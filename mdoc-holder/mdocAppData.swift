@@ -14,7 +14,7 @@ class MdocAppData: ObservableObject {
     @Published var qrCodeImage: UIImage?
 
     func genQrCode(isBleServer: Bool) {
-        let de = DeviceEngagement(isBleServer: isBleServer)
+        let de = DeviceEngagement(isBleServer: isBleServer, crv: .p256)
         qrCodeImage = de.getQrCodeImage()
     }
 }
