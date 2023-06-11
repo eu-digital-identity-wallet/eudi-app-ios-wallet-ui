@@ -9,12 +9,10 @@ import SwiftUI
 
 @main
 struct mdoc_holderApp: App {
-    let persistenceController = PersistenceController.shared
 
     var body: some Scene {
         WindowGroup {
             ContentView().environmentObject(MdocAppData())
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }
