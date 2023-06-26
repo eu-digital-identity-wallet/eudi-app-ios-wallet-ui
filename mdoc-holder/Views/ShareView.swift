@@ -10,7 +10,6 @@ import CoreData
 import MdocDataModel18013
 
 struct ShareView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var mdocAppData: MdocAppData
     @State var isBleServer: Bool = true
     
@@ -19,7 +18,7 @@ struct ShareView: View {
             Text("QR to BLE Device Engagement").minimumScaleFactor(0.5).lineLimit(1)
             Image(uiImage: mdocAppData.qrCodeImage ?? UIImage(systemName: "questionmark.square.dashed")!)
                 .resizable().scaledToFit().frame(maxWidth: .infinity, alignment: .center)
-            Toggle("Is BLE server", isOn: $isBleServer)
+            //Toggle("Is BLE server", isOn: $isBleServer)
             Spacer()
         }.padding().padding().onAppear(perform: genQrCode).onChange(of: isBleServer, perform: {b in mdocAppData.genQrCode(isBleServer: b) })
     } // body

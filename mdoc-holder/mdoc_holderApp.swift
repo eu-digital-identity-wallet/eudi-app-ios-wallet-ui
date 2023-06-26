@@ -12,7 +12,7 @@ struct mdoc_holderApp: App {
 
     var body: some Scene {
         WindowGroup {
-			MainHolderView().environmentObject(MdocAppData().loadSampleData())
+			MainHolderView().environmentObject(MdocAppData())
         }
     }
 }
