@@ -49,7 +49,7 @@ struct MainHolderView: View {
 
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
-		let appData = MdocAppData()// .loadSampleData()
+		let appData = MdocAppData().loadSampleData()
 		MainHolderView().environmentObject(appData)
 	}
 }
