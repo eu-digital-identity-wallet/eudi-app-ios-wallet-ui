@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 import MdocDataModel18013
 
-struct ContentView: View {
+struct ShareView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var mdocAppData: MdocAppData
     @State var isBleServer: Bool = true
@@ -29,8 +29,9 @@ struct ContentView: View {
 }
 
 
-struct ContentView_Previews: PreviewProvider {
+struct ShareView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environmentObject(MdocAppData())
+		let appData = MdocAppData().loadSampleData()
+        ShareView().environmentObject(appData)
     }
 }
