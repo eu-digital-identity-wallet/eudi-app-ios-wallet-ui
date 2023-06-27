@@ -3,10 +3,10 @@
     {
       "identity" : "eudi-lib-ios-iso18013-data-model",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
+      "location" : "https://github.com/niscy-eudiw/eudi-lib-ios-iso18013-data-model",
       "state" : {
-        "branch" : "main",
-        "revision" : "9914d5cded989234b49867530e595224825d3f2c"
+        "branch" : "develop",
+        "revision" : "830f19b382a8648a9e8b03c807a331cdb6dd33d5"
       }
     },
     {

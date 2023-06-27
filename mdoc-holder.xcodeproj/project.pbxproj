@@ -22,7 +22,7 @@
 		B0C0B9F12A269B9400DEEFFF /* SimulatorScreenshotDemoApp1.png in Resources */ = {isa = PBXBuildFile; fileRef = B0C0B9F02A269B9400DEEFFF /* SimulatorScreenshotDemoApp1.png */; };
 		B0DF90932A48D906001ED98C /* MainHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DF90922A48D906001ED98C /* MainHolderView.swift */; };
 		B0DF90962A48D990001ED98C /* ButtonControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DF90952A48D990001ED98C /* ButtonControls.swift */; };
-		B0E6DAD02A4ACD81007EDA71 /* MdocDataModel18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B0E6DACF2A4ACD81007EDA71 /* MdocDataModel18013 */; };
+		B0EA82E12A4BA37D00A1C859 /* MdocDataModel18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B0EA82E02A4BA37D00A1C859 /* MdocDataModel18013 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,7 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B0E6DAD02A4ACD81007EDA71 /* MdocDataModel18013 in Frameworks */,
+				B0EA82E12A4BA37D00A1C859 /* MdocDataModel18013 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,7 +212,7 @@
 			);
 			name = "mdoc-holder";
 			packageProductDependencies = (
-				B0E6DACF2A4ACD81007EDA71 /* MdocDataModel18013 */,
+				B0EA82E02A4BA37D00A1C859 /* MdocDataModel18013 */,
 			);
 			productName = "mdoc-holder";
 			productReference = B00A7C602A1ABC1D00DF9A86 /* mdoc-holder.app */;
@@ -287,7 +287,7 @@
 			);
 			mainGroup = B00A7C572A1ABC1D00DF9A86;
 			packageReferences = (
-				B0E6DACE2A4ACD81007EDA71 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */,
+				B0EA82DF2A4BA37D00A1C859 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */,
 			);
 			productRefGroup = B00A7C612A1ABC1D00DF9A86 /* Products */;
 			projectDirPath = "";
@@ -680,20 +680,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B0E6DACE2A4ACD81007EDA71 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */ = {
+		B0EA82DF2A4BA37D00A1C859 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git";
+			repositoryURL = "https://github.com/niscy-eudiw/eudi-lib-ios-iso18013-data-model";
 			requirement = {
-				branch = main;
+				branch = develop;
 				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B0E6DACF2A4ACD81007EDA71 /* MdocDataModel18013 */ = {
+		B0EA82E02A4BA37D00A1C859 /* MdocDataModel18013 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B0E6DACE2A4ACD81007EDA71 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */;
+			package = B0EA82DF2A4BA37D00A1C859 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */;
 			productName = MdocDataModel18013;
 		};
 /* End XCSwiftPackageProductDependency section */
