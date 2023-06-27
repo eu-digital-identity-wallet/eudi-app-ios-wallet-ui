@@ -19,7 +19,7 @@ struct MainHolderView: View {
 					Text("no_documents").italic().font(.footnote)
 					Text("start_by_adding_sample_documents").italic().font(.footnote)
 					Button {
-						_ = appData.loadSampleData()
+						_ = appData.loadSampleData(force: true)
 					} label: {
 						Text("add_sample_documents").padding(12)
 					}.padding(.top, 20).tint(Color("AccentColor"))
@@ -43,8 +43,10 @@ struct MainHolderView: View {
 				}
 				
 			}.padding()
-		}
-    }
+		}.onAppear(perform: {
+			if appData.mdlLoaded || appData.pidLoaded { _ = appData.loadSampleData() }
+		})
+    } // end body
 }
 
 struct ContentView_Previews: PreviewProvider {

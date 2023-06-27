@@ -24,13 +24,13 @@ class MdocAppData: ObservableObject {
 	}
 	var hasData: Bool { pidLoaded && getDoc(i: 0) != nil || mdlLoaded && getDoc(i: 1) != nil }
 	
-	func loadSampleData() -> MdocAppData {
+	func loadSampleData(force: Bool = false) -> MdocAppData {
 		let sampleData = Data(name: "sample_data")!
 		let sr = sampleData.decodeJSON(type: SignUpResponse.self)!
 		let dr = sr.deviceResponse
-		euPidModel = EuPidModel(response: dr)
+		if force || pidLoaded { euPidModel = EuPidModel(response: dr) }
 		pidLoaded = euPidModel != nil
-		isoMdlModel = IsoMdlModel(response: dr)
+		if force || mdlLoaded { isoMdlModel = IsoMdlModel(response: dr) }
 		mdlLoaded = isoMdlModel != nil
 		return self
 	}
