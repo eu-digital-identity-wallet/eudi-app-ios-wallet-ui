@@ -62,6 +62,7 @@
 		B0C0B9F02A269B9400DEEFFF /* SimulatorScreenshotDemoApp1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SimulatorScreenshotDemoApp1.png; sourceTree = "<group>"; };
 		B0DF90922A48D906001ED98C /* MainHolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHolderView.swift; sourceTree = "<group>"; };
 		B0DF90952A48D990001ED98C /* ButtonControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonControls.swift; sourceTree = "<group>"; };
+		B0EA82E22A4BAD6E00A1C859 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +116,7 @@
 		B00A7C622A1ABC1D00DF9A86 /* mdoc-holder */ = {
 			isa = PBXGroup;
 			children = (
+				B0EA82E22A4BAD6E00A1C859 /* Info.plist */,
 				B03B55752A48F72900EB067C /* Resources */,
 				B00A7C9A2A1AC90800DF9A86 /* Sample_data */,
 				B00A7C632A1ABC1D00DF9A86 /* mdoc_holderApp.swift */,
@@ -513,6 +515,7 @@
 				DEVELOPMENT_TEAM = 5T7UHW36CL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mdoc-holder/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -543,6 +546,7 @@
 				DEVELOPMENT_TEAM = 5T7UHW36CL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mdoc-holder/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
