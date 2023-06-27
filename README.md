@@ -8,4 +8,5 @@ At present, device engagement using QR code is available.
 
 ### Demo Video
 
-[Demo video](mdoc-holderTests/Video/RocketSim_Recording_iPhone_14_Pro_2023-06-27_10.22.04.mp4)
+[Demo video](https://github.com/niscy-eudiw/eudi-app-ios-iso18013-holder/assets/4129573/a4d76882-93b7-4d08-b374-80f2777cb45b)
+
