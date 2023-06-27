@@ -1,10 +1,13 @@
-# EUID Wallet Prototype v.0.05 for Proximity use case
+# EUID Wallet Prototype v.0.1 for Proximity use case
 
 ## About
 
 This repository contains a demo *mdoc holder* iOS application, according to [ISO/IEC 18013-5](https://www.iso.org/standard/69084.html).
 
-At present, device engagement using QR code is available.
+At the present time, are available:
+
+- Device engagement using QR code.
+- Loading of wallet data from CBOR bytes
 
 ### Demo Video
 
