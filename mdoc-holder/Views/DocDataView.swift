@@ -54,7 +54,7 @@ struct DocDataView: View {
 				}
 			}
 		}.toolbar {
-			ToolbarItem(placement: .topBarTrailing) {
+			ToolbarItem {
 				Button(action: { isPresentingConfirm = true }) {
 					Image(systemName: "trash")
 				}
