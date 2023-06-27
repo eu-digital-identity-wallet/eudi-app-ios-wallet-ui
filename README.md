@@ -6,6 +6,6 @@ This repository contains a demo *mdoc holder* iOS application, according to [ISO
 
 At present, device engagement using QR code is available.
 
-## Screenshots
+### Demo Video
 
-![Device engagement](mdoc-holderTests/Screenshots/SimulatorScreenshotDemoApp1.png)
+[Demo video](mdoc-holderTests/Video/RocketSim_Recording_iPhone_14_Pro_2023-06-27_10.22.04.mp4)
