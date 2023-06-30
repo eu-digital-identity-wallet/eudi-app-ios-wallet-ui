@@ -16,11 +16,8 @@
 "wallet_pseudo_id" = "Wallet Pseudo Identifier";
 "issuer_pseudo_id" = "Issuer Pseudo Identifier";
 "family_name_birth" = "Family Name at Birth";
-"family_name_birth_national_characters" = "Family Name at Birth in national characters";
 "first_name_birth" = "First Name at Birth";
-"first_name_birth_national_characters" = "First Name at Birth in national characters";
 "given_name_birth" = "Given Name at Birth";
-"given_name_birth_national_characters" = "Given Name at Birth in national characters";
 "gender" = "Gender";
 "facial_portrait" = "PID portrait";
 "biometric_template_finger" = "Fingerprint";
@@ -36,7 +33,8 @@
 "given_name" = "Given Name";
 "birth_date" = "Date of birth";
 "issue_date" = "Date of issue";
-"expiry_date" = "Date of expiry";
+"issue_date" = "Date of issue";
+"issuance_date" = "Date of issuance";
 "issuing_country" = "Issuing country";
 "issuing_authority" = "Issuing authority";
 "document_number" = "Licence number";
@@ -61,8 +59,8 @@
 "resident_state" = "Resident state";
 "resident_postal_code" = "Resident postal code";
 "resident_country" = "Resident country";
-"family_name_national_character" = "Family name in national characters";
-"given_name_national_character" = "Given name in national characters";
+"resident_street" = "Resident street";
+"resident_house_number" = "Resident house number";
 "signature_usual_mark" = "Signature / usual mark";
 "aamva_sex" = "AAMVA Sex";
 "EDL_credential" = "EDL Credential";
