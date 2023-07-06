@@ -28,18 +28,18 @@ struct MainHolderView: View {
 				if appData.pidLoaded && appData.euPidModel != nil {
 					NavigationLink(destination: { DocDataView(index: 0)}) {
 						DocButton(title: String(localized:EuPidModel.title), subtitle: EuPidModel.namespace)
-					}
+					}.accessibilityIdentifier("EuPidButton")
 				}
 				if appData.mdlLoaded && appData.isoMdlModel != nil {
 					NavigationLink(destination: { DocDataView(index: 1)}) {
 						DocButton(title: String(localized:IsoMdlModel.title), subtitle: IsoMdlModel.namespace)
-					}
+					}.accessibilityIdentifier("IsoMdlButton")
 				}
 				Spacer()
 				if appData.hasData {
 					NavigationLink(destination: { ShareView() }) {
 						RoundedRectangle(cornerRadius: 6).fill(Color("AccentColor")).frame(maxHeight: 50).overlay() {Text("share").foregroundColor(.white).font(.system(size: 18)) }
-					}
+					}.accessibilityIdentifier("Share")
 				}
 				
 			}.padding()

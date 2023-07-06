@@ -22,16 +22,16 @@ final class mdoc_holderUITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testUserInterface() throws {
+    func test_mdoc_holder_user_interface() throws {
         // UI tests must launch the application that they test.
         let app = XCUIApplication()
 		app.launch()
 		takeScreenshot(of: app, named: "Main view")
-		app.buttons["EU PID, eu.europa.ec.eudiw.pid.1"].tap()
+		app.buttons["EuPidButton"].tap()
 		takeScreenshot(of: app, named: "EU-PID data view")
 		let backButton = app.navigationBars["_TtGC7SwiftUI32NavigationStackHosting"].buttons["Back"]
 		backButton.tap()
-		app.buttons["mDL, org.iso.18013.5.1"].tap()
+		app.buttons["IsoMdlButton"].tap()
 		takeScreenshot(of: app, named: "ISO mDL data view")
 		backButton.tap()
 		XCUIApplication().buttons["Share"].tap()
