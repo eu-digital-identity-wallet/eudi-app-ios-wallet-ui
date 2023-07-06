@@ -27,6 +27,8 @@ final class mdoc_holderUITests: XCTestCase {
         let app = XCUIApplication()
 		app.launch()
 		takeScreenshot(of: app, named: "Main view")
+		XCUIApplication().buttons["Add sample documents"].tap()
+		takeScreenshot(of: app, named: "Main view 2")
 		app.buttons["EuPidButton"].tap()
 		takeScreenshot(of: app, named: "EU-PID data view")
 		let backButton = app.navigationBars["_TtGC7SwiftUI32NavigationStackHosting"].buttons["Back"]
