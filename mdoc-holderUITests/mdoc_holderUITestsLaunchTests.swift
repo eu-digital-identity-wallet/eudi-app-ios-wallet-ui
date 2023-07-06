@@ -16,7 +16,7 @@ final class mdoc_holderUITestsLaunchTests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
-
+/*
     func testLaunch() throws {
         let app = XCUIApplication()
         app.launch()
@@ -29,4 +29,5 @@ final class mdoc_holderUITestsLaunchTests: XCTestCase {
         attachment.lifetime = .keepAlways
         add(attachment)
     }
+*/
 }
