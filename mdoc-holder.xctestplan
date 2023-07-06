@@ -15,7 +15,7 @@
       "identifier" : "B00A7C5F2A1ABC1D00DF9A86",
       "name" : "mdoc-holder"
     },
-    "userAttachmentLifetime" : "keepAlways"
+    "uiTestingScreenshotsLifetime" : "keepAlways"
   },
   "testTargets" : [
     {
