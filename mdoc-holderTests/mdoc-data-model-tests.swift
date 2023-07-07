@@ -20,7 +20,7 @@ final class mdoc_data_model_tests: XCTestCase {
     }
 
 
-	func test_decode_annex31_device_engagement() throws {
+	func test_decode_device_engagement_annex31() throws {
 	 let de = try XCTUnwrap(DeviceEngagement(data: AnnexdTestData.d31.bytes))
 	 XCTAssertEqual(de.version, "1.0")
 	 XCTAssertEqual(de.deviceRetrievalMethods?.first, .ble(isBleServer: false, uuid: "45EFEF742B2C4837A9A3B0E1D05A6917"))
@@ -42,7 +42,7 @@ final class mdoc_data_model_tests: XCTestCase {
 	 XCTAssertEqual(de2.version, "1.0")
  }
  
- func test_decode_driving_privileges() throws {
+ func test_decode_driving_privileges_annex21() throws {
 	 //test decoding according to test data
 	 let dps = try XCTUnwrap(DrivingPrivileges(data: AnnexdTestData.d21.bytes))
 	 print(dps)
@@ -55,7 +55,7 @@ final class mdoc_data_model_tests: XCTestCase {
 	 XCTAssertEqual(dps2[1].vehicleCategoryCode, "B");  XCTAssertEqual(dps2[1].issueDate, "2017-02-23");  XCTAssertEqual(dps2[1].expiryDate, "2024-10-20")
  }
  
- func test_decode_issuer_auth() throws {
+ func test_decode_issuer_auth_annex52() throws {
 	 let ia = try XCTUnwrap(IssuerAuth(data: AnnexdTestData.d52.bytes))
 	 XCTAssertEqual(ia.mso.digestAlgorithm, "SHA-256")
 	 XCTAssertEqual(ia.mso.valueDigests["org.iso.18013.5.1"]?.digestIDs.count, 13)
@@ -64,7 +64,7 @@ final class mdoc_data_model_tests: XCTestCase {
  }
 
  // test based on D.4.1.1 mdoc request section of the ISO/IEC FDIS 18013-5 document
- func test_decode_device_request() throws {
+ func test_decode_device_request_annex411() throws {
 	 let dr = try XCTUnwrap(DeviceRequest(data: AnnexdTestData.d411.bytes))
 	 let testItems = ["family_name", "document_number", "driving_privileges", "issue_date", "expiry_date", "portrait"].sorted()
 	 XCTAssertEqual(dr.version, "1.0")
@@ -89,7 +89,7 @@ final class mdoc_data_model_tests: XCTestCase {
  }
 
  // test based on D.4.1.2 mdoc response section of the ISO/IEC FDIS 18013-5 document
- func test_decode_device_response() throws {
+ func test_decode_device_response_annex412() throws {
 	 let dr = try XCTUnwrap(DeviceResponse(data: AnnexdTestData.d412.bytes))
 	 XCTAssertEqual(dr.version, "1.0")
 	 let docs = try XCTUnwrap(dr.documents)
