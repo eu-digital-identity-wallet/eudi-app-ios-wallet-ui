@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -24,7 +24,7 @@
 		B0BC40BF2A56BC9000E74227 /* mdoc-data-model-tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BC40BE2A56BC9000E74227 /* mdoc-data-model-tests.swift */; };
 		B0DF90932A48D906001ED98C /* MainHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DF90922A48D906001ED98C /* MainHolderView.swift */; };
 		B0DF90962A48D990001ED98C /* ButtonControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DF90952A48D990001ED98C /* ButtonControls.swift */; };
-		B0EA82E12A4BA37D00A1C859 /* MdocDataModel18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B0EA82E02A4BA37D00A1C859 /* MdocDataModel18013 */; };
+		B0F28F3D2A648DB10077C2A6 /* MdocDataTransfer18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B0F28F3C2A648DB10077C2A6 /* MdocDataTransfer18013 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,7 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B0EA82E12A4BA37D00A1C859 /* MdocDataModel18013 in Frameworks */,
+				B0F28F3D2A648DB10077C2A6 /* MdocDataTransfer18013 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,7 +214,7 @@
 			);
 			name = "mdoc-holder";
 			packageProductDependencies = (
-				B0EA82E02A4BA37D00A1C859 /* MdocDataModel18013 */,
+				B0F28F3C2A648DB10077C2A6 /* MdocDataTransfer18013 */,
 			);
 			productName = "mdoc-holder";
 			productReference = B00A7C602A1ABC1D00DF9A86 /* mdoc-holder.app */;
@@ -289,7 +289,8 @@
 			);
 			mainGroup = B00A7C572A1ABC1D00DF9A86;
 			packageReferences = (
-				B0EA82DF2A4BA37D00A1C859 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */,
+				B0F28F382A648D530077C2A6 /* XCLocalSwiftPackageReference "../MdocDataTransfer18013" */,
+				B0F28F3B2A648DB10077C2A6 /* XCLocalSwiftPackageReference "../MdocDataTransfer18013" */,
 			);
 			productRefGroup = B00A7C612A1ABC1D00DF9A86 /* Products */;
 			projectDirPath = "";
@@ -518,6 +519,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "mdoc-holder/Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -549,6 +551,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "mdoc-holder/Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -685,22 +688,21 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		B0EA82DF2A4BA37D00A1C859 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/niscy-eudiw/eudi-lib-ios-iso18013-data-model";
-			requirement = {
-				branch = develop;
-				kind = branch;
-			};
+/* Begin XCLocalSwiftPackageReference section */
+		B0F28F382A648D530077C2A6 /* XCLocalSwiftPackageReference "../MdocDataTransfer18013" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MdocDataTransfer18013;
 		};
-/* End XCRemoteSwiftPackageReference section */
+		B0F28F3B2A648DB10077C2A6 /* XCLocalSwiftPackageReference "../MdocDataTransfer18013" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MdocDataTransfer18013;
+		};
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B0EA82E02A4BA37D00A1C859 /* MdocDataModel18013 */ = {
+		B0F28F3C2A648DB10077C2A6 /* MdocDataTransfer18013 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B0EA82DF2A4BA37D00A1C859 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */;
-			productName = MdocDataModel18013;
+			productName = MdocDataTransfer18013;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

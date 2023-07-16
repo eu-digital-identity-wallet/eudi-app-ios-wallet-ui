@@ -124,5 +124,7 @@ final class mdoc_data_model_tests: XCTestCase {
 	 XCTAssertNotNil(de.getQrCodeImage(.m))
  }
 #endif
+	
+
 
 }

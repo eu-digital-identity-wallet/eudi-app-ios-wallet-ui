@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MdocDataModel18013
+import MdocDataTransfer18013
 
 struct MainHolderView: View {
 	@EnvironmentObject var appData: MdocAppData
@@ -36,8 +37,8 @@ struct MainHolderView: View {
 					}.accessibilityIdentifier("IsoMdlButton")
 				}
 				Spacer()
-				if appData.hasData {
-					NavigationLink(destination: { ShareView() }) {
+				if appData.mdlLoaded && appData.isoMdlModel != nil {
+					NavigationLink(destination: { ShareView(bleServerTransfer: MdocGattServer(docs:[appData.isoMdlModel!.response!])) }) {
 						RoundedRectangle(cornerRadius: 6).fill(Color("AccentColor")).frame(maxHeight: 50).overlay() {Text("share").foregroundColor(.white).font(.system(size: 18)) }
 					}.accessibilityIdentifier("Share")
 				}

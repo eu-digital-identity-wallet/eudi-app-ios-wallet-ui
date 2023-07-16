@@ -1,12 +1,21 @@
 {
   "pins" : [
     {
-      "identity" : "eudi-lib-ios-iso18013-data-model",
+      "identity" : "combinecorebluetooth",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/niscy-eudiw/eudi-lib-ios-iso18013-data-model",
+      "location" : "https://github.com/StarryInternet/CombineCoreBluetooth.git",
       "state" : {
-        "branch" : "develop",
-        "revision" : "830f19b382a8648a9e8b03c807a331cdb6dd33d5"
+        "revision" : "05df53532ba6eee30df83a20dd22c447bc223f8a",
+        "version" : "0.4.0"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "f8ce47d3b04c217a5aa0f3e26a632fc3fec22f4a"
       }
     },
     {
