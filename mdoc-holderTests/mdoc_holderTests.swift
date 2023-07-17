@@ -6,8 +6,11 @@
 //
 
 import XCTest
+import SwiftCBOR
+@testable import MdocDataModel18013
+@testable import MdocSecurity18013
+@testable import MdocDataTransfer18013
 @testable import mdoc_holder
-import CryptoSwift
 import CryptoKit
 
 final class mdoc_holderTests: XCTestCase {
@@ -58,4 +61,16 @@ final class mdoc_holderTests: XCTestCase {
 		XCTAssertEqual(decryptedContent, Data(data))
 	}
  */
+	
+	func test_encode_device_engagement() throws {
+		var de = try XCTUnwrap(DeviceEngagement(data: ScytalesMValidData.deEncoded.bytes))
+		let pkData = ScytalesMValidData.privKey963.dropFirst() // drop initial byte 0x04
+		de.setD(d: [UInt8](pkData.dropFirst(64)))
+		print(ScytalesMValidData.seData.bytes.toHexString())
+		let seCbor = try XCTUnwrap(try CBOR.decode(ScytalesMValidData.seData.bytes))
+		print(seCbor.description)
+		let se = try XCTUnwrap(SessionEstablishment(cbor: seCbor))
+		let sessionEncr = try XCTUnwrap(SessionEncryption(se: se, de: de, handOver: BleTransferMode.QRHandover))
+		print(sessionEncr.transcript.toCBOR(options: CBOROptions()).description)
+	}
 }
