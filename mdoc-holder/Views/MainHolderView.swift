@@ -38,7 +38,7 @@ struct MainHolderView: View {
 				}
 				Spacer()
 				if appData.mdlLoaded && appData.isoMdlModel != nil {
-					NavigationLink(destination: { ShareView(bleServerTransfer: MdocGattServer(docs:[appData.isoMdlModel!.response!])) }) {
+					NavigationLink(destination: { ShareView(bleServerTransfer: MdocGattServer(docs:[appData.isoMdlModel!.response!], iaca: Data(name: "scytales_root_ca", ext: "der")!)) }) {
 						RoundedRectangle(cornerRadius: 6).fill(Color("AccentColor")).frame(maxHeight: 50).overlay() {Text("share").foregroundColor(.white).font(.system(size: 18)) }
 					}.accessibilityIdentifier("Share")
 				}

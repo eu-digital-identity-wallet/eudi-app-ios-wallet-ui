@@ -69,16 +69,16 @@ final class mdoc_data_model_tests: XCTestCase {
 	 let dr = try XCTUnwrap(DeviceRequest(data: AnnexdTestData.d411.bytes))
 	 let testItems = ["family_name", "document_number", "driving_privileges", "issue_date", "expiry_date", "portrait"].sorted()
 	 XCTAssertEqual(dr.version, "1.0")
-	 XCTAssertEqual(dr.docRequests.first?.itemsRequest.nameSpaces["org.iso.18013.5.1"]?.elementIdentifiers.sorted(), testItems)
+	 XCTAssertEqual(dr.docRequests.first?.itemsRequest.requestNameSpaces["org.iso.18013.5.1"]?.elementIdentifiers.sorted(), testItems)
 	 // test encode
 	 let cborDr = dr.toCBOR(options: CBOROptions())
 	 // test if successfully encoded
 	 let dr2 = try XCTUnwrap(DeviceRequest(cbor: cborDr))
-	 XCTAssertEqual(dr2.docRequests.first?.itemsRequest.nameSpaces["org.iso.18013.5.1"]?.elementIdentifiers.sorted(), testItems)
+	 XCTAssertEqual(dr2.docRequests.first?.itemsRequest.requestNameSpaces["org.iso.18013.5.1"]?.elementIdentifiers.sorted(), testItems)
 	 // test iso make request
 	 let isoKeys: [IsoMdlModel.CodingKeys] = [.familyName, .documentNumber, .drivingPrivileges, .issueDate, .expiryDate, .portrait]
 	 let dr3 = DeviceRequest(mdl: isoKeys, agesOver: [], intentToRetain: true)
-	 XCTAssertEqual(dr3.docRequests.first?.itemsRequest.nameSpaces[IsoMdlModel.namespace]?.elementIdentifiers.sorted(), testItems)
+	 XCTAssertEqual(dr3.docRequests.first?.itemsRequest.requestNameSpaces[IsoMdlModel.namespace]?.elementIdentifiers.sorted(), testItems)
  }
  
  func test_decode_sample_data_response() throws {
@@ -96,7 +96,7 @@ final class mdoc_data_model_tests: XCTestCase {
 	 let docs = try XCTUnwrap(dr.documents)
 	 let doc = try XCTUnwrap(docs.first)
 	 XCTAssertEqual(doc.docType, "org.iso.18013.5.1.mDL")
-	 let isoNS = try XCTUnwrap(doc.issuerSigned.nameSpaces?["org.iso.18013.5.1"])
+	 let isoNS = try XCTUnwrap(doc.issuerSigned.issuerNameSpaces?["org.iso.18013.5.1"])
 	 let fnItem = try XCTUnwrap(isoNS.findItem(name: "family_name"))
 	 XCTAssertEqual(fnItem.elementValue.asString()!, "Doe")
 	 XCTAssertEqual(fnItem.digestID, 0)

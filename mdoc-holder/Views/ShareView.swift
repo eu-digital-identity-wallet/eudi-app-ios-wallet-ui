@@ -38,6 +38,6 @@ struct ShareView: View {
 struct ShareView_Previews: PreviewProvider {
     static var previews: some View {
 		let appData = MdocAppData().loadSampleData()
-		ShareView(bleServerTransfer: MdocGattServer(docs: [])).environmentObject(appData)
+		ShareView(bleServerTransfer: MdocGattServer(docs: [], iaca: Data())).environmentObject(appData)
     }
 }
