@@ -111,7 +111,7 @@ final class mdoc_data_model_tests: XCTestCase {
 	 XCTAssertEqual(valueDigests1[0]!.toHexString().localizedUppercase, "75167333B47B6C2BFB86ECCC1F438CF57AF055371AC55E1E359E20F254ADCEBF")
 	 XCTAssertEqual(valueDigests2.digestIDs.count, 4)
 	 XCTAssert(isoNS.count > 0)
-	 XCTAssertEqual(doc.deviceSigned?.nsRawBytes.count, 1); XCTAssertEqual(doc.deviceSigned?.nsRawBytes[0], 160) // {} A0 empty dic
+	 XCTAssertEqual(doc.deviceSigned?.nameSpacesRawData.count, 1); XCTAssertEqual(doc.deviceSigned?.nameSpacesRawData[0], 160) // {} A0 empty dic
 	 XCTAssertEqual(doc.deviceSigned?.deviceAuth.coseMacOrSignature.macAlgorithm, Cose.MacAlgorithm.hmac256)
 	 XCTAssertEqual(doc.deviceSigned?.deviceAuth.coseMacOrSignature.signature.bytes.toHexString().uppercased(), "E99521A85AD7891B806A07F8B5388A332D92C189A7BF293EE1F543405AE6824D")
 	 let model = try XCTUnwrap(IsoMdlModel(response: dr))
@@ -120,7 +120,7 @@ final class mdoc_data_model_tests: XCTestCase {
  
 #if os(iOS)
  func test_generate_BLE_engage_QR_code() throws {
-	 let de = DeviceEngagement(isBleServer: true)
+	 var de = DeviceEngagement(isBleServer: true)
 	 var strQR = de.qrCode
 	 XCTAssertNotNil(de.getQrCodeImage(.m))
  }
