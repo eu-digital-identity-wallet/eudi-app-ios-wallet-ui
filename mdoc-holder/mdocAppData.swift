@@ -8,7 +8,7 @@ import SwiftCBOR
 import MdocDataModel18013
 import MdocDataTransfer18013
 
-class MdocAppData: ObservableObject, MdocOfflineDelegate {
+class MdocAppData: ObservableObject {
 	@Published var euPidModel: EuPidModel?
 	@Published var isoMdlModel: IsoMdlModel?
 	@AppStorage("pidLoaded") var pidLoaded: Bool = false
@@ -30,13 +30,5 @@ class MdocAppData: ObservableObject, MdocOfflineDelegate {
 		if force || mdlLoaded { isoMdlModel = IsoMdlModel(response: dr) }
 		mdlLoaded = isoMdlModel != nil
 		return self
-	}
-	
-	func didChangeStatus(_ newStatus: MdocDataTransfer18013.TransferStatus) {
-		print(newStatus)
-	}
-	
-	func didReceiveRequest(_ request: MdocDataModel18013.DeviceRequest, handleAccept: (Bool) -> Void) {
-		print(request.toCBOR(options: CBOROptions()).description)
 	}
 }

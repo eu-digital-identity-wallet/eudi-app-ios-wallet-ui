@@ -20,15 +20,22 @@ struct ShareView: View {
         VStack(spacing: 16) {
             Text("QR to BLE Device Engagement").minimumScaleFactor(0.5).lineLimit(1)
             Image(uiImage: qrCodeImage ?? UIImage(systemName: "questionmark.square.dashed")!)
-                .resizable().scaledToFit().frame(maxWidth: .infinity, alignment: .center)
+				.resizable().scaledToFit().frame(maxWidth: .infinity, alignment: .center).padding(.bottom, 16)
+			Text(bleServerTransfer.statusDescription)
+			Text(bleServerTransfer.errorMessage)
             //Toggle("Is BLE server", isOn: $isBleServer)
             Spacer()
         }.padding().padding()
 			.onAppear(perform: genQrCode)
 			.onDisappear(perform: { bleServerTransfer.stop() })
+			.alert(isPresented: $bleServerTransfer.hasRequestPresented) {
+				Alert(title: Text(bleServerTransfer.requestItemsMessage), primaryButton: .default(Text("OK")) { bleServerTransfer.handleAccept(true) }, secondaryButton: .destructive(Text("Cancel")) { bleServerTransfer.handleAccept(false) })
+			}
     } // body
     
 	func genQrCode() {
+		bleServerTransfer.requireUserAccept = true
+		bleServerTransfer.delegate = bleServerTransfer
 		qrCodeImage = bleServerTransfer.performDeviceEngagement()
 	}
  
