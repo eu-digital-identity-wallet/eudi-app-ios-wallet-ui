@@ -22,6 +22,8 @@
 		B0BC40BB2A56BBF500E74227 /* mdocTestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BC40BA2A56BBF500E74227 /* mdocTestData.swift */; };
 		B0BC40BD2A56BC0900E74227 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BC40BC2A56BC0900E74227 /* Extensions.swift */; };
 		B0BC40BF2A56BC9000E74227 /* mdoc-data-model-tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BC40BE2A56BC9000E74227 /* mdoc-data-model-tests.swift */; };
+		B0CAAF922A6A8E4100C8C9B6 /* MdocSecurity18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B0CAAF912A6A8E4100C8C9B6 /* MdocSecurity18013 */; };
+		B0CAAF952A6A8E5300C8C9B6 /* MdocDataTransfer18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B0CAAF942A6A8E5300C8C9B6 /* MdocDataTransfer18013 */; };
 		B0DF90932A48D906001ED98C /* MainHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DF90922A48D906001ED98C /* MainHolderView.swift */; };
 		B0DF90962A48D990001ED98C /* ButtonControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DF90952A48D990001ED98C /* ButtonControls.swift */; };
 		B0F28F3D2A648DB10077C2A6 /* MdocDataTransfer18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B0F28F3C2A648DB10077C2A6 /* MdocDataTransfer18013 */; };
@@ -76,6 +78,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B0F28F3D2A648DB10077C2A6 /* MdocDataTransfer18013 in Frameworks */,
+				B0CAAF952A6A8E5300C8C9B6 /* MdocDataTransfer18013 in Frameworks */,
+				B0CAAF922A6A8E4100C8C9B6 /* MdocSecurity18013 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,6 +219,8 @@
 			name = "mdoc-holder";
 			packageProductDependencies = (
 				B0F28F3C2A648DB10077C2A6 /* MdocDataTransfer18013 */,
+				B0CAAF912A6A8E4100C8C9B6 /* MdocSecurity18013 */,
+				B0CAAF942A6A8E5300C8C9B6 /* MdocDataTransfer18013 */,
 			);
 			productName = "mdoc-holder";
 			productReference = B00A7C602A1ABC1D00DF9A86 /* mdoc-holder.app */;
@@ -289,8 +295,9 @@
 			);
 			mainGroup = B00A7C572A1ABC1D00DF9A86;
 			packageReferences = (
-				B0F28F382A648D530077C2A6 /* XCLocalSwiftPackageReference "../MdocDataTransfer18013" */,
 				B0F28F3B2A648DB10077C2A6 /* XCLocalSwiftPackageReference "../MdocDataTransfer18013" */,
+				B0CAAF902A6A8E4100C8C9B6 /* XCLocalSwiftPackageReference "../MdocSecurity18013" */,
+				B0CAAF932A6A8E5300C8C9B6 /* XCLocalSwiftPackageReference "../MdocDataTransfer18013" */,
 			);
 			productRefGroup = B00A7C612A1ABC1D00DF9A86 /* Products */;
 			projectDirPath = "";
@@ -689,7 +696,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		B0F28F382A648D530077C2A6 /* XCLocalSwiftPackageReference "../MdocDataTransfer18013" */ = {
+		B0CAAF902A6A8E4100C8C9B6 /* XCLocalSwiftPackageReference "../MdocSecurity18013" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MdocSecurity18013;
+		};
+		B0CAAF932A6A8E5300C8C9B6 /* XCLocalSwiftPackageReference "../MdocDataTransfer18013" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../MdocDataTransfer18013;
 		};
@@ -700,6 +711,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B0CAAF912A6A8E4100C8C9B6 /* MdocSecurity18013 */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MdocSecurity18013;
+		};
+		B0CAAF942A6A8E5300C8C9B6 /* MdocDataTransfer18013 */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MdocDataTransfer18013;
+		};
 		B0F28F3C2A648DB10077C2A6 /* MdocDataTransfer18013 */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MdocDataTransfer18013;
