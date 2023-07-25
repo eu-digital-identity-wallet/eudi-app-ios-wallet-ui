@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+import MdocDataTransfer18013
 
 @main
 struct mdoc_holderApp: App {
 
     var body: some Scene {
         WindowGroup {
-			MainHolderView().environmentObject(MdocAppData())
+			MainHolderView().environmentObject(MdocAppData()).environmentObject(MdocGattServer())
         }
     }
 }

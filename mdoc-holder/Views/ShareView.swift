@@ -13,14 +13,15 @@ import MdocDataTransfer18013
 struct ShareView: View {
     @EnvironmentObject var mdocAppData: MdocAppData
     @State var isBleServer: Bool = true
-	@State var qrCodeImage: UIImage?
-	@ObservedObject var bleServerTransfer: MdocGattServer
+	@EnvironmentObject var bleServerTransfer: MdocGattServer
 
     var body: some View {
         VStack(spacing: 16) {
             Text("QR to BLE Device Engagement").minimumScaleFactor(0.5).lineLimit(1)
-            Image(uiImage: qrCodeImage ?? UIImage(systemName: "questionmark.square.dashed")!)
-				.resizable().scaledToFit().frame(maxWidth: .infinity, alignment: .center).padding(.bottom, 16)
+			if let d = bleServerTransfer.qrCodeImageData {
+				Image(uiImage: UIImage(data: d) ?? UIImage(systemName: "questionmark.square.dashed")!)
+					.resizable().scaledToFit().frame(maxWidth: .infinity, alignment: .center).padding(.bottom, 16)
+			}
 			Text(bleServerTransfer.statusDescription)
 			Text(bleServerTransfer.errorMessage)
             //Toggle("Is BLE server", isOn: $isBleServer)
@@ -34,9 +35,14 @@ struct ShareView: View {
     } // body
     
 	func genQrCode() {
-		bleServerTransfer.requireUserAccept = true
+		bleServerTransfer.initialize(parameters: [
+			InitializeKeys.document_data.rawValue: [Data(name: "sample_data")!],
+			InitializeKeys.trusted_certificates.rawValue: [Data(name: "scytales_root_ca", ext: "der")!],
+			InitializeKeys.require_user_accept.rawValue: true
+			]
+		)
 		bleServerTransfer.delegate = bleServerTransfer
-		qrCodeImage = bleServerTransfer.performDeviceEngagement()
+		bleServerTransfer.performDeviceEngagement()
 	}
  
 }
@@ -45,6 +51,7 @@ struct ShareView: View {
 struct ShareView_Previews: PreviewProvider {
     static var previews: some View {
 		let appData = MdocAppData().loadSampleData()
-		ShareView(bleServerTransfer: MdocGattServer(docs: [], iaca: Data())).environmentObject(appData)
+		ShareView()
+			.environmentObject(appData).environmentObject(MdocGattServer())
     }
 }

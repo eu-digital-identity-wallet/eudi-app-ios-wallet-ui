@@ -6,8 +6,8 @@
   
 */
 "eu_pid_doctype_name" = "EU PID";
-"family_name_national_characters" = "Family Name in national characters";
-"given_name_national_characters" = "Given Name in national characters";
+"family_name_national_character" = "Family Name in national characters";
+"given_name_national_character" = "Given Name in national characters";
 "birth_country" = "Birth country";
 "birth_state" = "Birth state";
 "birth_city" = "Birth city";
@@ -32,6 +32,7 @@
 "family_name" = "Family Name";
 "given_name" = "Given Name";
 "birth_date" = "Date of birth";
+"expiry_date" = "Date of expiration";
 "issue_date" = "Date of issue";
 "issue_date" = "Date of issue";
 "issuance_date" = "Date of issuance";
