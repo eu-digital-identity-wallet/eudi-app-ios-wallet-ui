@@ -15,7 +15,7 @@ struct DocDataView: View {
 	@State private var isPresentingConfirm: Bool = false
 	var title:String {
 		guard let doc = appData.getDoc(i: index) else { return "" }
-		return String(localized:type(of:doc).title)
+		return NSLocalizedString(type(of:doc).title, comment: "")
 	}
 	let index: Int
 	

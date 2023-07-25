@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/StarryInternet/CombineCoreBluetooth.git",
       "state" : {
-        "revision" : "05df53532ba6eee30df83a20dd22c447bc223f8a",
-        "version" : "0.4.0"
+        "revision" : "f998470290a330ba1aa0137ddeea7d847a25b89d",
+        "version" : "0.5.0"
       }
     },
     {

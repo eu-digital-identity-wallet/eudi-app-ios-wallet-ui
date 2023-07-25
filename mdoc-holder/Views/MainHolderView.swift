@@ -12,7 +12,7 @@ import MdocDataTransfer18013
 struct MainHolderView: View {
 	@EnvironmentObject var appData: MdocAppData
     var body: some View {
-		NavigationStack {
+		NavigationView {
 			VStack(alignment: .center, spacing: 0) {
 				Text("eudi_wallet_prototype_v1").font(.title2)
 				Divider().padding(.horizontal, -8).padding(.vertical, 12)
@@ -28,12 +28,12 @@ struct MainHolderView: View {
 				}
 				if appData.pidLoaded && appData.euPidModel != nil {
 					NavigationLink(destination: { DocDataView(index: 0)}) {
-						DocButton(title: String(localized:EuPidModel.title), subtitle: EuPidModel.namespace)
+						DocButton(title: NSLocalizedString(EuPidModel.title, comment: ""), subtitle: EuPidModel.namespace)
 					}.accessibilityIdentifier("EuPidButton")
 				}
 				if appData.mdlLoaded && appData.isoMdlModel != nil {
 					NavigationLink(destination: { DocDataView(index: 1)}) {
-						DocButton(title: String(localized:IsoMdlModel.title), subtitle: IsoMdlModel.namespace)
+						DocButton(title: NSLocalizedString(IsoMdlModel.title, comment: ""), subtitle: IsoMdlModel.namespace)
 					}.accessibilityIdentifier("IsoMdlButton")
 				}
 				Spacer()
