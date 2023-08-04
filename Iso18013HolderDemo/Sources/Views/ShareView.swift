@@ -14,23 +14,34 @@ struct ShareView: View {
     @EnvironmentObject var mdocAppData: MdocAppData
     @State var isBleServer: Bool = true
 	@EnvironmentObject var bleServerTransfer: MdocGattServer
+	@StateObject var transferDelegate = TransferDelegateObject()
 
     var body: some View {
         VStack(spacing: 16) {
-			if let d = bleServerTransfer.qrCodeImageData {
+			Text(verbatim: "Status: \(transferDelegate.status)").foregroundStyle(.blue)
+
+			if transferDelegate.status == .qrEngagementReady, let d = bleServerTransfer.qrCodeImageData {
 				Image(uiImage: UIImage(data: d) ?? UIImage(systemName: "questionmark.square.dashed")!)
-					.resizable().scaledToFit().frame(maxWidth: .infinity, alignment: .center).padding(.bottom, 16)
+					.resizable().scaledToFit().frame(maxWidth: .infinity, alignment: .center).padding(.bottom, 8)
 			}
-			Text(bleServerTransfer.statusDescription)
-			Text(bleServerTransfer.errorMessage)
-            //Toggle("Is BLE server", isOn: $isBleServer)
-            Spacer()
+			if transferDelegate.status == .requestReceived {
+				ScrollView {
+					Text(transferDelegate.requestItemsMessage).font(.footnote).padding(.bottom, 20)
+					if let valM = transferDelegate.readerCertValidationMessage {
+						Text(verbatim: valM).foregroundStyle(.red)
+					}
+				}
+			Spacer()
+			Text(transferDelegate.errorMessage).foregroundStyle(.red).padding(.bottom, 20)
+				HStack {
+					Button("Accept") { transferDelegate.handleAccept(true) }.buttonStyle(.bordered).padding(.horizontal, 30)
+					
+					Button("Reject") { transferDelegate.handleAccept(false) }.buttonStyle(.bordered)
+				}
+			}
         }.padding().padding()
 			.onAppear(perform: genQrCode)
 			.onDisappear(perform: { bleServerTransfer.stop() })
-			.alert(isPresented: $bleServerTransfer.hasRequestPresented) {
-				Alert(title: Text("Request"), message: Text(verbatim: bleServerTransfer.requestItemsMessage), primaryButton: .default(Text("OK")) { bleServerTransfer.handleAccept(true) }, secondaryButton: .destructive(Text("Cancel")) { bleServerTransfer.handleAccept(false) })
-			}
     } // body
     
 	func genQrCode() {
@@ -40,7 +51,7 @@ struct ShareView: View {
 			InitializeKeys.require_user_accept.rawValue: true
 			]
 		)
-		bleServerTransfer.delegate = bleServerTransfer
+		bleServerTransfer.delegate = transferDelegate
 		bleServerTransfer.performDeviceEngagement()
 	}
  
