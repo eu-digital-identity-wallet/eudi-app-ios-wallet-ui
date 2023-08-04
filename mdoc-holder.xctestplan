@@ -1,0 +1,39 @@
+{
+  "configurations" : [
+    {
+      "id" : "EBEDA59A-4AF2-498E-B602-4ADF95A8DF7F",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:mdoc-holder.xcodeproj",
+      "identifier" : "B00A7C5F2A1ABC1D00DF9A86",
+      "name" : "mdoc-holder"
+    },
+    "uiTestingScreenshotsLifetime" : "keepAlways"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:mdoc-holder.xcodeproj",
+        "identifier" : "B00A7C742A1ABC1F00DF9A86",
+        "name" : "mdoc-holderTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:mdoc-holder.xcodeproj",
+        "identifier" : "B00A7C7E2A1ABC1F00DF9A86",
+        "name" : "mdoc-holderUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
