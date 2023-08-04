@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22146" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22122"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="EHf-IW-A2E">
+            <objects>
+                <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copyright © 2023 EUDIW. All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="obG-Y5-kRd">
+                                <rect key="frame" x="0.0" y="777.66666666666663" width="393" height="20.333333333333371"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ISO-18013 mDoc Holder Demo" textAlignment="center" lineBreakMode="middleTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="GJd-Yh-RWb" userLabel="Iso18013 Holder Demo">
+                                <rect key="frame" x="0.0" y="139" width="393" height="86"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="36"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="app-logo" translatesAutoresizingMaskIntoConstraints="NO" id="ikL-u7-ZYf">
+                                <rect key="frame" x="0.0" y="265" width="393" height="336"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="336" id="61b-Vb-dzr"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="GJd-Yh-RWb" firstAttribute="trailing" secondItem="ikL-u7-ZYf" secondAttribute="trailing" id="A8F-0N-gjc"/>
+                            <constraint firstItem="obG-Y5-kRd" firstAttribute="trailing" secondItem="ikL-u7-ZYf" secondAttribute="trailing" id="Fuv-AH-phC"/>
+                            <constraint firstItem="GJd-Yh-RWb" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="80" id="HaF-wD-PX9"/>
+                            <constraint firstItem="obG-Y5-kRd" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="RjV-Ab-px0"/>
+                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="obG-Y5-kRd" secondAttribute="bottom" constant="20.000000000000114" id="XVP-is-HpA"/>
+                            <constraint firstItem="ikL-u7-ZYf" firstAttribute="top" secondItem="GJd-Yh-RWb" secondAttribute="bottom" constant="40" id="rGL-sZ-WDj"/>
+                            <constraint firstAttribute="trailing" secondItem="obG-Y5-kRd" secondAttribute="trailing" id="tbG-o9-qiG"/>
+                            <constraint firstItem="GJd-Yh-RWb" firstAttribute="leading" secondItem="ikL-u7-ZYf" secondAttribute="leading" id="u2Y-F1-QbE"/>
+                            <constraint firstItem="obG-Y5-kRd" firstAttribute="leading" secondItem="ikL-u7-ZYf" secondAttribute="leading" id="vLh-Cj-8Gd"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="52.671755725190835" y="374.64788732394368"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="app-logo" width="1024" height="1024"/>
+    </resources>
+</document>
