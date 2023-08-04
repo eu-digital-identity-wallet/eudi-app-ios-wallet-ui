@@ -27,10 +27,10 @@ and eupid, see in [SAMPLE_DATA.md](wiki/SAMPLE_DATA.md).
 
 Use the link below to download and install the mDoc Verifier app based on Google Identity Credential library (https://github.com/google/identity-credential) that implements ISO/IEC 18013-5:2021:
 
-- [ ] [mDoc Verifier App](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/mdoc-verifier-testing/distribution_groups/mdoc%20verifier%20(testing)%20public)
+[mDoc Verifier App](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/mdoc-verifier-testing/distribution_groups/mdoc%20verifier%20(testing)%20public)
   This is an external link to AppCenter.
 
 ### Demo Video
 
-[Demo video](https://github.com/niscy-eudiw/eudi-app-ios-iso18013-holder/assets/4129573/a4d76882-93b7-4d08-b374-80f2777cb45b)
+[Demo video](https://github.com/eu-digital-identity-wallet/eudi-app-ios-iso18013-holder-demo/assets/4129573/3f85499c-39c1-4b81-824b-49aa3723b642)
 
