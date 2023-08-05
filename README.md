@@ -1,4 +1,4 @@
-# EUID Wallet Prototype v.0.1 for Proximity use case
+# EUDI Wallet Prototype v.0.1 for Proximity use case
 [![Tuist badge](https://img.shields.io/badge/Powered%20by-Tuist-blue)](https://tuist.io)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=eu-digital-identity-wallet_eudi-app-ios-iso18013-holder-demo&metric=ncloc&token=81df7c4b707777079c6dbf397275f1024e31709b)](https://sonarcloud.io/summary/new_code?id=eu-digital-identity-wallet_eudi-app-ios-iso18013-holder-demo)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=eu-digital-identity-wallet_eudi-app-ios-iso18013-holder-demo&metric=duplicated_lines_density&token=81df7c4b707777079c6dbf397275f1024e31709b)](https://sonarcloud.io/summary/new_code?id=eu-digital-identity-wallet_eudi-app-ios-iso18013-holder-demo)
