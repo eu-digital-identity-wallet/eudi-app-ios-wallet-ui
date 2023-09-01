@@ -28,10 +28,9 @@ struct ShareView: View {
 				ScrollView {
 					Text(transferDelegate.requestItemsMessage).font(.footnote).padding(.bottom, 20)
 					if let valM = transferDelegate.readerCertValidationMessage {
-						Text(verbatim: valM).foregroundStyle(.blue)
+						Text(verbatim: valM).font(.footnote).foregroundStyle(.blue)
 					}
-				}
-			Spacer()
+				}.padding(.bottom, 20)
 			Text(transferDelegate.errorMessage).foregroundStyle(.red).padding(.bottom, 20)
 				Button { transferDelegate.handleAccept(true) } label: {Label("Accept (send data)", systemImage: "checkmark.seal").font(.title2)}.buttonStyle(.borderedProminent).padding(.bottom, 30)
 					
