@@ -28,16 +28,15 @@ struct ShareView: View {
 				ScrollView {
 					Text(transferDelegate.requestItemsMessage).font(.footnote).padding(.bottom, 20)
 					if let valM = transferDelegate.readerCertValidationMessage {
-						Text(verbatim: valM).foregroundStyle(.red)
+						Text(verbatim: valM).foregroundStyle(.blue)
 					}
 				}
 			Spacer()
 			Text(transferDelegate.errorMessage).foregroundStyle(.red).padding(.bottom, 20)
-				HStack {
-					Button("Accept") { transferDelegate.handleAccept(true) }.buttonStyle(.bordered).padding(.horizontal, 30)
+				Button { transferDelegate.handleAccept(true) } label: {Label("Accept (send data)", systemImage: "checkmark.seal").font(.title2)}.buttonStyle(.borderedProminent).padding(.bottom, 30)
 					
-					Button("Reject") { transferDelegate.handleAccept(false) }.buttonStyle(.bordered)
-				}
+				Button { transferDelegate.handleAccept(false) } label: {Label("Reject (dont send)", systemImage: "x.circle").font(.title2) }.buttonStyle(.bordered)
+
 			}
         }.padding().padding()
 			.onAppear(perform: genQrCode)
