@@ -1,0 +1,2 @@
+- New sample with issuer auth included
+- Fixed MSO signature and MAC verifications. 
