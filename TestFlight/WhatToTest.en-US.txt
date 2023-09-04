@@ -1,2 +1,3 @@
+- Fix for session data (google verifier works)
 - New sample with issuer auth included
 - Fixed MSO signature and MAC verifications. 
