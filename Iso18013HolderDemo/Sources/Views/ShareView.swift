@@ -9,57 +9,65 @@ import SwiftUI
 import CoreData
 import MdocDataModel18013
 import MdocDataTransfer18013
+import IdentifiedCollections
 
 struct ShareView: View {
-    @EnvironmentObject var mdocAppData: MdocAppData
-    @State var isBleServer: Bool = true
+	@EnvironmentObject var mdocAppData: MdocAppData
+	@State var isBleServer: Bool = true
 	@EnvironmentObject var bleServerTransfer: MdocGattServer
 	@StateObject var transferDelegate = TransferDelegateObject()
-
-    var body: some View {
-        VStack(spacing: 16) {
-			Text(verbatim: "Status: \(transferDelegate.status)").foregroundStyle(.blue)
-
-			if transferDelegate.status == .qrEngagementReady, let d = bleServerTransfer.qrCodeImageData {
+	
+	var body: some View {
+		VStack(spacing: 16) {
+			Text(verbatim: "Status: \(bleServerTransfer.status)").foregroundStyle(.blue)
+			
+			if bleServerTransfer.status == .qrEngagementReady, let d = bleServerTransfer.qrCodeImageData {
 				Image(uiImage: UIImage(data: d) ?? UIImage(systemName: "questionmark.square.dashed")!)
 					.resizable().scaledToFit().frame(maxWidth: .infinity, alignment: .center).padding(.bottom, 8)
 			}
-			if transferDelegate.status == .requestReceived {
+			if bleServerTransfer.status == .requestReceived {
+				if let issuerM = transferDelegate.readerCertIsserMessage {
+					Text(verbatim: issuerM).font(.footnote).foregroundStyle(.green)
+				}
 				ScrollView {
-					Text(transferDelegate.requestItemsMessage).font(.footnote).padding(.bottom, 20)
-					if let valM = transferDelegate.readerCertValidationMessage {
-						Text(verbatim: valM).font(.footnote).foregroundStyle(.blue)
+					ForEach(transferDelegate.selectedRequestItems.indices, id: \.self) { docIndex in
+						var nsItems = transferDelegate.selectedRequestItems[docIndex]
+						Text(nsItems.docType).font(.title2)
+						ForEach($transferDelegate.selectedRequestItems[docIndex].elements) { $el in
+							Toggle(el.elementIdentifier, isOn: $el.isSelected).toggleStyle(CheckboxToggleStyle())
+						} .padding(.bottom, 2)
 					}
-				}.padding(.bottom, 20)
-			Text(transferDelegate.errorMessage).foregroundStyle(.red).padding(.bottom, 20)
-				Button { transferDelegate.handleAccept(true) } label: {Label("Accept (send data)", systemImage: "checkmark.seal").font(.title2)}.buttonStyle(.borderedProminent).padding(.bottom, 30)
-					
-				Button { transferDelegate.handleAccept(false) } label: {Label("Reject (dont send)", systemImage: "x.circle").font(.title2) }.buttonStyle(.bordered)
-
+				}
+				Text(transferDelegate.errorMessage).foregroundStyle(.red).padding(.bottom, 20)
+				HStack(alignment: .bottom, spacing: 40) {
+					Button { transferDelegate.handleSelected(false, nil) } label: {Label("Cancel", systemImage: "x.circle") }.buttonStyle(.bordered)
+					Button { transferDelegate.handleSelected(true,  transferDelegate.selectedRequestItems.docSelectedDictionary) } label: {Label("Accept", systemImage: "checkmark.seal")}.buttonStyle(.borderedProminent)
+				}
 			}
-        }.padding().padding()
+		}.padding().padding()
 			.onAppear(perform: genQrCode)
 			.onDisappear(perform: { bleServerTransfer.stop() })
-    } // body
-    
+	} // body
+	
 	func genQrCode() {
 		bleServerTransfer.initialize(parameters: [
 			InitializeKeys.document_data.rawValue: [Data(name: "sample_data")!],
 			InitializeKeys.trusted_certificates.rawValue: [Data(name: "scytales_root_ca", ext: "der")!],
 			InitializeKeys.require_user_accept.rawValue: true
-			]
+		]
 		)
 		bleServerTransfer.delegate = transferDelegate
 		bleServerTransfer.performDeviceEngagement()
 	}
- 
+	
 }
 
 
 struct ShareView_Previews: PreviewProvider {
-    static var previews: some View {
+	static var previews: some View {
 		let appData = MdocAppData().loadSampleData()
+		let server = MdocGattServer(status: .requestReceived)
 		ShareView()
-			.environmentObject(appData).environmentObject(MdocGattServer())
-    }
+			.environmentObject(appData).environmentObject(server)
+	}
 }
