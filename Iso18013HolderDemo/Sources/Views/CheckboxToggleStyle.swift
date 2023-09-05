@@ -13,7 +13,7 @@ struct CheckboxToggleStyle: ToggleStyle {
 	func makeBody(configuration: Configuration) -> some View {
 		return HStack {
 			Image(systemName: configuration.isOn ? "checkmark.square" : "square")
-				.resizable().frame(width: 24, height: 24)
+				.resizable().frame(width: 22, height: 22)
 			configuration.label
 			Spacer()
 		}

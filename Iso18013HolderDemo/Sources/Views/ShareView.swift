@@ -32,7 +32,7 @@ struct ShareView: View {
 				ScrollView {
 					ForEach(transferDelegate.selectedRequestItems.indices, id: \.self) { docIndex in
 						var nsItems = transferDelegate.selectedRequestItems[docIndex]
-						Text(nsItems.docType).font(.title2)
+						Text(verbatim: NSLocalizedString(nsItems.docType, comment: "")).font(.title2)
 						ForEach($transferDelegate.selectedRequestItems[docIndex].elements) { $el in
 							Toggle(el.elementIdentifier, isOn: $el.isSelected).toggleStyle(CheckboxToggleStyle())
 						} .padding(.bottom, 2)
