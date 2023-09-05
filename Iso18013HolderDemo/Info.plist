@@ -43,5 +43,7 @@
 	<false/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Share mdoc using BLE peripheral mode</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Use FaceID to authenticate</string>
 </dict>
 </plist>
