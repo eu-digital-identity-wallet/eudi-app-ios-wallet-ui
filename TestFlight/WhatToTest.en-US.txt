@@ -1,3 +1,4 @@
+- Aythentication with TouchID or FaceID
 - New sample with issuer auth included
 - Selective disclosure
 - Fix for session data (google verifier works)
