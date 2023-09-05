@@ -115,3 +115,5 @@
 "connection_mdoc_closed" = "Connection to mdoc verifier is closed";
 "txt_documents_sent" = "%d request(s) served";
 "delete" = "delete";
+"responseSent" = "Response sent";
+"cancelledSent" = "Unauthorized/Cancelled";

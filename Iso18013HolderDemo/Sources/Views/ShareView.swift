@@ -14,12 +14,13 @@ import IdentifiedCollections
 struct ShareView: View {
 	@EnvironmentObject var mdocAppData: MdocAppData
 	@State var isBleServer: Bool = true
+	@State var hasCancelled = false
 	@EnvironmentObject var bleServerTransfer: MdocGattServer
 	@StateObject var transferDelegate = TransferDelegateObject()
 	
 	var body: some View {
 		VStack(spacing: 16) {
-			Text(verbatim: "Status: \(bleServerTransfer.status)").foregroundStyle(.blue)
+			Text(verbatim: "Status: \(statusDescription)").foregroundStyle(.blue)
 			
 			if bleServerTransfer.status == .qrEngagementReady, let d = bleServerTransfer.qrCodeImageData {
 				Image(uiImage: UIImage(data: d) ?? UIImage(systemName: "questionmark.square.dashed")!)
@@ -40,14 +41,17 @@ struct ShareView: View {
 				}
 				Text(transferDelegate.errorMessage).foregroundStyle(.red).padding(.bottom, 20)
 				HStack(alignment: .bottom, spacing: 40) {
-					Button { transferDelegate.handleSelected(false, nil) } label: {Label("Cancel", systemImage: "x.circle") }.buttonStyle(.bordered)
-					Button { transferDelegate.handleSelected(true,  transferDelegate.selectedRequestItems.docSelectedDictionary) } label: {Label("Accept", systemImage: "checkmark.seal")}.buttonStyle(.borderedProminent)
+					Button { hasCancelled = true; transferDelegate.handleSelected(false, nil) } label: {Label("Cancel", systemImage: "x.circle") }.buttonStyle(.bordered)
+					Button { hasCancelled = false;
+						transferDelegate.handleSelected(true,  transferDelegate.selectedRequestItems.docSelectedDictionary) } label: {Label("Accept", systemImage: "checkmark.seal")}.buttonStyle(.borderedProminent)
 				}
 			}
 		}.padding().padding()
 			.onAppear(perform: genQrCode)
 			.onDisappear(perform: { bleServerTransfer.stop() })
 	} // body
+	
+	var statusDescription: String { NSLocalizedString(hasCancelled ? "cancelledSent" : bleServerTransfer.status.rawValue, comment: "") }
 	
 	func genQrCode() {
 		bleServerTransfer.initialize(parameters: [
