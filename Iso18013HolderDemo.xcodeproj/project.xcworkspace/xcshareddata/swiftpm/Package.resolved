@@ -15,7 +15,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model",
       "state" : {
         "branch" : "develop",
-        "revision" : "cd5d6434539e44e9743070e3cf80327115b717ed"
+        "revision" : "b7fb4eba813737c52051fcb58d54b0d83a2c67f4"
       }
     },
     {
@@ -24,7 +24,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer",
       "state" : {
         "branch" : "develop",
-        "revision" : "f8b0d9b1bae08ec540884b6d2f1131018db5d9e0"
+        "revision" : "81f5a5808024e3cafc026c1538cf9e7c292880da"
       }
     },
     {
@@ -33,7 +33,25 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security",
       "state" : {
         "branch" : "develop",
-        "revision" : "b88c54e26675acae6337e4bdc7e261b4ddce3c63"
+        "revision" : "1d3e235b7633d0952430db9a02ca01fe3b815f42"
+      }
+    },
+    {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections",
+      "state" : {
+        "revision" : "937e904258d22af6e447a0b72c0bc67583ef64a2",
+        "version" : "1.0.4"
+      }
+    },
+    {
+      "identity" : "swift-identified-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-identified-collections.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "d1e45f3e1eee2c9193f5369fa9d70a6ddad635e8"
       }
     },
     {
