@@ -13,6 +13,7 @@ class MdocAppData: ObservableObject {
 	@Published var isoMdlModel: IsoMdlModel?
 	@AppStorage("pidLoaded") var pidLoaded: Bool = false
 	@AppStorage("mdlLoaded") var mdlLoaded: Bool = false
+	var hasGivenLA = false
 
 	func getDoc(i: Int) -> MdocDecodable? { i == 0 ? euPidModel : isoMdlModel}
 	func removeDoc(i: Int) {

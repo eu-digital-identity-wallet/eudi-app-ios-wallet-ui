@@ -10,16 +10,19 @@ import CoreData
 import MdocDataModel18013
 import MdocDataTransfer18013
 import IdentifiedCollections
+import LocalAuthentication
 
 struct ShareView: View {
 	@EnvironmentObject var mdocAppData: MdocAppData
 	@State var isBleServer: Bool = true
+	@State var hasCancelled = false
 	@EnvironmentObject var bleServerTransfer: MdocGattServer
 	@StateObject var transferDelegate = TransferDelegateObject()
+	@Environment(\.presentationMode) var presentationMode
 	
 	var body: some View {
 		VStack(spacing: 16) {
-			Text(verbatim: "Status: \(bleServerTransfer.status)").foregroundStyle(.blue)
+			Text(verbatim: "Status: \(statusDescription)").foregroundStyle(.blue)
 			
 			if bleServerTransfer.status == .qrEngagementReady, let d = bleServerTransfer.qrCodeImageData {
 				Image(uiImage: UIImage(data: d) ?? UIImage(systemName: "questionmark.square.dashed")!)
@@ -40,14 +43,46 @@ struct ShareView: View {
 				}
 				Text(transferDelegate.errorMessage).foregroundStyle(.red).padding(.bottom, 20)
 				HStack(alignment: .bottom, spacing: 40) {
-					Button { transferDelegate.handleSelected(false, nil) } label: {Label("Cancel", systemImage: "x.circle") }.buttonStyle(.bordered)
-					Button { transferDelegate.handleSelected(true,  transferDelegate.selectedRequestItems.docSelectedDictionary) } label: {Label("Accept", systemImage: "checkmark.seal")}.buttonStyle(.borderedProminent)
+					Button { hasCancelled = true; transferDelegate.handleSelected(false, nil) } label: {Label("Cancel", systemImage: "x.circle") }.buttonStyle(.bordered)
+					Button { beginDataTransfer() } label: {Label("Accept", systemImage: "checkmark.seal")}.buttonStyle(.borderedProminent)
 				}
+			}
+			if bleServerTransfer.status == .disconnected || bleServerTransfer.status == .responseSent  {
+				Spacer()
+				Button { self.presentationMode.wrappedValue.dismiss() } label: {Label("OK", systemImage: "checkmark.seal")}.buttonStyle(.borderedProminent).frame(width:200, height: 50).padding()
 			}
 		}.padding().padding()
 			.onAppear(perform: genQrCode)
 			.onDisappear(perform: { bleServerTransfer.stop() })
 	} // body
+	
+	var statusDescription: String { NSLocalizedString(hasCancelled ? "cancelledSent" : bleServerTransfer.status.rawValue, comment: "") }
+	
+	func doTransfer() {
+		hasCancelled = false;
+		transferDelegate.handleSelected(true,  transferDelegate.selectedRequestItems.docSelectedDictionary)
+	}
+	
+	func beginDataTransfer() {
+		let context = LAContext()
+			 var error: NSError?
+			 if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+					 context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: NSLocalizedString("authenticate_to_share_data", comment: "")) {
+							 success, authenticationError in
+
+							 DispatchQueue.main.async {
+									 if success {
+										 mdocAppData.hasGivenLA = true
+											 doTransfer()
+									 } else {
+										 self.presentationMode.wrappedValue.dismiss()
+									 }
+							 }
+					 }
+			 } else {
+				 doTransfer()
+			 }
+	}
 	
 	func genQrCode() {
 		bleServerTransfer.initialize(parameters: [

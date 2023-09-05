@@ -38,7 +38,7 @@
 "issuance_date" = "Date of issuance";
 "issuing_country" = "Issuing country";
 "issuing_authority" = "Issuing authority";
-"document_number" = "Licence number";
+"document_number" = "Document number";
 "portrait" = "Portrait of mDL holder";
 "driving_privileges" = "Categories of vehicles";
 "un_distinguishing_sign" = "UN distinguishing sign";
@@ -115,3 +115,6 @@
 "connection_mdoc_closed" = "Connection to mdoc verifier is closed";
 "txt_documents_sent" = "%d request(s) served";
 "delete" = "delete";
+"responseSent" = "Response sent";
+"cancelledSent" = "Authorization Cancelled";
+"authenticate_to_share_data" = "Authenticate to share data";
