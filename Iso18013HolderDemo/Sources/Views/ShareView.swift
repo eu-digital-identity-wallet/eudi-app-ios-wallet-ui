@@ -31,10 +31,10 @@ struct ShareView: View {
 				}
 				ScrollView {
 					ForEach(transferDelegate.selectedRequestItems.indices, id: \.self) { docIndex in
-						var nsItems = transferDelegate.selectedRequestItems[docIndex]
+						let nsItems = transferDelegate.selectedRequestItems[docIndex]
 						Text(verbatim: NSLocalizedString(nsItems.docType, comment: "")).font(.title2)
 						ForEach($transferDelegate.selectedRequestItems[docIndex].elements) { $el in
-							Toggle(el.elementIdentifier, isOn: $el.isSelected).toggleStyle(CheckboxToggleStyle())
+							Toggle(NSLocalizedString(el.elementIdentifier, comment: ""), isOn: $el.isSelected).toggleStyle(CheckboxToggleStyle())
 						} .padding(.bottom, 2)
 					}
 				}
