@@ -9,7 +9,6 @@ import SwiftUI
 import CoreData
 import MdocDataModel18013
 import MdocDataTransfer18013
-import IdentifiedCollections
 import LocalAuthentication
 
 struct ShareView: View {
