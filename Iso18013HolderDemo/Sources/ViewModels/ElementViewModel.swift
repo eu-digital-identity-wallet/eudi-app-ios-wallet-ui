@@ -13,10 +13,10 @@ import IdentifiedCollections
 struct DocElementsViewModel: Identifiable {
 	var id: String { docType }
 	let docType: String
-	var elements: IdentifiedArrayOf<ElementViewModel>
+	var elements: Array<ElementViewModel>
 }
 
-extension IdentifiedArray where Element == DocElementsViewModel {
+extension Array where Element == DocElementsViewModel {
 	var docSelectedDictionary: RequestItems { Dictionary(grouping: self, by: \.docType).mapValues { $0.first!.elements.filter(\.isSelected).nsDictionary } }
 }
 
