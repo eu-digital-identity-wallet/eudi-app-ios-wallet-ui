@@ -13,8 +13,6 @@ if Environment.isCI.getBoolean(default: true) {
         // for local development, use local packages
         packages = products.map { Package.local(path: .relativeToManifest("../\($0)")) }
 }
-packages.append(Package.remote(url:"https://github.com/pointfreeco/swift-identified-collections.git", requirement: .branch("main")))
-
 
 // Creates our project using a helper function defined in ProjectDescriptionHelpers
 let project = Project.app(name: "Iso18013HolderDemo", platform: .iOS, additionalTargets: [], packages: packages, products: products)

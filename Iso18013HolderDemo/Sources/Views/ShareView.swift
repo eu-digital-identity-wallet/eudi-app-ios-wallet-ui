@@ -9,7 +9,6 @@ import SwiftUI
 import CoreData
 import MdocDataModel18013
 import MdocDataTransfer18013
-import IdentifiedCollections
 import LocalAuthentication
 
 struct ShareView: View {
@@ -63,18 +62,23 @@ struct ShareView: View {
 		transferDelegate.handleSelected(true,  transferDelegate.selectedRequestItems.docSelectedDictionary)
 	}
 	
-	func beginDataTransfer() {
+	func beginDataTransfer(isFallBack: Bool = false) {
 		let context = LAContext()
 			 var error: NSError?
-			 if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-					 context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: NSLocalizedString("authenticate_to_share_data", comment: "")) {
+		let policy: LAPolicy =  .deviceOwnerAuthentication
+			 if context.canEvaluatePolicy(policy, error: &error) {
+					 context.evaluatePolicy(policy, localizedReason: NSLocalizedString("authenticate_to_share_data", comment: "")) {
 							 success, authenticationError in
 
 							 DispatchQueue.main.async {
 									 if success {
 										 mdocAppData.hasGivenLA = true
 											 doTransfer()
-									 } else {
+									 } else if !isFallBack, let error = error as? LAError, error.code == .userFallback {
+										 beginDataTransfer(isFallBack: true)
+									 }
+								 else {
+										 bleServerTransfer.stop()
 										 self.presentationMode.wrappedValue.dismiss()
 									 }
 							 }

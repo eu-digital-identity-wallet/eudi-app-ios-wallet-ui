@@ -22,7 +22,6 @@
 		A06DB869639F999F7E4BA729 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 268F27B6E2979B70D0EEB026 /* LaunchScreen.storyboard */; };
 		B07825562AA6871700B36C17 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07825552AA6871700B36C17 /* CheckboxToggleStyle.swift */; };
 		B078255C2AA6B79700B36C17 /* MdocDataTransfer18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B078255B2AA6B79700B36C17 /* MdocDataTransfer18013 */; };
-		B0A5F5D82AA61E1A00A015A9 /* IdentifiedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = B0A5F5D72AA61E1A00A015A9 /* IdentifiedCollections */; };
 		B807260BC666A5A0D2EA0F3A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CA872DD9B8F79BFC0A55469 /* Localizable.strings */; };
 		B90B13B5FEA134C47DDAC017 /* TransferDelegateObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87C462002C60C53BE714B4CE /* TransferDelegateObject.swift */; };
 		CE930B8F27771E5DB1D6C614 /* MdocSecurity18013 in Frameworks */ = {isa = PBXBuildFile; productRef = D711C1E0D519611BF6CE329D /* MdocSecurity18013 */; };
@@ -96,7 +95,6 @@
 			files = (
 				B078255C2AA6B79700B36C17 /* MdocDataTransfer18013 in Frameworks */,
 				22A58C0AE2F478E9274B4865 /* MdocDataModel18013 in Frameworks */,
-				B0A5F5D82AA61E1A00A015A9 /* IdentifiedCollections in Frameworks */,
 				CE930B8F27771E5DB1D6C614 /* MdocSecurity18013 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -282,7 +280,6 @@
 			packageProductDependencies = (
 				98605034860B72678AD1EFE5 /* MdocDataModel18013 */,
 				D711C1E0D519611BF6CE329D /* MdocSecurity18013 */,
-				B0A5F5D72AA61E1A00A015A9 /* IdentifiedCollections */,
 				B078255B2AA6B79700B36C17 /* MdocDataTransfer18013 */,
 			);
 			productName = Iso18013HolderDemo;
@@ -316,7 +313,6 @@
 				F7A6ABA42901662E65C1A25D /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */,
 				022845A0CE965DB38A280998 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-transfer" */,
 				72CC8CFF73FA8BAD8D2CC0BB /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-security" */,
-				E04F19C93C6601A3E10F10DC /* XCRemoteSwiftPackageReference "swift-identified-collections" */,
 			);
 			productRefGroup = 28FDA0ED8337B27922E8CC70 /* Products */;
 			projectDirPath = "";
@@ -660,14 +656,6 @@
 				kind = branch;
 			};
 		};
-		E04F19C93C6601A3E10F10DC /* XCRemoteSwiftPackageReference "swift-identified-collections" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-identified-collections.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		F7A6ABA42901662E65C1A25D /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model";
@@ -687,11 +675,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 022845A0CE965DB38A280998 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-transfer" */;
 			productName = MdocDataTransfer18013;
-		};
-		B0A5F5D72AA61E1A00A015A9 /* IdentifiedCollections */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E04F19C93C6601A3E10F10DC /* XCRemoteSwiftPackageReference "swift-identified-collections" */;
-			productName = IdentifiedCollections;
 		};
 		D711C1E0D519611BF6CE329D /* MdocSecurity18013 */ = {
 			isa = XCSwiftPackageProductDependency;
