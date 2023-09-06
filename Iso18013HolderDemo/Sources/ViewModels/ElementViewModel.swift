@@ -8,7 +8,6 @@
 
 import Foundation
 import MdocDataTransfer18013
-import IdentifiedCollections
 
 struct DocElementsViewModel: Identifiable {
 	var id: String { docType }
