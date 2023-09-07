@@ -36,5 +36,5 @@ See [wiki/TEST.md](wiki/TEST.md) for how to test EUDI Holder App using an mDoc V
 ### Demo Video
 
 
-[Demo video](https://github.com/eu-digital-identity-wallet/eudi-app-ios-iso18013-holder-demo/assets/4129573/ac5cc8fc-2412-4ab0-8718-516b2a633ff6)
+[Demo video](https://github.com/eu-digital-identity-wallet/eudi-app-ios-iso18013-holder-demo/assets/4129573/a998e6ac-ab1e-4c08-9f2e-983c0b4433bd)
 
