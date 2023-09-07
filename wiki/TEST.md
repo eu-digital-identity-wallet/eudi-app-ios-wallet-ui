@@ -1,11 +1,6 @@
-# Testing EUDI Holder App using an mDoc Verifier App
+# Testing iOS EUDI Holder Demo App using an mDoc Verifier App
 
 ## Preparation
-
-Use the link below to download and install the EUDI Holder app:
-
-- [ ] [EUDI Holder App](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/eudi-holder-iso-18013-5/distribution_groups/eudi%20holder%20(iso%2018013-5)%20public)
-  This is an external link to AppCenter.
 
 Use the link below to download and install the mDoc Verifier app based on Google Identity Credential library (https://github.com/google/identity-credential) that implements ISO/IEC 18013-5:2021:
 
