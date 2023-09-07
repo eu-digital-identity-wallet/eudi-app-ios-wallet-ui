@@ -8,6 +8,8 @@ The `sample_data.json` file contains SampleData CBOR structure encoded in Base64
 
 ```json
 {
+  "PrivateKey": "<Device private key CBOR structure encoded in Base64>"
+  "PublicKey": "<Device public key CBOR structure encoded in Base64>"
   "Data": "<SampleData CBOR structure encoded in Base64>"
 }
 ```
