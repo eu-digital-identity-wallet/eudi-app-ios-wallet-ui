@@ -19,7 +19,6 @@ At the present time, the following features are available:
 The core functionality of the app is implemented in our ISO-18013 Swift Packages: [Data-Model](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git), [Security](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git) and [Data-Transfer](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git)
 
 The following image depicts the app architecture: ![Graphviz](wiki/dep_graph.jpg).
-
 You can regenerate the Xcode project using [Tuist](https://tuist.io) by running `tuist generate` in the root folder of the project. 
 
 ### Sample Data
@@ -31,9 +30,10 @@ and eupid, see in [SAMPLE_DATA.md](wiki/SAMPLE_DATA.md).
 
 ### Testing
 
-You can test the mdoc holder with a verifier app, such as [GET Mobile Verify](https://getgroupna.com/solutions/digital-id/get-mobile-verify)
+See [wiki/TEST.md](wiki/TEST.md) for how to test EUDI Holder App using an mDoc Verifier App
 
 ### Demo Video
 
-[Demo video](https://github.com/eu-digital-identity-wallet/eudi-app-ios-iso18013-holder-demo/assets/4129573/3f85499c-39c1-4b81-824b-49aa3723b642)
+
+[Demo video](https://github.com/eu-digital-identity-wallet/eudi-app-ios-iso18013-holder-demo/assets/4129573/ac5cc8fc-2412-4ab0-8718-516b2a633ff6)
 
