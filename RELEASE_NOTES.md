@@ -1,0 +1,4 @@
+## Release notes for
+- Aythentication with TouchID or FaceID
+- New sample with issuer auth included
+- Selective disclosure
