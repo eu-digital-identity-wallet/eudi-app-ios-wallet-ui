@@ -10,8 +10,6 @@
 		0BF9CC03E08DA80704800A98 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7A25294A9E3CDFED709B90 /* ShareView.swift */; };
 		0F91A0F0863CEFEBC5D7AEBD /* scytales_root_ca.der in Resources */ = {isa = PBXBuildFile; fileRef = 0D57DC5DD3A0FC18E83B0023 /* scytales_root_ca.der */; };
 		12AD6137012A40E367FD1CC8 /* mdoc_holderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9DF632FE20A18FBF39E13F /* mdoc_holderUITestsLaunchTests.swift */; };
-		1991932B33D12564234156D9 /* ElementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D78C2221F482B26FD27ED6D1 /* ElementViewModel.swift */; };
-		22A58C0AE2F478E9274B4865 /* MdocDataModel18013 in Frameworks */ = {isa = PBXBuildFile; productRef = 98605034860B72678AD1EFE5 /* MdocDataModel18013 */; };
 		2CB3D47A008CC6F66C5CE352 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 071EA5AD742F0A6980D58E96 /* Assets.xcassets */; };
 		3E59AFE2057089CA241F1046 /* DocDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBCB81D85A5FEB87E22CB52 /* DocDataView.swift */; };
 		4A76CDEDAE02D377B655EC7F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A76075244B6EA4ABC073824 /* Extensions.swift */; };
@@ -23,8 +21,6 @@
 		B07825562AA6871700B36C17 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07825552AA6871700B36C17 /* CheckboxToggleStyle.swift */; };
 		B078255C2AA6B79700B36C17 /* MdocDataTransfer18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B078255B2AA6B79700B36C17 /* MdocDataTransfer18013 */; };
 		B807260BC666A5A0D2EA0F3A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CA872DD9B8F79BFC0A55469 /* Localizable.strings */; };
-		B90B13B5FEA134C47DDAC017 /* TransferDelegateObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87C462002C60C53BE714B4CE /* TransferDelegateObject.swift */; };
-		CE930B8F27771E5DB1D6C614 /* MdocSecurity18013 in Frameworks */ = {isa = PBXBuildFile; productRef = D711C1E0D519611BF6CE329D /* MdocSecurity18013 */; };
 		CF10BD7EA1DC34996CC91BEF /* ButtonControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243810599B19D04BC18869DB /* ButtonControls.swift */; };
 		DB1CBB78C4626D2DB73DECDE /* MainHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C936820255CCFC3F68C51913 /* MainHolderView.swift */; };
 		F7B4419BF28399B503CFB267 /* mdocAppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601717DA620F4072AA934A9B /* mdocAppData.swift */; };
@@ -76,14 +72,12 @@
 		7E7A25294A9E3CDFED709B90 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		86ABC4FD9B54EC57B39517C2 /* sample_data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = sample_data.json; sourceTree = "<group>"; };
 		86DA409AC0A2BD5D87C95731 /* mdoc_holderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdoc_holderUITests.swift; sourceTree = "<group>"; };
-		87C462002C60C53BE714B4CE /* TransferDelegateObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferDelegateObject.swift; sourceTree = "<group>"; };
 		8B9DF632FE20A18FBF39E13F /* mdoc_holderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdoc_holderUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		B07825552AA6871700B36C17 /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
 		BEBCB81D85A5FEB87E22CB52 /* DocDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocDataView.swift; sourceTree = "<group>"; };
 		C59B4ADE62B8BA3D5817A575 /* mdoc_holderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdoc_holderApp.swift; sourceTree = "<group>"; };
 		C936820255CCFC3F68C51913 /* MainHolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHolderView.swift; sourceTree = "<group>"; };
 		D5EA9115DD31976D44071C71 /* Iso18013HolderDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Iso18013HolderDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D78C2221F482B26FD27ED6D1 /* ElementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementViewModel.swift; sourceTree = "<group>"; };
 		DBCE1579B560027994F61007 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FFF98A559AF08701237D4902 /* TuistBundle+Iso18013HolderDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+Iso18013HolderDemo.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -94,8 +88,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B078255C2AA6B79700B36C17 /* MdocDataTransfer18013 in Frameworks */,
-				22A58C0AE2F478E9274B4865 /* MdocDataModel18013 in Frameworks */,
-				CE930B8F27771E5DB1D6C614 /* MdocSecurity18013 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,7 +131,6 @@
 		2F26CB7737B867BDD96E7B3A /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				CB7BC05AA6B621A842581DB1 /* ViewModels */,
 				90AB65E36876B48E91CE6459 /* Views */,
 				C59B4ADE62B8BA3D5817A575 /* mdoc_holderApp.swift */,
 				601717DA620F4072AA934A9B /* mdocAppData.swift */,
@@ -212,15 +203,6 @@
 			path = Iso18013HolderDemo;
 			sourceTree = "<group>";
 		};
-		CB7BC05AA6B621A842581DB1 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				D78C2221F482B26FD27ED6D1 /* ElementViewModel.swift */,
-				87C462002C60C53BE714B4CE /* TransferDelegateObject.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
 		EA12E01DB243D97E7D102C7B = {
 			isa = PBXGroup;
 			children = (
@@ -278,8 +260,6 @@
 			);
 			name = Iso18013HolderDemo;
 			packageProductDependencies = (
-				98605034860B72678AD1EFE5 /* MdocDataModel18013 */,
-				D711C1E0D519611BF6CE329D /* MdocSecurity18013 */,
 				B078255B2AA6B79700B36C17 /* MdocDataTransfer18013 */,
 			);
 			productName = Iso18013HolderDemo;
@@ -362,8 +342,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5329E5351F0F6452B28A2344 /* TuistBundle+Iso18013HolderDemo.swift in Sources */,
-				1991932B33D12564234156D9 /* ElementViewModel.swift in Sources */,
-				B90B13B5FEA134C47DDAC017 /* TransferDelegateObject.swift in Sources */,
 				CF10BD7EA1DC34996CC91BEF /* ButtonControls.swift in Sources */,
 				3E59AFE2057089CA241F1046 /* DocDataView.swift in Sources */,
 				DB1CBB78C4626D2DB73DECDE /* MainHolderView.swift in Sources */,
@@ -667,18 +645,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		98605034860B72678AD1EFE5 /* MdocDataModel18013 */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MdocDataModel18013;
-		};
 		B078255B2AA6B79700B36C17 /* MdocDataTransfer18013 */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 022845A0CE965DB38A280998 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-transfer" */;
 			productName = MdocDataTransfer18013;
-		};
-		D711C1E0D519611BF6CE329D /* MdocSecurity18013 */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MdocSecurity18013;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

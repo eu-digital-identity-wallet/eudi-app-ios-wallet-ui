@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/filom/ASN1Decoder",
       "state" : {
-        "revision" : "65953a42a0f039f53c73e48fd88c02809f7db607",
-        "version" : "1.8.0"
+        "revision" : "d30708c89cbbf8f0f27122a53fbd98d0cda079fd",
+        "version" : "1.9.0"
       }
     },
     {
@@ -15,7 +15,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model",
       "state" : {
         "branch" : "develop",
-        "revision" : "b7fb4eba813737c52051fcb58d54b0d83a2c67f4"
+        "revision" : "c84f8c579626cd1da0a3b2154d49f1da290a17a2"
       }
     },
     {
@@ -24,7 +24,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer",
       "state" : {
         "branch" : "develop",
-        "revision" : "7ec245f7eaafbaed07afa2d49e41e959f810812c"
+        "revision" : "8df14009215f931156ee1e8775c8a125727726bc"
       }
     },
     {
@@ -33,7 +33,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security",
       "state" : {
         "branch" : "develop",
-        "revision" : "1d3e235b7633d0952430db9a02ca01fe3b815f42"
+        "revision" : "4dc6f39d4143a8a65ba3e17d2298ca8e6410ffab"
       }
     },
     {

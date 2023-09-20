@@ -16,7 +16,7 @@ struct ShareView: View {
 	@State var isBleServer: Bool = true
 	@State var hasCancelled = false
 	@EnvironmentObject var bleServerTransfer: MdocGattServer
-	@StateObject var transferDelegate = TransferDelegateObject()
+	@StateObject var transferDelegate: DefaultTransferDelegate = .init()
 	@Environment(\.presentationMode) var presentationMode
 	
 	var body: some View {
@@ -34,10 +34,14 @@ struct ShareView: View {
 				ScrollView {
 					ForEach(transferDelegate.selectedRequestItems.indices, id: \.self) { docIndex in
 						let nsItems = transferDelegate.selectedRequestItems[docIndex]
-						Text(verbatim: NSLocalizedString(nsItems.docType, comment: "")).font(.title2)
+						Text(verbatim: NSLocalizedString(nsItems.docType, comment: "")).font(.title2).disabled(nsItems.isEnabled)
 						ForEach($transferDelegate.selectedRequestItems[docIndex].elements) { $el in
-							Toggle(NSLocalizedString(el.elementIdentifier, comment: ""), isOn: $el.isSelected).toggleStyle(CheckboxToggleStyle())
-						} .padding(.bottom, 2)
+							if el.isEnabled {
+								Toggle(NSLocalizedString(el.elementIdentifier, comment: ""), isOn: $el.isSelected).toggleStyle(CheckboxToggleStyle())
+							} else {
+								Text(el.elementIdentifier).disabled(true).foregroundColor(el.isEnabled ? .black : .gray).multilineTextAlignment(.leading).frame(maxWidth: .greatestFiniteMagnitude, alignment: .leading)
+							}
+						}.padding(.bottom, 2)
 					}
 				}
 				Text(transferDelegate.errorMessage).foregroundStyle(.red).padding(.bottom, 20)
