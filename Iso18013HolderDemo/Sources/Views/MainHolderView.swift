@@ -29,12 +29,12 @@ struct MainHolderView: View {
 				}
 				if appData.pidLoaded && appData.euPidModel != nil {
 					NavigationLink(destination: { DocDataView(index: 0)}) {
-						DocButton(title: NSLocalizedString(EuPidModel.title, comment: ""), subtitle: EuPidModel.namespace)
+						DocButton(title: NSLocalizedString(EuPidModel.title, comment: ""), subtitle: EuPidModel.docType)
 					}.accessibilityIdentifier("EuPidButton")
 				}
 				if appData.mdlLoaded && appData.isoMdlModel != nil {
 					NavigationLink(destination: { DocDataView(index: 1)}) {
-						DocButton(title: NSLocalizedString(IsoMdlModel.title, comment: ""), subtitle: IsoMdlModel.namespace)
+						DocButton(title: NSLocalizedString(IsoMdlModel.title, comment: ""), subtitle: IsoMdlModel.docType)
 					}.accessibilityIdentifier("IsoMdlButton")
 				}
 				Spacer()
