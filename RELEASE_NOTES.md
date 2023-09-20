@@ -1,4 +1,5 @@
 ## Release notes for
+- QR to BLE transfer
 - Aythentication with TouchID or FaceID
-- New sample with issuer auth included
+- Load sample response with issuer auth included
 - Selective disclosure
