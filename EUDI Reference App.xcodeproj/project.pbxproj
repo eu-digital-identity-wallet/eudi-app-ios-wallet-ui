@@ -7,43 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F14907BC2ABAF54B00DDFE56 /* EUDI_Reference_AppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14907BB2ABAF54B00DDFE56 /* EUDI_Reference_AppApp.swift */; };
-		F14907BE2ABAF54B00DDFE56 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14907BD2ABAF54B00DDFE56 /* ContentView.swift */; };
+		F12E940D2ABC51060086EC93 /* logic_navigation in Frameworks */ = {isa = PBXBuildFile; productRef = F12E940C2ABC51060086EC93 /* logic_navigation */; };
+		F12E940F2ABC6C000086EC93 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12E940E2ABC6C000086EC93 /* AppDelegate.swift */; };
+		F14907BC2ABAF54B00DDFE56 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14907BB2ABAF54B00DDFE56 /* Application.swift */; };
 		F14907C02ABAF55000DDFE56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F14907BF2ABAF55000DDFE56 /* Assets.xcassets */; };
 		F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F14907C22ABAF55000DDFE56 /* Preview Assets.xcassets */; };
-		F14907CD2ABAF55000DDFE56 /* EUDI_Reference_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14907CC2ABAF55000DDFE56 /* EUDI_Reference_AppTests.swift */; };
-		F14907D72ABAF55000DDFE56 /* EUDI_Reference_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14907D62ABAF55000DDFE56 /* EUDI_Reference_AppUITests.swift */; };
-		F14907D92ABAF55000DDFE56 /* EUDI_Reference_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14907D82ABAF55000DDFE56 /* EUDI_Reference_AppUITestsLaunchTests.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		F14907C92ABAF55000DDFE56 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F14907B02ABAF54B00DDFE56 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F14907B72ABAF54B00DDFE56;
-			remoteInfo = "EUDI Reference App";
-		};
-		F14907D32ABAF55000DDFE56 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F14907B02ABAF54B00DDFE56 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F14907B72ABAF54B00DDFE56;
-			remoteInfo = "EUDI Reference App";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
+		F12E93E92ABC48850086EC93 /* logic_api */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_api; path = Modules/logic_api; sourceTree = "<group>"; };
+		F12E93EA2ABC48910086EC93 /* logic_ui */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_ui; path = Modules/logic_ui; sourceTree = "<group>"; };
+		F12E93EB2ABC489E0086EC93 /* logic_business */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_business; path = Modules/logic_business; sourceTree = "<group>"; };
+		F12E93FA2ABC4CCA0086EC93 /* feature_onboarding */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = feature_onboarding; path = Modules/feature_onboarding; sourceTree = "<group>"; };
+		F12E940B2ABC4F2F0086EC93 /* logic_navigation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_navigation; path = Modules/modules/logic_navigation; sourceTree = "<group>"; };
+		F12E940E2ABC6C000086EC93 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F14907B82ABAF54B00DDFE56 /* EUDI Reference App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EUDI Reference App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F14907BB2ABAF54B00DDFE56 /* EUDI_Reference_AppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EUDI_Reference_AppApp.swift; sourceTree = "<group>"; };
-		F14907BD2ABAF54B00DDFE56 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F14907BB2ABAF54B00DDFE56 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		F14907BF2ABAF55000DDFE56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F14907C22ABAF55000DDFE56 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		F14907C82ABAF55000DDFE56 /* EUDI Reference AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "EUDI Reference AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F14907CC2ABAF55000DDFE56 /* EUDI_Reference_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EUDI_Reference_AppTests.swift; sourceTree = "<group>"; };
-		F14907D22ABAF55000DDFE56 /* EUDI Reference AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "EUDI Reference AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F14907D62ABAF55000DDFE56 /* EUDI_Reference_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EUDI_Reference_AppUITests.swift; sourceTree = "<group>"; };
-		F14907D82ABAF55000DDFE56 /* EUDI_Reference_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EUDI_Reference_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,20 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F14907C52ABAF55000DDFE56 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F14907CF2ABAF55000DDFE56 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				F12E940D2ABC51060086EC93 /* logic_navigation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,10 +42,10 @@
 		F14907AF2ABAF54B00DDFE56 = {
 			isa = PBXGroup;
 			children = (
-				F14907BA2ABAF54B00DDFE56 /* EUDI Reference App */,
-				F14907CB2ABAF55000DDFE56 /* EUDI Reference AppTests */,
-				F14907D52ABAF55000DDFE56 /* EUDI Reference AppUITests */,
+				F14907BA2ABAF54B00DDFE56 /* EUDI */,
+				F14908692ABC467600DDFE56 /* Packages */,
 				F14907B92ABAF54B00DDFE56 /* Products */,
+				F14908182ABC3D0400DDFE56 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -85,21 +53,19 @@
 			isa = PBXGroup;
 			children = (
 				F14907B82ABAF54B00DDFE56 /* EUDI Reference App.app */,
-				F14907C82ABAF55000DDFE56 /* EUDI Reference AppTests.xctest */,
-				F14907D22ABAF55000DDFE56 /* EUDI Reference AppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F14907BA2ABAF54B00DDFE56 /* EUDI Reference App */ = {
+		F14907BA2ABAF54B00DDFE56 /* EUDI */ = {
 			isa = PBXGroup;
 			children = (
-				F14907BB2ABAF54B00DDFE56 /* EUDI_Reference_AppApp.swift */,
-				F14907BD2ABAF54B00DDFE56 /* ContentView.swift */,
+				F14907BB2ABAF54B00DDFE56 /* Application.swift */,
+				F12E940E2ABC6C000086EC93 /* AppDelegate.swift */,
 				F14907BF2ABAF55000DDFE56 /* Assets.xcassets */,
 				F14907C12ABAF55000DDFE56 /* Preview Content */,
 			);
-			path = "EUDI Reference App";
+			path = EUDI;
 			sourceTree = "<group>";
 		};
 		F14907C12ABAF55000DDFE56 /* Preview Content */ = {
@@ -110,21 +76,23 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		F14907CB2ABAF55000DDFE56 /* EUDI Reference AppTests */ = {
+		F14908182ABC3D0400DDFE56 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F14907CC2ABAF55000DDFE56 /* EUDI_Reference_AppTests.swift */,
 			);
-			path = "EUDI Reference AppTests";
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		F14907D52ABAF55000DDFE56 /* EUDI Reference AppUITests */ = {
+		F14908692ABC467600DDFE56 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				F14907D62ABAF55000DDFE56 /* EUDI_Reference_AppUITests.swift */,
-				F14907D82ABAF55000DDFE56 /* EUDI_Reference_AppUITestsLaunchTests.swift */,
+				F12E940B2ABC4F2F0086EC93 /* logic_navigation */,
+				F12E93FA2ABC4CCA0086EC93 /* feature_onboarding */,
+				F12E93EB2ABC489E0086EC93 /* logic_business */,
+				F12E93EA2ABC48910086EC93 /* logic_ui */,
+				F12E93E92ABC48850086EC93 /* logic_api */,
 			);
-			path = "EUDI Reference AppUITests";
+			name = Packages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -143,45 +111,12 @@
 			dependencies = (
 			);
 			name = "EUDI Reference App";
+			packageProductDependencies = (
+				F12E940C2ABC51060086EC93 /* logic_navigation */,
+			);
 			productName = "EUDI Reference App";
 			productReference = F14907B82ABAF54B00DDFE56 /* EUDI Reference App.app */;
 			productType = "com.apple.product-type.application";
-		};
-		F14907C72ABAF55000DDFE56 /* EUDI Reference AppTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F14907DF2ABAF55000DDFE56 /* Build configuration list for PBXNativeTarget "EUDI Reference AppTests" */;
-			buildPhases = (
-				F14907C42ABAF55000DDFE56 /* Sources */,
-				F14907C52ABAF55000DDFE56 /* Frameworks */,
-				F14907C62ABAF55000DDFE56 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F14907CA2ABAF55000DDFE56 /* PBXTargetDependency */,
-			);
-			name = "EUDI Reference AppTests";
-			productName = "EUDI Reference AppTests";
-			productReference = F14907C82ABAF55000DDFE56 /* EUDI Reference AppTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		F14907D12ABAF55000DDFE56 /* EUDI Reference AppUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F14907E22ABAF55000DDFE56 /* Build configuration list for PBXNativeTarget "EUDI Reference AppUITests" */;
-			buildPhases = (
-				F14907CE2ABAF55000DDFE56 /* Sources */,
-				F14907CF2ABAF55000DDFE56 /* Frameworks */,
-				F14907D02ABAF55000DDFE56 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F14907D42ABAF55000DDFE56 /* PBXTargetDependency */,
-			);
-			name = "EUDI Reference AppUITests";
-			productName = "EUDI Reference AppUITests";
-			productReference = F14907D22ABAF55000DDFE56 /* EUDI Reference AppUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -196,14 +131,6 @@
 					F14907B72ABAF54B00DDFE56 = {
 						CreatedOnToolsVersion = 15.0;
 					};
-					F14907C72ABAF55000DDFE56 = {
-						CreatedOnToolsVersion = 15.0;
-						TestTargetID = F14907B72ABAF54B00DDFE56;
-					};
-					F14907D12ABAF55000DDFE56 = {
-						CreatedOnToolsVersion = 15.0;
-						TestTargetID = F14907B72ABAF54B00DDFE56;
-					};
 				};
 			};
 			buildConfigurationList = F14907B32ABAF54B00DDFE56 /* Build configuration list for PBXProject "EUDI Reference App" */;
@@ -215,13 +142,13 @@
 				Base,
 			);
 			mainGroup = F14907AF2ABAF54B00DDFE56;
+			packageReferences = (
+			);
 			productRefGroup = F14907B92ABAF54B00DDFE56 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				F14907B72ABAF54B00DDFE56 /* EUDI Reference App */,
-				F14907C72ABAF55000DDFE56 /* EUDI Reference AppTests */,
-				F14907D12ABAF55000DDFE56 /* EUDI Reference AppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -236,20 +163,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F14907C62ABAF55000DDFE56 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F14907D02ABAF55000DDFE56 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -257,42 +170,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F14907BE2ABAF54B00DDFE56 /* ContentView.swift in Sources */,
-				F14907BC2ABAF54B00DDFE56 /* EUDI_Reference_AppApp.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F14907C42ABAF55000DDFE56 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F14907CD2ABAF55000DDFE56 /* EUDI_Reference_AppTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F14907CE2ABAF55000DDFE56 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F14907D72ABAF55000DDFE56 /* EUDI_Reference_AppUITests.swift in Sources */,
-				F14907D92ABAF55000DDFE56 /* EUDI_Reference_AppUITestsLaunchTests.swift in Sources */,
+				F12E940F2ABC6C000086EC93 /* AppDelegate.swift in Sources */,
+				F14907BC2ABAF54B00DDFE56 /* Application.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		F14907CA2ABAF55000DDFE56 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F14907B72ABAF54B00DDFE56 /* EUDI Reference App */;
-			targetProxy = F14907C92ABAF55000DDFE56 /* PBXContainerItemProxy */;
-		};
-		F14907D42ABAF55000DDFE56 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F14907B72ABAF54B00DDFE56 /* EUDI Reference App */;
-			targetProxy = F14907D32ABAF55000DDFE56 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		F14907DA2ABAF55000DDFE56 /* Debug */ = {
@@ -421,7 +304,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"EUDI Reference App/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"EUDI/Preview Content\"";
 				DEVELOPMENT_TEAM = AZXQE7588Y;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -450,7 +333,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"EUDI Reference App/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"EUDI/Preview Content\"";
 				DEVELOPMENT_TEAM = AZXQE7588Y;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -469,82 +352,6 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		F14907E02ABAF55000DDFE56 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = AZXQE7588Y;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "eu.europa.eu.EUDI-Reference-AppTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EUDI Reference App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EUDI Reference App";
-			};
-			name = Debug;
-		};
-		F14907E12ABAF55000DDFE56 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = AZXQE7588Y;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "eu.europa.eu.EUDI-Reference-AppTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EUDI Reference App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EUDI Reference App";
-			};
-			name = Release;
-		};
-		F14907E32ABAF55000DDFE56 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = AZXQE7588Y;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "eu.europa.eu.EUDI-Reference-AppUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "EUDI Reference App";
-			};
-			name = Debug;
-		};
-		F14907E42ABAF55000DDFE56 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = AZXQE7588Y;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "eu.europa.eu.EUDI-Reference-AppUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "EUDI Reference App";
 			};
 			name = Release;
 		};
@@ -569,25 +376,14 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F14907DF2ABAF55000DDFE56 /* Build configuration list for PBXNativeTarget "EUDI Reference AppTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F14907E02ABAF55000DDFE56 /* Debug */,
-				F14907E12ABAF55000DDFE56 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F14907E22ABAF55000DDFE56 /* Build configuration list for PBXNativeTarget "EUDI Reference AppUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F14907E32ABAF55000DDFE56 /* Debug */,
-				F14907E42ABAF55000DDFE56 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F12E940C2ABC51060086EC93 /* logic_navigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = logic_navigation;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F14907B02ABAF54B00DDFE56 /* Project object */;
 }
