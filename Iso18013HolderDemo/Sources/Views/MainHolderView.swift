@@ -27,14 +27,14 @@ struct MainHolderView: View {
 					}.padding(.top, 20).tint(Color("AccentColor"))
 						.buttonStyle(.borderedProminent)
 				}
-				if appData.pidLoaded && appData.euPidModel != nil {
+				if appData.pidLoaded, let m = appData.euPidModel {
 					NavigationLink(destination: { DocDataView(index: 0)}) {
-						DocButton(title: NSLocalizedString(EuPidModel.title, comment: ""), subtitle: EuPidModel.docType)
+						DocButton(title: NSLocalizedString(m.title, comment: ""), subtitle: m.docType)
 					}.accessibilityIdentifier("EuPidButton")
 				}
-				if appData.mdlLoaded && appData.isoMdlModel != nil {
+				if appData.mdlLoaded, let m = appData.isoMdlModel {
 					NavigationLink(destination: { DocDataView(index: 1)}) {
-						DocButton(title: NSLocalizedString(IsoMdlModel.title, comment: ""), subtitle: IsoMdlModel.docType)
+						DocButton(title: NSLocalizedString(m.title, comment: ""), subtitle: m.docType)
 					}.accessibilityIdentifier("IsoMdlButton")
 				}
 				Spacer()

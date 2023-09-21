@@ -15,7 +15,7 @@ struct DocDataView: View {
 	@State private var isPresentingConfirm: Bool = false
 	var title:String {
 		guard let doc = appData.getDoc(i: index) else { return "" }
-		return NSLocalizedString(type(of:doc).title, comment: "")
+		return NSLocalizedString(doc.title, comment: "")
 	}
 	let index: Int
 	
@@ -32,7 +32,7 @@ struct DocDataView: View {
 			VStack(alignment: .leading) {
 				Text(verbatim: title).font(.title).frame(maxWidth: .infinity, alignment: .center)
 				Divider()
-				if type(of: doc).docType == IsoMdlModel.docType, let mdlDoc = doc as? IsoMdlModel {
+				if doc.docType == IsoMdlModel.isoDocType, let mdlDoc = doc as? IsoMdlModel {
 					if let pb = mdlDoc.portrait, let uiImage = UIImage(data: Data(pb)) {
 						Image(uiImage: uiImage).resizable().aspectRatio(contentMode: .fit).frame(height: 200).frame(maxWidth: .infinity, alignment: .center)
 					}
