@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SwiftUI
-import logic_ui
-import logic_navigation
+import Foundation
+import XCTest
 
-@main
-struct Application: App {
+@testable import SiopOpenID4VP
+
+class BaseTests: XCTestCase {
   
-  @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-  
-  private let routerHost: RouterHostType
-  private let configUiLogic: ConfigUiLogic
-  
-  init() {
-    self.routerHost = RouterHost()
-    self.configUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
+  override func setUp() async throws {
+    try await super.setUp()
   }
   
-  var body: some Scene {
-    WindowGroup {
-      routerHost.composeApplication()
-    }
+  override func tearDown() {
+    super.tearDown()
+  }
+  
+  func test() {
+    XCTAssert(true, "Test passed!")
   }
 }

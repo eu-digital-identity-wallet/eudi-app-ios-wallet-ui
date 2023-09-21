@@ -28,6 +28,17 @@ let package = Package(
         )
       ],
       path: "./Sources"
-    )
+    ),
+    .testTarget(
+      name: "logic_business_test",
+      dependencies: [
+        "logic_business",
+        .product(
+          name: "SiopOpenID4VP",
+          package: "eudi-lib-ios-siop-openid4vp-swift"
+        )
+      ],
+      path: "./Tests"
+    ),
   ]
 )
