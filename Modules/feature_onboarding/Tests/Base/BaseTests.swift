@@ -16,7 +16,7 @@
 import Foundation
 import XCTest
 
-@testable import feature_onboarding
+@testable import logic_business
 
 class BaseTests: XCTestCase {
   

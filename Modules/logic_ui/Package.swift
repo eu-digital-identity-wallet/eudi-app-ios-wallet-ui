@@ -57,6 +57,29 @@ let package = Package(
         )
       ],
       path: "./Sources"
-    )
+    ),
+    .testTarget(
+      name: "logic_ui_test",
+      dependencies: [
+        "logic_ui",
+        .product(
+          name: "CodeScanner",
+          package: "CodeScanner"
+        ),
+        .product(
+          name: "UIPilot",
+          package: "UIPilot"
+        ),
+        .product(
+          name: "ActivityIndicatorView",
+          package: "ActivityIndicatorView"
+        ),
+        .product(
+          name: "AlertToast",
+          package: "AlertToast"
+        )
+      ],
+      path: "./Tests"
+    ),
   ]
 )

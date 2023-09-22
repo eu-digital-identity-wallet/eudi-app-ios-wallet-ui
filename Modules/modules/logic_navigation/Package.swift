@@ -22,6 +22,13 @@ let package = Package(
         "feature_onboarding"
       ],
       path: "./Sources"
-    )
+    ),
+    .testTarget(
+      name: "logic_navigation_test",
+      dependencies: [
+        "feature_onboarding",
+      ],
+      path: "./Tests"
+    ),
   ]
 )

@@ -19,12 +19,13 @@
 		F12E93EA2ABC48910086EC93 /* logic_ui */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_ui; path = Modules/logic_ui; sourceTree = "<group>"; };
 		F12E93EB2ABC489E0086EC93 /* logic_business */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_business; path = Modules/logic_business; sourceTree = "<group>"; };
 		F12E93FA2ABC4CCA0086EC93 /* feature_onboarding */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = feature_onboarding; path = Modules/feature_onboarding; sourceTree = "<group>"; };
-		F12E940B2ABC4F2F0086EC93 /* logic_navigation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_navigation; path = Modules/modules/logic_navigation; sourceTree = "<group>"; };
 		F12E940E2ABC6C000086EC93 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F14907B82ABAF54B00DDFE56 /* EUDI Reference App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EUDI Reference App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F14907BB2ABAF54B00DDFE56 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		F14907BF2ABAF55000DDFE56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F14907C22ABAF55000DDFE56 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F16A99382ABD7DAC006C018D /* logic_tests */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_tests; path = Modules/logic_tests; sourceTree = "<group>"; };
+		F16A993A2ABD7EDA006C018D /* logic_navigation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_navigation; path = Modules/modules/logic_navigation; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,7 +87,8 @@
 		F14908692ABC467600DDFE56 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				F12E940B2ABC4F2F0086EC93 /* logic_navigation */,
+				F16A993A2ABD7EDA006C018D /* logic_navigation */,
+				F16A99382ABD7DAC006C018D /* logic_tests */,
 				F12E93FA2ABC4CCA0086EC93 /* feature_onboarding */,
 				F12E93EB2ABC489E0086EC93 /* logic_business */,
 				F12E93EA2ABC48910086EC93 /* logic_ui */,

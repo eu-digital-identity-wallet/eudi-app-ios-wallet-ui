@@ -16,7 +16,7 @@
 import Foundation
 import XCTest
 
-@testable import feature_onboarding
+//@testable import feature_onboarding
 
 class BaseTests: XCTestCase {
   
