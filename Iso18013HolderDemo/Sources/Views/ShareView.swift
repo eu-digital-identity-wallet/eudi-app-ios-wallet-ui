@@ -95,7 +95,7 @@ struct ShareView: View {
 	func genQrCode() {
 		bleServerTransfer.initialize(parameters: [
 			InitializeKeys.document_signup_response_data.rawValue: [mdocAppData.isoMdlModel?.response, mdocAppData.euPidModel?.response].compactMap {$0},
-			InitializeKeys.device_private_key.rawValue: mdocAppData.isoMdlModel?.devicePrivateKey ?? mdocAppData.euPidModel?.devicePrivateKey,
+			InitializeKeys.device_private_key.rawValue: (mdocAppData.isoMdlModel?.devicePrivateKey ?? mdocAppData.euPidModel?.devicePrivateKey)!,
 			InitializeKeys.trusted_certificates.rawValue: [Data(name: "scytales_root_ca", ext: "der")!],
 			InitializeKeys.require_user_accept.rawValue: true
 		]
@@ -110,7 +110,7 @@ struct ShareView: View {
 struct ShareView_Previews: PreviewProvider {
 	static var previews: some View {
 		let appData = MdocAppData().loadSampleData()
-		let server = MdocGattServer(status: .requestReceived)
+		let server = MdocGattServer()
 		ShareView()
 			.environmentObject(appData).environmentObject(server)
 	}

@@ -13,6 +13,7 @@ class MdocAppData: ObservableObject {
 	@Published var isoMdlModel: IsoMdlModel?
 	@AppStorage("pidLoaded") var pidLoaded: Bool = false
 	@AppStorage("mdlLoaded") var mdlLoaded: Bool = false
+	@AppStorage("DebugDisplay") var debugDisplay: Bool = false
 	var hasGivenLA = false
 
 	func getDoc(i: Int) -> MdocDecodable? { i == 0 ? euPidModel : isoMdlModel}
@@ -23,7 +24,7 @@ class MdocAppData: ObservableObject {
 	var hasData: Bool { pidLoaded && getDoc(i: 0) != nil || mdlLoaded && getDoc(i: 1) != nil }
 	
 	func loadSampleData(force: Bool = false) -> MdocAppData {
-		UserDefaults.standard.set(true, forKey: 	"DebugDisplay")
+		debugDisplay = true
 		let sampleData = Data(name: "sample_data")!
 		let sr = sampleData.decodeJSON(type: SignUpResponse.self)!
 		guard let dr = sr.deviceResponse, let dpk = sr.devicePrivateKey else { return self}
