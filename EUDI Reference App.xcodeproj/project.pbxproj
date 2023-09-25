@@ -25,7 +25,7 @@
 		F14907BF2ABAF55000DDFE56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F14907C22ABAF55000DDFE56 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F16A99382ABD7DAC006C018D /* logic_tests */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_tests; path = Modules/logic_tests; sourceTree = "<group>"; };
-		F16A993A2ABD7EDA006C018D /* logic_navigation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_navigation; path = Modules/modules/logic_navigation; sourceTree = "<group>"; };
+		F1C717442AC16D850067FCC9 /* logic_navigation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_navigation; path = Modules/logic_navigation; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,7 +87,7 @@
 		F14908692ABC467600DDFE56 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				F16A993A2ABD7EDA006C018D /* logic_navigation */,
+				F1C717442AC16D850067FCC9 /* logic_navigation */,
 				F16A99382ABD7DAC006C018D /* logic_tests */,
 				F12E93FA2ABC4CCA0086EC93 /* feature_onboarding */,
 				F12E93EB2ABC489E0086EC93 /* logic_business */,

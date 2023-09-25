@@ -14,7 +14,7 @@ let package = Package(
   ],
   dependencies: [
     .package(name: "feature_onboarding", path: "./feature_onboarding"),
-    .package(name: "logic_navigation", path: "./modules/logic_navigation"),
+    .package(name: "logic_navigation", path: "./logic_navigation"),
     .package(name: "logic_api", path: "./logic_api"),
     .package(name: "logic_ui", path: "./logic_ui"),
     .package(name: "logic_business", path: "./logic_business"),

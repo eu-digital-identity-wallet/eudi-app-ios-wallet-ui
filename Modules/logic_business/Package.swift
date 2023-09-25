@@ -16,6 +16,10 @@ let package = Package(
     .package(
       url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
       from: "0.0.62"
+    ),
+    .package(
+      url: "https://github.com/pointfreeco/swift-dependencies.git",
+      from: "1.0.0"
     )
   ],
   targets: [
@@ -25,6 +29,10 @@ let package = Package(
         .product(
           name: "SiopOpenID4VP",
           package: "eudi-lib-ios-siop-openid4vp-swift"
+        ),
+        .product(
+          name: "Dependencies",
+          package: "swift-dependencies"
         )
       ],
       path: "./Sources"
@@ -36,6 +44,10 @@ let package = Package(
         .product(
           name: "SiopOpenID4VP",
           package: "eudi-lib-ios-siop-openid4vp-swift"
+        ),
+        .product(
+          name: "Dependencies",
+          package: "swift-dependencies"
         )
       ],
       path: "./Tests"
