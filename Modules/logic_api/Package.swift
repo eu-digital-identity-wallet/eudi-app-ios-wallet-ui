@@ -34,6 +34,13 @@ let package = Package(
         )
       ],
       path: "./Sources"
-    )
+    ),
+    .testTarget(
+      name: "logic_api_test",
+      dependencies: [
+        "logic_api",
+      ],
+      path: "./Tests"
+    ),
   ]
 )
