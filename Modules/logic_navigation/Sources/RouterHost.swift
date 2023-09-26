@@ -18,7 +18,7 @@ import UIPilot
 import logic_ui
 import SwiftUI
 import logic_business
-import feature_onboarding
+import feature_startup
 
 public final class RouterHost: RouterHostType {
 
@@ -49,11 +49,7 @@ public final class RouterHost: RouterHostType {
   public func composeApplication() -> AnyView {
     return UIPilotHost(pilot) { route in
       switch route {
-      case .Authorization:
-        EmptyView()
-      case .Success(let config):
-        SuccessView(config: config, with: self)
-      case .Onboarding:
+      case .Startup:
         ContentView(with: self)
       }
     }

@@ -13,7 +13,7 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(name: "feature_onboarding", path: "./feature_onboarding"),
+    .package(name: "feature_startup", path: "./feature_startup"),
     .package(name: "logic_navigation", path: "./logic_navigation"),
     .package(name: "logic_api", path: "./logic_api"),
     .package(name: "logic_ui", path: "./logic_ui"),
@@ -23,7 +23,7 @@ let package = Package(
     .testTarget(
       name: "logic_tests_target",
       dependencies: [
-        "feature_onboarding",
+        "feature_startup",
         "logic_navigation",
         "logic_api",
         "logic_ui",

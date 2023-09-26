@@ -22,18 +22,12 @@ public indirect enum AppRoute: Equatable {
     return lhs.key == rhs.key
   }
 
-  case Onboarding
-  case Authorization
-  case Success(SuccessUiConfig)
+  case Startup
 
   var key: String {
     switch self {
-    case .Onboarding:
-      return "Onboarding"
-    case .Authorization:
-      return "Authorization"
-    case .Success:
-      return "Success"
+    case .Startup:
+      return "Startup"
     }
   }
 }

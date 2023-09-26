@@ -4,12 +4,12 @@
 import PackageDescription
 
 let package = Package(
-  name: "feature_onboarding",
+  name: "feature_startup",
   platforms: [.iOS(.v16)],
   products: [
     .library(
-      name: "feature_onboarding",
-      targets: ["feature_onboarding"]
+      name: "feature_startup",
+      targets: ["feature_startup"]
     )
   ],
   dependencies: [
@@ -19,7 +19,7 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "feature_onboarding",
+      name: "feature_startup",
       dependencies: [
         "logic_business",
         "logic_ui",
@@ -28,9 +28,9 @@ let package = Package(
       path: "./Sources"
     ),
     .testTarget(
-      name: "feature_onboarding_test",
+      name: "feature_startup_test",
       dependencies: [
-        "feature_onboarding",
+        "feature_startup",
         "logic_business",
         "logic_ui",
         "logic_api",

@@ -13,20 +13,20 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(name: "feature_onboarding", path: "./feature_onboarding")
+    .package(name: "feature_startup", path: "./feature_startup")
   ],
   targets: [
     .target(
       name: "logic_navigation",
       dependencies: [
-        "feature_onboarding"
+        "feature_startup"
       ],
       path: "./Sources"
     ),
     .testTarget(
       name: "logic_navigation_test",
       dependencies: [
-        "feature_onboarding",
+        "feature_startup",
       ],
       path: "./Tests"
     ),

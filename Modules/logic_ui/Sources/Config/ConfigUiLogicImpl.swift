@@ -15,6 +15,6 @@
  */
 public struct WalletUiConfig: ConfigUiLogic {
   public var initialRoute: AppRoute {
-    return .Onboarding
+    return .Startup
   }
 }

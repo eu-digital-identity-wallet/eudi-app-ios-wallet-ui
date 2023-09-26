@@ -16,8 +16,6 @@
 import Foundation
 import XCTest
 
-//@testable import feature_onboarding
-
 class BaseTests: XCTestCase {
   
   override func setUp() async throws {
