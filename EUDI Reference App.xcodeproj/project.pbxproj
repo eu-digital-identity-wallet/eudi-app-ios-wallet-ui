@@ -27,7 +27,6 @@
 		F14907BB2ABAF54B00DDFE56 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		F14907BF2ABAF55000DDFE56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F14907C22ABAF55000DDFE56 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		F16A99382ABD7DAC006C018D /* logic_tests */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_tests; path = Modules/logic_tests; sourceTree = "<group>"; };
 		F1C717442AC16D850067FCC9 /* logic_navigation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = logic_navigation; path = Modules/logic_navigation; sourceTree = "<group>"; };
 		F1C717452AC2EAAD0067FCC9 /* feature_startup */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = feature_startup; path = Modules/feature_startup; sourceTree = "<group>"; };
 		F1CACADF2AC3097100B40DED /* EudiDev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = EudiDev.xcconfig; sourceTree = "<group>"; };
@@ -99,7 +98,6 @@
 			children = (
 				F1C717452AC2EAAD0067FCC9 /* feature_startup */,
 				F1C717442AC16D850067FCC9 /* logic_navigation */,
-				F16A99382ABD7DAC006C018D /* logic_tests */,
 				F12E93EB2ABC489E0086EC93 /* logic_business */,
 				F12E93EA2ABC48910086EC93 /* logic_ui */,
 				F12E93E92ABC48850086EC93 /* logic_api */,
