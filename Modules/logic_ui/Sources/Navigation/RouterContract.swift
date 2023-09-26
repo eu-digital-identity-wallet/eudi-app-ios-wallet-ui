@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SiopOpenID4VP
 import SwiftUI
 
 public indirect enum AppRoute: Equatable {

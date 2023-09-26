@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 import Foundation
-import JOSESwift
-import SiopOpenID4VP
 
 public struct WalletConfig: ConfigLogic {
 
@@ -41,45 +39,5 @@ public struct WalletConfig: ConfigLogic {
 
   public var appVersion: String {
     return getBundleValue(key: "CFBundleShortVersionString")
-  }
-
-  public var holderInfo: HolderInfoDomain? {
-    return .init(
-      email: "user@niscy.com",
-      name: "EUDI User"
-    )
-  }
-
-  public var walletConfiguration: WalletOpenId4VPConfiguration? {
-
-    guard
-      let identifier = try? DecentralizedIdentifier(rawValue: "did:example:123456789abcdefghi"),
-      let privateKey = try? KeyController.generateRSAPrivateKey(),
-      let publicKey = try? KeyController.generateRSAPublicKey(from: privateKey),
-      let publicJwk = try? RSAPublicKey(
-        publicKey: publicKey,
-        additionalParameters: [
-          "use": "enc",
-          "kid": UUID().uuidString,
-          "alg": "ECDH-ES"
-        ]
-      ),
-      let set = try? WebKeySet(jwk: publicJwk)
-    else {
-      return nil
-    }
-
-    return .init(
-      subjectSyntaxTypesSupported: [
-        .decentralizedIdentifier,
-        .jwkThumbprint
-      ],
-      preferredSubjectSyntaxType: .jwkThumbprint,
-      decentralizedIdentifier: identifier,
-      signingKey: privateKey,
-      signingKeySet: set,
-      supportedClientIdSchemes: [.isoX509],
-      vpFormatsSupported: []
-    )
   }
 }

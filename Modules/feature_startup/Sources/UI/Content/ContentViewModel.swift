@@ -20,13 +20,4 @@ import logic_business
 @MainActor
 public final class ContentViewModel<Router: RouterHostType>: BaseViewModel<Router> {
 
-  private lazy var useCase: AuthorizationUseCase = AuthorizationUseCase()
-
-  convenience init(
-    router: Router,
-    useCase: AuthorizationUseCase
-  ) {
-    self.init(router: router)
-    self.useCase = useCase
-  }
 }

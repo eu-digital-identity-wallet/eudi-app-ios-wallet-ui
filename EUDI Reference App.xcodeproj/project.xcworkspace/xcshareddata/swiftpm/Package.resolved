@@ -28,15 +28,6 @@
       }
     },
     {
-      "identity" : "chronometer",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KittyMac/Chronometer.git",
-      "state" : {
-        "revision" : "12ac87fa5d945169e32818bda82fa53d8220c256",
-        "version" : "0.1.10"
-      }
-    },
-    {
       "identity" : "codescanner",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twostraws/CodeScanner",
@@ -55,93 +46,12 @@
       }
     },
     {
-      "identity" : "eudi-lib-ios-presentation-exchange-swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-presentation-exchange-swift.git",
-      "state" : {
-        "revision" : "bbba88af8bc5c8b888866ac430c96bd18c5ecc7c",
-        "version" : "0.0.36"
-      }
-    },
-    {
-      "identity" : "eudi-lib-ios-siop-openid4vp-swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
-      "state" : {
-        "revision" : "2f3302354259dcfb7c3e80050903654eb673d26c",
-        "version" : "0.0.62"
-      }
-    },
-    {
-      "identity" : "hitch",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KittyMac/Hitch.git",
-      "state" : {
-        "revision" : "de110dd6d2de0f41f4a4e7b7dea0bb769df7b12b",
-        "version" : "0.4.113"
-      }
-    },
-    {
-      "identity" : "joseswift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/niscy-eudiw/JOSESwift.git",
-      "state" : {
-        "revision" : "ef86488a729fb1eb85edc3b174f528ac212c5ce6",
-        "version" : "2.4.1"
-      }
-    },
-    {
-      "identity" : "jsonschema.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kylef/JSONSchema.swift",
-      "state" : {
-        "revision" : "d14de4b2d9205068c9db89c00d097ca43c897000",
-        "version" : "0.6.0"
-      }
-    },
-    {
       "identity" : "netfox",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kasketis/netfox",
       "state" : {
         "revision" : "557576032736fd3140422baefb68b8f76c55088f",
         "version" : "1.21.0"
-      }
-    },
-    {
-      "identity" : "pathkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kylef/PathKit.git",
-      "state" : {
-        "revision" : "3bfd2737b700b9a36565a8c94f4ad2b050a5e574",
-        "version" : "1.0.1"
-      }
-    },
-    {
-      "identity" : "sextant",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KittyMac/Sextant.git",
-      "state" : {
-        "revision" : "49b567226e72ba4f22943e352e1ee3bf3bf4824e",
-        "version" : "0.4.24"
-      }
-    },
-    {
-      "identity" : "spanker",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KittyMac/Spanker.git",
-      "state" : {
-        "revision" : "6b0edd2996d1f3bebb534fb05e20eac6bf8c8739",
-        "version" : "0.2.46"
-      }
-    },
-    {
-      "identity" : "spectre",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kylef/Spectre.git",
-      "state" : {
-        "revision" : "26cc5e9ae0947092c7139ef7ba612e34646086c7",
-        "version" : "0.10.1"
       }
     },
     {

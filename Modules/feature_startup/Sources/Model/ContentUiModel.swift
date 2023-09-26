@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 import Foundation
-import SiopOpenID4VP
 
 struct ContentUiModel: Identifiable {
   var id: String
-  let name: String?
 }
 

@@ -14,10 +14,6 @@ let package = Package(
   ],
   dependencies: [
     .package(
-      url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
-      from: "0.0.62"
-    ),
-    .package(
       url: "https://github.com/pointfreeco/swift-dependencies.git",
       from: "1.0.0"
     )
@@ -26,10 +22,6 @@ let package = Package(
     .target(
       name: "logic_business",
       dependencies: [
-        .product(
-          name: "SiopOpenID4VP",
-          package: "eudi-lib-ios-siop-openid4vp-swift"
-        ),
         .product(
           name: "Dependencies",
           package: "swift-dependencies"
@@ -41,10 +33,6 @@ let package = Package(
       name: "logic_business_test",
       dependencies: [
         "logic_business",
-        .product(
-          name: "SiopOpenID4VP",
-          package: "eudi-lib-ios-siop-openid4vp-swift"
-        ),
         .product(
           name: "Dependencies",
           package: "swift-dependencies"

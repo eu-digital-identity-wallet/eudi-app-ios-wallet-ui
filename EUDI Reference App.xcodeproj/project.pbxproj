@@ -14,6 +14,8 @@
 		F1CACADC2AC3051D00B40DED /* logic_navigation in Frameworks */ = {isa = PBXBuildFile; productRef = F1CACADB2AC3051D00B40DED /* logic_navigation */; };
 		F1CACAE02AC3097100B40DED /* EudiDev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F1CACADF2AC3097100B40DED /* EudiDev.xcconfig */; };
 		F1CACAE22AC3098C00B40DED /* EudiRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F1CACAE12AC3098C00B40DED /* EudiRelease.xcconfig */; };
+		F1CACAE62AC3122700B40DED /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = F1CACAE42AC3122700B40DED /* GoogleService-Info-dev.plist */; };
+		F1CACAE72AC3122700B40DED /* GoogleService-Info-release.plist in Resources */ = {isa = PBXBuildFile; fileRef = F1CACAE52AC3122700B40DED /* GoogleService-Info-release.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		F1C717452AC2EAAD0067FCC9 /* feature_startup */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = feature_startup; path = Modules/feature_startup; sourceTree = "<group>"; };
 		F1CACADF2AC3097100B40DED /* EudiDev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = EudiDev.xcconfig; sourceTree = "<group>"; };
 		F1CACAE12AC3098C00B40DED /* EudiRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = EudiRelease.xcconfig; sourceTree = "<group>"; };
+		F1CACAE42AC3122700B40DED /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
+		F1CACAE52AC3122700B40DED /* GoogleService-Info-release.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-release.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +69,7 @@
 		F14907BA2ABAF54B00DDFE56 /* EUDI */ = {
 			isa = PBXGroup;
 			children = (
+				F1CACAE32AC311D300B40DED /* Firebase */,
 				F1CACADD2AC3090200B40DED /* Common */,
 				F14907BB2ABAF54B00DDFE56 /* Application.swift */,
 				F12E940E2ABC6C000086EC93 /* AppDelegate.swift */,
@@ -117,6 +122,15 @@
 				F1CACAE12AC3098C00B40DED /* EudiRelease.xcconfig */,
 			);
 			path = Environment;
+			sourceTree = "<group>";
+		};
+		F1CACAE32AC311D300B40DED /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				F1CACAE42AC3122700B40DED /* GoogleService-Info-dev.plist */,
+				F1CACAE52AC3122700B40DED /* GoogleService-Info-release.plist */,
+			);
+			path = Firebase;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -183,6 +197,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */,
+				F1CACAE62AC3122700B40DED /* GoogleService-Info-dev.plist in Resources */,
+				F1CACAE72AC3122700B40DED /* GoogleService-Info-release.plist in Resources */,
 				F14907C02ABAF55000DDFE56 /* Assets.xcassets in Resources */,
 				F1CACAE02AC3097100B40DED /* EudiDev.xcconfig in Resources */,
 				F1CACAE22AC3098C00B40DED /* EudiRelease.xcconfig in Resources */,

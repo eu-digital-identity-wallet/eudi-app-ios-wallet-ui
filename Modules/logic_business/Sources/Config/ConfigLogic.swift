@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import Foundation
-import SiopOpenID4VP
 
 public enum AppTarget: String {
   case Wallet
@@ -50,16 +49,6 @@ public protocol ConfigLogic {
    * App version.
    */
   var appVersion: String { get }
-
-  /**
-   * Wallet Holder Info.
-   */
-  var holderInfo: HolderInfoDomain? { get }
-
-  /**
-   * Wallet Configuration.
-   */
-  var walletConfiguration: WalletOpenId4VPConfiguration? { get }
 }
 
 extension ConfigLogic {
