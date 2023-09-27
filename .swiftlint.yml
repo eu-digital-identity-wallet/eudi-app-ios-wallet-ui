@@ -1,0 +1,23 @@
+excluded:
+    - "Modules/logic-business/Sources/Mock/*"
+    - "Modules/logic-ui/Sources/Mock/*"
+    - "Modules/logic-api/Sources/Mock/*"
+    - "Modules/feature-startup/Tests/*"
+  
+disabled_rules:
+  - comment_spacing
+  - identifier_name
+  - cyclomatic_complexity
+  - function_body_length
+  - type_body_length
+  - function_parameter_count
+  - nesting
+  - file_length
+
+line_length: 300
+
+type_name:
+  min_length: 3
+  max_length:
+    warning: 50
+    error: 60
