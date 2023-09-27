@@ -35,10 +35,6 @@ let package = Package(
         .product(
           name: "netfox",
           package: "netfox"
-        ),
-        .product(
-          name: "Cuckoo",
-          package: "Cuckoo"
         )
       ],
       path: "./Sources"

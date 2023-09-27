@@ -58,10 +58,6 @@ let package = Package(
         .product(
           name: "AlertToast",
           package: "AlertToast"
-        ),
-        .product(
-          name: "Cuckoo",
-          package: "Cuckoo"
         )
       ],
       path: "./Sources"

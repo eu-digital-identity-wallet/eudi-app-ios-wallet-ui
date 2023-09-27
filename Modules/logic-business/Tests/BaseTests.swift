@@ -38,5 +38,7 @@ class BaseTests: XCTestCase {
     }
 
     XCTAssertEqual(mock.baseHost, "test.com")
+
+    XCTAssertTrue(true, "test!")
   }
 }

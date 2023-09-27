@@ -36,11 +36,7 @@ let package = Package(
           package: "swift-dependencies"
         ),
         .product(name: "FirebaseCrashlytics", package: "Firebase"),
-        .product(name: "FirebaseAnalytics", package: "Firebase"),
-        .product(
-          name: "Cuckoo",
-          package: "Cuckoo"
-        )
+        .product(name: "FirebaseAnalytics", package: "Firebase")
       ],
       path: "./Sources"
     ),

@@ -1,4 +1,5 @@
 import Cuckoo
+@testable import logic_business
 
 import Foundation
 
@@ -236,43 +237,43 @@ public class ConfigLogicStub: ConfigLogic {
 
 
 import Cuckoo
+@testable import logic_business
 
 import Foundation
 
 import Cuckoo
+@testable import logic_business
 
 import Foundation
 
 import Cuckoo
+@testable import logic_business
 
 import Foundation
 
 import Cuckoo
+@testable import logic_business
 
 import Foundation
 
 import Cuckoo
+@testable import logic_business
 
 import Foundation
 
 import Cuckoo
+@testable import logic_business
 
 import Foundation
 
 import Cuckoo
+@testable import logic_business
 
 import Foundation
 import UIKit
 
 import Cuckoo
-
-import Cuckoo
-import Foundation
-import UIKit
-import class Foundation.Bundle
-import logic_business
-
-import Cuckoo
+@testable import logic_business
 
 import class Foundation.Bundle
 
