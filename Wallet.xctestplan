@@ -1,0 +1,50 @@
+{
+  "configurations" : [
+    {
+      "id" : "D081D3EF-C7D4-419F-84E7-75A782F84C42",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:EUDI Reference App.xcodeproj",
+      "identifier" : "F14907B72ABAF54B00DDFE56",
+      "name" : "EUDI Reference App"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/feature-startup",
+        "identifier" : "feature-startup-test",
+        "name" : "feature-startup-test"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/logic-api",
+        "identifier" : "logic-api-test",
+        "name" : "logic-api-test"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/logic-business",
+        "identifier" : "logic-business-test",
+        "name" : "logic-business-test"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/logic-ui",
+        "identifier" : "logic-ui-test",
+        "name" : "logic-ui-test"
+      }
+    }
+  ],
+  "version" : 1
+}
