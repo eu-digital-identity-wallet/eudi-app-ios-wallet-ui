@@ -17,15 +17,15 @@ import SwiftUI
 
 public func textRow(
   _ value: LocalizedStringKey,
-  textColor: Color = ThemeManager.textColor,
-  imageColor: Color = ThemeManager.textColor,
+  textColor: Color = Theme.shared.color.surface,
+  imageColor: Color = Theme.shared.color.surface,
   image: String? = nil
 ) -> some View {
   HStack {
     Text(value)
       .lineLimit(1)
       .minimumScaleFactor(0.5)
-      .foregroundColor(ThemeManager.textColor)
+      .foregroundColor(Theme.shared.color.surface)
     Spacer()
     if let image {
       Image(systemName: image)
@@ -39,8 +39,8 @@ public func textRow(
 
 public func textRow(
   _ value: String,
-  textColor: Color = ThemeManager.textColor,
-  imageColor: Color = ThemeManager.textColor,
+  textColor: Color = Theme.shared.color.surface,
+  imageColor: Color = Theme.shared.color.surface,
   image: String? = nil
 ) -> some View {
   textRow(

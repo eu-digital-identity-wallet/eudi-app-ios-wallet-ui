@@ -16,24 +16,32 @@
 import SwiftUI
 
 public protocol ShapeManagerProtocol {
-  static var capsuleShape: AnyShape { get }
-  static var lowCornerRadius: AnyShape { get }
-  static var highCornerRadiusShape: AnyShape { get }
+  var capsuleShape: AnyShape { get }
+  var lowCornerRadius: AnyShape { get }
+  var highCornerRadiusShape: AnyShape { get }
 }
 
 public class ShapeManager: ShapeManagerProtocol {
 
-
-  public static var lowCornerRadius: AnyShape {
-    .init(RoundedRectangle(cornerSize: .init(width: 16, height: 16)))
+  public var lowCornerRadius: AnyShape {
+    .init(
+      RoundedRectangle(cornerSize: .init(width: 16, height: 16))
+        .inset(by: -4)
+    )
   }
 
-  public static var highCornerRadiusShape: AnyShape {
-    .init(RoundedRectangle(cornerSize: .init(width: 20, height: 20)))
+  public var highCornerRadiusShape: AnyShape {
+    .init(
+      RoundedRectangle(cornerSize: .init(width: 20, height: 20))
+        .inset(by: -4)
+    )
   }
 
-  public static var capsuleShape: AnyShape {
-    .init(Capsule())
+  public var capsuleShape: AnyShape {
+    .init(
+      Capsule()
+        .inset(by: -4)
+    )
   }
 
 }

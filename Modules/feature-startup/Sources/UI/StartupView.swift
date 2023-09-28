@@ -30,9 +30,9 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
       Image(systemName: "globe")
         .imageScale(.large)
         .foregroundStyle(.tint)
+      Spacer()
       Text("Hello, world!")
         .font(Theme.shared.font.headline)
-        .background(ShapeManager.capsuleShape)
 
     }
     .padding()

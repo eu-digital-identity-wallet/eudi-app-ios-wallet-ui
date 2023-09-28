@@ -29,9 +29,6 @@ public class ThemeManager {
   }
 }
 
-
-import Foundation
-
 public struct ThemeConfiguration {
   public static let `default` = ThemeConfiguration()
 
