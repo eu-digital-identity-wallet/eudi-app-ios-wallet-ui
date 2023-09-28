@@ -23,7 +23,7 @@ class MdocAppData: ObservableObject {
 	}
 	var hasData: Bool { pidLoaded && getDoc(i: 0) != nil || mdlLoaded && getDoc(i: 1) != nil }
 	
-	func loadSampleData(force: Bool = false) -> MdocAppData {
+	func  loadSampleData(force: Bool = false) -> MdocAppData {
 		debugDisplay = true
 		let sampleData = Data(name: "sample_data")!
 		let sr = sampleData.decodeJSON(type: SignUpResponse.self)!

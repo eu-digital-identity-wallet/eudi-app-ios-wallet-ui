@@ -50,9 +50,16 @@ struct ShareView: View {
 					Button { beginDataTransfer() } label: {Label("Accept", systemImage: "checkmark.seal")}.buttonStyle(.borderedProminent)
 				}
 			}
+			if bleServerTransfer.status == .userSelected {
+				Spacer()
+				Image(.tileBluetooth).renderingMode(.template).aspectRatio(contentMode: .fit).frame(width: 80, height: 80).tint(.blue)
+				Spacer()
+			}
 			if bleServerTransfer.status == .disconnected || bleServerTransfer.status == .responseSent  {
 				Spacer()
-				Button { self.presentationMode.wrappedValue.dismiss() } label: {Label("OK", systemImage: "checkmark.seal")}.buttonStyle(.borderedProminent).frame(width:200, height: 50).padding()
+				checkMark
+				Spacer()
+				Button { self.presentationMode.wrappedValue.dismiss() } label: {Label("OK", systemImage: "checkmark.seal").frame(width:200, height: 30)}.buttonStyle(.borderedProminent).padding()
 			}
 		}.padding().padding()
 			.onAppear(perform: genQrCode)
@@ -65,6 +72,8 @@ struct ShareView: View {
 		hasCancelled = false;
 		transferDelegate.handleSelected(true,  transferDelegate.selectedRequestItems.docSelectedDictionary)
 	}
+	
+	var checkMark: some View { Image(systemName: "checkmark.circle").font(.system(size: 100)).symbolRenderingMode(.monochrome).foregroundStyle(.green).padding(.top, 50) }
 	
 	func beginDataTransfer(isFallBack: Bool = false) {
 		let context = LAContext()

@@ -290,9 +290,7 @@
 			);
 			mainGroup = EA12E01DB243D97E7D102C7B;
 			packageReferences = (
-				F7A6ABA42901662E65C1A25D /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */,
 				022845A0CE965DB38A280998 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-transfer" */,
-				72CC8CFF73FA8BAD8D2CC0BB /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-security" */,
 			);
 			productRefGroup = 28FDA0ED8337B27922E8CC70 /* Products */;
 			projectDirPath = "";
@@ -621,22 +619,6 @@
 		022845A0CE965DB38A280998 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-transfer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer";
-			requirement = {
-				branch = develop;
-				kind = branch;
-			};
-		};
-		72CC8CFF73FA8BAD8D2CC0BB /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-security" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security";
-			requirement = {
-				branch = develop;
-				kind = branch;
-			};
-		};
-		F7A6ABA42901662E65C1A25D /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model";
 			requirement = {
 				branch = develop;
 				kind = branch;
