@@ -3,7 +3,12 @@ excluded:
     - "Modules/logic-ui/Tests/*"
     - "Modules/logic-api/Tests/*"
     - "Modules/feature-startup/Tests/*"
-  
+    - "Modules/logic-business/.build/*"
+    - "Modules/logic-ui/Tests/.build/*"
+    - "Modules/logic-api/Tests/.build/*"
+    - "Modules/feature-startup/.build/*"
+
+
 disabled_rules:
   - comment_spacing
   - identifier_name
