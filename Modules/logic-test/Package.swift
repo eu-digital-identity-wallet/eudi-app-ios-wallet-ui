@@ -26,7 +26,8 @@ let package = Package(
           name: "Cuckoo",
           package: "Cuckoo"
         )
-      ]
+      ],
+      path: "./Sources"
     )
   ]
 )

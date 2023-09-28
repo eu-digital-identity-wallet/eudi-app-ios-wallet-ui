@@ -13,14 +13,21 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(name: "logic-test", path: "./logic-test")
+    .package(name: "logic-test", path: "./logic-test"),
+    .package(name: "logic-business", path: "./logic-business"),
+    .package(name: "logic-ui", path: "./logic-ui"),
+    .package(name: "logic-api", path: "./logic-api")
   ],
   targets: [
     .target(
       name: "feature-test",
       dependencies: [
-        "logic-test"
-      ]
+        "logic-test",
+        "logic-business",
+        "logic-ui",
+        "logic-api"
+      ],
+      path: "./Sources"
     )
   ]
 )
