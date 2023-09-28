@@ -17,23 +17,41 @@ import SwiftUI
 import logic_resources
 
 public protocol TypographyManagerProtocol {
-  var display: Font { get }
-  var headline: Font { get }
-  var title: Font { get }
-  var body: Font { get }
-  var label: Font { get }
+  var Title: Font { get }
+  var SubTitle: Font { get }
+  var SubTitle2: Font { get }
+  var Text: Font { get }
+  var Text2: Font { get }
+  var Text3: Font { get }
+  var Text4: Font { get }
+  var Text5: Font { get }
+  var Body: Font { get }
+  var Body2: Font { get }
+
 }
 
 class TypographyManager: TypographyManagerProtocol {
-  var display: Font = .custom(.bold, relativeTo: .largeTitle)
 
-  var headline: Font = .custom(.medium, relativeTo: .title)
+  // 32pt
+  var Title: Font = .custom(.medium, relativeTo: .largeTitle)
+  // 24pt
+  var SubTitle: Font = .custom(.medium, relativeTo: .title)
 
-  var title: Font = .custom(.medium, relativeTo: .title2)
+  var SubTitle2: Font = .custom(.medium, relativeTo: .title2)
+  // 20pt
+  var Text: Font = .custom(.medium, relativeTo: .headline)
 
-  var body: Font = .custom(.regular, relativeTo: .body)
+  var Text2: Font = .custom(.medium, relativeTo: .headline)
+  // 16pt
+  var Text3: Font = .custom(.regular, relativeTo: .callout)
+  // 12pt
+  var Text4: Font = .custom(.regular, relativeTo: .caption)
 
-  var label: Font = .custom(.regular, relativeTo: .subheadline)
+  var Text5: Font  = .custom(.regular, relativeTo: .caption)
+  // 14 pt
+  var Body: Font = .custom(.regular, relativeTo: .body)
+
+  var Body2: Font = .custom(.regular, relativeTo: .body)
 
   init() {
     Font.registerFonts()

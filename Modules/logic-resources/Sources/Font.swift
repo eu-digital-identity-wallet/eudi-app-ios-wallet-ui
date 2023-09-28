@@ -42,16 +42,36 @@ public extension Font {
 extension Font.TextStyle {
   var size: CGFloat {
     switch self {
-    case .largeTitle: return 60
-    case .title: return 48
-    case .title2: return 34
-    case .title3: return 24
-    case .headline, .body: return 18
-    case .subheadline, .callout: return 16
-    case .footnote: return 14
-    case .caption, .caption2: return 12
-    @unknown default:
-      return 8
+    case .largeTitle: return 32
+    case .title: return 24
+    case .title2: return 24
+    case .headline: return 20
+    case .body: return 14
+    case .callout: return 16
+    case .caption: return 12
+    default:
+      return 14
     }
   }
 }
+
+// 32pt
+var Title: Font = .custom(.medium, relativeTo: .largeTitle)
+// 24pt
+var SubTitle: Font = .custom(.medium, relativeTo: .title)
+
+var SubTitle2: Font = .custom(.medium, relativeTo: .title2)
+// 20pt
+var Text: Font = .custom(.medium, relativeTo: .headline)
+
+var Text2: Font = .custom(.medium, relativeTo: .headline)
+// 16pt
+var Text3: Font = .custom(.regular, relativeTo: .callout)
+// 12pt
+var Text4: Font = .custom(.regular, relativeTo: .caption)
+
+var Text5: Font  = .custom(.regular, relativeTo: .caption)
+// 14 pt
+var Body: Font = .custom(.regular, relativeTo: .body)
+
+var Body2: Font = .custom(.regular, relativeTo: .body)

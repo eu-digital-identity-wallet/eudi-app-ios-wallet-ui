@@ -37,7 +37,7 @@ public struct WrapButtonView: View {
     gravity: Gravity = .center,
     isLoading: Binding<Bool> = Binding.constant(false),
     isEnabled: Bool = true,
-    cornerRadius: CGFloat = .zero,
+    cornerRadius: CGFloat = Theme.shared.shape.lowRadius,
     onAction: @autoclosure @escaping () -> Void
   ) {
     self.title = title
