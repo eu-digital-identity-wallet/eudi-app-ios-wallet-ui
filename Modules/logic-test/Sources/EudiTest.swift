@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@_exported import Foundation
+@_exported import XCTest
+@_exported import Cuckoo
 
-@testable import logic_business
-@testable import logic_test
-
-class BaseTests: EudiTest {
+class EudiTest: XCTestCase {
 
   override func setUp() async throws {
     try await super.setUp()
@@ -27,16 +27,4 @@ class BaseTests: EudiTest {
     super.tearDown()
   }
 
-  func test() {
-
-    let mock = MockConfigLogic()
-
-    stub(mock) { stub in
-      when(stub.baseHost.get).thenReturn("test.com")
-    }
-
-    XCTAssertEqual(mock.baseHost, "test.com")
-
-    XCTAssertTrue(true, "test!")
-  }
 }

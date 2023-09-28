@@ -22,10 +22,7 @@ let package = Package(
       url: "https://github.com/firebase/firebase-ios-sdk",
       from: "10.3.0"
     ),
-    .package(
-      url: "https://github.com/Brightify/Cuckoo.git",
-      .upToNextMinor(from: "1.9.1")
-    )
+    .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
     .target(
@@ -44,13 +41,10 @@ let package = Package(
       name: "logic-business-test",
       dependencies: [
         "logic-business",
+        "logic-test",
         .product(
           name: "Dependencies",
           package: "swift-dependencies"
-        ),
-        .product(
-          name: "Cuckoo",
-          package: "Cuckoo"
         )
       ],
       path: "./Tests"

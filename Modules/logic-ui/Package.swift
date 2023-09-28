@@ -33,10 +33,7 @@ let package = Package(
       url: "https://github.com/elai950/AlertToast.git",
       from: "1.3.9"
     ),
-    .package(
-      url: "https://github.com/Brightify/Cuckoo.git",
-      .upToNextMinor(from: "1.9.1")
-    )
+    .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
     .target(
@@ -67,10 +64,7 @@ let package = Package(
       dependencies: [
         "logic-ui",
         "logic-business",
-        .product(
-          name: "Cuckoo",
-          package: "Cuckoo"
-        )
+        "logic-test"
       ],
       path: "./Tests"
     )

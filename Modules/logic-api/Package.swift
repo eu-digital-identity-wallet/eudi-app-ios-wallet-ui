@@ -18,10 +18,7 @@ let package = Package(
       name: "logic-business",
       path: "./logic-business"
     ),
-    .package(
-      url: "https://github.com/Brightify/Cuckoo.git",
-      .upToNextMinor(from: "1.9.1")
-    )
+    .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
     .target(
@@ -44,10 +41,7 @@ let package = Package(
       dependencies: [
         "logic-business",
         "logic-api",
-        .product(
-          name: "Cuckoo",
-          package: "Cuckoo"
-        )
+        "logic-test"
       ],
       path: "./Tests"
     )

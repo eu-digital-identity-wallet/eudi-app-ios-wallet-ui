@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Foundation
-import XCTest
-import Cuckoo
 
 @testable import feature_startup
 @testable import logic_api
+@testable import logic_test
+@testable import feature_test
 
-class BaseTests: XCTestCase {
+class BaseTests: EudiTest {
 
   override func setUp() async throws {
     try await super.setUp()
@@ -55,11 +54,11 @@ class BaseTests: XCTestCase {
     let mock = MockConfigLogic()
 
     stub(mock) { stub in
-      when(stub.baseHost.get).thenReturn("test.com")
+      when(stub.baseHost.get).thenReturn(SampleConstants.urlMock)
     }
 
-    XCTAssertEqual(mock.baseHost, "test.com")
+    XCTAssertEqual(mock.baseHost, SampleConstants.urlMock)
 
-    XCTAssertTrue(true, "test!")
+    XCTAssertTrue(true, SampleConstants.urlMock)
   }
 }
