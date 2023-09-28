@@ -13,7 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-struct NetworkParameter {
-  var key: String
-  var value: String
+import Foundation
+
+public enum Roboto: String, CaseIterable {
+    case regular = "Roboto-Regular"
+    case italic = "Roboto-Italic"
+    case medium = "Roboto-Medium"
+    case mediumItalic = "Roboto-MediumItalic"
+    case bold = "Roboto-Bold"
+    case boldItalic = "Roboto-BoldItalic"
+    case black = "Roboto-Black"
+    case blackItalic = "Roboto-BlackItalic"
+    case light = "Roboto-Light"
+    case lightItalic = "Roboto-LightItalic"
+    case thin = "Roboto-Thin"
+    case thinItalic = "Roboto-ThinItalic"
 }

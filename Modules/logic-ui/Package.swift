@@ -18,6 +18,10 @@ let package = Package(
       path: "./logic-business"
     ),
     .package(
+      name: "logic-resources",
+      path: "./logic-resources"
+    ),
+    .package(
       url: "https://github.com/canopas/UIPilot.git",
       from: "2.0.0"
     ),
@@ -43,6 +47,7 @@ let package = Package(
       name: "logic-ui",
       dependencies: [
         "logic-business",
+        "logic-resources",
         .product(
           name: "CodeScanner",
           package: "CodeScanner"

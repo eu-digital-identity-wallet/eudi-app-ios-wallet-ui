@@ -22,6 +22,7 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
 
   public init(with router: Router, and interactor: Interactor) {
     self.viewModel = .init(router: router, interactor: interactor)
+
   }
 
   public var body: some View {
@@ -30,7 +31,37 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
         .imageScale(.large)
         .foregroundStyle(.tint)
       Text("Hello, world!")
+        .font(Theme.shared.font.headline)
+        .background(ShapeManager.capsuleShape)
+
     }
     .padding()
+    .environment(\.font, .callout)
   }
+}
+
+#Preview {
+  StartupView(with: MockRouter(), and: StartupInteractor())
+}
+
+class MockRouter: RouterHostType {
+  func push(with route: logic_ui.AppRoute) {
+  }
+
+  func popTo(with route: logic_ui.AppRoute, inclusive: Bool, animated: Bool) {
+
+  }
+
+  func pop() {
+
+  }
+
+  func composeApplication() -> AnyView {
+    StartupView(with: self, and: StartupInteractor()).eraseToAnyView()
+  }
+
+  func getCurrentScreen() -> logic_ui.AppRoute? {
+    nil
+  }
+
 }

@@ -13,23 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import SwiftUI
 
-public struct ThemeManager {
+public typealias Theme = ThemeManager
 
-  public static var accentColor: Color {
-    return Color("AccentColor")
+public class ThemeManager {
+
+  public static var shared: ThemeProtocol = AppTheme()
+
+  private init() {}
+
+  class func config(themeConfiguration: ThemeConfiguration) {
+    self.shared.themeConfiguration = themeConfiguration
   }
+}
 
-  public static var backgroundColor: Color {
-    return Color("BackgroundColor")
-  }
 
-  public static var textColor: Color {
-    return Color("TextColor")
-  }
+import Foundation
 
-  public static var cardColor: Color {
-    return Color("CardColor")
+public struct ThemeConfiguration {
+  public static let `default` = ThemeConfiguration()
+
+  var color: ColorManagerProtocol
+  var image: ImageManagerProtocol
+  var shape: ShapeManagerProtocol
+  var font: TypographyManagerProtocol
+  var dimension: DimensionManagerProtocol
+
+  init(color: ColorManagerProtocol? = nil,
+       image: ImageManagerProtocol? = nil,
+       shape: ShapeManagerProtocol? = nil,
+       font: TypographyManagerProtocol? = nil,
+       dimension: DimensionManagerProtocol? = nil) {
+    self.color = color ?? ColorManager(bundle: .assetsBundle)
+    self.image = image ?? ImageManager(bundle: .assetsBundle)
+    self.shape = shape ?? ShapeManager()
+    self.font = font ?? TypographyManager()
+    self.dimension = dimension ?? DimensionManager()
   }
 }

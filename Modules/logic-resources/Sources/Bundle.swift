@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-struct NetworkParameter {
-  var key: String
-  var value: String
+import Foundation
+
+public extension Bundle {
+  static var assetsBundle: Bundle {
+    Bundle.module
+  }
 }

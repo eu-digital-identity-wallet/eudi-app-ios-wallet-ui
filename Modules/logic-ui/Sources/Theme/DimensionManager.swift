@@ -13,7 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-struct NetworkParameter {
-  var key: String
-  var value: String
+import Foundation
+
+public protocol DimensionManagerProtocol {
+  var padding: CGFloat { get }
+}
+
+class DimensionManager: DimensionManagerProtocol {
+  var padding: CGFloat = 16
 }

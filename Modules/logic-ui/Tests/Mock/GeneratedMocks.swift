@@ -1052,3 +1052,4 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
+import logic_resources
