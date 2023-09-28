@@ -1,7 +1,7 @@
 excluded:
-    - "Modules/logic-business/Tests/Mock/*"
-    - "Modules/logic-ui/Tests/Mock/*"
-    - "Modules/logic-api/Tests/Mock/*"
+    - "Modules/logic-business/Tests/*"
+    - "Modules/logic-ui/Tests/*"
+    - "Modules/logic-api/Tests/*"
     - "Modules/feature-startup/Tests/*"
   
 disabled_rules:
