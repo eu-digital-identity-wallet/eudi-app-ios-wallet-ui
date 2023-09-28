@@ -29,7 +29,6 @@ public class ShapeManager: ShapeManagerProtocol {
   public var lowRadius: CGFloat = 16
   public var highRadius: CGFloat = 20
 
-
   public var lowCornerRadius: AnyShape {
     .init(
       RoundedRectangle(cornerSize: .init(width: lowRadius, height: lowRadius))

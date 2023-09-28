@@ -21,4 +21,6 @@ public protocol ConfigUiLogic {
    * App Route Entry Point
    */
   var initialRoute: AppRoute { get }
+
+  init(themeConciguration: ThemeConfiguration)
 }

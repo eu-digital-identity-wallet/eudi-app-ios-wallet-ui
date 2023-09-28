@@ -27,6 +27,6 @@ public struct ConfigUiProvider: ConfigUiProviderType {
   private init() {}
 
   public func getConfigUiLogic() -> ConfigUiLogic {
-    WalletUiConfig()
+    WalletUiConfig(themeConciguration: .default)
   }
 }

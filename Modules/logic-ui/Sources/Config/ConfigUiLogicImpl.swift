@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 public struct WalletUiConfig: ConfigUiLogic {
+  public init(themeConciguration: ThemeConfiguration) {
+    ThemeManager.config(themeConfiguration: themeConciguration)
+  }
+
   public var initialRoute: AppRoute {
     return .startup
   }
