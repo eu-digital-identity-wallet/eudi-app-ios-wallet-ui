@@ -56,7 +56,7 @@ public struct AnyShape: Shape, InsettableShape {
 
   var insetAmount = 0.0
 
-  private let builder: @Sendable (CGRect) -> Path
+  private let builder: (CGRect) -> Path
 
   init<S: Shape>(_ shape: S) {
     builder = { rect in
