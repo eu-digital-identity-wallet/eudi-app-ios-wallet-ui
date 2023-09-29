@@ -150,7 +150,6 @@
 				F14907B42ABAF54B00DDFE56 /* Sources */,
 				F14907B52ABAF54B00DDFE56 /* Frameworks */,
 				F14907B62ABAF54B00DDFE56 /* Resources */,
-				F0A3740C2AC38A6100F301DD /* Cuckoo */,
 				F09E1EA52AC3468300779C25 /* Swift Lint */,
 				F09E1EA12AC3435B00779C25 /* Firebase */,
 				F09E1EA42AC3460600779C25 /* Crashlytics */,
@@ -284,25 +283,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint --fix && swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
-		F0A3740C2AC38A6100F301DD /* Cuckoo */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = Cuckoo;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "sh \"${PROJECT_DIR}/Mock/GenerateMocks.sh\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
