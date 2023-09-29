@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F06325102AC598370004601F /* logic-test in Resources */ = {isa = PBXBuildFile; fileRef = F063250F2AC598370004601F /* logic-test */; };
+		F06325122AC59AF50004601F /* feature-test in Resources */ = {isa = PBXBuildFile; fileRef = F06325112AC59AF50004601F /* feature-test */; };
 		F0A013982AC35ECA00065EAD /* logic-business in Resources */ = {isa = PBXBuildFile; fileRef = F0A013922AC35ECA00065EAD /* logic-business */; };
 		F0A013992AC35ECA00065EAD /* logic-api in Resources */ = {isa = PBXBuildFile; fileRef = F0A013932AC35ECA00065EAD /* logic-api */; };
 		F0A0139A2AC35ECA00065EAD /* feature-startup in Resources */ = {isa = PBXBuildFile; fileRef = F0A013942AC35ECA00065EAD /* feature-startup */; };
@@ -25,6 +27,8 @@
 
 /* Begin PBXFileReference section */
 		1198ECD72AC453F200F4E71A /* logic-resources */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-resources"; path = "Modules/logic-resources"; sourceTree = "<group>"; };
+		F063250F2AC598370004601F /* logic-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-test"; path = "Modules/logic-test"; sourceTree = "<group>"; };
+		F06325112AC59AF50004601F /* feature-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-test"; path = "Modules/feature-test"; sourceTree = "<group>"; };
 		F09E1EA22AC3443000779C25 /* Wallet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Wallet.plist; sourceTree = "<group>"; };
 		F0A013922AC35ECA00065EAD /* logic-business */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-business"; path = "Modules/logic-business"; sourceTree = "<group>"; };
 		F0A013932AC35ECA00065EAD /* logic-api */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-api"; path = "Modules/logic-api"; sourceTree = "<group>"; };
@@ -118,6 +122,8 @@
 			isa = PBXGroup;
 			children = (
 				1198ECD72AC453F200F4E71A /* logic-resources */,
+				F06325112AC59AF50004601F /* feature-test */,
+				F063250F2AC598370004601F /* logic-test */,
 				F0A013942AC35ECA00065EAD /* feature-startup */,
 				F0A013932AC35ECA00065EAD /* logic-api */,
 				F0A013922AC35ECA00065EAD /* logic-business */,
@@ -146,7 +152,6 @@
 				F14907B42ABAF54B00DDFE56 /* Sources */,
 				F14907B52ABAF54B00DDFE56 /* Frameworks */,
 				F14907B62ABAF54B00DDFE56 /* Resources */,
-				F0A3740C2AC38A6100F301DD /* Cuckoo */,
 				F09E1EA52AC3468300779C25 /* Swift Lint */,
 				F09E1EA12AC3435B00779C25 /* Firebase */,
 				F09E1EA42AC3460600779C25 /* Crashlytics */,
@@ -203,11 +208,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F06325122AC59AF50004601F /* feature-test in Resources */,
 				F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */,
 				F0A013982AC35ECA00065EAD /* logic-business in Resources */,
 				F1CACAE62AC3122700B40DED /* GoogleService-Info-dev.plist in Resources */,
 				F1CACAE72AC3122700B40DED /* GoogleService-Info-release.plist in Resources */,
 				F14907C02ABAF55000DDFE56 /* Assets.xcassets in Resources */,
+				F06325102AC598370004601F /* logic-test in Resources */,
 				F0A0139B2AC35ECA00065EAD /* logic-navigation in Resources */,
 				F1CACAE02AC3097100B40DED /* WalletDev.xcconfig in Resources */,
 				F0A013992AC35ECA00065EAD /* logic-api in Resources */,
@@ -278,25 +285,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint --fix && swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
-		F0A3740C2AC38A6100F301DD /* Cuckoo */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = Cuckoo;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [ $ACTION == \"indexbuild\" ]; then\n  echo \"Not running Cuckoo generator during indexing.\"\n  exit 0\nfi\n\n# Skip for preview builds\nif [ \"${ENABLE_PREVIEWS}\" = \"YES\" ]; then\n  echo \"Not running Cuckoo generator during preview builds.\"\n  exit 0\nfi\n\nLOGIC_BUSINESS_MODULE=\"logic-business\"\nLOGIC_API_MODULE=\"logic-api\"\nLOGIC_UI_MODULE=\"logic-ui\"\n\nSECOND_LEVEL_MODULES=(\"${LOGIC_API_MODULE}\" \"${LOGIC_UI_MODULE}\")\nFEATURE_MODULES=(\"feature-startup\")\n\nIS_BASE_LOGIC_MODULE=1\nIS_SECONDARY_LOGIC_MODULE=2\nIS_FEATURE_MODULE=3\n\n# Function Generator\nfunction generateMocks {\n\n  OUTPUT_FILE=\"${PROJECT_DIR}/Modules/$1/$2/Mock/GeneratedMocks.swift\"\n  echo \"Generated Mocks File = ${OUTPUT_FILE}\"\n\n  INPUT_DIR=\"${PROJECT_DIR}/Modules\"\n  \n  echo \"Mocks Input Directory = ${INPUT_DIR}\"\n  echo \"Testable argument = $3\"\n  \n  logic_business_path=\"\"\n  logic_ui_path=\"\"\n  logic_api_path=\"\"\n  \n  if [ $4 == $IS_SECONDARY_LOGIC_MODULE ];\n    then\n      logic_business_path=\"${INPUT_DIR}/${LOGIC_BUSINESS_MODULE}/Sources/**/*.swift\"\n  elif [ $4 == $IS_FEATURE_MODULE ];\n    then\n      logic_business_path=\"${INPUT_DIR}/${LOGIC_BUSINESS_MODULE}/Sources/**/*.swift\"\n      logic_api_path=\"${INPUT_DIR}/${LOGIC_API_MODULE}/Sources/**/*.swift\"\n      logic_ui_path=\"${INPUT_DIR}/${LOGIC_UI_MODULE}/Sources/**/*.swift\"\n  fi\n\n  \"${PROJECT_DIR}/run\" --download generate $3 --no-class-mocking --no-inheritance --no-header --glob \\\n  --output \"${OUTPUT_FILE}\" \\\n  \"${INPUT_DIR}/$1/Sources/**/*.swift\" \\\n  \"$logic_business_path\" \\\n  \"$logic_ui_path\" \\\n  \"$logic_api_path\"\n}\n\n# Logic Business\n\ngenerateMocks $LOGIC_BUSINESS_MODULE \"Tests\" \"--testable $LOGIC_BUSINESS_MODULE\" $IS_BASE_LOGIC_MODULE\n\n# Second level Logic Modules\nfor module in ${SECOND_LEVEL_MODULES[@]}; do\n  generateMocks $module \"Tests\" \"--testable $LOGIC_BUSINESS_MODULE,$module\" $IS_SECONDARY_LOGIC_MODULE\ndone\n\n# Feature Modules\n\ndelimiter=\",\"\nmodulesToImport=\"\"\n\nfor item in ${SECOND_LEVEL_MODULES[@]}; do\n  modulesToImport+=\"$item$delimiter\"\ndone\n\nmodulesToImport=\"${modulesToImport%$delimiter}\"\n\nfor module in ${FEATURE_MODULES[@]}; do\n  generateMocks $module \"Tests\" \"--testable $LOGIC_BUSINESS_MODULE,$module,$modulesToImport\" $IS_FEATURE_MODULE\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -14,29 +14,6 @@
  * limitations under the License.
  */
 
-@testable import logic_business
-@testable import logic_test
-
-class BaseTests: EudiTest {
-
-  override func setUp() async throws {
-    try await super.setUp()
-  }
-
-  override func tearDown() {
-    super.tearDown()
-  }
-
-  func test() {
-
-    let mock = MockConfigLogic()
-
-    stub(mock) { stub in
-      when(stub.baseHost.get).thenReturn("test.com")
-    }
-
-    XCTAssertEqual(mock.baseHost, "test.com")
-
-    XCTAssertTrue(true, "test!")
-  }
+final class SampleConstants {
+  static let urlMock = "test.com"
 }

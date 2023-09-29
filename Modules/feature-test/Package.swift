@@ -4,40 +4,30 @@
 import PackageDescription
 
 let package = Package(
-  name: "feature-startup",
+  name: "feature-test",
   platforms: [.iOS(.v15)],
   products: [
     .library(
-      name: "feature-startup",
-      targets: ["feature-startup"]
+      name: "feature-test",
+      targets: ["feature-test"]
     )
   ],
   dependencies: [
+    .package(name: "logic-test", path: "./logic-test"),
     .package(name: "logic-business", path: "./logic-business"),
     .package(name: "logic-ui", path: "./logic-ui"),
-    .package(name: "logic-api", path: "./logic-api"),
-    .package(name: "feature-test", path: "./feature-test")
+    .package(name: "logic-api", path: "./logic-api")
   ],
   targets: [
     .target(
-      name: "feature-startup",
+      name: "feature-test",
       dependencies: [
+        "logic-test",
         "logic-business",
         "logic-ui",
         "logic-api"
       ],
       path: "./Sources"
-    ),
-    .testTarget(
-      name: "feature-startup-test",
-      dependencies: [
-        "feature-startup",
-        "logic-business",
-        "logic-ui",
-        "logic-api",
-        "feature-test"
-      ],
-      path: "./Tests"
     )
   ]
 )
