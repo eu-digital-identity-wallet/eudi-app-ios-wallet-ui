@@ -31,32 +31,32 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
         .imageScale(.large)
         .foregroundStyle(.tint)
       Text("Title")
-        .font(Theme.shared.font.title)
+        .font(Theme.shared.font.titleLarge)
       Text("SubTitle")
-        .font(Theme.shared.font.subTitle)
+        .font(Theme.shared.font.headlineLarge)
       Text("SubTitle2")
-        .font(Theme.shared.font.subTitle2)
+        .font(Theme.shared.font.headlineMedium)
       Text("Text")
-        .font(Theme.shared.font.text)
+        .font(Theme.shared.font.displayLarge)
       Text("Text2")
-        .font(Theme.shared.font.text2)
+        .font(Theme.shared.font.displayMedium)
       Text("Text3")
-        .font(Theme.shared.font.text3)
+        .font(Theme.shared.font.displaySmall)
       Text("Text4")
-        .font(Theme.shared.font.text4)
+        .font(Theme.shared.font.labelMedium)
       Text("Text5")
-        .font(Theme.shared.font.text5)
+        .font(Theme.shared.font.labelSmall)
       Text("Body")
-        .font(Theme.shared.font.body)
+        .font(Theme.shared.font.bodyLarge)
       Text("Body2")
-        .font(Theme.shared.font.body2)
+        .font(Theme.shared.font.bodyMedium)
 
       WrapButtonView(
         title: .init(stringLiteral: "Hello World!"),
         onAction: {}()
       )
       WrapIconView(
-        backgroundColor: Theme.shared.color.tertiaryMain,
+        backgroundColor: Theme.shared.color.tertiary,
         systemIcon: "left"
 
       )

@@ -32,12 +32,12 @@ public struct WrapButtonView: View {
   public init(
     title: LocalizedStringKey,
     textColor: Color = .white,
-    backgroundColor: Color = Theme.shared.color.backgroundDefault,
+    backgroundColor: Color = Theme.shared.color.background,
     systemIcon: String? = nil,
     gravity: Gravity = .center,
     isLoading: Binding<Bool> = Binding.constant(false),
     isEnabled: Bool = true,
-    cornerRadius: CGFloat = Theme.shared.shape.lowRadius,
+    cornerRadius: CGFloat = Theme.shared.shape.small,
     onAction: @autoclosure @escaping () -> Void
   ) {
     self.title = title

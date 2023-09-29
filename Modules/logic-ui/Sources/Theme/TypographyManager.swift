@@ -17,41 +17,50 @@ import SwiftUI
 import logic_resources
 
 public protocol TypographyManagerProtocol {
-  var title: Font { get }
-  var subTitle: Font { get }
-  var subTitle2: Font { get }
-  var text: Font { get }
-  var text2: Font { get }
-  var text3: Font { get }
-  var text4: Font { get }
-  var text5: Font { get }
-  var body: Font { get }
-  var body2: Font { get }
+
+  var displayLarge: Font { get }
+  var displayMedium: Font { get }
+  var displaySmall: Font { get }
+
+  var headlineLarge: Font { get }
+  var headlineMedium: Font { get }
+  var headlineSmall: Font { get }
+
+  var titleLarge: Font { get }
+  var titleMedium: Font { get }
+  var titleSmall: Font { get }
+
+  var bodyLarge: Font { get }
+  var bodyMedium: Font { get }
+  var bodySmall: Font { get }
+
+  var labelLarge: Font { get }
+  var labelMedium: Font { get }
+  var labelSmall: Font { get }
 
 }
 
 class TypographyManager: TypographyManagerProtocol {
 
-  // 32pt
-  var title: Font = .custom(.medium, relativeTo: .largeTitle)
-  // 24pt
-  var subTitle: Font = .custom(.medium, relativeTo: .title)
+  var displayLarge: Font = .custom(.medium, relativeTo: .headline)
+  var displayMedium: Font = .custom(.medium, relativeTo: .headline)
+  var displaySmall: Font = .custom(.regular, relativeTo: .callout)
 
-  var subTitle2: Font = .custom(.medium, relativeTo: .title2)
-  // 20pt
-  var text: Font = .custom(.medium, relativeTo: .headline)
+  var headlineLarge: Font = .custom(.medium, relativeTo: .title)
+  var headlineMedium: Font = .custom(.medium, relativeTo: .title2)
+  var headlineSmall: Font = .custom(.medium, relativeTo: .largeTitle)
 
-  var text2: Font = .custom(.medium, relativeTo: .headline)
-  // 16pt
-  var text3: Font = .custom(.regular, relativeTo: .callout)
-  // 12pt
-  var text4: Font = .custom(.regular, relativeTo: .caption)
+  var titleLarge: Font = .custom(.medium, relativeTo: .largeTitle)
+  var titleMedium: Font = .custom(.medium, relativeTo: .largeTitle)
+  var titleSmall: Font = .custom(.medium, relativeTo: .largeTitle)
 
-  var text5: Font  = .custom(.regular, relativeTo: .caption)
-  // 14 pt
-  var body: Font = .custom(.regular, relativeTo: .body)
+  var labelLarge: Font = .custom(.regular, relativeTo: .caption)
+  var labelMedium: Font = .custom(.regular, relativeTo: .caption)
+  var labelSmall: Font  = .custom(.regular, relativeTo: .caption)
 
-  var body2: Font = .custom(.regular, relativeTo: .body)
+  var bodyLarge: Font = .custom(.regular, relativeTo: .body)
+  var bodyMedium: Font = .custom(.regular, relativeTo: .body)
+  var bodySmall: Font = .custom(.medium, relativeTo: .body)
 
   init() {
     Font.registerFonts()

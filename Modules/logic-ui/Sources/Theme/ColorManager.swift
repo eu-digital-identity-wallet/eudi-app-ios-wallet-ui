@@ -17,25 +17,35 @@ import SwiftUI
 
 public protocol ColorManagerProtocol {
 
-  var black: Color { get }
-  var white: Color { get }
-  var blue: Color { get }
-  var red: Color { get }
-  var grey: Color { get }
-  var darkGrey: Color { get }
-
-  var backgroundDefault: Color { get }
-  var dividerDark: Color { get }
-  var lightBlue: Color { get }
-  var lightGradientEnd: Color { get }
-  var lightGradientStart: Color { get }
+  var primary: Color { get }
+  var onPrimary: Color { get }
+  var primaryContainer: Color { get }
+  var onPrimaryContainer: Color { get }
+  var inversePrimary: Color { get }
+  var secondary: Color { get }
+  var onSecondary: Color { get }
+  var secondaryContainer: Color { get }
+  var onSecondaryContainer: Color { get }
+  var tertiary: Color { get }
+  var onTertiary: Color { get }
+  var tertiaryContainer: Color { get }
+  var onTertiaryContainer: Color { get }
+  var background: Color { get }
+  var onBackground: Color { get }
+  var surface: Color { get }
+  var onSurface: Color { get }
+  var surfaceVariant: Color { get }
+  var onSurfaceVariant: Color { get }
+  var surfaceTint: Color { get }
+  var inverseSurface: Color { get }
+  var inverseOnSurface: Color { get }
+  var error: Color { get }
   var onError: Color { get }
-  var secondaryMain: Color { get }
-  var successText: Color { get }
-  var tertiaryMain: Color { get }
-  var textDisabledDark: Color { get }
-  var textPrimaryDark: Color { get }
-  var textSecondaryDark: Color { get }
+  var errorContainer: Color { get }
+  var onErrorContainer: Color { get }
+  var outline: Color { get }
+  var outlineVariant: Color { get }
+  var scrim: Color { get }
 }
 
 class ColorManager: ColorManagerProtocol {
@@ -74,77 +84,91 @@ class ColorManager: ColorManagerProtocol {
   }
   // MARK: - Primary Colors
 
-  var black: Color {
-    Color(PrimaryColors.black.rawValue, bundle: bundle)
-  }
-  var white: Color {
-    Color(PrimaryColors.white.rawValue, bundle: bundle)
-  }
-  var blue: Color {
-    Color(PrimaryColors.blue.rawValue, bundle: bundle)
-  }
-  var red: Color {
-    Color(PrimaryColors.red.rawValue, bundle: bundle)
-  }
-  var grey: Color {
-    Color(PrimaryColors.grey.rawValue, bundle: bundle)
-  }
-  var darkGrey: Color {
-    Color(PrimaryColors.darkGrey.rawValue, bundle: bundle)
-  }
-
-  // MARK: - Colors
-
-  var backgroundDefault: Color {
-    Color(ColorEnum.backgroundDefault.rawValue, bundle: bundle)
-  }
-
-  var dividerDark: Color {
-    Color(ColorEnum.dividerDark.rawValue, bundle: bundle)
-  }
-
-  var lightBlue: Color {
+  var primary: Color {
     Color(ColorEnum.lightBlue.rawValue, bundle: bundle)
   }
-
-  var lightGradient: Gradient {
-    Gradient(colors: [self.lightGradientEnd, self.lightGradientStart])
+  var onPrimary: Color {
+    Color(PrimaryColors.white.rawValue, bundle: bundle)
   }
-
-  var lightGradientEnd: Color {
-    Color(ColorEnum.lightGradientEnd.rawValue, bundle: bundle)
+  var primaryContainer: Color {
+    Color(ColorEnum.lightBlue.rawValue, bundle: bundle)
   }
-
-  var lightGradientStart: Color {
-    Color(ColorEnum.lightGradientStart.rawValue, bundle: bundle)
+  var onPrimaryContainer: Color {
+    Color(PrimaryColors.black.rawValue, bundle: bundle)
   }
-
-  var onError: Color {
-    Color(ColorEnum.onError.rawValue, bundle: bundle)
+  var inversePrimary: Color {
+    Color(ColorEnum.lightBlue.rawValue, bundle: bundle)
   }
-
-  var secondaryMain: Color {
+  var secondary: Color {
     Color(ColorEnum.secondaryMain.rawValue, bundle: bundle)
   }
-
-  var successText: Color {
-    Color(ColorEnum.successText.rawValue, bundle: bundle)
+  var onSecondary: Color {
+    Color(PrimaryColors.white.rawValue, bundle: bundle)
   }
-
-  var tertiaryMain: Color {
+  var secondaryContainer: Color {
+    Color(ColorEnum.secondaryMain.rawValue, bundle: bundle)
+  }
+  var onSecondaryContainer: Color {
+    Color(PrimaryColors.white.rawValue, bundle: bundle)
+  }
+  var tertiary: Color {
     Color(ColorEnum.tertiaryMain.rawValue, bundle: bundle)
   }
-
-  var textDisabledDark: Color {
-    Color(ColorEnum.textDisabledDark.rawValue, bundle: bundle)
+  var onTertiary: Color {
+    Color(PrimaryColors.black.rawValue, bundle: bundle)
   }
-
-  var textPrimaryDark: Color {
-    Color(ColorEnum.textPrimaryDark.rawValue, bundle: bundle)
+  var tertiaryContainer: Color {
+    Color(ColorEnum.tertiaryMain.rawValue, bundle: bundle)
   }
-
-  var textSecondaryDark: Color {
+  var onTertiaryContainer: Color {
+    Color(PrimaryColors.black.rawValue, bundle: bundle)
+  }
+  var background: Color {
+    Color(ColorEnum.backgroundDefault.rawValue, bundle: bundle)
+  }
+  var onBackground: Color {
+    Color(PrimaryColors.white.rawValue, bundle: bundle)
+  }
+  var surface: Color {
+    Color(PrimaryColors.black.rawValue, bundle: bundle)
+  }
+  var onSurface: Color {
+    Color(PrimaryColors.white.rawValue, bundle: bundle)
+  }
+  var surfaceVariant: Color {
+    Color(PrimaryColors.black.rawValue, bundle: bundle)
+  }
+  var onSurfaceVariant: Color {
+    Color(PrimaryColors.white.rawValue, bundle: bundle)
+  }
+  var surfaceTint: Color {
+    Color(ColorEnum.lightBlue.rawValue, bundle: bundle)
+  }
+  var inverseSurface: Color {
+    Color(ColorEnum.lightBlue.rawValue, bundle: bundle)
+  }
+  var inverseOnSurface: Color {
+    Color(ColorEnum.lightBlue.rawValue, bundle: bundle)
+  }
+  var error: Color {
+    Color(ColorEnum.onError.rawValue, bundle: bundle)
+  }
+  var onError: Color {
     Color(ColorEnum.textSecondaryDark.rawValue, bundle: bundle)
   }
-
+  var errorContainer: Color {
+    Color(ColorEnum.onError.rawValue, bundle: bundle)
+  }
+  var onErrorContainer: Color {
+    Color(ColorEnum.onError.rawValue, bundle: bundle)
+  }
+  var outline: Color {
+    Color(ColorEnum.dividerDark.rawValue, bundle: bundle)
+  }
+  var outlineVariant: Color {
+    Color(ColorEnum.dividerDark.rawValue, bundle: bundle)
+  }
+  var scrim: Color {
+    Color(PrimaryColors.blue.rawValue, bundle: bundle)
+  }
 }

@@ -3524,14 +3524,14 @@ public class MockTypographyManagerProtocol: TypographyManagerProtocol, Cuckoo.Pr
     
     
     
-    public var title: Font {
+    public var largeTitle: Font {
         get {
             return cuckoo_manager.getter("title",
                 superclassCall:
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.title)
+                defaultCall:  __defaultImplStub!.titleLarge)
         }
         
     }
@@ -3540,14 +3540,14 @@ public class MockTypographyManagerProtocol: TypographyManagerProtocol, Cuckoo.Pr
     
     
     
-    public var subTitle: Font {
+    public var headlineLarge: Font {
         get {
             return cuckoo_manager.getter("subTitle",
                 superclassCall:
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.subTitle)
+                defaultCall:  __defaultImplStub!.headlineLarge)
         }
         
     }
@@ -3556,14 +3556,14 @@ public class MockTypographyManagerProtocol: TypographyManagerProtocol, Cuckoo.Pr
     
     
     
-    public var subTitle2: Font {
+    public var headlineMedium: Font {
         get {
             return cuckoo_manager.getter("subTitle2",
                 superclassCall:
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.subTitle2)
+                defaultCall:  __defaultImplStub!.headlineMedium)
         }
         
     }
@@ -3572,14 +3572,14 @@ public class MockTypographyManagerProtocol: TypographyManagerProtocol, Cuckoo.Pr
     
     
     
-    public var text: Font {
+    public var displayLarge: Font {
         get {
             return cuckoo_manager.getter("text",
                 superclassCall:
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.text)
+                defaultCall:  __defaultImplStub!.displayLarge)
         }
         
     }
@@ -3588,14 +3588,14 @@ public class MockTypographyManagerProtocol: TypographyManagerProtocol, Cuckoo.Pr
     
     
     
-    public var text2: Font {
+    public var displayMedium: Font {
         get {
             return cuckoo_manager.getter("text2",
                 superclassCall:
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.text2)
+                defaultCall:  __defaultImplStub!.displayMedium)
         }
         
     }
@@ -3604,14 +3604,14 @@ public class MockTypographyManagerProtocol: TypographyManagerProtocol, Cuckoo.Pr
     
     
     
-    public var text3: Font {
+    public var displaySmall: Font {
         get {
             return cuckoo_manager.getter("text3",
                 superclassCall:
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.text3)
+                defaultCall:  __defaultImplStub!.displaySmall)
         }
         
     }
@@ -3627,7 +3627,7 @@ public class MockTypographyManagerProtocol: TypographyManagerProtocol, Cuckoo.Pr
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.text4)
+                defaultCall:  __defaultImplStub!.labelMedium)
         }
         
     }
@@ -3643,7 +3643,7 @@ public class MockTypographyManagerProtocol: TypographyManagerProtocol, Cuckoo.Pr
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.text5)
+                defaultCall:  __defaultImplStub!.labelSmall)
         }
         
     }
@@ -3659,7 +3659,7 @@ public class MockTypographyManagerProtocol: TypographyManagerProtocol, Cuckoo.Pr
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.body)
+                defaultCall:  __defaultImplStub!.bodyLarge)
         }
         
     }
@@ -3675,7 +3675,7 @@ public class MockTypographyManagerProtocol: TypographyManagerProtocol, Cuckoo.Pr
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.body2)
+                defaultCall:  __defaultImplStub!.bodyMedium)
         }
         
     }
@@ -3859,7 +3859,7 @@ public class TypographyManagerProtocolStub: TypographyManagerProtocol {
     
     
     
-    public var title: Font {
+    public var largeTitle: Font {
         get {
             return DefaultValueRegistry.defaultValue(for: (Font).self)
         }
@@ -3870,7 +3870,7 @@ public class TypographyManagerProtocolStub: TypographyManagerProtocol {
     
     
     
-    public var subTitle: Font {
+    public var headlineLarge: Font {
         get {
             return DefaultValueRegistry.defaultValue(for: (Font).self)
         }
@@ -3881,7 +3881,7 @@ public class TypographyManagerProtocolStub: TypographyManagerProtocol {
     
     
     
-    public var subTitle2: Font {
+    public var headlineMedium: Font {
         get {
             return DefaultValueRegistry.defaultValue(for: (Font).self)
         }
@@ -3892,7 +3892,7 @@ public class TypographyManagerProtocolStub: TypographyManagerProtocol {
     
     
     
-    public var text: Font {
+    public var displayLarge: Font {
         get {
             return DefaultValueRegistry.defaultValue(for: (Font).self)
         }
@@ -3903,7 +3903,7 @@ public class TypographyManagerProtocolStub: TypographyManagerProtocol {
     
     
     
-    public var text2: Font {
+    public var displayMedium: Font {
         get {
             return DefaultValueRegistry.defaultValue(for: (Font).self)
         }
@@ -3914,7 +3914,7 @@ public class TypographyManagerProtocolStub: TypographyManagerProtocol {
     
     
     
-    public var text3: Font {
+    public var displaySmall: Font {
         get {
             return DefaultValueRegistry.defaultValue(for: (Font).self)
         }

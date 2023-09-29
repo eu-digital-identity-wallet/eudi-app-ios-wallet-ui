@@ -63,7 +63,7 @@ public struct HeaderView: View {
               Image(systemName: dismissIcon)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .foregroundColor(Theme.shared.color.textPrimaryDark)
+                .foregroundColor(Theme.shared.color.surface)
                 .frame(height: 20)
                 .padding()
             }
@@ -74,7 +74,7 @@ public struct HeaderView: View {
         if let title {
           Text(title)
             .bold()
-            .foregroundColor(Theme.shared.color.textPrimaryDark)
+            .foregroundColor(Theme.shared.color.surface)
         }
 
         Spacer()

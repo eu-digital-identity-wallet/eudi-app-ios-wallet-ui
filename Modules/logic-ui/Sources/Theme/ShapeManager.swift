@@ -16,8 +16,13 @@
 import SwiftUI
 
 public protocol ShapeManagerProtocol {
-  var lowRadius: CGFloat { get }
-  var highRadius: CGFloat { get }
+  var none: CGFloat { get }
+  var extraSmall: CGFloat { get }
+  var small: CGFloat { get }
+  var medium: CGFloat { get }
+  var large: CGFloat { get }
+  var extraLarge: CGFloat { get }
+  var full: CGFloat { get }
 
   var capsuleShape: AnyShape { get }
   var lowCornerRadius: AnyShape { get }
@@ -26,19 +31,24 @@ public protocol ShapeManagerProtocol {
 
 public class ShapeManager: ShapeManagerProtocol {
 
-  public var lowRadius: CGFloat = 16
-  public var highRadius: CGFloat = 20
+  public var none: CGFloat = 0
+  public var extraSmall: CGFloat = 8
+  public var small: CGFloat = 16
+  public var medium: CGFloat = 18
+  public var large: CGFloat = 20
+  public var extraLarge: CGFloat = 24
+  public var full: CGFloat = .infinity
 
   public var lowCornerRadius: AnyShape {
     .init(
-      RoundedRectangle(cornerSize: .init(width: lowRadius, height: lowRadius))
+      RoundedRectangle(cornerSize: .init(width: small, height: small))
         .inset(by: -4)
     )
   }
 
   public var highCornerRadiusShape: AnyShape {
     .init(
-      RoundedRectangle(cornerSize: .init(width: highRadius, height: highRadius))
+      RoundedRectangle(cornerSize: .init(width: large, height: large))
         .inset(by: -4)
     )
   }
