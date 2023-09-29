@@ -26,25 +26,20 @@ public struct WrapIconView: View {
   private let cornerRadius: CGFloat
   private let isEnabled: Bool
 
-  @Binding
-  private var isLoading: Bool
-
   public init(
     title: LocalizedStringKey? = nil,
     textColor: Color = .white,
     backgroundColor: Color = ThemeManager.shared.color.background,
     systemIcon: String,
     gravity: Gravity = .center,
-    isLoading: Binding<Bool> = Binding.constant(false),
     isEnabled: Bool = true,
-    cornerRadius: CGFloat = 10
+    cornerRadius: CGFloat = ThemeManager.shared.shape.large
   ) {
     self.title = title
     self.textColor = textColor
     self.backgroundColor = backgroundColor
     self.systemIcon = systemIcon
     self.gravity = gravity
-    self._isLoading = isLoading
     self.isEnabled = isEnabled
     self.cornerRadius = cornerRadius
   }
@@ -72,17 +67,8 @@ public struct WrapIconView: View {
         Spacer()
       }
 
-      if isLoading {
-        LoaderView(
-          showLoader: $isLoading,
-          width: 20,
-          height: 20
-        )
-        HSpacer.small()
-      }
     }
     .padding()
-    .frame(maxWidth: .infinity)
     .background(backgroundColor)
     .cornerRadius(cornerRadius)
   }
