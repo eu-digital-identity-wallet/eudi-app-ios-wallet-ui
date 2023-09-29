@@ -51,6 +51,11 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
       Text("Body2")
         .font(Theme.shared.font.bodyMedium)
 
+      FloatingTextField(title: .init("Hello"),
+                        text: .constant("World"),
+                        showError: false,
+                        contentType: .name,
+                        userHasCommitedChange: .constant(false))
       WrapButtonView(
         title: .init(stringLiteral: "Hello World!"),
         onAction: {}()
