@@ -26,34 +26,41 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
   }
 
   public var body: some View {
-    VStack {
+    WrapperView {
       Image(systemName: "globe")
         .imageScale(.large)
         .foregroundStyle(.tint)
       Text("Title")
-        .font(Theme.shared.font.Title)
+        .font(Theme.shared.font.title)
       Text("SubTitle")
-        .font(Theme.shared.font.SubTitle)
+        .font(Theme.shared.font.subTitle)
       Text("SubTitle2")
-        .font(Theme.shared.font.SubTitle2)
+        .font(Theme.shared.font.subTitle2)
       Text("Text")
-        .font(Theme.shared.font.Text)
+        .font(Theme.shared.font.text)
       Text("Text2")
-        .font(Theme.shared.font.Text2)
+        .font(Theme.shared.font.text2)
       Text("Text3")
-        .font(Theme.shared.font.Text3)
+        .font(Theme.shared.font.text3)
       Text("Text4")
-        .font(Theme.shared.font.Text4)
+        .font(Theme.shared.font.text4)
       Text("Text5")
-        .font(Theme.shared.font.Text5)
+        .font(Theme.shared.font.text5)
       Text("Body")
-        .font(Theme.shared.font.Body)
+        .font(Theme.shared.font.body)
       Text("Body2")
-        .font(Theme.shared.font.Body2)
+        .font(Theme.shared.font.body2)
 
+      WrapButtonView(
+        title: .init(stringLiteral: "Hello World!"),
+        onAction: {}()
+      )
+      WrapIconView(
+        backgroundColor: Theme.shared.color.tertiaryMain,
+        systemIcon: "left"
+
+      )
     }
-    .padding()
-    .environment(\.font, .callout)
   }
 }
 
