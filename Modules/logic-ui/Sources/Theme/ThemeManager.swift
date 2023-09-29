@@ -18,35 +18,20 @@ import SwiftUI
 
 public typealias Theme = ThemeManager
 
-public class ThemeManager {
+public protocol ThemeManagerProtocol {
+
+  static var shared: ThemeProtocol { get }
+
+  static func config(themeConfiguration: ThemeConfiguration)
+}
+
+final public class ThemeManager: ThemeManagerProtocol {
 
   public static var shared: ThemeProtocol = AppTheme()
 
   private init() {}
 
-  class func config(themeConfiguration: ThemeConfiguration) {
+  public class func config(themeConfiguration: ThemeConfiguration) {
     self.shared.themeConfiguration = themeConfiguration
-  }
-}
-
-public struct ThemeConfiguration {
-  public static let `default` = ThemeConfiguration()
-
-  var color: ColorManagerProtocol
-  var image: ImageManagerProtocol
-  var shape: ShapeManagerProtocol
-  var font: TypographyManagerProtocol
-  var dimension: DimensionManagerProtocol
-
-  init(color: ColorManagerProtocol? = nil,
-       image: ImageManagerProtocol? = nil,
-       shape: ShapeManagerProtocol? = nil,
-       font: TypographyManagerProtocol? = nil,
-       dimension: DimensionManagerProtocol? = nil) {
-    self.color = color ?? ColorManager(bundle: .assetsBundle)
-    self.image = image ?? ImageManager(bundle: .assetsBundle)
-    self.shape = shape ?? ShapeManager()
-    self.font = font ?? TypographyManager()
-    self.dimension = dimension ?? DimensionManager()
   }
 }
