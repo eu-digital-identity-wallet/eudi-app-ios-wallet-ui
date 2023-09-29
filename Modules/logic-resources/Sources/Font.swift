@@ -54,24 +54,3 @@ extension Font.TextStyle {
     }
   }
 }
-
-// 32pt
-var Title: Font = .custom(.medium, relativeTo: .largeTitle)
-// 24pt
-var SubTitle: Font = .custom(.medium, relativeTo: .title)
-
-var SubTitle2: Font = .custom(.medium, relativeTo: .title2)
-// 20pt
-var Text: Font = .custom(.medium, relativeTo: .headline)
-
-var Text2: Font = .custom(.medium, relativeTo: .headline)
-// 16pt
-var Text3: Font = .custom(.regular, relativeTo: .callout)
-// 12pt
-var Text4: Font = .custom(.regular, relativeTo: .caption)
-
-var Text5: Font  = .custom(.regular, relativeTo: .caption)
-// 14 pt
-var Body: Font = .custom(.regular, relativeTo: .body)
-
-var Body2: Font = .custom(.regular, relativeTo: .body)
