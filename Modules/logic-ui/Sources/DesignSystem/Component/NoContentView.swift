@@ -37,11 +37,11 @@ public struct NoContentView: View {
       Image(systemName: imageName)
         .resizable()
         .scaledToFit()
-        .foregroundColor(Theme.shared.color.surface)
+        .foregroundColor(Theme.shared.color.textPrimaryDark)
         .frame(height: 50)
 
       Text(title)
-        .foregroundColor(Theme.shared.color.surface)
+        .foregroundColor(Theme.shared.color.textPrimaryDark)
     }
     .onTapGesture {
       onClick?()

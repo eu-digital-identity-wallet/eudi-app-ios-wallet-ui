@@ -32,7 +32,7 @@ public struct WrapButtonView: View {
   public init(
     title: LocalizedStringKey,
     textColor: Color = .white,
-    backgroundColor: Color = Theme.shared.color.background,
+    backgroundColor: Color = Theme.shared.color.backgroundDefault,
     systemIcon: String? = nil,
     gravity: Gravity = .center,
     isLoading: Binding<Bool> = Binding.constant(false),
