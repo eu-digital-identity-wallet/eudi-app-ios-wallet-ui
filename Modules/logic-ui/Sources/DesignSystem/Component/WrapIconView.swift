@@ -29,11 +29,11 @@ public struct WrapIconView: View {
   public init(
     title: LocalizedStringKey? = nil,
     textColor: Color = .white,
-    backgroundColor: Color = ThemeManager.shared.color.background,
+    backgroundColor: Color = Theme.shared.color.background,
     systemIcon: String,
     gravity: Gravity = .center,
     isEnabled: Bool = true,
-    cornerRadius: CGFloat = ThemeManager.shared.shape.large
+    cornerRadius: CGFloat = Theme.shared.shape.large
   ) {
     self.title = title
     self.textColor = textColor

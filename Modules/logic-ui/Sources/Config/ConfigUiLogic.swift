@@ -22,5 +22,5 @@ public protocol ConfigUiLogic {
    */
   var initialRoute: AppRoute { get }
 
-  init(themeConciguration: ThemeConfiguration)
+  init(themeConfiguration: ThemeConfiguration)
 }

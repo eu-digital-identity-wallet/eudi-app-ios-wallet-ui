@@ -64,21 +64,21 @@ public struct FloatingTextField<Content: View>: View {
 
   private var backgroundColor: Color {
     if showError {
-      return ThemeManager.shared.color.secondary.opacity(0.12)
+      return Theme.shared.color.secondary.opacity(0.12)
     } else if isNotFocused {
-      return ThemeManager.shared.color.outlineVariant
+      return Theme.shared.color.outlineVariant
     } else {
-      return ThemeManager.shared.color.outline
+      return Theme.shared.color.outline
     }
   }
 
   private var labelColor: Color {
     if showError {
-      return ThemeManager.shared.color.primary
+      return Theme.shared.color.primary
     } else if isNotFocused {
-      return ThemeManager.shared.color.surface
+      return Theme.shared.color.surface
     } else {
-      return ThemeManager.shared.color.secondary
+      return Theme.shared.color.secondary
     }
   }
 
@@ -91,7 +91,7 @@ public struct FloatingTextField<Content: View>: View {
         }
         ZStack(alignment: .leading) {
           Text(title)
-            .font(ThemeManager.shared.themeConfiguration.font.bodyMedium)
+            .font(Theme.shared.themeConfiguration.font.bodyMedium)
             .foregroundColor(labelColor)
             .padding(.leading, 15)
             .offset(x: 0, y: isNotFocused ? 0 : -18)

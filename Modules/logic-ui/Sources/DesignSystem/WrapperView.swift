@@ -23,7 +23,7 @@ public struct WrapperView<Content: View>: View {
 
   public init(
     @ViewBuilder content: () -> Content,
-    padding: CGFloat = ThemeManager.shared.dimension.padding
+    padding: CGFloat = Theme.shared.dimension.padding
   ) {
     self.content = content()
     self.padding = padding
