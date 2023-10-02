@@ -41,6 +41,6 @@ public struct LoaderView: View {
       type: .default(count: 8)
     )
     .frame(width: width, height: height)
-    .foregroundColor(ThemeManager.accentColor)
+    .foregroundColor(Theme.shared.color.surface)
   }
 }
