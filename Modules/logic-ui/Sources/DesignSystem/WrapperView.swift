@@ -17,16 +17,22 @@
 import SwiftUI
 
 public struct WrapperView<Content: View>: View {
-  let content: Content
 
-  public init(@ViewBuilder content: () -> Content) {
+  let content: Content
+  let padding: CGFloat
+
+  public init(
+    @ViewBuilder content: () -> Content,
+    padding: CGFloat = ThemeManager.shared.dimension.padding
+  ) {
     self.content = content()
+    self.padding = padding
   }
 
   public var body: some View {
     VStack {
       content
     }
-    .padding(ThemeManager.shared.dimension.padding)
+    .padding(padding)
   }
 }

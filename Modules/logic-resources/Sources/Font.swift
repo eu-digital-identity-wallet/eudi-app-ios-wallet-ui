@@ -16,7 +16,7 @@
 import SwiftUI
 
 public extension Font {
-  static func custom(_ font: Roboto, relativeTo style: Font.TextStyle) -> Font {
+  static func custom(_ font: RobotoFont, relativeTo style: Font.TextStyle) -> Font {
     custom(font.rawValue, size: style.size, relativeTo: style)
   }
 
@@ -33,7 +33,7 @@ public extension Font {
   }
 
   static func registerFonts() {
-    Roboto.allCases.forEach {
+    RobotoFont.allCases.forEach {
       registerFont(bundle: .module, fontName: $0.rawValue, fontExtension: "ttf")
     }
   }

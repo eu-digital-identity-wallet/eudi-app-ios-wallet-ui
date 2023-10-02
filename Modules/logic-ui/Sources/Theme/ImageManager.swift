@@ -17,14 +17,12 @@
 import SwiftUI
 
 public protocol ImageManagerProtocol {
-  var consentImage: Image { get }
   var euLogo: Image { get }
   var launchImage: Image { get }
 }
 
 class ImageManager: ImageManagerProtocol {
   enum ImageEnum: String {
-    case consent
     case euLogo = "eu-logo"
     case launchImage = "launch-image"
   }
@@ -38,10 +36,6 @@ class ImageManager: ImageManagerProtocol {
     self.bundle = bundle
   }
   // MARK: - Images
-
-  var consentImage: Image {
-    Image(ImageEnum.consent.rawValue, bundle: bundle)
-  }
 
   var euLogo: Image {
     Image(ImageEnum.euLogo.rawValue, bundle: bundle)

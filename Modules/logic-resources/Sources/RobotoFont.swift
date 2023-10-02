@@ -15,7 +15,7 @@
  */
 import Foundation
 
-public enum Roboto: String, CaseIterable {
+public enum RobotoFont: String, CaseIterable {
     case regular = "Roboto-Regular"
     case italic = "Roboto-Italic"
     case medium = "Roboto-Medium"
