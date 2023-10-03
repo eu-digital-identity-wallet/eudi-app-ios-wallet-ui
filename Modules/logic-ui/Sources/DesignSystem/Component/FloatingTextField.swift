@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import SwiftUI
+import logic_resources
 
 public struct FloatingTextField<Content: View>: View {
   let title: LocalizedStringKey
@@ -91,7 +92,7 @@ public struct FloatingTextField<Content: View>: View {
         }
         ZStack(alignment: .leading) {
           Text(title)
-            .font(Theme.shared.themeConfiguration.font.bodyMedium)
+            .font(Theme.shared.font.bodyMedium)
             .foregroundColor(labelColor)
             .padding(.leading, 15)
             .offset(x: 0, y: isNotFocused ? 0 : -18)
@@ -109,10 +110,9 @@ public struct FloatingTextField<Content: View>: View {
           .onChange(of: text) { _ in
             switch formatType {
             case .amount:
-              // TODO: Revisit if needed
-              text = text
+              text = formatAmount(with: text)
             case .numeric:
-              text = text
+              text = text.toNumeric()
             case .uppercase:
               text = text.uppercased()
             case .none:
@@ -143,5 +143,35 @@ public extension FloatingTextField {
     case numeric
     case uppercase
     case none
+  }
+}
+
+private extension FloatingTextField {
+  func formatAmount(with text: String) -> String {
+    let replacedText = text.replacingOccurrences(of: ",", with: ".")
+    let isFirstCharPunctuation = replacedText.first?.isPunctuation ?? false
+
+    if isFirstCharPunctuation {
+      return ""
+    }
+
+    let dotInstances = replacedText.countInstances(of: ".")
+
+    if dotInstances > 1 {
+      return String(replacedText.prefix(replacedText.count - (dotInstances - 1)))
+    }
+
+    let splitted = replacedText.split(separator: ".")
+    if splitted.count >= 2 {
+      var firstPart = splitted[0]
+      if firstPart.count > 13 {
+        firstPart = firstPart.prefix(13)
+      }
+      return "\(firstPart).\(splitted[1])".toAmount() ?? replacedText
+    } else if replacedText.count > 13 && replacedText.last?.isPunctuation == false {
+      return String(replacedText.prefix(13))
+    }
+
+    return replacedText
   }
 }

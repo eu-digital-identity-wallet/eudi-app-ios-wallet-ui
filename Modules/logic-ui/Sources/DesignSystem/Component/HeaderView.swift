@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import SwiftUI
+import logic_resources
 
 public struct HeaderView: View {
 

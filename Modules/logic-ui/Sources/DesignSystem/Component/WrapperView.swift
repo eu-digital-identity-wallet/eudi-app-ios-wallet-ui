@@ -15,6 +15,7 @@
  */
 
 import SwiftUI
+import logic_resources
 
 public struct WrapperView<Content: View>: View {
 

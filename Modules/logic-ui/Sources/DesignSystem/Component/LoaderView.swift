@@ -15,6 +15,7 @@
  */
 import SwiftUI
 import ActivityIndicatorView
+import logic_resources
 
 public struct LoaderView: View {
 

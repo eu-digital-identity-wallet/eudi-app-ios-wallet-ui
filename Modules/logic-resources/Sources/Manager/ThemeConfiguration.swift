@@ -28,7 +28,8 @@ public struct ThemeConfiguration {
        image: ImageManagerProtocol? = nil,
        shape: ShapeManagerProtocol? = nil,
        font: TypographyManagerProtocol? = nil,
-       dimension: DimensionManagerProtocol? = nil) {
+       dimension: DimensionManagerProtocol? = nil
+  ) {
     self.color = color ?? ColorManager(bundle: .assetsBundle)
     self.image = image ?? ImageManager(bundle: .assetsBundle)
     self.shape = shape ?? ShapeManager()

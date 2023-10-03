@@ -41,3 +41,55 @@ public extension String {
     return string
   }
 }
+
+public extension String {
+
+  private var formatter: NumberFormatter {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    formatter.minimumFractionDigits = 1
+    formatter.maximumFractionDigits = 2
+    formatter.decimalSeparator = "."
+    formatter.usesGroupingSeparator = false
+    formatter.roundingMode = .floor
+    return formatter
+  }
+
+  func toInteger() -> Int? {
+    return Int(self)
+  }
+
+  func toNumeric() -> String {
+    if self.toInteger() != nil {
+      return self
+    } else {
+      var text = NSMutableString(string: self)
+      if let regex = try? NSRegularExpression(pattern: "[^0-9]") {
+        regex.replaceMatches(in: text, options: .reportProgress, range: NSRange(location: 0, length: text.length), withTemplate: "")
+      } else {
+        text = ""
+      }
+      return String(text)
+    }
+  }
+
+  func toAmount() -> String? {
+    if let number = formatter.number(from: self) {
+      return formatter.string(from: number)
+    }
+    return nil
+  }
+}
+
+public extension String {
+  func countInstances(of stringToFind: String) -> Int {
+    assert(!stringToFind.isEmpty)
+    var count = 0
+    var searchRange: Range<String.Index>?
+    while let foundRange = range(of: stringToFind, options: [], range: searchRange) {
+      count += 1
+      searchRange = Range(uncheckedBounds: (lower: foundRange.upperBound, upper: endIndex))
+    }
+    return count
+  }
+}
