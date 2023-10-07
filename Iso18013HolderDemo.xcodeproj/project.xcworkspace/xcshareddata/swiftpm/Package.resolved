@@ -33,7 +33,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
         "branch" : "develop",
-        "revision" : "ac46a0c71c5154353d1cf911e2eb62891b4fb896"
+        "revision" : "8069ed7ebf969008a313fecfba7dabda78c7fb21"
       }
     },
     {
@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Hitch.git",
       "state" : {
-        "revision" : "de110dd6d2de0f41f4a4e7b7dea0bb769df7b12b",
-        "version" : "0.4.113"
+        "revision" : "5dffbdbc30add840b946590879e779c1c46423cf",
+        "version" : "0.4.114"
       }
     },
     {

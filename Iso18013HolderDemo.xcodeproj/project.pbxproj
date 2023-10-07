@@ -10,7 +10,6 @@
 		0BF9CC03E08DA80704800A98 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7A25294A9E3CDFED709B90 /* ShareView.swift */; };
 		0F91A0F0863CEFEBC5D7AEBD /* scytales_root_ca.der in Resources */ = {isa = PBXBuildFile; fileRef = 0D57DC5DD3A0FC18E83B0023 /* scytales_root_ca.der */; };
 		12AD6137012A40E367FD1CC8 /* mdoc_holderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9DF632FE20A18FBF39E13F /* mdoc_holderUITestsLaunchTests.swift */; };
-		22A58C0AE2F478E9274B4865 /* MdocDataTransfer18013 in Frameworks */ = {isa = PBXBuildFile; productRef = A1156C1AB18E78CD5F37C664 /* MdocDataTransfer18013 */; };
 		2CB3D47A008CC6F66C5CE352 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 071EA5AD742F0A6980D58E96 /* Assets.xcassets */; };
 		3E59AFE2057089CA241F1046 /* DocDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBCB81D85A5FEB87E22CB52 /* DocDataView.swift */; };
 		4A76CDEDAE02D377B655EC7F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A76075244B6EA4ABC073824 /* Extensions.swift */; };
@@ -21,6 +20,7 @@
 		98D93180046EB299D3E350B2 /* mdoc_holderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59B4ADE62B8BA3D5817A575 /* mdoc_holderApp.swift */; };
 		A06DB869639F999F7E4BA729 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 268F27B6E2979B70D0EEB026 /* LaunchScreen.storyboard */; };
 		B0036D0B2ACD9488009AD181 /* OpenId4VpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0036D0A2ACD9488009AD181 /* OpenId4VpClient.swift */; };
+		B0EC6CF62AD213AF00E5482D /* vp_token_test.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0EC6CF52AD213AF00E5482D /* vp_token_test.txt */; };
 		B807260BC666A5A0D2EA0F3A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CA872DD9B8F79BFC0A55469 /* Localizable.strings */; };
 		CE930B8F27771E5DB1D6C614 /* SiopOpenID4VP in Frameworks */ = {isa = PBXBuildFile; productRef = 54FF3F5F47998360A0719693 /* SiopOpenID4VP */; };
 		CF10BD7EA1DC34996CC91BEF /* ButtonControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243810599B19D04BC18869DB /* ButtonControls.swift */; };
@@ -77,6 +77,7 @@
 		86DA409AC0A2BD5D87C95731 /* mdoc_holderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdoc_holderUITests.swift; sourceTree = "<group>"; };
 		8B9DF632FE20A18FBF39E13F /* mdoc_holderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdoc_holderUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		B0036D0A2ACD9488009AD181 /* OpenId4VpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenId4VpClient.swift; sourceTree = "<group>"; };
+		B0EC6CF52AD213AF00E5482D /* vp_token_test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = vp_token_test.txt; sourceTree = "<group>"; };
 		BEBCB81D85A5FEB87E22CB52 /* DocDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocDataView.swift; sourceTree = "<group>"; };
 		C59B4ADE62B8BA3D5817A575 /* mdoc_holderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdoc_holderApp.swift; sourceTree = "<group>"; };
 		C757591F585F6B5F2FACB262 /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
@@ -91,7 +92,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22A58C0AE2F478E9274B4865 /* MdocDataTransfer18013 in Frameworks */,
 				CE930B8F27771E5DB1D6C614 /* SiopOpenID4VP in Frameworks */,
 				74CF90E3FE08C0E39C6E0E73 /* CodeScanner in Frameworks */,
 			);
@@ -186,6 +186,7 @@
 		A29D7E8D98C66B02DFC69E35 /* UITests */ = {
 			isa = PBXGroup;
 			children = (
+				B0EC6CF42AD2138E00E5482D /* Resources */,
 				EF7411F939BACF38049E0A08 /* Sources */,
 				DBCE1579B560027994F61007 /* Info.plist */,
 			);
@@ -198,6 +199,14 @@
 				B0036D0A2ACD9488009AD181 /* OpenId4VpClient.swift */,
 			);
 			path = OpenId4Vp;
+			sourceTree = "<group>";
+		};
+		B0EC6CF42AD2138E00E5482D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B0EC6CF52AD213AF00E5482D /* vp_token_test.txt */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		B48131F888E2C3AA1C4ABBF4 /* Derived */ = {
@@ -275,7 +284,6 @@
 			);
 			name = Iso18013HolderDemo;
 			packageProductDependencies = (
-				A1156C1AB18E78CD5F37C664 /* MdocDataTransfer18013 */,
 				54FF3F5F47998360A0719693 /* SiopOpenID4VP */,
 				163C5AA70A3D689878251F21 /* CodeScanner */,
 			);
@@ -337,6 +345,7 @@
 				A06DB869639F999F7E4BA729 /* LaunchScreen.storyboard in Resources */,
 				5DE72C1A9CE8EFA83C1C58FC /* sample_data.json in Resources */,
 				0F91A0F0863CEFEBC5D7AEBD /* scytales_root_ca.der in Resources */,
+				B0EC6CF62AD213AF00E5482D /* vp_token_test.txt in Resources */,
 				B807260BC666A5A0D2EA0F3A /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -400,7 +409,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Iso18013HolderDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -468,7 +477,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Iso18013HolderDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -670,10 +679,6 @@
 		54FF3F5F47998360A0719693 /* SiopOpenID4VP */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SiopOpenID4VP;
-		};
-		A1156C1AB18E78CD5F37C664 /* MdocDataTransfer18013 */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MdocDataTransfer18013;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

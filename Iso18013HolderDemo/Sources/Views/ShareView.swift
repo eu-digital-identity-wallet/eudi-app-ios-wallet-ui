@@ -16,18 +16,21 @@ struct ShareView: View {
 	@State var isBleServer: Bool = true
 	@State var hasCancelled = false
 	@EnvironmentObject var bleServerTransfer: MdocGattServer
+	@EnvironmentObject var openId4VpTransfer: OpenId4VpClient
 	@StateObject var transferDelegate: DefaultTransferDelegate = .init()
 	@Environment(\.presentationMode) var presentationMode
-	
+	var transferManager: MdocTransferManager { isProximitySharing ? bleServerTransfer : openId4VpTransfer }
+	var isProximitySharing: Bool { openId4VpTransfer.qrCodeImageData == nil }
+
 	var body: some View {
 		VStack(spacing: 16) {
 			Text(verbatim: "Status: \(statusDescription)").foregroundStyle(.blue)
 			
-			if bleServerTransfer.status == .qrEngagementReady, let d = bleServerTransfer.qrCodeImageData {
+			if transferDelegate.status == .qrEngagementReady, let d = bleServerTransfer.qrCodeImageData {
 				Image(uiImage: UIImage(data: d) ?? UIImage(systemName: "questionmark.square.dashed")!)
 					.resizable().scaledToFit().frame(maxWidth: .infinity, alignment: .center).padding(.bottom, 8)
 			}
-			if bleServerTransfer.status == .requestReceived {
+			if transferDelegate.status == .requestReceived {
 				if let issuerM = transferDelegate.readerCertIsserMessage {
 					Text(verbatim: issuerM).font(.footnote).foregroundStyle(.green)
 				}
@@ -50,23 +53,23 @@ struct ShareView: View {
 					Button { beginDataTransfer() } label: {Label("Accept", systemImage: "checkmark.seal")}.buttonStyle(.borderedProminent)
 				}
 			}
-			if bleServerTransfer.status == .userSelected {
+			if transferDelegate.status == .userSelected {
 				Spacer()
 				Image(.tileBluetooth).renderingMode(.template).aspectRatio(contentMode: .fit).frame(width: 80, height: 80).tint(.blue)
 				Spacer()
 			}
-			if bleServerTransfer.status == .disconnected || bleServerTransfer.status == .responseSent  {
+			if transferDelegate.status == .disconnected || transferDelegate.status == .responseSent  {
 				Spacer()
 				checkMark
 				Spacer()
 				Button { self.presentationMode.wrappedValue.dismiss() } label: {Label("OK", systemImage: "checkmark.seal").frame(width:200, height: 30)}.buttonStyle(.borderedProminent).padding()
 			}
 		}.padding().padding()
-			.onAppear(perform: genQrCode)
-			.onDisappear(perform: { bleServerTransfer.stop() })
+			.onAppear(perform: initializeAndPerformDeviceEngagement)
+			.onDisappear(perform: { transferManager.stop() })
 	} // body
 	
-	var statusDescription: String { NSLocalizedString(hasCancelled ? "cancelledSent" : bleServerTransfer.status.rawValue, comment: "") }
+	var statusDescription: String { NSLocalizedString(hasCancelled ? "cancelledSent" : transferDelegate.status.rawValue, comment: "") }
 	
 	func doTransfer() {
 		hasCancelled = false;
@@ -91,7 +94,7 @@ struct ShareView: View {
 										 beginDataTransfer(isFallBack: true)
 									 }
 								 else {
-										 bleServerTransfer.stop()
+									 transferManager.stop()
 										 self.presentationMode.wrappedValue.dismiss()
 									 }
 							 }
@@ -101,16 +104,16 @@ struct ShareView: View {
 			 }
 	}
 	
-	func genQrCode() {
-		bleServerTransfer.initialize(parameters: [
+	func initializeAndPerformDeviceEngagement() {
+		transferManager.initialize(parameters: [
 			InitializeKeys.document_signup_response_data.rawValue: [mdocAppData.isoMdlModel?.response, mdocAppData.euPidModel?.response].compactMap {$0},
 			InitializeKeys.device_private_key.rawValue: (mdocAppData.isoMdlModel?.devicePrivateKey ?? mdocAppData.euPidModel?.devicePrivateKey)!,
 			InitializeKeys.trusted_certificates.rawValue: [Data(name: "scytales_root_ca", ext: "der")!],
 			InitializeKeys.require_user_accept.rawValue: true
 		]
 		)
-		bleServerTransfer.delegate = transferDelegate
-		bleServerTransfer.performDeviceEngagement()
+		transferManager.delegate = transferDelegate
+		transferManager.performDeviceEngagement()
 	}
 	
 }
