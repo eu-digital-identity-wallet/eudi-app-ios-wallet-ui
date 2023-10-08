@@ -20,6 +20,7 @@
 		98D93180046EB299D3E350B2 /* mdoc_holderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59B4ADE62B8BA3D5817A575 /* mdoc_holderApp.swift */; };
 		A06DB869639F999F7E4BA729 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 268F27B6E2979B70D0EEB026 /* LaunchScreen.storyboard */; };
 		B0036D0B2ACD9488009AD181 /* OpenId4VpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0036D0A2ACD9488009AD181 /* OpenId4VpClient.swift */; };
+		B0BAD9E52AD341B7009DAAA7 /* MdocDataTransfer18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B0BAD9E42AD341B7009DAAA7 /* MdocDataTransfer18013 */; };
 		B0EC6CF62AD213AF00E5482D /* vp_token_test.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0EC6CF52AD213AF00E5482D /* vp_token_test.txt */; };
 		B807260BC666A5A0D2EA0F3A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CA872DD9B8F79BFC0A55469 /* Localizable.strings */; };
 		CE930B8F27771E5DB1D6C614 /* SiopOpenID4VP in Frameworks */ = {isa = PBXBuildFile; productRef = 54FF3F5F47998360A0719693 /* SiopOpenID4VP */; };
@@ -93,6 +94,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE930B8F27771E5DB1D6C614 /* SiopOpenID4VP in Frameworks */,
+				B0BAD9E52AD341B7009DAAA7 /* MdocDataTransfer18013 in Frameworks */,
 				74CF90E3FE08C0E39C6E0E73 /* CodeScanner in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -286,6 +288,7 @@
 			packageProductDependencies = (
 				54FF3F5F47998360A0719693 /* SiopOpenID4VP */,
 				163C5AA70A3D689878251F21 /* CodeScanner */,
+				B0BAD9E42AD341B7009DAAA7 /* MdocDataTransfer18013 */,
 			);
 			productName = Iso18013HolderDemo;
 			productReference = D5EA9115DD31976D44071C71 /* Iso18013HolderDemo.app */;
@@ -649,7 +652,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer";
 			requirement = {
-				branch = main;
+				branch = develop;
 				kind = branch;
 			};
 		};
@@ -679,6 +682,11 @@
 		54FF3F5F47998360A0719693 /* SiopOpenID4VP */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SiopOpenID4VP;
+		};
+		B0BAD9E42AD341B7009DAAA7 /* MdocDataTransfer18013 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 022845A0CE965DB38A280998 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-transfer" */;
+			productName = MdocDataTransfer18013;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

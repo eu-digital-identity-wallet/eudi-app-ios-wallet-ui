@@ -42,6 +42,8 @@ class OpenId4VpClient: ObservableObject, MdocTransferManager {
 	var error: Error?
 	var readerName: String?
 	var logger = Logger(label: "OpenId4VpClient")
+	var presentationDefinition: PresentationDefinition?
+	var resolvedRequestData: ResolvedRequestData?
 	
 	var siopOpenId4Vp: SiopOpenID4VP!
 	public var qrCodeImageData: Data?
@@ -56,9 +58,24 @@ class OpenId4VpClient: ObservableObject, MdocTransferManager {
 	func performDeviceEngagement() {
 		guard let qrCodeImageData, let openid4VPlink = String(data: qrCodeImageData, encoding: .utf8) else { return }
 		Task {
-			guard let (items, pd, resolved) = try await resolveRequestUri(openid4VPlink) else { await setStatus(newStatus: .error); return }
+			try await resolveRequestUri(openid4VPlink)
+		}
+	}
+	
+	@MainActor
+	func setStatus(newStatus: MdocDataTransfer18013.TransferStatus) {
+		status = newStatus
+		delegate?.didChangeStatus(newStatus)
+		print("New status \(status)")
+	}
+	
+	public func userSelected(_ b: Bool, _ items: RequestItems?) {
+		Task {
+			await setStatus(newStatus: .userSelected)
+			if !b { error = Self.makeError(code: .userRejected); return }
+			guard let items, items.count > 0, let pd = presentationDefinition, let resolved = resolvedRequestData else { error = Self.makeError(code: .userRejected); return }
 			logger.info("Openid4vp request items: \(items)")
-			let deviceResponse = try getDeviceResponseToSend(nil, selectedItems: items, eReaderKey: devicePrivateKey.key, devicePrivateKey: devicePrivateKey)
+			let deviceResponse = try getDeviceResponseToSend(nil, selectedItems: items, eReaderKey: nil, devicePrivateKey: devicePrivateKey)
 			// Obtain consent
 			// -- test SOS String(data: Data(name:"vp_token_test", ext: "txt")!, encoding: .utf8)!
 			let vpTokenStr =  Data(deviceResponse.toCBOR().encode()).base64URLEncodedString()
@@ -76,32 +93,31 @@ class OpenId4VpClient: ObservableObject, MdocTransferManager {
 		}
 	}
 	
-	@MainActor
-	func setStatus(newStatus: MdocDataTransfer18013.TransferStatus) {
-		status = newStatus
-		delegate?.didChangeStatus(newStatus)
-		print("New status \(status)")
-	}
-	
-	func resolveRequestUri(_ openid4VPlink: String) async throws -> (RequestItems, PresentationDefinition, ResolvedRequestData)? {
-		guard status != .error, let openid4VPURI = URL(string: openid4VPlink) else { return nil }
+	func resolveRequestUri(_ openid4VPlink: String) async throws {
+		guard status != .error, let openid4VPURI = URL(string: openid4VPlink) else { return }
 		await setStatus(newStatus: .connected)
 		do {
 			switch try await siopOpenId4Vp.authorize(url: openid4VPURI)  {
 			case .notSecured(data: _):
 				await setStatus(newStatus: .error); error = Self.makeError(code: .invalidUrl, str: "Not secure request received.")
 			case let .jwt(request: resolvedRequestData):
+				self.resolvedRequestData = resolvedRequestData
 				switch	resolvedRequestData {
 				case let .vpToken(vp):
+					self.presentationDefinition = vp.presentationDefinition
 					let items = parsePresentationDefinition(vp.presentationDefinition)
-					guard let items else { return nil }
-					return (items,vp.presentationDefinition, resolvedRequestData)
+					guard let items else { await setStatus(newStatus: .error); error = Self.makeError(code: .unexpected_error); return }
+					await setStatus(newStatus: .requestReceived)
+					if requireUserAccept == false /*|| _isDebugAssertConfiguration() */ { userSelected(true, nil) }
+					else {
+						// todo: validate items
+						let params: [String: Any] = [UserRequestKeys.valid_items_requested.rawValue: items, UserRequestKeys.error_items_requested.rawValue: [:]]
+						await MainActor.run {	delegate?.didReceiveRequest(params, handleSelected: self.userSelected) }
+					}
 				default: await setStatus(newStatus: .error); error = Self.makeError(code: .invalidUrl, str: "SiopAuthentication request received, not supported yet.")
 				}
-				await setStatus(newStatus: .requestReceived)
 			} }
-		catch { self.error = error }
-		return nil
+		catch { await setStatus(newStatus: .error); self.error = error }
 	}
 	
 	func stop() {
@@ -119,8 +135,7 @@ class OpenId4VpClient: ObservableObject, MdocTransferManager {
 		let VERIFIER_API = ProcessInfo.processInfo.environment["VERIFIER_API"] ?? "http://localhost:8080"
 		let verifierMetaData = PreregisteredClient(clientId: "Verifier", jarSigningAlg: JWSAlgorithm(.RS256), jwkSetSource: WebKeySource.fetchByReference(url: URL(string: "\(VERIFIER_API)/wallet/public-keys.json")!))
 		guard let rsaPrivateKey = try? KeyController.generateRSAPrivateKey(),
-						let rsaPublicKey = try? KeyController.generateRSAPublicKey(from: rsaPrivateKey),
-						let privateKey = try? KeyController.generateECDHPrivateKey() else { return nil }
+						let rsaPublicKey = try? KeyController.generateRSAPublicKey(from: rsaPrivateKey) else { return nil }
 		guard let rsaJWK = try? RSAPublicKey(publicKey: rsaPublicKey, additionalParameters: ["use": "sig", "kid": UUID().uuidString, "alg": "RS256"]) else { return nil }
 		guard let keySet = try? WebKeySet(jwk: rsaJWK) else { return nil }
 		var res = WalletOpenId4VPConfiguration(subjectSyntaxTypesSupported: [], preferredSubjectSyntaxType: .jwkThumbprint, decentralizedIdentifier: try! DecentralizedIdentifier(rawValue: "did:example:123"), idTokenTTL: 10 * 60, presentationDefinitionUriSupported: true, signingKey: rsaPrivateKey, signingKeySet: keySet, supportedClientIdSchemes: [.preregistered(clients: [verifierMetaData.clientId: verifierMetaData])], 	vpFormatsSupported: [])

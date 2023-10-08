@@ -55,7 +55,11 @@ struct ShareView: View {
 			}
 			if transferDelegate.status == .userSelected {
 				Spacer()
-				Image(.tileBluetooth).renderingMode(.template).aspectRatio(contentMode: .fit).frame(width: 80, height: 80).tint(.blue)
+				if isProximitySharing {
+					Image(.tileBluetooth).renderingMode(.template).aspectRatio(contentMode: .fit).frame(width: 80, height: 80).tint(.blue)
+				}else{
+					Image(systemName: "wifi").resizable().aspectRatio(contentMode: .fit).frame(width: 80, height: 80).tint(.blue)
+				}
 				Spacer()
 			}
 			if transferDelegate.status == .disconnected || transferDelegate.status == .responseSent  {
