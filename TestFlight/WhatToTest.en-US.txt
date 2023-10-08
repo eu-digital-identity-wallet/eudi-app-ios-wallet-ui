@@ -1,4 +1,1 @@
-- Aythentication with TouchID or FaceID
-- New sample with issuer auth included
-- Selective disclosure
-- Show not available items gray-out
+- OID4VP + CBOR support
