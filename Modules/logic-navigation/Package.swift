@@ -13,13 +13,15 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(name: "feature-startup", path: "./feature-startup")
+    .package(name: "feature-startup", path: "./feature-startup"),
+    .package(name: "feature-login", path: "./feature-login")
   ],
   targets: [
     .target(
       name: "logic-navigation",
       dependencies: [
-        "feature-startup"
+        "feature-startup",
+        "feature-login"
       ],
       path: "./Sources"
     )

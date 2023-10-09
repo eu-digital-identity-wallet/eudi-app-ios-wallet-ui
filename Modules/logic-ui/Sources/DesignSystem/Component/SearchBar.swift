@@ -13,31 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import Foundation
 import SwiftUI
 
-public indirect enum AppRoute: Equatable {
+public struct SearchBar: View {
+  @Binding var text: String
+  @Binding var commited: Bool
 
-  public static func == (lhs: AppRoute, rhs: AppRoute) -> Bool {
-    return lhs.key == rhs.key
+  let isloading: Bool
+
+  public init(
+    text: Binding<String>,
+    commited: Binding<Bool>,
+    isLoading: Bool
+  ) {
+    self._text = text
+    self._commited = commited
+    self.isloading = isLoading
   }
 
-  case startup
-  case faqs
-
-  var key: String {
-    switch self {
-    case .startup:
-      return "Startup"
-    case .faqs:
-      return "FAQs"
+  public var body: some View {
+    HStack {
+      FloatingTextField(
+        title: "Search",
+        text: $text,
+        showError: false,
+        contentType: .username,
+        useSpringAnimation: false,
+        userHasCommitedChange: $commited
+      )
     }
+    .shimmer(isLoading: isloading)
   }
-}
-
-public protocol RouterHostType {
-  func push(with route: AppRoute)
-  func popTo(with route: AppRoute, inclusive: Bool, animated: Bool)
-  func pop()
-  func composeApplication() -> AnyView
-  func getCurrentScreen() -> AppRoute?
 }

@@ -13,31 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SwiftUI
+import Foundation
 
-public indirect enum AppRoute: Equatable {
-
-  public static func == (lhs: AppRoute, rhs: AppRoute) -> Bool {
-    return lhs.key == rhs.key
-  }
-
-  case startup
-  case faqs
-
-  var key: String {
-    switch self {
-    case .startup:
-      return "Startup"
-    case .faqs:
-      return "FAQs"
-    }
-  }
-}
-
-public protocol RouterHostType {
-  func push(with route: AppRoute)
-  func popTo(with route: AppRoute, inclusive: Bool, animated: Bool)
-  func pop()
-  func composeApplication() -> AnyView
-  func getCurrentScreen() -> AppRoute?
+public protocol Displayable {
+  associatedtype State
 }

@@ -44,6 +44,13 @@
         "identifier" : "logic-ui-test",
         "name" : "logic-ui-test"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/feature-login",
+        "identifier" : "feature-login-tests",
+        "name" : "feature-login-tests"
+      }
     }
   ],
   "version" : 1

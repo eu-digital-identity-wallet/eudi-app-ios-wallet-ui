@@ -13,31 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SwiftUI
+import Foundation
 
-public indirect enum AppRoute: Equatable {
+public struct FAQDisplayable {
+  var isLoading: Bool
+  var searchText: String
+  var models: [FAQUIModel]
+  var filteredModels: [FAQUIModel]
 
-  public static func == (lhs: AppRoute, rhs: AppRoute) -> Bool {
-    return lhs.key == rhs.key
+  init(
+    isLoading: Bool = true,
+    searchText: String = "",
+    models: [FAQUIModel] = [],
+    filteredModels: [FAQUIModel] = []
+  ) {
+    self.isLoading = isLoading
+    self.searchText = searchText
+    self.models = models
+    self.filteredModels = filteredModels
   }
-
-  case startup
-  case faqs
-
-  var key: String {
-    switch self {
-    case .startup:
-      return "Startup"
-    case .faqs:
-      return "FAQs"
-    }
-  }
-}
-
-public protocol RouterHostType {
-  func push(with route: AppRoute)
-  func popTo(with route: AppRoute, inclusive: Bool, animated: Bool)
-  func pop()
-  func composeApplication() -> AnyView
-  func getCurrentScreen() -> AppRoute?
 }

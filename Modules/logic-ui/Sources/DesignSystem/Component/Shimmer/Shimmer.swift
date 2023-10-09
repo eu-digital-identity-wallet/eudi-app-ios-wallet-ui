@@ -14,30 +14,21 @@
  * limitations under the License.
  */
 import SwiftUI
+import Shimmer
 
-public indirect enum AppRoute: Equatable {
-
-  public static func == (lhs: AppRoute, rhs: AppRoute) -> Bool {
-    return lhs.key == rhs.key
-  }
-
-  case startup
-  case faqs
-
-  var key: String {
-    switch self {
-    case .startup:
-      return "Startup"
-    case .faqs:
-      return "FAQs"
+public extension View {
+  /// Adds an animated shimmering effect to any view, typically to show that
+  /// an operation is in progress.
+  /// - Parameters:
+  ///   - isLoading: Convenience parameter to conditionally enable the effect. Defaults to `true`.
+  @ViewBuilder func shimmer(
+    isLoading: Bool = true
+  ) -> some View {
+    if isLoading {
+      self.redacted(reason: .placeholder)
+        .shimmering()
+    } else {
+      self
     }
   }
-}
-
-public protocol RouterHostType {
-  func push(with route: AppRoute)
-  func popTo(with route: AppRoute, inclusive: Bool, animated: Bool)
-  func pop()
-  func composeApplication() -> AnyView
-  func getCurrentScreen() -> AppRoute?
 }

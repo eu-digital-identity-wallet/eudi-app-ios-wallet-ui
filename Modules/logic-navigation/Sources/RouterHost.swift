@@ -19,6 +19,7 @@ import logic_ui
 import SwiftUI
 import logic_business
 import feature_startup
+import feature_login
 
 public final class RouterHost: RouterHostType {
 
@@ -51,6 +52,8 @@ public final class RouterHost: RouterHostType {
       switch route {
       case .startup:
         StartupView(with: self, and: StartupInteractor())
+      case .faqs:
+        FAQsView(with: self, and: FAQsInteractor())
       }
     }
     .eraseToAnyView()

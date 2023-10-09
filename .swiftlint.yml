@@ -7,6 +7,8 @@ excluded:
     - "Modules/logic-ui/Tests/.build/*"
     - "Modules/logic-api/Tests/.build/*"
     - "Modules/feature-startup/.build/*"
+    - "Modules/feature-login/Tests/*"
+    - "Modules/feature-login/.build/*"
 
 
 disabled_rules:
