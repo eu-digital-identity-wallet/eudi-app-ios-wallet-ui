@@ -79,6 +79,15 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
           title: .init(stringLiteral: "Hello World!"),
           onAction: {}()
         )
+
+        WrapButtonView(
+          title: .init("Secondary"),
+          textColor: ThemeManager.shared.color.palette.textPrimaryDark,
+          backgroundColor: ThemeManager.shared.color.palette.backgroundPaper,
+          borderWidth: 1,
+          borderColor: ThemeManager.shared.color.palette.dividerDark,
+          onAction: {}())
+
         WrapIconView(
           backgroundColor: Theme.shared.color.palette.tertiaryMain,
           systemIcon: "left"

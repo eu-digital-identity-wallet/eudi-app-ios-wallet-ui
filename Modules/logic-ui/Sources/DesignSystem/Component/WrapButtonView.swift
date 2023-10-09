@@ -26,6 +26,8 @@ public struct WrapButtonView: View {
   private let gravity: Gravity
   private let cornerRadius: CGFloat
   private let isEnabled: Bool
+  private let borderWidth: CGFloat
+  private let borderColor: Color
 
   @Binding
   private var isLoading: Bool
@@ -39,6 +41,8 @@ public struct WrapButtonView: View {
     isLoading: Binding<Bool> = Binding.constant(false),
     isEnabled: Bool = true,
     cornerRadius: CGFloat = Theme.shared.shape.small,
+    borderWidth: CGFloat = 0,
+    borderColor: Color = .clear,
     onAction: @autoclosure @escaping () -> Void
   ) {
     self.title = title
@@ -49,6 +53,8 @@ public struct WrapButtonView: View {
     self._isLoading = isLoading
     self.isEnabled = isEnabled
     self.cornerRadius = cornerRadius
+    self.borderWidth = borderWidth
+    self.borderColor = borderColor
     self.onAction = onAction
   }
 
@@ -76,6 +82,7 @@ public struct WrapButtonView: View {
           Text(title)
             .applyFont(ThemeManager.shared.font.labelLarge)
             .foregroundColor(textColor)
+            .buttonStyle(OutlinePressedButtonStyle())
 
           if gravity == .center || gravity == .start {
             Spacer()
@@ -94,8 +101,14 @@ public struct WrapButtonView: View {
         .frame(maxWidth: .infinity)
         .background(backgroundColor)
         .cornerRadius(cornerRadius)
+        .overlay(
+          RoundedRectangle(cornerRadius: cornerRadius)
+            .stroke(borderColor, lineWidth: borderWidth)
+        )
+
       }
     )
+
     .disabled(isLoading || !isEnabled)
   }
 }
