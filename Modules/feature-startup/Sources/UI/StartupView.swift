@@ -19,54 +19,74 @@ import logic_resources
 
 public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorType>: View {
 
+  @State var text: String
+  @State var hasComited: Bool
+
   @ObservedObject private var viewModel: StartupViewModel<Router, Interactor>
 
   public init(with router: Router, and interactor: Interactor) {
     self.viewModel = .init(router: router, interactor: interactor)
 
+    self.text = ""
+    self.hasComited = false
   }
 
   public var body: some View {
-    WrapperView {
-      Image(systemName: "globe")
-        .imageScale(.large)
-        .foregroundStyle(.tint)
-      Text("Title")
-        .font(Theme.shared.font.titleLarge)
-      Text("SubTitle")
-        .font(Theme.shared.font.headlineLarge)
-      Text("SubTitle2")
-        .font(Theme.shared.font.headlineMedium)
-      Text("Text")
-        .font(Theme.shared.font.displayLarge)
-      Text("Text2")
-        .font(Theme.shared.font.displayMedium)
-      Text("Text3")
-        .font(Theme.shared.font.displaySmall)
-      Text("Text4")
-        .font(Theme.shared.font.labelMedium)
-      Text("Text5")
-        .font(Theme.shared.font.labelSmall)
-      Text("Body")
-        .font(Theme.shared.font.bodyLarge)
-      Text("Body2")
-        .font(Theme.shared.font.bodyMedium)
+    ScrollView {
+      WrapperView {
 
-      FloatingTextField(title: .init("Hello"),
-                        text: .constant("World"),
-                        showError: false,
-                        contentType: .name,
-                        userHasCommitedChange: .constant(false))
-      WrapButtonView(
-        title: .init(stringLiteral: "Hello World!"),
-        onAction: {}()
-      )
-      WrapIconView(
-        backgroundColor: Theme.shared.color.tertiary,
-        systemIcon: "left"
+        Text("displayLarge")
+          .applyFont(Theme.shared.font.displayLarge)
+        Text("displayMedium")
+          .applyFont(Theme.shared.font.displayMedium)
+        Text("displaySmall")
+          .applyFont(Theme.shared.font.displaySmall)
 
-      )
+        Text("headlineLarge")
+          .applyFont(ThemeManager.shared.font.headlineLarge)
+        Text("headlineMedium")
+          .applyFont(Theme.shared.font.headlineMedium)
+        Text("headlineSmall")
+          .applyFont(Theme.shared.font.headlineSmall)
+
+        Text("titleLarge")
+          .applyFont(Theme.shared.font.titleLarge)
+        Text("titleMedium")
+          .applyFont(Theme.shared.font.titleMedium)
+        Text("titleSmall")
+          .applyFont(Theme.shared.font.titleSmall)
+
+        Text("bodyLarge")
+          .applyFont(Theme.shared.font.bodyLarge)
+        Text("bodyMedium")
+          .applyFont(Theme.shared.font.bodyMedium)
+        Text("bodySmall")
+          .applyFont(Theme.shared.font.bodySmall)
+
+        Text("labelLarge")
+          .applyFont(Theme.shared.font.labelLarge)
+        Text("labelMedium")
+          .applyFont(Theme.shared.font.labelMedium)
+        Text("labelSmall")
+          .applyFont(Theme.shared.font.labelSmall)
+
+        FloatingTextField(title: .init("Hello"),
+                          text: $text,
+                          showError: false,
+                          contentType: .name,
+                          userHasCommitedChange: $hasComited)
+        WrapButtonView(
+          title: .init(stringLiteral: "Hello World!"),
+          onAction: {}()
+        )
+        WrapIconView(
+          backgroundColor: Theme.shared.color.palette.tertiaryMain,
+          systemIcon: "left"
+
+        )
+      }
     }
+
   }
 }
 

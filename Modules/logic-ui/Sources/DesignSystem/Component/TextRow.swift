@@ -18,15 +18,15 @@ import logic_resources
 
 public func textRow(
   _ value: LocalizedStringKey,
-  textColor: Color = Theme.shared.color.surface,
-  imageColor: Color = Theme.shared.color.surface,
+  textColor: Color = Theme.shared.color.palette.textPrimaryDark,
+  imageColor: Color = Theme.shared.color.palette.textPrimaryDark,
   image: String? = nil
 ) -> some View {
   HStack {
     Text(value)
       .lineLimit(1)
       .minimumScaleFactor(0.5)
-      .foregroundColor(Theme.shared.color.surface)
+      .foregroundColor(textColor)
     Spacer()
     if let image {
       Image(systemName: image)
@@ -40,8 +40,8 @@ public func textRow(
 
 public func textRow(
   _ value: String,
-  textColor: Color = Theme.shared.color.surface,
-  imageColor: Color = Theme.shared.color.surface,
+  textColor: Color = Theme.shared.color.palette.textPrimaryDark,
+  imageColor: Color = Theme.shared.color.palette.textPrimaryDark,
   image: String? = nil
 ) -> some View {
   textRow(

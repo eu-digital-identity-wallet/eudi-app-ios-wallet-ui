@@ -65,21 +65,21 @@ public struct FloatingTextField<Content: View>: View {
 
   private var backgroundColor: Color {
     if showError {
-      return Theme.shared.color.secondary.opacity(0.12)
+      return Theme.shared.color.palette.secondaryMain.opacity(0.12)
     } else if isNotFocused {
-      return Theme.shared.color.outlineVariant
+      return Theme.shared.color.palette.dividerDark
     } else {
-      return Theme.shared.color.outline
+      return Theme.shared.color.palette.textPrimaryDark
     }
   }
 
   private var labelColor: Color {
     if showError {
-      return Theme.shared.color.primary
+      return Theme.shared.color.palette.secondaryMain
     } else if isNotFocused {
-      return Theme.shared.color.surface
+      return Theme.shared.color.palette.dividerDark
     } else {
-      return Theme.shared.color.secondary
+      return Theme.shared.color.palette.secondaryMain
     }
   }
 
@@ -92,15 +92,15 @@ public struct FloatingTextField<Content: View>: View {
         }
         ZStack(alignment: .leading) {
           Text(title)
-            .font(Theme.shared.font.bodyMedium)
+            .applyFont(ThemeManager.shared.font.bodyMedium)
             .foregroundColor(labelColor)
             .padding(.leading, 15)
             .offset(x: 0, y: isNotFocused ? 0 : -18)
           TextField("", text: $text, onEditingChanged: { changed in
             userHasCommitedChange = changed
           })
-          .font(Theme.shared.font.bodyMedium)
-          .foregroundColor(Theme.shared.color.surface)
+          .applyFont(Theme.shared.font.bodyMedium)
+          .foregroundColor(Theme.shared.color.palette.backgroundDefault)
           .autocapitalization(.none)
           .disableAutocorrection(true)
           .padding(.leading, 15)
