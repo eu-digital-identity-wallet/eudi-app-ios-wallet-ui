@@ -15,29 +15,12 @@
  */
 import SwiftUI
 
-public indirect enum AppRoute: Equatable {
-
-  public static func == (lhs: AppRoute, rhs: AppRoute) -> Bool {
-    return lhs.key == rhs.key
-  }
-
-  case startup
-  case faqs
-
-  var key: String {
-    switch self {
-    case .startup:
-      return "Startup"
-    case .faqs:
-      return "FAQ"
+struct DashboardContainer: View {
+  var body: some View {
+    VStack {
+      Text("Container")
+      Spacer()
     }
+    .padding()
   }
-}
-
-public protocol RouterHostType {
-  func push(with route: AppRoute)
-  func popTo(with route: AppRoute, inclusive: Bool, animated: Bool)
-  func pop(animated: Bool)
-  func composeApplication() -> AnyView
-  func getCurrentScreen() -> AppRoute?
 }

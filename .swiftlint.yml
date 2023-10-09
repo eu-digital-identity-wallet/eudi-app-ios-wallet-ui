@@ -9,6 +9,8 @@ excluded:
     - "Modules/feature-startup/.build/*"
     - "Modules/feature-login/Tests/*"
     - "Modules/feature-login/.build/*"
+    - "Modules/feature-dashboard/Tests/*"
+    - "Modules/feature-dashboard/.build/*"
 
 
 disabled_rules:

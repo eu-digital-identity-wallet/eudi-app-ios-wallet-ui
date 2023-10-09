@@ -43,6 +43,7 @@
 		F14907BB2ABAF54B00DDFE56 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		F14907BF2ABAF55000DDFE56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F14907C22ABAF55000DDFE56 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F1596BB02AD40EE000552D1B /* feature-dashboard */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-dashboard"; path = "Modules/feature-dashboard"; sourceTree = "<group>"; };
 		F1CACADF2AC3097100B40DED /* WalletDev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = WalletDev.xcconfig; sourceTree = "<group>"; };
 		F1CACAE12AC3098C00B40DED /* WalletRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = WalletRelease.xcconfig; sourceTree = "<group>"; };
 		F1CACAE42AC3122700B40DED /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
@@ -125,6 +126,7 @@
 		F14908692ABC467600DDFE56 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
+				F1596BB02AD40EE000552D1B /* feature-dashboard */,
 				F1E83CFD2ACE91DD00FBC0E3 /* feature-login */,
 				1198ECD72AC453F200F4E71A /* logic-resources */,
 				F06325112AC59AF50004601F /* feature-test */,

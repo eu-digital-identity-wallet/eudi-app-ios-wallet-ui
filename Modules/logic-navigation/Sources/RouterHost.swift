@@ -39,8 +39,8 @@ public final class RouterHost: RouterHostType {
     pilot.popTo(route, inclusive: inclusive, animated: animated)
   }
 
-  public func pop() {
-    pilot.pop()
+  public func pop(animated: Bool) {
+    pilot.pop(animated: animated)
   }
 
   public func getCurrentScreen() -> AppRoute? {

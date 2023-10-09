@@ -13,31 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SwiftUI
 
-public indirect enum AppRoute: Equatable {
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_test
+@testable import feature_test
 
-  public static func == (lhs: AppRoute, rhs: AppRoute) -> Bool {
-    return lhs.key == rhs.key
+class BaseTests: EudiTest {
+
+  override func setUp() async throws {
+    try await super.setUp()
   }
 
-  case startup
-  case faqs
+  override func tearDown() {
+    super.tearDown()
+  }
 
-  var key: String {
-    switch self {
-    case .startup:
-      return "Startup"
-    case .faqs:
-      return "FAQ"
+  func testBusinessLogic() {
+
+    let mock = MockConfigLogic()
+
+    stub(mock) { stub in
+      when(stub.baseHost.get).thenReturn(SampleConstants.urlMock)
     }
-  }
-}
 
-public protocol RouterHostType {
-  func push(with route: AppRoute)
-  func popTo(with route: AppRoute, inclusive: Bool, animated: Bool)
-  func pop(animated: Bool)
-  func composeApplication() -> AnyView
-  func getCurrentScreen() -> AppRoute?
+    XCTAssertEqual(mock.baseHost, SampleConstants.urlMock)
+
+    XCTAssertTrue(true, SampleConstants.urlMock)
+  }
 }

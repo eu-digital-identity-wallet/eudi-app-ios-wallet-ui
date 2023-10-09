@@ -7,6 +7,7 @@
 * [Overview](#overview)
 * [Disclaimer](#disclaimer)
 * [How to contribute](#how-to-contribute)
+* [Creating a new feature module](#creating-a-new-feature-module)
 * [License](#license)
 
 ## Overview
@@ -30,6 +31,22 @@ The released software is a initial development release version:
 
 We welcome contributions to this project. To ensure that the process is smooth for everyone
 involved, follow the guidelines found in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Creating a new feature module
+
+1. Create a new Swift package library in the Modules subdirectory. Please use the _feature-*{new-addition}*_ format; e.g. **feature-dashboard**
+2. Add this package to the project by dragging it to the Packages directory in the project navigator in xcode.
+3. Add **logic-business**, **logic-ui**, **logic-api**, **feature-test** as dependencies so you can take advantage of the existing codebase in your new feature.
+4. Make sure the path in your target points to **./Sources**; **./Tests** for your test target.
+
+If you want to gain access to the entire apps mock infrastructure (classes and structs), so you can leverage it in your unit tests, you can:
+
+1. Add your new package to swiftlint to be ignored:
+    - "Modules/feature-*new-addition*/Tests/*"
+    - "Modules/feature-*new-addition*/.build/*"
+2. Under your Test folder in you package add a Mock folder and place an empty file called GeneratedMocks.swift therein.
+3. Edit *root*/Mock/GenerateMocks.sh, and append your package name to the FEATURE_MODULES variable.
+4. run **./Mock/GenerateMocks.sh** from the project root.
 
 ## License
 

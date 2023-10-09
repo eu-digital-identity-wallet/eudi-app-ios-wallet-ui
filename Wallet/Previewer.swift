@@ -13,14 +13,14 @@ class PreviewInteractor: FAQsInteractorType {
 }
 
 class PreviewRouter: RouterHostType {
-  func push(with route: logic_ui.AppRoute) {}
-  func popTo(with route: logic_ui.AppRoute, inclusive: Bool, animated: Bool) {}
-  func pop() {}
+  func push(with route: AppRoute) {}
+  func popTo(with route: AppRoute, inclusive: Bool, animated: Bool) {}
+  func pop(animated: Bool) {}
   func composeApplication() -> AnyView {
     FAQsView(with: self, and: PreviewInteractor())
       .eraseToAnyView()
   }
-  func getCurrentScreen() -> logic_ui.AppRoute? { nil }
+  func getCurrentScreen() -> AppRoute? { nil }
 }
 
 #Preview {

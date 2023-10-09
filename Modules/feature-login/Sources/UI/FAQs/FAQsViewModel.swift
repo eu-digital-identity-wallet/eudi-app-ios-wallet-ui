@@ -69,6 +69,6 @@ public final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInterac
   }
 
   func goBack() {
-    router.pop()
+    router.pop(animated: true)
   }
 }

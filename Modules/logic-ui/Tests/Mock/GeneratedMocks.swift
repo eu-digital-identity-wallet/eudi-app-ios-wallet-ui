@@ -845,19 +845,19 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
     
     
     
-    public func pop()  {
+    public func pop(animated: Bool)  {
         
     return cuckoo_manager.call(
     """
-    pop()
+    pop(animated: Bool)
     """,
-            parameters: (),
-            escapingParameters: (),
+            parameters: (animated),
+            escapingParameters: (animated),
             superclassCall:
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: __defaultImplStub!.pop())
+            defaultCall: __defaultImplStub!.pop(animated: animated))
         
     }
     
@@ -935,11 +935,11 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
         
         
         
-        func pop() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+        func pop<M1: Cuckoo.Matchable>(animated: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(Bool)> where M1.MatchedType == Bool {
+            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: animated) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRouterHostType.self, method:
     """
-    pop()
+    pop(animated: Bool)
     """, parameterMatchers: matchers))
         }
         
@@ -1009,11 +1009,11 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func pop() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+        func pop<M1: Cuckoo.Matchable>(animated: M1) -> Cuckoo.__DoNotUse<(Bool), Void> where M1.MatchedType == Bool {
+            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: animated) { $0 }]
             return cuckoo_manager.verify(
     """
-    pop()
+    pop(animated: Bool)
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -1071,7 +1071,7 @@ public class RouterHostTypeStub: RouterHostType {
     
     
     
-    public func pop()   {
+    public func pop(animated: Bool)   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
