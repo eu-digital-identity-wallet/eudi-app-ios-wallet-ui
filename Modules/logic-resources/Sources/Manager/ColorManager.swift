@@ -17,55 +17,57 @@ import SwiftUI
 
 public protocol ColorManagerProtocol {
 
-  var primary: Color { get }
-  var onPrimary: Color { get }
-  var primaryContainer: Color { get }
-  var onPrimaryContainer: Color { get }
-  var inversePrimary: Color { get }
-  var secondary: Color { get }
-  var onSecondary: Color { get }
-  var secondaryContainer: Color { get }
-  var onSecondaryContainer: Color { get }
-  var tertiary: Color { get }
-  var onTertiary: Color { get }
-  var tertiaryContainer: Color { get }
-  var onTertiaryContainer: Color { get }
-  var background: Color { get }
-  var onBackground: Color { get }
-  var surface: Color { get }
-  var onSurface: Color { get }
-  var surfaceVariant: Color { get }
-  var onSurfaceVariant: Color { get }
-  var surfaceTint: Color { get }
-  var inverseSurface: Color { get }
-  var inverseOnSurface: Color { get }
+  var black: Color { get }
+  var white: Color { get }
+  var blue: Color { get }
+  var red: Color { get }
+  var grey: Color { get }
+  var darkGrey: Color { get }
+
+  var backgroundDefault: Color { get }
+  var backgroundPaper: Color { get }
+  var dividerDark: Color { get }
+  var lightGradientEnd: Color { get }
+  var lightGradientStart: Color { get }
   var error: Color { get }
-  var onError: Color { get }
-  var errorContainer: Color { get }
-  var onErrorContainer: Color { get }
-  var outline: Color { get }
-  var outlineVariant: Color { get }
-  var scrim: Color { get }
+  var primaryDark: Color { get }
+  var primaryLight: Color { get }
+  var secondaryMain: Color { get }
+  var successText: Color { get }
+  var tertiaryMain: Color { get }
+  var textDisabledDark: Color { get }
+  var textDisabledLight: Color { get }
+  var textPrimaryDark: Color { get }
+  var textSecondaryDark: Color { get }
+  var textSecondaryLight: Color { get }
+
+  var material: MaterialColor { get }
 }
 
 class ColorManager: ColorManagerProtocol {
 
-  enum ColorEnum: String {
+  // MARK: - Properties
+
+  enum PaletteColorEnum: String {
     case backgroundDefault
+    case backgroundPaper
     case dividerDark
-    case lightBlue
     case lightGradientEnd
     case lightGradientStart
-    case onError
+    case error
+    case primaryDark
+    case primaryLight
     case secondaryMain
     case successText
     case tertiaryMain
     case textDisabledDark
+    case textDisabledLight
     case textPrimaryDark
     case textSecondaryDark
+    case textSecondaryLight
   }
 
-  enum PrimaryColors: String {
+  enum BaseColors: String {
     case black
     case white
     case blue
@@ -74,101 +76,83 @@ class ColorManager: ColorManagerProtocol {
     case darkGrey
   }
 
-  // MARK: - Properties
+  public var black: Color {
+    Color(BaseColors.black.rawValue, bundle: bundle)
+  }
+  public var white: Color {
+    Color(BaseColors.white.rawValue, bundle: bundle)
+  }
+  public var blue: Color {
+    Color(BaseColors.blue.rawValue, bundle: bundle)
+  }
+  public var red: Color {
+    Color(BaseColors.red.rawValue, bundle: bundle)
+  }
+  public var grey: Color {
+    Color(BaseColors.grey.rawValue, bundle: bundle)
+  }
+  public var darkGrey: Color {
+    Color(BaseColors.darkGrey.rawValue, bundle: bundle)
+  }
+
+  public var backgroundDefault: Color {
+    Color(PaletteColorEnum.backgroundDefault.rawValue, bundle: bundle)
+  }
+  public var backgroundPaper: Color {
+    Color(PaletteColorEnum.backgroundPaper.rawValue, bundle: bundle)
+  }
+  public var dividerDark: Color {
+    Color(PaletteColorEnum.dividerDark.rawValue, bundle: bundle)
+  }
+  public var lightGradientEnd: Color {
+    Color(PaletteColorEnum.lightGradientEnd.rawValue, bundle: bundle)
+  }
+  public var lightGradientStart: Color {
+    Color(PaletteColorEnum.lightGradientStart.rawValue, bundle: bundle)
+  }
+  public var error: Color {
+    Color(PaletteColorEnum.error.rawValue, bundle: bundle)
+  }
+  public var primaryDark: Color {
+    Color(PaletteColorEnum.primaryDark.rawValue, bundle: bundle)
+  }
+  public var primaryLight: Color {
+    Color(PaletteColorEnum.primaryLight.rawValue, bundle: bundle)
+  }
+  public var secondaryMain: Color {
+    Color(PaletteColorEnum.secondaryMain.rawValue, bundle: bundle)
+  }
+  public var successText: Color {
+    Color(PaletteColorEnum.successText.rawValue, bundle: bundle)
+  }
+  public var tertiaryMain: Color {
+    Color(PaletteColorEnum.tertiaryMain.rawValue, bundle: bundle)
+  }
+  public var textDisabledDark: Color {
+    Color(PaletteColorEnum.textDisabledDark.rawValue, bundle: bundle)
+  }
+  public var textDisabledLight: Color {
+    Color(PaletteColorEnum.textDisabledLight.rawValue, bundle: bundle)
+  }
+  public var textPrimaryDark: Color {
+    Color(PaletteColorEnum.textPrimaryDark.rawValue, bundle: bundle)
+  }
+  public var textSecondaryDark: Color {
+    Color(PaletteColorEnum.textSecondaryDark.rawValue, bundle: bundle)
+  }
+  public var textSecondaryLight: Color {
+    Color(PaletteColorEnum.textSecondaryLight.rawValue, bundle: bundle)
+  }
 
   var bundle: Bundle
+
+  var material: MaterialColor
+
   // MARK: - Lifecycle
 
   init(bundle: Bundle) {
+    material = MaterialColor(bundle: bundle)
     self.bundle = bundle
   }
-  // MARK: - Primary Colors
 
-  var primary: Color {
-    Color(ColorEnum.lightBlue.rawValue, bundle: bundle)
-  }
-  var onPrimary: Color {
-    Color(PrimaryColors.white.rawValue, bundle: bundle)
-  }
-  var primaryContainer: Color {
-    Color(ColorEnum.lightBlue.rawValue, bundle: bundle)
-  }
-  var onPrimaryContainer: Color {
-    Color(PrimaryColors.black.rawValue, bundle: bundle)
-  }
-  var inversePrimary: Color {
-    Color(ColorEnum.lightBlue.rawValue, bundle: bundle)
-  }
-  var secondary: Color {
-    Color(ColorEnum.secondaryMain.rawValue, bundle: bundle)
-  }
-  var onSecondary: Color {
-    Color(PrimaryColors.white.rawValue, bundle: bundle)
-  }
-  var secondaryContainer: Color {
-    Color(ColorEnum.secondaryMain.rawValue, bundle: bundle)
-  }
-  var onSecondaryContainer: Color {
-    Color(PrimaryColors.white.rawValue, bundle: bundle)
-  }
-  var tertiary: Color {
-    Color(ColorEnum.tertiaryMain.rawValue, bundle: bundle)
-  }
-  var onTertiary: Color {
-    Color(PrimaryColors.black.rawValue, bundle: bundle)
-  }
-  var tertiaryContainer: Color {
-    Color(ColorEnum.tertiaryMain.rawValue, bundle: bundle)
-  }
-  var onTertiaryContainer: Color {
-    Color(PrimaryColors.black.rawValue, bundle: bundle)
-  }
-  var background: Color {
-    Color(ColorEnum.backgroundDefault.rawValue, bundle: bundle)
-  }
-  var onBackground: Color {
-    Color(PrimaryColors.white.rawValue, bundle: bundle)
-  }
-  var surface: Color {
-    Color(PrimaryColors.black.rawValue, bundle: bundle)
-  }
-  var onSurface: Color {
-    Color(PrimaryColors.white.rawValue, bundle: bundle)
-  }
-  var surfaceVariant: Color {
-    Color(PrimaryColors.black.rawValue, bundle: bundle)
-  }
-  var onSurfaceVariant: Color {
-    Color(PrimaryColors.white.rawValue, bundle: bundle)
-  }
-  var surfaceTint: Color {
-    Color(ColorEnum.lightBlue.rawValue, bundle: bundle)
-  }
-  var inverseSurface: Color {
-    Color(ColorEnum.lightBlue.rawValue, bundle: bundle)
-  }
-  var inverseOnSurface: Color {
-    Color(ColorEnum.lightBlue.rawValue, bundle: bundle)
-  }
-  var error: Color {
-    Color(ColorEnum.onError.rawValue, bundle: bundle)
-  }
-  var onError: Color {
-    Color(ColorEnum.textSecondaryDark.rawValue, bundle: bundle)
-  }
-  var errorContainer: Color {
-    Color(ColorEnum.onError.rawValue, bundle: bundle)
-  }
-  var onErrorContainer: Color {
-    Color(ColorEnum.onError.rawValue, bundle: bundle)
-  }
-  var outline: Color {
-    Color(ColorEnum.dividerDark.rawValue, bundle: bundle)
-  }
-  var outlineVariant: Color {
-    Color(ColorEnum.dividerDark.rawValue, bundle: bundle)
-  }
-  var scrim: Color {
-    Color(PrimaryColors.blue.rawValue, bundle: bundle)
-  }
 }

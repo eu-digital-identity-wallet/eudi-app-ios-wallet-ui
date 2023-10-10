@@ -18,13 +18,27 @@ import SwiftUI
 
 public protocol ImageManagerProtocol {
   var euLogo: Image { get }
+  var logo: Image { get }
   var launchImage: Image { get }
+  var faceId: Image { get }
+  var id: Image { get }
+  var nfc: Image { get }
+  var qr: Image { get }
+  var touchId: Image { get }
+  var user: Image { get }
 }
 
 class ImageManager: ImageManagerProtocol {
   enum ImageEnum: String {
     case euLogo = "eu-logo"
     case launchImage = "launch-image"
+    case faceId = "face-id"
+    case id = "id-stroke"
+    case nfc = "nfc"
+    case qr = "qr"
+    case touchId = "touch-id"
+    case user = "user"
+    case logo = "logo"
   }
 
   // MARK: - Properties
@@ -40,8 +54,28 @@ class ImageManager: ImageManagerProtocol {
   var euLogo: Image {
     Image(ImageEnum.euLogo.rawValue, bundle: bundle)
   }
-
   var launchImage: Image {
     Image(ImageEnum.launchImage.rawValue, bundle: bundle)
+  }
+  var faceId: Image {
+    Image(ImageEnum.faceId.rawValue, bundle: bundle)
+  }
+  var id: Image {
+    Image(ImageEnum.id.rawValue, bundle: bundle)
+  }
+  var nfc: Image {
+    Image(ImageEnum.nfc.rawValue, bundle: bundle)
+  }
+  var qr: Image {
+    Image(ImageEnum.qr.rawValue, bundle: bundle)
+  }
+  var touchId: Image {
+    Image(ImageEnum.touchId.rawValue, bundle: bundle)
+  }
+  var user: Image {
+    Image(ImageEnum.user.rawValue, bundle: bundle)
+  }
+  var logo: Image {
+    Image(ImageEnum.logo.rawValue, bundle: bundle)
   }
 }

@@ -7,7 +7,7 @@ import logic_ui
 
 class PreviewInteractor: FAQsInteractorType {
   func fetchFAQs() async throws -> [FAQUIModel] {
-    try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+    try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
     return FAQUIModel.mocks()
   }
 }

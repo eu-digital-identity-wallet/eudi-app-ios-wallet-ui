@@ -23,8 +23,8 @@ public struct WrapperView<Content: View>: View {
   let padding: CGFloat
 
   public init(
-    @ViewBuilder content: () -> Content,
-    padding: CGFloat = Theme.shared.dimension.padding
+    padding: CGFloat = Theme.shared.dimension.padding,
+    @ViewBuilder content: () -> Content
   ) {
     self.content = content()
     self.padding = padding
@@ -34,6 +34,6 @@ public struct WrapperView<Content: View>: View {
     VStack {
       content
     }
-    .padding(padding)
+    .padding(.horizontal, padding)
   }
 }

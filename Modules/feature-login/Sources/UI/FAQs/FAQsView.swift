@@ -27,37 +27,41 @@ public struct FAQsView<Router: RouterHostType, Interactor: FAQsInteractorType>: 
   }
 
   public var body: some View {
-    VStack(spacing: SPACING_MEDIUM_SMALL) {
+    WrapperView(padding: SPACING_LARGE) {
+      VStack(spacing: SPACING_MEDIUM_SMALL) {
 
-      LargeHeaderView(title: "FAQ") {
-        viewModel.goBack()
-      }
-
-      ScrollView(showsIndicators: false) {
-        VStack(spacing: SPACING_LARGE_MEDIUM) {
-          SearchBar(
-            text: $viewModel.searchText,
-            commited: $userIsEditingAlias,
-            isLoading: viewModel.displayable.isLoading
-          )
-
-          ForEach(viewModel.displayable.filteredModels) { cell in
-            ExpandableTextView(
-              title: cell.value.title,
-              content: cell.value.content,
-              isloading: viewModel.displayable.isLoading
-            ).transition(.opacity)
-          }
+        LargeHeaderView(title: "FAQs") {
+          viewModel.goBack()
         }
-        .padding()
-        .animation(.default)
-      }
-      .disabled(viewModel.displayable.isLoading)
 
+        ScrollView(showsIndicators: false) {
+          VStack(spacing: SPACING_LARGE_MEDIUM) {
+            VSpacer.extraSmall()
+            SearchBar(
+              text: $viewModel.searchText,
+              commited: $userIsEditingAlias,
+              isLoading: viewModel.displayable.isLoading
+            )
+
+            ForEach(viewModel.displayable.filteredModels) { cell in
+              ExpandableTextView(
+                title: cell.value.title,
+                content: cell.value.content,
+                isloading: viewModel.displayable.isLoading
+              ).transition(.opacity)
+            }
+          }
+          .animation(.default)
+        }
+        .disabled(viewModel.displayable.isLoading)
+
+      }
+      .task {
+        await viewModel.fetchFAQs()
+      }
     }
     .fastenDynamicType()
-    .task {
-      await viewModel.fetchFAQs()
-    }
+    .background(Theme.shared.color.backgroundPaper)
+    .navigationBarHidden(true)
   }
 }

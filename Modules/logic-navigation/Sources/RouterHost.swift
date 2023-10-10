@@ -56,6 +56,7 @@ public final class RouterHost: RouterHostType {
         FAQsView(with: self, and: FAQsInteractor())
       }
     }
+    .edgesIgnoringSafeArea(.bottom)
     .eraseToAnyView()
   }
 }

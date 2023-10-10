@@ -37,21 +37,19 @@ public struct LargeHeaderView: View {
           onBack?()
         }, label: {
           Image(systemName: "arrow.left")
-            .foregroundColor(Theme.shared.color.secondary)
+            .foregroundColor(Theme.shared.color.secondaryMain)
             .font(.title)
         })
 
         Spacer()
       }
-      .padding(.horizontal)
 
       HStack {
         Text(title)
-          .font(Theme.shared.font.headlineSmall)
-          .foregroundColor(Theme.shared.color.secondary)
+          .typography(Theme.shared.font.headlineSmall)
+          .foregroundColor(Theme.shared.color.secondaryMain)
         Spacer()
       }
-      .padding(.horizontal)
     }
   }
 }

@@ -15,6 +15,7 @@
  */
 import Foundation
 import SwiftUI
+
 import logic_resources
 
 public struct ExpandableTextView: View {
@@ -40,19 +41,19 @@ public struct ExpandableTextView: View {
       Group {
         HStack {
           Text(title)
-            .font(Theme.shared.font.titleSmall)
-            .foregroundColor(Theme.shared.color.primary)
+            .typography(Theme.shared.font.titleSmall)
+            .foregroundColor(Theme.shared.color.textPrimaryDark)
           Spacer()
           Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-            .foregroundColor(Theme.shared.color.primary)
+            .foregroundColor(Theme.shared.color.secondaryMain)
         }
         .padding(isExpanded ? [.horizontal, .top] : [.all])
 
         if isExpanded {
           HStack {
             Text(content)
-              .font(Theme.shared.font.bodyMedium)
-              .foregroundColor(Theme.shared.color.primary)
+              .typography(Theme.shared.font.bodyMedium)
+              .foregroundColor(Theme.shared.color.textSecondaryDark)
             Spacer()
           }
           .padding([.horizontal, .bottom])
@@ -60,7 +61,7 @@ public struct ExpandableTextView: View {
       }
     }
     .padding()
-    .background(Color(red: 0.9, green: 0.9, blue: 0.9))
+    .background(Theme.shared.color.backgroundDefault)
     .cornerRadius(10)
     .onTapGesture {
       withAnimation {

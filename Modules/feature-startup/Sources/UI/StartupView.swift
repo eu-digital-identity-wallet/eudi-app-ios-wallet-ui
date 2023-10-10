@@ -19,53 +19,94 @@ import logic_resources
 
 public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorType>: View {
 
+  @State var text: String
+  @State var hasComited: Bool
+
   @ObservedObject private var viewModel: StartupViewModel<Router, Interactor>
 
   public init(with router: Router, and interactor: Interactor) {
     self.viewModel = .init(router: router, interactor: interactor)
 
+    self.text = ""
+    self.hasComited = false
   }
 
   public var body: some View {
-    WrapperView {
-      Image(systemName: "globe")
-        .imageScale(.large)
-        .foregroundStyle(.tint)
-      Text("Title")
-        .font(Theme.shared.font.titleLarge)
-      Text("SubTitle")
-        .font(Theme.shared.font.headlineLarge)
-      Text("SubTitle2")
-        .font(Theme.shared.font.headlineMedium)
-      Text("Text")
-        .font(Theme.shared.font.displayLarge)
-      Text("Text2")
-        .font(Theme.shared.font.displayMedium)
-      Text("Text3")
-        .font(Theme.shared.font.displaySmall)
-      Text("Text4")
-        .font(Theme.shared.font.labelMedium)
-      Text("Text5")
-        .font(Theme.shared.font.labelSmall)
-      Text("Body")
-        .font(Theme.shared.font.bodyLarge)
-      Text("Body2")
-        .font(Theme.shared.font.bodyMedium)
+    ScrollView {
+      WrapperView {
 
-      FloatingTextField(title: .init("Hello"),
-                        text: .constant("World"),
-                        showError: false,
-                        contentType: .name,
-                        userHasCommitedChange: .constant(false))
-      WrapButtonView(
-        title: .init(stringLiteral: "Hello World!"),
-        onAction: {}()
-      )
-      WrapIconView(
-        backgroundColor: Theme.shared.color.tertiary,
-        systemIcon: "left"
+        Text("displayLarge")
+          .typography(Theme.shared.font.displayLarge)
+        Text("displayMedium")
+          .typography(Theme.shared.font.displayMedium)
+        Text("displaySmall")
+          .typography(Theme.shared.font.displaySmall)
 
-      )
+        Text("headlineLarge")
+          .typography(ThemeManager.shared.font.headlineLarge)
+        Text("headlineMedium")
+          .typography(Theme.shared.font.headlineMedium)
+        Text("headlineSmall")
+          .typography(Theme.shared.font.headlineSmall)
+
+        Text("titleLarge")
+          .typography(Theme.shared.font.titleLarge)
+        Text("titleMedium")
+          .typography(Theme.shared.font.titleMedium)
+        Text("titleSmall")
+          .typography(Theme.shared.font.titleSmall)
+
+        Text("bodyLarge")
+          .typography(Theme.shared.font.bodyLarge)
+        Text("bodyMedium")
+          .typography(Theme.shared.font.bodyMedium)
+        Text("bodySmall")
+          .typography(Theme.shared.font.bodySmall)
+
+        Text("labelLarge")
+          .typography(Theme.shared.font.labelLarge)
+        Text("labelMedium")
+          .typography(Theme.shared.font.labelMedium)
+        Text("labelSmall")
+          .typography(Theme.shared.font.labelSmall)
+
+        FloatingTextField(title: .init("Hello"),
+                          text: $text,
+                          showError: false,
+                          contentType: .name,
+                          userHasCommitedChange: $hasComited)
+        WrapButtonView(
+          title: .init(stringLiteral: "PRIMARY"),
+          onAction: {}()
+        )
+
+        WrapButtonView(style: .secondary,
+                       title: .init("SECONDARY"),
+                       onAction: {}())
+
+        Theme.shared.image.euLogo
+        Theme.shared.image.launchImage
+        Theme.shared.image.faceId
+        Theme.shared.image.id
+        Theme.shared.image.nfc
+        Theme.shared.image.qr
+        Theme.shared.image.touchId
+        Theme.shared.image.logo
+      }
     }
   }
+}
+
+class MockRouter: RouterHostType {
+  func push(with route: logic_ui.AppRoute) {}
+  func popTo(with route: logic_ui.AppRoute, inclusive: Bool, animated: Bool) {}
+  func pop(animated: Bool) {}
+  func composeApplication() -> AnyView {
+    StartupView(with: self, and: StartupInteractor()).eraseToAnyView()
+  }
+  func getCurrentScreen() -> logic_ui.AppRoute? { nil }
+}
+
+#Preview {
+  StartupView(with: MockRouter(), and: StartupInteractor())
 }

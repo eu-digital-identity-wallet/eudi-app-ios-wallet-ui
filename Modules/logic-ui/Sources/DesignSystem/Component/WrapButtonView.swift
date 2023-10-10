@@ -26,19 +26,23 @@ public struct WrapButtonView: View {
   private let gravity: Gravity
   private let cornerRadius: CGFloat
   private let isEnabled: Bool
+  private let borderWidth: CGFloat
+  private let borderColor: Color
 
   @Binding
   private var isLoading: Bool
 
   public init(
     title: LocalizedStringKey,
-    textColor: Color = .white,
-    backgroundColor: Color = Theme.shared.color.background,
+    textColor: Color = Theme.shared.color.textPrimaryDark,
+    backgroundColor: Color = Theme.shared.color.tertiaryMain,
     systemIcon: String? = nil,
     gravity: Gravity = .center,
     isLoading: Binding<Bool> = Binding.constant(false),
     isEnabled: Bool = true,
     cornerRadius: CGFloat = Theme.shared.shape.small,
+    borderWidth: CGFloat = 0,
+    borderColor: Color = .clear,
     onAction: @autoclosure @escaping () -> Void
   ) {
     self.title = title
@@ -49,6 +53,31 @@ public struct WrapButtonView: View {
     self._isLoading = isLoading
     self.isEnabled = isEnabled
     self.cornerRadius = cornerRadius
+    self.borderWidth = borderWidth
+    self.borderColor = borderColor
+    self.onAction = onAction
+  }
+
+  public init(
+    style: ButtonStyleEnum,
+    title: LocalizedStringKey,
+    systemIcon: String? = nil,
+    gravity: Gravity = .center,
+    isLoading: Binding<Bool> = Binding.constant(false),
+    isEnabled: Bool = true,
+    cornerRadius: CGFloat = Theme.shared.shape.small,
+    onAction: @autoclosure @escaping () -> Void
+  ) {
+    self.title = title
+    self.textColor = style.textColor
+    self.backgroundColor = style.backgroundColor
+    self.systemIcon = systemIcon
+    self.gravity = gravity
+    self._isLoading = isLoading
+    self.isEnabled = isEnabled
+    self.cornerRadius = cornerRadius
+    self.borderWidth = style.borderWidth
+    self.borderColor = style.borderColor
     self.onAction = onAction
   }
 
@@ -74,7 +103,9 @@ public struct WrapButtonView: View {
           }
 
           Text(title)
+            .typography(ThemeManager.shared.font.labelLarge)
             .foregroundColor(textColor)
+            .buttonStyle(OutlinePressedButtonStyle())
 
           if gravity == .center || gravity == .start {
             Spacer()
@@ -93,8 +124,14 @@ public struct WrapButtonView: View {
         .frame(maxWidth: .infinity)
         .background(backgroundColor)
         .cornerRadius(cornerRadius)
+        .overlay(
+          RoundedRectangle(cornerRadius: cornerRadius)
+            .stroke(borderColor, lineWidth: borderWidth)
+        )
+
       }
     )
+
     .disabled(isLoading || !isEnabled)
   }
 }
