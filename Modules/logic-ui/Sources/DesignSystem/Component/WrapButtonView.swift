@@ -58,6 +58,29 @@ public struct WrapButtonView: View {
     self.onAction = onAction
   }
 
+  public init(
+    style: ButtonStyleEnum,
+    title: LocalizedStringKey,
+    systemIcon: String? = nil,
+    gravity: Gravity = .center,
+    isLoading: Binding<Bool> = Binding.constant(false),
+    isEnabled: Bool = true,
+    cornerRadius: CGFloat = Theme.shared.shape.small,
+    onAction: @autoclosure @escaping () -> Void
+  ) {
+    self.title = title
+    self.textColor = style.textColor
+    self.backgroundColor = style.backgroundColor
+    self.systemIcon = systemIcon
+    self.gravity = gravity
+    self._isLoading = isLoading
+    self.isEnabled = isEnabled
+    self.cornerRadius = cornerRadius
+    self.borderWidth = style.borderWidth
+    self.borderColor = style.borderColor
+    self.onAction = onAction
+  }
+
   public var body: some View {
     Button(
       action: { onAction() },

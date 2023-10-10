@@ -80,13 +80,9 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
           onAction: {}()
         )
 
-        WrapButtonView(
-          title: .init("SECONDARY"),
-          textColor: Theme.shared.color.textPrimaryDark,
-          backgroundColor: Theme.shared.color.backgroundPaper,
-          borderWidth: 1,
-          borderColor: Theme.shared.color.dividerDark,
-          onAction: {}())
+        WrapButtonView(style: .primary,
+                       title: .init("SECONDARY"),
+                       onAction: {}())
 
         Theme.shared.image.euLogo
         Theme.shared.image.launchImage

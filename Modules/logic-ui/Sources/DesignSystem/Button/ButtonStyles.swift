@@ -52,39 +52,3 @@ public struct OutlinePressedButtonStyle: ButtonStyle {
       .animation(.easeInOut, value: 0.33)
   }
 }
-
-public struct PrimaryButtonStyle: ButtonStyle {
-
-  public let outlineColor: Color
-  public let pressedBackgroundColor: Color
-  public let defaultBackgroundColor: Color
-
-  public init(
-    outlineColor: Color = Theme.shared.color.tertiaryMain,
-    pressedBackgroundColor: Color = Theme.shared.color.dividerDark,
-    defaultBackgroundColor: Color = Theme.shared.color.tertiaryMain
-  ) {
-    self.outlineColor = outlineColor
-    self.pressedBackgroundColor = pressedBackgroundColor
-    self.defaultBackgroundColor = defaultBackgroundColor
-  }
-
-  public func makeBody(configuration: Configuration) -> some View {
-    let isPressed = configuration.isPressed
-
-    return configuration.label
-      .padding()
-      .contentShape(Rectangle())
-      .frame(maxWidth: .infinity, alignment: .center)
-      .overlay(
-        RoundedRectangle(cornerRadius: 8.0)
-          .stroke(outlineColor, lineWidth: 2.0)
-      )
-      .foregroundColor(outlineColor)
-      .background(
-        RoundedRectangle(cornerRadius: 8)
-          .fill(isPressed ? pressedBackgroundColor : defaultBackgroundColor)
-        )
-      .animation(.easeInOut, value: 0.33)
-  }
-}
