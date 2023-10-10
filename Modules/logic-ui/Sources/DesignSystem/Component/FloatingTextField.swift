@@ -17,6 +17,9 @@ import SwiftUI
 import logic_resources
 
 public struct FloatingTextField<Content: View>: View {
+
+  let placeholderScaleFactor = 0.8
+
   let title: LocalizedStringKey
   let leftImage: Image?
   var showError: Bool
@@ -98,7 +101,9 @@ public struct FloatingTextField<Content: View>: View {
             .padding(2)
             .background(Theme.shared.color.backgroundPaper)
             .padding(.leading, 15)
-            .offset(x: 0, y: isNotFocused ? 0 : -30)
+            .offset(x: 0, y: isNotFocused ? 0 : -(30 + (1-placeholderScaleFactor) * 30))
+            .scaleEffect(isNotFocused ? 1 : placeholderScaleFactor, anchor: .topLeading)
+
           TextField("", text: $text, onEditingChanged: { changed in
             userHasCommitedChange = changed
           })
