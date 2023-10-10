@@ -80,7 +80,7 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
           onAction: {}()
         )
 
-        WrapButtonView(style: .primary,
+        WrapButtonView(style: .secondary,
                        title: .init("SECONDARY"),
                        onAction: {}())
 
