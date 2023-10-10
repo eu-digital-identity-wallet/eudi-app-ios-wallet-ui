@@ -14,11 +14,6 @@ let package = Package(
   ],
   dependencies: [
     .package(
-      url: "https://github.com/pointfreeco/swift-dependencies.git",
-      from: "1.0.0"
-    ),
-    .package(
-      name: "Firebase",
       url: "https://github.com/firebase/firebase-ios-sdk",
       from: "10.3.0"
     ),
@@ -28,12 +23,8 @@ let package = Package(
     .target(
       name: "logic-business",
       dependencies: [
-        .product(
-          name: "Dependencies",
-          package: "swift-dependencies"
-        ),
-        .product(name: "FirebaseCrashlytics", package: "Firebase"),
-        .product(name: "FirebaseAnalytics", package: "Firebase")
+        .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk"),
+        .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk")
       ],
       path: "./Sources"
     ),
@@ -41,11 +32,7 @@ let package = Package(
       name: "logic-business-test",
       dependencies: [
         "logic-business",
-        "logic-test",
-        .product(
-          name: "Dependencies",
-          package: "swift-dependencies"
-        )
+        "logic-test"
       ],
       path: "./Tests"
     )
