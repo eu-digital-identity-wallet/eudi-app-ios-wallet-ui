@@ -34,8 +34,8 @@ public struct WrapButtonView: View {
 
   public init(
     title: LocalizedStringKey,
-    textColor: Color = Theme.shared.color.palette.textPrimaryDark,
-    backgroundColor: Color = Theme.shared.color.palette.tertiaryMain,
+    textColor: Color = Theme.shared.color.textPrimaryDark,
+    backgroundColor: Color = Theme.shared.color.tertiaryMain,
     systemIcon: String? = nil,
     gravity: Gravity = .center,
     isLoading: Binding<Bool> = Binding.constant(false),
@@ -80,7 +80,7 @@ public struct WrapButtonView: View {
           }
 
           Text(title)
-            .applyFont(ThemeManager.shared.font.labelLarge)
+            .typography(ThemeManager.shared.font.labelLarge)
             .foregroundColor(textColor)
             .buttonStyle(OutlinePressedButtonStyle())
 

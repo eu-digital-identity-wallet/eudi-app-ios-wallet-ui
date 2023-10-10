@@ -30,7 +30,7 @@ public struct WrapIconView: View {
   public init(
     title: LocalizedStringKey? = nil,
     textColor: Color = .white,
-    backgroundColor: Color = Theme.shared.color.palette.backgroundPaper,
+    backgroundColor: Color = Theme.shared.color.backgroundPaper,
     systemIcon: String,
     gravity: Gravity = .center,
     isEnabled: Bool = true,

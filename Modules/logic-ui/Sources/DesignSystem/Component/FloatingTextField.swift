@@ -65,21 +65,21 @@ public struct FloatingTextField<Content: View>: View {
 
   private var backgroundColor: Color {
     if showError {
-      return Theme.shared.color.palette.secondaryMain.opacity(0.12)
+      return Theme.shared.color.secondaryMain.opacity(0.12)
     } else if isNotFocused {
-      return Theme.shared.color.palette.dividerDark
+      return Theme.shared.color.dividerDark
     } else {
-      return Theme.shared.color.palette.textPrimaryDark
+      return Theme.shared.color.textPrimaryDark
     }
   }
 
   private var labelColor: Color {
     if showError {
-      return Theme.shared.color.palette.secondaryMain
+      return Theme.shared.color.secondaryMain
     } else if isNotFocused {
-      return Theme.shared.color.palette.dividerDark
+      return Theme.shared.color.dividerDark
     } else {
-      return Theme.shared.color.palette.secondaryMain
+      return Theme.shared.color.secondaryMain
     }
   }
 
@@ -92,15 +92,18 @@ public struct FloatingTextField<Content: View>: View {
         }
         ZStack(alignment: .leading) {
           Text(title)
-            .applyFont(ThemeManager.shared.font.bodyMedium)
-            .foregroundColor(labelColor)
+            .typography(ThemeManager.shared.font.bodyMedium)
+            .foregroundColor(userHasCommitedChange ?
+                             labelColor : Theme.shared.color.textSecondaryDark)
+            .padding(2)
+            .background(Theme.shared.color.backgroundPaper)
             .padding(.leading, 15)
-            .offset(x: 0, y: isNotFocused ? 0 : -18)
+            .offset(x: 0, y: isNotFocused ? 0 : -30)
           TextField("", text: $text, onEditingChanged: { changed in
             userHasCommitedChange = changed
           })
-          .applyFont(Theme.shared.font.bodyMedium)
-          .foregroundColor(Theme.shared.color.palette.backgroundDefault)
+          .typography(Theme.shared.font.bodyMedium)
+          .foregroundColor(Theme.shared.color.textPrimaryDark)
           .autocapitalization(.none)
           .disableAutocorrection(true)
           .padding(.leading, 15)
@@ -120,17 +123,23 @@ public struct FloatingTextField<Content: View>: View {
             }
           }
         }
-        .padding(.top, isNotFocused ? 0 : 15)
         .frame(maxWidth: .infinity, minHeight: 60, maxHeight: 60)
         .animation(self.useSpringAnimation ? .spring(response: 0.4, dampingFraction: 0.5) : .default, value: userHasCommitedChange)
 
         trailingContent()
-
+          .background(Color.blue)
         HSpacer.medium()
+          .background(Color.red)
       }
       .background(
-        Theme.shared.shape.highCornerRadiusShape
-          .fill(.gray.opacity(0.2))
+        RoundedRectangle(
+          cornerRadius: Theme.shared.shape.small,
+          style: .continuous)
+        .stroke(
+          userHasCommitedChange ?
+          Theme.shared.color.secondaryMain :
+          Theme.shared.color.dividerDark,
+          lineWidth: 1.5)
       )
     }
 

@@ -17,7 +17,7 @@ import SwiftUI
 import logic_resources
 
 public extension TextField {
-  func applyFont(_ style: TypographyStyle) -> some View {
+  func typography(_ style: TypographyStyle) -> some View {
     if #available(iOS 16.0, *) {
       return self
         .font(style.font)

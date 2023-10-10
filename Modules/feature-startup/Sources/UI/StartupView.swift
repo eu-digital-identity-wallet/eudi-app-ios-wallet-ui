@@ -36,39 +36,39 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
       WrapperView {
 
         Text("displayLarge")
-          .applyFont(Theme.shared.font.displayLarge)
+          .typography(Theme.shared.font.displayLarge)
         Text("displayMedium")
-          .applyFont(Theme.shared.font.displayMedium)
+          .typography(Theme.shared.font.displayMedium)
         Text("displaySmall")
-          .applyFont(Theme.shared.font.displaySmall)
+          .typography(Theme.shared.font.displaySmall)
 
         Text("headlineLarge")
-          .applyFont(ThemeManager.shared.font.headlineLarge)
+          .typography(ThemeManager.shared.font.headlineLarge)
         Text("headlineMedium")
-          .applyFont(Theme.shared.font.headlineMedium)
+          .typography(Theme.shared.font.headlineMedium)
         Text("headlineSmall")
-          .applyFont(Theme.shared.font.headlineSmall)
+          .typography(Theme.shared.font.headlineSmall)
 
         Text("titleLarge")
-          .applyFont(Theme.shared.font.titleLarge)
+          .typography(Theme.shared.font.titleLarge)
         Text("titleMedium")
-          .applyFont(Theme.shared.font.titleMedium)
+          .typography(Theme.shared.font.titleMedium)
         Text("titleSmall")
-          .applyFont(Theme.shared.font.titleSmall)
+          .typography(Theme.shared.font.titleSmall)
 
         Text("bodyLarge")
-          .applyFont(Theme.shared.font.bodyLarge)
+          .typography(Theme.shared.font.bodyLarge)
         Text("bodyMedium")
-          .applyFont(Theme.shared.font.bodyMedium)
+          .typography(Theme.shared.font.bodyMedium)
         Text("bodySmall")
-          .applyFont(Theme.shared.font.bodySmall)
+          .typography(Theme.shared.font.bodySmall)
 
         Text("labelLarge")
-          .applyFont(Theme.shared.font.labelLarge)
+          .typography(Theme.shared.font.labelLarge)
         Text("labelMedium")
-          .applyFont(Theme.shared.font.labelMedium)
+          .typography(Theme.shared.font.labelMedium)
         Text("labelSmall")
-          .applyFont(Theme.shared.font.labelSmall)
+          .typography(Theme.shared.font.labelSmall)
 
         FloatingTextField(title: .init("Hello"),
                           text: $text,
@@ -76,31 +76,21 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
                           contentType: .name,
                           userHasCommitedChange: $hasComited)
         WrapButtonView(
-          title: .init(stringLiteral: "Hello World!"),
+          title: .init(stringLiteral: "PRIMARY"),
           onAction: {}()
         )
 
         WrapButtonView(
-          title: .init("Secondary"),
-          textColor: ThemeManager.shared.color.palette.textPrimaryDark,
-          backgroundColor: ThemeManager.shared.color.palette.backgroundPaper,
+          title: .init("SECONDARY"),
+          textColor: Theme.shared.color.textPrimaryDark,
+          backgroundColor: Theme.shared.color.backgroundPaper,
           borderWidth: 1,
-          borderColor: ThemeManager.shared.color.palette.dividerDark,
+          borderColor: Theme.shared.color.dividerDark,
           onAction: {}())
-
-        WrapIconView(
-          backgroundColor: Theme.shared.color.palette.tertiaryMain,
-          systemIcon: "left"
-
-        )
       }
     }
 
   }
-}
-
-#Preview {
-  StartupView(with: MockRouter(), and: StartupInteractor())
 }
 
 class MockRouter: RouterHostType {
@@ -123,4 +113,10 @@ class MockRouter: RouterHostType {
     nil
   }
 
+}
+
+#Preview {
+  @State var text: String = ""
+  @State var hasCommited: Bool = false
+  return FloatingTextField(title: .init("TEXT"), leftImage: nil, text: $text, showError: false, contentType: .jobTitle, userHasCommitedChange: $hasCommited)
 }

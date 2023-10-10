@@ -17,7 +17,7 @@ import SwiftUI
 import logic_resources
 
 public extension Text {
-  func applyFont(_ style: TypographyStyle) -> some View {
+  func typography(_ style: TypographyStyle) -> some View {
     self
       .font(style.font)
       .tracking(style.spacing)

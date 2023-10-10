@@ -18,8 +18,8 @@ import logic_resources
 
 public func textRow(
   _ value: LocalizedStringKey,
-  textColor: Color = Theme.shared.color.palette.textPrimaryDark,
-  imageColor: Color = Theme.shared.color.palette.textPrimaryDark,
+  textColor: Color = Theme.shared.color.textPrimaryDark,
+  imageColor: Color = Theme.shared.color.textPrimaryDark,
   image: String? = nil
 ) -> some View {
   HStack {
@@ -40,8 +40,8 @@ public func textRow(
 
 public func textRow(
   _ value: String,
-  textColor: Color = Theme.shared.color.palette.textPrimaryDark,
-  imageColor: Color = Theme.shared.color.palette.textPrimaryDark,
+  textColor: Color = Theme.shared.color.textPrimaryDark,
+  imageColor: Color = Theme.shared.color.textPrimaryDark,
   image: String? = nil
 ) -> some View {
   textRow(

@@ -24,9 +24,9 @@ public struct OutlinePressedButtonStyle: ButtonStyle {
   public let defaultBackgroundColor: Color
 
   public init(
-    outlineColor: Color = Theme.shared.color.palette.dividerDark,
-    pressedBackgroundColor: Color = Theme.shared.color.palette.dividerDark,
-    defaultBackgroundColor: Color = Theme.shared.color.palette.backgroundPaper
+    outlineColor: Color = Theme.shared.color.dividerDark,
+    pressedBackgroundColor: Color = Theme.shared.color.dividerDark,
+    defaultBackgroundColor: Color = Theme.shared.color.backgroundPaper
   ) {
     self.outlineColor = outlineColor
     self.pressedBackgroundColor = pressedBackgroundColor
@@ -60,9 +60,9 @@ public struct PrimaryButtonStyle: ButtonStyle {
   public let defaultBackgroundColor: Color
 
   public init(
-    outlineColor: Color = Theme.shared.color.palette.tertiaryMain,
-    pressedBackgroundColor: Color = Theme.shared.color.palette.dividerDark,
-    defaultBackgroundColor: Color = Theme.shared.color.palette.tertiaryMain
+    outlineColor: Color = Theme.shared.color.tertiaryMain,
+    pressedBackgroundColor: Color = Theme.shared.color.dividerDark,
+    defaultBackgroundColor: Color = Theme.shared.color.tertiaryMain
   ) {
     self.outlineColor = outlineColor
     self.pressedBackgroundColor = pressedBackgroundColor

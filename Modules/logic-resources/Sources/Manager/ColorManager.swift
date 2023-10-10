@@ -16,24 +16,143 @@
 import SwiftUI
 
 public protocol ColorManagerProtocol {
-  var base: BaseColor { get }
-  var palette: PaletteColor { get }
+
+  var black: Color { get }
+  var white: Color { get }
+  var blue: Color { get }
+  var red: Color { get }
+  var grey: Color { get }
+  var darkGrey: Color { get }
+
+  var backgroundDefault: Color { get }
+  var backgroundPaper: Color { get }
+  var dividerDark: Color { get }
+  var lightGradientEnd: Color { get }
+  var lightGradientStart: Color { get }
+  var error: Color { get }
+  var primaryDark: Color { get }
+  var primaryLight: Color { get }
+  var secondaryMain: Color { get }
+  var successText: Color { get }
+  var tertiaryMain: Color { get }
+  var textDisabledDark: Color { get }
+  var textDisabledLight: Color { get }
+  var textPrimaryDark: Color { get }
+  var textSecondaryDark: Color { get }
+  var textSecondaryLight: Color { get }
+
   var material: MaterialColor { get }
 }
 
 class ColorManager: ColorManagerProtocol {
 
   // MARK: - Properties
-  var base: BaseColor
-  var palette: PaletteColor
+
+  enum PaletteColorEnum: String {
+    case backgroundDefault
+    case backgroundPaper
+    case dividerDark
+    case lightGradientEnd
+    case lightGradientStart
+    case error
+    case primaryDark
+    case primaryLight
+    case secondaryMain
+    case successText
+    case tertiaryMain
+    case textDisabledDark
+    case textDisabledLight
+    case textPrimaryDark
+    case textSecondaryDark
+    case textSecondaryLight
+  }
+
+  enum BaseColors: String {
+    case black
+    case white
+    case blue
+    case red
+    case grey
+    case darkGrey
+  }
+
+  public var black: Color {
+    Color(BaseColors.black.rawValue, bundle: bundle)
+  }
+  public var white: Color {
+    Color(BaseColors.white.rawValue, bundle: bundle)
+  }
+  public var blue: Color {
+    Color(BaseColors.blue.rawValue, bundle: bundle)
+  }
+  public var red: Color {
+    Color(BaseColors.red.rawValue, bundle: bundle)
+  }
+  public var grey: Color {
+    Color(BaseColors.grey.rawValue, bundle: bundle)
+  }
+  public var darkGrey: Color {
+    Color(BaseColors.darkGrey.rawValue, bundle: bundle)
+  }
+
+  public var backgroundDefault: Color {
+    Color(PaletteColorEnum.backgroundDefault.rawValue, bundle: bundle)
+  }
+  public var backgroundPaper: Color {
+    Color(PaletteColorEnum.backgroundPaper.rawValue, bundle: bundle)
+  }
+  public var dividerDark: Color {
+    Color(PaletteColorEnum.dividerDark.rawValue, bundle: bundle)
+  }
+  public var lightGradientEnd: Color {
+    Color(PaletteColorEnum.lightGradientEnd.rawValue, bundle: bundle)
+  }
+  public var lightGradientStart: Color {
+    Color(PaletteColorEnum.lightGradientStart.rawValue, bundle: bundle)
+  }
+  public var error: Color {
+    Color(PaletteColorEnum.error.rawValue, bundle: bundle)
+  }
+  public var primaryDark: Color {
+    Color(PaletteColorEnum.primaryDark.rawValue, bundle: bundle)
+  }
+  public var primaryLight: Color {
+    Color(PaletteColorEnum.primaryLight.rawValue, bundle: bundle)
+  }
+  public var secondaryMain: Color {
+    Color(PaletteColorEnum.secondaryMain.rawValue, bundle: bundle)
+  }
+  public var successText: Color {
+    Color(PaletteColorEnum.successText.rawValue, bundle: bundle)
+  }
+  public var tertiaryMain: Color {
+    Color(PaletteColorEnum.tertiaryMain.rawValue, bundle: bundle)
+  }
+  public var textDisabledDark: Color {
+    Color(PaletteColorEnum.textDisabledDark.rawValue, bundle: bundle)
+  }
+  public var textDisabledLight: Color {
+    Color(PaletteColorEnum.textDisabledLight.rawValue, bundle: bundle)
+  }
+  public var textPrimaryDark: Color {
+    Color(PaletteColorEnum.textPrimaryDark.rawValue, bundle: bundle)
+  }
+  public var textSecondaryDark: Color {
+    Color(PaletteColorEnum.textSecondaryDark.rawValue, bundle: bundle)
+  }
+  public var textSecondaryLight: Color {
+    Color(PaletteColorEnum.textSecondaryLight.rawValue, bundle: bundle)
+  }
+
+  var bundle: Bundle
+
   var material: MaterialColor
 
   // MARK: - Lifecycle
 
   init(bundle: Bundle) {
-    palette = PaletteColor(bundle: bundle)
     material = MaterialColor(bundle: bundle)
-    base = BaseColor(bundle: bundle)
+    self.bundle = bundle
   }
 
 }

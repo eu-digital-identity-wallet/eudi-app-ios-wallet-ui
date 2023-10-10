@@ -110,10 +110,10 @@ class TypographyManager: TypographyManagerProtocol {
 
   private var bodyLargeFont: Font = TypographyStyleEnum.body1.font
   private var bodyMediumFont: Font =  TypographyStyleEnum.body2.font
-  private var bodySmallFont: Font =  TypographyStyleEnum.body1.font
+  private var bodySmallFont: Font =  Font.custom(.regular, relativeTo: .footnote)
 
   private var labelLargeFont: Font = TypographyStyleEnum.button.font
-  private var labelMediumFont: Font = TypographyStyleEnum.button.font
+  private var labelMediumFont: Font = Font.custom(.regular, relativeTo: .body)
   private var labelSmallFont: Font  = TypographyStyleEnum.overline.font
 
   private var displayLargeSpacing: CGFloat = TypographyStyleEnum.h1.spacing
