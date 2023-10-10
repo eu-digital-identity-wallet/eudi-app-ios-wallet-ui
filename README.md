@@ -8,6 +8,7 @@
 * [Disclaimer](#disclaimer)
 * [How to contribute](#how-to-contribute)
 * [Creating a new feature module](#creating-a-new-feature-module)
+* [SwiftUI Previews](#swiftui-previews)
 * [License](#license)
 
 ## Overview
@@ -47,6 +48,12 @@ If you want to gain access to the entire apps mock infrastructure (classes and s
 2. Under your Test folder in you package add a Mock folder and place an empty file called GeneratedMocks.swift therein.
 3. Edit *root*/Mock/GenerateMocks.sh, and append your package name to the FEATURE_MODULES variable.
 4. run **./Mock/GenerateMocks.sh** from the project root.
+
+## SwiftUI previews
+
+As of xcode 15.0 preview for SwiftUI view that are located in local swift packages are not reliable.
+
+We recommend using the main target for previews. Please Check **Previewer.swift** for an example that utilises our local package infrastructure to achieve previewing.
 
 ## License
 
