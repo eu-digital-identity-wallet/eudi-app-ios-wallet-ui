@@ -47,7 +47,7 @@ public struct LargeHeaderView: View {
 
       HStack {
         Text(title)
-          .font(.largeTitle)
+          .font(Theme.shared.font.headlineSmall)
           .foregroundColor(Theme.shared.color.secondary)
         Spacer()
       }

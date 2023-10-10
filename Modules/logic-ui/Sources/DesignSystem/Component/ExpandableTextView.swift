@@ -40,7 +40,8 @@ public struct ExpandableTextView: View {
       Group {
         HStack {
           Text(title)
-            .bold()
+            .font(Theme.shared.font.titleSmall)
+            .foregroundColor(Theme.shared.color.primary)
           Spacer()
           Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
             .foregroundColor(Theme.shared.color.primary)
@@ -50,7 +51,8 @@ public struct ExpandableTextView: View {
         if isExpanded {
           HStack {
             Text(content)
-              .foregroundColor(.gray)
+              .font(Theme.shared.font.bodyMedium)
+              .foregroundColor(Theme.shared.color.primary)
             Spacer()
           }
           .padding([.horizontal, .bottom])
