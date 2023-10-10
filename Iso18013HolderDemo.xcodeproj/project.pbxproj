@@ -15,12 +15,12 @@
 		4A76CDEDAE02D377B655EC7F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A76075244B6EA4ABC073824 /* Extensions.swift */; };
 		4F27F981847B65F7E973D7E1 /* mdoc_holderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DA409AC0A2BD5D87C95731 /* mdoc_holderUITests.swift */; };
 		5329E5351F0F6452B28A2344 /* TuistBundle+Iso18013HolderDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF98A559AF08701237D4902 /* TuistBundle+Iso18013HolderDemo.swift */; };
-		5DE72C1A9CE8EFA83C1C58FC /* sample_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 86ABC4FD9B54EC57B39517C2 /* sample_data.json */; };
 		74CF90E3FE08C0E39C6E0E73 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 163C5AA70A3D689878251F21 /* CodeScanner */; };
 		98D93180046EB299D3E350B2 /* mdoc_holderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59B4ADE62B8BA3D5817A575 /* mdoc_holderApp.swift */; };
 		A06DB869639F999F7E4BA729 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 268F27B6E2979B70D0EEB026 /* LaunchScreen.storyboard */; };
 		B0036D0B2ACD9488009AD181 /* OpenId4VpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0036D0A2ACD9488009AD181 /* OpenId4VpClient.swift */; };
 		B0BAD9E52AD341B7009DAAA7 /* MdocDataTransfer18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B0BAD9E42AD341B7009DAAA7 /* MdocDataTransfer18013 */; };
+		B0C137152AD5BE44006E67BC /* EUDI_sample_data.json in Resources */ = {isa = PBXBuildFile; fileRef = B0C137142AD5BE44006E67BC /* EUDI_sample_data.json */; };
 		B0EC6CF62AD213AF00E5482D /* vp_token_test.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0EC6CF52AD213AF00E5482D /* vp_token_test.txt */; };
 		B807260BC666A5A0D2EA0F3A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CA872DD9B8F79BFC0A55469 /* Localizable.strings */; };
 		CE930B8F27771E5DB1D6C614 /* SiopOpenID4VP in Frameworks */ = {isa = PBXBuildFile; productRef = 54FF3F5F47998360A0719693 /* SiopOpenID4VP */; };
@@ -74,10 +74,10 @@
 		2DD591DE93BFD2D4BDCC5A78 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		601717DA620F4072AA934A9B /* mdocAppData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdocAppData.swift; sourceTree = "<group>"; };
 		7E7A25294A9E3CDFED709B90 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
-		86ABC4FD9B54EC57B39517C2 /* sample_data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = sample_data.json; sourceTree = "<group>"; };
 		86DA409AC0A2BD5D87C95731 /* mdoc_holderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdoc_holderUITests.swift; sourceTree = "<group>"; };
 		8B9DF632FE20A18FBF39E13F /* mdoc_holderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdoc_holderUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		B0036D0A2ACD9488009AD181 /* OpenId4VpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenId4VpClient.swift; sourceTree = "<group>"; };
+		B0C137142AD5BE44006E67BC /* EUDI_sample_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = EUDI_sample_data.json; sourceTree = "<group>"; };
 		B0EC6CF52AD213AF00E5482D /* vp_token_test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = vp_token_test.txt; sourceTree = "<group>"; };
 		BEBCB81D85A5FEB87E22CB52 /* DocDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocDataView.swift; sourceTree = "<group>"; };
 		C59B4ADE62B8BA3D5817A575 /* mdoc_holderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdoc_holderApp.swift; sourceTree = "<group>"; };
@@ -158,7 +158,7 @@
 		7D4D4FA4A667E84DC99BC422 /* Sample_data */ = {
 			isa = PBXGroup;
 			children = (
-				86ABC4FD9B54EC57B39517C2 /* sample_data.json */,
+				B0C137142AD5BE44006E67BC /* EUDI_sample_data.json */,
 				0D57DC5DD3A0FC18E83B0023 /* scytales_root_ca.der */,
 			);
 			path = Sample_data;
@@ -346,7 +346,7 @@
 			files = (
 				2CB3D47A008CC6F66C5CE352 /* Assets.xcassets in Resources */,
 				A06DB869639F999F7E4BA729 /* LaunchScreen.storyboard in Resources */,
-				5DE72C1A9CE8EFA83C1C58FC /* sample_data.json in Resources */,
+				B0C137152AD5BE44006E67BC /* EUDI_sample_data.json in Resources */,
 				0F91A0F0863CEFEBC5D7AEBD /* scytales_root_ca.der in Resources */,
 				B0EC6CF62AD213AF00E5482D /* vp_token_test.txt in Resources */,
 				B807260BC666A5A0D2EA0F3A /* Localizable.strings in Resources */,

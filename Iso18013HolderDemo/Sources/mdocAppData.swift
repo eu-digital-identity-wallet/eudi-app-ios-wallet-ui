@@ -25,7 +25,7 @@ class MdocAppData: ObservableObject {
 	
 	func  loadSampleData(force: Bool = false) -> MdocAppData {
 		debugDisplay = true
-		let sampleData = Data(name: "sample_data")!
+		let sampleData = Data(name: "EUDI_sample_data")!
 		let sr = sampleData.decodeJSON(type: SignUpResponse.self)!
 		guard let dr = sr.deviceResponse, let dpk = sr.devicePrivateKey else { return self}
 		if force || pidLoaded { euPidModel = EuPidModel(response: dr, devicePrivateKey: dpk) }
