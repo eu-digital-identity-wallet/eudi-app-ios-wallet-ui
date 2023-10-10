@@ -17,6 +17,9 @@ import SwiftUI
 import logic_resources
 
 public struct FloatingTextField<Content: View>: View {
+
+  let placeholderScaleFactor = 0.8
+
   let title: LocalizedStringKey
   let leftImage: Image?
   var showError: Bool
@@ -65,21 +68,21 @@ public struct FloatingTextField<Content: View>: View {
 
   private var backgroundColor: Color {
     if showError {
-      return Theme.shared.color.secondary.opacity(0.12)
+      return Theme.shared.color.secondaryMain.opacity(0.12)
     } else if isNotFocused {
-      return Theme.shared.color.outlineVariant
+      return Theme.shared.color.dividerDark
     } else {
-      return Theme.shared.color.outline
+      return Theme.shared.color.textPrimaryDark
     }
   }
 
   private var labelColor: Color {
     if showError {
-      return Theme.shared.color.primary
+      return Theme.shared.color.secondaryMain
     } else if isNotFocused {
-      return Theme.shared.color.surface
+      return Theme.shared.color.dividerDark
     } else {
-      return Theme.shared.color.secondary
+      return Theme.shared.color.secondaryMain
     }
   }
 
@@ -92,15 +95,20 @@ public struct FloatingTextField<Content: View>: View {
         }
         ZStack(alignment: .leading) {
           Text(title)
-            .font(Theme.shared.font.bodyMedium)
-            .foregroundColor(labelColor)
+            .typography(ThemeManager.shared.font.bodyMedium)
+            .foregroundColor(userHasCommitedChange ?
+                             labelColor : Theme.shared.color.textSecondaryDark)
+            .padding(2)
+            .background(Theme.shared.color.backgroundPaper)
             .padding(.leading, 15)
-            .offset(x: 0, y: isNotFocused ? 0 : -18)
+            .offset(x: 0, y: isNotFocused ? 0 : -(30 + (1-placeholderScaleFactor) * 30))
+            .scaleEffect(isNotFocused ? 1 : placeholderScaleFactor, anchor: .topLeading)
+
           TextField("", text: $text, onEditingChanged: { changed in
             userHasCommitedChange = changed
           })
-          .font(Theme.shared.font.bodyMedium)
-          .foregroundColor(Theme.shared.color.surface)
+          .typography(Theme.shared.font.bodyMedium)
+          .foregroundColor(Theme.shared.color.textPrimaryDark)
           .autocapitalization(.none)
           .disableAutocorrection(true)
           .padding(.leading, 15)
@@ -120,17 +128,23 @@ public struct FloatingTextField<Content: View>: View {
             }
           }
         }
-        .padding(.top, isNotFocused ? 0 : 15)
         .frame(maxWidth: .infinity, minHeight: 60, maxHeight: 60)
         .animation(self.useSpringAnimation ? .spring(response: 0.4, dampingFraction: 0.5) : .default, value: userHasCommitedChange)
 
         trailingContent()
-
+          .background(Color.blue)
         HSpacer.medium()
+          .background(Color.red)
       }
       .background(
-        Theme.shared.shape.highCornerRadiusShape
-          .fill(.gray.opacity(0.2))
+        RoundedRectangle(
+          cornerRadius: Theme.shared.shape.small,
+          style: .continuous)
+        .stroke(
+          userHasCommitedChange ?
+          Theme.shared.color.secondaryMain :
+          Theme.shared.color.dividerDark,
+          lineWidth: 1.5)
       )
     }
 
