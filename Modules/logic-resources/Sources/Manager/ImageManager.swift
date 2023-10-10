@@ -18,7 +18,14 @@ import SwiftUI
 
 public protocol ImageManagerProtocol {
   var euLogo: Image { get }
+  var logo: Image { get }
   var launchImage: Image { get }
+  var faceId: Image { get }
+  var id: Image { get }
+  var nfc: Image { get }
+  var qr: Image { get }
+  var touchId: Image { get }
+  var user: Image { get }
 }
 
 class ImageManager: ImageManagerProtocol {
@@ -31,6 +38,7 @@ class ImageManager: ImageManagerProtocol {
     case qr = "qr"
     case touchId = "touch-id"
     case user = "user"
+    case logo = "logo"
   }
 
   // MARK: - Properties
@@ -66,5 +74,8 @@ class ImageManager: ImageManagerProtocol {
   }
   var user: Image {
     Image(ImageEnum.user.rawValue, bundle: bundle)
+  }
+  var logo: Image {
+    Image(ImageEnum.logo.rawValue, bundle: bundle)
   }
 }

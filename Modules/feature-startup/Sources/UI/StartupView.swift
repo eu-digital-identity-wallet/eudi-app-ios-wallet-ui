@@ -87,6 +87,15 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
           borderWidth: 1,
           borderColor: Theme.shared.color.dividerDark,
           onAction: {}())
+
+        Theme.shared.image.euLogo
+        Theme.shared.image.launchImage
+        Theme.shared.image.faceId
+        Theme.shared.image.id
+        Theme.shared.image.nfc
+        Theme.shared.image.qr
+        Theme.shared.image.touchId
+        Theme.shared.image.logo
       }
     }
 
