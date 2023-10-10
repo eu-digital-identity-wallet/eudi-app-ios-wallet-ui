@@ -51,6 +51,13 @@
         "identifier" : "feature-login-tests",
         "name" : "feature-login-tests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "feature-dashboard-tests",
+        "name" : "feature-dashboard-tests"
+      }
     }
   ],
   "version" : 1

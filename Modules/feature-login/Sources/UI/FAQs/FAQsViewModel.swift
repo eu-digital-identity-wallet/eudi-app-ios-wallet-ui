@@ -46,15 +46,12 @@ public final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInterac
       .dropFirst()
       .map { [weak self] text -> [FAQUIModel] in
         guard let self = self else { return [] }
-        if text.isEmpty {
-          return displayable.models
-        } else {
-          return displayable.models.filter { $0.value.title.localizedCaseInsensitiveContains(text) }
+        return displayable.models.filter { model in
+          return text.isEmpty || model.value.title.localizedCaseInsensitiveContains(text)
         }
-      }.sink { [weak self] faqs in
-        guard let self = self else { return }
-        self.displayable.filteredModels = faqs
-      }.store(in: &cancellables)
+      }
+      .assign(to: \.displayable.filteredModels, on: self)
+      .store(in: &cancellables)
   }
 
   func fetchFAQs() async {
