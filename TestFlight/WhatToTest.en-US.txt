@@ -1,1 +1,2 @@
+- New sample data with driving privileges 
 - OID4VP + CBOR support
