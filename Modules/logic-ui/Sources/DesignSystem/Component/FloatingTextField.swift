@@ -96,8 +96,11 @@ public struct FloatingTextField<Content: View>: View {
         ZStack(alignment: .leading) {
           Text(title)
             .typography(ThemeManager.shared.font.bodyMedium)
-            .foregroundColor(userHasCommitedChange ?
-                             labelColor : Theme.shared.color.textSecondaryDark)
+            .foregroundColor(
+              userHasCommitedChange
+              ? labelColor
+              : Theme.shared.color.textSecondaryDark
+            )
             .padding(2)
             .background(Theme.shared.color.backgroundPaper)
             .padding(.leading, 15)
@@ -143,7 +146,7 @@ public struct FloatingTextField<Content: View>: View {
         .stroke(
           userHasCommitedChange ?
           Theme.shared.color.secondaryMain :
-          Theme.shared.color.dividerDark,
+            Theme.shared.color.dividerDark,
           lineWidth: 1.5)
       )
     }

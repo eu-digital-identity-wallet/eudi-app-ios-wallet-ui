@@ -270,6 +270,11 @@ import Cuckoo
 @testable import logic_business
 
 import Foundation
+
+import Cuckoo
+@testable import logic_business
+
+import Foundation
 import UIKit
 
 import Cuckoo

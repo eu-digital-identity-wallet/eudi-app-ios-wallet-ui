@@ -32,96 +32,85 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
   }
 
   public var body: some View {
-    ScrollView {
-      WrapperView {
+    ContentScreen(canScroll: true) {
+      ScrollView {
+        VStack {
 
-        Text("displayLarge")
-          .typography(Theme.shared.font.displayLarge)
-        Text("displayMedium")
-          .typography(Theme.shared.font.displayMedium)
-        Text("displaySmall")
-          .typography(Theme.shared.font.displaySmall)
+          Text("displayLarge")
+            .typography(Theme.shared.font.displayLarge)
+          Text("displayMedium")
+            .typography(Theme.shared.font.displayMedium)
+          Text("displaySmall")
+            .typography(Theme.shared.font.displaySmall)
 
-        Text("headlineLarge")
-          .typography(ThemeManager.shared.font.headlineLarge)
-        Text("headlineMedium")
-          .typography(Theme.shared.font.headlineMedium)
-        Text("headlineSmall")
-          .typography(Theme.shared.font.headlineSmall)
+          Text("headlineLarge")
+            .typography(ThemeManager.shared.font.headlineLarge)
+          Text("headlineMedium")
+            .typography(Theme.shared.font.headlineMedium)
+          Text("headlineSmall")
+            .typography(Theme.shared.font.headlineSmall)
 
-        Text("titleLarge")
-          .typography(Theme.shared.font.titleLarge)
-        Text("titleMedium")
-          .typography(Theme.shared.font.titleMedium)
-        Text("titleSmall")
-          .typography(Theme.shared.font.titleSmall)
+          Text("titleLarge")
+            .typography(Theme.shared.font.titleLarge)
+          Text("titleMedium")
+            .typography(Theme.shared.font.titleMedium)
+          Text("titleSmall")
+            .typography(Theme.shared.font.titleSmall)
 
-        Text("bodyLarge")
-          .typography(Theme.shared.font.bodyLarge)
-        Text("bodyMedium")
-          .typography(Theme.shared.font.bodyMedium)
-        Text("bodySmall")
-          .typography(Theme.shared.font.bodySmall)
+          Text("bodyLarge")
+            .typography(Theme.shared.font.bodyLarge)
+          Text("bodyMedium")
+            .typography(Theme.shared.font.bodyMedium)
+          Text("bodySmall")
+            .typography(Theme.shared.font.bodySmall)
 
-        Text("labelLarge")
-          .typography(Theme.shared.font.labelLarge)
-        Text("labelMedium")
-          .typography(Theme.shared.font.labelMedium)
-        Text("labelSmall")
-          .typography(Theme.shared.font.labelSmall)
+          Text("labelLarge")
+            .typography(Theme.shared.font.labelLarge)
+          Text("labelMedium")
+            .typography(Theme.shared.font.labelMedium)
+          Text("labelSmall")
+            .typography(Theme.shared.font.labelSmall)
 
-        FloatingTextField(title: .init("Hello"),
-                          text: $text,
-                          showError: false,
-                          contentType: .name,
-                          userHasCommitedChange: $hasComited)
-        WrapButtonView(
-          title: .init(stringLiteral: "PRIMARY"),
-          onAction: {}()
-        )
+          FloatingTextField(title: .init("Hello"),
+                            text: $text,
+                            showError: false,
+                            contentType: .name,
+                            userHasCommitedChange: $hasComited)
+          WrapButtonView(
+            title: .init(stringLiteral: "PRIMARY"),
+            onAction: {}()
+          )
 
-        WrapButtonView(style: .secondary,
-                       title: .init("SECONDARY"),
-                       onAction: {}())
+          WrapButtonView(
+            title: .init(stringLiteral: "TEST SUCCESS SCREEN"),
+            onAction: viewModel.onClickTestSuccess()
+          )
 
-        Theme.shared.image.euLogo
-        Theme.shared.image.launchImage
-        Theme.shared.image.faceId
-        Theme.shared.image.id
-        Theme.shared.image.nfc
-        Theme.shared.image.qr
-        Theme.shared.image.touchId
-        Theme.shared.image.logo
+          WrapButtonView(
+            title: .init(stringLiteral: "TEST BIOMETRICS SCREEN"),
+            onAction: {}()
+          )
+
+          WrapButtonView(style: .secondary,
+                         title: .init("SECONDARY"),
+                         onAction: {}())
+
+          Theme.shared.image.euLogo
+          Theme.shared.image.launchImage
+          Theme.shared.image.faceId
+          Theme.shared.image.id
+          Theme.shared.image.nfc
+          Theme.shared.image.qr
+          Theme.shared.image.touchId
+          Theme.shared.image.logo
+        }
       }
     }
-
   }
-}
-
-class MockRouter: RouterHostType {
-  func push(with route: logic_ui.AppRoute) {
-  }
-
-  func popTo(with route: logic_ui.AppRoute, inclusive: Bool, animated: Bool) {
-
-  }
-
-  func pop() {
-
-  }
-
-  func composeApplication() -> AnyView {
-    StartupView(with: self, and: StartupInteractor()).eraseToAnyView()
-  }
-
-  func getCurrentScreen() -> logic_ui.AppRoute? {
-    nil
-  }
-
 }
 
 #Preview {
-  StartupView(with: MockRouter(), and: StartupInteractor())
+  StartupView(with: PreviewRouter(), and: StartupInteractor())
 }
 //
 //#Preview {

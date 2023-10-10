@@ -15,6 +15,7 @@
 		F0A0139B2AC35ECA00065EAD /* logic-navigation in Resources */ = {isa = PBXBuildFile; fileRef = F0A013952AC35ECA00065EAD /* logic-navigation */; };
 		F0A0139C2AC35ECA00065EAD /* logic-ui in Resources */ = {isa = PBXBuildFile; fileRef = F0A013962AC35ECA00065EAD /* logic-ui */; };
 		F0A0139F2AC35F4900065EAD /* logic-navigation in Frameworks */ = {isa = PBXBuildFile; productRef = F0A0139E2AC35F4900065EAD /* logic-navigation */; };
+		F0BFE9B72AD557290062826F /* feature-common in Resources */ = {isa = PBXBuildFile; fileRef = F0BFE9B62AD557290062826F /* feature-common */; };
 		F12E940F2ABC6C000086EC93 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12E940E2ABC6C000086EC93 /* AppDelegate.swift */; };
 		F14907BC2ABAF54B00DDFE56 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14907BB2ABAF54B00DDFE56 /* Application.swift */; };
 		F14907C02ABAF55000DDFE56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F14907BF2ABAF55000DDFE56 /* Assets.xcassets */; };
@@ -27,6 +28,7 @@
 
 /* Begin PBXFileReference section */
 		1198ECD72AC453F200F4E71A /* logic-resources */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-resources"; path = "Modules/logic-resources"; sourceTree = "<group>"; };
+		F0290B062AD55C550081EEFF /* GenerateMocks.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = GenerateMocks.sh; path = Mock/GenerateMocks.sh; sourceTree = "<group>"; };
 		F063250F2AC598370004601F /* logic-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-test"; path = "Modules/logic-test"; sourceTree = "<group>"; };
 		F06325112AC59AF50004601F /* feature-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-test"; path = "Modules/feature-test"; sourceTree = "<group>"; };
 		F09E1EA22AC3443000779C25 /* Wallet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Wallet.plist; sourceTree = "<group>"; };
@@ -37,6 +39,7 @@
 		F0A013962AC35ECA00065EAD /* logic-ui */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-ui"; path = "Modules/logic-ui"; sourceTree = "<group>"; };
 		F0A0BE922AC35925002BE0F5 /* Wallet.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Wallet.xctestplan; sourceTree = "<group>"; };
 		F0A3740D2AC3A92400F301DD /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		F0BFE9B62AD557290062826F /* feature-common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-common"; path = "Modules/feature-common"; sourceTree = "<group>"; };
 		F12E940E2ABC6C000086EC93 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F14907B82ABAF54B00DDFE56 /* Wallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F14907BB2ABAF54B00DDFE56 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
@@ -72,6 +75,7 @@
 		F14907AF2ABAF54B00DDFE56 = {
 			isa = PBXGroup;
 			children = (
+				F0290B062AD55C550081EEFF /* GenerateMocks.sh */,
 				F0A3740D2AC3A92400F301DD /* .swiftlint.yml */,
 				F0A0BE922AC35925002BE0F5 /* Wallet.xctestplan */,
 				F14907BA2ABAF54B00DDFE56 /* Wallet */,
@@ -121,6 +125,7 @@
 		F14908692ABC467600DDFE56 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
+				F0BFE9B62AD557290062826F /* feature-common */,
 				1198ECD72AC453F200F4E71A /* logic-resources */,
 				F06325112AC59AF50004601F /* feature-test */,
 				F063250F2AC598370004601F /* logic-test */,
@@ -220,6 +225,7 @@
 				F0A013992AC35ECA00065EAD /* logic-api in Resources */,
 				F0A0139A2AC35ECA00065EAD /* feature-startup in Resources */,
 				F1CACAE22AC3098C00B40DED /* WalletRelease.xcconfig in Resources */,
+				F0BFE9B72AD557290062826F /* feature-common in Resources */,
 				F0A0139C2AC35ECA00065EAD /* logic-ui in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

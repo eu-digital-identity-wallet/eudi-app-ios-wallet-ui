@@ -3,10 +3,12 @@ excluded:
     - "Modules/logic-ui/Tests/*"
     - "Modules/logic-api/Tests/*"
     - "Modules/feature-startup/Tests/*"
+    - "Modules/feature-common/Tests/*"
     - "Modules/logic-business/.build/*"
     - "Modules/logic-ui/Tests/.build/*"
     - "Modules/logic-api/Tests/.build/*"
     - "Modules/feature-startup/.build/*"
+    - "Modules/feature-common/.build/*"
 
 
 disabled_rules:
@@ -18,6 +20,7 @@ disabled_rules:
   - function_parameter_count
   - nesting
   - file_length
+  - switch_case_alignment
 
 line_length: 300
 

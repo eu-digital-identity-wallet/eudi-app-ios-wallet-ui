@@ -16,6 +16,7 @@
 import SwiftUI
 import logic_ui
 import logic_navigation
+import logic_resources
 
 @main
 struct Application: App {
@@ -32,7 +33,16 @@ struct Application: App {
 
   var body: some Scene {
     WindowGroup {
-      routerHost.composeApplication()
+      ZStack {
+
+        Rectangle()
+          .fill(ThemeManager.shared.color.backgroundPaper)
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
+          .edgesIgnoringSafeArea(.all)
+
+        routerHost.composeApplication()
+          .edgesIgnoringSafeArea(.bottom)
+      }
     }
   }
 }

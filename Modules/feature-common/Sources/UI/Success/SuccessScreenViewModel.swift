@@ -13,33 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Foundation
+import SwiftUI
 import logic_ui
-import feature_common
 import logic_business
 
 @MainActor
-public final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteractorType>: BaseViewModel<Router> {
+final class SuccessViewModel<Router: RouterHostType>: BaseViewModel<Router> {
 
-  private let interactor: Interactor
+  @Published var config: UIConfig.Success
 
-  public init(router: Router, interactor: Interactor) {
-    self.interactor = interactor
+  init(config: any UIConfigType, router: Router) {
+    guard let config = config as? UIConfig.Success else {
+      fatalError("SuccessViewModel:: Invalid configuraton")
+    }
+    self.config = config
     super.init(router: router)
   }
 
-  func onClickTestSuccess() {
-    router.push(
-      with: .success(
-        config: UIConfig.Success(
-          title: "testTitle",
-          subtitle: "testSubTitle",
-          buttons: [
-            .init(title: "POP BACK", screen: .startup, style: .primary, navigationType: .pop)
-          ],
-          visualKind: .defaultIcon
-        )
-      )
-    )
+  func onButtonClicked(with button: UIConfig.Success.Button) {
+    switch button.navigationType {
+    case .pop:
+      router.popTo(with: button.screen)
+    case .deepLink:
+      if let _ = button.deepLink {
+        //cacheDeepLinkURL(url: link)
+        router.popTo(with: button.screen, inclusive: true, animated: true)
+      }
+    }
   }
 }

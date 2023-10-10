@@ -36,7 +36,7 @@ LOGIC_UI_MODULE="logic-ui"
 SECOND_LEVEL_MODULES=("${LOGIC_API_MODULE}" "${LOGIC_UI_MODULE}")
 
 # Append your new feature module here
-FEATURE_MODULES=("feature-startup")
+FEATURE_MODULES=("feature-startup" "feature-common")
 
 IS_BASE_LOGIC_MODULE=1
 IS_SECONDARY_LOGIC_MODULE=2
