@@ -116,7 +116,11 @@ class MockRouter: RouterHostType {
 }
 
 #Preview {
-  @State var text: String = ""
-  @State var hasCommited: Bool = false
-  return FloatingTextField(title: .init("TEXT"), leftImage: nil, text: $text, showError: false, contentType: .jobTitle, userHasCommitedChange: $hasCommited)
+  StartupView(with: MockRouter(), and: StartupInteractor())
 }
+//
+//#Preview {
+//  @State var text: String = ""
+//  @State var hasCommited: Bool = false
+//  return FloatingTextField(title: .init("TEXT"), leftImage: nil, text: $text, showError: false, contentType: .jobTitle, userHasCommitedChange: $hasCommited)
+//}
