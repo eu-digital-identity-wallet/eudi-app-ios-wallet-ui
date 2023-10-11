@@ -17,6 +17,7 @@ import class Foundation.Bundle
 
 public protocol ConfigProviderType {
   func getConfigLogic() -> ConfigLogic
+  func getConfigSecurityLogic() -> ConfigSecurityLogic
 }
 
 public struct ConfigProvider: ConfigProviderType {
@@ -27,5 +28,9 @@ public struct ConfigProvider: ConfigProviderType {
 
   public func getConfigLogic() -> ConfigLogic {
     WalletConfig()
+  }
+
+  public func getConfigSecurityLogic() -> ConfigSecurityLogic {
+    WalletSecurityConfig()
   }
 }

@@ -93,3 +93,20 @@ public extension String {
     return count
   }
 }
+
+public extension String {
+  func equals(_ valueToMatch: String, ignoreCase: Bool = false) -> Bool {
+    if ignoreCase {
+      return self.caseInsensitiveCompare(valueToMatch) == .orderedSame
+    } else {
+      return self == valueToMatch
+    }
+  }
+
+  func match(_ regex: String) -> [[String]] {
+    let nsString = self as NSString
+    return (try? NSRegularExpression(pattern: regex, options: []))?.matches(in: self, options: [], range: NSRange(location: 0, length: nsString.length)).map { match in
+      (0..<match.numberOfRanges).map { match.range(at: $0).location == NSNotFound ? "" : nsString.substring(with: match.range(at: $0)) }
+    } ?? []
+  }
+}

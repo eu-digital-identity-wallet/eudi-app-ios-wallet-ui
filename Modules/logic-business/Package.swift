@@ -14,8 +14,28 @@ let package = Package(
   ],
   dependencies: [
     .package(
+      url: "https://github.com/pointfreeco/swift-dependencies.git",
+      from: "1.0.0"
+    ),
+    .package(
       url: "https://github.com/firebase/firebase-ios-sdk",
       from: "10.3.0"
+    ),
+    .package(
+      url: "https://github.com/securing/IOSSecuritySuite.git",
+      from: "1.9.5"
+    ),
+    .package(
+      url: "https://github.com/kishikawakatsumi/KeychainAccess.git",
+      from: "3.0.0"
+    ),
+    .package(
+      url: "https://github.com/iziz/libPhoneNumber-iOS.git",
+      branch: "master"
+    ),
+    .package(
+      url: "https://github.com/nsagora/peppermint",
+      from: "1.2.0"
     ),
     .package(name: "logic-test", path: "./logic-test")
   ],
@@ -23,6 +43,20 @@ let package = Package(
     .target(
       name: "logic-business",
       dependencies: [
+        "IOSSecuritySuite",
+        "KeychainAccess",
+        .product(
+          name: "Peppermint",
+          package: "peppermint"
+        ),
+        .product(
+          name: "libPhoneNumber",
+          package: "libPhoneNumber-iOS"
+        ),
+        .product(
+          name: "Dependencies",
+          package: "swift-dependencies"
+        ),
         .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk"),
         .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk")
       ],

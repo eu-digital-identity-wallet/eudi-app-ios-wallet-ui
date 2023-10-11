@@ -16,9 +16,9 @@
 
 import Foundation
 
-public protocol UIConfigType: Equatable {}
+public protocol UIConfigType {}
 
-public struct UIConfig: UIConfigType { }
+public struct UIConfig { }
 
 public extension UIConfig {
 

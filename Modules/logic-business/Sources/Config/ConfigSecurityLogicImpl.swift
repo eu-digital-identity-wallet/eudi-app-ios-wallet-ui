@@ -13,19 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@_exported import Foundation
-@_exported import XCTest
-@_exported import Cuckoo
-@_exported import CombineExpectations
+import Foundation
 
-class EudiTest: XCTestCase {
+public struct WalletSecurityConfig: ConfigSecurityLogic {
 
-  override func setUp() async throws {
-    try await super.setUp()
+  public var blockRootAccess: Bool {
+    false
   }
 
-  override func tearDown() {
-    super.tearDown()
+  public var blockEmulator: Bool {
+    false
   }
 
+  public var blockDebugMode: Bool {
+    false
+  }
+
+  public var blockReverseEngineering: Bool {
+    false
+  }
+
+  public var blockScreenCapture: Bool {
+    false
+  }
+
+  public var blockUnsecureWebContent: Bool {
+    false
+  }
+
+  public var bindToDevice: Bool {
+    false
+  }
+
+  public var profileInformation: (bundleId: String, signature: String)? {
+    nil
+  }
 }

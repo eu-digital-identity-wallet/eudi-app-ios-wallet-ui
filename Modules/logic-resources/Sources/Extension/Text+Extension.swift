@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 import SwiftUI
-import logic_resources
 
 public extension Text {
   func typography(_ style: TypographyStyle) -> some View {
     self
       .font(style.font)
       .tracking(style.spacing)
+  }
+}
+
+public extension Text {
+  init(_ key: LocalizableString.Key) {
+    self.init(verbatim: LocalizableString.shared.get(with: key))
   }
 }
