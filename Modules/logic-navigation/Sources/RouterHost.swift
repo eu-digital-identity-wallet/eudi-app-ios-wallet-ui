@@ -19,6 +19,7 @@ import logic_ui
 import SwiftUI
 import logic_business
 import feature_startup
+import feature_login
 import feature_common
 
 public final class RouterHost: RouterHostType {
@@ -39,16 +40,16 @@ public final class RouterHost: RouterHostType {
     pilot.popTo(route, inclusive: inclusive, animated: animated)
   }
 
-  public func popTo(with route: AppRoute) {
-    pilot.popTo(route)
-  }
-
   public func popTo(with route: AppRoute, inclusive: Bool) {
     pilot.popTo(route, inclusive: inclusive)
   }
 
-  public func pop() {
-    pilot.pop()
+  public func popTo(with route: AppRoute) {
+    pilot.popTo(route)
+  }
+
+  public func pop(animated: Bool) {
+    pilot.pop(animated: animated)
   }
 
   public func getCurrentScreen() -> AppRoute? {
@@ -60,6 +61,8 @@ public final class RouterHost: RouterHostType {
       switch route {
       case .startup:
         StartupView(with: self, and: StartupInteractor())
+      case .faqs:
+        FAQsView(with: self, and: FAQsInteractor())
       case .success(let config):
         SuccessView(with: self, and: config)
       }

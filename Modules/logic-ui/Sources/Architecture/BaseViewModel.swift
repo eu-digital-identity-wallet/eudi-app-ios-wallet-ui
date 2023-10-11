@@ -17,29 +17,9 @@ import SwiftUI
 
 open class BaseViewModel<Router: RouterHostType>: ObservableObject {
 
-  // Loader
-  @Published public var showLoader: Bool = false
-
-  // Error
-  @Published public var showError: Bool = false
-  @Published private(set) public var error: String = ""
-
   public let router: Router
 
   public init(router: Router) {
     self.router = router
-  }
-
-  public func toggleError() {
-    self.showError.toggle()
-  }
-
-  public func toggleLoader() {
-    self.showLoader.toggle()
-  }
-
-  public func setError(_ error: String) {
-    self.error = error
-    self.toggleError()
   }
 }

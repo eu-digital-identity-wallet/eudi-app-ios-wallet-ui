@@ -37,6 +37,10 @@ let package = Package(
       url: "https://github.com/elai950/AlertToast.git",
       from: "1.3.9"
     ),
+    .package(
+      url: "https://github.com/markiv/SwiftUI-Shimmer.git",
+      from: "1.4.0"
+    ),
     .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
@@ -60,6 +64,10 @@ let package = Package(
         .product(
           name: "AlertToast",
           package: "AlertToast"
+        ),
+        .product(
+          name: "Shimmer",
+          package: "SwiftUI-Shimmer"
         )
       ],
       path: "./Sources"

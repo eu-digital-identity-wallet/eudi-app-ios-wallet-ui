@@ -26,6 +26,9 @@ public protocol ImageManagerProtocol {
   var qr: Image { get }
   var touchId: Image { get }
   var user: Image { get }
+  var arrowLeft: Image { get }
+  var chevronUp: Image { get }
+  var chevronDown: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -39,6 +42,9 @@ final class ImageManager: ImageManagerProtocol {
     case touchId = "touch-id"
     case user = "user"
     case logo = "logo"
+    case arrowLeft = "arrow.left"
+    case chevronUp = "chevron.up"
+    case chevronDown = "chevron.down"
   }
 
   // MARK: - Properties
@@ -77,5 +83,14 @@ final class ImageManager: ImageManagerProtocol {
   }
   var logo: Image {
     Image(ImageEnum.logo.rawValue, bundle: bundle)
+  }
+  var arrowLeft: Image {
+    Image(systemName: ImageEnum.arrowLeft.rawValue)
+  }
+  var chevronUp: Image {
+    Image(systemName: ImageEnum.chevronUp.rawValue)
+  }
+  var chevronDown: Image {
+    Image(systemName: ImageEnum.chevronDown.rawValue)
   }
 }

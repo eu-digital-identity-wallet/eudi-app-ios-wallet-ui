@@ -8,8 +8,12 @@ excluded:
     - "Modules/logic-ui/Tests/.build/*"
     - "Modules/logic-api/Tests/.build/*"
     - "Modules/feature-startup/.build/*"
+    - "Modules/feature-login/Tests/*"
+    - "Modules/feature-login/.build/*"
+    - "Modules/feature-dashboard/Tests/*"
+    - "Modules/feature-dashboard/.build/*"
     - "Modules/feature-common/.build/*"
-
+    - "Modules/feature-common/Tests/*"
 
 disabled_rules:
   - comment_spacing
