@@ -37,7 +37,7 @@ involved, follow the guidelines found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 1. Create a new Swift package library in the Modules subdirectory. Please use the _feature-*{new-addition}*_ format; e.g. **feature-dashboard**
 2. Add this package to the project by dragging it to the Packages directory in the project navigator in xcode.
-3. Add **logic-business**, **logic-ui**, **logic-api**, **feature-test** as dependencies so you can take advantage of the existing codebase in your new feature.
+3. Add **feature-common** as a dependency so you can take advantage of the existing codebase in your new feature.
 4. Make sure the path in your target points to **./Sources**; **./Tests** for your test target.
 
 If you want to gain access to the entire apps mock infrastructure (classes and structs), so you can leverage it in your unit tests, you can:

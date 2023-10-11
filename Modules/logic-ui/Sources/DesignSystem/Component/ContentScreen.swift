@@ -23,19 +23,22 @@ public struct ContentScreen<Content: View>: View {
   let content: Content
   let padding: CGFloat
   let canScroll: Bool
+  let spacing: CGFloat
 
   public init(
     padding: CGFloat = Theme.shared.dimension.padding,
     canScroll: Bool = false,
+    spacing: CGFloat = .zero,
     @ViewBuilder content: () -> Content
   ) {
     self.content = content()
     self.padding = padding
     self.canScroll = canScroll
+    self.spacing = spacing
   }
 
   public var body: some View {
-    VStack(spacing: .zero) {
+    VStack(spacing: spacing) {
       content
     }
     .padding(canScroll ? [.horizontal, .top] : [.all])

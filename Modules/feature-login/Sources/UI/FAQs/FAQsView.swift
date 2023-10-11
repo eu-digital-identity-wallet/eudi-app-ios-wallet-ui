@@ -27,38 +27,38 @@ public struct FAQsView<Router: RouterHostType, Interactor: FAQsInteractorType>: 
   }
 
   public var body: some View {
-    ContentScreen(canScroll: true) {
-        VStack(spacing: SPACING_MEDIUM_SMALL) {
+    ContentScreen(canScroll: true, spacing: SPACING_MEDIUM_SMALL) {
 
-          LargeHeaderView(title: "FAQs") {
-            viewModel.goBack()
-          }
-          ScrollView(showsIndicators: false) {
-            VStack(spacing: SPACING_LARGE_MEDIUM) {
-              VSpacer.extraSmall()
-              SearchBar(
-                text: $viewModel.searchText,
-                commited: $userIsEditingAlias,
-                isLoading: viewModel.displayable.isLoading
-              )
-
-              ForEach(viewModel.displayable.filteredModels) { cell in
-                ExpandableTextView(
-                  title: cell.value.title,
-                  content: cell.value.content,
-                  isloading: viewModel.displayable.isLoading
-                ).transition(.opacity)
-              }
-            }
-            .animation(.default)
-          }
-          .disabled(viewModel.displayable.isLoading)
-
-        }
-        .task {
-          await viewModel.fetchFAQs()
-        }
+      LargeHeaderView(
+        title: LocalizableString.shared.get(with: .faqs)
+      ) {
+        viewModel.goBack()
       }
+
+      ScrollView(showsIndicators: false) {
+        VStack(spacing: SPACING_LARGE_MEDIUM) {
+          VSpacer.extraSmall()
+          SearchBar(
+            text: $viewModel.searchText,
+            commited: $userIsEditingAlias,
+            isLoading: viewModel.displayable.isLoading
+          )
+
+          ForEach(viewModel.displayable.filteredModels) { cell in
+            ExpandableTextView(
+              title: cell.value.title,
+              content: cell.value.content,
+              isloading: viewModel.displayable.isLoading
+            ).transition(.opacity)
+          }
+        }
+        .animation(.default)
+      }
+      .disabled(viewModel.displayable.isLoading)
+    }
+    .task {
+      await viewModel.fetchFAQs()
+    }
     .fastenDynamicType()
     .background(Theme.shared.color.backgroundPaper)
     .navigationBarHidden(true)

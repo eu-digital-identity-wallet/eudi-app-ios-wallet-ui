@@ -19,11 +19,11 @@ import logic_resources
 
 public struct LargeHeaderView: View {
 
-  private let title: LocalizedStringKey
+  private let title: String
   private let onBack: (() -> Void)?
 
   public init(
-    title: LocalizedStringKey,
+    title: String,
     onBack: (() -> Void)?
   ) {
     self.title = title

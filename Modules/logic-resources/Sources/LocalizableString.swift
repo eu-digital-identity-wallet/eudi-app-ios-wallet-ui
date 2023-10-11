@@ -39,6 +39,8 @@ public class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "screen_recording_security_warning")
     case .test(let arguments):
       bundle.localizedStringWithArguments(forKey: "test_arguments", arguments: arguments)
+    case .faqs:
+      bundle.localizedString(forKey: "faq_title")
     }
   }
 
@@ -51,6 +53,7 @@ public extension LocalizableString {
   enum Key: Equatable {
     case screenCaptureSecurityWarning
     case test([String])
+    case faqs
   }
 }
 
