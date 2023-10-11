@@ -31,7 +31,7 @@ public protocol ImageManagerProtocol {
   var chevronDown: Image { get }
 }
 
-class ImageManager: ImageManagerProtocol {
+final class ImageManager: ImageManagerProtocol {
   enum ImageEnum: String {
     case euLogo = "eu-logo"
     case launchImage = "launch-image"

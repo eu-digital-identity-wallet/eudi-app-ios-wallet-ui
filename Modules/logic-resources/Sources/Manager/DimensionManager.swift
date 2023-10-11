@@ -19,6 +19,6 @@ public protocol DimensionManagerProtocol {
   var padding: CGFloat { get }
 }
 
-class DimensionManager: DimensionManagerProtocol {
+final class DimensionManager: DimensionManagerProtocol {
   var padding: CGFloat = 16
 }

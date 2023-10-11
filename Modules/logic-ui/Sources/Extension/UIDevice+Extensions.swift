@@ -13,25 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import Foundation
 import SwiftUI
 
-public typealias Theme = ThemeManager
+public extension UIDevice {
 
-public protocol ThemeManagerProtocol {
+  enum UIHomeIndicator {
+    case unknown
+    case available
+    case unavailable
+  }
 
-  static var shared: ThemeProtocol { get }
+  enum UINotch {
+    case unknown
+    case available
+    case unavailable
+  }
 
-  static func config(themeConfiguration: ThemeConfiguration)
-}
+  var uiHomeIndicator: UIHomeIndicator {
 
-public final class ThemeManager: ThemeManagerProtocol {
+    guard let window = UIApplication.shared.currentUIWindow else {
+      return .unknown
+    }
 
-  public static var shared: ThemeProtocol = AppTheme()
+    return window.safeAreaInsets.bottom > 0 ? .available : .unavailable
+  }
 
-  private init() {}
+  var uiNotch: UINotch {
 
-  public class func config(themeConfiguration: ThemeConfiguration) {
-    self.shared.themeConfiguration = themeConfiguration
+    guard let window = UIApplication.shared.currentUIWindow else {
+      return .unknown
+    }
+
+    return window.safeAreaInsets.top > 20 ? .available : .unavailable
   }
 }

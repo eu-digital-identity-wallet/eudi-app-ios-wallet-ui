@@ -44,7 +44,7 @@ public protocol ColorManagerProtocol {
   var material: MaterialColor { get }
 }
 
-class ColorManager: ColorManagerProtocol {
+final class ColorManager: ColorManagerProtocol {
 
   // MARK: - Properties
 

@@ -44,7 +44,7 @@ public protocol TypographyManagerProtocol {
 
 }
 
-class TypographyManager: TypographyManagerProtocol {
+final class TypographyManager: TypographyManagerProtocol {
 
   var displayLarge: TypographyStyle {
     TypographyStyle(font: displayLargeFont, spacing: displayLargeSpacing)

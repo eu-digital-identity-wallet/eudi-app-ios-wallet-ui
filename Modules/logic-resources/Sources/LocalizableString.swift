@@ -23,7 +23,7 @@ public protocol LocalizableStringType {
   func get(with key: LocalizableString.Key) -> LocalizedStringKey
 }
 
-public class LocalizableString: LocalizableStringType {
+public final class LocalizableString: LocalizableStringType {
 
   public static var shared: LocalizableStringType = LocalizableString()
 
