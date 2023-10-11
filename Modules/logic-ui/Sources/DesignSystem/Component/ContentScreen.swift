@@ -39,6 +39,7 @@ public struct ContentScreen<Content: View>: View {
       content
     }
     .padding(canScroll ? [.horizontal, .top] : [.all])
+    .background(ThemeManager.shared.color.backgroundPaper)
     .uipNavigationBarHidden(true)
     .if(canScroll == true) { view in
       view.edgesIgnoringSafeArea(.bottom)

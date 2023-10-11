@@ -16,12 +16,17 @@ let package = Package(
     .package(
       url: "https://github.com/Brightify/Cuckoo.git",
       .upToNextMinor(from: "1.9.1")
+    ),
+    .package(
+      url: "https://github.com/groue/CombineExpectations.git",
+      from: "0.10.0"
     )
   ],
   targets: [
     .target(
       name: "logic-test",
       dependencies: [
+        "CombineExpectations",
         .product(
           name: "Cuckoo",
           package: "Cuckoo"

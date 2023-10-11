@@ -17,18 +17,25 @@ import SwiftUI
 import logic_ui
 import logic_navigation
 import logic_resources
+import logic_business
 
 @main
 struct Application: App {
 
   @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+  @Environment(\.scenePhase) var scenePhase
+
+  @State var isScreenCapping: Bool = false
+  @State var blurType: BlurType = .none
 
   private let routerHost: RouterHostType
   private let configUiLogic: ConfigUiLogic
+  private let securityController: SecurityControllerType
 
   init() {
     self.routerHost = RouterHost()
     self.configUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
+    self.securityController = SecurityController()
   }
 
   var body: some Scene {
@@ -42,7 +49,58 @@ struct Application: App {
 
         routerHost.composeApplication()
           .edgesIgnoringSafeArea(.bottom)
+
+        if isScreenCapping {
+          warningScreenCap()
+        }
+
+        if blurType != .none {
+          BlurView(style: .regular)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .ignoresSafeArea(.all)
+        }
+      }
+      .onChange(of: scenePhase) { phase in
+        switch phase {
+        case .background:
+          self.blurType = .background
+        case .inactive:
+          self.blurType = .inactive
+        case .active:
+          self.blurType = .none
+        default: break
+        }
+      }
+      .onReceive(NotificationCenter.default.publisher(for: UIScreen.capturedDidChangeNotification)) { _ in
+        guard self.securityController.isScreenCaptureDisabled() else {
+          return
+        }
+        self.isScreenCapping.toggle()
       }
     }
+  }
+
+  private func warningScreenCap() -> some View {
+    ZStack(alignment: .center) {
+      VStack(alignment: .center, spacing: SPACING_EXTRA_LARGE) {
+        ThemeManager.shared.image.logo
+        Text(.screenCaptureSecurityWarning)
+          .typography(ThemeManager.shared.font.bodyMedium)
+          .foregroundColor(ThemeManager.shared.color.textPrimaryDark)
+          .multilineTextAlignment(.center)
+      }
+    }
+    .padding()
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(ThemeManager.shared.color.backgroundPaper)
+    .edgesIgnoringSafeArea(.all)
+  }
+}
+
+extension Application {
+  enum BlurType {
+    case inactive
+    case background
+    case none
   }
 }

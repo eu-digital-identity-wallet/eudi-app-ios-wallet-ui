@@ -19,7 +19,7 @@ import SwiftUI
 
 public extension UIConfig {
 
-  struct Success: UIConfigType {
+  struct Success: UIConfigType, Equatable {
 
     public let title: LocalizedStringKey
     public let subtitle: LocalizedStringKey

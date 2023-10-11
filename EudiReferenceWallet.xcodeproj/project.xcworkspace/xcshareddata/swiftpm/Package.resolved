@@ -55,6 +55,15 @@
       }
     },
     {
+      "identity" : "combineexpectations",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/groue/CombineExpectations.git",
+      "state" : {
+        "revision" : "04d4e4b21c9e8361925f03f64a7ecda89ef9974f",
+        "version" : "0.10.0"
+      }
+    },
+    {
       "identity" : "cuckoo",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
@@ -127,12 +136,39 @@
       }
     },
     {
+      "identity" : "iossecuritysuite",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/securing/IOSSecuritySuite.git",
+      "state" : {
+        "revision" : "8f264f8ce15b9040893ec28d418a454285d4c46e",
+        "version" : "1.9.9"
+      }
+    },
+    {
+      "identity" : "keychainaccess",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kishikawakatsumi/KeychainAccess.git",
+      "state" : {
+        "revision" : "8d33ffd6f74b3bcfc99af759d4204c6395a3f918",
+        "version" : "3.2.1"
+      }
+    },
+    {
       "identity" : "leveldb",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/leveldb.git",
       "state" : {
         "revision" : "0706abcc6b0bd9cedfbb015ba840e4a780b5159b",
         "version" : "1.22.2"
+      }
+    },
+    {
+      "identity" : "libphonenumber-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/iziz/libPhoneNumber-iOS.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "8327e0d626b59b01f04c5016f5ae85f99dfcb98e"
       }
     },
     {
@@ -151,6 +187,15 @@
       "state" : {
         "revision" : "557576032736fd3140422baefb68b8f76c55088f",
         "version" : "1.21.0"
+      }
+    },
+    {
+      "identity" : "peppermint",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nsagora/peppermint",
+      "state" : {
+        "revision" : "9e3db637fbf8041c23a1b7f71e4ef16ac54f833f",
+        "version" : "1.2.0"
       }
     },
     {

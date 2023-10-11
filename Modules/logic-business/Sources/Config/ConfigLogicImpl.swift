@@ -18,7 +18,7 @@ import Foundation
 public struct WalletConfig: ConfigLogic {
 
   public var baseHost: String {
-    return getBundleValue(key: "Base Host")
+    getBundleValue(key: "Base Host")
   }
 
   public var networkLoggerExclusionList: [String] = [
@@ -30,10 +30,10 @@ public struct WalletConfig: ConfigLogic {
   ]
 
   public var appBuildType: AppBuildType {
-    return getBuildType()
+    getBuildType()
   }
 
   public var appVersion: String {
-    return getBundleValue(key: "CFBundleShortVersionString")
+    getBundleValue(key: "CFBundleShortVersionString")
   }
 }
