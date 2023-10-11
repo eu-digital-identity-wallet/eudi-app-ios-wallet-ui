@@ -54,9 +54,16 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:Modules\/feature-dashboard",
         "identifier" : "feature-dashboard-tests",
         "name" : "feature-dashboard-tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/feature-common",
+        "identifier" : "feature-common-test",
+        "name" : "feature-common-test"
       }
     }
   ],
