@@ -2665,106 +2665,6 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
-import Foundation
-
-
-
-
-
-
-public class MockDisplayable<State>: Displayable, Cuckoo.ProtocolMock {
-    
-    public typealias MocksType = DefaultImplCaller<State>
-    
-    public typealias Stubbing = __StubbingProxy_Displayable
-    public typealias Verification = __VerificationProxy_Displayable
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    
-    public class DefaultImplCaller<State>: Displayable {
-        private let reference: Any
-    
-        
-        
-        init<_CUCKOO$$GENERIC: Displayable>(from defaultImpl: UnsafeMutablePointer<_CUCKOO$$GENERIC>, keeping reference: @escaping @autoclosure () -> Any?) where _CUCKOO$$GENERIC.State == State {
-            self.reference = reference
-    
-            
-            
-        }
-        
-        
-    
-        
-    }
-
-    private var __defaultImplStub: DefaultImplCaller<State>?
-
-    public func enableDefaultImplementation<_CUCKOO$$GENERIC: Displayable>(_ stub: _CUCKOO$$GENERIC) where _CUCKOO$$GENERIC.State == State {
-        var mutableStub = stub
-        __defaultImplStub = DefaultImplCaller(from: &mutableStub, keeping: mutableStub)
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-    public func enableDefaultImplementation<_CUCKOO$$GENERIC: Displayable>(mutating stub: UnsafeMutablePointer<_CUCKOO$$GENERIC>) where _CUCKOO$$GENERIC.State == State {
-        __defaultImplStub = DefaultImplCaller(from: stub, keeping: nil)
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-    
-
-    
-
-    
-
-    
-
-    public struct __StubbingProxy_Displayable: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        
-    }
-
-    public struct __VerificationProxy_Displayable: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    
-        
-    
-        
-    }
-}
-
-
-public class DisplayableStub<State>: Displayable {
-    
-
-    
-
-    
-}
-
-
-
-
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_common
-@testable import logic_api
-@testable import logic_ui
-
 import Combine
 import Foundation
 import Peppermint
@@ -3127,6 +3027,106 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+
+
+
+
+
+
+public class MockDisplayable<State>: Displayable, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = DefaultImplCaller<State>
+    
+    public typealias Stubbing = __StubbingProxy_Displayable
+    public typealias Verification = __VerificationProxy_Displayable
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    public class DefaultImplCaller<State>: Displayable {
+        private let reference: Any
+    
+        
+        
+        init<_CUCKOO$$GENERIC: Displayable>(from defaultImpl: UnsafeMutablePointer<_CUCKOO$$GENERIC>, keeping reference: @escaping @autoclosure () -> Any?) where _CUCKOO$$GENERIC.State == State {
+            self.reference = reference
+    
+            
+            
+        }
+        
+        
+    
+        
+    }
+
+    private var __defaultImplStub: DefaultImplCaller<State>?
+
+    public func enableDefaultImplementation<_CUCKOO$$GENERIC: Displayable>(_ stub: _CUCKOO$$GENERIC) where _CUCKOO$$GENERIC.State == State {
+        var mutableStub = stub
+        __defaultImplStub = DefaultImplCaller(from: &mutableStub, keeping: mutableStub)
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+    public func enableDefaultImplementation<_CUCKOO$$GENERIC: Displayable>(mutating stub: UnsafeMutablePointer<_CUCKOO$$GENERIC>) where _CUCKOO$$GENERIC.State == State {
+        __defaultImplStub = DefaultImplCaller(from: stub, keeping: nil)
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+
+    public struct __StubbingProxy_Displayable: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_Displayable: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+    
+        
+    }
+}
+
+
+public class DisplayableStub<State>: Displayable {
+    
+
+    
+
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
 import logic_resources
 
 
@@ -3416,16 +3416,6 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
-import Foundation
-import SwiftUI
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_common
-@testable import logic_api
-@testable import logic_ui
-
 import ActivityIndicatorView
 import SwiftUI
 import logic_resources
@@ -3527,6 +3517,24 @@ import Cuckoo
 
 import SwiftUI
 import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import UIKit
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import SwiftUI
 
 import Cuckoo
 @testable import logic_business

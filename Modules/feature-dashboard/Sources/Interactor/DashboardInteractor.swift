@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SwiftUI
+import Foundation
 
-struct DashboardContainer: View {
-  var body: some View {
-    VStack {
-      Text("Container")
-      Spacer()
-    }
-    .padding()
-  }
+public protocol DashboardInteractorType {
+
+}
+
+public final actor DashboardInteractor: DashboardInteractorType {
+  public init() {}
 }

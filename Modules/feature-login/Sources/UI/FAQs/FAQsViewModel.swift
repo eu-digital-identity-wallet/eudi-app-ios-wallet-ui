@@ -17,10 +17,9 @@ import Foundation
 import Combine
 
 import logic_ui
-import logic_business
 
 @MainActor
-public final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType>: BaseViewModel<Router>, Displayable {
+final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType>: BaseViewModel<Router>, Displayable {
 
   public typealias State = FAQDisplayable
 
@@ -31,7 +30,7 @@ public final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInterac
 
   public lazy var cancellables = Set<AnyCancellable>()
 
-  public init(router: Router, interactor: Interactor) {
+  init(router: Router, interactor: Interactor) {
     self.interactor = interactor
     super.init(router: router)
 

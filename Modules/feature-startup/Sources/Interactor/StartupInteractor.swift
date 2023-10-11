@@ -20,7 +20,7 @@ public protocol StartupInteractorType {
   func sampleCall() async -> SamplePartialState
 }
 
-public final class StartupInteractor: StartupInteractorType {
+public final actor StartupInteractor: StartupInteractorType {
 
   private let repository: SampleRepositoryType
 

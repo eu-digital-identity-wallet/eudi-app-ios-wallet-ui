@@ -24,15 +24,18 @@ public indirect enum AppRoute: Equatable {
   case startup
   case success(config: any UIConfigType)
   case faqs
+  case dashboard
 
   var key: String {
-    switch self {
+    return switch self {
     case .startup:
-      return "Startup"
+      "Startup"
     case .faqs:
-      return "FAQ"
+      "FAQ"
     case .success:
-      return "Success"
+      "Success"
+    case .dashboard:
+      "Dashboard"
     }
   }
 }

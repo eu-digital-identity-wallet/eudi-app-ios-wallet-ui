@@ -90,22 +90,3 @@ public struct SuccessView<Router: RouterHostType>: View {
     }
   }
 }
-
-#Preview {
-  SuccessView(
-    with: PreviewRouter(),
-    and: UIConfig.Success(
-      title: "title",
-      subtitle: "SubTitle",
-      buttons: [
-        .init(
-          title: "Button title",
-          screen: .startup,
-          style: .primary,
-          navigationType: .pop
-        )
-      ],
-      visualKind: .defaultIcon
-    )
-  )
-}

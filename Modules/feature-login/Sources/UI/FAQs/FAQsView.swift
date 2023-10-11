@@ -29,7 +29,7 @@ public struct FAQsView<Router: RouterHostType, Interactor: FAQsInteractorType>: 
   public var body: some View {
     ContentScreen(canScroll: true, spacing: SPACING_MEDIUM_SMALL) {
 
-      LargeHeaderView(title: .faqs) {
+      HeaderView(title: .faqs) {
         viewModel.goBack()
       }
 
@@ -50,7 +50,6 @@ public struct FAQsView<Router: RouterHostType, Interactor: FAQsInteractorType>: 
             ).transition(.opacity)
           }
         }
-        .animation(.default)
       }
       .disabled(viewModel.displayable.isLoading)
     }

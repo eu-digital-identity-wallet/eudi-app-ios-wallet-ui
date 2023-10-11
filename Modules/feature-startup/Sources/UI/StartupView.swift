@@ -82,6 +82,11 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
           )
 
           WrapButtonView(
+            title: .init(stringLiteral: "TEST FAQ SCREEN"),
+            onAction: viewModel.onClickFAQ()
+          )
+
+          WrapButtonView(
             title: .init(stringLiteral: "TEST SUCCESS SCREEN"),
             onAction: viewModel.onClickTestSuccess()
           )
@@ -107,8 +112,4 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
       }
     }
   }
-}
-
-#Preview {
-  StartupView(with: PreviewRouter(), and: StartupInteractor())
 }

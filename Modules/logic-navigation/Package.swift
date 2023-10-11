@@ -13,15 +13,19 @@ let package = Package(
     )
   ],
   dependencies: [
+    .package(name: "feature-common", path: "./feature-common"),
     .package(name: "feature-startup", path: "./feature-startup"),
-    .package(name: "feature-login", path: "./feature-login")
+    .package(name: "feature-login", path: "./feature-login"),
+    .package(name: "feature-dashboard", path: "./feature-dashboard")
   ],
   targets: [
     .target(
       name: "logic-navigation",
       dependencies: [
+        "feature-common",
         "feature-startup",
-        "feature-login"
+        "feature-login",
+        "feature-dashboard"
       ],
       path: "./Sources"
     )

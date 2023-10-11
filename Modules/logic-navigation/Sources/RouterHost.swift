@@ -21,6 +21,7 @@ import logic_business
 import feature_startup
 import feature_login
 import feature_common
+import feature_dashboard
 
 public final class RouterHost: RouterHostType {
 
@@ -65,6 +66,8 @@ public final class RouterHost: RouterHostType {
         FAQsView(with: self, and: FAQsInteractor())
       case .success(let config):
         SuccessView(with: self, and: config)
+      case .dashboard:
+        DashboardView(with: self, and: DashboardInteractor())
       }
     }.eraseToAnyView()
   }

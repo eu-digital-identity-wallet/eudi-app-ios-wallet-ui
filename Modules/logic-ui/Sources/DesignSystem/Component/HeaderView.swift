@@ -18,20 +18,17 @@ import logic_resources
 
 public struct HeaderView: View {
 
-  private let showLogo: Bool
-  private let title: LocalizedStringKey?
-  private let dismissIcon: String
+  private let title: LocalizableString.Key?
+  private let dismissIcon: Image
   private let onBack: (() -> Void)?
   private let actions: [Action]?
 
   public init(
-    showLogo: Bool = false,
-    title: LocalizedStringKey? = nil,
-    dismissIcon: String = "chevron.backward",
+    title: LocalizableString.Key? = nil,
+    dismissIcon: Image = Theme.shared.image.arrowLeft,
     onBack: (() -> Void)? = nil,
     actions: [Action]? = nil
   ) {
-    self.showLogo = showLogo
     self.title = title
     self.dismissIcon = dismissIcon
     self.onBack = onBack
@@ -39,62 +36,44 @@ public struct HeaderView: View {
   }
 
   public var body: some View {
-    VStack(spacing: .zero) {
 
-      if showLogo {
-        HStack {
-          Image("eu-logo")
-            .resizable()
-            .scaledToFit()
-            .frame(height: 50)
+    HStack {
 
-          Spacer()
-        }
-        .padding(.vertical)
+      if let onBack {
+        Button(
+          action: {
+            onBack()
+          },
+          label: {
+            Theme.shared.image.arrowLeft
+              .foregroundColor(Theme.shared.color.secondaryMain)
+          }
+        )
+        HSpacer.medium()
       }
 
-      HStack {
+      if let title {
+        Text(title)
+          .typography(Theme.shared.font.headlineSmall)
+          .foregroundColor(Theme.shared.color.secondaryMain)
+      }
 
-        if let onBack {
-          Button(
-            action: {
-              onBack()
-            },
-            label: {
-              Image(systemName: dismissIcon)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .foregroundColor(Theme.shared.color.textSecondaryLight)
-                .frame(height: 20)
-                .padding()
-            }
-          )
-          HSpacer.medium()
-        }
+      Spacer()
 
-        if let title {
-          Text(title)
-            .bold()
-            .foregroundColor(Theme.shared.color.textSecondaryLight)
-        }
-
-        Spacer()
-
-        if let actions {
-          HStack(spacing: SPACING_MEDIUM_SMALL) {
-            ForEach(actions, id: \.id) { action in
-              Button(
-                action: {
-                  action.callback()
-                },
-                label: {
-                  Image(systemName: action.systemImage)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 25)
-                }
-              )
-            }
+      if let actions {
+        HStack(spacing: SPACING_MEDIUM_SMALL) {
+          ForEach(actions, id: \.id) { action in
+            Button(
+              action: {
+                action.callback()
+              },
+              label: {
+                Image(systemName: action.systemImage)
+                  .resizable()
+                  .scaledToFit()
+                  .frame(height: 25)
+              }
+            )
           }
         }
       }

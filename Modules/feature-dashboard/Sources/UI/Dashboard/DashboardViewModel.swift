@@ -15,35 +15,15 @@
  */
 import Foundation
 import logic_ui
-import feature_common
-import logic_business
 
 @MainActor
-public final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteractorType>: BaseViewModel<Router> {
+final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInteractorType>: BaseViewModel<Router> {
 
   private let interactor: Interactor
 
-  public init(router: Router, interactor: Interactor) {
+  init(router: Router, interactor: Interactor) {
     self.interactor = interactor
     super.init(router: router)
   }
 
-  func onClickTestSuccess() {
-    router.push(
-      with: .success(
-        config: UIConfig.Success(
-          title: "testTitle",
-          subtitle: "testSubTitle",
-          buttons: [
-            .init(title: "POP BACK", screen: .startup, style: .primary, navigationType: .pop)
-          ],
-          visualKind: .defaultIcon
-        )
-      )
-    )
-  }
-
-  func onClickFAQ() {
-    router.push(with: .faqs)
-  }
 }
