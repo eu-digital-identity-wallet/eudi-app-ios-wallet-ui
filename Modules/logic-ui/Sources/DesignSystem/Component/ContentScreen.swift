@@ -14,15 +14,34 @@
  * limitations under the License.
  */
 
+import SwiftUI
 import logic_resources
+import UIPilot
 
-public struct WalletUiConfig: ConfigUiLogic {
+public struct ContentScreen<Content: View>: View {
 
-  public var initialRoute: AppRoute {
-    return .faqs
+  let content: Content
+  let padding: CGFloat
+  let canScroll: Bool
+
+  public init(
+    padding: CGFloat = Theme.shared.dimension.padding,
+    canScroll: Bool = false,
+    @ViewBuilder content: () -> Content
+  ) {
+    self.content = content()
+    self.padding = padding
+    self.canScroll = canScroll
   }
 
-  public init(themeConfiguration: ThemeConfiguration) {
-    Theme.config(themeConfiguration: themeConfiguration)
+  public var body: some View {
+    VStack(spacing: .zero) {
+      content
+    }
+    .padding(canScroll ? [.horizontal, .top] : [.all])
+    .uipNavigationBarHidden(true)
+    .if(canScroll == true) { view in
+      view.edgesIgnoringSafeArea(.bottom)
+    }
   }
 }

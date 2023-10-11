@@ -14,15 +14,30 @@
  * limitations under the License.
  */
 
-import logic_resources
+import Foundation
 
-public struct WalletUiConfig: ConfigUiLogic {
+public protocol UIConfigType: Equatable {}
 
-  public var initialRoute: AppRoute {
-    return .faqs
-  }
+public struct UIConfig: UIConfigType { }
 
-  public init(themeConfiguration: ThemeConfiguration) {
-    Theme.config(themeConfiguration: themeConfiguration)
+public extension UIConfig {
+
+  struct NavigationConfig: Equatable {
+
+    public enum NavigationType: Equatable {
+      case pop
+      case push
+    }
+
+    public let screen: AppRoute
+    public let navigationType: NavigationType
+
+    public init(
+      screen: AppRoute,
+      navigationType: NavigationType
+    ) {
+      self.screen = screen
+      self.navigationType = navigationType
+    }
   }
 }

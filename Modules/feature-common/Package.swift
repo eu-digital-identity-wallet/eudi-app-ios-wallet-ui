@@ -4,31 +4,37 @@
 import PackageDescription
 
 let package = Package(
-  name: "feature-startup",
+  name: "feature-common",
   platforms: [.iOS(.v15)],
   products: [
     .library(
-      name: "feature-startup",
-      targets: ["feature-startup"]
+      name: "feature-common",
+      targets: ["feature-common"]
     )
   ],
   dependencies: [
-    .package(name: "feature-common", path: "./feature-common"),
+    .package(name: "logic-business", path: "./logic-business"),
+    .package(name: "logic-ui", path: "./logic-ui"),
+    .package(name: "logic-api", path: "./logic-api"),
     .package(name: "feature-test", path: "./feature-test")
   ],
   targets: [
     .target(
-      name: "feature-startup",
+      name: "feature-common",
       dependencies: [
-        "feature-common"
+        "logic-business",
+        "logic-ui",
+        "logic-api"
       ],
       path: "./Sources"
     ),
     .testTarget(
-      name: "feature-startup-test",
+      name: "feature-common-test",
       dependencies: [
-        "feature-startup",
         "feature-common",
+        "logic-business",
+        "logic-ui",
+        "logic-api",
         "feature-test"
       ],
       path: "./Tests"

@@ -13,16 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import logic_resources
-
-public struct WalletUiConfig: ConfigUiLogic {
-
-  public var initialRoute: AppRoute {
-    return .faqs
-  }
-
-  public init(themeConfiguration: ThemeConfiguration) {
-    Theme.config(themeConfiguration: themeConfiguration)
-  }
-}
+import Foundation

@@ -12,18 +12,14 @@ let package = Package(
       targets: ["feature-dashboard"])
   ],
   dependencies: [
-    .package(name: "logic-business", path: "./logic-business"),
-    .package(name: "logic-ui", path: "./logic-ui"),
-    .package(name: "logic-api", path: "./logic-api"),
+    .package(name: "feature-common", path: "./feature-common"),
     .package(name: "feature-test", path: "./feature-test")
   ],
   targets: [
     .target(
       name: "feature-dashboard",
       dependencies: [
-        "logic-business",
-        "logic-ui",
-        "logic-api"
+        "feature-common"
       ],
       path: "./Sources"
     ),
@@ -31,9 +27,7 @@ let package = Package(
       name: "feature-dashboard-tests",
       dependencies: [
         "feature-dashboard",
-        "logic-business",
-        "logic-ui",
-        "logic-api",
+        "feature-common",
         "feature-test"
       ],
       path: "./Tests")

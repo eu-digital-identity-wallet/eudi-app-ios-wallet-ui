@@ -22,6 +22,7 @@ public indirect enum AppRoute: Equatable {
   }
 
   case startup
+  case success(config: any UIConfigType)
   case faqs
 
   var key: String {
@@ -30,6 +31,8 @@ public indirect enum AppRoute: Equatable {
       return "Startup"
     case .faqs:
       return "FAQ"
+    case .success:
+      return "Success"
     }
   }
 }
@@ -38,6 +41,27 @@ public protocol RouterHostType {
   func push(with route: AppRoute)
   func popTo(with route: AppRoute, inclusive: Bool, animated: Bool)
   func pop(animated: Bool)
+  func popTo(with route: AppRoute, inclusive: Bool)
+  func popTo(with route: AppRoute)
   func composeApplication() -> AnyView
   func getCurrentScreen() -> AppRoute?
+}
+
+public class PreviewRouter: RouterHostType {
+
+  public init() {}
+
+  public func push(with route: AppRoute) {}
+
+  public func popTo(with route: AppRoute, inclusive: Bool, animated: Bool) {}
+
+  public func popTo(with route: AppRoute, inclusive: Bool) {}
+
+  public func popTo(with route: AppRoute) {}
+
+  public func pop(animated: Bool) {}
+
+  public func composeApplication() -> AnyView { EmptyView().eraseToAnyView() }
+
+  public func getCurrentScreen() -> AppRoute? { .none }
 }
