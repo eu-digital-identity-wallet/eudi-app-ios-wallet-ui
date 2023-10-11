@@ -14,10 +14,6 @@ let package = Package(
   ],
   dependencies: [
     .package(
-      url: "https://github.com/pointfreeco/swift-dependencies.git",
-      from: "1.0.0"
-    ),
-    .package(
       url: "https://github.com/firebase/firebase-ios-sdk",
       from: "10.3.0"
     ),
@@ -52,10 +48,6 @@ let package = Package(
         .product(
           name: "libPhoneNumber",
           package: "libPhoneNumber-iOS"
-        ),
-        .product(
-          name: "Dependencies",
-          package: "swift-dependencies"
         ),
         .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk"),
         .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk")

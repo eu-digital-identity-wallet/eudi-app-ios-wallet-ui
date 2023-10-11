@@ -19,7 +19,7 @@ import logic_resources
 public struct WalletUiConfig: ConfigUiLogic {
 
   public var initialRoute: AppRoute {
-    return .faqs
+    return .startup
   }
 
   public init(themeConfiguration: ThemeConfiguration) {
