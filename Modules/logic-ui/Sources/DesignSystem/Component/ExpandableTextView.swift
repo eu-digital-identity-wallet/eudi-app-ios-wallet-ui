@@ -36,6 +36,15 @@ public struct ExpandableTextView: View {
     self.isloading = isloading
   }
 
+  @ViewBuilder
+  var chevron: some View {
+    if isExpanded {
+      Theme.shared.image.chevronUp.foregroundColor(Theme.shared.color.secondaryMain)
+    } else {
+      Theme.shared.image.chevronDown.foregroundColor(Theme.shared.color.secondaryMain)
+    }
+  }
+
   public var body: some View {
     VStack(spacing: SPACING_MEDIUM_SMALL) {
       Group {
@@ -44,8 +53,7 @@ public struct ExpandableTextView: View {
             .typography(Theme.shared.font.titleSmall)
             .foregroundColor(Theme.shared.color.textPrimaryDark)
           Spacer()
-          Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-            .foregroundColor(Theme.shared.color.secondaryMain)
+          chevron
         }
         .padding(isExpanded ? [.horizontal, .top] : [.all])
 

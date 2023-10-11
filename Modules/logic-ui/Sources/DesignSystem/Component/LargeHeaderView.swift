@@ -36,11 +36,9 @@ public struct LargeHeaderView: View {
         Button(action: {
           onBack?()
         }, label: {
-          Image(systemName: "arrow.left")
+          Theme.shared.image.arrowLeft
             .foregroundColor(Theme.shared.color.secondaryMain)
-            .font(.title)
         })
-
         Spacer()
       }
 
