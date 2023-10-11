@@ -17,7 +17,7 @@ import SwiftUI
 
 public struct FastenedDynamicType: ViewModifier {
   public func body(content: Content) -> some View {
-    content.dynamicTypeSize(...DynamicTypeSize.xLarge)
+    content.dynamicTypeSize(...DynamicTypeSize.accessibility1)
   }
 }
 
