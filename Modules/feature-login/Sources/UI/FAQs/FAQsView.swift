@@ -29,9 +29,7 @@ public struct FAQsView<Router: RouterHostType, Interactor: FAQsInteractorType>: 
   public var body: some View {
     ContentScreen(canScroll: true, spacing: SPACING_MEDIUM_SMALL) {
 
-      LargeHeaderView(
-        title: LocalizableString.shared.get(with: .faqs)
-      ) {
+      LargeHeaderView(title: .faqs) {
         viewModel.goBack()
       }
 
@@ -61,6 +59,5 @@ public struct FAQsView<Router: RouterHostType, Interactor: FAQsInteractorType>: 
     }
     .fastenDynamicType()
     .background(Theme.shared.color.backgroundPaper)
-    .navigationBarHidden(true)
   }
 }
