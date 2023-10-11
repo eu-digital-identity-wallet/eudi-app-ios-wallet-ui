@@ -20,7 +20,7 @@ public protocol FAQsInteractorType {
   func fetchFAQs() async throws -> [FAQUIModel]
 }
 
-public final class FAQsInteractor: FAQsInteractorType {
+public final actor FAQsInteractor: FAQsInteractorType {
   public init() {}
   public func fetchFAQs() async throws -> [FAQUIModel] {
     try await Task.sleep(nanoseconds: 5 * 1_000_000_000)

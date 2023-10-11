@@ -57,7 +57,6 @@ public struct FAQsView<Router: RouterHostType, Interactor: FAQsInteractorType>: 
     .task {
       await viewModel.fetchFAQs()
     }
-    .fastenDynamicType()
     .background(Theme.shared.color.backgroundPaper)
   }
 }

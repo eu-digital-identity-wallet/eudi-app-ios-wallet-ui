@@ -41,11 +41,12 @@ public struct ContentScreen<Content: View>: View {
     VStack(spacing: spacing) {
       content
     }
-    .padding(canScroll ? [.horizontal, .top] : [.all])
+    .padding(canScroll ? [.horizontal, .top] : [.all], padding)
     .background(ThemeManager.shared.color.backgroundPaper)
     .uipNavigationBarHidden(true)
     .if(canScroll == true) { view in
       view.edgesIgnoringSafeArea(.bottom)
     }
+    .fastenDynamicType()
   }
 }
