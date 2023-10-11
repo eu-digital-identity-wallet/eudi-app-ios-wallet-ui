@@ -28,7 +28,7 @@ public protocol ImageManagerProtocol {
   var user: Image { get }
 }
 
-class ImageManager: ImageManagerProtocol {
+final class ImageManager: ImageManagerProtocol {
   enum ImageEnum: String {
     case euLogo = "eu-logo"
     case launchImage = "launch-image"

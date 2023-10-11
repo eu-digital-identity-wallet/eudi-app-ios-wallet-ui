@@ -27,6 +27,7 @@ struct Application: App {
 
   @State var isScreenCapping: Bool = false
   @State var blurType: BlurType = .none
+  @State var shouldAddBottomPadding: Bool = false
 
   private let routerHost: RouterHostType
   private let configUiLogic: ConfigUiLogic
@@ -48,7 +49,9 @@ struct Application: App {
           .edgesIgnoringSafeArea(.all)
 
         routerHost.composeApplication()
-          .edgesIgnoringSafeArea(.bottom)
+          .if(self.shouldAddBottomPadding == false) { view in
+            view.edgesIgnoringSafeArea(.bottom)
+          }
 
         if isScreenCapping {
           warningScreenCap()
@@ -77,6 +80,9 @@ struct Application: App {
         }
         self.isScreenCapping.toggle()
       }
+      .task {
+        await checkForHomeIndicator()
+      }
     }
   }
 
@@ -94,6 +100,13 @@ struct Application: App {
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(ThemeManager.shared.color.backgroundPaper)
     .edgesIgnoringSafeArea(.all)
+  }
+
+  private func checkForHomeIndicator() async {
+    try? await Task.sleep(nanoseconds: 1_000_000_000)
+    if UIDevice.current.uiHomeIndicator == .unavailable {
+      self.shouldAddBottomPadding = true
+    }
   }
 }
 

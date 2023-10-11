@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import Foundation
+import UIKit
 
-import SwiftUI
-
-public typealias Theme = ThemeManager
-
-public protocol ThemeManagerProtocol {
-
-  static var shared: ThemeProtocol { get }
-
-  static func config(themeConfiguration: ThemeConfiguration)
-}
-
-public final class ThemeManager: ThemeManagerProtocol {
-
-  public static var shared: ThemeProtocol = AppTheme()
-
-  private init() {}
-
-  public class func config(themeConfiguration: ThemeConfiguration) {
-    self.shared.themeConfiguration = themeConfiguration
+public extension UIApplication {
+  var currentUIWindow: UIWindow? {
+    return self
+      .connectedScenes
+      .flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
+      .first { $0.isKeyWindow }
+  }
+  func hideKeyboard() {
+    self.sendAction(
+      #selector(UIResponder.resignFirstResponder),
+      to: nil,
+      from: nil,
+      for: nil
+    )
   }
 }
