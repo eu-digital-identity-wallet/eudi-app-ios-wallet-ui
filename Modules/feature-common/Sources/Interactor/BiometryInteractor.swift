@@ -15,16 +15,39 @@
  */
 import Foundation
 import logic_ui
+import logic_business
 import SwiftUI
+import Combine
+import LocalAuthentication
 
-public protocol BiometryInteractorType: SystemBiometricsInteractorType {
-  func areBiometricsEnabled() -> Bool
+public protocol BiometryInteractorType {
+
+  func authenticate() -> AnyPublisher<BiometricsState, Never>
+  func openSettingsURL(action: @escaping () -> Void)
+  var biometricsImage: Image? { get }
+  var currentBiometricsMethod: String { get }
+  var biometryType: LABiometryType { get }
+
+  func isBiometryEnabled() -> Bool
+  func setBiometrySelection(isEnabled: Bool)
+  func isPinValid(with pin: String) -> QuickPinPartialState
 }
 
 public final class BiometryInteractor: SystemBiometricsInteractor, BiometryInteractorType {
 
-  public func areBiometricsEnabled() -> Bool {
-    true
+  private lazy var prefsController: PrefsControllerType = PrefsController()
+  private lazy var quickPinInteractor: QuickPinInteractorType = QuickPinInteractor()
+
+  public func isBiometryEnabled() -> Bool {
+    prefsController.getBool(forKey: .biometryEnabled)
+  }
+
+  public func setBiometrySelection(isEnabled: Bool) {
+    prefsController.setValue(isEnabled, forKey: .biometryEnabled)
+  }
+
+  public func isPinValid(with pin: String) -> QuickPinPartialState {
+    quickPinInteractor.isPinValid(pin: pin)
   }
 
 }

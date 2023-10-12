@@ -16,14 +16,14 @@
 import Foundation
 
 public protocol PrefsControllerType {
-  func setValue(_ value: Any?, forKey: String)
-  func getString(forKey: String) -> String?
-  func getOptionalString(forKey: String) -> String
-  func getBool(forKey: String) -> Bool
-  func getFloat(forKey: String) -> Float
-  func getInt(forKey: String) -> Int
-  func remove(forKey: String)
-  func getValue(forKey: String) -> Any?
+  func setValue(_ value: Any?, forKey: PrefsController.Key)
+  func getString(forKey: PrefsController.Key) -> String?
+  func getOptionalString(forKey: PrefsController.Key) -> String
+  func getBool(forKey: PrefsController.Key) -> Bool
+  func getFloat(forKey: PrefsController.Key) -> Float
+  func getInt(forKey: PrefsController.Key) -> Int
+  func remove(forKey: PrefsController.Key)
+  func getValue(forKey: PrefsController.Key) -> Any?
 }
 
 public class PrefsController: PrefsControllerType {
@@ -36,35 +36,41 @@ public class PrefsController: PrefsControllerType {
 
   public init() {}
 
-  public func setValue(_ value: Any?, forKey: String) {
-    userDefaultsWrapper.setValue(value, forKey: forKey)
+  public func setValue(_ value: Any?, forKey: PrefsController.Key) {
+    userDefaultsWrapper.setValue(value, forKey: forKey.rawValue)
   }
 
-  public func getString(forKey: String) -> String? {
-    return userDefaultsWrapper.string(forKey: forKey)
+  public func getString(forKey: PrefsController.Key) -> String? {
+    return userDefaultsWrapper.string(forKey: forKey.rawValue)
   }
 
-  public func getOptionalString(forKey: String) -> String {
-    return userDefaultsWrapper.string(forKey: forKey) ?? ""
+  public func getOptionalString(forKey: PrefsController.Key) -> String {
+    return userDefaultsWrapper.string(forKey: forKey.rawValue) ?? ""
   }
 
-  public func getFloat(forKey: String) -> Float {
-    return userDefaultsWrapper.float(forKey: forKey)
+  public func getFloat(forKey: PrefsController.Key) -> Float {
+    return userDefaultsWrapper.float(forKey: forKey.rawValue)
   }
 
-  public func getBool(forKey: String) -> Bool {
-    return userDefaultsWrapper.bool(forKey: forKey)
+  public func getBool(forKey: PrefsController.Key) -> Bool {
+    return userDefaultsWrapper.bool(forKey: forKey.rawValue)
   }
 
-  public func remove(forKey: String) {
-    userDefaultsWrapper.removeObject(forKey: forKey)
+  public func remove(forKey: PrefsController.Key) {
+    userDefaultsWrapper.removeObject(forKey: forKey.rawValue)
   }
 
-  public func getValue(forKey: String) -> Any? {
-    return userDefaultsWrapper.value(forKey: forKey)
+  public func getValue(forKey: PrefsController.Key) -> Any? {
+    return userDefaultsWrapper.value(forKey: forKey.rawValue)
   }
 
-  public func getInt(forKey: String) -> Int {
-    return userDefaultsWrapper.integer(forKey: forKey)
+  public func getInt(forKey: PrefsController.Key) -> Int {
+    return userDefaultsWrapper.integer(forKey: forKey.rawValue)
+  }
+}
+
+public extension PrefsController {
+  enum Key: String {
+    case biometryEnabled
   }
 }

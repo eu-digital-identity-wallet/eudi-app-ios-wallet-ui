@@ -27,7 +27,6 @@ public enum BiometricsState: Equatable {
   case failure(SystemBiometricsError)
 }
 
-//sourcery: AutoMockable
 public protocol SystemBiometricsInteractorType {
   func authenticate() -> AnyPublisher<BiometricsState, Never>
   func openSettingsURL(action: @escaping () -> Void)

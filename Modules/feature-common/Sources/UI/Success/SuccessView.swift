@@ -26,7 +26,7 @@ public struct SuccessView<Router: RouterHostType>: View {
   }
 
   public var body: some View {
-    ContentScreen {
+    ContentScreen(allowBackGesture: false) {
       ContentTitle(
         title: viewmodel.config.title,
         caption: viewmodel.config.subtitle,

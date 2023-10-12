@@ -33,7 +33,7 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
         numericText: $viewmodel.uiPinInputField,
         maxDigits: 4,
         isSecureEntry: true,
-        canFocus: $viewmodel.areBiometricsEnabled,
+        canFocus: .constant(!viewmodel.areBiometricsEnabled),
         shouldUseFullScreen: false,
         hasError: viewmodel.pinError != nil
       )
@@ -76,7 +76,7 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
         Spacer()
         image
           .onTapGesture {
-            // viewmodel.setEvent(.loginWithBiometrics)
+            viewmodel.onBiometry()
           }
       }
       .padding(.horizontal)
@@ -84,23 +84,24 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
   }
 
   public var body: some View {
-    ContentScreen {
+    ContentScreen(allowBackGesture: false) {
       content
         .alert(item: $viewmodel.biometryError) { error in
           Alert(
             title: Text(.genericErrorTitle),
             message: Text(error.errorDescription.orEmpty),
             primaryButton: .default(Text(.biometryOpenSettings)) {
-              // viewmodel.setEvent(.goToBiometricSettings)
+              self.viewmodel.onSettings()
             },
-            secondaryButton: .cancel {
-              // viewmodel.setEvent(.errorDialogCancelled)
-            }
+            secondaryButton: .cancel {}
           )
         }
-        .onChange(of: scenePhase) { _ in
-          // viewmodel.setEvent(.setScenePhase(phase))
+        .onChange(of: scenePhase) { phase in
+          self.viewmodel.setPhase(with: phase)
         }
+    }
+    .onAppear {
+      self.viewmodel.onAppearBiometry()
     }
   }
 }

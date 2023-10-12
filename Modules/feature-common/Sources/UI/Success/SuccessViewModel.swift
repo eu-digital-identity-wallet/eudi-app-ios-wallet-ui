@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SwiftUI
 import logic_ui
 import logic_business
 
@@ -37,7 +36,7 @@ final class SuccessViewModel<Router: RouterHostType>: BaseViewModel<Router> {
     case .deepLink:
       if let _ = button.deepLink {
         //cacheDeepLinkURL(url: link)
-        router.popTo(with: button.screen, inclusive: true, animated: true)
+        router.popTo(with: button.screen)
       }
     }
   }

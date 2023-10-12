@@ -18,10 +18,7 @@ import KeychainAccess
 
 public enum KeychainWrapper: String {
   case deviceVendorId
-
-  var value: String {
-    return self.rawValue
-  }
+  case devicePin
 }
 
 public protocol KeyChainControllerType {
@@ -42,15 +39,15 @@ public final class KeyChainController: KeyChainControllerType {
   }()
 
   public func storeValue(key: KeychainWrapper, value: String) {
-    keyChain[key.value] = value
+    keyChain[key.rawValue] = value
   }
 
   public func getValue(key: KeychainWrapper) -> String? {
-    keyChain[key.value]
+    keyChain[key.rawValue]
   }
 
   public func removeObject(key: KeychainWrapper) {
-    try? keyChain.remove(key.value)
+    try? keyChain.remove(key.rawValue)
   }
 
   public func validateKeyChainBiometry() throws {
@@ -72,7 +69,6 @@ private extension KeyChainController {
   func isBiometricKeyValid() throws {
 
     let item = try self.keyChain
-      .authenticationPrompt("Authenticate to login to server")
       .get(self.biometryKey)
 
     if item != nil {

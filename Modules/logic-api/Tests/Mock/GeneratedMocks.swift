@@ -1193,6 +1193,26 @@ public class MockKeyChainControllerType: KeyChainControllerType, Cuckoo.Protocol
     }
     
     
+    
+    
+    
+    public func validateKeyChainBiometry() throws {
+        
+    return try cuckoo_manager.callThrows(
+    """
+    validateKeyChainBiometry() throws
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.validateKeyChainBiometry())
+        
+    }
+    
+    
 
     public struct __StubbingProxy_KeyChainControllerType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -1231,6 +1251,17 @@ public class MockKeyChainControllerType: KeyChainControllerType, Cuckoo.Protocol
             return .init(stub: cuckoo_manager.createStub(for: MockKeyChainControllerType.self, method:
     """
     removeObject(key: KeychainWrapper)
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func validateKeyChainBiometry() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockKeyChainControllerType.self, method:
+    """
+    validateKeyChainBiometry() throws
     """, parameterMatchers: matchers))
         }
         
@@ -1287,6 +1318,18 @@ public class MockKeyChainControllerType: KeyChainControllerType, Cuckoo.Protocol
         }
         
         
+        
+        
+        @discardableResult
+        func validateKeyChainBiometry() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    validateKeyChainBiometry() throws
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -1317,6 +1360,14 @@ public class KeyChainControllerTypeStub: KeyChainControllerType {
     
     
     public func removeObject(key: KeychainWrapper)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func validateKeyChainBiometry() throws  {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -1364,11 +1415,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
     
     
     
-    public func setValue(_ value: Any?, forKey: String)  {
+    public func setValue(_ value: Any?, forKey: PrefsController.Key)  {
         
     return cuckoo_manager.call(
     """
-    setValue(_: Any?, forKey: String)
+    setValue(_: Any?, forKey: PrefsController.Key)
     """,
             parameters: (value, forKey),
             escapingParameters: (value, forKey),
@@ -1384,11 +1435,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
     
     
     
-    public func getString(forKey: String) -> String? {
+    public func getString(forKey: PrefsController.Key) -> String? {
         
     return cuckoo_manager.call(
     """
-    getString(forKey: String) -> String?
+    getString(forKey: PrefsController.Key) -> String?
     """,
             parameters: (forKey),
             escapingParameters: (forKey),
@@ -1404,11 +1455,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
     
     
     
-    public func getOptionalString(forKey: String) -> String {
+    public func getOptionalString(forKey: PrefsController.Key) -> String {
         
     return cuckoo_manager.call(
     """
-    getOptionalString(forKey: String) -> String
+    getOptionalString(forKey: PrefsController.Key) -> String
     """,
             parameters: (forKey),
             escapingParameters: (forKey),
@@ -1424,11 +1475,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
     
     
     
-    public func getBool(forKey: String) -> Bool {
+    public func getBool(forKey: PrefsController.Key) -> Bool {
         
     return cuckoo_manager.call(
     """
-    getBool(forKey: String) -> Bool
+    getBool(forKey: PrefsController.Key) -> Bool
     """,
             parameters: (forKey),
             escapingParameters: (forKey),
@@ -1444,11 +1495,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
     
     
     
-    public func getFloat(forKey: String) -> Float {
+    public func getFloat(forKey: PrefsController.Key) -> Float {
         
     return cuckoo_manager.call(
     """
-    getFloat(forKey: String) -> Float
+    getFloat(forKey: PrefsController.Key) -> Float
     """,
             parameters: (forKey),
             escapingParameters: (forKey),
@@ -1464,11 +1515,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
     
     
     
-    public func getInt(forKey: String) -> Int {
+    public func getInt(forKey: PrefsController.Key) -> Int {
         
     return cuckoo_manager.call(
     """
-    getInt(forKey: String) -> Int
+    getInt(forKey: PrefsController.Key) -> Int
     """,
             parameters: (forKey),
             escapingParameters: (forKey),
@@ -1484,11 +1535,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
     
     
     
-    public func remove(forKey: String)  {
+    public func remove(forKey: PrefsController.Key)  {
         
     return cuckoo_manager.call(
     """
-    remove(forKey: String)
+    remove(forKey: PrefsController.Key)
     """,
             parameters: (forKey),
             escapingParameters: (forKey),
@@ -1504,11 +1555,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
     
     
     
-    public func getValue(forKey: String) -> Any? {
+    public func getValue(forKey: PrefsController.Key) -> Any? {
         
     return cuckoo_manager.call(
     """
-    getValue(forKey: String) -> Any?
+    getValue(forKey: PrefsController.Key) -> Any?
     """,
             parameters: (forKey),
             escapingParameters: (forKey),
@@ -1532,88 +1583,88 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
         
         
         
-        func setValue<M1: Cuckoo.OptionalMatchable, M2: Cuckoo.Matchable>(_ value: M1, forKey: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(Any?, String)> where M1.OptionalMatchedType == Any, M2.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(Any?, String)>] = [wrap(matchable: value) { $0.0 }, wrap(matchable: forKey) { $0.1 }]
+        func setValue<M1: Cuckoo.OptionalMatchable, M2: Cuckoo.Matchable>(_ value: M1, forKey: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(Any?, PrefsController.Key)> where M1.OptionalMatchedType == Any, M2.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Any?, PrefsController.Key)>] = [wrap(matchable: value) { $0.0 }, wrap(matchable: forKey) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPrefsControllerType.self, method:
     """
-    setValue(_: Any?, forKey: String)
+    setValue(_: Any?, forKey: PrefsController.Key)
     """, parameterMatchers: matchers))
         }
         
         
         
         
-        func getString<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubFunction<(String), String?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func getString<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubFunction<(PrefsController.Key), String?> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPrefsControllerType.self, method:
     """
-    getString(forKey: String) -> String?
+    getString(forKey: PrefsController.Key) -> String?
     """, parameterMatchers: matchers))
         }
         
         
         
         
-        func getOptionalString<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubFunction<(String), String> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func getOptionalString<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubFunction<(PrefsController.Key), String> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPrefsControllerType.self, method:
     """
-    getOptionalString(forKey: String) -> String
+    getOptionalString(forKey: PrefsController.Key) -> String
     """, parameterMatchers: matchers))
         }
         
         
         
         
-        func getBool<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubFunction<(String), Bool> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func getBool<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubFunction<(PrefsController.Key), Bool> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPrefsControllerType.self, method:
     """
-    getBool(forKey: String) -> Bool
+    getBool(forKey: PrefsController.Key) -> Bool
     """, parameterMatchers: matchers))
         }
         
         
         
         
-        func getFloat<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubFunction<(String), Float> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func getFloat<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubFunction<(PrefsController.Key), Float> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPrefsControllerType.self, method:
     """
-    getFloat(forKey: String) -> Float
+    getFloat(forKey: PrefsController.Key) -> Float
     """, parameterMatchers: matchers))
         }
         
         
         
         
-        func getInt<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubFunction<(String), Int> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func getInt<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubFunction<(PrefsController.Key), Int> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPrefsControllerType.self, method:
     """
-    getInt(forKey: String) -> Int
+    getInt(forKey: PrefsController.Key) -> Int
     """, parameterMatchers: matchers))
         }
         
         
         
         
-        func remove<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(String)> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func remove<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(PrefsController.Key)> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPrefsControllerType.self, method:
     """
-    remove(forKey: String)
+    remove(forKey: PrefsController.Key)
     """, parameterMatchers: matchers))
         }
         
         
         
         
-        func getValue<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubFunction<(String), Any?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func getValue<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.ProtocolStubFunction<(PrefsController.Key), Any?> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPrefsControllerType.self, method:
     """
-    getValue(forKey: String) -> Any?
+    getValue(forKey: PrefsController.Key) -> Any?
     """, parameterMatchers: matchers))
         }
         
@@ -1637,11 +1688,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func setValue<M1: Cuckoo.OptionalMatchable, M2: Cuckoo.Matchable>(_ value: M1, forKey: M2) -> Cuckoo.__DoNotUse<(Any?, String), Void> where M1.OptionalMatchedType == Any, M2.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(Any?, String)>] = [wrap(matchable: value) { $0.0 }, wrap(matchable: forKey) { $0.1 }]
+        func setValue<M1: Cuckoo.OptionalMatchable, M2: Cuckoo.Matchable>(_ value: M1, forKey: M2) -> Cuckoo.__DoNotUse<(Any?, PrefsController.Key), Void> where M1.OptionalMatchedType == Any, M2.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Any?, PrefsController.Key)>] = [wrap(matchable: value) { $0.0 }, wrap(matchable: forKey) { $0.1 }]
             return cuckoo_manager.verify(
     """
-    setValue(_: Any?, forKey: String)
+    setValue(_: Any?, forKey: PrefsController.Key)
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -1649,11 +1700,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func getString<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(String), String?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func getString<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(PrefsController.Key), String?> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return cuckoo_manager.verify(
     """
-    getString(forKey: String) -> String?
+    getString(forKey: PrefsController.Key) -> String?
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -1661,11 +1712,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func getOptionalString<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(String), String> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func getOptionalString<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(PrefsController.Key), String> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return cuckoo_manager.verify(
     """
-    getOptionalString(forKey: String) -> String
+    getOptionalString(forKey: PrefsController.Key) -> String
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -1673,11 +1724,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func getBool<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(String), Bool> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func getBool<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(PrefsController.Key), Bool> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return cuckoo_manager.verify(
     """
-    getBool(forKey: String) -> Bool
+    getBool(forKey: PrefsController.Key) -> Bool
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -1685,11 +1736,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func getFloat<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(String), Float> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func getFloat<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(PrefsController.Key), Float> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return cuckoo_manager.verify(
     """
-    getFloat(forKey: String) -> Float
+    getFloat(forKey: PrefsController.Key) -> Float
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -1697,11 +1748,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func getInt<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(String), Int> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func getInt<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(PrefsController.Key), Int> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return cuckoo_manager.verify(
     """
-    getInt(forKey: String) -> Int
+    getInt(forKey: PrefsController.Key) -> Int
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -1709,11 +1760,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func remove<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func remove<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(PrefsController.Key), Void> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return cuckoo_manager.verify(
     """
-    remove(forKey: String)
+    remove(forKey: PrefsController.Key)
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -1721,11 +1772,11 @@ public class MockPrefsControllerType: PrefsControllerType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func getValue<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(String), Any?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: forKey) { $0 }]
+        func getValue<M1: Cuckoo.Matchable>(forKey: M1) -> Cuckoo.__DoNotUse<(PrefsController.Key), Any?> where M1.MatchedType == PrefsController.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(PrefsController.Key)>] = [wrap(matchable: forKey) { $0 }]
             return cuckoo_manager.verify(
     """
-    getValue(forKey: String) -> Any?
+    getValue(forKey: PrefsController.Key) -> Any?
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -1743,7 +1794,7 @@ public class PrefsControllerTypeStub: PrefsControllerType {
     
     
     
-    public func setValue(_ value: Any?, forKey: String)   {
+    public func setValue(_ value: Any?, forKey: PrefsController.Key)   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -1751,7 +1802,7 @@ public class PrefsControllerTypeStub: PrefsControllerType {
     
     
     
-    public func getString(forKey: String) -> String?  {
+    public func getString(forKey: PrefsController.Key) -> String?  {
         return DefaultValueRegistry.defaultValue(for: (String?).self)
     }
     
@@ -1759,7 +1810,7 @@ public class PrefsControllerTypeStub: PrefsControllerType {
     
     
     
-    public func getOptionalString(forKey: String) -> String  {
+    public func getOptionalString(forKey: PrefsController.Key) -> String  {
         return DefaultValueRegistry.defaultValue(for: (String).self)
     }
     
@@ -1767,7 +1818,7 @@ public class PrefsControllerTypeStub: PrefsControllerType {
     
     
     
-    public func getBool(forKey: String) -> Bool  {
+    public func getBool(forKey: PrefsController.Key) -> Bool  {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
@@ -1775,7 +1826,7 @@ public class PrefsControllerTypeStub: PrefsControllerType {
     
     
     
-    public func getFloat(forKey: String) -> Float  {
+    public func getFloat(forKey: PrefsController.Key) -> Float  {
         return DefaultValueRegistry.defaultValue(for: (Float).self)
     }
     
@@ -1783,7 +1834,7 @@ public class PrefsControllerTypeStub: PrefsControllerType {
     
     
     
-    public func getInt(forKey: String) -> Int  {
+    public func getInt(forKey: PrefsController.Key) -> Int  {
         return DefaultValueRegistry.defaultValue(for: (Int).self)
     }
     
@@ -1791,7 +1842,7 @@ public class PrefsControllerTypeStub: PrefsControllerType {
     
     
     
-    public func remove(forKey: String)   {
+    public func remove(forKey: PrefsController.Key)   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -1799,7 +1850,7 @@ public class PrefsControllerTypeStub: PrefsControllerType {
     
     
     
-    public func getValue(forKey: String) -> Any?  {
+    public func getValue(forKey: PrefsController.Key) -> Any?  {
         return DefaultValueRegistry.defaultValue(for: (Any?).self)
     }
     
@@ -2360,6 +2411,7 @@ import Cuckoo
 @testable import logic_api
 
 import Foundation
+import logic_resources
 
 import Cuckoo
 @testable import logic_business

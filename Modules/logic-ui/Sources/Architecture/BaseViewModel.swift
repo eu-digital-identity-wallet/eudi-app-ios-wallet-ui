@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SwiftUI
+@_exported import SwiftUI
+@_exported import Combine
 
 open class BaseViewModel<Router: RouterHostType>: ObservableObject {
+
+  public lazy var cancellables = Set<AnyCancellable>()
 
   public let router: Router
 

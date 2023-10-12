@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 import Foundation
+import logic_resources
 
 public enum RuntimeError: LocalizedError {
 
-  case deepLinkError(String)
   case customError(String)
   case genericError
-  case notSupported
+  case quickPinInvalid
 
   public var errorDescription: String? {
-    switch self {
-    case .deepLinkError(let message):
-      return message
-    case .genericError:
-      return "Oups! Something went wrong"
+    return switch self {
     case .customError(let message):
-      return message
-    case .notSupported:
-      return "Not supported yet"
+      message
+    case .genericError:
+      LocalizableString.shared.get(with: .genericErrorDesc)
+    case .quickPinInvalid:
+      LocalizableString.shared.get(with: .invalidQuickPin)
     }
   }
 }

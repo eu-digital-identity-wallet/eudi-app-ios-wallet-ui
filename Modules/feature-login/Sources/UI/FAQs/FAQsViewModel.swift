@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 import Foundation
-import Combine
-
 import logic_ui
 
 @MainActor
@@ -27,8 +25,6 @@ final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType
 
   @Published var displayable: State = .init()
   @Published var searchText = ""
-
-  public lazy var cancellables = Set<AnyCancellable>()
 
   init(router: Router, interactor: Interactor) {
     self.interactor = interactor

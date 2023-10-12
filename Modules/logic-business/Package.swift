@@ -33,12 +33,17 @@ let package = Package(
       url: "https://github.com/nsagora/peppermint",
       from: "1.2.0"
     ),
+    .package(
+      name: "logic-resources",
+      path: "./logic-resources"
+    ),
     .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
     .target(
       name: "logic-business",
       dependencies: [
+        "logic-resources",
         "IOSSecuritySuite",
         "KeychainAccess",
         .product(
