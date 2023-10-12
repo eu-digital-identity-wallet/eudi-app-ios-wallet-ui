@@ -35,7 +35,7 @@ public struct SearchBar: View {
   public var body: some View {
     HStack {
       FloatingTextField(
-        title: "Search",
+        title: .search,
         text: $text,
         showError: false,
         contentType: .username,

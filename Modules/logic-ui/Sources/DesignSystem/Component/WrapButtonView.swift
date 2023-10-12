@@ -18,7 +18,7 @@ import logic_resources
 
 public struct WrapButtonView: View {
 
-  private let title: LocalizedStringKey
+  private let title: LocalizableString.Key
   private let onAction: () -> Void
   private let textColor: Color
   private let backgroundColor: Color
@@ -33,7 +33,7 @@ public struct WrapButtonView: View {
   private var isLoading: Bool
 
   public init(
-    title: LocalizedStringKey,
+    title: LocalizableString.Key,
     textColor: Color = Theme.shared.color.textPrimaryDark,
     backgroundColor: Color = Theme.shared.color.tertiaryMain,
     systemIcon: String? = nil,
@@ -60,7 +60,7 @@ public struct WrapButtonView: View {
 
   public init(
     style: ButtonStyleEnum,
-    title: LocalizedStringKey,
+    title: LocalizableString.Key,
     systemIcon: String? = nil,
     gravity: Gravity = .center,
     isLoading: Binding<Bool> = Binding.constant(false),

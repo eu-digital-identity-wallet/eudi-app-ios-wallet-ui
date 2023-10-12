@@ -7,6 +7,7 @@ import SwiftUI
 
 import logic_navigation
 import logic_ui
+import logic_resources
 
 #Preview {
   FAQsView(with: PreviewRouter(), and: FAQsInteractor())
@@ -16,11 +17,11 @@ import logic_ui
   SuccessView(
     with: PreviewRouter(),
     and: UIConfig.Success(
-      title: "title",
-      subtitle: "SubTitle",
+      title: .custom("LITERAL PLACEHOLDER"),
+      subtitle: .custom("LITERAL PLACEHOLDER"),
       buttons: [
         .init(
-          title: "Button title",
+          title: .custom("LITERAL PLACEHOLDER"),
           screen: .startup,
           style: .primary,
           navigationType: .pop

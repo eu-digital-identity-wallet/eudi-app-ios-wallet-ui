@@ -32,10 +32,10 @@ public final class StartupViewModel<Router: RouterHostType, Interactor: StartupI
     router.push(
       with: .success(
         config: UIConfig.Success(
-          title: "testTitle",
-          subtitle: "testSubTitle",
+          title: .custom("LITERAL PLACEHOLDER"),
+          subtitle: .custom("LITERAL PLACEHOLDER"),
           buttons: [
-            .init(title: "POP BACK", screen: .startup, style: .primary, navigationType: .pop)
+            .init(title: .custom("LITERAL PLACEHOLDER"), screen: .startup, style: .primary, navigationType: .pop)
           ],
           visualKind: .defaultIcon
         )

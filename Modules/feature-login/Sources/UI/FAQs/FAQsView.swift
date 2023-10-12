@@ -44,8 +44,8 @@ public struct FAQsView<Router: RouterHostType, Interactor: FAQsInteractorType>: 
 
           ForEach(viewModel.displayable.filteredModels) { cell in
             ExpandableTextView(
-              title: cell.value.title,
-              content: cell.value.content,
+              title: .custom(cell.value.title),
+              content: .custom(cell.value.content),
               isloading: viewModel.displayable.isLoading
             ).transition(.opacity)
           }

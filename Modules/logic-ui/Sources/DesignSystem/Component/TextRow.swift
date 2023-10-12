@@ -17,7 +17,7 @@ import SwiftUI
 import logic_resources
 
 public func textRow(
-  _ value: LocalizedStringKey,
+  _ value: LocalizableString.Key,
   textColor: Color = Theme.shared.color.textPrimaryDark,
   imageColor: Color = Theme.shared.color.textPrimaryDark,
   image: String? = nil
@@ -36,18 +36,4 @@ public func textRow(
         .frame(height: 20)
     }
   }
-}
-
-public func textRow(
-  _ value: String,
-  textColor: Color = Theme.shared.color.textPrimaryDark,
-  imageColor: Color = Theme.shared.color.textPrimaryDark,
-  image: String? = nil
-) -> some View {
-  textRow(
-    LocalizedStringKey(value),
-    textColor: textColor,
-    imageColor: imageColor,
-    image: image
-  )
 }

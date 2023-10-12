@@ -71,33 +71,33 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
           Text("labelSmall")
             .typography(Theme.shared.font.labelSmall)
 
-          FloatingTextField(title: .init("Hello"),
+          FloatingTextField(title: .custom("Hello"),
                             text: $text,
                             showError: false,
                             contentType: .name,
                             userHasCommitedChange: $hasComited)
           WrapButtonView(
-            title: .init(stringLiteral: "PRIMARY"),
+            title: .custom("PRIMARY"),
             onAction: {}()
           )
 
           WrapButtonView(
-            title: .init(stringLiteral: "TEST FAQ SCREEN"),
+            title: .custom("TEST FAQ SCREEN"),
             onAction: viewModel.onClickFAQ()
           )
 
           WrapButtonView(
-            title: .init(stringLiteral: "TEST SUCCESS SCREEN"),
+            title: .custom("TEST SUCCESS SCREEN"),
             onAction: viewModel.onClickTestSuccess()
           )
 
           WrapButtonView(
-            title: .init(stringLiteral: "TEST BIOMETRICS SCREEN"),
+            title: .custom("TEST BIOMETRICS SCREEN"),
             onAction: {}()
           )
 
           WrapButtonView(style: .secondary,
-                         title: .init("SECONDARY"),
+                         title: .custom("SECONDARY"),
                          onAction: {}())
 
           Theme.shared.image.euLogo

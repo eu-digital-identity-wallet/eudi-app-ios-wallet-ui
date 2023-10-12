@@ -28,10 +28,6 @@ public struct ScrollableTextView: View {
   @State private var contentSize: CGSize = .zero
   var text: Text
 
-  public init(_ title: LocalizedStringKey) {
-    self.text = Text(title)
-  }
-
   public init(_ title: String) {
     self.text = Text(title)
   }

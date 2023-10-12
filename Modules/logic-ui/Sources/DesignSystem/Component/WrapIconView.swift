@@ -19,7 +19,7 @@ import logic_resources
 
 public struct WrapIconView: View {
 
-  private let title: LocalizedStringKey?
+  private let title: LocalizableString.Key?
   private let textColor: Color
   private let backgroundColor: Color
   private let systemIcon: String
@@ -28,7 +28,7 @@ public struct WrapIconView: View {
   private let isEnabled: Bool
 
   public init(
-    title: LocalizedStringKey? = nil,
+    title: LocalizableString.Key? = nil,
     textColor: Color = .white,
     backgroundColor: Color = Theme.shared.color.backgroundPaper,
     systemIcon: String,

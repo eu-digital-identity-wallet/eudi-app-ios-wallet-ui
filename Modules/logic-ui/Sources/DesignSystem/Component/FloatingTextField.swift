@@ -20,7 +20,7 @@ public struct FloatingTextField<Content: View>: View {
 
   let placeholderScaleFactor = 0.8
 
-  let title: LocalizedStringKey
+  let title: LocalizableString.Key
   let leftImage: Image?
   var showError: Bool
   let contentType: UITextContentType
@@ -35,7 +35,7 @@ public struct FloatingTextField<Content: View>: View {
   @Binding var userHasCommitedChange: Bool
 
   public init(
-    title: LocalizedStringKey,
+    title: LocalizableString.Key,
     leftImage: Image? = nil,
     text: Binding<String>,
     showError: Bool,

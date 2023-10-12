@@ -20,14 +20,14 @@ import logic_resources
 
 public struct ExpandableTextView: View {
   @State private var isExpanded = false
-  var title: String
-  var content: String
+  var title: LocalizableString.Key
+  var content: LocalizableString.Key
   let isloading: Bool
 
   public init(
     isExpanded: Bool = false,
-    title: String,
-    content: String,
+    title: LocalizableString.Key,
+    content: LocalizableString.Key,
     isloading: Bool
   ) {
     self.isExpanded = isExpanded

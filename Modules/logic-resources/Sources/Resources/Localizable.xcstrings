@@ -23,13 +23,13 @@
         }
       }
     },
-    "test_arguments" : {
+    "search" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ done %@"
+            "value" : "Search"
           }
         }
       }

@@ -18,12 +18,12 @@ import logic_resources
 
 public struct NoContentView: View {
 
-  private let title: LocalizedStringKey
+  private let title: LocalizableString.Key
   private let imageName: String
   private let onClick: (() -> Void)?
 
   public init(
-    title: LocalizedStringKey,
+    title: LocalizableString.Key,
     imageName: String = "exclamationmark.circle",
     onClick: (() -> Void)? = nil
   ) {

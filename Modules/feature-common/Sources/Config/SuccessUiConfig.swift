@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import logic_ui
+import logic_resources
 import Foundation
 import SwiftUI
 
@@ -21,14 +22,14 @@ public extension UIConfig {
 
   struct Success: UIConfigType, Equatable {
 
-    public let title: LocalizedStringKey
-    public let subtitle: LocalizedStringKey
+    public let title: LocalizableString.Key
+    public let subtitle: LocalizableString.Key
     public let buttons: [Success.Button]
     public let visualKind: VisualKind
 
     public init(
-      title: LocalizedStringKey,
-      subtitle: LocalizedStringKey,
+      title: LocalizableString.Key,
+      subtitle: LocalizableString.Key,
       buttons: [Success.Button],
       visualKind: VisualKind
     ) {
@@ -51,7 +52,7 @@ public extension UIConfig.Success {
 
     public var id: UUID
 
-    public let title: LocalizedStringKey
+    public let title: LocalizableString.Key
     public let screen: AppRoute
     public let deepLink: URL?
     public let style: Style
@@ -68,7 +69,7 @@ public extension UIConfig.Success {
     }
 
     public init(
-      title: LocalizedStringKey,
+      title: LocalizableString.Key,
       screen: AppRoute,
       deepLink: URL? = nil,
       style: Style,

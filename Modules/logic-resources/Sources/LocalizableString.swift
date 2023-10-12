@@ -35,12 +35,14 @@ public final class LocalizableString: LocalizableStringType {
 
   public func get(with key: Key) -> String {
     return switch key {
+    case .custom(let literal):
+      literal
     case .screenCaptureSecurityWarning:
       bundle.localizedString(forKey: "screen_recording_security_warning")
-    case .test(let arguments):
-      bundle.localizedStringWithArguments(forKey: "test_arguments", arguments: arguments)
     case .faqs:
       bundle.localizedString(forKey: "faq_title")
+    case .search:
+      bundle.localizedString(forKey: "search")
     }
   }
 
@@ -51,9 +53,10 @@ public final class LocalizableString: LocalizableStringType {
 
 public extension LocalizableString {
   enum Key: Equatable {
+    case custom(String)
     case screenCaptureSecurityWarning
-    case test([String])
     case faqs
+    case search
   }
 }
 
