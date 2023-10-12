@@ -16,7 +16,7 @@
 import SwiftUI
 import logic_resources
 
-public struct HeaderView: View {
+public struct ContentHeader: View {
 
   private let title: LocalizableString.Key?
   private let dismissIcon: Image
@@ -81,7 +81,7 @@ public struct HeaderView: View {
   }
 }
 
-public extension HeaderView {
+public extension ContentHeader {
   struct Action: Identifiable {
 
     public var id: String {

@@ -27,7 +27,7 @@ public struct BlurProgressView: View {
 
   public var body: some View {
     ZStack {
-      LoaderView(
+      ContentLoader(
         showLoader: .constant(true),
         width: self.width,
         height: self.height
@@ -49,7 +49,7 @@ public struct NormalProgressView: View {
   }
 
   public var body: some View {
-    LoaderView(
+    ContentLoader(
       showLoader: .constant(true),
       width: self.width,
       height: self.height

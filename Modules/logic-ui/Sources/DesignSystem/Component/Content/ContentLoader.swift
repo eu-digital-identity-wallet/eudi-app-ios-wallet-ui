@@ -17,7 +17,7 @@ import SwiftUI
 import ActivityIndicatorView
 import logic_resources
 
-public struct LoaderView: View {
+public struct ContentLoader: View {
 
   @Binding
   private var showLoader: Bool

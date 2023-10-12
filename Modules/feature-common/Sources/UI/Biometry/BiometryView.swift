@@ -53,34 +53,17 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
 
   @ViewBuilder private var content: some View {
 
-    HeaderView(
+    ContentHeader(
       dismissIcon: ThemeManager.shared.image.xmark,
       onBack: { viewmodel.onPop() }
     )
 
-    VSpacer.large()
-
-    Group {
-      HStack {
-        Text(viewmodel.config.title)
-          .typography(ThemeManager.shared.font.headlineSmall)
-          .foregroundColor(ThemeManager.shared.color.secondaryMain)
-        Spacer()
-      }
-
-      VSpacer.extraSmall()
-
-      HStack {
-        Text(
-          viewmodel.areBiometricsEnabled
-          ? viewmodel.config.caption
-          : viewmodel.config.quickPinOnlyCaption
-        )
-        .typography(ThemeManager.shared.font.bodyMedium)
-        .foregroundColor(ThemeManager.shared.color.textSecondaryDark)
-        Spacer()
-      }
-    }
+    ContentTitle(
+      title: viewmodel.config.title,
+      caption: viewmodel.areBiometricsEnabled
+      ? viewmodel.config.caption
+      : viewmodel.config.quickPinOnlyCaption
+    )
 
     VSpacer.medium()
 

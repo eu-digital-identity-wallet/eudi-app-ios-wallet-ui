@@ -27,31 +27,12 @@ public struct SuccessView<Router: RouterHostType>: View {
 
   public var body: some View {
     ContentScreen {
-      topView()
+      ContentTitle(
+        title: viewmodel.config.title,
+        caption: viewmodel.config.subtitle,
+        titleColor: ThemeManager.shared.color.successText
+      )
       mainView()
-    }
-  }
-
-  private func topView() -> some View {
-    VStack(alignment: .leading, spacing: 0) {
-
-      VSpacer.custom(size: getScreenRect().height * 0.06)
-
-      HStack {
-        Text(viewmodel.config.title)
-          .typography(ThemeManager.shared.font.headlineSmall)
-          .foregroundColor(ThemeManager.shared.color.successText)
-        Spacer()
-      }
-
-      VSpacer.small()
-
-      HStack {
-        Text(viewmodel.config.subtitle)
-          .typography(ThemeManager.shared.font.bodyMedium)
-          .foregroundColor(ThemeManager.shared.color.textSecondaryDark)
-        Spacer()
-      }
     }
   }
 

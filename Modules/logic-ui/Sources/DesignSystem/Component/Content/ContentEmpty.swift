@@ -16,7 +16,7 @@
 import SwiftUI
 import logic_resources
 
-public struct NoContentView: View {
+public struct ContentEmpty: View {
 
   private let title: LocalizableString.Key
   private let image: Image

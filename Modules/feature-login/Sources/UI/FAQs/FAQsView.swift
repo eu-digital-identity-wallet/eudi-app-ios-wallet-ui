@@ -27,15 +27,17 @@ public struct FAQsView<Router: RouterHostType, Interactor: FAQsInteractorType>: 
   }
 
   public var body: some View {
-    ContentScreen(canScroll: true, spacing: SPACING_MEDIUM_SMALL) {
+    ContentScreen(canScroll: true) {
 
-      HeaderView(title: .faqs) {
+      ContentHeader {
         viewModel.goBack()
       }
 
       ScrollView(showsIndicators: false) {
         VStack(spacing: SPACING_LARGE_MEDIUM) {
-          VSpacer.extraSmall()
+
+          ContentTitle(title: .faqs)
+
           SearchBar(
             text: $viewModel.searchText,
             commited: $userIsEditingAlias,

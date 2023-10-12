@@ -112,7 +112,7 @@ public struct WrapButtonView: View {
           }
 
           if isLoading {
-            LoaderView(
+            ContentLoader(
               showLoader: $isLoading,
               width: 20,
               height: 20
