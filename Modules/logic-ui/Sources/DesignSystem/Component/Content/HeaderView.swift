@@ -45,7 +45,7 @@ public struct HeaderView: View {
             onBack()
           },
           label: {
-            Theme.shared.image.arrowLeft
+            self.dismissIcon
               .foregroundColor(Theme.shared.color.secondaryMain)
           }
         )

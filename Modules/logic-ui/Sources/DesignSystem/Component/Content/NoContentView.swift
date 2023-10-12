@@ -19,23 +19,23 @@ import logic_resources
 public struct NoContentView: View {
 
   private let title: LocalizableString.Key
-  private let imageName: String
+  private let image: Image
   private let onClick: (() -> Void)?
 
   public init(
     title: LocalizableString.Key,
-    imageName: String = "exclamationmark.circle",
+    image: Image = ThemeManager.shared.image.exclamationmarkCircle,
     onClick: (() -> Void)? = nil
   ) {
     self.title = title
-    self.imageName = imageName
+    self.image = image
     self.onClick = onClick
   }
 
   public var body: some View {
     VStack(alignment: .center, spacing: SPACING_MEDIUM) {
 
-      Image(systemName: imageName)
+      image
         .resizable()
         .scaledToFit()
         .foregroundColor(Theme.shared.color.backgroundDefault)

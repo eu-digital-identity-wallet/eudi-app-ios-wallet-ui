@@ -17,7 +17,6 @@
 import SwiftUI
 
 public protocol ImageManagerProtocol {
-  var euLogo: Image { get }
   var logo: Image { get }
   var launchImage: Image { get }
   var faceId: Image { get }
@@ -29,11 +28,13 @@ public protocol ImageManagerProtocol {
   var arrowLeft: Image { get }
   var chevronUp: Image { get }
   var chevronDown: Image { get }
+  var xmark: Image { get }
+  var exclamationmarkCircle: Image { get }
+  var circle: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
   enum ImageEnum: String {
-    case euLogo = "eu-logo"
     case launchImage = "launch-image"
     case faceId = "face-id"
     case id = "id-stroke"
@@ -45,6 +46,9 @@ final class ImageManager: ImageManagerProtocol {
     case arrowLeft = "arrow.left"
     case chevronUp = "chevron.up"
     case chevronDown = "chevron.down"
+    case xmark = "xmark"
+    case exclamationmarkCircle = "exclamationmark.circle"
+    case circle = "circle.fill"
   }
 
   // MARK: - Properties
@@ -56,10 +60,6 @@ final class ImageManager: ImageManagerProtocol {
     self.bundle = bundle
   }
   // MARK: - Images
-
-  var euLogo: Image {
-    Image(ImageEnum.euLogo.rawValue, bundle: bundle)
-  }
   var launchImage: Image {
     Image(ImageEnum.launchImage.rawValue, bundle: bundle)
   }
@@ -92,5 +92,14 @@ final class ImageManager: ImageManagerProtocol {
   }
   var chevronDown: Image {
     Image(systemName: ImageEnum.chevronDown.rawValue)
+  }
+  var xmark: Image {
+    Image(systemName: ImageEnum.xmark.rawValue)
+  }
+  var exclamationmarkCircle: Image {
+    Image(systemName: ImageEnum.exclamationmarkCircle.rawValue)
+  }
+  var circle: Image {
+    Image(systemName: ImageEnum.circle.rawValue)
   }
 }

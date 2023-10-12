@@ -68,6 +68,9 @@ public final class RouterHost: RouterHostType {
         SuccessView(with: self, and: config)
       case .dashboard:
         DashboardView(with: self, and: DashboardInteractor())
+      case .biometry(let config):
+        BiometryView(with: self, interactor: BiometryInteractor(), config: config)
+
       }
     }.eraseToAnyView()
   }

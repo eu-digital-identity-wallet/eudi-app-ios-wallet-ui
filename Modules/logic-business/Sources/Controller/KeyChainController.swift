@@ -28,9 +28,12 @@ public protocol KeyChainControllerType {
   func storeValue(key: KeychainWrapper, value: String)
   func getValue(key: KeychainWrapper) -> String?
   func removeObject(key: KeychainWrapper)
+  func validateKeyChainBiometry() throws
 }
 
 public final class KeyChainController: KeyChainControllerType {
+
+  private let biometryKey = "eu.europa.ec.euidi.biometric.access"
 
   public init() {}
 
@@ -48,5 +51,32 @@ public final class KeyChainController: KeyChainControllerType {
 
   public func removeObject(key: KeychainWrapper) {
     try? keyChain.remove(key.value)
+  }
+
+  public func validateKeyChainBiometry() throws {
+    try setBiometricKey()
+    try isBiometricKeyValid()
+  }
+}
+
+private extension KeyChainController {
+  func setBiometricKey() throws {
+    try self.keyChain
+      .accessibility(
+        .whenPasscodeSetThisDeviceOnly,
+        authenticationPolicy: [.touchIDAny]
+      )
+      .set(UUID().uuidString, key: self.biometryKey)
+  }
+
+  func isBiometricKeyValid() throws {
+
+    let item = try self.keyChain
+      .authenticationPrompt("Authenticate to login to server")
+      .get(self.biometryKey)
+
+    if item != nil {
+      try self.keyChain.remove(self.biometryKey)
+    }
   }
 }

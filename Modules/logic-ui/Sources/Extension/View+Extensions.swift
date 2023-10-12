@@ -61,3 +61,27 @@ public extension View {
       )
   }
 }
+
+public extension View {
+  func hideKeyboard() {
+    UIApplication.shared.hideKeyboard()
+  }
+  func onHideKeyboard() -> some View {
+    UIApplication.shared.hideKeyboard()
+    return self
+  }
+}
+
+public extension View {
+  func onAppearDelayed(
+    delay: Int = 250,
+    onAppear: @escaping () -> Void
+  ) -> some View {
+    return self
+      .onAppear {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(delay)) {
+          onAppear()
+        }
+      }
+  }
+}

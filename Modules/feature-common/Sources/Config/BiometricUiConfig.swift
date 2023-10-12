@@ -17,7 +17,7 @@ import logic_ui
 import logic_resources
 
 public extension UIConfig {
-  struct Biometric: UIConfigType, Equatable {
+  struct Biometry: UIConfigType, Equatable {
 
     public let title: LocalizableString.Key
     public let caption: LocalizableString.Key

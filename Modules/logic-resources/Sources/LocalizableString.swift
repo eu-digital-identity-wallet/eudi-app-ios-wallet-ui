@@ -43,6 +43,12 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "faq_title")
     case .search:
       bundle.localizedString(forKey: "search")
+    case .genericErrorTitle:
+      bundle.localizedString(forKey: "generic_error_title")
+    case .genericErrorDesc:
+      bundle.localizedString(forKey: "generic_error_description")
+    case .biometryOpenSettings:
+      bundle.localizedString(forKey: "biometry_open_settings")
     }
   }
 
@@ -57,6 +63,9 @@ public extension LocalizableString {
     case screenCaptureSecurityWarning
     case faqs
     case search
+    case genericErrorTitle
+    case genericErrorDesc
+    case biometryOpenSettings
   }
 }
 

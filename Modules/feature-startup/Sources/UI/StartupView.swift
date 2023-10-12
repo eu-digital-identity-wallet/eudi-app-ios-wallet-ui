@@ -93,14 +93,13 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
 
           WrapButtonView(
             title: .custom("TEST BIOMETRICS SCREEN"),
-            onAction: {}()
+            onAction: viewModel.onClickBiometry()
           )
 
           WrapButtonView(style: .secondary,
                          title: .custom("SECONDARY"),
                          onAction: {}())
 
-          Theme.shared.image.euLogo
           Theme.shared.image.launchImage
           Theme.shared.image.faceId
           Theme.shared.image.id

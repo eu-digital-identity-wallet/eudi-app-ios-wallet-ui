@@ -14,26 +14,16 @@
  * limitations under the License.
  */
 import SwiftUI
-import logic_resources
 
-public func textRow(
-  _ value: LocalizableString.Key,
-  textColor: Color = Theme.shared.color.textPrimaryDark,
-  imageColor: Color = Theme.shared.color.textPrimaryDark,
-  image: String? = nil
-) -> some View {
-  HStack {
-    Text(value)
-      .lineLimit(1)
-      .minimumScaleFactor(0.5)
-      .foregroundColor(textColor)
-    Spacer()
-    if let image {
-      Image(systemName: image)
-        .resizable()
-        .scaledToFit()
-        .foregroundColor(imageColor)
-        .frame(height: 20)
-    }
+public struct Blur: UIViewRepresentable {
+
+  public var style: UIBlurEffect.Style = .systemMaterial
+
+  public func makeUIView(context: Context) -> UIVisualEffectView {
+    return UIVisualEffectView(effect: UIBlurEffect(style: style))
+  }
+
+  public func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
+    uiView.effect = UIBlurEffect(style: style)
   }
 }

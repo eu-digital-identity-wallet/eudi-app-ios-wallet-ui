@@ -31,19 +31,38 @@ public final class StartupViewModel<Router: RouterHostType, Interactor: StartupI
   func onClickTestSuccess() {
     router.push(
       with: .success(
-        config: UIConfig.Success(
-          title: .custom("LITERAL PLACEHOLDER"),
-          subtitle: .custom("LITERAL PLACEHOLDER"),
-          buttons: [
-            .init(title: .custom("LITERAL PLACEHOLDER"), screen: .startup, style: .primary, navigationType: .pop)
-          ],
-          visualKind: .defaultIcon
-        )
+        config: successConfig()
       )
     )
   }
 
   func onClickFAQ() {
     router.push(with: .faqs)
+  }
+
+  func onClickBiometry() {
+    router.push(
+      with: .biometry(
+        config: UIConfig.Biometry(
+          title: .genericErrorTitle,
+          caption: .genericErrorDesc,
+          quickPinOnlyCaption: .genericErrorDesc,
+          navigationSuccessConfig: .init(screen: .success(config: successConfig()), navigationType: .push),
+          navigationBackConfig: .init(screen: .startup, navigationType: .pop),
+          isPreAuthorization: false,
+          shouldInitializeBiometricOnCreate: true)
+      )
+    )
+  }
+
+  private func successConfig() -> UIConfig.Success {
+    return UIConfig.Success(
+      title: .custom("LITERAL PLACEHOLDER"),
+      subtitle: .custom("LITERAL PLACEHOLDER"),
+      buttons: [
+        .init(title: .custom("LITERAL PLACEHOLDER"), screen: .startup, style: .primary, navigationType: .pop)
+      ],
+      visualKind: .defaultIcon
+    )
   }
 }

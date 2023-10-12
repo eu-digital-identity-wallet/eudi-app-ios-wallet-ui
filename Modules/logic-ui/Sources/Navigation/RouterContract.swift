@@ -25,6 +25,7 @@ public indirect enum AppRoute: Equatable {
   case success(config: any UIConfigType)
   case faqs
   case dashboard
+  case biometry(config: any UIConfigType)
 
   var key: String {
     return switch self {
@@ -36,6 +37,8 @@ public indirect enum AppRoute: Equatable {
       "Success"
     case .dashboard:
       "Dashboard"
+    case .biometry:
+      "Biometry"
     }
   }
 }

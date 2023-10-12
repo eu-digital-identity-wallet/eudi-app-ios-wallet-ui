@@ -1,6 +1,17 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "biometry_open_settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go to settings"
+          }
+        }
+      }
+    },
     "faq_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -8,6 +19,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "FAQs"
+          }
+        }
+      }
+    },
+    "generic_error_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If the issue persists, please contact customer support"
+          }
+        }
+      }
+    },
+    "generic_error_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Houston we have a problem!"
           }
         }
       }
