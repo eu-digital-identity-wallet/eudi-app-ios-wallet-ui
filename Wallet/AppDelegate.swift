@@ -21,7 +21,7 @@ import logic_business
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-  private lazy var configLogic = ConfigProvider.shared.getConfigLogic()
+  private lazy var configSecurityLogic = ConfigProvider.shared.getConfigSecurityLogic()
 
   func application(
     _ application: UIApplication,
@@ -39,7 +39,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   private func initializeNetworkLogging() {
-    configLogic.networkLoggerExclusionList.forEach { url in
+
+    guard configSecurityLogic.useNetworkLogger else {
+      return
+    }
+
+    configSecurityLogic.networkLoggerExclusionList.forEach { url in
       NFX.sharedInstance().ignoreURL(url)
     }
     NFX.sharedInstance().start()

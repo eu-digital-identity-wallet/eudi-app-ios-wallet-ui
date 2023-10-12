@@ -31,6 +31,6 @@ public struct ConfigProvider: ConfigProviderType {
   }
 
   public func getConfigSecurityLogic() -> ConfigSecurityLogic {
-    WalletSecurityConfig()
+    WalletSecurityConfig(configLogic: getConfigLogic())
   }
 }

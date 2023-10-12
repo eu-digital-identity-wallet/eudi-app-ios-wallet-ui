@@ -21,14 +21,6 @@ public struct WalletConfig: ConfigLogic {
     getBundleValue(key: "Base Host")
   }
 
-  public var networkLoggerExclusionList: [String] = [
-    "https://region1.app-measurement.com",
-    "https://app-measurement.com",
-    "https://firebaselogging-pa.googleapis.com",
-    "https://fcmtoken.googleapis.com",
-    "https://static.realm.io"
-  ]
-
   public var appBuildType: AppBuildType {
     getBuildType()
   }

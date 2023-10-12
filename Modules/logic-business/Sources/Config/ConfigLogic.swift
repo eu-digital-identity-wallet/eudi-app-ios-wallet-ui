@@ -16,7 +16,7 @@
 import Foundation
 
 public enum AppBuildType: String {
-  case RELEASE, DEV
+  case RELEASE, DEBUG
 }
 
 public protocol ConfigLogic {
@@ -25,11 +25,6 @@ public protocol ConfigLogic {
    * Server base url.
    */
   var baseHost: String { get }
-
-  /**
-   * Networking logging debug panel
-   */
-  var networkLoggerExclusionList: [String] { get }
 
   /**
    * Build type.

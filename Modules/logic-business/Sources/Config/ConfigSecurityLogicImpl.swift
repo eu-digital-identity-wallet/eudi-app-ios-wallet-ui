@@ -17,6 +17,8 @@ import Foundation
 
 public struct WalletSecurityConfig: ConfigSecurityLogic {
 
+  let configLogic: ConfigLogic
+
   public var blockRootAccess: Bool {
     false
   }
@@ -48,4 +50,16 @@ public struct WalletSecurityConfig: ConfigSecurityLogic {
   public var profileInformation: (bundleId: String, signature: String)? {
     nil
   }
+
+  public var useNetworkLogger: Bool {
+    configLogic.appBuildType == .DEBUG
+  }
+
+  public var networkLoggerExclusionList: [String] = [
+    "https://region1.app-measurement.com",
+    "https://app-measurement.com",
+    "https://firebaselogging-pa.googleapis.com",
+    "https://fcmtoken.googleapis.com",
+    "https://static.realm.io"
+  ]
 }

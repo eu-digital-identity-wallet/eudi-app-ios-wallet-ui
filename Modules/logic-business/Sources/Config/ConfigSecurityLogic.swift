@@ -56,4 +56,14 @@ public protocol ConfigSecurityLogic {
    * Check provision signature and bundleId on startup for release builds.
    */
   var profileInformation: (bundleId: String, signature: String)? { get }
+
+  /**
+   * Use network logger for debug builds.
+   */
+  var useNetworkLogger: Bool { get }
+
+  /**
+   * Networking logging debug panel
+   */
+  var networkLoggerExclusionList: [String] { get }
 }
