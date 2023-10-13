@@ -70,6 +70,8 @@ public final class RouterHost: RouterHostType {
         DashboardView(with: self, and: DashboardInteractor())
       case .biometry(let config):
         BiometryView(with: self, interactor: BiometryInteractor(), config: config)
+      case .onlineAuthLoading:
+        OnlineAuthLoadingView(with: self, and: OnlineAuthInteractor())
 
       }
     }.eraseToAnyView()
