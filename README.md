@@ -7,6 +7,7 @@
 * [Overview](#overview)
 * [Disclaimer](#disclaimer)
 * [How to contribute](#how-to-contribute)
+* [Package structure](#package-structure)
 * [Creating a new feature module](#creating-a-new-feature-module)
 * [SwiftUI Previews](#swiftui-previews)
 * [License](#license)
@@ -32,6 +33,29 @@ The released software is a initial development release version:
 
 We welcome contributions to this project. To ensure that the process is smooth for everyone
 involved, follow the guidelines found in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Package structure
+
+```mermaid
+graph TD;
+    logic-resources-->logic-ui;
+    logic-business-->logic-ui;
+    logic-business-->logic-api;
+    
+    logic-business-->feature-common;
+    logic-ui-->feature-common;
+    logic-api-->feature-common;
+
+    feature-common-->feature-login;
+    feature-common-->feature-dashboard;
+    feature-common-->feature-startup;
+
+    feature-login-->logic-navigation;
+    feature-dashboard-->logic-navigation;
+    feature-startup-->logic-navigation;
+
+    logic-navigation-->EudiReferenceWallet;
+```
 
 ## Creating a new feature module
 

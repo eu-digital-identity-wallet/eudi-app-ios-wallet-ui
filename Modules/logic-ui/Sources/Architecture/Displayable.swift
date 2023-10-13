@@ -17,4 +17,5 @@ import Foundation
 
 public protocol Displayable {
   associatedtype State
+  func setState(_ reducer: (State) -> State) async
 }

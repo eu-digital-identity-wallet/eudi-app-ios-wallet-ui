@@ -23,15 +23,17 @@ final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType
 
   private let interactor: Interactor
 
-  @Published var displayable: State = .init()
+  @Published var displayable: State
   @Published var searchText = ""
 
   init(router: Router, interactor: Interactor) {
     self.interactor = interactor
-    super.init(router: router)
+    self.displayable = .init(
+      models: FAQUIModel.mocks(),
+      filteredModels: FAQUIModel.mocks()
+    )
 
-    displayable.models = FAQUIModel.mocks()
-    displayable.filteredModels = displayable.models
+    super.init(router: router)
 
     subscribeToSearchedText()
   }
@@ -45,22 +47,57 @@ final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType
           return text.isEmpty || model.value.title.localizedCaseInsensitiveContains(text)
         }
       }
-      .assign(to: \.displayable.filteredModels, on: self)
+      .sink(receiveValue: { [weak self] models in
+        guard let self = self else { return }
+        self.setNewState(
+          filteredModels: models
+        )
+      })
       .store(in: &cancellables)
   }
 
   func fetchFAQs() async {
-    do {
-      displayable.isLoading = true
-      displayable.models = try await interactor.fetchFAQs()
-    } catch {
-      displayable.models = []
+
+    defer {
+      setNewState(
+        isLoading: false
+      )
     }
-    displayable.filteredModels = displayable.models
-    displayable.isLoading = false
+
+    do {
+      setNewState(
+        isLoading: true,
+        models: try await interactor.fetchFAQs()
+      )
+    } catch {
+      setNewState(
+        isLoading: false,
+        models: []
+      )
+    }
   }
 
   func goBack() {
     router.pop(animated: true)
+  }
+
+  public func setState(_ reducer: (FAQDisplayable) -> FAQDisplayable) {
+    self.displayable = reducer(displayable)
+  }
+
+  private func setNewState(
+    isLoading: Bool? = nil,
+    searchText: String? = nil,
+    models: [FAQUIModel]? = nil,
+    filteredModels: [FAQUIModel]? = nil
+  ) {
+    setState { previousState in
+      .init(
+        isLoading: isLoading ?? previousState.isLoading,
+        searchText: searchText ?? previousState.searchText,
+        models: models ?? previousState.models,
+        filteredModels: filteredModels ?? previousState.filteredModels
+      )
+    }
   }
 }

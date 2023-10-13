@@ -659,22 +659,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
     
     
     
-    public var networkLoggerExclusionList: [String] {
-        get {
-            return cuckoo_manager.getter("networkLoggerExclusionList",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.networkLoggerExclusionList)
-        }
-        
-    }
-    
-    
-    
-    
-    
     public var appBuildType: AppBuildType {
         get {
             return cuckoo_manager.getter("appBuildType",
@@ -725,13 +709,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         
         
         
-        var networkLoggerExclusionList: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, [String]> {
-            return .init(manager: cuckoo_manager, name: "networkLoggerExclusionList")
-        }
-        
-        
-        
-        
         var appBuildType: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, AppBuildType> {
             return .init(manager: cuckoo_manager, name: "appBuildType")
         }
@@ -768,13 +745,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         
         
         
-        var networkLoggerExclusionList: Cuckoo.VerifyReadOnlyProperty<[String]> {
-            return .init(manager: cuckoo_manager, name: "networkLoggerExclusionList", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
         var appBuildType: Cuckoo.VerifyReadOnlyProperty<AppBuildType> {
             return .init(manager: cuckoo_manager, name: "appBuildType", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
@@ -801,17 +771,6 @@ public class ConfigLogicStub: ConfigLogic {
     public var baseHost: String {
         get {
             return DefaultValueRegistry.defaultValue(for: (String).self)
-        }
-        
-    }
-    
-    
-    
-    
-    
-    public var networkLoggerExclusionList: [String] {
-        get {
-            return DefaultValueRegistry.defaultValue(for: ([String]).self)
         }
         
     }
@@ -1017,6 +976,38 @@ public class MockConfigSecurityLogic: ConfigSecurityLogic, Cuckoo.ProtocolMock {
     }
     
     
+    
+    
+    
+    public var useNetworkLogger: Bool {
+        get {
+            return cuckoo_manager.getter("useNetworkLogger",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.useNetworkLogger)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var networkLoggerExclusionList: [String] {
+        get {
+            return cuckoo_manager.getter("networkLoggerExclusionList",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.networkLoggerExclusionList)
+        }
+        
+    }
+    
+    
 
     
 
@@ -1082,6 +1073,20 @@ public class MockConfigSecurityLogic: ConfigSecurityLogic, Cuckoo.ProtocolMock {
         
         var profileInformation: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigSecurityLogic, (bundleId: String, signature: String)?> {
             return .init(manager: cuckoo_manager, name: "profileInformation")
+        }
+        
+        
+        
+        
+        var useNetworkLogger: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigSecurityLogic, Bool> {
+            return .init(manager: cuckoo_manager, name: "useNetworkLogger")
+        }
+        
+        
+        
+        
+        var networkLoggerExclusionList: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigSecurityLogic, [String]> {
+            return .init(manager: cuckoo_manager, name: "networkLoggerExclusionList")
         }
         
         
@@ -1153,6 +1158,20 @@ public class MockConfigSecurityLogic: ConfigSecurityLogic, Cuckoo.ProtocolMock {
         
         var profileInformation: Cuckoo.VerifyReadOnlyProperty<(bundleId: String, signature: String)?> {
             return .init(manager: cuckoo_manager, name: "profileInformation", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        var useNetworkLogger: Cuckoo.VerifyReadOnlyProperty<Bool> {
+            return .init(manager: cuckoo_manager, name: "useNetworkLogger", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        var networkLoggerExclusionList: Cuckoo.VerifyReadOnlyProperty<[String]> {
+            return .init(manager: cuckoo_manager, name: "networkLoggerExclusionList", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         
@@ -1247,6 +1266,28 @@ public class ConfigSecurityLogicStub: ConfigSecurityLogic {
     public var profileInformation: (bundleId: String, signature: String)? {
         get {
             return DefaultValueRegistry.defaultValue(for: ((bundleId: String, signature: String)?).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var useNetworkLogger: Bool {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Bool).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var networkLoggerExclusionList: [String] {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ([String]).self)
         }
         
     }
@@ -2633,6 +2674,15 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import Combine
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_startup
+@testable import logic_api
+@testable import logic_ui
+
 import Foundation
 
 import Cuckoo
@@ -3217,11 +3267,17 @@ public class MockDisplayable<State>: Displayable, Cuckoo.ProtocolMock {
             self.reference = reference
     
             
+            _storage$1$setState = defaultImpl.pointee.setState
             
         }
         
         
     
+        
+        private let _storage$1$setState: ((State) -> State)  async -> Void
+        public func setState(_ reducer: (State) -> State) async {
+            return  await _storage$1$setState(reducer)
+        }
         
     }
 
@@ -3244,12 +3300,45 @@ public class MockDisplayable<State>: Displayable, Cuckoo.ProtocolMock {
     
 
     
+    
+    
+    
+    public func setState(_ reducer: (State) -> State) async {
+        return await withoutActuallyEscaping(reducer, do: { (reducer: @escaping (State) -> State) -> Void in
+
+    return await cuckoo_manager.call(
+    """
+    setState(_: (State) -> State) async
+    """,
+            parameters: (reducer),
+            escapingParameters: ({ _ -> State in fatalError("This is a stub! It's not supposed to be called!") }),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.setState(reducer))
+        })
+
+    }
+    
+    
 
     public struct __StubbingProxy_Displayable: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
             self.cuckoo_manager = manager
+        }
+        
+        
+        
+        
+        func setState<M1: Cuckoo.Matchable>(_ reducer: M1) -> Cuckoo.ProtocolStubNoReturnFunction<((State) -> State)> where M1.MatchedType == (State) -> State {
+            let matchers: [Cuckoo.ParameterMatcher<((State) -> State)>] = [wrap(matchable: reducer) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockDisplayable.self, method:
+    """
+    setState(_: (State) -> State) async
+    """, parameterMatchers: matchers))
         }
         
         
@@ -3269,6 +3358,18 @@ public class MockDisplayable<State>: Displayable, Cuckoo.ProtocolMock {
         
     
         
+        
+        
+        @discardableResult
+        func setState<M1: Cuckoo.Matchable>(_ reducer: M1) -> Cuckoo.__DoNotUse<((State) -> State), Void> where M1.MatchedType == (State) -> State {
+            let matchers: [Cuckoo.ParameterMatcher<((State) -> State)>] = [wrap(matchable: reducer) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    setState(_: (State) -> State) async
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -3278,6 +3379,14 @@ public class DisplayableStub<State>: Displayable {
 
     
 
+    
+    
+    
+    
+    public func setState(_ reducer: (State) -> State) async  {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
     
 }
 
