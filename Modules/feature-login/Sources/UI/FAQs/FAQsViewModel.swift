@@ -16,24 +16,48 @@
 import Foundation
 import logic_ui
 
-@MainActor
-final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType>: BaseViewModel<Router>, Displayable {
+/*
+ public struct FAQDisplayable {
+   
 
-  public typealias State = FAQDisplayable
+   init(
+     isLoading: Bool = true,
+     searchText: String = "",
+     models: [FAQUIModel] = [],
+     filteredModels: [FAQUIModel] = []
+   ) {
+     self.isLoading = isLoading
+     self.searchText = searchText
+     self.models = models
+     self.filteredModels = filteredModels
+   }
+ }
+ */
+struct FAQState: ViewState {
+  let isLoading: Bool
+  let searchText: String
+  let models: [FAQUIModel]
+  let filteredModels: [FAQUIModel]
+}
+
+@MainActor
+final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType>: BaseViewModel<Router, FAQState> {
 
   private let interactor: Interactor
-
-  @Published var displayable: State
   @Published var searchText = ""
 
   init(router: Router, interactor: Interactor) {
     self.interactor = interactor
-    self.displayable = .init(
-      models: FAQUIModel.mocks(),
-      filteredModels: FAQUIModel.mocks()
-    )
 
-    super.init(router: router)
+    super.init(
+      router: router,
+      initialState: .init(
+        isLoading: true,
+        searchText: "",
+        models: FAQUIModel.mocks(),
+        filteredModels: FAQUIModel.mocks()
+      )
+    )
 
     subscribeToSearchedText()
   }
@@ -43,7 +67,7 @@ final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType
       .dropFirst()
       .map { [weak self] text -> [FAQUIModel] in
         guard let self = self else { return [] }
-        return displayable.models.filter { model in
+        return viewState.models.filter { model in
           return text.isEmpty || model.value.title.localizedCaseInsensitiveContains(text)
         }
       }
@@ -79,10 +103,6 @@ final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType
 
   func goBack() {
     router.pop(animated: true)
-  }
-
-  public func setState(_ reducer: (FAQDisplayable) -> FAQDisplayable) {
-    self.displayable = reducer(displayable)
   }
 
   private func setNewState(
