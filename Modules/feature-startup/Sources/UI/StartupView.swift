@@ -32,12 +32,12 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
           isAnimating: viewModel.viewState.isAnimating
         )
         .onAppear {
-          withAnimation(Animation.easeInOut(duration: 1.0)) {
-            viewModel.splashStartedAnimating()
+          withAnimation(Animation.easeInOut(duration: viewModel.viewState.config.splashDuration)) {
+            viewModel.startAnimatingSplash()
           }
-          DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-            viewModel.splashFinished()
-          }
+        }
+        .task {
+          await viewModel.setup()
         }
       }
     }

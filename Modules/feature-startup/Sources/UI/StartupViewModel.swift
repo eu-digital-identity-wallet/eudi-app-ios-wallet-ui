@@ -19,8 +19,9 @@ import feature_common
 import logic_business
 
 struct StartupState: ViewState {
+  let config: UIConfig.Startup
   let isAnimating: Bool
-  let finishedAnimating: Bool
+  let setupError: Error?
 }
 
 @MainActor
@@ -31,20 +32,34 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
   init(router: Router, interactor: Interactor) {
     self.interactor = interactor
     super.init(router: router,
-               initialState: .init(isAnimating: false, finishedAnimating: false))
+               initialState: .init(config: .init(splashDuration: 1.2),
+                                   isAnimating: false,
+                                   setupError: nil))
   }
 
-  func splashStartedAnimating() {
+  func startAnimatingSplash() {
     self.setNewState(isAnimating: true)
   }
 
+  func setup() async {
+    do {
+      switch try await interactor.splashSetup(splashAnimationDuration: viewState.config.splashDuration) {
+      case .success:
+        splashFinished()
+      case .failure(let error):
+        self.setNewState(setupError: error)
+      }
+    } catch {
+      self.setNewState(setupError: error)
+    }
+  }
+
   func splashFinished() {
-    self.setNewState(finishedAnimating: true)
     self.router.push(with: .faqs)
   }
 
   // TODO: Remove When Navigation is complete
-  
+
   func onClickTestSuccess() {
     router.push(
       with: .success(
@@ -86,11 +101,12 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
 
   private func setNewState(
   isAnimating: Bool? = nil,
-  finishedAnimating: Bool? = nil
+  setupError: Error? = nil
   ) {
     setState { previous in
-        .init(isAnimating: isAnimating ?? previous.isAnimating,
-              finishedAnimating: finishedAnimating ?? previous.finishedAnimating)
+        .init(config: previous.config,
+              isAnimating: isAnimating ?? previous.isAnimating,
+              setupError: setupError ?? previous.setupError)
     }
   }
 }

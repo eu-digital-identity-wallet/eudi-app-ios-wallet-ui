@@ -17,6 +17,7 @@ import Foundation
 import logic_api
 
 public protocol StartupInteractorType {
+  func splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState
   func sampleCall() async -> SamplePartialState
 }
 
@@ -37,9 +38,47 @@ public final actor StartupInteractor: StartupInteractorType {
     }
   }
 
-}
+  public func splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState {
+    // Record the starting time
+    let start = DispatchTime.now().uptimeNanoseconds
 
+    // Start the async task
+    let task = Task { try await setupCalls() }
+
+    // Minimum time to wait in nanoseconds
+    // In order for splash to finish animating
+    let minimumTime: UInt64 = UInt64(splashAnimationDuration * 1_000_000_000)
+
+    // Fetch result from the task
+    if let result = try? await task.value {
+      // Record the ending time
+      let end = DispatchTime.now().uptimeNanoseconds
+
+      // Calculate the elapsed time
+      let elapsed = end - start
+      // If the elapsed time is less than the minimum time, sleep the remaining time of the animation
+      if elapsed < minimumTime {
+        let remaining = minimumTime - elapsed
+        try await Task.sleep(nanoseconds: remaining)
+      }
+      print("Finished waiting for at least \(splashAnimationDuration) seconds.")
+      return .success(Void())
+    } else {
+      return .failure(NSError())
+    }
+  }
+
+  private func setupCalls() async throws {
+    try await Task.sleep(nanoseconds: 1_750_000_000)
+  }
+
+}
 public enum SamplePartialState {
   case success(_ response: SampleResponseDTO)
+  case failure(_ error: Error)
+}
+
+public enum SplashSetupPartialState {
+  case success(_ response: Any)
   case failure(_ error: Error)
 }
