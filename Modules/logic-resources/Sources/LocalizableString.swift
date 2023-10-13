@@ -51,6 +51,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "biometry_open_settings")
     case .invalidQuickPin:
       bundle.localizedString(forKey: "invalid_quick_pin")
+    case .tryAgain:
+      bundle.localizedString(forKey: "try_again")
     }
   }
 
@@ -69,6 +71,7 @@ public extension LocalizableString {
     case genericErrorDesc
     case biometryOpenSettings
     case invalidQuickPin
+    case tryAgain
   }
 }
 

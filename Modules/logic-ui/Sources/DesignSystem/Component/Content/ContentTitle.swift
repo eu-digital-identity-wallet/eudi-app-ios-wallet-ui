@@ -22,23 +22,26 @@ public struct ContentTitle: View {
   private let caption: LocalizableString.Key?
   private let titleColor: Color
   private let captionColor: Color
+  private let topSpacing: TopSpacing
 
   public init(
     title: LocalizableString.Key,
     caption: LocalizableString.Key? = nil,
     titleColor: Color = ThemeManager.shared.color.secondaryMain,
-    captionColor: Color = ThemeManager.shared.color.textSecondaryDark
+    captionColor: Color = ThemeManager.shared.color.textSecondaryDark,
+    topSpacing: TopSpacing = .withToolbar
   ) {
     self.title = title
     self.caption = caption
     self.titleColor = titleColor
     self.captionColor = captionColor
+    self.topSpacing = topSpacing
   }
 
   public var body: some View {
-    VStack(spacing: SPACING_EXTRA_SMALL) {
+    VStack(spacing: .zero) {
 
-      VSpacer.mediumLarge()
+      VSpacer.custom(size: topSpacing.rawValue)
 
       HStack {
         Text(self.title)
@@ -46,6 +49,8 @@ public struct ContentTitle: View {
           .foregroundColor(self.titleColor)
         Spacer()
       }
+
+      VSpacer.extraSmall()
 
       if let caption = self.caption {
         HStack {
@@ -56,5 +61,12 @@ public struct ContentTitle: View {
         }
       }
     }
+  }
+}
+
+public extension ContentTitle {
+  enum TopSpacing: CGFloat {
+    case withToolbar = 8
+    case withoutToolbar = 16
   }
 }

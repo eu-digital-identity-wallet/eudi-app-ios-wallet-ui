@@ -96,6 +96,11 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
             onAction: viewModel.onClickBiometry()
           )
 
+          WrapButtonView(
+            title: .custom("TEST ONLINE AUTH SCREEN"),
+            onAction: viewModel.onClickOnlineLoading()
+          )
+
           WrapButtonView(style: .secondary,
                          title: .custom("SECONDARY"),
                          onAction: {}())

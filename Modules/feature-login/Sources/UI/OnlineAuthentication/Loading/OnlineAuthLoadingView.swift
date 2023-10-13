@@ -13,26 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Foundation
-import logic_api
+import SwiftUI
+import logic_ui
+import feature_common
 
-public enum FAQsPartialState {
-  case success([FAQUIModel])
-  case failure(Error)
-}
+public struct OnlineAuthLoadingView<Router: RouterHostType, Interactor: OnlineAuthInteractorType>: View {
 
-public protocol FAQsInteractorType {
-  func fetchFAQs() async -> FAQsPartialState
-}
+  @ObservedObject private var viewModel: OnlineAuthLoadingViewModel<Router, Interactor>
 
-public final actor FAQsInteractor: FAQsInteractorType {
-  public init() {}
-  public func fetchFAQs() async -> FAQsPartialState {
-    do {
-      try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
-      return .success(FAQUIModel.mocks())
-    } catch {
-      return .failure(error)
-    }
+  public init(with router: Router, and interactor: Interactor) {
+    self.viewModel = .init(router: router, interactor: interactor)
+  }
+
+  public var body: some View {
+    BaseLoadingView(with: viewModel.router, viewModel: viewModel)
   }
 }

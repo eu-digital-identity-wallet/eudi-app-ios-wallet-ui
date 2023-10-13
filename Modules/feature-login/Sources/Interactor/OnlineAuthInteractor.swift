@@ -15,22 +15,25 @@
  */
 import Foundation
 import logic_api
+import logic_business
 
-public enum FAQsPartialState {
-  case success([FAQUIModel])
+public enum OnlineAuthPartialState {
+  case success
   case failure(Error)
 }
 
-public protocol FAQsInteractorType {
-  func fetchFAQs() async -> FAQsPartialState
+public protocol OnlineAuthInteractorType {
+  func testWork() async -> OnlineAuthPartialState
 }
 
-public final actor FAQsInteractor: FAQsInteractorType {
+public final actor OnlineAuthInteractor: OnlineAuthInteractorType {
+
   public init() {}
-  public func fetchFAQs() async -> FAQsPartialState {
+
+  public func testWork() async -> OnlineAuthPartialState {
     do {
       try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
-      return .success(FAQUIModel.mocks())
+      return .success
     } catch {
       return .failure(error)
     }

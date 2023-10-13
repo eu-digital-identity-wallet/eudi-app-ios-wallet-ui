@@ -78,6 +78,7 @@ public struct ContentHeader: View {
         }
       }
     }
+    .frame(height: SPACING_EXTRA_LARGE)
   }
 }
 

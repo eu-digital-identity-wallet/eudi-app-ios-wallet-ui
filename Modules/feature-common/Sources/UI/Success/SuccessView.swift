@@ -26,11 +26,12 @@ public struct SuccessView<Router: RouterHostType>: View {
   }
 
   public var body: some View {
-    ContentScreen(allowBackGesture: false) {
+    ContentScreen {
       ContentTitle(
         title: viewmodel.viewState.config.title,
         caption: viewmodel.viewState.config.subtitle,
-        titleColor: ThemeManager.shared.color.successText
+        titleColor: ThemeManager.shared.color.successText,
+        topSpacing: .withoutToolbar
       )
       mainView()
     }
