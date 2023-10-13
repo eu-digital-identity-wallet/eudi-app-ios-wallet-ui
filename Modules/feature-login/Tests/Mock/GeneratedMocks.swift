@@ -38,11 +38,11 @@ public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
     
     
     
-    public func fetchFAQs() async throws -> [FAQUIModel] {
+    public func fetchFAQs() async -> FAQsPartialState {
         
-    return try await cuckoo_manager.callThrows(
+    return await cuckoo_manager.call(
     """
-    fetchFAQs() async throws -> [FAQUIModel]
+    fetchFAQs() async -> FAQsPartialState
     """,
             parameters: (),
             escapingParameters: (),
@@ -66,11 +66,11 @@ public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
         
         
         
-        func fetchFAQs() -> Cuckoo.ProtocolStubThrowingFunction<(), [FAQUIModel]> {
+        func fetchFAQs() -> Cuckoo.ProtocolStubFunction<(), FAQsPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockFAQsInteractorType.self, method:
     """
-    fetchFAQs() async throws -> [FAQUIModel]
+    fetchFAQs() async -> FAQsPartialState
     """, parameterMatchers: matchers))
         }
         
@@ -94,11 +94,11 @@ public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func fetchFAQs() -> Cuckoo.__DoNotUse<(), [FAQUIModel]> {
+        func fetchFAQs() -> Cuckoo.__DoNotUse<(), FAQsPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    fetchFAQs() async throws -> [FAQUIModel]
+    fetchFAQs() async -> FAQsPartialState
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -116,8 +116,138 @@ public class FAQsInteractorTypeStub: FAQsInteractorType {
     
     
     
-    public func fetchFAQs() async throws -> [FAQUIModel]  {
-        return DefaultValueRegistry.defaultValue(for: ([FAQUIModel]).self)
+    public func fetchFAQs() async -> FAQsPartialState  {
+        return DefaultValueRegistry.defaultValue(for: (FAQsPartialState).self)
+    }
+    
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import logic_api
+import logic_business
+
+
+
+
+
+
+public class MockOnlineAuthInteractorType: OnlineAuthInteractorType, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = OnlineAuthInteractorType
+    
+    public typealias Stubbing = __StubbingProxy_OnlineAuthInteractorType
+    public typealias Verification = __VerificationProxy_OnlineAuthInteractorType
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: OnlineAuthInteractorType?
+
+    public func enableDefaultImplementation(_ stub: OnlineAuthInteractorType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    public func testWork() async -> OnlineAuthPartialState {
+        
+    return await cuckoo_manager.call(
+    """
+    testWork() async -> OnlineAuthPartialState
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.testWork())
+        
+    }
+    
+    
+
+    public struct __StubbingProxy_OnlineAuthInteractorType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        
+        func testWork() -> Cuckoo.ProtocolStubFunction<(), OnlineAuthPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockOnlineAuthInteractorType.self, method:
+    """
+    testWork() async -> OnlineAuthPartialState
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_OnlineAuthInteractorType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+    
+        
+        
+        
+        @discardableResult
+        func testWork() -> Cuckoo.__DoNotUse<(), OnlineAuthPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    testWork() async -> OnlineAuthPartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+public class OnlineAuthInteractorTypeStub: OnlineAuthInteractorType {
+    
+
+    
+
+    
+    
+    
+    
+    public func testWork() async -> OnlineAuthPartialState  {
+        return DefaultValueRegistry.defaultValue(for: (OnlineAuthPartialState).self)
     }
     
     
@@ -153,6 +283,24 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import feature_common
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import feature_common
 
 import Cuckoo
 @testable import logic_business
@@ -4210,6 +4358,16 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_business
 import logic_resources
 
 import Cuckoo
