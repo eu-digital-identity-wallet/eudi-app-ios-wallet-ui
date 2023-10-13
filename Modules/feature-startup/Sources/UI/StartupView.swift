@@ -100,7 +100,6 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
                          title: .custom("SECONDARY"),
                          onAction: {}())
 
-          Theme.shared.image.launchImage
           Theme.shared.image.faceId
           Theme.shared.image.id
           Theme.shared.image.nfc

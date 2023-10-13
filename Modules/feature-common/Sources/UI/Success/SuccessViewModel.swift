@@ -16,17 +16,18 @@
 import logic_ui
 import logic_business
 
-@MainActor
-final class SuccessViewModel<Router: RouterHostType>: BaseViewModel<Router> {
+struct SuccessState: ViewState {
+  let config: UIConfig.Success
+}
 
-  @Published var config: UIConfig.Success
+@MainActor
+final class SuccessViewModel<Router: RouterHostType>: BaseViewModel<Router, SuccessState> {
 
   init(config: any UIConfigType, router: Router) {
     guard let config = config as? UIConfig.Success else {
       fatalError("SuccessViewModel:: Invalid configuraton")
     }
-    self.config = config
-    super.init(router: router)
+    super.init(router: router, initialState: .init(config: config))
   }
 
   func onButtonClicked(with button: UIConfig.Success.Button) {

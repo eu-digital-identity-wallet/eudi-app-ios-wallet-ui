@@ -16,22 +16,31 @@
 import Foundation
 import logic_ui
 
-@MainActor
-final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType>: BaseViewModel<Router>, Displayable {
+struct FAQState: ViewState {
+  let isLoading: Bool
+  let searchText: String
+  let models: [FAQUIModel]
+  let filteredModels: [FAQUIModel]
+}
 
-  public typealias State = FAQDisplayable
+@MainActor
+final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType>: BaseViewModel<Router, FAQState> {
 
   private let interactor: Interactor
-
-  @Published var displayable: State = .init()
   @Published var searchText = ""
 
   init(router: Router, interactor: Interactor) {
     self.interactor = interactor
-    super.init(router: router)
 
-    displayable.models = FAQUIModel.mocks()
-    displayable.filteredModels = displayable.models
+    super.init(
+      router: router,
+      initialState: .init(
+        isLoading: true,
+        searchText: "",
+        models: FAQUIModel.mocks(),
+        filteredModels: FAQUIModel.mocks()
+      )
+    )
 
     subscribeToSearchedText()
   }
@@ -41,26 +50,57 @@ final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType
       .dropFirst()
       .map { [weak self] text -> [FAQUIModel] in
         guard let self = self else { return [] }
-        return displayable.models.filter { model in
+        return viewState.models.filter { model in
           return text.isEmpty || model.value.title.localizedCaseInsensitiveContains(text)
         }
       }
-      .assign(to: \.displayable.filteredModels, on: self)
+      .sink(receiveValue: { [weak self] models in
+        guard let self = self else { return }
+        self.setNewState(
+          filteredModels: models
+        )
+      })
       .store(in: &cancellables)
   }
 
   func fetchFAQs() async {
-    do {
-      displayable.isLoading = true
-      displayable.models = try await interactor.fetchFAQs()
-    } catch {
-      displayable.models = []
+
+    defer {
+      setNewState(
+        isLoading: false
+      )
     }
-    displayable.filteredModels = displayable.models
-    displayable.isLoading = false
+
+    do {
+      setNewState(
+        isLoading: true,
+        models: try await interactor.fetchFAQs()
+      )
+    } catch {
+      setNewState(
+        isLoading: false,
+        models: []
+      )
+    }
   }
 
   func goBack() {
     router.pop(animated: true)
+  }
+
+  private func setNewState(
+    isLoading: Bool? = nil,
+    searchText: String? = nil,
+    models: [FAQUIModel]? = nil,
+    filteredModels: [FAQUIModel]? = nil
+  ) {
+    setState { previousState in
+      .init(
+        isLoading: isLoading ?? previousState.isLoading,
+        searchText: searchText ?? previousState.searchText,
+        models: models ?? previousState.models,
+        filteredModels: filteredModels ?? previousState.filteredModels
+      )
+    }
   }
 }

@@ -33,14 +33,14 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
         numericText: $viewmodel.uiPinInputField,
         maxDigits: 4,
         isSecureEntry: true,
-        canFocus: .constant(!viewmodel.areBiometricsEnabled),
+        canFocus: .constant(!viewmodel.viewState.areBiometricsEnabled),
         shouldUseFullScreen: false,
-        hasError: viewmodel.pinError != nil
+        hasError: viewmodel.viewState.pinError != nil
       )
 
       VSpacer.mediumSmall()
 
-      if let error = viewmodel.pinError {
+      if let error = viewmodel.viewState.pinError {
         HStack {
           Text(error)
             .typography(ThemeManager.shared.font.bodyMedium)
@@ -59,10 +59,10 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
     )
 
     ContentTitle(
-      title: viewmodel.config.title,
-      caption: viewmodel.areBiometricsEnabled
-      ? viewmodel.config.caption
-      : viewmodel.config.quickPinOnlyCaption
+      title: viewmodel.viewState.config.title,
+      caption: viewmodel.viewState.areBiometricsEnabled
+      ? viewmodel.viewState.config.caption
+      : viewmodel.viewState.config.quickPinOnlyCaption
     )
 
     VSpacer.medium()
@@ -71,7 +71,7 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
 
     Spacer()
 
-    if viewmodel.areBiometricsEnabled, let image = viewmodel.getBiometryImage() {
+    if viewmodel.viewState.areBiometricsEnabled, let image = viewmodel.viewState.biometryImage {
       HStack {
         Spacer()
         image

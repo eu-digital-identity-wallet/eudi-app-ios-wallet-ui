@@ -28,8 +28,8 @@ public struct SuccessView<Router: RouterHostType>: View {
   public var body: some View {
     ContentScreen(allowBackGesture: false) {
       ContentTitle(
-        title: viewmodel.config.title,
-        caption: viewmodel.config.subtitle,
+        title: viewmodel.viewState.config.title,
+        caption: viewmodel.viewState.config.subtitle,
         titleColor: ThemeManager.shared.color.successText
       )
       mainView()
@@ -37,7 +37,7 @@ public struct SuccessView<Router: RouterHostType>: View {
   }
 
   private func getCenteredIcon() -> Image {
-    return switch viewmodel.config.visualKind {
+    return switch viewmodel.viewState.config.visualKind {
     case .defaultIcon:
       Image(systemName: "checkmark.circle")
     case .customIcon(let image):
@@ -60,7 +60,7 @@ public struct SuccessView<Router: RouterHostType>: View {
       Spacer()
 
       VStack {
-        ForEach(viewmodel.config.buttons, id: \.id) { button in
+        ForEach(viewmodel.viewState.config.buttons, id: \.id) { button in
           WrapButtonView(
             style: button.style == .primary ? .primary : .secondary,
             title: button.title,

@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 import Foundation
+import Combine
 
-public struct FAQDisplayable {
-  var isLoading: Bool
-  var searchText: String
-  var models: [FAQUIModel]
-  var filteredModels: [FAQUIModel]
-
-  init(
-    isLoading: Bool = true,
-    searchText: String = "",
-    models: [FAQUIModel] = [],
-    filteredModels: [FAQUIModel] = []
-  ) {
-    self.isLoading = isLoading
-    self.searchText = searchText
-    self.models = models
-    self.filteredModels = filteredModels
+public extension Publisher where Self.Failure == Never {
+  func sink(receiveValue: @escaping ((Self.Output) async -> Void)) -> AnyCancellable {
+    sink { value in
+      Task {
+        await receiveValue(value)
+      }
+    }
   }
 }

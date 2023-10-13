@@ -16,13 +16,22 @@
 @_exported import SwiftUI
 @_exported import Combine
 
-open class BaseViewModel<Router: RouterHostType>: ObservableObject {
+public protocol ViewState {}
+
+open class BaseViewModel<Router: RouterHostType, UiState: ViewState>: ObservableObject {
 
   public lazy var cancellables = Set<AnyCancellable>()
 
+  @Published public private(set) var viewState: UiState
+
   public let router: Router
 
-  public init(router: Router) {
+  public init(router: Router, initialState: UiState) {
     self.router = router
+    self.viewState = initialState
+  }
+
+  public func setState(_ reducer: (UiState) -> UiState) {
+    self.viewState = reducer(viewState)
   }
 }

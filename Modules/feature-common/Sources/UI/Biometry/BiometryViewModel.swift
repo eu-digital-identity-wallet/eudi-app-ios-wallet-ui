@@ -17,25 +17,27 @@ import Foundation
 import logic_ui
 import logic_business
 
+struct BiometryState: ViewState {
+  let config: UIConfig.Biometry
+  let areBiometricsEnabled: Bool
+  let pinError: String?
+  let throttlePinInput: Bool
+  let scenePhase: ScenePhase
+  let pendingNavigation: UIConfig.NavigationConfig?
+  let autoBiometryInitiated: Bool
+  let biometryImage: Image?
+}
+
 @MainActor
-final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryInteractorType>: BaseViewModel<Router> {
+final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryInteractorType>: BaseViewModel<Router, BiometryState> {
 
   private let AUTO_VERIFY_ON_APPEAR_DELAY = 250
-
-  @Published var config: UIConfig.Biometry
+  private let PIN_INPUT_DEBOUNCE = 250
 
   @Published var uiPinInputField: String = ""
-  @Published var pinError: String?
-
   @Published var biometryError: SystemBiometricsError?
-  @Published var areBiometricsEnabled: Bool = false
 
   private let interactor: Interactor
-  private let throttlePinInput: Bool
-
-  private var scenePhase: ScenePhase = .active
-  private var pendingNavigation: UIConfig.NavigationConfig?
-  private var autoBiometryInitiated: Bool = false
 
   init(
     router: Router,
@@ -46,29 +48,35 @@ final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryIntera
     guard let config = config as? UIConfig.Biometry else {
       fatalError("BiometryViewModel:: Invalid configuraton")
     }
-    self.config = config
     self.interactor = interactor
-    self.throttlePinInput = throttlePinInput
-    super.init(router: router)
+    super.init(
+      router: router,
+      initialState: .init(
+        config: config,
+        areBiometricsEnabled: interactor.isBiometryEnabled(),
+        pinError: nil,
+        throttlePinInput: throttlePinInput,
+        scenePhase: .active,
+        pendingNavigation: nil,
+        autoBiometryInitiated: false,
+        biometryImage: interactor.biometricsImage
+      )
+    )
 
-    self.initialize()
+    self.subscribeToPinInput()
   }
 
   func onAppearBiometry() {
-    if self.config.shouldInitializeBiometricOnCreate, self.areBiometricsEnabled, !self.autoBiometryInitiated {
-      self.autoBiometryInitiated = true
+    if viewState.config.shouldInitializeBiometricOnCreate, viewState.areBiometricsEnabled, !viewState.autoBiometryInitiated {
+      setNewState(autoBiometryInitiated: true)
       DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(AUTO_VERIFY_ON_APPEAR_DELAY)) {
         self.onBiometry()
       }
     }
   }
 
-  func getBiometryImage() -> Image? {
-    return interactor.biometricsImage
-  }
-
   func onPop() {
-    doNavigation(config: config.navigationBackConfig)
+    doNavigation(config: viewState.config.navigationBackConfig)
   }
 
   func onBiometry() {
@@ -92,24 +100,19 @@ final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryIntera
   }
 
   func setPhase(with phase: ScenePhase) {
-    self.scenePhase = phase
-    if let pending = self.pendingNavigation {
+    setNewState(scenePhase: phase)
+    if let pending = viewState.pendingNavigation {
       doNavigation(config: pending)
     }
-  }
-
-  private func initialize() {
-    areBiometricsEnabled = interactor.isBiometryEnabled()
-    subscribeToPinInput()
   }
 
   private func subscribeToPinInput() {
 
     let publisher = self.$uiPinInputField.dropFirst()
 
-    if self.throttlePinInput {
+    if viewState.throttlePinInput {
       publisher
-        .debounce(for: .milliseconds(250), scheduler: RunLoop.main)
+        .debounce(for: .milliseconds(PIN_INPUT_DEBOUNCE), scheduler: RunLoop.main)
         .removeDuplicates()
         .sink { [weak self] value in
           guard let self = self else { return }
@@ -131,21 +134,21 @@ final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryIntera
       case .success:
         self.authenticated()
       case .failure(let error):
-        self.pinError = error.localizedDescription
+        setNewState(pinError: error.localizedDescription)
       }
     } else {
-      self.pinError = nil
+      setNewState(pinError: nil)
     }
   }
 
   private func authenticated() {
-    doNavigation(config: config.navigationSuccessConfig)
+    doNavigation(config: viewState.config.navigationSuccessConfig)
   }
 
   private func doNavigation(config: UIConfig.NavigationConfig) {
 
-    guard self.scenePhase == .active else {
-      self.pendingNavigation = config
+    guard viewState.scenePhase == .active else {
+      setNewState(pendingNavigation: config)
       return
     }
 
@@ -154,6 +157,26 @@ final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryIntera
       router.popTo(with: config.screen)
     case .push:
       router.push(with: config.screen)
+    }
+  }
+
+  private func setNewState(
+    pinError: String? = nil,
+    scenePhase: ScenePhase? = nil,
+    pendingNavigation: UIConfig.NavigationConfig? = nil,
+    autoBiometryInitiated: Bool? = nil
+  ) {
+    setState { previous in
+        .init(
+          config: previous.config,
+          areBiometricsEnabled: previous.areBiometricsEnabled,
+          pinError: pinError,
+          throttlePinInput: previous.throttlePinInput,
+          scenePhase: scenePhase ?? previous.scenePhase,
+          pendingNavigation: pendingNavigation ?? previous.pendingNavigation,
+          autoBiometryInitiated: autoBiometryInitiated ?? previous.autoBiometryInitiated,
+          biometryImage: previous.biometryImage
+        )
     }
   }
 }

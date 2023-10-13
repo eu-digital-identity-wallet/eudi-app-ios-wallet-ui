@@ -41,19 +41,19 @@ public struct FAQsView<Router: RouterHostType, Interactor: FAQsInteractorType>: 
           SearchBar(
             text: $viewModel.searchText,
             commited: $userIsEditingAlias,
-            isLoading: viewModel.displayable.isLoading
+            isLoading: viewModel.viewState.isLoading
           )
 
-          ForEach(viewModel.displayable.filteredModels) { cell in
+          ForEach(viewModel.viewState.filteredModels) { cell in
             ExpandableTextView(
               title: .custom(cell.value.title),
               content: .custom(cell.value.content),
-              isloading: viewModel.displayable.isLoading
+              isloading: viewModel.viewState.isLoading
             ).transition(.opacity)
           }
         }
       }
-      .disabled(viewModel.displayable.isLoading)
+      .disabled(viewModel.viewState.isLoading)
     }
     .task {
       await viewModel.fetchFAQs()
