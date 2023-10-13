@@ -105,6 +105,7 @@ public final class SystemBiometricsController: SystemBiometricsControllerType {
           try self.keyChainController.validateKeyChainBiometry()
           promise(.success(()))
         } catch {
+          self.keyChainController.clearKeyChainBiometry()
           promise(.failure(SystemBiometricsError.biometricError))
         }
       }

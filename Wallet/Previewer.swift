@@ -16,19 +16,7 @@ import logic_resources
 #Preview {
   SuccessView(
     with: PreviewRouter(),
-    and: UIConfig.Success(
-      title: .custom("LITERAL PLACEHOLDER"),
-      subtitle: .custom("LITERAL PLACEHOLDER"),
-      buttons: [
-        .init(
-          title: .custom("LITERAL PLACEHOLDER"),
-          screen: .startup,
-          style: .primary,
-          navigationType: .pop
-        )
-      ],
-      visualKind: .defaultIcon
-    )
+    and: successConfig()
   )
 }
 
@@ -38,4 +26,37 @@ import logic_resources
 
 #Preview {
   DashboardView(with: PreviewRouter(), and: DashboardInteractor())
+}
+
+#Preview {
+  BiometryView(
+    with: PreviewRouter(),
+    interactor: BiometryInteractor(),
+    config: UIConfig.Biometry(
+      title: .genericErrorTitle,
+      caption: .genericErrorDesc,
+      quickPinOnlyCaption: .genericErrorDesc,
+      navigationSuccessConfig: .init(
+        screen: .success(config: successConfig()), navigationType: .push
+      ),
+      navigationBackConfig: .init(screen: .startup, navigationType: .pop),
+      isPreAuthorization: false,
+      shouldInitializeBiometricOnCreate: false
+    )
+  )
+}
+
+private func successConfig() -> UIConfig.Success {
+  return UIConfig.Success(
+    title: .custom("LITERAL PLACEHOLDER"),
+    subtitle: .custom("LITERAL PLACEHOLDER"),
+    buttons: [
+      .init(
+        title: .custom("LITERAL PLACEHOLDER"),
+        screen: .startup,
+        style: .primary, navigationType: .pop
+      )
+    ],
+    visualKind: .defaultIcon
+  )
 }

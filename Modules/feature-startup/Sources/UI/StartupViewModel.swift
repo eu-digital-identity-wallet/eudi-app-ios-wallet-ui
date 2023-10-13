@@ -18,14 +18,16 @@ import logic_ui
 import feature_common
 import logic_business
 
+struct StartupState: ViewState {}
+
 @MainActor
-public final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteractorType>: BaseViewModel<Router> {
+final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteractorType>: BaseViewModel<Router, StartupState> {
 
   private let interactor: Interactor
 
-  public init(router: Router, interactor: Interactor) {
+  init(router: Router, interactor: Interactor) {
     self.interactor = interactor
-    super.init(router: router)
+    super.init(router: router, initialState: .init())
   }
 
   func onClickTestSuccess() {
@@ -50,7 +52,8 @@ public final class StartupViewModel<Router: RouterHostType, Interactor: StartupI
           navigationSuccessConfig: .init(screen: .success(config: successConfig()), navigationType: .push),
           navigationBackConfig: .init(screen: .startup, navigationType: .pop),
           isPreAuthorization: false,
-          shouldInitializeBiometricOnCreate: true)
+          shouldInitializeBiometricOnCreate: true
+        )
       )
     )
   }

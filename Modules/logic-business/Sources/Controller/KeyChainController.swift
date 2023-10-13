@@ -26,6 +26,7 @@ public protocol KeyChainControllerType {
   func getValue(key: KeychainWrapper) -> String?
   func removeObject(key: KeychainWrapper)
   func validateKeyChainBiometry() throws
+  func clearKeyChainBiometry()
 }
 
 public final class KeyChainController: KeyChainControllerType {
@@ -54,6 +55,10 @@ public final class KeyChainController: KeyChainControllerType {
     try setBiometricKey()
     try isBiometricKeyValid()
   }
+
+  public func clearKeyChainBiometry() {
+    try? self.keyChain.remove(self.biometryKey)
+  }
 }
 
 private extension KeyChainController {
@@ -72,7 +77,7 @@ private extension KeyChainController {
       .get(self.biometryKey)
 
     if item != nil {
-      try self.keyChain.remove(self.biometryKey)
+      clearKeyChainBiometry()
     }
   }
 }

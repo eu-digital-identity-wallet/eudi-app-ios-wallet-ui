@@ -16,14 +16,16 @@
 import Foundation
 import logic_ui
 
+struct DashboardState: ViewState {}
+
 @MainActor
-final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInteractorType>: BaseViewModel<Router> {
+final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInteractorType>: BaseViewModel<Router, DashboardState> {
 
   private let interactor: Interactor
 
   init(router: Router, interactor: Interactor) {
     self.interactor = interactor
-    super.init(router: router)
+    super.init(router: router, initialState: .init())
   }
 
 }

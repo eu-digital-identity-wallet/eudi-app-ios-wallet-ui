@@ -39,7 +39,9 @@ public final class BiometryInteractor: SystemBiometricsInteractor, BiometryInter
   private lazy var quickPinInteractor: QuickPinInteractorType = QuickPinInteractor()
 
   public func isBiometryEnabled() -> Bool {
-    prefsController.getBool(forKey: .biometryEnabled)
+    // MARK: - TODO ENABLE ONCE ONBOARDING IS READY
+    //prefsController.getBool(forKey: .biometryEnabled)
+    true
   }
 
   public func setBiometrySelection(isEnabled: Bool) {

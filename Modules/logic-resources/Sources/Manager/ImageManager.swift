@@ -18,7 +18,6 @@ import SwiftUI
 
 public protocol ImageManagerProtocol {
   var logo: Image { get }
-  var launchImage: Image { get }
   var faceId: Image { get }
   var id: Image { get }
   var nfc: Image { get }
@@ -35,7 +34,6 @@ public protocol ImageManagerProtocol {
 
 final class ImageManager: ImageManagerProtocol {
   enum ImageEnum: String {
-    case launchImage = "launch-image"
     case faceId = "face-id"
     case id = "id-stroke"
     case nfc = "nfc"
@@ -60,9 +58,6 @@ final class ImageManager: ImageManagerProtocol {
     self.bundle = bundle
   }
   // MARK: - Images
-  var launchImage: Image {
-    Image(ImageEnum.launchImage.rawValue, bundle: bundle)
-  }
   var faceId: Image {
     Image(ImageEnum.faceId.rawValue, bundle: bundle)
   }
