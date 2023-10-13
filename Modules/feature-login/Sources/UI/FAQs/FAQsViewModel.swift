@@ -16,23 +16,6 @@
 import Foundation
 import logic_ui
 
-/*
- public struct FAQDisplayable {
-   
-
-   init(
-     isLoading: Bool = true,
-     searchText: String = "",
-     models: [FAQUIModel] = [],
-     filteredModels: [FAQUIModel] = []
-   ) {
-     self.isLoading = isLoading
-     self.searchText = searchText
-     self.models = models
-     self.filteredModels = filteredModels
-   }
- }
- */
 struct FAQState: ViewState {
   let isLoading: Bool
   let searchText: String
