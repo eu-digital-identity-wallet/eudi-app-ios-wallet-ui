@@ -18,7 +18,10 @@ import logic_ui
 import feature_common
 import logic_business
 
-struct StartupState: ViewState {}
+struct StartupState: ViewState {
+  let isAnimating: Bool
+  let finishedAnimating: Bool
+}
 
 @MainActor
 final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteractorType>: BaseViewModel<Router, StartupState> {
@@ -27,9 +30,21 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
 
   init(router: Router, interactor: Interactor) {
     self.interactor = interactor
-    super.init(router: router, initialState: .init())
+    super.init(router: router,
+               initialState: .init(isAnimating: false, finishedAnimating: false))
   }
 
+  func splashStartedAnimating() {
+    self.setNewState(isAnimating: true)
+  }
+
+  func splashFinished() {
+    self.setNewState(finishedAnimating: true)
+    self.router.push(with: .faqs)
+  }
+
+  // TODO: Remove When Navigation is complete
+  
   func onClickTestSuccess() {
     router.push(
       with: .success(
@@ -67,5 +82,15 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
       ],
       visualKind: .defaultIcon
     )
+  }
+
+  private func setNewState(
+  isAnimating: Bool? = nil,
+  finishedAnimating: Bool? = nil
+  ) {
+    setState { previous in
+        .init(isAnimating: isAnimating ?? previous.isAnimating,
+              finishedAnimating: finishedAnimating ?? previous.finishedAnimating)
+    }
   }
 }

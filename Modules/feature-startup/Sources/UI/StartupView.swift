@@ -19,95 +19,28 @@ import logic_resources
 
 public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorType>: View {
 
-  @State var text: String
-  @State var hasComited: Bool
-
   @ObservedObject private var viewModel: StartupViewModel<Router, Interactor>
 
   public init(with router: Router, and interactor: Interactor) {
     self.viewModel = .init(router: router, interactor: interactor)
-
-    self.text = ""
-    self.hasComited = false
   }
 
   public var body: some View {
-    ContentScreen(canScroll: true) {
-      ScrollView {
-        VStack {
-
-          Text("displayLarge")
-            .typography(Theme.shared.font.displayLarge)
-          Text("displayMedium")
-            .typography(Theme.shared.font.displayMedium)
-          Text("displaySmall")
-            .typography(Theme.shared.font.displaySmall)
-
-          Text("headlineLarge")
-            .typography(ThemeManager.shared.font.headlineLarge)
-          Text("headlineMedium")
-            .typography(Theme.shared.font.headlineMedium)
-          Text("headlineSmall")
-            .typography(Theme.shared.font.headlineSmall)
-
-          Text("titleLarge")
-            .typography(Theme.shared.font.titleLarge)
-          Text("titleMedium")
-            .typography(Theme.shared.font.titleMedium)
-          Text("titleSmall")
-            .typography(Theme.shared.font.titleSmall)
-
-          Text("bodyLarge")
-            .typography(Theme.shared.font.bodyLarge)
-          Text("bodyMedium")
-            .typography(Theme.shared.font.bodyMedium)
-          Text("bodySmall")
-            .typography(Theme.shared.font.bodySmall)
-
-          Text("labelLarge")
-            .typography(Theme.shared.font.labelLarge)
-          Text("labelMedium")
-            .typography(Theme.shared.font.labelMedium)
-          Text("labelSmall")
-            .typography(Theme.shared.font.labelSmall)
-
-          FloatingTextField(title: .custom("Hello"),
-                            text: $text,
-                            showError: false,
-                            contentType: .name,
-                            userHasCommitedChange: $hasComited)
-          WrapButtonView(
-            title: .custom("PRIMARY"),
-            onAction: {}()
-          )
-
-          WrapButtonView(
-            title: .custom("TEST FAQ SCREEN"),
-            onAction: viewModel.onClickFAQ()
-          )
-
-          WrapButtonView(
-            title: .custom("TEST SUCCESS SCREEN"),
-            onAction: viewModel.onClickTestSuccess()
-          )
-
-          WrapButtonView(
-            title: .custom("TEST BIOMETRICS SCREEN"),
-            onAction: viewModel.onClickBiometry()
-          )
-
-          WrapButtonView(style: .secondary,
-                         title: .custom("SECONDARY"),
-                         onAction: {}())
-
-          Theme.shared.image.faceId
-          Theme.shared.image.id
-          Theme.shared.image.nfc
-          Theme.shared.image.qr
-          Theme.shared.image.touchId
-          Theme.shared.image.logo
+    ContentScreen(padding: 0, canScroll: false, allowBackGesture: false) {
+      ZStack {
+        SplashBackground(
+          isAnimating: viewModel.viewState.isAnimating
+        )
+        .onAppear {
+          withAnimation(Animation.easeInOut(duration: 1.0)) {
+            viewModel.splashStartedAnimating()
+          }
+          DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+            viewModel.splashFinished()
+          }
         }
       }
     }
+    .ignoresSafeArea(.all)
   }
 }
