@@ -17,7 +17,7 @@
 import feature_common
 
 @MainActor
-final class OnlineAuthLoadingViewModel<Router: RouterHostType, Interactor: OnlineAuthInteractorType>: BaseLoadingViewModel<Router> {
+final class AuthenticationLoadingViewModel<Router: RouterHostType, Interactor: AuthenticationInteractorType>: BaseLoadingViewModel<Router> {
 
   private let interactor: Interactor
 
@@ -50,7 +50,7 @@ final class OnlineAuthLoadingViewModel<Router: RouterHostType, Interactor: Onlin
   }
 
   override func doWork() async {
-    switch await interactor.testWork() {
+    switch await interactor.doWork() {
     case .success:
       self.onNavigate(type: .push)
     case .failure(let error):

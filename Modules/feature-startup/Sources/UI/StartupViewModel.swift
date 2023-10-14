@@ -31,7 +31,7 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
   }
 
   func onClickOnlineLoading() {
-    router.push(with: .onlineAuthLoading)
+    router.push(with: .authenticationLoader)
   }
 
   func onClickTestSuccess() {

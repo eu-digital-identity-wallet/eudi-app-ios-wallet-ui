@@ -13,32 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import SwiftUI
+import logic_ui
+import feature_common
 
-@testable import feature_startup
-@testable import logic_api
-@testable import logic_test
-@testable import feature_test
+public struct AuthenticationLoadingView<Router: RouterHostType, Interactor: AuthenticationInteractorType>: View {
 
-final class BaseTests: EudiTest {
+  @ObservedObject private var viewModel: AuthenticationLoadingViewModel<Router, Interactor>
 
-  override func setUp() async throws {
-    try await super.setUp()
+  public init(with router: Router, and interactor: Interactor) {
+    self.viewModel = .init(router: router, interactor: interactor)
   }
 
-  override func tearDown() {
-    super.tearDown()
-  }
-
-  func testBusinessLogic() {
-
-    let mock = MockConfigLogic()
-
-    stub(mock) { stub in
-      when(stub.baseHost.get).thenReturn(SampleConstants.urlMock)
-    }
-
-    XCTAssertEqual(mock.baseHost, SampleConstants.urlMock)
-
-    XCTAssertTrue(true, SampleConstants.urlMock)
+  public var body: some View {
+    BaseLoadingView(with: viewModel.router, viewModel: viewModel)
   }
 }

@@ -34,7 +34,7 @@ LOGIC_API_MODULE="logic-api"
 LOGIC_UI_MODULE="logic-ui"
 
 SECOND_LEVEL_MODULES=("${LOGIC_API_MODULE}" "${LOGIC_UI_MODULE}")
-FEATURE_MODULES=("feature-dashboard", "feature-login", "feature-startup", "feature-common")
+FEATURE_MODULES=("feature-dashboard", "feature-login", "feature-startup", "feature-common" "feature-authentication")
 
 IS_BASE_LOGIC_MODULE=1
 IS_SECONDARY_LOGIC_MODULE=2

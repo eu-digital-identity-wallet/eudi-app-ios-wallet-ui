@@ -22,6 +22,7 @@ import feature_startup
 import feature_login
 import feature_common
 import feature_dashboard
+import feature_authentication
 
 public final class RouterHost: RouterHostType {
 
@@ -70,9 +71,8 @@ public final class RouterHost: RouterHostType {
         DashboardView(with: self, and: DashboardInteractor())
       case .biometry(let config):
         BiometryView(with: self, interactor: BiometryInteractor(), config: config)
-      case .onlineAuthLoading:
-        OnlineAuthLoadingView(with: self, and: OnlineAuthInteractor())
-
+      case .authenticationLoader:
+        AuthenticationLoadingView(with: self, and: AuthenticationInteractor())
       }
     }.eraseToAnyView()
   }

@@ -17,20 +17,20 @@ import Foundation
 import logic_api
 import logic_business
 
-public enum OnlineAuthPartialState {
+public enum AuthenticationPartialState {
   case success
   case failure(Error)
 }
 
-public protocol OnlineAuthInteractorType {
-  func testWork() async -> OnlineAuthPartialState
+public protocol AuthenticationInteractorType {
+  func doWork() async -> AuthenticationPartialState
 }
 
-public final actor OnlineAuthInteractor: OnlineAuthInteractorType {
+public final actor AuthenticationInteractor: AuthenticationInteractorType {
 
   public init() {}
 
-  public func testWork() async -> OnlineAuthPartialState {
+  public func doWork() async -> AuthenticationPartialState {
     do {
       try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
       return .success

@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import SwiftUI
-import logic_ui
-import feature_common
+@testable import feature_authentication
+@testable import feature_test
+@testable import logic_test
 
-public struct OnlineAuthLoadingView<Router: RouterHostType, Interactor: OnlineAuthInteractorType>: View {
+final class BaseTests: EudiTest {
+    func testExample() throws {
+        // XCTest Documentation
+        // https://developer.apple.com/documentation/xctest
 
-  @ObservedObject private var viewModel: OnlineAuthLoadingViewModel<Router, Interactor>
-
-  public init(with router: Router, and interactor: Interactor) {
-    self.viewModel = .init(router: router, interactor: interactor)
-  }
-
-  public var body: some View {
-    BaseLoadingView(with: viewModel.router, viewModel: viewModel)
-  }
+        // Defining Test Cases and Test Methods
+        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
+    }
 }

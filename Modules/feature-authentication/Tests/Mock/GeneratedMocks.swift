@@ -1,30 +1,31 @@
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
 import Foundation
 import logic_api
+import logic_business
 
 
 
 
 
 
-public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
+public class MockAuthenticationInteractorType: AuthenticationInteractorType, Cuckoo.ProtocolMock {
     
-    public typealias MocksType = FAQsInteractorType
+    public typealias MocksType = AuthenticationInteractorType
     
-    public typealias Stubbing = __StubbingProxy_FAQsInteractorType
-    public typealias Verification = __VerificationProxy_FAQsInteractorType
+    public typealias Stubbing = __StubbingProxy_AuthenticationInteractorType
+    public typealias Verification = __VerificationProxy_AuthenticationInteractorType
 
     public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-    private var __defaultImplStub: FAQsInteractorType?
+    private var __defaultImplStub: AuthenticationInteractorType?
 
-    public func enableDefaultImplementation(_ stub: FAQsInteractorType) {
+    public func enableDefaultImplementation(_ stub: AuthenticationInteractorType) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
@@ -38,11 +39,11 @@ public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
     
     
     
-    public func fetchFAQs() async -> FAQsPartialState {
+    public func doWork() async -> AuthenticationPartialState {
         
     return await cuckoo_manager.call(
     """
-    fetchFAQs() async -> FAQsPartialState
+    doWork() async -> AuthenticationPartialState
     """,
             parameters: (),
             escapingParameters: (),
@@ -50,13 +51,13 @@ public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: await __defaultImplStub!.fetchFAQs())
+            defaultCall: await __defaultImplStub!.doWork())
         
     }
     
     
 
-    public struct __StubbingProxy_FAQsInteractorType: Cuckoo.StubbingProxy {
+    public struct __StubbingProxy_AuthenticationInteractorType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
@@ -66,18 +67,18 @@ public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
         
         
         
-        func fetchFAQs() -> Cuckoo.ProtocolStubFunction<(), FAQsPartialState> {
+        func doWork() -> Cuckoo.ProtocolStubFunction<(), AuthenticationPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockFAQsInteractorType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockAuthenticationInteractorType.self, method:
     """
-    fetchFAQs() async -> FAQsPartialState
+    doWork() async -> AuthenticationPartialState
     """, parameterMatchers: matchers))
         }
         
         
     }
 
-    public struct __VerificationProxy_FAQsInteractorType: Cuckoo.VerificationProxy {
+    public struct __VerificationProxy_AuthenticationInteractorType: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -94,11 +95,11 @@ public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func fetchFAQs() -> Cuckoo.__DoNotUse<(), FAQsPartialState> {
+        func doWork() -> Cuckoo.__DoNotUse<(), AuthenticationPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    fetchFAQs() async -> FAQsPartialState
+    doWork() async -> AuthenticationPartialState
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -107,7 +108,7 @@ public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
 }
 
 
-public class FAQsInteractorTypeStub: FAQsInteractorType {
+public class AuthenticationInteractorTypeStub: AuthenticationInteractorType {
     
 
     
@@ -116,8 +117,8 @@ public class FAQsInteractorTypeStub: FAQsInteractorType {
     
     
     
-    public func fetchFAQs() async -> FAQsPartialState  {
-        return DefaultValueRegistry.defaultValue(for: (FAQsPartialState).self)
+    public func doWork() async -> AuthenticationPartialState  {
+        return DefaultValueRegistry.defaultValue(for: (AuthenticationPartialState).self)
     }
     
     
@@ -129,34 +130,25 @@ public class FAQsInteractorTypeStub: FAQsInteractorType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
 import SwiftUI
-import logic_resources
+import feature_common
 import logic_ui
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
-import Foundation
-import logic_ui
+import feature_common
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -164,7 +156,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -174,13 +166,13 @@ import logic_business
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -472,7 +464,7 @@ import struct Foundation.Data
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -480,7 +472,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -488,7 +480,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -616,7 +608,7 @@ public class SampleRepositoryTypeStub: SampleRepositoryType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -816,7 +808,7 @@ public class ConfigLogicStub: ConfigLogic {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -824,7 +816,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -1311,7 +1303,7 @@ public class ConfigSecurityLogicStub: ConfigSecurityLogic {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -1319,7 +1311,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -1652,7 +1644,7 @@ public class KeyChainControllerTypeStub: KeyChainControllerType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -2137,7 +2129,7 @@ public class PrefsControllerTypeStub: PrefsControllerType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -2147,7 +2139,7 @@ import Network
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -2686,7 +2678,7 @@ public class SecurityControllerTypeStub: SecurityControllerType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -2695,7 +2687,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -2703,7 +2695,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -2711,7 +2703,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -2719,7 +2711,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -2727,7 +2719,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -2736,7 +2728,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -2744,7 +2736,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -2753,7 +2745,7 @@ import UIKit
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -2932,7 +2924,7 @@ public class ConfigProviderTypeStub: ConfigProviderType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -3285,7 +3277,7 @@ public class FormValidatorInteractorStub: FormValidatorInteractor {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -3363,7 +3355,7 @@ public class ViewStateStub: ViewState {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -3638,7 +3630,7 @@ public class SystemBiometricsControllerTypeStub: SystemBiometricsControllerType 
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -3945,7 +3937,7 @@ public class SystemBiometricsInteractorTypeStub: SystemBiometricsInteractorType 
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4077,7 +4069,7 @@ public class ConfigUiLogicStub: ConfigUiLogic {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4085,7 +4077,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4162,7 +4154,7 @@ public class UIConfigTypeStub: UIConfigType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4171,7 +4163,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4181,7 +4173,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4189,7 +4181,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4197,7 +4189,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4205,7 +4197,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4214,7 +4206,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4224,7 +4216,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4233,7 +4225,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4243,7 +4235,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4253,7 +4245,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4262,7 +4254,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4271,7 +4263,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4280,7 +4272,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4289,7 +4281,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4298,7 +4290,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4308,7 +4300,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4317,7 +4309,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4325,16 +4317,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4343,7 +4326,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4352,7 +4335,16 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4361,7 +4353,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4369,7 +4361,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4378,7 +4370,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4387,7 +4379,7 @@ import UIKit
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4396,7 +4388,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4405,7 +4397,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
@@ -4839,7 +4831,7 @@ public class RouterHostTypeStub: RouterHostType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_login
+@testable import feature_authentication
 @testable import logic_api
 @testable import logic_ui
 
