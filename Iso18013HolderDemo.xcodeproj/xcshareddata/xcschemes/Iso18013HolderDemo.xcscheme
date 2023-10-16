@@ -60,6 +60,13 @@
             ReferencedContainer = "container:Iso18013HolderDemo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "VERIFIER_API"
+            value = "https://eudi.netcompany-intrasoft.com"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
