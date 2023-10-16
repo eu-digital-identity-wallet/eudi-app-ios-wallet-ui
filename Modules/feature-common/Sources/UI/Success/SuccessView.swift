@@ -30,7 +30,7 @@ public struct SuccessView<Router: RouterHostType>: View {
       ContentTitle(
         title: viewmodel.viewState.config.title,
         caption: viewmodel.viewState.config.subtitle,
-        titleColor: ThemeManager.shared.color.successText,
+        titleColor: ThemeManager.shared.color.success,
         topSpacing: .withoutToolbar
       )
       mainView()
@@ -55,7 +55,7 @@ public struct SuccessView<Router: RouterHostType>: View {
         getCenteredIcon()
           .resizable()
           .scaledToFit()
-          .foregroundColor(ThemeManager.shared.color.successText)
+          .foregroundColor(ThemeManager.shared.color.success)
           .frame(height: getScreenRect().width / 2)
       }
       Spacer()

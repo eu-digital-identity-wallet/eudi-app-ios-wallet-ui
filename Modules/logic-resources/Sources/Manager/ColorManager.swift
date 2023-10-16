@@ -26,15 +26,16 @@ public protocol ColorManagerProtocol {
 
   var backgroundDefault: Color { get }
   var backgroundPaper: Color { get }
+  var chipBackground: Color { get }
   var dividerDark: Color { get }
   var lightGradientEnd: Color { get }
   var lightGradientStart: Color { get }
   var error: Color { get }
   var primaryDark: Color { get }
   var primaryLight: Color { get }
-  var secondaryMain: Color { get }
-  var successText: Color { get }
-  var tertiaryMain: Color { get }
+  var primary: Color { get }
+  var success: Color { get }
+  var secondary: Color { get }
   var textDisabledDark: Color { get }
   var textDisabledLight: Color { get }
   var textPrimaryDark: Color { get }
@@ -51,15 +52,16 @@ final class ColorManager: ColorManagerProtocol {
   enum PaletteColorEnum: String {
     case backgroundDefault
     case backgroundPaper
+    case chipBackground
     case dividerDark
     case lightGradientEnd
     case lightGradientStart
-    case error
+    case errorMain
     case primaryDark
     case primaryLight
-    case secondaryMain
+    case primaryMain
     case successText
-    case tertiaryMain
+    case secondaryMain
     case textDisabledDark
     case textDisabledLight
     case textPrimaryDark
@@ -101,6 +103,9 @@ final class ColorManager: ColorManagerProtocol {
   public var backgroundPaper: Color {
     Color(PaletteColorEnum.backgroundPaper.rawValue, bundle: bundle)
   }
+  public var chipBackground: Color {
+    Color(PaletteColorEnum.chipBackground.rawValue, bundle: bundle)
+  }
   public var dividerDark: Color {
     Color(PaletteColorEnum.dividerDark.rawValue, bundle: bundle)
   }
@@ -111,7 +116,7 @@ final class ColorManager: ColorManagerProtocol {
     Color(PaletteColorEnum.lightGradientStart.rawValue, bundle: bundle)
   }
   public var error: Color {
-    Color(PaletteColorEnum.error.rawValue, bundle: bundle)
+    Color(PaletteColorEnum.errorMain.rawValue, bundle: bundle)
   }
   public var primaryDark: Color {
     Color(PaletteColorEnum.primaryDark.rawValue, bundle: bundle)
@@ -119,14 +124,14 @@ final class ColorManager: ColorManagerProtocol {
   public var primaryLight: Color {
     Color(PaletteColorEnum.primaryLight.rawValue, bundle: bundle)
   }
-  public var secondaryMain: Color {
-    Color(PaletteColorEnum.secondaryMain.rawValue, bundle: bundle)
+  public var primary: Color {
+    Color(PaletteColorEnum.primaryMain.rawValue, bundle: bundle)
   }
-  public var successText: Color {
+  public var success: Color {
     Color(PaletteColorEnum.successText.rawValue, bundle: bundle)
   }
-  public var tertiaryMain: Color {
-    Color(PaletteColorEnum.tertiaryMain.rawValue, bundle: bundle)
+  public var secondary: Color {
+    Color(PaletteColorEnum.secondaryMain.rawValue, bundle: bundle)
   }
   public var textDisabledDark: Color {
     Color(PaletteColorEnum.textDisabledDark.rawValue, bundle: bundle)

@@ -31,7 +31,7 @@ public enum ButtonStyleEnum {
   var backgroundColor: Color {
     switch self {
     case .primary:
-      Theme.shared.color.tertiaryMain
+      Theme.shared.color.secondary
     case .secondary:
       Theme.shared.color.backgroundPaper
     }

@@ -42,6 +42,6 @@ public struct ContentLoader: View {
       type: .default(count: 8)
     )
     .frame(width: width, height: height)
-    .foregroundColor(Theme.shared.color.secondaryMain)
+    .foregroundColor(Theme.shared.color.primary)
   }
 }
