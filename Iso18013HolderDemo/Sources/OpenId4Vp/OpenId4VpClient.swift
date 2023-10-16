@@ -29,7 +29,7 @@ import Logging
 class OpenId4VpClient: ObservableObject, MdocTransferManager {
 	var status: MdocDataTransfer18013.TransferStatus = .initializing
 	var deviceEngagement: MdocDataModel18013.DeviceEngagement?
-	var requireUserAccept: Bool = true
+	var requireUserAccept: Bool = false
 	var sessionEncryption: MdocSecurity18013.SessionEncryption?
 	var deviceRequest: MdocDataModel18013.DeviceRequest?
 	var deviceResponseToSend: MdocDataModel18013.DeviceResponse?
@@ -69,6 +69,20 @@ class OpenId4VpClient: ObservableObject, MdocTransferManager {
 		print("New status \(status)")
 	}
 	
+	fileprivate func SendVpToken(_ vpTokenStr: String, _ pd: PresentationDefinition, _ resolved: ResolvedRequestData) async throws {
+		let consent: ClientConsent = .vpToken(vpToken: vpTokenStr, presentationSubmission: .init(id: pd.id, definitionID: pd.id, descriptorMap: [])	)
+		// Generate a direct post authorisation response
+		let response = try AuthorizationResponse(resolvedRequest: resolved, consent: consent, walletOpenId4VPConfig: Self.walletConf!)
+		let result: DispatchOutcome = try await siopOpenId4Vp.dispatch(response: response)
+		if case let .accepted(url) = result {
+			logger.info("Dispatch accepted, return url: \(url?.absoluteString ?? "")")
+			await setStatus(newStatus: .responseSent)
+		} else if case let .rejected(reason) = result {
+			logger.info("Dispatch rejected, reason: \(reason)")
+			await setStatus(newStatus: .error); error = Self.makeError(code: .unexpected_error, str: reason)
+		}
+	}
+	
 	public func userSelected(_ b: Bool, _ items: RequestItems?) {
 		Task {
 			await setStatus(newStatus: .userSelected)
@@ -77,19 +91,8 @@ class OpenId4VpClient: ObservableObject, MdocTransferManager {
 			logger.info("Openid4vp request items: \(items)")
 			let deviceResponse = try getDeviceResponseToSend(nil, selectedItems: items, eReaderKey: nil, devicePrivateKey: devicePrivateKey)
 			// Obtain consent
-			// -- test SOS String(data: Data(name:"vp_token_test", ext: "txt")!, encoding: .utf8)!
-			let vpTokenStr =  Data(deviceResponse.toCBOR().encode()).base64URLEncodedString()
-			let consent: ClientConsent = .vpToken(vpToken: vpTokenStr, presentationSubmission: .init(id: "pid-res", definitionID: pd.id, descriptorMap: [.init(id: pd.inputDescriptors.first!.id, format: "MsoMdoc", path: "$")])	)
-			// Generate a direct post authorisation response
-			let response = try AuthorizationResponse(resolvedRequest: resolved, consent: consent, walletOpenId4VPConfig: Self.walletConf!)
-			let result: DispatchOutcome = try await siopOpenId4Vp.dispatch(response: response)
-			if case let .accepted(url) = result {
-				logger.info("Dispatch accepted, return url: \(url?.absoluteString ?? "")")
-				await setStatus(newStatus: .responseSent)
-			} else if case let .rejected(reason) = result {
-				logger.info("Dispatch rejected, reason: \(reason)")
-				await setStatus(newStatus: .error); error = Self.makeError(code: .unexpected_error, str: reason)
-			}
+			let vpTokenStr = Data(deviceResponse.toCBOR().encode()).base64URLEncodedString()
+			try await SendVpToken(vpTokenStr, pd, resolved)
 		}
 	}
 	
@@ -102,13 +105,15 @@ class OpenId4VpClient: ObservableObject, MdocTransferManager {
 				await setStatus(newStatus: .error); error = Self.makeError(code: .invalidUrl, str: "Not secure request received.")
 			case let .jwt(request: resolvedRequestData):
 				self.resolvedRequestData = resolvedRequestData
-				switch	resolvedRequestData {
+				switch resolvedRequestData {
 				case let .vpToken(vp):
 					self.presentationDefinition = vp.presentationDefinition
 					let items = parsePresentationDefinition(vp.presentationDefinition)
 					guard let items else { await setStatus(newStatus: .error); error = Self.makeError(code: .unexpected_error); return }
 					await setStatus(newStatus: .requestReceived)
-					if requireUserAccept == false /*|| _isDebugAssertConfiguration() */ { userSelected(true, nil) }
+					if requireUserAccept == false /*|| _isDebugAssertConfiguration() */ {
+						userSelected(true, nil)
+					}
 					else {
 						// todo: validate items
 						let params: [String: Any] = [UserRequestKeys.valid_items_requested.rawValue: items, UserRequestKeys.error_items_requested.rawValue: [:]]
@@ -134,13 +139,13 @@ class OpenId4VpClient: ObservableObject, MdocTransferManager {
 	static var walletConf: WalletOpenId4VPConfiguration? = {
 		let VERIFIER_API = ProcessInfo.processInfo.environment["VERIFIER_API"] ?? "http://localhost:8080"
 		let verifierMetaData = PreregisteredClient(clientId: "Verifier", jarSigningAlg: JWSAlgorithm(.RS256), jwkSetSource: WebKeySource.fetchByReference(url: URL(string: "\(VERIFIER_API)/wallet/public-keys.json")!))
-		guard let rsaPrivateKey = try? KeyController.generateRSAPrivateKey(),
-						let rsaPublicKey = try? KeyController.generateRSAPublicKey(from: rsaPrivateKey) else { return nil }
+		guard let rsaPrivateKey = try? KeyController.generateRSAPrivateKey(), let privateKey = try? KeyController.generateECDHPrivateKey(),
+			  let rsaPublicKey = try? KeyController.generateRSAPublicKey(from: rsaPrivateKey) else { return nil }
 		guard let rsaJWK = try? RSAPublicKey(publicKey: rsaPublicKey, additionalParameters: ["use": "sig", "kid": UUID().uuidString, "alg": "RS256"]) else { return nil }
 		guard let keySet = try? WebKeySet(jwk: rsaJWK) else { return nil }
-		var res = WalletOpenId4VPConfiguration(subjectSyntaxTypesSupported: [], preferredSubjectSyntaxType: .jwkThumbprint, decentralizedIdentifier: try! DecentralizedIdentifier(rawValue: "did:example:123"), idTokenTTL: 10 * 60, presentationDefinitionUriSupported: true, signingKey: rsaPrivateKey, signingKeySet: keySet, supportedClientIdSchemes: [.preregistered(clients: [verifierMetaData.clientId: verifierMetaData])], 	vpFormatsSupported: [])
+		var res = WalletOpenId4VPConfiguration(subjectSyntaxTypesSupported: [], preferredSubjectSyntaxType: .jwkThumbprint, decentralizedIdentifier: try! DecentralizedIdentifier(rawValue: "did:example:123"), idTokenTTL: 10 * 60, presentationDefinitionUriSupported: true, signingKey: privateKey, signingKeySet: keySet, supportedClientIdSchemes: [.preregistered(clients: [verifierMetaData.clientId: verifierMetaData])], vpFormatsSupported: [])
 		return res
 	}()
-
+	
 	
 }

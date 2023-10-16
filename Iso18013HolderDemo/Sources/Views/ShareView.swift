@@ -109,6 +109,7 @@ struct ShareView: View {
 	}
 	
 	func initializeAndPerformDeviceEngagement() {
+		mdocAppData.logger.log(level: .info, "initializeAndPerformDeviceEngagement")
 		transferManager.initialize(parameters: [
 			InitializeKeys.document_signup_response_data.rawValue: [mdocAppData.isoMdlModel?.response, mdocAppData.euPidModel?.response].compactMap {$0},
 			InitializeKeys.device_private_key.rawValue: (mdocAppData.isoMdlModel?.devicePrivateKey ?? mdocAppData.euPidModel?.devicePrivateKey)!,

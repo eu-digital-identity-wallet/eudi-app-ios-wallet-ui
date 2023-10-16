@@ -7,6 +7,7 @@ import SwiftUI
 import SwiftCBOR
 import MdocDataModel18013
 import MdocDataTransfer18013
+import Logging
 
 class MdocAppData: ObservableObject {
 	@Published var euPidModel: EuPidModel?
@@ -15,6 +16,11 @@ class MdocAppData: ObservableObject {
 	@AppStorage("mdlLoaded") var mdlLoaded: Bool = false
 	@AppStorage("DebugDisplay") var debugDisplay: Bool = false
 	var hasGivenLA = false
+	let logger: Logger
+
+	init() {
+		logger = Logger(label: "logger")
+	}
 
 	func getDoc(i: Int) -> MdocDecodable? { i == 0 ? euPidModel : isoMdlModel}
 	func removeDoc(i: Int) {

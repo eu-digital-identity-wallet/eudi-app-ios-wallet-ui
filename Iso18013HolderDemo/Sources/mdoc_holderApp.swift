@@ -7,17 +7,12 @@
 
 import SwiftUI
 import MdocDataTransfer18013
-import Logging
 
 @main
 struct mdoc_holderApp: App {
-	let logger: Logger
-	init() {
-		logger = Logger(label: "logger")
-	}
     var body: some Scene {
         WindowGroup {
-					MainHolderView().environmentObject(MdocAppData()).environmentObject(MdocGattServer()).environmentObject(OpenId4VpClient.shared)
+		  MainHolderView().environmentObject(MdocAppData()).environmentObject(MdocGattServer()).environmentObject(OpenId4VpClient.shared)
         }
     }
 }

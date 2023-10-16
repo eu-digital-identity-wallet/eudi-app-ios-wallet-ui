@@ -28,6 +28,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "BDAE5637C7320CBAA311118E"
+               BuildableName = "Iso18013HolderDemoTests.xctest"
+               BlueprintName = "Iso18013HolderDemoTests"
+               ReferencedContainer = "container:Iso18013HolderDemo.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "A5B021DA2451E7DA7508FCAE"
                BuildableName = "Iso18013HolderDemoUITests.xctest"
                BlueprintName = "Iso18013HolderDemoUITests"
@@ -42,6 +56,16 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "BDAE5637C7320CBAA311118E"
+               BuildableName = "Iso18013HolderDemoTests.xctest"
+               BlueprintName = "Iso18013HolderDemoTests"
+               ReferencedContainer = "container:Iso18013HolderDemo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference

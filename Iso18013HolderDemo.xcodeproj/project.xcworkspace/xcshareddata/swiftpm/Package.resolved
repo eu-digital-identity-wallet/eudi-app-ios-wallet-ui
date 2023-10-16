@@ -69,7 +69,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift",
       "state" : {
         "branch" : "main",
-        "revision" : "97396fd24963a8255bfd706f0f2da7a4f40e26ec"
+        "revision" : "66fe1eda233c6a76950d55443290d51f5a56f18e"
       }
     },
     {
@@ -97,6 +97,15 @@
       "state" : {
         "revision" : "d14de4b2d9205068c9db89c00d097ca43c897000",
         "version" : "0.6.0"
+      }
+    },
+    {
+      "identity" : "mockingbird",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/birdrides/mockingbird.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "210ec238b470ac6fd60f7ecfa2218b544519773f"
       }
     },
     {

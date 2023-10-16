@@ -10,28 +10,37 @@
 		0BF9CC03E08DA80704800A98 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7A25294A9E3CDFED709B90 /* ShareView.swift */; };
 		0F91A0F0863CEFEBC5D7AEBD /* scytales_root_ca.der in Resources */ = {isa = PBXBuildFile; fileRef = 0D57DC5DD3A0FC18E83B0023 /* scytales_root_ca.der */; };
 		12AD6137012A40E367FD1CC8 /* mdoc_holderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9DF632FE20A18FBF39E13F /* mdoc_holderUITestsLaunchTests.swift */; };
+		22A58C0AE2F478E9274B4865 /* MdocDataTransfer18013 in Frameworks */ = {isa = PBXBuildFile; productRef = A1156C1AB18E78CD5F37C664 /* MdocDataTransfer18013 */; };
 		2CB3D47A008CC6F66C5CE352 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 071EA5AD742F0A6980D58E96 /* Assets.xcassets */; };
 		3E59AFE2057089CA241F1046 /* DocDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBCB81D85A5FEB87E22CB52 /* DocDataView.swift */; };
+		42AC5827371C319DF7147920 /* OpenId4VpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534F210081FDAD6ABFF48899 /* OpenId4VpClient.swift */; };
 		4A76CDEDAE02D377B655EC7F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A76075244B6EA4ABC073824 /* Extensions.swift */; };
 		4F27F981847B65F7E973D7E1 /* mdoc_holderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DA409AC0A2BD5D87C95731 /* mdoc_holderUITests.swift */; };
 		5329E5351F0F6452B28A2344 /* TuistBundle+Iso18013HolderDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF98A559AF08701237D4902 /* TuistBundle+Iso18013HolderDemo.swift */; };
+		5357C5D9457A8A39C0D0E760 /* Iso18013HolderDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35EEBEBAFE3B7B4D13EDAAE3 /* Iso18013HolderDemoTests.swift */; };
+		5DE72C1A9CE8EFA83C1C58FC /* sample_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 86ABC4FD9B54EC57B39517C2 /* sample_data.json */; };
 		74CF90E3FE08C0E39C6E0E73 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 163C5AA70A3D689878251F21 /* CodeScanner */; };
+		7C8B91BD5F3B8B995509D7B2 /* Mockingbird in Frameworks */ = {isa = PBXBuildFile; productRef = D6FA15C50A27F2F6739A5D85 /* Mockingbird */; };
 		98D93180046EB299D3E350B2 /* mdoc_holderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59B4ADE62B8BA3D5817A575 /* mdoc_holderApp.swift */; };
 		A06DB869639F999F7E4BA729 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 268F27B6E2979B70D0EEB026 /* LaunchScreen.storyboard */; };
-		B0036D0B2ACD9488009AD181 /* OpenId4VpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0036D0A2ACD9488009AD181 /* OpenId4VpClient.swift */; };
-		B0BAD9E52AD341B7009DAAA7 /* MdocDataTransfer18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B0BAD9E42AD341B7009DAAA7 /* MdocDataTransfer18013 */; };
-		B0C137152AD5BE44006E67BC /* EUDI_sample_data.json in Resources */ = {isa = PBXBuildFile; fileRef = B0C137142AD5BE44006E67BC /* EUDI_sample_data.json */; };
-		B0EC6CF62AD213AF00E5482D /* vp_token_test.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0EC6CF52AD213AF00E5482D /* vp_token_test.txt */; };
 		B807260BC666A5A0D2EA0F3A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CA872DD9B8F79BFC0A55469 /* Localizable.strings */; };
 		CE930B8F27771E5DB1D6C614 /* SiopOpenID4VP in Frameworks */ = {isa = PBXBuildFile; productRef = 54FF3F5F47998360A0719693 /* SiopOpenID4VP */; };
 		CF10BD7EA1DC34996CC91BEF /* ButtonControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243810599B19D04BC18869DB /* ButtonControls.swift */; };
 		DB1CBB78C4626D2DB73DECDE /* MainHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C936820255CCFC3F68C51913 /* MainHolderView.swift */; };
+		E86C0AC0011E80071BD71090 /* EUDI_sample_data.json in Resources */ = {isa = PBXBuildFile; fileRef = FFCF9BA704073AA98CC0854F /* EUDI_sample_data.json */; };
 		F7B4419BF28399B503CFB267 /* mdocAppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601717DA620F4072AA934A9B /* mdocAppData.swift */; };
 		F92585A1C1F434EED86D2A32 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C757591F585F6B5F2FACB262 /* CheckboxToggleStyle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		E12B0137A480EF12CB63CF76 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B29B9B25C7A90F972CD36FBA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C2681060E6A4396DF2588DD1;
+			remoteInfo = Iso18013HolderDemo;
+		};
+		F8E8FB73D2F8159862B31E0E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B29B9B25C7A90F972CD36FBA /* Project object */;
 			proxyType = 1;
@@ -61,40 +70,61 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C889B8EFA3FC4675967DCDED /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		071EA5AD742F0A6980D58E96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		0D57DC5DD3A0FC18E83B0023 /* scytales_root_ca.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = scytales_root_ca.der; sourceTree = "<group>"; };
+		0D57DC5DD3A0FC18E83B0023 /* scytales_root_ca.der */ = {isa = PBXFileReference; path = scytales_root_ca.der; sourceTree = "<group>"; };
 		1A76075244B6EA4ABC073824 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		21ADDB2B53F18C4D088A1AB3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		23B487F4BE86968AE9ADCC1C /* Iso18013HolderDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Iso18013HolderDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		243810599B19D04BC18869DB /* ButtonControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonControls.swift; sourceTree = "<group>"; };
 		268F27B6E2979B70D0EEB026 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2DD591DE93BFD2D4BDCC5A78 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		35EEBEBAFE3B7B4D13EDAAE3 /* Iso18013HolderDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Iso18013HolderDemoTests.swift; sourceTree = "<group>"; };
+		3606F4C7A2AECBB549402943 /* Iso18013HolderDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Iso18013HolderDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		534F210081FDAD6ABFF48899 /* OpenId4VpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenId4VpClient.swift; sourceTree = "<group>"; };
 		601717DA620F4072AA934A9B /* mdocAppData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdocAppData.swift; sourceTree = "<group>"; };
+		6D842299F7C1368B1E3465C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7E7A25294A9E3CDFED709B90 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
+		86ABC4FD9B54EC57B39517C2 /* sample_data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = sample_data.json; sourceTree = "<group>"; };
 		86DA409AC0A2BD5D87C95731 /* mdoc_holderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdoc_holderUITests.swift; sourceTree = "<group>"; };
 		8B9DF632FE20A18FBF39E13F /* mdoc_holderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdoc_holderUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		B0036D0A2ACD9488009AD181 /* OpenId4VpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenId4VpClient.swift; sourceTree = "<group>"; };
-		B0C137142AD5BE44006E67BC /* EUDI_sample_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = EUDI_sample_data.json; sourceTree = "<group>"; };
-		B0EC6CF52AD213AF00E5482D /* vp_token_test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = vp_token_test.txt; sourceTree = "<group>"; };
 		BEBCB81D85A5FEB87E22CB52 /* DocDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocDataView.swift; sourceTree = "<group>"; };
 		C59B4ADE62B8BA3D5817A575 /* mdoc_holderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mdoc_holderApp.swift; sourceTree = "<group>"; };
 		C757591F585F6B5F2FACB262 /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
 		C936820255CCFC3F68C51913 /* MainHolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHolderView.swift; sourceTree = "<group>"; };
 		D5EA9115DD31976D44071C71 /* Iso18013HolderDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Iso18013HolderDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCE1579B560027994F61007 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FFCF9BA704073AA98CC0854F /* EUDI_sample_data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EUDI_sample_data.json; sourceTree = "<group>"; };
 		FFF98A559AF08701237D4902 /* TuistBundle+Iso18013HolderDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+Iso18013HolderDemo.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3377DBCA66B2F3F200BD189C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C8B91BD5F3B8B995509D7B2 /* Mockingbird in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A266D5D853E1F641AC975958 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22A58C0AE2F478E9274B4865 /* MdocDataTransfer18013 in Frameworks */,
 				CE930B8F27771E5DB1D6C614 /* SiopOpenID4VP in Frameworks */,
-				B0BAD9E52AD341B7009DAAA7 /* MdocDataTransfer18013 in Frameworks */,
 				74CF90E3FE08C0E39C6E0E73 /* CodeScanner in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -131,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				D5EA9115DD31976D44071C71 /* Iso18013HolderDemo.app */,
+				3606F4C7A2AECBB549402943 /* Iso18013HolderDemoTests.xctest */,
 				23B487F4BE86968AE9ADCC1C /* Iso18013HolderDemoUITests.xctest */,
 			);
 			name = Products;
@@ -139,12 +170,29 @@
 		2F26CB7737B867BDD96E7B3A /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				B0036D092ACD944B009AD181 /* OpenId4Vp */,
+				49A3932EB108B3AF41E5C817 /* OpenId4Vp */,
 				90AB65E36876B48E91CE6459 /* Views */,
 				C59B4ADE62B8BA3D5817A575 /* mdoc_holderApp.swift */,
 				601717DA620F4072AA934A9B /* mdocAppData.swift */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		3917CB5690E835F0725A7B75 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				C66F214FB696EA369D723DC7 /* Sources */,
+				6D842299F7C1368B1E3465C9 /* Info.plist */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		49A3932EB108B3AF41E5C817 /* OpenId4Vp */ = {
+			isa = PBXGroup;
+			children = (
+				534F210081FDAD6ABFF48899 /* OpenId4VpClient.swift */,
+			);
+			path = OpenId4Vp;
 			sourceTree = "<group>";
 		};
 		4CA233EC7A6EE8E57EDB8E14 /* Sources */ = {
@@ -158,7 +206,8 @@
 		7D4D4FA4A667E84DC99BC422 /* Sample_data */ = {
 			isa = PBXGroup;
 			children = (
-				B0C137142AD5BE44006E67BC /* EUDI_sample_data.json */,
+				FFCF9BA704073AA98CC0854F /* EUDI_sample_data.json */,
+				86ABC4FD9B54EC57B39517C2 /* sample_data.json */,
 				0D57DC5DD3A0FC18E83B0023 /* scytales_root_ca.der */,
 			);
 			path = Sample_data;
@@ -188,27 +237,10 @@
 		A29D7E8D98C66B02DFC69E35 /* UITests */ = {
 			isa = PBXGroup;
 			children = (
-				B0EC6CF42AD2138E00E5482D /* Resources */,
 				EF7411F939BACF38049E0A08 /* Sources */,
 				DBCE1579B560027994F61007 /* Info.plist */,
 			);
 			path = UITests;
-			sourceTree = "<group>";
-		};
-		B0036D092ACD944B009AD181 /* OpenId4Vp */ = {
-			isa = PBXGroup;
-			children = (
-				B0036D0A2ACD9488009AD181 /* OpenId4VpClient.swift */,
-			);
-			path = OpenId4Vp;
-			sourceTree = "<group>";
-		};
-		B0EC6CF42AD2138E00E5482D /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				B0EC6CF52AD213AF00E5482D /* vp_token_test.txt */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		B48131F888E2C3AA1C4ABBF4 /* Derived */ = {
@@ -224,10 +256,19 @@
 			children = (
 				0AE57D7AB3502784530D1664 /* Resources */,
 				2F26CB7737B867BDD96E7B3A /* Sources */,
+				3917CB5690E835F0725A7B75 /* Tests */,
 				A29D7E8D98C66B02DFC69E35 /* UITests */,
 				21ADDB2B53F18C4D088A1AB3 /* Info.plist */,
 			);
 			path = Iso18013HolderDemo;
+			sourceTree = "<group>";
+		};
+		C66F214FB696EA369D723DC7 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				35EEBEBAFE3B7B4D13EDAAE3 /* Iso18013HolderDemoTests.swift */,
+			);
+			path = Sources;
 			sourceTree = "<group>";
 		};
 		EA12E01DB243D97E7D102C7B = {
@@ -271,6 +312,28 @@
 			productReference = 23B487F4BE86968AE9ADCC1C /* Iso18013HolderDemoUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		BDAE5637C7320CBAA311118E /* Iso18013HolderDemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A6B884A96108C7E28929CE96 /* Build configuration list for PBXNativeTarget "Iso18013HolderDemoTests" */;
+			buildPhases = (
+				9CC89E2EC0A9956AB477E78C /* Sources */,
+				C864C832EE773CF92B19A326 /* Resources */,
+				C889B8EFA3FC4675967DCDED /* Embed Frameworks */,
+				3377DBCA66B2F3F200BD189C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9DA90EE9C3FC3CFEB8E03A36 /* PBXTargetDependency */,
+			);
+			name = Iso18013HolderDemoTests;
+			packageProductDependencies = (
+				D6FA15C50A27F2F6739A5D85 /* Mockingbird */,
+			);
+			productName = Iso18013HolderDemoTests;
+			productReference = 3606F4C7A2AECBB549402943 /* Iso18013HolderDemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		C2681060E6A4396DF2588DD1 /* Iso18013HolderDemo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3EFB09614F80C30A3B6601C4 /* Build configuration list for PBXNativeTarget "Iso18013HolderDemo" */;
@@ -286,9 +349,9 @@
 			);
 			name = Iso18013HolderDemo;
 			packageProductDependencies = (
+				A1156C1AB18E78CD5F37C664 /* MdocDataTransfer18013 */,
 				54FF3F5F47998360A0719693 /* SiopOpenID4VP */,
 				163C5AA70A3D689878251F21 /* CodeScanner */,
-				B0BAD9E42AD341B7009DAAA7 /* MdocDataTransfer18013 */,
 			);
 			productName = Iso18013HolderDemo;
 			productReference = D5EA9115DD31976D44071C71 /* Iso18013HolderDemo.app */;
@@ -306,6 +369,9 @@
 					A5B021DA2451E7DA7508FCAE = {
 						TestTargetID = C2681060E6A4396DF2588DD1;
 					};
+					BDAE5637C7320CBAA311118E = {
+						TestTargetID = C2681060E6A4396DF2588DD1;
+					};
 				};
 			};
 			buildConfigurationList = 414DDAE08E6BA391FADB2C99 /* Build configuration list for PBXProject "Iso18013HolderDemo" */;
@@ -318,6 +384,7 @@
 			);
 			mainGroup = EA12E01DB243D97E7D102C7B;
 			packageReferences = (
+				9DF4B43AC7017C9C135DC918 /* XCRemoteSwiftPackageReference "mockingbird" */,
 				022845A0CE965DB38A280998 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-transfer" */,
 				054FC094B9C24063F7789E43 /* XCRemoteSwiftPackageReference "eudi-lib-ios-siop-openid4vp-swift" */,
 				A706F9A3AFF74EE51FA91813 /* XCRemoteSwiftPackageReference "CodeScanner" */,
@@ -327,6 +394,7 @@
 			projectRoot = "";
 			targets = (
 				C2681060E6A4396DF2588DD1 /* Iso18013HolderDemo */,
+				BDAE5637C7320CBAA311118E /* Iso18013HolderDemoTests */,
 				A5B021DA2451E7DA7508FCAE /* Iso18013HolderDemoUITests */,
 			);
 		};
@@ -340,15 +408,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C864C832EE773CF92B19A326 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F2B500BFD2C57ECF895A1BB4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				2CB3D47A008CC6F66C5CE352 /* Assets.xcassets in Resources */,
 				A06DB869639F999F7E4BA729 /* LaunchScreen.storyboard in Resources */,
-				B0C137152AD5BE44006E67BC /* EUDI_sample_data.json in Resources */,
+				E86C0AC0011E80071BD71090 /* EUDI_sample_data.json in Resources */,
+				5DE72C1A9CE8EFA83C1C58FC /* sample_data.json in Resources */,
 				0F91A0F0863CEFEBC5D7AEBD /* scytales_root_ca.der in Resources */,
-				B0EC6CF62AD213AF00E5482D /* vp_token_test.txt in Resources */,
 				B807260BC666A5A0D2EA0F3A /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -366,16 +441,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9CC89E2EC0A9956AB477E78C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5357C5D9457A8A39C0D0E760 /* Iso18013HolderDemoTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D34D11407546F23D654A9B47 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				5329E5351F0F6452B28A2344 /* TuistBundle+Iso18013HolderDemo.swift in Sources */,
+				42AC5827371C319DF7147920 /* OpenId4VpClient.swift in Sources */,
 				CF10BD7EA1DC34996CC91BEF /* ButtonControls.swift in Sources */,
 				F92585A1C1F434EED86D2A32 /* CheckboxToggleStyle.swift in Sources */,
 				3E59AFE2057089CA241F1046 /* DocDataView.swift in Sources */,
 				DB1CBB78C4626D2DB73DECDE /* MainHolderView.swift in Sources */,
-				B0036D0B2ACD9488009AD181 /* OpenId4VpClient.swift in Sources */,
 				0BF9CC03E08DA80704800A98 /* ShareView.swift in Sources */,
 				F7B4419BF28399B503CFB267 /* mdocAppData.swift in Sources */,
 				98D93180046EB299D3E350B2 /* mdoc_holderApp.swift in Sources */,
@@ -385,6 +468,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		9DA90EE9C3FC3CFEB8E03A36 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Iso18013HolderDemo;
+			target = C2681060E6A4396DF2588DD1 /* Iso18013HolderDemo */;
+			targetProxy = F8E8FB73D2F8159862B31E0E /* PBXContainerItemProxy */;
+		};
 		FCD09742B74AC2E1274E6F19 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Iso18013HolderDemo;
@@ -464,6 +553,27 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.eudiw.Iso18013HolderDemoUITests;
 				PRODUCT_NAME = Iso18013HolderDemoUITests;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Iso18013HolderDemo;
+			};
+			name = Release;
+		};
+		869E80A52348FFF3B4579F5C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Iso18013HolderDemo/Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.eudiw.Iso18013HolderDemoTests;
+				PRODUCT_NAME = Iso18013HolderDemoTests;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -553,6 +663,28 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
+		};
+		B7D11D378F7F7952AFA96848 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Iso18013HolderDemo/Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.eudiw.Iso18013HolderDemoTests;
+				PRODUCT_NAME = Iso18013HolderDemoTests;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Iso18013HolderDemo;
+			};
+			name = Debug;
 		};
 		F4AE203972B9F98BAE8F3906 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -645,6 +777,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		A6B884A96108C7E28929CE96 /* Build configuration list for PBXNativeTarget "Iso18013HolderDemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B7D11D378F7F7952AFA96848 /* Debug */,
+				869E80A52348FFF3B4579F5C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -661,6 +802,14 @@
 			repositoryURL = "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift";
 			requirement = {
 				branch = main;
+				kind = branch;
+			};
+		};
+		9DF4B43AC7017C9C135DC918 /* XCRemoteSwiftPackageReference "mockingbird" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/birdrides/mockingbird.git";
+			requirement = {
+				branch = master;
 				kind = branch;
 			};
 		};
@@ -683,10 +832,13 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = SiopOpenID4VP;
 		};
-		B0BAD9E42AD341B7009DAAA7 /* MdocDataTransfer18013 */ = {
+		A1156C1AB18E78CD5F37C664 /* MdocDataTransfer18013 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 022845A0CE965DB38A280998 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-transfer" */;
 			productName = MdocDataTransfer18013;
+		};
+		D6FA15C50A27F2F6739A5D85 /* Mockingbird */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Mockingbird;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
