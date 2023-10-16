@@ -27,6 +27,7 @@ public protocol ColorManagerProtocol {
   var backgroundDefault: Color { get }
   var backgroundPaper: Color { get }
   var chipBackground: Color { get }
+  var infoBackground: Color { get }
   var dividerDark: Color { get }
   var lightGradientEnd: Color { get }
   var lightGradientStart: Color { get }
@@ -47,12 +48,14 @@ public protocol ColorManagerProtocol {
 
 final class ColorManager: ColorManagerProtocol {
 
+
   // MARK: - Properties
 
   enum PaletteColorEnum: String {
     case backgroundDefault
     case backgroundPaper
     case chipBackground
+    case infoBackground
     case dividerDark
     case lightGradientEnd
     case lightGradientStart
@@ -105,6 +108,9 @@ final class ColorManager: ColorManagerProtocol {
   }
   public var chipBackground: Color {
     Color(PaletteColorEnum.chipBackground.rawValue, bundle: bundle)
+  }
+  var infoBackground: Color {
+    Color(PaletteColorEnum.infoBackground.rawValue, bundle: bundle)
   }
   public var dividerDark: Color {
     Color(PaletteColorEnum.dividerDark.rawValue, bundle: bundle)
