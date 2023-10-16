@@ -13,7 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-struct NetworkParameter {
-  var key: String
-  var value: String
+import SwiftUI
+import logic_ui
+import logic_resources
+
+struct LoginView<Router: RouterHostType, Interactor: LoginInteractorType>: View {
+  var body: some View {
+    Text("")
+  }
 }

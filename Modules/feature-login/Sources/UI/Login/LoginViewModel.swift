@@ -13,7 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-struct NetworkParameter {
-  var key: String
-  var value: String
+import Foundation
+import logic_ui
+
+struct LoginState: ViewState {
+
+}
+
+@MainActor
+final class LoginViewModel<Router: RouterHostType, Interactor: LoginInteractorType>: BaseViewModel<Router, FAQState> {
 }

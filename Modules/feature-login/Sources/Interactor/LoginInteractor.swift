@@ -13,7 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-struct NetworkParameter {
-  var key: String
-  var value: String
+import Foundation
+
+public protocol LoginInteractorType {
+
+}
+
+public class LoginInteractor: LoginInteractorType {
+
+  public init() {}
 }
