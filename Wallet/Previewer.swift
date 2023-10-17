@@ -22,10 +22,12 @@ import logic_resources
 
 #Preview {
   StartupView(with: PreviewRouter(), and: StartupInteractor())
+
 }
 
 #Preview {
   DashboardView(with: PreviewRouter(), and: DashboardInteractor())
+
 }
 
 #Preview {
@@ -44,6 +46,12 @@ import logic_resources
       shouldInitializeBiometricOnCreate: false
     )
   )
+}
+
+#Preview {
+  FloatingActionButton(title: .custom("FAB"), icon: Theme.shared.image.xmark) {
+
+  }
 }
 
 private func successConfig() -> UIConfig.Success {

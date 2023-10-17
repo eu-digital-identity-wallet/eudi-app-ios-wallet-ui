@@ -114,5 +114,8 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
         }
       }
     }
+    .modifier(FloatingActionButtonModifier(title: .custom("FLOAT"), icon: Theme.shared.image.idStroke, action: {
+
+    }))
   }
 }
