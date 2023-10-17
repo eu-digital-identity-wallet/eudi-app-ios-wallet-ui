@@ -79,6 +79,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "success")
     case .requestDataShareSuccess(let args):
       bundle.localizedStringWithArguments(forKey: "request_data_share_sucess_title", arguments: args)
+    case .incompleteRequestDataSelection:
+      bundle.localizedString(forKey: "incomplete_request_data_selectin")
     }
   }
 
@@ -111,6 +113,7 @@ public extension LocalizableString {
     case shareDataReview
     case success
     case requestDataShareSuccess([String])
+    case incompleteRequestDataSelection
   }
 }
 

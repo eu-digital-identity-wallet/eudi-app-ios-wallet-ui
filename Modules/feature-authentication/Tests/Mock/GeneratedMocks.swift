@@ -152,6 +152,155 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import SwiftUI
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_authentication
+@testable import logic_api
+@testable import logic_ui
+
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_authentication
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import SwiftUI
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_authentication
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import SwiftUI
+
+
+
+
+
+
+ class MockRequestDataCell: RequestDataCell, Cuckoo.ProtocolMock {
+    
+     typealias MocksType = RequestDataCell
+    
+     typealias Stubbing = __StubbingProxy_RequestDataCell
+     typealias Verification = __VerificationProxy_RequestDataCell
+
+     let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+   private var __defaultImplStub: (any RequestDataCell)?
+
+   func enableDefaultImplementation(_ stub: any RequestDataCell) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+    
+    
+    
+     var id: String {
+        get {
+            return cuckoo_manager.getter("id",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.id)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+
+     struct __StubbingProxy_RequestDataCell: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+         init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        var id: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockRequestDataCell, String> {
+            return .init(manager: cuckoo_manager, name: "id")
+        }
+        
+        
+        
+    }
+
+     struct __VerificationProxy_RequestDataCell: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+         init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+        
+        
+        var id: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "id", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+    
+        
+    }
+}
+
+
+ class RequestDataCellStub: RequestDataCell {
+    
+    
+    
+    
+     var id: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_authentication
+@testable import logic_api
+@testable import logic_ui
+
 import Foundation
 
 import Cuckoo
@@ -4276,8 +4425,36 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_authentication
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_authentication
+@testable import logic_api
+@testable import logic_ui
+
 import Foundation
 import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_authentication
+@testable import logic_api
+@testable import logic_ui
+
+import PartialSheet
+import SwiftUI
+import logic_resources
 
 import Cuckoo
 @testable import logic_business
@@ -4314,15 +4491,6 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_authentication
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
-import logic_resources
 
 import Cuckoo
 @testable import logic_business
@@ -4393,6 +4561,7 @@ import Cuckoo
 @testable import logic_ui
 
 import AlertToast
+import PartialSheet
 import SwiftUI
 
 import Cuckoo
@@ -4487,6 +4656,26 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
             defaultCall: __defaultImplStub!.pop(animated: animated))
+        
+    }
+    
+    
+    
+    
+    
+    public func pop()  {
+        
+    return cuckoo_manager.call(
+    """
+    pop()
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.pop())
         
     }
     
@@ -4615,6 +4804,17 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
         
         
         
+        func pop() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterHostType.self, method:
+    """
+    pop()
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
         func popTo<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with route: M1, inclusive: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(AppRoute, Bool)> where M1.MatchedType == AppRoute, M2.MatchedType == Bool {
             let matchers: [Cuckoo.ParameterMatcher<(AppRoute, Bool)>] = [wrap(matchable: route) { $0.0 }, wrap(matchable: inclusive) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRouterHostType.self, method:
@@ -4712,6 +4912,18 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
+        func pop() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    pop()
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
         func popTo<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with route: M1, inclusive: M2) -> Cuckoo.__DoNotUse<(AppRoute, Bool), Void> where M1.MatchedType == AppRoute, M2.MatchedType == Bool {
             let matchers: [Cuckoo.ParameterMatcher<(AppRoute, Bool)>] = [wrap(matchable: route) { $0.0 }, wrap(matchable: inclusive) { $0.1 }]
             return cuckoo_manager.verify(
@@ -4787,6 +4999,14 @@ public class RouterHostTypeStub: RouterHostType {
     
     
     public func pop(animated: Bool)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func pop()   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

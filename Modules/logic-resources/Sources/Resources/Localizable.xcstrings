@@ -89,6 +89,17 @@
         }
       }
     },
+    "incomplete_request_data_selectin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your selection of data to be shared may impact the service"
+          }
+        }
+      }
+    },
     "invalid_quick_pin" : {
       "extractionState" : "manual",
       "localizations" : {

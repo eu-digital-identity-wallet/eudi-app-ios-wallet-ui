@@ -51,6 +51,19 @@ public struct AuthenticationRequestView<Router: RouterHostType, Interactor: Auth
         visibilityIcon
       }
 
+      VSpacer.small()
+
+      ScrollView {
+        VStack(spacing: SPACING_SMALL) {
+          ForEach(viewModel.viewState.items, id: \.id) {
+            RequestDataCellView(cellModel: $0) { id in
+              viewModel.onSelectionChanged(id: id)
+            }
+          }
+        }
+        .padding(.top)
+      }
+
       Spacer()
 
       footer
@@ -98,8 +111,34 @@ public struct AuthenticationRequestView<Router: RouterHostType, Interactor: Auth
 
   var footer: some View {
     VStack(spacing: SPACING_MEDIUM) {
+      missingCredentials()
       WrapButtonView(style: .primary, title: .shareButton, onAction: viewModel.onShare())
       WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.onShowCancelModal())
+    }
+    .animation(.easeInOut, value: viewModel.viewState.itemsAreAllSelected)
+  }
+
+  @ViewBuilder
+  func missingCredentials() -> some View {
+    if !viewModel.viewState.itemsAreAllSelected {
+      HStack(spacing: SPACING_MEDIUM) {
+
+        ThemeManager.shared.image.exclamationmarkCircle
+          .resizable()
+          .scaledToFit()
+          .frame(width: 35)
+          .foregroundStyle(ThemeManager.shared.color.secondary)
+
+        Text(.incompleteRequestDataSelection)
+          .typography(ThemeManager.shared.font.bodyMedium)
+          .foregroundStyle(ThemeManager.shared.color.textPrimaryDark)
+      }
+      .padding()
+      .frame(maxWidth: .infinity)
+      .overlay(
+        RoundedRectangle(cornerRadius: 15)
+          .foregroundStyle(ThemeManager.shared.color.secondary.opacity(0.2))
+      )
     }
   }
 }

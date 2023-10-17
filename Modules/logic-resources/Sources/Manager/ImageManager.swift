@@ -34,6 +34,9 @@ public protocol ImageManagerProtocol {
   var eye: Image { get }
   var eyeSlash: Image { get }
   var checkmarkCircle: Image { get }
+  var checkmarkSquareFill: Image { get }
+  var square: Image { get }
+  var exclamationmarkOctagon: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -56,6 +59,9 @@ final class ImageManager: ImageManagerProtocol {
     case eye = "eye"
     case eyeSlash = "eye.slash"
     case checkmarkCircle = "checkmark.circle"
+    case checkmarkSquareFill = "checkmark.square.fill"
+    case square = "square"
+    case exclamationmarkOctagon = "exclamationmark.octagon"
   }
 
   // MARK: - Properties
@@ -117,5 +123,14 @@ final class ImageManager: ImageManagerProtocol {
   }
   var checkmarkCircle: Image {
     Image(systemName: ImageEnum.checkmarkCircle.rawValue)
+  }
+  var checkmarkSquareFill: Image {
+    Image(systemName: ImageEnum.checkmarkSquareFill.rawValue)
+  }
+  var square: Image {
+    Image(systemName: ImageEnum.square.rawValue)
+  }
+  var exclamationmarkOctagon: Image {
+    Image(systemName: ImageEnum.exclamationmarkOctagon.rawValue)
   }
 }

@@ -24,7 +24,8 @@ struct AuthRequestViewState: ViewState {
   let caption: LocalizableString.Key
   let dataRequestInfo: LocalizableString.Key
   let isContentVisible: Bool
-
+  let itemsAreAllSelected: Bool
+  let items: [any RequestDataCell]
 }
 
 @MainActor
@@ -45,7 +46,15 @@ final class AuthenticationRequestViewModel<Router: RouterHostType, Interactor: A
         relyingParty: "EUDI Conference",
         caption: .requestDataCaption,
         dataRequestInfo: .requestDataInfoNotice,
-        isContentVisible: false
+        isContentVisible: false,
+        itemsAreAllSelected: true,
+        items: [
+          RequestDataSection(type: .id, title: "Digital ID"),
+          RequestDataRow(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras"),
+          RequestDataRow(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos"),
+          RequestDataRow(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985"),
+          RequestDataRow(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")
+        ]
       )
     )
   }
@@ -87,12 +96,45 @@ final class AuthenticationRequestViewModel<Router: RouterHostType, Interactor: A
   }
 
   func onContentVisibilityChange() {
-    setNewState(isContentVisible: !viewState.isContentVisible)
+    setNewState(
+      isContentVisible: !viewState.isContentVisible,
+      items: viewState.items.map {
+        guard var row = $0 as? RequestDataRow else {
+          return $0
+        }
+        row.setVisible(!viewState.isContentVisible)
+        return row
+      }
+    )
+  }
+
+  func onSelectionChanged(id: String) {
+
+    let items = viewState.items.map {
+      guard var row = $0 as? RequestDataRow, row.id == id else {
+        return $0
+      }
+      row.setSelected(!row.isSelected)
+      return row
+    }
+
+    let allSelected = items.map {
+      ($0 as? RequestDataRow)?.isSelected ?? true
+    }
+    .filter { !$0 }
+    .isEmpty
+
+    setNewState(
+      itemsAreAllSelected: allSelected,
+      items: items
+    )
   }
 
   private func setNewState(
     error: ContentError.Config? = nil,
-    isContentVisible: Bool? = nil
+    isContentVisible: Bool? = nil,
+    itemsAreAllSelected: Bool? = nil,
+    items: [any RequestDataCell]? = nil
   ) {
     setState {
       .init(
@@ -101,7 +143,9 @@ final class AuthenticationRequestViewModel<Router: RouterHostType, Interactor: A
         relyingParty: $0.relyingParty,
         caption: $0.caption,
         dataRequestInfo: $0.dataRequestInfo,
-        isContentVisible: isContentVisible ?? $0.isContentVisible
+        isContentVisible: isContentVisible ?? $0.isContentVisible,
+        itemsAreAllSelected: itemsAreAllSelected ?? $0.itemsAreAllSelected,
+        items: items ?? $0.items
       )
     }
   }
