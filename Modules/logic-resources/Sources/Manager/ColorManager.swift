@@ -48,7 +48,6 @@ public protocol ColorManagerProtocol {
 
 final class ColorManager: ColorManagerProtocol {
 
-
   // MARK: - Properties
 
   enum PaletteColorEnum: String {
@@ -56,15 +55,18 @@ final class ColorManager: ColorManagerProtocol {
     case backgroundPaper
     case chipBackground
     case infoBackground
+
     case dividerDark
     case lightGradientEnd
     case lightGradientStart
+
     case errorMain
     case primaryDark
     case primaryLight
     case primaryMain
     case successText
     case secondaryMain
+
     case textDisabledDark
     case textDisabledLight
     case textPrimaryDark
@@ -99,7 +101,6 @@ final class ColorManager: ColorManagerProtocol {
   public var darkGrey: Color {
     Color(BaseColors.darkGrey.rawValue, bundle: bundle)
   }
-
   public var backgroundDefault: Color {
     Color(PaletteColorEnum.backgroundDefault.rawValue, bundle: bundle)
   }
