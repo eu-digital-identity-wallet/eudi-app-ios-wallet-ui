@@ -88,12 +88,12 @@ public extension View {
 }
 
 public extension View {
-  func sheetDialog<Content: View>(isPresented: Binding<Bool>, _ content: @escaping () -> ContentSheet<Content>) -> some View {
+  func sheetDialog<Content: View>(isPresented: Binding<Bool>, @ViewBuilder _ content: @escaping () -> Content) -> some View {
     return self.partialSheet(
       isPresented: isPresented,
       iPhoneStyle: SheetStyle.iphoneSheetStyle,
       iPadMacStyle: SheetStyle.IpadMacSheetStyle,
-      content: content
+      content: { ContentSheet(content: content) }
     )
   }
 }

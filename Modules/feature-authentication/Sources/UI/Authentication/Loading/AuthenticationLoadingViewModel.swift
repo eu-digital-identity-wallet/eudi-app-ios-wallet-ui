@@ -20,26 +20,32 @@ import feature_common
 final class AuthenticationLoadingViewModel<Router: RouterHostType, Interactor: AuthenticationInteractorType>: BaseLoadingViewModel<Router> {
 
   private let interactor: Interactor
+  private let relyingParty: String
 
-  init(router: Router, interactor: Interactor) {
+  init(
+    router: Router,
+    interactor: Interactor,
+    relyingParty: String
+  ) {
     self.interactor = interactor
+    self.relyingParty = relyingParty
     super.init(router: router)
   }
 
   override func getTitle() -> LocalizableString.Key {
-    .custom("TEST TEST TEST TEST TEST TEST TEST")
+    .requestDataTitle([relyingParty])
   }
 
   override func getCaption() -> LocalizableString.Key {
-    .custom("TEST TEST TEST TEST TEST TEST TEST")
+    .shareDataReview
   }
 
   override func getOnSuccessRoute() -> AppRoute? {
     .success(
       config: UIConfig.Success(
-        title: .custom("TEST"),
-        subtitle: .custom("TEST"),
-        buttons: [.init(title: .custom("BUTTON TEST"), screen: .startup, style: .primary, navigationType: .pop)],
+        title: .success,
+        subtitle: .requestDataShareSuccess([relyingParty]),
+        buttons: [.init(title: .okButton, screen: .startup, style: .primary, navigationType: .pop)],
         visualKind: .defaultIcon
       )
     )

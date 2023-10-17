@@ -75,8 +75,12 @@ public final class RouterHost: RouterHostType {
         DashboardView(with: self, and: DashboardInteractor())
       case .biometry(let config):
         BiometryView(with: self, interactor: BiometryInteractor(), config: config)
-      case .authenticationLoader:
-        AuthenticationLoadingView(with: self, and: AuthenticationInteractor())
+      case .authenticationLoader(let relyingParty):
+        AuthenticationLoadingView(
+          with: self,
+          and: AuthenticationInteractor(),
+          relyingParty: relyingParty
+        )
       case .authenticationRequest:
         AuthenticationRequestView(with: self, and: AuthenticationInteractor())
       }

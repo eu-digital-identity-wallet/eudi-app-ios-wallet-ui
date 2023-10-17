@@ -12,7 +12,18 @@
         }
       }
     },
-    "cance_share_sheet_caption" : {
+    "cancel_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CANCEL"
+          }
+        }
+      }
+    },
+    "cancel_share_sheet_caption" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -23,7 +34,7 @@
         }
       }
     },
-    "cance_share_sheet_continue" : {
+    "cancel_share_sheet_continue" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -34,24 +45,13 @@
         }
       }
     },
-    "cance_share_sheet_title" : {
+    "cancel_share_sheet_title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancel information sharing?"
-          }
-        }
-      }
-    },
-    "cancel_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CANCEL"
           }
         }
       }
@@ -100,6 +100,17 @@
         }
       }
     },
+    "ok_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
     "request_data_info_notice" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -122,6 +133,17 @@
         }
       }
     },
+    "request_data_share_sucess_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You successfully shared information with the %@"
+          }
+        }
+      }
+    },
     "request_data_share_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -129,6 +151,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ requests the following"
+          }
+        }
+      }
+    },
+    "request_data_sheet_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It allows us to verify your identity with the requesting party"
           }
         }
       }
@@ -162,6 +195,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SHARE"
+          }
+        }
+      }
+    },
+    "share_data_review_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please review carefully before sharing your data"
+          }
+        }
+      }
+    },
+    "success" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Success"
           }
         }
       }

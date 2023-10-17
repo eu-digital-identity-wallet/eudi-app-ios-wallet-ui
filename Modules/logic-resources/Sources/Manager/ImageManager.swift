@@ -33,6 +33,7 @@ public protocol ImageManagerProtocol {
   var circle: Image { get }
   var eye: Image { get }
   var eyeSlash: Image { get }
+  var checkmarkCircle: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -54,6 +55,7 @@ final class ImageManager: ImageManagerProtocol {
     case circle = "circle.fill"
     case eye = "eye"
     case eyeSlash = "eye.slash"
+    case checkmarkCircle = "checkmark.circle"
   }
 
   // MARK: - Properties
@@ -107,12 +109,13 @@ final class ImageManager: ImageManagerProtocol {
   var circle: Image {
     Image(systemName: ImageEnum.circle.rawValue)
   }
-
   var eye: Image {
     Image(systemName: ImageEnum.eye.rawValue)
   }
-
   var eyeSlash: Image {
     Image(systemName: ImageEnum.eyeSlash.rawValue)
+  }
+  var checkmarkCircle: Image {
+    Image(systemName: ImageEnum.checkmarkCircle.rawValue)
   }
 }

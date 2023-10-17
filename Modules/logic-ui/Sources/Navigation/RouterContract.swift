@@ -26,7 +26,7 @@ public indirect enum AppRoute: Equatable {
   case faqs
   case dashboard
   case biometry(config: any UIConfigType)
-  case authenticationLoader
+  case authenticationLoader(String)
   case authenticationRequest
 
   var key: String {

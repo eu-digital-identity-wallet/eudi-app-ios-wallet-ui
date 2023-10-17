@@ -44,7 +44,7 @@ public struct AuthenticationRequestView<Router: RouterHostType, Interactor: Auth
         Text("\(Text(viewModel.viewState.caption)) \(Text(viewModel.viewState.dataRequestInfo).underline())")
           .typography(ThemeManager.shared.font.bodyMedium)
           .foregroundColor(ThemeManager.shared.color.textSecondaryDark)
-          .onTapGesture {}
+          .onTapGesture { viewModel.onShowRequestInfoModal() }
 
         Spacer()
 
@@ -56,17 +56,26 @@ public struct AuthenticationRequestView<Router: RouterHostType, Interactor: Auth
       footer
     }
     .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
-      ContentSheet {
-        VStack(spacing: SPACING_MEDIUM) {
+      VStack(spacing: SPACING_MEDIUM) {
 
-          ContentTitle(
-            title: .cancelShareSheetTitle,
-            caption: .cancelShareSheetCaption
-          )
+        ContentTitle(
+          title: .cancelShareSheetTitle,
+          caption: .cancelShareSheetCaption
+        )
 
-          WrapButtonView(style: .primary, title: .cancelShareSheetContinue, onAction: viewModel.onShowCancelModal())
-          WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.onPop())
-        }
+        WrapButtonView(style: .primary, title: .cancelShareSheetContinue, onAction: viewModel.onShowCancelModal())
+        WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.onPop())
+      }
+    }
+    .sheetDialog(isPresented: $viewModel.isRequestInfoModalShowing) {
+      VStack(spacing: SPACING_MEDIUM) {
+
+        ContentTitle(
+          title: .requestDataInfoNotice,
+          caption: .requestDataSheetCaption
+        )
+
+        WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onShowRequestInfoModal())
       }
     }
   }

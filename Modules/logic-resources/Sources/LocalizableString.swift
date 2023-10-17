@@ -64,11 +64,21 @@ public final class LocalizableString: LocalizableStringType {
     case .requestDataTitle(let args):
       bundle.localizedStringWithArguments(forKey: "request_data_share_title", arguments: args)
     case .cancelShareSheetTitle:
-      bundle.localizedString(forKey: "cance_share_sheet_title")
+      bundle.localizedString(forKey: "cancel_share_sheet_title")
     case .cancelShareSheetCaption:
-      bundle.localizedString(forKey: "cance_share_sheet_caption")
+      bundle.localizedString(forKey: "cancel_share_sheet_caption")
     case .cancelShareSheetContinue:
-      bundle.localizedString(forKey: "cance_share_sheet_continue")
+      bundle.localizedString(forKey: "cancel_share_sheet_continue")
+    case .requestDataSheetCaption:
+      bundle.localizedString(forKey: "request_data_sheet_caption")
+    case .okButton:
+      bundle.localizedString(forKey: "ok_button")
+    case .shareDataReview:
+      bundle.localizedString(forKey: "share_data_review_title")
+    case .success:
+      bundle.localizedString(forKey: "success")
+    case .requestDataShareSuccess(let args):
+      bundle.localizedStringWithArguments(forKey: "request_data_share_sucess_title", arguments: args)
     }
   }
 
@@ -96,6 +106,11 @@ public extension LocalizableString {
     case cancelShareSheetTitle
     case cancelShareSheetCaption
     case cancelShareSheetContinue
+    case requestDataSheetCaption
+    case okButton
+    case shareDataReview
+    case success
+    case requestDataShareSuccess([String])
   }
 }
 

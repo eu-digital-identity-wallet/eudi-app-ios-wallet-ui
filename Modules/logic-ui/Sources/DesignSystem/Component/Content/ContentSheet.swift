@@ -16,11 +16,11 @@
 import SwiftUI
 import logic_resources
 
-public struct ContentSheet<Content: View>: View {
+struct ContentSheet<Content: View>: View {
 
   private let content: () -> Content
 
-  public init(content: @escaping () -> Content) {
+  init(@ViewBuilder content: @escaping () -> Content) {
     self.content = content
   }
 

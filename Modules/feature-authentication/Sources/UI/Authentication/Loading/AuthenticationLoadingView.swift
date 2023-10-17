@@ -21,8 +21,8 @@ public struct AuthenticationLoadingView<Router: RouterHostType, Interactor: Auth
 
   @ObservedObject private var viewModel: AuthenticationLoadingViewModel<Router, Interactor>
 
-  public init(with router: Router, and interactor: Interactor) {
-    self.viewModel = .init(router: router, interactor: interactor)
+  public init(with router: Router, and interactor: Interactor, relyingParty: String) {
+    self.viewModel = .init(router: router, interactor: interactor, relyingParty: relyingParty)
   }
 
   public var body: some View {

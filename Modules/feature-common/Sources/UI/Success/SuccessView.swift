@@ -40,7 +40,7 @@ public struct SuccessView<Router: RouterHostType>: View {
   private func getCenteredIcon() -> Image {
     return switch viewmodel.viewState.config.visualKind {
     case .defaultIcon:
-      Image(systemName: "checkmark.circle")
+      ThemeManager.shared.image.checkmarkCircle
     case .customIcon(let image):
       image
     }
@@ -56,7 +56,7 @@ public struct SuccessView<Router: RouterHostType>: View {
           .resizable()
           .scaledToFit()
           .foregroundColor(ThemeManager.shared.color.success)
-          .frame(height: getScreenRect().width / 2)
+          .frame(height: getScreenRect().width / 2.5)
       }
       Spacer()
 

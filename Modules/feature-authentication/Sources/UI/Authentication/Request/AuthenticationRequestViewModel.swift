@@ -20,6 +20,7 @@ import logic_resources
 struct AuthRequestViewState: ViewState {
   let error: ContentError.Config?
   let title: LocalizableString.Key
+  let relyingParty: String
   let caption: LocalizableString.Key
   let dataRequestInfo: LocalizableString.Key
   let isContentVisible: Bool
@@ -32,6 +33,7 @@ final class AuthenticationRequestViewModel<Router: RouterHostType, Interactor: A
   private let interactor: Interactor
 
   @Published var isCancelModalShowing: Bool = false
+  @Published var isRequestInfoModalShowing: Bool = false
 
   init(router: Router, interactor: Interactor) {
     self.interactor = interactor
@@ -40,6 +42,7 @@ final class AuthenticationRequestViewModel<Router: RouterHostType, Interactor: A
       initialState: .init(
         error: nil,
         title: .requestDataTitle(["EUDI Conference"]),
+        relyingParty: "EUDI Conference",
         caption: .requestDataCaption,
         dataRequestInfo: .requestDataInfoNotice,
         isContentVisible: false
@@ -48,6 +51,8 @@ final class AuthenticationRequestViewModel<Router: RouterHostType, Interactor: A
   }
 
   func onPop() {
+    isRequestInfoModalShowing = false
+    isCancelModalShowing = false
     router.pop()
   }
 
@@ -55,13 +60,34 @@ final class AuthenticationRequestViewModel<Router: RouterHostType, Interactor: A
     isCancelModalShowing = !isCancelModalShowing
   }
 
-  func onShare() {
+  func onShowRequestInfoModal() {
+    isRequestInfoModalShowing = !isRequestInfoModalShowing
+  }
 
+  func onShare() {
+    router.push(with:
+        .biometry(
+          config: UIConfig.Biometry(
+            title: viewState.title,
+            caption: viewState.caption,
+            quickPinOnlyCaption: viewState.caption,
+            navigationSuccessConfig: .init(
+              screen: .authenticationLoader(viewState.relyingParty),
+              navigationType: .push
+            ),
+            navigationBackConfig: .init(
+              screen: .authenticationRequest,
+              navigationType: .pop
+            ),
+            isPreAuthorization: false,
+            shouldInitializeBiometricOnCreate: true
+          )
+        )
+    )
   }
 
   func onContentVisibilityChange() {
     setNewState(isContentVisible: !viewState.isContentVisible)
-    print(viewState.isContentVisible)
   }
 
   private func setNewState(
@@ -72,6 +98,7 @@ final class AuthenticationRequestViewModel<Router: RouterHostType, Interactor: A
       .init(
         error: error,
         title: $0.title,
+        relyingParty: $0.relyingParty,
         caption: $0.caption,
         dataRequestInfo: $0.dataRequestInfo,
         isContentVisible: isContentVisible ?? $0.isContentVisible
