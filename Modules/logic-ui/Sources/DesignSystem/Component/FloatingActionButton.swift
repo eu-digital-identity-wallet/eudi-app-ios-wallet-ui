@@ -24,24 +24,18 @@ public struct FloatingActionButton: View {
   private let icon: Image
   private let iconColor: Color
   private let action: () -> Void
-  private let bottomPadding: CGFloat
-  private let trailingPadding: CGFloat
 
   public init(title: LocalizableString.Key,
               textColor: Color = Theme.shared.color.textPrimaryDark,
               backgroundColor: Color = Theme.shared.color.secondary,
               icon: Image,
               iconColor: Color = Theme.shared.color.textPrimaryDark,
-              bottomPadding: CGFloat = 20,
-              trailingPadding: CGFloat = 15,
               action: @escaping () -> Void) {
     self.title = title
     self.textColor = textColor
     self.backgroundColor = backgroundColor
     self.icon = icon
     self.iconColor = iconColor
-    self.bottomPadding = bottomPadding
-    self.trailingPadding = trailingPadding
     self.action = action
   }
 
@@ -63,8 +57,8 @@ public struct FloatingActionButton: View {
               .foregroundStyle(textColor)
 
           }
-          .padding(.horizontal, trailingPadding)
-          .padding(.vertical, bottomPadding)
+          .padding(.horizontal, 20)
+          .padding(.vertical, 15)
           .background(backgroundColor)
 
         }
@@ -107,8 +101,14 @@ public struct FloatingActionButtonModifier: ViewModifier {
   public func body(content: Content) -> some View {
     ZStack {
       content
-      FloatingActionButton(title: title, textColor: textColor, backgroundColor: backgroundColor, icon: icon, iconColor: iconColor, bottomPadding: bottomPadding, trailingPadding: trailingPadding, action: action)
+      FloatingActionButton(title: title,
+                          textColor: textColor,
+                           backgroundColor: backgroundColor,
+                           icon: icon, 
+                           iconColor: iconColor,
+                           action: action)
         .padding(.trailing, trailingPadding)
+        .padding(.bottom, bottomPadding)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .edgesIgnoringSafeArea(.all)
