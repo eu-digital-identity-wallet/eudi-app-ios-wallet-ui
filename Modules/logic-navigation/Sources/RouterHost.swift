@@ -54,6 +54,10 @@ public final class RouterHost: RouterHostType {
     pilot.pop(animated: animated)
   }
 
+  public func pop() {
+    pilot.pop()
+  }
+
   public func getCurrentScreen() -> AppRoute? {
     return pilot.routes.last
   }
@@ -73,6 +77,8 @@ public final class RouterHost: RouterHostType {
         BiometryView(with: self, interactor: BiometryInteractor(), config: config)
       case .authenticationLoader:
         AuthenticationLoadingView(with: self, and: AuthenticationInteractor())
+      case .authenticationRequest:
+        AuthenticationRequestView(with: self, and: AuthenticationInteractor())
       }
     }.eraseToAnyView()
   }

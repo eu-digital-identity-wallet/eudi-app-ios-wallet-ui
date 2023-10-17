@@ -53,6 +53,22 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "invalid_quick_pin")
     case .tryAgain:
       bundle.localizedString(forKey: "try_again")
+    case .shareButton:
+      bundle.localizedString(forKey: "share_button")
+    case .cancelButton:
+      bundle.localizedString(forKey: "cancel_button")
+    case .requestDataCaption:
+      bundle.localizedString(forKey: "request_data_share_caption")
+    case .requestDataInfoNotice:
+      bundle.localizedString(forKey: "request_data_info_notice")
+    case .requestDataTitle(let args):
+      bundle.localizedStringWithArguments(forKey: "request_data_share_title", arguments: args)
+    case .cancelShareSheetTitle:
+      bundle.localizedString(forKey: "cance_share_sheet_title")
+    case .cancelShareSheetCaption:
+      bundle.localizedString(forKey: "cance_share_sheet_caption")
+    case .cancelShareSheetContinue:
+      bundle.localizedString(forKey: "cance_share_sheet_continue")
     }
   }
 
@@ -72,6 +88,14 @@ public extension LocalizableString {
     case biometryOpenSettings
     case invalidQuickPin
     case tryAgain
+    case shareButton
+    case cancelButton
+    case requestDataCaption
+    case requestDataInfoNotice
+    case requestDataTitle([String])
+    case cancelShareSheetTitle
+    case cancelShareSheetCaption
+    case cancelShareSheetContinue
   }
 }
 

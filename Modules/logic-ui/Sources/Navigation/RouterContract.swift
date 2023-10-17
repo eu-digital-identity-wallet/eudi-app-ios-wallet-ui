@@ -27,6 +27,7 @@ public indirect enum AppRoute: Equatable {
   case dashboard
   case biometry(config: any UIConfigType)
   case authenticationLoader
+  case authenticationRequest
 
   var key: String {
     return switch self {
@@ -42,6 +43,8 @@ public indirect enum AppRoute: Equatable {
       "Biometry"
     case .authenticationLoader:
       "AuthenticationLoader"
+    case .authenticationRequest:
+      "AuthenticationRequest"
     }
   }
 }
@@ -50,6 +53,7 @@ public protocol RouterHostType {
   func push(with route: AppRoute)
   func popTo(with route: AppRoute, inclusive: Bool, animated: Bool)
   func pop(animated: Bool)
+  func pop()
   func popTo(with route: AppRoute, inclusive: Bool)
   func popTo(with route: AppRoute)
   func composeApplication() -> AnyView
@@ -69,6 +73,8 @@ public class PreviewRouter: RouterHostType {
   public func popTo(with route: AppRoute) {}
 
   public func pop(animated: Bool) {}
+
+  public func pop() {}
 
   public func composeApplication() -> AnyView { EmptyView().eraseToAnyView() }
 

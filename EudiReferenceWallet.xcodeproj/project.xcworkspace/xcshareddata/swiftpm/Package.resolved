@@ -181,6 +181,15 @@
       }
     },
     {
+      "identity" : "partialsheet",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreaMiotto/PartialSheet.git",
+      "state" : {
+        "revision" : "6c61890976181274ea7baf6a4c297418346db799",
+        "version" : "3.1.1"
+      }
+    },
+    {
       "identity" : "peppermint",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nsagora/peppermint",

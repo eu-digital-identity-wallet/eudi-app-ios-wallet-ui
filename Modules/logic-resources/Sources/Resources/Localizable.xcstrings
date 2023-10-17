@@ -12,6 +12,50 @@
         }
       }
     },
+    "cance_share_sheet_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel will redirect you back to the login without sharing any information"
+          }
+        }
+      }
+    },
+    "cance_share_sheet_continue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONTINUE SHARING"
+          }
+        }
+      }
+    },
+    "cance_share_sheet_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel information sharing?"
+          }
+        }
+      }
+    },
+    "cancel_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CANCEL"
+          }
+        }
+      }
+    },
     "faq_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -56,6 +100,39 @@
         }
       }
     },
+    "request_data_info_notice" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Why we need your data?"
+          }
+        }
+      }
+    },
+    "request_data_share_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please review carefully before sharing your data."
+          }
+        }
+      }
+    },
+    "request_data_share_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ requests the following"
+          }
+        }
+      }
+    },
     "screen_recording_security_warning" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -74,6 +151,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search"
+          }
+        }
+      }
+    },
+    "share_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SHARE"
           }
         }
       }

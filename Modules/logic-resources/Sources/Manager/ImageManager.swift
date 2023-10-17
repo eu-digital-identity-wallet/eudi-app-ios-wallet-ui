@@ -31,6 +31,8 @@ public protocol ImageManagerProtocol {
   var xmark: Image { get }
   var exclamationmarkCircle: Image { get }
   var circle: Image { get }
+  var eye: Image { get }
+  var eyeSlash: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -50,6 +52,8 @@ final class ImageManager: ImageManagerProtocol {
     case xmark = "xmark"
     case exclamationmarkCircle = "exclamationmark.circle"
     case circle = "circle.fill"
+    case eye = "eye"
+    case eyeSlash = "eye.slash"
   }
 
   // MARK: - Properties
@@ -102,5 +106,13 @@ final class ImageManager: ImageManagerProtocol {
   }
   var circle: Image {
     Image(systemName: ImageEnum.circle.rawValue)
+  }
+
+  var eye: Image {
+    Image(systemName: ImageEnum.eye.rawValue)
+  }
+
+  var eyeSlash: Image {
+    Image(systemName: ImageEnum.eyeSlash.rawValue)
   }
 }

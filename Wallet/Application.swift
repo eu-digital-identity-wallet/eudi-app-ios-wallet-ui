@@ -18,6 +18,7 @@ import logic_ui
 import logic_navigation
 import logic_resources
 import logic_business
+import PartialSheet
 
 @main
 struct Application: App {
@@ -52,6 +53,7 @@ struct Application: App {
           .if(self.shouldAddBottomPadding == false) { view in
             view.edgesIgnoringSafeArea(.bottom)
           }
+          .attachPartialSheetToRoot()
 
         if isScreenCapping {
           warningScreenCap()
