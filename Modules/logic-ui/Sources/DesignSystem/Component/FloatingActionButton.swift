@@ -104,7 +104,7 @@ public struct FloatingActionButtonModifier: ViewModifier {
       FloatingActionButton(title: title,
                           textColor: textColor,
                            backgroundColor: backgroundColor,
-                           icon: icon, 
+                           icon: icon,
                            iconColor: iconColor,
                            action: action)
         .padding(.trailing, trailingPadding)
