@@ -20,6 +20,7 @@ public protocol ImageManagerProtocol {
   var logo: Image { get }
   var faceId: Image { get }
   var id: Image { get }
+  var idStroke: Image { get }
   var nfc: Image { get }
   var qr: Image { get }
   var touchId: Image { get }
@@ -33,9 +34,11 @@ public protocol ImageManagerProtocol {
 }
 
 final class ImageManager: ImageManagerProtocol {
+
   enum ImageEnum: String {
     case faceId = "face-id"
-    case id = "id-stroke"
+    case id = "id"
+    case idStroke = "id-stroke"
     case nfc = "nfc"
     case qr = "qr"
     case touchId = "touch-id"
@@ -63,6 +66,9 @@ final class ImageManager: ImageManagerProtocol {
   }
   var id: Image {
     Image(ImageEnum.id.rawValue, bundle: bundle)
+  }
+  var idStroke: Image {
+    Image(ImageEnum.idStroke.rawValue, bundle: bundle)
   }
   var nfc: Image {
     Image(ImageEnum.nfc.rawValue, bundle: bundle)

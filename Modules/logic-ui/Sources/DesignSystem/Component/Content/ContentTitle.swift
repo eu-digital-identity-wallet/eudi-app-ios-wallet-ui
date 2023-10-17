@@ -27,7 +27,7 @@ public struct ContentTitle: View {
   public init(
     title: LocalizableString.Key,
     caption: LocalizableString.Key? = nil,
-    titleColor: Color = ThemeManager.shared.color.secondaryMain,
+    titleColor: Color = ThemeManager.shared.color.primary,
     captionColor: Color = ThemeManager.shared.color.textSecondaryDark,
     topSpacing: TopSpacing = .withToolbar
   ) {

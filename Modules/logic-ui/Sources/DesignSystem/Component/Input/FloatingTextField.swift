@@ -68,7 +68,7 @@ public struct FloatingTextField<Content: View>: View {
 
   private var backgroundColor: Color {
     if showError {
-      return Theme.shared.color.secondaryMain.opacity(0.12)
+      return Theme.shared.color.primary.opacity(0.12)
     } else if isNotFocused {
       return Theme.shared.color.dividerDark
     } else {
@@ -78,11 +78,11 @@ public struct FloatingTextField<Content: View>: View {
 
   private var labelColor: Color {
     if showError {
-      return Theme.shared.color.secondaryMain
+      return Theme.shared.color.primary
     } else if isNotFocused {
       return Theme.shared.color.dividerDark
     } else {
-      return Theme.shared.color.secondaryMain
+      return Theme.shared.color.primary
     }
   }
 
@@ -145,7 +145,7 @@ public struct FloatingTextField<Content: View>: View {
           style: .continuous)
         .stroke(
           userHasCommitedChange ?
-          Theme.shared.color.secondaryMain :
+          Theme.shared.color.primary :
             Theme.shared.color.dividerDark,
           lineWidth: 1.5)
       )
