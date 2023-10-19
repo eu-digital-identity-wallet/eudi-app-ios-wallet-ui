@@ -56,10 +56,11 @@ public struct ContentJumboHeaderView: View {
       }
       .padding(.horizontal, 32)
       .frame(maxWidth: .infinity)
+      .shimmer(isLoading: isLoading)
     }
     .padding(.vertical, 60)
     .background(Theme.shared.color.primary)
     .roundedCorner(16, corners: [.bottomLeft, .bottomRight])
-    .shimmer(isLoading: isLoading)
+    .background(Theme.shared.color.backgroundPaper)
   }
 }
