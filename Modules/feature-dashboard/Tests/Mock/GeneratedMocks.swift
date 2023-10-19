@@ -4270,6 +4270,15 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
 import Foundation
 import SwiftUI
 import logic_resources
@@ -4290,6 +4299,15 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
 
 import Cuckoo
 @testable import logic_business

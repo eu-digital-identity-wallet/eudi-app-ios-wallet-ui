@@ -26,6 +26,7 @@ public struct ContentScreen<Content: View>: View {
   let spacing: CGFloat
   let allowBackGesture: Bool
   let errorConfig: ContentError.Config?
+  let backgroundColor: Color
 
   public init(
     padding: CGFloat = Theme.shared.dimension.padding,
@@ -33,6 +34,7 @@ public struct ContentScreen<Content: View>: View {
     spacing: CGFloat = .zero,
     allowBackGesture: Bool = false,
     errorConfig: ContentError.Config? = nil,
+    backgroundColor: Color = Theme.shared.color.backgroundPaper,
     @ViewBuilder content: () -> Content
   ) {
     self.content = content()
@@ -41,6 +43,7 @@ public struct ContentScreen<Content: View>: View {
     self.allowBackGesture = allowBackGesture
     self.spacing = spacing
     self.errorConfig = errorConfig
+    self.backgroundColor = backgroundColor
   }
 
   public var body: some View {
@@ -57,7 +60,7 @@ public struct ContentScreen<Content: View>: View {
         }
       }
     }
-    .background(ThemeManager.shared.color.backgroundPaper)
+    .background(backgroundColor)
     .uipNavigationBarHidden(true)
     .if(allowBackGesture == false) {
       $0.navigationBarBackButtonHidden()

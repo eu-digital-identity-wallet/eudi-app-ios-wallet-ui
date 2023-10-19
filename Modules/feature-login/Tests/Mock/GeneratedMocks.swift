@@ -133,6 +133,83 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import Foundation
+
+
+
+
+
+
+public class MockLoginInteractorType: LoginInteractorType, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = LoginInteractorType
+    
+    public typealias Stubbing = __StubbingProxy_LoginInteractorType
+    public typealias Verification = __VerificationProxy_LoginInteractorType
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: LoginInteractorType?
+
+    public func enableDefaultImplementation(_ stub: LoginInteractorType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+
+    public struct __StubbingProxy_LoginInteractorType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_LoginInteractorType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+    
+        
+    }
+}
+
+
+public class LoginInteractorTypeStub: LoginInteractorType {
+    
+
+    
+
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
 import SwiftUI
 import logic_resources
 import logic_ui
@@ -153,6 +230,25 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import logic_ui
 
 import Cuckoo
 @testable import logic_business
@@ -4330,6 +4426,15 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
 import Foundation
 import SwiftUI
 import logic_resources
@@ -4350,6 +4455,15 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
 
 import Cuckoo
 @testable import logic_business
