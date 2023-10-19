@@ -51,7 +51,7 @@ struct Application: App {
 
         routerHost.composeApplication()
           .if(self.shouldAddBottomPadding == false) { view in
-            view.edgesIgnoringSafeArea(.bottom)
+            view.ignoresSafeArea(edges: .vertical)
           }
           .attachPartialSheetToRoot()
 
