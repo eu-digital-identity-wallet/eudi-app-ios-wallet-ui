@@ -23,28 +23,31 @@ public struct FloatingActionButton: View {
   private let backgroundColor: Color
   private let icon: Image
   private let iconColor: Color
+  private let isLoading: Bool
   private let action: () -> Void
 
-  public init(title: LocalizableString.Key,
-              textColor: Color = Theme.shared.color.textPrimaryDark,
-              backgroundColor: Color = Theme.shared.color.secondary,
-              icon: Image,
-              iconColor: Color = Theme.shared.color.textPrimaryDark,
-              action: @escaping () -> Void) {
+  public init(
+    title: LocalizableString.Key,
+    textColor: Color = Theme.shared.color.textPrimaryDark,
+    backgroundColor: Color = Theme.shared.color.secondary,
+    icon: Image,
+    iconColor: Color = Theme.shared.color.textPrimaryDark,
+    isLoading: Bool = false,
+    action: @escaping () -> Void
+  ) {
     self.title = title
     self.textColor = textColor
     self.backgroundColor = backgroundColor
     self.icon = icon
     self.iconColor = iconColor
+    self.isLoading = isLoading
     self.action = action
   }
 
   public var body: some View {
-    // FAB
     VStack {
       Spacer()
       HStack {
-        Spacer()
         Button(action: action) {
           HStack(alignment: .center) {
             icon
@@ -54,6 +57,8 @@ public struct FloatingActionButton: View {
               .foregroundStyle(iconColor)
             Text(title)
               .typography(ThemeManager.shared.font.labelLarge)
+              .lineLimit(1)
+              .minimumScaleFactor(0.5)
               .foregroundStyle(textColor)
 
           }
@@ -63,7 +68,8 @@ public struct FloatingActionButton: View {
 
         }
         .clipShape(Capsule())
-        .shadow(radius: 3, x: 1, y: 3)
+        .shadow(radius: 5, x: .zero, y: 5)
+        .shimmer(isLoading: isLoading)
       }
     }
   }
@@ -76,6 +82,7 @@ public struct FloatingActionButtonModifier: ViewModifier {
   private let backgroundColor: Color
   private let icon: Image
   private let iconColor: Color
+  private let isLoading: Bool
   private let action: () -> Void
   private let bottomPadding: CGFloat
   private let trailingPadding: CGFloat
@@ -87,6 +94,7 @@ public struct FloatingActionButtonModifier: ViewModifier {
               iconColor: Color = Theme.shared.color.textPrimaryDark,
               bottomPadding: CGFloat = 20,
               trailingPadding: CGFloat = 15,
+              isLoading: Bool = false,
               action: @escaping () -> Void) {
     self.title = title
     self.textColor = textColor
@@ -96,6 +104,7 @@ public struct FloatingActionButtonModifier: ViewModifier {
     self.bottomPadding = bottomPadding
     self.trailingPadding = trailingPadding
     self.action = action
+    self.isLoading = isLoading
   }
 
   public func body(content: Content) -> some View {
@@ -106,6 +115,7 @@ public struct FloatingActionButtonModifier: ViewModifier {
                            backgroundColor: backgroundColor,
                            icon: icon,
                            iconColor: iconColor,
+                           isLoading: isLoading,
                            action: action)
         .padding(.trailing, trailingPadding)
         .padding(.bottom, bottomPadding)

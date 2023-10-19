@@ -35,7 +35,7 @@ final class SuccessViewModel<Router: RouterHostType>: BaseViewModel<Router, Succ
     case .pop:
       router.popTo(with: button.screen)
     case .deepLink:
-      if let _ = button.deepLink {
+      if button.deepLink != nil {
         //cacheDeepLinkURL(url: link)
         router.popTo(with: button.screen)
       }

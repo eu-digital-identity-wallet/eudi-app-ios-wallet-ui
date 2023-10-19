@@ -25,11 +25,39 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
     self.viewModel = .init(router: router, interactor: interactor)
   }
 
+  @ViewBuilder
+  func content() -> some View {
+    ZStack {
+      DocumentList(
+        items: viewModel.viewState.documents,
+        isLoading: viewModel.viewState.documentsLoading
+      ) { item in
+        print(item)
+      }
+      FloatingActionButtonBar(
+        isAddEnabled: viewModel.isLoading,
+        addAction: {},
+        shareAction: {}
+      )
+    }
+    .background(ThemeManager.shared.color.backgroundPaper)
+  }
+
   public var body: some View {
-    ContentScreen {
-      Spacer()
-      Text("Container")
-      Spacer()
+    ContentScreen(
+      padding: .zero,
+      spacing: .zero,
+      background: ThemeManager.shared.color.primary
+    ) {
+      ContentJumboHeaderView(
+        title: viewModel.bearerName,
+        image: Theme.shared.image.user,
+        isLoading: viewModel.viewState.bearerLoading
+      )
+      content()
+    }
+    .task {
+      await viewModel.fetch()
     }
   }
 }

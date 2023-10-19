@@ -15,10 +15,39 @@
  */
 import Foundation
 
-public protocol DashboardInteractorType {
+public enum DashboardDocumentsPartialState {
+  case success([DocumentUIModel])
+  case failure(Error)
+}
 
+public enum DashboardBearerPartialState {
+  case success(BearerUIModel)
+  case failure(Error)
+}
+
+public protocol DashboardInteractorType {
+  func fetchDocuments() async -> DashboardDocumentsPartialState
+  func fetchBearer() async -> DashboardBearerPartialState
 }
 
 public final actor DashboardInteractor: DashboardInteractorType {
+  public func fetchBearer() async -> DashboardBearerPartialState {
+    do {
+      try await Task.sleep(nanoseconds: 1 * 1_000_000_000)
+      return .success(BearerUIModel.mock())
+    } catch {
+      return .failure(error)
+    }
+  }
+
+  public func fetchDocuments() async -> DashboardDocumentsPartialState {
+    do {
+      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
+      return .success(DocumentUIModel.mocks())
+    } catch {
+      return .failure(error)
+    }
+  }
+
   public init() {}
 }

@@ -16,16 +16,87 @@
 import Foundation
 import logic_ui
 
-struct DashboardState: ViewState {}
+struct DashboardState: ViewState {
+  let bearerLoading: Bool
+  let documentsLoading: Bool
+  let documents: [DocumentUIModel]
+  let bearer: BearerUIModel?
+}
 
 @MainActor
 final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInteractorType>: BaseViewModel<Router, DashboardState> {
 
   private let interactor: Interactor
 
-  init(router: Router, interactor: Interactor) {
-    self.interactor = interactor
-    super.init(router: router, initialState: .init())
+  var bearerName: String {
+    viewState.bearer?.value.name ?? ""
   }
 
+  var isLoading: Bool {
+    !viewState.bearerLoading && !viewState.documentsLoading
+  }
+
+  init(router: Router, interactor: Interactor) {
+    self.interactor = interactor
+    super.init(
+      router: router,
+      initialState: .init(
+        bearerLoading: true,
+        documentsLoading: true,
+        documents: DocumentUIModel.mocks(),
+        bearer: BearerUIModel.mock()
+      )
+    )
+  }
+
+  func fetch() async {
+    await fetchPossesor()
+    await fetchDocuments()
+  }
+
+  private func fetchPossesor() async {
+    switch await interactor.fetchBearer() {
+    case .success(let possesor):
+      setNewState(
+        bearerLoading: false,
+        bearer: possesor
+      )
+    case .failure:
+      setNewState(
+        bearerLoading: false,
+        bearer: nil
+      )
+    }
+  }
+
+  private func fetchDocuments() async {
+    switch await interactor.fetchDocuments() {
+    case .success(let documents):
+      setNewState(
+        documentsLoading: false,
+        documents: documents
+      )
+    case .failure:
+      setNewState(
+        documentsLoading: false,
+        documents: []
+      )
+    }
+  }
+
+  private func setNewState(
+    bearerLoading: Bool? = nil,
+    documentsLoading: Bool? = nil,
+    documents: [DocumentUIModel]? = nil,
+    bearer: BearerUIModel? = nil
+  ) {
+    setState { previousSate in
+        .init(
+          bearerLoading: bearerLoading ?? previousSate.bearerLoading,
+          documentsLoading: documentsLoading ?? previousSate.documentsLoading,
+          documents: documents ?? previousSate.documents,
+          bearer: bearer ?? previousSate.bearer
+        )
+    }
+  }
 }

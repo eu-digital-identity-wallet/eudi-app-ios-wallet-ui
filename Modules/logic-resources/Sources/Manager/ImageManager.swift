@@ -37,6 +37,8 @@ public protocol ImageManagerProtocol {
   var checkmarkSquareFill: Image { get }
   var square: Image { get }
   var exclamationmarkOctagon: Image { get }
+  var plus: Image { get }
+  var share: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -62,6 +64,8 @@ final class ImageManager: ImageManagerProtocol {
     case checkmarkSquareFill = "checkmark.square.fill"
     case square = "square"
     case exclamationmarkOctagon = "exclamationmark.octagon"
+    case plus = "plus"
+    case share = "iphone.and.arrow.forward"
   }
 
   // MARK: - Properties
@@ -132,5 +136,11 @@ final class ImageManager: ImageManagerProtocol {
   }
   var exclamationmarkOctagon: Image {
     Image(systemName: ImageEnum.exclamationmarkOctagon.rawValue)
+  }
+  var plus: Image {
+    Image(systemName: ImageEnum.plus.rawValue)
+  }
+  var share: Image {
+    Image(systemName: ImageEnum.share.rawValue)
   }
 }

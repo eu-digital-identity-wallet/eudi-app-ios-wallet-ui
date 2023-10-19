@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import Foundation
 
-import logic_resources
+public struct BearerUIModel: Identifiable {
+  public let id: String
+  public let value: Value
 
-public struct WalletUiConfig: ConfigUiLogic {
+  public init(id: String, value: Value) {
+    self.id = id
+    self.value = value
+  }
+}
 
-  public var initialRoute: AppRoute {
-    return .dashboard
+public extension BearerUIModel {
+  struct Value {
+    public let id: String
+    public let name: String
   }
 
-  public init(themeConfiguration: ThemeConfiguration) {
-    Theme.config(themeConfiguration: themeConfiguration)
+  static func mock() -> BearerUIModel {
+    .init(id: UUID().uuidString, value: .init(id: UUID().uuidString, name: "Elena P."))
   }
 }
