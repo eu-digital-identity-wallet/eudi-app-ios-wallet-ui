@@ -16,14 +16,23 @@
 import Foundation
 import logic_api
 
+public enum FAQsPartialState {
+  case success([FAQUIModel])
+  case failure(Error)
+}
+
 public protocol FAQsInteractorType {
-  func fetchFAQs() async throws -> [FAQUIModel]
+  func fetchFAQs() async -> FAQsPartialState
 }
 
 public final actor FAQsInteractor: FAQsInteractorType {
   public init() {}
-  public func fetchFAQs() async throws -> [FAQUIModel] {
-    try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
-    return FAQUIModel.mocks()
+  public func fetchFAQs() async -> FAQsPartialState {
+    do {
+      try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+      return .success(FAQUIModel.mocks())
+    } catch {
+      return .failure(error)
+    }
   }
 }

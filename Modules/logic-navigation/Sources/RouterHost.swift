@@ -22,6 +22,7 @@ import feature_startup
 import feature_login
 import feature_common
 import feature_dashboard
+import feature_authentication
 
 public final class RouterHost: RouterHostType {
 
@@ -53,6 +54,10 @@ public final class RouterHost: RouterHostType {
     pilot.pop(animated: animated)
   }
 
+  public func pop() {
+    pilot.pop()
+  }
+
   public func getCurrentScreen() -> AppRoute? {
     return pilot.routes.last
   }
@@ -70,7 +75,14 @@ public final class RouterHost: RouterHostType {
         DashboardView(with: self, and: DashboardInteractor())
       case .biometry(let config):
         BiometryView(with: self, interactor: BiometryInteractor(), config: config)
-
+      case .authenticationLoader(let relyingParty):
+        AuthenticationLoadingView(
+          with: self,
+          and: AuthenticationInteractor(),
+          relyingParty: relyingParty
+        )
+      case .authenticationRequest:
+        AuthenticationRequestView(with: self, and: AuthenticationInteractor())
       }
     }.eraseToAnyView()
   }

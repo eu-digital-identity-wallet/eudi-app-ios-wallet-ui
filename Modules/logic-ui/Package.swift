@@ -41,6 +41,10 @@ let package = Package(
       url: "https://github.com/markiv/SwiftUI-Shimmer.git",
       from: "1.4.0"
     ),
+    .package(
+      url: "https://github.com/AndreaMiotto/PartialSheet.git",
+      from: "3.1.1"
+    ),
     .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
@@ -49,6 +53,7 @@ let package = Package(
       dependencies: [
         "logic-business",
         "logic-resources",
+        "PartialSheet",
         .product(
           name: "CodeScanner",
           package: "CodeScanner"

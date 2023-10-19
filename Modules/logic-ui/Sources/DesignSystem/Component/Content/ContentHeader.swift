@@ -46,7 +46,7 @@ public struct ContentHeader: View {
           },
           label: {
             self.dismissIcon
-              .foregroundColor(Theme.shared.color.secondaryMain)
+              .foregroundColor(Theme.shared.color.primary)
           }
         )
         HSpacer.medium()
@@ -55,7 +55,7 @@ public struct ContentHeader: View {
       if let title {
         Text(title)
           .typography(Theme.shared.font.headlineSmall)
-          .foregroundColor(Theme.shared.color.secondaryMain)
+          .foregroundColor(Theme.shared.color.primary)
       }
 
       Spacer()
@@ -78,6 +78,7 @@ public struct ContentHeader: View {
         }
       }
     }
+    .frame(height: SPACING_EXTRA_LARGE)
   }
 }
 

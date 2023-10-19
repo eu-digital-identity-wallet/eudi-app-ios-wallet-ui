@@ -3541,6 +3541,14 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
+import logic_business
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_ui
+
+import SwiftUI
 import logic_resources
 
 import Cuckoo
@@ -3584,8 +3592,30 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_ui
 
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_ui
+
 import Foundation
 import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_ui
+
+import PartialSheet
+import SwiftUI
+import logic_resources
 
 import Cuckoo
 @testable import logic_business
@@ -3614,13 +3644,6 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_ui
-
-import SwiftUI
-import logic_resources
 
 import Cuckoo
 @testable import logic_business
@@ -3675,6 +3698,7 @@ import Cuckoo
 @testable import logic_ui
 
 import AlertToast
+import PartialSheet
 import SwiftUI
 
 import Cuckoo
@@ -3767,6 +3791,26 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
             defaultCall: __defaultImplStub!.pop(animated: animated))
+        
+    }
+    
+    
+    
+    
+    
+    public func pop()  {
+        
+    return cuckoo_manager.call(
+    """
+    pop()
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.pop())
         
     }
     
@@ -3895,6 +3939,17 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
         
         
         
+        func pop() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterHostType.self, method:
+    """
+    pop()
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
         func popTo<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with route: M1, inclusive: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(AppRoute, Bool)> where M1.MatchedType == AppRoute, M2.MatchedType == Bool {
             let matchers: [Cuckoo.ParameterMatcher<(AppRoute, Bool)>] = [wrap(matchable: route) { $0.0 }, wrap(matchable: inclusive) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRouterHostType.self, method:
@@ -3992,6 +4047,18 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
+        func pop() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    pop()
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
         func popTo<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with route: M1, inclusive: M2) -> Cuckoo.__DoNotUse<(AppRoute, Bool), Void> where M1.MatchedType == AppRoute, M2.MatchedType == Bool {
             let matchers: [Cuckoo.ParameterMatcher<(AppRoute, Bool)>] = [wrap(matchable: route) { $0.0 }, wrap(matchable: inclusive) { $0.1 }]
             return cuckoo_manager.verify(
@@ -4067,6 +4134,14 @@ public class RouterHostTypeStub: RouterHostType {
     
     
     public func pop(animated: Bool)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func pop()   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

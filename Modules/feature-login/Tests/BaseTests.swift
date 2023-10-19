@@ -19,7 +19,7 @@
 @testable import logic_test
 @testable import feature_test
 
-class BaseTests: EudiTest {
+final class BaseTests: EudiTest {
 
   override func setUp() async throws {
     try await super.setUp()

@@ -13,27 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import Foundation
+import logic_api
+import logic_business
 
-import SwiftUI
-import logic_resources
+public enum AuthenticationPartialState {
+  case success
+  case failure(Error)
+}
 
-public struct WrapperView<Content: View>: View {
+public protocol AuthenticationInteractorType {
+  func doWork() async -> AuthenticationPartialState
+}
 
-  let content: Content
-  let padding: CGFloat
+public final actor AuthenticationInteractor: AuthenticationInteractorType {
 
-  public init(
-    padding: CGFloat = Theme.shared.dimension.padding,
-    @ViewBuilder content: () -> Content
-  ) {
-    self.content = content()
-    self.padding = padding
-  }
+  public init() {}
 
-  public var body: some View {
-    VStack {
-      content
+  public func doWork() async -> AuthenticationPartialState {
+    do {
+      try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+      return .success
+    } catch {
+      return .failure(error)
     }
-    .padding(.horizontal, padding)
   }
 }

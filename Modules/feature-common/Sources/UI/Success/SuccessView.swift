@@ -26,11 +26,12 @@ public struct SuccessView<Router: RouterHostType>: View {
   }
 
   public var body: some View {
-    ContentScreen(allowBackGesture: false) {
+    ContentScreen {
       ContentTitle(
         title: viewmodel.viewState.config.title,
         caption: viewmodel.viewState.config.subtitle,
-        titleColor: ThemeManager.shared.color.successText
+        titleColor: ThemeManager.shared.color.success,
+        topSpacing: .withoutToolbar
       )
       mainView()
     }
@@ -39,7 +40,7 @@ public struct SuccessView<Router: RouterHostType>: View {
   private func getCenteredIcon() -> Image {
     return switch viewmodel.viewState.config.visualKind {
     case .defaultIcon:
-      Image(systemName: "checkmark.circle")
+      ThemeManager.shared.image.checkmarkCircle
     case .customIcon(let image):
       image
     }
@@ -54,8 +55,8 @@ public struct SuccessView<Router: RouterHostType>: View {
         getCenteredIcon()
           .resizable()
           .scaledToFit()
-          .foregroundColor(ThemeManager.shared.color.successText)
-          .frame(height: getScreenRect().width / 2)
+          .foregroundColor(ThemeManager.shared.color.success)
+          .frame(height: getScreenRect().width / 2.5)
       }
       Spacer()
 

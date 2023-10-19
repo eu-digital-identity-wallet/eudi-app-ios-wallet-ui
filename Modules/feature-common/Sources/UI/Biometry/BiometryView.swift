@@ -84,7 +84,7 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
   }
 
   public var body: some View {
-    ContentScreen(allowBackGesture: false) {
+    ContentScreen {
       content
         .alert(item: $viewmodel.biometryError) { error in
           Alert(

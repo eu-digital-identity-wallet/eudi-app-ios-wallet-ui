@@ -60,6 +60,10 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
 
   // TODO: Remove When Navigation is complete
 
+  func onClickOnlineLoading() {
+    router.push(with: .authenticationRequest)
+  }
+
   func onClickTestSuccess() {
     router.push(
       with: .success(

@@ -25,12 +25,14 @@ public struct ContentScreen<Content: View>: View {
   let canScroll: Bool
   let spacing: CGFloat
   let allowBackGesture: Bool
+  let errorConfig: ContentError.Config?
 
   public init(
     padding: CGFloat = Theme.shared.dimension.padding,
     canScroll: Bool = false,
     spacing: CGFloat = .zero,
-    allowBackGesture: Bool = true,
+    allowBackGesture: Bool = false,
+    errorConfig: ContentError.Config? = nil,
     @ViewBuilder content: () -> Content
   ) {
     self.content = content()
@@ -38,21 +40,28 @@ public struct ContentScreen<Content: View>: View {
     self.canScroll = canScroll
     self.allowBackGesture = allowBackGesture
     self.spacing = spacing
+    self.errorConfig = errorConfig
   }
 
   public var body: some View {
-    VStack(spacing: spacing) {
-      content
+    ZStack {
+      if let errorConfig {
+        ContentError(config: errorConfig)
+      } else {
+        VStack(spacing: spacing) {
+          content
+        }
+        .padding(canScroll ? [.horizontal, .top] : [.all], padding)
+        .if(canScroll == true) {
+          $0.edgesIgnoringSafeArea(.bottom)
+        }
+      }
     }
-    .padding(canScroll ? [.horizontal, .top] : [.all], padding)
     .background(ThemeManager.shared.color.backgroundPaper)
     .uipNavigationBarHidden(true)
-    .if(canScroll == true) {
-      $0.edgesIgnoringSafeArea(.bottom)
-    }
-    .fastenDynamicType()
     .if(allowBackGesture == false) {
       $0.navigationBarBackButtonHidden()
     }
+    .fastenDynamicType()
   }
 }

@@ -15,6 +15,7 @@
  */
 import SwiftUI
 import AlertToast
+import PartialSheet
 
 public extension View {
   func eraseToAnyView() -> AnyView {
@@ -83,5 +84,16 @@ public extension View {
           onAppear()
         }
       }
+  }
+}
+
+public extension View {
+  func sheetDialog<Content: View>(isPresented: Binding<Bool>, @ViewBuilder _ content: @escaping () -> Content) -> some View {
+    return self.partialSheet(
+      isPresented: isPresented,
+      iPhoneStyle: SheetStyle.iphoneSheetStyle,
+      iPadMacStyle: SheetStyle.IpadMacSheetStyle,
+      content: { ContentSheet(content: content) }
+    )
   }
 }

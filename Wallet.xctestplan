@@ -65,6 +65,13 @@
         "identifier" : "feature-common-test",
         "name" : "feature-common-test"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/feature-authentication",
+        "identifier" : "feature-authenticationTests",
+        "name" : "feature-authenticationTests"
+      }
     }
   ],
   "version" : 1

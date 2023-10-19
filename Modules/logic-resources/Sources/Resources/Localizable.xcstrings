@@ -12,6 +12,50 @@
         }
       }
     },
+    "cancel_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CANCEL"
+          }
+        }
+      }
+    },
+    "cancel_share_sheet_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel will redirect you back to the login without sharing any information"
+          }
+        }
+      }
+    },
+    "cancel_share_sheet_continue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONTINUE SHARING"
+          }
+        }
+      }
+    },
+    "cancel_share_sheet_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel information sharing?"
+          }
+        }
+      }
+    },
     "faq_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -45,6 +89,17 @@
         }
       }
     },
+    "incomplete_request_data_selectin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your selection of data to be shared may impact the service"
+          }
+        }
+      }
+    },
     "invalid_quick_pin" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -52,6 +107,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid quick pin"
+          }
+        }
+      }
+    },
+    "ok_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "request_data_info_notice" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Why we need your data?"
+          }
+        }
+      }
+    },
+    "request_data_share_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please review carefully before sharing your data."
+          }
+        }
+      }
+    },
+    "request_data_share_sucess_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You successfully shared information with the %@"
+          }
+        }
+      }
+    },
+    "request_data_share_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ requests the following"
+          }
+        }
+      }
+    },
+    "request_data_sheet_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It allows us to verify your identity with the requesting party"
           }
         }
       }
@@ -74,6 +195,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search"
+          }
+        }
+      }
+    },
+    "share_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SHARE"
+          }
+        }
+      }
+    },
+    "share_data_review_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please review carefully before sharing your data"
+          }
+        }
+      }
+    },
+    "success" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Success"
+          }
+        }
+      }
+    },
+    "try_again" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try again"
           }
         }
       }

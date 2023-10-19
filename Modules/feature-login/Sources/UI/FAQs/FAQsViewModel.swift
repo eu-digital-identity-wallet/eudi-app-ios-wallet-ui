@@ -71,12 +71,13 @@ final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType
       )
     }
 
-    do {
+    switch await interactor.fetchFAQs() {
+    case .success(let faqs):
       setNewState(
         isLoading: true,
-        models: try await interactor.fetchFAQs()
+        models: faqs
       )
-    } catch {
+    case .failure:
       setNewState(
         isLoading: false,
         models: []
@@ -95,12 +96,12 @@ final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType
     filteredModels: [FAQUIModel]? = nil
   ) {
     setState { previousState in
-      .init(
-        isLoading: isLoading ?? previousState.isLoading,
-        searchText: searchText ?? previousState.searchText,
-        models: models ?? previousState.models,
-        filteredModels: filteredModels ?? previousState.filteredModels
-      )
+        .init(
+          isLoading: isLoading ?? previousState.isLoading,
+          searchText: searchText ?? previousState.searchText,
+          models: models ?? previousState.models,
+          filteredModels: filteredModels ?? previousState.filteredModels
+        )
     }
   }
 }
