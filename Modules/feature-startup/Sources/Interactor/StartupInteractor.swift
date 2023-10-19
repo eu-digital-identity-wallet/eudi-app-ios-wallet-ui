@@ -39,38 +39,18 @@ public final actor StartupInteractor: StartupInteractorType {
   }
 
   public func splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState {
-    // Record the starting time
-    let start = DispatchTime.now().uptimeNanoseconds
-
-    // Start the async task
-    let task = Task { try await setupCalls() }
-
-    // Minimum time to wait in nanoseconds
-    // In order for splash to finish animating
-    let minimumTime: UInt64 = UInt64(splashAnimationDuration * 1_000_000_000)
-
-    // Fetch result from the task
-    if let result = try? await task.value {
-      // Record the ending time
-      let end = DispatchTime.now().uptimeNanoseconds
-
-      // Calculate the elapsed time
-      let elapsed = end - start
-      // If the elapsed time is less than the minimum time, sleep the remaining time of the animation
-      if elapsed < minimumTime {
-        let remaining = minimumTime - elapsed
-        try await Task.sleep(nanoseconds: remaining)
-      }
-      print("Finished waiting for at least \(splashAnimationDuration) seconds.")
-      return .success(Void())
-    } else {
-      return .failure(NSError())
+    switch try await delayFor(atLeast: splashAnimationDuration, task: setupCalls) {
+    case .success(let value):
+      return .success(value)
+    case .failure(let error):
+      return .failure(error)
     }
   }
 
-  private func setupCalls() async throws {
+  private func setupCalls() async throws -> Int {
     // TODO: Add any calls we might need to do during splash animation?
     try await Task.sleep(nanoseconds: 1_750_000_000)
+    return 1
   }
 
 }
@@ -80,6 +60,34 @@ public enum SamplePartialState {
 }
 
 public enum SplashSetupPartialState {
-  case success(_ response: Any)
+  case success(_ response: Int)
   case failure(_ error: Error)
+}
+
+fileprivate func delayFor<Value>(atLeast: TimeInterval, task: @escaping () async throws -> Value) async throws -> Result<Value, any Error> {
+  // Record the starting time
+  let start = DispatchTime.now().uptimeNanoseconds
+
+  // Start the async task
+  let task = Task { try await task() }
+  // Minimum time to wait in nanoseconds
+  let minimumTime: UInt64 = UInt64(atLeast * 1_000_000_000)
+
+  // Fetch result from the task
+  if let result = try? await task.value {
+    // Record the ending time
+    let end = DispatchTime.now().uptimeNanoseconds
+
+    // Calculate the elapsed time
+    let elapsed = end - start
+    // If the elapsed time is less than the minimum time, sleep the remaining time of the animation
+    if elapsed < minimumTime {
+      let remaining = minimumTime - elapsed
+      try await Task.sleep(nanoseconds: remaining)
+    }
+
+    return .success(result)
+  } else {
+    return await task.result
+  }
 }

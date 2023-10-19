@@ -41,6 +41,7 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
         }
       }
     }
+    
     .ignoresSafeArea(.all)
   }
 }
