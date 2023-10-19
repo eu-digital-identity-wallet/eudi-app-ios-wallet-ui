@@ -25,19 +25,19 @@ public struct SplashBackground: View {
   }
 
   public var body: some View {
-    LinearGradient(gradient: Gradient(colors: [ThemeManager.shared.color.lightGradientStart,
-                                               ThemeManager.shared.color.lightGradientEnd]),
-                   startPoint: .top,
-                   endPoint: .bottom)
-    .edgesIgnoringSafeArea(.all)
-    .overlay {
-      VStack {
-        ThemeManager.shared.image.logo
-          .resizable()
-          .aspectRatio(contentMode: .fit)
-          .frame(width: isAnimating ? getScreenRect().width / 3 : getScreenRect().width / 0.5)
-          .opacity(isAnimating ? 1.0 : 0.5)
-      }
+    ZStack {
+      Rectangle()
+        .fill(ThemeManager.shared.color.primary)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea()
+        .background(ThemeManager.shared.color.red)
+
+      ThemeManager.shared.image.logo
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .frame(width: getScreenRect().width / 2.5)
+        .opacity(isAnimating ? 1.0 : 0.5)
     }
+    .ignoresSafeArea()
   }
 }

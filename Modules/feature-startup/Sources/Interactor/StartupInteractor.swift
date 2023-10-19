@@ -64,7 +64,7 @@ public enum SplashSetupPartialState {
   case failure(_ error: Error)
 }
 
-fileprivate func delayFor<Value>(atLeast: TimeInterval, task: @escaping () async throws -> Value) async throws -> Result<Value, any Error> {
+private func delayFor<Value>(atLeast: TimeInterval, task: @escaping () async throws -> Value) async throws -> Result<Value, any Error> {
   // Record the starting time
   let start = DispatchTime.now().uptimeNanoseconds
 

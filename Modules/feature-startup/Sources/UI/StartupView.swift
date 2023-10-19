@@ -26,7 +26,12 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
   }
 
   public var body: some View {
-    ContentScreen(padding: 0, canScroll: false, allowBackGesture: false) {
+    ContentScreen(
+      padding: 0,
+      canScroll: false,
+      allowBackGesture: false,
+      backgroundColor: Theme.shared.color.primary
+    ) {
       ZStack {
         SplashBackground(
           isAnimating: viewModel.viewState.isAnimating
@@ -41,7 +46,5 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
         }
       }
     }
-    
-    .ignoresSafeArea(.all)
   }
 }
