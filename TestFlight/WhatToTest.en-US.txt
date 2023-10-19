@@ -1,2 +1,2 @@
-- New sample data with driving privileges 
+- Maximum two age_over_NN data elements shall be returned 
 - OID4VP + CBOR support
