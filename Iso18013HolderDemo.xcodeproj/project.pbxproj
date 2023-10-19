@@ -10,7 +10,6 @@
 		0BF9CC03E08DA80704800A98 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7A25294A9E3CDFED709B90 /* ShareView.swift */; };
 		0F91A0F0863CEFEBC5D7AEBD /* scytales_root_ca.der in Resources */ = {isa = PBXBuildFile; fileRef = 0D57DC5DD3A0FC18E83B0023 /* scytales_root_ca.der */; };
 		12AD6137012A40E367FD1CC8 /* mdoc_holderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9DF632FE20A18FBF39E13F /* mdoc_holderUITestsLaunchTests.swift */; };
-		22A58C0AE2F478E9274B4865 /* MdocDataTransfer18013 in Frameworks */ = {isa = PBXBuildFile; productRef = A1156C1AB18E78CD5F37C664 /* MdocDataTransfer18013 */; };
 		2CB3D47A008CC6F66C5CE352 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 071EA5AD742F0A6980D58E96 /* Assets.xcassets */; };
 		3E59AFE2057089CA241F1046 /* DocDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBCB81D85A5FEB87E22CB52 /* DocDataView.swift */; };
 		42AC5827371C319DF7147920 /* OpenId4VpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534F210081FDAD6ABFF48899 /* OpenId4VpClient.swift */; };
@@ -23,6 +22,7 @@
 		7C8B91BD5F3B8B995509D7B2 /* Mockingbird in Frameworks */ = {isa = PBXBuildFile; productRef = D6FA15C50A27F2F6739A5D85 /* Mockingbird */; };
 		98D93180046EB299D3E350B2 /* mdoc_holderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59B4ADE62B8BA3D5817A575 /* mdoc_holderApp.swift */; };
 		A06DB869639F999F7E4BA729 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 268F27B6E2979B70D0EEB026 /* LaunchScreen.storyboard */; };
+		B0B150352AE0B36100FD0793 /* MdocDataTransfer18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B0B150342AE0B36100FD0793 /* MdocDataTransfer18013 */; };
 		B807260BC666A5A0D2EA0F3A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CA872DD9B8F79BFC0A55469 /* Localizable.strings */; };
 		CE930B8F27771E5DB1D6C614 /* SiopOpenID4VP in Frameworks */ = {isa = PBXBuildFile; productRef = 54FF3F5F47998360A0719693 /* SiopOpenID4VP */; };
 		CF10BD7EA1DC34996CC91BEF /* ButtonControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243810599B19D04BC18869DB /* ButtonControls.swift */; };
@@ -84,7 +84,7 @@
 
 /* Begin PBXFileReference section */
 		071EA5AD742F0A6980D58E96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		0D57DC5DD3A0FC18E83B0023 /* scytales_root_ca.der */ = {isa = PBXFileReference; path = scytales_root_ca.der; sourceTree = "<group>"; };
+		0D57DC5DD3A0FC18E83B0023 /* scytales_root_ca.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = scytales_root_ca.der; sourceTree = "<group>"; };
 		1A76075244B6EA4ABC073824 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		21ADDB2B53F18C4D088A1AB3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		23B487F4BE86968AE9ADCC1C /* Iso18013HolderDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Iso18013HolderDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,8 +123,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22A58C0AE2F478E9274B4865 /* MdocDataTransfer18013 in Frameworks */,
 				CE930B8F27771E5DB1D6C614 /* SiopOpenID4VP in Frameworks */,
+				B0B150352AE0B36100FD0793 /* MdocDataTransfer18013 in Frameworks */,
 				74CF90E3FE08C0E39C6E0E73 /* CodeScanner in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,9 +349,9 @@
 			);
 			name = Iso18013HolderDemo;
 			packageProductDependencies = (
-				A1156C1AB18E78CD5F37C664 /* MdocDataTransfer18013 */,
 				54FF3F5F47998360A0719693 /* SiopOpenID4VP */,
 				163C5AA70A3D689878251F21 /* CodeScanner */,
+				B0B150342AE0B36100FD0793 /* MdocDataTransfer18013 */,
 			);
 			productName = Iso18013HolderDemo;
 			productReference = D5EA9115DD31976D44071C71 /* Iso18013HolderDemo.app */;
@@ -832,8 +832,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = SiopOpenID4VP;
 		};
-		A1156C1AB18E78CD5F37C664 /* MdocDataTransfer18013 */ = {
+		B0B150342AE0B36100FD0793 /* MdocDataTransfer18013 */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 022845A0CE965DB38A280998 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-transfer" */;
 			productName = MdocDataTransfer18013;
 		};
 		D6FA15C50A27F2F6739A5D85 /* Mockingbird */ = {
