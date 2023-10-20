@@ -29,7 +29,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cancel will redirect you back to the login without sharing any information"
+            "value" : "Cancel will redirect you back to the dashboard without sharing any information"
           }
         }
       }
@@ -122,6 +122,17 @@
         }
       }
     },
+    "please_wait" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please wait..."
+          }
+        }
+      }
+    },
     "request_data_info_notice" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -133,6 +144,17 @@
         }
       }
     },
+    "request_data_share_biometry_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use your biometrics to share information"
+          }
+        }
+      }
+    },
     "request_data_share_caption" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -140,6 +162,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Please review carefully before sharing your data."
+          }
+        }
+      }
+    },
+    "request_data_share_quick_pin_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type your quick pin to share information"
           }
         }
       }

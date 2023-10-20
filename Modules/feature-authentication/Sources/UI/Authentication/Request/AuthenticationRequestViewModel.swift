@@ -78,8 +78,8 @@ final class AuthenticationRequestViewModel<Router: RouterHostType, Interactor: A
         .biometry(
           config: UIConfig.Biometry(
             title: viewState.title,
-            caption: viewState.caption,
-            quickPinOnlyCaption: viewState.caption,
+            caption: .requestDataShareBiometryCaption,
+            quickPinOnlyCaption: .requestDataShareBiometryCaption,
             navigationSuccessConfig: .init(
               screen: .authenticationLoader(viewState.relyingParty),
               navigationType: .push

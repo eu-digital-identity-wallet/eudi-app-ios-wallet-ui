@@ -81,6 +81,12 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedStringWithArguments(forKey: "request_data_share_sucess_title", arguments: args)
     case .incompleteRequestDataSelection:
       bundle.localizedString(forKey: "incomplete_request_data_selectin")
+    case .pleaseWait:
+      bundle.localizedString(forKey: "please_wait")
+    case .requestDataShareQuickPinCaption:
+      bundle.localizedString(forKey: "request_data_share_quick_pin_caption")
+    case .requestDataShareBiometryCaption:
+      bundle.localizedString(forKey: "request_data_share_biometry_caption")
     }
   }
 
@@ -114,6 +120,9 @@ public extension LocalizableString {
     case success
     case requestDataShareSuccess([String])
     case incompleteRequestDataSelection
+    case pleaseWait
+    case requestDataShareQuickPinCaption
+    case requestDataShareBiometryCaption
   }
 }
 

@@ -54,11 +54,25 @@ public struct AuthenticationRequestView<Router: RouterHostType, Interactor: Auth
       VSpacer.small()
 
       ScrollView {
-        VStack(spacing: SPACING_SMALL) {
-          ForEach(viewModel.viewState.items, id: \.id) {
-            RequestDataCellView(cellModel: $0) { id in
+        VStack(spacing: .zero) {
+
+          ForEach(viewModel.viewState.items.indices, id: \.self) { index in
+
+            let item = viewModel.viewState.items[index]
+
+            if index > 0 {
+              VSpacer.small()
+            }
+
+            RequestDataCellView(cellModel: item) { id in
               viewModel.onSelectionChanged(id: id)
             }
+
+            if (index + 1) < viewModel.viewState.items.count, (item as? RequestDataSection) == nil {
+              Divider()
+            }
+
+            VSpacer.small()
           }
         }
         .padding(.top)
