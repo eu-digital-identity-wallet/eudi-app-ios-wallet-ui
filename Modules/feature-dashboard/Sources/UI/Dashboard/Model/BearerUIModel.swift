@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Foundation
+import SwiftUI
+import logic_resources
 
 public struct BearerUIModel: Identifiable {
   public let id: String
@@ -29,9 +30,10 @@ public extension BearerUIModel {
   struct Value {
     public let id: String
     public let name: String
+    public let image: Image
   }
 
   static func mock() -> BearerUIModel {
-    .init(id: UUID().uuidString, value: .init(id: UUID().uuidString, name: "Elena P."))
+    .init(id: UUID().uuidString, value: .init(id: UUID().uuidString, name: "Elena P.", image: Theme.shared.image.user))
   }
 }

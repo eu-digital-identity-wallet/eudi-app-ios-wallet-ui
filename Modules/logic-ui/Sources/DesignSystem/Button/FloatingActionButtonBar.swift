@@ -40,7 +40,7 @@ public struct FloatingActionButtonBar: View {
       HStack(spacing: SPACING_MEDIUM) {
         FloatingActionButton(
           title: .addDoc,
-          textColor: isAddEnabled ? Theme.shared.color.primaryDark : Theme.shared.color.textDisabledDark,
+          textColor: isAddEnabled ? Theme.shared.color.textPrimaryDark : Theme.shared.color.textDisabledDark,
           backgroundColor: isAddEnabled ? Theme.shared.color.backgroundPaper : Theme.shared.color.grey,
           icon: Theme.shared.image.plus,
           iconColor: isAddEnabled ? Theme.shared.color.textPrimaryDark : Theme.shared.color.textDisabledDark,

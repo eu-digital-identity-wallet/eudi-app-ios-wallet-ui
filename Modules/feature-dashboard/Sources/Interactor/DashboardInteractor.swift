@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 import Foundation
+import logic_business
+
+public enum DashboardPartialState {
+  case success(BearerUIModel, [DocumentUIModel])
+  case failure(Error)
+}
 
 public enum DashboardDocumentsPartialState {
   case success([DocumentUIModel])
@@ -28,9 +34,13 @@ public enum DashboardBearerPartialState {
 public protocol DashboardInteractorType {
   func fetchDocuments() async -> DashboardDocumentsPartialState
   func fetchBearer() async -> DashboardBearerPartialState
+  func fetchDashboard() async -> DashboardPartialState
 }
 
 public final actor DashboardInteractor: DashboardInteractorType {
+
+  public init() {}
+
   public func fetchBearer() async -> DashboardBearerPartialState {
     do {
       try await Task.sleep(nanoseconds: 1 * 1_000_000_000)
@@ -42,12 +52,38 @@ public final actor DashboardInteractor: DashboardInteractorType {
 
   public func fetchDocuments() async -> DashboardDocumentsPartialState {
     do {
-      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
+      try await Task.sleep(nanoseconds: 1 * 1_000_000_000)
       return .success(DocumentUIModel.mocks())
     } catch {
       return .failure(error)
     }
   }
 
-  public init() {}
+  public func fetchDashboard() async -> DashboardPartialState {
+    var bearer: BearerUIModel?
+    let bearerState = await fetchBearer()
+    switch bearerState {
+    case .success(let value):
+      bearer = value
+    default: break
+    }
+
+    var document: [DocumentUIModel]?
+    let documentsSate = await fetchDocuments()
+    switch documentsSate {
+    case .success(let value):
+      document = value
+    default: break
+    }
+
+    guard let bearer = bearer else {
+      return .failure(RuntimeError.customError("Unable to fetch bearer info"))
+    }
+
+    guard let document = document else {
+      return .failure(RuntimeError.customError("Unable to fetch documents"))
+    }
+
+    return .success(bearer, document)
+  }
 }

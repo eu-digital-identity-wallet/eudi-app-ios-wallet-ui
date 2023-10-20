@@ -16,10 +16,12 @@
 import SwiftUI
 import logic_ui
 import logic_resources
+import logic_business
 
 public struct DashboardView<Router: RouterHostType, Interactor: DashboardInteractorType>: View {
 
   @ObservedObject private var viewModel: DashboardViewModel<Router, Interactor>
+  @EnvironmentObject var colorManager: BackgroundColorManager
 
   public init(with router: Router, and interactor: Interactor) {
     self.viewModel = .init(router: router, interactor: interactor)
@@ -30,12 +32,12 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
     ZStack {
       DocumentList(
         items: viewModel.viewState.documents,
-        isLoading: viewModel.viewState.documentsLoading
-      ) { item in
-        print(item)
+        isLoading: viewModel.viewState.isLoading
+      ) { _ in
+
       }
       FloatingActionButtonBar(
-        isAddEnabled: viewModel.isLoading,
+        isAddEnabled: !viewModel.viewState.isLoading,
         addAction: {},
         shareAction: {}
       )
@@ -46,18 +48,19 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
   public var body: some View {
     ContentScreen(
       padding: .zero,
-      spacing: .zero,
       background: ThemeManager.shared.color.primary
     ) {
-      ContentJumboHeaderView(
-        title: viewModel.bearerName,
-        image: Theme.shared.image.user,
-        isLoading: viewModel.viewState.bearerLoading
+      BearerHeaderView(
+        item: viewModel.viewState.bearer,
+        isLoading: viewModel.viewState.isLoading
       )
       content()
     }
     .task {
       await viewModel.fetch()
+    }
+    .onAppear {
+      colorManager.change(to: ThemeManager.shared.color.primary)
     }
   }
 }

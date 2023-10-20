@@ -17,10 +17,9 @@ import Foundation
 import logic_ui
 
 struct DashboardState: ViewState {
-  let bearerLoading: Bool
-  let documentsLoading: Bool
+  let isLoading: Bool
   let documents: [DocumentUIModel]
-  let bearer: BearerUIModel?
+  let bearer: BearerUIModel
 }
 
 @MainActor
@@ -29,11 +28,7 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
   private let interactor: Interactor
 
   var bearerName: String {
-    viewState.bearer?.value.name ?? ""
-  }
-
-  var isLoading: Bool {
-    !viewState.bearerLoading && !viewState.documentsLoading
+    viewState.bearer.value.name
   }
 
   init(router: Router, interactor: Interactor) {
@@ -41,8 +36,7 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
     super.init(
       router: router,
       initialState: .init(
-        bearerLoading: true,
-        documentsLoading: true,
+        isLoading: true,
         documents: DocumentUIModel.mocks(),
         bearer: BearerUIModel.mock()
       )
@@ -50,50 +44,30 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
   }
 
   func fetch() async {
-    await fetchPossesor()
-    await fetchDocuments()
-  }
-
-  private func fetchPossesor() async {
-    switch await interactor.fetchBearer() {
-    case .success(let possesor):
+    switch await interactor.fetchDashboard() {
+    case .success(let bearer, let documents):
       setNewState(
-        bearerLoading: false,
-        bearer: possesor
+        isLoading: false,
+        documents: documents,
+        bearer: bearer
       )
     case .failure:
       setNewState(
-        bearerLoading: false,
+        isLoading: false,
+        documents: [],
         bearer: nil
       )
     }
   }
 
-  private func fetchDocuments() async {
-    switch await interactor.fetchDocuments() {
-    case .success(let documents):
-      setNewState(
-        documentsLoading: false,
-        documents: documents
-      )
-    case .failure:
-      setNewState(
-        documentsLoading: false,
-        documents: []
-      )
-    }
-  }
-
   private func setNewState(
-    bearerLoading: Bool? = nil,
-    documentsLoading: Bool? = nil,
+    isLoading: Bool? = nil,
     documents: [DocumentUIModel]? = nil,
     bearer: BearerUIModel? = nil
   ) {
     setState { previousSate in
         .init(
-          bearerLoading: bearerLoading ?? previousSate.bearerLoading,
-          documentsLoading: documentsLoading ?? previousSate.documentsLoading,
+          isLoading: isLoading ?? previousSate.isLoading,
           documents: documents ?? previousSate.documents,
           bearer: bearer ?? previousSate.bearer
         )

@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Foundation
+import SwiftUI
 
-public extension NSNotification {
-  static let DeepLinkAction = Notification.Name.init("DeepLinkAction")
-  static let urlKey: String = "URL"
-}
-public extension Notification.Name {
-  static let backgroundColorChanged = Notification.Name("BackgroundColorChanged")
+public class BackgroundColorManager: ObservableObject {
+  @Published var color: Color = .white
+
+  public init() {}
+  public func change(to color: Color) {
+    self.color = color
+    NotificationCenter.default.post(name: .backgroundColorChanged, object: color)
+  }
 }

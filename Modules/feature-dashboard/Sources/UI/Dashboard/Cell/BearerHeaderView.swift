@@ -16,47 +16,28 @@
 import SwiftUI
 import logic_resources
 
-public struct ContentJumboHeaderView: View {
+public struct BearerHeaderView: View {
 
-  public let title: String
-  public let image: Image
+  public let item: BearerUIModel
   public let isLoading: Bool
 
   @ViewBuilder
   public var userImage: some View {
-    image
+    item.value.image
       .resizable()
       .aspectRatio(contentMode: .fit)
       .frame(maxWidth: 64.0)
       .cornerRadius(8.0)
   }
 
-  public init(title: String, image: Image, isLoading: Bool) {
-    self.title = title
-    self.image = image
+  public init(item: BearerUIModel, isLoading: Bool) {
+    self.item = item
     self.isLoading = isLoading
   }
 
   public var body: some View {
     VStack(alignment: .leading) {
-      HStack {
-        userImage
-        VStack(alignment: .leading) {
-          Text(.welcomeBack)
-            .typography(ThemeManager.shared.font.bodyMedium)
-            .foregroundColor(ThemeManager.shared.color.textSecondaryLight)
-          Text(.custom(title))
-            .typography(ThemeManager.shared.font.headlineMedium)
-            .minimumScaleFactor(0.5)
-            .lineLimit(1)
-            .foregroundColor(ThemeManager.shared.color.textSecondaryLight)
-        }
-        .padding(.horizontal, 6)
-        Spacer()
-      }
-      .padding(.horizontal, 32)
-      .frame(maxWidth: .infinity)
-      .shimmer(isLoading: isLoading)
+      BearerCell(item: item, isLoading: isLoading)
     }
     .padding(.vertical, 60)
     .background(Theme.shared.color.primary)

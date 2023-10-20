@@ -37,7 +37,7 @@ public struct DocumentCell: View {
   public var body: some View {
     Button(action: {
       action(item)
-    }) {
+    }, label: {
       VStack {
         Spacer(minLength: exrtaSpace)
         Theme.shared.image.idStroke
@@ -54,7 +54,7 @@ public struct DocumentCell: View {
           .foregroundColor(Theme.shared.color.success)
         Spacer(minLength: exrtaSpace)
       }
-    }
+    })
     .frame(maxWidth: .infinity, alignment: .center)
     .padding()
     .background(Theme.shared.color.backgroundDefault)

@@ -17,7 +17,7 @@ import SwiftUI
 import AlertToast
 import PartialSheet
 
-extension View {
+public extension View {
   func roundedCorner(_ radius: CGFloat, corners: UIRectCorner) -> some View {
     clipShape(RoundedCorner(radius: radius, corners: corners) )
   }

@@ -74,6 +74,26 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
     }
     
     
+    
+    
+    
+    public func fetchDashboard() async -> DashboardPartialState {
+        
+    return await cuckoo_manager.call(
+    """
+    fetchDashboard() async -> DashboardPartialState
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.fetchDashboard())
+        
+    }
+    
+    
 
     public struct __StubbingProxy_DashboardInteractorType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -101,6 +121,17 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
             return .init(stub: cuckoo_manager.createStub(for: MockDashboardInteractorType.self, method:
     """
     fetchBearer() async -> DashboardBearerPartialState
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func fetchDashboard() -> Cuckoo.ProtocolStubFunction<(), DashboardPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockDashboardInteractorType.self, method:
+    """
+    fetchDashboard() async -> DashboardPartialState
     """, parameterMatchers: matchers))
         }
         
@@ -145,6 +176,18 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
         }
         
         
+        
+        
+        @discardableResult
+        func fetchDashboard() -> Cuckoo.__DoNotUse<(), DashboardPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    fetchDashboard() async -> DashboardPartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -171,6 +214,14 @@ public class DashboardInteractorTypeStub: DashboardInteractorType {
     }
     
     
+    
+    
+    
+    public func fetchDashboard() async -> DashboardPartialState  {
+        return DefaultValueRegistry.defaultValue(for: (DashboardPartialState).self)
+    }
+    
+    
 }
 
 
@@ -194,6 +245,25 @@ import Cuckoo
 
 import SwiftUI
 import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_business
+import logic_resources
 import logic_ui
 
 import Cuckoo
@@ -221,7 +291,8 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
-import Foundation
+import SwiftUI
+import logic_resources
 
 import Cuckoo
 @testable import logic_business
@@ -2834,6 +2905,14 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
 import class Foundation.Bundle
 
 
@@ -4315,15 +4394,6 @@ import Cuckoo
 
 import SwiftUI
 import logic_business
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
 import logic_resources
 
 import Cuckoo

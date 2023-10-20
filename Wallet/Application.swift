@@ -25,10 +25,12 @@ struct Application: App {
 
   @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
   @Environment(\.scenePhase) var scenePhase
+  @StateObject private var colorManager = BackgroundColorManager()
 
   @State var isScreenCapping: Bool = false
   @State var blurType: BlurType = .none
   @State var shouldAddBottomPadding: Bool = false
+  @State var backgroundColor = Theme.shared.color.backgroundPaper
 
   private let routerHost: RouterHostType
   private let configUiLogic: ConfigUiLogic
@@ -45,15 +47,16 @@ struct Application: App {
       ZStack {
 
         Rectangle()
-          .fill(ThemeManager.shared.color.backgroundPaper)
+          .fill(backgroundColor)
           .frame(maxWidth: .infinity, maxHeight: .infinity)
           .edgesIgnoringSafeArea(.all)
 
         routerHost.composeApplication()
-          .if(self.shouldAddBottomPadding == false) { view in
-            view.edgesIgnoringSafeArea(.bottom)
+          .if(self.shouldAddBottomPadding == false) {
+            $0.edgesIgnoringSafeArea(.bottom)
           }
           .attachPartialSheetToRoot()
+          .environmentObject(colorManager)
 
         if isScreenCapping {
           warningScreenCap()
@@ -84,6 +87,15 @@ struct Application: App {
       }
       .task {
         await checkForHomeIndicator()
+      }
+      .onAppear {
+        NotificationCenter.default.addObserver(forName: .backgroundColorChanged, object: nil, queue: nil) { notification in
+          if let color = notification.object as? Color {
+            backgroundColor = color
+          }
+
+          colorManager.change(to: ThemeManager.shared.color.backgroundPaper)
+        }
       }
     }
   }

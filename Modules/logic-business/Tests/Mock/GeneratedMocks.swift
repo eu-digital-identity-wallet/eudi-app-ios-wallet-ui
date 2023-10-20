@@ -2090,6 +2090,11 @@ import UIKit
 import Cuckoo
 @testable import logic_business
 
+import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+
 import class Foundation.Bundle
 
 
