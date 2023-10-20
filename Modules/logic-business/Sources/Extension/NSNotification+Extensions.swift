@@ -19,6 +19,3 @@ public extension NSNotification {
   static let DeepLinkAction = Notification.Name.init("DeepLinkAction")
   static let urlKey: String = "URL"
 }
-public extension Notification.Name {
-  static let backgroundColorChanged = Notification.Name("BackgroundColorChanged")
-}
