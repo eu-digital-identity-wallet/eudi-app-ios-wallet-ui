@@ -21,7 +21,6 @@ import logic_business
 public struct DashboardView<Router: RouterHostType, Interactor: DashboardInteractorType>: View {
 
   @ObservedObject private var viewModel: DashboardViewModel<Router, Interactor>
-  @EnvironmentObject var colorManager: BackgroundColorManager
 
   public init(with router: Router, and interactor: Interactor) {
     self.viewModel = .init(router: router, interactor: interactor)
@@ -58,9 +57,6 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
     }
     .task {
       await viewModel.fetch()
-    }
-    .onAppear {
-      colorManager.change(to: ThemeManager.shared.color.primary)
     }
   }
 }

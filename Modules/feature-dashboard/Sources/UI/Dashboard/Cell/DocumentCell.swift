@@ -47,7 +47,7 @@ public struct DocumentCell: View {
         Text(.custom(item.value.title))
           .typography(ThemeManager.shared.font.bodyMedium)
           .foregroundColor(ThemeManager.shared.color.textPrimaryDark)
-          .minimumScaleFactor(0.5)
+          .minimumScaleFactor(0.3)
           .lineLimit(1)
         Text(.custom(item.value.status))
           .typography(ThemeManager.shared.font.bodySmall)

@@ -43,6 +43,8 @@ public struct BearerCell: View {
       VStack(alignment: .leading) {
         Text(.welcomeBack)
           .typography(ThemeManager.shared.font.bodyMedium)
+          .minimumScaleFactor(0.5)
+          .lineLimit(1)
           .foregroundColor(ThemeManager.shared.color.textSecondaryLight)
         Text(.custom(item.value.name))
           .typography(ThemeManager.shared.font.headlineMedium)

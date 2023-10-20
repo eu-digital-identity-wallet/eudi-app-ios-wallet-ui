@@ -61,6 +61,7 @@ public struct FloatingActionButtonBar: View {
 
       }
       .frame(maxWidth: .infinity)
+      .padding([.horizontal])
     }
   }
 }
