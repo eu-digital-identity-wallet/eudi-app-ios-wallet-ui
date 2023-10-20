@@ -87,6 +87,12 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "show_qr_tap")
     case .welcomeBack:
       bundle.localizedString(forKey: "welcome_back")
+    case .pleaseWait:
+      bundle.localizedString(forKey: "please_wait")
+    case .requestDataShareQuickPinCaption:
+      bundle.localizedString(forKey: "request_data_share_quick_pin_caption")
+    case .requestDataShareBiometryCaption:
+      bundle.localizedString(forKey: "request_data_share_biometry_caption")
     }
   }
 
@@ -123,6 +129,9 @@ public extension LocalizableString {
     case addDoc
     case showQRTap
     case welcomeBack
+    case pleaseWait
+    case requestDataShareQuickPinCaption
+    case requestDataShareBiometryCaption
   }
 }
 

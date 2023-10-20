@@ -38,6 +38,7 @@ extension AuthenticationRequestView {
         WrapCheckBoxView(
           isSelected: row.isSelected,
           isVisible: row.isVisible,
+          isEnabled: true,
           id: row.id,
           title: row.title,
           value: row.value,
