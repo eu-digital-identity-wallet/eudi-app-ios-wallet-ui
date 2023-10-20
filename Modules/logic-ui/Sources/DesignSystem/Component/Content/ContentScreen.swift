@@ -56,7 +56,7 @@ public struct ContentScreen<Content: View>: View {
         }
         .padding(canScroll ? [.horizontal, .top] : [.all], padding)
         .if(canScroll == true) {
-          $0.edgesIgnoringSafeArea(.bottom)
+          $0.ignoresSafeArea(edges: .bottom)
         }
       }
     }

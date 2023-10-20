@@ -32,7 +32,7 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
   init(router: Router, interactor: Interactor) {
     self.interactor = interactor
     super.init(router: router,
-               initialState: .init(config: .init(splashDuration: 1.2),
+               initialState: .init(config: .init(splashDuration: 1.5),
                                    isAnimating: false,
                                    setupError: nil))
   }
@@ -55,10 +55,9 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
   }
 
   func splashFinished() {
-    self.router.push(with: .faqs)
+    self.setNewState(isAnimating: false)
+    router.push(with: .dashboard)
   }
-
-  // TODO: Remove When Navigation is complete
 
   func onClickOnlineLoading() {
     router.push(with: .authenticationRequest)

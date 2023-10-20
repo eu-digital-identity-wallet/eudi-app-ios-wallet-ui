@@ -19,6 +19,11 @@ import logic_ui
 public extension UIConfig {
 
   struct Startup: UIConfigType, Equatable {
+
     public let splashDuration: TimeInterval
+
+    public init(splashDuration: TimeInterval) {
+      self.splashDuration = splashDuration
+    }
   }
 }

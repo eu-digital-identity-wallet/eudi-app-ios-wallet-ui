@@ -30,14 +30,13 @@ public struct SplashBackground: View {
         .fill(ThemeManager.shared.color.primary)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea()
-        .background(ThemeManager.shared.color.red)
 
       ThemeManager.shared.image.logo
         .resizable()
         .aspectRatio(contentMode: .fit)
         .frame(width: getScreenRect().width / 2.5)
-        .opacity(isAnimating ? 1.0 : 0.5)
+        .opacity(isAnimating ? 1.0 : 0)
     }
-    .ignoresSafeArea()
+    .ignoresSafeArea(.all)
   }
 }
