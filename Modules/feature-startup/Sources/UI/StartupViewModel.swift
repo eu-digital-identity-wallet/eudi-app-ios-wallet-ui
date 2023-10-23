@@ -59,49 +59,6 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
     router.push(with: .dashboard)
   }
 
-  func onClickOnlineLoading() {
-    router.push(with: .authenticationRequest)
-  }
-
-  func onClickTestSuccess() {
-    router.push(
-      with: .success(
-        config: successConfig()
-      )
-    )
-  }
-
-  func onClickFAQ() {
-    router.push(with: .faqs)
-  }
-
-  func onClickBiometry() {
-    router.push(
-      with: .biometry(
-        config: UIConfig.Biometry(
-          title: .genericErrorTitle,
-          caption: .genericErrorDesc,
-          quickPinOnlyCaption: .genericErrorDesc,
-          navigationSuccessConfig: .init(screen: .success(config: successConfig()), navigationType: .push),
-          navigationBackConfig: .init(screen: .startup, navigationType: .pop),
-          isPreAuthorization: false,
-          shouldInitializeBiometricOnCreate: true
-        )
-      )
-    )
-  }
-
-  private func successConfig() -> UIConfig.Success {
-    return UIConfig.Success(
-      title: .custom("LITERAL PLACEHOLDER"),
-      subtitle: .custom("LITERAL PLACEHOLDER"),
-      buttons: [
-        .init(title: .custom("LITERAL PLACEHOLDER"), screen: .startup, style: .primary, navigationType: .pop)
-      ],
-      visualKind: .defaultIcon
-    )
-  }
-
   private func setNewState(
   isAnimating: Bool? = nil,
   setupError: Error? = nil

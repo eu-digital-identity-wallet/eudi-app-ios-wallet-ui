@@ -41,31 +41,6 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
             viewModel.startAnimatingSplash()
           }
         }
-
-        // TODO: Remove when done
-
-//        VStack {
-//          WrapButtonView(
-//            title: .custom("PRIMARY"),
-//            onAction: {}()
-//          )
-//
-//          WrapButtonView(
-//            title: .custom("TEST FAQ SCREEN"),
-//            onAction: viewModel.onClickFAQ()
-//          )
-//
-//          WrapButtonView(
-//            title: .custom("TEST SUCCESS SCREEN"),
-//            onAction: viewModel.onClickTestSuccess()
-//          )
-//
-//          WrapButtonView(
-//            title: .custom("TEST BIOMETRICS SCREEN"),
-//            onAction: viewModel.onClickBiometry()
-//          )
-//        }
-
       }
     }
     .task {
