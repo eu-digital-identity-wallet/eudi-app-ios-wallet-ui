@@ -50,6 +50,7 @@ public final actor StartupInteractor: StartupInteractorType {
 
   private func setupCalls() async throws {
     // TODO: Add any calls we might need to do during splash animation?
+    await self.sampleCall()
     try await Task.sleep(nanoseconds: 1_750_000_000)
   }
 

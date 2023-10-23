@@ -29,12 +29,24 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
 
   private let interactor: Interactor
 
-  init(router: Router, interactor: Interactor) {
+  init(
+    router: Router,
+    interactor: Interactor,
+    config: any UIConfigType = UIConfig.Startup(splashDuration: 1.5)
+  ) {
+
+    guard let config = config as? UIConfig.Startup else {
+      fatalError("BiometryViewModel:: Invalid configuraton")
+    }
+
     self.interactor = interactor
-    super.init(router: router,
-               initialState: .init(config: .init(splashDuration: 1.5),
-                                   isAnimating: false,
-                                   setupError: nil))
+    super.init(
+      router: router,
+      initialState: .init(
+        config: config,
+        isAnimating: false,
+        setupError: nil)
+    )
   }
 
   func startAnimatingSplash() {
@@ -60,8 +72,8 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
   }
 
   private func setNewState(
-  isAnimating: Bool? = nil,
-  setupError: Error? = nil
+    isAnimating: Bool? = nil,
+    setupError: Error? = nil
   ) {
     setState { previous in
         .init(config: previous.config,
