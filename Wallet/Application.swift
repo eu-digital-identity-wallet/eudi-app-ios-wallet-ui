@@ -29,6 +29,7 @@ struct Application: App {
   @State var isScreenCapping: Bool = false
   @State var blurType: BlurType = .none
   @State var shouldAddBottomPadding: Bool = false
+  @State var backgroundColor: Color = Theme.shared.color.primary
 
   private let routerHost: RouterHostType
   private let configUiLogic: ConfigUiLogic
@@ -38,6 +39,7 @@ struct Application: App {
     self.routerHost = RouterHost()
     self.configUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
     self.securityController = SecurityController()
+    self.backgroundColor = routerHost.getBackgroundColor()
   }
 
   var body: some Scene {
@@ -45,7 +47,7 @@ struct Application: App {
       ZStack {
 
         Rectangle()
-          .fill(Theme.shared.color.backgroundPaper)
+          .fill(backgroundColor)
           .frame(maxWidth: .infinity, maxHeight: .infinity)
           .edgesIgnoringSafeArea(.all)
 
@@ -82,6 +84,9 @@ struct Application: App {
         }
         self.isScreenCapping.toggle()
       }
+      .onReceive(NotificationCenter.default.publisher(for: .shouldChangeBackgroundColor), perform: { _ in
+        self.backgroundColor = routerHost.getBackgroundColor()
+      })
       .task {
         await checkForHomeIndicator()
       }

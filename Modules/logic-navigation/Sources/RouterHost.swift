@@ -86,4 +86,8 @@ public final class RouterHost: RouterHostType {
       }
     }.eraseToAnyView()
   }
+
+  public func getBackgroundColor() -> Color {
+    UIConfig.screenBackgroundColor[self.getCurrentScreen()?.key ?? ""] ?? Theme.shared.color.white
+  }
 }

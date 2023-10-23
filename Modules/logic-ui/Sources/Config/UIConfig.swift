@@ -15,10 +15,17 @@
  */
 
 import Foundation
+import logic_resources
 
-public protocol UIConfigType {}
+public protocol UIConfigType {
+}
 
-public struct UIConfig { }
+public struct UIConfig {
+  public static let screenBackgroundColor: [String: Color] = [
+    AppRoute.dashboard.key: Theme.shared.color.primary,
+    AppRoute.startup.key: Theme.shared.color.primary
+  ]
+}
 
 public extension UIConfig {
 
