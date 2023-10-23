@@ -16,13 +16,13 @@
 import SwiftUI
 import logic_resources
 
-public struct BearerHeaderView: View {
+struct BearerHeaderView: View {
 
-  public let item: BearerUIModel
-  public let isLoading: Bool
+  let item: BearerUIModel
+  let isLoading: Bool
 
   @ViewBuilder
-  public var userImage: some View {
+  var userImage: some View {
     item.value.image
       .resizable()
       .aspectRatio(contentMode: .fit)
@@ -30,12 +30,12 @@ public struct BearerHeaderView: View {
       .cornerRadius(8.0)
   }
 
-  public init(item: BearerUIModel, isLoading: Bool) {
+  init(item: BearerUIModel, isLoading: Bool) {
     self.item = item
     self.isLoading = isLoading
   }
 
-  public var body: some View {
+  var body: some View {
     VStack(alignment: .leading) {
       BearerCell(item: item, isLoading: isLoading)
     }

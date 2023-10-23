@@ -30,14 +30,14 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
   @ViewBuilder
   func content() -> some View {
     ZStack {
-      DocumentList(
+      DocumentListView(
         items: viewModel.viewState.documents,
         isLoading: viewModel.viewState.isLoading
       ) { _ in
 
       }
       FloatingActionButtonBar(
-        isAddEnabled: !viewModel.viewState.isLoading,
+        isLoading: viewModel.viewState.isLoading,
         addAction: {},
         shareAction: {}
       )

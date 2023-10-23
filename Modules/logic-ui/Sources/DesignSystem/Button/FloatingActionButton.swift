@@ -68,10 +68,11 @@ public struct FloatingActionButton: View {
 
         }
         .clipShape(Capsule())
-        .shadow(radius: 5, x: .zero, y: 5)
         .shimmer(isLoading: isLoading)
+        .shadow(radius: 5, x: .zero, y: 5)
       }
     }
+    .disabled(isLoading)
   }
 }
 
@@ -87,15 +88,17 @@ public struct FloatingActionButtonModifier: ViewModifier {
   private let bottomPadding: CGFloat
   private let trailingPadding: CGFloat
 
-  public init(title: LocalizableString.Key,
-              textColor: Color = Theme.shared.color.textPrimaryDark,
-              backgroundColor: Color = Theme.shared.color.secondary,
-              icon: Image,
-              iconColor: Color = Theme.shared.color.textPrimaryDark,
-              bottomPadding: CGFloat = 20,
-              trailingPadding: CGFloat = 15,
-              isLoading: Bool = false,
-              action: @escaping () -> Void) {
+  public init(
+    title: LocalizableString.Key,
+    textColor: Color = Theme.shared.color.textPrimaryDark,
+    backgroundColor: Color = Theme.shared.color.secondary,
+    icon: Image,
+    iconColor: Color = Theme.shared.color.textPrimaryDark,
+    bottomPadding: CGFloat = 20,
+    trailingPadding: CGFloat = 15,
+    isLoading: Bool = false,
+    action: @escaping () -> Void
+  ) {
     self.title = title
     self.textColor = textColor
     self.backgroundColor = backgroundColor
@@ -110,15 +113,17 @@ public struct FloatingActionButtonModifier: ViewModifier {
   public func body(content: Content) -> some View {
     ZStack {
       content
-      FloatingActionButton(title: title,
-                          textColor: textColor,
-                           backgroundColor: backgroundColor,
-                           icon: icon,
-                           iconColor: iconColor,
-                           isLoading: isLoading,
-                           action: action)
-        .padding(.trailing, trailingPadding)
-        .padding(.bottom, bottomPadding)
+      FloatingActionButton(
+        title: title,
+        textColor: textColor,
+        backgroundColor: backgroundColor,
+        icon: icon,
+        iconColor: iconColor,
+        isLoading: isLoading,
+        action: action
+      )
+      .padding(.trailing, trailingPadding)
+      .padding(.bottom, bottomPadding)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .edgesIgnoringSafeArea(.all)
