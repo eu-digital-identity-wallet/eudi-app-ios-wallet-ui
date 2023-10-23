@@ -17,22 +17,22 @@ import SwiftUI
 import logic_resources
 import logic_ui
 
-public struct DocumentList: View {
+struct DocumentListView: View {
 
-  public let items: [DocumentUIModel]
-  public let action: (DocumentUIModel) -> Void
-  public let isLoading: Bool
+  let items: [DocumentUIModel]
+  let action: (DocumentUIModel) -> Void
+  let isLoading: Bool
 
-  public init(
+  init(
     items: [DocumentUIModel],
     isLoading: Bool,
     action: @escaping (DocumentUIModel) -> Void) {
-    self.items = items
-    self.action = action
-    self.isLoading = isLoading
-  }
+      self.items = items
+      self.action = action
+      self.isLoading = isLoading
+    }
 
-  public var body: some View {
+  var body: some View {
     ScrollView {
       LazyVGrid(
         columns: [GridItem(), GridItem()],

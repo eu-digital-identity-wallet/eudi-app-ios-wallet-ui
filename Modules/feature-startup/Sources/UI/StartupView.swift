@@ -101,6 +101,11 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
             onAction: viewModel.onClickOnlineLoading()
           )
 
+          WrapButtonView(
+            title: .custom("TEST DASHBOARD"),
+            onAction: viewModel.onClickDashboard()
+          )
+
           WrapButtonView(style: .secondary,
                          title: .custom("SECONDARY"),
                          onAction: {}())

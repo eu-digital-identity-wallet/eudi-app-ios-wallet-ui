@@ -42,6 +42,10 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
     )
   }
 
+  func onClickDashboard() {
+    router.push(with: .dashboard)
+  }
+
   func onClickFAQ() {
     router.push(with: .faqs)
   }

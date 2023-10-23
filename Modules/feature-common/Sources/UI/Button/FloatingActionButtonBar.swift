@@ -18,18 +18,15 @@ import logic_resources
 
 public struct FloatingActionButtonBar: View {
 
-  public let isAddEnabled: Bool
   public let isLoading: Bool
   public let addAction: () -> Void
   public let shareAction: () -> Void
 
   public init(
-    isAddEnabled: Bool,
     isLoading: Bool = false,
     addAction: @escaping () -> Void,
     shareAction: @escaping () -> Void
   ) {
-    self.isAddEnabled = isAddEnabled
     self.isLoading = isLoading
     self.addAction = addAction
     self.shareAction = shareAction
@@ -37,17 +34,17 @@ public struct FloatingActionButtonBar: View {
 
   public var body: some View {
     VStack(alignment: .center) {
+
       HStack(spacing: SPACING_MEDIUM) {
         FloatingActionButton(
           title: .addDoc,
-          textColor: isAddEnabled ? Theme.shared.color.textPrimaryDark : Theme.shared.color.textDisabledDark,
-          backgroundColor: isAddEnabled ? Theme.shared.color.backgroundPaper : Theme.shared.color.grey,
+          textColor: Theme.shared.color.textPrimaryDark,
+          backgroundColor: Theme.shared.color.backgroundPaper,
           icon: Theme.shared.image.plus,
-          iconColor: isAddEnabled ? Theme.shared.color.textPrimaryDark : Theme.shared.color.textDisabledDark,
+          iconColor: Theme.shared.color.textPrimaryDark,
           isLoading: isLoading,
           action: addAction
         )
-        .disabled(!isAddEnabled)
 
         FloatingActionButton(
           title: .showQRTap,
