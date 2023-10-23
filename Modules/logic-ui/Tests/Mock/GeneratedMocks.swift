@@ -2107,6 +2107,12 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_ui
 
+import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_ui
+
 import class Foundation.Bundle
 
 
@@ -3516,6 +3522,20 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_ui
+
+import SwiftUI
 
 import Cuckoo
 @testable import logic_business
@@ -3565,13 +3585,6 @@ import Cuckoo
 
 import SwiftUI
 import UIPilot
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_ui
-
-import SwiftUI
 import logic_resources
 
 import Cuckoo
@@ -3663,8 +3676,21 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_ui
 
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_ui
+
 import Foundation
 import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_ui
+
+import Foundation
 
 import Cuckoo
 @testable import logic_business

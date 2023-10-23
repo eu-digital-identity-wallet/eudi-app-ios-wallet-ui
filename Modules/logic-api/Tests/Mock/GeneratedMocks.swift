@@ -2553,6 +2553,12 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_api
 
+import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_api
+
 import class Foundation.Bundle
 
 

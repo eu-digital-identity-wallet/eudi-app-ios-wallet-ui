@@ -16,16 +16,61 @@
 import Foundation
 import logic_ui
 
-struct DashboardState: ViewState {}
+struct DashboardState: ViewState {
+  let isLoading: Bool
+  let documents: [DocumentUIModel]
+  let bearer: BearerUIModel
+}
 
 @MainActor
 final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInteractorType>: BaseViewModel<Router, DashboardState> {
 
   private let interactor: Interactor
 
-  init(router: Router, interactor: Interactor) {
-    self.interactor = interactor
-    super.init(router: router, initialState: .init())
+  var bearerName: String {
+    viewState.bearer.value.name
   }
 
+  init(router: Router, interactor: Interactor) {
+    self.interactor = interactor
+    super.init(
+      router: router,
+      initialState: .init(
+        isLoading: true,
+        documents: DocumentUIModel.mocks(),
+        bearer: BearerUIModel.mock()
+      )
+    )
+  }
+
+  func fetch() async {
+    switch await interactor.fetchDashboard() {
+    case .success(let bearer, let documents):
+      setNewState(
+        isLoading: false,
+        documents: documents,
+        bearer: bearer
+      )
+    case .failure:
+      setNewState(
+        isLoading: false,
+        documents: [],
+        bearer: nil
+      )
+    }
+  }
+
+  private func setNewState(
+    isLoading: Bool? = nil,
+    documents: [DocumentUIModel]? = nil,
+    bearer: BearerUIModel? = nil
+  ) {
+    setState { previousSate in
+        .init(
+          isLoading: isLoading ?? previousSate.isLoading,
+          documents: documents ?? previousSate.documents,
+          bearer: bearer ?? previousSate.bearer
+        )
+    }
+  }
 }
