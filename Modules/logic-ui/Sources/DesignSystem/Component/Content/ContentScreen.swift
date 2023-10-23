@@ -60,6 +60,9 @@ public struct ContentScreen<Content: View>: View {
         }
       }
     }
+    .onAppear {
+      NotificationCenter.default.post(name: .shouldChangeBackgroundColor, object: nil)
+    }
     .background(background)
     .uipNavigationBarHidden(true)
     .if(allowBackGesture == false) {
