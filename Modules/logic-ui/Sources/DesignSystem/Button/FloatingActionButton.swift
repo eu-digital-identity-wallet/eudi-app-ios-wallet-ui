@@ -72,6 +72,7 @@ public struct FloatingActionButton: View {
         .shadow(radius: 5, x: .zero, y: 5)
       }
     }
+    .disabled(isLoading)
   }
 }
 
