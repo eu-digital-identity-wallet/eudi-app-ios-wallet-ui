@@ -59,7 +59,6 @@ public final class ShapeManager: ShapeManagerProtocol {
         .inset(by: -4)
     )
   }
-
 }
 
 public struct AnyShape: Shape, InsettableShape {

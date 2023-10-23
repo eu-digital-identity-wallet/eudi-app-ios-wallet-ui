@@ -39,9 +39,11 @@ public struct ExpandableTextView: View {
   @ViewBuilder
   var chevron: some View {
     if isExpanded {
-      Theme.shared.image.chevronUp.foregroundColor(Theme.shared.color.primary)
+      Theme.shared.image.chevronUp
+        .foregroundColor(Theme.shared.color.primary)
     } else {
-      Theme.shared.image.chevronDown.foregroundColor(Theme.shared.color.primary)
+      Theme.shared.image.chevronDown
+        .foregroundColor(Theme.shared.color.primary)
     }
   }
 

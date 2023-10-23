@@ -18,6 +18,12 @@ import AlertToast
 import PartialSheet
 
 public extension View {
+  func roundedCorner(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+    clipShape(RoundedCorner(radius: radius, corners: corners) )
+  }
+}
+
+public extension View {
   func eraseToAnyView() -> AnyView {
     return AnyView(self)
   }

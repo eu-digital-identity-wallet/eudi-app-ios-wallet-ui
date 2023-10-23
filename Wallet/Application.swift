@@ -45,7 +45,7 @@ struct Application: App {
       ZStack {
 
         Rectangle()
-          .fill(ThemeManager.shared.color.backgroundPaper)
+          .fill(Theme.shared.color.backgroundPaper)
           .frame(maxWidth: .infinity, maxHeight: .infinity)
           .edgesIgnoringSafeArea(.all)
 

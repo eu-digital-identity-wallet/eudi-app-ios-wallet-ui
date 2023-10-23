@@ -30,7 +30,7 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
       padding: 0,
       canScroll: false,
       allowBackGesture: false,
-      backgroundColor: Theme.shared.color.primary
+      background: Theme.shared.color.primary
     ) {
       ZStack {
         SplashBackground(

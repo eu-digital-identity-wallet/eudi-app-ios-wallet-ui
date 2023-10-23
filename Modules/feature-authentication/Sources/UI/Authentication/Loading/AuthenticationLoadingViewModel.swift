@@ -37,7 +37,7 @@ final class AuthenticationLoadingViewModel<Router: RouterHostType, Interactor: A
   }
 
   override func getCaption() -> LocalizableString.Key {
-    .shareDataReview
+    .pleaseWait
   }
 
   override func getOnSuccessRoute() -> AppRoute? {

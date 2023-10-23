@@ -34,12 +34,105 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
     
 
     
+    
+    
+    
+    public func fetchDocuments() async -> DashboardDocumentsPartialState {
+        
+    return await cuckoo_manager.call(
+    """
+    fetchDocuments() async -> DashboardDocumentsPartialState
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.fetchDocuments())
+        
+    }
+    
+    
+    
+    
+    
+    public func fetchBearer() async -> DashboardBearerPartialState {
+        
+    return await cuckoo_manager.call(
+    """
+    fetchBearer() async -> DashboardBearerPartialState
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.fetchBearer())
+        
+    }
+    
+    
+    
+    
+    
+    public func fetchDashboard() async -> DashboardPartialState {
+        
+    return await cuckoo_manager.call(
+    """
+    fetchDashboard() async -> DashboardPartialState
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.fetchDashboard())
+        
+    }
+    
+    
 
     public struct __StubbingProxy_DashboardInteractorType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
             self.cuckoo_manager = manager
+        }
+        
+        
+        
+        
+        func fetchDocuments() -> Cuckoo.ProtocolStubFunction<(), DashboardDocumentsPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockDashboardInteractorType.self, method:
+    """
+    fetchDocuments() async -> DashboardDocumentsPartialState
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func fetchBearer() -> Cuckoo.ProtocolStubFunction<(), DashboardBearerPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockDashboardInteractorType.self, method:
+    """
+    fetchBearer() async -> DashboardBearerPartialState
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func fetchDashboard() -> Cuckoo.ProtocolStubFunction<(), DashboardPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockDashboardInteractorType.self, method:
+    """
+    fetchDashboard() async -> DashboardPartialState
+    """, parameterMatchers: matchers))
         }
         
         
@@ -59,6 +152,42 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
         
     
         
+        
+        
+        @discardableResult
+        func fetchDocuments() -> Cuckoo.__DoNotUse<(), DashboardDocumentsPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    fetchDocuments() async -> DashboardDocumentsPartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func fetchBearer() -> Cuckoo.__DoNotUse<(), DashboardBearerPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    fetchBearer() async -> DashboardBearerPartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func fetchDashboard() -> Cuckoo.__DoNotUse<(), DashboardPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    fetchDashboard() async -> DashboardPartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -69,11 +198,82 @@ public class DashboardInteractorTypeStub: DashboardInteractorType {
     
 
     
+    
+    
+    
+    public func fetchDocuments() async -> DashboardDocumentsPartialState  {
+        return DefaultValueRegistry.defaultValue(for: (DashboardDocumentsPartialState).self)
+    }
+    
+    
+    
+    
+    
+    public func fetchBearer() async -> DashboardBearerPartialState  {
+        return DefaultValueRegistry.defaultValue(for: (DashboardBearerPartialState).self)
+    }
+    
+    
+    
+    
+    
+    public func fetchDashboard() async -> DashboardPartialState  {
+        return DefaultValueRegistry.defaultValue(for: (DashboardPartialState).self)
+    }
+    
+    
 }
 
 
 
 
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_business
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import logic_ui
 
 import Cuckoo
 @testable import logic_business
@@ -91,8 +291,16 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
 import Foundation
-import logic_ui
 
 import Cuckoo
 @testable import logic_business
@@ -2697,6 +2905,14 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
 import class Foundation.Bundle
 
 
@@ -4126,6 +4342,24 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
 
 import Cuckoo
 @testable import logic_business
@@ -4189,15 +4423,6 @@ import Cuckoo
 
 import SwiftUI
 import UIPilot
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
 import logic_resources
 
 import Cuckoo
@@ -4335,6 +4560,14 @@ import Cuckoo
 
 import Foundation
 import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
 
 import Cuckoo
 @testable import logic_business

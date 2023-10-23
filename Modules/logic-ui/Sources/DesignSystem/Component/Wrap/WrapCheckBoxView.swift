@@ -22,14 +22,32 @@ public struct WrapCheckBoxView: View {
 
   let isSelected: Bool
   let isVisible: Bool
+  let isEnabled: Bool
   let id: String
   let title: String
   let value: String
   let onTap: TapListener
 
+  var checkBoxColor: Color {
+    if self.isEnabled {
+      ThemeManager.shared.color.primary
+    } else {
+      ThemeManager.shared.color.textDisabledDark
+    }
+  }
+
+  var titleTextColor: Color {
+    if self.isEnabled {
+      ThemeManager.shared.color.textPrimaryDark
+    } else {
+      ThemeManager.shared.color.textDisabledDark
+    }
+  }
+
   public init(
     isSelected: Bool,
     isVisible: Bool,
+    isEnabled: Bool,
     id: String,
     title: String,
     value: String,
@@ -37,6 +55,7 @@ public struct WrapCheckBoxView: View {
   ) {
     self.isSelected = isSelected
     self.isVisible = isVisible
+    self.isEnabled = isEnabled
     self.id = id
     self.title = title
     self.value = value
@@ -55,12 +74,12 @@ public struct WrapCheckBoxView: View {
         .resizable()
         .scaledToFit()
         .frame(height: 25)
-        .foregroundStyle(ThemeManager.shared.color.primary)
+        .foregroundStyle(self.checkBoxColor)
 
       if !self.isVisible {
         Text(self.title)
           .typography(ThemeManager.shared.font.titleMedium)
-          .foregroundStyle(ThemeManager.shared.color.textPrimaryDark)
+          .foregroundStyle(self.titleTextColor)
       } else {
         VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
 
@@ -77,11 +96,12 @@ public struct WrapCheckBoxView: View {
       Spacer()
     }
     .frame(maxWidth: .infinity, maxHeight: 50)
-    .if(self.onTap != nil) {
+    .if(self.onTap != nil && self.isEnabled) {
       $0.onTapGesture {
         self.onTap?(self.id)
       }
     }
+    .disabled(!self.isEnabled)
     .animation(.easeInOut, value: self.isVisible)
   }
 }

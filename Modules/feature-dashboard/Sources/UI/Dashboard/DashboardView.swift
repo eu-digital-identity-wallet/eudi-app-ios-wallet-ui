@@ -16,6 +16,8 @@
 import SwiftUI
 import logic_ui
 import logic_resources
+import logic_business
+import feature_common
 
 public struct DashboardView<Router: RouterHostType, Interactor: DashboardInteractorType>: View {
 
@@ -25,11 +27,37 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
     self.viewModel = .init(router: router, interactor: interactor)
   }
 
+  @ViewBuilder
+  func content() -> some View {
+    ZStack {
+      DocumentList(
+        items: viewModel.viewState.documents,
+        isLoading: viewModel.viewState.isLoading
+      ) { _ in
+
+      }
+      FloatingActionButtonBar(
+        isAddEnabled: !viewModel.viewState.isLoading,
+        addAction: {},
+        shareAction: {}
+      )
+    }
+    .background(ThemeManager.shared.color.backgroundPaper)
+  }
+
   public var body: some View {
-    ContentScreen {
-      Spacer()
-      Text("Container")
-      Spacer()
+    ContentScreen(
+      padding: .zero,
+      background: ThemeManager.shared.color.primary
+    ) {
+      BearerHeaderView(
+        item: viewModel.viewState.bearer,
+        isLoading: viewModel.viewState.isLoading
+      )
+      content()
+    }
+    .task {
+      await viewModel.fetch()
     }
   }
 }
