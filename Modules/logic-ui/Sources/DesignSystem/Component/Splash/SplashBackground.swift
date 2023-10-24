@@ -31,7 +31,7 @@ public struct SplashBackground: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea()
 
-      ThemeManager.shared.image.logo
+      Theme.shared.image.logo
         .resizable()
         .aspectRatio(contentMode: .fit)
         .frame(width: getScreenRect().width / 2.5)

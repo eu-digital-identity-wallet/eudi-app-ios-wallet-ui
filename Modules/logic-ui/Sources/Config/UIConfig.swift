@@ -19,6 +19,8 @@ import logic_resources
 
 public protocol UIConfigType {}
 
+public struct NoConfig: UIConfigType {}
+
 public struct UIConfig {}
 
 public extension UIConfig {
