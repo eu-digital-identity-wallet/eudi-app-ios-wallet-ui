@@ -29,7 +29,7 @@ public indirect enum AppRoute: Equatable {
   case authenticationLoader(String)
   case authenticationRequest
 
-  var key: String {
+  public var key: String {
     return switch self {
     case .startup:
       "Startup"
@@ -58,6 +58,7 @@ public protocol RouterHostType {
   func popTo(with route: AppRoute)
   func composeApplication() -> AnyView
   func getCurrentScreen() -> AppRoute?
+  func getBackgroundColor() -> Color
 }
 
 public class PreviewRouter: RouterHostType {
@@ -79,4 +80,7 @@ public class PreviewRouter: RouterHostType {
   public func composeApplication() -> AnyView { EmptyView().eraseToAnyView() }
 
   public func getCurrentScreen() -> AppRoute? { .none }
+
+  public func getBackgroundColor() -> Color { .clear }
+
 }

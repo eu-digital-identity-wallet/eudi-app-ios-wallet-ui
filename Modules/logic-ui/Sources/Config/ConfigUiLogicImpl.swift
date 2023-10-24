@@ -18,6 +18,11 @@ import logic_resources
 
 public struct WalletUiConfig: ConfigUiLogic {
 
+  public var backgroundColorForScreenDictionary: [AppRouteKey: Color] = [
+    AppRoute.dashboard.key: Theme.shared.color.primary,
+    AppRoute.startup.key: Theme.shared.color.primary
+  ]
+
   public var initialRoute: AppRoute {
     return .startup
   }

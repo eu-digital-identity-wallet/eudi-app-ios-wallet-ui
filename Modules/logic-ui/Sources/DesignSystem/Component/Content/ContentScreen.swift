@@ -34,7 +34,7 @@ public struct ContentScreen<Content: View>: View {
     spacing: CGFloat = .zero,
     allowBackGesture: Bool = false,
     errorConfig: ContentError.Config? = nil,
-    background: Color = ThemeManager.shared.color.backgroundPaper,
+    background: Color = Theme.shared.color.backgroundPaper,
     @ViewBuilder content: () -> Content
   ) {
     self.content = content()
@@ -56,11 +56,11 @@ public struct ContentScreen<Content: View>: View {
         }
         .padding(canScroll ? [.horizontal, .top] : [.all], padding)
         .if(canScroll == true) {
-          $0.edgesIgnoringSafeArea(.bottom)
+          $0.ignoresSafeArea(edges: .bottom)
         }
       }
     }
-    .background(self.background)
+    .background(background)
     .uipNavigationBarHidden(true)
     .if(allowBackGesture == false) {
       $0.navigationBarBackButtonHidden()

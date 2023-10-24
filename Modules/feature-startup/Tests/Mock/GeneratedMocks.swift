@@ -5,6 +5,15 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_startup
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
 import logic_api
 
 
@@ -38,6 +47,26 @@ public class MockStartupInteractorType: StartupInteractorType, Cuckoo.ProtocolMo
     
     
     
+    public func splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState {
+        
+    return try await cuckoo_manager.callThrows(
+    """
+    splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState
+    """,
+            parameters: (splashAnimationDuration),
+            escapingParameters: (splashAnimationDuration),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.splashSetup(splashAnimationDuration: splashAnimationDuration))
+        
+    }
+    
+    
+    
+    
+    
     public func sampleCall() async -> SamplePartialState {
         
     return await cuckoo_manager.call(
@@ -61,6 +90,17 @@ public class MockStartupInteractorType: StartupInteractorType, Cuckoo.ProtocolMo
     
         public init(manager: Cuckoo.MockManager) {
             self.cuckoo_manager = manager
+        }
+        
+        
+        
+        
+        func splashSetup<M1: Cuckoo.Matchable>(splashAnimationDuration: M1) -> Cuckoo.ProtocolStubThrowingFunction<(TimeInterval), SplashSetupPartialState> where M1.MatchedType == TimeInterval {
+            let matchers: [Cuckoo.ParameterMatcher<(TimeInterval)>] = [wrap(matchable: splashAnimationDuration) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockStartupInteractorType.self, method:
+    """
+    splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState
+    """, parameterMatchers: matchers))
         }
         
         
@@ -94,6 +134,18 @@ public class MockStartupInteractorType: StartupInteractorType, Cuckoo.ProtocolMo
         
         
         @discardableResult
+        func splashSetup<M1: Cuckoo.Matchable>(splashAnimationDuration: M1) -> Cuckoo.__DoNotUse<(TimeInterval), SplashSetupPartialState> where M1.MatchedType == TimeInterval {
+            let matchers: [Cuckoo.ParameterMatcher<(TimeInterval)>] = [wrap(matchable: splashAnimationDuration) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
         func sampleCall() -> Cuckoo.__DoNotUse<(), SamplePartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
@@ -112,6 +164,14 @@ public class StartupInteractorTypeStub: StartupInteractorType {
 
     
 
+    
+    
+    
+    
+    public func splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState  {
+        return DefaultValueRegistry.defaultValue(for: (SplashSetupPartialState).self)
+    }
+    
     
     
     
@@ -4334,6 +4394,15 @@ import Cuckoo
 
 import Shimmer
 import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_startup
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
 
 import Cuckoo
 @testable import logic_business

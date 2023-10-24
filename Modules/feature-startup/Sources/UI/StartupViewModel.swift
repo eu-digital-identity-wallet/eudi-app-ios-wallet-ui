@@ -18,62 +18,63 @@ import logic_ui
 import feature_common
 import logic_business
 
-struct StartupState: ViewState {}
+struct StartupState: ViewState {
+  let config: UIConfig.Startup
+  let isAnimating: Bool
+  let setupError: Error?
+}
 
 @MainActor
 final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteractorType>: BaseViewModel<Router, StartupState> {
 
   private let interactor: Interactor
 
-  init(router: Router, interactor: Interactor) {
+  init(
+    router: Router,
+    interactor: Interactor,
+    config: any UIConfigType = UIConfig.Startup(splashDuration: 1.5)
+  ) {
+
+    guard let config = config as? UIConfig.Startup else {
+      fatalError("StartupViewModel:: Invalid configuraton")
+    }
+
     self.interactor = interactor
-    super.init(router: router, initialState: .init())
-  }
-
-  func onClickOnlineLoading() {
-    router.push(with: .authenticationRequest)
-  }
-
-  func onClickTestSuccess() {
-    router.push(
-      with: .success(
-        config: successConfig()
-      )
+    super.init(
+      router: router,
+      initialState: .init(
+        config: config,
+        isAnimating: false,
+        setupError: nil)
     )
   }
 
-  func onClickDashboard() {
+  func startAnimatingSplash() {
+    self.setNewState(isAnimating: true)
+  }
+
+  func setup() async {
+    switch await interactor.splashSetup(splashAnimationDuration: viewState.config.splashDuration) {
+    case .success:
+      splashFinished()
+    case .failure(let error):
+      self.setNewState(setupError: error)
+    }
+  }
+
+  func splashFinished() {
+    self.setNewState(isAnimating: false)
     router.push(with: .dashboard)
   }
 
-  func onClickFAQ() {
-    router.push(with: .faqs)
-  }
-
-  func onClickBiometry() {
-    router.push(
-      with: .biometry(
-        config: UIConfig.Biometry(
-          title: .genericErrorTitle,
-          caption: .genericErrorDesc,
-          quickPinOnlyCaption: .genericErrorDesc,
-          navigationSuccessConfig: .init(screen: .success(config: successConfig()), navigationType: .push),
-          navigationBackConfig: .init(screen: .startup, navigationType: .pop),
-          isPreAuthorization: false,
-          shouldInitializeBiometricOnCreate: true
-        )
-      )
-    )
-  }
-
-  private func successConfig() -> UIConfig.Success {
-    return UIConfig.Success(
-      title: .custom("LITERAL PLACEHOLDER"),
-      subtitle: .custom("LITERAL PLACEHOLDER"),
-      buttons: [
-        .init(title: .custom("LITERAL PLACEHOLDER"), screen: .startup, style: .primary, navigationType: .pop)
-      ],
-      visualKind: .defaultIcon
-    )
+  private func setNewState(
+    isAnimating: Bool? = nil,
+    setupError: Error? = nil
+  ) {
+    setState { previous in
+        .init(config: previous.config,
+              isAnimating: isAnimating ?? previous.isAnimating,
+              setupError: setupError ?? previous.setupError)
+    }
   }
 }

@@ -36,26 +36,32 @@ public final class RouterHost: RouterHostType {
 
   public func push(with route: AppRoute) {
     pilot.push(route)
+    notifyBackgroundColorUpdate()
   }
 
   public func popTo(with route: AppRoute, inclusive: Bool, animated: Bool) {
     pilot.popTo(route, inclusive: inclusive, animated: animated)
+    notifyBackgroundColorUpdate()
   }
 
   public func popTo(with route: AppRoute, inclusive: Bool) {
     pilot.popTo(route, inclusive: inclusive)
+    notifyBackgroundColorUpdate()
   }
 
   public func popTo(with route: AppRoute) {
     pilot.popTo(route)
+    notifyBackgroundColorUpdate()
   }
 
   public func pop(animated: Bool) {
     pilot.pop(animated: animated)
+    notifyBackgroundColorUpdate()
   }
 
   public func pop() {
     pilot.pop()
+    notifyBackgroundColorUpdate()
   }
 
   public func getCurrentScreen() -> AppRoute? {
@@ -84,6 +90,20 @@ public final class RouterHost: RouterHostType {
       case .authenticationRequest:
         AuthenticationRequestView(with: self, and: AuthenticationInteractor())
       }
-    }.eraseToAnyView()
+    }
+    .eraseToAnyView()
+  }
+
+  public func getBackgroundColor() -> Color {
+    guard let screenKey = self.getCurrentScreen()?.key else {
+      return Theme.shared.color.backgroundPaper
+    }
+
+    return ConfigUiProvider.shared.getConfigUiLogic()
+      .backgroundColorForScreenDictionary[screenKey] ?? Theme.shared.color.backgroundPaper
+  }
+
+  private func notifyBackgroundColorUpdate() {
+    NotificationCenter.default.post(name: .shouldChangeBackgroundColor, object: nil)
   }
 }

@@ -13,34 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import Foundation
-import logic_resources
 
-public protocol UIConfigType {}
-
-public struct NoConfig: UIConfigType {}
-
-public struct UIConfig {}
-
-public extension UIConfig {
-
-  struct NavigationConfig: Equatable {
-
-    public enum NavigationType: Equatable {
-      case pop
-      case push
-    }
-
-    public let screen: AppRoute
-    public let navigationType: NavigationType
-
-    public init(
-      screen: AppRoute,
-      navigationType: NavigationType
-    ) {
-      self.screen = screen
-      self.navigationType = navigationType
-    }
-  }
+public extension Notification.Name {
+  static let shouldChangeBackgroundColor = Notification.Name("shouldChangeBackgroundColor")
 }

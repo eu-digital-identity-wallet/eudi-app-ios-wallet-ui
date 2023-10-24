@@ -13,34 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import Foundation
-import logic_resources
-
-public protocol UIConfigType {}
-
-public struct NoConfig: UIConfigType {}
-
-public struct UIConfig {}
+import logic_ui
 
 public extension UIConfig {
 
-  struct NavigationConfig: Equatable {
+  struct Startup: UIConfigType, Equatable {
 
-    public enum NavigationType: Equatable {
-      case pop
-      case push
-    }
+    public let splashDuration: TimeInterval
 
-    public let screen: AppRoute
-    public let navigationType: NavigationType
-
-    public init(
-      screen: AppRoute,
-      navigationType: NavigationType
-    ) {
-      self.screen = screen
-      self.navigationType = navigationType
+    public init(splashDuration: TimeInterval) {
+      self.splashDuration = splashDuration
     }
   }
 }

@@ -16,12 +16,17 @@
 import Foundation
 import logic_resources
 
+public typealias AppRouteKey = String
+
 public protocol ConfigUiLogic {
 
   /**
    * App Route Entry Point
    */
+
   var initialRoute: AppRoute { get }
+
+  var backgroundColorForScreenDictionary: [AppRouteKey: Color] { get }
 
   init(themeConfiguration: ThemeConfiguration)
 }

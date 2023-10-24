@@ -15,8 +15,10 @@
  */
 import Foundation
 import logic_api
+import logic_business
 
 public protocol StartupInteractorType {
+  func splashSetup(splashAnimationDuration: TimeInterval) async -> SplashSetupPartialState
   func sampleCall() async -> SamplePartialState
 }
 
@@ -37,9 +39,32 @@ public final actor StartupInteractor: StartupInteractorType {
     }
   }
 
-}
+  public func splashSetup(splashAnimationDuration: TimeInterval) async -> SplashSetupPartialState {
+    do {
+      switch try await delayFor(atLeast: splashAnimationDuration, task: setupCalls) {
+      case .success(let value):
+        return .success
+      case .failure(let error):
+        throw error
+      }
+    } catch {
+      return .failure(error)
+    }
+  }
 
+  private func setupCalls() async throws {
+    // TODO: Add any calls we might need to do during splash animation?
+    await self.sampleCall()
+    try await Task.sleep(nanoseconds: 1_750_000_000)
+  }
+
+}
 public enum SamplePartialState {
   case success(_ response: SampleResponseDTO)
+  case failure(_ error: Error)
+}
+
+public enum SplashSetupPartialState {
+  case success
   case failure(_ error: Error)
 }

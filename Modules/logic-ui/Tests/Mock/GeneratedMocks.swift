@@ -3641,6 +3641,13 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_ui
 
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_ui
+
 import Foundation
 import SwiftUI
 import logic_resources

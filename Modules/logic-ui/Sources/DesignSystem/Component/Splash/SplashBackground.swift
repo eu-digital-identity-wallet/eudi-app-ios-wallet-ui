@@ -13,34 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import Foundation
+import SwiftUI
 import logic_resources
 
-public protocol UIConfigType {}
+public struct SplashBackground: View {
 
-public struct NoConfig: UIConfigType {}
+  let isAnimating: Bool
 
-public struct UIConfig {}
+  public init(isAnimating: Bool = false) {
+    self.isAnimating = isAnimating
+  }
 
-public extension UIConfig {
+  public var body: some View {
+    ZStack {
+      Rectangle()
+        .fill(ThemeManager.shared.color.primary)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea()
 
-  struct NavigationConfig: Equatable {
-
-    public enum NavigationType: Equatable {
-      case pop
-      case push
+      Theme.shared.image.logo
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .frame(width: getScreenRect().width / 2.5)
+        .opacity(isAnimating ? 1.0 : 0)
     }
-
-    public let screen: AppRoute
-    public let navigationType: NavigationType
-
-    public init(
-      screen: AppRoute,
-      navigationType: NavigationType
-    ) {
-      self.screen = screen
-      self.navigationType = navigationType
-    }
+    .ignoresSafeArea(.all)
   }
 }
