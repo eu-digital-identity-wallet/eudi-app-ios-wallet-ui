@@ -54,8 +54,8 @@ struct Application: App {
                      value: backgroundColor)
 
         routerHost.composeApplication()
-          .if(self.shouldAddBottomPadding == false) { view in
-            view.ignoresSafeArea(edges: .bottom)
+          .if(self.shouldAddBottomPadding == false) {
+            $0.ignoresSafeArea(edges: .bottom)
           }
           .attachPartialSheetToRoot()
 
