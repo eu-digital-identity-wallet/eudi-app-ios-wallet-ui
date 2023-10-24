@@ -89,6 +89,8 @@ public final class RouterHost: RouterHostType {
         )
       case .authenticationRequest:
         AuthenticationRequestView(with: self, and: AuthenticationInteractor())
+      case .welcome:
+        WelcomeView(with: self, and: WelcomeInteractor())
       }
     }
     .eraseToAnyView()

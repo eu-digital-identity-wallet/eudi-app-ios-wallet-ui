@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
+import SwiftUI
+import logic_ui
 import logic_resources
 
-public struct WalletUiConfig: ConfigUiLogic {
+public struct WelcomeView<Router: RouterHostType, Interactor: WelcomeInteractorType>: View {
 
-  public var backgroundColorForScreenDictionary: [AppRouteKey: Color] = [
-    AppRoute.dashboard.key: Theme.shared.color.primary,
-    AppRoute.startup.key: Theme.shared.color.primary,
-    AppRoute.welcome.key: Theme.shared.color.primary
-  ]
+  @ObservedObject private var viewModel: WelcomeViewModel<Router, Interactor>
 
-  public var initialRoute: AppRoute {
-    return .startup
+  public init(with router: Router, and interactor: Interactor) {
+    self.viewModel = .init(router: router, interactor: interactor)
   }
 
-  public init(themeConfiguration: ThemeConfiguration) {
-    Theme.config(themeConfiguration: themeConfiguration)
+  public var body: some View {
+    ContentScreen {
+
+    }
   }
+
 }

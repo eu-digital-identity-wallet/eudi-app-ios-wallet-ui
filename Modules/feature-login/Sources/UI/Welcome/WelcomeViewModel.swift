@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import Foundation
+import logic_ui
 
-import logic_resources
+struct WelcomeState: ViewState {
 
-public struct WalletUiConfig: ConfigUiLogic {
+}
 
-  public var backgroundColorForScreenDictionary: [AppRouteKey: Color] = [
-    AppRoute.dashboard.key: Theme.shared.color.primary,
-    AppRoute.startup.key: Theme.shared.color.primary,
-    AppRoute.welcome.key: Theme.shared.color.primary
-  ]
+@MainActor
+final class WelcomeViewModel<Router: RouterHostType, Interactor: WelcomeInteractorType>: BaseViewModel<Router, WelcomeState> {
 
-  public var initialRoute: AppRoute {
-    return .startup
-  }
+  private let interactor: Interactor
 
-  public init(themeConfiguration: ThemeConfiguration) {
-    Theme.config(themeConfiguration: themeConfiguration)
+  init(router: Router, interactor: Interactor) {
+    self.interactor = interactor
+
+    super.init(router: router, initialState: .init())
   }
 }

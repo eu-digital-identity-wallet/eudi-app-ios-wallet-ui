@@ -13,22 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import Foundation
 
-import logic_resources
+public protocol WelcomeInteractorType {
 
-public struct WalletUiConfig: ConfigUiLogic {
+}
 
-  public var backgroundColorForScreenDictionary: [AppRouteKey: Color] = [
-    AppRoute.dashboard.key: Theme.shared.color.primary,
-    AppRoute.startup.key: Theme.shared.color.primary,
-    AppRoute.welcome.key: Theme.shared.color.primary
-  ]
+public final actor WelcomeInteractor: WelcomeInteractorType {
 
-  public var initialRoute: AppRoute {
-    return .startup
-  }
+  public init() {}
 
-  public init(themeConfiguration: ThemeConfiguration) {
-    Theme.config(themeConfiguration: themeConfiguration)
-  }
 }
