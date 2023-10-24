@@ -15,6 +15,8 @@ import Cuckoo
 
 import Foundation
 import logic_api
+import logic_business
+import logic_ui
 
 
 
@@ -47,11 +49,11 @@ public class MockStartupInteractorType: StartupInteractorType, Cuckoo.ProtocolMo
     
     
     
-    public func splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState {
+    public func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute {
         
-    return try await cuckoo_manager.callThrows(
+    return await cuckoo_manager.call(
     """
-    splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState
+    initialize(with: TimeInterval) async -> AppRoute
     """,
             parameters: (splashAnimationDuration),
             escapingParameters: (splashAnimationDuration),
@@ -59,27 +61,7 @@ public class MockStartupInteractorType: StartupInteractorType, Cuckoo.ProtocolMo
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: await __defaultImplStub!.splashSetup(splashAnimationDuration: splashAnimationDuration))
-        
-    }
-    
-    
-    
-    
-    
-    public func sampleCall() async -> SamplePartialState {
-        
-    return await cuckoo_manager.call(
-    """
-    sampleCall() async -> SamplePartialState
-    """,
-            parameters: (),
-            escapingParameters: (),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: await __defaultImplStub!.sampleCall())
+            defaultCall: await __defaultImplStub!.initialize(with: splashAnimationDuration))
         
     }
     
@@ -95,22 +77,11 @@ public class MockStartupInteractorType: StartupInteractorType, Cuckoo.ProtocolMo
         
         
         
-        func splashSetup<M1: Cuckoo.Matchable>(splashAnimationDuration: M1) -> Cuckoo.ProtocolStubThrowingFunction<(TimeInterval), SplashSetupPartialState> where M1.MatchedType == TimeInterval {
+        func initialize<M1: Cuckoo.Matchable>(with splashAnimationDuration: M1) -> Cuckoo.ProtocolStubFunction<(TimeInterval), AppRoute> where M1.MatchedType == TimeInterval {
             let matchers: [Cuckoo.ParameterMatcher<(TimeInterval)>] = [wrap(matchable: splashAnimationDuration) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockStartupInteractorType.self, method:
     """
-    splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState
-    """, parameterMatchers: matchers))
-        }
-        
-        
-        
-        
-        func sampleCall() -> Cuckoo.ProtocolStubFunction<(), SamplePartialState> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockStartupInteractorType.self, method:
-    """
-    sampleCall() async -> SamplePartialState
+    initialize(with: TimeInterval) async -> AppRoute
     """, parameterMatchers: matchers))
         }
         
@@ -134,23 +105,11 @@ public class MockStartupInteractorType: StartupInteractorType, Cuckoo.ProtocolMo
         
         
         @discardableResult
-        func splashSetup<M1: Cuckoo.Matchable>(splashAnimationDuration: M1) -> Cuckoo.__DoNotUse<(TimeInterval), SplashSetupPartialState> where M1.MatchedType == TimeInterval {
+        func initialize<M1: Cuckoo.Matchable>(with splashAnimationDuration: M1) -> Cuckoo.__DoNotUse<(TimeInterval), AppRoute> where M1.MatchedType == TimeInterval {
             let matchers: [Cuckoo.ParameterMatcher<(TimeInterval)>] = [wrap(matchable: splashAnimationDuration) { $0 }]
             return cuckoo_manager.verify(
     """
-    splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        @discardableResult
-        func sampleCall() -> Cuckoo.__DoNotUse<(), SamplePartialState> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-    """
-    sampleCall() async -> SamplePartialState
+    initialize(with: TimeInterval) async -> AppRoute
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -168,16 +127,8 @@ public class StartupInteractorTypeStub: StartupInteractorType {
     
     
     
-    public func splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState  {
-        return DefaultValueRegistry.defaultValue(for: (SplashSetupPartialState).self)
-    }
-    
-    
-    
-    
-    
-    public func sampleCall() async -> SamplePartialState  {
-        return DefaultValueRegistry.defaultValue(for: (SamplePartialState).self)
+    public func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute  {
+        return DefaultValueRegistry.defaultValue(for: (AppRoute).self)
     }
     
     
@@ -2803,6 +2754,14 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_startup
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
 import UIKit
 
 import Cuckoo
@@ -2811,7 +2770,7 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
-import SwiftUI
+import Foundation
 
 import Cuckoo
 @testable import logic_business
@@ -4054,6 +4013,22 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
     }
     
     
+    
+    
+    
+    public var backgroundColorForScreenDictionary: [AppRouteKey: Color] {
+        get {
+            return cuckoo_manager.getter("backgroundColorForScreenDictionary",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.backgroundColorForScreenDictionary)
+        }
+        
+    }
+    
+    
 
     
     
@@ -4081,6 +4056,13 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
         
         
         
+        
+        var backgroundColorForScreenDictionary: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigUiLogic, [AppRouteKey: Color]> {
+            return .init(manager: cuckoo_manager, name: "backgroundColorForScreenDictionary")
+        }
+        
+        
+        
     }
 
     public struct __VerificationProxy_ConfigUiLogic: Cuckoo.VerificationProxy {
@@ -4102,6 +4084,13 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
         }
         
         
+        
+        
+        var backgroundColorForScreenDictionary: Cuckoo.VerifyReadOnlyProperty<[AppRouteKey: Color]> {
+            return .init(manager: cuckoo_manager, name: "backgroundColorForScreenDictionary", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
     
         
     }
@@ -4116,6 +4105,17 @@ public class ConfigUiLogicStub: ConfigUiLogic {
     public var initialRoute: AppRoute {
         get {
             return DefaultValueRegistry.defaultValue(for: (AppRoute).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var backgroundColorForScreenDictionary: [AppRouteKey: Color] {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ([AppRouteKey: Color]).self)
         }
         
     }
@@ -4152,6 +4152,7 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+import logic_resources
 
 
 
@@ -4238,15 +4239,6 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
-import SwiftUI
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_startup
-@testable import logic_api
-@testable import logic_ui
-
 import SwiftUI
 import logic_resources
 
@@ -4716,6 +4708,26 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
     }
     
     
+    
+    
+    
+    public func getBackgroundColor() -> Color {
+        
+    return cuckoo_manager.call(
+    """
+    getBackgroundColor() -> Color
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getBackgroundColor())
+        
+    }
+    
+    
 
     public struct __StubbingProxy_RouterHostType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -4809,6 +4821,17 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
             return .init(stub: cuckoo_manager.createStub(for: MockRouterHostType.self, method:
     """
     getCurrentScreen() -> AppRoute?
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func getBackgroundColor() -> Cuckoo.ProtocolStubFunction<(), Color> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterHostType.self, method:
+    """
+    getBackgroundColor() -> Color
     """, parameterMatchers: matchers))
         }
         
@@ -4925,6 +4948,18 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
         }
         
         
+        
+        
+        @discardableResult
+        func getBackgroundColor() -> Cuckoo.__DoNotUse<(), Color> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    getBackgroundColor() -> Color
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -4996,6 +5031,14 @@ public class RouterHostTypeStub: RouterHostType {
     
     public func getCurrentScreen() -> AppRoute?  {
         return DefaultValueRegistry.defaultValue(for: (AppRoute?).self)
+    }
+    
+    
+    
+    
+    
+    public func getBackgroundColor() -> Color  {
+        return DefaultValueRegistry.defaultValue(for: (Color).self)
     }
     
     

@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 import Foundation
-import logic_api
-import logic_business
-import logic_ui
 
-public protocol StartupInteractorType {
-  func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute
-}
+public extension TimeInterval {
 
-public final actor StartupInteractor: StartupInteractorType {
+  var seconds: Int {
+    return Int(self.rounded())
+  }
 
-  public init() {}
+  var milliseconds: Int {
+    return Int(self * 1_000)
+  }
 
-  public func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute {
-    try? await Task.sleep(nanoseconds: splashAnimationDuration.nanoseconds)
-    return .dashboard
+  var nanoseconds: UInt64 {
+    return UInt64(self * 1_000_000_000)
   }
 }

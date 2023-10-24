@@ -50,8 +50,10 @@ struct Application: App {
           .fill(backgroundColor)
           .frame(maxWidth: .infinity, maxHeight: .infinity)
           .edgesIgnoringSafeArea(.all)
-          .animation(.easeIn(duration: UINavigationController.hideShowBarDuration),
-                     value: backgroundColor)
+          .animation(
+            .easeIn(duration: UINavigationController.hideShowBarDuration),
+            value: backgroundColor
+          )
 
         routerHost.composeApplication()
           .if(self.shouldAddBottomPadding == false) {

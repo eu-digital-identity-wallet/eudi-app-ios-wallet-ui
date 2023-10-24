@@ -20,45 +20,25 @@
 @testable import feature_test
 
 class BaseTests: EudiTest {
-
+  
   override func setUp() async throws {
     try await super.setUp()
   }
-
+  
   override func tearDown() {
     super.tearDown()
   }
-
-  func test() async {
-    
-    let mockedDto: SampleResponseDTO = .init()
-    let mock = MockStartupInteractorType()
-    
-    stub(mock) { stub in
-      when(stub.sampleCall()).thenReturn(.success(mockedDto))
-    }
-    
-    let response = await mock.sampleCall()
-    
-    switch response {
-    case .success(let dto):
-      XCTAssertEqual(dto, mockedDto)
-    case .failure(let error):
-      XCTFail(error.localizedDescription)
-    }
-    
-  }
   
   func testBusinessLogic() {
-
+    
     let mock = MockConfigLogic()
-
+    
     stub(mock) { stub in
       when(stub.baseHost.get).thenReturn(SampleConstants.urlMock)
     }
-
+    
     XCTAssertEqual(mock.baseHost, SampleConstants.urlMock)
-
+    
     XCTAssertTrue(true, SampleConstants.urlMock)
   }
 }

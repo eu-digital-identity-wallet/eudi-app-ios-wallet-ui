@@ -45,7 +45,8 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
       initialState: .init(
         config: config,
         isAnimating: false,
-        setupError: nil)
+        setupError: nil
+      )
     )
   }
 
@@ -53,18 +54,10 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
     self.setNewState(isAnimating: true)
   }
 
-  func setup() async {
-    switch await interactor.splashSetup(splashAnimationDuration: viewState.config.splashDuration) {
-    case .success:
-      splashFinished()
-    case .failure(let error):
-      self.setNewState(setupError: error)
-    }
-  }
-
-  func splashFinished() {
-    self.setNewState(isAnimating: false)
-    router.push(with: .dashboard)
+  func initialize() async {
+    let route = await interactor.initialize(with: viewState.config.splashDuration)
+    setNewState(isAnimating: false)
+    router.push(with: route)
   }
 
   private func setNewState(
@@ -72,9 +65,11 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
     setupError: Error? = nil
   ) {
     setState { previous in
-        .init(config: previous.config,
-              isAnimating: isAnimating ?? previous.isAnimating,
-              setupError: setupError ?? previous.setupError)
+        .init(
+          config: previous.config,
+          isAnimating: isAnimating ?? previous.isAnimating,
+          setupError: setupError ?? previous.setupError
+        )
     }
   }
 }

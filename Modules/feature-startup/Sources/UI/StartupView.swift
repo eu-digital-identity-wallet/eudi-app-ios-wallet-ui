@@ -27,7 +27,7 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
 
   public var body: some View {
     ContentScreen(
-      padding: 0,
+      padding: .zero,
       canScroll: false,
       allowBackGesture: false,
       background: Theme.shared.color.primary
@@ -44,7 +44,7 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
       }
     }
     .task {
-      await viewModel.setup()
+      await viewModel.initialize()
     }
   }
 }

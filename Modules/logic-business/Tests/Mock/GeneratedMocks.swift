@@ -2085,12 +2085,17 @@ import Cuckoo
 @testable import logic_business
 
 import Foundation
+
+import Cuckoo
+@testable import logic_business
+
+import Foundation
 import UIKit
 
 import Cuckoo
 @testable import logic_business
 
-import SwiftUI
+import Foundation
 
 import Cuckoo
 @testable import logic_business

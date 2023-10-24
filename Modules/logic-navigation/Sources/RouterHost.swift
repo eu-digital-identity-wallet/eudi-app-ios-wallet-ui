@@ -36,32 +36,32 @@ public final class RouterHost: RouterHostType {
 
   public func push(with route: AppRoute) {
     pilot.push(route)
-    notifyBackgroundColorUpdate()
+    onNavigationFollowUp()
   }
 
   public func popTo(with route: AppRoute, inclusive: Bool, animated: Bool) {
     pilot.popTo(route, inclusive: inclusive, animated: animated)
-    notifyBackgroundColorUpdate()
+    onNavigationFollowUp()
   }
 
   public func popTo(with route: AppRoute, inclusive: Bool) {
     pilot.popTo(route, inclusive: inclusive)
-    notifyBackgroundColorUpdate()
+    onNavigationFollowUp()
   }
 
   public func popTo(with route: AppRoute) {
     pilot.popTo(route)
-    notifyBackgroundColorUpdate()
+    onNavigationFollowUp()
   }
 
   public func pop(animated: Bool) {
     pilot.pop(animated: animated)
-    notifyBackgroundColorUpdate()
+    onNavigationFollowUp()
   }
 
   public func pop() {
     pilot.pop()
-    notifyBackgroundColorUpdate()
+    onNavigationFollowUp()
   }
 
   public func getCurrentScreen() -> AppRoute? {
@@ -101,6 +101,10 @@ public final class RouterHost: RouterHostType {
 
     return ConfigUiProvider.shared.getConfigUiLogic()
       .backgroundColorForScreenDictionary[screenKey] ?? Theme.shared.color.backgroundPaper
+  }
+
+  private func onNavigationFollowUp() {
+    notifyBackgroundColorUpdate()
   }
 
   private func notifyBackgroundColorUpdate() {

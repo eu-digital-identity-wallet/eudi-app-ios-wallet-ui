@@ -5,6 +5,7 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+import logic_business
 
 
 
@@ -262,6 +263,17 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import feature_common
 import logic_business
 import logic_resources
 import logic_ui
@@ -273,16 +285,6 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
-import logic_resources
 import logic_ui
 
 import Cuckoo
@@ -2897,6 +2899,14 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
 import UIKit
 
 import Cuckoo
@@ -2905,7 +2915,7 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
-import SwiftUI
+import Foundation
 
 import Cuckoo
 @testable import logic_business
@@ -4148,6 +4158,22 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
     }
     
     
+    
+    
+    
+    public var backgroundColorForScreenDictionary: [AppRouteKey: Color] {
+        get {
+            return cuckoo_manager.getter("backgroundColorForScreenDictionary",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.backgroundColorForScreenDictionary)
+        }
+        
+    }
+    
+    
 
     
     
@@ -4175,6 +4201,13 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
         
         
         
+        
+        var backgroundColorForScreenDictionary: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigUiLogic, [AppRouteKey: Color]> {
+            return .init(manager: cuckoo_manager, name: "backgroundColorForScreenDictionary")
+        }
+        
+        
+        
     }
 
     public struct __VerificationProxy_ConfigUiLogic: Cuckoo.VerificationProxy {
@@ -4196,6 +4229,13 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
         }
         
         
+        
+        
+        var backgroundColorForScreenDictionary: Cuckoo.VerifyReadOnlyProperty<[AppRouteKey: Color]> {
+            return .init(manager: cuckoo_manager, name: "backgroundColorForScreenDictionary", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
     
         
     }
@@ -4210,6 +4250,17 @@ public class ConfigUiLogicStub: ConfigUiLogic {
     public var initialRoute: AppRoute {
         get {
             return DefaultValueRegistry.defaultValue(for: (AppRoute).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var backgroundColorForScreenDictionary: [AppRouteKey: Color] {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ([AppRouteKey: Color]).self)
         }
         
     }
@@ -4246,6 +4297,7 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+import logic_resources
 
 
 
@@ -4332,15 +4384,6 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
-import SwiftUI
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_ui
-
 import SwiftUI
 import logic_resources
 
@@ -4810,6 +4853,26 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
     }
     
     
+    
+    
+    
+    public func getBackgroundColor() -> Color {
+        
+    return cuckoo_manager.call(
+    """
+    getBackgroundColor() -> Color
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getBackgroundColor())
+        
+    }
+    
+    
 
     public struct __StubbingProxy_RouterHostType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -4903,6 +4966,17 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
             return .init(stub: cuckoo_manager.createStub(for: MockRouterHostType.self, method:
     """
     getCurrentScreen() -> AppRoute?
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func getBackgroundColor() -> Cuckoo.ProtocolStubFunction<(), Color> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterHostType.self, method:
+    """
+    getBackgroundColor() -> Color
     """, parameterMatchers: matchers))
         }
         
@@ -5019,6 +5093,18 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
         }
         
         
+        
+        
+        @discardableResult
+        func getBackgroundColor() -> Cuckoo.__DoNotUse<(), Color> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    getBackgroundColor() -> Color
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -5090,6 +5176,14 @@ public class RouterHostTypeStub: RouterHostType {
     
     public func getCurrentScreen() -> AppRoute?  {
         return DefaultValueRegistry.defaultValue(for: (AppRoute?).self)
+    }
+    
+    
+    
+    
+    
+    public func getBackgroundColor() -> Color  {
+        return DefaultValueRegistry.defaultValue(for: (Color).self)
     }
     
     
