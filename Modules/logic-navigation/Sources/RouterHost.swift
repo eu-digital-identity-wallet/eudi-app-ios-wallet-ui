@@ -95,8 +95,12 @@ public final class RouterHost: RouterHostType {
   }
 
   public func getBackgroundColor() -> Color {
-    ConfigUiProvider.shared.getConfigUiLogic()
-      .backgroundColorForScreenDictionary[self.getCurrentScreen()?.key ?? ""] ?? Theme.shared.color.white
+    guard let screenKey = self.getCurrentScreen()?.key else {
+      return Theme.shared.color.backgroundPaper
+    }
+
+    return ConfigUiProvider.shared.getConfigUiLogic()
+      .backgroundColorForScreenDictionary[screenKey] ?? Theme.shared.color.backgroundPaper
   }
 
   private func notifyBackgroundColorUpdate() {
