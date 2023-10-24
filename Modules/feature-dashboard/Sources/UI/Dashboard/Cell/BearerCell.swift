@@ -56,7 +56,6 @@ extension BearerHeaderView {
         .padding(.horizontal, 6)
         Spacer()
       }
-      .colorScheme(.light)
       .padding(.horizontal, 32)
       .frame(maxWidth: .infinity)
       .shimmer(isLoading: isLoading)

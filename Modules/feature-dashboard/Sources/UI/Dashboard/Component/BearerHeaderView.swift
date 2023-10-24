@@ -39,6 +39,7 @@ struct BearerHeaderView: View {
     VStack(alignment: .leading) {
       BearerCell(item: item, isLoading: isLoading)
     }
+    .colorScheme(.light)
     .padding(.vertical, 60)
     .background(Theme.shared.color.primary)
     .roundedCorner(16, corners: [.bottomLeft, .bottomRight])
