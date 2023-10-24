@@ -17,7 +17,7 @@ import Foundation
 import logic_ui
 
 struct WelcomeState: ViewState {
-
+  let isAnimating: Bool
 }
 
 @MainActor
@@ -28,6 +28,26 @@ final class WelcomeViewModel<Router: RouterHostType, Interactor: WelcomeInteract
   init(router: Router, interactor: Interactor) {
     self.interactor = interactor
 
-    super.init(router: router, initialState: .init())
+    super.init(router: router, initialState: .init(isAnimating: true))
+  }
+
+  func finishedAnimating() {
+    setNewState(isAnimating: false)
+  }
+
+  func onClickFAQ() {
+    router.push(with: .faqs)
+  }
+
+  func onClickLogin() {
+    router.pop()
+  }
+
+  private func setNewState(
+  isAnimating: Bool? = nil
+  ) {
+    setState { previous in
+        .init(isAnimating: isAnimating ?? previous.isAnimating)
+    }
   }
 }
