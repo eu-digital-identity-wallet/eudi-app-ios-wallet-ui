@@ -18,7 +18,7 @@ import logic_api
 import logic_business
 
 public protocol StartupInteractorType {
-  func splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState
+  func splashSetup(splashAnimationDuration: TimeInterval) async -> SplashSetupPartialState
   func sampleCall() async -> SamplePartialState
 }
 
@@ -39,11 +39,15 @@ public final actor StartupInteractor: StartupInteractorType {
     }
   }
 
-  public func splashSetup(splashAnimationDuration: TimeInterval) async throws -> SplashSetupPartialState {
-    switch try await delayFor(atLeast: splashAnimationDuration, task: setupCalls) {
-    case .success(let value):
-      return .success
-    case .failure(let error):
+  public func splashSetup(splashAnimationDuration: TimeInterval) async -> SplashSetupPartialState {
+    do {
+      switch try await delayFor(atLeast: splashAnimationDuration, task: setupCalls) {
+      case .success(let value):
+        return .success
+      case .failure(let error):
+        throw error
+      }
+    } catch {
       return .failure(error)
     }
   }

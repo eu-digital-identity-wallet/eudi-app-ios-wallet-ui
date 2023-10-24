@@ -36,7 +36,7 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
   ) {
 
     guard let config = config as? UIConfig.Startup else {
-      fatalError("BiometryViewModel:: Invalid configuraton")
+      fatalError("StartupViewModel:: Invalid configuraton")
     }
 
     self.interactor = interactor
@@ -54,14 +54,10 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
   }
 
   func setup() async {
-    do {
-      switch try await interactor.splashSetup(splashAnimationDuration: viewState.config.splashDuration) {
-      case .success:
-        splashFinished()
-      case .failure(let error):
-        self.setNewState(setupError: error)
-      }
-    } catch {
+    switch await interactor.splashSetup(splashAnimationDuration: viewState.config.splashDuration) {
+    case .success:
+      splashFinished()
+    case .failure(let error):
       self.setNewState(setupError: error)
     }
   }
