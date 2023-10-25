@@ -1,10 +1,10 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 let eudiGitUrl = "https://github.com/eu-digital-identity-wallet/"
-let packNames = ["eudi-lib-ios-iso18013-data-transfer"]
-let products = ["MdocDataTransfer18013", "SiopOpenID4VP", "CodeScanner"]
+let packNames = ["eudi-lib-ios-wallet-kit"]
+let products = ["EudiWalletKit", "CodeScanner"]
 // example call: TUIST_IS_CI=false tuist generate -n
-let thirdPartyPackages = ["https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift", "https://github.com/twostraws/CodeScanner.git"]
+let thirdPartyPackages = ["https://github.com/twostraws/CodeScanner.git"]
 let testPackages = [Package.remote(url: "https://github.com/birdrides/mockingbird.git", requirement: .branch("master"))] 
 // MARK: - Packages
 var packages: [Package] 

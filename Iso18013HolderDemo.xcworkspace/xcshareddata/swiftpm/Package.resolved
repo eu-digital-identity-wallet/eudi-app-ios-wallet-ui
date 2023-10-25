@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/filom/ASN1Decoder",
       "state" : {
-        "revision" : "65953a42a0f039f53c73e48fd88c02809f7db607",
-        "version" : "1.8.0"
+        "revision" : "d30708c89cbbf8f0f27122a53fbd98d0cda079fd",
+        "version" : "1.9.0"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-presentation-exchange-swift.git",
       "state" : {
-        "revision" : "9974f148deaaec2df324732a7f1d99dc0e6ed8f6",
-        "version" : "0.0.39"
+        "revision" : "70e122d3eb371ea6d8d5e423d3e98dabeaaebfaa",
+        "version" : "0.0.41"
       }
     },
     {
@@ -73,12 +73,21 @@
       }
     },
     {
+      "identity" : "eudi-lib-ios-wallet-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit",
+      "state" : {
+        "branch" : "develop",
+        "revision" : "656cc1b2c997603009530fdeb19d64a9e5c80585"
+      }
+    },
+    {
       "identity" : "hitch",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Hitch.git",
       "state" : {
-        "revision" : "de110dd6d2de0f41f4a4e7b7dea0bb769df7b12b",
-        "version" : "0.4.113"
+        "revision" : "0698c164bd972c15e64f517dba63716b7217087b",
+        "version" : "0.4.115"
       }
     },
     {

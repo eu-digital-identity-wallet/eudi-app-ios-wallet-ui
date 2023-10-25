@@ -6,13 +6,19 @@
 //
 
 import SwiftUI
-import MdocDataTransfer18013
+import EudiWalletKit
 
 @main
 struct mdoc_holderApp: App {
-    var body: some Scene {
-        WindowGroup {
-		  MainHolderView().environmentObject(MdocAppData()).environmentObject(MdocGattServer()).environmentObject(OpenId4VpClient.shared)
-        }
-    }
+	@State private var path = NavigationPath()
+	
+	var body: some Scene {
+		WindowGroup {
+			let storageSvc = DataSampleStorageService()
+			let wallet = UserWallet(storageService: storageSvc)
+			NavigationStack(path: $path) {
+				MainHolderView(appData: storageSvc, path: $path).environmentObject(wallet)					
+			}
+		}
+	}
 }
