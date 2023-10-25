@@ -4152,7 +4152,7 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
     
     
     
-    public var backgroundColorForScreenDictionary: [AppRouteKey: Color] {
+    public var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] {
         get {
             return cuckoo_manager.getter("backgroundColorForScreenDictionary",
                 superclassCall:
@@ -4193,7 +4193,7 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
         
         
         
-        var backgroundColorForScreenDictionary: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigUiLogic, [AppRouteKey: Color]> {
+        var backgroundColorForScreenDictionary: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigUiLogic, [AppRouteKey: UIConfig.ToolBar]> {
             return .init(manager: cuckoo_manager, name: "backgroundColorForScreenDictionary")
         }
         
@@ -4222,7 +4222,7 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
         
         
         
-        var backgroundColorForScreenDictionary: Cuckoo.VerifyReadOnlyProperty<[AppRouteKey: Color]> {
+        var backgroundColorForScreenDictionary: Cuckoo.VerifyReadOnlyProperty<[AppRouteKey: UIConfig.ToolBar]> {
             return .init(manager: cuckoo_manager, name: "backgroundColorForScreenDictionary", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
@@ -4249,9 +4249,9 @@ public class ConfigUiLogicStub: ConfigUiLogic {
     
     
     
-    public var backgroundColorForScreenDictionary: [AppRouteKey: Color] {
+    public var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] {
         get {
-            return DefaultValueRegistry.defaultValue(for: ([AppRouteKey: Color]).self)
+            return DefaultValueRegistry.defaultValue(for: ([AppRouteKey: UIConfig.ToolBar]).self)
         }
         
     }
@@ -4428,6 +4428,16 @@ import Cuckoo
 
 import SwiftUI
 import logic_business
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_authentication
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import SwiftUI
 import logic_resources
 
 import Cuckoo
@@ -4847,11 +4857,11 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
     
     
     
-    public func getBackgroundColor() -> Color {
+    public func getToolbarConfig() -> UIConfig.ToolBar {
         
     return cuckoo_manager.call(
     """
-    getBackgroundColor() -> Color
+    getToolbarConfig() -> UIConfig.ToolBar
     """,
             parameters: (),
             escapingParameters: (),
@@ -4859,7 +4869,7 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: __defaultImplStub!.getBackgroundColor())
+            defaultCall: __defaultImplStub!.getToolbarConfig())
         
     }
     
@@ -4963,11 +4973,11 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
         
         
         
-        func getBackgroundColor() -> Cuckoo.ProtocolStubFunction<(), Color> {
+        func getToolbarConfig() -> Cuckoo.ProtocolStubFunction<(), UIConfig.ToolBar> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRouterHostType.self, method:
     """
-    getBackgroundColor() -> Color
+    getToolbarConfig() -> UIConfig.ToolBar
     """, parameterMatchers: matchers))
         }
         
@@ -5087,11 +5097,11 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func getBackgroundColor() -> Cuckoo.__DoNotUse<(), Color> {
+        func getToolbarConfig() -> Cuckoo.__DoNotUse<(), UIConfig.ToolBar> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    getBackgroundColor() -> Color
+    getToolbarConfig() -> UIConfig.ToolBar
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -5173,8 +5183,8 @@ public class RouterHostTypeStub: RouterHostType {
     
     
     
-    public func getBackgroundColor() -> Color  {
-        return DefaultValueRegistry.defaultValue(for: (Color).self)
+    public func getToolbarConfig() -> UIConfig.ToolBar  {
+        return DefaultValueRegistry.defaultValue(for: (UIConfig.ToolBar).self)
     }
     
     
