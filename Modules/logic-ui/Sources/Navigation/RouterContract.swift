@@ -61,7 +61,7 @@ public protocol RouterHostType {
   func popTo(with route: AppRoute)
   func composeApplication() -> AnyView
   func getCurrentScreen() -> AppRoute?
-  func getBackgroundColor() -> Color
+  func getToolbarConfig() -> UIConfig.ToolBar
 }
 
 public class PreviewRouter: RouterHostType {
@@ -84,6 +84,6 @@ public class PreviewRouter: RouterHostType {
 
   public func getCurrentScreen() -> AppRoute? { .none }
 
-  public func getBackgroundColor() -> Color { .clear }
+  public func getToolbarConfig() -> UIConfig.ToolBar { .init(.clear) }
 
 }

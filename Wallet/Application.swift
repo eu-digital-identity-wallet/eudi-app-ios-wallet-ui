@@ -29,7 +29,7 @@ struct Application: App {
   @State var isScreenCapping: Bool = false
   @State var blurType: BlurType = .none
   @State var shouldAddBottomPadding: Bool = false
-  @State var backgroundColor: Color = Theme.shared.color.primary
+  @State var toolbarConfig: UIConfig.ToolBar = .init(Theme.shared.color.primary)
 
   private let routerHost: RouterHostType
   private let configUiLogic: ConfigUiLogic
@@ -39,7 +39,7 @@ struct Application: App {
     self.routerHost = RouterHost()
     self.configUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
     self.securityController = SecurityController()
-    self.backgroundColor = routerHost.getBackgroundColor()
+    self.toolbarConfig = routerHost.getToolbarConfig()
   }
 
   var body: some Scene {
@@ -47,12 +47,12 @@ struct Application: App {
       ZStack {
 
         Rectangle()
-          .fill(backgroundColor)
+          .fill(toolbarConfig.backgroundColor)
           .frame(maxWidth: .infinity, maxHeight: .infinity)
           .edgesIgnoringSafeArea(.all)
           .animation(
             .easeIn(duration: UINavigationController.hideShowBarDuration),
-            value: backgroundColor
+            value: toolbarConfig.backgroundColor
           )
 
         routerHost.composeApplication()
@@ -89,7 +89,7 @@ struct Application: App {
         self.isScreenCapping.toggle()
       }
       .onReceive(NotificationCenter.default.publisher(for: .shouldChangeBackgroundColor), perform: { _ in
-        self.backgroundColor = routerHost.getBackgroundColor()
+        self.toolbarConfig = routerHost.getToolbarConfig()
       })
       .task {
         await checkForHomeIndicator()

@@ -39,6 +39,7 @@ public protocol ImageManagerProtocol {
   var exclamationmarkOctagon: Image { get }
   var plus: Image { get }
   var share: Image { get }
+  var warning: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -66,6 +67,7 @@ final class ImageManager: ImageManagerProtocol {
     case exclamationmarkOctagon = "exclamationmark.octagon"
     case plus = "plus"
     case share = "iphone.and.arrow.forward"
+    case warning = "ic-warning"
   }
 
   // MARK: - Properties
@@ -142,5 +144,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var share: Image {
     Image(systemName: ImageEnum.share.rawValue)
+  }
+  var warning: Image {
+    Image(ImageEnum.warning.rawValue, bundle: bundle)
   }
 }

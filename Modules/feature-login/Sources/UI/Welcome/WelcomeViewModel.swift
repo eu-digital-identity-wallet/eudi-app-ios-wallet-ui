@@ -43,7 +43,7 @@ final class WelcomeViewModel<Router: RouterHostType, Interactor: WelcomeInteract
   }
 
   func onClickLogin() {
-    router.pop()
+    router.push(with: .dashboard)
   }
 
   private func setNewState(

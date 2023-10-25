@@ -36,43 +36,42 @@ public struct WelcomeView<Router: RouterHostType, Interactor: WelcomeInteractorT
       VStack {
         ZStack {
           Rectangle()
-            .fill(viewModel.viewState.isAnimating ? Theme.shared.color.primary : Theme.shared.color.backgroundPaper)
+            .fill(viewModel.viewState.isAnimating
+                  ? Theme.shared.color.primary
+                  : Theme.shared.color.backgroundPaper
+            )
             .ignoresSafeArea()
+
           SplashBackground(
             isAnimating: true
           )
-            .ignoresSafeArea()
-            .roundedCorner(Theme.shared.shape.medium, corners: [.bottomLeft, .bottomRight])
+          .ignoresSafeArea()
+          .roundedCorner(Theme.shared.shape.medium, corners: [.bottomLeft, .bottomRight])
+
         }
         if !viewModel.viewState.isAnimating {
-          VStack {
+          VStack(spacing: SPACING_MEDIUM) {
             WrapButtonView(
               style: .primary,
               title: .loginButton,
-              onAction: {
-              viewModel.onClickLogin()
-            }()
+              onAction: viewModel.onClickLogin()
             )
-            VSpacer.medium()
             WrapButtonView(
               style: .secondary,
               title: .readFaqButton,
-              onAction: {
-              viewModel.onClickFAQ()
-            }()
+              onAction: viewModel.onClickFAQ()
             )
           }
           .padding(.vertical, Theme.shared.shape.extraLarge)
           .padding(viewModel.viewState.isAnimating ? 0 : Theme.shared.dimension.padding)
           .transition(.move(edge: .bottom))
         }
-
       }
       .background(Theme.shared.color.backgroundPaper)
       .onAppear {
         withAnimation(
-            .easeOut(duration: 0.66)
-            .delay(0.4)
+          .easeOut(duration: 0.66)
+          .delay(0.4)
         ) {
           viewModel.onAnimationCompletion()
         }

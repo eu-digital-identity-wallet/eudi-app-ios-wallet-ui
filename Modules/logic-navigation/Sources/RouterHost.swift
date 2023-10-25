@@ -96,13 +96,13 @@ public final class RouterHost: RouterHostType {
     .eraseToAnyView()
   }
 
-  public func getBackgroundColor() -> Color {
+  public func getToolbarConfig() -> UIConfig.ToolBar {
     guard let screenKey = self.getCurrentScreen()?.key else {
-      return Theme.shared.color.backgroundPaper
+      return .init(Theme.shared.color.backgroundPaper)
     }
 
     return ConfigUiProvider.shared.getConfigUiLogic()
-      .backgroundColorForScreenDictionary[screenKey] ?? Theme.shared.color.backgroundPaper
+      .backgroundColorForScreenDictionary[screenKey] ?? .init(Theme.shared.color.backgroundPaper)
   }
 
   private func onNavigationFollowUp() {

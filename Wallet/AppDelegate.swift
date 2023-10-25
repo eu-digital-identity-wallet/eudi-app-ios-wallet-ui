@@ -38,6 +38,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     return true
   }
 
+  func application(
+    _ application: UIApplication,
+    shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplication.ExtensionPointIdentifier
+  ) -> Bool {
+    switch extensionPointIdentifier {
+    case UIApplication.ExtensionPointIdentifier.keyboard: return false
+    default: return true
+    }
+  }
+
   private func initializeNetworkLogging() {
 
     guard configSecurityLogic.useNetworkLogger else {

@@ -32,6 +32,8 @@ public protocol ColorManagerProtocol {
   var lightGradientEnd: Color { get }
   var lightGradientStart: Color { get }
   var error: Color { get }
+  var warning: Color { get }
+  var info: Color { get }
   var primaryDark: Color { get }
   var primaryLight: Color { get }
   var primary: Color { get }
@@ -61,6 +63,8 @@ final class ColorManager: ColorManagerProtocol {
     case lightGradientStart
 
     case errorMain
+    case warningMain
+    case infoMain
     case primaryDark
     case primaryLight
     case primaryMain
@@ -154,6 +158,12 @@ final class ColorManager: ColorManagerProtocol {
   }
   public var textSecondaryLight: Color {
     Color(PaletteColorEnum.textSecondaryLight.rawValue, bundle: bundle)
+  }
+  var warning: Color {
+    Color(PaletteColorEnum.warningMain.rawValue, bundle: bundle)
+  }
+  var info: Color {
+    Color(PaletteColorEnum.infoMain.rawValue, bundle: bundle)
   }
 
   var bundle: Bundle

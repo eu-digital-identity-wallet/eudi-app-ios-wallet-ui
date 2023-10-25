@@ -44,3 +44,14 @@ public extension UIConfig {
     }
   }
 }
+
+public extension UIConfig {
+  struct ToolBar: Equatable {
+
+    public let backgroundColor: Color
+
+    public init(_ backgroundColor: Color) {
+      self.backgroundColor = backgroundColor
+    }
+  }
+}

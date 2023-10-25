@@ -26,6 +26,6 @@ public final actor StartupInteractor: StartupInteractorType {
 
   public func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute {
     try? await Task.sleep(nanoseconds: splashAnimationDuration.nanoseconds)
-    return .dashboard
+    return .welcome
   }
 }

@@ -41,9 +41,14 @@ public struct AuthenticationRequestView<Router: RouterHostType, Interactor: Auth
 
       HStack {
 
-        Text("\(Text(viewModel.viewState.caption)) \(Text(viewModel.viewState.dataRequestInfo).underline())")
-          .typography(ThemeManager.shared.font.bodyMedium)
+        let titleText = Text(viewModel.viewState.caption)
           .foregroundColor(ThemeManager.shared.color.textSecondaryDark)
+
+        let whyInfoText = Text(viewModel.viewState.dataRequestInfo)
+          .foregroundColor(ThemeManager.shared.color.textPrimaryDark)
+
+        Text("\(titleText) \(whyInfoText)")
+          .typography(ThemeManager.shared.font.bodyMedium)
           .onTapGesture { viewModel.onShowRequestInfoModal() }
 
         Spacer()
@@ -137,11 +142,12 @@ public struct AuthenticationRequestView<Router: RouterHostType, Interactor: Auth
     if !viewModel.viewState.itemsAreAllSelected {
       HStack(spacing: SPACING_MEDIUM) {
 
-        ThemeManager.shared.image.exclamationmarkCircle
+        ThemeManager.shared.image.warning
           .resizable()
+          .renderingMode(.template)
           .scaledToFit()
           .frame(width: 35)
-          .foregroundStyle(ThemeManager.shared.color.secondary)
+          .foregroundStyle(ThemeManager.shared.color.warning)
 
         Text(.incompleteRequestDataSelection)
           .typography(ThemeManager.shared.font.bodyMedium)
@@ -151,7 +157,7 @@ public struct AuthenticationRequestView<Router: RouterHostType, Interactor: Auth
       .frame(maxWidth: .infinity)
       .overlay(
         RoundedRectangle(cornerRadius: 15)
-          .foregroundStyle(ThemeManager.shared.color.secondary.opacity(0.2))
+          .foregroundStyle(ThemeManager.shared.color.warning.opacity(0.12))
       )
     }
   }

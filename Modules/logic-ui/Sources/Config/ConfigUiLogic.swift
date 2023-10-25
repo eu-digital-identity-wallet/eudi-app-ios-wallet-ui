@@ -26,7 +26,7 @@ public protocol ConfigUiLogic {
 
   var initialRoute: AppRoute { get }
 
-  var backgroundColorForScreenDictionary: [AppRouteKey: Color] { get }
+  var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] { get }
 
   init(themeConfiguration: ThemeConfiguration)
 }
