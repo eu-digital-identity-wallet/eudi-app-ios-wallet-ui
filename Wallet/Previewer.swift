@@ -68,3 +68,7 @@ private func successConfig() -> UIConfig.Success {
     visualKind: .defaultIcon
   )
 }
+
+#Preview("Welcome View") {
+  WelcomeView(with: PreviewRouter(), and: WelcomeInteractor())
+}

@@ -28,6 +28,7 @@ public indirect enum AppRoute: Equatable {
   case biometry(config: any UIConfigType)
   case authenticationLoader(String)
   case authenticationRequest
+  case welcome
 
   public var key: String {
     return switch self {
@@ -45,6 +46,8 @@ public indirect enum AppRoute: Equatable {
       "AuthenticationLoader"
     case .authenticationRequest:
       "AuthenticationRequest"
+    case .welcome:
+      "Welcome"
     }
   }
 }
