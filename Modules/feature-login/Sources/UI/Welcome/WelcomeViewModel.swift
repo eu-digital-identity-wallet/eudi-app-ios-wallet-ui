@@ -31,7 +31,7 @@ final class WelcomeViewModel<Router: RouterHostType, Interactor: WelcomeInteract
     super.init(router: router, initialState: .init(isAnimating: true))
   }
 
-  func finishedAnimating() {
+  func onAnimationCompletion() {
     setNewState(isAnimating: false)
   }
 

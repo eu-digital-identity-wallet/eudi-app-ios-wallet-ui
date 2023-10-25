@@ -67,7 +67,7 @@ public struct WelcomeView<Router: RouterHostType, Interactor: WelcomeInteractorT
             .easeOut(duration: 0.66)
             .delay(0.4)
         ) {
-          viewModel.finishedAnimating()
+          viewModel.onAnimationCompletion()
         }
       }
     }

@@ -57,8 +57,7 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
   func initialize() async {
     let route = await interactor.initialize(with: viewState.config.splashDuration)
     setNewState(isAnimating: false)
-//    router.push(with: route)
-    router.push(with: .welcome)
+    router.push(with: route)
   }
 
   private func setNewState(
