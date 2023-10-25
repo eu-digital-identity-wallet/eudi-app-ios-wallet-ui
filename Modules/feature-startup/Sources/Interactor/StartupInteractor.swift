@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 import Foundation
-import logic_api
-import logic_business
 import logic_ui
 
 public protocol StartupInteractorType {

@@ -71,6 +71,26 @@ extension AuthenticationRequestView {
         }
         .frame(maxWidth: .infinity, maxHeight: 50)
         .padding(.bottom)
+
+      } else if let verification = cellModel as? RequestDataVerification {
+
+        ContentExpandable(title: .custom(verification.title)) {
+
+          VStack(spacing: SPACING_LARGE) {
+
+            ForEach(verification.items, id: \.id) {
+              WrapCheckBoxView(
+                isSelected: $0.isSelected,
+                isVisible: $0.isVisible,
+                isEnabled: false,
+                id: $0.id,
+                title: $0.title,
+                value: $0.value
+              )
+            }
+          }
+        }
+        .padding(.bottom)
       }
     }
   }

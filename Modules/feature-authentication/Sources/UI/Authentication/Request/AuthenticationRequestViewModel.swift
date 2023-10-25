@@ -53,7 +53,16 @@ final class AuthenticationRequestViewModel<Router: RouterHostType, Interactor: A
           RequestDataRow(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras"),
           RequestDataRow(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos"),
           RequestDataRow(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985"),
-          RequestDataRow(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")
+          RequestDataRow(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece"),
+          RequestDataVerification(
+            title: "Verification data",
+            items: [
+              RequestDataRow(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras"),
+              RequestDataRow(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos"),
+              RequestDataRow(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985"),
+              RequestDataRow(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")
+            ]
+          )
         ]
       )
     )
@@ -121,8 +130,8 @@ final class AuthenticationRequestViewModel<Router: RouterHostType, Interactor: A
     let allSelected = items.map {
       ($0 as? RequestDataRow)?.isSelected ?? true
     }
-    .filter { !$0 }
-    .isEmpty
+      .filter { !$0 }
+      .isEmpty
 
     setNewState(
       itemsAreAllSelected: allSelected,

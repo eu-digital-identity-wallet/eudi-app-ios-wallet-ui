@@ -59,6 +59,19 @@ struct RequestDataSection: RequestDataCell {
   }
 }
 
+struct RequestDataVerification: RequestDataCell {
+
+  var id: String
+  let title: String
+  let items: [RequestDataRow]
+
+  init(title: String, items: [RequestDataRow]) {
+    self.id = UUID().uuidString
+    self.title = title
+    self.items = items
+  }
+}
+
 extension RequestDataSection {
   enum `Type` {
     case id
