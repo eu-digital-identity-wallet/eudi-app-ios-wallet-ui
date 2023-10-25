@@ -25,7 +25,10 @@ final class WelcomeViewModel<Router: RouterHostType, Interactor: WelcomeInteract
 
   private let interactor: Interactor
 
-  init(router: Router, interactor: Interactor) {
+  init(
+    router: Router,
+    interactor: Interactor
+  ) {
     self.interactor = interactor
 
     super.init(router: router, initialState: .init(isAnimating: true))

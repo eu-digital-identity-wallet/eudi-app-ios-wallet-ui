@@ -22,18 +22,25 @@ public struct WelcomeView<Router: RouterHostType, Interactor: WelcomeInteractorT
 
   @ObservedObject private var viewModel: WelcomeViewModel<Router, Interactor>
 
-  public init(with router: Router, and interactor: Interactor) {
+  public init(
+    with router: Router,
+    and interactor: Interactor
+  ) {
     self.viewModel = .init(router: router, interactor: interactor)
   }
 
   public var body: some View {
-    ContentScreen(padding: 0) {
+    ContentScreen(
+      padding: .zero
+    ) {
       VStack {
         ZStack {
           Rectangle()
             .fill(viewModel.viewState.isAnimating ? Theme.shared.color.primary : Theme.shared.color.backgroundPaper)
             .ignoresSafeArea()
-          SplashBackground(isAnimating: true)
+          SplashBackground(
+            isAnimating: true
+          )
             .ignoresSafeArea()
             .roundedCorner(Theme.shared.shape.medium, corners: [.bottomLeft, .bottomRight])
         }
@@ -72,5 +79,4 @@ public struct WelcomeView<Router: RouterHostType, Interactor: WelcomeInteractorT
       }
     }
   }
-
 }
