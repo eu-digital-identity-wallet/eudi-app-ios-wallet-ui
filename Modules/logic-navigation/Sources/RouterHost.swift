@@ -27,11 +27,10 @@ import feature_authentication
 public final class RouterHost: RouterHostType {
 
   private let pilot: UIPilot<AppRoute>
+  private lazy var uiConfigLogic: ConfigUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
 
   public init() {
-    self.pilot = UIPilot(
-      initial: ConfigUiProvider.shared.getConfigUiLogic().initialRoute
-    )
+    self.pilot = UIPilot(initial: .startup)
   }
 
   public func push(with route: AppRoute) {
@@ -101,8 +100,17 @@ public final class RouterHost: RouterHostType {
       return .init(Theme.shared.color.backgroundPaper)
     }
 
-    return ConfigUiProvider.shared.getConfigUiLogic()
-      .backgroundColorForScreenDictionary[screenKey] ?? .init(Theme.shared.color.backgroundPaper)
+    return uiConfigLogic.backgroundColorForScreenDictionary[screenKey]
+    ?? .init(Theme.shared.color.backgroundPaper)
+  }
+
+  public func isAfterAuthorization() -> Bool {
+    return getCurrentScreen()?.key == uiConfigLogic.landingRoute.key ||
+    pilot.routes.contains(where: { $0.key == uiConfigLogic.landingRoute.key })
+  }
+
+  public func isScreenForeground(with route: AppRoute) -> Bool {
+    getCurrentScreen()?.key == route.key
   }
 
   private func onNavigationFollowUp() {

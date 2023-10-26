@@ -62,6 +62,8 @@ public protocol RouterHostType {
   func composeApplication() -> AnyView
   func getCurrentScreen() -> AppRoute?
   func getToolbarConfig() -> UIConfig.ToolBar
+  func isAfterAuthorization() -> Bool
+  func isScreenForeground(with route: AppRoute) -> Bool
 }
 
 public class PreviewRouter: RouterHostType {
@@ -85,5 +87,13 @@ public class PreviewRouter: RouterHostType {
   public func getCurrentScreen() -> AppRoute? { .none }
 
   public func getToolbarConfig() -> UIConfig.ToolBar { .init(.clear) }
+
+  public func isAfterAuthorization() -> Bool {
+    false
+  }
+
+  public func isScreenForeground(with route: AppRoute) -> Bool {
+    true
+  }
 
 }

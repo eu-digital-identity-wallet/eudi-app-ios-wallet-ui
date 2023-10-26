@@ -24,8 +24,8 @@ public struct WalletUiConfig: ConfigUiLogic {
     AppRoute.welcome.key: .init(Theme.shared.color.primary)
   ]
 
-  public var initialRoute: AppRoute {
-    return .startup
+  public var landingRoute: AppRoute {
+    return .dashboard
   }
 
   public init(themeConfiguration: ThemeConfiguration) {

@@ -21,10 +21,10 @@ public typealias AppRouteKey = String
 public protocol ConfigUiLogic {
 
   /**
-   * App Route Entry Point
+   * App Route after authorization Point
    */
 
-  var initialRoute: AppRoute { get }
+  var landingRoute: AppRoute { get }
 
   var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] { get }
 

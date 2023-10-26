@@ -51,12 +51,19 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
         documents: documents,
         bearer: bearer
       )
+      handleDeepLink()
     case .failure:
       setNewState(
         isLoading: false,
         documents: [],
         bearer: nil
       )
+    }
+  }
+
+  private func handleDeepLink() {
+    if let deepLink = getPendingDeepLinkAction() {
+      handleDeepLinkAction(routerHost: router, deepLinkAction: deepLink)
     }
   }
 

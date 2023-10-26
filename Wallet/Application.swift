@@ -71,6 +71,11 @@ struct Application: App {
             .ignoresSafeArea(.all)
         }
       }
+      .onOpenURL { url in
+        if let deepLink = hasDeepLink(url: url) {
+          handleDeepLinkAction(routerHost: routerHost, deepLinkAction: deepLink)
+        }
+      }
       .onChange(of: scenePhase) { phase in
         switch phase {
         case .background:

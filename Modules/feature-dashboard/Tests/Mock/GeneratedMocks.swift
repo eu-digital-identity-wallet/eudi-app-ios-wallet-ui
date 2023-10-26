@@ -4145,14 +4145,14 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
     
     
     
-    public var initialRoute: AppRoute {
+    public var landingRoute: AppRoute {
         get {
-            return cuckoo_manager.getter("initialRoute",
+            return cuckoo_manager.getter("landingRoute",
                 superclassCall:
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.initialRoute)
+                defaultCall:  __defaultImplStub!.landingRoute)
         }
         
     }
@@ -4195,8 +4195,8 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
         
         
         
-        var initialRoute: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigUiLogic, AppRoute> {
-            return .init(manager: cuckoo_manager, name: "initialRoute")
+        var landingRoute: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigUiLogic, AppRoute> {
+            return .init(manager: cuckoo_manager, name: "landingRoute")
         }
         
         
@@ -4224,8 +4224,8 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
         
         
         
-        var initialRoute: Cuckoo.VerifyReadOnlyProperty<AppRoute> {
-            return .init(manager: cuckoo_manager, name: "initialRoute", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var landingRoute: Cuckoo.VerifyReadOnlyProperty<AppRoute> {
+            return .init(manager: cuckoo_manager, name: "landingRoute", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         
@@ -4247,7 +4247,7 @@ public class ConfigUiLogicStub: ConfigUiLogic {
     
     
     
-    public var initialRoute: AppRoute {
+    public var landingRoute: AppRoute {
         get {
             return DefaultValueRegistry.defaultValue(for: (AppRoute).self)
         }
@@ -4673,6 +4673,15 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import Foundation
+import logic_business
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
 import SwiftUI
 
 
@@ -4883,6 +4892,46 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
     }
     
     
+    
+    
+    
+    public func isAfterAuthorization() -> Bool {
+        
+    return cuckoo_manager.call(
+    """
+    isAfterAuthorization() -> Bool
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.isAfterAuthorization())
+        
+    }
+    
+    
+    
+    
+    
+    public func isScreenForeground(with route: AppRoute) -> Bool {
+        
+    return cuckoo_manager.call(
+    """
+    isScreenForeground(with: AppRoute) -> Bool
+    """,
+            parameters: (route),
+            escapingParameters: (route),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.isScreenForeground(with: route))
+        
+    }
+    
+    
 
     public struct __StubbingProxy_RouterHostType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -4987,6 +5036,28 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
             return .init(stub: cuckoo_manager.createStub(for: MockRouterHostType.self, method:
     """
     getToolbarConfig() -> UIConfig.ToolBar
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func isAfterAuthorization() -> Cuckoo.ProtocolStubFunction<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterHostType.self, method:
+    """
+    isAfterAuthorization() -> Bool
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func isScreenForeground<M1: Cuckoo.Matchable>(with route: M1) -> Cuckoo.ProtocolStubFunction<(AppRoute), Bool> where M1.MatchedType == AppRoute {
+            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: route) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterHostType.self, method:
+    """
+    isScreenForeground(with: AppRoute) -> Bool
     """, parameterMatchers: matchers))
         }
         
@@ -5115,6 +5186,30 @@ public class MockRouterHostType: RouterHostType, Cuckoo.ProtocolMock {
         }
         
         
+        
+        
+        @discardableResult
+        func isAfterAuthorization() -> Cuckoo.__DoNotUse<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    isAfterAuthorization() -> Bool
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func isScreenForeground<M1: Cuckoo.Matchable>(with route: M1) -> Cuckoo.__DoNotUse<(AppRoute), Bool> where M1.MatchedType == AppRoute {
+            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: route) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    isScreenForeground(with: AppRoute) -> Bool
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -5194,6 +5289,22 @@ public class RouterHostTypeStub: RouterHostType {
     
     public func getToolbarConfig() -> UIConfig.ToolBar  {
         return DefaultValueRegistry.defaultValue(for: (UIConfig.ToolBar).self)
+    }
+    
+    
+    
+    
+    
+    public func isAfterAuthorization() -> Bool  {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+    
+    
+    
+    
+    
+    public func isScreenForeground(with route: AppRoute) -> Bool  {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
     
