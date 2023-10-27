@@ -1,4 +1,2 @@
-- Aythentication with TouchID or FaceID
-- New sample with issuer auth included
-- Selective disclosure
-- Show not available items gray-out
+- Maximum two age_over_NN data elements shall be returned 
+- OID4VP + CBOR support

@@ -10,12 +10,12 @@ let bundleIdPrefix = Environment.bundleIdPrefix.getString(default: "org.eudiw")
 let organization = Environment.organization.getString(default: "EUDIW")
 let env = Environment.environment.getString(default: "dev")
 let teamIDs = ["dev": "5T7UHW36CL", "prod": "5T7UHW36CL"]
-let iOSDeploymentTarget = Environment.iOSDeploymentTarget.getString(default: "15.0") 
+let iOSDeploymentTarget = Environment.iOSDeploymentTarget.getString(default: "16.0") 
 
 extension Project {
     /// Helper function to create the Project for this ExampleApp
-    public static func app(name: String, platform: Platform, additionalTargets: [String], packages: [Package], products: [String]) -> Project {
-        var targets = makeAppTargets(name: name, platform: platform, dependencies: additionalTargets.map { TargetDependency.target(name: $0) } + products.map { TargetDependency.package(product: $0) })
+    public static func app(name: String, platform: Platform, additionalTargets: [String], packages: [Package], products: [String], testProducts: [String]) -> Project {
+        var targets = makeAppTargets(name: name, platform: platform, dependencies: additionalTargets.map { TargetDependency.target(name: $0) } + products.map { TargetDependency.package(product: $0) }, testDependencies: testProducts.map { TargetDependency.package(product: $0) })
         targets += additionalTargets.flatMap({ makeFrameworkTargets(name: $0, platform: platform) })
         return Project(name: name, organizationName: organization, packages: packages, settings: projSett(), targets: targets, resourceSynthesizers: [])
     }
@@ -34,7 +34,7 @@ extension Project {
     }
 
     /// Helper function to create the application target and the unit test target.
-    private static func makeAppTargets(name: String, platform: Platform, dependencies: [TargetDependency]) -> [Target] {
+    private static func makeAppTargets(name: String, platform: Platform, dependencies: [TargetDependency], testDependencies: [TargetDependency]) -> [Target] {
         let platform: Platform = platform
    
         let mainTarget = Target(
@@ -50,6 +50,17 @@ extension Project {
             settings: targetSett(name)
         )
 
+        let testTarget = Target(
+            name: "\(name)Tests",
+            platform: platform,
+            product: .uiTests,
+            bundleId: "\(bundleIdPrefix).\(name)Tests",
+            infoPlist: .file(path: "\(name)/Tests/Info.plist"),
+            sources: ["\(name)/Tests/Sources/**"],
+            dependencies: testDependencies + [
+                .target(name: "\(name)")
+        ])
+
         let uiTestTarget = Target(
             name: "\(name)UITests",
             platform: platform,
@@ -60,6 +71,6 @@ extension Project {
             dependencies: [
                 .target(name: "\(name)")
         ])
-        return [mainTarget, uiTestTarget]
+        return [mainTarget, testTarget, uiTestTarget]
     }
 }

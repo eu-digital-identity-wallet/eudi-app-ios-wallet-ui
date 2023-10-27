@@ -18,6 +18,6 @@ default_platform(:ios)
 platform :ios do
   desc "Description of what the lane does"
   lane :test_badge do
-    add_badge(shield: "0.2-TEST-black", no_badge: true, glob: "Iso18013HolderDemo/Resources/Assets.xcassets/*.appiconset/*.{png,PNG}")
+    add_badge(shield: "0.3-TEST-black", no_badge: true)
   end
 end

@@ -7,17 +7,25 @@
 
 import SwiftUI
 import UIKit
+import EudiWalletKit
 import MdocDataModel18013
 
 struct DocDataView: View {
-	@EnvironmentObject var appData: MdocAppData
 	@Environment(\.dismiss) var dismiss
+	@EnvironmentObject var userWallet: UserWallet
+    @ObservedObject var appData: DataSampleStorageService
 	@State private var isPresentingConfirm: Bool = false
+	let index: Int
+
+	init(index: Int, appData: DataSampleStorageService) {
+		self.index = index
+		self.appData = appData
+	}
+	
 	var title:String {
 		guard let doc = appData.getDoc(i: index) else { return "" }
 		return NSLocalizedString(doc.title, comment: "")
 	}
-	let index: Int
 	
 	var body: some View {
 		if let doc = appData.getDoc(i: index) {
@@ -59,16 +67,18 @@ struct DocDataView: View {
 					Image(systemName: "trash")
 				}
 			}
-		}.confirmationDialog("Confirmation", isPresented: $isPresentingConfirm) { Button("Remove \(title) ?", role: .destructive) { dismiss(); appData.removeDoc(i: index) } }
+		}.confirmationDialog("Confirmation", isPresented: $isPresentingConfirm) { Button("Remove \(title) ?", role: .destructive) {
+			dismiss(); appData.removeDoc(i: index) } }
 	} // end body
 	
 	var imageFields = [IsoMdlModel.CodingKeys.portrait.rawValue, IsoMdlModel.CodingKeys.signatureUsualMark.rawValue]
 	
 }
 
+/*
 struct DocDataView_Previews: PreviewProvider {
 	static var previews: some View {
-		let appData = MdocAppData().loadSampleData()
-		DocDataView(index: 1).environmentObject(appData)
+		DocDataView(index: 1)
 	}
 }
+*/
