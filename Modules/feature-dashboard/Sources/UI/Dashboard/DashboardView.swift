@@ -29,7 +29,7 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
 
   @ViewBuilder
   func content() -> some View {
-    ZStack {
+    VStack(spacing: .zero) {
       DocumentListView(
         items: viewModel.viewState.documents,
         isLoading: viewModel.viewState.isLoading
@@ -38,6 +38,7 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
       }
       FloatingActionButtonBar(
         isLoading: viewModel.viewState.isLoading,
+        edgeInsets: .init(top: SPACING_SMALL, leading: .zero, bottom: .zero, trailing: .zero),
         addAction: {},
         shareAction: {}
       )
@@ -48,6 +49,7 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
   public var body: some View {
     ContentScreen(
       padding: .zero,
+      canScroll: false,
       background: ThemeManager.shared.color.primary
     ) {
       BearerHeaderView(

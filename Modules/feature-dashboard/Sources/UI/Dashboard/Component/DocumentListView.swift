@@ -36,7 +36,7 @@ struct DocumentListView: View {
     ScrollView {
       LazyVGrid(
         columns: [GridItem(), GridItem()],
-        spacing: 8
+        spacing: SPACING_SMALL
       ) {
         ForEach(items) { item in
           DocumentCell(
@@ -44,11 +44,11 @@ struct DocumentListView: View {
             isLoading: isLoading,
             action: { item in
               action(item)
-            })
+            }
+          )
         }
       }
-      .padding(32)
-      VSpacer.largeMedium()
+      .padding(SPACING_LARGE)
     }
   }
 }

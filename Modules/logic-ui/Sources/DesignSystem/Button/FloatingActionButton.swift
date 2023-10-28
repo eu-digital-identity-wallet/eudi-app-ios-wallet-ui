@@ -45,32 +45,29 @@ public struct FloatingActionButton: View {
   }
 
   public var body: some View {
-    VStack {
-      Spacer()
-      HStack {
-        Button(action: action) {
-          HStack(alignment: .center) {
-            icon
-              .resizable()
-              .aspectRatio(contentMode: .fit)
-              .frame(maxHeight: 30)
-              .foregroundStyle(iconColor)
-            Text(title)
-              .typography(ThemeManager.shared.font.labelLarge)
-              .lineLimit(1)
-              .minimumScaleFactor(0.3)
-              .foregroundStyle(textColor)
-
-          }
-          .padding(.horizontal, 20)
-          .padding(.vertical, 15)
-          .background(backgroundColor)
+    HStack {
+      Button(action: action) {
+        HStack(alignment: .center) {
+          icon
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(maxHeight: 25)
+            .foregroundStyle(iconColor)
+          Text(title)
+            .typography(ThemeManager.shared.font.labelLarge)
+            .lineLimit(1)
+            .minimumScaleFactor(0.3)
+            .foregroundStyle(textColor)
 
         }
-        .clipShape(Capsule())
-        .shimmer(isLoading: isLoading)
-        .shadow(radius: 5, x: .zero, y: 5)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 15)
+        .background(backgroundColor)
+
       }
+      .clipShape(Capsule())
+      .shimmer(isLoading: isLoading)
+      .shadow(radius: 5, x: .zero, y: 5)
     }
     .disabled(isLoading)
   }

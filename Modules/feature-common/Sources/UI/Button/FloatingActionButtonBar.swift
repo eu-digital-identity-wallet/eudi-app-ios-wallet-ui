@@ -19,46 +19,51 @@ import logic_resources
 public struct FloatingActionButtonBar: View {
 
   public let isLoading: Bool
+  public let backgroundColor: Color
+  public let edgeInsets: EdgeInsets
   public let addAction: () -> Void
   public let shareAction: () -> Void
 
   public init(
     isLoading: Bool = false,
+    backgroundColor: Color = .clear,
+    edgeInsets: EdgeInsets = .init(),
     addAction: @escaping () -> Void,
     shareAction: @escaping () -> Void
   ) {
     self.isLoading = isLoading
+    self.backgroundColor = backgroundColor
+    self.edgeInsets = edgeInsets
     self.addAction = addAction
     self.shareAction = shareAction
   }
 
   public var body: some View {
-    VStack(alignment: .center) {
+    HStack(spacing: SPACING_MEDIUM) {
 
-      HStack(spacing: SPACING_MEDIUM) {
-        FloatingActionButton(
-          title: .addDoc,
-          textColor: Theme.shared.color.textPrimaryDark,
-          backgroundColor: Theme.shared.color.backgroundPaper,
-          icon: Theme.shared.image.plus,
-          iconColor: Theme.shared.color.textPrimaryDark,
-          isLoading: isLoading,
-          action: addAction
-        )
+      FloatingActionButton(
+        title: .addDoc,
+        textColor: Theme.shared.color.textPrimaryDark,
+        backgroundColor: Theme.shared.color.backgroundPaper,
+        icon: Theme.shared.image.plus,
+        iconColor: Theme.shared.color.textPrimaryDark,
+        isLoading: isLoading,
+        action: addAction
+      )
 
-        FloatingActionButton(
-          title: .showQRTap,
-          textColor: Theme.shared.color.textPrimaryDark,
-          backgroundColor: Theme.shared.color.secondary,
-          icon: Theme.shared.image.share,
-          iconColor: Theme.shared.color.textPrimaryDark,
-          isLoading: isLoading,
-          action: shareAction
-        )
+      FloatingActionButton(
+        title: .showQRTap,
+        textColor: Theme.shared.color.textPrimaryDark,
+        backgroundColor: Theme.shared.color.secondary,
+        icon: Theme.shared.image.share,
+        iconColor: Theme.shared.color.textPrimaryDark,
+        isLoading: isLoading,
+        action: shareAction
+      )
 
-      }
-      .frame(maxWidth: .infinity)
-      .padding([.horizontal])
     }
+    .padding(edgeInsets)
+    .frame(maxWidth: .infinity)
+    .background(backgroundColor)
   }
 }

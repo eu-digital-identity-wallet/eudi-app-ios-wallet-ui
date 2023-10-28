@@ -15,6 +15,7 @@
  */
 import SwiftUI
 import logic_resources
+import logic_ui
 
 struct BearerHeaderView: View {
 
@@ -40,9 +41,9 @@ struct BearerHeaderView: View {
       BearerCell(item: item, isLoading: isLoading)
     }
     .colorScheme(.light)
-    .padding(.vertical, 60)
+    .padding(.vertical, SPACING_EXTRA_LARGE)
     .background(Theme.shared.color.primary)
-    .roundedCorner(16, corners: [.bottomLeft, .bottomRight])
+    .roundedCorner(SPACING_MEDIUM, corners: [.bottomLeft, .bottomRight])
     .background(Theme.shared.color.backgroundPaper)
   }
 }

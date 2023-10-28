@@ -45,6 +45,34 @@ public extension DocumentUIModel {
       .init(
         id: UUID().uuidString,
         value: .init(id: UUID().uuidString, title: "Passport", status: "Active")
+      ),
+      .init(
+        id: UUID().uuidString,
+        value: .init(id: UUID().uuidString, title: "Document 1", status: "Active")
+      ),
+      .init(
+        id: UUID().uuidString,
+        value: .init(id: UUID().uuidString, title: "Document 2", status: "Active")
+      ),
+      .init(
+        id: UUID().uuidString,
+        value: .init(id: UUID().uuidString, title: "Document 3", status: "Active")
+      ),
+      .init(
+        id: UUID().uuidString,
+        value: .init(id: UUID().uuidString, title: "Document 4", status: "Active")
+      ),
+      .init(
+        id: UUID().uuidString,
+        value: .init(id: UUID().uuidString, title: "Document 5", status: "Active")
+      ),
+      .init(
+        id: UUID().uuidString,
+        value: .init(id: UUID().uuidString, title: "Document 6", status: "Active")
+      ),
+      .init(
+        id: UUID().uuidString,
+        value: .init(id: UUID().uuidString, title: "Passport", status: "Active")
       )
     ]
   }
