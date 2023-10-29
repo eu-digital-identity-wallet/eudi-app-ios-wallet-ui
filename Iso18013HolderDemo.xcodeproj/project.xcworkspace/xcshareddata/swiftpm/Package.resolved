@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Chronometer.git",
       "state" : {
-        "revision" : "12ac87fa5d945169e32818bda82fa53d8220c256",
-        "version" : "0.1.10"
+        "revision" : "b4808d59a175b1f764cc3d7e2e927e5476b10427",
+        "version" : "0.1.11"
       }
     },
     {
@@ -78,7 +78,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit",
       "state" : {
         "branch" : "develop",
-        "revision" : "656cc1b2c997603009530fdeb19d64a9e5c80585"
+        "revision" : "862421ff58a2e359be6efb253d8dbe48003a2a76"
       }
     },
     {

@@ -28,7 +28,7 @@ struct ShareView: View {
 					.resizable().scaledToFit().frame(maxWidth: .infinity, alignment: .center).padding(.bottom, 8)
 			}
 			if presentationSession.status == .requestReceived {
-				if let issuerM = presentationSession.readerCertIsserMessage {
+				if let issuerM = presentationSession.readerCertIssuerMessage {
 					Text(verbatim: issuerM).font(.footnote).foregroundStyle(.green)
 				}
 				ScrollView {
