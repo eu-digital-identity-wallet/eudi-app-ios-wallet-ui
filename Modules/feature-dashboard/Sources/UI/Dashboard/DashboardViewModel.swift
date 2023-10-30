@@ -23,16 +23,18 @@ struct DashboardState: ViewState {
 }
 
 @MainActor
-final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInteractorType>: BaseViewModel<Router, DashboardState> {
+final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInteractorType, DeepLinkController: DeepLinkControllerType>: BaseViewModel<Router, DashboardState> {
 
   private let interactor: Interactor
+  private let deepLinkController: DeepLinkController
 
   var bearerName: String {
     viewState.bearer.value.name
   }
 
-  init(router: Router, interactor: Interactor) {
+  init(router: Router, interactor: Interactor, deepLinkController: DeepLinkController) {
     self.interactor = interactor
+    self.deepLinkController = deepLinkController
     super.init(
       router: router,
       initialState: .init(
@@ -62,8 +64,8 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
   }
 
   private func handleDeepLink() {
-    if let deepLink = getPendingDeepLinkAction() {
-      handleDeepLinkAction(routerHost: router, deepLinkAction: deepLink)
+    if let deepLink = deepLinkController.getPendingDeepLinkAction() {
+      deepLinkController.handleDeepLinkAction(routerHost: router, deepLinkAction: deepLink)
     }
   }
 

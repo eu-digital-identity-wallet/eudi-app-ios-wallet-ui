@@ -19,12 +19,12 @@ import logic_resources
 import logic_business
 import feature_common
 
-public struct DashboardView<Router: RouterHostType, Interactor: DashboardInteractorType>: View {
+public struct DashboardView<Router: RouterHostType, Interactor: DashboardInteractorType, DeepLinkController: DeepLinkControllerType>: View {
 
-  @ObservedObject private var viewModel: DashboardViewModel<Router, Interactor>
+  @ObservedObject private var viewModel: DashboardViewModel<Router, Interactor, DeepLinkController>
 
-  public init(with router: Router, and interactor: Interactor) {
-    self.viewModel = .init(router: router, interactor: interactor)
+  public init(with router: Router, and interactor: Interactor, also deepLinkController: DeepLinkController) {
+    self.viewModel = .init(router: router, interactor: interactor, deepLinkController: deepLinkController)
   }
 
   @ViewBuilder

@@ -3554,6 +3554,235 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_ui
 
+import Foundation
+import logic_business
+
+
+
+
+
+
+public class MockDeepLinkControllerType: DeepLinkControllerType, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = DeepLinkControllerType
+    
+    public typealias Stubbing = __StubbingProxy_DeepLinkControllerType
+    public typealias Verification = __VerificationProxy_DeepLinkControllerType
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: DeepLinkControllerType?
+
+    public func enableDefaultImplementation(_ stub: DeepLinkControllerType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    public func hasDeepLink(url: URL) -> DeepLinkController.DeepLinkAction? {
+        
+    return cuckoo_manager.call(
+    """
+    hasDeepLink(url: URL) -> DeepLinkController.DeepLinkAction?
+    """,
+            parameters: (url),
+            escapingParameters: (url),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.hasDeepLink(url: url))
+        
+    }
+    
+    
+    
+    
+    
+    public func handleDeepLinkAction(routerHost: RouterHostType, deepLinkAction: DeepLinkController.DeepLinkAction)  {
+        
+    return cuckoo_manager.call(
+    """
+    handleDeepLinkAction(routerHost: RouterHostType, deepLinkAction: DeepLinkController.DeepLinkAction)
+    """,
+            parameters: (routerHost, deepLinkAction),
+            escapingParameters: (routerHost, deepLinkAction),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.handleDeepLinkAction(routerHost: routerHost, deepLinkAction: deepLinkAction))
+        
+    }
+    
+    
+    
+    
+    
+    public func getPendingDeepLinkAction() -> DeepLinkController.DeepLinkAction? {
+        
+    return cuckoo_manager.call(
+    """
+    getPendingDeepLinkAction() -> DeepLinkController.DeepLinkAction?
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getPendingDeepLinkAction())
+        
+    }
+    
+    
+
+    public struct __StubbingProxy_DeepLinkControllerType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        
+        func hasDeepLink<M1: Cuckoo.Matchable>(url: M1) -> Cuckoo.ProtocolStubFunction<(URL), DeepLinkController.DeepLinkAction?> where M1.MatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(URL)>] = [wrap(matchable: url) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockDeepLinkControllerType.self, method:
+    """
+    hasDeepLink(url: URL) -> DeepLinkController.DeepLinkAction?
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func handleDeepLinkAction<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(routerHost: M1, deepLinkAction: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(RouterHostType, DeepLinkController.DeepLinkAction)> where M1.MatchedType == RouterHostType, M2.MatchedType == DeepLinkController.DeepLinkAction {
+            let matchers: [Cuckoo.ParameterMatcher<(RouterHostType, DeepLinkController.DeepLinkAction)>] = [wrap(matchable: routerHost) { $0.0 }, wrap(matchable: deepLinkAction) { $0.1 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockDeepLinkControllerType.self, method:
+    """
+    handleDeepLinkAction(routerHost: RouterHostType, deepLinkAction: DeepLinkController.DeepLinkAction)
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func getPendingDeepLinkAction() -> Cuckoo.ProtocolStubFunction<(), DeepLinkController.DeepLinkAction?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockDeepLinkControllerType.self, method:
+    """
+    getPendingDeepLinkAction() -> DeepLinkController.DeepLinkAction?
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_DeepLinkControllerType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+    
+        
+        
+        
+        @discardableResult
+        func hasDeepLink<M1: Cuckoo.Matchable>(url: M1) -> Cuckoo.__DoNotUse<(URL), DeepLinkController.DeepLinkAction?> where M1.MatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(URL)>] = [wrap(matchable: url) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    hasDeepLink(url: URL) -> DeepLinkController.DeepLinkAction?
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func handleDeepLinkAction<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(routerHost: M1, deepLinkAction: M2) -> Cuckoo.__DoNotUse<(RouterHostType, DeepLinkController.DeepLinkAction), Void> where M1.MatchedType == RouterHostType, M2.MatchedType == DeepLinkController.DeepLinkAction {
+            let matchers: [Cuckoo.ParameterMatcher<(RouterHostType, DeepLinkController.DeepLinkAction)>] = [wrap(matchable: routerHost) { $0.0 }, wrap(matchable: deepLinkAction) { $0.1 }]
+            return cuckoo_manager.verify(
+    """
+    handleDeepLinkAction(routerHost: RouterHostType, deepLinkAction: DeepLinkController.DeepLinkAction)
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func getPendingDeepLinkAction() -> Cuckoo.__DoNotUse<(), DeepLinkController.DeepLinkAction?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    getPendingDeepLinkAction() -> DeepLinkController.DeepLinkAction?
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+public class DeepLinkControllerTypeStub: DeepLinkControllerType {
+    
+
+    
+
+    
+    
+    
+    
+    public func hasDeepLink(url: URL) -> DeepLinkController.DeepLinkAction?  {
+        return DefaultValueRegistry.defaultValue(for: (DeepLinkController.DeepLinkAction?).self)
+    }
+    
+    
+    
+    
+    
+    public func handleDeepLinkAction(routerHost: RouterHostType, deepLinkAction: DeepLinkController.DeepLinkAction)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func getPendingDeepLinkAction() -> DeepLinkController.DeepLinkAction?  {
+        return DefaultValueRegistry.defaultValue(for: (DeepLinkController.DeepLinkAction?).self)
+    }
+    
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_ui
+
 import SwiftUI
 import logic_resources
 
@@ -3782,13 +4011,6 @@ import Cuckoo
 import AlertToast
 import PartialSheet
 import SwiftUI
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_ui
-
-import Foundation
-import logic_business
 
 import Cuckoo
 @testable import logic_business

@@ -26,7 +26,7 @@ import logic_business
 }
 
 #Preview {
-  DashboardView(with: PreviewRouter(), and: DashboardInteractor())
+  DashboardView(with: PreviewRouter(), and: DashboardInteractor(), also: DeepLinkController())
 
 }
 

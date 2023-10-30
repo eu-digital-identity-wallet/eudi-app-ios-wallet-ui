@@ -77,7 +77,7 @@ public final class RouterHost: RouterHostType {
       case .success(let config):
         SuccessView(with: self, and: config)
       case .dashboard:
-        DashboardView(with: self, and: DashboardInteractor())
+        DashboardView(with: self, and: DashboardInteractor(), also: DeepLinkController())
       case .biometry(let config):
         BiometryView(with: self, interactor: BiometryInteractor(), config: config)
       case .authenticationLoader(let relyingParty):

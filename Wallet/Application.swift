@@ -34,11 +34,13 @@ struct Application: App {
   private let routerHost: RouterHostType
   private let configUiLogic: ConfigUiLogic
   private let securityController: SecurityControllerType
+  private let deepLinkController: DeepLinkControllerType
 
   init() {
     self.routerHost = RouterHost()
     self.configUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
     self.securityController = SecurityController()
+    self.deepLinkController = DeepLinkController()
     self.toolbarConfig = routerHost.getToolbarConfig()
   }
 
@@ -72,8 +74,11 @@ struct Application: App {
         }
       }
       .onOpenURL { url in
-        if let deepLink = hasDeepLink(url: url) {
-          handleDeepLinkAction(routerHost: routerHost, deepLinkAction: deepLink)
+        if let deepLink = deepLinkController.hasDeepLink(url: url) {
+          deepLinkController.handleDeepLinkAction(
+            routerHost: routerHost,
+            deepLinkAction: deepLink
+          )
         }
       }
       .onChange(of: scenePhase) { phase in
