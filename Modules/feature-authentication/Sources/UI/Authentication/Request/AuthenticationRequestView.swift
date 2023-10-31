@@ -28,8 +28,6 @@ public struct AuthenticationRequestView<Router: RouterHostType, Interactor: Auth
   public var body: some View {
     ContentScreen(errorConfig: viewModel.viewState.error) {
 
-      ContentHeader()
-
       ContentTitle(
         title: viewModel.viewState.title
       )

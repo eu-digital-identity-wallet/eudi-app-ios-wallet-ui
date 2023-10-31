@@ -45,14 +45,14 @@ final class AuthenticationLoadingViewModel<Router: RouterHostType, Interactor: A
       config: UIConfig.Success(
         title: .success,
         subtitle: .requestDataShareSuccess([relyingParty]),
-        buttons: [.init(title: .okButton, screen: .startup, style: .primary, navigationType: .pop)],
+        buttons: [.init(title: .okButton, screen: .dashboard, style: .primary, navigationType: .pop)],
         visualKind: .defaultIcon
       )
     )
   }
 
   override func getOnPopRoute() -> AppRoute? {
-    .startup
+    .dashboard
   }
 
   override func doWork() async {
