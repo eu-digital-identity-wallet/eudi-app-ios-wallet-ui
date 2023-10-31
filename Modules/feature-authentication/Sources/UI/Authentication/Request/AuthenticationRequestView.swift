@@ -28,10 +28,7 @@ public struct AuthenticationRequestView<Router: RouterHostType, Interactor: Auth
   public var body: some View {
     ContentScreen(errorConfig: viewModel.viewState.error) {
 
-      ContentHeader(
-        dismissIcon: ThemeManager.shared.image.xmark,
-        onBack: { viewModel.onPop() }
-      )
+      ContentHeader()
 
       ContentTitle(
         title: viewModel.viewState.title
