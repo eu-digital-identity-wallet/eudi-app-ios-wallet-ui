@@ -67,7 +67,7 @@ public struct FloatingActionButton: View {
       }
       .clipShape(Capsule())
       .shimmer(isLoading: isLoading)
-      .shadow(radius: 2, x: .zero, y: 2)
+      .shadow(radius: 5, x: .zero, y: 5)
     }
     .disabled(isLoading)
   }
