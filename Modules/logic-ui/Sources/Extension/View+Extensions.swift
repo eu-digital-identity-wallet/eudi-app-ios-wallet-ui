@@ -103,3 +103,22 @@ public extension View {
     )
   }
 }
+
+public extension View {
+  func bottomFade() -> some View {
+    return self.mask(
+      LinearGradient(
+        gradient: Gradient(
+          stops: [
+            .init(color: .clear, location: 0),
+            .init(color: .black, location: 0),
+            .init(color: .black, location: 0.85),
+            .init(color: .clear, location: 1)
+          ]
+        ),
+        startPoint: .top,
+        endPoint: .bottom
+      )
+    )
+  }
+}

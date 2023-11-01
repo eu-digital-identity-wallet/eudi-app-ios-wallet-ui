@@ -30,15 +30,16 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
   @ViewBuilder
   func content() -> some View {
     VStack(spacing: .zero) {
+
       DocumentListView(
         items: viewModel.viewState.documents,
         isLoading: viewModel.viewState.isLoading
       ) { _ in
 
-      }
+      }.bottomFade()
+
       FloatingActionButtonBar(
         isLoading: viewModel.viewState.isLoading,
-        edgeInsets: .init(top: SPACING_SMALL, leading: .zero, bottom: .zero, trailing: .zero),
         addAction: {},
         shareAction: {}
       )
