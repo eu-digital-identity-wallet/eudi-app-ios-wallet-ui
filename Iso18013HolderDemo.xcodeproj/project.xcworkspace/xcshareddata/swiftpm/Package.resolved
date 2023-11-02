@@ -42,7 +42,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
         "branch" : "develop",
-        "revision" : "2572b2c26d20110b40966a797d77abcf23b95ae2"
+        "revision" : "4c94344aa4717e65da81f0d23d68fdfbef8fa800"
       }
     },
     {
@@ -51,7 +51,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
         "branch" : "develop",
-        "revision" : "e43b4cf893b11d7e9958258a00f0a07825db78d3"
+        "revision" : "d2128c14c8a9a58c57ab49df0a3e8af69144a05f"
       }
     },
     {
@@ -78,7 +78,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit",
       "state" : {
         "branch" : "develop",
-        "revision" : "c1abe9df69c2686a9837c2cbd4f06439f3fa8f24"
+        "revision" : "c991f5bb65898b7a6f663090869488f4673dafb9"
       }
     },
     {
