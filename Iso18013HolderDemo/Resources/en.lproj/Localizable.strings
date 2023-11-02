@@ -6,6 +6,7 @@
   
 */
 "eu_pid_doctype_name" = "EU PID";
+"conference_badge" = "Conference badge";
 "family_name_national_character" = "Family Name in national characters";
 "given_name_national_character" = "Given Name in national characters";
 "birth_country" = "Birth country";
@@ -71,25 +72,6 @@
 "registration_holder" = "Vehicle Registration Holder Information";
 "basic_vehicle_info" = "Basic Vehicle Information";
 "vin" = "Vehicle Identification Number";
-"micov_doctype_name" = "miCOV";
-"micov_vtr_fn" = "Family Name";
-"micov_vtr_gn" = "Given Name";
-"micov_vtr_dob" = "Date of Birth";
-"micov_vtr_sex" = "Sex";
-"micov_vtr_v_RA01_1" = "First vaccination against RA01";
-"micov_vtr_v_RA01_2" = "Second vaccination against RA01";
-"micov_vtr_pid_PPN" = "ID with passport number";
-"micov_vtr_pid_DL" = "ID with driver’s license number";
-"micov_att_1D47_vaccinated" = "Indication of vaccination against Yellow Fever";
-"micov_att_RA01_vaccinated" = "Indication of vaccination against COVID-19";
-"micov_att_RA01_test" = "Indication of test event for COVID-19";
-"micov_att_safeEntry_Leisure" = "Safe entry indication";
-"micov_att_fac" = "Facial Image";
-"micov_att_fni" = "Family Name Initial";
-"micov_att_gni" = "Given Name Initial";
-"micov_att_by" = "Birth Year";
-"micov_att_bm" = "Birth Month";
-"micov_att_bd" = "Birth Day";
 
 "app_name" = "EUDIW v0.3";
 "eudi_wallet_prototype_v1" = "EUDI Wallet Prototype v0.3";

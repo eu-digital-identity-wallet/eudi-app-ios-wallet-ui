@@ -13,9 +13,9 @@ struct DocButton: View {
 	let subtitle: String
 
 	var body: some View {
-			HStack(spacing: 50) {
+			HStack(spacing: 20) {
 				VStack(alignment: .leading, spacing: 4) {
-					Text(verbatim: title).font(.title)
+					Text(verbatim: title).minimumScaleFactor(0.5).font(.headline)
 					Text(verbatim: subtitle).font(.caption2)
 				}
 				Spacer()
