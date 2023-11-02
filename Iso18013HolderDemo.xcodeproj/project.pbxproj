@@ -20,6 +20,7 @@
 		98D93180046EB299D3E350B2 /* mdoc_holderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59B4ADE62B8BA3D5817A575 /* mdoc_holderApp.swift */; };
 		A06DB869639F999F7E4BA729 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 268F27B6E2979B70D0EEB026 /* LaunchScreen.storyboard */; };
 		B0719E452AF41FD800E81A98 /* EudiWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = B0719E442AF41FD800E81A98 /* EudiWalletKit */; };
+		B0DF0EDF2AF4379200E962B1 /* MdocDataModel18013 in Frameworks */ = {isa = PBXBuildFile; productRef = B0DF0EDE2AF4379200E962B1 /* MdocDataModel18013 */; };
 		B807260BC666A5A0D2EA0F3A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CA872DD9B8F79BFC0A55469 /* Localizable.strings */; };
 		BF6F214B5C8F0BD6AD6A3ECC /* RouteDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC49404F9A0A4AF53AC738B /* RouteDestination.swift */; };
 		CE930B8F27771E5DB1D6C614 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 163C5AA70A3D689878251F21 /* CodeScanner */; };
@@ -120,6 +121,7 @@
 			files = (
 				CE930B8F27771E5DB1D6C614 /* CodeScanner in Frameworks */,
 				B0719E452AF41FD800E81A98 /* EudiWalletKit in Frameworks */,
+				B0DF0EDF2AF4379200E962B1 /* MdocDataModel18013 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +337,7 @@
 			packageProductDependencies = (
 				163C5AA70A3D689878251F21 /* CodeScanner */,
 				B0719E442AF41FD800E81A98 /* EudiWalletKit */,
+				B0DF0EDE2AF4379200E962B1 /* MdocDataModel18013 */,
 			);
 			productName = Iso18013HolderDemo;
 			productReference = D5EA9115DD31976D44071C71 /* Iso18013HolderDemo.app */;
@@ -370,6 +373,7 @@
 				9DF4B43AC7017C9C135DC918 /* XCRemoteSwiftPackageReference "mockingbird" */,
 				DD5C5D5ACFC78BC39F71A08E /* XCRemoteSwiftPackageReference "eudi-lib-ios-wallet-kit" */,
 				A706F9A3AFF74EE51FA91813 /* XCRemoteSwiftPackageReference "CodeScanner" */,
+				B0DF0EDD2AF4379200E962B1 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */,
 			);
 			productRefGroup = 28FDA0ED8337B27922E8CC70 /* Products */;
 			projectDirPath = "";
@@ -785,6 +789,14 @@
 				minimumVersion = 2.3.3;
 			};
 		};
+		B0DF0EDD2AF4379200E962B1 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git";
+			requirement = {
+				branch = develop;
+				kind = branch;
+			};
+		};
 		DD5C5D5ACFC78BC39F71A08E /* XCRemoteSwiftPackageReference "eudi-lib-ios-wallet-kit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit";
@@ -804,6 +816,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DD5C5D5ACFC78BC39F71A08E /* XCRemoteSwiftPackageReference "eudi-lib-ios-wallet-kit" */;
 			productName = EudiWalletKit;
+		};
+		B0DF0EDE2AF4379200E962B1 /* MdocDataModel18013 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B0DF0EDD2AF4379200E962B1 /* XCRemoteSwiftPackageReference "eudi-lib-ios-iso18013-data-model" */;
+			productName = MdocDataModel18013;
 		};
 		D6FA15C50A27F2F6739A5D85 /* Mockingbird */ = {
 			isa = XCSwiftPackageProductDependency;
