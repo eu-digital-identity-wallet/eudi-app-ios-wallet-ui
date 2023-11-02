@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twostraws/CodeScanner.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "bf5d7087015620b250ee6c865b3c9039fc159d1a"
+        "revision" : "bf5d7087015620b250ee6c865b3c9039fc159d1a",
+        "version" : "2.3.3"
       }
     },
     {
@@ -66,10 +66,10 @@
     {
       "identity" : "eudi-lib-ios-siop-openid4vp-swift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift",
+      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
       "state" : {
         "branch" : "main",
-        "revision" : "66fe1eda233c6a76950d55443290d51f5a56f18e"
+        "revision" : "517e9f38f53dc0fcf8924086a473b1c2555bb848"
       }
     },
     {
@@ -78,7 +78,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit",
       "state" : {
         "branch" : "develop",
-        "revision" : "af7adbef36dceb2cfbd1d46322d502d8fd9e2a29"
+        "revision" : "fa1fbeb5b029ea747ebf2811031202a85a726742"
       }
     },
     {

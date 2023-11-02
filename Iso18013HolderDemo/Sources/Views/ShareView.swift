@@ -68,7 +68,6 @@ struct ShareView: View {
 				Spacer()
 				Button {
 					dismiss()
-					openPresentationSessionUrl()
 				} label: {Label("OK", systemImage: "checkmark.seal").frame(width:200, height: 30)}.buttonStyle(.borderedProminent).padding()
 			}
 		}.padding().padding()
@@ -76,14 +75,7 @@ struct ShareView: View {
 				try? await presentationSession.presentAttestations()
 			}
 	} // body
-	
-	func openPresentationSessionUrl() {
-		let fl = presentationSession.flow
-		if let qr = fl.qrCode, let urlString = String(data: qr, encoding: .utf8), let url = URL(string: urlString) {
-			openURL(url)
-		}
-	}
-	
+		
 	var statusDescription: String { NSLocalizedString(hasCancelled ? "cancelledSent" : presentationSession.status.rawValue, comment: "") }
 	
 	func doTransfer() {
