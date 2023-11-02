@@ -78,7 +78,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit",
       "state" : {
         "branch" : "develop",
-        "revision" : "862421ff58a2e359be6efb253d8dbe48003a2a76"
+        "revision" : "af7adbef36dceb2cfbd1d46322d502d8fd9e2a29"
       }
     },
     {
@@ -131,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Sextant.git",
       "state" : {
-        "revision" : "49b567226e72ba4f22943e352e1ee3bf3bf4824e",
-        "version" : "0.4.24"
+        "revision" : "ac9f9feaab9563559d26e00a8c03fbab7e02c60a",
+        "version" : "0.4.25"
       }
     },
     {

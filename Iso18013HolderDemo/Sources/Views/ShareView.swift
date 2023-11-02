@@ -12,11 +12,12 @@ import LocalAuthentication
 
 struct ShareView: View {
 	@State var hasCancelled = false
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 	var isProximitySharing: Bool { presentationSession.flow.isProximity }
 	@ObservedObject var presentationSession: PresentationSession
 	@EnvironmentObject var userWallet: UserWallet
-
+	@Environment(\.openURL) private var openURL
+	
 	var body: some View {
 		VStack(spacing: 16) {
 			Text(verbatim: "Status: \(statusDescription)").foregroundStyle(.blue)
@@ -65,13 +66,23 @@ struct ShareView: View {
 				Spacer()
 				checkMark
 				Spacer()
-				Button { self.presentationMode.wrappedValue.dismiss() } label: {Label("OK", systemImage: "checkmark.seal").frame(width:200, height: 30)}.buttonStyle(.borderedProminent).padding()
+				Button {
+					dismiss()
+					openPresentationSessionUrl()
+				} label: {Label("OK", systemImage: "checkmark.seal").frame(width:200, height: 30)}.buttonStyle(.borderedProminent).padding()
 			}
 		}.padding().padding()
 		 .task {
 				try? await presentationSession.presentAttestations()
 			}
 	} // body
+	
+	func openPresentationSessionUrl() {
+		let fl = presentationSession.flow
+		if let qr = fl.qrCode, let urlString = String(data: qr, encoding: .utf8), let url = URL(string: urlString) {
+			openURL(url)
+		}
+	}
 	
 	var statusDescription: String { NSLocalizedString(hasCancelled ? "cancelledSent" : presentationSession.status.rawValue, comment: "") }
 	
@@ -97,7 +108,7 @@ struct ShareView: View {
 										 beginDataTransfer(isFallBack: true)
 									 }
 								 else {
-										 self.presentationMode.wrappedValue.dismiss()
+										dismiss()
 									 }
 							 }
 					 }

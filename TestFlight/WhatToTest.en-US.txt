@@ -1,2 +1,3 @@
 - Maximum two age_over_NN data elements shall be returned 
+- Support for custom schemes
 - OID4VP + CBOR support

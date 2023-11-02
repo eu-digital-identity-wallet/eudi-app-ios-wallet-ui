@@ -10,7 +10,6 @@
 		0BF9CC03E08DA80704800A98 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7A25294A9E3CDFED709B90 /* ShareView.swift */; };
 		0F91A0F0863CEFEBC5D7AEBD /* scytales_root_ca.der in Resources */ = {isa = PBXBuildFile; fileRef = 0D57DC5DD3A0FC18E83B0023 /* scytales_root_ca.der */; };
 		12AD6137012A40E367FD1CC8 /* mdoc_holderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9DF632FE20A18FBF39E13F /* mdoc_holderUITestsLaunchTests.swift */; };
-		22A58C0AE2F478E9274B4865 /* EudiWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = 05A619EC402A910D93B8668C /* EudiWalletKit */; };
 		2CB3D47A008CC6F66C5CE352 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 071EA5AD742F0A6980D58E96 /* Assets.xcassets */; };
 		3E59AFE2057089CA241F1046 /* DocDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBCB81D85A5FEB87E22CB52 /* DocDataView.swift */; };
 		4A76CDEDAE02D377B655EC7F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A76075244B6EA4ABC073824 /* Extensions.swift */; };
@@ -118,7 +117,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22A58C0AE2F478E9274B4865 /* EudiWalletKit in Frameworks */,
 				CE930B8F27771E5DB1D6C614 /* CodeScanner in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -333,7 +331,6 @@
 			);
 			name = Iso18013HolderDemo;
 			packageProductDependencies = (
-				05A619EC402A910D93B8668C /* EudiWalletKit */,
 				163C5AA70A3D689878251F21 /* CodeScanner */,
 			);
 			productName = Iso18013HolderDemo;
@@ -796,10 +793,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		05A619EC402A910D93B8668C /* EudiWalletKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = EudiWalletKit;
-		};
 		163C5AA70A3D689878251F21 /* CodeScanner */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CodeScanner;
