@@ -67,8 +67,10 @@ struct MainHolderView: View {
 					isPresentingScanner = false
 				}
 			}
-		}.onOpenURL(perform: { url in
-			flow = .openid4vp(qrCode: url.absoluteString.data(using: .utf8)!)
+		}.onOpenURL(perform: { customUrl in
+			guard let sc = customUrl.scheme else { return }
+			let url = customUrl.absoluteString.replacingOccurrences(of: sc, with: "https")
+			flow = .openid4vp(qrCode: url.data(using: .utf8)!)
 			path.append(RouteDestination.shareView(flow: flow))
 			isPresentingScanner = false
 		})
