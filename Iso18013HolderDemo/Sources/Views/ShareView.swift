@@ -72,7 +72,7 @@ struct ShareView: View {
 			}
 		}.padding().padding()
 		 .onAppear() {
-			 Task {
+			 Task { @MainActor in
 				 try? await presentationSession.presentAttestations()
 			 }
 			}
