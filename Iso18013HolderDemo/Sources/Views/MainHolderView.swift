@@ -38,11 +38,6 @@ struct MainHolderView: View {
 						DocButton(title: NSLocalizedString(m.title, comment: ""), subtitle: m.docType)
 					}.accessibilityIdentifier("IsoMdlButton")
 				}
-				if appData.conferenceLoaded, let m = appData.conferenceModel {
-					NavigationLink(value: RouteDestination.docView(index: 2)) {
-						DocButton(title: NSLocalizedString(m.title, comment: ""), subtitle: m.docType)
-					}.accessibilityIdentifier("ConferenceButton")
-				}
 				Spacer()
 				if appData.mdlLoaded && appData.isoMdlModel != nil {					
 					Button(action: { flow = .ble; path.append(RouteDestination.shareView(flow: flow)) }, label: {
