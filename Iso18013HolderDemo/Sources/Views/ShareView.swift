@@ -28,7 +28,7 @@ struct ShareView: View {
 				Image(uiImage: UIImage(data: d) ?? UIImage(systemName: "questionmark.square.dashed")!)
 					.resizable().scaledToFit().frame(maxWidth: .infinity, alignment: .center).padding(.bottom, 8)
 			}
-			if presentationSession.status == .requestReceived {
+			else if presentationSession.status == .requestReceived {
 				if let issuerM = presentationSession.readerCertIssuerMessage {
 					Text(verbatim: issuerM).font(.footnote).foregroundStyle(.green)
 				}
@@ -53,7 +53,7 @@ struct ShareView: View {
 					Button { beginDataTransfer() } label: {Label("Accept", systemImage: "checkmark.seal")}.buttonStyle(.borderedProminent)
 				}
 			}
-			if presentationSession.status == .userSelected {
+			else if presentationSession.status == .userSelected {
 				Spacer()
 				if isProximitySharing {
 					Image(.tileBluetooth).renderingMode(.template).aspectRatio(contentMode: .fit).frame(width: 80, height: 80).tint(.blue)
@@ -62,7 +62,7 @@ struct ShareView: View {
 				}
 				Spacer()
 			}
-			if presentationSession.status == .disconnected || presentationSession.status == .responseSent  {
+			else if presentationSession.status == .disconnected || presentationSession.status == .responseSent  {
 				Spacer()
 				checkMark
 				Spacer()
@@ -71,8 +71,10 @@ struct ShareView: View {
 				} label: {Label("OK", systemImage: "checkmark.seal").frame(width:200, height: 30)}.buttonStyle(.borderedProminent).padding()
 			}
 		}.padding().padding()
-		 .task {
-				try? await presentationSession.presentAttestations()
+		 .onAppear() {
+			 Task {
+				 try? await presentationSession.presentAttestations()
+			 }
 			}
 	} // body
 		
