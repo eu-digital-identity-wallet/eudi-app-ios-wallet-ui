@@ -14,10 +14,9 @@ struct mdoc_holderApp: App {
 	
 	var body: some Scene {
 		WindowGroup {
-			let storageSvc = DataSampleStorageService()
-			let wallet = UserWallet(storageService: storageSvc)
+			let wallet = UserWallet(storageType: .sample)
 			NavigationStack(path: $path) {
-				MainHolderView(appData: storageSvc, path: $path).environmentObject(wallet)					
+				MainHolderView(appData: wallet.storageService as! DataSampleStorageService, path: $path).environmentObject(wallet)					
 			}
 		}
 	}
