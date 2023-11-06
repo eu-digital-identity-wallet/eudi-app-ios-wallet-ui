@@ -39,7 +39,7 @@ public struct AddNewDocumentCell: View {
           .aspectRatio(contentMode: .fit)
           .frame(maxWidth: 32)
         Text(title)
-          .typography(Theme.shared.font.bodyMedium)
+          .typography(Theme.shared.font.bodyLarge)
           .foregroundColor(isEnabled ? Theme.shared.color.textPrimaryDark : Theme.shared.color.textDisabledDark)
         Spacer()
         Image(systemName: "plus")
@@ -47,7 +47,7 @@ public struct AddNewDocumentCell: View {
           .foregroundColor(isEnabled ? Theme.shared.color.primary : Theme.shared.color.textDisabledDark)
       }
       .disabled(!isEnabled)
-      .padding(24)
+      .padding(20)
       .background(Theme.shared.color.backgroundDefault)
       .tint(isEnabled ? nil : .gray)
       .clipShape(.rect(cornerRadius: Theme.shared.shape.small))

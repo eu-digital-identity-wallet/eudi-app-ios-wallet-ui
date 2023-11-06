@@ -29,6 +29,13 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
   public var body: some View {
     ContentScreen {
       VStack(alignment: .leading) {
+        Button(action: {}, label: {
+          Theme.shared.image.xmark
+            .font(.system(size: 20, weight: .medium))
+        })
+        .foregroundStyle(Theme.shared.color.primary)
+
+        VSpacer.large()
 
         Text(LocalizableString.Key.addDocumentTitle)
           .typography(Theme.shared.font.headlineSmall)
@@ -46,12 +53,11 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
           VStack {
             ForEach(viewModel.viewState.addDocumentCellModels) { cell in
               AddNewDocumentCell(
-                isEnabled: true,
+                isEnabled: cell.value.isEnabled,
                 icon: cell.value.image,
-                title: cell.value.documentName
-              ) {
-                print("cell")
-              }
+                title: cell.value.documentName,
+                action: cell.value.action
+              )
               .padding(.bottom, Theme.shared.shape.small)
             }
           }

@@ -29,19 +29,28 @@ public struct AddDocumentCellModel: Identifiable {
 
 public extension AddDocumentCellModel {
   struct Value {
-    internal init(documentName: LocalizableString.Key, image: Image) {
+    internal init(
+      isEnabled: Bool,
+      documentName: LocalizableString.Key,
+      image: Image,
+      action: @escaping () -> Void
+    ) {
       self.id = UUID().uuidString
+      self.isEnabled = isEnabled
       self.documentName = documentName
       self.image = image
+      self.action = action
     }
 
     public let id: String
+    public let isEnabled: Bool
     public let documentName: LocalizableString.Key
     public let image: Image
+    public let action: () -> Void
 
   }
 
   static func mock() -> AddDocumentCellModel {
-    .init(value: .init(documentName: .pid, image: Theme.shared.image.id))
+    .init(value: .init(isEnabled: true, documentName: .pid, image: Theme.shared.image.id, action: {}))
   }
 }
