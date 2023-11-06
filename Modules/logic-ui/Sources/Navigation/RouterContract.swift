@@ -29,6 +29,7 @@ public indirect enum AppRoute: Equatable {
   case authenticationLoader(String)
   case authenticationRequest
   case welcome
+  case documentDetails
 
   public var key: String {
     return switch self {
@@ -48,6 +49,8 @@ public indirect enum AppRoute: Equatable {
       "AuthenticationRequest"
     case .welcome:
       "Welcome"
+    case .documentDetails:
+      "DocumentDetails"
     }
   }
 }

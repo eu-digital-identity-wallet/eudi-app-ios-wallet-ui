@@ -12,6 +12,28 @@
         }
       }
     },
+    "add_document_subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a document to add in your EUDI Wallet"
+          }
+        }
+      }
+    },
+    "add_document_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to the EUDI Wallet"
+          }
+        }
+      }
+    },
     "biometry_open_settings" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -133,6 +155,17 @@
         }
       }
     },
+    "mdl" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Driving Licence"
+          }
+        }
+      }
+    },
     "ok_button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -140,6 +173,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        }
+      }
+    },
+    "pid" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "National ID"
           }
         }
       }
