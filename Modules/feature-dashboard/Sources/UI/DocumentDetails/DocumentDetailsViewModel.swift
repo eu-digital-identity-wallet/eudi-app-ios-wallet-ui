@@ -34,7 +34,7 @@ public class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Docume
         addDocumentCellModels: [
           .init(value: .init(isEnabled: true,
                              documentName: LocalizableString.Key.pid,
-                             image: Theme.shared.image.id, action: {
+                             image: Theme.shared.image.idStroke, action: {
                                print("route to pid")
                              })),
           .init(value: .init(isEnabled: false,

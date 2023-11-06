@@ -30,13 +30,25 @@ public struct AddNewDocumentCell: View {
     self.action = action
   }
 
+  @ViewBuilder
+  var iconStyle: some View {
+    if !isEnabled {
+      icon
+        .renderingMode(.template)
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+    } else {
+      icon
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+    }
+  }
+
   public var body: some View {
     HStack {
       Button(action: action) {
-        icon
-          .resizable()
+        iconStyle
           .foregroundColor(isEnabled ? Theme.shared.color.primary : Theme.shared.color.textDisabledDark)
-          .aspectRatio(contentMode: .fit)
           .frame(maxWidth: 32)
         Text(title)
           .typography(Theme.shared.font.bodyLarge)
