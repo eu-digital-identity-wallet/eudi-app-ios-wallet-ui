@@ -22,7 +22,7 @@ import feature_startup
 import feature_login
 import feature_common
 import feature_dashboard
-import feature_authentication
+import feature_presentation
 
 public final class RouterHost: RouterHostType {
 
@@ -80,14 +80,14 @@ public final class RouterHost: RouterHostType {
         DashboardView(with: self, and: DashboardInteractor(), also: DeepLinkController())
       case .biometry(let config):
         BiometryView(with: self, interactor: BiometryInteractor(), config: config)
-      case .authenticationLoader(let relyingParty):
-        AuthenticationLoadingView(
+      case .presentationLoader(let relyingParty):
+        PresentationLoadingView(
           with: self,
-          and: AuthenticationInteractor(),
+          and: PresentationInteractor(),
           relyingParty: relyingParty
         )
-      case .authenticationRequest:
-        AuthenticationRequestView(with: self, and: AuthenticationInteractor())
+      case .presentationRequest:
+        PresentationRequestView(with: self, and: PresentationInteractor())
       case .welcome:
         WelcomeView(with: self, and: WelcomeInteractor())
       }

@@ -14,8 +14,12 @@ excluded:
     - "Modules/feature-dashboard/.build/*"
     - "Modules/feature-common/.build/*"
     - "Modules/feature-common/Tests/*"
-    - "Modules/feature-authentication/.build/*"
-    - "Modules/feature-authentication/Tests/*"
+    - "Modules/feature-presentation/.build/*"
+    - "Modules/feature-presentation/Tests/*"
+    - "Modules/feature-issuance/.build/*"
+    - "Modules/feature-issuance/Tests/*"
+    - "Modules/feature-proximity/.build/*"
+    - "Modules/feature-proximity/Tests/*"
 
 disabled_rules:
   - comment_spacing

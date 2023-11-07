@@ -68,9 +68,9 @@
     },
     {
       "target" : {
-        "containerPath" : "container:Modules\/feature-authentication",
-        "identifier" : "feature-authenticationTests",
-        "name" : "feature-authenticationTests"
+        "containerPath" : "container:Modules\/feature-presentation",
+        "identifier" : "feature-presentationTests",
+        "name" : "feature-presentationTests"
       }
     }
   ],
