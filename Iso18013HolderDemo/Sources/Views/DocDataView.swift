@@ -12,12 +12,12 @@ import MdocDataModel18013
 
 struct DocDataView: View {
 	@Environment(\.dismiss) var dismiss
-	@EnvironmentObject var userWallet: UserWallet
-    @ObservedObject var appData: DataSampleStorageService
+	@EnvironmentObject var userWallet: EudiWallet
+    @ObservedObject var appData: DocumentsViewModel
 	@State private var isPresentingConfirm: Bool = false
 	let index: Int
 
-	init(index: Int, appData: DataSampleStorageService) {
+	init(index: Int, appData: DocumentsViewModel) {
 		self.index = index
 		self.appData = appData
 	}

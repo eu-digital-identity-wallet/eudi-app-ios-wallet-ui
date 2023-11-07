@@ -15,7 +15,7 @@ struct ShareView: View {
 	@Environment(\.dismiss) var dismiss
 	var isProximitySharing: Bool { presentationSession.flow.isProximity }
 	@ObservedObject var presentationSession: PresentationSession
-	@EnvironmentObject var userWallet: UserWallet
+	@EnvironmentObject var userWallet: EudiWallet
 	@Environment(\.openURL) private var openURL
 	
 	var body: some View {
@@ -113,13 +113,4 @@ struct ShareView: View {
 	
 }
 
-/*
- struct ShareView_Previews: PreviewProvider {
- static var previews: some View {
- let appData = MdocAppData().loadSampleData()
- let server = MdocGattServer()
- ShareView()
- .environmentObject(appData).environmentObject(server)
- }
- }
- */
+

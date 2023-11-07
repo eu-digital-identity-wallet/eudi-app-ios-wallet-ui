@@ -10,10 +10,11 @@ import EudiWalletKit
 import CodeScanner
 
 struct MainHolderView: View {
-	@ObservedObject var appData: DataSampleStorageService 
+	@ObservedObject var appData: DocumentsViewModel
 	@State var isPresentingScanner: Bool = false
 	@State var flow: FlowType = .ble
-	@EnvironmentObject var userWallet: UserWallet
+	@State var uiError: MyError? = nil
+	@EnvironmentObject var userWallet: EudiWallet
 	@Binding var path: NavigationPath
 	
 	var body: some View {
@@ -22,24 +23,25 @@ struct MainHolderView: View {
 					Text("no_documents").italic().font(.footnote)
 					Text("start_by_adding_sample_documents").italic().font(.footnote)
 					Button {
-						appData.loadSampleData(force: true)
+						do { try userWallet.loadSampleData() }
+						catch { uiError = MyError(message: error.localizedDescription) }
 					} label: {
 						Text("add_sample_documents").padding(12)
 					}.padding(.top, 20).tint(Color("AccentColor"))
 						.buttonStyle(.borderedProminent)
 				}
-				if appData.pidLoaded, let m = appData.euPidModel {
+				if appData.hasModels[0] == true, let m = appData.mdocModels[0] {
 					NavigationLink(value: RouteDestination.docView(index: 0)) {
 						DocButton(title: NSLocalizedString(m.title, comment: ""), subtitle: m.docType)
 					}.accessibilityIdentifier("EuPidButton")
 				}
-				if appData.mdlLoaded, let m = appData.isoMdlModel {
+				if appData.hasModels[1] == true, let m = appData.mdocModels[1] {
 					NavigationLink(value: RouteDestination.docView(index: 1)) {
 						DocButton(title: NSLocalizedString(m.title, comment: ""), subtitle: m.docType)
 					}.accessibilityIdentifier("IsoMdlButton")
 				}
 				Spacer()
-				if appData.mdlLoaded && appData.isoMdlModel != nil {					
+				if appData.hasData {
 					Button(action: { flow = .ble; path.append(RouteDestination.shareView(flow: flow)) }, label: {
 						RoundedRectangle(cornerRadius: 6).fill(Color("AccentColor")).frame(maxHeight: 50).overlay() {Text("share").foregroundColor(.white).font(.system(size: 18)) }
 					}).accessibilityIdentifier("Share")
@@ -57,9 +59,7 @@ struct MainHolderView: View {
 					Button(action: { isPresentingScanner = true }, label: {Image(systemName: "qrcode.viewfinder") })
 				}
 			}.padding()
-		.onAppear {
-			if appData.mdlLoaded || appData.pidLoaded { appData.loadSampleData() }
-		}.sheet(isPresented: $isPresentingScanner) {
+			.sheet(isPresented: $isPresentingScanner) {
 			CodeScannerView(codeTypes: [.qr], scanMode: .once, showViewfinder: true) { response in
 				if case let .success(result) = response {
 					flow = .openid4vp(qrCode: result.string.data(using: .utf8)!)
@@ -75,13 +75,14 @@ struct MainHolderView: View {
 			isPresentingScanner = false
 		})
 	} // end body
+	
+	struct MyError: LocalizedError {
+		var message: String
+		init(message: String) {
+			self.message = message
+		}
+		var errorDescription: String? { message }
+	}
 }
 
-/*
- struct ContentView_Previews: PreviewProvider {
- static var previews: some View {
- let appData = MdocAppData().loadSampleData()
- MainHolderView().environmentObject(appData)
- }
- }
- */
+

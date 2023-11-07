@@ -14,9 +14,9 @@ struct mdoc_holderApp: App {
 	
 	var body: some Scene {
 		WindowGroup {
-			let wallet = UserWallet(storageType: .sample)
+			let wallet = EudiWallet()
 			NavigationStack(path: $path) {
-				MainHolderView(appData: wallet.storageService as! DataSampleStorageService, path: $path).environmentObject(wallet)					
+				MainHolderView(appData: wallet.documentsViewModel, path: $path).environmentObject(wallet)
 			}
 		}
 	}
