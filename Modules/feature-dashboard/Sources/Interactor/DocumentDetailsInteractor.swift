@@ -16,7 +16,7 @@
 import Foundation
 
 public protocol DocumentDetailsInteractorType {
-
+  
 }
 
 public class DocumentDetailsInteractor: DocumentDetailsInteractorType {

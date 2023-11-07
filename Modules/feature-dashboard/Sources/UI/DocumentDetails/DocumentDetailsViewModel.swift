@@ -32,19 +32,23 @@ public class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Docume
       router: router,
       initialState: .init(
         addDocumentCellModels: [
-          .init(value: .init(isEnabled: true,
-                             documentName: LocalizableString.Key.pid,
-                             image: Theme.shared.image.idStroke, action: {
-                               print("route to pid")
-                             })),
-          .init(value: .init(isEnabled: false,
-                             documentName: LocalizableString.Key.mdl,
-                             image: Theme.shared.image.id, action: {
-                               print("route to mdl")
-                             }))
+          .init(
+            isEnabled: true,
+            documentName: .pid,
+            image: Theme.shared.image.idStroke,
+            type: .pid
+          ),
+          .init(
+            isEnabled: true,
+            documentName: LocalizableString.Key.mdl,
+            image: Theme.shared.image.id,
+            type: .mdl
+          )
         ]
       )
     )
   }
 
+  func routeToIssuance(for docType: AddDocumentCellModel.`Type`) {
+  }
 }

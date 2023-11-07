@@ -53,10 +53,12 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
           VStack {
             ForEach(viewModel.viewState.addDocumentCellModels) { cell in
               AddNewDocumentCell(
-                isEnabled: cell.value.isEnabled,
-                icon: cell.value.image,
-                title: cell.value.documentName,
-                action: cell.value.action
+                isEnabled: cell.isEnabled,
+                icon: cell.image,
+                title: cell.documentName,
+                action: {
+                  viewModel.routeToIssuance(for: cell.type)
+                }
               )
               .padding(.bottom, Theme.shared.shape.small)
             }

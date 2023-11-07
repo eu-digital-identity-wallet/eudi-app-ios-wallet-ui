@@ -18,39 +18,35 @@ import SwiftUI
 import logic_resources
 
 public struct AddDocumentCellModel: Identifiable {
-  public let id: String
-  public let value: Value
 
-  public init(value: Value) {
+  public let id: String
+  public let isEnabled: Bool
+  public let documentName: LocalizableString.Key
+  public let image: Image
+  public let type: `Type`
+
+  public init(
+    isEnabled: Bool,
+    documentName: LocalizableString.Key,
+    image: Image,
+    type: `Type`
+  ) {
     self.id = UUID().uuidString
-    self.value = value
+    self.isEnabled = isEnabled
+    self.documentName = documentName
+    self.image = image
+    self.type = type
   }
+
 }
 
 public extension AddDocumentCellModel {
-  struct Value {
-    internal init(
-      isEnabled: Bool,
-      documentName: LocalizableString.Key,
-      image: Image,
-      action: @escaping () -> Void
-    ) {
-      self.id = UUID().uuidString
-      self.isEnabled = isEnabled
-      self.documentName = documentName
-      self.image = image
-      self.action = action
-    }
-
-    public let id: String
-    public let isEnabled: Bool
-    public let documentName: LocalizableString.Key
-    public let image: Image
-    public let action: () -> Void
-
+  enum `Type` {
+    case pid
+    case mdl
   }
 
   static func mock() -> AddDocumentCellModel {
-    .init(value: .init(isEnabled: true, documentName: .pid, image: Theme.shared.image.id, action: {}))
+    .init(isEnabled: true, documentName: .pid, image: Theme.shared.image.id, type: .pid)
   }
 }
