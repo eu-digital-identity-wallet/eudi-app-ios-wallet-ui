@@ -23,7 +23,12 @@ public struct AddNewDocumentCell: View {
   let title: LocalizableString.Key
   let action: () -> Void
 
-  public init(isEnabled: Bool, icon: Image, title: LocalizableString.Key, action: @escaping () -> Void) {
+  public init(
+    isEnabled: Bool,
+    icon: Image,
+    title: LocalizableString.Key,
+    action: @escaping () -> Void
+  ) {
     self.isEnabled = isEnabled
     self.icon = icon
     self.title = title
@@ -54,14 +59,14 @@ public struct AddNewDocumentCell: View {
           .typography(Theme.shared.font.bodyLarge)
           .foregroundColor(isEnabled ? Theme.shared.color.textPrimaryDark : Theme.shared.color.textDisabledDark)
         Spacer()
-        Image(systemName: "plus")
+        Theme.shared.image.plus
           .font(.body.bold())
           .foregroundColor(isEnabled ? Theme.shared.color.primary : Theme.shared.color.textDisabledDark)
       }
       .disabled(!isEnabled)
       .padding(20)
       .background(Theme.shared.color.backgroundDefault)
-      .tint(isEnabled ? nil : .gray)
+      .tint(isEnabled ? nil : Theme.shared.color.textDisabledDark)
       .clipShape(.rect(cornerRadius: Theme.shared.shape.small))
     }
   }
