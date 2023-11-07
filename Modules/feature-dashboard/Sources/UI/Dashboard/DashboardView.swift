@@ -40,8 +40,12 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
 
       FloatingActionButtonBar(
         isLoading: viewModel.viewState.isLoading,
-        addAction: {},
-        shareAction: {}
+        addAction: {
+          viewModel.routeToAddDocument()
+        },
+        shareAction: {
+          viewModel.routeToDocumentDetails()
+        }
       )
     }
     .background(ThemeManager.shared.color.backgroundPaper)

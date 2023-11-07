@@ -63,6 +63,14 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
     }
   }
 
+  func routeToAddDocument() {
+    router.push(with: .addDocument)
+  }
+
+  func routeToDocumentDetails() {
+    router.push(with: .documentDetails)
+  }
+
   private func handleDeepLink() {
     if let deepLink = deepLinkController.getPendingDeepLinkAction() {
       deepLinkController.handleDeepLinkAction(routerHost: router, deepLinkAction: deepLink)

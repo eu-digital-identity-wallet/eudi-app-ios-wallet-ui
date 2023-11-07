@@ -92,6 +92,8 @@ public final class RouterHost: RouterHostType {
         WelcomeView(with: self, and: WelcomeInteractor())
       case .documentDetails:
         DocumentDetailsView(with: self, and: DocumentDetailsInteractor())
+      case .addDocument:
+        AddDocumentView(with: self, and: AddDocumentInteractor())
       }
     }
     .eraseToAnyView()

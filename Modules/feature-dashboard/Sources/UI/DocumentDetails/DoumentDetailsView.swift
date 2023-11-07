@@ -28,43 +28,10 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
 
   public var body: some View {
     ContentScreen {
-      VStack(alignment: .leading) {
-        Button(action: {}, label: {
-          Theme.shared.image.xmark
-            .font(.system(size: 20, weight: .medium))
-        })
-        .foregroundStyle(Theme.shared.color.primary)
 
-        VSpacer.large()
-
-        Text(LocalizableString.Key.addDocumentTitle)
-          .typography(Theme.shared.font.headlineSmall)
-          .foregroundStyle(Theme.shared.color.primary)
-
-        VSpacer.medium()
-
-        Text(LocalizableString.Key.addDocumentSubtitle)
-          .typography(Theme.shared.font.bodyLarge)
-          .foregroundStyle(Theme.shared.color.textSecondaryDark)
-
-        VSpacer.extraLarge()
-
-        ScrollView {
-          VStack {
-            ForEach(viewModel.viewState.addDocumentCellModels) { cell in
-              AddNewDocumentCell(
-                isEnabled: cell.isEnabled,
-                icon: cell.image,
-                title: cell.documentName,
-                action: {
-                  viewModel.routeToIssuance(for: cell.type)
-                }
-              )
-              .padding(.bottom, Theme.shared.shape.small)
-            }
-          }
-        }
-      }
+    }
+    .onAppear {
+      self.viewModel.fetchDocumentDetails()
     }
   }
 

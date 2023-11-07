@@ -18,10 +18,10 @@ import logic_ui
 import logic_resources
 
 public struct DocumentDetailsViewState: ViewState {
-  var addDocumentCellModels: [AddDocumentCellModel]
+
 }
 
-public class DocumentDetailsViewModel<Router: RouterHostType, Interactor: DocumentDetailsInteractorType>: BaseViewModel<Router, DocumentDetailsViewState> {
+public final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: DocumentDetailsInteractorType>: BaseViewModel<Router, DocumentDetailsViewState> {
 
   private let interactor: Interactor
 
@@ -31,24 +31,18 @@ public class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Docume
     super.init(
       router: router,
       initialState: .init(
-        addDocumentCellModels: [
-          .init(
-            isEnabled: true,
-            documentName: .pid,
-            image: Theme.shared.image.idStroke,
-            type: .pid
-          ),
-          .init(
-            isEnabled: true,
-            documentName: LocalizableString.Key.mdl,
-            image: Theme.shared.image.id,
-            type: .mdl
-          )
-        ]
       )
     )
   }
 
-  func routeToIssuance(for docType: AddDocumentCellModel.`Type`) {
+  func fetchDocumentDetails() {
+  }
+
+  private func setNewState(
+  ) {
+    setState { _ in
+        .init(
+        )
+    }
   }
 }

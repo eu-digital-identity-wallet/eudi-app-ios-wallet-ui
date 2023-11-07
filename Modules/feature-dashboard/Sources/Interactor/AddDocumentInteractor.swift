@@ -17,21 +17,35 @@ import Foundation
 import logic_ui
 import logic_resources
 
-public protocol DocumentDetailsInteractorType {
-
+public protocol AddDocumentInteractorType {
+ func fetchStoredDocuments() -> StoredDocumentsPartialState
 }
 
-public final class DocumentDetailsInteractor: DocumentDetailsInteractorType {
+public final class AddDocumentInteractor: AddDocumentInteractorType {
 
   public init() {}
 
-  public func fetchStoredDocuments() {
+  public func fetchStoredDocuments() -> StoredDocumentsPartialState {
     // Add Some logic from walletCore about active documents in storage.
     // Filter the ones we can add, currently Dummy
+    return .success([
+      .init(
+        isEnabled: true,
+        documentName: .pid,
+        image: Theme.shared.image.idStroke,
+        type: .pid
+      ),
+      .init(
+        isEnabled: false,
+        documentName: LocalizableString.Key.mdl,
+        image: Theme.shared.image.id,
+        type: .mdl
+      )
+    ])
   }
 }
 
-public enum DocumentDetailsPartialState {
-  case success
+public enum StoredDocumentsPartialState {
+  case success([AddDocumentCellModel])
   case failure(Error)
 }
