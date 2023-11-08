@@ -15,23 +15,28 @@
  */
 
 import SwiftUI
+import logic_resources
 
 public struct DocumentDetailsHeaderView: View {
 
-  @State var holdersName: String
-  @State var userIcon: Image
+  let documentName: String
+  let holdersName: String
+  let userIcon: Image
 
   public init(
+    documentName: String,
     holdersName: String,
     userIcon: Image
   ) {
     self.holdersName = holdersName
     self.userIcon = userIcon
+    self.documentName = documentName
   }
 
   public var body: some View {
     VStack {
       DocumentDetailsHeaderCell(
+        documentName: documentName,
         holdersName: holdersName,
         userIcon: userIcon
       )
@@ -43,41 +48,47 @@ public struct DocumentDetailsHeaderView: View {
 extension DocumentDetailsHeaderView {
   struct DocumentDetailsHeaderCell: View {
     public init(
+      documentName: String,
       holdersName: String,
       userIcon: Image
     ) {
+      self.documentName = documentName
       self.holdersName = holdersName
       self.userIcon = userIcon
     }
 
-  //  @State var documentType: DocumentTypeEnum
-    @State var holdersName: String
-    @State var userIcon: Image
+    let documentName: String
+    let holdersName: String
+    let userIcon: Image
 
     public var body: some View {
-        VStack(alignment: .leading) {
-          Text("")//TypographyText(text: documentType.title, style: .h5)
-            .foregroundColor(Theme.shared.color.white)
-            .padding(.bottom)
-          Text("")//TypographyText(text: holdersName, style: .subtitle2)
-            .foregroundColor(Theme.shared.color.textSecondaryLight)
-            .padding(.bottom)
-          HStack {
-             userIcon
-               .resizable()
-               .aspectRatio(contentMode: .fit)
-               .frame(height: 120)
-               .clipShape(.rect(cornerRadius: 16))
+      VStack(alignment: .leading) {
+        Text(documentName)
+          .typography(Theme.shared.font.headlineSmall)
+          .foregroundColor(Theme.shared.color.white)
+        VSpacer.small()
+        Text(holdersName)
+          .typography(Theme.shared.font.bodyLarge)
+          .foregroundColor(Theme.shared.color.textSecondaryLight)
+          .padding(.bottom)
+        VSpacer.small()
+        HStack {
+          userIcon
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(height: 120)
+            .clipShape(.rect(cornerRadius: 16))
 
-            Theme.shared.image.idStroke
-              .padding(.leading, -40)
-            Spacer()
-          }
+          Theme.shared.image.idStroke
+            .padding(.leading, -40)
+          Spacer()
         }
-        .padding(32)
-        .frame(maxWidth: .infinity)
-        .background(Theme.shared.color.primary)
-        .roundedCorner(16, corners: [.bottomLeft, .bottomRight])
+      }
+      .padding(Theme.shared.dimension.padding)
+      .frame(maxWidth: .infinity)
+      .background(Theme.shared.color.primary)
+      .roundedCorner(Theme.shared.shape.small,
+                     corners: [.bottomLeft, .bottomRight])
     }
   }
 }

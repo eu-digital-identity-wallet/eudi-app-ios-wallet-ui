@@ -31,10 +31,37 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
       padding: 0,
       canScroll: true
     ) {
-      DocumentDetailsHeaderView(
-        holdersName: viewModel.viewState.holdersName,
-        userIcon: viewModel.viewState.holdersImage
-      )
+      VStack {
+        // Close Button
+        VStack(alignment: .leading) {
+          HStack {
+            HSpacer.medium()
+            Button(action: {
+              viewModel.pop()
+            }, label: {
+              Theme.shared.image.xmark
+            })
+            .foregroundStyle(Theme.shared.color.white)
+            Spacer()
+          }
+
+        }
+        .background(Theme.shared.color.primary)
+        .frame(maxWidth: .infinity)
+
+        VSpacer.large()
+          .frame(maxWidth: .infinity)
+          .background(Theme.shared.color.primary)
+
+        DocumentDetailsHeaderView(
+          documentName: viewModel.viewState.document.documentName,
+          holdersName: viewModel.viewState.document.holdersName,
+          userIcon: viewModel.viewState.document.holdersImage
+        )
+      }
+
+      VSpacer.large()
+
       Spacer()
     }
     .onAppear {

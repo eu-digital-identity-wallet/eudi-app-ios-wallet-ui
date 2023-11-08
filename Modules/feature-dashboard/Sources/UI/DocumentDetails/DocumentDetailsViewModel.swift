@@ -18,8 +18,7 @@ import logic_ui
 import logic_resources
 
 public struct DocumentDetailsViewState: ViewState {
-  var holdersName: String
-  var holdersImage: Image
+  var document: DocumentDetailsUIModel
 }
 
 public final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: DocumentDetailsInteractorType>: BaseViewModel<Router, DocumentDetailsViewState> {
@@ -32,23 +31,25 @@ public final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: 
     super.init(
       router: router,
       initialState: .init(
-        holdersName: "",
-        holdersImage: Theme.shared.image.user
+        document: DocumentDetailsUIModel.mock()
       )
     )
   }
 
   func fetchDocumentDetails() {
+
+  }
+
+  func pop() {
+    router.pop(animated: true)
   }
 
   private func setNewState(
-    holdersName: String?,
-    holdersImage: Image?
+    document: DocumentDetailsUIModel?
   ) {
     setState { previous in
         .init(
-          holdersName: holdersName ?? previous.holdersName,
-          holdersImage: holdersImage ?? previous.holdersImage
+          document: document ?? previous.document
         )
     }
   }

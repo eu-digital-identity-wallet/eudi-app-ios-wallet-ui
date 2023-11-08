@@ -13,25 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Foundation
-import logic_ui
+import SwiftUI
 import logic_resources
 
-public protocol DocumentDetailsInteractorType {
-  func fetchStoredDocument()
+public struct DocumentDetailsUIModel {
+
+  public let documentName: String
+  public let holdersName: String
+  public let holdersImage: Image
+  public let documentFields: [DocumentField]
 }
 
-public final class DocumentDetailsInteractor: DocumentDetailsInteractorType {
+public extension DocumentDetailsUIModel {
 
-  public init() {}
-
-  public func fetchStoredDocument() {
-    // Add Some logic from walletCore about active documents in storage.
-    // Filter the ones we can add, currently Dummy
+  struct DocumentField {
+    public let title: String
+    public let value: String
   }
-}
 
-public enum DocumentDetailsPartialState {
-  case success
-  case failure(Error)
+  static func mock() -> DocumentDetailsUIModel {
+    DocumentDetailsUIModel(
+      documentName: "Document",
+      holdersName: "User",
+      holdersImage: Theme.shared.image.user,
+      documentFields: Array(
+        repeating: DocumentField(title: "", value: ""),
+        count: 12
+      )
+    )
+  }
 }

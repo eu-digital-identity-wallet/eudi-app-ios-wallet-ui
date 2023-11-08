@@ -14,24 +14,3 @@
  * limitations under the License.
  */
 import Foundation
-import logic_ui
-import logic_resources
-
-public protocol DocumentDetailsInteractorType {
-  func fetchStoredDocument()
-}
-
-public final class DocumentDetailsInteractor: DocumentDetailsInteractorType {
-
-  public init() {}
-
-  public func fetchStoredDocument() {
-    // Add Some logic from walletCore about active documents in storage.
-    // Filter the ones we can add, currently Dummy
-  }
-}
-
-public enum DocumentDetailsPartialState {
-  case success
-  case failure(Error)
-}
