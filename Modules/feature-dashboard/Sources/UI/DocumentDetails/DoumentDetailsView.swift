@@ -27,8 +27,15 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
   }
 
   public var body: some View {
-    ContentScreen {
-
+    ContentScreen(
+      padding: 0,
+      canScroll: true
+    ) {
+      DocumentDetailsHeaderView(
+        holdersName: viewModel.viewState.holdersName,
+        userIcon: viewModel.viewState.holdersImage
+      )
+      Spacer()
     }
     .onAppear {
       self.viewModel.fetchDocumentDetails()
