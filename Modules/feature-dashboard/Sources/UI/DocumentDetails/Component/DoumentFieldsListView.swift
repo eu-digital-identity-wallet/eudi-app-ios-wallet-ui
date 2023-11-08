@@ -37,10 +37,11 @@ struct DocumentFieldListView: View {
             subTitle: .custom(documentFieldContent.value),
             isLoading: isLoading
           )
-          .padding(Theme.shared.dimension.padding)
 
+          VSpacer.medium()
         }
       }
+      .padding(.horizontal, SPACING_MEDIUM)
     }
   }
 }

@@ -33,6 +33,11 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
     ) {
       VStack {
         // Close Button
+
+        VSpacer.medium()
+          .frame(maxWidth: .infinity)
+          .background(Theme.shared.color.primary)
+
         VStack(alignment: .leading) {
           HStack {
             HSpacer.medium()
@@ -49,7 +54,7 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
         .background(Theme.shared.color.primary)
         .frame(maxWidth: .infinity)
 
-        VSpacer.large()
+        VSpacer.medium()
           .frame(maxWidth: .infinity)
           .background(Theme.shared.color.primary)
 

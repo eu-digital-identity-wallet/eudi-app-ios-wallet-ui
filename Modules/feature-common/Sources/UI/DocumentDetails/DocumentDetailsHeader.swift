@@ -86,7 +86,7 @@ extension DocumentDetailsHeaderView {
               .resizable()
               .aspectRatio(contentMode: .fit)
               .frame(height: 120)
-              .clipShape(.rect(cornerRadius: 16))
+              .clipShape(.rect(cornerRadius: Theme.shared.shape.small))
 
             Theme.shared.image.idStroke
               .padding(.leading, -40)
@@ -95,7 +95,7 @@ extension DocumentDetailsHeaderView {
         }
         .shimmer(isLoading: isLoading)
       }
-      .padding(Theme.shared.dimension.padding)
+      .padding(SPACING_MEDIUM)
       .frame(maxWidth: .infinity)
       .background(Theme.shared.color.primary)
       .roundedCorner(Theme.shared.shape.small,
