@@ -56,16 +56,19 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
         DocumentDetailsHeaderView(
           documentName: viewModel.viewState.document.documentName,
           holdersName: viewModel.viewState.document.holdersName,
-          userIcon: viewModel.viewState.document.holdersImage
+          userIcon: viewModel.viewState.document.holdersImage,
+          isLoading: viewModel.viewState.isLoading
         )
       }
 
-      VSpacer.large()
-
+      DocumentFieldListView(
+        documentFields: viewModel.viewState.document.documentFields,
+        isLoading: viewModel.viewState.isLoading
+      )
       Spacer()
     }
-    .onAppear {
-      self.viewModel.fetchDocumentDetails()
+    .task {
+      await self.viewModel.fetchDocumentDetails()
     }
   }
 

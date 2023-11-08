@@ -13,4 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Foundation
+import SwiftUI
+import logic_resources
+import logic_ui
+
+struct DocumentFieldListView: View {
+
+  let documentFields: [DocumentDetailsUIModel.DocumentField]
+  let isLoading: Bool
+
+  var body: some View {
+    ScrollView {
+      VStack {
+        ForEach(documentFields.indices, id: \.self) { index in
+          let documentFieldContent = documentFields[index]
+
+          if index == 0 {
+            VSpacer.extraLarge()
+          }
+
+          KeyValueView(
+            title: .custom(documentFieldContent.title),
+            subTitle: .custom(documentFieldContent.value),
+            isLoading: isLoading
+          )
+          .padding(Theme.shared.dimension.padding)
+
+        }
+      }
+    }
+  }
+}

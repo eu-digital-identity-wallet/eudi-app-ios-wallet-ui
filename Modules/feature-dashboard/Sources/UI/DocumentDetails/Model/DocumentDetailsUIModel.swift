@@ -15,6 +15,7 @@
  */
 import SwiftUI
 import logic_resources
+import logic_business
 
 public struct DocumentDetailsUIModel {
 
@@ -26,7 +27,8 @@ public struct DocumentDetailsUIModel {
 
 public extension DocumentDetailsUIModel {
 
-  struct DocumentField {
+  struct DocumentField: Identifiable {
+    public let id: String
     public let title: String
     public let value: String
   }
@@ -37,8 +39,12 @@ public extension DocumentDetailsUIModel {
       holdersName: "User",
       holdersImage: Theme.shared.image.user,
       documentFields: Array(
-        repeating: DocumentField(title: "", value: ""),
-        count: 12
+        count: 12,
+        createElement: DocumentField(
+          id: UUID().uuidString,
+          title: "Title",
+          value: "Value"
+        )
       )
     )
   }

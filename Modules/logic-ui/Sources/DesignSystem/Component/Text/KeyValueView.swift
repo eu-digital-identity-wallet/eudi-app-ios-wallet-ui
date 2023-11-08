@@ -16,40 +16,72 @@
 import Foundation
 import logic_resources
 
-struct KeyValueView: View {
+public struct KeyValueView: View {
 
   let title: LocalizableString.Key
   let subTitle: LocalizableString.Key
+  let alignment: KeyValueView.Alignment
   let isLoading: Bool
 
-  init(
+  public init(
     title: LocalizableString.Key,
     subTitle: LocalizableString.Key,
+    alignment: KeyValueView.Alignment = .start,
     isLoading: Bool = false
   ) {
     self.title = title
     self.subTitle = subTitle
+    self.alignment = alignment
     self.isLoading = isLoading
   }
 
-
-  var body: some View {
+  public var body: some View {
     HStack {
+
+      if alignment == .center || alignment == .end {
+        Spacer()
+      }
 
       VStack(alignment: .leading, spacing: SPACING_SMALL) {
 
         Text(title)
-          .foregroundColor(ThemeManager.shared.color.textSecondaryDark)
+          .foregroundColor(Theme.shared.color.textSecondaryDark)
           .typography(ThemeManager.shared.font.bodyMedium)
+
+        VSpacer.custom(size: 4)
+
         Text(subTitle)
-          .foregroundColor(ThemeManager.shared.color.textPrimaryDark)
+          .foregroundColor(Theme.shared.color.textPrimaryDark)
           .typography(ThemeManager.shared.font.bodyLarge)
 
         Spacer()
 
       }
-      .shimmer(isLoading: self.isLoading)
+
+      if alignment == .center || alignment == .start {
+        Spacer()
+      }
     }
+    .shimmer(isLoading: self.isLoading)
   }
 }
 
+public extension KeyValueView {
+  enum Alignment {
+    case start
+    case center
+    case end
+  }
+
+  struct Model: Identifiable {
+    public init(title: String, value: String) {
+      self.id = UUID().uuidString
+      self.title = title
+      self.value = value
+    }
+
+    public var id: String
+    public var title: String
+    public var value: String
+  }
+}

@@ -19,8 +19,10 @@ import logic_resources
 
 public struct DocumentDetailsViewState: ViewState {
   var document: DocumentDetailsUIModel
+  var isLoading: Bool
 }
 
+@MainActor
 public final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: DocumentDetailsInteractorType>: BaseViewModel<Router, DocumentDetailsViewState> {
 
   private let interactor: Interactor
@@ -31,13 +33,16 @@ public final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: 
     super.init(
       router: router,
       initialState: .init(
-        document: DocumentDetailsUIModel.mock()
+        document: DocumentDetailsUIModel.mock(),
+        isLoading: true
       )
     )
   }
 
-  func fetchDocumentDetails() {
+  func fetchDocumentDetails() async {
+    try? await Task.sleep(nanoseconds: 5 * 1_000_000_000)
 
+    self.setNewState(isLoading: false)
   }
 
   func pop() {
@@ -45,11 +50,13 @@ public final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: 
   }
 
   private func setNewState(
-    document: DocumentDetailsUIModel?
+    document: DocumentDetailsUIModel? = nil,
+    isLoading: Bool? = nil
   ) {
     setState { previous in
         .init(
-          document: document ?? previous.document
+          document: document ?? previous.document,
+          isLoading: isLoading ?? previous.isLoading
         )
     }
   }

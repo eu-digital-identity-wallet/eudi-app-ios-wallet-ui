@@ -22,15 +22,18 @@ public struct DocumentDetailsHeaderView: View {
   let documentName: String
   let holdersName: String
   let userIcon: Image
+  let isLoading: Bool
 
   public init(
     documentName: String,
     holdersName: String,
-    userIcon: Image
+    userIcon: Image,
+    isLoading: Bool
   ) {
     self.holdersName = holdersName
     self.userIcon = userIcon
     self.documentName = documentName
+    self.isLoading = isLoading
   }
 
   public var body: some View {
@@ -38,51 +41,59 @@ public struct DocumentDetailsHeaderView: View {
       DocumentDetailsHeaderCell(
         documentName: documentName,
         holdersName: holdersName,
-        userIcon: userIcon
+        userIcon: userIcon,
+        isLoading: isLoading
       )
-      Spacer()
     }
   }
 }
 
 extension DocumentDetailsHeaderView {
+
   struct DocumentDetailsHeaderCell: View {
-    public init(
-      documentName: String,
-      holdersName: String,
-      userIcon: Image
-    ) {
-      self.documentName = documentName
-      self.holdersName = holdersName
-      self.userIcon = userIcon
-    }
 
     let documentName: String
     let holdersName: String
     let userIcon: Image
+    let isLoading: Bool
+
+    public init(
+      documentName: String,
+      holdersName: String,
+      userIcon: Image,
+      isLoading: Bool
+    ) {
+      self.documentName = documentName
+      self.holdersName = holdersName
+      self.userIcon = userIcon
+      self.isLoading = isLoading
+    }
 
     public var body: some View {
       VStack(alignment: .leading) {
-        Text(documentName)
-          .typography(Theme.shared.font.headlineSmall)
-          .foregroundColor(Theme.shared.color.white)
-        VSpacer.small()
-        Text(holdersName)
-          .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.textSecondaryLight)
-          .padding(.bottom)
-        VSpacer.small()
-        HStack {
-          userIcon
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(height: 120)
-            .clipShape(.rect(cornerRadius: 16))
+        Group {
+          Text(documentName)
+            .typography(Theme.shared.font.headlineSmall)
+            .foregroundColor(Theme.shared.color.white)
+          VSpacer.small()
+          Text(holdersName)
+            .typography(Theme.shared.font.bodyLarge)
+            .foregroundColor(Theme.shared.color.textSecondaryLight)
+            .padding(.bottom)
+          VSpacer.small()
+          HStack {
+            userIcon
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(height: 120)
+              .clipShape(.rect(cornerRadius: 16))
 
-          Theme.shared.image.idStroke
-            .padding(.leading, -40)
-          Spacer()
+            Theme.shared.image.idStroke
+              .padding(.leading, -40)
+            Spacer()
+          }
         }
+        .shimmer(isLoading: isLoading)
       }
       .padding(Theme.shared.dimension.padding)
       .frame(maxWidth: .infinity)

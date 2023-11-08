@@ -63,8 +63,10 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
       )
       content()
     }
-    .task {
-      await viewModel.fetch()
+    .viewDidLoadOnce {
+      Task {
+        await viewModel.fetch()
+      }
     }
   }
 }
