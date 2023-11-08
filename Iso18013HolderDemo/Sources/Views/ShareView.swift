@@ -33,10 +33,10 @@ struct ShareView: View {
 					Text(verbatim: issuerM).font(.footnote).foregroundStyle(.green)
 				}
 				ScrollView {
-					ForEach(presentationSession.selectedRequestItems.indices, id: \.self) { docIndex in
-						let nsItems = presentationSession.selectedRequestItems[docIndex]
+					ForEach(presentationSession.disclosedDocuments.indices, id: \.self) { docIndex in
+						let nsItems = presentationSession.disclosedDocuments[docIndex]
 						Text(verbatim: NSLocalizedString(nsItems.docType, comment: "")).font(.title2).disabled(nsItems.isEnabled)
-						ForEach($presentationSession.selectedRequestItems[docIndex].elements) { $el in
+						ForEach($presentationSession.disclosedDocuments[docIndex].elements) { $el in
 							if el.isEnabled {
 								Toggle(NSLocalizedString(el.elementIdentifier, comment: ""), isOn: $el.isSelected).toggleStyle(CheckboxToggleStyle())
 							} else {
@@ -82,7 +82,7 @@ struct ShareView: View {
 	
 	func doTransfer() {
 		hasCancelled = false
-		Task { try await presentationSession.sendResponse(userAccepted: true, itemsToSend: presentationSession.selectedRequestItems.docSelectedDictionary) }
+		Task { try await presentationSession.sendResponse(userAccepted: true, itemsToSend: presentationSession.disclosedDocuments.items) }
 	}
 	
 	var checkMark: some View { Image(systemName: "checkmark.circle").font(.system(size: 100)).symbolRenderingMode(.monochrome).foregroundStyle(.green).padding(.top, 50) }
