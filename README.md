@@ -22,9 +22,9 @@ At the present time, the following features are available:
 
 ### Dependencies
 
-The core functionality of the app is implemented in our ISO-18013 Swift Packages: [Data-Model](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git), [Security](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git) and [Data-Transfer](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git)
+The core functionality of the app is implemented in [Wallet Kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit) package. Wallet Kit dependes on ISO-18013 Swift Packages: [Data-Model](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git), [Security](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git), [Data-Transfer](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git) and [OpenID4VP](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift) package.
 
-The following image depicts the app architecture: ![Graphviz](wiki/dep_graph.jpg).
+The following image depicts the app package dependencies: ![Graphviz](wiki/dep_graph.png).
 
 You can regenerate the Xcode project using [Tuist](https://tuist.io) by running `tuist generate` in the root folder of the project. 
 
