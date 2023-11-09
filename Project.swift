@@ -16,4 +16,4 @@ if Environment.isCI.getBoolean(default: true) {
 }
 
 // Creates our project using a helper function defined in ProjectDescriptionHelpers
-let project = Project.app(name: "Iso18013HolderDemo", platform: .iOS, additionalTargets: [], packages: packages, products: products, testProducts: ["Mockingbird"])
+let project = Project.app(name: "AppWalletUI", platform: .iOS, additionalTargets: [], packages: packages, products: products, testProducts: ["Mockingbird"])
