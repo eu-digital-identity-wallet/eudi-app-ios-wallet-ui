@@ -590,7 +590,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.eudiw.AppWalletUI;
+				PRODUCT_BUNDLE_IDENTIFIER = org.eudiw.Iso18013HolderDemo;
 				PRODUCT_NAME = AppWalletUI;
 				SDKROOT = iphoneos;
 				STRIP_STYLE = debugging;
@@ -616,7 +616,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.eudiw.AppWalletUI;
+				PRODUCT_BUNDLE_IDENTIFIER = org.eudiw.Iso18013HolderDemo;
 				PRODUCT_NAME = AppWalletUI;
 				SDKROOT = iphoneos;
 				STRIP_STYLE = debugging;
