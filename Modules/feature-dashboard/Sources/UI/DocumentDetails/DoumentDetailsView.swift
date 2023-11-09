@@ -66,20 +66,36 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
         VSpacer.medium()
           .frame(maxWidth: .infinity)
           .background(Theme.shared.color.primary)
+      }
 
+      ScrollView {
         DocumentDetailsHeaderView(
           documentName: viewModel.viewState.document.documentName,
           holdersName: viewModel.viewState.document.holdersName,
           userIcon: viewModel.viewState.document.holdersImage,
           isLoading: viewModel.viewState.isLoading
         )
+        VStack {
+          ForEach(viewModel.viewState.document.documentFields.indices, id: \.self) { index in
+            let documentFieldContent = viewModel.viewState.document.documentFields[index]
+
+            if index == 0 {
+              VSpacer.extraLarge()
+            }
+
+            KeyValueView(
+              title: .custom(documentFieldContent.title),
+              subTitle: .custom(documentFieldContent.value),
+              isLoading: viewModel.viewState.isLoading
+            )
+
+            VSpacer.medium()
+          }
+        }
+        .padding(.horizontal, SPACING_MEDIUM)
+        Spacer()
       }
 
-      DocumentFieldListView(
-        documentFields: viewModel.viewState.document.documentFields,
-        isLoading: viewModel.viewState.isLoading
-      )
-      Spacer()
     }
     .task {
       await self.viewModel.fetchDocumentDetails()

@@ -35,11 +35,27 @@ public extension DocumentDetailsUIModel {
 
   static func mock() -> DocumentDetailsUIModel {
     DocumentDetailsUIModel(
-      documentName: "Document Name Placeholder",
-      holdersName: "Holders Name Placeholder",
+      documentName: "Digital ID",
+      holdersName: "Jane Doe",
       holdersImage: Theme.shared.image.user,
-      documentFields: Array(
-        count: 12,
+      documentFields:
+        [
+          .init(id: UUID().uuidString,
+                title: "ID no",
+                value: "AB12356"),
+          .init(id: UUID().uuidString,
+                title: "Nationality",
+                value: "Hellenic"),
+          .init(id: UUID().uuidString,
+                title: "Place of birth",
+                value: "21 Oct 1994"),
+          .init(id: UUID().uuidString,
+                title: "Height",
+                value: "1,82")
+        ]
+        +
+        Array(
+        count: 6,
         createElement: DocumentField(
           id: UUID().uuidString,
           title: "Placeholder Field Title".padded(padLength: 5),
