@@ -47,7 +47,7 @@ struct ShareView: View {
 				}
 				HStack(alignment: .bottom, spacing: 40) {
 					Button { hasCancelled = true
-						Task { try await presentationSession.sendResponse(userAccepted: false, itemsToSend: [:]) }
+						Task { try await presentationSession.sendResponse(userAccepted: false, itemsToSend: [:], onCancel: { dismiss() }) }
 					} label: {Label("Cancel", systemImage: "x.circle") }.buttonStyle(.bordered)
 					Button { Task { try? await sendAsyncResponse()  } } label: {Label("Accept", systemImage: "checkmark.seal")}.buttonStyle(.borderedProminent)
 				}
@@ -80,12 +80,7 @@ struct ShareView: View {
 	
 	func sendAsyncResponse() async throws {
 		hasCancelled = false
-		let action = { _ = try await presentationSession.sendResponse(userAccepted: true, itemsToSend: presentationSession.disclosedDocuments.items)}
-		if EudiWallet.standard.userAuthenticationRequired {
-			try await EudiWallet.authorizedAction(dismiss: { dismiss()}, action: action )
-		} else {
-			try await action()
-		}
+		_ = try await presentationSession.sendResponse(userAccepted: true, itemsToSend: presentationSession.disclosedDocuments.items, onCancel: { dismiss() })
 	}
 	
 	var checkMark: some View { Image(systemName: "checkmark.circle").font(.system(size: 100)).symbolRenderingMode(.monochrome).foregroundStyle(.green).padding(.top, 50) }

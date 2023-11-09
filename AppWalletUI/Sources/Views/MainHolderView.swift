@@ -53,7 +53,7 @@ struct MainHolderView: View {
 					  case .docView(let index):
 						  DocDataView(index: index, appData: appData)
 					  case .shareView(let flow):
-						  let session = PresentationSession(presentationService: userWallet.beginPresentation(flow: flow))
+					let session = userWallet.beginPresentation(flow: flow) 
 						  ShareView(presentationSession: session)
 					  }
 				  }.navigationBarTitle("eudi_wallet_prototype_v1", displayMode: .inline).toolbar {
