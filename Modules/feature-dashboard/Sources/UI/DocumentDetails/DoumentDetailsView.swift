@@ -67,7 +67,7 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
 
   public var body: some View {
     ContentScreen(
-      padding: 0,
+      padding: .zero,
       canScroll: true,
       errorConfig: viewModel.viewState.error
     ) {
@@ -78,19 +78,17 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
           .frame(maxWidth: .infinity)
           .background(Theme.shared.color.primary)
 
-        VStack(alignment: .leading) {
-          HStack {
-            HSpacer.medium()
-            Button(action: {
-              viewModel.pop()
-            }, label: {
-              Theme.shared.image.xmark
-            })
-            .foregroundStyle(Theme.shared.color.white)
-            Spacer()
-          }
-
+        HStack {
+          HSpacer.medium()
+          Button(action: {
+            viewModel.pop()
+          }, label: {
+            Theme.shared.image.xmark
+          })
+          .foregroundStyle(Theme.shared.color.white)
+          Spacer()
         }
+
         .background(Theme.shared.color.primary)
         .frame(maxWidth: .infinity)
 
