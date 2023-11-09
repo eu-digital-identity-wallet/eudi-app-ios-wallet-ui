@@ -20,28 +20,35 @@ import logic_resources
 public struct DocumentDetailsViewState: ViewState {
   var document: DocumentDetailsUIModel
   var isLoading: Bool
+  let error: ContentError.Config?
 }
 
 @MainActor
 public final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: DocumentDetailsInteractorType>: BaseViewModel<Router, DocumentDetailsViewState> {
 
   private let interactor: Interactor
+  private let documentId: String
 
-  init(router: Router, interactor: Interactor) {
+  init(
+    router: Router,
+    interactor: Interactor,
+    documentId: String
+  ) {
     self.interactor = interactor
-
+    self.documentId = documentId
     super.init(
       router: router,
       initialState: .init(
         document: DocumentDetailsUIModel.mock(),
-        isLoading: true
+        isLoading: true,
+        error: nil
       )
     )
   }
 
   func fetchDocumentDetails() async {
 
-    switch await self.interactor.fetchStoredDocument() {
+    switch await self.interactor.fetchStoredDocument(documentId: documentId) {
 
     case .success(let document):
       self.setNewState(
@@ -50,7 +57,10 @@ public final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: 
       )
     case .failure(let error):
       self.setNewState(
-        isLoading: true
+        isLoading: true,
+        error: ContentError.Config(title: .custom("Failed To Fectch Doc"),
+                                   description: .custom("Try Again"),
+                                   cancelAction: self.pop())
       )
     }
   }
@@ -61,12 +71,14 @@ public final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: 
 
   private func setNewState(
     document: DocumentDetailsUIModel? = nil,
-    isLoading: Bool? = nil
+    isLoading: Bool? = nil,
+    error: ContentError.Config? = nil
   ) {
     setState { previous in
         .init(
           document: document ?? previous.document,
-          isLoading: isLoading ?? previous.isLoading
+          isLoading: isLoading ?? previous.isLoading,
+          error: error ?? previous.error
         )
     }
   }

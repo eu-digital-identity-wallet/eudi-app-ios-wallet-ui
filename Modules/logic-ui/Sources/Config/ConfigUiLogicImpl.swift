@@ -22,7 +22,7 @@ public struct WalletUiConfig: ConfigUiLogic {
     AppRoute.dashboard.key: .init(Theme.shared.color.primary),
     AppRoute.startup.key: .init(Theme.shared.color.primary),
     AppRoute.welcome.key: .init(Theme.shared.color.primary),
-    AppRoute.documentDetails.key: .init(Theme.shared.color.primary)
+    AppRoute.documentDetails(docoumentId: "").key: .init(Theme.shared.color.primary)
   ]
 
   public var landingRoute: AppRoute {

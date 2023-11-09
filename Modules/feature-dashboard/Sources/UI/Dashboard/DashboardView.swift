@@ -34,8 +34,8 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
       DocumentListView(
         items: viewModel.viewState.documents,
         isLoading: viewModel.viewState.isLoading
-      ) { _ in
-
+      ) { document in
+        viewModel.routeToDocumentDetails(documentId: document.value.id)
       }.bottomFade()
 
       FloatingActionButtonBar(
@@ -43,9 +43,7 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
         addAction: {
           viewModel.routeToAddDocument()
         },
-        shareAction: {
-          viewModel.routeToDocumentDetails()
-        }
+        shareAction: {}
       )
     }
     .background(ThemeManager.shared.color.backgroundPaper)

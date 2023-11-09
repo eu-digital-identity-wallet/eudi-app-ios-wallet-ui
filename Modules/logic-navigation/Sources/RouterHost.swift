@@ -90,8 +90,12 @@ public final class RouterHost: RouterHostType {
         AuthenticationRequestView(with: self, and: AuthenticationInteractor())
       case .welcome:
         WelcomeView(with: self, and: WelcomeInteractor())
-      case .documentDetails:
-        DocumentDetailsView(with: self, and: DocumentDetailsInteractor())
+      case .documentDetails(let documentId):
+        DocumentDetailsView(
+          with: self,
+          and: DocumentDetailsInteractor(),
+          documentId: documentId
+        )
       case .addDocument:
         AddDocumentView(with: self, and: AddDocumentInteractor())
       }

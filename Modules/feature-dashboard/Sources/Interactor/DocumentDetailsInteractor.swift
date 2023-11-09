@@ -18,16 +18,16 @@ import logic_ui
 import logic_resources
 
 public protocol DocumentDetailsInteractorType {
-  func fetchStoredDocument() async -> DocumentDetailsPartialState
+  func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
 }
 
 public final class DocumentDetailsInteractor: DocumentDetailsInteractorType {
 
   public init() {}
 
-  public func fetchStoredDocument() async -> DocumentDetailsPartialState {
+  public func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
     // Add Some logic from walletCore about active documents in storage.
-    // Filter the ones we can add, currently Dummy
+    // Fetch document with currendId
     try? await Task.sleep(nanoseconds: 5.nanoseconds)
     return .success(.mock())
   }

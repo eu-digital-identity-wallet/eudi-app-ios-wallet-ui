@@ -30,7 +30,7 @@ public indirect enum AppRoute: Equatable {
   case authenticationRequest
   case welcome
   case addDocument
-  case documentDetails
+  case documentDetails(docoumentId: String)
 
   public var key: String {
     return switch self {

@@ -22,14 +22,23 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
 
   @ObservedObject var viewModel: DocumentDetailsViewModel<Router, Interactor>
 
-  public init(with router: Router, and interactor: Interactor) {
-    self.viewModel = DocumentDetailsViewModel(router: router, interactor: interactor)
+  public init(
+    with router: Router,
+    and interactor: Interactor,
+    documentId: String
+  ) {
+    self.viewModel = DocumentDetailsViewModel(
+      router: router,
+      interactor: interactor,
+      documentId: documentId
+    )
   }
 
   public var body: some View {
     ContentScreen(
       padding: 0,
-      canScroll: true
+      canScroll: true,
+      errorConfig: viewModel.viewState.error
     ) {
       VStack {
         // Close Button
@@ -76,5 +85,4 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
       await self.viewModel.fetchDocumentDetails()
     }
   }
-
 }
