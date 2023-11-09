@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twostraws/CodeScanner.git",
       "state" : {
-        "revision" : "bf5d7087015620b250ee6c865b3c9039fc159d1a",
-        "version" : "2.3.3"
+        "branch" : "main",
+        "revision" : "bf5d7087015620b250ee6c865b3c9039fc159d1a"
       }
     },
     {
@@ -70,24 +70,6 @@
       "state" : {
         "branch" : "main",
         "revision" : "517e9f38f53dc0fcf8924086a473b1c2555bb848"
-      }
-    },
-    {
-      "identity" : "eudi-lib-ios-wallet-kit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit",
-      "state" : {
-        "branch" : "develop",
-        "revision" : "9e96ba8e0d280095668b33f50af4b895e9d31524"
-      }
-    },
-    {
-      "identity" : "eudi-lib-ios-wallet-storage",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
-      "state" : {
-        "branch" : "develop",
-        "revision" : "e5e899f9e91005e4e3f21d557b290fadfae700c9"
       }
     },
     {
@@ -160,6 +142,24 @@
       "state" : {
         "revision" : "26cc5e9ae0947092c7139ef7ba612e34646086c7",
         "version" : "0.10.1"
+      }
+    },
+    {
+      "identity" : "swift-docc-plugin",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-docc-plugin",
+      "state" : {
+        "revision" : "26ac5758409154cc448d7ab82389c520fa8a8247",
+        "version" : "1.3.0"
+      }
+    },
+    {
+      "identity" : "swift-docc-symbolkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-docc-symbolkit",
+      "state" : {
+        "revision" : "b45d1f2ed151d057b54504d653e0da5552844e34",
+        "version" : "1.0.0"
       }
     },
     {

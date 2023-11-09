@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C2681060E6A4396DF2588DD1"
-               BuildableName = "Iso18013HolderDemo.app"
-               BlueprintName = "Iso18013HolderDemo"
-               ReferencedContainer = "container:Iso18013HolderDemo.xcodeproj">
+               BlueprintIdentifier = "95FB1C2D56AA0885EB99EC8C"
+               BuildableName = "AppWalletUI.app"
+               BlueprintName = "AppWalletUI"
+               ReferencedContainer = "container:AppWalletUI.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -28,10 +28,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BDAE5637C7320CBAA311118E"
-               BuildableName = "Iso18013HolderDemoTests.xctest"
-               BlueprintName = "Iso18013HolderDemoTests"
-               ReferencedContainer = "container:Iso18013HolderDemo.xcodeproj">
+               BlueprintIdentifier = "1E091924599444FDB774C590"
+               BuildableName = "AppWalletUITests.xctest"
+               BlueprintName = "AppWalletUITests"
+               ReferencedContainer = "container:AppWalletUI.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -42,10 +42,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A5B021DA2451E7DA7508FCAE"
-               BuildableName = "Iso18013HolderDemoUITests.xctest"
-               BlueprintName = "Iso18013HolderDemoUITests"
-               ReferencedContainer = "container:Iso18013HolderDemo.xcodeproj">
+               BlueprintIdentifier = "1C1E83D8F0B710D4299D511B"
+               BuildableName = "AppWalletUIUITests.xctest"
+               BlueprintName = "AppWalletUIUITests"
+               ReferencedContainer = "container:AppWalletUI.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -60,20 +60,20 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BDAE5637C7320CBAA311118E"
-               BuildableName = "Iso18013HolderDemoTests.xctest"
-               BlueprintName = "Iso18013HolderDemoTests"
-               ReferencedContainer = "container:Iso18013HolderDemo.xcodeproj">
+               BlueprintIdentifier = "1E091924599444FDB774C590"
+               BuildableName = "AppWalletUITests.xctest"
+               BlueprintName = "AppWalletUITests"
+               ReferencedContainer = "container:AppWalletUI.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A5B021DA2451E7DA7508FCAE"
-               BuildableName = "Iso18013HolderDemoUITests.xctest"
-               BlueprintName = "Iso18013HolderDemoUITests"
-               ReferencedContainer = "container:Iso18013HolderDemo.xcodeproj">
+               BlueprintIdentifier = "1C1E83D8F0B710D4299D511B"
+               BuildableName = "AppWalletUIUITests.xctest"
+               BlueprintName = "AppWalletUIUITests"
+               ReferencedContainer = "container:AppWalletUI.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -92,10 +92,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C2681060E6A4396DF2588DD1"
-            BuildableName = "Iso18013HolderDemo.app"
-            BlueprintName = "Iso18013HolderDemo"
-            ReferencedContainer = "container:Iso18013HolderDemo.xcodeproj">
+            BlueprintIdentifier = "95FB1C2D56AA0885EB99EC8C"
+            BuildableName = "AppWalletUI.app"
+            BlueprintName = "AppWalletUI"
+            ReferencedContainer = "container:AppWalletUI.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -109,10 +109,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C2681060E6A4396DF2588DD1"
-            BuildableName = "Iso18013HolderDemo.app"
-            BlueprintName = "Iso18013HolderDemo"
-            ReferencedContainer = "container:Iso18013HolderDemo.xcodeproj">
+            BlueprintIdentifier = "95FB1C2D56AA0885EB99EC8C"
+            BuildableName = "AppWalletUI.app"
+            BlueprintName = "AppWalletUI"
+            ReferencedContainer = "container:AppWalletUI.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

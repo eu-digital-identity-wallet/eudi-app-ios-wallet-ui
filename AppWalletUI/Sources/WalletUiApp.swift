@@ -9,12 +9,16 @@ import SwiftUI
 import EudiWalletKit
 
 @main
-struct mdoc_holderApp: App {
+struct WalletUiApp: App {
 	@State private var path = NavigationPath()
+	var wallet: EudiWallet
+	init() {
+		wallet = EudiWallet.standard
+		wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
+	}
 	
 	var body: some Scene {
 		WindowGroup {
-			let wallet = EudiWallet()
 			NavigationStack(path: $path) {
 				MainHolderView(appData: wallet.documentsViewModel, path: $path).environmentObject(wallet)
 			}

@@ -8,14 +8,14 @@ import Foundation
 private class BundleFinder {}
 
 extension Foundation.Bundle {
-    /// Since Iso18013HolderDemo is a application, the bundle for classes within this module can be used directly.
+    /// Since AppWalletUI is a application, the bundle for classes within this module can be used directly.
     static let module = Bundle(for: BundleFinder.self)
 }
 
 // MARK: - Objective-C Bundle Accessor
 
 @objc
-public class Iso18013HolderDemoResources: NSObject {
+public class AppWalletUIResources: NSObject {
     @objc public class var bundle: Bundle {
         return .module
     }

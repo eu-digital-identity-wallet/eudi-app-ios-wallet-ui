@@ -21,8 +21,8 @@ struct ShareView: View {
 	var body: some View {
 		VStack(spacing: 16) {
 			Text(verbatim: "Status: \(statusDescription)").foregroundStyle(.blue)
-			if presentationSession.status == .error, !presentationSession.errorMessage.isEmpty {
-				Text(verbatim: presentationSession.errorMessage).foregroundStyle(.red)
+			if presentationSession.status == .error, let err = presentationSession.uiError {
+				Text(verbatim: err.localizedDescription).foregroundStyle(.red)
 			}
 			else if presentationSession.status == .qrEngagementReady, let d = presentationSession.deviceEngagement {
 				Image(uiImage: UIImage(data: d) ?? UIImage(systemName: "questionmark.square.dashed")!)
@@ -45,12 +45,11 @@ struct ShareView: View {
 						}.padding(.bottom, 2)
 					}
 				}
-				Text(presentationSession.errorMessage).foregroundStyle(.red).padding(.bottom, 20)
 				HStack(alignment: .bottom, spacing: 40) {
 					Button { hasCancelled = true
 						Task { try await presentationSession.sendResponse(userAccepted: false, itemsToSend: [:]) }
 					} label: {Label("Cancel", systemImage: "x.circle") }.buttonStyle(.bordered)
-					Button { beginDataTransfer() } label: {Label("Accept", systemImage: "checkmark.seal")}.buttonStyle(.borderedProminent)
+					Button { Task { try? await sendAsyncResponse()  } } label: {Label("Accept", systemImage: "checkmark.seal")}.buttonStyle(.borderedProminent)
 				}
 			}
 			else if presentationSession.status == .userSelected {
@@ -71,46 +70,29 @@ struct ShareView: View {
 				} label: {Label("OK", systemImage: "checkmark.seal").frame(width:200, height: 30)}.buttonStyle(.borderedProminent).padding()
 			}
 		}.padding().padding()
-		 .onAppear() {
-			 Task { @MainActor in
-				 try? await presentationSession.presentAttestations()
-			 }
+		 .task {
+			 if isProximitySharing { try? await presentationSession.startQrEngagement() }
+			 try? await presentationSession.receiveRequest()
 			}
 	} // body
 		
 	var statusDescription: String { NSLocalizedString(hasCancelled ? "cancelledSent" : presentationSession.status.rawValue, comment: "") }
 	
-	func doTransfer() {
+	func sendAsyncResponse() async throws {
 		hasCancelled = false
-		Task { try await presentationSession.sendResponse(userAccepted: true, itemsToSend: presentationSession.disclosedDocuments.items) }
+		let action = { _ = try await presentationSession.sendResponse(userAccepted: true, itemsToSend: presentationSession.disclosedDocuments.items)}
+		if EudiWallet.standard.userAuthenticationRequired {
+			try await EudiWallet.authorizedAction(dismiss: { dismiss()}, action: action )
+		} else {
+			try await action()
+		}
 	}
 	
 	var checkMark: some View { Image(systemName: "checkmark.circle").font(.system(size: 100)).symbolRenderingMode(.monochrome).foregroundStyle(.green).padding(.top, 50) }
 	
-	func beginDataTransfer(isFallBack: Bool = false) {
-		let context = LAContext()
-			 var error: NSError?
-		let policy: LAPolicy =  .deviceOwnerAuthentication
-			 if context.canEvaluatePolicy(policy, error: &error) {
-					 context.evaluatePolicy(policy, localizedReason: NSLocalizedString("authenticate_to_share_data", comment: "")) {
-							 success, authenticationError in
 
-							 DispatchQueue.main.async {
-									 if success {
-										 doTransfer()
-									 } else if !isFallBack, let error = error as? LAError, error.code == .userFallback {
-										 beginDataTransfer(isFallBack: true)
-									 }
-								 else {
-										dismiss()
-									 }
-							 }
-					 }
-			 } else {
-				 doTransfer()
-			 }
-	}
-	
-}
+	 
+
+} // end struct
 
 

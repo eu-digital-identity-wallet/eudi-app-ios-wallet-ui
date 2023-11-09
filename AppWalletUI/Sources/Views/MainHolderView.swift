@@ -26,7 +26,7 @@ struct MainHolderView: View {
 					Text("start_by_adding_sample_documents").italic().font(.footnote)
 					Button {
 						do { try userWallet.loadSampleData() }
-						catch { hasError = true; uiError = error as? StorageError }
+						catch { hasError = true; uiError = error as? StorageError; print(error.localizedDescription) }
 					} label: {
 						Text("add_sample_documents").padding(12)
 					}.padding(.top, 20).tint(Color("AccentColor"))
@@ -69,7 +69,6 @@ struct MainHolderView: View {
 					isPresentingScanner = false
 				}
 			}
-			.alert(isPresented: $hasError, error: uiError) { Button("OK") {} }
 		}.onOpenURL(perform: { customUrl in
 			guard let sc = customUrl.scheme else { return }
 			let url = customUrl.absoluteString.replacingOccurrences(of: sc, with: "https")
@@ -77,6 +76,7 @@ struct MainHolderView: View {
 			path.append(RouteDestination.shareView(flow: flow))
 			isPresentingScanner = false
 		})
+		.alert(isPresented: $hasError, error: uiError) { Button("OK") {} }
 	} // end body
 
 }
