@@ -64,7 +64,7 @@ public struct AddNewDocumentCell: View {
           .foregroundColor(isEnabled ? Theme.shared.color.primary : Theme.shared.color.textDisabledDark)
       }
       .disabled(!isEnabled)
-      .padding(20)
+      .padding(SPACING_MEDIUM_LARGE)
       .background(Theme.shared.color.backgroundDefault)
       .tint(isEnabled ? nil : Theme.shared.color.textDisabledDark)
       .clipShape(.rect(cornerRadius: Theme.shared.shape.small))

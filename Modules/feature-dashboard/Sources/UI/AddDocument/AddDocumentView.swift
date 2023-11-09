@@ -26,8 +26,29 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
     self.viewModel = AddDocumentViewModel(router: router, interactor: interactor)
   }
 
+  @ViewBuilder
+  func content() -> some View {
+    ScrollView {
+      VStack {
+        ForEach(viewModel.viewState.addDocumentCellModels) { cell in
+          AddNewDocumentCell(
+            isEnabled: cell.isEnabled,
+            icon: cell.image,
+            title: cell.documentName,
+            action: {
+              viewModel.routeToIssuance(for: cell.type)
+            }
+          )
+          .padding(.bottom, Theme.shared.shape.small)
+        }
+      }
+    }
+  }
+
   public var body: some View {
     ContentScreen {
+      VSpacer.large()
+
       VStack(alignment: .leading) {
         Button(action: {
           viewModel.pop()
@@ -50,21 +71,7 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
 
         VSpacer.extraLarge()
 
-        ScrollView {
-          VStack {
-            ForEach(viewModel.viewState.addDocumentCellModels) { cell in
-              AddNewDocumentCell(
-                isEnabled: cell.isEnabled,
-                icon: cell.image,
-                title: cell.documentName,
-                action: {
-                  viewModel.routeToIssuance(for: cell.type)
-                }
-              )
-              .padding(.bottom, Theme.shared.shape.small)
-            }
-          }
-        }
+        content()
       }
     }
     .onAppear {

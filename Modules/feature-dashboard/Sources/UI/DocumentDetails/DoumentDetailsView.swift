@@ -34,6 +34,37 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
     )
   }
 
+  @ViewBuilder
+  func content() -> some View {
+    ScrollView {
+      DocumentDetailsHeaderView(
+        documentName: viewModel.viewState.document.documentName,
+        holdersName: viewModel.viewState.document.holdersName,
+        userIcon: viewModel.viewState.document.holdersImage,
+        isLoading: viewModel.viewState.isLoading
+      )
+      VStack {
+        ForEach(viewModel.viewState.document.documentFields.indices, id: \.self) { index in
+          let documentFieldContent = viewModel.viewState.document.documentFields[index]
+
+          if index == 0 {
+            VSpacer.extraLarge()
+          }
+
+          KeyValueView(
+            title: .custom(documentFieldContent.title),
+            subTitle: .custom(documentFieldContent.value),
+            isLoading: viewModel.viewState.isLoading
+          )
+
+          VSpacer.medium()
+        }
+      }
+      .padding(.horizontal, SPACING_MEDIUM)
+      Spacer()
+    }
+  }
+
   public var body: some View {
     ContentScreen(
       padding: 0,
@@ -68,34 +99,7 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
           .background(Theme.shared.color.primary)
       }
 
-      ScrollView {
-        DocumentDetailsHeaderView(
-          documentName: viewModel.viewState.document.documentName,
-          holdersName: viewModel.viewState.document.holdersName,
-          userIcon: viewModel.viewState.document.holdersImage,
-          isLoading: viewModel.viewState.isLoading
-        )
-        VStack {
-          ForEach(viewModel.viewState.document.documentFields.indices, id: \.self) { index in
-            let documentFieldContent = viewModel.viewState.document.documentFields[index]
-
-            if index == 0 {
-              VSpacer.extraLarge()
-            }
-
-            KeyValueView(
-              title: .custom(documentFieldContent.title),
-              subTitle: .custom(documentFieldContent.value),
-              isLoading: viewModel.viewState.isLoading
-            )
-
-            VSpacer.medium()
-          }
-        }
-        .padding(.horizontal, SPACING_MEDIUM)
-        Spacer()
-      }
-
+      content()
     }
     .task {
       await self.viewModel.fetchDocumentDetails()
