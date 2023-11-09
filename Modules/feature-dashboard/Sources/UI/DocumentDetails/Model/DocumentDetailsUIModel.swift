@@ -35,15 +35,15 @@ public extension DocumentDetailsUIModel {
 
   static func mock() -> DocumentDetailsUIModel {
     DocumentDetailsUIModel(
-      documentName: "Document",
-      holdersName: "User",
+      documentName: "Document Name Placeholder",
+      holdersName: "Holders Name Placeholder",
       holdersImage: Theme.shared.image.user,
       documentFields: Array(
         count: 12,
         createElement: DocumentField(
           id: UUID().uuidString,
-          title: "Title",
-          value: "Value"
+          title: "Placeholder Field Title".padded(padLength: 5),
+          value: "Placeholder Field Value".padded(padLength: 10)
         )
       )
     )

@@ -42,17 +42,23 @@ public struct KeyValueView: View {
         Spacer()
       }
 
-      VStack(alignment: .leading, spacing: SPACING_SMALL) {
+      VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
 
         Text(title)
           .foregroundColor(Theme.shared.color.textSecondaryDark)
           .typography(ThemeManager.shared.font.bodyMedium)
-
-        VSpacer.custom(size: 4)
+          .if(isLoading) { view in
+            view
+              .lineLimit(1)
+          }
 
         Text(subTitle)
           .foregroundColor(Theme.shared.color.textPrimaryDark)
           .typography(ThemeManager.shared.font.bodyLarge)
+          .if(isLoading) { view in
+            view
+              .lineLimit(1)
+          }
 
         Spacer()
 

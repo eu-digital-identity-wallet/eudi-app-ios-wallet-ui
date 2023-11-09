@@ -40,9 +40,19 @@ public final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: 
   }
 
   func fetchDocumentDetails() async {
-    try? await Task.sleep(nanoseconds: 5 * 1_000_000_000)
 
-    self.setNewState(isLoading: false)
+    switch await self.interactor.fetchStoredDocument() {
+
+    case .success(let document):
+      self.setNewState(
+        document: document,
+        isLoading: false
+      )
+    case .failure(let error):
+      self.setNewState(
+        isLoading: true
+      )
+    }
   }
 
   func pop() {
