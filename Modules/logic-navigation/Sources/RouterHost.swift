@@ -80,14 +80,22 @@ public final class RouterHost: RouterHostType {
         DashboardView(with: self, and: DashboardInteractor(), also: DeepLinkController())
       case .biometry(let config):
         BiometryView(with: self, interactor: BiometryInteractor(), config: config)
-      case .presentationLoader(let relyingParty):
-        PresentationLoadingView(
+      case .crossDeviceLoader(let relyingParty):
+        CrossDeviceLoadingView(
           with: self,
-          and: PresentationInteractor(),
+          and: CrossDeviceInteractor(),
           relyingParty: relyingParty
         )
-      case .presentationRequest:
-        PresentationRequestView(with: self, and: PresentationInteractor())
+      case .crossDeviceRequest:
+        CrossDeviceRequestView(with: self, and: CrossDeviceInteractor())
+      case .sameDeviceLoader(let relyingParty):
+        SameDeviceLoadingView(
+          with: self,
+          and: SameDeviceInteractor(),
+          relyingParty: relyingParty
+        )
+      case .sameDeviceRequest:
+        SameDeviceRequestView(with: self, and: SameDeviceInteractor())
       case .welcome:
         WelcomeView(with: self, and: WelcomeInteractor())
       }

@@ -23,6 +23,7 @@ public struct WrapCheckBoxView: View {
   let isSelected: Bool
   let isVisible: Bool
   let isEnabled: Bool
+  let isLoading: Bool
   let id: String
   let title: String
   let value: String
@@ -48,6 +49,7 @@ public struct WrapCheckBoxView: View {
     isSelected: Bool,
     isVisible: Bool,
     isEnabled: Bool,
+    isLoading: Bool,
     id: String,
     title: String,
     value: String,
@@ -56,6 +58,7 @@ public struct WrapCheckBoxView: View {
     self.isSelected = isSelected
     self.isVisible = isVisible
     self.isEnabled = isEnabled
+    self.isLoading = isLoading
     self.id = id
     self.title = title
     self.value = value
@@ -96,12 +99,13 @@ public struct WrapCheckBoxView: View {
       Spacer()
     }
     .frame(maxWidth: .infinity, maxHeight: 50)
-    .if(self.onTap != nil && self.isEnabled) {
+    .if(self.onTap != nil && self.isEnabled && !self.isLoading) {
       $0.onTapGesture {
         self.onTap?(self.id)
       }
     }
-    .disabled(!self.isEnabled)
+    .disabled(!self.isEnabled || self.isLoading)
+    .shimmer(isLoading: self.isLoading)
     .animation(.easeInOut, value: self.isVisible)
   }
 }

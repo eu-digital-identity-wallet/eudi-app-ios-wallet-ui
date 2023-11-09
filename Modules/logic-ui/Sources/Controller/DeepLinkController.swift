@@ -60,7 +60,7 @@ public final class DeepLinkController: DeepLinkControllerType {
 
     let route: AppRoute? = switch deepLinkAction.action {
     case .authorization:
-      !routerHost.isScreenForeground(with: .presentationRequest) ? .presentationRequest : nil
+      !routerHost.isScreenForeground(with: .sameDeviceRequest) ? .sameDeviceRequest : nil
     }
 
     if let route {

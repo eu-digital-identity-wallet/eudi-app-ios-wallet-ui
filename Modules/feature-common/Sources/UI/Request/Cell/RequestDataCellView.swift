@@ -18,17 +18,19 @@ import SwiftUI
 import logic_resources
 import logic_ui
 
-extension PresentationRequestView {
+extension BaseRequestView {
   struct RequestDataCellView: View {
 
     typealias Cell = any RequestDataCell
     typealias TapListener = ((String) -> Void)?
 
     let cellModel: Cell
+    let isLoading: Bool
     let onTap: TapListener
 
-    init(cellModel: Cell, onTap: TapListener = nil) {
+    init(cellModel: Cell, isLoading: Bool, onTap: TapListener = nil) {
       self.cellModel = cellModel
+      self.isLoading = isLoading
       self.onTap = onTap
     }
 
@@ -39,6 +41,7 @@ extension PresentationRequestView {
           isSelected: row.isSelected,
           isVisible: row.isVisible,
           isEnabled: true,
+          isLoading: isLoading,
           id: row.id,
           title: row.title,
           value: row.value,
@@ -71,6 +74,8 @@ extension PresentationRequestView {
         }
         .frame(maxWidth: .infinity, maxHeight: 50)
         .padding(.bottom)
+        .disabled(isLoading)
+        .shimmer(isLoading: isLoading)
 
       } else if let verification = cellModel as? RequestDataVerification {
 
@@ -83,6 +88,7 @@ extension PresentationRequestView {
                 isSelected: $0.isSelected,
                 isVisible: $0.isVisible,
                 isEnabled: false,
+                isLoading: isLoading,
                 id: $0.id,
                 title: $0.title,
                 value: $0.value
@@ -91,6 +97,7 @@ extension PresentationRequestView {
           }
         }
         .padding(.bottom)
+        .shimmer(isLoading: isLoading)
       }
     }
   }

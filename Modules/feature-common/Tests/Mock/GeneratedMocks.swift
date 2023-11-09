@@ -774,6 +774,155 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import SwiftUI
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import SwiftUI
+
+
+
+
+
+
+public class MockRequestDataCell: RequestDataCell, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = RequestDataCell
+    
+    public typealias Stubbing = __StubbingProxy_RequestDataCell
+    public typealias Verification = __VerificationProxy_RequestDataCell
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+  private var __defaultImplStub: (any RequestDataCell)?
+
+  public func enableDefaultImplementation(_ stub: any RequestDataCell) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+    
+    
+    
+    public var id: String {
+        get {
+            return cuckoo_manager.getter("id",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.id)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+
+    public struct __StubbingProxy_RequestDataCell: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        var id: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockRequestDataCell, String> {
+            return .init(manager: cuckoo_manager, name: "id")
+        }
+        
+        
+        
+    }
+
+    public struct __VerificationProxy_RequestDataCell: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+        
+        
+        var id: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "id", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+    
+        
+    }
+}
+
+
+public class RequestDataCellStub: RequestDataCell {
+    
+    
+    
+    
+    public var id: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
 import logic_business
 import logic_ui
 

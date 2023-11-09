@@ -17,7 +17,7 @@
 import feature_common
 
 @MainActor
-final class PresentationLoadingViewModel<Router: RouterHostType, Interactor: PresentationInteractorType>: BaseLoadingViewModel<Router> {
+final class CrossDeviceLoadingViewModel<Router: RouterHostType, Interactor: CrossDeviceInteractorType>: BaseLoadingViewModel<Router> {
 
   private let interactor: Interactor
   private let relyingParty: String
@@ -45,7 +45,14 @@ final class PresentationLoadingViewModel<Router: RouterHostType, Interactor: Pre
       config: UIConfig.Success(
         title: .success,
         subtitle: .requestDataShareSuccess([relyingParty]),
-        buttons: [.init(title: .okButton, screen: .dashboard, style: .primary, navigationType: .pop)],
+        buttons: [
+          .init(
+            title: .okButton,
+            screen: .dashboard,
+            style: .primary,
+            navigationType: .pop
+          )
+        ],
         visualKind: .defaultIcon
       )
     )

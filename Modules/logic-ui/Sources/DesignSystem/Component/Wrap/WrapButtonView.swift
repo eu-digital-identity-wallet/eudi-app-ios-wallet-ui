@@ -28,9 +28,7 @@ public struct WrapButtonView: View {
   private let isEnabled: Bool
   private let borderWidth: CGFloat
   private let borderColor: Color
-
-  @Binding
-  private var isLoading: Bool
+  private let isLoading: Bool
 
   public init(
     title: LocalizableString.Key,
@@ -38,7 +36,7 @@ public struct WrapButtonView: View {
     backgroundColor: Color = Theme.shared.color.secondary,
     systemIcon: String? = nil,
     gravity: Gravity = .center,
-    isLoading: Binding<Bool> = Binding.constant(false),
+    isLoading: Bool = false,
     isEnabled: Bool = true,
     cornerRadius: CGFloat = Theme.shared.shape.small,
     borderWidth: CGFloat = 0,
@@ -50,7 +48,7 @@ public struct WrapButtonView: View {
     self.backgroundColor = backgroundColor
     self.systemIcon = systemIcon
     self.gravity = gravity
-    self._isLoading = isLoading
+    self.isLoading = isLoading
     self.isEnabled = isEnabled
     self.cornerRadius = cornerRadius
     self.borderWidth = borderWidth
@@ -63,7 +61,7 @@ public struct WrapButtonView: View {
     title: LocalizableString.Key,
     systemIcon: String? = nil,
     gravity: Gravity = .center,
-    isLoading: Binding<Bool> = Binding.constant(false),
+    isLoading: Bool = false,
     isEnabled: Bool = true,
     cornerRadius: CGFloat = Theme.shared.shape.small,
     onAction: @autoclosure @escaping () -> Void
@@ -73,7 +71,7 @@ public struct WrapButtonView: View {
     self.backgroundColor = style.backgroundColor
     self.systemIcon = systemIcon
     self.gravity = gravity
-    self._isLoading = isLoading
+    self.isLoading = isLoading
     self.isEnabled = isEnabled
     self.cornerRadius = cornerRadius
     self.borderWidth = style.borderWidth
@@ -110,15 +108,6 @@ public struct WrapButtonView: View {
           if gravity == .center || gravity == .start {
             Spacer()
           }
-
-          if isLoading {
-            ContentLoader(
-              showLoader: $isLoading,
-              width: 20,
-              height: 20
-            )
-            HSpacer.small()
-          }
         }
         .padding()
         .frame(maxWidth: .infinity)
@@ -131,8 +120,8 @@ public struct WrapButtonView: View {
 
       }
     )
-
     .disabled(isLoading || !isEnabled)
+    .shimmer(isLoading: isLoading)
   }
 }
 

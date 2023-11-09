@@ -17,15 +17,15 @@ import SwiftUI
 import logic_ui
 import feature_common
 
-public struct PresentationLoadingView<Router: RouterHostType, Interactor: PresentationInteractorType>: View {
+public struct CrossDeviceRequestView<Router: RouterHostType, Interactor: CrossDeviceInteractorType>: View {
 
-  @ObservedObject private var viewModel: PresentationLoadingViewModel<Router, Interactor>
+  @ObservedObject private var viewModel: CrossDeviceRequestViewModel<Router, Interactor>
 
-  public init(with router: Router, and interactor: Interactor, relyingParty: String) {
-    self.viewModel = .init(router: router, interactor: interactor, relyingParty: relyingParty)
+  public init(with router: Router, and interactor: Interactor) {
+    self.viewModel = .init(router: router, interactor: interactor)
   }
 
   public var body: some View {
-    BaseLoadingView(with: viewModel.router, viewModel: viewModel)
+    BaseRequestView(with: viewModel.router, viewModel: viewModel)
   }
 }

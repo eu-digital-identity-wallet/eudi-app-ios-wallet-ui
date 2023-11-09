@@ -17,29 +17,29 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct PresentationRequestView<Router: RouterHostType, Interactor: PresentationInteractorType>: View {
+public struct BaseRequestView<Router: RouterHostType>: View {
 
-  @ObservedObject var viewModel: PresentationRequestViewModel<Router, Interactor>
+  @ObservedObject var viewModel: BaseRequestViewModel<Router>
 
-  public init(with router: Router, and interactor: Interactor) {
-    self.viewModel = .init(router: router, interactor: interactor)
+  public init(with router: Router, viewModel: BaseRequestViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
   public var body: some View {
     ContentScreen(errorConfig: viewModel.viewState.error) {
 
       ContentTitle(
-        title: viewModel.viewState.title
+        title: viewModel.getTitle()
       )
 
       VSpacer.extraSmall()
 
       HStack {
 
-        let titleText = Text(viewModel.viewState.caption)
+        let titleText = Text(viewModel.getCaption())
           .foregroundColor(ThemeManager.shared.color.textSecondaryDark)
 
-        let whyInfoText = Text(viewModel.viewState.dataRequestInfo)
+        let whyInfoText = Text(viewModel.getDataRequestInfo())
           .foregroundColor(ThemeManager.shared.color.textPrimaryDark)
 
         Text("\(titleText) \(whyInfoText)")
@@ -64,7 +64,10 @@ public struct PresentationRequestView<Router: RouterHostType, Interactor: Presen
               VSpacer.small()
             }
 
-            RequestDataCellView(cellModel: item) { id in
+            RequestDataCellView(
+              cellModel: item,
+              isLoading: viewModel.viewState.isLoading
+            ) { id in
               viewModel.onSelectionChanged(id: id)
             }
 
@@ -105,6 +108,9 @@ public struct PresentationRequestView<Router: RouterHostType, Interactor: Presen
         WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onShowRequestInfoModal())
       }
     }
+    .task {
+      await viewModel.doWork()
+    }
   }
 
   var visibilityIcon: some View {
@@ -121,13 +127,24 @@ public struct PresentationRequestView<Router: RouterHostType, Interactor: Presen
       .onTapGesture {
         viewModel.onContentVisibilityChange()
       }
+      .disabled(viewModel.viewState.isLoading)
   }
 
   var footer: some View {
     VStack(spacing: SPACING_MEDIUM) {
       missingCredentials()
-      WrapButtonView(style: .primary, title: .shareButton, onAction: viewModel.onShare())
-      WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.onShowCancelModal())
+      WrapButtonView(
+        style: .primary,
+        title: .shareButton,
+        isLoading: viewModel.viewState.isLoading,
+        isEnabled: !viewModel.viewState.isLoading,
+        onAction: viewModel.onShare()
+      )
+      WrapButtonView(
+        style: .secondary,
+        title: .cancelButton,
+        onAction: viewModel.onShowCancelModal()
+      )
     }
     .animation(.easeInOut, value: viewModel.viewState.itemsAreAllSelected)
   }

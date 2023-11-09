@@ -17,20 +17,20 @@ import Foundation
 import logic_api
 import logic_business
 
-public enum PresentationPartialState {
+public enum CrossDevicePartialState {
   case success
   case failure(Error)
 }
 
-public protocol PresentationInteractorType {
-  func doWork() async -> PresentationPartialState
+public protocol CrossDeviceInteractorType {
+  func doWork() async -> CrossDevicePartialState
 }
 
-public final actor PresentationInteractor: PresentationInteractorType {
+public final actor CrossDeviceInteractor: CrossDeviceInteractorType {
 
   public init() {}
 
-  public func doWork() async -> PresentationPartialState {
+  public func doWork() async -> CrossDevicePartialState {
     do {
       try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
       return .success

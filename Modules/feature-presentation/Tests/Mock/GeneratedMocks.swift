@@ -13,19 +13,19 @@ import logic_business
 
 
 
-public class MockPresentationInteractorType: PresentationInteractorType, Cuckoo.ProtocolMock {
+public class MockCrossDeviceInteractorType: CrossDeviceInteractorType, Cuckoo.ProtocolMock {
     
-    public typealias MocksType = PresentationInteractorType
+    public typealias MocksType = CrossDeviceInteractorType
     
-    public typealias Stubbing = __StubbingProxy_PresentationInteractorType
-    public typealias Verification = __VerificationProxy_PresentationInteractorType
+    public typealias Stubbing = __StubbingProxy_CrossDeviceInteractorType
+    public typealias Verification = __VerificationProxy_CrossDeviceInteractorType
 
     public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-    private var __defaultImplStub: PresentationInteractorType?
+    private var __defaultImplStub: CrossDeviceInteractorType?
 
-    public func enableDefaultImplementation(_ stub: PresentationInteractorType) {
+    public func enableDefaultImplementation(_ stub: CrossDeviceInteractorType) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
@@ -39,11 +39,11 @@ public class MockPresentationInteractorType: PresentationInteractorType, Cuckoo.
     
     
     
-    public func doWork() async -> PresentationPartialState {
+    public func doWork() async -> CrossDevicePartialState {
         
     return await cuckoo_manager.call(
     """
-    doWork() async -> PresentationPartialState
+    doWork() async -> CrossDevicePartialState
     """,
             parameters: (),
             escapingParameters: (),
@@ -57,7 +57,7 @@ public class MockPresentationInteractorType: PresentationInteractorType, Cuckoo.
     
     
 
-    public struct __StubbingProxy_PresentationInteractorType: Cuckoo.StubbingProxy {
+    public struct __StubbingProxy_CrossDeviceInteractorType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
@@ -67,18 +67,18 @@ public class MockPresentationInteractorType: PresentationInteractorType, Cuckoo.
         
         
         
-        func doWork() -> Cuckoo.ProtocolStubFunction<(), PresentationPartialState> {
+        func doWork() -> Cuckoo.ProtocolStubFunction<(), CrossDevicePartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractorType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockCrossDeviceInteractorType.self, method:
     """
-    doWork() async -> PresentationPartialState
+    doWork() async -> CrossDevicePartialState
     """, parameterMatchers: matchers))
         }
         
         
     }
 
-    public struct __VerificationProxy_PresentationInteractorType: Cuckoo.VerificationProxy {
+    public struct __VerificationProxy_CrossDeviceInteractorType: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -95,11 +95,11 @@ public class MockPresentationInteractorType: PresentationInteractorType, Cuckoo.
         
         
         @discardableResult
-        func doWork() -> Cuckoo.__DoNotUse<(), PresentationPartialState> {
+        func doWork() -> Cuckoo.__DoNotUse<(), CrossDevicePartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    doWork() async -> PresentationPartialState
+    doWork() async -> CrossDevicePartialState
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -108,7 +108,7 @@ public class MockPresentationInteractorType: PresentationInteractorType, Cuckoo.
 }
 
 
-public class PresentationInteractorTypeStub: PresentationInteractorType {
+public class CrossDeviceInteractorTypeStub: CrossDeviceInteractorType {
     
 
     
@@ -117,8 +117,8 @@ public class PresentationInteractorTypeStub: PresentationInteractorType {
     
     
     
-    public func doWork() async -> PresentationPartialState  {
-        return DefaultValueRegistry.defaultValue(for: (PresentationPartialState).self)
+    public func doWork() async -> CrossDevicePartialState  {
+        return DefaultValueRegistry.defaultValue(for: (CrossDevicePartialState).self)
     }
     
     
@@ -134,141 +134,123 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
-import SwiftUI
-import feature_common
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_presentation
-@testable import logic_api
-@testable import logic_ui
-
-import feature_common
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_presentation
-@testable import logic_api
-@testable import logic_ui
-
 import Foundation
-import SwiftUI
-import logic_resources
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_presentation
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-import SwiftUI
+import logic_api
+import logic_business
 
 
 
 
 
 
- class MockRequestDataCell: RequestDataCell, Cuckoo.ProtocolMock {
+public class MockSameDeviceInteractorType: SameDeviceInteractorType, Cuckoo.ProtocolMock {
     
-     typealias MocksType = RequestDataCell
+    public typealias MocksType = SameDeviceInteractorType
     
-     typealias Stubbing = __StubbingProxy_RequestDataCell
-     typealias Verification = __VerificationProxy_RequestDataCell
+    public typealias Stubbing = __StubbingProxy_SameDeviceInteractorType
+    public typealias Verification = __VerificationProxy_SameDeviceInteractorType
 
-     let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-   private var __defaultImplStub: (any RequestDataCell)?
+    private var __defaultImplStub: SameDeviceInteractorType?
 
-   func enableDefaultImplementation(_ stub: any RequestDataCell) {
+    public func enableDefaultImplementation(_ stub: SameDeviceInteractorType) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
     
 
     
+
+    
+
     
     
     
-     var id: String {
-        get {
-            return cuckoo_manager.getter("id",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.id)
-        }
+    
+    public func doWork() async -> SameDevicePartialState {
+        
+    return await cuckoo_manager.call(
+    """
+    doWork() async -> SameDevicePartialState
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.doWork())
         
     }
     
     
 
-    
-
-    
-
-     struct __StubbingProxy_RequestDataCell: Cuckoo.StubbingProxy {
+    public struct __StubbingProxy_SameDeviceInteractorType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
-         init(manager: Cuckoo.MockManager) {
+        public init(manager: Cuckoo.MockManager) {
             self.cuckoo_manager = manager
         }
         
         
         
-        var id: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockRequestDataCell, String> {
-            return .init(manager: cuckoo_manager, name: "id")
-        }
         
+        func doWork() -> Cuckoo.ProtocolStubFunction<(), SameDevicePartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockSameDeviceInteractorType.self, method:
+    """
+    doWork() async -> SameDevicePartialState
+    """, parameterMatchers: matchers))
+        }
         
         
     }
 
-     struct __VerificationProxy_RequestDataCell: Cuckoo.VerificationProxy {
+    public struct __VerificationProxy_SameDeviceInteractorType: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
     
-         init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
             self.cuckoo_manager = manager
             self.callMatcher = callMatcher
             self.sourceLocation = sourceLocation
         }
     
         
+    
         
         
-        var id: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "id", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        
+        @discardableResult
+        func doWork() -> Cuckoo.__DoNotUse<(), SameDevicePartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    doWork() async -> SameDevicePartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
-        
-    
         
     }
 }
 
 
- class RequestDataCellStub: RequestDataCell {
+public class SameDeviceInteractorTypeStub: SameDeviceInteractorType {
+    
+
+    
+
     
     
     
     
-     var id: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
-        }
-        
+    public func doWork() async -> SameDevicePartialState  {
+        return DefaultValueRegistry.defaultValue(for: (SameDevicePartialState).self)
     }
     
-    
-
-    
-
     
 }
 
@@ -283,7 +265,7 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
-import logic_resources
+import feature_common
 import logic_ui
 
 import Cuckoo
@@ -292,8 +274,61 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
-import logic_resources
+import feature_common
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import feature_common
 import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import feature_common
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import feature_common
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import feature_common
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import feature_common
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import feature_common
 
 import Cuckoo
 @testable import logic_business
