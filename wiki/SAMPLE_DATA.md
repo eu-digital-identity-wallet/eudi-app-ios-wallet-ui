@@ -1,6 +1,6 @@
 # Sample Data
 
-The app contains sample data in the `Iso18013HolderDemo/Resources/Sample_data/sample_data.json` file.
+The app contains sample data in the `AppWalletUI/Resources/Sample_data/sample_data.json` file.
 
 **Note: PID sample is a technical sample and it does not implement the data model of PID yet.**
 
