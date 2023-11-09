@@ -1,108 +1,37 @@
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
-@testable import logic_api
-@testable import logic_ui
-
-import logic_resources
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
 import Foundation
-import SwiftUI
-import logic_resources
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_common
-@testable import logic_api
-@testable import logic_ui
-
-import Combine
-import Foundation
-import LocalAuthentication
-import SwiftUI
+import logic_api
 import logic_business
-import logic_ui
 
 
 
 
 
 
-public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.ProtocolMock {
+public class MockCrossDeviceInteractorType: CrossDeviceInteractorType, Cuckoo.ProtocolMock {
     
-    public typealias MocksType = BiometryInteractorType
+    public typealias MocksType = CrossDeviceInteractorType
     
-    public typealias Stubbing = __StubbingProxy_BiometryInteractorType
-    public typealias Verification = __VerificationProxy_BiometryInteractorType
+    public typealias Stubbing = __StubbingProxy_CrossDeviceInteractorType
+    public typealias Verification = __VerificationProxy_CrossDeviceInteractorType
 
     public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-    private var __defaultImplStub: BiometryInteractorType?
+    private var __defaultImplStub: CrossDeviceInteractorType?
 
-    public func enableDefaultImplementation(_ stub: BiometryInteractorType) {
+    public func enableDefaultImplementation(_ stub: CrossDeviceInteractorType) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
     
 
     
-    
-    
-    
-    public var biometricsImage: Image? {
-        get {
-            return cuckoo_manager.getter("biometricsImage",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.biometricsImage)
-        }
-        
-    }
-    
-    
-    
-    
-    
-    public var currentBiometricsMethod: String {
-        get {
-            return cuckoo_manager.getter("currentBiometricsMethod",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.currentBiometricsMethod)
-        }
-        
-    }
-    
-    
-    
-    
-    
-    public var biometryType: LABiometryType {
-        get {
-            return cuckoo_manager.getter("biometryType",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.biometryType)
-        }
-        
-    }
-    
-    
 
     
 
@@ -110,11 +39,11 @@ public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.Protocol
     
     
     
-    public func authenticate() -> AnyPublisher<BiometricsState, Never> {
+    public func doWork() async -> CrossDevicePartialState {
         
-    return cuckoo_manager.call(
+    return await cuckoo_manager.call(
     """
-    authenticate() -> AnyPublisher<BiometricsState, Never>
+    doWork() async -> CrossDevicePartialState
     """,
             parameters: (),
             escapingParameters: (),
@@ -122,39 +51,129 @@ public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.Protocol
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: __defaultImplStub!.authenticate())
+            defaultCall: await __defaultImplStub!.doWork())
         
     }
     
     
+
+    public struct __StubbingProxy_CrossDeviceInteractorType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
     
-    
-    
-    public func openSettingsURL(action: @escaping () -> Void)  {
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
         
-    return cuckoo_manager.call(
+        
+        
+        
+        func doWork() -> Cuckoo.ProtocolStubFunction<(), CrossDevicePartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockCrossDeviceInteractorType.self, method:
     """
-    openSettingsURL(action: @escaping () -> Void)
-    """,
-            parameters: (action),
-            escapingParameters: (action),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.openSettingsURL(action: action))
+    doWork() async -> CrossDevicePartialState
+    """, parameterMatchers: matchers))
+        }
         
+        
+    }
+
+    public struct __VerificationProxy_CrossDeviceInteractorType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+    
+        
+        
+        
+        @discardableResult
+        func doWork() -> Cuckoo.__DoNotUse<(), CrossDevicePartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    doWork() async -> CrossDevicePartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+public class CrossDeviceInteractorTypeStub: CrossDeviceInteractorType {
+    
+
+    
+
+    
+    
+    
+    
+    public func doWork() async -> CrossDevicePartialState  {
+        return DefaultValueRegistry.defaultValue(for: (CrossDevicePartialState).self)
     }
     
     
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import logic_api
+import logic_business
+
+
+
+
+
+
+public class MockSameDeviceInteractorType: SameDeviceInteractorType, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = SameDeviceInteractorType
+    
+    public typealias Stubbing = __StubbingProxy_SameDeviceInteractorType
+    public typealias Verification = __VerificationProxy_SameDeviceInteractorType
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: SameDeviceInteractorType?
+
+    public func enableDefaultImplementation(_ stub: SameDeviceInteractorType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
     
     
     
-    public func isBiometryEnabled() -> Bool {
+    
+    public func doWork() async -> SameDevicePartialState {
         
-    return cuckoo_manager.call(
+    return await cuckoo_manager.call(
     """
-    isBiometryEnabled() -> Bool
+    doWork() async -> SameDevicePartialState
     """,
             parameters: (),
             escapingParameters: (),
@@ -162,422 +181,13 @@ public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.Protocol
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: __defaultImplStub!.isBiometryEnabled())
-        
-    }
-    
-    
-    
-    
-    
-    public func setBiometrySelection(isEnabled: Bool)  {
-        
-    return cuckoo_manager.call(
-    """
-    setBiometrySelection(isEnabled: Bool)
-    """,
-            parameters: (isEnabled),
-            escapingParameters: (isEnabled),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.setBiometrySelection(isEnabled: isEnabled))
-        
-    }
-    
-    
-    
-    
-    
-    public func isPinValid(with pin: String) -> QuickPinPartialState {
-        
-    return cuckoo_manager.call(
-    """
-    isPinValid(with: String) -> QuickPinPartialState
-    """,
-            parameters: (pin),
-            escapingParameters: (pin),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.isPinValid(with: pin))
+            defaultCall: await __defaultImplStub!.doWork())
         
     }
     
     
 
-    public struct __StubbingProxy_BiometryInteractorType: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        
-        
-        var biometricsImage: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockBiometryInteractorType, Image?> {
-            return .init(manager: cuckoo_manager, name: "biometricsImage")
-        }
-        
-        
-        
-        
-        var currentBiometricsMethod: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockBiometryInteractorType, String> {
-            return .init(manager: cuckoo_manager, name: "currentBiometricsMethod")
-        }
-        
-        
-        
-        
-        var biometryType: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockBiometryInteractorType, LABiometryType> {
-            return .init(manager: cuckoo_manager, name: "biometryType")
-        }
-        
-        
-        
-        
-        
-        func authenticate() -> Cuckoo.ProtocolStubFunction<(), AnyPublisher<BiometricsState, Never>> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractorType.self, method:
-    """
-    authenticate() -> AnyPublisher<BiometricsState, Never>
-    """, parameterMatchers: matchers))
-        }
-        
-        
-        
-        
-        func openSettingsURL<M1: Cuckoo.Matchable>(action: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(() -> Void)> where M1.MatchedType == () -> Void {
-            let matchers: [Cuckoo.ParameterMatcher<(() -> Void)>] = [wrap(matchable: action) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractorType.self, method:
-    """
-    openSettingsURL(action: @escaping () -> Void)
-    """, parameterMatchers: matchers))
-        }
-        
-        
-        
-        
-        func isBiometryEnabled() -> Cuckoo.ProtocolStubFunction<(), Bool> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractorType.self, method:
-    """
-    isBiometryEnabled() -> Bool
-    """, parameterMatchers: matchers))
-        }
-        
-        
-        
-        
-        func setBiometrySelection<M1: Cuckoo.Matchable>(isEnabled: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(Bool)> where M1.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: isEnabled) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractorType.self, method:
-    """
-    setBiometrySelection(isEnabled: Bool)
-    """, parameterMatchers: matchers))
-        }
-        
-        
-        
-        
-        func isPinValid<M1: Cuckoo.Matchable>(with pin: M1) -> Cuckoo.ProtocolStubFunction<(String), QuickPinPartialState> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractorType.self, method:
-    """
-    isPinValid(with: String) -> QuickPinPartialState
-    """, parameterMatchers: matchers))
-        }
-        
-        
-    }
-
-    public struct __VerificationProxy_BiometryInteractorType: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    
-        
-        
-        
-        var biometricsImage: Cuckoo.VerifyReadOnlyProperty<Image?> {
-            return .init(manager: cuckoo_manager, name: "biometricsImage", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        var currentBiometricsMethod: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "currentBiometricsMethod", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        var biometryType: Cuckoo.VerifyReadOnlyProperty<LABiometryType> {
-            return .init(manager: cuckoo_manager, name: "biometryType", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-    
-        
-        
-        
-        @discardableResult
-        func authenticate() -> Cuckoo.__DoNotUse<(), AnyPublisher<BiometricsState, Never>> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-    """
-    authenticate() -> AnyPublisher<BiometricsState, Never>
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        @discardableResult
-        func openSettingsURL<M1: Cuckoo.Matchable>(action: M1) -> Cuckoo.__DoNotUse<(() -> Void), Void> where M1.MatchedType == () -> Void {
-            let matchers: [Cuckoo.ParameterMatcher<(() -> Void)>] = [wrap(matchable: action) { $0 }]
-            return cuckoo_manager.verify(
-    """
-    openSettingsURL(action: @escaping () -> Void)
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        @discardableResult
-        func isBiometryEnabled() -> Cuckoo.__DoNotUse<(), Bool> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-    """
-    isBiometryEnabled() -> Bool
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        @discardableResult
-        func setBiometrySelection<M1: Cuckoo.Matchable>(isEnabled: M1) -> Cuckoo.__DoNotUse<(Bool), Void> where M1.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: isEnabled) { $0 }]
-            return cuckoo_manager.verify(
-    """
-    setBiometrySelection(isEnabled: Bool)
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        @discardableResult
-        func isPinValid<M1: Cuckoo.Matchable>(with pin: M1) -> Cuckoo.__DoNotUse<(String), QuickPinPartialState> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
-            return cuckoo_manager.verify(
-    """
-    isPinValid(with: String) -> QuickPinPartialState
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-    }
-}
-
-
-public class BiometryInteractorTypeStub: BiometryInteractorType {
-    
-    
-    
-    
-    public var biometricsImage: Image? {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Image?).self)
-        }
-        
-    }
-    
-    
-    
-    
-    
-    public var currentBiometricsMethod: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
-        }
-        
-    }
-    
-    
-    
-    
-    
-    public var biometryType: LABiometryType {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (LABiometryType).self)
-        }
-        
-    }
-    
-    
-
-    
-
-    
-    
-    
-    
-    public func authenticate() -> AnyPublisher<BiometricsState, Never>  {
-        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<BiometricsState, Never>).self)
-    }
-    
-    
-    
-    
-    
-    public func openSettingsURL(action: @escaping () -> Void)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    
-    
-    
-    
-    public func isBiometryEnabled() -> Bool  {
-        return DefaultValueRegistry.defaultValue(for: (Bool).self)
-    }
-    
-    
-    
-    
-    
-    public func setBiometrySelection(isEnabled: Bool)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    
-    
-    
-    
-    public func isPinValid(with pin: String) -> QuickPinPartialState  {
-        return DefaultValueRegistry.defaultValue(for: (QuickPinPartialState).self)
-    }
-    
-    
-}
-
-
-
-
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_common
-@testable import logic_api
-@testable import logic_ui
-
-import Combine
-import Foundation
-import logic_business
-
-
-
-
-
-
-public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.ProtocolMock {
-    
-    public typealias MocksType = QuickPinInteractorType
-    
-    public typealias Stubbing = __StubbingProxy_QuickPinInteractorType
-    public typealias Verification = __VerificationProxy_QuickPinInteractorType
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    
-    private var __defaultImplStub: QuickPinInteractorType?
-
-    public func enableDefaultImplementation(_ stub: QuickPinInteractorType) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-    
-
-    
-
-    
-
-    
-    
-    
-    
-    public func setPin(newPin: String)  {
-        
-    return cuckoo_manager.call(
-    """
-    setPin(newPin: String)
-    """,
-            parameters: (newPin),
-            escapingParameters: (newPin),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.setPin(newPin: newPin))
-        
-    }
-    
-    
-    
-    
-    
-    public func isPinValid(pin: String) -> QuickPinPartialState {
-        
-    return cuckoo_manager.call(
-    """
-    isPinValid(pin: String) -> QuickPinPartialState
-    """,
-            parameters: (pin),
-            escapingParameters: (pin),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.isPinValid(pin: pin))
-        
-    }
-    
-    
-    
-    
-    
-    public func changePin(currentPin: String, newPin: String) -> QuickPinPartialState {
-        
-    return cuckoo_manager.call(
-    """
-    changePin(currentPin: String, newPin: String) -> QuickPinPartialState
-    """,
-            parameters: (currentPin, newPin),
-            escapingParameters: (currentPin, newPin),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.changePin(currentPin: currentPin, newPin: newPin))
-        
-    }
-    
-    
-
-    public struct __StubbingProxy_QuickPinInteractorType: Cuckoo.StubbingProxy {
+    public struct __StubbingProxy_SameDeviceInteractorType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
@@ -587,40 +197,18 @@ public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.Protocol
         
         
         
-        func setPin<M1: Cuckoo.Matchable>(newPin: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(String)> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: newPin) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockQuickPinInteractorType.self, method:
+        func doWork() -> Cuckoo.ProtocolStubFunction<(), SameDevicePartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockSameDeviceInteractorType.self, method:
     """
-    setPin(newPin: String)
-    """, parameterMatchers: matchers))
-        }
-        
-        
-        
-        
-        func isPinValid<M1: Cuckoo.Matchable>(pin: M1) -> Cuckoo.ProtocolStubFunction<(String), QuickPinPartialState> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockQuickPinInteractorType.self, method:
-    """
-    isPinValid(pin: String) -> QuickPinPartialState
-    """, parameterMatchers: matchers))
-        }
-        
-        
-        
-        
-        func changePin<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(currentPin: M1, newPin: M2) -> Cuckoo.ProtocolStubFunction<(String, String), QuickPinPartialState> where M1.MatchedType == String, M2.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String)>] = [wrap(matchable: currentPin) { $0.0 }, wrap(matchable: newPin) { $0.1 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockQuickPinInteractorType.self, method:
-    """
-    changePin(currentPin: String, newPin: String) -> QuickPinPartialState
+    doWork() async -> SameDevicePartialState
     """, parameterMatchers: matchers))
         }
         
         
     }
 
-    public struct __VerificationProxy_QuickPinInteractorType: Cuckoo.VerificationProxy {
+    public struct __VerificationProxy_SameDeviceInteractorType: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -637,35 +225,11 @@ public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.Protocol
         
         
         @discardableResult
-        func setPin<M1: Cuckoo.Matchable>(newPin: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: newPin) { $0 }]
+        func doWork() -> Cuckoo.__DoNotUse<(), SameDevicePartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    setPin(newPin: String)
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        @discardableResult
-        func isPinValid<M1: Cuckoo.Matchable>(pin: M1) -> Cuckoo.__DoNotUse<(String), QuickPinPartialState> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
-            return cuckoo_manager.verify(
-    """
-    isPinValid(pin: String) -> QuickPinPartialState
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        @discardableResult
-        func changePin<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(currentPin: M1, newPin: M2) -> Cuckoo.__DoNotUse<(String, String), QuickPinPartialState> where M1.MatchedType == String, M2.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String)>] = [wrap(matchable: currentPin) { $0.0 }, wrap(matchable: newPin) { $0.1 }]
-            return cuckoo_manager.verify(
-    """
-    changePin(currentPin: String, newPin: String) -> QuickPinPartialState
+    doWork() async -> SameDevicePartialState
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -674,7 +238,7 @@ public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.Protocol
 }
 
 
-public class QuickPinInteractorTypeStub: QuickPinInteractorType {
+public class SameDeviceInteractorTypeStub: SameDeviceInteractorType {
     
 
     
@@ -683,24 +247,8 @@ public class QuickPinInteractorTypeStub: QuickPinInteractorType {
     
     
     
-    public func setPin(newPin: String)   {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    
-    
-    
-    
-    public func isPinValid(pin: String) -> QuickPinPartialState  {
-        return DefaultValueRegistry.defaultValue(for: (QuickPinPartialState).self)
-    }
-    
-    
-    
-    
-    
-    public func changePin(currentPin: String, newPin: String) -> QuickPinPartialState  {
-        return DefaultValueRegistry.defaultValue(for: (QuickPinPartialState).self)
+    public func doWork() async -> SameDevicePartialState  {
+        return DefaultValueRegistry.defaultValue(for: (SameDevicePartialState).self)
     }
     
     
@@ -712,223 +260,79 @@ public class QuickPinInteractorTypeStub: QuickPinInteractorType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
 import SwiftUI
-import logic_resources
+import feature_common
 import logic_ui
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
-import Foundation
-import logic_business
-import logic_ui
+import feature_common
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
 import SwiftUI
-import logic_resources
+import feature_common
+import logic_ui
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import feature_common
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
 import SwiftUI
-import logic_resources
+import feature_common
 import logic_ui
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
-import logic_resources
-import logic_ui
+import feature_common
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
-import logic_resources
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_common
-@testable import logic_api
-@testable import logic_ui
-
-import logic_resources
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_common
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-import SwiftUI
-import logic_resources
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_common
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-import SwiftUI
-
-
-
-
-
-
-public class MockRequestDataCell: RequestDataCell, Cuckoo.ProtocolMock {
-    
-    public typealias MocksType = RequestDataCell
-    
-    public typealias Stubbing = __StubbingProxy_RequestDataCell
-    public typealias Verification = __VerificationProxy_RequestDataCell
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    
-  private var __defaultImplStub: (any RequestDataCell)?
-
-  public func enableDefaultImplementation(_ stub: any RequestDataCell) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-    
-
-    
-    
-    
-    
-    public var id: String {
-        get {
-            return cuckoo_manager.getter("id",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.id)
-        }
-        
-    }
-    
-    
-
-    
-
-    
-
-    public struct __StubbingProxy_RequestDataCell: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        
-        
-        var id: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockRequestDataCell, String> {
-            return .init(manager: cuckoo_manager, name: "id")
-        }
-        
-        
-        
-    }
-
-    public struct __VerificationProxy_RequestDataCell: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    
-        
-        
-        
-        var id: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "id", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-    
-        
-    }
-}
-
-
-public class RequestDataCellStub: RequestDataCell {
-    
-    
-    
-    
-    public var id: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
-        }
-        
-    }
-    
-    
-
-    
-
-    
-}
-
-
-
-
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
 import SwiftUI
-import logic_resources
+import feature_common
 import logic_ui
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
-import logic_business
-import logic_ui
+import feature_common
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -936,7 +340,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -946,13 +350,13 @@ import logic_business
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -1244,7 +648,7 @@ import struct Foundation.Data
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -1252,7 +656,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -1260,7 +664,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -1388,7 +792,7 @@ public class SampleRepositoryTypeStub: SampleRepositoryType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -1588,7 +992,7 @@ public class ConfigLogicStub: ConfigLogic {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -1596,7 +1000,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -2083,7 +1487,7 @@ public class ConfigSecurityLogicStub: ConfigSecurityLogic {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -2091,7 +1495,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -2424,7 +1828,7 @@ public class KeyChainControllerTypeStub: KeyChainControllerType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -2909,7 +2313,7 @@ public class PrefsControllerTypeStub: PrefsControllerType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -2919,7 +2323,7 @@ import Network
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -3458,7 +2862,7 @@ public class SecurityControllerTypeStub: SecurityControllerType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -3467,7 +2871,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -3475,7 +2879,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -3483,7 +2887,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -3491,7 +2895,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -3499,7 +2903,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -3508,7 +2912,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -3516,7 +2920,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -3524,7 +2928,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -3533,7 +2937,7 @@ import UIKit
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -3541,7 +2945,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -3720,7 +3124,7 @@ public class ConfigProviderTypeStub: ConfigProviderType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -4073,7 +3477,7 @@ public class FormValidatorInteractorStub: FormValidatorInteractor {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -4151,7 +3555,7 @@ public class ViewStateStub: ViewState {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -4426,7 +3830,7 @@ public class SystemBiometricsControllerTypeStub: SystemBiometricsControllerType 
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -4733,7 +4137,7 @@ public class SystemBiometricsInteractorTypeStub: SystemBiometricsInteractorType 
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -4906,7 +4310,7 @@ public class ConfigUiLogicStub: ConfigUiLogic {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -4914,7 +4318,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -4992,7 +4396,7 @@ public class UIConfigTypeStub: UIConfigType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5223,7 +4627,7 @@ public class DeepLinkControllerTypeStub: DeepLinkControllerType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5232,7 +4636,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5242,7 +4646,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5251,7 +4655,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5259,7 +4663,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5267,7 +4671,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5275,7 +4679,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5284,7 +4688,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5294,7 +4698,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5304,7 +4708,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5313,7 +4717,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5323,7 +4727,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5333,7 +4737,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5342,7 +4746,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5351,7 +4755,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5360,7 +4764,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5369,7 +4773,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5378,7 +4782,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5388,7 +4792,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5397,7 +4801,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5406,7 +4810,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5416,7 +4820,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5425,7 +4829,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5433,16 +4837,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5451,7 +4846,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5460,7 +4855,16 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5469,7 +4873,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5477,7 +4881,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5485,7 +4889,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5494,7 +4898,7 @@ import logic_resources
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5503,7 +4907,7 @@ import UIKit
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5512,7 +4916,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -5522,7 +4926,7 @@ import SwiftUI
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 
@@ -6160,7 +5564,7 @@ public class RouterHostTypeStub: RouterHostType {
 
 import Cuckoo
 @testable import logic_business
-@testable import feature_common
+@testable import feature_presentation
 @testable import logic_api
 @testable import logic_ui
 

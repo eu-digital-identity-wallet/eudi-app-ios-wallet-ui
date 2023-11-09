@@ -17,7 +17,9 @@ let package = Package(
     .package(name: "feature-startup", path: "./feature-startup"),
     .package(name: "feature-login", path: "./feature-login"),
     .package(name: "feature-dashboard", path: "./feature-dashboard"),
-    .package(name: "feature-authentication", path: "./feature-authentication")
+    .package(name: "feature-presentation", path: "./feature-presentation"),
+    .package(name: "feature-issuance", path: "./feature-issuance"),
+    .package(name: "feature-proximity", path: "./feature-proximity")
   ],
   targets: [
     .target(
@@ -27,7 +29,9 @@ let package = Package(
         "feature-startup",
         "feature-login",
         "feature-dashboard",
-        "feature-authentication"
+        "feature-presentation",
+        "feature-issuance",
+        "feature-proximity"
       ],
       path: "./Sources"
     )

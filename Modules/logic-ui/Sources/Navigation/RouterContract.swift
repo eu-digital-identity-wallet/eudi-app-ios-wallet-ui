@@ -26,8 +26,10 @@ public indirect enum AppRoute: Equatable {
   case faqs
   case dashboard
   case biometry(config: any UIConfigType)
-  case authenticationLoader(String)
-  case authenticationRequest
+  case crossDeviceLoader(String)
+  case crossDeviceRequest
+  case sameDeviceLoader(String)
+  case sameDeviceRequest
   case welcome
   case addDocument
   case documentDetails(docoumentId: String)
@@ -44,16 +46,20 @@ public indirect enum AppRoute: Equatable {
       "Dashboard"
     case .biometry:
       "Biometry"
-    case .authenticationLoader:
-      "AuthenticationLoader"
-    case .authenticationRequest:
-      "AuthenticationRequest"
+    case .crossDeviceLoader:
+      "CrossDeviceLoader"
+    case .sameDeviceRequest:
+      "SameDeviceRequest"
     case .welcome:
       "Welcome"
     case .documentDetails:
       "DocumentDetails"
     case .addDocument:
       "AddDocument"
+    case .crossDeviceRequest:
+      "CrossDeviceRequest"
+    case .sameDeviceLoader:
+      "SameDeviceLoader"
     }
   }
 }
