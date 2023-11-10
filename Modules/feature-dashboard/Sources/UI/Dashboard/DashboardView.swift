@@ -35,15 +35,14 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
         items: viewModel.viewState.documents,
         isLoading: viewModel.viewState.isLoading
       ) { document in
-        viewModel.routeToDocumentDetails(documentId: document.value.id)
-      }.bottomFade()
-
+        viewModel.onDocumentDetails(documentId: document.value.id)
+      }
+      .bottomFade()
+      
       FloatingActionButtonBar(
         isLoading: viewModel.viewState.isLoading,
-        addAction: {
-          viewModel.routeToAddDocument()
-        },
-        shareAction: {}
+        addAction: viewModel.onAdd(),
+        shareAction: viewModel.onShare()
       )
     }
     .background(ThemeManager.shared.color.backgroundPaper)

@@ -33,6 +33,9 @@ public indirect enum AppRoute: Equatable {
   case welcome
   case addDocument
   case documentDetails(docoumentId: String)
+  case proximityConnection
+  case proximityRequest
+  case proximityLoader(String)
 
   public var key: String {
     return switch self {
@@ -60,6 +63,12 @@ public indirect enum AppRoute: Equatable {
       "CrossDeviceRequest"
     case .sameDeviceLoader:
       "SameDeviceLoader"
+    case .proximityConnection:
+      "ProximityConnection"
+    case .proximityRequest:
+      "ProximityRequest"
+    case .proximityLoader:
+      "ProximityLoader"
     }
   }
 }

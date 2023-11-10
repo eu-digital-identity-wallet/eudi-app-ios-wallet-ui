@@ -59,6 +59,9 @@ public struct BaseRequestView<Router: RouterHostType>: View {
           ForEach(viewModel.viewState.items.indices, id: \.self) { index in
 
             let item = viewModel.viewState.items[index]
+            let nextItem: RequestDataCell? = (index + 2) < viewModel.viewState.items.count
+            ? viewModel.viewState.items[index + 1]
+            : nil
 
             if index > 0 {
               VSpacer.small()
@@ -71,7 +74,10 @@ public struct BaseRequestView<Router: RouterHostType>: View {
               viewModel.onSelectionChanged(id: id)
             }
 
-            if (index + 1) < viewModel.viewState.items.count, (item as? RequestDataSection) == nil {
+            if (index + 1) < viewModel.viewState.items.count,
+               item.isDataSection == nil,
+               item.isDataVerification == nil,
+               nextItem?.isDataRow != nil {
               Divider()
             }
 

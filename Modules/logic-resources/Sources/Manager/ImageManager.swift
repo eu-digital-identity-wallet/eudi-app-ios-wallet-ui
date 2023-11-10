@@ -22,7 +22,6 @@ public protocol ImageManagerProtocol {
   var id: Image { get }
   var idStroke: Image { get }
   var nfc: Image { get }
-  var qr: Image { get }
   var touchId: Image { get }
   var user: Image { get }
   var arrowLeft: Image { get }
@@ -49,7 +48,6 @@ final class ImageManager: ImageManagerProtocol {
     case id = "id"
     case idStroke = "id-stroke"
     case nfc = "nfc"
-    case qr = "qr"
     case touchId = "touch-id"
     case user = "user"
     case logo = "logo"
@@ -90,9 +88,6 @@ final class ImageManager: ImageManagerProtocol {
   }
   var nfc: Image {
     Image(ImageEnum.nfc.rawValue, bundle: bundle)
-  }
-  var qr: Image {
-    Image(ImageEnum.qr.rawValue, bundle: bundle)
   }
   var touchId: Image {
     Image(ImageEnum.touchId.rawValue, bundle: bundle)

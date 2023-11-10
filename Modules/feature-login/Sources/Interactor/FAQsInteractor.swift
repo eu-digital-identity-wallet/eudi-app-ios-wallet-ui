@@ -29,7 +29,7 @@ public final actor FAQsInteractor: FAQsInteractorType {
   public init() {}
   public func fetchFAQs() async -> FAQsPartialState {
     do {
-      try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
       return .success(FAQUIModel.mocks())
     } catch {
       return .failure(error)

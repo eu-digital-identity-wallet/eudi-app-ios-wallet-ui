@@ -4,6 +4,245 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import CoreImage.CIFilterBuiltins
+import Foundation
+import UIKit
+import logic_api
+import logic_business
+
+
+
+
+
+
+public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = ProximityInteractorType
+    
+    public typealias Stubbing = __StubbingProxy_ProximityInteractorType
+    public typealias Verification = __VerificationProxy_ProximityInteractorType
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: ProximityInteractorType?
+
+    public func enableDefaultImplementation(_ stub: ProximityInteractorType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    public func doWork() async -> ProximityPartialState {
+        
+    return await cuckoo_manager.call(
+    """
+    doWork() async -> ProximityPartialState
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.doWork())
+        
+    }
+    
+    
+    
+    
+    
+    public func generateQRCode() async -> ProximityQrCodePartialState {
+        
+    return await cuckoo_manager.call(
+    """
+    generateQRCode() async -> ProximityQrCodePartialState
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.generateQRCode())
+        
+    }
+    
+    
+
+    public struct __StubbingProxy_ProximityInteractorType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        
+        func doWork() -> Cuckoo.ProtocolStubFunction<(), ProximityPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractorType.self, method:
+    """
+    doWork() async -> ProximityPartialState
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func generateQRCode() -> Cuckoo.ProtocolStubFunction<(), ProximityQrCodePartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractorType.self, method:
+    """
+    generateQRCode() async -> ProximityQrCodePartialState
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_ProximityInteractorType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+    
+        
+        
+        
+        @discardableResult
+        func doWork() -> Cuckoo.__DoNotUse<(), ProximityPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    doWork() async -> ProximityPartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func generateQRCode() -> Cuckoo.__DoNotUse<(), ProximityQrCodePartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    generateQRCode() async -> ProximityQrCodePartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+public class ProximityInteractorTypeStub: ProximityInteractorType {
+    
+
+    
+
+    
+    
+    
+    
+    public func doWork() async -> ProximityPartialState  {
+        return DefaultValueRegistry.defaultValue(for: (ProximityPartialState).self)
+    }
+    
+    
+    
+    
+    
+    public func generateQRCode() async -> ProximityQrCodePartialState  {
+        return DefaultValueRegistry.defaultValue(for: (ProximityQrCodePartialState).self)
+    }
+    
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import UIKit
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import feature_common
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
+import feature_common
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import feature_common
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
+import feature_common
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
 import Foundation
 
 import Cuckoo

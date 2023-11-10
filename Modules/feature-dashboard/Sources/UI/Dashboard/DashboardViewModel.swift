@@ -63,12 +63,15 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
     }
   }
 
-  func routeToAddDocument() {
-    router.push(with: .addDocument)
+  func onDocumentDetails(documentId: String) {
+    router.push(with: .documentDetails(docoumentId: documentId))
+  }
+  func onShare() {
+    router.push(with: .proximityConnection)
   }
 
-  func routeToDocumentDetails(documentId: String) {
-    router.push(with: .documentDetails(docoumentId: documentId))
+  func onAdd() {
+    router.push(with: .addDocument)
   }
 
   private func handleDeepLink() {

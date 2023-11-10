@@ -105,7 +105,12 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "add_document_title")
     case .addDocumentSubtitle:
       bundle.localizedString(forKey: "add_document_subtitle")
-
+    case .proximityConnectivityTitle:
+      bundle.localizedString(forKey: "proximity_connectivity_title")
+    case .proximityConnectivityCaption:
+      bundle.localizedString(forKey: "proxmity_connectivity_caption")
+    case .proximityConnectivityNfc:
+      bundle.localizedString(forKey: "proximity_connectivity_nfc")
     }
   }
 
@@ -151,6 +156,9 @@ public extension LocalizableString {
     case mdl
     case addDocumentTitle
     case addDocumentSubtitle
+    case proximityConnectivityTitle
+    case proximityConnectivityCaption
+    case proximityConnectivityNfc
   }
 }
 

@@ -16,11 +16,40 @@
 import Foundation
 import SwiftUI
 
-public protocol RequestDataCell: Identifiable {
-  var id: String { get }
+public enum RequestDataCell: Equatable {
+  case requestDataRow(RequestDataRow)
+  case requestDataSection(RequestDataSection)
+  case requestDataVerification(RequestDataVerification)
+
+  var isDataRow: RequestDataRow? {
+    switch self {
+    case .requestDataRow(let row):
+      return row
+    default:
+      return nil
+    }
+  }
+
+  var isDataSection: RequestDataSection? {
+    switch self {
+    case .requestDataSection(let section):
+      return section
+    default:
+      return nil
+    }
+  }
+
+  var isDataVerification: RequestDataVerification? {
+    switch self {
+    case .requestDataVerification(let verification):
+      return verification
+    default:
+      return nil
+    }
+  }
 }
 
-public struct RequestDataRow: RequestDataCell {
+public struct RequestDataRow: Identifiable, Equatable {
 
   public let title: String
   public let value: String
@@ -46,7 +75,7 @@ public struct RequestDataRow: RequestDataCell {
   }
 }
 
-public struct RequestDataSection: RequestDataCell {
+public struct RequestDataSection: Identifiable, Equatable {
 
   public var id: String
   public let type: `Type`
@@ -59,7 +88,7 @@ public struct RequestDataSection: RequestDataCell {
   }
 }
 
-public struct RequestDataVerification: RequestDataCell {
+public struct RequestDataVerification: Identifiable, Equatable {
 
   public var id: String
   public let title: String
@@ -80,21 +109,35 @@ public extension RequestDataSection {
 }
 
 public struct RequestDataUiModel {
-  public static func mock() -> [any RequestDataCell] {
+  public static func mock() -> [RequestDataCell] {
     [
-      RequestDataSection(type: .id, title: "Digital ID"),
-      RequestDataRow(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras"),
-      RequestDataRow(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos"),
-      RequestDataRow(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985"),
-      RequestDataRow(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece"),
-      RequestDataVerification(
-        title: "Verification data",
-        items: [
-          RequestDataRow(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras"),
-          RequestDataRow(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos"),
-          RequestDataRow(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985"),
-          RequestDataRow(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")
-        ]
+      .requestDataSection(.init(type: .id, title: "Digital ID")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")),
+      .requestDataVerification(
+        .init(
+          title: "Verification data",
+          items: [
+            .init(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras"),
+            .init(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos"),
+            .init(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985"),
+            .init(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")
+          ]
+        )
+      ),
+      .requestDataSection(.init(type: .mdl, title: "MDL")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos")),
+      .requestDataVerification(
+        .init(
+          title: "Verification data",
+          items: [
+            .init(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985"),
+            .init(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")
+          ]
+        )
       )
     ]
   }

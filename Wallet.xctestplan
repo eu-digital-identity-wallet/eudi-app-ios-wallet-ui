@@ -72,6 +72,20 @@
         "identifier" : "feature-presentationTests",
         "name" : "feature-presentationTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/feature-issuance",
+        "identifier" : "feature-issuanceTests",
+        "name" : "feature-issuanceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/feature-proximity",
+        "identifier" : "feature-proximityTests",
+        "name" : "feature-proximityTests"
+      }
     }
   ],
   "version" : 1
