@@ -31,6 +31,8 @@ public indirect enum AppRoute: Equatable {
   case sameDeviceLoader(String)
   case sameDeviceRequest
   case welcome
+  case addDocument
+  case documentDetails(docoumentId: String)
   case proximityConnection
   case proximityRequest
   case proximityLoader(String)
@@ -53,6 +55,10 @@ public indirect enum AppRoute: Equatable {
       "SameDeviceRequest"
     case .welcome:
       "Welcome"
+    case .documentDetails:
+      "DocumentDetails"
+    case .addDocument:
+      "AddDocument"
     case .crossDeviceRequest:
       "CrossDeviceRequest"
     case .sameDeviceLoader:

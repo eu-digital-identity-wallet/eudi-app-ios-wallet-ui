@@ -13,23 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import Foundation
+import logic_ui
 import logic_resources
 
-public struct WalletUiConfig: ConfigUiLogic {
+public protocol AddDocumentInteractorType {
+ func fetchStoredDocuments() -> StoredDocumentsPartialState
+}
 
-  public var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] = [
-    AppRoute.dashboard.key: .init(Theme.shared.color.primary),
-    AppRoute.startup.key: .init(Theme.shared.color.primary),
-    AppRoute.welcome.key: .init(Theme.shared.color.primary),
-    AppRoute.documentDetails(docoumentId: "").key: .init(Theme.shared.color.primary)
-  ]
+public final class AddDocumentInteractor: AddDocumentInteractorType {
 
-  public var landingRoute: AppRoute {
-    return .dashboard
+  public init() {}
+
+  public func fetchStoredDocuments() -> StoredDocumentsPartialState {
+    // Add Some logic from walletCore about active documents in storage.
+    // Filter the ones we can add, currently Dummy
+    return .success(AddDocumentCellModel.mocks)
   }
+}
 
-  public init(themeConfiguration: ThemeConfiguration) {
-    Theme.config(themeConfiguration: themeConfiguration)
-  }
+public enum StoredDocumentsPartialState {
+  case success([AddDocumentCellModel])
+  case failure(Error)
 }

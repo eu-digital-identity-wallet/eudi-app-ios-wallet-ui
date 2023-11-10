@@ -97,6 +97,14 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "read_faqs_button")
     case .loginButton:
       bundle.localizedString(forKey: "login_button")
+    case .pid:
+      bundle.localizedString(forKey: "pid")
+    case .mdl:
+      bundle.localizedString(forKey: "mdl")
+    case .addDocumentTitle:
+      bundle.localizedString(forKey: "add_document_title")
+    case .addDocumentSubtitle:
+      bundle.localizedString(forKey: "add_document_subtitle")
     case .proximityConnectivityTitle:
       bundle.localizedString(forKey: "proximity_connectivity_title")
     case .proximityConnectivityCaption:
@@ -144,6 +152,10 @@ public extension LocalizableString {
     case requestDataShareBiometryCaption
     case readFaqButton
     case loginButton
+    case pid
+    case mdl
+    case addDocumentTitle
+    case addDocumentSubtitle
     case proximityConnectivityTitle
     case proximityConnectivityCaption
     case proximityConnectivityNfc

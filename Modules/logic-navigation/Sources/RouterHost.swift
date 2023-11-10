@@ -99,6 +99,14 @@ public final class RouterHost: RouterHostType {
         SameDeviceRequestView(with: self, and: SameDeviceInteractor())
       case .welcome:
         WelcomeView(with: self, and: WelcomeInteractor())
+      case .documentDetails(let documentId):
+        DocumentDetailsView(
+          with: self,
+          and: DocumentDetailsInteractor(),
+          documentId: documentId
+        )
+      case .addDocument:
+        AddDocumentView(with: self, and: AddDocumentInteractor())
       case .proximityConnection:
         ProximityConnectionView(with: self, and: ProximityInteractor())
       case .proximityRequest:

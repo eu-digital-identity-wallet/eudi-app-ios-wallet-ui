@@ -34,10 +34,11 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
       DocumentListView(
         items: viewModel.viewState.documents,
         isLoading: viewModel.viewState.isLoading
-      ) { _ in
-
-      }.bottomFade()
-
+      ) { document in
+        viewModel.onDocumentDetails(documentId: document.value.id)
+      }
+      .bottomFade()
+      
       FloatingActionButtonBar(
         isLoading: viewModel.viewState.isLoading,
         addAction: viewModel.onAdd(),
@@ -59,8 +60,10 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
       )
       content()
     }
-    .task {
-      await viewModel.fetch()
+    .viewDidLoad {
+      Task {
+        await viewModel.fetch()
+      }
     }
   }
 }

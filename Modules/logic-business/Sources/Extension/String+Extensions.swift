@@ -119,3 +119,20 @@ public extension String? {
     return self
   }
 }
+
+public extension String {
+    func padded(toWidth width: Int, withPad pad: String = " ", startingAt start: Int = 0) -> String {
+        let padLength = width - self.count
+        guard padLength > 0 else { return self }
+
+        let padding = String(repeating: pad, count: padLength)
+        return padding + self
+    }
+
+  func padded(withPad pad: String = " ", padLength: Int) -> String {
+      guard padLength > 0 else { return self }
+
+      let padding = String(repeating: pad, count: padLength)
+      return self + padding
+  }
+}
