@@ -44,12 +44,9 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
         isLoading: viewModel.viewState.isLoading
       )
       VStack {
-        ForEach(viewModel.viewState.document.documentFields.indices, id: \.self) { index in
-          let documentFieldContent = viewModel.viewState.document.documentFields[index]
+        VSpacer.extraLarge()
 
-          if index == 0 {
-            VSpacer.extraLarge()
-          }
+        ForEach(viewModel.viewState.document.documentFields) { documentFieldContent in
 
           KeyValueView(
             title: .custom(documentFieldContent.title),

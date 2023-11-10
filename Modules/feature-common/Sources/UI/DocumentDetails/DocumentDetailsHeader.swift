@@ -88,9 +88,11 @@ extension DocumentDetailsHeaderView {
               .frame(height: 120)
               .clipShape(.rect(cornerRadius: Theme.shared.shape.small))
 
-            Theme.shared.image.idStroke
-              .roundedCorner(16, corners: .allCorners)
-              .padding(.leading, -40)
+            if isLoading == false {
+              Theme.shared.image.idStroke
+                .roundedCorner(16, corners: .allCorners)
+                .padding(.leading, -40)
+            }
             Spacer()
           }
         }
