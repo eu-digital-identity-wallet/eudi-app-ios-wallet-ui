@@ -13,29 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Foundation
-import logic_api
-import logic_business
+import SwiftUI
+import logic_ui
+import feature_common
 
-public enum CrossDevicePartialState {
-  case success
-  case failure(Error)
-}
+public struct ProximityRequestView<Router: RouterHostType, Interactor: ProximityInteractorType>: View {
 
-public protocol CrossDeviceInteractorType {
-  func doWork() async -> CrossDevicePartialState
-}
+  @ObservedObject private var viewModel: ProximityRequestViewModel<Router, Interactor>
 
-public final actor CrossDeviceInteractor: CrossDeviceInteractorType {
+  public init(with router: Router, and interactor: Interactor) {
+    self.viewModel = .init(router: router, interactor: interactor)
+  }
 
-  public init() {}
-
-  public func doWork() async -> CrossDevicePartialState {
-    do {
-      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
-      return .success
-    } catch {
-      return .failure(error)
-    }
+  public var body: some View {
+    BaseRequestView(with: viewModel.router, viewModel: viewModel)
   }
 }

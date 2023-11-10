@@ -28,8 +28,8 @@ public struct FloatingActionButtonBar: View {
     isLoading: Bool = false,
     backgroundColor: Color = .clear,
     edgeInsets: EdgeInsets = .init(),
-    addAction: @escaping () -> Void,
-    shareAction: @escaping () -> Void
+    addAction: @escaping @autoclosure () -> Void,
+    shareAction: @escaping @autoclosure () -> Void
   ) {
     self.isLoading = isLoading
     self.backgroundColor = backgroundColor

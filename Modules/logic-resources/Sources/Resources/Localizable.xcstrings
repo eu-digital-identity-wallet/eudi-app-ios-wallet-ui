@@ -155,6 +155,39 @@
         }
       }
     },
+    "proximity_connectivity_nfc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or use the NFC"
+          }
+        }
+      }
+    },
+    "proximity_connectivity_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show QR or Tap"
+          }
+        }
+      }
+    },
+    "proxmity_connectivity_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show this QR code to access the necessary information for sharing"
+          }
+        }
+      }
+    },
     "read_faqs_button" : {
       "extractionState" : "manual",
       "localizations" : {

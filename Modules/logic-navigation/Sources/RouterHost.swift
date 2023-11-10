@@ -23,6 +23,7 @@ import feature_login
 import feature_common
 import feature_dashboard
 import feature_presentation
+import feature_proximity
 
 public final class RouterHost: RouterHostType {
 
@@ -98,6 +99,16 @@ public final class RouterHost: RouterHostType {
         SameDeviceRequestView(with: self, and: SameDeviceInteractor())
       case .welcome:
         WelcomeView(with: self, and: WelcomeInteractor())
+      case .proximityConnection:
+        ProximityConnectionView(with: self, and: ProximityInteractor())
+      case .proximityRequest:
+        ProximityRequestView(with: self, and: ProximityInteractor())
+      case .proximityLoader(let relyingParty):
+        ProximityLoadingView(
+          with: self,
+          and: ProximityInteractor(),
+          relyingParty: relyingParty
+        )
       }
     }
     .eraseToAnyView()

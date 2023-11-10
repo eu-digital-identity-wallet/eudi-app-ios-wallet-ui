@@ -32,7 +32,7 @@ public final actor SameDeviceInteractor: SameDeviceInteractorType {
 
   public func doWork() async -> SameDevicePartialState {
     do {
-      try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
       return .success
     } catch {
       return .failure(error)

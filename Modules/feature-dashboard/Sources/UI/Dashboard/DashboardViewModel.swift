@@ -63,6 +63,14 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
     }
   }
 
+  func onShare() {
+    router.push(with: .proximityConnection)
+  }
+
+  func onAdd() {
+
+  }
+
   private func handleDeepLink() {
     if let deepLink = deepLinkController.getPendingDeepLinkAction() {
       deepLinkController.handleDeepLinkAction(routerHost: router, deepLinkAction: deepLink)

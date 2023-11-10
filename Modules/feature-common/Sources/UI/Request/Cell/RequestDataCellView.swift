@@ -21,7 +21,7 @@ import logic_ui
 extension BaseRequestView {
   struct RequestDataCellView: View {
 
-    typealias Cell = any RequestDataCell
+    typealias Cell = RequestDataCell
     typealias TapListener = ((String) -> Void)?
 
     let cellModel: Cell
@@ -35,8 +35,8 @@ extension BaseRequestView {
     }
 
     var body: some View {
-      if let row = cellModel as? RequestDataRow {
-
+      switch cellModel {
+      case .requestDataRow(let row):
         WrapCheckBoxView(
           isSelected: row.isSelected,
           isVisible: row.isVisible,
@@ -48,9 +48,7 @@ extension BaseRequestView {
           onTap: self.onTap
         )
         .padding(.bottom)
-
-      } else if let section = cellModel as? RequestDataSection {
-
+      case .requestDataSection(let section):
         HStack(spacing: .zero) {
 
           HStack(spacing: SPACING_SMALL) {
@@ -76,9 +74,7 @@ extension BaseRequestView {
         .padding(.bottom)
         .disabled(isLoading)
         .shimmer(isLoading: isLoading)
-
-      } else if let verification = cellModel as? RequestDataVerification {
-
+      case .requestDataVerification(let verification):
         ContentExpandable(title: .custom(verification.title)) {
 
           VStack(spacing: SPACING_LARGE) {

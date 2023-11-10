@@ -22,7 +22,7 @@ public struct RequestViewState: ViewState {
   public let error: ContentError.Config?
   public let isContentVisible: Bool
   public let itemsAreAllSelected: Bool
-  public let items: [any RequestDataCell]
+  public let items: [RequestDataCell]
 }
 
 @MainActor
@@ -71,6 +71,10 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     router.push(with: route)
   }
 
+  open func getPopRoute() -> AppRoute? {
+    return nil
+  }
+
   public func onStartLoading() {
     setNewState(
       isLoading: true
@@ -87,7 +91,7 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     )
   }
 
-  public func onReceivedItems(with items: [any RequestDataCell]) {
+  public func onReceivedItems(with items: [RequestDataCell]) {
     setNewState(
       items: items
     )
@@ -96,7 +100,11 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
   func onPop() {
     isRequestInfoModalShowing = false
     isCancelModalShowing = false
-    router.pop()
+    if let route = getPopRoute() {
+      router.popTo(with: route)
+    } else {
+      router.pop()
+    }
   }
 
   func onShowCancelModal() {
@@ -111,28 +119,25 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     setNewState(
       isContentVisible: !viewState.isContentVisible,
       items: viewState.items.map {
-        guard var row = $0 as? RequestDataRow else {
-          return $0
+        if var row = $0.isDataRow {
+          row.setVisible(!viewState.isContentVisible)
+          return .requestDataRow(row)
         }
-        row.setVisible(!viewState.isContentVisible)
-        return row
+        return $0
       }
     )
   }
 
   func onSelectionChanged(id: String) {
-
     let items = viewState.items.map {
-      guard var row = $0 as? RequestDataRow, row.id == id else {
-        return $0
+      if var row = $0.isDataRow, row.id == id {
+        row.setSelected(!row.isSelected)
+        return RequestDataCell.requestDataRow(row)
       }
-      row.setSelected(!row.isSelected)
-      return row
+      return $0
     }
 
-    let allSelected = items.map {
-      ($0 as? RequestDataRow)?.isSelected ?? true
-    }
+    let allSelected = items.map { $0.isDataRow?.isSelected ?? true }
       .filter { !$0 }
       .isEmpty
 
@@ -154,7 +159,7 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     error: ContentError.Config? = nil,
     isContentVisible: Bool? = nil,
     itemsAreAllSelected: Bool? = nil,
-    items: [any RequestDataCell]? = nil
+    items: [RequestDataCell]? = nil
   ) {
     setState {
       .init(
