@@ -86,11 +86,11 @@ extension DocumentDetailsHeaderView {
               .resizable()
               .aspectRatio(contentMode: .fit)
               .frame(height: 120)
-              .clipShape(.rect(cornerRadius: Theme.shared.shape.small))
+              .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
 
             if isLoading == false {
               Theme.shared.image.idStroke
-                .roundedCorner(16, corners: .allCorners)
+                .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
                 .padding(.leading, -40)
             }
             Spacer()
