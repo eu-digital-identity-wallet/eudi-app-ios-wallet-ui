@@ -18,7 +18,8 @@ import logic_ui
 import logic_resources
 
 struct AddDocumentViewState: ViewState {
-  var addDocumentCellModels: [AddDocumentCellModel]
+  let addDocumentCellModels: [AddDocumentCellModel]
+  let error: ContentError.Config?
 }
 
 final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocumentInteractorType>: BaseViewModel<Router, AddDocumentViewState> {
@@ -31,7 +32,8 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
     super.init(
       router: router,
       initialState: .init(
-        addDocumentCellModels: AddDocumentCellModel.mocks
+        addDocumentCellModels: AddDocumentCellModel.mocks,
+        error: nil
       )
     )
   }
@@ -41,7 +43,13 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
     case .success(let documents):
       self.setNewState(addDocumentCellModels: documents)
     case .failure(let error):
-      ()
+      setNewState(
+        error: ContentError.Config(
+          description: .custom(error.localizedDescription),
+          cancelAction: self.pop(),
+          action: { self.fetchStoredDocuments() }
+        )
+      )
     }
   }
 
@@ -59,11 +67,13 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
   }
 
   private func setNewState(
-    addDocumentCellModels: [AddDocumentCellModel]? = nil
+    addDocumentCellModels: [AddDocumentCellModel]? = nil,
+    error: ContentError.Config? = nil
   ) {
     setState { previousSate in
         .init(
-          addDocumentCellModels: addDocumentCellModels ?? previousSate.addDocumentCellModels
+          addDocumentCellModels: addDocumentCellModels ?? previousSate.addDocumentCellModels,
+          error: error
         )
     }
   }

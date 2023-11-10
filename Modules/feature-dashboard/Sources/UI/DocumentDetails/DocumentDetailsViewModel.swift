@@ -21,13 +21,13 @@ struct DocumentDetailsViewState: ViewState {
   var document: DocumentDetailsUIModel
   var isLoading: Bool
   let error: ContentError.Config?
+  let documentId: String
 }
 
 @MainActor
 final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: DocumentDetailsInteractorType>: BaseViewModel<Router, DocumentDetailsViewState> {
 
   private let interactor: Interactor
-  private let documentId: String
 
   init(
     router: Router,
@@ -35,50 +35,52 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
     documentId: String
   ) {
     self.interactor = interactor
-    self.documentId = documentId
     super.init(
       router: router,
       initialState: .init(
         document: DocumentDetailsUIModel.mock(),
         isLoading: true,
-        error: nil
+        error: nil,
+        documentId: documentId
       )
     )
   }
 
   func fetchDocumentDetails() async {
 
-    switch await self.interactor.fetchStoredDocument(documentId: documentId) {
+    switch await self.interactor.fetchStoredDocument(documentId: viewState.documentId) {
 
     case .success(let document):
       self.setNewState(
-        document: document,
-        isLoading: false
+        isLoading: false,
+        document: document
       )
     case .failure(let error):
       self.setNewState(
         isLoading: true,
-        error: ContentError.Config(title: .custom("Failed To Fectch Doc"),
-                                   description: .custom("Try Again"),
-                                   cancelAction: self.pop())
+        error: ContentError.Config(
+          description: .custom(error.localizedDescription),
+          cancelAction: self.pop()
+        )
       )
     }
   }
 
   func pop() {
-    router.pop(animated: true)
+    router.pop()
   }
 
   private func setNewState(
+    isLoading: Bool = false,
     document: DocumentDetailsUIModel? = nil,
-    isLoading: Bool? = nil,
     error: ContentError.Config? = nil
   ) {
     setState { previous in
         .init(
           document: document ?? previous.document,
-          isLoading: isLoading ?? previous.isLoading,
-          error: error ?? previous.error
+          isLoading: isLoading,
+          error: error,
+          documentId: previous.documentId
         )
     }
   }

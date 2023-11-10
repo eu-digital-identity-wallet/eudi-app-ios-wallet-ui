@@ -2814,6 +2814,14 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
 import Combine
 import Foundation
 
@@ -4723,6 +4731,15 @@ import Cuckoo
 
 import Foundation
 import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
 import logic_resources
 
 import Cuckoo

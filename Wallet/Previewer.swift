@@ -88,7 +88,6 @@ private func successConfig() -> UIConfig.Success {
   WelcomeView(with: PreviewRouter(), and: WelcomeInteractor())
 }
 
-
 #Preview("DocumentDetails View") {
   DocumentDetailsView(with: PreviewRouter(), and: DocumentDetailsInteractor(), documentId: "123")
 }
@@ -96,4 +95,3 @@ private func successConfig() -> UIConfig.Success {
 #Preview("AddDocument View") {
   AddDocumentView(with: PreviewRouter(), and: AddDocumentInteractor())
 }
-

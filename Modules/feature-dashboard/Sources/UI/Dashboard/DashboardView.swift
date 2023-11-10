@@ -38,7 +38,7 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
         viewModel.onDocumentDetails(documentId: document.value.id)
       }
       .bottomFade()
-      
+
       FloatingActionButtonBar(
         isLoading: viewModel.viewState.isLoading,
         addAction: viewModel.onAdd(),

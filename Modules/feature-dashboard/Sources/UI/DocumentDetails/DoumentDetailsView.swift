@@ -37,17 +37,11 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
   @ViewBuilder
   func content() -> some View {
     ScrollView {
-      DocumentDetailsHeaderView(
-        documentName: viewModel.viewState.document.documentName,
-        holdersName: viewModel.viewState.document.holdersName,
-        userIcon: viewModel.viewState.document.holdersImage,
-        isLoading: viewModel.viewState.isLoading
-      )
-      VStack {
-        VSpacer.extraLarge()
+      VStack(spacing: .zero) {
+
+        VSpacer.medium()
 
         ForEach(viewModel.viewState.document.documentFields) { documentFieldContent in
-
           KeyValueView(
             title: .custom(documentFieldContent.title),
             subTitle: .custom(documentFieldContent.value),
@@ -57,8 +51,7 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
           VSpacer.medium()
         }
       }
-      .padding(.horizontal, SPACING_MEDIUM)
-      Spacer()
+      .padding(.horizontal, Theme.shared.dimension.padding)
     }
   }
 
@@ -68,30 +61,14 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
       canScroll: true,
       errorConfig: viewModel.viewState.error
     ) {
-      VStack {
-        // Close Button
 
-        VSpacer.medium()
-          .frame(maxWidth: .infinity)
-          .background(Theme.shared.color.primary)
-
-        HStack {
-          HSpacer.medium()
-          Button(action: {
-            viewModel.pop()
-          }, label: {
-            Theme.shared.image.xmark
-          })
-          .foregroundStyle(Theme.shared.color.white)
-          Spacer()
-        }
-
-        .background(Theme.shared.color.primary)
-        .frame(maxWidth: .infinity)
-
-        VSpacer.medium()
-          .frame(maxWidth: .infinity)
-          .background(Theme.shared.color.primary)
+      DocumentDetailsHeaderView(
+        documentName: viewModel.viewState.document.documentName,
+        holdersName: viewModel.viewState.document.holdersName,
+        userIcon: viewModel.viewState.document.holdersImage,
+        isLoading: viewModel.viewState.isLoading
+      ) {
+        viewModel.pop()
       }
 
       content()

@@ -29,7 +29,15 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
   @ViewBuilder
   func content() -> some View {
     ScrollView {
-      VStack {
+      VStack(spacing: .zero) {
+
+        ContentTitle(
+          title: .addDocumentTitle,
+          caption: .addDocumentSubtitle
+        )
+
+        VSpacer.large()
+
         ForEach(viewModel.viewState.addDocumentCellModels) { cell in
           AddNewDocumentCell(
             isEnabled: cell.isEnabled,
@@ -47,37 +55,16 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
   }
 
   public var body: some View {
-    ContentScreen {
-      VSpacer.large()
+    ContentScreen(errorConfig: viewModel.viewState.error) {
 
-      VStack(alignment: .leading) {
-        Button(action: {
-          viewModel.pop()
-        }, label: {
-          Theme.shared.image.xmark
-        })
-        .foregroundStyle(Theme.shared.color.primary)
-
-        VSpacer.large()
-
-        Text(LocalizableString.Key.addDocumentTitle)
-          .typography(Theme.shared.font.headlineSmall)
-          .foregroundStyle(Theme.shared.color.primary)
-
-        VSpacer.medium()
-
-        Text(LocalizableString.Key.addDocumentSubtitle)
-          .typography(Theme.shared.font.bodyLarge)
-          .foregroundStyle(Theme.shared.color.textSecondaryDark)
-
-        VSpacer.extraLarge()
-
-        content()
+      ContentHeader(dismissIcon: Theme.shared.image.xmark) {
+        viewModel.pop()
       }
+
+      content()
     }
     .onAppear {
       self.viewModel.fetchStoredDocuments()
     }
   }
-
 }

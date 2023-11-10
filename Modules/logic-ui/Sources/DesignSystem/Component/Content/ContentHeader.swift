@@ -20,17 +20,20 @@ public struct ContentHeader: View {
 
   private let title: LocalizableString.Key?
   private let dismissIcon: Image
+  private let foregroundColor: Color
   private let onBack: (() -> Void)?
   private let actions: [Action]?
 
   public init(
     title: LocalizableString.Key? = nil,
     dismissIcon: Image = Theme.shared.image.arrowLeft,
+    foregroundColor: Color = Theme.shared.color.primary,
     onBack: (() -> Void)? = nil,
     actions: [Action]? = nil
   ) {
     self.title = title
     self.dismissIcon = dismissIcon
+    self.foregroundColor = foregroundColor
     self.onBack = onBack
     self.actions = actions
   }
@@ -46,7 +49,7 @@ public struct ContentHeader: View {
           },
           label: {
             self.dismissIcon
-              .foregroundColor(Theme.shared.color.primary)
+              .foregroundColor(foregroundColor)
           }
         )
         HSpacer.medium()
@@ -55,7 +58,7 @@ public struct ContentHeader: View {
       if let title {
         Text(title)
           .typography(Theme.shared.font.headlineSmall)
-          .foregroundColor(Theme.shared.color.primary)
+          .foregroundColor(foregroundColor)
       }
 
       Spacer()

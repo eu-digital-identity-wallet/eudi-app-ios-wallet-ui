@@ -718,6 +718,15 @@ import Cuckoo
 
 import SwiftUI
 import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
 import logic_ui
 
 import Cuckoo
@@ -738,6 +747,16 @@ import Cuckoo
 
 import SwiftUI
 import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+import logic_ui
 
 import Cuckoo
 @testable import logic_business
@@ -3393,6 +3412,14 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
 import Combine
 import Foundation
 
@@ -5302,6 +5329,15 @@ import Cuckoo
 
 import Foundation
 import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
 import logic_resources
 
 import Cuckoo

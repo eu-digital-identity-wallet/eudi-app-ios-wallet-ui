@@ -40,21 +40,25 @@ public extension DocumentDetailsUIModel {
       holdersImage: Theme.shared.image.user,
       documentFields:
         [
-          .init(id: UUID().uuidString,
-                title: "ID no",
-                value: "AB12356"),
-          .init(id: UUID().uuidString,
-                title: "Nationality",
-                value: "Hellenic"),
-          .init(id: UUID().uuidString,
-                title: "Place of birth",
-                value: "21 Oct 1994"),
-          .init(id: UUID().uuidString,
-                title: "Height",
-                value: "1,82")
+          .init(
+            id: UUID().uuidString,
+            title: "ID no",
+            value: "AB12356"),
+          .init(
+            id: UUID().uuidString,
+            title: "Nationality",
+            value: "Hellenic"),
+          .init(
+            id: UUID().uuidString,
+            title: "Place of birth",
+            value: "21 Oct 1994"),
+          .init(
+            id: UUID().uuidString,
+            title: "Height",
+            value: "1,82")
         ]
-        +
-        Array(
+      +
+      Array(
         count: 6,
         createElement: DocumentField(
           id: UUID().uuidString,
