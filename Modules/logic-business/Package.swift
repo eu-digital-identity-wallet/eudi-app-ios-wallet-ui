@@ -37,6 +37,11 @@ let package = Package(
       name: "logic-resources",
       path: "./logic-resources"
     ),
+    .package(
+      url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
+      branch: "main"
+    )
+    ,
     .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
@@ -53,6 +58,10 @@ let package = Package(
         .product(
           name: "libPhoneNumber",
           package: "libPhoneNumber-iOS"
+        ),
+        .product(
+          name: "EudiWalletKit",
+          package: "eudi-lib-ios-wallet-kit"
         ),
         .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk"),
         .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk")
