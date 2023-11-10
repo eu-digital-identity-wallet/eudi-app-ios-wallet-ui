@@ -125,7 +125,7 @@ public extension View {
 
 public extension View {
 
-  func viewDidLoadOnce(action: @escaping () -> Void) -> some View {
+  func viewDidLoad(action: @escaping () -> Void) -> some View {
     self
       .modifier(ViewDidLoadModifier(action: action))
   }

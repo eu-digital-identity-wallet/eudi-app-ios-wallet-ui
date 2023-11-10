@@ -23,24 +23,45 @@ public struct AddDocumentCellModel: Identifiable {
   public let isEnabled: Bool
   public let documentName: LocalizableString.Key
   public let image: Image
+  public let isLoading: Bool
   public let type: `Type`
 
   public init(
     isEnabled: Bool,
     documentName: LocalizableString.Key,
     image: Image,
+    isLoading: Bool = false,
     type: `Type`
   ) {
     self.id = UUID().uuidString
     self.isEnabled = isEnabled
     self.documentName = documentName
     self.image = image
+    self.isLoading = isLoading
     self.type = type
   }
 
 }
 
 public extension AddDocumentCellModel {
+
+  static var mocks: [AddDocumentCellModel] {
+    [
+      .init(
+        isEnabled: true,
+        documentName: .pid,
+        image: Theme.shared.image.idStroke,
+        type: .pid
+      ),
+      .init(
+        isEnabled: false,
+        documentName: LocalizableString.Key.mdl,
+        image: Theme.shared.image.id,
+        type: .mdl
+      )
+    ]
+  }
+
   enum `Type` {
     case pid
     case mdl

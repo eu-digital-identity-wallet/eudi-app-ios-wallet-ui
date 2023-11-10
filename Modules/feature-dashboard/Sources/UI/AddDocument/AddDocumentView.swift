@@ -35,6 +35,7 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
             isEnabled: cell.isEnabled,
             icon: cell.image,
             title: cell.documentName,
+            isLoading: cell.isLoading,
             action: {
               viewModel.routeToIssuance(for: cell.type)
             }

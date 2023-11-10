@@ -28,20 +28,7 @@ public final class AddDocumentInteractor: AddDocumentInteractorType {
   public func fetchStoredDocuments() -> StoredDocumentsPartialState {
     // Add Some logic from walletCore about active documents in storage.
     // Filter the ones we can add, currently Dummy
-    return .success([
-      .init(
-        isEnabled: true,
-        documentName: .pid,
-        image: Theme.shared.image.idStroke,
-        type: .pid
-      ),
-      .init(
-        isEnabled: false,
-        documentName: LocalizableString.Key.mdl,
-        image: Theme.shared.image.id,
-        type: .mdl
-      )
-    ])
+    return .success(AddDocumentCellModel.mocks)
   }
 }
 

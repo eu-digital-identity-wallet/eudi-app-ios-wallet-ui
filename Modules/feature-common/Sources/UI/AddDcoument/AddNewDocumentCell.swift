@@ -22,16 +22,19 @@ public struct AddNewDocumentCell: View {
   let icon: Image
   let title: LocalizableString.Key
   let action: () -> Void
+  let isLoading: Bool
 
   public init(
     isEnabled: Bool,
     icon: Image,
     title: LocalizableString.Key,
+    isLoading: Bool,
     action: @escaping () -> Void
   ) {
     self.isEnabled = isEnabled
     self.icon = icon
     self.title = title
+    self.isLoading = isLoading
     self.action = action
   }
 
@@ -68,6 +71,7 @@ public struct AddNewDocumentCell: View {
       .background(Theme.shared.color.backgroundDefault)
       .tint(isEnabled ? nil : Theme.shared.color.textDisabledDark)
       .clipShape(.rect(cornerRadius: Theme.shared.shape.small))
+      .shimmer(isLoading: isLoading)
     }
   }
 }

@@ -17,11 +17,11 @@ import Foundation
 import logic_ui
 import logic_resources
 
-public struct AddDocumentViewState: ViewState {
+struct AddDocumentViewState: ViewState {
   var addDocumentCellModels: [AddDocumentCellModel]
 }
 
-public final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocumentInteractorType>: BaseViewModel<Router, AddDocumentViewState> {
+final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocumentInteractorType>: BaseViewModel<Router, AddDocumentViewState> {
 
   private let interactor: Interactor
 
@@ -31,10 +31,7 @@ public final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddD
     super.init(
       router: router,
       initialState: .init(
-        addDocumentCellModels: [
-          .mock(),
-          .mock()
-        ]
+        addDocumentCellModels: AddDocumentCellModel.mocks
       )
     )
   }

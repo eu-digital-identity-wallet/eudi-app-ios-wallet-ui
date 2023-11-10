@@ -17,14 +17,14 @@ import Foundation
 import logic_ui
 import logic_resources
 
-public struct DocumentDetailsViewState: ViewState {
+struct DocumentDetailsViewState: ViewState {
   var document: DocumentDetailsUIModel
   var isLoading: Bool
   let error: ContentError.Config?
 }
 
 @MainActor
-public final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: DocumentDetailsInteractorType>: BaseViewModel<Router, DocumentDetailsViewState> {
+final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: DocumentDetailsInteractorType>: BaseViewModel<Router, DocumentDetailsViewState> {
 
   private let interactor: Interactor
   private let documentId: String
