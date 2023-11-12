@@ -30,7 +30,7 @@ struct MainHolderView: View {
 	
 	var body: some View {
 			VStack(alignment: .center, spacing: 0) {
-				if !appData.hasData {
+				if !appData.hasWellKnownData {
 					Text("no_documents").italic().font(.footnote)
 					Text("start_by_adding_sample_documents").italic().font(.footnote)
 					Button {
@@ -41,12 +41,12 @@ struct MainHolderView: View {
 					}.padding(.top, 20).tint(Color("AccentColor"))
 						.buttonStyle(.borderedProminent)
 				}
-				if appData.hasData, let m = appData.mdocModels[0] {
+				if appData.hasData, appData.mdocModels.count > 0, let m = appData.mdocModels[0] {
 					NavigationLink(value: RouteDestination.docView(index: 0)) {
 						DocButton(title: NSLocalizedString(m.title, comment: ""), subtitle: m.docType)
 					}.accessibilityIdentifier("EuPidButton")
 				}
-				if appData.hasData, let m = appData.mdocModels[1] {
+				if appData.hasData, appData.mdocModels.count > 1,  let m = appData.mdocModels[1] {
 					NavigationLink(value: RouteDestination.docView(index: 1)) {
 						DocButton(title: NSLocalizedString(m.title, comment: ""), subtitle: m.docType)
 					}.accessibilityIdentifier("IsoMdlButton")
