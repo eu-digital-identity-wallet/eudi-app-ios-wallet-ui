@@ -20,6 +20,6 @@ import SwiftUI
 import EudiWalletKit
 
 public enum RouteDestination: Codable, Hashable {
-	case docView(index: Int)
+	case docView(docType: String)
 	case shareView(flow: FlowType)
 }

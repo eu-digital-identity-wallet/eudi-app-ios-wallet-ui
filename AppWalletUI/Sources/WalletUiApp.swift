@@ -30,7 +30,7 @@ struct WalletUiApp: App {
 	var body: some Scene {
 		WindowGroup {
 			NavigationStack(path: $path) {
-				MainHolderView(appData: wallet.documentsViewModel, path: $path).environmentObject(wallet)
+				MainHolderView(storage: wallet.storage, path: $path).environmentObject(wallet)
 			}
 		}
 	}

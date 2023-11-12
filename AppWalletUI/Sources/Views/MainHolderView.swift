@@ -20,7 +20,7 @@ import WalletStorage
 import CodeScanner
 
 struct MainHolderView: View {
-	@ObservedObject var appData: DocumentsViewModel
+	@ObservedObject var storage: StorageModel
 	@State var isPresentingScanner: Bool = false
 	@State var flow: FlowType = .ble
 	@State var hasError: Bool = false
@@ -30,7 +30,7 @@ struct MainHolderView: View {
 	
 	var body: some View {
 			VStack(alignment: .center, spacing: 0) {
-				if !appData.hasWellKnownData {
+				if !storage.hasWellKnownData {
 					Text("no_documents").italic().font(.footnote)
 					Text("start_by_adding_sample_documents").italic().font(.footnote)
 					Button {
@@ -41,26 +41,26 @@ struct MainHolderView: View {
 					}.padding(.top, 20).tint(Color("AccentColor"))
 						.buttonStyle(.borderedProminent)
 				}
-				if appData.hasData, appData.mdocModels.count > 0, let m = appData.mdocModels[0] {
-					NavigationLink(value: RouteDestination.docView(index: 0)) {
-						DocButton(title: NSLocalizedString(m.title, comment: ""), subtitle: m.docType)
+				if let pidModel = storage.pidModel {
+					NavigationLink(value: RouteDestination.docView(docType: pidModel.docType)) {
+						DocButton(title: NSLocalizedString(pidModel.title, comment: ""), subtitle: pidModel.docType)
 					}.accessibilityIdentifier("EuPidButton")
 				}
-				if appData.hasData, appData.mdocModels.count > 1,  let m = appData.mdocModels[1] {
-					NavigationLink(value: RouteDestination.docView(index: 1)) {
-						DocButton(title: NSLocalizedString(m.title, comment: ""), subtitle: m.docType)
+				if let mdlModel = storage.mdlModel {
+					NavigationLink(value: RouteDestination.docView(docType: mdlModel.docType)) {
+						DocButton(title: NSLocalizedString(mdlModel.title, comment: ""), subtitle: mdlModel.docType)
 					}.accessibilityIdentifier("IsoMdlButton")
 				}
 				Spacer()
-				if appData.hasData {
+				if storage.hasData {
 					Button(action: { flow = .ble; path.append(RouteDestination.shareView(flow: flow)) }, label: {
 						RoundedRectangle(cornerRadius: 6).fill(Color("AccentColor")).frame(maxHeight: 50).overlay() {Text("share").foregroundColor(.white).font(.system(size: 18)) }
 					}).accessibilityIdentifier("Share")
 				}
 			}.navigationDestination(for: RouteDestination.self) { destination in
 				switch destination {
-					  case .docView(let index):
-						  DocDataView(index: index, appData: appData)
+					  case .docView(let docType):
+					DocDataView(docType: docType, storage: storage)
 					  case .shareView(let flow):
 					let session = userWallet.beginPresentation(flow: flow) 
 						  ShareView(presentationSession: session)
