@@ -33,7 +33,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
         "branch" : "develop",
-        "revision" : "2af6a5ade98c4b4458793f811317c6ecac93f4bf"
+        "revision" : "5f6be833b74471a80aa7958887dd6b80f7969ed3"
       }
     },
     {
@@ -78,7 +78,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit",
       "state" : {
         "branch" : "develop",
-        "revision" : "43def6904462073a15166cba9d8fd9ba2da87284"
+        "revision" : "c726fb2246b336468a5620c8ccc3c1d0f1610c73"
       }
     },
     {
@@ -87,7 +87,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
         "branch" : "develop",
-        "revision" : "0dcdecec6a6c895aa414e2940f7399e374133c3f"
+        "revision" : "c3e5337538aaf128b27e30e0380fd24e9312a3a8"
       }
     },
     {
