@@ -1,46 +1,50 @@
-/* 
-  Localizable.strings
-  
+/*
+Copyright (c) 2023 European Commission
 
-  Created by ffeli on 22/06/2023.
-  
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
+// PID
 "eu_pid_doctype_name" = "EU PID";
-"conference_badge" = "Conference badge";
-"family_name_national_character" = "Family Name in national characters";
-"given_name_national_character" = "Given Name in national characters";
-"birth_country" = "Birth country";
-"birth_state" = "Birth state";
-"birth_city" = "Birth city";
-"anon_id" = "Anonymous Identifier";
-"unique_id" = "Unique Identifier";
-"wallet_pseudo_id" = "Wallet Pseudo Identifier";
-"issuer_pseudo_id" = "Issuer Pseudo Identifier";
+"unique_id" = "Unique identifier";
+"persistent_id" = "Persistent Identifier";
 "family_name_birth" = "Family Name at Birth";
 "first_name_birth" = "First Name at Birth";
 "given_name_birth" = "Given Name at Birth";
+"birth_country" = "Country of birth";
+"birth_state" = "State of birth";
+"birth_city" = "City of birth";
+"resident_street" = "Resident street";
+"resident_house_number" = "Resident house number";
 "gender" = "Gender";
-"facial_portrait" = "PID portrait";
-"biometric_template_finger" = "Fingerprint";
-"age_over_15" = "Age over 15?";
-"age_over_18" = "Age over 18?";
+"issuance_date" = "Date of issuance";
 "age_over_13" = "Age over 13?";
+"age_over_15" = "Age over 15?";
 "age_over_16" = "Age over 16?";
+"age_over_18" = "Age over 18?";
 "age_over_60" = "Age over 60?";
 "age_over_65" = "Age over 65?";
 "age_over_68" = "Age over 68?";
+// mDL
 "mdl_doctype_name" = "mDL";
 "family_name" = "Family Name";
 "given_name" = "Given Name";
 "birth_date" = "Date of birth";
-"expiry_date" = "Date of expiration";
 "issue_date" = "Date of issue";
-"issue_date" = "Date of issue";
-"issuance_date" = "Date of issuance";
+"expiry_date" = "Date of expiry";
 "issuing_country" = "Issuing country";
 "issuing_authority" = "Issuing authority";
 "document_number" = "Document number";
-"portrait" = "Portrait of mDL holder";
+"portrait" = "Portrait";
 "driving_privileges" = "Categories of vehicles";
 "un_distinguishing_sign" = "UN distinguishing sign";
 "administrative_number" = "Administrative number";
@@ -61,18 +65,13 @@
 "resident_state" = "Resident state";
 "resident_postal_code" = "Resident postal code";
 "resident_country" = "Resident country";
-"resident_street" = "Resident street";
-"resident_house_number" = "Resident house number";
+"family_name_national_character" = "Family name in national characters";
+"given_name_national_character" = "Given name in national characters";
 "signature_usual_mark" = "Signature / usual mark";
 "aamva_sex" = "AAMVA Sex";
 "EDL_credential" = "EDL Credential";
 "DHS_compliance" = "DHS Compliance";
-"mvr_doctype_name" = "mVR";
-"registration_info" = "Vehicle Registration Information";
-"registration_holder" = "Vehicle Registration Holder Information";
-"basic_vehicle_info" = "Basic Vehicle Information";
-"vin" = "Vehicle Identification Number";
-
+// other strings
 "app_name" = "EUDIW v0.3";
 "eudi_wallet_prototype_v1" = "EUDI Wallet Prototype v0.3";
 "share" = "Share";

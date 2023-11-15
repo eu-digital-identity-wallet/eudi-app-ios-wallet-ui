@@ -22,22 +22,22 @@ import MdocDataModel18013
 struct DocDataView: View {
 	@Environment(\.dismiss) var dismiss
 	@EnvironmentObject var userWallet: EudiWallet
-    @ObservedObject var storage: StorageModel
+    @ObservedObject var storage: StorageManager
 	@State private var isPresentingConfirm: Bool = false
 	let docType: String
 
-	init(docType: String, storage: StorageModel) {
+	init(docType: String, storage: StorageManager) {
 		self.docType = docType
 		self.storage = storage
 	}
 	
 	var title:String {
-		guard let doc = storage.getDoc(docType: docType) else { return "" }
+		guard let doc = storage.getDocumentModel(docType: docType) else { return "" }
 		return NSLocalizedString(doc.title, comment: "")
 	}
 	
 	var body: some View {
-		if let doc = storage.getDoc(docType: docType) {
+		if let doc = storage.getDocumentModel(docType: docType) {
 			docView(doc)
 		} else {
 			EmptyView()
@@ -77,17 +77,10 @@ struct DocDataView: View {
 				}
 			}
 		}.confirmationDialog("Confirmation", isPresented: $isPresentingConfirm) { Button("Remove \(title) ?", role: .destructive) {
-			dismiss(); storage.removeDoc(docType: doc.docType) } }
+			dismiss(); storage.deleteDocument(docType: doc.docType) } }
 	} // end body
 	
 	var imageFields = [IsoMdlModel.CodingKeys.portrait.rawValue, IsoMdlModel.CodingKeys.signatureUsualMark.rawValue]
 	
 }
 
-/*
-struct DocDataView_Previews: PreviewProvider {
-	static var previews: some View {
-		DocDataView(index: 1)
-	}
-}
-*/

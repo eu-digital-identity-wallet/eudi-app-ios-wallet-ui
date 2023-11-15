@@ -21,10 +21,14 @@ import EudiWalletKit
 struct WalletUiApp: App {
 	@State private var path = NavigationPath()
 	var wallet: EudiWallet
+	
+	// initialize wallet app
 	init() {
 		wallet = EudiWallet.standard
 		wallet.userAuthenticationRequired = true
 		wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
+		wallet.openId4VpVerifierApiUri = ProcessInfo.processInfo.environment["VERIFIER_API"] ?? "http://localhost:8080"
+		wallet.loadDocuments()
 	}
 	
 	var body: some Scene {

@@ -20,7 +20,7 @@ import WalletStorage
 import CodeScanner
 
 struct MainHolderView: View {
-	@ObservedObject var storage: StorageModel
+	@ObservedObject var storage: StorageManager
 	@State var isPresentingScanner: Bool = false
 	@State var flow: FlowType = .ble
 	@State var hasError: Bool = false
@@ -72,10 +72,11 @@ struct MainHolderView: View {
 			}.padding()
 			.sheet(isPresented: $isPresentingScanner) {
 			CodeScannerView(codeTypes: [.qr], scanMode: .once, showViewfinder: true) { response in
+				guard isPresentingScanner else { return }
 				if case let .success(result) = response {
+					isPresentingScanner = false
 					flow = .openid4vp(qrCode: result.string.data(using: .utf8)!)
 					path.append(RouteDestination.shareView(flow: flow))
-					isPresentingScanner = false
 				}
 			}
 		}.onOpenURL(perform: { customUrl in
