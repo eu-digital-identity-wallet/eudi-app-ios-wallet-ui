@@ -69,7 +69,6 @@ public struct ProximityConnectionView<Router: RouterHostType, Interactor: Proxim
 
     }
     .task {
-      print(wallet.documentsViewModel)
       await viewModel.initialize()
     }
   }

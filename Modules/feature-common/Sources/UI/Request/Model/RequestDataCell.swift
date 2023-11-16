@@ -15,13 +15,14 @@
  */
 import Foundation
 import SwiftUI
+import MdocDataModel18013
 
 public enum RequestDataCell: Equatable {
   case requestDataRow(RequestDataRow)
   case requestDataSection(RequestDataSection)
   case requestDataVerification(RequestDataVerification)
 
-  var isDataRow: RequestDataRow? {
+  public var isDataRow: RequestDataRow? {
     switch self {
     case .requestDataRow(let row):
       return row
@@ -30,7 +31,7 @@ public enum RequestDataCell: Equatable {
     }
   }
 
-  var isDataSection: RequestDataSection? {
+  public var isDataSection: RequestDataSection? {
     switch self {
     case .requestDataSection(let section):
       return section
@@ -39,7 +40,7 @@ public enum RequestDataCell: Equatable {
     }
   }
 
-  var isDataVerification: RequestDataVerification? {
+  public var isDataVerification: RequestDataVerification? {
     switch self {
     case .requestDataVerification(let verification):
       return verification
@@ -58,12 +59,25 @@ public struct RequestDataRow: Identifiable, Equatable {
   public var isSelected: Bool
   public var isVisible: Bool
 
-  public init(isSelected: Bool, isVisible: Bool, title: String, value: String) {
-    self.id = UUID().uuidString
+  public var namespace: String
+  public var docType: String
+
+  public init(
+    id: String = UUID().uuidString,
+    isSelected: Bool,
+    isVisible: Bool,
+    title: String,
+    value: String,
+    namespace: String = "doc.namespace",
+    docType: String = "mock"
+  ) {
+    self.id = id
     self.isSelected = isSelected
     self.isVisible = isVisible
     self.title = title
     self.value = value
+    self.namespace = namespace
+    self.docType = docType
   }
 
   public mutating func setSelected(_ isSelected: Bool) {
@@ -81,8 +95,12 @@ public struct RequestDataSection: Identifiable, Equatable {
   public let type: `Type`
   public let title: String
 
-  public init(type: `Type`, title: String) {
-    self.id = UUID().uuidString
+  public init(
+    id: String = UUID().uuidString,
+    type: `Type`,
+    title: String
+  ) {
+    self.id = id
     self.type = type
     self.title = title
   }
@@ -94,17 +112,33 @@ public struct RequestDataVerification: Identifiable, Equatable {
   public let title: String
   public let items: [RequestDataRow]
 
-  public init(title: String, items: [RequestDataRow]) {
-    self.id = UUID().uuidString
+  public init(
+    id: String = UUID().uuidString,
+    title: String,
+    items: [RequestDataRow]
+  ) {
+    self.id = id
     self.title = title
     self.items = items
   }
 }
 
 public extension RequestDataSection {
-  enum `Type` {
+  enum `Type`: Equatable {
     case id
     case mdl
+    case custom(String)
+
+    public init(docType: String) {
+      switch docType {
+      case IsoMdlModel.isoDocType:
+        self = .mdl
+      case EuPidModel.EuPidDocType:
+        self = .id
+      default:
+        self = .custom(docType)
+      }
+    }
   }
 }
 

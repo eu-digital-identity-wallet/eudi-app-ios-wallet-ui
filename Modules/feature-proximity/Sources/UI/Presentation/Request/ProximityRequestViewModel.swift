@@ -31,9 +31,9 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
 
   override func doWork() async {
     self.onStartLoading()
-    switch await interactor.doWork() {
-    case .success:
-      self.onReceivedItems(with: RequestDataUiModel.mock())
+    switch await interactor.onRequestReceived() {
+    case .success(let array):
+      self.onReceivedItems(with: array)
     case .failure(let error):
       self.onError(with: error)
     }

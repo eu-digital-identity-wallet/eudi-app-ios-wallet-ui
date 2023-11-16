@@ -16,6 +16,7 @@
 
 import Foundation
 import EudiWalletKit
+import MdocDataModel18013
 import Combine
 import logic_resources
 
@@ -71,5 +72,15 @@ public final class WalletKitController {
 
   public func stopPresentation() {
     self.activeSession = .notAvailable
+  }
+
+  public func mandatoryFields(for documentType: String) -> [String] {
+    if documentType == IsoMdlModel.isoDocType {
+      return IsoMdlModel.mandatoryKeys
+    } else if documentType == EuPidModel.EuPidDocType {
+      return []
+    }
+
+    return []
   }
 }

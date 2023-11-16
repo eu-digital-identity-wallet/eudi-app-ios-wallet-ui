@@ -73,6 +73,9 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
   }
 
   func goBack() {
+    Task {
+      await interactor.stopPresentation()
+    }
     router.pop()
   }
 
