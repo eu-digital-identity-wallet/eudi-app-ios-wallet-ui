@@ -63,7 +63,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "VERIFIER_API"
-            value = "eudi.netcompany-intrasoft.com"
+            value = "https://eudi.netcompany-intrasoft.com"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
