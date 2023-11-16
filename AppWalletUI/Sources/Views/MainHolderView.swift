@@ -72,19 +72,21 @@ struct MainHolderView: View {
 			}.padding()
 			.sheet(isPresented: $isPresentingScanner) {
 			CodeScannerView(codeTypes: [.qr], scanMode: .once, showViewfinder: true) { response in
-				guard isPresentingScanner else { return }
+				guard path.count == 0, isPresentingScanner else { return }
 				if case let .success(result) = response {
 					isPresentingScanner = false
 					flow = .openid4vp(qrCode: result.string.data(using: .utf8)!)
+					print(path.count)
+					path.removeLast(path.count)
 					path.append(RouteDestination.shareView(flow: flow))
 				}
 			}
 		}.onOpenURL(perform: { customUrl in
-			guard let sc = customUrl.scheme else { return }
+			guard path.count == 0, let sc = customUrl.scheme else { return }
 			let url = customUrl.absoluteString.replacingOccurrences(of: sc, with: "https")
 			flow = .openid4vp(qrCode: url.data(using: .utf8)!)
+			path.removeLast(path.count)
 			path.append(RouteDestination.shareView(flow: flow))
-			isPresentingScanner = false
 		})
 		.alert(isPresented: $hasError, error: uiError) { Button("OK") {} }
 	} // end body
