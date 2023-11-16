@@ -15,11 +15,15 @@
  */
 import Foundation
 import logic_ui
+import logic_business
 import UIKit
+import EudiWalletKit
+import logic_resources
 
 struct ProxmityConnectivityState: ViewState {
   let error: ContentError.Config?
   let qrImage: UIImage?
+  let transferStatus: TransferStatus
 }
 
 @MainActor
@@ -31,24 +35,33 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
     self.interactor = interactor
     super.init(
       router: router,
-      initialState: .init(error: nil, qrImage: nil)
+      initialState: .init(
+        error: nil,
+        qrImage: nil,
+        transferStatus: interactor.presentationSession.status
+      )
     )
+
+    self.interactor.presentationSession.$status.sink { transferStatus in
+      self.setNewState(transferStatus: transferStatus)
+      switch transferStatus {
+      case .qrEngagementReady:
+        await self.generateQRCode()
+      case .requestReceived:
+        await self.onConnectionSuccess()
+      case .error:
+        self.onError()
+      default:
+        ()
+      }
+    }
+    .store(in: &cancellables)
   }
 
   func initialize() async {
-    await generateQRCode()
-    await onConnectionSuccess()
-  }
-
-  func goBack() {
-    router.pop()
-  }
-
-  // MARK: - TODO needs to change to actual implementation, temporarily will move to request screen
-  private func onConnectionSuccess() async {
-    switch await interactor.doWork() {
+    switch await self.interactor.startDeviceEngagement() {
     case .success:
-      router.push(with: .proximityRequest)
+      print("Started Device Engagement")
     case .failure(let error):
       setNewState(
         error: .init(
@@ -57,6 +70,10 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
         )
       )
     }
+  }
+
+  func goBack() {
+    router.pop()
   }
 
   private func generateQRCode() async {
@@ -73,14 +90,46 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
     }
   }
 
+  private func onConnectionSuccess() async {
+    switch await interactor.doWork() {
+    case .success:
+      router.push(with: .proximityRequest)
+    case .failure(let error):
+      setNewState(
+        error: .init(
+          description: .custom(error.localizedDescription),
+          cancelAction: self.router.pop()
+        )
+      )
+    }
+  }
+
+  private func onError() {
+    let errorDesc: LocalizableString.Key =
+    if let errorDesc = interactor.presentationSession.uiError?.errorDescription {
+      LocalizableString.Key.custom(errorDesc)
+    } else {
+      .genericErrorDesc
+    }
+
+    self.setNewState(
+      error: .init(
+        description: errorDesc,
+        cancelAction: self.router.pop()
+      )
+    )
+  }
+
   private func setNewState(
     error: ContentError.Config? = nil,
-    qrImage: UIImage? = nil
+    qrImage: UIImage? = nil,
+    transferStatus: TransferStatus? = nil
   ) {
     setState { previousState in
         .init(
           error: error,
-          qrImage: qrImage ?? previousState.qrImage
+          qrImage: qrImage ?? previousState.qrImage,
+          transferStatus: transferStatus ?? previousState.transferStatus
         )
     }
   }

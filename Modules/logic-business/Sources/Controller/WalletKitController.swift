@@ -13,12 +13,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import EudiWalletKit
 
-class WalletKitController {
-  
-  init() {
-    let wallet = EudiWallet.standard
+import Foundation
+import EudiWalletKit
+import Combine
+import logic_resources
+
+public final class WalletKitController {
+
+  public static let shared = WalletKitController()
+
+  public enum DocumentIdentifiers: String {
+    case EuPidDocType = "eu.europa.ec.eudiw.pid.1"
+    case IsoMdlModel = "org.iso.18013.5.1.mDL"
+  }
+
+  public let wallet = EudiWallet.standard
+
+  public private(set) var activeSession: PresentationSession = .notAvailable
+  private var cancellables = Set<AnyCancellable>()
+
+  private init() {
     try? wallet.loadSampleData()
+    wallet.userAuthenticationRequired = true
+    wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
+
+    self.activeSession.$status
+      .sink { status in
+        switch status {
+        case .initializing:
+          print(status)
+        case .initialized:
+          print(status)
+        case .qrEngagementReady:
+          print(status)
+        case .connected:
+          print(status)
+        case .started:
+          print(status)
+        case .requestReceived:
+          print(status)
+        case .userSelected:
+          print(status)
+        case .responseSent:
+          print(status)
+        case .disconnected, .error:
+          self.stopPresentation()
+        }
+      }
+      .store(in: &cancellables)
+  }
+
+  public func startPresentation(flow: FlowType) -> PresentationSession {
+    self.activeSession = wallet.beginPresentation(flow: flow)
+    return self.activeSession
+  }
+
+  public func stopPresentation() {
+    self.activeSession = .notAvailable
   }
 }

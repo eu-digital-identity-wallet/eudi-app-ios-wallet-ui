@@ -18,8 +18,14 @@ import logic_api
 import logic_business
 import CoreImage.CIFilterBuiltins
 import UIKit
+import EudiWalletKit
 
 public enum ProximityPartialState {
+  case success
+  case failure(Error)
+}
+
+public enum ProximityInitialisationPartialState {
   case success
   case failure(Error)
 }
@@ -30,33 +36,42 @@ public enum ProximityQrCodePartialState {
 }
 
 public protocol ProximityInteractorType {
+  var presentationSession: PresentationSession { get }
   func doWork() async -> ProximityPartialState
+
+  func startDeviceEngagement() async -> ProximityInitialisationPartialState
   func generateQRCode() async -> ProximityQrCodePartialState
 }
 
 public final actor ProximityInteractor: ProximityInteractorType {
 
-  public init() {}
+  public let presentationSession: PresentationSession
+
+  public init() {
+    guard WalletKitController.shared.activeSession.status != .initializing else {
+      presentationSession = WalletKitController.shared.startPresentation(flow: .ble)
+      return
+    }
+    presentationSession = WalletKitController.shared.activeSession
+  }
+
+  public func startDeviceEngagement() async -> ProximityInitialisationPartialState {
+    do {
+      try await presentationSession.startQrEngagement()
+      try await presentationSession.receiveRequest()
+      return .success
+    } catch {
+      return .failure(error)
+    }
+  }
 
   public func generateQRCode() async -> ProximityQrCodePartialState {
 
-    let qrCode = UUID().uuidString
-
-    let filter = CIFilter.qrCodeGenerator()
-
-    guard let data = qrCode.data(using: .ascii, allowLossyConversion: false) else {
+    guard let data = presentationSession.deviceEngagement else {
       return .failure(RuntimeError.genericError)
     }
-    filter.message = data
 
-    guard let ciimage = filter.outputImage else {
-      return .failure(RuntimeError.genericError)
-    }
-    let transform = CGAffineTransform(scaleX: 10, y: 10)
-    let scaledCIImage = ciimage.transformed(by: transform)
-    let uiimage = UIImage(ciImage: scaledCIImage)
-
-    guard let pngData = uiimage.pngData(), let qrImage = UIImage(data: pngData) else {
+    guard let qrImage = UIImage(data: data) else {
       return .failure(RuntimeError.genericError)
     }
 
@@ -70,5 +85,9 @@ public final actor ProximityInteractor: ProximityInteractorType {
     } catch {
       return .failure(error)
     }
+  }
+
+  deinit {
+    WalletKitController.shared.stopPresentation()
   }
 }

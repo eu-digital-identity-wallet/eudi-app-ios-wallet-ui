@@ -17,9 +17,13 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
+import EudiWalletKit
+import logic_business
+
 public struct ProximityConnectionView<Router: RouterHostType, Interactor: ProximityInteractorType>: View {
 
   @ObservedObject private var viewModel: ProximityConnectionViewModel<Router, Interactor>
+  @EnvironmentObject private var wallet: EudiWallet
   @State var userIsEditingAlias = false
 
   var contentSize: CGFloat = 0.0
@@ -54,6 +58,9 @@ public struct ProximityConnectionView<Router: RouterHostType, Interactor: Proxim
         Image(uiImage: image)
           .resizable()
           .frame(width: contentSize, height: contentSize)
+          .transition(.opacity)
+      } else {
+        ContentLoader(showLoader: .constant(true))
       }
 
       Spacer()
@@ -62,6 +69,7 @@ public struct ProximityConnectionView<Router: RouterHostType, Interactor: Proxim
 
     }
     .task {
+      print(wallet.documentsViewModel)
       await viewModel.initialize()
     }
   }
