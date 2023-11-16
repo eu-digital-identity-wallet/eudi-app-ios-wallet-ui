@@ -83,4 +83,9 @@ public final class WalletKitController {
 
     return []
   }
+
+  public func valueForElementIdentifier(for documentType: String) -> String {
+
+    return ""
+  }
 }

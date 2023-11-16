@@ -151,6 +151,10 @@ public final actor ProximityInteractor: ProximityInteractorType {
       requestDataCell.append(documentMandatoryVerificationFields(for: document))
     }
 
+    guard requestDataCell.count > 1 else {
+      return .failure(presentationSession.uiError ?? .init(description: LocalizableString.shared.get(with: .genericErrorTitle)))
+    }
+
     return .success(requestDataCell)
   }
 
@@ -168,7 +172,7 @@ public final actor ProximityInteractor: ProximityInteractorType {
         RequestDataCell.requestDataRow(.init(id: $0.id,
                                              isSelected: true,
                                              isVisible: false,
-                                             title: $0.elementIdentifier,
+                                             title: LocalizableString.shared.get(with: .customKey(key: $0.elementIdentifier)),
                                              value: "",
                                              namespace: $0.nameSpace,
                                              docType: document.docType))
@@ -183,17 +187,20 @@ public final actor ProximityInteractor: ProximityInteractorType {
         return mandatoryKeys.contains(element.elementIdentifier)
       }
       .map {
-        RequestDataRow(id: $0.id,
-                       isSelected: true,
-                       isVisible: false,
-                       title: $0.elementIdentifier,
-                       value: "",
-                       namespace: $0.nameSpace,
-                       docType: document.docType)
-
+        RequestDataRow(
+          id: $0.id,
+          isSelected: true,
+          isVisible: false,
+          title: $0.elementIdentifier,
+          value: "",
+          namespace: $0.nameSpace,
+          docType: document.docType)
       }
 
-    return .requestDataVerification(.init(title: document.docType + "verification", items: mandatoryFields))
+    return .requestDataVerification(
+      .init(title: LocalizableString.shared.get(with: .verification),
+            items: mandatoryFields)
+    )
   }
 
   public func doWork() async -> ProximityPartialState {

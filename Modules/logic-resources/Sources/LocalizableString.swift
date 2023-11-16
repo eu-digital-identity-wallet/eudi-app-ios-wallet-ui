@@ -35,6 +35,8 @@ public final class LocalizableString: LocalizableStringType {
 
   public func get(with key: Key) -> String {
     return switch key {
+    case .customKey(key: let key):
+      bundle.localizedString(forKey: key)
     case .custom(let literal):
       literal
     case .screenCaptureSecurityWarning:
@@ -111,6 +113,9 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "proxmity_connectivity_caption")
     case .proximityConnectivityNfc:
       bundle.localizedString(forKey: "proximity_connectivity_nfc")
+    case .verification:
+      bundle.localizedString(forKey: "request_data_verification")
+
     }
   }
 
@@ -121,6 +126,7 @@ public final class LocalizableString: LocalizableStringType {
 
 public extension LocalizableString {
   enum Key: Equatable {
+    case customKey(key: String)
     case custom(String)
     case screenCaptureSecurityWarning
     case faqs
@@ -159,6 +165,7 @@ public extension LocalizableString {
     case proximityConnectivityTitle
     case proximityConnectivityCaption
     case proximityConnectivityNfc
+    case verification
   }
 }
 
