@@ -59,6 +59,7 @@ public struct RequestDataRow: Identifiable, Equatable {
   public var isSelected: Bool
   public var isVisible: Bool
 
+  public var elementKey: String
   public var namespace: String
   public var docType: String
 
@@ -68,6 +69,7 @@ public struct RequestDataRow: Identifiable, Equatable {
     isVisible: Bool,
     title: String,
     value: String,
+    elementKey: String = "namespaced_key",
     namespace: String = "doc.namespace",
     docType: String = "mock"
   ) {
@@ -76,6 +78,7 @@ public struct RequestDataRow: Identifiable, Equatable {
     self.isVisible = isVisible
     self.title = title
     self.value = value
+    self.elementKey = elementKey
     self.namespace = namespace
     self.docType = docType
   }

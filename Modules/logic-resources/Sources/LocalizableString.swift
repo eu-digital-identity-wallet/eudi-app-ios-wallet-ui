@@ -35,7 +35,7 @@ public final class LocalizableString: LocalizableStringType {
 
   public func get(with key: Key) -> String {
     return switch key {
-    case .customKey(key: let key):
+    case .dynamic(key: let key):
       bundle.localizedString(forKey: key)
     case .custom(let literal):
       literal
@@ -126,7 +126,7 @@ public final class LocalizableString: LocalizableStringType {
 
 public extension LocalizableString {
   enum Key: Equatable {
-    case customKey(key: String)
+    case dynamic(key: String)
     case custom(String)
     case screenCaptureSecurityWarning
     case faqs

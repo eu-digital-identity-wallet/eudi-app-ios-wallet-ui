@@ -31,16 +31,24 @@ public final class WalletKitController {
 
   public let wallet = EudiWallet.standard
 
-  public private(set) var activeSession: PresentationSession = .notAvailable
+  public private(set) var activeSession: PresentationSession? {
+    didSet {
+      self.setupStatusSubscription()
+    }
+  }
   private var cancellables = Set<AnyCancellable>()
 
   private init() {
     try? wallet.loadSampleData()
-    wallet.userAuthenticationRequired = true
+    wallet.userAuthenticationRequired = false
     wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
 
-    self.activeSession.$status
+  }
+
+  private func setupStatusSubscription() {
+    self.activeSession?.$status
       .sink { status in
+        print("---> received value \(status)")
         switch status {
         case .initializing:
           print(status)
@@ -56,9 +64,7 @@ public final class WalletKitController {
           print(status)
         case .userSelected:
           print(status)
-        case .responseSent:
-          print(status)
-        case .disconnected, .error:
+        case .disconnected, .error, .responseSent:
           self.stopPresentation()
         }
       }
@@ -66,12 +72,15 @@ public final class WalletKitController {
   }
 
   public func startPresentation(flow: FlowType) -> PresentationSession {
-    self.activeSession = wallet.beginPresentation(flow: flow)
-    return self.activeSession
+    self.stopPresentation()
+    let session = wallet.beginPresentation(flow: flow)
+    self.activeSession = session
+    return session
   }
 
   public func stopPresentation() {
-    self.activeSession = .notAvailable
+    self.cancellables.forEach {$0.cancel()}
+    self.activeSession = nil
   }
 
   public func mandatoryFields(for documentType: String) -> [String] {
@@ -88,4 +97,23 @@ public final class WalletKitController {
 
     return ""
   }
+}
+
+@MainActor
+public final class PresentationSessionCoordinator {
+
+  let session: PresentationSession
+
+  init(session: PresentationSession) {
+    self.session = session
+  }
+
+  private func startQrEngagement() async throws {
+    try await session.startQrEngagement()
+  }
+
+  private func awaitForRequest() async throws {
+    try await session.receiveRequest()
+  }
+
 }

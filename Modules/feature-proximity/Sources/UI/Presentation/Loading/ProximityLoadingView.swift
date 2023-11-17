@@ -16,13 +16,14 @@
 import SwiftUI
 import logic_ui
 import feature_common
+import EudiWalletKit
 
 public struct ProximityLoadingView<Router: RouterHostType, Interactor: ProximityInteractorType>: View {
 
   @ObservedObject private var viewModel: ProximityLoadingViewModel<Router, Interactor>
 
-  public init(with router: Router, and interactor: Interactor, relyingParty: String) {
-    self.viewModel = .init(router: router, interactor: interactor, relyingParty: relyingParty)
+  public init(with router: Router, and interactor: Interactor, relyingParty: String, requestItems: RequestItems) {
+    self.viewModel = .init(router: router, interactor: interactor, relyingParty: relyingParty, requestItems: requestItems)
   }
 
   public var body: some View {

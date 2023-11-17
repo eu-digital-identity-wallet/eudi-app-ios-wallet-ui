@@ -46,11 +46,15 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
         caption: .requestDataShareBiometryCaption,
         quickPinOnlyCaption: .requestDataShareBiometryCaption,
         navigationSuccessConfig: .init(
-          screen: .proximityLoader(getRelyingParty()),
+          screen: .proximityLoader(
+            getRelyingParty(),
+            presentationSession: interactor.presentationSession,
+            requestItems: interactor.onResponsePrepare(requestItems: viewState.items)
+          ),
           navigationType: .push
         ),
         navigationBackConfig: .init(
-          screen: .proximityRequest,
+          screen: .proximityRequest(presentationSession: interactor.presentationSession),
           navigationType: .pop
         ),
         isPreAuthorization: false,

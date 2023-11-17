@@ -46,7 +46,7 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
       self.setNewState(transferStatus: transferStatus)
       switch transferStatus {
       case .qrEngagementReady:
-        await self.generateQRCode()
+        await self.onQRGeneration()
       case .requestReceived:
         await self.onConnectionSuccess()
       case .error:
@@ -59,7 +59,7 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
   }
 
   func initialize() async {
-    switch await self.interactor.startDeviceEngagement() {
+    switch await self.interactor.onDeviceEngagement() {
     case .success:
       print("Started Device Engagement")
     case .failure(let error):
@@ -79,8 +79,8 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
     router.pop()
   }
 
-  private func generateQRCode() async {
-    switch await interactor.generateQRCode() {
+  private func onQRGeneration() async {
+    switch await interactor.onQRGeneration() {
     case .success(let qrImage):
       setNewState(qrImage: qrImage)
     case .failure(let error):
@@ -96,7 +96,7 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
   private func onConnectionSuccess() async {
     switch await interactor.doWork() {
     case .success:
-      router.push(with: .proximityRequest)
+      router.push(with: .proximityRequest(presentationSession: interactor.presentationSession))
     case .failure(let error):
       setNewState(
         error: .init(

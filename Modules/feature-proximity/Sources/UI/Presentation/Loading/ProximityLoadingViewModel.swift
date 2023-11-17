@@ -15,20 +15,24 @@
  */
 
 import feature_common
+import EudiWalletKit
 
 @MainActor
 final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: ProximityInteractorType>: BaseLoadingViewModel<Router> {
 
   private let interactor: Interactor
   private let relyingParty: String
+  private let requestItems: RequestItems
 
   init(
     router: Router,
     interactor: Interactor,
-    relyingParty: String
+    relyingParty: String,
+    requestItems: RequestItems
   ) {
     self.interactor = interactor
     self.relyingParty = relyingParty
+    self.requestItems = requestItems
     super.init(router: router)
   }
 
@@ -63,7 +67,7 @@ final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: Proxim
   }
 
   override func doWork() async {
-    switch await interactor.doWork() {
+    switch await interactor.onSendResponse(requestItems: requestItems) {
     case .success:
       self.onNavigate(type: .push)
     case .failure(let error):

@@ -107,15 +107,22 @@ public final class RouterHost: RouterHostType {
         )
       case .addDocument:
         AddDocumentView(with: self, and: AddDocumentInteractor())
-      case .proximityConnection:
-        ProximityConnectionView(with: self, and: ProximityInteractor())
-      case .proximityRequest:
-        ProximityRequestView(with: self, and: ProximityInteractor())
-      case .proximityLoader(let relyingParty):
+      case .proximityConnection(let presentationSession):
+        ProximityConnectionView(
+          with: self,
+          and: ProximityInteractor(presentationSession: presentationSession)
+        )
+      case .proximityRequest(let presentationSession):
+        ProximityRequestView(
+          with: self,
+          and: ProximityInteractor(presentationSession: presentationSession)
+        )
+      case .proximityLoader(let relyingParty, let presentationSession, let requestItems):
         ProximityLoadingView(
           with: self,
-          and: ProximityInteractor(),
-          relyingParty: relyingParty
+          and: ProximityInteractor(presentationSession: presentationSession),
+          relyingParty: relyingParty,
+          requestItems: requestItems
         )
       }
     }
