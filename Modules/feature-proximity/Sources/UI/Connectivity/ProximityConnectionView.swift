@@ -59,8 +59,6 @@ public struct ProximityConnectionView<Router: RouterHostType, Interactor: Proxim
           .resizable()
           .frame(width: contentSize, height: contentSize)
           .transition(.opacity)
-      } else {
-        ContentLoader(showLoader: .constant(true))
       }
 
       Spacer()

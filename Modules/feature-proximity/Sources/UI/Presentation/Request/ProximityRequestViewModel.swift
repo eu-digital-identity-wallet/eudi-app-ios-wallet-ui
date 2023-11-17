@@ -68,11 +68,17 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
   }
 
   override func getTitle() -> LocalizableString.Key {
-    .requestDataTitle(["EUDI Conference"])
+    if let verifierMessage = interactor.presentationSession.readerCertIssuerMessage {
+      return .custom(verifierMessage)
+    }
+    return .requestDataTitle(["EUDI Conference"])
   }
 
   override func getCaption() -> LocalizableString.Key {
-    .requestDataCaption
+    if let validationMessage = interactor.presentationSession.readerCertValidationMessage {
+      return .custom(validationMessage)
+    }
+    return .requestDataCaption
   }
 
   override func getDataRequestInfo() -> LocalizableString.Key {
