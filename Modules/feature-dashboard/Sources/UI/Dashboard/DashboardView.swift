@@ -56,9 +56,26 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
     ) {
       BearerHeaderView(
         item: viewModel.viewState.bearer,
-        isLoading: viewModel.viewState.isLoading
+        isLoading: viewModel.viewState.isLoading,
+        onMoreClicked: viewModel.onMore()
       )
       content()
+    }
+    .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {
+      VStack(spacing: SPACING_MEDIUM) {
+
+        ContentTitle(
+          title: .moreOptions
+        )
+
+        WrapButtonView(
+          title: .changeQuickPinOption,
+          backgroundColor: .clear,
+          icon: Theme.shared.image.pencil,
+          gravity: .start,
+          onAction: viewModel.onUpdatePin()
+        )
+      }
     }
     .viewDidLoad {
       Task {

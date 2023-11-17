@@ -111,6 +111,10 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "proxmity_connectivity_caption")
     case .proximityConnectivityNfc:
       bundle.localizedString(forKey: "proximity_connectivity_nfc")
+    case .moreOptions:
+      bundle.localizedString(forKey: "more_options")
+    case .changeQuickPinOption:
+      bundle.localizedString(forKey: "change_quick_pin_option")
     }
   }
 
@@ -159,6 +163,8 @@ public extension LocalizableString {
     case proximityConnectivityTitle
     case proximityConnectivityCaption
     case proximityConnectivityNfc
+    case moreOptions
+    case changeQuickPinOption
   }
 }
 

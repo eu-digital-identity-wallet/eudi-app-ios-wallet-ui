@@ -28,6 +28,8 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
   private let interactor: Interactor
   private let deepLinkController: DeepLinkController
 
+  @Published var isMoreModalShowing: Bool = false
+
   var bearerName: String {
     viewState.bearer.value.name
   }
@@ -72,6 +74,14 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
 
   func onAdd() {
     router.push(with: .addDocument)
+  }
+
+  func onMore() {
+    isMoreModalShowing = !isMoreModalShowing
+  }
+
+  func onUpdatePin() {
+    isMoreModalShowing = false
   }
 
   private func handleDeepLink() {

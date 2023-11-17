@@ -22,7 +22,8 @@ public struct WrapButtonView: View {
   private let onAction: () -> Void
   private let textColor: Color
   private let backgroundColor: Color
-  private let systemIcon: String?
+  private let iconColor: Color
+  private let icon: Image?
   private let gravity: Gravity
   private let cornerRadius: CGFloat
   private let isEnabled: Bool
@@ -34,7 +35,8 @@ public struct WrapButtonView: View {
     title: LocalizableString.Key,
     textColor: Color = Theme.shared.color.textPrimaryDark,
     backgroundColor: Color = Theme.shared.color.secondary,
-    systemIcon: String? = nil,
+    iconColor: Color = Theme.shared.color.primary,
+    icon: Image? = nil,
     gravity: Gravity = .center,
     isLoading: Bool = false,
     isEnabled: Bool = true,
@@ -46,7 +48,8 @@ public struct WrapButtonView: View {
     self.title = title
     self.textColor = textColor
     self.backgroundColor = backgroundColor
-    self.systemIcon = systemIcon
+    self.iconColor = iconColor
+    self.icon = icon
     self.gravity = gravity
     self.isLoading = isLoading
     self.isEnabled = isEnabled
@@ -59,7 +62,8 @@ public struct WrapButtonView: View {
   public init(
     style: ButtonStyleEnum,
     title: LocalizableString.Key,
-    systemIcon: String? = nil,
+    iconColor: Color = Theme.shared.color.primary,
+    icon: Image? = nil,
     gravity: Gravity = .center,
     isLoading: Bool = false,
     isEnabled: Bool = true,
@@ -69,7 +73,8 @@ public struct WrapButtonView: View {
     self.title = title
     self.textColor = style.textColor
     self.backgroundColor = style.backgroundColor
-    self.systemIcon = systemIcon
+    self.iconColor = style.textColor
+    self.icon = icon
     self.gravity = gravity
     self.isLoading = isLoading
     self.isEnabled = isEnabled
@@ -89,15 +94,15 @@ public struct WrapButtonView: View {
             Spacer()
           }
 
-          if let systemIcon {
+          if let icon {
 
-            Image(systemName: systemIcon)
+            icon
               .resizable()
               .scaledToFit()
               .frame(width: 25)
-              .foregroundColor(textColor)
+              .foregroundColor(iconColor)
 
-            HSpacer.small()
+            HSpacer.medium()
           }
 
           Text(title)
@@ -117,7 +122,6 @@ public struct WrapButtonView: View {
           RoundedRectangle(cornerRadius: cornerRadius)
             .stroke(borderColor, lineWidth: borderWidth)
         )
-
       }
     )
     .disabled(isLoading || !isEnabled)

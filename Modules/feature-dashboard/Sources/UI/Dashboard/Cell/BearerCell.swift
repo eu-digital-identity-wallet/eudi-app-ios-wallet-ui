@@ -18,8 +18,10 @@ import logic_resources
 
 extension BearerHeaderView {
   struct BearerCell: View {
+
     let item: BearerUIModel
     let isLoading: Bool
+    let onMoreClicked: () -> Void
 
     @ViewBuilder
     var userImage: some View {
@@ -32,10 +34,12 @@ extension BearerHeaderView {
 
     init(
       item: BearerUIModel,
-      isLoading: Bool
+      isLoading: Bool,
+      onMoreClicked: @escaping @autoclosure () -> Void
     ) {
       self.item = item
       self.isLoading = isLoading
+      self.onMoreClicked = onMoreClicked
     }
 
     var body: some View {
@@ -47,11 +51,25 @@ extension BearerHeaderView {
             .minimumScaleFactor(0.5)
             .lineLimit(1)
             .foregroundColor(ThemeManager.shared.color.textSecondaryLight)
-          Text(.custom(item.value.name))
-            .typography(ThemeManager.shared.font.headlineMedium)
-            .minimumScaleFactor(0.5)
-            .lineLimit(1)
-            .foregroundColor(ThemeManager.shared.color.textSecondaryLight)
+          HStack {
+            Text(.custom(item.value.name))
+              .typography(ThemeManager.shared.font.headlineMedium)
+              .minimumScaleFactor(0.5)
+              .lineLimit(1)
+              .foregroundColor(ThemeManager.shared.color.backgroundPaper)
+            Spacer()
+            Button(
+              action: {
+                guard !isLoading else { return }
+                onMoreClicked()
+              },
+              label: {
+                Theme.shared.image.more
+                  .renderingMode(.template)
+                  .foregroundStyle(Theme.shared.color.backgroundPaper)
+              }
+            )
+          }
         }
         .padding(.horizontal, 6)
         Spacer()

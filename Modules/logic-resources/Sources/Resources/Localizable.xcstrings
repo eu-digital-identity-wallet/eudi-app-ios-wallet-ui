@@ -89,6 +89,17 @@
         }
       }
     },
+    "change_quick_pin_option" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change quick pin"
+          }
+        }
+      }
+    },
     "faq_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -162,6 +173,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Driving Licence"
+          }
+        }
+      }
+    },
+    "more_options" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More options"
           }
         }
       }

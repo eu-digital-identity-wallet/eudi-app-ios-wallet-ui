@@ -21,6 +21,7 @@ struct BearerHeaderView: View {
 
   let item: BearerUIModel
   let isLoading: Bool
+  let onMoreClicked: () -> Void
 
   @ViewBuilder
   var userImage: some View {
@@ -31,14 +32,23 @@ struct BearerHeaderView: View {
       .cornerRadius(8.0)
   }
 
-  init(item: BearerUIModel, isLoading: Bool) {
+  init(
+    item: BearerUIModel,
+    isLoading: Bool,
+    onMoreClicked: @escaping @autoclosure () -> Void
+  ) {
     self.item = item
     self.isLoading = isLoading
+    self.onMoreClicked = onMoreClicked
   }
 
   var body: some View {
     VStack(alignment: .leading) {
-      BearerCell(item: item, isLoading: isLoading)
+      BearerCell(
+        item: item,
+        isLoading: isLoading,
+        onMoreClicked: onMoreClicked()
+      )
     }
     .colorScheme(.light)
     .padding(.vertical, SPACING_EXTRA_LARGE)

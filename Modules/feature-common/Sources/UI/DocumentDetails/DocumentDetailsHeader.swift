@@ -86,7 +86,7 @@ extension DocumentDetailsHeaderView {
 
         Text(documentName)
           .typography(Theme.shared.font.headlineSmall)
-          .foregroundColor(Theme.shared.color.white)
+          .foregroundColor(Theme.shared.color.backgroundPaper)
           .shimmer(isLoading: isLoading)
 
         Text(holdersName)
