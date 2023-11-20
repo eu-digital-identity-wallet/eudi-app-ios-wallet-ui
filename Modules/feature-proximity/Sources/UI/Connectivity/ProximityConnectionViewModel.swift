@@ -23,7 +23,6 @@ import logic_resources
 struct ProxmityConnectivityState: ViewState {
   let error: ContentError.Config?
   let qrImage: UIImage?
-  let transferStatus: TransferStatus
 }
 
 @MainActor
@@ -37,15 +36,15 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
       router: router,
       initialState: .init(
         error: nil,
-        qrImage: nil,
-        transferStatus: interactor.presentationSession.status
+        qrImage: nil
       )
     )
 
-    self.interactor.presentationSession.$status.sink { transferStatus in
-      self.setNewState(transferStatus: transferStatus)
+    interactor.presentationSession.$status
+      .sink { transferStatus in
       switch transferStatus {
       case .qrEngagementReady:
+        try? await Task.sleep(nanoseconds: 2.nanoseconds)
         await self.onQRGeneration()
       case .requestReceived:
         await self.onConnectionSuccess()
@@ -62,6 +61,7 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
     switch await self.interactor.onDeviceEngagement() {
     case .success:
       print("Started Device Engagement")
+
     case .failure(let error):
       setNewState(
         error: .init(
@@ -96,6 +96,7 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
   private func onConnectionSuccess() async {
     switch await interactor.doWork() {
     case .success:
+      self.cancellables.forEach({$0.cancel()})
       router.push(with: .proximityRequest(presentationSession: interactor.presentationSession))
     case .failure(let error):
       setNewState(
@@ -125,14 +126,12 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
 
   private func setNewState(
     error: ContentError.Config? = nil,
-    qrImage: UIImage? = nil,
-    transferStatus: TransferStatus? = nil
+    qrImage: UIImage? = nil
   ) {
     setState { previousState in
         .init(
           error: error,
-          qrImage: qrImage ?? previousState.qrImage,
-          transferStatus: transferStatus ?? previousState.transferStatus
+          qrImage: qrImage ?? previousState.qrImage
         )
     }
   }

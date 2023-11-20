@@ -25,13 +25,16 @@ import feature_dashboard
 import feature_presentation
 import feature_proximity
 
+import EudiWalletKit
+import MdocDataModel18013
+
 public final class RouterHost: RouterHostType {
 
   private let pilot: UIPilot<AppRoute>
   private lazy var uiConfigLogic: ConfigUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
 
   public init() {
-    self.pilot = UIPilot(initial: .startup)
+    self.pilot = UIPilot(initial: .startup, debug: true)
   }
 
   public func push(with route: AppRoute) {
@@ -120,9 +123,9 @@ public final class RouterHost: RouterHostType {
       case .proximityLoader(let relyingParty, let presentationSession, let requestItems):
         ProximityLoadingView(
           with: self,
-          and: ProximityInteractor(presentationSession: presentationSession),
+          and: ProximityInteractor(presentationSession: WalletKitController.shared.activeSession!),
           relyingParty: relyingParty,
-          requestItems: requestItems
+          requestItems: RequestItems()
         )
       }
     }

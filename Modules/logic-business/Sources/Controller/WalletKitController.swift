@@ -24,18 +24,38 @@ public final class WalletKitController {
 
   public static let shared = WalletKitController()
 
-  public enum DocumentIdentifiers: String {
-    case EuPidDocType = "eu.europa.ec.eudiw.pid.1"
-    case IsoMdlModel = "org.iso.18013.5.1.mDL"
+  public enum DocumentIdentifier: RawRepresentable {
+
+    case EuPidDocType
+    case IsoMdlModel
+    case genericDocument(docType: String)
+
+    public var rawValue: String {
+      switch self {
+      case .EuPidDocType:
+        return MdocDataModel18013.EuPidModel.EuPidDocType
+      case .IsoMdlModel:
+        return MdocDataModel18013.IsoMdlModel.isoDocType
+      case .genericDocument(let docType):
+        return docType
+      }
+    }
+
+    public init(rawValue: String) {
+      switch rawValue {
+      case MdocDataModel18013.EuPidModel.EuPidDocType:
+        self = .EuPidDocType
+      case MdocDataModel18013.IsoMdlModel.isoDocType:
+        self = .IsoMdlModel
+      default:
+        self = .genericDocument(docType: rawValue)
+      }
+    }
   }
 
   public let wallet = EudiWallet.standard
 
-  public private(set) var activeSession: PresentationSession? {
-    didSet {
-      self.setupStatusSubscription()
-    }
-  }
+  public private(set) var activeSession: PresentationSession?
   private var cancellables = Set<AnyCancellable>()
 
   private init() {
@@ -45,30 +65,8 @@ public final class WalletKitController {
 
   }
 
-  private func setupStatusSubscription() {
-    self.activeSession?.$status
-      .sink { status in
-        print("---> received value \(status)")
-        switch status {
-        case .initializing:
-          print(status)
-        case .initialized:
-          print(status)
-        case .qrEngagementReady:
-          print(status)
-        case .connected:
-          print(status)
-        case .started:
-          print(status)
-        case .requestReceived:
-          print(status)
-        case .userSelected:
-          print(status)
-        case .disconnected, .error, .responseSent:
-          self.stopPresentation()
-        }
-      }
-      .store(in: &cancellables)
+  public func statusPublisher() -> AnyPublisher<TransferStatus, Never>? {
+    activeSession?.$status.eraseToAnyPublisher()
   }
 
   public func startPresentation(flow: FlowType) -> PresentationSession {
@@ -83,17 +81,18 @@ public final class WalletKitController {
     self.activeSession = nil
   }
 
-  public func mandatoryFields(for documentType: String) -> [String] {
-    if documentType == IsoMdlModel.isoDocType {
+  public func mandatoryFields(for documentType: DocumentIdentifier) -> [String] {
+    switch documentType {
+    case .EuPidDocType:
+      return []
+    case .IsoMdlModel:
       return IsoMdlModel.mandatoryKeys
-    } else if documentType == EuPidModel.EuPidDocType {
+    case .genericDocument(docType: let docType):
       return []
     }
-
-    return []
   }
 
-  public func valueForElementIdentifier(for documentType: String) -> String {
+  public func valueForElementIdentifier(for documentType: DocumentIdentifier) -> String {
 
     return ""
   }

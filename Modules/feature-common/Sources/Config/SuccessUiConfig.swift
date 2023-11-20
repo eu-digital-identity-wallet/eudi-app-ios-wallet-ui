@@ -64,7 +64,7 @@ public extension UIConfig.Success {
     }
 
     public enum NavigationType: Equatable {
-      case pop
+      case pop(inclusive: Bool = false)
       case deepLink
     }
 

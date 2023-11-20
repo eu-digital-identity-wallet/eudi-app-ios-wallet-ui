@@ -26,6 +26,11 @@ public enum ProximityPartialState {
   case failure(Error)
 }
 
+public enum ProximityResponsePreparationPartialState {
+  case success(RequestItems)
+  case failure(Error)
+}
+
 public enum ProximityRequestPartialState {
   case success([RequestDataCell])
   case failure(Error)
@@ -47,7 +52,7 @@ public protocol ProximityInteractorType {
   func onDeviceEngagement() async -> ProximityInitialisationPartialState
   func onQRGeneration() async -> ProximityQrCodePartialState
   func onRequestReceived() async -> ProximityRequestPartialState
-  func onResponsePrepare(requestItems: [RequestDataCell]) -> RequestItems
+  func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState
   func onSendResponse(requestItems: RequestItems) async -> ProximityPartialState
   func stopPresentation() async
 
@@ -85,6 +90,7 @@ public final actor ProximityInteractor: ProximityInteractorType {
   }
 
   public func onRequestReceived() -> ProximityRequestPartialState {
+    return .success(RequestDataUiModel.mock())
     var requestDataCell = [RequestDataCell]()
 
     for document in presentationSession.disclosedDocuments {
@@ -107,30 +113,29 @@ public final actor ProximityInteractor: ProximityInteractorType {
     return .success(requestDataCell)
   }
 
-  nonisolated public func onResponsePrepare(requestItems: [RequestDataCell]) -> RequestItems {
-    requestItems
-      .reduce(into: [RequestDataRow]()) { partialResult, cell in
-        if let item = cell.isDataRow, item.isSelected {
-          partialResult.append(item)
-        }
+  public func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState {
+    .success(
+      requestItems
+        .reduce(into: [RequestDataRow]()) { partialResult, cell in
+          if let item = cell.isDataRow, item.isSelected {
+            partialResult.append(item)
+          }
 
-        if let items = cell.isDataVerification?.items.filter({$0.isSelected}) {
-          partialResult.append(contentsOf: items)
+          if let items = cell.isDataVerification?.items.filter({$0.isSelected}) {
+            partialResult.append(contentsOf: items)
+          }
         }
-      }
-      .reduce(into: RequestItems()) {  partialResult, row in
-        var nameSpaceDict = partialResult[row.docType, default: [row.namespace: [row.elementKey]]]
-        nameSpaceDict[row.namespace, default: [row.elementKey]].append(row.elementKey)
-        partialResult[row.docType] = nameSpaceDict
-      }
+        .reduce(into: RequestItems()) {  partialResult, row in
+          var nameSpaceDict = partialResult[row.docType, default: [row.namespace: [row.elementKey]]]
+          nameSpaceDict[row.namespace, default: [row.elementKey]].append(row.elementKey)
+          partialResult[row.docType] = nameSpaceDict
+        })
   }
 
   public func onSendResponse(requestItems: RequestItems) async -> ProximityPartialState {
     do {
+      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
       try await presentationSession.sendResponse(userAccepted: true, itemsToSend: requestItems) {
-        Task {
-          await self.stopPresentation()
-        }
       }
       return .success
     } catch {
@@ -160,7 +165,7 @@ extension ProximityInteractor {
   fileprivate func documentSelectiveDisclosableFields(for document: DocElementsViewModel) -> [RequestDataCell] {
     document.elements
       .filter { element in
-        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: document.docType)
+        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
         return !mandatoryKeys.contains(element.elementIdentifier)
       }
       .map {
@@ -181,7 +186,7 @@ extension ProximityInteractor {
   fileprivate func documentMandatoryVerificationFields(for document: DocElementsViewModel) -> RequestDataCell? {
     let mandatoryFields = document.elements
       .filter { element in
-        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: document.docType)
+        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
         return mandatoryKeys.contains(element.elementIdentifier)
       }
       .map {

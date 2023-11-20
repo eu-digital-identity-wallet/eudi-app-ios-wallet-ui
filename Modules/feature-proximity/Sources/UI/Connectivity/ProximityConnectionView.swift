@@ -53,13 +53,16 @@ public struct ProximityConnectionView<Router: RouterHostType, Interactor: Proxim
 
       Spacer()
 
-      if let image = viewModel.viewState.qrImage {
-
-        Image(uiImage: image)
-          .resizable()
-          .frame(width: contentSize, height: contentSize)
-          .transition(.opacity)
+      VStack {
+        if let image = viewModel.viewState.qrImage {
+          Image(uiImage: image)
+            .resizable()
+            .transition(.opacity)
+        } else {
+          ContentLoader(showLoader: .constant(true))
+        }
       }
+      .frame(width: contentSize, height: contentSize)
 
       Spacer()
 

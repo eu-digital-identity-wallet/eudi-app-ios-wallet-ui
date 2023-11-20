@@ -15,6 +15,7 @@
  */
 
 import feature_common
+import EudiWalletKit
 
 @MainActor
 final class ProximityRequestViewModel<Router: RouterHostType, Interactor: ProximityInteractorType>: BaseRequestViewModel<Router> {
@@ -49,7 +50,7 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
           screen: .proximityLoader(
             getRelyingParty(),
             presentationSession: interactor.presentationSession,
-            requestItems: interactor.onResponsePrepare(requestItems: viewState.items)
+            requestItems: RequestItems()
           ),
           navigationType: .push
         ),
@@ -88,4 +89,5 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
   override func getRelyingParty() -> String {
     "EUDI Conference"
   }
+
 }
