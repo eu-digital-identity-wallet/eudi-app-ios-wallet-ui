@@ -19,28 +19,28 @@ import logic_resources
 
 public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteractorType>: View {
 
-  @ObservedObject var viewmodel: BiometryViewModel<Router, Interactor>
+  @ObservedObject var viewModel: BiometryViewModel<Router, Interactor>
   @Environment(\.scenePhase) var scenePhase
 
   public init(with router: Router, interactor: Interactor, config: any UIConfigType) {
-    self.viewmodel = .init(router: router, interactor: interactor, config: config)
+    self.viewModel = .init(router: router, interactor: interactor, config: config)
   }
 
   private var pinView: some View {
     VStack(spacing: .zero) {
 
       PinTextField(
-        numericText: $viewmodel.uiPinInputField,
+        numericText: $viewModel.uiPinInputField,
         maxDigits: 4,
         isSecureEntry: true,
-        canFocus: .constant(!viewmodel.viewState.areBiometricsEnabled),
+        canFocus: .constant(!viewModel.viewState.areBiometricsEnabled),
         shouldUseFullScreen: false,
-        hasError: viewmodel.viewState.pinError != nil
+        hasError: viewModel.viewState.pinError != nil
       )
 
       VSpacer.mediumSmall()
 
-      if let error = viewmodel.viewState.pinError {
+      if let error = viewModel.viewState.pinError {
         HStack {
           Text(error)
             .typography(ThemeManager.shared.font.bodyMedium)
@@ -53,30 +53,32 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
 
   @ViewBuilder private var content: some View {
 
-    ContentHeader(
-      dismissIcon: ThemeManager.shared.image.xmark,
-      onBack: { viewmodel.onPop() }
-    )
+    if viewModel.viewState.isCancellable {
+      ContentHeader(
+        dismissIcon: ThemeManager.shared.image.xmark,
+        onBack: { viewModel.onPop() }
+      )
+    }
 
     ContentTitle(
-      title: viewmodel.viewState.config.title,
-      caption: viewmodel.viewState.areBiometricsEnabled
-      ? viewmodel.viewState.config.caption
-      : viewmodel.viewState.config.quickPinOnlyCaption
+      title: viewModel.viewState.config.title,
+      caption: viewModel.viewState.areBiometricsEnabled
+      ? viewModel.viewState.config.caption
+      : viewModel.viewState.config.quickPinOnlyCaption
     )
 
-    VSpacer.medium()
+    VSpacer.large()
 
     pinView
 
     Spacer()
 
-    if viewmodel.viewState.areBiometricsEnabled, let image = viewmodel.viewState.biometryImage {
+    if viewModel.viewState.areBiometricsEnabled, let image = viewModel.viewState.biometryImage {
       HStack {
         Spacer()
         image
           .onTapGesture {
-            viewmodel.onBiometry()
+            viewModel.onBiometry()
           }
       }
       .padding(.horizontal)
@@ -86,22 +88,22 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
   public var body: some View {
     ContentScreen {
       content
-        .alert(item: $viewmodel.biometryError) { error in
+        .alert(item: $viewModel.biometryError) { error in
           Alert(
             title: Text(.genericErrorTitle),
             message: Text(error.errorDescription.orEmpty),
             primaryButton: .default(Text(.biometryOpenSettings)) {
-              self.viewmodel.onSettings()
+              self.viewModel.onSettings()
             },
             secondaryButton: .cancel {}
           )
         }
         .onChange(of: scenePhase) { phase in
-          self.viewmodel.setPhase(with: phase)
+          self.viewModel.setPhase(with: phase)
         }
     }
     .onAppear {
-      self.viewmodel.onAppearBiometry()
+      self.viewModel.onAppearBiometry()
     }
   }
 }

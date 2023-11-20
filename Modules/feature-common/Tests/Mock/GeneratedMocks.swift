@@ -576,6 +576,26 @@ public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.Protocol
     }
     
     
+    
+    
+    
+    public func hasPin() -> Bool {
+        
+    return cuckoo_manager.call(
+    """
+    hasPin() -> Bool
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.hasPin())
+        
+    }
+    
+    
 
     public struct __StubbingProxy_QuickPinInteractorType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -614,6 +634,17 @@ public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.Protocol
             return .init(stub: cuckoo_manager.createStub(for: MockQuickPinInteractorType.self, method:
     """
     changePin(currentPin: String, newPin: String) -> QuickPinPartialState
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func hasPin() -> Cuckoo.ProtocolStubFunction<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockQuickPinInteractorType.self, method:
+    """
+    hasPin() -> Bool
     """, parameterMatchers: matchers))
         }
         
@@ -670,6 +701,18 @@ public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.Protocol
         }
         
         
+        
+        
+        @discardableResult
+        func hasPin() -> Cuckoo.__DoNotUse<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    hasPin() -> Bool
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -704,20 +747,19 @@ public class QuickPinInteractorTypeStub: QuickPinInteractorType {
     }
     
     
+    
+    
+    
+    public func hasPin() -> Bool  {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+    
+    
 }
 
 
 
 
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_common
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
-import logic_resources
 
 import Cuckoo
 @testable import logic_business
@@ -756,6 +798,15 @@ import Cuckoo
 
 import SwiftUI
 import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
 import logic_ui
 
 import Cuckoo
@@ -774,6 +825,35 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_common
+@testable import logic_api
+@testable import logic_ui
+
+import logic_business
 import logic_resources
 import logic_ui
 
@@ -2135,6 +2215,26 @@ public class MockKeyChainControllerType: KeyChainControllerType, Cuckoo.Protocol
     }
     
     
+    
+    
+    
+    public func clear()  {
+        
+    return cuckoo_manager.call(
+    """
+    clear()
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.clear())
+        
+    }
+    
+    
 
     public struct __StubbingProxy_KeyChainControllerType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -2195,6 +2295,17 @@ public class MockKeyChainControllerType: KeyChainControllerType, Cuckoo.Protocol
             return .init(stub: cuckoo_manager.createStub(for: MockKeyChainControllerType.self, method:
     """
     clearKeyChainBiometry()
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func clear() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockKeyChainControllerType.self, method:
+    """
+    clear()
     """, parameterMatchers: matchers))
         }
         
@@ -2275,6 +2386,18 @@ public class MockKeyChainControllerType: KeyChainControllerType, Cuckoo.Protocol
         }
         
         
+        
+        
+        @discardableResult
+        func clear() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    clear()
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -2321,6 +2444,14 @@ public class KeyChainControllerTypeStub: KeyChainControllerType {
     
     
     public func clearKeyChainBiometry()   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func clear()   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

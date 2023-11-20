@@ -18,6 +18,8 @@ import logic_resources
 
 public struct FloatingActionButtonBar: View {
 
+  @Environment(\.colorScheme) var colorScheme
+
   public let isLoading: Bool
   public let backgroundColor: Color
   public let edgeInsets: EdgeInsets
@@ -44,7 +46,9 @@ public struct FloatingActionButtonBar: View {
       FloatingActionButton(
         title: .addDoc,
         textColor: Theme.shared.color.textPrimaryDark,
-        backgroundColor: Theme.shared.color.backgroundPaper,
+        backgroundColor: colorScheme == .dark
+        ? Theme.shared.color.backgroundDefault
+        : Theme.shared.color.backgroundPaper,
         icon: Theme.shared.image.plus,
         iconColor: Theme.shared.color.textPrimaryDark,
         isLoading: isLoading,

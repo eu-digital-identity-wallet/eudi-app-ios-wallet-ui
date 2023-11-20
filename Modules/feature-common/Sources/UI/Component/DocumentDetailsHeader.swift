@@ -80,7 +80,10 @@ extension DocumentDetailsHeaderView {
     public var body: some View {
       VStack(alignment: .leading, spacing: SPACING_SMALL) {
 
-        ContentHeader(dismissIcon: Theme.shared.image.xmark, foregroundColor: Theme.shared.color.white) {
+        ContentHeader(
+          dismissIcon: Theme.shared.image.xmark,
+          foregroundColor: Theme.shared.color.white
+        ) {
           onBack()
         }
 
@@ -115,6 +118,7 @@ extension DocumentDetailsHeaderView {
       .frame(maxWidth: .infinity)
       .background(Theme.shared.color.primary)
       .roundedCorner(Theme.shared.shape.small, corners: [.bottomLeft, .bottomRight])
+      .colorScheme(.light)
     }
   }
 }

@@ -26,6 +26,7 @@ public protocol QuickPinInteractorType {
   func setPin(newPin: String)
   func isPinValid(pin: String) -> QuickPinPartialState
   func changePin(currentPin: String, newPin: String) -> QuickPinPartialState
+  func hasPin() -> Bool
 }
 
 public final class QuickPinInteractor: QuickPinInteractorType {
@@ -53,6 +54,10 @@ public final class QuickPinInteractor: QuickPinInteractorType {
     } else {
       return .failure(RuntimeError.quickPinInvalid)
     }
+  }
+
+  public func hasPin() -> Bool {
+    return keyChainController.getValue(key: .devicePin)?.isEmpty == false
   }
 
   private func isCurrentPinValid(pin: String) -> Bool {

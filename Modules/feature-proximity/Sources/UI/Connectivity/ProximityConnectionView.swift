@@ -78,7 +78,6 @@ public struct ProximityConnectionView<Router: RouterHostType, Interactor: Proxim
         .scaledToFit()
         .frame(height: contentSize / 2)
     }
-    .colorScheme(.light)
     .padding(.vertical, SPACING_EXTRA_LARGE)
     .frame(maxWidth: .infinity, maxHeight: contentSize)
     .background(Theme.shared.color.primary.opacity(0.12))

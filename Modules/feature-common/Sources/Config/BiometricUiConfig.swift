@@ -23,7 +23,7 @@ public extension UIConfig {
     public let caption: LocalizableString.Key
     public let quickPinOnlyCaption: LocalizableString.Key
     public let navigationSuccessConfig: NavigationConfig
-    public let navigationBackConfig: NavigationConfig
+    public let navigationBackConfig: NavigationConfig?
     public let isPreAuthorization: Bool
     public let shouldInitializeBiometricOnCreate: Bool
 
@@ -32,7 +32,7 @@ public extension UIConfig {
       caption: LocalizableString.Key,
       quickPinOnlyCaption: LocalizableString.Key,
       navigationSuccessConfig: NavigationConfig,
-      navigationBackConfig: NavigationConfig,
+      navigationBackConfig: NavigationConfig?,
       isPreAuthorization: Bool,
       shouldInitializeBiometricOnCreate: Bool
     ) {

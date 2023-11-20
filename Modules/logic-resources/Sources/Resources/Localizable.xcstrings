@@ -166,6 +166,39 @@
         }
       }
     },
+    "login_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use your biometrics to login"
+          }
+        }
+      }
+    },
+    "login_caption_quick_pin_only" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type your quick pin to login"
+          }
+        }
+      }
+    },
+    "login_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Login"
+          }
+        }
+      }
+    },
     "mdl" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -250,6 +283,193 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show this QR code to access the necessary information for sharing"
+          }
+        }
+      }
+    },
+    "quick_pin_confirm_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONFIRM"
+          }
+        }
+      }
+    },
+    "quick_pin_dont_match" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pins do not match"
+          }
+        }
+      }
+    },
+    "quick_pin_next_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NEXT"
+          }
+        }
+      }
+    },
+    "quick_pin_set_step_one_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set a quick pin for future logins"
+          }
+        }
+      }
+    },
+    "quick_pin_set_step_two_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Re-enter the quick pin"
+          }
+        }
+      }
+    },
+    "quick_pin_set_success" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You successfully set the quick pin"
+          }
+        }
+      }
+    },
+    "quick_pin_set_success_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONTINUE"
+          }
+        }
+      }
+    },
+    "quick_pin_set_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to the EIDI Wallet"
+          }
+        }
+      }
+    },
+    "quick_pin_update_cancellation_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel will redirect you back to the home without changing the quick pin"
+          }
+        }
+      }
+    },
+    "quick_pin_update_cancellation_continue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONTINUE"
+          }
+        }
+      }
+    },
+    "quick_pin_update_cancellation_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel quick pin changing?"
+          }
+        }
+      }
+    },
+    "quick_pin_update_step_one_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type your current pin"
+          }
+        }
+      }
+    },
+    "quick_pin_update_step_three_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Re-enter the quick pin"
+          }
+        }
+      }
+    },
+    "quick_pin_update_step_two_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set a quick pin for future logins"
+          }
+        }
+      }
+    },
+    "quick_pin_update_success" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You successfully set the quick pin"
+          }
+        }
+      }
+    },
+    "quick_pin_update_success_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BACK TO HOME"
+          }
+        }
+      }
+    },
+    "quick_pin_update_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change quick pin"
           }
         }
       }

@@ -36,6 +36,7 @@ public indirect enum AppRoute: Equatable {
   case proximityConnection
   case proximityRequest
   case proximityLoader(String)
+  case quickPin(config: any UIConfigType)
 
   public var key: String {
     return switch self {
@@ -69,6 +70,8 @@ public indirect enum AppRoute: Equatable {
       "ProximityRequest"
     case .proximityLoader:
       "ProximityLoader"
+    case .quickPin:
+      "QuickPin"
     }
   }
 }
@@ -116,5 +119,4 @@ public class PreviewRouter: RouterHostType {
   public func isScreenForeground(with route: AppRoute) -> Bool {
     true
   }
-
 }

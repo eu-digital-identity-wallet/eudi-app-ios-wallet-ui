@@ -73,5 +73,6 @@ public extension PrefsController {
   enum Key: String {
     case biometryEnabled
     case cachedDeepLink
+    case runAtLeastOnce
   }
 }

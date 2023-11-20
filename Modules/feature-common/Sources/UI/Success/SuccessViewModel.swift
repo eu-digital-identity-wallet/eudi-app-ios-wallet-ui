@@ -39,6 +39,8 @@ final class SuccessViewModel<Router: RouterHostType>: BaseViewModel<Router, Succ
         //cacheDeepLinkURL(url: link)
         router.popTo(with: button.screen)
       }
+    case .push:
+      router.push(with: button.screen)
     }
   }
 }

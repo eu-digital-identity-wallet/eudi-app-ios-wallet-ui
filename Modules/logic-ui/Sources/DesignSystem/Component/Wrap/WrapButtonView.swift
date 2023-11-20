@@ -124,6 +124,9 @@ public struct WrapButtonView: View {
         )
       }
     )
+    .if(!isEnabled && !isLoading) {
+      $0.opacity(0.5)
+    }
     .disabled(isLoading || !isEnabled)
     .shimmer(isLoading: isLoading)
   }

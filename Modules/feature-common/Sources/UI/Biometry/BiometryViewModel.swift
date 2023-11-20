@@ -26,6 +26,7 @@ struct BiometryState: ViewState {
   let pendingNavigation: UIConfig.NavigationConfig?
   let autoBiometryInitiated: Bool
   let biometryImage: Image?
+  let isCancellable: Bool
 }
 
 @MainActor
@@ -59,7 +60,8 @@ final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryIntera
         scenePhase: .active,
         pendingNavigation: nil,
         autoBiometryInitiated: false,
-        biometryImage: interactor.biometricsImage
+        biometryImage: interactor.biometricsImage,
+        isCancellable: config.navigationBackConfig != nil
       )
     )
 
@@ -76,7 +78,9 @@ final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryIntera
   }
 
   func onPop() {
-    doNavigation(config: viewState.config.navigationBackConfig)
+    if let backNavigation = viewState.config.navigationBackConfig {
+      doNavigation(config: backNavigation)
+    }
   }
 
   func onBiometry() {
@@ -175,7 +179,8 @@ final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryIntera
           scenePhase: scenePhase ?? previous.scenePhase,
           pendingNavigation: pendingNavigation ?? previous.pendingNavigation,
           autoBiometryInitiated: autoBiometryInitiated ?? previous.autoBiometryInitiated,
-          biometryImage: previous.biometryImage
+          biometryImage: previous.biometryImage,
+          isCancellable: previous.isCancellable
         )
     }
   }

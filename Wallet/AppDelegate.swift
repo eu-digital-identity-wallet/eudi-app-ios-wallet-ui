@@ -22,11 +22,16 @@ import logic_business
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
   private lazy var configSecurityLogic = ConfigProvider.shared.getConfigSecurityLogic()
+  private lazy var prefsController: PrefsControllerType = PrefsController()
+  private lazy var keyChainController: KeyChainControllerType = KeyChainController()
 
   func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
+
+    // Check firt run and clear keychain from previous installations
+    manageStorage()
 
     // Load firebase
     FirebaseApp.configure()
@@ -58,5 +63,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       NFX.sharedInstance().ignoreURL(url)
     }
     NFX.sharedInstance().start()
+  }
+
+  private func manageStorage() {
+    if !prefsController.getBool(forKey: .runAtLeastOnce) {
+      keyChainController.clear()
+      prefsController.setValue(true, forKey: .runAtLeastOnce)
+    }
   }
 }

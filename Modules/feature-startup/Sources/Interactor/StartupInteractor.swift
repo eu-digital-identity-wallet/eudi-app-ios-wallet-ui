@@ -15,6 +15,7 @@
  */
 import Foundation
 import logic_ui
+import feature_common
 
 public protocol StartupInteractorType {
   func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute
@@ -22,10 +23,29 @@ public protocol StartupInteractorType {
 
 public final actor StartupInteractor: StartupInteractorType {
 
+  private lazy var quickPinInteractor: QuickPinInteractorType = QuickPinInteractor()
+
   public init() {}
 
   public func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute {
     try? await Task.sleep(nanoseconds: splashAnimationDuration.nanoseconds)
-    return .welcome
+    if quickPinInteractor.hasPin() {
+      return .biometry(
+        config: UIConfig.Biometry(
+          title: .loginTitle,
+          caption: .loginCaption,
+          quickPinOnlyCaption: .loginCaptionQuickPinOnly,
+          navigationSuccessConfig: .init(
+            screen: .dashboard,
+            navigationType: .push
+          ),
+          navigationBackConfig: nil,
+          isPreAuthorization: true,
+          shouldInitializeBiometricOnCreate: true
+        )
+      )
+    } else {
+      return .quickPin(config: QuickPinConfig(flow: .set))
+    }
   }
 }

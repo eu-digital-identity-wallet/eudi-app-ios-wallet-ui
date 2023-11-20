@@ -117,6 +117,12 @@ public final class RouterHost: RouterHostType {
           and: ProximityInteractor(),
           relyingParty: relyingParty
         )
+      case .quickPin(let config):
+        QuickPinView(
+          with: self,
+          interactor: QuickPinInteractor(),
+          config: config
+        )
       }
     }
     .eraseToAnyView()

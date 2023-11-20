@@ -15,6 +15,7 @@
  */
 import Foundation
 import logic_ui
+import feature_common
 
 struct DashboardState: ViewState {
   let isLoading: Bool
@@ -82,6 +83,7 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
 
   func onUpdatePin() {
     isMoreModalShowing = false
+    router.push(with: .quickPin(config: QuickPinConfig(flow: .update)))
   }
 
   private func handleDeepLink() {

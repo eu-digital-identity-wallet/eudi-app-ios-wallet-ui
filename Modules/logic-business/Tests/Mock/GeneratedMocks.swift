@@ -823,6 +823,26 @@ public class MockKeyChainControllerType: KeyChainControllerType, Cuckoo.Protocol
     }
     
     
+    
+    
+    
+    public func clear()  {
+        
+    return cuckoo_manager.call(
+    """
+    clear()
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.clear())
+        
+    }
+    
+    
 
     public struct __StubbingProxy_KeyChainControllerType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -883,6 +903,17 @@ public class MockKeyChainControllerType: KeyChainControllerType, Cuckoo.Protocol
             return .init(stub: cuckoo_manager.createStub(for: MockKeyChainControllerType.self, method:
     """
     clearKeyChainBiometry()
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func clear() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockKeyChainControllerType.self, method:
+    """
+    clear()
     """, parameterMatchers: matchers))
         }
         
@@ -963,6 +994,18 @@ public class MockKeyChainControllerType: KeyChainControllerType, Cuckoo.Protocol
         }
         
         
+        
+        
+        @discardableResult
+        func clear() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    clear()
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -1009,6 +1052,14 @@ public class KeyChainControllerTypeStub: KeyChainControllerType {
     
     
     public func clearKeyChainBiometry()   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func clear()   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

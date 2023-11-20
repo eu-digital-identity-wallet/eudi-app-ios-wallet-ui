@@ -115,6 +115,46 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "more_options")
     case .changeQuickPinOption:
       bundle.localizedString(forKey: "change_quick_pin_option")
+    case .quickPinSetTitle:
+      bundle.localizedString(forKey: "quick_pin_set_title")
+    case .quickPinSetCaptionOne:
+      bundle.localizedString(forKey: "quick_pin_set_step_one_caption")
+    case .quickPinSetCaptionTwo:
+      bundle.localizedString(forKey: "quick_pin_set_step_two_caption")
+    case .quickPinNextButton:
+      bundle.localizedString(forKey: "quick_pin_next_button")
+    case .quickPinConfirmButton:
+      bundle.localizedString(forKey: "quick_pin_confirm_button")
+    case .quickPinSetSuccess:
+      bundle.localizedString(forKey: "quick_pin_set_success")
+    case .loginTitle:
+      bundle.localizedString(forKey: "login_title")
+    case .loginCaptionQuickPinOnly:
+      bundle.localizedString(forKey: "login_caption_quick_pin_only")
+    case .loginCaption:
+      bundle.localizedString(forKey: "login_biometry_available")
+    case .quickPinSetSuccessButton:
+      bundle.localizedString(forKey: "quick_pin_set_success_button")
+    case .quickPinDoNotMatch:
+      bundle.localizedString(forKey: "quick_pin_dont_match")
+    case .quickPinUpdateTitle:
+      bundle.localizedString(forKey: "quick_pin_update_title")
+    case .quickPinUpdateCaptionOne:
+      bundle.localizedString(forKey: "quick_pin_update_step_one_caption")
+    case .quickPinUpdateCaptionTwo:
+      bundle.localizedString(forKey: "quick_pin_update_step_two_caption")
+    case .quickPinUpdateCaptionThree:
+      bundle.localizedString(forKey: "quick_pin_update_step_three_caption")
+    case .quickPinUpdateSuccess:
+      bundle.localizedString(forKey: "quick_pin_update_success")
+    case .quickPinUpdateSuccessButton:
+      bundle.localizedString(forKey: "quick_pin_update_success_button")
+    case .quickPinUpdateCancellationTitle:
+      bundle.localizedString(forKey: "quick_pin_update_cancellation_title")
+    case .quickPinUpdateCancellationCaption:
+      bundle.localizedString(forKey: "quick_pin_update_cancellation_caption")
+    case .quickPinUpdateCancellationContinue:
+      bundle.localizedString(forKey: "quick_pin_update_cancellation_continue")
     }
   }
 
@@ -165,6 +205,26 @@ public extension LocalizableString {
     case proximityConnectivityNfc
     case moreOptions
     case changeQuickPinOption
+    case quickPinSetTitle
+    case quickPinSetCaptionOne
+    case quickPinSetCaptionTwo
+    case quickPinNextButton
+    case quickPinConfirmButton
+    case quickPinSetSuccess
+    case loginTitle
+    case loginCaptionQuickPinOnly
+    case loginCaption
+    case quickPinSetSuccessButton
+    case quickPinDoNotMatch
+    case quickPinUpdateTitle
+    case quickPinUpdateCaptionOne
+    case quickPinUpdateCaptionTwo
+    case quickPinUpdateCaptionThree
+    case quickPinUpdateSuccess
+    case quickPinUpdateSuccessButton
+    case quickPinUpdateCancellationTitle
+    case quickPinUpdateCancellationCaption
+    case quickPinUpdateCancellationContinue
   }
 }
 
