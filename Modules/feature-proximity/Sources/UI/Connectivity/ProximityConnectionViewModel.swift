@@ -17,7 +17,6 @@ import Foundation
 import logic_ui
 import logic_business
 import UIKit
-import EudiWalletKit
 import logic_resources
 
 struct ProxmityConnectivityState: ViewState {
@@ -40,19 +39,17 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
       )
     )
 
-    interactor.presentationSession.$status
-      .sink { transferStatus in
-      switch transferStatus {
-      case .qrEngagementReady:
-        try? await Task.sleep(nanoseconds: 2.nanoseconds)
+    interactor.presentationSessionCoordinator.$presentationState.sink { state in
+      switch state {
+      case .prepareQr:
         await self.onQRGeneration()
       case .requestReceived:
-        await self.onConnectionSuccess()
-      case .error:
-        self.onError()
+        print("")
+//        await self.onConnectionSuccess()
       default:
-        ()
+        print(state)
       }
+
     }
     .store(in: &cancellables)
   }
@@ -60,8 +57,8 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
   func initialize() async {
     switch await self.interactor.onDeviceEngagement() {
     case .success:
-      print("Started Device Engagement")
-
+      await self.onConnectionSuccess()
+//      print("Connected with verifier")
     case .failure(let error):
       setNewState(
         error: .init(
@@ -70,6 +67,8 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
         )
       )
     }
+
+    await self.onQRGeneration()
   }
 
   func goBack() {
@@ -97,7 +96,7 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
     switch await interactor.doWork() {
     case .success:
       self.cancellables.forEach({$0.cancel()})
-      router.push(with: .proximityRequest(presentationSession: interactor.presentationSession))
+      router.push(with: .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator))
     case .failure(let error):
       setNewState(
         error: .init(
@@ -110,11 +109,11 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
 
   private func onError() {
     let errorDesc: LocalizableString.Key =
-    if let errorDesc = interactor.presentationSession.uiError?.errorDescription {
-      LocalizableString.Key.custom(errorDesc)
-    } else {
+//    if let errorDesc = interactor.presentationSession.uiError?.errorDescription {
+//      LocalizableString.Key.custom(errorDesc)
+//    } else {
       .genericErrorDesc
-    }
+//    }
 
     self.setNewState(
       error: .init(

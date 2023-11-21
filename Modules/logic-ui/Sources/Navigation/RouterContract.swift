@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import SwiftUI
-import EudiWalletKit
+import logic_business
 
 public indirect enum AppRoute: Equatable {
 
@@ -34,9 +34,9 @@ public indirect enum AppRoute: Equatable {
   case welcome
   case addDocument
   case documentDetails(docoumentId: String)
-  case proximityConnection(presentationSession: PresentationSession)
-  case proximityRequest(presentationSession: PresentationSession)
-  case proximityLoader(String, presentationSession: PresentationSession, requestItems: RequestItems)
+  case proximityConnection(presentationCoordinator: PresentationSessionCoordinator)
+  case proximityRequest(presentationCoordinator: PresentationSessionCoordinator)
+  case proximityLoader(String, presentationCoordinator: PresentationSessionCoordinator)
 
   public var key: String {
     return switch self {

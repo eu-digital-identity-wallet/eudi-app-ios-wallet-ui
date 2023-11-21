@@ -15,7 +15,8 @@
  */
 import Foundation
 import SwiftUI
-import MdocDataModel18013
+import logic_business
+import EudiWalletKit
 
 public enum RequestDataCell: Equatable {
   case requestDataRow(RequestDataRow)
@@ -132,13 +133,14 @@ public extension RequestDataSection {
     case mdl
     case custom(String)
 
-    public init(docType: String) {
+    public init(docType: WalletKitController.DocumentIdentifier) {
       switch docType {
-      case IsoMdlModel.isoDocType:
-        self = .mdl
-      case EuPidModel.EuPidDocType:
+
+      case .EuPidDocType:
         self = .id
-      default:
+      case .IsoMdlModel:
+        self = .mdl
+      case .genericDocument(docType: let docType):
         self = .custom(docType)
       }
     }
@@ -177,5 +179,80 @@ public struct RequestDataUiModel {
         )
       )
     ]
+  }
+}
+
+extension RequestDataUiModel {
+
+  public static func items(for documents: [DocElementsViewModel]) -> [RequestDataCell] {
+    var requestDataCell = [RequestDataCell]()
+
+    for document in documents {
+      // Section Header
+      requestDataCell.append(documentSectionHeader(for: document))
+
+      // Filter fields for Selectable Disclosed Fields
+      requestDataCell.append(contentsOf: documentSelectiveDisclosableFields(for: document))
+
+      // Filter fields for mandatory keys for verification
+      if let verificationFields = documentMandatoryVerificationFields(for: document) {
+        requestDataCell.append(verificationFields)
+      }
+    }
+
+    return requestDataCell
+  }
+
+  fileprivate static func documentSectionHeader(for document: DocElementsViewModel) -> RequestDataCell {
+    .requestDataSection(.init(id: document.docType, type: .init(docType: .init(rawValue: document.docType)), title: document.docType))
+  }
+
+  fileprivate static func documentSelectiveDisclosableFields(for document: DocElementsViewModel) -> [RequestDataCell] {
+    document.elements
+      .filter { element in
+        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
+        return !mandatoryKeys.contains(element.elementIdentifier)
+      }
+      .map {
+        RequestDataCell.requestDataRow(
+          RequestDataRow(
+            id: $0.id,
+            isSelected: true,
+            isVisible: false,
+            title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
+            value: "",
+            elementKey: $0.elementIdentifier,
+            namespace: $0.nameSpace,
+            docType: document.docType))
+
+      }
+  }
+
+  fileprivate static func documentMandatoryVerificationFields(for document: DocElementsViewModel) -> RequestDataCell? {
+    let mandatoryFields = document.elements
+      .filter { element in
+        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
+        return mandatoryKeys.contains(element.elementIdentifier)
+      }
+      .map {
+        RequestDataRow(
+          id: $0.id,
+          isSelected: true,
+          isVisible: false,
+          title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
+          value: "",
+          elementKey: $0.elementIdentifier,
+          namespace: $0.nameSpace,
+          docType: document.docType)
+      }
+
+    guard mandatoryFields.count > 0 else {
+      return nil
+    }
+
+    return .requestDataVerification(
+      .init(title: LocalizableString.shared.get(with: .verification),
+            items: mandatoryFields)
+    )
   }
 }

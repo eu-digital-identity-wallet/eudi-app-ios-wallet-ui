@@ -24,7 +24,7 @@ public final class WalletKitController {
 
   public static let shared = WalletKitController()
 
-  public enum DocumentIdentifier: RawRepresentable {
+  public enum DocumentIdentifier: RawRepresentable, Equatable {
 
     case EuPidDocType
     case IsoMdlModel
@@ -55,25 +55,20 @@ public final class WalletKitController {
 
   public let wallet = EudiWallet.standard
 
-  public private(set) var activeSession: PresentationSession?
+  public private(set) var activeSession: PresentationSessionCoordinator?
   private var cancellables = Set<AnyCancellable>()
 
   private init() {
     try? wallet.loadSampleData()
     wallet.userAuthenticationRequired = false
     wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
-
   }
 
-  public func statusPublisher() -> AnyPublisher<TransferStatus, Never>? {
-    activeSession?.$status.eraseToAnyPublisher()
-  }
-
-  public func startPresentation(flow: FlowType) -> PresentationSession {
+  public func startPresentation(flow: FlowType) -> PresentationSessionCoordinator {
     self.stopPresentation()
     let session = wallet.beginPresentation(flow: flow)
-    self.activeSession = session
-    return session
+    self.activeSession = PresentationSessionCoordinator(session: session)
+    return activeSession!
   }
 
   public func stopPresentation() {
@@ -96,23 +91,4 @@ public final class WalletKitController {
 
     return ""
   }
-}
-
-@MainActor
-public final class PresentationSessionCoordinator {
-
-  let session: PresentationSession
-
-  init(session: PresentationSession) {
-    self.session = session
-  }
-
-  private func startQrEngagement() async throws {
-    try await session.startQrEngagement()
-  }
-
-  private func awaitForRequest() async throws {
-    try await session.receiveRequest()
-  }
-
 }

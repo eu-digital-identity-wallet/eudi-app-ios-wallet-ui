@@ -68,7 +68,7 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
     router.push(with: .documentDetails(docoumentId: documentId))
   }
   func onShare() {
-    router.push(with: .proximityConnection(presentationSession: WalletKitController.shared.startPresentation(flow: .ble)))
+    router.push(with: .proximityConnection(presentationCoordinator: WalletKitController.shared.startPresentation(flow: .ble)))
   }
 
   func onAdd() {

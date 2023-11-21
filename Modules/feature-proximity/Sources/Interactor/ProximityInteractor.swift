@@ -16,9 +16,7 @@
 import Foundation
 import logic_api
 import logic_business
-import CoreImage.CIFilterBuiltins
 import UIKit
-import EudiWalletKit
 import feature_common
 
 public enum ProximityPartialState {
@@ -27,7 +25,7 @@ public enum ProximityPartialState {
 }
 
 public enum ProximityResponsePreparationPartialState {
-  case success(RequestItems)
+  case success(RequestItemConvertible)
   case failure(Error)
 }
 
@@ -47,29 +45,29 @@ public enum ProximityQrCodePartialState {
 }
 
 public protocol ProximityInteractorType {
-  var presentationSession: PresentationSession { get }
+
+  var presentationSessionCoordinator: PresentationSessionCoordinator { get }
   func doWork() async -> ProximityPartialState
   func onDeviceEngagement() async -> ProximityInitialisationPartialState
   func onQRGeneration() async -> ProximityQrCodePartialState
   func onRequestReceived() async -> ProximityRequestPartialState
-  func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState
-  func onSendResponse(requestItems: RequestItems) async -> ProximityPartialState
+  func onResponsePrepare(requestItems: [RequestDataCell]) -> ProximityResponsePreparationPartialState
+  func onSendResponse() async -> ProximityPartialState
   func stopPresentation() async
 
 }
 
 public final actor ProximityInteractor: ProximityInteractorType {
 
-  public let presentationSession: PresentationSession
+  public let presentationSessionCoordinator: PresentationSessionCoordinator
 
-  public init(presentationSession: PresentationSession) {
-    self.presentationSession = presentationSession
+  public init(presentationSessionCoordinator: PresentationSessionCoordinator) {
+    self.presentationSessionCoordinator = presentationSessionCoordinator
   }
 
   public func onDeviceEngagement() async -> ProximityInitialisationPartialState {
     do {
-      try await presentationSession.startQrEngagement()
-      try await presentationSession.receiveRequest()
+      try await presentationSessionCoordinator.initialize()
       return .success
     } catch {
       return .failure(error)
@@ -77,45 +75,32 @@ public final actor ProximityInteractor: ProximityInteractorType {
   }
 
   public func onQRGeneration() async -> ProximityQrCodePartialState {
+    do {
+      let data = try await self.presentationSessionCoordinator.startQrEngagement()
 
-    guard let data = presentationSession.deviceEngagement else {
-      return .failure(RuntimeError.genericError)
-    }
-
-    guard let qrImage = UIImage(data: data) else {
-      return .failure(RuntimeError.genericError)
-    }
-
-    return .success(qrImage)
-  }
-
-  public func onRequestReceived() -> ProximityRequestPartialState {
-    return .success(RequestDataUiModel.mock())
-    var requestDataCell = [RequestDataCell]()
-
-    for document in presentationSession.disclosedDocuments {
-      // Section Header
-      requestDataCell.append(documentSectionHeader(for: document))
-
-      // Filter fields for Selectable Disclosed Fields
-      requestDataCell.append(contentsOf: documentSelectiveDisclosableFields(for: document))
-
-      // Filter fields for mandatory keys for verification
-      if let verificationFields = documentMandatoryVerificationFields(for: document) {
-        requestDataCell.append(verificationFields)
+      guard let qrImage = UIImage(data: data) else {
+        return .failure(RuntimeError.genericError)
       }
+
+      return .success(qrImage)
+
+    } catch {
+      return .failure(error)
     }
 
-    guard requestDataCell.count > 1 else {
-      return .failure(presentationSession.uiError ?? .init(description: LocalizableString.shared.get(with: .genericErrorTitle)))
-    }
-
-    return .success(requestDataCell)
   }
 
-  public func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState {
-    .success(
-      requestItems
+  public func onRequestReceived() async -> ProximityRequestPartialState {
+    do {
+      let documents = try await presentationSessionCoordinator.requestReceived()
+      return .success(RequestDataUiModel.items(for: documents))
+    } catch {
+      return .failure(error)
+    }
+  }
+
+  nonisolated public func onResponsePrepare(requestItems: [RequestDataCell]) -> ProximityResponsePreparationPartialState {
+    let requestConvertible = requestItems
         .reduce(into: [RequestDataRow]()) { partialResult, cell in
           if let item = cell.isDataRow, item.isSelected {
             partialResult.append(item)
@@ -125,18 +110,30 @@ public final actor ProximityInteractor: ProximityInteractorType {
             partialResult.append(contentsOf: items)
           }
         }
-        .reduce(into: RequestItems()) {  partialResult, row in
-          var nameSpaceDict = partialResult[row.docType, default: [row.namespace: [row.elementKey]]]
+        .reduce(into: RequestItemsWrapper()) {  partialResult, row in
+          var nameSpaceDict = partialResult.requestItems[row.docType, default: [row.namespace: [row.elementKey]]]
           nameSpaceDict[row.namespace, default: [row.elementKey]].append(row.elementKey)
-          partialResult[row.docType] = nameSpaceDict
-        })
+          partialResult.requestItems[row.docType] = nameSpaceDict
+        }
+
+    guard requestConvertible.requestItems.isEmpty == false else {
+      return .failure(RuntimeError.customError("Failed to parse Request Fields"))
+    }
+
+    self.presentationSessionCoordinator.presentationState = .response(requestConvertible)
+
+    return .success(requestConvertible.asRequestItems())
   }
 
-  public func onSendResponse(requestItems: RequestItems) async -> ProximityPartialState {
+  public func onSendResponse() async -> ProximityPartialState {
+
+    guard case PresentationSessionCoordinator.PresentationState.response(let responseItem) = presentationSessionCoordinator.presentationState else {
+      return .failure(NSError())
+    }
+
     do {
-      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
-      try await presentationSession.sendResponse(userAccepted: true, itemsToSend: requestItems) {
-      }
+      try await Task.sleep(nanoseconds: 2.nanoseconds)
+      try await presentationSessionCoordinator.sendResponse(response: responseItem)
       return .success
     } catch {
       return .failure(error)
@@ -154,60 +151,5 @@ public final actor ProximityInteractor: ProximityInteractorType {
 
   public func stopPresentation() async {
     WalletKitController.shared.stopPresentation()
-  }
-}
-
-extension ProximityInteractor {
-  fileprivate func documentSectionHeader(for document: DocElementsViewModel) -> RequestDataCell {
-    .requestDataSection(.init(id: document.docType, type: .init(docType: document.docType), title: document.docType))
-  }
-
-  fileprivate func documentSelectiveDisclosableFields(for document: DocElementsViewModel) -> [RequestDataCell] {
-    document.elements
-      .filter { element in
-        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
-        return !mandatoryKeys.contains(element.elementIdentifier)
-      }
-      .map {
-        RequestDataCell.requestDataRow(
-          RequestDataRow(
-            id: $0.id,
-            isSelected: true,
-            isVisible: false,
-            title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
-            value: "",
-            elementKey: $0.elementIdentifier,
-            namespace: $0.nameSpace,
-            docType: document.docType))
-
-      }
-  }
-
-  fileprivate func documentMandatoryVerificationFields(for document: DocElementsViewModel) -> RequestDataCell? {
-    let mandatoryFields = document.elements
-      .filter { element in
-        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
-        return mandatoryKeys.contains(element.elementIdentifier)
-      }
-      .map {
-        RequestDataRow(
-          id: $0.id,
-          isSelected: true,
-          isVisible: false,
-          title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
-          value: "",
-          elementKey: $0.elementIdentifier,
-          namespace: $0.nameSpace,
-          docType: document.docType)
-      }
-
-    guard mandatoryFields.count > 0 else {
-      return nil
-    }
-
-    return .requestDataVerification(
-      .init(title: LocalizableString.shared.get(with: .verification),
-            items: mandatoryFields)
-    )
   }
 }

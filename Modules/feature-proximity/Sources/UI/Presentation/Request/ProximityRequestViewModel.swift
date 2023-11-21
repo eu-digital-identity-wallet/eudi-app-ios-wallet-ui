@@ -15,7 +15,7 @@
  */
 
 import feature_common
-import EudiWalletKit
+import logic_business
 
 @MainActor
 final class ProximityRequestViewModel<Router: RouterHostType, Interactor: ProximityInteractorType>: BaseRequestViewModel<Router> {
@@ -40,6 +40,17 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
     }
   }
 
+  override func onShare() {
+    switch interactor.onResponsePrepare(requestItems: viewState.items) {
+    case .success:
+      guard let route = getSuccessRoute() else { return }
+      router.push(with: route)
+    case .failure(let error):
+      self.onError(with: error)
+    }
+
+  }
+
   override func getSuccessRoute() -> AppRoute? {
     .biometry(
       config: UIConfig.Biometry(
@@ -49,13 +60,12 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
         navigationSuccessConfig: .init(
           screen: .proximityLoader(
             getRelyingParty(),
-            presentationSession: interactor.presentationSession,
-            requestItems: RequestItems()
+            presentationCoordinator: interactor.presentationSessionCoordinator
           ),
           navigationType: .push
         ),
         navigationBackConfig: .init(
-          screen: .proximityRequest(presentationSession: interactor.presentationSession),
+          screen: .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator),
           navigationType: .pop
         ),
         isPreAuthorization: false,
@@ -69,16 +79,16 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
   }
 
   override func getTitle() -> LocalizableString.Key {
-    if let verifierMessage = interactor.presentationSession.readerCertIssuerMessage {
-      return .custom(verifierMessage)
-    }
+    //    if let verifierMessage = interactor.presentationSession.readerCertIssuerMessage {
+    //      return .custom(verifierMessage)
+    //    }
     return .requestDataTitle(["EUDI Conference"])
   }
 
   override func getCaption() -> LocalizableString.Key {
-    if let validationMessage = interactor.presentationSession.readerCertValidationMessage {
-      return .custom(validationMessage)
-    }
+    //    if let validationMessage = interactor.presentationSession.readerCertValidationMessage {
+    //      return .custom(validationMessage)
+    //    }
     return .requestDataCaption
   }
 

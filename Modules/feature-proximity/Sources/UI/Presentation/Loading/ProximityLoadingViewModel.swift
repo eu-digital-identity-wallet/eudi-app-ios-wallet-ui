@@ -15,25 +15,34 @@
  */
 
 import feature_common
-import EudiWalletKit
+import logic_business
 
 @MainActor
 final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: ProximityInteractorType>: BaseLoadingViewModel<Router> {
 
   private let interactor: Interactor
   private let relyingParty: String
-  private let requestItems: RequestItems
 
   init(
     router: Router,
     interactor: Interactor,
-    relyingParty: String,
-    requestItems: RequestItems
+    relyingParty: String
   ) {
     self.interactor = interactor
     self.relyingParty = relyingParty
-    self.requestItems = requestItems
     super.init(router: router)
+
+    self.interactor.presentationSessionCoordinator.$presentationState.sink { status in
+      switch status {
+      case .success:
+//        self.onNavigate(type: .push)
+        ()
+      case .error(let error):
+        self.onError(with: error)
+      default:
+        ()
+      }
+    }
   }
 
   override func getTitle() -> LocalizableString.Key {
@@ -67,7 +76,7 @@ final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: Proxim
   }
 
   override func doWork() async {
-    switch await interactor.onSendResponse(requestItems: requestItems) {
+    switch await interactor.onSendResponse() {
     case .success:
       self.onNavigate(type: .push)
     case .failure(let error):

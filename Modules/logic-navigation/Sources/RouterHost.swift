@@ -25,9 +25,6 @@ import feature_dashboard
 import feature_presentation
 import feature_proximity
 
-import EudiWalletKit
-import MdocDataModel18013
-
 public final class RouterHost: RouterHostType {
 
   private let pilot: UIPilot<AppRoute>
@@ -110,22 +107,22 @@ public final class RouterHost: RouterHostType {
         )
       case .addDocument:
         AddDocumentView(with: self, and: AddDocumentInteractor())
-      case .proximityConnection(let presentationSession):
+      case .proximityConnection(let presentationSessionCoordinator):
         ProximityConnectionView(
           with: self,
-          and: ProximityInteractor(presentationSession: presentationSession)
+          and: ProximityInteractor(presentationSessionCoordinator: presentationSessionCoordinator)
         )
-      case .proximityRequest(let presentationSession):
+      case .proximityRequest(let presentationSessionCoordinator):
         ProximityRequestView(
           with: self,
-          and: ProximityInteractor(presentationSession: presentationSession)
+          and: ProximityInteractor(presentationSessionCoordinator: presentationSessionCoordinator)
         )
-      case .proximityLoader(let relyingParty, let presentationSession, let requestItems):
+      case .proximityLoader(let relyingParty, let presentationSessionCoordinator):
         ProximityLoadingView(
           with: self,
-          and: ProximityInteractor(presentationSession: WalletKitController.shared.activeSession!),
-          relyingParty: relyingParty,
-          requestItems: RequestItems()
+          and: ProximityInteractor(presentationSessionCoordinator: presentationSessionCoordinator),
+          relyingParty: relyingParty
+//          RequestItemConvertible: RequestItemConvertible
         )
       }
     }
