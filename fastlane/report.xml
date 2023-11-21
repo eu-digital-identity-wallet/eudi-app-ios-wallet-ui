@@ -5,12 +5,17 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000265">
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000225">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: add_badge" time="1.731791">
+      <testcase classname="fastlane.lanes" name="1: gh auth login --with-token &lt; ~/.github_token_eudi" time="0.583749">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: gh release create v0.1.0 -R eu-digital-identity-wallet/eudi-lib-ios-wallet-kit -t &apos;Snapshot 0.1.0&apos;" time="0.862456">
         
       </testcase>
     

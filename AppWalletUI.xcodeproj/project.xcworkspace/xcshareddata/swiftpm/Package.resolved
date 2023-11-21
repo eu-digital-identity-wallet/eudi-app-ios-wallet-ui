@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "branch" : "develop",
-        "revision" : "ed678c052d300789adb0dfb2d7292bf54188c47f"
+        "revision" : "c49527404de88c407660d94d70de376bf43f95c6",
+        "version" : "0.1.0"
       }
     },
     {
@@ -42,7 +42,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
         "branch" : "develop",
-        "revision" : "aea4989aab589b763478823453c60225e62ea224"
+        "revision" : "b8996805fcf7f46739dedffe5aa26421dabfaed6"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "branch" : "develop",
-        "revision" : "c9295736c3e4899b3f3440b2d4c3ed4654d2f077"
+        "revision" : "9259718f0919180cb1950ce03d4b30f5824732ab",
+        "version" : "0.1.0"
       }
     },
     {
@@ -87,7 +87,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
         "branch" : "develop",
-        "revision" : "c3e5337538aaf128b27e30e0380fd24e9312a3a8"
+        "revision" : "21cdccc63a2661e884bb4a1186b095c48da9b311"
       }
     },
     {
@@ -168,7 +168,7 @@
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
         "branch" : "main",
-        "revision" : "cb28750240a9389e0023ee3e3cb6c83ce0960f5c"
+        "revision" : "f447991bd27b2e16bf93cc80219da8a7331a55dc"
       }
     },
     {
@@ -176,8 +176,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/valpackett/SwiftCBOR.git",
       "state" : {
-        "branch" : "master",
-        "revision" : "edc01765cf6b3685bb622bb09242ef5964fb991b"
+        "revision" : "edc01765cf6b3685bb622bb09242ef5964fb991b",
+        "version" : "0.4.6"
       }
     }
   ],

@@ -20,4 +20,13 @@ platform :ios do
   lane :test_badge do
     add_badge(shield: "0.3-TEST-black", no_badge: true)
   end
+
+  desc "Tag the main branch, e.g. bundle exec fastlane tag version:0.1.0 repo:eudi-lib-ios-iso18013-data-transfer"
+  lane :tag do |options|
+    sh "gh auth login --with-token < ~/.github_token_eudi"
+    # fastlane action to tag git
+    tag_version = options[:version]
+    sh "gh release create v#{tag_version} -R eu-digital-identity-wallet/#{options[:repo]} -t 'Snapshot #{tag_version}'"
+  end
+
 end
