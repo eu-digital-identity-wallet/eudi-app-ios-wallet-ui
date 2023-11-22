@@ -22,26 +22,43 @@ public protocol RequestItemConvertible {
   func asRequestItems() -> RequestItems
 }
 
-public final class PresentationSessionCoordinator {
+public protocol PresentationSessionCoordinatorType {
 
-  public enum PresentationState {
-    case loading
-    case prepareQr
-    case qrReady(imageData: Data)
-    case requestReceived(requestedFields: [DocElementsViewModel])
-    case response(RequestItemConvertible)
-    case success
-    case error(WalletError)
+  var presentationState: PresentationState { get set }
+  var presentationStatePublished: Published<PresentationState> { get }
+  var presentationStatePublisher: Published<PresentationState>.Publisher { get }
 
-  }
+  init(session: PresentationSession)
 
-  let session: PresentationSession
+  func initialize() async throws
+  func startQrEngagement() async throws -> Data
+  func requestReceived() async throws -> [DocElementsViewModel]
+  func sendResponse(response: RequestItemConvertible) async throws
+
+  func setState(presentationState: PresentationState)
+}
+
+public enum PresentationState {
+  case loading
+  case prepareQr
+  case qrReady(imageData: Data)
+  case requestReceived(requestedFields: [DocElementsViewModel])
+  case response(RequestItemConvertible)
+  case success
+  case error(WalletError)
+}
+
+public final class PresentationSessionCoordinator: PresentationSessionCoordinatorType {
+
+  private let session: PresentationSession
 
   @Published public var presentationState: PresentationState
+  public var presentationStatePublisher: Published<PresentationState>.Publisher { $presentationState }
+  public var presentationStatePublished: Published<PresentationState> { _presentationState }
 
   private var cancellables = Set<AnyCancellable>()
 
-  init(session: PresentationSession) {
+  public init(session: PresentationSession) {
     self.session = session
     self.presentationState = .loading
 
@@ -102,6 +119,11 @@ public final class PresentationSessionCoordinator {
   public func getState() async -> PresentationState {
     self.presentationState
   }
+
+  public func setState(presentationState: PresentationState) {
+    self.presentationState = presentationState
+  }
+
 }
 
 public struct RequestItemsWrapper: RequestItemConvertible {

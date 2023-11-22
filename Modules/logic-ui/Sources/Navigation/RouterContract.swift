@@ -34,9 +34,9 @@ public indirect enum AppRoute: Equatable {
   case welcome
   case addDocument
   case documentDetails(docoumentId: String)
-  case proximityConnection(presentationCoordinator: PresentationSessionCoordinator)
-  case proximityRequest(presentationCoordinator: PresentationSessionCoordinator)
-  case proximityLoader(String, presentationCoordinator: PresentationSessionCoordinator)
+  case proximityConnection(presentationCoordinator: PresentationSessionCoordinatorType)
+  case proximityRequest(presentationCoordinator: PresentationSessionCoordinatorType)
+  case proximityLoader(String, presentationCoordinator: PresentationSessionCoordinatorType)
 
   public var key: String {
     return switch self {

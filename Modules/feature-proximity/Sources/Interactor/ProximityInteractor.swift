@@ -19,7 +19,7 @@ import logic_business
 import UIKit
 import feature_common
 
-public enum ProximityPartialState {
+public enum ProximityResponsePartialState {
   case success
   case failure(Error)
 }
@@ -46,22 +46,22 @@ public enum ProximityQrCodePartialState {
 
 public protocol ProximityInteractorType {
 
-  var presentationSessionCoordinator: PresentationSessionCoordinator { get }
-  func doWork() async -> ProximityPartialState
+  var presentationSessionCoordinator: PresentationSessionCoordinatorType { get }
+
   func onDeviceEngagement() async -> ProximityInitialisationPartialState
   func onQRGeneration() async -> ProximityQrCodePartialState
   func onRequestReceived() async -> ProximityRequestPartialState
   func onResponsePrepare(requestItems: [RequestDataCell]) -> ProximityResponsePreparationPartialState
-  func onSendResponse() async -> ProximityPartialState
+  func onSendResponse() async -> ProximityResponsePartialState
   func stopPresentation() async
 
 }
 
 public final actor ProximityInteractor: ProximityInteractorType {
 
-  public let presentationSessionCoordinator: PresentationSessionCoordinator
+  public let presentationSessionCoordinator: PresentationSessionCoordinatorType
 
-  public init(presentationSessionCoordinator: PresentationSessionCoordinator) {
+  public init(presentationSessionCoordinator: PresentationSessionCoordinatorType) {
     self.presentationSessionCoordinator = presentationSessionCoordinator
   }
 
@@ -120,14 +120,14 @@ public final actor ProximityInteractor: ProximityInteractorType {
       return .failure(RuntimeError.customError("Failed to parse Request Fields"))
     }
 
-    self.presentationSessionCoordinator.presentationState = .response(requestConvertible)
+    self.presentationSessionCoordinator.setState(presentationState: .response(requestConvertible))
 
     return .success(requestConvertible.asRequestItems())
   }
 
-  public func onSendResponse() async -> ProximityPartialState {
+  public func onSendResponse() async -> ProximityResponsePartialState {
 
-    guard case PresentationSessionCoordinator.PresentationState.response(let responseItem) = presentationSessionCoordinator.presentationState else {
+    guard case PresentationState.response(let responseItem) = presentationSessionCoordinator.presentationState else {
       return .failure(NSError())
     }
 
@@ -140,16 +140,7 @@ public final actor ProximityInteractor: ProximityInteractorType {
     }
   }
 
-  public func doWork() async -> ProximityPartialState {
-    do {
-      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
-      return .success
-    } catch {
-      return .failure(error)
-    }
-  }
-
-  public func stopPresentation() async {
+  public func stopPresentation() {
     WalletKitController.shared.stopPresentation()
   }
 }

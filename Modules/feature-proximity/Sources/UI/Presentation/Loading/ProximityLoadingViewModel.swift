@@ -32,7 +32,7 @@ final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: Proxim
     self.relyingParty = relyingParty
     super.init(router: router)
 
-    self.interactor.presentationSessionCoordinator.$presentationState.sink { status in
+    self.interactor.presentationSessionCoordinator.presentationStatePublisher.sink { status in
       switch status {
       case .success:
 //        self.onNavigate(type: .push)
@@ -43,6 +43,7 @@ final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: Proxim
         ()
       }
     }
+    .store(in: &cancellables)
   }
 
   override func getTitle() -> LocalizableString.Key {

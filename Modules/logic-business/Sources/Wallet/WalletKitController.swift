@@ -20,9 +20,18 @@ import MdocDataModel18013
 import Combine
 import logic_resources
 
-public final class WalletKitController {
+public protocol WalletKitControllerType {
+  static var shared: WalletKitControllerType { get }
+  var wallet: EudiWallet { get }
+  var activeSession: PresentationSessionCoordinator? { get }
 
-  public static let shared = WalletKitController()
+  func startPresentation(flow: FlowType) -> PresentationSessionCoordinator
+  func stopPresentation()
+}
+
+public final class WalletKitController: WalletKitControllerType {
+
+  public static let shared: WalletKitControllerType = WalletKitController()
 
   public enum DocumentIdentifier: RawRepresentable, Equatable {
 
@@ -76,7 +85,11 @@ public final class WalletKitController {
     self.activeSession = nil
   }
 
-  public func mandatoryFields(for documentType: DocumentIdentifier) -> [String] {
+}
+
+extension WalletKitControllerType {
+
+  public func mandatoryFields(for documentType: WalletKitController.DocumentIdentifier) -> [String] {
     switch documentType {
     case .EuPidDocType:
       return []
@@ -87,8 +100,9 @@ public final class WalletKitController {
     }
   }
 
-  public func valueForElementIdentifier(for documentType: DocumentIdentifier) -> String {
-
+  public func valueForElementIdentifier(for documentType: WalletKitController.DocumentIdentifier) -> String {
+    // TODO: Make the call of who is repsonsible 
     return ""
   }
+
 }

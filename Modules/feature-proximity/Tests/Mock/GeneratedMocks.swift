@@ -41,7 +41,7 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
     
     
     
-    public func doWork() async -> ProximityPartialState {
+    public func doWork() async -> ProximityResponsePartialState {
         
     return await cuckoo_manager.call(
     """
@@ -89,7 +89,7 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
         
         
         
-        func doWork() -> Cuckoo.ProtocolStubFunction<(), ProximityPartialState> {
+        func doWork() -> Cuckoo.ProtocolStubFunction<(), ProximityResponsePartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractorType.self, method:
     """
@@ -128,7 +128,7 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
         
         
         @discardableResult
-        func doWork() -> Cuckoo.__DoNotUse<(), ProximityPartialState> {
+        func doWork() -> Cuckoo.__DoNotUse<(), ProximityResponsePartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
@@ -162,8 +162,8 @@ public class ProximityInteractorTypeStub: ProximityInteractorType {
     
     
     
-    public func doWork() async -> ProximityPartialState  {
-        return DefaultValueRegistry.defaultValue(for: (ProximityPartialState).self)
+    public func doWork() async -> ProximityResponsePartialState  {
+        return DefaultValueRegistry.defaultValue(for: (ProximityResponsePartialState).self)
     }
     
     

@@ -39,13 +39,13 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
       )
     )
 
-    interactor.presentationSessionCoordinator.$presentationState.sink { state in
+    interactor.presentationSessionCoordinator.presentationStatePublisher.sink { state in
       switch state {
       case .prepareQr:
         await self.onQRGeneration()
       case .requestReceived:
         print("")
-//        await self.onConnectionSuccess()
+        //        await self.onConnectionSuccess()
       default:
         print(state)
       }
@@ -58,7 +58,6 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
     switch await self.interactor.onDeviceEngagement() {
     case .success:
       await self.onConnectionSuccess()
-//      print("Connected with verifier")
     case .failure(let error):
       setNewState(
         error: .init(
@@ -67,8 +66,6 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
         )
       )
     }
-
-    await self.onQRGeneration()
   }
 
   func goBack() {
@@ -93,27 +90,17 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
   }
 
   private func onConnectionSuccess() async {
-    switch await interactor.doWork() {
-    case .success:
-      self.cancellables.forEach({$0.cancel()})
-      router.push(with: .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator))
-    case .failure(let error):
-      setNewState(
-        error: .init(
-          description: .custom(error.localizedDescription),
-          cancelAction: self.router.pop()
-        )
-      )
-    }
+    cancellables.forEach({$0.cancel()})
+    router.push(with: .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator))
   }
 
   private func onError() {
     let errorDesc: LocalizableString.Key =
-//    if let errorDesc = interactor.presentationSession.uiError?.errorDescription {
-//      LocalizableString.Key.custom(errorDesc)
-//    } else {
+    //    if let errorDesc = interactor.presentationSession.uiError?.errorDescription {
+    //      LocalizableString.Key.custom(errorDesc)
+    //    } else {
       .genericErrorDesc
-//    }
+    //    }
 
     self.setNewState(
       error: .init(
