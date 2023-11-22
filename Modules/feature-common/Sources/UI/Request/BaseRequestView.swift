@@ -86,6 +86,7 @@ public struct BaseRequestView<Router: RouterHostType>: View {
         }
         .padding(.top)
       }
+      .bottomFade()
 
       Spacer()
 
