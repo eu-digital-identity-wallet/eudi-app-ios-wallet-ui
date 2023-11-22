@@ -43,9 +43,8 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
       switch state {
       case .prepareQr:
         await self.onQRGeneration()
-      case .requestReceived:
-        print("")
-        //        await self.onConnectionSuccess()
+      case .error:
+        self.onError()
       default:
         print(state)
       }
@@ -95,16 +94,9 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
   }
 
   private func onError() {
-    let errorDesc: LocalizableString.Key =
-    //    if let errorDesc = interactor.presentationSession.uiError?.errorDescription {
-    //      LocalizableString.Key.custom(errorDesc)
-    //    } else {
-      .genericErrorDesc
-    //    }
-
     self.setNewState(
       error: .init(
-        description: errorDesc,
+        description: .genericErrorDesc,
         cancelAction: self.router.pop()
       )
     )

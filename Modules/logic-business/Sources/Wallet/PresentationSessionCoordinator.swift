@@ -17,126 +17,142 @@ import Foundation
 import EudiWalletKit
 import MdocDataModel18013
 import Combine
+import logic_resources
 
 public protocol RequestItemConvertible {
   func asRequestItems() -> RequestItems
 }
 
 public protocol PresentationSessionCoordinatorType {
-
+  
   var presentationState: PresentationState { get set }
   var presentationStatePublished: Published<PresentationState> { get }
   var presentationStatePublisher: Published<PresentationState>.Publisher { get }
-
+  
   init(session: PresentationSession)
-
-  func initialize() async throws
+  
+  func initialize() async
   func startQrEngagement() async throws -> Data
-  func requestReceived() async throws -> [DocElementsViewModel]
+  func requestReceived() async throws -> PresentationRequest
   func sendResponse(response: RequestItemConvertible) async throws
-
+  
   func setState(presentationState: PresentationState)
+  
 }
 
 public enum PresentationState {
   case loading
   case prepareQr
   case qrReady(imageData: Data)
-  case requestReceived(requestedFields: [DocElementsViewModel])
+  case requestReceived(PresentationRequest)
   case response(RequestItemConvertible)
   case success
   case error(WalletError)
 }
 
 public final class PresentationSessionCoordinator: PresentationSessionCoordinatorType {
-
+  
   private let session: PresentationSession
-
+  
   @Published public var presentationState: PresentationState
   public var presentationStatePublisher: Published<PresentationState>.Publisher { $presentationState }
   public var presentationStatePublished: Published<PresentationState> { _presentationState }
-
+  
   private var cancellables = Set<AnyCancellable>()
-
+  
   public init(session: PresentationSession) {
     self.session = session
     self.presentationState = .loading
-
-    self.session.$status.sink { status in
-      switch status {
-      case .qrEngagementReady:
-        self.presentationState = .prepareQr
-      case .requestReceived:
-        self.presentationState = .requestReceived(requestedFields: [])
-      case .error:
-        if let error = session.uiError {
-          self.presentationState = .error(error)
+    
+    self.session.$status
+      .sink { status in
+        switch status {
+        case .qrEngagementReady:
+          self.presentationState = .prepareQr
+        case .responseSent:
+          self.presentationState = .response(session.disclosedDocuments.items)
+        case .error:
+          if let error = session.uiError {
+            self.presentationState = .error(error)
+          } else {
+            self.presentationState = .error(.init(description: LocalizableString.shared.get(with: .genericErrorDesc)))
+          }
+        default:
+          ()
         }
-
-      default:
-        ()
       }
-    }
-    .store(in: &cancellables)
+      .store(in: &cancellables)
   }
-
-  public func initialize() async throws {
-    try await session.startQrEngagement()
-    try await session.receiveRequest()
+  
+  public func initialize() async {
+    await session.startQrEngagement()
+    let dict = await session.receiveRequest()
   }
-
+  
   public func startQrEngagement() async throws -> Data {
     guard let deviceEngagement = session.deviceEngagement else {
-      self.presentationState = .error(session.uiError ?? .init(description: "Failed To Generate QR Code"))
       throw session.uiError ?? .init(description: "Failed To Generate QR Code")
     }
     self.presentationState = .qrReady(imageData: deviceEngagement)
     return deviceEngagement
   }
-
-  public func requestReceived() async throws -> [DocElementsViewModel] {
+  
+  public func requestReceived() async throws -> PresentationRequest {
     guard session.disclosedDocuments.isEmpty == false else {
-      self.presentationState = .error(session.uiError ?? .init(description: "Failed to Find knonw documents to send"))
       throw session.uiError ?? .init(description: "Failed to Find knonw documents to send")
     }
-
-    self.presentationState = .requestReceived(requestedFields: session.disclosedDocuments)
-    return session.disclosedDocuments
+    
+    
+    let presentationRequest = PresentationRequest(
+      items: session.disclosedDocuments,
+      relyingParty: session.readerCertIssuer ?? LocalizableString.shared.get(with: .custom("Wallet_Title")),
+      dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
+      isTrusted: true
+    )
+    self.presentationState = .requestReceived(presentationRequest)
+    return presentationRequest
   }
-
-  public func sendResponse(response: RequestItemConvertible) async throws {
-    do {
-      try await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems()) {
-
-      }
-    } catch {
-      self.presentationState = .error(session.uiError ?? .init(description: "Failed to Find send response"))
+  
+  public func sendResponse(response: RequestItemConvertible) async {
+    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems()) {
+      
     }
-
     self.presentationState = .success
   }
-
+  
   public func getState() async -> PresentationState {
     self.presentationState
   }
-
+  
   public func setState(presentationState: PresentationState) {
     self.presentationState = presentationState
   }
+  
+  deinit {
+    print(session)
+  }
+}
 
+public struct PresentationRequest {
+  
+  public let items: [DocElementsViewModel]
+  
+  public let relyingParty: String
+  public let dataRequestInfo: String
+  public let isTrusted: Bool
 }
 
 public struct RequestItemsWrapper: RequestItemConvertible {
   public func asRequestItems() -> EudiWalletKit.RequestItems {
     requestItems
   }
-
+  
   public var requestItems: RequestItems
-
+  
   public init() {
     requestItems = RequestItems()
   }
-
+  
   public init(dictionary: [String: [String: [String]]]) {
     self.requestItems = dictionary
   }

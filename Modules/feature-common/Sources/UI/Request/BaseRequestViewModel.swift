@@ -23,6 +23,10 @@ public struct RequestViewState: ViewState {
   public let isContentVisible: Bool
   public let itemsAreAllSelected: Bool
   public let items: [RequestDataCell]
+  public let title: LocalizableString.Key
+  public let caption: LocalizableString.Key
+  public let dataRequestInfo: LocalizableString.Key
+  public let relyingParty: String
 }
 
 @MainActor
@@ -39,7 +43,11 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
         error: nil,
         isContentVisible: false,
         itemsAreAllSelected: true,
-        items: RequestDataUiModel.mock()
+        items: RequestDataUiModel.mock(),
+        title: .requestDataTitle(["EUDI Conference"]),
+        caption: .requestDataCaption,
+        dataRequestInfo: .requestDataInfoNotice,
+        relyingParty: "EUDI Conference"
       )
     )
   }
@@ -91,9 +99,11 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     )
   }
 
-  public func onReceivedItems(with items: [RequestDataCell]) {
+  public func onReceivedItems(with items: [RequestDataCell], title: LocalizableString.Key, dataRequestInfo: LocalizableString.Key) {
     setNewState(
-      items: items
+      items: items,
+      title: title,
+      dataRequestInfo: dataRequestInfo
     )
   }
 
@@ -159,7 +169,11 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     error: ContentError.Config? = nil,
     isContentVisible: Bool? = nil,
     itemsAreAllSelected: Bool? = nil,
-    items: [RequestDataCell]? = nil
+    items: [RequestDataCell]? = nil,
+    title: LocalizableString.Key? = nil,
+    caption: LocalizableString.Key? = nil,
+    dataRequestInfo: LocalizableString.Key? = nil,
+    relyingParty: String? = nil
   ) {
     setState {
       .init(
@@ -167,7 +181,11 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
         error: error,
         isContentVisible: isContentVisible ?? $0.isContentVisible,
         itemsAreAllSelected: itemsAreAllSelected ?? $0.itemsAreAllSelected,
-        items: items ?? $0.items
+        items: items ?? $0.items,
+        title: title ?? $0.title,
+        caption: caption ?? $0.caption,
+        dataRequestInfo: dataRequestInfo ?? $0.dataRequestInfo,
+        relyingParty: relyingParty ?? $0.relyingParty
       )
     }
   }

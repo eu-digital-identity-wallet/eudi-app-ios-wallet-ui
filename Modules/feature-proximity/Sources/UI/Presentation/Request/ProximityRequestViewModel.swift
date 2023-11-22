@@ -28,13 +28,24 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
   ) {
     self.interactor = interactor
     super.init(router: router)
+    
+    interactor.presentationSessionCoordinator.presentationStatePublisher.sink { state in
+      switch state {
+      case .error(let walletError):
+        self.onError(with: walletError)
+      default:
+        ()
+      }
+
+    }
+    .store(in: &cancellables)
   }
 
   override func doWork() async {
     self.onStartLoading()
     switch await interactor.onRequestReceived() {
-    case .success(let array):
-      self.onReceivedItems(with: array)
+    case .success(let items, title: let tite, caption: let caption, dataRequestInfo: let dataRequestInfo, relyingParty: let relyingParty):
+      self.onReceivedItems(with: items, title: .custom(tite), dataRequestInfo: .custom(dataRequestInfo))
     case .failure(let error):
       self.onError(with: error)
     }
@@ -79,25 +90,19 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
   }
 
   override func getTitle() -> LocalizableString.Key {
-    //    if let verifierMessage = interactor.presentationSession.readerCertIssuerMessage {
-    //      return .custom(verifierMessage)
-    //    }
-    return .requestDataTitle(["EUDI Conference"])
+    viewState.title
   }
 
   override func getCaption() -> LocalizableString.Key {
-    //    if let validationMessage = interactor.presentationSession.readerCertValidationMessage {
-    //      return .custom(validationMessage)
-    //    }
-    return .requestDataCaption
+    viewState.caption
   }
 
   override func getDataRequestInfo() -> LocalizableString.Key {
-    .requestDataInfoNotice
+    viewState.dataRequestInfo
   }
 
   override func getRelyingParty() -> String {
-    "EUDI Conference"
+    viewState.relyingParty
   }
 
 }

@@ -34,9 +34,6 @@ final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: Proxim
 
     self.interactor.presentationSessionCoordinator.presentationStatePublisher.sink { status in
       switch status {
-      case .success:
-//        self.onNavigate(type: .push)
-        ()
       case .error(let error):
         self.onError(with: error)
       default:
