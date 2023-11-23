@@ -36,7 +36,8 @@ final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: Cros
       self.onReceivedItems(
         with: RequestDataUiModel.mock(),
         title: .requestDataTitle(["EUDI Wallet"]),
-        relyingParty: "EUDI Wallet"
+        relyingParty: "EUDI Wallet",
+        isTrusted: true
       )
     case .failure(let error):
       self.onError(with: error)

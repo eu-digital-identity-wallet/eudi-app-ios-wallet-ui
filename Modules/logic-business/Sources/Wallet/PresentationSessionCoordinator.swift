@@ -99,7 +99,7 @@ public final class PresentationSessionCoordinator: PresentationSessionCoordinato
       items: session.disclosedDocuments,
       relyingParty: session.readerCertIssuer ?? LocalizableString.shared.get(with: .custom("Wallet_Title")),
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
-      isTrusted: true
+      isTrusted: session.readerCertIssuer != nil
     )
     self.presentationStateSubject.value = .requestReceived(presentationRequest)
     return presentationRequest
@@ -134,7 +134,6 @@ public struct PresentationRequest {
   public let dataRequestInfo: String
   public let isTrusted: Bool
 }
-
 
 public enum PresentationSessionError: Error {
   case qrGeneration

@@ -50,11 +50,12 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
   override func doWork() async {
     self.onStartLoading()
     switch await interactor.onRequestReceived() {
-    case .success(let items, let relyingParty, let dataRequestInfo):
+    case .success(let items, let relyingParty, let dataRequestInfo, let isTrusted):
       self.onReceivedItems(
         with: items,
         title: .requestDataTitle([relyingParty]),
-        relyingParty: relyingParty
+        relyingParty: relyingParty,
+        isTrusted: isTrusted
       )
     case .failure(let error):
       self.onError(with: error)

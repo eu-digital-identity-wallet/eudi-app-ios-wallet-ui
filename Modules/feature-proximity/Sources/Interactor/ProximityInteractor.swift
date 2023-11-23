@@ -30,7 +30,7 @@ public enum ProximityResponsePreparationPartialState {
 }
 
 public enum ProximityRequestPartialState {
-  case success([RequestDataCell], relyingParty: String, dataRequestInfo: String)
+  case success([RequestDataCell], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
   case failure(Error)
 }
 
@@ -93,13 +93,14 @@ public final actor ProximityInteractor: ProximityInteractorType {
 
   public func onRequestReceived() async -> ProximityRequestPartialState {
     do {
-      let documents = try await presentationSessionCoordinator.requestReceived()
+      let response = try await presentationSessionCoordinator.requestReceived()
       return .success(
         RequestDataUiModel.items(
-          for: documents.items
+          for: response.items
         ),
-        relyingParty: documents.relyingParty,
-        dataRequestInfo: documents.dataRequestInfo
+        relyingParty: response.relyingParty,
+        dataRequestInfo: response.dataRequestInfo,
+        isTrusted: response.isTrusted
       )
     } catch {
       return .failure(error)

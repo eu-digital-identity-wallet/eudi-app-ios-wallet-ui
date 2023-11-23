@@ -27,6 +27,7 @@ public struct RequestViewState: ViewState {
   public let caption: LocalizableString.Key
   public let dataRequestInfo: LocalizableString.Key
   public let relyingParty: String
+  public let isTrusted: Bool
 }
 
 @MainActor
@@ -47,7 +48,8 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
         title: .requestDataTitle(["EUDI Conference"]),
         caption: .requestDataCaption,
         dataRequestInfo: .requestDataInfoNotice,
-        relyingParty: "EUDI Conference"
+        relyingParty: "EUDI Conference",
+        isTrusted: false
       )
     )
   }
@@ -99,11 +101,17 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     )
   }
 
-  public func onReceivedItems(with items: [RequestDataCell], title: LocalizableString.Key, relyingParty: String) {
+  public func onReceivedItems(
+    with items: [RequestDataCell],
+    title: LocalizableString.Key,
+    relyingParty: String,
+    isTrusted: Bool
+  ) {
     setNewState(
       items: items,
       title: title,
-      relyingParty: relyingParty
+      relyingParty: relyingParty,
+      isTrusted: isTrusted
     )
   }
 
@@ -173,7 +181,8 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     title: LocalizableString.Key? = nil,
     caption: LocalizableString.Key? = nil,
     dataRequestInfo: LocalizableString.Key? = nil,
-    relyingParty: String? = nil
+    relyingParty: String? = nil,
+    isTrusted: Bool? = nil
   ) {
     setState {
       .init(
@@ -185,7 +194,8 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
         title: title ?? $0.title,
         caption: caption ?? $0.caption,
         dataRequestInfo: dataRequestInfo ?? $0.dataRequestInfo,
-        relyingParty: relyingParty ?? $0.relyingParty
+        relyingParty: relyingParty ?? $0.relyingParty,
+        isTrusted: isTrusted ?? $0.isTrusted
       )
     }
   }

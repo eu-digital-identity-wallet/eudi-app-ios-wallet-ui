@@ -35,7 +35,7 @@ public final class LocalizableString: LocalizableStringType {
 
   public func get(with key: Key) -> String {
     return switch key {
-    case .dynamic(key: let key):
+    case .dynamic(let key):
       bundle.localizedString(forKey: key)
     case .custom(let literal):
       literal

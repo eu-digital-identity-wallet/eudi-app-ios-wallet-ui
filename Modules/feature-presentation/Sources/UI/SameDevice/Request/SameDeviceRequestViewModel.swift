@@ -36,7 +36,8 @@ final class SameDeviceRequestViewModel<Router: RouterHostType, Interactor: SameD
       self.onReceivedItems(
         with: RequestDataUiModel.mock(),
         title: .requestDataTitle(["EUDI Wallet"]),
-        relyingParty: "EUDI Wallet"
+        relyingParty: "EUDI Wallet",
+        isTrusted: true
       )
     case .failure(let error):
       self.onError(with: error)
