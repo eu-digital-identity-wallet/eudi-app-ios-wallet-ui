@@ -77,7 +77,7 @@ private func successConfig() -> UIConfig.Success {
       .init(
         title: .custom("LITERAL PLACEHOLDER"),
         screen: .startup,
-        style: .primary, navigationType: .pop
+        style: .primary, navigationType: .pop()
       )
     ],
     visualKind: .defaultIcon

@@ -226,7 +226,10 @@ extension RequestDataUiModel {
             isSelected: true,
             isVisible: false,
             title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
-            value: "",
+            value: WalletKitController.shared.valueForElementIdentifier(
+              for: .init(rawValue: document.docType),
+              elementIdentifier: $0.elementIdentifier
+            ),
             elementKey: $0.elementIdentifier,
             namespace: $0.nameSpace,
             docType: document.docType))
@@ -246,7 +249,10 @@ extension RequestDataUiModel {
           isSelected: true,
           isVisible: false,
           title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
-          value: "",
+          value: WalletKitController.shared.valueForElementIdentifier(
+            for: .init(rawValue: document.docType),
+            elementIdentifier: $0.elementIdentifier
+          ),
           elementKey: $0.elementIdentifier,
           namespace: $0.nameSpace,
           docType: document.docType)

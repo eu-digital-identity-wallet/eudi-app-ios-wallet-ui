@@ -140,7 +140,7 @@ public final actor ProximityInteractor: ProximityInteractorType {
     }
 
     do {
-      try await Task.sleep(nanoseconds: 2.nanoseconds)
+      try await Task.sleep(seconds: 2)
       try await presentationSessionCoordinator.sendResponse(response: responseItem)
       return .success
     } catch {

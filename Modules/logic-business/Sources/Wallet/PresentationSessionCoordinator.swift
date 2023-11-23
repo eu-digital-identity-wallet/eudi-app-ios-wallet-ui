@@ -29,6 +29,7 @@ public protocol PresentationSessionCoordinatorType {
   func startQrEngagement() async throws -> Data
   func requestReceived() async throws -> PresentationRequest
   func sendResponse(response: RequestItemConvertible) async throws
+  func onSuccess(completion: () -> Void)
 
   func setState(presentationState: PresentationState)
 
@@ -121,8 +122,8 @@ public final class PresentationSessionCoordinator: PresentationSessionCoordinato
     self.presentationStateSubject.value = presentationState
   }
 
-  deinit {
-    print(session)
+  public func onSuccess(completion: () -> Void) {
+    completion()
   }
 }
 

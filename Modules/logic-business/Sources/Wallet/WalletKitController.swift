@@ -23,7 +23,7 @@ import logic_resources
 public protocol WalletKitControllerType {
   static var shared: WalletKitControllerType { get }
   var wallet: EudiWallet { get }
-  var activeSession: PresentationSessionCoordinator? { get }
+  var activeCoordinator: PresentationSessionCoordinator? { get }
 
   func startPresentation(flow: FlowType) -> PresentationSessionCoordinator
   func stopPresentation()
@@ -34,7 +34,7 @@ public final class WalletKitController: WalletKitControllerType {
   public static let shared: WalletKitControllerType = WalletKitController()
   public let wallet = EudiWallet.standard
 
-  public private(set) var activeSession: PresentationSessionCoordinator?
+  public private(set) var activeCoordinator: PresentationSessionCoordinator?
   private var cancellables = Set<AnyCancellable>()
 
   private init() {
@@ -46,13 +46,17 @@ public final class WalletKitController: WalletKitControllerType {
   public func startPresentation(flow: FlowType) -> PresentationSessionCoordinator {
     self.stopPresentation()
     let session = wallet.beginPresentation(flow: flow)
-    self.activeSession = PresentationSessionCoordinator(session: session)
-    return activeSession!
+    let presentationSessionCoordinator = PresentationSessionCoordinator(session: session)
+    self.activeCoordinator = presentationSessionCoordinator
+    presentationSessionCoordinator.onSuccess {
+      stopPresentation()
+    }
+    return presentationSessionCoordinator
   }
 
   public func stopPresentation() {
     self.cancellables.forEach {$0.cancel()}
-    self.activeSession = nil
+    self.activeCoordinator = nil
   }
 
 }
@@ -70,9 +74,11 @@ extension WalletKitControllerType {
     }
   }
 
-  public func valueForElementIdentifier(for documentType: DocumentIdentifier) -> String {
-    // TODO: Make the call of who is repsonsible 
-    return ""
+  public func valueForElementIdentifier(for documentType: DocumentIdentifier, elementIdentifier: String) -> String {
+    wallet.storage.mdocModels
+      .compactMap({ $0 })
+      .first(where: { $0.docType == documentType.rawValue })?.displayStrings
+      .first(where: { $0.name == elementIdentifier })?.value ?? LocalizableString.shared.get(with: .unavailableField)
   }
 
 }

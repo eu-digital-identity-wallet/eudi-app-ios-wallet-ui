@@ -115,6 +115,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "proximity_connectivity_nfc")
     case .verification:
       bundle.localizedString(forKey: "request_data_verification")
+    case .unavailableField:
+      bundle.localizedString(forKey: "unavailable_field")
 
     }
   }
@@ -166,6 +168,7 @@ public extension LocalizableString {
     case proximityConnectivityCaption
     case proximityConnectivityNfc
     case verification
+    case unavailableField
   }
 }
 
