@@ -166,6 +166,28 @@
         }
       }
     },
+    "issuance_external_loading_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use your “National System” credentials to add the document in your EUDI Wallet"
+          }
+        }
+      }
+    },
+    "issuance_external_loading_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add %@"
+          }
+        }
+      }
+    },
     "login_button" : {
       "extractionState" : "manual",
       "localizations" : {

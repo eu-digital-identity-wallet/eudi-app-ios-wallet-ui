@@ -128,9 +128,14 @@ public final class RouterHost: RouterHostType {
           interactor: QuickPinInteractor(),
           config: config
         )
-      case .issuanceExternalLogin:
-        WelcomeView(with: self, and: WelcomeInteractor())
-      case .issuanceSuccess:
+      case .issuanceExternalLogin(let config, let documentName):
+        ExternalLoginView(
+          with: self,
+          and: ExternalLoginInteractor(),
+          config: config,
+          documentName: documentName
+        )
+      case .issuanceSuccess(let config):
         WelcomeView(with: self, and: WelcomeInteractor())
       }
     }

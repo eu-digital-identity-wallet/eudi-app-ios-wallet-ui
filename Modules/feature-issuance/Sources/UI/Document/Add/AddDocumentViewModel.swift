@@ -62,13 +62,8 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
     }
   }
 
-  func routeToIssuance(for docType: AddDocumentCellModel.`Type`) {
-    switch docType {
-    case .pid:
-      print("route to pid issuance flow")
-    case .mdl:
-      print("route to pid issuance flow")
-    }
+  func routeToIssuance(for docName: String) {
+    router.push(with: .issuanceExternalLogin(config: viewState.config, documentName: docName))
   }
 
   func pop() {

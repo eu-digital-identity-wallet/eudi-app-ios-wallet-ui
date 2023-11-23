@@ -157,6 +157,10 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "quick_pin_update_cancellation_continue")
     case .issuanceDetailsContinueButton:
       bundle.localizedString(forKey: "issuance_details_continue_button")
+    case .issuanceExternalLoadingTitle(let args):
+      bundle.localizedStringWithArguments(forKey: "issuance_external_loading_title", arguments: args)
+    case .issuanceExternalLoadingCaption:
+      bundle.localizedString(forKey: "issuance_external_loading_caption")
     }
   }
 
@@ -228,6 +232,8 @@ public extension LocalizableString {
     case quickPinUpdateCancellationCaption
     case quickPinUpdateCancellationContinue
     case issuanceDetailsContinueButton
+    case issuanceExternalLoadingTitle([String])
+    case issuanceExternalLoadingCaption
   }
 }
 
