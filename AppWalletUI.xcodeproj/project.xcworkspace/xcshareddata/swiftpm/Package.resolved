@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twostraws/CodeScanner.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "bf5d7087015620b250ee6c865b3c9039fc159d1a"
+        "revision" : "bf5d7087015620b250ee6c865b3c9039fc159d1a",
+        "version" : "2.3.3"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "c49527404de88c407660d94d70de376bf43f95c6",
-        "version" : "0.1.0"
+        "branch" : "develop",
+        "revision" : "f789d682824183a5c648c186486caaef0b9a303a"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "9259718f0919180cb1950ce03d4b30f5824732ab",
-        "version" : "0.1.0"
+        "revision" : "68e31dd168e3af20d676986892751a46db304b63",
+        "version" : "0.1.2"
       }
     },
     {
@@ -78,7 +78,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit",
       "state" : {
         "branch" : "develop",
-        "revision" : "52005e6f4e6e2dbf6365bf3d18854ae7c2e872a9"
+        "revision" : "c0487f1117b39f2305d2a9ff42e13477244a26f6"
       }
     },
     {
@@ -87,7 +87,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
         "branch" : "develop",
-        "revision" : "21cdccc63a2661e884bb4a1186b095c48da9b311"
+        "revision" : "17bec9f9a0310de7efd6e5893898efb158cf4a1a"
       }
     },
     {

@@ -26,7 +26,9 @@ platform :ios do
     sh "gh auth login --with-token < ~/.github_token_eudi"
     # fastlane action to tag git
     tag_version = options[:version]
-    sh "gh release create v#{tag_version} -R eu-digital-identity-wallet/#{options[:repo]} -t 'Snapshot #{tag_version}'"
+    cmdline = "gh release create v#{tag_version} -R eu-digital-identity-wallet/#{options[:repo]} -t 'Snapshot #{tag_version}'"
+    if options[:commit_sha]; cmdline += " --target #{options[:commit_sha]}"; end
+    sh cmdline
   end
 
 end
