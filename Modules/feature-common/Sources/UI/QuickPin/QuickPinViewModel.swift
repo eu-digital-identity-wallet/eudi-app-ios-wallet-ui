@@ -24,7 +24,7 @@ enum QuickPinStep {
 }
 
 struct QuickPinState: ViewState {
-  let config: QuickPinConfig
+  let config: QuickPinUiConfig
   let title: LocalizableString.Key
   let caption: LocalizableString.Key
   let button: LocalizableString.Key
@@ -50,7 +50,7 @@ final class QuickPinViewModel<Router: RouterHostType, Interactor: QuickPinIntera
     interactor: Interactor,
     config: any UIConfigType
   ) {
-    guard let config = config as? QuickPinConfig else {
+    guard let config = config as? QuickPinUiConfig else {
       fatalError("QuickPinViewModel:: Invalid configuraton")
     }
     self.interactor = interactor

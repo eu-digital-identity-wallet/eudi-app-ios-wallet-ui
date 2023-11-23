@@ -67,14 +67,18 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
   }
 
   func onDocumentDetails(documentId: String) {
-    router.push(with: .documentDetails(docoumentId: documentId))
+    router.push(
+      with: .issuanceDocumentDetails(
+        config: IssuanceDetailUiConfig(flow: .extraDocument(documentId))
+      )
+    )
   }
   func onShare() {
     router.push(with: .proximityConnection)
   }
 
   func onAdd() {
-    router.push(with: .addDocument)
+    router.push(with: .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .extraDocument)))
   }
 
   func onMore() {
@@ -83,7 +87,7 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
 
   func onUpdatePin() {
     isMoreModalShowing = false
-    router.push(with: .quickPin(config: QuickPinConfig(flow: .update)))
+    router.push(with: .quickPin(config: QuickPinUiConfig(flow: .update)))
   }
 
   private func handleDeepLink() {

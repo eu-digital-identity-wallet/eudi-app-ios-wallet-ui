@@ -45,7 +45,7 @@ public final actor StartupInteractor: StartupInteractorType {
         )
       )
     } else {
-      return .quickPin(config: QuickPinConfig(flow: .set))
+      return .quickPin(config: QuickPinUiConfig(flow: .set))
     }
   }
 }

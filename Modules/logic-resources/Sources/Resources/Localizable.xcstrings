@@ -155,6 +155,17 @@
         }
       }
     },
+    "issuance_details_continue_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONTINUE"
+          }
+        }
+      }
+    },
     "login_button" : {
       "extractionState" : "manual",
       "localizations" : {

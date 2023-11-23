@@ -155,6 +155,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "quick_pin_update_cancellation_caption")
     case .quickPinUpdateCancellationContinue:
       bundle.localizedString(forKey: "quick_pin_update_cancellation_continue")
+    case .issuanceDetailsContinueButton:
+      bundle.localizedString(forKey: "issuance_details_continue_button")
     }
   }
 
@@ -225,6 +227,7 @@ public extension LocalizableString {
     case quickPinUpdateCancellationTitle
     case quickPinUpdateCancellationCaption
     case quickPinUpdateCancellationContinue
+    case issuanceDetailsContinueButton
   }
 }
 

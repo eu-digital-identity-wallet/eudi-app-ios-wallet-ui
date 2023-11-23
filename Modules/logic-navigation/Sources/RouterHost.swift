@@ -24,6 +24,7 @@ import feature_common
 import feature_dashboard
 import feature_presentation
 import feature_proximity
+import feature_issuance
 
 public final class RouterHost: RouterHostType {
 
@@ -99,14 +100,18 @@ public final class RouterHost: RouterHostType {
         SameDeviceRequestView(with: self, and: SameDeviceInteractor())
       case .welcome:
         WelcomeView(with: self, and: WelcomeInteractor())
-      case .documentDetails(let documentId):
+      case .issuanceDocumentDetails(let config):
         DocumentDetailsView(
           with: self,
           and: DocumentDetailsInteractor(),
-          documentId: documentId
+          config: config
         )
-      case .addDocument:
-        AddDocumentView(with: self, and: AddDocumentInteractor())
+      case .issuanceAddDocument(let config):
+        AddDocumentView(
+          with: self,
+          and: AddDocumentInteractor(),
+          config: config
+        )
       case .proximityConnection:
         ProximityConnectionView(with: self, and: ProximityInteractor())
       case .proximityRequest:
@@ -123,6 +128,10 @@ public final class RouterHost: RouterHostType {
           interactor: QuickPinInteractor(),
           config: config
         )
+      case .issuanceExternalLogin:
+        WelcomeView(with: self, and: WelcomeInteractor())
+      case .issuanceSuccess:
+        WelcomeView(with: self, and: WelcomeInteractor())
       }
     }
     .eraseToAnyView()

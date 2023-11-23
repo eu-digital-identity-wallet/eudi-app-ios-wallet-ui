@@ -18,6 +18,7 @@ import feature_login
 import feature_common
 import feature_startup
 import feature_dashboard
+import feature_issuance
 import SwiftUI
 
 import logic_navigation
@@ -89,9 +90,17 @@ private func successConfig() -> UIConfig.Success {
 }
 
 #Preview("DocumentDetails View") {
-  DocumentDetailsView(with: PreviewRouter(), and: DocumentDetailsInteractor(), documentId: "123")
+  DocumentDetailsView(
+    with: PreviewRouter(),
+    and: DocumentDetailsInteractor(),
+    config: IssuanceDetailUiConfig(flow: .extraDocument(""))
+  )
 }
 
 #Preview("AddDocument View") {
-  AddDocumentView(with: PreviewRouter(), and: AddDocumentInteractor())
+  AddDocumentView(
+    with: PreviewRouter(),
+    and: AddDocumentInteractor(),
+    config: IssuanceFlowUiConfig(flow: .extraDocument)
+  )
 }

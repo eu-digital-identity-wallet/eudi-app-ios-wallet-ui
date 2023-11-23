@@ -16,24 +16,33 @@
 import Foundation
 import logic_ui
 import logic_resources
+import feature_common
 
 struct AddDocumentViewState: ViewState {
   let addDocumentCellModels: [AddDocumentCellModel]
   let error: ContentError.Config?
+  let config: IssuanceFlowUiConfig
+
+  var isFlowCancellable: Bool {
+    return config.isExtraDocumentFlow
+  }
 }
 
 final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocumentInteractorType>: BaseViewModel<Router, AddDocumentViewState> {
 
   private let interactor: Interactor
 
-  init(router: Router, interactor: Interactor) {
+  init(router: Router, interactor: Interactor, config: any UIConfigType) {
+    guard let config = config as? IssuanceFlowUiConfig else {
+      fatalError("AddDocumentViewModel:: Invalid configuraton")
+    }
     self.interactor = interactor
-
     super.init(
       router: router,
       initialState: .init(
         addDocumentCellModels: AddDocumentCellModel.mocks,
-        error: nil
+        error: nil,
+        config: config
       )
     )
   }
@@ -73,7 +82,8 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
     setState { previousSate in
         .init(
           addDocumentCellModels: addDocumentCellModels ?? previousSate.addDocumentCellModels,
-          error: error
+          error: error,
+          config: previousSate.config
         )
     }
   }
