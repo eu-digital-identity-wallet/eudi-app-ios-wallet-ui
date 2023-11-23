@@ -49,10 +49,11 @@ public protocol ProximityInteractorType {
   var presentationSessionCoordinator: PresentationSessionCoordinatorType { get }
 
   func getSessionStatePublisher() async -> any Publisher<PresentationState, Never>
+
   func onDeviceEngagement() async -> ProximityInitialisationPartialState
   func onQRGeneration() async -> ProximityQrCodePartialState
   func onRequestReceived() async -> ProximityRequestPartialState
-  func onResponsePrepare(requestItems: [RequestDataCell]) -> ProximityResponsePreparationPartialState
+  func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState
   func onSendResponse() async -> ProximityResponsePartialState
   func stopPresentation() async
 
@@ -67,7 +68,9 @@ public final actor ProximityInteractor: ProximityInteractorType {
   }
 
   public func getSessionStatePublisher() async -> any Publisher<PresentationState, Never> {
-    presentationSessionCoordinator.presentationStateSubject.eraseToAnyPublisher()
+    presentationSessionCoordinator
+      .presentationStateSubject
+      .eraseToAnyPublisher()
   }
 
   public func onDeviceEngagement() async -> ProximityInitialisationPartialState {
@@ -107,7 +110,7 @@ public final actor ProximityInteractor: ProximityInteractorType {
     }
   }
 
-  nonisolated public func onResponsePrepare(requestItems: [RequestDataCell]) -> ProximityResponsePreparationPartialState {
+  public func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState {
     let requestConvertible = requestItems
       .reduce(into: [RequestDataRow]()) { partialResult, cell in
         if let item = cell.isDataRow, item.isSelected {

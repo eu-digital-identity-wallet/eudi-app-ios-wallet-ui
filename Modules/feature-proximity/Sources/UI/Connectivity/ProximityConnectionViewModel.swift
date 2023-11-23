@@ -66,8 +66,8 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
         default:
           print(state)
         }
-    }
-    .store(in: &cancellables)
+      }
+      .store(in: &cancellables)
   }
 
   func goBack() {

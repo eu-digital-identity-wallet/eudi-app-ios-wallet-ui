@@ -63,12 +63,17 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
   }
 
   override func onShare() {
-    switch interactor.onResponsePrepare(requestItems: viewState.items) {
-    case .success:
-      guard let route = getSuccessRoute() else { return }
-      router.push(with: route)
-    case .failure(let error):
-      self.onError(with: error)
+    Task {
+      await switch interactor.onResponsePrepare(requestItems: viewState.items) {
+      case .success:
+        if let route = getSuccessRoute() {
+          router.push(with: route)
+        } else {
+          router.pop()
+        }
+      case .failure(let error):
+        self.onError(with: error)
+      }
     }
   }
 

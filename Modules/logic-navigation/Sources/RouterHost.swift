@@ -122,7 +122,6 @@ public final class RouterHost: RouterHostType {
           with: self,
           and: ProximityInteractor(presentationSessionCoordinator: presentationSessionCoordinator),
           relyingParty: relyingParty
-//          RequestItemConvertible: RequestItemConvertible
         )
       }
     }
