@@ -16,18 +16,22 @@
 import logic_ui
 import logic_resources
 import feature_common
-import UIKit
 
-struct BaseLoadingState: ViewState {
+struct DocumentSuccessState: ViewState {
   let error: ContentError.Config?
   let title: LocalizableString.Key
   let caption: LocalizableString.Key
-  let documentName: String
+  let footerTitle: LocalizableString.Key
+  let modalTitle: LocalizableString.Key
+  let modalCaption: LocalizableString.Key
+  let holderName: String
   let config: IssuanceFlowUiConfig
 }
 
 @MainActor
-final class ExternalLoginViewModel<Router: RouterHostType, Interactor: ExternalLoginInteractorType>: BaseViewModel<Router, BaseLoadingState> {
+final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: DocumentSuccessInteractorType>: BaseViewModel<Router, DocumentSuccessState> {
+
+  @Published var isCancelModalShowing: Bool = false
 
   private let interactor: Interactor
 
@@ -40,48 +44,44 @@ final class ExternalLoginViewModel<Router: RouterHostType, Interactor: ExternalL
       router: router,
       initialState: .init(
         error: nil,
-        title: .issuanceExternalLoadingTitle([documentName]),
-        caption: .issuanceExternalLoadingCaption,
-        documentName: documentName,
+        title: .issuanceSuccessTitle,
+        caption: .issuanceSuccessCaption([documentName]),
+        footerTitle: .issuanceSuccessFooterTitle([documentName]),
+        modalTitle: .issuanceSuccessModalTitle([documentName]),
+        modalCaption: .issuanceSuccessModalCaption([documentName]),
+        holderName: "Jane Doe",
         config: config
       )
     )
   }
 
   func onPop() {
-    router.pop()
+    isCancelModalShowing = false
+    router.popTo(with: .issuanceAddDocument(config: viewState.config))
   }
 
-  // MARK: - TODO Uncomment the interactor and connect with core once integration started
-  func initialize() async {
+  func onShowCancelModal() {
+    isCancelModalShowing = !isCancelModalShowing
+  }
 
-    try? await Task.sleep(nanoseconds: 2.nanoseconds)
+  func onIssue() {
+
+    var flow: IssuanceDetailUiConfig.Flow {
+      switch viewState.config.flow {
+      case .noDocument:
+        return .noDocument("id")
+      case .extraDocument:
+        return .extraDocument("id")
+      }
+    }
 
     router.push(
-      with: .issuanceSuccess(
-        config: viewState.config,
-        documentName: viewState.documentName
+      with: .issuanceDocumentDetails(
+        config: IssuanceDetailUiConfig(
+          flow: flow
+        )
       )
     )
-
-    //    switch await interactor.handleExternalLogin() {
-    //    case .success(let url):
-    //      await UIApplication.shared.open(url)
-    //    case .failure(let error):
-    //      self.setNewState(
-    //        error: .init(
-    //          description: .custom(error.localizedDescription),
-    //          cancelAction: self.onErrorAction()
-    //        )
-    //      )
-    //    }
-  }
-
-  private func onErrorAction() {
-    setNewState(error: nil)
-    Task {
-      await self.initialize()
-    }
   }
 
   private func setNewState(
@@ -92,7 +92,10 @@ final class ExternalLoginViewModel<Router: RouterHostType, Interactor: ExternalL
           error: error,
           title: previous.title,
           caption: previous.caption,
-          documentName: previous.documentName,
+          footerTitle: previous.footerTitle,
+          modalTitle: previous.modalTitle,
+          modalCaption: previous.modalCaption,
+          holderName: previous.holderName,
           config: previous.config
         )
     }

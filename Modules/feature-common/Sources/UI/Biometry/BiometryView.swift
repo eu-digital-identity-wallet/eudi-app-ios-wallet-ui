@@ -64,7 +64,8 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
       title: viewModel.viewState.config.title,
       caption: viewModel.viewState.areBiometricsEnabled
       ? viewModel.viewState.config.caption
-      : viewModel.viewState.config.quickPinOnlyCaption
+      : viewModel.viewState.config.quickPinOnlyCaption,
+      topSpacing: viewModel.viewState.isCancellable ? .withToolbar : .withoutToolbar
     )
 
     VSpacer.large()

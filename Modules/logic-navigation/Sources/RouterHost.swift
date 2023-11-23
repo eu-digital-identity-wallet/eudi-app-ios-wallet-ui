@@ -135,8 +135,13 @@ public final class RouterHost: RouterHostType {
           config: config,
           documentName: documentName
         )
-      case .issuanceSuccess(let config):
-        WelcomeView(with: self, and: WelcomeInteractor())
+      case .issuanceSuccess(let config, let documentName):
+        DocumentSuccessView(
+          with: self,
+          and: DocumentSuccessInteractor(),
+          config: config,
+          documentName: documentName
+        )
       }
     }
     .eraseToAnyView()

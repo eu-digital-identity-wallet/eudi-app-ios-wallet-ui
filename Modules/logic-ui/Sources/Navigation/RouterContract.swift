@@ -38,7 +38,7 @@ public indirect enum AppRoute: Equatable {
   case issuanceAddDocument(config: any UIConfigType)
   case issuanceDocumentDetails(config: any UIConfigType)
   case issuanceExternalLogin(config: any UIConfigType, documentName: String)
-  case issuanceSuccess(config: any UIConfigType)
+  case issuanceSuccess(config: any UIConfigType, documentName: String)
 
   public var key: String {
     return switch self {

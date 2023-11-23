@@ -29,7 +29,8 @@ public struct BaseRequestView<Router: RouterHostType>: View {
     ContentScreen(errorConfig: viewModel.viewState.error) {
 
       ContentTitle(
-        title: viewModel.getTitle()
+        title: viewModel.getTitle(),
+        topSpacing: .withoutToolbar
       )
 
       VSpacer.extraSmall()
@@ -136,7 +137,7 @@ public struct BaseRequestView<Router: RouterHostType>: View {
       .disabled(viewModel.viewState.isLoading)
   }
 
-  var footer: some View {
+  private var footer: some View {
     VStack(spacing: SPACING_MEDIUM) {
       missingCredentials()
       WrapButtonView(
@@ -156,7 +157,7 @@ public struct BaseRequestView<Router: RouterHostType>: View {
   }
 
   @ViewBuilder
-  func missingCredentials() -> some View {
+  private func missingCredentials() -> some View {
     if !viewModel.viewState.itemsAreAllSelected {
       HStack(spacing: SPACING_MEDIUM) {
 

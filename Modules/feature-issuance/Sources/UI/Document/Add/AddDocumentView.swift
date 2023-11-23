@@ -37,7 +37,8 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
 
         ContentTitle(
           title: .addDocumentTitle,
-          caption: .addDocumentSubtitle
+          caption: .addDocumentSubtitle,
+          topSpacing: viewModel.viewState.isFlowCancellable ? .withToolbar : .withoutToolbar
         )
 
         VSpacer.large()

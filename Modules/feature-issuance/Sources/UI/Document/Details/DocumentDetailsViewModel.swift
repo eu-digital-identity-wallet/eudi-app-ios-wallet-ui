@@ -79,7 +79,7 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
   }
 
   func pop() {
-    router.pop()
+    router.popTo(with: .dashboard)
   }
 
   func onContinue() {
