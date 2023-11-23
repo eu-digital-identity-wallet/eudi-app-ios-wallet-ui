@@ -17,6 +17,7 @@
 		68C9142F71DA324B35570DDD /* DocDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C168568AE72A55E14FF960A /* DocDataView.swift */; };
 		6D697236484FE71D3E547213 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 1E6EC900D12B703E7BC17B9D /* CodeScanner */; };
 		AC2B2F7C55C2B9D24B67A706 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 75A663A39A851322A212B0A4 /* Localizable.strings */; };
+		B05C0D772B0F889100A4D8C7 /* EudiWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = B05C0D762B0F889100A4D8C7 /* EudiWalletKit */; };
 		B094F4152B0E4235007A51E6 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = B094F4142B0E4235007A51E6 /* CodeScanner */; };
 		BC7FB05D9F497EC0B13A8497 /* WalletUiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC7642D7306E4537C5A431B /* WalletUiApp.swift */; };
 		BF400B2EB660ABE2031C8FB7 /* MainHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A5A599800B794397ECD218 /* MainHolderView.swift */; };
@@ -127,6 +128,7 @@
 			files = (
 				6D697236484FE71D3E547213 /* CodeScanner in Frameworks */,
 				B094F4152B0E4235007A51E6 /* CodeScanner in Frameworks */,
+				B05C0D772B0F889100A4D8C7 /* EudiWalletKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +337,7 @@
 			packageProductDependencies = (
 				1E6EC900D12B703E7BC17B9D /* CodeScanner */,
 				B094F4142B0E4235007A51E6 /* CodeScanner */,
+				B05C0D762B0F889100A4D8C7 /* EudiWalletKit */,
 			);
 			productName = AppWalletUI;
 			productReference = E979049EC84A42C44A32394B /* AppWalletUI.app */;
@@ -803,6 +806,11 @@
 		1E6EC900D12B703E7BC17B9D /* CodeScanner */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CodeScanner;
+		};
+		B05C0D762B0F889100A4D8C7 /* EudiWalletKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 837260188995F5FD097D3E04 /* XCRemoteSwiftPackageReference "eudi-lib-ios-wallet-kit" */;
+			productName = EudiWalletKit;
 		};
 		B094F4142B0E4235007A51E6 /* CodeScanner */ = {
 			isa = XCSwiftPackageProductDependency;
