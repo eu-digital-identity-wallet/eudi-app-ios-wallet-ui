@@ -131,14 +131,14 @@ public final actor ProximityInteractor: ProximityInteractorType {
       return .failure(PresentationSessionError.conversionToRequestItemModel)
     }
 
-    self.presentationSessionCoordinator.setState(presentationState: .response(requestConvertible))
+    self.presentationSessionCoordinator.setState(presentationState: .responseToSend(requestConvertible))
 
     return .success(requestConvertible.asRequestItems())
   }
 
   public func onSendResponse() async -> ProximityResponsePartialState {
 
-    guard case PresentationState.response(let responseItem) = presentationSessionCoordinator.presentationStateSubject.value else {
+    guard case PresentationState.responseToSend(let responseItem) = presentationSessionCoordinator.presentationStateSubject.value else {
       return .failure(PresentationSessionError.invalidState)
     }
 

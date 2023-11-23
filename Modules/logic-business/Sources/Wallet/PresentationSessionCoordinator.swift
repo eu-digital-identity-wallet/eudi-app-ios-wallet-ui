@@ -40,7 +40,7 @@ public enum PresentationState {
   case prepareQr
   case qrReady(imageData: Data)
   case requestReceived(PresentationRequest)
-  case response(RequestItemConvertible)
+  case responseToSend(RequestItemConvertible)
   case success
   case error(WalletError)
 }
@@ -62,7 +62,7 @@ public final class PresentationSessionCoordinator: PresentationSessionCoordinato
         case .qrEngagementReady:
           self.presentationStateSubject.value = .prepareQr
         case .responseSent:
-          self.presentationStateSubject.value = .response(session.disclosedDocuments.items)
+          self.presentationStateSubject.value = .responseToSend(session.disclosedDocuments.items)
         case .error:
           if let error = session.uiError {
             self.presentationStateSubject.value = .error(error)
