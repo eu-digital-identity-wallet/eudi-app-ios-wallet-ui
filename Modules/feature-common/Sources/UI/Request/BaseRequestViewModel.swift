@@ -99,11 +99,11 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     )
   }
 
-  public func onReceivedItems(with items: [RequestDataCell], title: LocalizableString.Key, dataRequestInfo: LocalizableString.Key) {
+  public func onReceivedItems(with items: [RequestDataCell], title: LocalizableString.Key, relyingParty: String) {
     setNewState(
       items: items,
       title: title,
-      dataRequestInfo: dataRequestInfo
+      relyingParty: relyingParty
     )
   }
 

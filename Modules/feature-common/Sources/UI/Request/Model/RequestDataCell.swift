@@ -133,7 +133,7 @@ public extension RequestDataSection {
     case mdl
     case custom(String)
 
-    public init(docType: WalletKitController.DocumentIdentifier) {
+    public init(docType: DocumentIdentifier) {
       switch docType {
 
       case .EuPidDocType:
@@ -204,7 +204,13 @@ extension RequestDataUiModel {
   }
 
   fileprivate static func documentSectionHeader(for document: DocElementsViewModel) -> RequestDataCell {
-    .requestDataSection(.init(id: document.docType, type: .init(docType: .init(rawValue: document.docType)), title: document.docType))
+    .requestDataSection(
+      .init(
+        id: document.docType,
+        type: .init(docType: DocumentIdentifier(rawValue: document.docType)),
+        title: DocumentIdentifier(rawValue: document.docType).localizedTitle
+      )
+    )
   }
 
   fileprivate static func documentSelectiveDisclosableFields(for document: DocElementsViewModel) -> [RequestDataCell] {

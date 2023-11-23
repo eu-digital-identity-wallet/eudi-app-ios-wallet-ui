@@ -38,22 +38,10 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
         qrImage: nil
       )
     )
-
-    interactor.presentationSessionCoordinator.presentationStatePublisher.sink { state in
-      switch state {
-      case .prepareQr:
-        await self.onQRGeneration()
-      case .error:
-        self.onError()
-      default:
-        print(state)
-      }
-
-    }
-    .store(in: &cancellables)
   }
 
   func initialize() async {
+    await self.subscribeToCoordinatorPublisher()
     switch await self.interactor.onDeviceEngagement() {
     case .success:
       await self.onConnectionSuccess()
@@ -65,6 +53,21 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
         )
       )
     }
+  }
+
+  func subscribeToCoordinatorPublisher() async {
+    await interactor.getSessionStatePublisher()
+      .sink { state in
+        switch state {
+        case .prepareQr:
+          await self.onQRGeneration()
+        case .error:
+          self.onError()
+        default:
+          print(state)
+        }
+    }
+    .store(in: &cancellables)
   }
 
   func goBack() {

@@ -32,15 +32,22 @@ final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: Proxim
     self.relyingParty = relyingParty
     super.init(router: router)
 
-    self.interactor.presentationSessionCoordinator.presentationStatePublisher.sink { status in
-      switch status {
-      case .error(let error):
-        self.onError(with: error)
-      default:
-        ()
-      }
+    Task {
+      await self.subscribeToCoordinatorPublisher()
     }
-    .store(in: &cancellables)
+  }
+
+  func subscribeToCoordinatorPublisher() async {
+    await interactor.getSessionStatePublisher()
+      .sink { state in
+        switch state {
+        case .error(let error):
+          self.onError(with: error)
+        default:
+          ()
+        }
+      }
+      .store(in: &cancellables)
   }
 
   override func getTitle() -> LocalizableString.Key {

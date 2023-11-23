@@ -28,24 +28,34 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
   ) {
     self.interactor = interactor
     super.init(router: router)
-    
-    interactor.presentationSessionCoordinator.presentationStatePublisher.sink { state in
-      switch state {
-      case .error(let walletError):
-        self.onError(with: walletError)
-      default:
-        ()
-      }
 
+    Task {
+      await self.subscribeToCoordinatorPublisher()
     }
-    .store(in: &cancellables)
+  }
+
+  func subscribeToCoordinatorPublisher() async {
+    await interactor.getSessionStatePublisher()
+      .sink { state in
+        switch state {
+        case .error(let error):
+          self.onError(with: error)
+        default:
+          ()
+        }
+      }
+      .store(in: &cancellables)
   }
 
   override func doWork() async {
     self.onStartLoading()
     switch await interactor.onRequestReceived() {
-    case .success(let items, title: let tite, caption: let caption, dataRequestInfo: let dataRequestInfo, relyingParty: let relyingParty):
-      self.onReceivedItems(with: items, title: .custom(tite), dataRequestInfo: .custom(dataRequestInfo))
+    case .success(let items, let relyingParty, let dataRequestInfo):
+      self.onReceivedItems(
+        with: items,
+        title: .requestDataTitle([relyingParty]),
+        relyingParty: relyingParty
+      )
     case .failure(let error):
       self.onError(with: error)
     }
@@ -59,7 +69,6 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
     case .failure(let error):
       self.onError(with: error)
     }
-
   }
 
   override func getSuccessRoute() -> AppRoute? {

@@ -32,36 +32,6 @@ public protocol WalletKitControllerType {
 public final class WalletKitController: WalletKitControllerType {
 
   public static let shared: WalletKitControllerType = WalletKitController()
-
-  public enum DocumentIdentifier: RawRepresentable, Equatable {
-
-    case EuPidDocType
-    case IsoMdlModel
-    case genericDocument(docType: String)
-
-    public var rawValue: String {
-      switch self {
-      case .EuPidDocType:
-        return MdocDataModel18013.EuPidModel.EuPidDocType
-      case .IsoMdlModel:
-        return MdocDataModel18013.IsoMdlModel.isoDocType
-      case .genericDocument(let docType):
-        return docType
-      }
-    }
-
-    public init(rawValue: String) {
-      switch rawValue {
-      case MdocDataModel18013.EuPidModel.EuPidDocType:
-        self = .EuPidDocType
-      case MdocDataModel18013.IsoMdlModel.isoDocType:
-        self = .IsoMdlModel
-      default:
-        self = .genericDocument(docType: rawValue)
-      }
-    }
-  }
-
   public let wallet = EudiWallet.standard
 
   public private(set) var activeSession: PresentationSessionCoordinator?
@@ -89,7 +59,7 @@ public final class WalletKitController: WalletKitControllerType {
 
 extension WalletKitControllerType {
 
-  public func mandatoryFields(for documentType: WalletKitController.DocumentIdentifier) -> [String] {
+  public func mandatoryFields(for documentType: DocumentIdentifier) -> [String] {
     switch documentType {
     case .EuPidDocType:
       return []
@@ -100,7 +70,7 @@ extension WalletKitControllerType {
     }
   }
 
-  public func valueForElementIdentifier(for documentType: WalletKitController.DocumentIdentifier) -> String {
+  public func valueForElementIdentifier(for documentType: DocumentIdentifier) -> String {
     // TODO: Make the call of who is repsonsible 
     return ""
   }

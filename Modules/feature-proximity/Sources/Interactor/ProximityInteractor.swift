@@ -30,7 +30,7 @@ public enum ProximityResponsePreparationPartialState {
 }
 
 public enum ProximityRequestPartialState {
-  case success([RequestDataCell], title: String, caption: String, dataRequestInfo: String, relyingParty: String)
+  case success([RequestDataCell], relyingParty: String, dataRequestInfo: String)
   case failure(Error)
 }
 
@@ -48,6 +48,7 @@ public protocol ProximityInteractorType {
 
   var presentationSessionCoordinator: PresentationSessionCoordinatorType { get }
 
+  func getSessionStatePublisher() async -> any Publisher<PresentationState, Never>
   func onDeviceEngagement() async -> ProximityInitialisationPartialState
   func onQRGeneration() async -> ProximityQrCodePartialState
   func onRequestReceived() async -> ProximityRequestPartialState
@@ -65,13 +66,13 @@ public final actor ProximityInteractor: ProximityInteractorType {
     self.presentationSessionCoordinator = presentationSessionCoordinator
   }
 
+  public func getSessionStatePublisher() async -> any Publisher<PresentationState, Never> {
+    presentationSessionCoordinator.presentationStateSubject.eraseToAnyPublisher()
+  }
+
   public func onDeviceEngagement() async -> ProximityInitialisationPartialState {
-    do {
-      try await presentationSessionCoordinator.initialize()
-      return .success
-    } catch {
-      return .failure(error)
-    }
+    await presentationSessionCoordinator.initialize()
+    return .success
   }
 
   public func onQRGeneration() async -> ProximityQrCodePartialState {
@@ -79,7 +80,7 @@ public final actor ProximityInteractor: ProximityInteractorType {
       let data = try await self.presentationSessionCoordinator.startQrEngagement()
 
       guard let qrImage = UIImage(data: data) else {
-        return .failure(RuntimeError.genericError)
+        return .failure(PresentationSessionError.qrGeneration)
       }
 
       return .success(qrImage)
@@ -93,11 +94,12 @@ public final actor ProximityInteractor: ProximityInteractorType {
   public func onRequestReceived() async -> ProximityRequestPartialState {
     do {
       let documents = try await presentationSessionCoordinator.requestReceived()
-      return .success(RequestDataUiModel.items(for: documents.items),
-                      title: documents.relyingParty, 
-                      caption: documents.dataRequestInfo,
-                      dataRequestInfo: documents.dataRequestInfo,
-                      relyingParty: documents.dataRequestInfo
+      return .success(
+        RequestDataUiModel.items(
+          for: documents.items
+        ),
+        relyingParty: documents.relyingParty,
+        dataRequestInfo: documents.dataRequestInfo
       )
     } catch {
       return .failure(error)
@@ -106,23 +108,23 @@ public final actor ProximityInteractor: ProximityInteractorType {
 
   nonisolated public func onResponsePrepare(requestItems: [RequestDataCell]) -> ProximityResponsePreparationPartialState {
     let requestConvertible = requestItems
-        .reduce(into: [RequestDataRow]()) { partialResult, cell in
-          if let item = cell.isDataRow, item.isSelected {
-            partialResult.append(item)
-          }
+      .reduce(into: [RequestDataRow]()) { partialResult, cell in
+        if let item = cell.isDataRow, item.isSelected {
+          partialResult.append(item)
+        }
 
-          if let items = cell.isDataVerification?.items.filter({$0.isSelected}) {
-            partialResult.append(contentsOf: items)
-          }
+        if let items = cell.isDataVerification?.items.filter({$0.isSelected}) {
+          partialResult.append(contentsOf: items)
         }
-        .reduce(into: RequestItemsWrapper()) {  partialResult, row in
-          var nameSpaceDict = partialResult.requestItems[row.docType, default: [row.namespace: [row.elementKey]]]
-          nameSpaceDict[row.namespace, default: [row.elementKey]].append(row.elementKey)
-          partialResult.requestItems[row.docType] = nameSpaceDict
-        }
+      }
+      .reduce(into: RequestItemsWrapper()) {  partialResult, row in
+        var nameSpaceDict = partialResult.requestItems[row.docType, default: [row.namespace: [row.elementKey]]]
+        nameSpaceDict[row.namespace, default: [row.elementKey]].append(row.elementKey)
+        partialResult.requestItems[row.docType] = nameSpaceDict
+      }
 
     guard requestConvertible.requestItems.isEmpty == false else {
-      return .failure(RuntimeError.customError("Failed to parse Request Fields"))
+      return .failure(PresentationSessionError.conversionToRequestItemModel)
     }
 
     self.presentationSessionCoordinator.setState(presentationState: .response(requestConvertible))
@@ -132,8 +134,8 @@ public final actor ProximityInteractor: ProximityInteractorType {
 
   public func onSendResponse() async -> ProximityResponsePartialState {
 
-    guard case PresentationState.response(let responseItem) = presentationSessionCoordinator.presentationState else {
-      return .failure(NSError())
+    guard case PresentationState.response(let responseItem) = presentationSessionCoordinator.presentationStateSubject.value else {
+      return .failure(PresentationSessionError.invalidState)
     }
 
     do {
