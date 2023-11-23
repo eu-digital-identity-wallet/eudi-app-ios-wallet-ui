@@ -13,23 +13,28 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
+import logic_ui
 
-import logic_resources
+public struct QuickPinUiConfig: UIConfigType {
+  public let flow: Flow
 
-public struct WalletUiConfig: ConfigUiLogic {
-
-  public var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] = [
-    AppRoute.dashboard.key: .init(Theme.shared.color.primary),
-    AppRoute.startup.key: .init(Theme.shared.color.primary),
-    AppRoute.welcome.key: .init(Theme.shared.color.primary),
-    AppRoute.issuanceDocumentDetails(config: NoConfig()).key: .init(Theme.shared.color.primary)
-  ]
-
-  public var landingRoute: AppRoute {
-    return .dashboard
+  public var isSetFlow: Bool {
+    self.flow == .set
   }
 
-  public init(themeConfiguration: ThemeConfiguration) {
-    Theme.config(themeConfiguration: themeConfiguration)
+  public var isUpdateFlow: Bool {
+    self.flow == .update
+  }
+
+  public init(flow: Flow) {
+    self.flow = flow
+  }
+}
+
+public extension QuickPinUiConfig {
+  enum Flow: Equatable {
+    case set
+    case update
   }
 }

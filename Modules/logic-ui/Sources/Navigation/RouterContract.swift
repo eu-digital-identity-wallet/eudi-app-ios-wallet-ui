@@ -31,12 +31,14 @@ public indirect enum AppRoute: Equatable {
   case sameDeviceLoader(String)
   case sameDeviceRequest
   case welcome
-  case addDocument
-  case documentDetails(docoumentId: String)
   case proximityConnection
   case proximityRequest
   case proximityLoader(String)
   case quickPin(config: any UIConfigType)
+  case issuanceAddDocument(config: any UIConfigType)
+  case issuanceDocumentDetails(config: any UIConfigType)
+  case issuanceExternalLogin(config: any UIConfigType, documentName: String)
+  case issuanceSuccess(config: any UIConfigType, documentName: String)
 
   public var key: String {
     return switch self {
@@ -56,10 +58,6 @@ public indirect enum AppRoute: Equatable {
       "SameDeviceRequest"
     case .welcome:
       "Welcome"
-    case .documentDetails:
-      "DocumentDetails"
-    case .addDocument:
-      "AddDocument"
     case .crossDeviceRequest:
       "CrossDeviceRequest"
     case .sameDeviceLoader:
@@ -72,6 +70,14 @@ public indirect enum AppRoute: Equatable {
       "ProximityLoader"
     case .quickPin:
       "QuickPin"
+    case .issuanceAddDocument:
+      "IssuanceAddDocument"
+    case .issuanceDocumentDetails:
+      "IssuanceDocumentDetails"
+    case .issuanceExternalLogin:
+      "IssuanceExternalLogin"
+    case .issuanceSuccess:
+      "IssuanceSuccess"
     }
   }
 }

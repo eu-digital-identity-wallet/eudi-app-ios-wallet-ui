@@ -25,12 +25,12 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
   public init(
     with router: Router,
     and interactor: Interactor,
-    documentId: String
+    config: any UIConfigType
   ) {
     self.viewModel = DocumentDetailsViewModel(
       router: router,
       interactor: interactor,
-      documentId: documentId
+      config: config
     )
   }
 
@@ -53,12 +53,25 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
       }
       .padding(.horizontal, Theme.shared.dimension.padding)
     }
+    .if(viewModel.viewState.hasContinueButton) {
+      $0.bottomFade()
+    }
+
+    if viewModel.viewState.hasContinueButton {
+      WrapButtonView(
+        style: .primary,
+        title: .issuanceDetailsContinueButton,
+        isLoading: viewModel.viewState.isLoading,
+        onAction: viewModel.onContinue()
+      )
+      .padding(.horizontal)
+    }
   }
 
   public var body: some View {
     ContentScreen(
       padding: .zero,
-      canScroll: true,
+      canScroll: !viewModel.viewState.hasContinueButton,
       errorConfig: viewModel.viewState.error
     ) {
 
@@ -66,10 +79,9 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
         documentName: viewModel.viewState.document.documentName,
         holdersName: viewModel.viewState.document.holdersName,
         userIcon: viewModel.viewState.document.holdersImage,
-        isLoading: viewModel.viewState.isLoading
-      ) {
-        viewModel.pop()
-      }
+        isLoading: viewModel.viewState.isLoading,
+        onBack: viewModel.viewState.isCancellable ? { viewModel.pop() } : nil
+      )
 
       content()
     }

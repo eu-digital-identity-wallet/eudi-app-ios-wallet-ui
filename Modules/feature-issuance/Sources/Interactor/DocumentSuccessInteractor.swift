@@ -14,22 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-import logic_resources
+public protocol DocumentSuccessInteractorType {}
 
-public struct WalletUiConfig: ConfigUiLogic {
+public final class DocumentSuccessInteractor: DocumentSuccessInteractorType {
 
-  public var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] = [
-    AppRoute.dashboard.key: .init(Theme.shared.color.primary),
-    AppRoute.startup.key: .init(Theme.shared.color.primary),
-    AppRoute.welcome.key: .init(Theme.shared.color.primary),
-    AppRoute.issuanceDocumentDetails(config: NoConfig()).key: .init(Theme.shared.color.primary)
-  ]
-
-  public var landingRoute: AppRoute {
-    return .dashboard
-  }
-
-  public init(themeConfiguration: ThemeConfiguration) {
-    Theme.config(themeConfiguration: themeConfiguration)
-  }
+  public init() {}
 }

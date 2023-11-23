@@ -22,8 +22,12 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
 
   @ObservedObject var viewModel: AddDocumentViewModel<Router, Interactor>
 
-  public init(with router: Router, and interactor: Interactor) {
-    self.viewModel = AddDocumentViewModel(router: router, interactor: interactor)
+  public init(
+    with router: Router,
+    and interactor: Interactor,
+    config: any UIConfigType
+  ) {
+    self.viewModel = AddDocumentViewModel(router: router, interactor: interactor, config: config)
   }
 
   @ViewBuilder
@@ -33,7 +37,8 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
 
         ContentTitle(
           title: .addDocumentTitle,
-          caption: .addDocumentSubtitle
+          caption: .addDocumentSubtitle,
+          topSpacing: viewModel.viewState.isFlowCancellable ? .withToolbar : .withoutToolbar
         )
 
         VSpacer.large()
@@ -45,7 +50,7 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
             title: cell.documentName,
             isLoading: cell.isLoading,
             action: {
-              viewModel.routeToIssuance(for: cell.type)
+              viewModel.routeToIssuance(for: LocalizableString.shared.get(with: cell.documentName))
             }
           )
           .padding(.bottom, Theme.shared.shape.small)
@@ -57,8 +62,10 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
   public var body: some View {
     ContentScreen(errorConfig: viewModel.viewState.error) {
 
-      ContentHeader(dismissIcon: Theme.shared.image.xmark) {
-        viewModel.pop()
+      if viewModel.viewState.isFlowCancellable {
+        ContentHeader(dismissIcon: Theme.shared.image.xmark) {
+          viewModel.pop()
+        }
       }
 
       content()

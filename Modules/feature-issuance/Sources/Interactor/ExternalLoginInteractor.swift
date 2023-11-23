@@ -13,23 +13,29 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-
+import Foundation
+import logic_ui
 import logic_resources
+import logic_business
 
-public struct WalletUiConfig: ConfigUiLogic {
+public protocol ExternalLoginInteractorType {
+  func handleExternalLogin() async -> ExternalLoginPartialState
+}
 
-  public var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] = [
-    AppRoute.dashboard.key: .init(Theme.shared.color.primary),
-    AppRoute.startup.key: .init(Theme.shared.color.primary),
-    AppRoute.welcome.key: .init(Theme.shared.color.primary),
-    AppRoute.issuanceDocumentDetails(config: NoConfig()).key: .init(Theme.shared.color.primary)
-  ]
+public final class ExternalLoginInteractor: ExternalLoginInteractorType {
 
-  public var landingRoute: AppRoute {
-    return .dashboard
+  public init() {}
+
+  public func handleExternalLogin() async -> ExternalLoginPartialState {
+    try? await Task.sleep(nanoseconds: 2.nanoseconds)
+    guard let url = URL(string: "https://www.gov.gr") else {
+      return .failure(RuntimeError.genericError)
+    }
+    return .success(url)
   }
+}
 
-  public init(themeConfiguration: ThemeConfiguration) {
-    Theme.config(themeConfiguration: themeConfiguration)
-  }
+public enum ExternalLoginPartialState {
+  case success(URL)
+  case failure(Error)
 }

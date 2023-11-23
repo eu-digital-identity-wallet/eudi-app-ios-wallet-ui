@@ -155,6 +155,30 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "quick_pin_update_cancellation_caption")
     case .quickPinUpdateCancellationContinue:
       bundle.localizedString(forKey: "quick_pin_update_cancellation_continue")
+    case .issuanceDetailsContinueButton:
+      bundle.localizedString(forKey: "issuance_details_continue_button")
+    case .issuanceExternalLoadingTitle(let args):
+      bundle.localizedStringWithArguments(forKey: "issuance_external_loading_title", arguments: args)
+    case .issuanceExternalLoadingCaption:
+      bundle.localizedString(forKey: "issuance_external_loading_caption")
+    case .issuanceSuccessTitle:
+      bundle.localizedString(forKey: "issuance_success_title")
+    case .issuanceSuccessCaption(let args):
+      bundle.localizedStringWithArguments(forKey: "issuance_success_caption", arguments: args)
+    case .issuanceSuccessFooterTitle(let args):
+      bundle.localizedStringWithArguments(forKey: "issuance_success_footer_title", arguments: args)
+    case .issuanceSuccessModalTitle(let args):
+      bundle.localizedStringWithArguments(forKey: "issuance_success_cancellation_modal_title", arguments: args)
+    case .issuanceSuccessModalCaption(let args):
+      bundle.localizedStringWithArguments(forKey: "issuance_success_cancellation_modal_caption", arguments: args)
+    case .issuanceSuccessModalContinueButton:
+      bundle.localizedString(forKey: "issuance_success_cancellation_modal_issuance_button")
+    case .issuanceSuccessModalCancelButton:
+      bundle.localizedString(forKey: "issuance_success_cancellation_modal_cancel_button")
+    case .issuanceSuccessAddButton:
+      bundle.localizedString(forKey: "issuance_success_add_button")
+    case .issuanceSuccessCancelButton:
+      bundle.localizedString(forKey: "issuance_success_cancel_button")
     }
   }
 
@@ -225,6 +249,18 @@ public extension LocalizableString {
     case quickPinUpdateCancellationTitle
     case quickPinUpdateCancellationCaption
     case quickPinUpdateCancellationContinue
+    case issuanceDetailsContinueButton
+    case issuanceExternalLoadingTitle([String])
+    case issuanceExternalLoadingCaption
+    case issuanceSuccessTitle
+    case issuanceSuccessCaption([String])
+    case issuanceSuccessFooterTitle([String])
+    case issuanceSuccessModalTitle([String])
+    case issuanceSuccessModalCaption([String])
+    case issuanceSuccessModalContinueButton
+    case issuanceSuccessModalCancelButton
+    case issuanceSuccessAddButton
+    case issuanceSuccessCancelButton
   }
 }
 

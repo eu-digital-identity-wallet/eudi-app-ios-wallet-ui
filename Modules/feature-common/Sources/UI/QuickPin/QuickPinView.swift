@@ -37,7 +37,8 @@ public struct QuickPinView<Router: RouterHostType, Interactor: QuickPinInteracto
 
       ContentTitle(
         title: viewModel.viewState.title,
-        caption: viewModel.viewState.caption
+        caption: viewModel.viewState.caption,
+        topSpacing: viewModel.viewState.isCancellable ? .withToolbar : .withoutToolbar
       )
 
       VSpacer.large()

@@ -16,12 +16,21 @@
 import Foundation
 import logic_ui
 import logic_resources
+import feature_common
 
 struct DocumentDetailsViewState: ViewState {
-  var document: DocumentDetailsUIModel
-  var isLoading: Bool
+  let document: DocumentDetailsUIModel
+  let isLoading: Bool
   let error: ContentError.Config?
-  let documentId: String
+  let config: IssuanceDetailUiConfig
+
+  var isCancellable: Bool {
+    return config.isExtraDocument
+  }
+
+  var hasContinueButton: Bool {
+    return !config.isExtraDocument
+  }
 }
 
 @MainActor
@@ -32,8 +41,11 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
   init(
     router: Router,
     interactor: Interactor,
-    documentId: String
+    config: any UIConfigType
   ) {
+    guard let config = config as? IssuanceDetailUiConfig else {
+      fatalError("DocumentDetailsViewModel:: Invalid configuraton")
+    }
     self.interactor = interactor
     super.init(
       router: router,
@@ -41,14 +53,14 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
         document: DocumentDetailsUIModel.mock(),
         isLoading: true,
         error: nil,
-        documentId: documentId
+        config: config
       )
     )
   }
 
   func fetchDocumentDetails() async {
 
-    switch await self.interactor.fetchStoredDocument(documentId: viewState.documentId) {
+    switch await self.interactor.fetchStoredDocument(documentId: viewState.config.documentId) {
 
     case .success(let document):
       self.setNewState(
@@ -67,7 +79,11 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
   }
 
   func pop() {
-    router.pop()
+    router.popTo(with: .dashboard)
+  }
+
+  func onContinue() {
+    router.push(with: .dashboard)
   }
 
   private func setNewState(
@@ -80,7 +96,7 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
           document: document ?? previous.document,
           isLoading: isLoading,
           error: error,
-          documentId: previous.documentId
+          config: previous.config
         )
     }
   }

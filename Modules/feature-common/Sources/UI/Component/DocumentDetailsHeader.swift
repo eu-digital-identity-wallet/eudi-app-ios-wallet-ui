@@ -24,14 +24,14 @@ public struct DocumentDetailsHeaderView: View {
   let holdersName: String
   let userIcon: Image
   let isLoading: Bool
-  let onBack: () -> Void
+  let onBack: (() -> Void)?
 
   public init(
     documentName: String,
     holdersName: String,
     userIcon: Image,
     isLoading: Bool,
-    onBack: @escaping () -> Void
+    onBack: (() -> Void)?
   ) {
     self.holdersName = holdersName
     self.userIcon = userIcon
@@ -61,14 +61,14 @@ extension DocumentDetailsHeaderView {
     let holdersName: String
     let userIcon: Image
     let isLoading: Bool
-    let onBack: () -> Void
+    let onBack: (() -> Void)?
 
     public init(
       documentName: String,
       holdersName: String,
       userIcon: Image,
       isLoading: Bool,
-      onBack: @escaping () -> Void
+      onBack: (() -> Void)?
     ) {
       self.documentName = documentName
       self.holdersName = holdersName
@@ -80,11 +80,13 @@ extension DocumentDetailsHeaderView {
     public var body: some View {
       VStack(alignment: .leading, spacing: SPACING_SMALL) {
 
-        ContentHeader(
-          dismissIcon: Theme.shared.image.xmark,
-          foregroundColor: Theme.shared.color.white
-        ) {
-          onBack()
+        if let onBack {
+          ContentHeader(
+            dismissIcon: Theme.shared.image.xmark,
+            foregroundColor: Theme.shared.color.white
+          ) {
+            onBack()
+          }
         }
 
         Text(documentName)

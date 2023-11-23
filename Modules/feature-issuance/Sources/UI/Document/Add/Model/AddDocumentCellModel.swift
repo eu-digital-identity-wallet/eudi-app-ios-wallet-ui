@@ -55,7 +55,7 @@ public extension AddDocumentCellModel {
       ),
       .init(
         isEnabled: false,
-        documentName: LocalizableString.Key.mdl,
+        documentName: .mdl,
         image: Theme.shared.image.id,
         type: .mdl
       )

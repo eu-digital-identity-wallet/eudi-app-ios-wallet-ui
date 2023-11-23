@@ -16,25 +16,35 @@
 import Foundation
 import logic_ui
 
-public struct QuickPinConfig: UIConfigType {
-  public let flow: QuickPinFlow
+public struct IssuanceDetailUiConfig: UIConfigType {
+  public let flow: Flow
 
-  public var isSetFlow: Bool {
-    self.flow == .set
-  }
-
-  public var isUpdateFlow: Bool {
-    self.flow == .update
-  }
-
-  public init(flow: QuickPinFlow) {
+  public init(flow: Flow) {
     self.flow = flow
+  }
+
+  public var documentId: String {
+    switch self.flow {
+    case .noDocument(let id):
+      return id
+    case .extraDocument(let id):
+      return id
+    }
+  }
+
+  public var isExtraDocument: Bool {
+    switch self.flow {
+    case .noDocument:
+      return false
+    case .extraDocument:
+      return true
+    }
   }
 }
 
-public extension QuickPinConfig {
-  enum QuickPinFlow: Equatable {
-    case set
-    case update
+public extension IssuanceDetailUiConfig {
+  enum Flow: Equatable {
+    case noDocument(String)
+    case extraDocument(String)
   }
 }

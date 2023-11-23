@@ -23,6 +23,9 @@ public protocol StartupInteractorType {
 
 public final actor StartupInteractor: StartupInteractorType {
 
+  // MARK: - TODO Remove this once we can ask core if the user has stored documents
+  private let hasDocuments: Bool = true
+
   private lazy var quickPinInteractor: QuickPinInteractorType = QuickPinInteractor()
 
   public init() {}
@@ -36,7 +39,9 @@ public final actor StartupInteractor: StartupInteractorType {
           caption: .loginCaption,
           quickPinOnlyCaption: .loginCaptionQuickPinOnly,
           navigationSuccessConfig: .init(
-            screen: .dashboard,
+            screen: hasDocuments
+            ? .dashboard
+            : .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument)),
             navigationType: .push
           ),
           navigationBackConfig: nil,
@@ -45,7 +50,7 @@ public final actor StartupInteractor: StartupInteractorType {
         )
       )
     } else {
-      return .quickPin(config: QuickPinConfig(flow: .set))
+      return .quickPin(config: QuickPinUiConfig(flow: .set))
     }
   }
 }
