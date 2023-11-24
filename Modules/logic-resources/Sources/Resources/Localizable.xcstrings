@@ -815,6 +815,12 @@
         }
       }
     },
+    "request_data_verified_entity" : {
+      "extractionState" : "manual"
+    },
+    "request_data_verified_entity_message" : {
+      "extractionState" : "manual"
+    },
     "resident_address" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -39,6 +39,7 @@ public protocol ImageManagerProtocol {
   var plus: Image { get }
   var share: Image { get }
   var warning: Image { get }
+  var checkMarkSealFill: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -66,6 +67,7 @@ final class ImageManager: ImageManagerProtocol {
     case plus = "plus"
     case share = "iphone.and.arrow.forward"
     case warning = "ic-warning"
+    case checkMarkSealFill = "checkmark.seal.fill"
   }
 
   // MARK: - Properties
@@ -142,5 +144,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var warning: Image {
     Image(ImageEnum.warning.rawValue, bundle: bundle)
+  }
+  var checkMarkSealFill: Image {
+    Image(systemName: ImageEnum.checkMarkSealFill.rawValue)
   }
 }

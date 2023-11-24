@@ -120,4 +120,8 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
     viewState.relyingParty
   }
 
+  override func getTitleCaption() -> LocalizableString.Key {
+    .requestDataTitle([""])
+  }
+
 }

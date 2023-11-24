@@ -35,6 +35,7 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
 
   @Published var isCancelModalShowing: Bool = false
   @Published var isRequestInfoModalShowing: Bool = false
+  @Published var isVerifiedEntityModalShowing: Bool = false
 
   public init(router: Router) {
     super.init(
@@ -74,6 +75,10 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
 
   open func getSuccessRoute() -> AppRoute? {
     return nil
+  }
+
+  open func getTitleCaption() -> LocalizableString.Key {
+    return .custom("")
   }
 
   open func onShare() {
@@ -131,6 +136,10 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
 
   func onShowRequestInfoModal() {
     isRequestInfoModalShowing = !isRequestInfoModalShowing
+  }
+
+  func onVerifiedEntityModal() {
+    isVerifiedEntityModalShowing = !isVerifiedEntityModalShowing
   }
 
   func onContentVisibilityChange() {

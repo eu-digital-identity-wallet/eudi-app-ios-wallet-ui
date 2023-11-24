@@ -68,7 +68,7 @@ final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: Proxim
             title: .okButton,
             screen: .dashboard,
             style: .primary,
-            navigationType: .pop(inclusive: true)
+            navigationType: .pop()
           )
         ],
         visualKind: .defaultIcon

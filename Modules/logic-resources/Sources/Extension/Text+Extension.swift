@@ -21,6 +21,12 @@ public extension Text {
       .font(style.font)
       .tracking(style.spacing)
   }
+
+  func typography(style: TypographyStyle) -> Text {
+    self
+      .font(style.font)
+      .tracking(style.spacing)
+  }
 }
 
 public extension Text {

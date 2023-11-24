@@ -70,13 +70,6 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
       .store(in: &cancellables)
   }
 
-  func goBack() {
-    Task {
-      await interactor.stopPresentation()
-    }
-    router.pop()
-  }
-
   private func onQRGeneration() async {
     switch await interactor.onQRGeneration() {
     case .success(let qrImage):
@@ -89,6 +82,13 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
         )
       )
     }
+  }
+
+  func goBack() {
+    Task {
+      await interactor.stopPresentation()
+    }
+    router.pop()
   }
 
   private func onConnectionSuccess() async {

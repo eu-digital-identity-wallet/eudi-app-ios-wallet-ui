@@ -28,9 +28,23 @@ public struct BaseRequestView<Router: RouterHostType>: View {
   public var body: some View {
     ContentScreen(errorConfig: viewModel.viewState.error) {
 
-      ContentTitle(
-        title: viewModel.getTitle()
-      )
+      if viewModel.viewState.isTrusted {
+        ContentTitle(
+          titleDecoration: .icon(
+            decorated: Text(viewModel.getRelyingParty()),
+            icon: Theme.shared.image.checkMarkSealFill,
+            text: Text(viewModel.getTitleCaption())
+          ),
+          decorationColor: Theme.shared.color.success,
+          onTap: {
+            viewModel.onVerifiedEntityModal()
+          }
+        )
+      } else {
+        ContentTitle(
+          title: viewModel.getTitle()
+        )
+      }
 
       VSpacer.extraSmall()
 
@@ -115,6 +129,14 @@ public struct BaseRequestView<Router: RouterHostType>: View {
         WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onShowRequestInfoModal())
       }
     }
+    .sheetDialog(isPresented: $viewModel.isVerifiedEntityModalShowing, {
+      ContentTitle(
+        title: .requestDataInfoNotice,
+        caption: .requestDataSheetCaption
+      )
+
+      WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onShowRequestInfoModal())
+    })
     .task {
       await viewModel.doWork()
     }
