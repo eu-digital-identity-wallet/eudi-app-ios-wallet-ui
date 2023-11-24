@@ -15,7 +15,6 @@
  */
 // PID
 "eu_pid_doctype_name" = "EU PID";
-"unique_id" = "Unique identifier";
 "persistent_id" = "Persistent Identifier";
 "family_name_birth" = "Family Name at Birth";
 "first_name_birth" = "First Name at Birth";
