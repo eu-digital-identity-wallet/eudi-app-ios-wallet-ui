@@ -16,7 +16,6 @@
 import SwiftUI
 import logic_ui
 import feature_common
-import logic_business
 
 public struct ProximityLoadingView<Router: RouterHostType, Interactor: ProximityInteractorType>: View {
 

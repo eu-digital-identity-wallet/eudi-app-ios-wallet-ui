@@ -21,9 +21,6 @@ public protocol RequestItemConvertible {
 }
 
 public struct RequestItemsWrapper: RequestItemConvertible {
-  public func asRequestItems() -> EudiWalletKit.RequestItems {
-    requestItems
-  }
 
   public var requestItems: RequestItems
 
@@ -34,6 +31,11 @@ public struct RequestItemsWrapper: RequestItemConvertible {
   public init(dictionary: [String: [String: [String]]]) {
     self.requestItems = dictionary
   }
+  
+  public func asRequestItems() -> EudiWalletKit.RequestItems {
+    requestItems
+  }
+
 }
 
 extension RequestItems: RequestItemConvertible {

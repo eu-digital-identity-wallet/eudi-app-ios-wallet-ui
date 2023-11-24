@@ -15,7 +15,6 @@
  */
 
 import feature_common
-import logic_business
 
 @MainActor
 final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: ProximityInteractorType>: BaseLoadingViewModel<Router> {
