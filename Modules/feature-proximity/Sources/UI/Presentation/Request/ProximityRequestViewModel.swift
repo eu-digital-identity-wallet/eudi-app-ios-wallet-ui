@@ -109,11 +109,11 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
   }
 
   override func getCaption() -> LocalizableString.Key {
-    viewState.caption
+    .requestDataCaption
   }
 
   override func getDataRequestInfo() -> LocalizableString.Key {
-    viewState.dataRequestInfo
+    .requestDataInfoNotice
   }
 
   override func getRelyingParty() -> String {

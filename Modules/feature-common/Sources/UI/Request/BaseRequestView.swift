@@ -31,9 +31,9 @@ public struct BaseRequestView<Router: RouterHostType>: View {
       if viewModel.viewState.isTrusted {
         ContentTitle(
           titleDecoration: .icon(
-            decorated: Text(viewModel.getTrustedRelyingParty()),
+            decorated: Text(viewModel.getRelyingParty()),
             icon: Theme.shared.image.checkMarkSealFill,
-            text: Text(viewModel.getTrustedRelyingPartyInfo())
+            text: Text(viewModel.getTitleCaption())
           ),
           decorationColor: Theme.shared.color.success,
           onTap: {
@@ -133,8 +133,8 @@ public struct BaseRequestView<Router: RouterHostType>: View {
       VStack(spacing: SPACING_MEDIUM) {
 
         ContentTitle(
-          title: .requestDataInfoNotice,
-          caption: .requestDataSheetCaption
+          title: viewModel.getTrustedRelyingParty(),
+          caption: viewModel.getTrustedRelyingPartyInfo()
         )
 
         WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onShowRequestInfoModal())

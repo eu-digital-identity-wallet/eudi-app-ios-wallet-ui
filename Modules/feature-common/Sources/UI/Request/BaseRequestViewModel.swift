@@ -24,8 +24,7 @@ public struct RequestViewState: ViewState {
   public let itemsAreAllSelected: Bool
   public let items: [RequestDataCell]
   public let title: LocalizableString.Key
-  public let caption: LocalizableString.Key
-  public let dataRequestInfo: LocalizableString.Key
+  public let trustedRelyingPartyInfo: LocalizableString.Key
   public let relyingParty: String
   public let isTrusted: Bool
 }
@@ -47,8 +46,7 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
         itemsAreAllSelected: true,
         items: RequestDataUiModel.mock(),
         title: .requestDataTitle(["EUDI Conference"]),
-        caption: .requestDataCaption,
-        dataRequestInfo: .requestDataInfoNotice,
+        trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
         relyingParty: "EUDI Conference",
         isTrusted: false
       )
@@ -196,8 +194,7 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     itemsAreAllSelected: Bool? = nil,
     items: [RequestDataCell]? = nil,
     title: LocalizableString.Key? = nil,
-    caption: LocalizableString.Key? = nil,
-    dataRequestInfo: LocalizableString.Key? = nil,
+    trustedRelyingPartyInfo: LocalizableString.Key? = nil,
     relyingParty: String? = nil,
     isTrusted: Bool? = nil
   ) {
@@ -209,8 +206,7 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
         itemsAreAllSelected: itemsAreAllSelected ?? $0.itemsAreAllSelected,
         items: items ?? $0.items,
         title: title ?? $0.title,
-        caption: caption ?? $0.caption,
-        dataRequestInfo: dataRequestInfo ?? $0.dataRequestInfo,
+        trustedRelyingPartyInfo: trustedRelyingPartyInfo ?? $0.trustedRelyingPartyInfo,
         relyingParty: relyingParty ?? $0.relyingParty,
         isTrusted: isTrusted ?? $0.isTrusted
       )
