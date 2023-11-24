@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2023 European Commission
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
  */
 import SwiftUI
 import logic_resources
@@ -22,7 +22,8 @@ public struct WrapButtonView: View {
   private let onAction: () -> Void
   private let textColor: Color
   private let backgroundColor: Color
-  private let systemIcon: String?
+  private let iconColor: Color
+  private let icon: Image?
   private let gravity: Gravity
   private let cornerRadius: CGFloat
   private let isEnabled: Bool
@@ -34,7 +35,8 @@ public struct WrapButtonView: View {
     title: LocalizableString.Key,
     textColor: Color = Theme.shared.color.textPrimaryDark,
     backgroundColor: Color = Theme.shared.color.secondary,
-    systemIcon: String? = nil,
+    iconColor: Color = Theme.shared.color.primary,
+    icon: Image? = nil,
     gravity: Gravity = .center,
     isLoading: Bool = false,
     isEnabled: Bool = true,
@@ -46,7 +48,8 @@ public struct WrapButtonView: View {
     self.title = title
     self.textColor = textColor
     self.backgroundColor = backgroundColor
-    self.systemIcon = systemIcon
+    self.iconColor = iconColor
+    self.icon = icon
     self.gravity = gravity
     self.isLoading = isLoading
     self.isEnabled = isEnabled
@@ -59,7 +62,8 @@ public struct WrapButtonView: View {
   public init(
     style: ButtonStyleEnum,
     title: LocalizableString.Key,
-    systemIcon: String? = nil,
+    iconColor: Color = Theme.shared.color.primary,
+    icon: Image? = nil,
     gravity: Gravity = .center,
     isLoading: Bool = false,
     isEnabled: Bool = true,
@@ -69,7 +73,8 @@ public struct WrapButtonView: View {
     self.title = title
     self.textColor = style.textColor
     self.backgroundColor = style.backgroundColor
-    self.systemIcon = systemIcon
+    self.iconColor = style.textColor
+    self.icon = icon
     self.gravity = gravity
     self.isLoading = isLoading
     self.isEnabled = isEnabled
@@ -89,15 +94,15 @@ public struct WrapButtonView: View {
             Spacer()
           }
 
-          if let systemIcon {
+          if let icon {
 
-            Image(systemName: systemIcon)
+            icon
               .resizable()
               .scaledToFit()
               .frame(width: 25)
-              .foregroundColor(textColor)
+              .foregroundColor(iconColor)
 
-            HSpacer.small()
+            HSpacer.medium()
           }
 
           Text(title)
@@ -117,9 +122,11 @@ public struct WrapButtonView: View {
           RoundedRectangle(cornerRadius: cornerRadius)
             .stroke(borderColor, lineWidth: borderWidth)
         )
-
       }
     )
+    .if(!isEnabled && !isLoading) {
+      $0.opacity(0.5)
+    }
     .disabled(isLoading || !isEnabled)
     .shimmer(isLoading: isLoading)
   }

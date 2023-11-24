@@ -1,39 +1,48 @@
 /*
  * Copyright (c) 2023 European Commission
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
  */
 import Foundation
 import logic_ui
 import logic_resources
+import feature_common
 
 struct AddDocumentViewState: ViewState {
   let addDocumentCellModels: [AddDocumentCellModel]
   let error: ContentError.Config?
+  let config: IssuanceFlowUiConfig
+
+  var isFlowCancellable: Bool {
+    return config.isExtraDocumentFlow
+  }
 }
 
 final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocumentInteractorType>: BaseViewModel<Router, AddDocumentViewState> {
 
   private let interactor: Interactor
 
-  init(router: Router, interactor: Interactor) {
+  init(router: Router, interactor: Interactor, config: any UIConfigType) {
+    guard let config = config as? IssuanceFlowUiConfig else {
+      fatalError("AddDocumentViewModel:: Invalid configuraton")
+    }
     self.interactor = interactor
-
     super.init(
       router: router,
       initialState: .init(
         addDocumentCellModels: AddDocumentCellModel.mocks,
-        error: nil
+        error: nil,
+        config: config
       )
     )
   }
@@ -53,13 +62,8 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
     }
   }
 
-  func routeToIssuance(for docType: AddDocumentCellModel.`Type`) {
-    switch docType {
-    case .pid:
-      print("route to pid issuance flow")
-    case .mdl:
-      print("route to pid issuance flow")
-    }
+  func routeToIssuance(for docName: String) {
+    router.push(with: .issuanceExternalLogin(config: viewState.config, documentName: docName))
   }
 
   func pop() {
@@ -73,7 +77,8 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
     setState { previousSate in
         .init(
           addDocumentCellModels: addDocumentCellModels ?? previousSate.addDocumentCellModels,
-          error: error
+          error: error,
+          config: previousSate.config
         )
     }
   }

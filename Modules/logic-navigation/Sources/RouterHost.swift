@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2023 European Commission
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
  */
 import Foundation
 import UIPilot
@@ -24,6 +24,7 @@ import feature_common
 import feature_dashboard
 import feature_presentation
 import feature_proximity
+import feature_issuance
 
 public final class RouterHost: RouterHostType {
 
@@ -99,14 +100,18 @@ public final class RouterHost: RouterHostType {
         SameDeviceRequestView(with: self, and: SameDeviceInteractor())
       case .welcome:
         WelcomeView(with: self, and: WelcomeInteractor())
-      case .documentDetails(let documentId):
+      case .issuanceDocumentDetails(let config):
         DocumentDetailsView(
           with: self,
           and: DocumentDetailsInteractor(),
-          documentId: documentId
+          config: config
         )
-      case .addDocument:
-        AddDocumentView(with: self, and: AddDocumentInteractor())
+      case .issuanceAddDocument(let config):
+        AddDocumentView(
+          with: self,
+          and: AddDocumentInteractor(),
+          config: config
+        )
       case .proximityConnection(let presentationSessionCoordinator):
         ProximityConnectionView(
           with: self,
@@ -122,6 +127,26 @@ public final class RouterHost: RouterHostType {
           with: self,
           and: ProximityInteractor(presentationSessionCoordinator: presentationSessionCoordinator),
           relyingParty: relyingParty
+        )
+      case .quickPin(let config):
+        QuickPinView(
+          with: self,
+          interactor: QuickPinInteractor(),
+          config: config
+        )
+      case .issuanceExternalLogin(let config, let documentName):
+        ExternalLoginView(
+          with: self,
+          and: ExternalLoginInteractor(),
+          config: config,
+          documentName: documentName
+        )
+      case .issuanceSuccess(let config, let documentName):
+        DocumentSuccessView(
+          with: self,
+          and: DocumentSuccessInteractor(),
+          config: config,
+          documentName: documentName
         )
       }
     }

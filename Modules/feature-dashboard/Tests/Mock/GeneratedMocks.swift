@@ -5,136 +5,6 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
-import logic_resources
-import logic_ui
-
-
-
-
-
-
-public class MockAddDocumentInteractorType: AddDocumentInteractorType, Cuckoo.ProtocolMock {
-    
-    public typealias MocksType = AddDocumentInteractorType
-    
-    public typealias Stubbing = __StubbingProxy_AddDocumentInteractorType
-    public typealias Verification = __VerificationProxy_AddDocumentInteractorType
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    
-    private var __defaultImplStub: AddDocumentInteractorType?
-
-    public func enableDefaultImplementation(_ stub: AddDocumentInteractorType) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-    
-
-    
-
-    
-
-    
-    
-    
-    
-    public func fetchStoredDocuments() -> StoredDocumentsPartialState {
-        
-    return cuckoo_manager.call(
-    """
-    fetchStoredDocuments() -> StoredDocumentsPartialState
-    """,
-            parameters: (),
-            escapingParameters: (),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.fetchStoredDocuments())
-        
-    }
-    
-    
-
-    public struct __StubbingProxy_AddDocumentInteractorType: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        
-        
-        
-        func fetchStoredDocuments() -> Cuckoo.ProtocolStubFunction<(), StoredDocumentsPartialState> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractorType.self, method:
-    """
-    fetchStoredDocuments() -> StoredDocumentsPartialState
-    """, parameterMatchers: matchers))
-        }
-        
-        
-    }
-
-    public struct __VerificationProxy_AddDocumentInteractorType: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    
-        
-    
-        
-        
-        
-        @discardableResult
-        func fetchStoredDocuments() -> Cuckoo.__DoNotUse<(), StoredDocumentsPartialState> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-    """
-    fetchStoredDocuments() -> StoredDocumentsPartialState
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-    }
-}
-
-
-public class AddDocumentInteractorTypeStub: AddDocumentInteractorType {
-    
-
-    
-
-    
-    
-    
-    
-    public func fetchStoredDocuments() -> StoredDocumentsPartialState  {
-        return DefaultValueRegistry.defaultValue(for: (StoredDocumentsPartialState).self)
-    }
-    
-    
-}
-
-
-
-
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
 import logic_business
 
 
@@ -365,166 +235,6 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
-import Foundation
-import logic_resources
-import logic_ui
-
-
-
-
-
-
-public class MockDocumentDetailsInteractorType: DocumentDetailsInteractorType, Cuckoo.ProtocolMock {
-    
-    public typealias MocksType = DocumentDetailsInteractorType
-    
-    public typealias Stubbing = __StubbingProxy_DocumentDetailsInteractorType
-    public typealias Verification = __VerificationProxy_DocumentDetailsInteractorType
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    
-    private var __defaultImplStub: DocumentDetailsInteractorType?
-
-    public func enableDefaultImplementation(_ stub: DocumentDetailsInteractorType) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-    
-
-    
-
-    
-
-    
-    
-    
-    
-    public func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
-        
-    return await cuckoo_manager.call(
-    """
-    fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
-    """,
-            parameters: (documentId),
-            escapingParameters: (documentId),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: await __defaultImplStub!.fetchStoredDocument(documentId: documentId))
-        
-    }
-    
-    
-
-    public struct __StubbingProxy_DocumentDetailsInteractorType: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        
-        
-        
-        func fetchStoredDocument<M1: Cuckoo.Matchable>(documentId: M1) -> Cuckoo.ProtocolStubFunction<(String), DocumentDetailsPartialState> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: documentId) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentDetailsInteractorType.self, method:
-    """
-    fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
-    """, parameterMatchers: matchers))
-        }
-        
-        
-    }
-
-    public struct __VerificationProxy_DocumentDetailsInteractorType: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    
-        
-    
-        
-        
-        
-        @discardableResult
-        func fetchStoredDocument<M1: Cuckoo.Matchable>(documentId: M1) -> Cuckoo.__DoNotUse<(String), DocumentDetailsPartialState> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: documentId) { $0 }]
-            return cuckoo_manager.verify(
-    """
-    fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-    }
-}
-
-
-public class DocumentDetailsInteractorTypeStub: DocumentDetailsInteractorType {
-    
-
-    
-
-    
-    
-    
-    
-    public func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState  {
-        return DefaultValueRegistry.defaultValue(for: (DocumentDetailsPartialState).self)
-    }
-    
-    
-}
-
-
-
-
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
-import feature_common
-import logic_resources
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-import logic_resources
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_ui
-
 import SwiftUI
 import logic_resources
 
@@ -576,44 +286,7 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-import logic_resources
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
 import feature_common
-import logic_resources
 import logic_ui
 
 import Cuckoo
@@ -623,8 +296,15 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
-import logic_business
 import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_dashboard
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
 
 import Cuckoo
 @testable import logic_business
@@ -1926,6 +1606,26 @@ public class MockKeyChainControllerType: KeyChainControllerType, Cuckoo.Protocol
     }
     
     
+    
+    
+    
+    public func clear()  {
+        
+    return cuckoo_manager.call(
+    """
+    clear()
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.clear())
+        
+    }
+    
+    
 
     public struct __StubbingProxy_KeyChainControllerType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -1986,6 +1686,17 @@ public class MockKeyChainControllerType: KeyChainControllerType, Cuckoo.Protocol
             return .init(stub: cuckoo_manager.createStub(for: MockKeyChainControllerType.self, method:
     """
     clearKeyChainBiometry()
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func clear() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockKeyChainControllerType.self, method:
+    """
+    clear()
     """, parameterMatchers: matchers))
         }
         
@@ -2066,6 +1777,18 @@ public class MockKeyChainControllerType: KeyChainControllerType, Cuckoo.Protocol
         }
         
         
+        
+        
+        @discardableResult
+        func clear() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    clear()
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -2112,6 +1835,14 @@ public class KeyChainControllerTypeStub: KeyChainControllerType {
     
     
     public func clearKeyChainBiometry()   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func clear()   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

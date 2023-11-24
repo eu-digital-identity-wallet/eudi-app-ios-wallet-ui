@@ -1,20 +1,21 @@
 /*
  * Copyright (c) 2023 European Commission
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
  */
 import Foundation
 import logic_ui
+import feature_common
 
 public protocol StartupInteractorType {
   func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute
@@ -22,10 +23,34 @@ public protocol StartupInteractorType {
 
 public final actor StartupInteractor: StartupInteractorType {
 
+  // MARK: - TODO Remove this once we can ask core if the user has stored documents
+  private let hasDocuments: Bool = true
+
+  private lazy var quickPinInteractor: QuickPinInteractorType = QuickPinInteractor()
+
   public init() {}
 
   public func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute {
     try? await Task.sleep(nanoseconds: splashAnimationDuration.nanoseconds)
-    return .welcome
+    if quickPinInteractor.hasPin() {
+      return .biometry(
+        config: UIConfig.Biometry(
+          title: .loginTitle,
+          caption: .loginCaption,
+          quickPinOnlyCaption: .loginCaptionQuickPinOnly,
+          navigationSuccessConfig: .init(
+            screen: hasDocuments
+            ? .dashboard
+            : .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument)),
+            navigationType: .push
+          ),
+          navigationBackConfig: nil,
+          isPreAuthorization: true,
+          shouldInitializeBiometricOnCreate: true
+        )
+      )
+    } else {
+      return .quickPin(config: QuickPinUiConfig(flow: .set))
+    }
   }
 }

@@ -31,7 +31,7 @@ public struct RequestItemsWrapper: RequestItemConvertible {
   public init(dictionary: [String: [String: [String]]]) {
     self.requestItems = dictionary
   }
-  
+
   public func asRequestItems() -> EudiWalletKit.RequestItems {
     requestItems
   }

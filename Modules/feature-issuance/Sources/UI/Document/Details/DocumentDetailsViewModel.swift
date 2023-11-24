@@ -1,27 +1,36 @@
 /*
  * Copyright (c) 2023 European Commission
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
  */
 import Foundation
 import logic_ui
 import logic_resources
+import feature_common
 
 struct DocumentDetailsViewState: ViewState {
-  var document: DocumentDetailsUIModel
-  var isLoading: Bool
+  let document: DocumentDetailsUIModel
+  let isLoading: Bool
   let error: ContentError.Config?
-  let documentId: String
+  let config: IssuanceDetailUiConfig
+
+  var isCancellable: Bool {
+    return config.isExtraDocument
+  }
+
+  var hasContinueButton: Bool {
+    return !config.isExtraDocument
+  }
 }
 
 @MainActor
@@ -32,8 +41,11 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
   init(
     router: Router,
     interactor: Interactor,
-    documentId: String
+    config: any UIConfigType
   ) {
+    guard let config = config as? IssuanceDetailUiConfig else {
+      fatalError("DocumentDetailsViewModel:: Invalid configuraton")
+    }
     self.interactor = interactor
     super.init(
       router: router,
@@ -41,14 +53,14 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
         document: DocumentDetailsUIModel.mock(),
         isLoading: true,
         error: nil,
-        documentId: documentId
+        config: config
       )
     )
   }
 
   func fetchDocumentDetails() async {
 
-    switch await self.interactor.fetchStoredDocument(documentId: viewState.documentId) {
+    switch await self.interactor.fetchStoredDocument(documentId: viewState.config.documentId) {
 
     case .success(let document):
       self.setNewState(
@@ -67,7 +79,11 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
   }
 
   func pop() {
-    router.pop()
+    router.popTo(with: .dashboard)
+  }
+
+  func onContinue() {
+    router.push(with: .dashboard)
   }
 
   private func setNewState(
@@ -80,7 +96,7 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
           document: document ?? previous.document,
           isLoading: isLoading,
           error: error,
-          documentId: previous.documentId
+          config: previous.config
         )
     }
   }
