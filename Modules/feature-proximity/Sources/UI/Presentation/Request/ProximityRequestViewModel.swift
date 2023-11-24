@@ -124,4 +124,11 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
     .requestDataTitle([""])
   }
 
+  override func getTrustedRelyingParty() -> LocalizableString.Key {
+    .requestDataVerifiedEntity
+  }
+
+  override func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
+    .requestDataVerifiedEntityMessage
+  }
 }

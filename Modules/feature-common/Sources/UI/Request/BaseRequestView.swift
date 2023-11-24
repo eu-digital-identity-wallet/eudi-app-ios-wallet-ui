@@ -31,9 +31,9 @@ public struct BaseRequestView<Router: RouterHostType>: View {
       if viewModel.viewState.isTrusted {
         ContentTitle(
           titleDecoration: .icon(
-            decorated: Text(viewModel.getRelyingParty()),
+            decorated: Text(viewModel.getTrustedRelyingParty()),
             icon: Theme.shared.image.checkMarkSealFill,
-            text: Text(viewModel.getTitleCaption())
+            text: Text(viewModel.getTrustedRelyingPartyInfo())
           ),
           decorationColor: Theme.shared.color.success,
           onTap: {
@@ -130,12 +130,15 @@ public struct BaseRequestView<Router: RouterHostType>: View {
       }
     }
     .sheetDialog(isPresented: $viewModel.isVerifiedEntityModalShowing, {
-      ContentTitle(
-        title: .requestDataInfoNotice,
-        caption: .requestDataSheetCaption
-      )
+      VStack(spacing: SPACING_MEDIUM) {
 
-      WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onShowRequestInfoModal())
+        ContentTitle(
+          title: .requestDataInfoNotice,
+          caption: .requestDataSheetCaption
+        )
+
+        WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onShowRequestInfoModal())
+      }
     })
     .task {
       await viewModel.doWork()

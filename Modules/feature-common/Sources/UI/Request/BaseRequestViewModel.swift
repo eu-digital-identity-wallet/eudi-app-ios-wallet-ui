@@ -81,6 +81,14 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     return .custom("")
   }
 
+  open func getTrustedRelyingParty() -> LocalizableString.Key {
+    return .custom("")
+  }
+
+  open func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
+    return .custom("")
+  }
+
   open func onShare() {
     guard let route = getSuccessRoute() else { return }
     router.push(with: route)
