@@ -45,9 +45,9 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
         isContentVisible: false,
         itemsAreAllSelected: true,
         items: RequestDataUiModel.mock(),
-        title: .requestDataTitle(["EUDI Conference"]),
+        title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
-        relyingParty: "EUDI Conference",
+        relyingParty: "Unknown Verifier",
         isTrusted: false
       )
     )
@@ -75,8 +75,8 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     return nil
   }
 
-  open func getTitleCaption() -> LocalizableString.Key {
-    return .custom("")
+  open func getTitleCaption() -> String {
+    return ""
   }
 
   open func getTrustedRelyingParty() -> LocalizableString.Key {

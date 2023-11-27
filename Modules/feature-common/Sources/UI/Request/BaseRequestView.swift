@@ -31,9 +31,9 @@ public struct BaseRequestView<Router: RouterHostType>: View {
       if viewModel.viewState.isTrusted {
         ContentTitle(
           titleDecoration: .icon(
-            decorated: Text(viewModel.getRelyingParty()),
+            decorated: viewModel.getRelyingParty(),
             icon: Theme.shared.image.checkMarkSealFill,
-            text: Text(viewModel.getTitleCaption())
+            text: viewModel.getTitleCaption()
           ),
           decorationColor: Theme.shared.color.success,
           topSpacing: .withoutToolbar,

@@ -529,6 +529,17 @@
         }
       }
     },
+    "issuance_date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date of issuance"
+          }
+        }
+      }
+    },
     "issuance_details_continue_button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -661,17 +672,6 @@
         }
       }
     },
-    "issuance_date" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Date of issuance"
-          }
-        }
-      }
-    },
     "issue_date" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -771,17 +771,6 @@
         }
       }
     },
-    "more_options" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "More options"
-          }
-        }
-      }
-    },
     "mdl_doctype_name" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -789,6 +778,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "mDL"
+          }
+        }
+      }
+    },
+    "more_options" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More options"
           }
         }
       }
@@ -1419,6 +1419,9 @@
           }
         }
       }
+    },
+    "unknown_verifier" : {
+      "extractionState" : "manual"
     },
     "weight" : {
       "extractionState" : "manual",

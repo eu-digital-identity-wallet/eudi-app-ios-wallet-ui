@@ -22,7 +22,7 @@ public struct ContentTitle: View {
 
   public enum TitleDecoration {
     case plain(LocalizableString.Key)
-    case icon(decorated: Text, icon: Image, text: Text?)
+    case icon(decorated: String, icon: Image, text: String?)
   }
 
   private let titleDecoration: TitleDecoration
@@ -77,7 +77,7 @@ public struct ContentTitle: View {
           .typography(ThemeManager.shared.font.headlineSmall)
           .foregroundColor(self.titleColor)
       case .icon(let decorated, let icon, let text):
-        Text("\(decorated)")
+        Text(decorated)
           .typography(style: ThemeManager.shared.font.headlineSmall)
           .foregroundColor(self.titleColor)
         +
@@ -85,7 +85,7 @@ public struct ContentTitle: View {
           .typography(style: ThemeManager.shared.font.headlineSmall)
           .foregroundColor(self.decorationColor)
         +
-        Text("\(text ?? Text(""))")
+        Text(text ?? "")
           .typography(style: ThemeManager.shared.font.headlineSmall)
           .foregroundColor(self.titleColor)
 

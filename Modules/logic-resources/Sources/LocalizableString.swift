@@ -190,6 +190,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "issuance_success_add_button")
     case .issuanceSuccessCancelButton:
       bundle.localizedString(forKey: "issuance_success_cancel_button")
+    case .unknownVerifier:
+      bundle.localizedString(forKey: "unknown_verifier")
     }
   }
 
@@ -277,6 +279,7 @@ public extension LocalizableString {
     case issuanceSuccessModalCancelButton
     case issuanceSuccessAddButton
     case issuanceSuccessCancelButton
+    case unknownVerifier
   }
 }
 
