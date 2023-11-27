@@ -4,9 +4,9 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
-import CoreImage.CIFilterBuiltins
 import Foundation
 import UIKit
+import feature_common
 import logic_api
 import logic_business
 
@@ -34,18 +34,34 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
     
 
     
-
+    
+    
+    
+    public var presentationSessionCoordinator: PresentationSessionCoordinatorType {
+        get {
+            return cuckoo_manager.getter("presentationSessionCoordinator",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.presentationSessionCoordinator)
+        }
+        
+    }
+    
     
 
     
+
     
     
     
-    public func doWork() async -> ProximityResponsePartialState {
+    
+    public func getSessionStatePublisher() async -> any Publisher<PresentationState, Never> {
         
     return await cuckoo_manager.call(
     """
-    doWork() async -> ProximityPartialState
+    getSessionStatePublisher() async -> any Publisher<PresentationState, Never>
     """,
             parameters: (),
             escapingParameters: (),
@@ -53,7 +69,7 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: await __defaultImplStub!.doWork())
+            defaultCall: await __defaultImplStub!.getSessionStatePublisher())
         
     }
     
@@ -61,11 +77,11 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
     
     
     
-    public func generateQRCode() async -> ProximityQrCodePartialState {
+    public func onDeviceEngagement() async -> ProximityInitialisationPartialState {
         
     return await cuckoo_manager.call(
     """
-    generateQRCode() async -> ProximityQrCodePartialState
+    onDeviceEngagement() async -> ProximityInitialisationPartialState
     """,
             parameters: (),
             escapingParameters: (),
@@ -73,7 +89,107 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: await __defaultImplStub!.generateQRCode())
+            defaultCall: await __defaultImplStub!.onDeviceEngagement())
+        
+    }
+    
+    
+    
+    
+    
+    public func onQRGeneration() async -> ProximityQrCodePartialState {
+        
+    return await cuckoo_manager.call(
+    """
+    onQRGeneration() async -> ProximityQrCodePartialState
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.onQRGeneration())
+        
+    }
+    
+    
+    
+    
+    
+    public func onRequestReceived() async -> ProximityRequestPartialState {
+        
+    return await cuckoo_manager.call(
+    """
+    onRequestReceived() async -> ProximityRequestPartialState
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.onRequestReceived())
+        
+    }
+    
+    
+    
+    
+    
+    public func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState {
+        
+    return await cuckoo_manager.call(
+    """
+    onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState
+    """,
+            parameters: (requestItems),
+            escapingParameters: (requestItems),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.onResponsePrepare(requestItems: requestItems))
+        
+    }
+    
+    
+    
+    
+    
+    public func onSendResponse() async -> ProximityResponsePartialState {
+        
+    return await cuckoo_manager.call(
+    """
+    onSendResponse() async -> ProximityResponsePartialState
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.onSendResponse())
+        
+    }
+    
+    
+    
+    
+    
+    public func stopPresentation() async {
+        
+    return await cuckoo_manager.call(
+    """
+    stopPresentation() async
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.stopPresentation())
         
     }
     
@@ -88,23 +204,85 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
         
         
         
+        var presentationSessionCoordinator: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockProximityInteractorType, PresentationSessionCoordinatorType> {
+            return .init(manager: cuckoo_manager, name: "presentationSessionCoordinator")
+        }
         
-        func doWork() -> Cuckoo.ProtocolStubFunction<(), ProximityResponsePartialState> {
+        
+        
+        
+        
+        func getSessionStatePublisher() -> Cuckoo.ProtocolStubFunction<(), any Publisher<PresentationState, Never>> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractorType.self, method:
     """
-    doWork() async -> ProximityPartialState
+    getSessionStatePublisher() async -> any Publisher<PresentationState, Never>
     """, parameterMatchers: matchers))
         }
         
         
         
         
-        func generateQRCode() -> Cuckoo.ProtocolStubFunction<(), ProximityQrCodePartialState> {
+        func onDeviceEngagement() -> Cuckoo.ProtocolStubFunction<(), ProximityInitialisationPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractorType.self, method:
     """
-    generateQRCode() async -> ProximityQrCodePartialState
+    onDeviceEngagement() async -> ProximityInitialisationPartialState
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func onQRGeneration() -> Cuckoo.ProtocolStubFunction<(), ProximityQrCodePartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractorType.self, method:
+    """
+    onQRGeneration() async -> ProximityQrCodePartialState
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func onRequestReceived() -> Cuckoo.ProtocolStubFunction<(), ProximityRequestPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractorType.self, method:
+    """
+    onRequestReceived() async -> ProximityRequestPartialState
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems: M1) -> Cuckoo.ProtocolStubFunction<([RequestDataCell]), ProximityResponsePreparationPartialState> where M1.MatchedType == [RequestDataCell] {
+            let matchers: [Cuckoo.ParameterMatcher<([RequestDataCell])>] = [wrap(matchable: requestItems) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractorType.self, method:
+    """
+    onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func onSendResponse() -> Cuckoo.ProtocolStubFunction<(), ProximityResponsePartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractorType.self, method:
+    """
+    onSendResponse() async -> ProximityResponsePartialState
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func stopPresentation() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractorType.self, method:
+    """
+    stopPresentation() async
     """, parameterMatchers: matchers))
         }
         
@@ -123,16 +301,23 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
         }
     
         
+        
+        
+        var presentationSessionCoordinator: Cuckoo.VerifyReadOnlyProperty<PresentationSessionCoordinatorType> {
+            return .init(manager: cuckoo_manager, name: "presentationSessionCoordinator", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
     
         
         
         
         @discardableResult
-        func doWork() -> Cuckoo.__DoNotUse<(), ProximityResponsePartialState> {
+        func getSessionStatePublisher() -> Cuckoo.__DoNotUse<(), any Publisher<PresentationState, Never>> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    doWork() async -> ProximityPartialState
+    getSessionStatePublisher() async -> any Publisher<PresentationState, Never>
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -140,11 +325,71 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
         
         
         @discardableResult
-        func generateQRCode() -> Cuckoo.__DoNotUse<(), ProximityQrCodePartialState> {
+        func onDeviceEngagement() -> Cuckoo.__DoNotUse<(), ProximityInitialisationPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    generateQRCode() async -> ProximityQrCodePartialState
+    onDeviceEngagement() async -> ProximityInitialisationPartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func onQRGeneration() -> Cuckoo.__DoNotUse<(), ProximityQrCodePartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    onQRGeneration() async -> ProximityQrCodePartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func onRequestReceived() -> Cuckoo.__DoNotUse<(), ProximityRequestPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    onRequestReceived() async -> ProximityRequestPartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems: M1) -> Cuckoo.__DoNotUse<([RequestDataCell]), ProximityResponsePreparationPartialState> where M1.MatchedType == [RequestDataCell] {
+            let matchers: [Cuckoo.ParameterMatcher<([RequestDataCell])>] = [wrap(matchable: requestItems) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func onSendResponse() -> Cuckoo.__DoNotUse<(), ProximityResponsePartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    onSendResponse() async -> ProximityResponsePartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func stopPresentation() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    stopPresentation() async
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -155,14 +400,65 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
 
 public class ProximityInteractorTypeStub: ProximityInteractorType {
     
-
+    
+    
+    
+    public var presentationSessionCoordinator: PresentationSessionCoordinatorType {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (PresentationSessionCoordinatorType).self)
+        }
+        
+    }
+    
     
 
     
+
     
     
     
-    public func doWork() async -> ProximityResponsePartialState  {
+    
+    public func getSessionStatePublisher() async -> any Publisher<PresentationState, Never>  {
+        return DefaultValueRegistry.defaultValue(for: (any Publisher<PresentationState, Never>).self)
+    }
+    
+    
+    
+    
+    
+    public func onDeviceEngagement() async -> ProximityInitialisationPartialState  {
+        return DefaultValueRegistry.defaultValue(for: (ProximityInitialisationPartialState).self)
+    }
+    
+    
+    
+    
+    
+    public func onQRGeneration() async -> ProximityQrCodePartialState  {
+        return DefaultValueRegistry.defaultValue(for: (ProximityQrCodePartialState).self)
+    }
+    
+    
+    
+    
+    
+    public func onRequestReceived() async -> ProximityRequestPartialState  {
+        return DefaultValueRegistry.defaultValue(for: (ProximityRequestPartialState).self)
+    }
+    
+    
+    
+    
+    
+    public func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState  {
+        return DefaultValueRegistry.defaultValue(for: (ProximityResponsePreparationPartialState).self)
+    }
+    
+    
+    
+    
+    
+    public func onSendResponse() async -> ProximityResponsePartialState  {
         return DefaultValueRegistry.defaultValue(for: (ProximityResponsePartialState).self)
     }
     
@@ -170,8 +466,8 @@ public class ProximityInteractorTypeStub: ProximityInteractorType {
     
     
     
-    public func generateQRCode() async -> ProximityQrCodePartialState  {
-        return DefaultValueRegistry.defaultValue(for: (ProximityQrCodePartialState).self)
+    public func stopPresentation() async  {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
     
@@ -199,6 +495,8 @@ import Cuckoo
 
 import Foundation
 import UIKit
+import logic_business
+import logic_resources
 import logic_ui
 
 import Cuckoo
@@ -236,6 +534,7 @@ import Cuckoo
 @testable import logic_ui
 
 import feature_common
+import logic_business
 
 import Cuckoo
 @testable import logic_business
@@ -2899,6 +3198,14 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
 import UIKit
 
 import Cuckoo
@@ -3432,6 +3739,853 @@ public class FormValidatorInteractorStub: FormValidatorInteractor {
     
     public func validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>  {
         return DefaultValueRegistry.defaultValue(for: (AnyPublisher<FormsValidationResult, Never>).self)
+    }
+    
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import MdocDataModel18013
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
+import Combine
+import EudiWalletKit
+import Foundation
+import MdocDataModel18013
+import logic_resources
+
+
+
+
+
+
+public class MockPresentationSessionCoordinatorType: PresentationSessionCoordinatorType, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = PresentationSessionCoordinatorType
+    
+    public typealias Stubbing = __StubbingProxy_PresentationSessionCoordinatorType
+    public typealias Verification = __VerificationProxy_PresentationSessionCoordinatorType
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: PresentationSessionCoordinatorType?
+
+    public func enableDefaultImplementation(_ stub: PresentationSessionCoordinatorType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+    
+    
+    
+    public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> {
+        get {
+            return cuckoo_manager.getter("presentationStateSubject",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.presentationStateSubject)
+        }
+        
+    }
+    
+    
+
+    
+    
+    
+    public required init(session: PresentationSession) {
+        
+    }
+    
+    
+
+    
+    
+    
+    
+    public func initialize() async {
+        
+    return await cuckoo_manager.call(
+    """
+    initialize() async
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.initialize())
+        
+    }
+    
+    
+    
+    
+    
+    public func startQrEngagement() async throws -> Data {
+        
+    return try await cuckoo_manager.callThrows(
+    """
+    startQrEngagement() async throws -> Data
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.startQrEngagement())
+        
+    }
+    
+    
+    
+    
+    
+    public func requestReceived() async throws -> PresentationRequest {
+        
+    return try await cuckoo_manager.callThrows(
+    """
+    requestReceived() async throws -> PresentationRequest
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.requestReceived())
+        
+    }
+    
+    
+    
+    
+    
+    public func sendResponse(response: RequestItemConvertible) async throws {
+        
+    return try await cuckoo_manager.callThrows(
+    """
+    sendResponse(response: RequestItemConvertible) async throws
+    """,
+            parameters: (response),
+            escapingParameters: (response),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.sendResponse(response: response))
+        
+    }
+    
+    
+    
+    
+    
+    public func onSuccess(completion: () -> Void)  {
+        return withoutActuallyEscaping(completion, do: { (completion: @escaping () -> Void) -> Void in
+
+    return cuckoo_manager.call(
+    """
+    onSuccess(completion: () -> Void)
+    """,
+            parameters: (completion),
+            escapingParameters: ({ () in fatalError("This is a stub! It's not supposed to be called!") }),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.onSuccess(completion: completion))
+        })
+
+    }
+    
+    
+    
+    
+    
+    public func setState(presentationState: PresentationState)  {
+        
+    return cuckoo_manager.call(
+    """
+    setState(presentationState: PresentationState)
+    """,
+            parameters: (presentationState),
+            escapingParameters: (presentationState),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.setState(presentationState: presentationState))
+        
+    }
+    
+    
+
+    public struct __StubbingProxy_PresentationSessionCoordinatorType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        var presentationStateSubject: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockPresentationSessionCoordinatorType, CurrentValueSubject<PresentationState, Never>> {
+            return .init(manager: cuckoo_manager, name: "presentationStateSubject")
+        }
+        
+        
+        
+        
+        
+        func initialize() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPresentationSessionCoordinatorType.self, method:
+    """
+    initialize() async
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func startQrEngagement() -> Cuckoo.ProtocolStubThrowingFunction<(), Data> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPresentationSessionCoordinatorType.self, method:
+    """
+    startQrEngagement() async throws -> Data
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func requestReceived() -> Cuckoo.ProtocolStubThrowingFunction<(), PresentationRequest> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPresentationSessionCoordinatorType.self, method:
+    """
+    requestReceived() async throws -> PresentationRequest
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func sendResponse<M1: Cuckoo.Matchable>(response: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(RequestItemConvertible)> where M1.MatchedType == RequestItemConvertible {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: response) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPresentationSessionCoordinatorType.self, method:
+    """
+    sendResponse(response: RequestItemConvertible) async throws
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func onSuccess<M1: Cuckoo.Matchable>(completion: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(() -> Void)> where M1.MatchedType == () -> Void {
+            let matchers: [Cuckoo.ParameterMatcher<(() -> Void)>] = [wrap(matchable: completion) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPresentationSessionCoordinatorType.self, method:
+    """
+    onSuccess(completion: () -> Void)
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func setState<M1: Cuckoo.Matchable>(presentationState: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(PresentationState)> where M1.MatchedType == PresentationState {
+            let matchers: [Cuckoo.ParameterMatcher<(PresentationState)>] = [wrap(matchable: presentationState) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPresentationSessionCoordinatorType.self, method:
+    """
+    setState(presentationState: PresentationState)
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_PresentationSessionCoordinatorType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+        
+        
+        var presentationStateSubject: Cuckoo.VerifyReadOnlyProperty<CurrentValueSubject<PresentationState, Never>> {
+            return .init(manager: cuckoo_manager, name: "presentationStateSubject", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+    
+        
+        
+        
+        @discardableResult
+        func initialize() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    initialize() async
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func startQrEngagement() -> Cuckoo.__DoNotUse<(), Data> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    startQrEngagement() async throws -> Data
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func requestReceived() -> Cuckoo.__DoNotUse<(), PresentationRequest> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    requestReceived() async throws -> PresentationRequest
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func sendResponse<M1: Cuckoo.Matchable>(response: M1) -> Cuckoo.__DoNotUse<(RequestItemConvertible), Void> where M1.MatchedType == RequestItemConvertible {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: response) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    sendResponse(response: RequestItemConvertible) async throws
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func onSuccess<M1: Cuckoo.Matchable>(completion: M1) -> Cuckoo.__DoNotUse<(() -> Void), Void> where M1.MatchedType == () -> Void {
+            let matchers: [Cuckoo.ParameterMatcher<(() -> Void)>] = [wrap(matchable: completion) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    onSuccess(completion: () -> Void)
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func setState<M1: Cuckoo.Matchable>(presentationState: M1) -> Cuckoo.__DoNotUse<(PresentationState), Void> where M1.MatchedType == PresentationState {
+            let matchers: [Cuckoo.ParameterMatcher<(PresentationState)>] = [wrap(matchable: presentationState) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    setState(presentationState: PresentationState)
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+public class PresentationSessionCoordinatorTypeStub: PresentationSessionCoordinatorType {
+    
+    
+    
+    
+    public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (CurrentValueSubject<PresentationState, Never>).self)
+        }
+        
+    }
+    
+    
+
+    
+    
+    public required init(session: PresentationSession) {
+        
+    }
+    
+    
+
+    
+    
+    
+    
+    public func initialize() async  {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func startQrEngagement() async throws -> Data  {
+        return DefaultValueRegistry.defaultValue(for: (Data).self)
+    }
+    
+    
+    
+    
+    
+    public func requestReceived() async throws -> PresentationRequest  {
+        return DefaultValueRegistry.defaultValue(for: (PresentationRequest).self)
+    }
+    
+    
+    
+    
+    
+    public func sendResponse(response: RequestItemConvertible) async throws  {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func onSuccess(completion: () -> Void)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func setState(presentationState: PresentationState)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
+import EudiWalletKit
+import Foundation
+
+
+
+
+
+
+public class MockRequestItemConvertible: RequestItemConvertible, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = RequestItemConvertible
+    
+    public typealias Stubbing = __StubbingProxy_RequestItemConvertible
+    public typealias Verification = __VerificationProxy_RequestItemConvertible
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: RequestItemConvertible?
+
+    public func enableDefaultImplementation(_ stub: RequestItemConvertible) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    public func asRequestItems() -> RequestItems {
+        
+    return cuckoo_manager.call(
+    """
+    asRequestItems() -> RequestItems
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.asRequestItems())
+        
+    }
+    
+    
+
+    public struct __StubbingProxy_RequestItemConvertible: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        
+        func asRequestItems() -> Cuckoo.ProtocolStubFunction<(), RequestItems> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRequestItemConvertible.self, method:
+    """
+    asRequestItems() -> RequestItems
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_RequestItemConvertible: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+    
+        
+        
+        
+        @discardableResult
+        func asRequestItems() -> Cuckoo.__DoNotUse<(), RequestItems> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    asRequestItems() -> RequestItems
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+public class RequestItemConvertibleStub: RequestItemConvertible {
+    
+
+    
+
+    
+    
+    
+    
+    public func asRequestItems() -> RequestItems  {
+        return DefaultValueRegistry.defaultValue(for: (RequestItems).self)
+    }
+    
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_proximity
+@testable import logic_api
+@testable import logic_ui
+
+import Combine
+import EudiWalletKit
+import Foundation
+import MdocDataModel18013
+import logic_resources
+
+
+
+
+
+
+public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = WalletKitControllerType
+    
+    public typealias Stubbing = __StubbingProxy_WalletKitControllerType
+    public typealias Verification = __VerificationProxy_WalletKitControllerType
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: WalletKitControllerType?
+
+    public func enableDefaultImplementation(_ stub: WalletKitControllerType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+    
+    
+    
+    public var wallet: EudiWallet {
+        get {
+            return cuckoo_manager.getter("wallet",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.wallet)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var activeCoordinator: PresentationSessionCoordinatorType? {
+        get {
+            return cuckoo_manager.getter("activeCoordinator",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.activeCoordinator)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+    
+    
+    
+    public func startProximityPresentation() -> PresentationSessionCoordinatorType {
+        
+    return cuckoo_manager.call(
+    """
+    startProximityPresentation() -> PresentationSessionCoordinatorType
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.startProximityPresentation())
+        
+    }
+    
+    
+    
+    
+    
+    public func stopPresentation()  {
+        
+    return cuckoo_manager.call(
+    """
+    stopPresentation()
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.stopPresentation())
+        
+    }
+    
+    
+
+    public struct __StubbingProxy_WalletKitControllerType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        var wallet: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitControllerType, EudiWallet> {
+            return .init(manager: cuckoo_manager, name: "wallet")
+        }
+        
+        
+        
+        
+        var activeCoordinator: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitControllerType, PresentationSessionCoordinatorType?> {
+            return .init(manager: cuckoo_manager, name: "activeCoordinator")
+        }
+        
+        
+        
+        
+        
+        func startProximityPresentation() -> Cuckoo.ProtocolStubFunction<(), PresentationSessionCoordinatorType> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    startProximityPresentation() -> PresentationSessionCoordinatorType
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func stopPresentation() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    stopPresentation()
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_WalletKitControllerType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+        
+        
+        var wallet: Cuckoo.VerifyReadOnlyProperty<EudiWallet> {
+            return .init(manager: cuckoo_manager, name: "wallet", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        var activeCoordinator: Cuckoo.VerifyReadOnlyProperty<PresentationSessionCoordinatorType?> {
+            return .init(manager: cuckoo_manager, name: "activeCoordinator", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+    
+        
+        
+        
+        @discardableResult
+        func startProximityPresentation() -> Cuckoo.__DoNotUse<(), PresentationSessionCoordinatorType> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    startProximityPresentation() -> PresentationSessionCoordinatorType
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func stopPresentation() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    stopPresentation()
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+public class WalletKitControllerTypeStub: WalletKitControllerType {
+    
+    
+    
+    
+    public var wallet: EudiWallet {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (EudiWallet).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var activeCoordinator: PresentationSessionCoordinatorType? {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (PresentationSessionCoordinatorType?).self)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+    
+    
+    
+    public func startProximityPresentation() -> PresentationSessionCoordinatorType  {
+        return DefaultValueRegistry.defaultValue(for: (PresentationSessionCoordinatorType).self)
+    }
+    
+    
+    
+    
+    
+    public func stopPresentation()   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
     
@@ -4906,6 +6060,7 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
+import logic_business
 
 
 

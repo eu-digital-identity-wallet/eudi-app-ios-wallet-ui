@@ -37,7 +37,11 @@ public final class WalletKitController: WalletKitControllerType {
   public private(set) var activeCoordinator: PresentationSessionCoordinatorType?
   private var cancellables = Set<AnyCancellable>()
 
-  private init() {
+  public convenience init(string: String) {
+    self.init()
+  }
+
+  internal init() {
     try? wallet.loadSampleData()
     wallet.userAuthenticationRequired = false
     wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
