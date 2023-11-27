@@ -45,7 +45,7 @@ public enum PresentationState {
   case error(WalletError)
 }
 
-public final class PresentationSessionCoordinator: PresentationSessionCoordinatorType {
+public final class ProximityPresentationSessionCoordinator: PresentationSessionCoordinatorType {
 
   public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
 
@@ -98,7 +98,7 @@ public final class PresentationSessionCoordinator: PresentationSessionCoordinato
 
     let presentationRequest = PresentationRequest(
       items: session.disclosedDocuments,
-      relyingParty: session.readerCertIssuer ?? LocalizableString.shared.get(with: .custom("Wallet_Title")),
+      relyingParty: session.readerCertIssuer ?? LocalizableString.shared.get(with: .unknownVerifier),
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
       isTrusted: session.readerCertIssuer != nil
     )

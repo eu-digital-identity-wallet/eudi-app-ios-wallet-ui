@@ -101,7 +101,7 @@ public final actor ProximityInteractor: ProximityInteractorType {
         RequestDataUiModel.items(
           for: response.items
         ),
-        relyingParty: response.relyingParty,
+        relyingParty: getVerifierName(response: response),
         dataRequestInfo: response.dataRequestInfo,
         isTrusted: response.isTrusted
       )
@@ -153,5 +153,40 @@ public final actor ProximityInteractor: ProximityInteractorType {
 
   public func stopPresentation() {
     WalletKitController.shared.stopPresentation()
+  }
+
+  private func getVerifierName(response: PresentationRequest) -> String {
+    // TODO: Make a more concrete aproach in how we handle extracting the CN value of verifier message
+
+      func extractKeyValuePairs(from input: String) -> [String: String] {
+          var result = [String: String]()
+          // Find Keys, separated  by a = unti we find the next comma e.g. CN = Test Verifier, CU = Test
+          // will produce a dictionary of result[CN] = "Test Verifier", result[CU] = "Test"
+          let regexPattern = #"(\w+)=([^,]+)"#
+
+          do {
+              let regex = try NSRegularExpression(pattern: regexPattern)
+              let matches = regex.matches(in: input, options: [], range: NSRange(location: 0, length: input.utf16.count))
+
+              for match in matches {
+                  if let keyRange = Range(match.range(at: 1), in: input),
+                    let valueRange = Range(match.range(at: 2), in: input) {
+                      let key = String(input[keyRange])
+                      let value = String(input[valueRange])
+
+                      result[key] = value
+                  }
+              }
+
+          } catch let error {
+              print("Invalid regex: \(error.localizedDescription)")
+          }
+
+          return result
+      }
+
+    let extractedKeys = extractKeyValuePairs(from: response.relyingParty)
+    let issuerMessage = extractedKeys["CN"]
+    return issuerMessage ?? LocalizableString.shared.get(with: .unknownVerifier)
   }
 }

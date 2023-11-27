@@ -23,9 +23,9 @@ import logic_resources
 public protocol WalletKitControllerType {
   static var shared: WalletKitControllerType { get }
   var wallet: EudiWallet { get }
-  var activeCoordinator: PresentationSessionCoordinator? { get }
+  var activeCoordinator: PresentationSessionCoordinatorType? { get }
 
-  func startPresentation(flow: FlowType) -> PresentationSessionCoordinator
+  func startProximityPresentation() -> PresentationSessionCoordinatorType
   func stopPresentation()
 }
 
@@ -34,7 +34,7 @@ public final class WalletKitController: WalletKitControllerType {
   public static let shared: WalletKitControllerType = WalletKitController()
   public let wallet = EudiWallet.standard
 
-  public private(set) var activeCoordinator: PresentationSessionCoordinator?
+  public private(set) var activeCoordinator: PresentationSessionCoordinatorType?
   private var cancellables = Set<AnyCancellable>()
 
   private init() {
@@ -43,10 +43,10 @@ public final class WalletKitController: WalletKitControllerType {
     wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
   }
 
-  public func startPresentation(flow: FlowType) -> PresentationSessionCoordinator {
+  public func startProximityPresentation() -> PresentationSessionCoordinatorType {
     self.stopPresentation()
-    let session = wallet.beginPresentation(flow: flow)
-    let presentationSessionCoordinator = PresentationSessionCoordinator(session: session)
+    let session = wallet.beginPresentation(flow: .ble)
+    let presentationSessionCoordinator = ProximityPresentationSessionCoordinator(session: session)
     self.activeCoordinator = presentationSessionCoordinator
     presentationSessionCoordinator.onSuccess {
       stopPresentation()
