@@ -20,7 +20,6 @@ import logic_resources
 public struct ProximityConnectionView<Router: RouterHostType, Interactor: ProximityInteractorType>: View {
 
   @ObservedObject private var viewModel: ProximityConnectionViewModel<Router, Interactor>
-  @State var userIsEditingAlias = false
 
   var contentSize: CGFloat = 0.0
 

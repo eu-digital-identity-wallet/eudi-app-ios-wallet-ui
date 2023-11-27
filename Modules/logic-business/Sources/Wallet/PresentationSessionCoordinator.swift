@@ -108,7 +108,8 @@ public final class ProximityPresentationSessionCoordinator: PresentationSessionC
 
   public func sendResponse(response: RequestItemConvertible) async {
     await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems()) {
-
+      // This closure is used by WalletKit in order to handle the cancelling
+      // of a strong authentication by the user
     }
     self.presentationStateSubject.value = .success
     self.presentationStateSubject.send(completion: .finished)
