@@ -80,7 +80,7 @@ public final class ProximityPresentationSessionCoordinator: PresentationSessionC
 
   public func initialize() async {
     await session.startQrEngagement()
-    await session.receiveRequest()
+    _ = await session.receiveRequest()
   }
 
   public func startQrEngagement() async throws -> Data {

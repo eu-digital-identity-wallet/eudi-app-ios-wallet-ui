@@ -61,9 +61,10 @@ public protocol ProximityInteractorType {
 
 public final actor ProximityInteractor: ProximityInteractorType {
 
+  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
   public let presentationSessionCoordinator: PresentationSessionCoordinatorType
 
-  public init(presentationSessionCoordinator: PresentationSessionCoordinatorType) {
+  public init(with presentationSessionCoordinator: PresentationSessionCoordinatorType) {
     self.presentationSessionCoordinator = presentationSessionCoordinator
   }
 
@@ -152,7 +153,7 @@ public final actor ProximityInteractor: ProximityInteractorType {
   }
 
   public func stopPresentation() {
-    WalletKitController.shared.stopPresentation()
+    walletKitController.stopPresentation()
   }
 
   private func getVerifierName(response: PresentationRequest) -> String {

@@ -115,17 +115,17 @@ public final class RouterHost: RouterHostType {
       case .proximityConnection(let presentationSessionCoordinator):
         ProximityConnectionView(
           with: self,
-          and: ProximityInteractor(presentationSessionCoordinator: presentationSessionCoordinator)
+          and: ProximityInteractor(with: presentationSessionCoordinator)
         )
       case .proximityRequest(let presentationSessionCoordinator):
         ProximityRequestView(
           with: self,
-          and: ProximityInteractor(presentationSessionCoordinator: presentationSessionCoordinator)
+          and: ProximityInteractor(with: presentationSessionCoordinator)
         )
       case .proximityLoader(let relyingParty, let presentationSessionCoordinator):
         ProximityLoadingView(
           with: self,
-          and: ProximityInteractor(presentationSessionCoordinator: presentationSessionCoordinator),
+          and: ProximityInteractor(with: presentationSessionCoordinator),
           relyingParty: relyingParty
         )
       case .quickPin(let config):
