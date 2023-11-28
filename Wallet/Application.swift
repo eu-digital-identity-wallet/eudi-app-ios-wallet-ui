@@ -62,7 +62,6 @@ struct Application: App {
             $0.ignoresSafeArea(edges: .bottom)
           }
           .attachPartialSheetToRoot()
-          .environmentObject(WalletKitController.shared.wallet)
 
         if isScreenCapping {
           warningScreenCap()
