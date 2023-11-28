@@ -79,10 +79,39 @@ extension WalletKitControllerType {
   }
 
   public func valueForElementIdentifier(for documentType: DocumentIdentifier, elementIdentifier: String) -> String {
-    wallet.storage.mdocModels
+    var displayStrings = wallet.storage.mdocModels
       .compactMap({ $0 })
       .first(where: { $0.docType == documentType.rawValue })?.displayStrings
-      .first(where: { $0.name == elementIdentifier })?.value ?? LocalizableString.shared.get(with: .unavailableField)
+
+    if documentType == .IsoMdlModel, let mdl = wallet.storage.mdlModel {
+      if elementIdentifier == IsoMdlModel.CodingKeys.portrait.rawValue || elementIdentifier == IsoMdlModel.CodingKeys.signatureUsualMark.rawValue {
+        return "Image Data"
+      }
+
+      if let drivingPrivileges = mdl.drivingPrivileges {
+        let flatString = drivingPrivileges.drivingPrivileges.reduce(into: "", {$0 += $1.vehicleCategoryCode +
+          " expiry: \($1.expiryDate ?? "") issued at: \($1.issueDate ?? "")" + "\n"}).dropLast()
+
+        displayStrings?.append(.init(name: "driving_privileges", value: String(flatString)))
+      }
+
+      mdl.ageOverXX.sorted(by: {$0.key < $1.key}).forEach { key, value in
+        displayStrings?.append(.init(name: "age_over_\(key)", value: value ? "Yes" : "No"))
+      }
+    } else if documentType == .EuPidDocType,
+              let pid = wallet.storage.pidModel {
+
+      pid.ageOverXX.sorted(by: {$0.key < $1.key}).forEach { key, value in
+        displayStrings?.append(.init(name: "age_over_\(key)", value: value ? "Yes" : "No"))
+      }
+    }
+
+    let value = displayStrings?
+      .first(where: { element in
+        element.name == elementIdentifier
+      })?.value
+
+    return  value ?? LocalizableString.shared.get(with: .unavailableField)
   }
 
 }

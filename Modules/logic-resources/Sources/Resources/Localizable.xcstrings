@@ -287,6 +287,28 @@
         }
       }
     },
+    "com.example.conference.badge" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EUDI Conference Badge"
+          }
+        }
+      }
+    },
+    "conference_badge" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EUDI Conference Badge"
+          }
+        }
+      }
+    },
     "DHS_compliance" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1101,6 +1123,17 @@
         }
       }
     },
+    "registration_id" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registration ID"
+          }
+        }
+      }
+    },
     "request_data_info_notice" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1288,6 +1321,17 @@
         }
       }
     },
+    "room_number" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room Number"
+          }
+        }
+      }
+    },
     "screen_recording_security_warning" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1306,6 +1350,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search"
+          }
+        }
+      }
+    },
+    "seat_number" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seat Number"
           }
         }
       }
@@ -1421,7 +1476,15 @@
       }
     },
     "unknown_verifier" : {
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown Verifier"
+          }
+        }
+      }
     },
     "weight" : {
       "extractionState" : "manual",

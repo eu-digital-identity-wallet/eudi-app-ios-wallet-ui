@@ -100,7 +100,7 @@ public final class ProximityPresentationSessionCoordinator: PresentationSessionC
       items: session.disclosedDocuments,
       relyingParty: session.readerCertIssuer ?? LocalizableString.shared.get(with: .unknownVerifier),
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
-      isTrusted: session.readerCertIssuer != nil
+      isTrusted: false
     )
     self.presentationStateSubject.value = .requestReceived(presentationRequest)
     return presentationRequest
