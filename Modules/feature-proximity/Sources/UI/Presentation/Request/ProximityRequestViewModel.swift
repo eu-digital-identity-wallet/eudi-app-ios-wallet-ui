@@ -15,6 +15,7 @@
  */
 
 import feature_common
+import logic_business
 
 @MainActor
 final class ProximityRequestViewModel<Router: RouterHostType, Interactor: ProximityInteractorType>: BaseRequestViewModel<Router> {
@@ -27,15 +28,52 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
   ) {
     self.interactor = interactor
     super.init(router: router)
+
+    Task {
+      await self.subscribeToCoordinatorPublisher()
+    }
+  }
+
+  func subscribeToCoordinatorPublisher() async {
+    await interactor.getSessionStatePublisher()
+      .sink { state in
+        switch state {
+        case .error(let error):
+          self.onError(with: error)
+        default:
+          ()
+        }
+      }
+      .store(in: &cancellables)
   }
 
   override func doWork() async {
     self.onStartLoading()
-    switch await interactor.doWork() {
-    case .success:
-      self.onReceivedItems(with: RequestDataUiModel.mock())
+    switch await interactor.onRequestReceived() {
+    case .success(let items, let relyingParty, _, let isTrusted):
+      self.onReceivedItems(
+        with: items,
+        title: .requestDataTitle([relyingParty]),
+        relyingParty: relyingParty,
+        isTrusted: isTrusted
+      )
     case .failure(let error):
       self.onError(with: error)
+    }
+  }
+
+  override func onShare() {
+    Task {
+      await switch interactor.onResponsePrepare(requestItems: viewState.items) {
+      case .success:
+        if let route = getSuccessRoute() {
+          router.push(with: route)
+        } else {
+          router.pop()
+        }
+      case .failure(let error):
+        self.onError(with: error)
+      }
     }
   }
 
@@ -46,11 +84,14 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
         caption: .requestDataShareBiometryCaption,
         quickPinOnlyCaption: .requestDataShareBiometryCaption,
         navigationSuccessConfig: .init(
-          screen: .proximityLoader(getRelyingParty()),
+          screen: .proximityLoader(
+            getRelyingParty(),
+            presentationCoordinator: interactor.presentationSessionCoordinator
+          ),
           navigationType: .push
         ),
         navigationBackConfig: .init(
-          screen: .proximityRequest,
+          screen: .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator),
           navigationType: .pop
         ),
         isPreAuthorization: false,
@@ -64,7 +105,7 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
   }
 
   override func getTitle() -> LocalizableString.Key {
-    .requestDataTitle(["EUDI Conference"])
+    viewState.title
   }
 
   override func getCaption() -> LocalizableString.Key {
@@ -76,6 +117,18 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
   }
 
   override func getRelyingParty() -> String {
-    "EUDI Conference"
+    viewState.relyingParty
+  }
+
+  override func getTitleCaption() -> String {
+    LocalizableString.shared.get(with: .requestDataTitle([""]))
+  }
+
+  override func getTrustedRelyingParty() -> LocalizableString.Key {
+    .requestDataVerifiedEntity
+  }
+
+  override func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
+    .requestDataVerifiedEntityMessage
   }
 }

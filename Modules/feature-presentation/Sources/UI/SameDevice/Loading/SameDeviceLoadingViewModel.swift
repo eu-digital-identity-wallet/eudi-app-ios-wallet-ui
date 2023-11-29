@@ -50,7 +50,7 @@ final class SameDeviceLoadingViewModel<Router: RouterHostType, Interactor: SameD
             title: .okButton,
             screen: .dashboard,
             style: .primary,
-            navigationType: .pop
+            navigationType: .pop()
           )
         ],
         visualKind: .defaultIcon

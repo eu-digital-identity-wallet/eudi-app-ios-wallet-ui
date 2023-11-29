@@ -15,7 +15,9 @@
  */
 import Foundation
 import logic_ui
+import logic_business
 import UIKit
+import logic_resources
 
 struct ProxmityConnectivityState: ViewState {
   let error: ContentError.Config?
@@ -31,24 +33,18 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
     self.interactor = interactor
     super.init(
       router: router,
-      initialState: .init(error: nil, qrImage: nil)
+      initialState: .init(
+        error: nil,
+        qrImage: nil
+      )
     )
   }
 
   func initialize() async {
-    await generateQRCode()
-    await onConnectionSuccess()
-  }
-
-  func goBack() {
-    router.pop()
-  }
-
-  // MARK: - TODO needs to change to actual implementation, temporarily will move to request screen
-  private func onConnectionSuccess() async {
-    switch await interactor.doWork() {
+    await self.subscribeToCoordinatorPublisher()
+    switch await self.interactor.onDeviceEngagement() {
     case .success:
-      router.push(with: .proximityRequest)
+      await self.onConnectionSuccess()
     case .failure(let error):
       setNewState(
         error: .init(
@@ -59,8 +55,23 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
     }
   }
 
-  private func generateQRCode() async {
-    switch await interactor.generateQRCode() {
+  func subscribeToCoordinatorPublisher() async {
+    await interactor.getSessionStatePublisher()
+      .sink { state in
+        switch state {
+        case .prepareQr:
+          await self.onQRGeneration()
+        case .error:
+          self.onError()
+        default:
+          print(state)
+        }
+      }
+      .store(in: &cancellables)
+  }
+
+  private func onQRGeneration() async {
+    switch await interactor.onQRGeneration() {
     case .success(let qrImage):
       setNewState(qrImage: qrImage)
     case .failure(let error):
@@ -71,6 +82,27 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
         )
       )
     }
+  }
+
+  func goBack() {
+    Task {
+      await interactor.stopPresentation()
+    }
+    router.pop()
+  }
+
+  private func onConnectionSuccess() async {
+    cancellables.forEach({$0.cancel()})
+    router.push(with: .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator))
+  }
+
+  private func onError() {
+    self.setNewState(
+      error: .init(
+        description: .genericErrorDesc,
+        cancelAction: self.router.pop()
+      )
+    )
   }
 
   private func setNewState(

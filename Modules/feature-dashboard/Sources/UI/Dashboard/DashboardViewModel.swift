@@ -15,6 +15,7 @@
  */
 import Foundation
 import logic_ui
+import logic_business
 import feature_common
 
 struct DashboardState: ViewState {
@@ -74,7 +75,7 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
     )
   }
   func onShare() {
-    router.push(with: .proximityConnection)
+    router.push(with: .proximityConnection(presentationCoordinator: WalletKitController.shared.startProximityPresentation()))
   }
 
   func onAdd() {

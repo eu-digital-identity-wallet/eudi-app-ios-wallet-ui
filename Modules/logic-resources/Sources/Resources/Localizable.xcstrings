@@ -1,6 +1,17 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "aamva_sex" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AAMVA Sex"
+          }
+        }
+      }
+    },
     "add_doc" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -34,6 +45,127 @@
         }
       }
     },
+    "administrative_number" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Administrative number"
+          }
+        }
+      }
+    },
+    "age_birth_year" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In what year were you born?"
+          }
+        }
+      }
+    },
+    "age_in_years" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How old are you (in years)?"
+          }
+        }
+      }
+    },
+    "age_over_13" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 13?"
+          }
+        }
+      }
+    },
+    "age_over_15" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 15?"
+          }
+        }
+      }
+    },
+    "age_over_16" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 16?"
+          }
+        }
+      }
+    },
+    "age_over_18" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 18?"
+          }
+        }
+      }
+    },
+    "age_over_21" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 21?"
+          }
+        }
+      }
+    },
+    "age_over_60" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 60?"
+          }
+        }
+      }
+    },
+    "age_over_65" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 65?"
+          }
+        }
+      }
+    },
+    "age_over_68" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 68?"
+          }
+        }
+      }
+    },
     "biometry_open_settings" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -41,6 +173,61 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Go to settings"
+          }
+        }
+      }
+    },
+    "birth_city" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "City of birth"
+          }
+        }
+      }
+    },
+    "birth_country" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Country of birth"
+          }
+        }
+      }
+    },
+    "birth_date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date of birth"
+          }
+        }
+      }
+    },
+    "birth_place" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Place of birth"
+          }
+        }
+      }
+    },
+    "birth_state" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "State of birth"
           }
         }
       }
@@ -100,6 +287,149 @@
         }
       }
     },
+    "com.example.conference.badge" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EUDI Conference Badge"
+          }
+        }
+      }
+    },
+    "conference_badge" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EUDI Conference Badge"
+          }
+        }
+      }
+    },
+    "DHS_compliance" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DHS Compliance"
+          }
+        }
+      }
+    },
+    "document_number" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document number"
+          }
+        }
+      }
+    },
+    "driving_privileges" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Categories of vehicles"
+          }
+        }
+      }
+    },
+    "EDL_credential" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EDL Credential"
+          }
+        }
+      }
+    },
+    "eu_pid_doctype_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EU PID"
+          }
+        }
+      }
+    },
+    "expiry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "expiry"
+          }
+        }
+      }
+    },
+    "expiry_date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date of expiry"
+          }
+        }
+      }
+    },
+    "eye_colour" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eye colour"
+          }
+        }
+      }
+    },
+    "family_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Family Name"
+          }
+        }
+      }
+    },
+    "family_name_birth" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Family Name at Birth"
+          }
+        }
+      }
+    },
+    "family_name_national_character" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Family name in national characters"
+          }
+        }
+      }
+    },
     "faq_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -107,6 +437,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "FAQs"
+          }
+        }
+      }
+    },
+    "first_name_birth" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "First Name at Birth"
+          }
+        }
+      }
+    },
+    "gender" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gender"
           }
         }
       }
@@ -133,6 +485,61 @@
         }
       }
     },
+    "given_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Given Name"
+          }
+        }
+      }
+    },
+    "given_name_birth" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Given Name at Birth"
+          }
+        }
+      }
+    },
+    "given_name_national_character" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Given name in national characters"
+          }
+        }
+      }
+    },
+    "hair_colour" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hair colour"
+          }
+        }
+      }
+    },
+    "height" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Height (cm)"
+          }
+        }
+      }
+    },
     "incomplete_request_data_selecting" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -151,6 +558,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid quick pin"
+          }
+        }
+      }
+    },
+    "issuance_date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date of issuance"
           }
         }
       }
@@ -287,6 +705,61 @@
         }
       }
     },
+    "issue_date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date of issue"
+          }
+        }
+      }
+    },
+    "issued_at" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issued at"
+          }
+        }
+      }
+    },
+    "issuing_authority" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuing authority"
+          }
+        }
+      }
+    },
+    "issuing_country" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuing country"
+          }
+        }
+      }
+    },
+    "issuing_jurisdiction" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuing jurisdiction"
+          }
+        }
+      }
+    },
     "login_button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -342,6 +815,17 @@
         }
       }
     },
+    "mdl_doctype_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mDL"
+          }
+        }
+      }
+    },
     "more_options" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -353,6 +837,20 @@
         }
       }
     },
+    "nationality" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nationality"
+          }
+        }
+      }
+    },
+    "no" : {
+      "extractionState" : "manual"
+    },
     "ok_button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -360,6 +858,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        }
+      }
+    },
+    "persistent_id" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Persistent Identifier"
           }
         }
       }
@@ -382,6 +891,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Please wait..."
+          }
+        }
+      }
+    },
+    "portrait" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portrait"
+          }
+        }
+      }
+    },
+    "portrait_capture_date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portrait image timestamp"
           }
         }
       }
@@ -617,6 +1148,17 @@
         }
       }
     },
+    "registration_id" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registration ID"
+          }
+        }
+      }
+    },
     "request_data_info_notice" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -694,6 +1236,127 @@
         }
       }
     },
+    "request_data_verification" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verification Data"
+          }
+        }
+      }
+    },
+    "request_data_verified_entity" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trusted Relying Party"
+          }
+        }
+      }
+    },
+    "request_data_verified_entity_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A relying party is considered trusted when it meets predefined criteria for security, data protection, compliance, and responsible data handling. Trust is reinforced through assessments, audits, and certifications."
+          }
+        }
+      }
+    },
+    "resident_address" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permanent place of residence"
+          }
+        }
+      }
+    },
+    "resident_city" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resident city"
+          }
+        }
+      }
+    },
+    "resident_country" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resident country"
+          }
+        }
+      }
+    },
+    "resident_house_number" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resident house number"
+          }
+        }
+      }
+    },
+    "resident_postal_code" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resident postal code"
+          }
+        }
+      }
+    },
+    "resident_state" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resident state"
+          }
+        }
+      }
+    },
+    "resident_street" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resident street"
+          }
+        }
+      }
+    },
+    "room_number" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room Number"
+          }
+        }
+      }
+    },
     "screen_recording_security_warning" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -712,6 +1375,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search"
+          }
+        }
+      }
+    },
+    "seat_number" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seat Number"
+          }
+        }
+      }
+    },
+    "sex" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sex"
           }
         }
       }
@@ -749,6 +1434,17 @@
         }
       }
     },
+    "signature_usual_mark" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signature / usual mark"
+          }
+        }
+      }
+    },
     "success" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -771,6 +1467,61 @@
         }
       }
     },
+    "un_distinguishing_sign" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UN distinguishing sign"
+          }
+        }
+      }
+    },
+    "unavailable_field" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unavailable Field"
+          }
+        }
+      }
+    },
+    "unique_id" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unique identifier"
+          }
+        }
+      }
+    },
+    "unknown_verifier" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown Verifier"
+          }
+        }
+      }
+    },
+    "weight" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weight (kg)"
+          }
+        }
+      }
+    },
     "welcome_back" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -781,6 +1532,9 @@
           }
         }
       }
+    },
+    "yes" : {
+      "extractionState" : "manual"
     }
   },
   "version" : "1.0"

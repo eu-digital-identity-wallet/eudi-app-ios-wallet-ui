@@ -28,10 +28,25 @@ public struct BaseRequestView<Router: RouterHostType>: View {
   public var body: some View {
     ContentScreen(errorConfig: viewModel.viewState.error) {
 
-      ContentTitle(
-        title: viewModel.getTitle(),
-        topSpacing: .withoutToolbar
-      )
+      if viewModel.viewState.isTrusted {
+        ContentTitle(
+          titleDecoration: .icon(
+            decorated: viewModel.getRelyingParty(),
+            icon: Theme.shared.image.checkMarkSealFill,
+            text: viewModel.getTitleCaption()
+          ),
+          decorationColor: Theme.shared.color.success,
+          topSpacing: .withoutToolbar,
+          onTap: {
+            viewModel.onVerifiedEntityModal()
+          }
+        )
+      } else {
+        ContentTitle(
+          title: viewModel.getTitle(),
+          topSpacing: .withoutToolbar
+        )
+      }
 
       VSpacer.extraSmall()
 
@@ -87,6 +102,7 @@ public struct BaseRequestView<Router: RouterHostType>: View {
         }
         .padding(.top)
       }
+      .bottomFade()
 
       Spacer()
 
@@ -115,6 +131,17 @@ public struct BaseRequestView<Router: RouterHostType>: View {
         WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onShowRequestInfoModal())
       }
     }
+    .sheetDialog(isPresented: $viewModel.isVerifiedEntityModalShowing, {
+      VStack(spacing: SPACING_MEDIUM) {
+
+        ContentTitle(
+          title: viewModel.getTrustedRelyingParty(),
+          caption: viewModel.getTrustedRelyingPartyInfo()
+        )
+
+        WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onShowRequestInfoModal())
+      }
+    })
     .task {
       await viewModel.doWork()
     }

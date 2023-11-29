@@ -50,7 +50,7 @@ final class CrossDeviceLoadingViewModel<Router: RouterHostType, Interactor: Cros
             title: .okButton,
             screen: .dashboard,
             style: .primary,
-            navigationType: .pop
+            navigationType: .pop()
           )
         ],
         visualKind: .defaultIcon

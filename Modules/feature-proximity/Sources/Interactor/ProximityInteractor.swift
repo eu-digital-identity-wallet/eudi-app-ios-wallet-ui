@@ -16,10 +16,25 @@
 import Foundation
 import logic_api
 import logic_business
-import CoreImage.CIFilterBuiltins
 import UIKit
+import feature_common
 
-public enum ProximityPartialState {
+public enum ProximityResponsePartialState {
+  case success
+  case failure(Error)
+}
+
+public enum ProximityResponsePreparationPartialState {
+  case success(RequestItemConvertible)
+  case failure(Error)
+}
+
+public enum ProximityRequestPartialState {
+  case success([RequestDataCell], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
+  case failure(Error)
+}
+
+public enum ProximityInitialisationPartialState {
   case success
   case failure(Error)
 }
@@ -30,45 +45,153 @@ public enum ProximityQrCodePartialState {
 }
 
 public protocol ProximityInteractorType {
-  func doWork() async -> ProximityPartialState
-  func generateQRCode() async -> ProximityQrCodePartialState
+
+  var presentationSessionCoordinator: PresentationSessionCoordinatorType { get }
+
+  func getSessionStatePublisher() async -> any Publisher<PresentationState, Never>
+
+  func onDeviceEngagement() async -> ProximityInitialisationPartialState
+  func onQRGeneration() async -> ProximityQrCodePartialState
+  func onRequestReceived() async -> ProximityRequestPartialState
+  func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState
+  func onSendResponse() async -> ProximityResponsePartialState
+  func stopPresentation() async
+
 }
 
 public final actor ProximityInteractor: ProximityInteractorType {
 
-  public init() {}
+  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
+  public let presentationSessionCoordinator: PresentationSessionCoordinatorType
 
-  public func generateQRCode() async -> ProximityQrCodePartialState {
-
-    let qrCode = UUID().uuidString
-
-    let filter = CIFilter.qrCodeGenerator()
-
-    guard let data = qrCode.data(using: .ascii, allowLossyConversion: false) else {
-      return .failure(RuntimeError.genericError)
-    }
-    filter.message = data
-
-    guard let ciimage = filter.outputImage else {
-      return .failure(RuntimeError.genericError)
-    }
-    let transform = CGAffineTransform(scaleX: 10, y: 10)
-    let scaledCIImage = ciimage.transformed(by: transform)
-    let uiimage = UIImage(ciImage: scaledCIImage)
-
-    guard let pngData = uiimage.pngData(), let qrImage = UIImage(data: pngData) else {
-      return .failure(RuntimeError.genericError)
-    }
-
-    return .success(qrImage)
+  public init(with presentationSessionCoordinator: PresentationSessionCoordinatorType) {
+    self.presentationSessionCoordinator = presentationSessionCoordinator
   }
 
-  public func doWork() async -> ProximityPartialState {
+  public func getSessionStatePublisher() async -> any Publisher<PresentationState, Never> {
+    presentationSessionCoordinator
+      .presentationStateSubject
+      .eraseToAnyPublisher()
+  }
+
+  public func onDeviceEngagement() async -> ProximityInitialisationPartialState {
+    await presentationSessionCoordinator.initialize()
+    return .success
+  }
+
+  public func onQRGeneration() async -> ProximityQrCodePartialState {
     do {
-      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
+      let data = try await self.presentationSessionCoordinator.startQrEngagement()
+
+      guard let qrImage = UIImage(data: data) else {
+        return .failure(PresentationSessionError.qrGeneration)
+      }
+
+      return .success(qrImage)
+
+    } catch {
+      return .failure(error)
+    }
+
+  }
+
+  public func onRequestReceived() async -> ProximityRequestPartialState {
+    do {
+      let response = try await presentationSessionCoordinator.requestReceived()
+      return .success(
+        RequestDataUiModel.items(
+          for: response.items
+        ),
+        relyingParty: getVerifierName(response: response),
+        dataRequestInfo: response.dataRequestInfo,
+        isTrusted: response.isTrusted
+      )
+    } catch {
+      return .failure(error)
+    }
+  }
+
+  public func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState {
+    let requestConvertible = requestItems
+      .reduce(into: [RequestDataRow]()) { partialResult, cell in
+        if let item = cell.isDataRow, item.isSelected {
+          partialResult.append(item)
+        }
+
+        if let items = cell.isDataVerification?.items.filter({$0.isSelected}) {
+          partialResult.append(contentsOf: items)
+        }
+      }
+      .reduce(into: RequestItemsWrapper()) {  partialResult, row in
+        var nameSpaceDict = partialResult.requestItems[row.docType, default: [row.namespace: [row.elementKey]]]
+        nameSpaceDict[row.namespace, default: [row.elementKey]].append(row.elementKey)
+        partialResult.requestItems[row.docType] = nameSpaceDict
+      }
+
+    guard requestConvertible.requestItems.isEmpty == false else {
+      return .failure(PresentationSessionError.conversionToRequestItemModel)
+    }
+
+    self.presentationSessionCoordinator.setState(presentationState: .responseToSend(requestConvertible))
+
+    return .success(requestConvertible.asRequestItems())
+  }
+
+  public func onSendResponse() async -> ProximityResponsePartialState {
+
+    guard case PresentationState.responseToSend(let responseItem) = await presentationSessionCoordinator.getState() else {
+      return .failure(PresentationSessionError.invalidState)
+    }
+
+    do {
+      // TODO: Remove when navigation queue issue is resolved.
+      // Added a delay to prevent UIPilot from crashing when pushing multiple routes in quick succession.
+      try await Task.sleep(seconds: 2)
+      try await presentationSessionCoordinator.sendResponse(response: responseItem)
       return .success
     } catch {
       return .failure(error)
     }
+  }
+
+  public func stopPresentation() {
+    walletKitController.stopPresentation()
+  }
+}
+
+extension ProximityInteractor {
+  fileprivate func getVerifierName(response: PresentationRequest) -> String {
+    // TODO: Make a more concrete approach in how we handle extracting the CN value of verifier message
+
+      func extractKeyValuePairs(from input: String) -> [String: String] {
+          var result = [String: String]()
+          // Find Keys, separated  by a = unti we find the next comma e.g. CN = Test Verifier, CU = Test
+          // will produce a dictionary of result[CN] = "Test Verifier", result[CU] = "Test"
+          let regexPattern = #"(\w+)=([^,]+)"#
+
+          do {
+              let regex = try NSRegularExpression(pattern: regexPattern)
+              let matches = regex.matches(in: input, options: [], range: NSRange(location: 0, length: input.utf16.count))
+
+              for match in matches {
+                  if let keyRange = Range(match.range(at: 1), in: input),
+                    let valueRange = Range(match.range(at: 2), in: input) {
+                      let key = String(input[keyRange])
+                      let value = String(input[valueRange])
+
+                      result[key] = value
+                  }
+              }
+
+          } catch let error {
+              print("Invalid regex: \(error.localizedDescription)")
+          }
+
+          return result
+      }
+
+    let extractedKeys = extractKeyValuePairs(from: response.relyingParty)
+    let issuerMessage = extractedKeys["CN"]
+    return issuerMessage ?? LocalizableString.shared.get(with: .unknownVerifier)
   }
 }

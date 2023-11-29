@@ -35,6 +35,8 @@ public final class LocalizableString: LocalizableStringType {
 
   public func get(with key: Key) -> String {
     return switch key {
+    case .dynamic(let key):
+      bundle.localizedString(forKey: key)
     case .custom(let literal):
       literal
     case .screenCaptureSecurityWarning:
@@ -111,6 +113,14 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "proxmity_connectivity_caption")
     case .proximityConnectivityNfc:
       bundle.localizedString(forKey: "proximity_connectivity_nfc")
+    case .verification:
+      bundle.localizedString(forKey: "request_data_verification")
+    case .unavailableField:
+      bundle.localizedString(forKey: "unavailable_field")
+    case .requestDataVerifiedEntity:
+      bundle.localizedString(forKey: "request_data_verified_entity")
+    case .requestDataVerifiedEntityMessage:
+      bundle.localizedString(forKey: "request_data_verified_entity_message")
     case .moreOptions:
       bundle.localizedString(forKey: "more_options")
     case .changeQuickPinOption:
@@ -179,6 +189,17 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "issuance_success_add_button")
     case .issuanceSuccessCancelButton:
       bundle.localizedString(forKey: "issuance_success_cancel_button")
+    case .unknownVerifier:
+      bundle.localizedString(forKey: "unknown_verifier")
+    case .expiry:
+      bundle.localizedString(forKey: "expiry")
+    case .issuedAt:
+      bundle.localizedString(forKey: "issued_at")
+    case .yes:
+      bundle.localizedString(forKey: "yes")
+    case .no:
+      bundle.localizedString(forKey: "no")
+
     }
   }
 
@@ -189,6 +210,7 @@ public final class LocalizableString: LocalizableStringType {
 
 public extension LocalizableString {
   enum Key: Equatable {
+    case dynamic(key: String)
     case custom(String)
     case screenCaptureSecurityWarning
     case faqs
@@ -227,6 +249,10 @@ public extension LocalizableString {
     case proximityConnectivityTitle
     case proximityConnectivityCaption
     case proximityConnectivityNfc
+    case verification
+    case unavailableField
+    case requestDataVerifiedEntity
+    case requestDataVerifiedEntityMessage
     case moreOptions
     case changeQuickPinOption
     case quickPinSetTitle
@@ -261,6 +287,11 @@ public extension LocalizableString {
     case issuanceSuccessModalCancelButton
     case issuanceSuccessAddButton
     case issuanceSuccessCancelButton
+    case unknownVerifier
+    case expiry
+    case issuedAt
+    case yes
+    case no
   }
 }
 

@@ -13,11 +13,33 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-@_exported import Foundation
-@_exported import XCTest
-@_exported import Cuckoo
-@_exported import CombineExpectations
+import Foundation
+import EudiWalletKit
 
-class EudiTest: XCTestCase {
+public protocol RequestItemConvertible {
+  func asRequestItems() -> RequestItems
+}
 
+public struct RequestItemsWrapper: RequestItemConvertible {
+
+  public var requestItems: RequestItems
+
+  public init() {
+    requestItems = RequestItems()
+  }
+
+  public init(dictionary: [String: [String: [String]]]) {
+    self.requestItems = dictionary
+  }
+
+  public func asRequestItems() -> EudiWalletKit.RequestItems {
+    requestItems
+  }
+
+}
+
+extension RequestItems: RequestItemConvertible {
+  public func asRequestItems() -> RequestItems {
+    return self
+  }
 }

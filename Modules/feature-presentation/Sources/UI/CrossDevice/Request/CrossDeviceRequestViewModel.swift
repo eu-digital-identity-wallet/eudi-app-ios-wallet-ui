@@ -33,7 +33,12 @@ final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: Cros
     self.onStartLoading()
     switch await interactor.doWork() {
     case .success:
-      self.onReceivedItems(with: RequestDataUiModel.mock())
+      self.onReceivedItems(
+        with: RequestDataUiModel.mock(),
+        title: .requestDataTitle(["EUDI Wallet"]),
+        relyingParty: "EUDI Wallet",
+        isTrusted: true
+      )
     case .failure(let error):
       self.onError(with: error)
     }
@@ -73,5 +78,17 @@ final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: Cros
 
   override func getRelyingParty() -> String {
     "EUDI Conference"
+  }
+
+  override func getTitleCaption() -> String {
+    LocalizableString.shared.get(with: .requestDataTitle([""]))
+  }
+
+  override func getTrustedRelyingParty() -> LocalizableString.Key {
+    .requestDataVerifiedEntity
+  }
+
+  override func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
+    .requestDataVerifiedEntityMessage
   }
 }

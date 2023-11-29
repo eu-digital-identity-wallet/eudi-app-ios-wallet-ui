@@ -20,7 +20,6 @@ import logic_resources
 public struct ProximityConnectionView<Router: RouterHostType, Interactor: ProximityInteractorType>: View {
 
   @ObservedObject private var viewModel: ProximityConnectionViewModel<Router, Interactor>
-  @State var userIsEditingAlias = false
 
   var contentSize: CGFloat = 0.0
 
@@ -49,12 +48,16 @@ public struct ProximityConnectionView<Router: RouterHostType, Interactor: Proxim
 
       Spacer()
 
-      if let image = viewModel.viewState.qrImage {
-
-        Image(uiImage: image)
-          .resizable()
-          .frame(width: contentSize, height: contentSize)
+      VStack {
+        if let image = viewModel.viewState.qrImage {
+          Image(uiImage: image)
+            .resizable()
+            .transition(.opacity)
+        } else {
+          ContentLoader(showLoader: .constant(true))
+        }
       }
+      .frame(width: contentSize, height: contentSize)
 
       Spacer()
 

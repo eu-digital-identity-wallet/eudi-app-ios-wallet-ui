@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import logic_business
 
 public indirect enum AppRoute: Equatable {
 
@@ -31,9 +32,9 @@ public indirect enum AppRoute: Equatable {
   case sameDeviceLoader(String)
   case sameDeviceRequest
   case welcome
-  case proximityConnection
-  case proximityRequest
-  case proximityLoader(String)
+  case proximityConnection(presentationCoordinator: PresentationSessionCoordinatorType)
+  case proximityRequest(presentationCoordinator: PresentationSessionCoordinatorType)
+  case proximityLoader(String, presentationCoordinator: PresentationSessionCoordinatorType)
   case quickPin(config: any UIConfigType)
   case issuanceAddDocument(config: any UIConfigType)
   case issuanceDocumentDetails(config: any UIConfigType)

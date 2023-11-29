@@ -13,11 +13,11 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-@_exported import Foundation
-@_exported import XCTest
-@_exported import Cuckoo
-@_exported import CombineExpectations
+import Foundation
 
-class EudiTest: XCTestCase {
+extension Task where Success == Never, Failure == Never {
 
+  public static func sleep(seconds: TimeInterval) async throws {
+    try await Task.sleep(nanoseconds: seconds.nanoseconds)
+  }
 }

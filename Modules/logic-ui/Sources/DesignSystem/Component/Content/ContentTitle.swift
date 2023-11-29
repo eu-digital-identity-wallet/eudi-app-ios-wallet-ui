@@ -18,24 +18,81 @@ import logic_resources
 
 public struct ContentTitle: View {
 
-  private let title: LocalizableString.Key
+  public typealias TapListener = (() -> Void)?
+
+  public enum TitleDecoration {
+    case plain(LocalizableString.Key)
+    case icon(decorated: String, icon: Image, text: String?)
+  }
+
+  private let titleDecoration: TitleDecoration
+  private let decorationColor: Color
   private let caption: LocalizableString.Key?
   private let titleColor: Color
   private let captionColor: Color
   private let topSpacing: TopSpacing
+  private let onTap: TapListener
 
   public init(
     title: LocalizableString.Key,
     caption: LocalizableString.Key? = nil,
+    decorationColor: Color = ThemeManager.shared.color.primary,
     titleColor: Color = ThemeManager.shared.color.primary,
     captionColor: Color = ThemeManager.shared.color.textSecondaryDark,
-    topSpacing: TopSpacing = .withToolbar
+    topSpacing: TopSpacing = .withToolbar,
+    onTap: TapListener = nil
   ) {
-    self.title = title
+    self.titleDecoration = .plain(title)
+    self.caption = caption
+    self.decorationColor = decorationColor
+    self.titleColor = titleColor
+    self.captionColor = captionColor
+    self.topSpacing = topSpacing
+    self.onTap = onTap
+  }
+
+  public init(
+    titleDecoration: TitleDecoration,
+    caption: LocalizableString.Key? = nil,
+    decorationColor: Color = ThemeManager.shared.color.primary,
+    titleColor: Color = ThemeManager.shared.color.primary,
+    captionColor: Color = ThemeManager.shared.color.textSecondaryDark,
+    topSpacing: TopSpacing = .withToolbar,
+    onTap: TapListener = nil
+  ) {
+    self.titleDecoration = titleDecoration
+    self.decorationColor = decorationColor
     self.caption = caption
     self.titleColor = titleColor
     self.captionColor = captionColor
     self.topSpacing = topSpacing
+    self.onTap = onTap
+  }
+
+  var title: some View {
+    HStack {
+      switch titleDecoration {
+      case .plain(let key):
+        Text(key)
+          .typography(ThemeManager.shared.font.headlineSmall)
+          .foregroundColor(self.titleColor)
+      case .icon(let decorated, let icon, let text):
+        Text(decorated)
+          .typography(style: ThemeManager.shared.font.headlineSmall)
+          .foregroundColor(self.titleColor)
+        +
+        Text("\(icon)")
+          .typography(style: ThemeManager.shared.font.headlineSmall)
+          .foregroundColor(self.decorationColor)
+        +
+        Text(text ?? "")
+          .typography(style: ThemeManager.shared.font.headlineSmall)
+          .foregroundColor(self.titleColor)
+
+      }
+
+      Spacer()
+    }
   }
 
   public var body: some View {
@@ -43,12 +100,10 @@ public struct ContentTitle: View {
 
       VSpacer.custom(size: topSpacing.rawValue)
 
-      HStack {
-        Text(self.title)
-          .typography(ThemeManager.shared.font.headlineSmall)
-          .foregroundColor(self.titleColor)
-        Spacer()
-      }
+      title
+        .onTapGesture(perform: {
+          onTap?()
+        })
 
       VSpacer.extraSmall()
 

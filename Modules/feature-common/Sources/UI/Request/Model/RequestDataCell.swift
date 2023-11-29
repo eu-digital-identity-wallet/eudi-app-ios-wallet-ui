@@ -15,13 +15,15 @@
  */
 import Foundation
 import SwiftUI
+import logic_business
+import EudiWalletKit
 
 public enum RequestDataCell: Equatable {
   case requestDataRow(RequestDataRow)
   case requestDataSection(RequestDataSection)
   case requestDataVerification(RequestDataVerification)
 
-  var isDataRow: RequestDataRow? {
+  public var isDataRow: RequestDataRow? {
     switch self {
     case .requestDataRow(let row):
       return row
@@ -30,7 +32,7 @@ public enum RequestDataCell: Equatable {
     }
   }
 
-  var isDataSection: RequestDataSection? {
+  public var isDataSection: RequestDataSection? {
     switch self {
     case .requestDataSection(let section):
       return section
@@ -39,7 +41,7 @@ public enum RequestDataCell: Equatable {
     }
   }
 
-  var isDataVerification: RequestDataVerification? {
+  public var isDataVerification: RequestDataVerification? {
     switch self {
     case .requestDataVerification(let verification):
       return verification
@@ -58,12 +60,28 @@ public struct RequestDataRow: Identifiable, Equatable {
   public var isSelected: Bool
   public var isVisible: Bool
 
-  public init(isSelected: Bool, isVisible: Bool, title: String, value: String) {
-    self.id = UUID().uuidString
+  public var elementKey: String
+  public var namespace: String
+  public var docType: String
+
+  public init(
+    id: String = UUID().uuidString,
+    isSelected: Bool,
+    isVisible: Bool,
+    title: String,
+    value: String,
+    elementKey: String = "namespaced_key",
+    namespace: String = "doc.namespace",
+    docType: String = "mock"
+  ) {
+    self.id = id
     self.isSelected = isSelected
     self.isVisible = isVisible
     self.title = title
     self.value = value
+    self.elementKey = elementKey
+    self.namespace = namespace
+    self.docType = docType
   }
 
   public mutating func setSelected(_ isSelected: Bool) {
@@ -81,8 +99,12 @@ public struct RequestDataSection: Identifiable, Equatable {
   public let type: `Type`
   public let title: String
 
-  public init(type: `Type`, title: String) {
-    self.id = UUID().uuidString
+  public init(
+    id: String = UUID().uuidString,
+    type: `Type`,
+    title: String
+  ) {
+    self.id = id
     self.type = type
     self.title = title
   }
@@ -94,17 +116,121 @@ public struct RequestDataVerification: Identifiable, Equatable {
   public let title: String
   public let items: [RequestDataRow]
 
-  public init(title: String, items: [RequestDataRow]) {
-    self.id = UUID().uuidString
+  public init(
+    id: String = UUID().uuidString,
+    title: String,
+    items: [RequestDataRow]
+  ) {
+    self.id = id
     self.title = title
     self.items = items
   }
 }
 
 public extension RequestDataSection {
-  enum `Type` {
+  enum `Type`: Equatable {
     case id
     case mdl
+    case custom(String)
+
+    public init(docType: DocumentIdentifier) {
+      switch docType {
+
+      case .EuPidDocType:
+        self = .id
+      case .IsoMdlModel:
+        self = .mdl
+      case .genericDocument(docType: let docType):
+        self = .custom(docType)
+      }
+    }
+  }
+}
+
+extension RequestDataUiModel {
+
+  public static func items(for documents: [DocElementsViewModel]) -> [RequestDataCell] {
+    var requestDataCell = [RequestDataCell]()
+
+    for document in documents {
+      // Section Header
+      requestDataCell.append(documentSectionHeader(for: document))
+
+      // Filter fields for Selectable Disclosed Fields
+      requestDataCell.append(contentsOf: documentSelectiveDisclosableFields(for: document))
+
+      // Filter fields for mandatory keys for verification
+      if let verificationFields = documentMandatoryVerificationFields(for: document) {
+        requestDataCell.append(verificationFields)
+      }
+    }
+
+    return requestDataCell
+  }
+
+  fileprivate static func documentSectionHeader(for document: DocElementsViewModel) -> RequestDataCell {
+    .requestDataSection(
+      .init(
+        id: document.docType,
+        type: .init(docType: DocumentIdentifier(rawValue: document.docType)),
+        title: DocumentIdentifier(rawValue: document.docType).localizedTitle
+      )
+    )
+  }
+
+  fileprivate static func documentSelectiveDisclosableFields(for document: DocElementsViewModel) -> [RequestDataCell] {
+    document.elements
+      .filter { element in
+        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
+        return !mandatoryKeys.contains(element.elementIdentifier)
+      }
+      .map {
+        RequestDataCell.requestDataRow(
+          RequestDataRow(
+            id: $0.id,
+            isSelected: true,
+            isVisible: false,
+            title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
+            value: WalletKitController.shared.valueForElementIdentifier(
+              for: .init(rawValue: document.docType),
+              elementIdentifier: $0.elementIdentifier
+            ),
+            elementKey: $0.elementIdentifier,
+            namespace: $0.nameSpace,
+            docType: document.docType))
+
+      }
+  }
+
+  fileprivate static func documentMandatoryVerificationFields(for document: DocElementsViewModel) -> RequestDataCell? {
+    let mandatoryFields = document.elements
+      .filter { element in
+        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
+        return mandatoryKeys.contains(element.elementIdentifier)
+      }
+      .map {
+        RequestDataRow(
+          id: $0.id,
+          isSelected: true,
+          isVisible: false,
+          title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
+          value: WalletKitController.shared.valueForElementIdentifier(
+            for: .init(rawValue: document.docType),
+            elementIdentifier: $0.elementIdentifier
+          ),
+          elementKey: $0.elementIdentifier,
+          namespace: $0.nameSpace,
+          docType: document.docType)
+      }
+
+    guard mandatoryFields.count > 0 else {
+      return nil
+    }
+
+    return .requestDataVerification(
+      .init(title: LocalizableString.shared.get(with: .verification),
+            items: mandatoryFields)
+    )
   }
 }
 

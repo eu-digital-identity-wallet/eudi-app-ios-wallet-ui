@@ -23,6 +23,10 @@ public struct RequestViewState: ViewState {
   public let isContentVisible: Bool
   public let itemsAreAllSelected: Bool
   public let items: [RequestDataCell]
+  public let title: LocalizableString.Key
+  public let trustedRelyingPartyInfo: LocalizableString.Key
+  public let relyingParty: String
+  public let isTrusted: Bool
 }
 
 @MainActor
@@ -30,6 +34,7 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
 
   @Published var isCancelModalShowing: Bool = false
   @Published var isRequestInfoModalShowing: Bool = false
+  @Published var isVerifiedEntityModalShowing: Bool = false
 
   public init(router: Router) {
     super.init(
@@ -39,7 +44,11 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
         error: nil,
         isContentVisible: false,
         itemsAreAllSelected: true,
-        items: RequestDataUiModel.mock()
+        items: RequestDataUiModel.mock(),
+        title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
+        trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
+        relyingParty: "Unknown Verifier",
+        isTrusted: false
       )
     )
   }
@@ -64,6 +73,18 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
 
   open func getSuccessRoute() -> AppRoute? {
     return nil
+  }
+
+  open func getTitleCaption() -> String {
+    return ""
+  }
+
+  open func getTrustedRelyingParty() -> LocalizableString.Key {
+    return .custom("")
+  }
+
+  open func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
+    return .custom("")
   }
 
   open func onShare() {
@@ -91,9 +112,17 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     )
   }
 
-  public func onReceivedItems(with items: [RequestDataCell]) {
+  public func onReceivedItems(
+    with items: [RequestDataCell],
+    title: LocalizableString.Key,
+    relyingParty: String,
+    isTrusted: Bool
+  ) {
     setNewState(
-      items: items
+      items: items,
+      title: title,
+      relyingParty: relyingParty,
+      isTrusted: isTrusted
     )
   }
 
@@ -113,6 +142,10 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
 
   func onShowRequestInfoModal() {
     isRequestInfoModalShowing = !isRequestInfoModalShowing
+  }
+
+  func onVerifiedEntityModal() {
+    isVerifiedEntityModalShowing = !isVerifiedEntityModalShowing
   }
 
   func onContentVisibilityChange() {
@@ -159,7 +192,11 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     error: ContentError.Config? = nil,
     isContentVisible: Bool? = nil,
     itemsAreAllSelected: Bool? = nil,
-    items: [RequestDataCell]? = nil
+    items: [RequestDataCell]? = nil,
+    title: LocalizableString.Key? = nil,
+    trustedRelyingPartyInfo: LocalizableString.Key? = nil,
+    relyingParty: String? = nil,
+    isTrusted: Bool? = nil
   ) {
     setState {
       .init(
@@ -167,7 +204,11 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
         error: error,
         isContentVisible: isContentVisible ?? $0.isContentVisible,
         itemsAreAllSelected: itemsAreAllSelected ?? $0.itemsAreAllSelected,
-        items: items ?? $0.items
+        items: items ?? $0.items,
+        title: title ?? $0.title,
+        trustedRelyingPartyInfo: trustedRelyingPartyInfo ?? $0.trustedRelyingPartyInfo,
+        relyingParty: relyingParty ?? $0.relyingParty,
+        isTrusted: isTrusted ?? $0.isTrusted
       )
     }
   }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1194D2322B06363400377213 /* EUDI_sample_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 1194D2302B06362900377213 /* EUDI_sample_data.json */; };
+		1194D2332B06363600377213 /* scytales_root_ca.der in Resources */ = {isa = PBXBuildFile; fileRef = 1194D2312B06362900377213 /* scytales_root_ca.der */; };
 		F05E9F382AFABBC200891E8F /* feature-presentation in Resources */ = {isa = PBXBuildFile; fileRef = F05E9F372AFABBC200891E8F /* feature-presentation */; };
 		F06325102AC598370004601F /* logic-test in Resources */ = {isa = PBXBuildFile; fileRef = F063250F2AC598370004601F /* logic-test */; };
 		F06325122AC59AF50004601F /* feature-test in Resources */ = {isa = PBXBuildFile; fileRef = F06325112AC59AF50004601F /* feature-test */; };
@@ -31,6 +33,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1194D2302B06362900377213 /* EUDI_sample_data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EUDI_sample_data.json; sourceTree = "<group>"; };
+		1194D2312B06362900377213 /* scytales_root_ca.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = scytales_root_ca.der; sourceTree = "<group>"; };
 		1198ECD72AC453F200F4E71A /* logic-resources */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-resources"; path = "Modules/logic-resources"; sourceTree = "<group>"; };
 		F0290B062AD55C550081EEFF /* GenerateMocks.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = GenerateMocks.sh; path = Mock/GenerateMocks.sh; sourceTree = "<group>"; };
 		F05E9F372AFABBC200891E8F /* feature-presentation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-presentation"; path = "Modules/feature-presentation"; sourceTree = "<group>"; };
@@ -73,6 +77,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1194D22F2B06362900377213 /* Sample */ = {
+			isa = PBXGroup;
+			children = (
+				1194D2302B06362900377213 /* EUDI_sample_data.json */,
+				1194D2312B06362900377213 /* scytales_root_ca.der */,
+			);
+			path = Sample;
+			sourceTree = "<group>";
+		};
 		F09E1EA02AC33A6800779C25 /* Config */ = {
 			isa = PBXGroup;
 			children = (
@@ -106,6 +119,7 @@
 		F14907BA2ABAF54B00DDFE56 /* Wallet */ = {
 			isa = PBXGroup;
 			children = (
+				1194D22F2B06362900377213 /* Sample */,
 				F09E1EA02AC33A6800779C25 /* Config */,
 				F1CACAE32AC311D300B40DED /* Firebase */,
 				F14907BB2ABAF54B00DDFE56 /* Application.swift */,
@@ -229,6 +243,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1194D2322B06363400377213 /* EUDI_sample_data.json in Resources */,
 				F06325122AC59AF50004601F /* feature-test in Resources */,
 				F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */,
 				F0A013982AC35ECA00065EAD /* logic-business in Resources */,
@@ -239,6 +254,7 @@
 				F06325102AC598370004601F /* logic-test in Resources */,
 				F0A0139B2AC35ECA00065EAD /* logic-navigation in Resources */,
 				F1CACAE02AC3097100B40DED /* WalletDev.xcconfig in Resources */,
+				1194D2332B06363600377213 /* scytales_root_ca.der in Resources */,
 				F0A013992AC35ECA00065EAD /* logic-api in Resources */,
 				F0A0139A2AC35ECA00065EAD /* feature-startup in Resources */,
 				F1CACAE22AC3098C00B40DED /* WalletRelease.xcconfig in Resources */,
@@ -467,6 +483,8 @@
 				INFOPLIST_FILE = Wallet/Wallet.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Allow Face ID to access stored credentials";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -511,6 +529,8 @@
 				INFOPLIST_FILE = Wallet/Wallet.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Allow Face ID to access stored credentials";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

@@ -32,7 +32,7 @@ public final class RouterHost: RouterHostType {
   private lazy var uiConfigLogic: ConfigUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
 
   public init() {
-    self.pilot = UIPilot(initial: .startup)
+    self.pilot = UIPilot(initial: .startup, debug: true)
   }
 
   public func push(with route: AppRoute) {
@@ -112,14 +112,20 @@ public final class RouterHost: RouterHostType {
           and: AddDocumentInteractor(),
           config: config
         )
-      case .proximityConnection:
-        ProximityConnectionView(with: self, and: ProximityInteractor())
-      case .proximityRequest:
-        ProximityRequestView(with: self, and: ProximityInteractor())
-      case .proximityLoader(let relyingParty):
+      case .proximityConnection(let presentationSessionCoordinator):
+        ProximityConnectionView(
+          with: self,
+          and: ProximityInteractor(with: presentationSessionCoordinator)
+        )
+      case .proximityRequest(let presentationSessionCoordinator):
+        ProximityRequestView(
+          with: self,
+          and: ProximityInteractor(with: presentationSessionCoordinator)
+        )
+      case .proximityLoader(let relyingParty, let presentationSessionCoordinator):
         ProximityLoadingView(
           with: self,
-          and: ProximityInteractor(),
+          and: ProximityInteractor(with: presentationSessionCoordinator),
           relyingParty: relyingParty
         )
       case .quickPin(let config):

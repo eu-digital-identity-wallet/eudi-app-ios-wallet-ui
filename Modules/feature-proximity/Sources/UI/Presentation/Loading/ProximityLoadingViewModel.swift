@@ -30,6 +30,23 @@ final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: Proxim
     self.interactor = interactor
     self.relyingParty = relyingParty
     super.init(router: router)
+
+    Task {
+      await self.subscribeToCoordinatorPublisher()
+    }
+  }
+
+  func subscribeToCoordinatorPublisher() async {
+    await interactor.getSessionStatePublisher()
+      .sink { state in
+        switch state {
+        case .error(let error):
+          self.onError(with: error)
+        default:
+          ()
+        }
+      }
+      .store(in: &cancellables)
   }
 
   override func getTitle() -> LocalizableString.Key {
@@ -50,7 +67,7 @@ final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: Proxim
             title: .okButton,
             screen: .dashboard,
             style: .primary,
-            navigationType: .pop
+            navigationType: .pop()
           )
         ],
         visualKind: .defaultIcon
@@ -63,7 +80,7 @@ final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: Proxim
   }
 
   override func doWork() async {
-    switch await interactor.doWork() {
+    switch await interactor.onSendResponse() {
     case .success:
       self.onNavigate(type: .push)
     case .failure(let error):

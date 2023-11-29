@@ -64,7 +64,7 @@ final class QuickPinViewModel<Router: RouterHostType, Interactor: QuickPinIntera
         button: .quickPinNextButton,
         success: config.isSetFlow ? .quickPinSetSuccess : .quickPinUpdateSuccess,
         successButton: config.isSetFlow ? .quickPinSetSuccessButton : .quickPinUpdateSuccessButton,
-        successNavigationType: config.isSetFlow ? .push : .pop,
+        successNavigationType: config.isSetFlow ? .push : .pop(),
         successNextScreen: config.isSetFlow
         ? .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument))
         : .dashboard,

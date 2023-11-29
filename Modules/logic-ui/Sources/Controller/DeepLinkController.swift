@@ -41,7 +41,7 @@ public final class DeepLinkController: DeepLinkControllerType {
     if let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
        let params = components.queryItems,
        !params.isEmpty,
-       let action = DeepLinkAction.Action.parseType(with: components.host.orEmpty) {
+       let action = DeepLinkAction.Action.parseType(with: params) {
       return DeepLinkAction(link: components, action: action)
     }
     return nil
@@ -59,7 +59,7 @@ public final class DeepLinkController: DeepLinkControllerType {
     removeCachedDeepLinkURL()
 
     let route: AppRoute? = switch deepLinkAction.action {
-    case .authorization:
+    case .openid4vp:
       !routerHost.isScreenForeground(with: .sameDeviceRequest) ? .sameDeviceRequest : nil
     }
 
@@ -81,21 +81,23 @@ public extension DeepLinkController {
   struct DeepLinkAction {
     public let link: URLComponents
     public let action: Action
-
-    init(link: URLComponents, action: Action) {
-      self.link = link
-      self.action = action
-    }
   }
 }
 
 public extension DeepLinkController.DeepLinkAction {
-  enum Action: String, CaseIterable {
+  enum Action: CaseIterable {
 
-    case authorization
+    case openid4vp
 
-    public static func parseType(with url: String) -> Action? {
-      Action.allCases.first(where: { url.contains($0.rawValue) })
+    private static var openId4vpParams: [String] {
+      return ["client_id", "request_uri"]
+    }
+
+    public static func parseType(with queryItems: [URLQueryItem]) -> Action? {
+      if Action.openId4vpParams == queryItems.map({ $0.name }) {
+        return .openid4vp
+      }
+      return nil
     }
   }
 }
