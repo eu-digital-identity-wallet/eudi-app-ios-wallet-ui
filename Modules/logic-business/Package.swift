@@ -40,8 +40,7 @@ let package = Package(
     .package(
       url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       from: "0.1.0"
-    )
-    ,
+    ),
     .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [

@@ -79,4 +79,16 @@ final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: Cros
   override func getRelyingParty() -> String {
     "EUDI Conference"
   }
+
+  override func getTitleCaption() -> String {
+    LocalizableString.shared.get(with: .requestDataTitle([""]))
+  }
+
+  override func getTrustedRelyingParty() -> LocalizableString.Key {
+    .requestDataVerifiedEntity
+  }
+
+  override func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
+    .requestDataVerifiedEntityMessage
+  }
 }
