@@ -48,7 +48,7 @@ public protocol ProximityInteractorType {
 
   var presentationSessionCoordinator: PresentationSessionCoordinatorType { get }
 
-  func getSessionStatePublisher() async -> any Publisher<PresentationState, Never>
+  func getSessionStatePublisher() async -> AnyPublisher<PresentationState, Never>
 
   func onDeviceEngagement() async -> ProximityInitialisationPartialState
   func onQRGeneration() async -> ProximityQrCodePartialState
@@ -68,7 +68,7 @@ public final actor ProximityInteractor: ProximityInteractorType {
     self.presentationSessionCoordinator = presentationSessionCoordinator
   }
 
-  public func getSessionStatePublisher() async -> any Publisher<PresentationState, Never> {
+  public func getSessionStatePublisher() async -> AnyPublisher<PresentationState, Never> {
     presentationSessionCoordinator
       .presentationStateSubject
       .eraseToAnyPublisher()

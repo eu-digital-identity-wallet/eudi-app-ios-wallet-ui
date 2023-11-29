@@ -21,7 +21,6 @@ import Combine
 import logic_resources
 
 public protocol WalletKitControllerType {
-  static var shared: WalletKitControllerType { get }
   var wallet: EudiWallet { get }
   var activeCoordinator: PresentationSessionCoordinatorType? { get }
 
@@ -67,26 +66,26 @@ public final class WalletKitController: WalletKitControllerType {
 
 extension WalletKitControllerType {
 
+  // TODO: Mandatory fields should be returned in a generic model
   public func mandatoryFields(for documentType: DocumentIdentifier) -> [String] {
     switch documentType {
     case .EuPidDocType:
       return []
     case .IsoMdlModel:
       return IsoMdlModel.mandatoryKeys
-    case .genericDocument(docType: let docType):
+    case .genericDocument:
       return []
     }
   }
 
+  // TODO: This needs to be made in a more generic way
+  /// A more concrete aproach would be:
+  ///    wallet.storage.mdocModels
+  ///      .compactMap({ $0 })
+  ///      .first(where: { $0.docType == documentType.rawValue })?.displayStrings
+  ///      .first(where: { $0.name == elementIdentifier })?.value ?? LocalizableString.shared.get(with: .unavailableField)
+  ///
   public func valueForElementIdentifier(for documentType: DocumentIdentifier, elementIdentifier: String) -> String {
-
-    // TODO: This needs to be made in a more generic way
-    /// A more concrete aproach would be:
-    ///    wallet.storage.mdocModels
-    ///      .compactMap({ $0 })
-    ///      .first(where: { $0.docType == documentType.rawValue })?.displayStrings
-    ///      .first(where: { $0.name == elementIdentifier })?.value ?? LocalizableString.shared.get(with: .unavailableField)
-    ///
 
     // Convert the Stored models to their [Key: Value] array
     var displayStrings = wallet.storage.mdocModels
