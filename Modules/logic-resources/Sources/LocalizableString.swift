@@ -121,7 +121,6 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "request_data_verified_entity")
     case .requestDataVerifiedEntityMessage:
       bundle.localizedString(forKey: "request_data_verified_entity_message")
-
     case .moreOptions:
       bundle.localizedString(forKey: "more_options")
     case .changeQuickPinOption:
@@ -192,6 +191,15 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "issuance_success_cancel_button")
     case .unknownVerifier:
       bundle.localizedString(forKey: "unknown_verifier")
+    case .expiry:
+      bundle.localizedString(forKey: "expiry")
+    case .issuedAt:
+      bundle.localizedString(forKey: "issued_at")
+    case .yes:
+      bundle.localizedString(forKey: "yes")
+    case .no:
+      bundle.localizedString(forKey: "no")
+
     }
   }
 
@@ -280,6 +288,10 @@ public extension LocalizableString {
     case issuanceSuccessAddButton
     case issuanceSuccessCancelButton
     case unknownVerifier
+    case expiry
+    case issuedAt
+    case yes
+    case no
   }
 }
 

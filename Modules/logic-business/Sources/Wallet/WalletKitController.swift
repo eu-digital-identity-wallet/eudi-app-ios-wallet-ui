@@ -79,24 +79,46 @@ extension WalletKitControllerType {
   }
 
   public func valueForElementIdentifier(for documentType: DocumentIdentifier, elementIdentifier: String) -> String {
+
+    // TODO: This needs to be made in a more generic way
+    /// A more concrete aproach would be:
+    ///    wallet.storage.mdocModels
+    ///      .compactMap({ $0 })
+    ///      .first(where: { $0.docType == documentType.rawValue })?.displayStrings
+    ///      .first(where: { $0.name == elementIdentifier })?.value ?? LocalizableString.shared.get(with: .unavailableField)
+    ///
+
+    // Convert the Stored models to their [Key: Value] array
     var displayStrings = wallet.storage.mdocModels
       .compactMap({ $0 })
       .first(where: { $0.docType == documentType.rawValue })?.displayStrings
+    // Check if document type matches one of known models (pid or mdl)
 
     if documentType == .IsoMdlModel, let mdl = wallet.storage.mdlModel {
+      // Check if the element key is of type that cannot be converted to string value
       if elementIdentifier == IsoMdlModel.CodingKeys.portrait.rawValue || elementIdentifier == IsoMdlModel.CodingKeys.signatureUsualMark.rawValue {
         return "Image Data"
       }
-
+      // Flatten properties in order to be made in a Key: Value structure
       if let drivingPrivileges = mdl.drivingPrivileges {
-        let flatString = drivingPrivileges.drivingPrivileges.reduce(into: "", {$0 += $1.vehicleCategoryCode +
-          " expiry: \($1.expiryDate ?? "") issued at: \($1.issueDate ?? "")" + "\n"}).dropLast()
+        let flatString = drivingPrivileges.drivingPrivileges
+          .reduce(into: "", {$0 += $1.vehicleCategoryCode +
+            """
+            \(LocalizableString.shared.get(with: .expiry)): \($1.expiryDate ?? "")
+            \(LocalizableString.shared.get(with: .issuedAt)): \($1.issueDate ?? "")
+            """
+          })
+          .dropLast()
+          // Dropping last because its a new line character
 
         displayStrings?.append(.init(name: "driving_privileges", value: String(flatString)))
       }
 
       mdl.ageOverXX.sorted(by: {$0.key < $1.key}).forEach { key, value in
-        displayStrings?.append(.init(name: "age_over_\(key)", value: value ? "Yes" : "No"))
+        displayStrings?.append(.init(
+          name: "age_over_\(key)",
+          value: value ? LocalizableString.shared.get(with: .yes).capitalized : LocalizableString.shared.get(with: .no).capitalized)
+        )
       }
     } else if documentType == .EuPidDocType,
               let pid = wallet.storage.pidModel {
@@ -105,12 +127,12 @@ extension WalletKitControllerType {
         displayStrings?.append(.init(name: "age_over_\(key)", value: value ? "Yes" : "No"))
       }
     }
-
+    // Find the first Value that Matches given Key for document
     let value = displayStrings?
       .first(where: { element in
         element.name == elementIdentifier
       })?.value
-
+    // Return the value if found, or a static string that field was not found
     return  value ?? LocalizableString.shared.get(with: .unavailableField)
   }
 

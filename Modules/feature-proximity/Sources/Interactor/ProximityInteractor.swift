@@ -144,6 +144,8 @@ public final actor ProximityInteractor: ProximityInteractorType {
     }
 
     do {
+      // TODO: Remove when navigation queue issue is resolved.
+      // Added a delay to prevent UIPilot from crashing when pushing multiple routes in quick succession.
       try await Task.sleep(seconds: 2)
       try await presentationSessionCoordinator.sendResponse(response: responseItem)
       return .success
@@ -155,8 +157,10 @@ public final actor ProximityInteractor: ProximityInteractorType {
   public func stopPresentation() {
     walletKitController.stopPresentation()
   }
+}
 
-  private func getVerifierName(response: PresentationRequest) -> String {
+extension ProximityInteractor {
+  fileprivate func getVerifierName(response: PresentationRequest) -> String {
     // TODO: Make a more concrete aproach in how we handle extracting the CN value of verifier message
 
       func extractKeyValuePairs(from input: String) -> [String: String] {

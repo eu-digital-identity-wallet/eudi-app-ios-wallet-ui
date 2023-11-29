@@ -364,6 +364,17 @@
         }
       }
     },
+    "expiry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "expiry"
+          }
+        }
+      }
+    },
     "expiry_date" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -705,6 +716,17 @@
         }
       }
     },
+    "issued_at" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issued at"
+          }
+        }
+      }
+    },
     "issuing_authority" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -825,6 +847,9 @@
           }
         }
       }
+    },
+    "no" : {
+      "extractionState" : "manual"
     },
     "ok_button" : {
       "extractionState" : "manual",
@@ -1507,6 +1532,9 @@
           }
         }
       }
+    },
+    "yes" : {
+      "extractionState" : "manual"
     }
   },
   "version" : "1.0"

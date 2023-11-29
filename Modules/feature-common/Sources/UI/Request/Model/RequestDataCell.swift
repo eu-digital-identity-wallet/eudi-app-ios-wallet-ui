@@ -147,41 +147,6 @@ public extension RequestDataSection {
   }
 }
 
-public struct RequestDataUiModel {
-  public static func mock() -> [RequestDataCell] {
-    [
-      .requestDataSection(.init(type: .id, title: "Digital ID")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")),
-      .requestDataVerification(
-        .init(
-          title: "Verification data",
-          items: [
-            .init(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras"),
-            .init(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos"),
-            .init(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985"),
-            .init(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")
-          ]
-        )
-      ),
-      .requestDataSection(.init(type: .mdl, title: "MDL")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos")),
-      .requestDataVerification(
-        .init(
-          title: "Verification data",
-          items: [
-            .init(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985"),
-            .init(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")
-          ]
-        )
-      )
-    ]
-  }
-}
-
 extension RequestDataUiModel {
 
   public static func items(for documents: [DocElementsViewModel]) -> [RequestDataCell] {
@@ -266,5 +231,40 @@ extension RequestDataUiModel {
       .init(title: LocalizableString.shared.get(with: .verification),
             items: mandatoryFields)
     )
+  }
+}
+
+public struct RequestDataUiModel {
+  public static func mock() -> [RequestDataCell] {
+    [
+      .requestDataSection(.init(type: .id, title: "Digital ID")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")),
+      .requestDataVerification(
+        .init(
+          title: "Verification data",
+          items: [
+            .init(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras"),
+            .init(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos"),
+            .init(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985"),
+            .init(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")
+          ]
+        )
+      ),
+      .requestDataSection(.init(type: .mdl, title: "MDL")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos")),
+      .requestDataVerification(
+        .init(
+          title: "Verification data",
+          items: [
+            .init(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985"),
+            .init(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")
+          ]
+        )
+      )
+    ]
   }
 }
