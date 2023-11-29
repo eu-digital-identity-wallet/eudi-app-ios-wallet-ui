@@ -100,6 +100,7 @@ public final class ProximityPresentationSessionCoordinator: PresentationSessionC
       items: session.disclosedDocuments,
       relyingParty: session.readerCertIssuer ?? LocalizableString.shared.get(with: .unknownVerifier),
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
+      // TODO: Update with logic from wallet in order to show or not the trusted verifier checkmark.
       isTrusted: false
     )
     self.presentationStateSubject.value = .requestReceived(presentationRequest)
@@ -110,6 +111,7 @@ public final class ProximityPresentationSessionCoordinator: PresentationSessionC
     await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems()) {
       // This closure is used by WalletKit in order to handle the cancelling
       // of a strong authentication by the user
+      // our implementation uses feature-common -> Biometry to handle strong user authorisation
     }
     self.presentationStateSubject.value = .success
     self.presentationStateSubject.send(completion: .finished)

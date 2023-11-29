@@ -161,7 +161,7 @@ public final actor ProximityInteractor: ProximityInteractorType {
 
 extension ProximityInteractor {
   fileprivate func getVerifierName(response: PresentationRequest) -> String {
-    // TODO: Make a more concrete aproach in how we handle extracting the CN value of verifier message
+    // TODO: Make a more concrete approach in how we handle extracting the CN value of verifier message
 
       func extractKeyValuePairs(from input: String) -> [String: String] {
           var result = [String: String]()
