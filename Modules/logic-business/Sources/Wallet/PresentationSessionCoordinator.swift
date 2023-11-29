@@ -31,6 +31,7 @@ public protocol PresentationSessionCoordinatorType {
   func sendResponse(response: RequestItemConvertible) async throws
   func onSuccess(completion: () -> Void)
 
+  func getState() async -> PresentationState
   func setState(presentationState: PresentationState)
 
 }
@@ -47,7 +48,7 @@ public enum PresentationState {
 
 public final class ProximityPresentationSessionCoordinator: PresentationSessionCoordinatorType {
 
-  public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
+  public private(set) var presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
 
   private let session: PresentationSession
 

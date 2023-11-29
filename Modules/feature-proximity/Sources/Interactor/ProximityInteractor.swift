@@ -139,7 +139,7 @@ public final actor ProximityInteractor: ProximityInteractorType {
 
   public func onSendResponse() async -> ProximityResponsePartialState {
 
-    guard case PresentationState.responseToSend(let responseItem) = presentationSessionCoordinator.presentationStateSubject.value else {
+    guard case PresentationState.responseToSend(let responseItem) = await presentationSessionCoordinator.getState() else {
       return .failure(PresentationSessionError.invalidState)
     }
 
