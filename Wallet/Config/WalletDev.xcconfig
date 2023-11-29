@@ -1,3 +1,2 @@
 BUILD_TYPE = DEBUG
 BASE_HOST = http:/$()/10.240.36.57:32120/
-FIREBASE_CONFIG = GoogleService-Info-dev

@@ -1,3 +1,2 @@
 BUILD_TYPE = RELEASE
 BASE_HOST = https:/$()/eudi.netcompany-intrasoft.com/
-FIREBASE_CONFIG = GoogleService-Info-release

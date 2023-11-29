@@ -29,7 +29,5 @@
 			</array>
 		</dict>
 	</array>
-	<key>Firebase Config</key>
-	<string>$(FIREBASE_CONFIG)</string>
 </dict>
 </plist>

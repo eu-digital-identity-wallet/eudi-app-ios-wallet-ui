@@ -55,11 +55,5 @@ public struct WalletSecurityConfig: ConfigSecurityLogic {
     configLogic.appBuildType == .DEBUG
   }
 
-  public var networkLoggerExclusionList: [String] = [
-    "https://region1.app-measurement.com",
-    "https://app-measurement.com",
-    "https://firebaselogging-pa.googleapis.com",
-    "https://fcmtoken.googleapis.com",
-    "https://static.realm.io"
-  ]
+  public var networkLoggerExclusionList: [String] = []
 }

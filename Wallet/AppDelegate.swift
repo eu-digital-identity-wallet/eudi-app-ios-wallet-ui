@@ -16,7 +16,6 @@
 import Foundation
 import UIKit
 import netfox
-import Firebase
 import logic_business
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -32,10 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // Check firt run and clear keychain from previous installations
     manageStorage()
-
-    // Load firebase
-    FirebaseApp.configure()
-    FirebaseConfiguration.shared.setLoggerLevel(.min)
 
     // Initialize Network Logging
     initializeNetworkLogging()

@@ -14,10 +14,6 @@ let package = Package(
   ],
   dependencies: [
     .package(
-      url: "https://github.com/firebase/firebase-ios-sdk",
-      from: "10.3.0"
-    ),
-    .package(
       url: "https://github.com/securing/IOSSecuritySuite.git",
       from: "1.9.5"
     ),
@@ -61,9 +57,7 @@ let package = Package(
         .product(
           name: "EudiWalletKit",
           package: "eudi-lib-ios-wallet-kit"
-        ),
-        .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk"),
-        .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk")
+        )
       ],
       path: "./Sources"
     ),
