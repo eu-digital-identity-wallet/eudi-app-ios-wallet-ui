@@ -57,8 +57,8 @@ public struct FloatingActionButtonBar: View {
 
       FloatingActionButton(
         title: .showQRTap,
-        textColor: Theme.shared.color.textPrimaryDark,
-        backgroundColor: Theme.shared.color.secondary,
+        textColor: Theme.shared.color.white,
+        backgroundColor: Theme.shared.color.primary,
         icon: Theme.shared.image.share,
         iconColor: Theme.shared.color.textPrimaryDark,
         isLoading: isLoading,

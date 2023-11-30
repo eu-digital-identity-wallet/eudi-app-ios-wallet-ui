@@ -29,7 +29,7 @@ public struct FloatingActionButton: View {
   public init(
     title: LocalizableString.Key,
     textColor: Color = Theme.shared.color.textPrimaryDark,
-    backgroundColor: Color = Theme.shared.color.secondary,
+    backgroundColor: Color = Theme.shared.color.primary,
     icon: Image,
     iconColor: Color = Theme.shared.color.textPrimaryDark,
     isLoading: Bool = false,

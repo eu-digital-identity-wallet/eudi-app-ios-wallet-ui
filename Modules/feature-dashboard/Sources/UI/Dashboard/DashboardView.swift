@@ -52,7 +52,7 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
     ContentScreen(
       padding: .zero,
       canScroll: false,
-      background: ThemeManager.shared.color.primary
+      background: ThemeManager.shared.color.secondary
     ) {
       BearerHeaderView(
         item: viewModel.viewState.bearer,

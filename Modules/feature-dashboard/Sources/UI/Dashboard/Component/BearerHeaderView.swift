@@ -52,7 +52,7 @@ struct BearerHeaderView: View {
     }
     .colorScheme(.light)
     .padding(.vertical, SPACING_EXTRA_LARGE)
-    .background(Theme.shared.color.primary)
+    .background(Theme.shared.color.secondary)
     .roundedCorner(SPACING_MEDIUM, corners: [.bottomLeft, .bottomRight])
     .background(Theme.shared.color.backgroundPaper)
   }
