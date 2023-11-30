@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "branch" : "develop",
-        "revision" : "56cab3a6841382748091b0c0202a7f6858842b33"
+        "revision" : "56cab3a6841382748091b0c0202a7f6858842b33",
+        "version" : "0.1.3"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "branch" : "develop",
-        "revision" : "1f403b896cefefc5da6373a7e989f9d8894eb0f8"
+        "revision" : "296bd9067bb0de228e580c32ecef9da2e0a00882",
+        "version" : "0.1.5"
       }
     },
     {
@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit",
       "state" : {
-        "branch" : "develop",
-        "revision" : "f701027ce963c09b4d7f21e620cd58d54128ff44"
+        "revision" : "a6401683ea9e0ab8b749a50ffc6230c944240886",
+        "version" : "0.1.4"
       }
     },
     {
@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "branch" : "develop",
-        "revision" : "9a7d1ad71f2845281d8f3dc3e065e83acaadd87d"
+        "revision" : "238939a0310d2052b3f2ade8a88fc6befe212efc",
+        "version" : "0.1.51"
       }
     },
     {
@@ -140,8 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Sextant.git",
       "state" : {
-        "revision" : "ac9f9feaab9563559d26e00a8c03fbab7e02c60a",
-        "version" : "0.4.25"
+        "revision" : "068b73bf9e02af00570fcd94b88463469ec2b1f9",
+        "version" : "0.4.27"
       }
     },
     {
@@ -163,12 +163,21 @@
       }
     },
     {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser",
+      "state" : {
+        "revision" : "8f4d2753f0e4778c76d5f05ad16c74f707390531",
+        "version" : "1.2.3"
+      }
+    },
+    {
       "identity" : "swift-log",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "f447991bd27b2e16bf93cc80219da8a7331a55dc"
+        "revision" : "532d8b529501fb73a2455b179e0bbb6d49b652ed",
+        "version" : "1.5.3"
       }
     },
     {
