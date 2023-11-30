@@ -53,18 +53,6 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
 
       footer
     }
-    .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
-      VStack(spacing: SPACING_MEDIUM) {
-
-        ContentTitle(
-          title: viewModel.viewState.modalTitle,
-          caption: viewModel.viewState.modalCaption
-        )
-
-        WrapButtonView(style: .primary, title: .issuanceSuccessModalContinueButton, onAction: viewModel.onShowCancelModal())
-        WrapButtonView(style: .secondary, title: .issuanceSuccessModalCancelButton, onAction: viewModel.onPop())
-      }
-    }
   }
 
   private var document: some View {
@@ -86,7 +74,7 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
 
         Text(viewModel.viewState.holderName)
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.textSecondaryLight)
+          .foregroundColor(Theme.shared.color.backgroundPaper)
 
         Spacer()
       }
@@ -98,24 +86,12 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
     .colorScheme(.light)
   }
 
+  @ViewBuilder
   private var footer: some View {
-    VStack(spacing: SPACING_MEDIUM) {
-      HStack {
-        Text(viewModel.viewState.footerTitle)
-          .typography(ThemeManager.shared.font.titleLarge)
-          .foregroundColor(Theme.shared.color.textPrimaryDark)
-        Spacer()
-      }
-      WrapButtonView(
-        style: .primary,
-        title: .issuanceSuccessAddButton,
-        onAction: viewModel.onIssue()
-      )
-      WrapButtonView(
-        style: .secondary,
-        title: .issuanceSuccessCancelButton,
-        onAction: viewModel.onShowCancelModal()
-      )
-    }
+    WrapButtonView(
+      style: .primary,
+      title: .issuanceSuccessNextButton,
+      onAction: viewModel.onIssue()
+    )
   }
 }

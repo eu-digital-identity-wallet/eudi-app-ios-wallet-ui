@@ -21,17 +21,12 @@ struct DocumentSuccessState: ViewState {
   let error: ContentError.Config?
   let title: LocalizableString.Key
   let caption: LocalizableString.Key
-  let footerTitle: LocalizableString.Key
-  let modalTitle: LocalizableString.Key
-  let modalCaption: LocalizableString.Key
   let holderName: String
   let config: IssuanceFlowUiConfig
 }
 
 @MainActor
 final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: DocumentSuccessInteractorType>: BaseViewModel<Router, DocumentSuccessState> {
-
-  @Published var isCancelModalShowing: Bool = false
 
   private let interactor: Interactor
 
@@ -46,22 +41,10 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
         error: nil,
         title: .issuanceSuccessTitle,
         caption: .issuanceSuccessCaption([documentName]),
-        footerTitle: .issuanceSuccessFooterTitle([documentName]),
-        modalTitle: .issuanceSuccessModalTitle([documentName]),
-        modalCaption: .issuanceSuccessModalCaption([documentName]),
         holderName: "Jane Doe",
         config: config
       )
     )
-  }
-
-  func onPop() {
-    isCancelModalShowing = false
-    router.popTo(with: .issuanceAddDocument(config: viewState.config))
-  }
-
-  func onShowCancelModal() {
-    isCancelModalShowing = !isCancelModalShowing
   }
 
   func onIssue() {
@@ -92,9 +75,6 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
           error: error,
           title: previous.title,
           caption: previous.caption,
-          footerTitle: previous.footerTitle,
-          modalTitle: previous.modalTitle,
-          modalCaption: previous.modalCaption,
           holderName: previous.holderName,
           config: previous.config
         )

@@ -175,20 +175,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "issuance_success_title")
     case .issuanceSuccessCaption(let args):
       bundle.localizedStringWithArguments(forKey: "issuance_success_caption", arguments: args)
-    case .issuanceSuccessFooterTitle(let args):
-      bundle.localizedStringWithArguments(forKey: "issuance_success_footer_title", arguments: args)
-    case .issuanceSuccessModalTitle(let args):
-      bundle.localizedStringWithArguments(forKey: "issuance_success_cancellation_modal_title", arguments: args)
-    case .issuanceSuccessModalCaption(let args):
-      bundle.localizedStringWithArguments(forKey: "issuance_success_cancellation_modal_caption", arguments: args)
-    case .issuanceSuccessModalContinueButton:
-      bundle.localizedString(forKey: "issuance_success_cancellation_modal_issuance_button")
-    case .issuanceSuccessModalCancelButton:
-      bundle.localizedString(forKey: "issuance_success_cancellation_modal_cancel_button")
-    case .issuanceSuccessAddButton:
-      bundle.localizedString(forKey: "issuance_success_add_button")
-    case .issuanceSuccessCancelButton:
-      bundle.localizedString(forKey: "issuance_success_cancel_button")
+    case .issuanceSuccessNextButton:
+      bundle.localizedString(forKey: "issuance_success_next_button")
     case .unknownVerifier:
       bundle.localizedString(forKey: "unknown_verifier")
     case .expiry:
@@ -280,13 +268,7 @@ public extension LocalizableString {
     case issuanceExternalLoadingCaption
     case issuanceSuccessTitle
     case issuanceSuccessCaption([String])
-    case issuanceSuccessFooterTitle([String])
-    case issuanceSuccessModalTitle([String])
-    case issuanceSuccessModalCaption([String])
-    case issuanceSuccessModalContinueButton
-    case issuanceSuccessModalCancelButton
-    case issuanceSuccessAddButton
-    case issuanceSuccessCancelButton
+    case issuanceSuccessNextButton
     case unknownVerifier
     case expiry
     case issuedAt
