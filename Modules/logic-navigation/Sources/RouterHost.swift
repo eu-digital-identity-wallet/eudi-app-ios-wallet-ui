@@ -31,38 +31,59 @@ public final class RouterHost: RouterHostType {
   private let pilot: UIPilot<AppRoute>
   private lazy var uiConfigLogic: ConfigUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
 
+  private var queueNavigation: [() -> Void] = []
+  private let lockInterval: Int = 1000
+  private var isLocked: Bool = false
+
   public init() {
     self.pilot = UIPilot(initial: .startup, debug: true)
   }
 
   public func push(with route: AppRoute) {
+    guard canNavigate(block: self.push(with: route)) else { return }
+    lockNavigation()
     pilot.push(route)
     onNavigationFollowUp()
   }
 
   public func popTo(with route: AppRoute, inclusive: Bool, animated: Bool) {
+    guard
+      canNavigate(
+        block: self.popTo(
+          with: route,
+          inclusive: inclusive,
+          animated: animated
+        )
+      )
+    else {
+      return
+    }
+    lockNavigation()
     pilot.popTo(route, inclusive: inclusive, animated: animated)
     onNavigationFollowUp()
   }
 
   public func popTo(with route: AppRoute, inclusive: Bool) {
-    pilot.popTo(route, inclusive: inclusive)
-    onNavigationFollowUp()
+    popTo(with: route, inclusive: inclusive, animated: true)
   }
 
   public func popTo(with route: AppRoute) {
-    pilot.popTo(route)
-    onNavigationFollowUp()
+    popTo(with: route, inclusive: false, animated: true)
   }
 
   public func pop(animated: Bool) {
+    guard
+      canNavigate(block: self.pop(animated: animated))
+    else {
+      return
+    }
+    lockNavigation()
     pilot.pop(animated: animated)
     onNavigationFollowUp()
   }
 
   public func pop() {
-    pilot.pop()
-    onNavigationFollowUp()
+    pop(animated: true)
   }
 
   public func getCurrentScreen() -> AppRoute? {
@@ -169,6 +190,33 @@ public final class RouterHost: RouterHostType {
 
   public func isScreenForeground(with route: AppRoute) -> Bool {
     getCurrentScreen()?.key == route.key
+  }
+
+  private func canNavigate(block: @escaping @autoclosure () -> Void) -> Bool {
+    guard !isLocked else {
+      queueNavigation.append(block)
+      return false
+    }
+    return true
+  }
+
+  private func lockNavigation() {
+    isLocked = true
+    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(lockInterval)) {
+      self.isLocked = false
+      self.executePendingNavigation()
+    }
+  }
+
+  private func executePendingNavigation() {
+    guard
+      !queueNavigation.isEmpty,
+      let block = queueNavigation.last
+    else {
+      return
+    }
+    queueNavigation.removeAll()
+    block()
   }
 
   private func onNavigationFollowUp() {

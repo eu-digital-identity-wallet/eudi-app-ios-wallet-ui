@@ -144,9 +144,6 @@ public final actor ProximityInteractor: ProximityInteractorType {
     }
 
     do {
-      // TODO: Remove when navigation queue issue is resolved.
-      // Added a delay to prevent UIPilot from crashing when pushing multiple routes in quick succession.
-      try await Task.sleep(seconds: 2)
       try await presentationSessionCoordinator.sendResponse(response: responseItem)
       return .success
     } catch {
