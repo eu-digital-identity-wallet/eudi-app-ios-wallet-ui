@@ -26,12 +26,14 @@ import feature_presentation
 import feature_proximity
 import feature_issuance
 
+private typealias QueueItem = () -> Void
+
 public final class RouterHost: RouterHostType {
 
   private let pilot: UIPilot<AppRoute>
   private lazy var uiConfigLogic: ConfigUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
 
-  private var queueNavigation: [() -> Void] = []
+  private var queueNavigation: [QueueItem] = []
   private let lockInterval: Int = 1000
   private var isLocked: Bool = false
 
@@ -209,14 +211,10 @@ public final class RouterHost: RouterHostType {
   }
 
   private func executePendingNavigation() {
-    guard
-      !queueNavigation.isEmpty,
-      let block = queueNavigation.last
-    else {
+    guard let item = queueNavigation.getQueuedItem() else {
       return
     }
-    queueNavigation.removeAll()
-    block()
+    item()
   }
 
   private func onNavigationFollowUp() {
@@ -225,5 +223,18 @@ public final class RouterHost: RouterHostType {
 
   private func notifyBackgroundColorUpdate() {
     NotificationCenter.default.post(name: .shouldChangeBackgroundColor, object: nil)
+  }
+}
+
+fileprivate extension Array where Element == QueueItem {
+  mutating func getQueuedItem() -> QueueItem? {
+    guard
+      !self.isEmpty,
+      let item = self.last
+    else {
+      return nil
+    }
+    self.removeAll()
+    return item
   }
 }
