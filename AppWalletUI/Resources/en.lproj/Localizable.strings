@@ -98,3 +98,12 @@
 "responseSent" = "Response sent";
 "cancelledSent" = "Authorization Cancelled";
 "authenticate_to_share_data" = "Authenticate to share data";
+// error codes
+"sdk_init_error" = "Error initializing MidSDK";
+"issue_prepare_error" = "Unable to prepare document for issuing";
+"transfer_error" = "Connection error%s";
+"error_sending_response" = "Error sending response";
+"user_auth_error" = "User authentication is not supported";
+"finalize_issuer_error" = "Unable to add issued document in storage";
+"doctype_not_found" = "Document %s not found";
+"USER_REJECTED" = "User rejected";
