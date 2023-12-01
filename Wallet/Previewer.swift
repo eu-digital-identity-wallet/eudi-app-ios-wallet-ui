@@ -104,3 +104,7 @@ private func successConfig() -> UIConfig.Success {
     config: IssuanceFlowUiConfig(flow: .extraDocument)
   )
 }
+
+#Preview("Scanner") {
+  ScannerView(dismiss: .constant(false), action: { _ in })
+}

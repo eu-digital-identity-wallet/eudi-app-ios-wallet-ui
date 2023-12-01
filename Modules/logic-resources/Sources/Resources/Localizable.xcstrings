@@ -1291,6 +1291,17 @@
         }
       }
     },
+    "scan_qr_code" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan a QR code"
+          }
+        }
+      }
+    },
     "screen_recording_security_warning" : {
       "extractionState" : "manual",
       "localizations" : {
