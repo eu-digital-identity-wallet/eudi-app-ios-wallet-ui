@@ -31,6 +31,7 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
   private let deepLinkController: DeepLinkController
 
   @Published var isMoreModalShowing: Bool = false
+  @Published var onScan: Bool = false
 
   var bearerName: String {
     viewState.bearer.value.name
@@ -89,6 +90,11 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
   func onUpdatePin() {
     isMoreModalShowing = false
     router.push(with: .quickPin(config: QuickPinUiConfig(flow: .update)))
+  }
+
+  func onShowScanner() {
+    isMoreModalShowing = false
+    onScan = true
   }
 
   private func handleDeepLink() {

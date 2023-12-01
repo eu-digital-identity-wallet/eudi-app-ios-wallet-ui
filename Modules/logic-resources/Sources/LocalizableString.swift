@@ -199,7 +199,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "yes")
     case .no:
       bundle.localizedString(forKey: "no")
-
+    case .scanQrCode:
+      bundle.localizedString(forKey: "scan_qr_code")
     }
   }
 
@@ -292,6 +293,7 @@ public extension LocalizableString {
     case issuedAt
     case yes
     case no
+    case scanQrCode
   }
 }
 

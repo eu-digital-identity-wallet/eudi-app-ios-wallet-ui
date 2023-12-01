@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "6ac237d4341a606fb47f4287a6f197ed210b1fc1",
-        "version" : "0.1.3"
+        "revision" : "68e31dd168e3af20d676986892751a46db304b63",
+        "version" : "0.1.2"
       }
     },
     {
@@ -230,8 +230,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Sextant.git",
       "state" : {
-        "revision" : "068b73bf9e02af00570fcd94b88463469ec2b1f9",
-        "version" : "0.4.27"
+        "revision" : "ac9f9feaab9563559d26e00a8c03fbab7e02c60a",
+        "version" : "0.4.25"
       }
     },
     {
@@ -250,15 +250,6 @@
       "state" : {
         "revision" : "26cc5e9ae0947092c7139ef7ba612e34646086c7",
         "version" : "0.10.1"
-      }
-    },
-    {
-      "identity" : "swift-argument-parser",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-argument-parser",
-      "state" : {
-        "revision" : "8f4d2753f0e4778c76d5f05ad16c74f707390531",
-        "version" : "1.2.3"
       }
     },
     {
