@@ -20,7 +20,6 @@ public struct WalletUiConfig: ConfigUiLogic {
 
   public var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] = [
     AppRoute.dashboard.key: .init(Theme.shared.color.secondary),
-    AppRoute.startup.key: .init(Theme.shared.color.secondary),
     AppRoute.welcome.key: .init(Theme.shared.color.secondary),
     AppRoute.issuanceDocumentDetails(config: NoConfig()).key: .init(Theme.shared.color.secondary)
   ]

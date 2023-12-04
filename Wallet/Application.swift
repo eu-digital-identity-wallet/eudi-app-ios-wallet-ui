@@ -29,7 +29,7 @@ struct Application: App {
   @State var isScreenCapping: Bool = false
   @State var blurType: BlurType = .none
   @State var shouldAddBottomPadding: Bool = false
-  @State var toolbarConfig: UIConfig.ToolBar = .init(Theme.shared.color.primary)
+  @State var toolbarConfig: UIConfig.ToolBar = .init(Theme.shared.color.backgroundPaper)
 
   private let routerHost: RouterHostType
   private let configUiLogic: ConfigUiLogic
