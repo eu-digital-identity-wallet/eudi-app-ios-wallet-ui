@@ -47,9 +47,12 @@ struct ShareView: View {
 						Text(verbatim: NSLocalizedString(nsItems.docType, comment: "")).font(.title2).disabled(nsItems.isEnabled)
 						ForEach($presentationSession.disclosedDocuments[docIndex].elements) { $el in
 							if el.isEnabled {
-								Toggle(NSLocalizedString(el.elementIdentifier, comment: ""), isOn: $el.isSelected).toggleStyle(CheckboxToggleStyle())
+								HStack(alignment: .center) {
+									Text(el.isEnabled && el.isMandatory ? "*" : " ").font(.title).foregroundStyle(.red).frame(width: 20, height: 10)
+									Toggle(NSLocalizedString(el.elementIdentifier, comment: ""), isOn: $el.isSelected).toggleStyle(CheckboxToggleStyle())
+								}
 							} else {
-								Text(el.elementIdentifier).disabled(true).foregroundColor(el.isEnabled ? .black : .gray).multilineTextAlignment(.leading).frame(maxWidth: .greatestFiniteMagnitude, alignment: .leading)
+								Text(el.elementIdentifier).disabled(true).foregroundStyle(el.isEnabled ? .black : .gray).multilineTextAlignment(.leading).frame(maxWidth: .greatestFiniteMagnitude, alignment: .leading)
 							}
 						}.padding(.bottom, 2)
 					}
