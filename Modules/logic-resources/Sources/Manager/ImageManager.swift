@@ -42,6 +42,7 @@ public protocol ImageManagerProtocol {
   var checkMarkSealFill: Image { get }
   var more: Image { get }
   var pencil: Image { get }
+  var qrScan: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -71,7 +72,8 @@ final class ImageManager: ImageManagerProtocol {
     case warning = "ic-warning"
     case checkMarkSealFill = "checkmark.seal.fill"
     case more = "ic-more"
-    case pencil = "pencil"
+    case pencil = "ic-edit"
+    case qrScan = "ic-qr-scanner"
   }
 
   // MARK: - Properties
@@ -156,6 +158,9 @@ final class ImageManager: ImageManagerProtocol {
     Image(ImageEnum.more.rawValue, bundle: bundle)
   }
   var pencil: Image {
-    Image(systemName: ImageEnum.pencil.rawValue)
+    Image(ImageEnum.pencil.rawValue, bundle: bundle)
+  }
+  var qrScan: Image {
+    Image(ImageEnum.qrScan.rawValue, bundle: bundle)
   }
 }
