@@ -69,7 +69,7 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
   }
 
   private var document: some View {
-    VStack(spacing: SPACING_LARGE_MEDIUM) {
+    VStack(spacing: SPACING_MEDIUM) {
 
       HStack {
 
@@ -92,7 +92,7 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
         Spacer()
       }
     }
-    .padding(SPACING_MEDIUM)
+    .padding(SPACING_MEDIUM_LARGE)
     .frame(maxWidth: .infinity)
     .background(Theme.shared.color.secondary)
     .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
