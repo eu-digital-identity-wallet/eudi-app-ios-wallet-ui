@@ -32,7 +32,7 @@ public protocol ImageManagerProtocol {
   var circle: Image { get }
   var eye: Image { get }
   var eyeSlash: Image { get }
-  var checkmarkCircle: Image { get }
+  var checkmarkCircleFill: Image { get }
   var checkmarkSquareFill: Image { get }
   var square: Image { get }
   var exclamationmarkOctagon: Image { get }
@@ -63,7 +63,7 @@ final class ImageManager: ImageManagerProtocol {
     case circle = "circle.fill"
     case eye = "eye"
     case eyeSlash = "eye.slash"
-    case checkmarkCircle = "checkmark.circle"
+    case checkmarkCircleFill = "checkmark.circle.fill"
     case checkmarkSquareFill = "checkmark.square.fill"
     case square = "square"
     case exclamationmarkOctagon = "exclamationmark.octagon"
@@ -130,8 +130,8 @@ final class ImageManager: ImageManagerProtocol {
   var eyeSlash: Image {
     Image(systemName: ImageEnum.eyeSlash.rawValue)
   }
-  var checkmarkCircle: Image {
-    Image(systemName: ImageEnum.checkmarkCircle.rawValue)
+  var checkmarkCircleFill: Image {
+    Image(systemName: ImageEnum.checkmarkCircleFill.rawValue)
   }
   var checkmarkSquareFill: Image {
     Image(systemName: ImageEnum.checkmarkSquareFill.rawValue)

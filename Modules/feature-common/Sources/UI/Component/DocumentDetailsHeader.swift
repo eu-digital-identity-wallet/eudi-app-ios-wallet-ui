@@ -83,7 +83,7 @@ extension DocumentDetailsHeaderView {
         if let onBack {
           ContentHeader(
             dismissIcon: Theme.shared.image.xmark,
-            foregroundColor: Theme.shared.color.white
+            foregroundColor: Theme.shared.color.primary
           ) {
             onBack()
           }
@@ -91,12 +91,12 @@ extension DocumentDetailsHeaderView {
 
         Text(documentName)
           .typography(Theme.shared.font.headlineSmall)
-          .foregroundColor(Theme.shared.color.backgroundPaper)
+          .foregroundColor(Theme.shared.color.textPrimaryDark)
           .shimmer(isLoading: isLoading)
 
         Text(holdersName)
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.textSecondaryLight)
+          .foregroundColor(Theme.shared.color.textPrimaryDark)
           .padding(.bottom)
           .shimmer(isLoading: isLoading)
 
@@ -118,7 +118,7 @@ extension DocumentDetailsHeaderView {
       }
       .padding(SPACING_MEDIUM)
       .frame(maxWidth: .infinity)
-      .background(Theme.shared.color.primary)
+      .background(Theme.shared.color.secondary)
       .roundedCorner(Theme.shared.shape.small, corners: [.bottomLeft, .bottomRight])
       .colorScheme(.light)
     }

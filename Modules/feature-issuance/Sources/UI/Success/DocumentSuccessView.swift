@@ -58,7 +58,8 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
 
         ContentTitle(
           title: viewModel.viewState.modalTitle,
-          caption: viewModel.viewState.modalCaption
+          caption: viewModel.viewState.modalCaption,
+          titleColor: Theme.shared.color.textPrimaryDark
         )
 
         WrapButtonView(style: .primary, title: .issuanceSuccessModalContinueButton, onAction: viewModel.onShowCancelModal())
@@ -68,7 +69,7 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
   }
 
   private var document: some View {
-    VStack(spacing: SPACING_MEDIUM) {
+    VStack(spacing: SPACING_LARGE_MEDIUM) {
 
       HStack {
 
@@ -86,14 +87,14 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
 
         Text(viewModel.viewState.holderName)
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.textSecondaryLight)
+          .foregroundColor(Theme.shared.color.textPrimaryDark)
 
         Spacer()
       }
     }
     .padding(SPACING_MEDIUM)
     .frame(maxWidth: .infinity)
-    .background(Theme.shared.color.primary)
+    .background(Theme.shared.color.secondary)
     .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
     .colorScheme(.light)
   }
