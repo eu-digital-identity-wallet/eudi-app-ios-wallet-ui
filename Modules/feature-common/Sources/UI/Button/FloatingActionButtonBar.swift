@@ -60,7 +60,7 @@ public struct FloatingActionButtonBar: View {
         textColor: Theme.shared.color.white,
         backgroundColor: Theme.shared.color.primary,
         icon: Theme.shared.image.share,
-        iconColor: Theme.shared.color.textPrimaryDark,
+        iconColor: Theme.shared.color.white,
         isLoading: isLoading,
         action: shareAction
       )

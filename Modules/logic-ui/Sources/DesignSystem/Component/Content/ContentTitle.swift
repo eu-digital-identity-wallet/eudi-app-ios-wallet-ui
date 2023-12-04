@@ -37,7 +37,7 @@ public struct ContentTitle: View {
     title: LocalizableString.Key,
     caption: LocalizableString.Key? = nil,
     decorationColor: Color = ThemeManager.shared.color.primary,
-    titleColor: Color = ThemeManager.shared.color.primary,
+    titleColor: Color = ThemeManager.shared.color.textPrimaryDark,
     captionColor: Color = ThemeManager.shared.color.textSecondaryDark,
     topSpacing: TopSpacing = .withToolbar,
     onTap: TapListener = nil
@@ -55,7 +55,7 @@ public struct ContentTitle: View {
     titleDecoration: TitleDecoration,
     caption: LocalizableString.Key? = nil,
     decorationColor: Color = ThemeManager.shared.color.primary,
-    titleColor: Color = ThemeManager.shared.color.primary,
+    titleColor: Color = ThemeManager.shared.color.textPrimaryDark,
     captionColor: Color = ThemeManager.shared.color.textSecondaryDark,
     topSpacing: TopSpacing = .withToolbar,
     onTap: TapListener = nil
