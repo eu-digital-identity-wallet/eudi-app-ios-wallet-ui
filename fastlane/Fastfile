@@ -26,7 +26,17 @@ platform :ios do
     sh "gh auth login --with-token < ~/.github_token_eudi"
     # fastlane action to tag git
     tag_version = options[:version]
-    sh "gh release create v#{tag_version} -R eu-digital-identity-wallet/#{options[:repo]} -t 'Snapshot #{tag_version}'"
+    cmdline = "gh release create v#{tag_version} -R eu-digital-identity-wallet/#{options[:repo]} -t 'Snapshot #{tag_version}'"
+    if options[:commit_sha]; cmdline += " --target #{options[:commit_sha]}"; end
+    sh cmdline
+  end
+
+  desc "fastlane action to generate changelog"
+  lane :chlog do |options|
+    token = File.read(File.expand_path("~/.github_token_eudi")).strip
+    puts token
+    # mkdir -p build && github_changelog_generator --since-tag 1.0.0 --output build/changelog.md
+    sh "github_changelog_generator -u eu-digital-identity-wallet -p #{options[:repo]} --since-tag v#{options[:since_tag]} --output changelog.md --token #{token}"
   end
 
 end

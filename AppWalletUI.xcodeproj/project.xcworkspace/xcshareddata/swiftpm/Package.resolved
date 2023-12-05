@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twostraws/CodeScanner.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "bf5d7087015620b250ee6c865b3c9039fc159d1a"
+        "revision" : "bf5d7087015620b250ee6c865b3c9039fc159d1a",
+        "version" : "2.3.3"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "c49527404de88c407660d94d70de376bf43f95c6",
-        "version" : "0.1.0"
+        "revision" : "a2c01c5c240e2c1952791b26cb2ebfc8152108ec",
+        "version" : "0.1.4"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "ddbac0f9bb6bcd2e78025d7441a12231a97a4d6c",
-        "version" : "0.1.0"
+        "revision" : "e16eaa812b7c16177f561a182806b43e1f88e8b1",
+        "version" : "0.1.7"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "9259718f0919180cb1950ce03d4b30f5824732ab",
-        "version" : "0.1.0"
+        "revision" : "ccb25d657c4445c10a5bce5129d5f020deef8039",
+        "version" : "0.1.4"
       }
     },
     {
@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit",
       "state" : {
-        "revision" : "bfb6e264cdc29701e3225871281536b7aba386b7",
-        "version" : "0.1.0"
+        "revision" : "a92c64d684c9e284bb40ec9ee07ada3d7062d863",
+        "version" : "0.1.6"
       }
     },
     {
@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "6db8461678a5716b0be8bf60395c8f74e4e30470",
-        "version" : "0.1.2"
+        "revision" : "238939a0310d2052b3f2ade8a88fc6befe212efc",
+        "version" : "0.1.6"
       }
     },
     {
@@ -140,8 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Sextant.git",
       "state" : {
-        "revision" : "ac9f9feaab9563559d26e00a8c03fbab7e02c60a",
-        "version" : "0.4.25"
+        "revision" : "068b73bf9e02af00570fcd94b88463469ec2b1f9",
+        "version" : "0.4.27"
       }
     },
     {
@@ -160,6 +160,15 @@
       "state" : {
         "revision" : "26cc5e9ae0947092c7139ef7ba612e34646086c7",
         "version" : "0.10.1"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser",
+      "state" : {
+        "revision" : "8f4d2753f0e4778c76d5f05ad16c74f707390531",
+        "version" : "1.2.3"
       }
     },
     {
