@@ -15,6 +15,8 @@
  */
 import SwiftUI
 import logic_resources
+import MdocDataModel18013
+import UIKit
 
 public struct BearerUIModel: Identifiable {
   public let id: String
@@ -27,13 +29,69 @@ public struct BearerUIModel: Identifiable {
 }
 
 public extension BearerUIModel {
+
   struct Value {
-    public let id: String
     public let name: String
     public let image: Image
   }
 
   static func mock() -> BearerUIModel {
-    .init(id: UUID().uuidString, value: .init(id: UUID().uuidString, name: "Elena P.", image: Theme.shared.image.user))
+    .init(
+      id: UUID().uuidString,
+      value: .init(
+        name: "Elena P.",
+        image: Theme.shared.image.user
+      )
+    )
+  }
+}
+
+extension Array where Element == MdocDecodable {
+  func transformToBearerUi() -> BearerUIModel? {
+
+    var image: Image?
+    var name: String?
+
+    self.forEach { item in
+
+      switch item {
+      case let pid as EuPidModel:
+        if let firstName = pid.given_name, let lastName = pid.family_name {
+          name = "\(firstName) \(lastName)"
+        }
+      case let mdl as IsoMdlModel:
+        if let firstName = mdl.givenName, let lastName = mdl.familyName {
+          name = "\(firstName) \(lastName)"
+        }
+        if let portrait = mdl.portrait, let uiImage = UIImage(data: Data(portrait)) {
+          image = Image(uiImage: uiImage)
+        }
+      case let generic as GenericMdocModel:
+        if
+          let firstName = generic.displayStrings.first(
+            where: {
+              $0.name.replacingOccurrences(of: "_", with: "").lowercased() == "givenname"
+            }
+          )?.value,
+          let lastName = generic.displayStrings.first(
+            where: {
+              $0.name.replacingOccurrences(of: "_", with: "").lowercased() == "familyname"
+            }
+          )?.value {
+          name = "\(firstName) \(lastName)"
+        }
+      default: break
+      }
+    }
+
+    guard let name, let image else { return nil }
+
+    return .init(
+      id: UUID().uuidString,
+      value: .init(
+        name: name,
+        image: image
+      )
+    )
   }
 }

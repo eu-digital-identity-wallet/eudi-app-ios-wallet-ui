@@ -1456,6 +1456,17 @@
         }
       }
     },
+    "valid_until" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valid until\n%@"
+          }
+        }
+      }
+    },
     "weight" : {
       "extractionState" : "manual",
       "localizations" : {

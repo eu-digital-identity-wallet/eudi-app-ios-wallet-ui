@@ -85,7 +85,7 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
         )
       }
     }
-    .viewDidLoadAsync {
+    .task {
       await viewModel.fetch()
     }
     .fullScreenCover(isPresented: $viewModel.onScan) {
