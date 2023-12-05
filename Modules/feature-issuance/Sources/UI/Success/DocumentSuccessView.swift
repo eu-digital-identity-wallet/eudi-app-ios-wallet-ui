@@ -87,7 +87,7 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
 
         Text(viewModel.viewState.holderName)
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.textPrimaryDark)
+          .foregroundColor(Theme.shared.color.black)
 
         Spacer()
       }
@@ -96,7 +96,6 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
     .frame(maxWidth: .infinity)
     .background(Theme.shared.color.secondary)
     .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
-    .colorScheme(.light)
   }
 
   private var footer: some View {

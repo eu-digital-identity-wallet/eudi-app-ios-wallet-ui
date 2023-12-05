@@ -91,12 +91,12 @@ extension DocumentDetailsHeaderView {
 
         Text(documentName)
           .typography(Theme.shared.font.headlineSmall)
-          .foregroundColor(Theme.shared.color.textPrimaryDark)
+          .foregroundColor(Theme.shared.color.black)
           .shimmer(isLoading: isLoading)
 
         Text(holdersName)
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.textPrimaryDark)
+          .foregroundColor(Theme.shared.color.black)
           .padding(.bottom)
           .shimmer(isLoading: isLoading)
 
@@ -120,7 +120,6 @@ extension DocumentDetailsHeaderView {
       .frame(maxWidth: .infinity)
       .background(Theme.shared.color.secondary)
       .roundedCorner(Theme.shared.shape.small, corners: [.bottomLeft, .bottomRight])
-      .colorScheme(.light)
     }
   }
 }
