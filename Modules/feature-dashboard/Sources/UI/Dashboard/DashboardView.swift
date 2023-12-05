@@ -62,27 +62,30 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
       content()
     }
     .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {
-      VStack(spacing: SPACING_MEDIUM) {
+      VStack(spacing: .zero) {
 
         ContentTitle(
           title: .moreOptions
         )
 
-        WrapButtonView(
-          title: .changeQuickPinOption,
-          backgroundColor: .clear,
-          icon: Theme.shared.image.pencil,
-          gravity: .start,
-          onAction: viewModel.onUpdatePin()
-        )
+        VSpacer.medium()
 
-        WrapButtonView(
-          title: .scanQrCode,
-          backgroundColor: .clear,
-          icon: Theme.shared.image.qrScan,
-          gravity: .start,
-          onAction: viewModel.onShowScanner()
-        )
+        Group {
+          WrapButtonView(
+            title: .changeQuickPinOption,
+            backgroundColor: .clear,
+            icon: Theme.shared.image.pencil,
+            gravity: .start,
+            onAction: viewModel.onUpdatePin()
+          )
+          WrapButtonView(
+            title: .scanQrCode,
+            backgroundColor: .clear,
+            icon: Theme.shared.image.qrScan,
+            gravity: .start,
+            onAction: viewModel.onShowScanner()
+          )
+        }
       }
     }
     .task {

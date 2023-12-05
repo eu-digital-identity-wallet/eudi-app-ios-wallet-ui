@@ -35,35 +35,38 @@ extension DocumentListView {
     }
 
     var body: some View {
-      Button(action: {
-        action(item)
-      }, label: {
-        VStack(spacing: .zero) {
+      Button(
+        action: {
+          action(item)
+        },
+        label: {
+          VStack(spacing: .zero) {
 
-          Theme.shared.image.idStroke
-            .foregroundColor(Theme.shared.color.primary)
-            .aspectRatio(contentMode: .fit)
-            .frame(maxWidth: 48)
+            Theme.shared.image.idStroke
+              .foregroundColor(Theme.shared.color.primary)
+              .aspectRatio(contentMode: .fit)
+              .frame(maxWidth: 48)
 
-          Spacer()
+            Spacer()
 
-          Text(.custom(item.value.title))
-            .typography(ThemeManager.shared.font.titleMedium)
-            .foregroundColor(ThemeManager.shared.color.textPrimaryDark)
-            .minimumScaleFactor(0.5)
-            .lineLimit(1)
-
-          Spacer()
-
-          if let expiresAt = item.value.expiresAt {
-            Text(.validUntil([expiresAt]))
-              .typography(ThemeManager.shared.font.bodySmall)
-              .foregroundColor(Theme.shared.color.textSecondaryDark)
+            Text(.custom(item.value.title))
+              .typography(ThemeManager.shared.font.titleMedium)
+              .foregroundColor(ThemeManager.shared.color.textPrimaryDark)
               .minimumScaleFactor(0.5)
-              .lineLimit(2)
+              .lineLimit(1)
+
+            Spacer()
+
+            if let expiresAt = item.value.expiresAt {
+              Text(.validUntil([expiresAt]))
+                .typography(ThemeManager.shared.font.bodySmall)
+                .foregroundColor(Theme.shared.color.textSecondaryDark)
+                .minimumScaleFactor(0.5)
+                .lineLimit(2)
+            }
           }
         }
-      })
+      )
       .frame(maxWidth: .infinity, alignment: .center)
       .padding()
       .background(Theme.shared.color.backgroundDefault)
