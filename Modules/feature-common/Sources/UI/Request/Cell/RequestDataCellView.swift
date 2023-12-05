@@ -18,23 +18,23 @@ import SwiftUI
 import logic_resources
 import logic_ui
 
-extension BaseRequestView {
-  struct RequestDataCellView: View {
+public extension BaseRequestView {
+  public struct RequestDataCellView: View {
 
-    typealias Cell = RequestDataCell
-    typealias TapListener = ((String) -> Void)?
+    public typealias Cell = RequestDataCell
+    public typealias TapListener = ((String) -> Void)?
 
     let cellModel: Cell
     let isLoading: Bool
     let onTap: TapListener
 
-    init(cellModel: Cell, isLoading: Bool, onTap: TapListener = nil) {
+    public init(cellModel: Cell, isLoading: Bool, onTap: TapListener = nil) {
       self.cellModel = cellModel
       self.isLoading = isLoading
       self.onTap = onTap
     }
 
-    var body: some View {
+    public var body: some View {
       switch cellModel {
       case .requestDataRow(let row):
         WrapCheckBoxView(
@@ -53,20 +53,18 @@ extension BaseRequestView {
 
           HStack(spacing: SPACING_SMALL) {
 
-            ThemeManager.shared.image.idStroke
+            ThemeManager.shared.image.id
               .resizable()
               .scaledToFit()
               .frame(width: 45)
 
             Text(section.title)
               .typography(ThemeManager.shared.font.titleMedium)
-              .foregroundStyle(ThemeManager.shared.color.primary)
+              .foregroundStyle(ThemeManager.shared.color.textPrimaryDark)
           }
           .padding([.horizontal, .vertical], SPACING_SMALL)
-          .overlay(
-            RoundedRectangle(cornerRadius: 15)
-              .foregroundStyle(ThemeManager.shared.color.primary.opacity(0.2))
-          )
+          .background(ThemeManager.shared.color.secondary)
+          .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
 
           Spacer()
         }
