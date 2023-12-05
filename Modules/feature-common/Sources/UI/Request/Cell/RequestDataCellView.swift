@@ -60,7 +60,9 @@ extension BaseRequestView {
 
             Text(section.title)
               .typography(ThemeManager.shared.font.titleMedium)
+              .colorScheme(.light)
               .foregroundStyle(ThemeManager.shared.color.textPrimaryDark)
+
           }
           .padding([.horizontal, .vertical], SPACING_SMALL)
           .background(ThemeManager.shared.color.secondary)
