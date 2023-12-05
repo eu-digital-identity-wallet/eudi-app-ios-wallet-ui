@@ -19,6 +19,7 @@ import feature_common
 import feature_startup
 import feature_dashboard
 import feature_issuance
+import feature_proximity
 import SwiftUI
 
 import logic_navigation

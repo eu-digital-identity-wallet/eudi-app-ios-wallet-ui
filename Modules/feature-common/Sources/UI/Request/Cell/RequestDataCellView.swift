@@ -53,20 +53,19 @@ extension BaseRequestView {
 
           HStack(spacing: SPACING_SMALL) {
 
-            ThemeManager.shared.image.idStroke
+            ThemeManager.shared.image.id
               .resizable()
               .scaledToFit()
               .frame(width: 45)
 
             Text(section.title)
               .typography(ThemeManager.shared.font.titleMedium)
-              .foregroundStyle(ThemeManager.shared.color.primary)
+              .foregroundStyle(ThemeManager.shared.color.black)
+
           }
           .padding([.horizontal, .vertical], SPACING_SMALL)
-          .overlay(
-            RoundedRectangle(cornerRadius: 15)
-              .foregroundStyle(ThemeManager.shared.color.primary.opacity(0.2))
-          )
+          .background(ThemeManager.shared.color.secondary)
+          .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
 
           Spacer()
         }

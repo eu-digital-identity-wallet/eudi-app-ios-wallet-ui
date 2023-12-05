@@ -38,6 +38,7 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
         ContentTitle(
           title: .addDocumentTitle,
           caption: .addDocumentSubtitle,
+          titleColor: Theme.shared.color.textPrimaryDark,
           topSpacing: viewModel.viewState.isFlowCancellable ? .withToolbar : .withoutToolbar
         )
 

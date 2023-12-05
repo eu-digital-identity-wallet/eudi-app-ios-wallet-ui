@@ -65,6 +65,7 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
       caption: viewModel.viewState.areBiometricsEnabled
       ? viewModel.viewState.config.caption
       : viewModel.viewState.config.quickPinOnlyCaption,
+      titleColor: Theme.shared.color.textPrimaryDark,
       topSpacing: viewModel.viewState.isCancellable ? .withToolbar : .withoutToolbar
     )
 

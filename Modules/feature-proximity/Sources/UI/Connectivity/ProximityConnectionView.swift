@@ -42,7 +42,8 @@ public struct ProximityConnectionView<Router: RouterHostType, Interactor: Proxim
 
       ContentTitle(
         title: .proximityConnectivityTitle,
-        caption: .proximityConnectivityCaption
+        caption: .proximityConnectivityCaption,
+        titleColor: Theme.shared.color.textPrimaryDark
       )
       .padding(.horizontal, Theme.shared.dimension.padding)
 
@@ -83,7 +84,7 @@ public struct ProximityConnectionView<Router: RouterHostType, Interactor: Proxim
     }
     .padding(.vertical, SPACING_EXTRA_LARGE)
     .frame(maxWidth: .infinity, maxHeight: contentSize)
-    .background(Theme.shared.color.primary.opacity(0.12))
+    .background(Theme.shared.color.backgroundDefault)
     .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
   }
 }

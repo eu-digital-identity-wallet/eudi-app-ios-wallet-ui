@@ -32,7 +32,7 @@ public protocol ImageManagerProtocol {
   var circle: Image { get }
   var eye: Image { get }
   var eyeSlash: Image { get }
-  var checkmarkCircle: Image { get }
+  var checkmarkCircleFill: Image { get }
   var checkmarkSquareFill: Image { get }
   var square: Image { get }
   var exclamationmarkOctagon: Image { get }
@@ -63,7 +63,7 @@ final class ImageManager: ImageManagerProtocol {
     case circle = "circle.fill"
     case eye = "eye"
     case eyeSlash = "eye.slash"
-    case checkmarkCircle = "checkmark.circle"
+    case checkmarkCircleFill = "checkmark.circle.fill"
     case checkmarkSquareFill = "checkmark.square.fill"
     case square = "square"
     case exclamationmarkOctagon = "exclamationmark.octagon"
@@ -72,8 +72,8 @@ final class ImageManager: ImageManagerProtocol {
     case warning = "ic-warning"
     case checkMarkSealFill = "checkmark.seal.fill"
     case more = "ic-more"
-    case pencil = "pencil"
-    case qrScan = "qrcode.viewfinder"
+    case pencil = "ic-edit"
+    case qrScan = "ic-qr-scanner"
   }
 
   // MARK: - Properties
@@ -130,8 +130,8 @@ final class ImageManager: ImageManagerProtocol {
   var eyeSlash: Image {
     Image(systemName: ImageEnum.eyeSlash.rawValue)
   }
-  var checkmarkCircle: Image {
-    Image(systemName: ImageEnum.checkmarkCircle.rawValue)
+  var checkmarkCircleFill: Image {
+    Image(systemName: ImageEnum.checkmarkCircleFill.rawValue)
   }
   var checkmarkSquareFill: Image {
     Image(systemName: ImageEnum.checkmarkSquareFill.rawValue)
@@ -143,7 +143,7 @@ final class ImageManager: ImageManagerProtocol {
     Image(systemName: ImageEnum.exclamationmarkOctagon.rawValue)
   }
   var plus: Image {
-    Image(systemName: ImageEnum.plus.rawValue)
+    Image(ImageEnum.plus.rawValue, bundle: bundle)
   }
   var share: Image {
     Image(systemName: ImageEnum.share.rawValue)
@@ -158,9 +158,9 @@ final class ImageManager: ImageManagerProtocol {
     Image(ImageEnum.more.rawValue, bundle: bundle)
   }
   var pencil: Image {
-    Image(systemName: ImageEnum.pencil.rawValue)
+    Image(ImageEnum.pencil.rawValue, bundle: bundle)
   }
   var qrScan: Image {
-    Image(systemName: ImageEnum.qrScan.rawValue)
+    Image(ImageEnum.qrScan.rawValue, bundle: bundle)
   }
 }

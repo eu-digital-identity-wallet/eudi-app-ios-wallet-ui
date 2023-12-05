@@ -50,13 +50,13 @@ extension BearerHeaderView {
             .typography(ThemeManager.shared.font.bodyMedium)
             .minimumScaleFactor(0.5)
             .lineLimit(1)
-            .foregroundColor(ThemeManager.shared.color.textSecondaryLight)
+            .foregroundColor(ThemeManager.shared.color.black)
           HStack {
             Text(.custom(item.value.name))
               .typography(ThemeManager.shared.font.headlineMedium)
               .minimumScaleFactor(0.5)
               .lineLimit(1)
-              .foregroundColor(ThemeManager.shared.color.backgroundPaper)
+              .foregroundColor(ThemeManager.shared.color.black)
             Spacer()
             Button(
               action: {
@@ -66,7 +66,7 @@ extension BearerHeaderView {
               label: {
                 Theme.shared.image.more
                   .renderingMode(.template)
-                  .foregroundStyle(Theme.shared.color.backgroundPaper)
+                  .foregroundStyle(Theme.shared.color.primary)
               }
             )
           }

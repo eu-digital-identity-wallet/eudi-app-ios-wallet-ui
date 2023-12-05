@@ -29,13 +29,9 @@ public protocol ColorManagerProtocol {
   var chipBackground: Color { get }
   var infoBackground: Color { get }
   var dividerDark: Color { get }
-  var lightGradientEnd: Color { get }
-  var lightGradientStart: Color { get }
   var error: Color { get }
   var warning: Color { get }
   var info: Color { get }
-  var primaryDark: Color { get }
-  var primaryLight: Color { get }
   var primary: Color { get }
   var success: Color { get }
   var secondary: Color { get }

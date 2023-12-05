@@ -74,16 +74,15 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
 
         Text(viewModel.viewState.holderName)
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.backgroundPaper)
+          .foregroundColor(Theme.shared.color.black)
 
         Spacer()
       }
     }
-    .padding(SPACING_MEDIUM)
+    .padding(SPACING_MEDIUM_LARGE)
     .frame(maxWidth: .infinity)
-    .background(Theme.shared.color.primary)
+    .background(Theme.shared.color.secondary)
     .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
-    .colorScheme(.light)
   }
 
   @ViewBuilder
