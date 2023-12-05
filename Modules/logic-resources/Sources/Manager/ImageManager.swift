@@ -143,7 +143,7 @@ final class ImageManager: ImageManagerProtocol {
     Image(systemName: ImageEnum.exclamationmarkOctagon.rawValue)
   }
   var plus: Image {
-    Image(systemName: ImageEnum.plus.rawValue)
+    Image(ImageEnum.plus.rawValue, bundle: bundle)
   }
   var share: Image {
     Image(systemName: ImageEnum.share.rawValue)
