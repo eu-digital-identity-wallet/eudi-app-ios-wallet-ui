@@ -14,6 +14,8 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import MdocDataModel18013
+import logic_resources
 
 public struct DocumentUIModel: Identifiable {
   public let id: String
@@ -26,54 +28,85 @@ public struct DocumentUIModel: Identifiable {
 }
 
 public extension DocumentUIModel {
+
   struct Value {
     public let id: String
     public let title: String
-    public let status: String
+    public let expiresAt: String?
   }
 
   static func mocks() -> [DocumentUIModel] {
     [
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Digital ID", status: "Active")
+        value: .init(id: UUID().uuidString, title: "Digital ID", expiresAt: "22/01/2025")
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "EUDI Conference", status: "Active")
+        value: .init(id: UUID().uuidString, title: "EUDI Conference", expiresAt: "22/01/2025")
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Passport", status: "Active")
+        value: .init(id: UUID().uuidString, title: "Passport", expiresAt: "22/01/2025")
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Document 1", status: "Active")
+        value: .init(id: UUID().uuidString, title: "Document 1", expiresAt: "22/01/2025")
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Document 2", status: "Active")
+        value: .init(id: UUID().uuidString, title: "Document 2", expiresAt: "22/01/2025")
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Document 3", status: "Active")
+        value: .init(id: UUID().uuidString, title: "Document 3", expiresAt: "22/01/2025")
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Document 4", status: "Active")
+        value: .init(id: UUID().uuidString, title: "Document 4", expiresAt: "22/01/2025")
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Document 5", status: "Active")
+        value: .init(id: UUID().uuidString, title: "Document 5", expiresAt: "22/01/2025")
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Document 6", status: "Active")
+        value: .init(id: UUID().uuidString, title: "Document 6", expiresAt: "22/01/2025")
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Passport", status: "Active")
+        value: .init(id: UUID().uuidString, title: "Passport", expiresAt: "22/01/2025")
       )
     ]
+  }
+}
+
+extension Array where Element == MdocDecodable {
+  func transformToDocumentUi() -> [DocumentUIModel] {
+    self.map { item in
+
+      let expires: String? = switch item {
+      case let pid as EuPidModel:
+        pid.expiry_date
+      case let mdl as IsoMdlModel:
+        mdl.expiryDate
+      case let generic as GenericMdocModel:
+        generic.displayStrings.first(
+          where: {
+            $0.name.replacingOccurrences(of: "_", with: "").lowercased() == "expirydate"
+          }
+        )?.value
+      default: nil
+      }
+
+      return .init(
+        id: UUID().uuidString,
+        value: .init(
+          id: item.docType,
+          title: LocalizableString.shared.get(with: .dynamic(key: item.title)),
+          expiresAt: expires
+        )
+      )
+    }
   }
 }

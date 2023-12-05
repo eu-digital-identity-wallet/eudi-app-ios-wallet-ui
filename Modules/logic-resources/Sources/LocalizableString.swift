@@ -189,6 +189,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "no")
     case .scanQrCode:
       bundle.localizedString(forKey: "scan_qr_code")
+    case .validUntil(let args):
+      bundle.localizedStringWithArguments(forKey: "valid_until", arguments: args)
     }
   }
 
@@ -276,6 +278,7 @@ public extension LocalizableString {
     case yes
     case no
     case scanQrCode
+    case validUntil([String])
   }
 }
 

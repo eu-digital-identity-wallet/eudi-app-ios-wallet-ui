@@ -38,46 +38,6 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
     
     
     
-    public func fetchDocuments() async -> DashboardDocumentsPartialState {
-        
-    return await cuckoo_manager.call(
-    """
-    fetchDocuments() async -> DashboardDocumentsPartialState
-    """,
-            parameters: (),
-            escapingParameters: (),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: await __defaultImplStub!.fetchDocuments())
-        
-    }
-    
-    
-    
-    
-    
-    public func fetchBearer() async -> DashboardBearerPartialState {
-        
-    return await cuckoo_manager.call(
-    """
-    fetchBearer() async -> DashboardBearerPartialState
-    """,
-            parameters: (),
-            escapingParameters: (),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: await __defaultImplStub!.fetchBearer())
-        
-    }
-    
-    
-    
-    
-    
     public func fetchDashboard() async -> DashboardPartialState {
         
     return await cuckoo_manager.call(
@@ -101,28 +61,6 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
     
         public init(manager: Cuckoo.MockManager) {
             self.cuckoo_manager = manager
-        }
-        
-        
-        
-        
-        func fetchDocuments() -> Cuckoo.ProtocolStubFunction<(), DashboardDocumentsPartialState> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockDashboardInteractorType.self, method:
-    """
-    fetchDocuments() async -> DashboardDocumentsPartialState
-    """, parameterMatchers: matchers))
-        }
-        
-        
-        
-        
-        func fetchBearer() -> Cuckoo.ProtocolStubFunction<(), DashboardBearerPartialState> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockDashboardInteractorType.self, method:
-    """
-    fetchBearer() async -> DashboardBearerPartialState
-    """, parameterMatchers: matchers))
         }
         
         
@@ -156,30 +94,6 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
         
         
         @discardableResult
-        func fetchDocuments() -> Cuckoo.__DoNotUse<(), DashboardDocumentsPartialState> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-    """
-    fetchDocuments() async -> DashboardDocumentsPartialState
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        @discardableResult
-        func fetchBearer() -> Cuckoo.__DoNotUse<(), DashboardBearerPartialState> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-    """
-    fetchBearer() async -> DashboardBearerPartialState
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        @discardableResult
         func fetchDashboard() -> Cuckoo.__DoNotUse<(), DashboardPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
@@ -198,22 +112,6 @@ public class DashboardInteractorTypeStub: DashboardInteractorType {
 
     
 
-    
-    
-    
-    
-    public func fetchDocuments() async -> DashboardDocumentsPartialState  {
-        return DefaultValueRegistry.defaultValue(for: (DashboardDocumentsPartialState).self)
-    }
-    
-    
-    
-    
-    
-    public func fetchBearer() async -> DashboardBearerPartialState  {
-        return DefaultValueRegistry.defaultValue(for: (DashboardBearerPartialState).self)
-    }
-    
     
     
     
@@ -246,6 +144,7 @@ import Cuckoo
 
 import SwiftUI
 import logic_resources
+import logic_ui
 
 import Cuckoo
 @testable import logic_business
@@ -296,7 +195,9 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import MdocDataModel18013
 import SwiftUI
+import UIKit
 import logic_resources
 
 import Cuckoo
@@ -306,6 +207,8 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+import MdocDataModel18013
+import logic_resources
 
 import Cuckoo
 @testable import logic_business
@@ -3000,6 +2903,26 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
     }
     
     
+    
+    
+    
+    public func fetchDocuments() -> [MdocDecodable] {
+        
+    return cuckoo_manager.call(
+    """
+    fetchDocuments() -> [MdocDecodable]
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.fetchDocuments())
+        
+    }
+    
+    
 
     public struct __StubbingProxy_WalletKitControllerType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -3041,6 +2964,17 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
     """
     stopPresentation()
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func fetchDocuments() -> Cuckoo.ProtocolStubFunction<(), [MdocDecodable]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    fetchDocuments() -> [MdocDecodable]
     """, parameterMatchers: matchers))
         }
         
@@ -3099,6 +3033,18 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
         }
         
         
+        
+        
+        @discardableResult
+        func fetchDocuments() -> Cuckoo.__DoNotUse<(), [MdocDecodable]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    fetchDocuments() -> [MdocDecodable]
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -3144,6 +3090,14 @@ public class WalletKitControllerTypeStub: WalletKitControllerType {
     
     public func stopPresentation()   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func fetchDocuments() -> [MdocDecodable]  {
+        return DefaultValueRegistry.defaultValue(for: ([MdocDecodable]).self)
     }
     
     

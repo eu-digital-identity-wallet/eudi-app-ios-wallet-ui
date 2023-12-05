@@ -21,60 +21,36 @@ public enum DashboardPartialState {
   case failure(Error)
 }
 
-public enum DashboardDocumentsPartialState {
-  case success([DocumentUIModel])
-  case failure(Error)
-}
-
-public enum DashboardBearerPartialState {
-  case success(BearerUIModel)
-  case failure(Error)
-}
-
 public protocol DashboardInteractorType {
-  func fetchDocuments() async -> DashboardDocumentsPartialState
-  func fetchBearer() async -> DashboardBearerPartialState
   func fetchDashboard() async -> DashboardPartialState
 }
 
 public final actor DashboardInteractor: DashboardInteractorType {
 
+  private lazy var walletController: WalletKitControllerType = WalletKitController.shared
+
   public init() {}
 
-  public func fetchBearer() async -> DashboardBearerPartialState {
-    do {
-      try await Task.sleep(nanoseconds: 1 * 1_000_000_000)
-      return .success(BearerUIModel.mock())
-    } catch {
-      return .failure(error)
+  private func fetchBearer() -> BearerUIModel? {
+    let documents = self.walletController.fetchDocuments()
+    guard !documents.isEmpty else {
+      return nil
     }
+    return documents.transformToBearerUi()
   }
 
-  public func fetchDocuments() async -> DashboardDocumentsPartialState {
-    do {
-      try await Task.sleep(nanoseconds: 1 * 1_000_000_000)
-      return .success(DocumentUIModel.mocks())
-    } catch {
-      return .failure(error)
+  private func fetchDocuments() -> [DocumentUIModel]? {
+    let documents = self.walletController.fetchDocuments()
+    guard !documents.isEmpty else {
+      return nil
     }
+    return documents.transformToDocumentUi()
   }
 
   public func fetchDashboard() async -> DashboardPartialState {
-    var bearer: BearerUIModel?
-    let bearerState = await fetchBearer()
-    switch bearerState {
-    case .success(let value):
-      bearer = value
-    default: break
-    }
 
-    var document: [DocumentUIModel]?
-    let documentsSate = await fetchDocuments()
-    switch documentsSate {
-    case .success(let value):
-      document = value
-    default: break
-    }
+    let document: [DocumentUIModel]? = fetchDocuments()
+    let bearer: BearerUIModel? = fetchBearer()
 
     guard let bearer = bearer else {
       return .failure(RuntimeError.customError("Unable to fetch bearer info"))

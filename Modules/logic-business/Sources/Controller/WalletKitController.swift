@@ -26,6 +26,7 @@ public protocol WalletKitControllerType {
 
   func startProximityPresentation() -> PresentationSessionCoordinatorType
   func stopPresentation()
+  func fetchDocuments() -> [MdocDecodable]
 }
 
 public final class WalletKitController: WalletKitControllerType {
@@ -35,10 +36,6 @@ public final class WalletKitController: WalletKitControllerType {
 
   public private(set) var activeCoordinator: PresentationSessionCoordinatorType?
   private var cancellables = Set<AnyCancellable>()
-
-  public convenience init(string: String) {
-    self.init()
-  }
 
   internal init() {
     try? wallet.loadSampleData()
@@ -60,6 +57,10 @@ public final class WalletKitController: WalletKitControllerType {
   public func stopPresentation() {
     self.cancellables.forEach {$0.cancel()}
     self.activeCoordinator = nil
+  }
+
+  public func fetchDocuments() -> [MdocDecodable] {
+    return wallet.storage.mdocModels.compactMap({ $0 })
   }
 
 }
@@ -108,7 +109,7 @@ extension WalletKitControllerType {
             """
           })
           .dropLast()
-          // Dropping last because its a new line character
+        // Dropping last because its a new line character
 
         displayStrings?.append(.init(name: "driving_privileges", value: String(flatString)))
       }
