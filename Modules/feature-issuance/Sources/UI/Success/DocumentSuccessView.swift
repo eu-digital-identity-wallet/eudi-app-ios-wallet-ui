@@ -53,19 +53,6 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
 
       footer
     }
-    .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
-      VStack(spacing: SPACING_MEDIUM) {
-
-        ContentTitle(
-          title: viewModel.viewState.modalTitle,
-          caption: viewModel.viewState.modalCaption,
-          titleColor: Theme.shared.color.textPrimaryDark
-        )
-
-        WrapButtonView(style: .primary, title: .issuanceSuccessModalContinueButton, onAction: viewModel.onShowCancelModal())
-        WrapButtonView(style: .secondary, title: .issuanceSuccessModalCancelButton, onAction: viewModel.onPop())
-      }
-    }
   }
 
   private var document: some View {
@@ -88,7 +75,7 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
         Text(viewModel.viewState.holderName)
           .typography(Theme.shared.font.bodyLarge)
           .foregroundColor(Theme.shared.color.black)
-          
+
         Spacer()
       }
     }
