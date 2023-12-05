@@ -18,23 +18,23 @@ import SwiftUI
 import logic_resources
 import logic_ui
 
-public extension BaseRequestView {
-  public struct RequestDataCellView: View {
+extension BaseRequestView {
+  struct RequestDataCellView: View {
 
-    public typealias Cell = RequestDataCell
-    public typealias TapListener = ((String) -> Void)?
+    typealias Cell = RequestDataCell
+    typealias TapListener = ((String) -> Void)?
 
     let cellModel: Cell
     let isLoading: Bool
     let onTap: TapListener
 
-    public init(cellModel: Cell, isLoading: Bool, onTap: TapListener = nil) {
+    init(cellModel: Cell, isLoading: Bool, onTap: TapListener = nil) {
       self.cellModel = cellModel
       self.isLoading = isLoading
       self.onTap = onTap
     }
 
-    public var body: some View {
+    var body: some View {
       switch cellModel {
       case .requestDataRow(let row):
         WrapCheckBoxView(
