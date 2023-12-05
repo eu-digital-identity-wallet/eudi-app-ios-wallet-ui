@@ -72,7 +72,7 @@ extension WalletKitControllerType {
     case .EuPidDocType:
       return []
     case .IsoMdlModel:
-      return IsoMdlModel.mandatoryKeys
+      return IsoMdlModel.isoMandatoryElementKeys
     case .genericDocument:
       return []
     }
