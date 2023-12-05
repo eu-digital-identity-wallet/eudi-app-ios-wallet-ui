@@ -17,12 +17,11 @@
 		68C9142F71DA324B35570DDD /* DocDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C168568AE72A55E14FF960A /* DocDataView.swift */; };
 		6D697236484FE71D3E547213 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 1E6EC900D12B703E7BC17B9D /* CodeScanner */; };
 		AC2B2F7C55C2B9D24B67A706 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 75A663A39A851322A212B0A4 /* Localizable.strings */; };
-		B05C0D772B0F889100A4D8C7 /* EudiWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = B05C0D762B0F889100A4D8C7 /* EudiWalletKit */; };
-		B094F4152B0E4235007A51E6 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = B094F4142B0E4235007A51E6 /* CodeScanner */; };
 		BC7FB05D9F497EC0B13A8497 /* WalletUiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC7642D7306E4537C5A431B /* WalletUiApp.swift */; };
 		BF400B2EB660ABE2031C8FB7 /* MainHolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A5A599800B794397ECD218 /* MainHolderView.swift */; };
 		BF4AC5C1FC5D94A2C5BAD79E /* EUDI_sample_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 1E667FD0ED0BE9CDAB8F44CD /* EUDI_sample_data.json */; };
 		C2714E0CCBB5E3CA4B184F0D /* TuistBundle+AppWalletUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F7BE41A4D398B7F47E3156 /* TuistBundle+AppWalletUI.swift */; };
+		C4B80E6310100FFF0231BE36 /* EudiWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = A5E2E7E73041995F3146C070 /* EudiWalletKit */; };
 		E1F46421317B51187BC99BDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82F936434862986E6F6EE3D7 /* Assets.xcassets */; };
 		E90AE0E607DB8C2E1760A93E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBDA3B721143FBCA5399E0B4 /* Extensions.swift */; };
 		EA16CDC6343CECAF2F14C7FE /* scytales_root_ca.der in Resources */ = {isa = PBXBuildFile; fileRef = D1D572382ADDD6EEAA3414A1 /* scytales_root_ca.der */; };
@@ -126,9 +125,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4B80E6310100FFF0231BE36 /* EudiWalletKit in Frameworks */,
 				6D697236484FE71D3E547213 /* CodeScanner in Frameworks */,
-				B094F4152B0E4235007A51E6 /* CodeScanner in Frameworks */,
-				B05C0D772B0F889100A4D8C7 /* EudiWalletKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,9 +333,8 @@
 			);
 			name = AppWalletUI;
 			packageProductDependencies = (
+				A5E2E7E73041995F3146C070 /* EudiWalletKit */,
 				1E6EC900D12B703E7BC17B9D /* CodeScanner */,
-				B094F4142B0E4235007A51E6 /* CodeScanner */,
-				B05C0D762B0F889100A4D8C7 /* EudiWalletKit */,
 			);
 			productName = AppWalletUI;
 			productReference = E979049EC84A42C44A32394B /* AppWalletUI.app */;
@@ -372,7 +369,7 @@
 			packageReferences = (
 				454347FA150C90F12514CBFA /* XCRemoteSwiftPackageReference "mockingbird" */,
 				837260188995F5FD097D3E04 /* XCRemoteSwiftPackageReference "eudi-lib-ios-wallet-kit" */,
-				B094F4132B0E4235007A51E6 /* XCRemoteSwiftPackageReference "CodeScanner" */,
+				20E644FBA6225E6193776DDB /* XCRemoteSwiftPackageReference "CodeScanner" */,
 			);
 			productRefGroup = 39F5E5C17B0356604D126B1F /* Products */;
 			projectDirPath = "";
@@ -593,7 +590,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.eudiw.Iso18013HolderDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = org.eudiw.AppWalletUI;
 				PRODUCT_NAME = AppWalletUI;
 				SDKROOT = iphoneos;
 				STRIP_STYLE = debugging;
@@ -619,7 +616,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.eudiw.Iso18013HolderDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = org.eudiw.AppWalletUI;
 				PRODUCT_NAME = AppWalletUI;
 				SDKROOT = iphoneos;
 				STRIP_STYLE = debugging;
@@ -772,6 +769,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		20E644FBA6225E6193776DDB /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twostraws/CodeScanner.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		454347FA150C90F12514CBFA /* XCRemoteSwiftPackageReference "mockingbird" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/birdrides/mockingbird.git";
@@ -788,14 +793,6 @@
 				version = 0.1.6;
 			};
 		};
-		B094F4132B0E4235007A51E6 /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/twostraws/CodeScanner";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.3.3;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -807,15 +804,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = CodeScanner;
 		};
-		B05C0D762B0F889100A4D8C7 /* EudiWalletKit */ = {
+		A5E2E7E73041995F3146C070 /* EudiWalletKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 837260188995F5FD097D3E04 /* XCRemoteSwiftPackageReference "eudi-lib-ios-wallet-kit" */;
 			productName = EudiWalletKit;
-		};
-		B094F4142B0E4235007A51E6 /* CodeScanner */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B094F4132B0E4235007A51E6 /* XCRemoteSwiftPackageReference "CodeScanner" */;
-			productName = CodeScanner;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
