@@ -15,6 +15,7 @@
  */
 import SwiftUI
 import logic_resources
+import logic_ui
 
 extension DocumentListView {
   struct DocumentCell: View {
@@ -22,8 +23,6 @@ extension DocumentListView {
     let item: DocumentUIModel
     let action: (DocumentUIModel) -> Void
     let isLoading: Bool
-
-    private let exrtaSpace: CGFloat = 10
 
     init(
       item: DocumentUIModel,
@@ -39,21 +38,30 @@ extension DocumentListView {
       Button(action: {
         action(item)
       }, label: {
-        VStack {
-          Spacer(minLength: exrtaSpace)
+        VStack(spacing: .zero) {
+
           Theme.shared.image.idStroke
             .foregroundColor(Theme.shared.color.primary)
             .aspectRatio(contentMode: .fit)
             .frame(maxWidth: 48)
+
+          Spacer()
+
           Text(.custom(item.value.title))
-            .typography(ThemeManager.shared.font.bodyMedium)
+            .typography(ThemeManager.shared.font.titleMedium)
             .foregroundColor(ThemeManager.shared.color.textPrimaryDark)
-            .minimumScaleFactor(0.3)
+            .minimumScaleFactor(0.5)
             .lineLimit(1)
-          Text(.custom(item.value.status))
-            .typography(ThemeManager.shared.font.bodySmall)
-            .foregroundColor(Theme.shared.color.success)
-          Spacer(minLength: exrtaSpace)
+
+          Spacer()
+
+          if let expiresAt = item.value.expiresAt {
+            Text(.validUntil([expiresAt]))
+              .typography(ThemeManager.shared.font.bodySmall)
+              .foregroundColor(Theme.shared.color.textSecondaryDark)
+              .minimumScaleFactor(0.5)
+              .lineLimit(2)
+          }
         }
       })
       .frame(maxWidth: .infinity, alignment: .center)

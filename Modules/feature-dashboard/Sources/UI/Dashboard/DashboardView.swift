@@ -75,11 +75,22 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
           gravity: .start,
           onAction: viewModel.onUpdatePin()
         )
+
+        WrapButtonView(
+          title: .scanQrCode,
+          backgroundColor: .clear,
+          icon: Theme.shared.image.qrScan,
+          gravity: .start,
+          onAction: viewModel.onShowScanner()
+        )
       }
     }
-    .viewDidLoad {
-      Task {
-        await viewModel.fetch()
+    .task {
+      await viewModel.fetch()
+    }
+    .fullScreenCover(isPresented: $viewModel.onScan) {
+      ScannerView(dismiss: $viewModel.onScan) { result in
+        print(result)
       }
     }
   }

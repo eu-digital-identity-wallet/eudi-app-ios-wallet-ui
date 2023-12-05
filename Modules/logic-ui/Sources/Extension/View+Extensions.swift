@@ -129,6 +129,11 @@ public extension View {
     self
       .modifier(ViewDidLoadModifier(action: action))
   }
+
+  func viewDidLoadAsync(action: @escaping () async -> Void) -> some View {
+    self
+      .modifier(ViewDidLoadAsyncModifier(action: action))
+  }
 }
 
 struct ViewDidLoadModifier: ViewModifier {
@@ -141,6 +146,21 @@ struct ViewDidLoadModifier: ViewModifier {
         if viewDidLoad == false {
           viewDidLoad = true
           action?()
+        }
+      }
+  }
+}
+
+struct ViewDidLoadAsyncModifier: ViewModifier {
+  @State private var viewDidLoad = false
+  let action: (() async -> Void)?
+
+  func body(content: Content) -> some View {
+    content
+      .task {
+        if viewDidLoad == false {
+          viewDidLoad = true
+          await action?()
         }
       }
   }

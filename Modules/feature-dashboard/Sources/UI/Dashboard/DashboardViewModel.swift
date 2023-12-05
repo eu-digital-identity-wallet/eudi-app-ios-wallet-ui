@@ -31,6 +31,7 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
   private let deepLinkController: DeepLinkController
 
   @Published var isMoreModalShowing: Bool = false
+  @Published var onScan: Bool = false
 
   var bearerName: String {
     viewState.bearer.value.name
@@ -53,14 +54,12 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
     switch await interactor.fetchDashboard() {
     case .success(let bearer, let documents):
       setNewState(
-        isLoading: false,
         documents: documents,
         bearer: bearer
       )
       handleDeepLink()
     case .failure:
       setNewState(
-        isLoading: false,
         documents: [],
         bearer: nil
       )
@@ -91,6 +90,11 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
     router.push(with: .quickPin(config: QuickPinUiConfig(flow: .update)))
   }
 
+  func onShowScanner() {
+    isMoreModalShowing = false
+    onScan = true
+  }
+
   private func handleDeepLink() {
     if let deepLink = deepLinkController.getPendingDeepLinkAction() {
       deepLinkController.handleDeepLinkAction(routerHost: router, deepLinkAction: deepLink)
@@ -98,13 +102,13 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
   }
 
   private func setNewState(
-    isLoading: Bool? = nil,
+    isLoading: Bool = false,
     documents: [DocumentUIModel]? = nil,
     bearer: BearerUIModel? = nil
   ) {
     setState { previousSate in
         .init(
-          isLoading: isLoading ?? previousSate.isLoading,
+          isLoading: isLoading,
           documents: documents ?? previousSate.documents,
           bearer: bearer ?? previousSate.bearer
         )

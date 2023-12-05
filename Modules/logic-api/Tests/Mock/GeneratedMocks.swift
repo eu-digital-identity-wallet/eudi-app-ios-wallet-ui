@@ -2659,6 +2659,26 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
     }
     
     
+    
+    
+    
+    public func fetchDocuments() -> [MdocDecodable] {
+        
+    return cuckoo_manager.call(
+    """
+    fetchDocuments() -> [MdocDecodable]
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.fetchDocuments())
+        
+    }
+    
+    
 
     public struct __StubbingProxy_WalletKitControllerType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -2700,6 +2720,17 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
     """
     stopPresentation()
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func fetchDocuments() -> Cuckoo.ProtocolStubFunction<(), [MdocDecodable]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    fetchDocuments() -> [MdocDecodable]
     """, parameterMatchers: matchers))
         }
         
@@ -2758,6 +2789,18 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
         }
         
         
+        
+        
+        @discardableResult
+        func fetchDocuments() -> Cuckoo.__DoNotUse<(), [MdocDecodable]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    fetchDocuments() -> [MdocDecodable]
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -2803,6 +2846,14 @@ public class WalletKitControllerTypeStub: WalletKitControllerType {
     
     public func stopPresentation()   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func fetchDocuments() -> [MdocDecodable]  {
+        return DefaultValueRegistry.defaultValue(for: ([MdocDecodable]).self)
     }
     
     

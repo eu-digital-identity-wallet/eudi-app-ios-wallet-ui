@@ -88,7 +88,7 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
         Text(viewModel.viewState.holderName)
           .typography(Theme.shared.font.bodyLarge)
           .foregroundColor(Theme.shared.color.black)
-
+          
         Spacer()
       }
     }
@@ -98,24 +98,12 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
     .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
   }
 
+  @ViewBuilder
   private var footer: some View {
-    VStack(spacing: SPACING_MEDIUM) {
-      HStack {
-        Text(viewModel.viewState.footerTitle)
-          .typography(ThemeManager.shared.font.titleLarge)
-          .foregroundColor(Theme.shared.color.textPrimaryDark)
-        Spacer()
-      }
-      WrapButtonView(
-        style: .primary,
-        title: .issuanceSuccessAddButton,
-        onAction: viewModel.onIssue()
-      )
-      WrapButtonView(
-        style: .secondary,
-        title: .issuanceSuccessCancelButton,
-        onAction: viewModel.onShowCancelModal()
-      )
-    }
+    WrapButtonView(
+      style: .primary,
+      title: .issuanceSuccessNextButton,
+      onAction: viewModel.onIssue()
+    )
   }
 }
