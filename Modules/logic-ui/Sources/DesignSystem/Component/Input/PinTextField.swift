@@ -24,6 +24,7 @@ public struct PinTextField: View {
   private let shouldUseFullScreen: Bool
   private let hasError: Bool
 
+  @State private var stateForDigit: [FieldState]
   @State private var currentIndex: Int = 0
   @State private var isInEditMode = false
   @State private var toggleLine = false
@@ -62,6 +63,8 @@ public struct PinTextField: View {
     self.isSecureEntry = isSecureEntry
     self.shouldUseFullScreen = shouldUseFullScreen
     self.hasError = hasError
+
+    self.stateForDigit = Array(repeating: FieldState.empty, count: maxDigits)
   }
 
   public var body: some View {
@@ -81,10 +84,9 @@ public struct PinTextField: View {
           .background(
             RoundedRectangle(cornerRadius: 5.0)
               .stroke(
-                hasError
-                ? ThemeManager.shared.color.error
-                : ThemeManager.shared.color.dividerDark,
-                lineWidth: 1
+                hasError ?
+                Theme.shared.color.error :
+                stateForDigit[index].color
               )
           )
         if shouldUseFullScreen && index < (maxDigits - 1) {
@@ -149,11 +151,22 @@ public struct PinTextField: View {
     return TextField(
       "",
       text: boundPin,
-      onEditingChanged: {isEditing in
+      onEditingChanged: { isEditing in
         self.isInEditMode = isEditing
+        if isEditing {
+          self.stateForDigit[numericText.count] = .filled
+        }
       },
-      onCommit: submitPin
+      onCommit: {
+        submitPin()
+        stateForDigit = Array(repeating: FieldState.empty, count: maxDigits)
+      }
     )
+    .onChange(of: numericText, perform: { numericText in
+      for index in (0..<maxDigits) {
+        self.stateForDigit[index] = numericText.count == index  ? .filled : .empty
+      }
+    })
     .accentColor(.clear)
     .foregroundColor(.clear)
     .keyboardType(.numberPad)
@@ -204,5 +217,21 @@ private extension Int {
   var numberString: String {
     guard self < 10 else { return "0" }
     return String(self)
+  }
+}
+
+extension PinTextField {
+  enum FieldState {
+    case empty
+    case filled
+
+    var color: Color {
+      return switch self {
+      case .empty:
+        ThemeManager.shared.color.dividerDark
+      case .filled:
+        ThemeManager.shared.color.primary
+      }
+    }
   }
 }
