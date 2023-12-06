@@ -2679,6 +2679,26 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
     }
     
     
+    
+    
+    
+    public func loadSampleData(dataFiles: [String])  {
+        
+    return cuckoo_manager.call(
+    """
+    loadSampleData(dataFiles: [String])
+    """,
+            parameters: (dataFiles),
+            escapingParameters: (dataFiles),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.loadSampleData(dataFiles: dataFiles))
+        
+    }
+    
+    
 
     public struct __StubbingProxy_WalletKitControllerType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -2731,6 +2751,17 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
     """
     fetchDocuments() -> [MdocDecodable]
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func loadSampleData<M1: Cuckoo.Matchable>(dataFiles: M1) -> Cuckoo.ProtocolStubNoReturnFunction<([String])> where M1.MatchedType == [String] {
+            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: dataFiles) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    loadSampleData(dataFiles: [String])
     """, parameterMatchers: matchers))
         }
         
@@ -2801,6 +2832,18 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
         }
         
         
+        
+        
+        @discardableResult
+        func loadSampleData<M1: Cuckoo.Matchable>(dataFiles: M1) -> Cuckoo.__DoNotUse<([String]), Void> where M1.MatchedType == [String] {
+            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: dataFiles) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    loadSampleData(dataFiles: [String])
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -2854,6 +2897,14 @@ public class WalletKitControllerTypeStub: WalletKitControllerType {
     
     public func fetchDocuments() -> [MdocDecodable]  {
         return DefaultValueRegistry.defaultValue(for: ([MdocDecodable]).self)
+    }
+    
+    
+    
+    
+    
+    public func loadSampleData(dataFiles: [String])   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
     

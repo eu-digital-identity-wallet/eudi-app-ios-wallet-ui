@@ -49,6 +49,8 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
 
   func onIssue() {
 
+    interactor.addData()
+
     var flow: IssuanceDetailUiConfig.Flow {
       switch viewState.config.flow {
       case .noDocument:
