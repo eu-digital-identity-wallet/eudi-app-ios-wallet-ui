@@ -3,6 +3,152 @@ default_platform(:ios)
 platform :ios do
   desc "Run tests"
   lane :tests do
-    puts "Tests"
+    scan
+  end
+  
+  desc "Build EUDI Wallet Demo version and upload it to AppCenter"
+  lane :demo do
+    ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "600"
+
+    git_pull
+
+    versionName = get_version_number(
+      target: ENV["APP_TARGET"],
+    )
+
+    appcenter_build_number = latest_appcenter_release(
+      appName: ENV["APP_CENTER_APP_NAME"],
+      appVersion: versionName,
+      appToken: ENV["APP_CENTER_APP_TOKEN"],
+      ownerName: ENV["APP_CENTER_ACCOUNT"],
+    )
+
+    buildNumber = build_number(versionBuildNumber: appcenter_build_number)
+
+    tagVersion = tag_name(
+      buildName: versionName,
+      buildNumber: buildNumber,
+      brand: ENV["APP_TAG"],
+      buildType: ENV["APP_BUILD_TYPE"],
+    )
+
+    update_build_number(
+      target: ENV["APP_TARGET"],
+      number: buildNumber,
+    )
+
+    build_app(
+      scheme: ENV["APP_SCHEME"],
+      include_bitcode: true,
+      export_method: "ad-hoc",
+      export_options: {
+        provisioningProfiles: {
+          ENV["APP_BUNDLE_ID"] => ENV["APP_PROVISION_PROFILE"],
+        },
+      },
+    )
+
+    upload_to_appcenter(
+      appName: ENV["APP_CENTER_APP_NAME"],
+      path: ENV["APP_IPA_PATH"],
+      appToken: ENV["APP_CENTER_APP_TOKEN"],
+      ownerName: ENV["APP_CENTER_ACCOUNT"],
+      groups: ENV["APP_CENTER_GROUPS"],
+    )
+
+    clean_build_artifacts
+    reset_buildnumber
+
+    add_git_tag(
+      tag: tagVersion,
+    )
+
+    push_git_tags
+  end
+
+  desc "Set build number to default 1"
+  lane :update_build_number do |values|
+    target = values[:target]
+    number = values[:number]
+    increment_build_number_in_plist(
+      target: target,
+      build_number: number.to_s,
+    )
+    increment_build_number_in_xcodeproj(
+      target: target,
+      build_number: number.to_s,
+    )
+  end
+
+  desc "Set build number to default 1"
+  lane :reset_buildnumber do
+    increment_build_number(
+      build_number: 1,
+    )
+  end
+
+  desc "Build Number"
+  lane :build_number do |values|
+    number = values[:versionBuildNumber].to_i + 1
+    puts "Build Number: #{number}"
+    number
+  end
+
+  desc "Build Full version"
+  lane :full_version do |values|
+    buildName = values[:buildName]
+    buildNumber = values[:buildNumber]
+    version = "[#{buildName} BUILD_NUMBER=#{buildNumber}]"
+    puts "Full version: #{version}"
+    version
+  end
+
+  desc "Build Tag Name"
+  lane :tag_name do |values|
+    buildName = values[:buildName]
+    buildNumber = values[:buildNumber]
+    brand = values[:brand]
+    buildType = values[:buildType]
+    name = "#{brand}/#{buildType}_#{buildName}_Build=#{buildNumber}"
+    puts "Tag Name: #{name}"
+    name
+  end
+
+  desc "Upload to AppCenter"
+  lane :upload_to_appcenter do |values|
+    appName = values[:appName]
+    path = values[:path]
+    appToken = values[:appToken]
+    ownerName = values[:ownerName]
+    groups = values[:groups]
+    appcenter_upload(
+      api_token: appToken,
+      owner_name: ownerName,
+      app_name: appName,
+      file: path,
+      notify_testers: true,
+      destinations: groups
+    )
+  end
+
+  desc "Get Release version From AppCenter"
+  lane :latest_appcenter_release do |values|
+    appName = values[:appName]
+    appVersion = values[:appVersion]
+    appToken = values[:appToken]
+    ownerName = values[:ownerName]
+    version = "1"
+    begin
+      version = appcenter_fetch_version_number(
+        api_token: appToken,
+        owner_name: ownerName,
+        app_name: appName,
+        version: appVersion,
+      )["build_number"].gsub("#{appVersion}.", "")
+    rescue => ex
+      puts ex
+    end
+    puts "AppCenter Version: #{version}"
+    version
   end
 end

@@ -23,6 +23,70 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Run tests
 
+### ios demo
+
+```sh
+[bundle exec] fastlane ios demo
+```
+
+Build EUDI Wallet Demo version and upload it to AppCenter
+
+### ios update_build_number
+
+```sh
+[bundle exec] fastlane ios update_build_number
+```
+
+Set build number to default 1
+
+### ios reset_buildnumber
+
+```sh
+[bundle exec] fastlane ios reset_buildnumber
+```
+
+Set build number to default 1
+
+### ios build_number
+
+```sh
+[bundle exec] fastlane ios build_number
+```
+
+Build Number
+
+### ios full_version
+
+```sh
+[bundle exec] fastlane ios full_version
+```
+
+Build Full version
+
+### ios tag_name
+
+```sh
+[bundle exec] fastlane ios tag_name
+```
+
+Build Tag Name
+
+### ios upload_to_appcenter
+
+```sh
+[bundle exec] fastlane ios upload_to_appcenter
+```
+
+Upload to AppCenter
+
+### ios latest_appcenter_release
+
+```sh
+[bundle exec] fastlane ios latest_appcenter_release
+```
+
+Get Release version From AppCenter
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

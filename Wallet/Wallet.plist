@@ -29,5 +29,7 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>1</string>
 </dict>
 </plist>
