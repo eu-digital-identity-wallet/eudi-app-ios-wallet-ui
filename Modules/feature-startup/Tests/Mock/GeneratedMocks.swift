@@ -15,6 +15,7 @@ import Cuckoo
 
 import Foundation
 import feature_common
+import logic_business
 import logic_ui
 
 
@@ -1320,6 +1321,17 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_startup
+@testable import logic_api
+@testable import logic_ui
+
+import MdocDataModel18013
+import SwiftUI
+import UIKit
+import logic_resources
 
 import Cuckoo
 @testable import logic_business
@@ -2871,6 +2883,46 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
     }
     
     
+    
+    
+    
+    public func fetchDocument(with id: String) -> MdocDecodable? {
+        
+    return cuckoo_manager.call(
+    """
+    fetchDocument(with: String) -> MdocDecodable?
+    """,
+            parameters: (id),
+            escapingParameters: (id),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.fetchDocument(with: id))
+        
+    }
+    
+    
+    
+    
+    
+    public func loadSampleData(dataFiles: [String])  {
+        
+    return cuckoo_manager.call(
+    """
+    loadSampleData(dataFiles: [String])
+    """,
+            parameters: (dataFiles),
+            escapingParameters: (dataFiles),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.loadSampleData(dataFiles: dataFiles))
+        
+    }
+    
+    
 
     public struct __StubbingProxy_WalletKitControllerType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -2923,6 +2975,28 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
     """
     fetchDocuments() -> [MdocDecodable]
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func fetchDocument<M1: Cuckoo.Matchable>(with id: M1) -> Cuckoo.ProtocolStubFunction<(String), MdocDecodable?> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: id) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    fetchDocument(with: String) -> MdocDecodable?
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func loadSampleData<M1: Cuckoo.Matchable>(dataFiles: M1) -> Cuckoo.ProtocolStubNoReturnFunction<([String])> where M1.MatchedType == [String] {
+            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: dataFiles) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    loadSampleData(dataFiles: [String])
     """, parameterMatchers: matchers))
         }
         
@@ -2993,6 +3067,30 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
         }
         
         
+        
+        
+        @discardableResult
+        func fetchDocument<M1: Cuckoo.Matchable>(with id: M1) -> Cuckoo.__DoNotUse<(String), MdocDecodable?> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: id) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    fetchDocument(with: String) -> MdocDecodable?
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func loadSampleData<M1: Cuckoo.Matchable>(dataFiles: M1) -> Cuckoo.__DoNotUse<([String]), Void> where M1.MatchedType == [String] {
+            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: dataFiles) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    loadSampleData(dataFiles: [String])
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -3046,6 +3144,22 @@ public class WalletKitControllerTypeStub: WalletKitControllerType {
     
     public func fetchDocuments() -> [MdocDecodable]  {
         return DefaultValueRegistry.defaultValue(for: ([MdocDecodable]).self)
+    }
+    
+    
+    
+    
+    
+    public func fetchDocument(with id: String) -> MdocDecodable?  {
+        return DefaultValueRegistry.defaultValue(for: (MdocDecodable?).self)
+    }
+    
+    
+    
+    
+    
+    public func loadSampleData(dataFiles: [String])   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
     
@@ -3557,6 +3671,14 @@ import Cuckoo
 
 import Foundation
 import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_startup
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
 
 import Cuckoo
 @testable import logic_business

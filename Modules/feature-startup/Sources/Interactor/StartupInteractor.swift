@@ -16,6 +16,7 @@
 import Foundation
 import logic_ui
 import feature_common
+import logic_business
 
 public protocol StartupInteractorType {
   func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute
@@ -23,8 +24,11 @@ public protocol StartupInteractorType {
 
 public final actor StartupInteractor: StartupInteractorType {
 
-  // MARK: - TODO Remove this once we can ask core if the user has stored documents
-  private let hasDocuments: Bool = true
+  private lazy var walletController: WalletKitControllerType = WalletKitController.shared
+
+  private var hasDocuments: Bool {
+    return !walletController.fetchDocuments().isEmpty
+  }
 
   private lazy var quickPinInteractor: QuickPinInteractorType = QuickPinInteractor()
 
