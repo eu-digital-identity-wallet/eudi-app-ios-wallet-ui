@@ -53,34 +53,12 @@ extension Array where Element == MdocDecodable {
     var name: String?
 
     self.forEach { item in
+      if let tempName = item.getBearersName() {
+        name = tempName
+      }
 
-      switch item {
-      case let pid as EuPidModel:
-        if let firstName = pid.given_name, let lastName = pid.family_name {
-          name = "\(firstName) \(lastName)"
-        }
-      case let mdl as IsoMdlModel:
-        if let firstName = mdl.givenName, let lastName = mdl.familyName {
-          name = "\(firstName) \(lastName)"
-        }
-        if let portrait = mdl.portrait, let uiImage = UIImage(data: Data(portrait)) {
-          image = Image(uiImage: uiImage)
-        }
-      case let generic as GenericMdocModel:
-        if
-          let firstName = generic.displayStrings.first(
-            where: {
-              $0.name.replacingOccurrences(of: "_", with: "").lowercased() == "givenname"
-            }
-          )?.value,
-          let lastName = generic.displayStrings.first(
-            where: {
-              $0.name.replacingOccurrences(of: "_", with: "").lowercased() == "familyname"
-            }
-          )?.value {
-          name = "\(firstName) \(lastName)"
-        }
-      default: break
+      if let tempImage = item.getPortrait() {
+        image = tempImage
       }
     }
 

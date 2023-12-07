@@ -16,6 +16,8 @@
 import logic_business
 
 public protocol DocumentSuccessInteractorType {
+  func getHoldersName(for documentIdentifier: String) -> String?
+  func getDocumentName(for documentIdentifier: String) -> String
   func addData()
 }
 
@@ -28,4 +30,13 @@ public final class DocumentSuccessInteractor: DocumentSuccessInteractorType {
   public func addData() {
     walletController.loadSampleData(dataFiles: ["EUDI_sample_data"])
   }
+
+  public func getHoldersName(for documentIdentifier: String) -> String? {
+    walletController.fetchDocument(with: documentIdentifier)?.getBearersName()
+  }
+
+  public func getDocumentName(for documentIdentifier: String) -> String {
+    DocumentIdentifier(rawValue: documentIdentifier).localizedTitle
+  }
+
 }

@@ -16,6 +16,7 @@
 import SwiftUI
 import logic_resources
 import logic_business
+import MdocDataModel18013
 
 public struct DocumentDetailsUIModel {
 
@@ -66,6 +67,40 @@ public extension DocumentDetailsUIModel {
           value: "Placeholder Field Value".padded(padLength: 10)
         )
       )
+    )
+  }
+}
+
+extension MdocDecodable {
+  func transformToDocumentDetailsUi() -> DocumentDetailsUIModel {
+    var nameValues = displayStrings + [getDrivingPrivileges()]
+
+    let documentFields: [DocumentDetailsUIModel.DocumentField] =
+    nameValues
+      .compactMap({$0})
+      .sorted(by: {$0.order < $1.order})
+      .map {
+        .init(
+          id: UUID().uuidString,
+          title: LocalizableString.shared.get(with: .dynamic(key: $0.name)),
+          value: tryParseDate(dateString: $0.value)
+        )
+      }
+    +
+    ageOverXX
+      .map { key, value in
+          .init(
+            id: UUID().uuidString,
+            title: LocalizableString.shared.get(with: .dynamic(key: "age_over_\(key)")),
+            value: LocalizableString.shared.get(with: value ? .yes : .no)
+          )
+      }
+
+    return .init(
+      documentName: LocalizableString.shared.get(with: .dynamic(key: title)),
+      holdersName: getBearersName() ?? "Unknown",
+      holdersImage: getPortrait() ?? Theme.shared.image.user,
+      documentFields: documentFields
     )
   }
 }

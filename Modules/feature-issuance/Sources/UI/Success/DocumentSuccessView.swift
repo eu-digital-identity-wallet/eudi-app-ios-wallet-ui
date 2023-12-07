@@ -25,13 +25,13 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
     with router: Router,
     and interactor: Interactor,
     config: any UIConfigType,
-    documentName: String
+    documentIdentifier: String
   ) {
     self.viewModel = .init(
       router: router,
       interactor: interactor,
       config: config,
-      documentName: documentName
+      documentIdentifier: documentIdentifier
     )
   }
 
@@ -71,10 +71,11 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
       }
 
       HStack {
-
-        Text(viewModel.viewState.holderName)
-          .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.black)
+        if let holderName = viewModel.viewState.holderName {
+          Text(holderName)
+            .typography(Theme.shared.font.bodyLarge)
+            .foregroundColor(Theme.shared.color.black)
+        }
 
         Spacer()
       }

@@ -67,6 +67,10 @@ public class PrefsController: PrefsControllerType {
   public func getInt(forKey: PrefsController.Key) -> Int {
     return userDefaultsWrapper.integer(forKey: forKey.rawValue)
   }
+
+  public func getUserLocale() -> String {
+    return getString(forKey: .language) ?? "en_GB"
+  }
 }
 
 public extension PrefsController {
@@ -74,5 +78,6 @@ public extension PrefsController {
     case biometryEnabled
     case cachedDeepLink
     case runAtLeastOnce
+    case language
   }
 }

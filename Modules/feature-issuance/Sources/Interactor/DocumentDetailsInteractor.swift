@@ -16,6 +16,7 @@
 import Foundation
 import logic_ui
 import logic_resources
+import logic_business
 
 public protocol DocumentDetailsInteractorType {
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
@@ -23,13 +24,18 @@ public protocol DocumentDetailsInteractorType {
 
 public final class DocumentDetailsInteractor: DocumentDetailsInteractorType {
 
+  private lazy var walletKitController = WalletKitController.shared
+
   public init() {}
 
   public func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
     // Add Some logic from walletCore about active documents in storage.
     // Fetch document with currendId
-    try? await Task.sleep(nanoseconds: 5.nanoseconds)
-    return .success(.mock())
+    let document = walletKitController.fetchDocument(with: documentId)
+    guard let documentDetails = document?.transformToDocumentDetailsUi() else {
+      return .failure(RuntimeError.customError("Failed to map document details"))
+    }
+    return .success(documentDetails)
   }
 }
 

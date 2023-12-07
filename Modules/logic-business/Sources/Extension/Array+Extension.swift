@@ -16,7 +16,14 @@
 import Foundation
 
 public extension Array {
-    init(count: Int, createElement: @autoclosure () -> Element) {
-        self = (0 ..< count).map { _ in createElement() }
-    }
+  init(count: Int, createElement: @autoclosure () -> Element) {
+    self = (0 ..< count).map { _ in createElement() }
+  }
+}
+
+public extension Array {
+  /// Returns the element at the specified index if it is within bounds, otherwise nil.
+  subscript (safe index: Index) -> Element? {
+    return indices.contains(index) ? self[index] : nil
+  }
 }

@@ -38,8 +38,8 @@ public indirect enum AppRoute: Equatable {
   case quickPin(config: any UIConfigType)
   case issuanceAddDocument(config: any UIConfigType)
   case issuanceDocumentDetails(config: any UIConfigType)
-  case issuanceExternalLogin(config: any UIConfigType, documentName: String)
-  case issuanceSuccess(config: any UIConfigType, documentName: String)
+  case issuanceExternalLogin(config: any UIConfigType, documentIdentifier: String)
+  case issuanceSuccess(config: any UIConfigType, documentIdentifier: String)
 
   public var key: String {
     return switch self {

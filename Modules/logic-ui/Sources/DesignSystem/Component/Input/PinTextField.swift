@@ -64,7 +64,7 @@ public struct PinTextField: View {
     self.shouldUseFullScreen = shouldUseFullScreen
     self.hasError = hasError
 
-    self.stateForDigit = Array(repeating: FieldState.empty, count: maxDigits)
+    self.stateForDigit = Array(repeating: FieldState.inactive, count: maxDigits)
   }
 
   public var body: some View {
@@ -151,20 +151,22 @@ public struct PinTextField: View {
     return TextField(
       "",
       text: boundPin,
-      onEditingChanged: { isEditing in
+      onEditingChanged: {
+        isEditing in
         self.isInEditMode = isEditing
-        if isEditing {
-          self.stateForDigit[numericText.count] = .filled
+        if isEditing,
+           let _ = self.stateForDigit[safe: numericText.count] {
+          self.stateForDigit[numericText.count] = .active
         }
       },
       onCommit: {
         submitPin()
-        stateForDigit = Array(repeating: FieldState.empty, count: maxDigits)
+        stateForDigit = Array(repeating: FieldState.inactive, count: maxDigits)
       }
     )
     .onChange(of: numericText, perform: { numericText in
       for index in (0..<maxDigits) {
-        self.stateForDigit[index] = numericText.count == index  ? .filled : .empty
+        self.stateForDigit[index] = numericText.count == index  ? .active : .inactive
       }
     })
     .accentColor(.clear)
@@ -222,14 +224,14 @@ private extension Int {
 
 extension PinTextField {
   enum FieldState {
-    case empty
-    case filled
+    case inactive
+    case active
 
     var color: Color {
       return switch self {
-      case .empty:
+      case .inactive:
         ThemeManager.shared.color.dividerDark
-      case .filled:
+      case .active:
         ThemeManager.shared.color.primary
       }
     }
