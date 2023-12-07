@@ -21,7 +21,7 @@ struct DocumentSuccessState: ViewState {
   let error: ContentError.Config?
   let title: LocalizableString.Key
   let caption: LocalizableString.Key
-  let holderName: String
+  let holderName: String?
   let config: IssuanceFlowUiConfig
 }
 

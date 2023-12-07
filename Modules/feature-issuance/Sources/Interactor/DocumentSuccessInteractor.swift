@@ -17,7 +17,7 @@
 import logic_business
 
 public protocol DocumentSuccessInteractorType {
-  func getHoldersName(for documentIdentifier: String) -> String
+  func getHoldersName(for documentIdentifier: String) -> String?
   func getDocumentName(for documentIdentifier: String) -> String
 }
 
@@ -27,8 +27,8 @@ public final class DocumentSuccessInteractor: DocumentSuccessInteractorType {
 
   public init() {}
 
-  public func getHoldersName(for documentIdentifier: String) -> String {
-    walletKitController.fetchDocument(with: documentIdentifier)?.getBearersName() ?? "No Name"
+  public func getHoldersName(for documentIdentifier: String) -> String? {
+    walletKitController.fetchDocument(with: documentIdentifier)?.getBearersName()
   }
 
   public func getDocumentName(for documentIdentifier: String) -> String {

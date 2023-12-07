@@ -71,10 +71,11 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
       }
 
       HStack {
-
-        Text(viewModel.viewState.holderName)
-          .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.black)
+        if let holderName = viewModel.viewState.holderName {
+          Text(holderName)
+            .typography(Theme.shared.font.bodyLarge)
+            .foregroundColor(Theme.shared.color.black)
+        }
 
         Spacer()
       }
