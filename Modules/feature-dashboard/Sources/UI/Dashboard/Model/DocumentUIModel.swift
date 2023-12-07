@@ -85,26 +85,12 @@ extension Array where Element == MdocDecodable {
   func transformToDocumentUi() -> [DocumentUIModel] {
     self.map { item in
 
-      let expires: String? = switch item {
-      case let pid as EuPidModel:
-        pid.expiry_date
-      case let mdl as IsoMdlModel:
-        mdl.expiryDate
-      case let generic as GenericMdocModel:
-        generic.displayStrings.first(
-          where: {
-            $0.name.replacingOccurrences(of: "_", with: "").lowercased() == "expirydate"
-          }
-        )?.value
-      default: nil
-      }
-
       return .init(
         id: UUID().uuidString,
         value: .init(
           id: item.docType,
           title: LocalizableString.shared.get(with: .dynamic(key: item.title)),
-          expiresAt: expires
+          expiresAt: item.getExpiryDate()
         )
       )
     }

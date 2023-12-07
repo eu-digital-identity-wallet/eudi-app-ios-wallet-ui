@@ -27,6 +27,7 @@ public protocol WalletKitControllerType {
   func startProximityPresentation() -> PresentationSessionCoordinatorType
   func stopPresentation()
   func fetchDocuments() -> [MdocDecodable]
+  func fetchDocument(with id: String) -> MdocDecodable?
 }
 
 public final class WalletKitController: WalletKitControllerType {
@@ -63,6 +64,9 @@ public final class WalletKitController: WalletKitControllerType {
     return wallet.storage.mdocModels.compactMap({ $0 })
   }
 
+  public func fetchDocument(with id: String) -> MdocDecodable? {
+    wallet.storage.getDocumentModel(docType: id)
+  }
 }
 
 extension WalletKitControllerType {
@@ -71,7 +75,7 @@ extension WalletKitControllerType {
   public func mandatoryFields(for documentType: DocumentIdentifier) -> [String] {
     switch documentType {
     case .EuPidDocType:
-      return []
+      return EuPidModel.pidMandatoryElementKeys
     case .IsoMdlModel:
       return IsoMdlModel.isoMandatoryElementKeys
     case .genericDocument:
@@ -94,7 +98,8 @@ extension WalletKitControllerType {
       .first(where: { $0.docType == documentType.rawValue })?.displayStrings
     // Check if document type matches one of known models (pid or mdl)
 
-    if documentType == .IsoMdlModel, let mdl = wallet.storage.mdlModel {
+    if documentType == .IsoMdlModel,
+       let mdl = wallet.storage.mdlModel {
       // Check if the element key is of type that cannot be converted to string value
       if elementIdentifier == IsoMdlModel.CodingKeys.portrait.rawValue || elementIdentifier == IsoMdlModel.CodingKeys.signatureUsualMark.rawValue {
         return "Image Data"
