@@ -16,6 +16,7 @@
 
 import SwiftUI
 import logic_resources
+import logic_business
 
 public struct AddDocumentCellModel: Identifiable {
 
@@ -24,14 +25,14 @@ public struct AddDocumentCellModel: Identifiable {
   public let documentName: LocalizableString.Key
   public let image: Image
   public let isLoading: Bool
-  public let type: `Type`
+  public let type: DocumentIdentifier
 
   public init(
     isEnabled: Bool,
     documentName: LocalizableString.Key,
     image: Image,
     isLoading: Bool = false,
-    type: `Type`
+    type: DocumentIdentifier
   ) {
     self.id = UUID().uuidString
     self.isEnabled = isEnabled
@@ -51,23 +52,18 @@ public extension AddDocumentCellModel {
         isEnabled: true,
         documentName: .pid,
         image: Theme.shared.image.idStroke,
-        type: .pid
+        type: .EuPidDocType
       ),
       .init(
         isEnabled: false,
         documentName: .mdl,
         image: Theme.shared.image.id,
-        type: .mdl
+        type: .IsoMdlModel
       )
     ]
   }
 
-  enum `Type` {
-    case pid
-    case mdl
-  }
-
   static func mock() -> AddDocumentCellModel {
-    .init(isEnabled: true, documentName: .pid, image: Theme.shared.image.id, type: .pid)
+    .init(isEnabled: true, documentName: .pid, image: Theme.shared.image.id, type: .EuPidDocType)
   }
 }

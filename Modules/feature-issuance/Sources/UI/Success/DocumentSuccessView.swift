@@ -25,13 +25,13 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
     with router: Router,
     and interactor: Interactor,
     config: any UIConfigType,
-    documentName: String
+    documentIdentifier: String
   ) {
     self.viewModel = .init(
       router: router,
       interactor: interactor,
       config: config,
-      documentName: documentName
+      documentIdentifier: documentIdentifier
     )
   }
 

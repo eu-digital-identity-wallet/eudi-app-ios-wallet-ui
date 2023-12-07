@@ -14,9 +14,24 @@
  * governing permissions and limitations under the Licence.
  */
 
-public protocol DocumentSuccessInteractorType {}
+import logic_business
+
+public protocol DocumentSuccessInteractorType {
+  func getHoldersName(for documentIdentifier: String) -> String
+  func getDocumentName(for documentIdentifier: String) -> String
+}
 
 public final class DocumentSuccessInteractor: DocumentSuccessInteractorType {
 
+  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
+
   public init() {}
+
+  public func getHoldersName(for documentIdentifier: String) -> String {
+    walletKitController.fetchDocument(with: documentIdentifier)?.getBearersName() ?? "No Name"
+  }
+
+  public func getDocumentName(for documentIdentifier: String) -> String {
+    DocumentIdentifier(rawValue: documentIdentifier).localizedTitle
+  }
 }

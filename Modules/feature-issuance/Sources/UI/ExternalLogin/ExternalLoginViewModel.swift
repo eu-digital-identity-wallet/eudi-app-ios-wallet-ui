@@ -15,6 +15,7 @@
  */
 import logic_ui
 import logic_resources
+import logic_business
 import feature_common
 import UIKit
 
@@ -22,7 +23,7 @@ struct BaseLoadingState: ViewState {
   let error: ContentError.Config?
   let title: LocalizableString.Key
   let caption: LocalizableString.Key
-  let documentName: String
+  let documentIdentifier: String
   let config: IssuanceFlowUiConfig
 }
 
@@ -31,18 +32,19 @@ final class ExternalLoginViewModel<Router: RouterHostType, Interactor: ExternalL
 
   private let interactor: Interactor
 
-  public init(router: Router, interactor: Interactor, config: any UIConfigType, documentName: String) {
+  public init(router: Router, interactor: Interactor, config: any UIConfigType, documentIdentifier: String) {
     guard let config = config as? IssuanceFlowUiConfig else {
       fatalError("ExternalLoginViewModel:: Invalid configuraton")
     }
     self.interactor = interactor
+    let documentIdentifier = DocumentIdentifier(rawValue: documentIdentifier)
     super.init(
       router: router,
       initialState: .init(
         error: nil,
-        title: .issuanceExternalLoadingTitle([documentName]),
+        title: .issuanceExternalLoadingTitle([documentIdentifier.localizedTitle]),
         caption: .issuanceExternalLoadingCaption,
-        documentName: documentName,
+        documentIdentifier: documentIdentifier.rawValue,
         config: config
       )
     )
@@ -60,7 +62,7 @@ final class ExternalLoginViewModel<Router: RouterHostType, Interactor: ExternalL
     router.push(
       with: .issuanceSuccess(
         config: viewState.config,
-        documentName: viewState.documentName
+        documentIdentifier: viewState.documentIdentifier
       )
     )
 
@@ -92,7 +94,7 @@ final class ExternalLoginViewModel<Router: RouterHostType, Interactor: ExternalL
           error: error,
           title: previous.title,
           caption: previous.caption,
-          documentName: previous.documentName,
+          documentIdentifier: previous.documentIdentifier,
           config: previous.config
         )
     }

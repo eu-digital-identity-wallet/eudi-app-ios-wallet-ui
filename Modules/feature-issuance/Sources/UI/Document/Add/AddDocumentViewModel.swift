@@ -16,6 +16,7 @@
 import Foundation
 import logic_ui
 import logic_resources
+import logic_business
 import feature_common
 
 struct AddDocumentViewState: ViewState {
@@ -62,8 +63,8 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
     }
   }
 
-  func routeToIssuance(for docName: String) {
-    router.push(with: .issuanceExternalLogin(config: viewState.config, documentName: docName))
+  func routeToIssuance(for documentIdentifier: DocumentIdentifier) {
+    router.push(with: .issuanceExternalLogin(config: viewState.config, documentIdentifier: documentIdentifier.rawValue))
   }
 
   func pop() {

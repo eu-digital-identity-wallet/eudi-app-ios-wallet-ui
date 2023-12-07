@@ -29,19 +29,21 @@ struct DocumentSuccessState: ViewState {
 final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: DocumentSuccessInteractorType>: BaseViewModel<Router, DocumentSuccessState> {
 
   private let interactor: Interactor
+  private let documentIdentifier: String
 
-  public init(router: Router, interactor: Interactor, config: any UIConfigType, documentName: String) {
+  public init(router: Router, interactor: Interactor, config: any UIConfigType, documentIdentifier: String) {
     guard let config = config as? IssuanceFlowUiConfig else {
       fatalError("ExternalLoginViewModel:: Invalid configuraton")
     }
     self.interactor = interactor
+    self.documentIdentifier = documentIdentifier
     super.init(
       router: router,
       initialState: .init(
         error: nil,
         title: .issuanceSuccessTitle,
-        caption: .issuanceSuccessCaption([documentName]),
-        holderName: "Jane Doe",
+        caption: .issuanceSuccessCaption([interactor.getDocumentName(for: documentIdentifier)]),
+        holderName: interactor.getHoldersName(for: documentIdentifier),
         config: config
       )
     )
@@ -52,9 +54,9 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
     var flow: IssuanceDetailUiConfig.Flow {
       switch viewState.config.flow {
       case .noDocument:
-        return .noDocument("id")
+        return .noDocument(documentIdentifier)
       case .extraDocument:
-        return .extraDocument("id")
+        return .extraDocument(documentIdentifier)
       }
     }
 
