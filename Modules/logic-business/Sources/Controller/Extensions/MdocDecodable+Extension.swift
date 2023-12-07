@@ -23,16 +23,25 @@ public extension MdocDecodable {
   func getExpiryDate() -> String? {
     switch self {
     case let pid as EuPidModel:
-      pid.expiry_date
+      if let expiryDate = pid.expiry_date {
+        return tryParseDate(dateString: expiryDate)
+      } else {
+        return nil
+      }
     case let mdl as IsoMdlModel:
-      mdl.expiryDate
+      if let expiryDate = mdl.expiryDate {
+        return tryParseDate(dateString: expiryDate)
+      } else {
+        return nil
+      }
     case let generic as GenericMdocModel:
-      generic.displayStrings.first(
+      return generic.displayStrings.first(
         where: {
           $0.name.replacingOccurrences(of: "_", with: "").lowercased() == "expirydate"
         }
       )?.value
-    default: nil
+    default:
+      return nil
     }
   }
 
@@ -102,13 +111,20 @@ public extension MdocDecodable {
           }
           partialResult +=  """
                             \(LocalizableString.shared.get(with: .vehicleCategory)): \(privilege.vehicleCategoryCode)
-                            \(LocalizableString.shared.get(with: .dateOfIssue)): \(issueDate)
-                            \(LocalizableString.shared.get(with: .dateOfExpiry)): \(expiryDate)
+                            \(LocalizableString.shared.get(with: .dateOfIssue)): \(tryParseDate(dateString: issueDate))
+                            \(LocalizableString.shared.get(with: .dateOfExpiry)): \(tryParseDate(dateString: expiryDate))
 
                             """
         })
           .dropLast()),
       order: IsoMdlModel.CodingKeys.allCases.firstIndex(of: .drivingPrivileges) ?? .max
+    )
+  }
+
+  func tryParseDate(dateString: String) -> String {
+    Locale.current.localizedDateTime(
+      date: dateString,
+      uiFormatter: "dd MMM yyyy"
     )
   }
 }

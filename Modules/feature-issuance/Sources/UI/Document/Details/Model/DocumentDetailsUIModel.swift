@@ -83,7 +83,7 @@ extension MdocDecodable {
         .init(
           id: UUID().uuidString,
           title: LocalizableString.shared.get(with: .dynamic(key: $0.name)),
-          value: $0.value
+          value: tryParseDate(dateString: $0.value)
         )
       }
     +
