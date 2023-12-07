@@ -21,26 +21,25 @@ import logic_resources
 public extension MdocDecodable {
 
   func getExpiryDate() -> String? {
-    switch self {
+
+    let expiryDate: String? = switch self {
     case let pid as EuPidModel:
-      if let expiryDate = pid.expiry_date {
-        return tryParseDate(dateString: expiryDate)
-      } else {
-        return nil
-      }
+      pid.expiry_date
     case let mdl as IsoMdlModel:
-      if let expiryDate = mdl.expiryDate {
-        return tryParseDate(dateString: expiryDate)
-      } else {
-        return nil
-      }
+      mdl.expiryDate
     case let generic as GenericMdocModel:
-      return generic.displayStrings.first(
+      generic.displayStrings.first(
         where: {
           $0.name.replacingOccurrences(of: "_", with: "").lowercased() == "expirydate"
         }
       )?.value
     default:
+      nil
+    }
+
+    if let expiryDate {
+      return tryParseDate(dateString: expiryDate)
+    } else {
       return nil
     }
   }

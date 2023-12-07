@@ -84,7 +84,6 @@ public extension DocumentUIModel {
 extension Array where Element == MdocDecodable {
   func transformToDocumentUi() -> [DocumentUIModel] {
     self.map { item in
-
       return .init(
         id: UUID().uuidString,
         value: .init(

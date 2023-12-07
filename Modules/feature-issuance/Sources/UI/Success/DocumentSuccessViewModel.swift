@@ -32,12 +32,17 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
   private let documentIdentifier: String
 
   public init(router: Router, interactor: Interactor, config: any UIConfigType, documentIdentifier: String) {
+
     guard let config = config as? IssuanceFlowUiConfig else {
       fatalError("ExternalLoginViewModel:: Invalid configuraton")
     }
+
     self.interactor = interactor
     self.documentIdentifier = documentIdentifier
+
+    // MARK: - TODO REMOVE ONCE REAL DATA
     interactor.addData()
+
     super.init(
       router: router,
       initialState: .init(
