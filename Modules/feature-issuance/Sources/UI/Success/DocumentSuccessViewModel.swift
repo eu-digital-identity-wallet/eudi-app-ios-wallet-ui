@@ -37,6 +37,7 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
     }
     self.interactor = interactor
     self.documentIdentifier = documentIdentifier
+    interactor.addData()
     super.init(
       router: router,
       initialState: .init(

@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   private lazy var configSecurityLogic = ConfigProvider.shared.getConfigSecurityLogic()
   private lazy var prefsController: PrefsControllerType = PrefsController()
   private lazy var keyChainController: KeyChainControllerType = KeyChainController()
+  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
 
   func application(
     _ application: UIApplication,
@@ -63,6 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   private func manageStorage() {
     if !prefsController.getBool(forKey: .runAtLeastOnce) {
       keyChainController.clear()
+      walletKitController.loadSampleData(dataFiles: ["null"])
       prefsController.setValue(true, forKey: .runAtLeastOnce)
     }
   }
