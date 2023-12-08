@@ -53,7 +53,7 @@ extension BearerHeaderView {
             .foregroundColor(ThemeManager.shared.color.black)
           HStack {
             Text(.custom(item.value.name))
-              .typography(ThemeManager.shared.font.headlineMedium)
+              .typography(ThemeManager.shared.font.headlineSmall)
               .minimumScaleFactor(0.5)
               .lineLimit(1)
               .foregroundColor(ThemeManager.shared.color.black)

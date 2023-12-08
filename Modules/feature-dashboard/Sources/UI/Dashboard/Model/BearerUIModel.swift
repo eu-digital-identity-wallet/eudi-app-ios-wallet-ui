@@ -53,8 +53,8 @@ extension Array where Element == MdocDecodable {
     var name: String?
 
     self.forEach { item in
-      if let tempName = item.getBearersName() {
-        name = tempName
+      if let bearerName = item.getBearersName() {
+        name = bearerName.first
       }
 
       if let tempImage = item.getPortrait() {

@@ -44,17 +44,17 @@ public extension MdocDecodable {
     }
   }
 
-  func getBearersName() -> String? {
-    var name: String?
+  func getBearersName() -> (first: String, last: String)? {
+    var name: (first: String, last: String)?
 
     switch self {
     case let pid as EuPidModel:
       if let firstName = pid.given_name, let lastName = pid.family_name {
-        name = "\(firstName) \(lastName)"
+        name = (firstName, lastName)
       }
     case let mdl as IsoMdlModel:
       if let firstName = mdl.givenName, let lastName = mdl.familyName {
-        name = "\(firstName) \(lastName)"
+        name = (firstName, lastName)
       }
     case let generic as GenericMdocModel:
       if
@@ -68,7 +68,7 @@ public extension MdocDecodable {
             $0.name.replacingOccurrences(of: "_", with: "").lowercased() == "familyname"
           }
         )?.value {
-        name = "\(firstName) \(lastName)"
+        name = (firstName, lastName)
       }
     default: break
     }

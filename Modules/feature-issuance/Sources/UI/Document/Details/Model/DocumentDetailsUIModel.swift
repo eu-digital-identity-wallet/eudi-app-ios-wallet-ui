@@ -96,9 +96,16 @@ extension MdocDecodable {
           )
       }
 
+    var bearerName: String {
+      guard let fullName = getBearersName() else {
+        return ""
+      }
+      return "\(fullName.first) \(fullName.last)"
+    }
+
     return .init(
       documentName: LocalizableString.shared.get(with: .dynamic(key: title)),
-      holdersName: getBearersName() ?? "Unknown",
+      holdersName: bearerName,
       holdersImage: getPortrait() ?? Theme.shared.image.user,
       documentFields: documentFields
     )

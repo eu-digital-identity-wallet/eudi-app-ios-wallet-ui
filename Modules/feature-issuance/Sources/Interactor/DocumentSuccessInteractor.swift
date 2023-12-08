@@ -32,7 +32,12 @@ public final class DocumentSuccessInteractor: DocumentSuccessInteractorType {
   }
 
   public func getHoldersName(for documentIdentifier: String) -> String? {
-    walletController.fetchDocument(with: documentIdentifier)?.getBearersName()
+    guard
+      let bearerName = walletController.fetchDocument(with: documentIdentifier)?.getBearersName()
+    else {
+      return nil
+    }
+    return  "\(bearerName.first) \(bearerName.last)"
   }
 
   public func getDocumentName(for documentIdentifier: String) -> String {
