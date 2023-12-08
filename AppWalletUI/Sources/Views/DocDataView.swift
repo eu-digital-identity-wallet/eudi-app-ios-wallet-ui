@@ -77,7 +77,7 @@ struct DocDataView: View {
 				}
 			}
 		}.confirmationDialog("Confirmation", isPresented: $isPresentingConfirm) { Button("Remove \(title) ?", role: .destructive) {
-			dismiss(); storage.deleteDocument(docType: doc.docType) } }
+			dismiss(); Task { try await storage.deleteDocument(docType: doc.docType) } } }
 	} // end body
 	
 	var imageFields = [IsoMdlModel.CodingKeys.portrait.rawValue, IsoMdlModel.CodingKeys.signatureUsualMark.rawValue]

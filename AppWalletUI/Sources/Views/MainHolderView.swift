@@ -34,8 +34,10 @@ struct MainHolderView: View {
 					Text("no_documents").italic().font(.footnote)
 					Text("start_by_adding_sample_documents").italic().font(.footnote)
 					Button {
-						do { try userWallet.loadSampleData() }
+						Task {
+							do { try await userWallet.loadSampleData() }
 						catch { hasError = true; uiError = error as? StorageError; print(error.localizedDescription) }
+					}
 					} label: {
 						Text("add_sample_documents").padding(12)
 					}.padding(.top, 20).tint(Color("AccentColor"))
@@ -51,13 +53,22 @@ struct MainHolderView: View {
 						DocButton(title: NSLocalizedString(mdlModel.title, comment: ""), subtitle: mdlModel.docType)
 					}.accessibilityIdentifier("IsoMdlButton")
 				}
+				ForEach(storage.otherModels, id: \.docType) { model in
+					NavigationLink(value: RouteDestination.docView(docType: model.docType)) {
+						DocButton(title: NSLocalizedString(model.title, comment: ""), subtitle: model.docType)
+					}
+				}
+
 				Spacer()
 				if storage.hasData {
 					Button(action: { flow = .ble; path.append(RouteDestination.shareView(flow: flow)) }, label: {
 						RoundedRectangle(cornerRadius: 6).fill(Color("AccentColor")).frame(maxHeight: 50).overlay() {Text("share").foregroundColor(.white).font(.system(size: 18)) }
 					}).accessibilityIdentifier("Share")
 				}
-			}.navigationDestination(for: RouteDestination.self) { destination in
+			}.task {
+				try? await	userWallet.loadDocuments()
+			}
+			.navigationDestination(for: RouteDestination.self) { destination in
 				switch destination {
 					  case .docView(let docType):
 					DocDataView(docType: docType, storage: storage)
