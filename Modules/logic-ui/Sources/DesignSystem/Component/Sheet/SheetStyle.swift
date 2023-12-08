@@ -21,9 +21,9 @@ public struct SheetStyle {
 
   public static var iphoneSheetStyle: PSIphoneStyle {
     return PSIphoneStyle(
-      background: .solid(ThemeManager.shared.color.backgroundPaper),
+      background: .solid(Theme.shared.color.backgroundPaper),
       handleBarStyle: .none,
-      cover: .enabled(Color.black.opacity(0.5)),
+      cover: .enabled(Theme.shared.color.material.onBackground.opacity(0.5)),
       cornerRadius: 20
     )
   }
