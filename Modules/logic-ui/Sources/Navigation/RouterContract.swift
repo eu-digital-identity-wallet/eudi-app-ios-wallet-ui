@@ -27,8 +27,8 @@ public indirect enum AppRoute: Equatable {
   case faqs
   case dashboard
   case biometry(config: any UIConfigType)
-  case crossDeviceLoader(String)
-  case crossDeviceRequest
+  case crossDeviceLoader(String, presentationCoordinator: PresentationSessionCoordinatorType)
+  case crossDeviceRequest(presentationCoordinator: PresentationSessionCoordinatorType)
   case sameDeviceLoader(String)
   case sameDeviceRequest
   case welcome

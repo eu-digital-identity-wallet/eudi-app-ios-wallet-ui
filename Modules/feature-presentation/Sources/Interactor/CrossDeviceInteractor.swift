@@ -16,19 +16,47 @@
 import Foundation
 import logic_api
 import logic_business
+import feature_common
 
 public enum CrossDevicePartialState {
   case success
   case failure(Error)
 }
 
+public enum CrossDevicePartialStateState {
+  case success([RequestDataCell], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
+  case failure(Error)
+}
+
 public protocol CrossDeviceInteractorType {
+  var presentationCoordinator: PresentationSessionCoordinatorType { get }
   func doWork() async -> CrossDevicePartialState
 }
 
 public final actor CrossDeviceInteractor: CrossDeviceInteractorType {
 
-  public init() {}
+  public let presentationCoordinator: PresentationSessionCoordinatorType
+  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
+
+  public init(with presentationCoordinator: PresentationSessionCoordinatorType) {
+    self.presentationCoordinator = presentationCoordinator
+  }
+
+  public func onRequestReceived() async -> CrossDevicePartialStateState {
+    do {
+      let response = try await presentationSessionCoordinator.requestReceived()
+      return .success(
+        RequestDataUiModel.items(
+          for: response.items
+        ),
+        relyingParty: getVerifierName(response: response),
+        dataRequestInfo: response.dataRequestInfo,
+        isTrusted: response.isTrusted
+      )
+    } catch {
+      return .failure(error)
+    }
+  }
 
   public func doWork() async -> CrossDevicePartialState {
     do {

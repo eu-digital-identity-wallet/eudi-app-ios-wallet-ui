@@ -25,6 +25,7 @@ public protocol WalletKitControllerType {
   var activeCoordinator: PresentationSessionCoordinatorType? { get }
 
   func startProximityPresentation() -> PresentationSessionCoordinatorType
+  func startRemotePresentation(urlString: String) -> PresentationSessionCoordinatorType
   func stopPresentation()
   func fetchDocuments() -> [MdocDecodable]
   func fetchDocument(with id: String) -> MdocDecodable?
@@ -53,6 +54,20 @@ public final class WalletKitController: WalletKitControllerType {
     self.stopPresentation()
     let session = wallet.beginPresentation(flow: .ble)
     let presentationSessionCoordinator = ProximityPresentationSessionCoordinator(session: session)
+    self.activeCoordinator = presentationSessionCoordinator
+    presentationSessionCoordinator.onSuccess {
+      stopPresentation()
+    }
+    return presentationSessionCoordinator
+  }
+
+  public func startRemotePresentation(urlString: String) -> PresentationSessionCoordinatorType {
+    self.stopPresentation()
+
+    let data = urlString.data(using: .utf8) ?? Data()
+
+    let session = wallet.beginPresentation(flow: .openid4vp(qrCode: data))
+    let presentationSessionCoordinator = RemoteSessionCoordinator(session: session)
     self.activeCoordinator = presentationSessionCoordinator
     presentationSessionCoordinator.onSuccess {
       stopPresentation()

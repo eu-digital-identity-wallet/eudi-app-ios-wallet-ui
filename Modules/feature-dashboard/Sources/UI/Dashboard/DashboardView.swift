@@ -106,7 +106,7 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
     }
     .fullScreenCover(isPresented: $viewModel.onScan) {
       ScannerView(dismiss: $viewModel.onScan) { result in
-        print(result)
+        viewModel.onScanSuccess(scanResult: result)
       }
     }
     .onChange(of: scenePhase) { phase in

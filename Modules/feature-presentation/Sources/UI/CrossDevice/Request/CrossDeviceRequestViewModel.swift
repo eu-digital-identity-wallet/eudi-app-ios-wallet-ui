@@ -51,11 +51,14 @@ final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: Cros
         caption: .requestDataShareBiometryCaption,
         quickPinOnlyCaption: .requestDataShareBiometryCaption,
         navigationSuccessConfig: .init(
-          screen: .crossDeviceLoader(getRelyingParty()),
+          screen: .crossDeviceLoader(
+            getRelyingParty(),
+            presentationCoordinator: interactor.presentationCoordinator
+          ),
           navigationType: .push
         ),
         navigationBackConfig: .init(
-          screen: .crossDeviceRequest,
+          screen: .dashboard,
           navigationType: .pop
         ),
         isPreAuthorization: false,

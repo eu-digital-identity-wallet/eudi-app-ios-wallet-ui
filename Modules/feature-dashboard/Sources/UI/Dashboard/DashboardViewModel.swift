@@ -145,6 +145,16 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
     }
   }
 
+  func onScanSuccess(scanResult: String) {
+    router.push(
+      with: .crossDeviceRequest(
+        presentationCoordinator: WalletKitController.shared.startRemotePresentation(
+          urlString: scanResult
+        )
+      )
+    )
+  }
+
   private func setNewState(
     isLoading: Bool = false,
     documents: [DocumentUIModel]? = nil,
