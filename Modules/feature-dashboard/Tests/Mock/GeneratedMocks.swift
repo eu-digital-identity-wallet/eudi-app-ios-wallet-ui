@@ -60,11 +60,11 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
     
     
     
-    public func getBleAvailability() -> AnyPublisher<ReachabilityController.BleAvailibity, Never> {
+    public func getBleAvailability() async -> ReachabilityController.BleAvailibity {
         
-    return cuckoo_manager.call(
+    return await cuckoo_manager.call(
     """
-    getBleAvailability() -> AnyPublisher<ReachabilityController.BleAvailibity, Never>
+    getBleAvailability() async -> ReachabilityController.BleAvailibity
     """,
             parameters: (),
             escapingParameters: (),
@@ -72,7 +72,7 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: __defaultImplStub!.getBleAvailability())
+            defaultCall: await __defaultImplStub!.getBleAvailability())
         
     }
     
@@ -119,11 +119,11 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
         
         
         
-        func getBleAvailability() -> Cuckoo.ProtocolStubFunction<(), AnyPublisher<ReachabilityController.BleAvailibity, Never>> {
+        func getBleAvailability() -> Cuckoo.ProtocolStubFunction<(), ReachabilityController.BleAvailibity> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockDashboardInteractorType.self, method:
     """
-    getBleAvailability() -> AnyPublisher<ReachabilityController.BleAvailibity, Never>
+    getBleAvailability() async -> ReachabilityController.BleAvailibity
     """, parameterMatchers: matchers))
         }
         
@@ -170,11 +170,11 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
         
         
         @discardableResult
-        func getBleAvailability() -> Cuckoo.__DoNotUse<(), AnyPublisher<ReachabilityController.BleAvailibity, Never>> {
+        func getBleAvailability() -> Cuckoo.__DoNotUse<(), ReachabilityController.BleAvailibity> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    getBleAvailability() -> AnyPublisher<ReachabilityController.BleAvailibity, Never>
+    getBleAvailability() async -> ReachabilityController.BleAvailibity
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -212,8 +212,8 @@ public class DashboardInteractorTypeStub: DashboardInteractorType {
     
     
     
-    public func getBleAvailability() -> AnyPublisher<ReachabilityController.BleAvailibity, Never>  {
-        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<ReachabilityController.BleAvailibity, Never>).self)
+    public func getBleAvailability() async -> ReachabilityController.BleAvailibity  {
+        return DefaultValueRegistry.defaultValue(for: (ReachabilityController.BleAvailibity).self)
     }
     
     

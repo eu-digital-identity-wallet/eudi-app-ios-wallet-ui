@@ -89,23 +89,20 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
   }
 
   func onShare() {
-    interactor.getBleAvailability()
-      .sink { [weak self] availability in
-        guard let self = self else { return }
-        switch availability {
-        case .available:
-          self.router.push(
-            with: .proximityConnection(
-              presentationCoordinator: WalletKitController.shared.startProximityPresentation()
-            )
+    Task { [weak self] in
+      switch await self?.interactor.getBleAvailability() {
+      case .available:
+        self?.router.push(
+          with: .proximityConnection(
+            presentationCoordinator: WalletKitController.shared.startProximityPresentation()
           )
-        case .noPermission, .disabled:
-          self.toggleBleModal()
-        default:
-          break
-        }
+        )
+      case .noPermission, .disabled:
+        self?.toggleBleModal()
+      default:
+        break
       }
-      .store(in: &cancellables)
+    }
   }
 
   func toggleBleModal() {
