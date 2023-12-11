@@ -151,11 +151,9 @@ public struct PinTextField: View {
     return TextField(
       "",
       text: boundPin,
-      onEditingChanged: {
-        isEditing in
+      onEditingChanged: { isEditing in
         self.isInEditMode = isEditing
-        if isEditing,
-           let _ = self.stateForDigit[safe: numericText.count] {
+        if isEditing, self.stateForDigit[safe: numericText.count] != nil {
           self.stateForDigit[numericText.count] = .active
         }
       },

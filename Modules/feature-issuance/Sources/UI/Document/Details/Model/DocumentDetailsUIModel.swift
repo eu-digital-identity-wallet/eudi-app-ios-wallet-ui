@@ -73,8 +73,8 @@ public extension DocumentDetailsUIModel {
 
 extension MdocDecodable {
   func transformToDocumentDetailsUi() -> DocumentDetailsUIModel {
-    var nameValues = displayStrings + [getDrivingPrivileges()]
 
+    let nameValues = displayStrings + [getDrivingPrivileges()]
     let documentFields: [DocumentDetailsUIModel.DocumentField] =
     nameValues
       .compactMap({$0})

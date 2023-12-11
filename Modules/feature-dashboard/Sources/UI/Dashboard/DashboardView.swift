@@ -22,6 +22,7 @@ import feature_common
 public struct DashboardView<Router: RouterHostType, Interactor: DashboardInteractorType, DeepLinkController: DeepLinkControllerType>: View {
 
   @ObservedObject private var viewModel: DashboardViewModel<Router, Interactor, DeepLinkController>
+  @Environment(\.scenePhase) var scenePhase
 
   public init(with router: Router, and interactor: Interactor, also deepLinkController: DeepLinkController) {
     self.viewModel = .init(router: router, interactor: interactor, deepLinkController: deepLinkController)
@@ -88,6 +89,18 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
         }
       }
     }
+    .sheetDialog(isPresented: $viewModel.isBleModalShowing) {
+      VStack(spacing: SPACING_MEDIUM) {
+
+        ContentTitle(
+          title: .bleDisabledModalTitle,
+          caption: .bleDisabledModalCaption
+        )
+
+        WrapButtonView(style: .primary, title: .bleDisabledModalButton, onAction: viewModel.onBleSettings())
+        WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.toggleBleModal())
+      }
+    }
     .task {
       await viewModel.fetch()
     }
@@ -95,6 +108,9 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
       ScannerView(dismiss: $viewModel.onScan) { result in
         print(result)
       }
+    }
+    .onChange(of: scenePhase) { phase in
+      self.viewModel.setPhase(with: phase)
     }
   }
 }

@@ -2585,9 +2585,223 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import BluetoothKit
 import Combine
 import Foundation
 import Network
+import UIKit
+
+
+
+
+
+
+public class MockReachabilityControllerType: ReachabilityControllerType, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = ReachabilityControllerType
+    
+    public typealias Stubbing = __StubbingProxy_ReachabilityControllerType
+    public typealias Verification = __VerificationProxy_ReachabilityControllerType
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: ReachabilityControllerType?
+
+    public func enableDefaultImplementation(_ stub: ReachabilityControllerType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+    
+    
+    
+    public var networkPath: NWPath {
+        get {
+            return cuckoo_manager.getter("networkPath",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.networkPath)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+    
+    
+    
+    public func getBleAvailibity() -> AnyPublisher<ReachabilityController.BleAvailibity, Never> {
+        
+    return cuckoo_manager.call(
+    """
+    getBleAvailibity() -> AnyPublisher<ReachabilityController.BleAvailibity, Never>
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getBleAvailibity())
+        
+    }
+    
+    
+    
+    
+    
+    public func openBleSettings()  {
+        
+    return cuckoo_manager.call(
+    """
+    openBleSettings()
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.openBleSettings())
+        
+    }
+    
+    
+
+    public struct __StubbingProxy_ReachabilityControllerType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        var networkPath: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockReachabilityControllerType, NWPath> {
+            return .init(manager: cuckoo_manager, name: "networkPath")
+        }
+        
+        
+        
+        
+        
+        func getBleAvailibity() -> Cuckoo.ProtocolStubFunction<(), AnyPublisher<ReachabilityController.BleAvailibity, Never>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockReachabilityControllerType.self, method:
+    """
+    getBleAvailibity() -> AnyPublisher<ReachabilityController.BleAvailibity, Never>
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func openBleSettings() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockReachabilityControllerType.self, method:
+    """
+    openBleSettings()
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_ReachabilityControllerType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+        
+        
+        var networkPath: Cuckoo.VerifyReadOnlyProperty<NWPath> {
+            return .init(manager: cuckoo_manager, name: "networkPath", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+    
+        
+        
+        
+        @discardableResult
+        func getBleAvailibity() -> Cuckoo.__DoNotUse<(), AnyPublisher<ReachabilityController.BleAvailibity, Never>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    getBleAvailibity() -> AnyPublisher<ReachabilityController.BleAvailibity, Never>
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func openBleSettings() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    openBleSettings()
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+public class ReachabilityControllerTypeStub: ReachabilityControllerType {
+    
+    
+    
+    
+    public var networkPath: NWPath {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (NWPath).self)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+    
+    
+    
+    public func getBleAvailibity() -> AnyPublisher<ReachabilityController.BleAvailibity, Never>  {
+        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<ReachabilityController.BleAvailibity, Never>).self)
+    }
+    
+    
+    
+    
+    
+    public func openBleSettings()   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+}
+
+
+
+
 
 import Cuckoo
 @testable import logic_business

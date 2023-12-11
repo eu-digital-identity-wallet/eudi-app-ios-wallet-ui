@@ -197,6 +197,12 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "date_of_issue")
     case .dateOfExpiry:
       bundle.localizedString(forKey: "date_of_expiry")
+    case .bleDisabledModalTitle:
+      bundle.localizedString(forKey: "ble_disabled_modal_title")
+    case .bleDisabledModalCaption:
+      bundle.localizedString(forKey: "ble_disabled_modal_content")
+    case .bleDisabledModalButton:
+      bundle.localizedString(forKey: "ble_disabled_modal_button")
     }
   }
 
@@ -288,6 +294,9 @@ public extension LocalizableString {
     case vehicleCategory
     case dateOfIssue
     case dateOfExpiry
+    case bleDisabledModalTitle
+    case bleDisabledModalCaption
+    case bleDisabledModalButton
   }
 }
 

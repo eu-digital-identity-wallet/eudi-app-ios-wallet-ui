@@ -22,6 +22,8 @@ struct DashboardState: ViewState {
   let isLoading: Bool
   let documents: [DocumentUIModel]
   let bearer: BearerUIModel
+  let phase: ScenePhase
+  let pendingBleModalAction: Bool
 }
 
 @MainActor
@@ -31,6 +33,7 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
   private let deepLinkController: DeepLinkController
 
   @Published var isMoreModalShowing: Bool = false
+  @Published var isBleModalShowing: Bool = false
   @Published var onScan: Bool = false
 
   var bearerName: String {
@@ -45,7 +48,9 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
       initialState: .init(
         isLoading: true,
         documents: DocumentUIModel.mocks(),
-        bearer: BearerUIModel.mock()
+        bearer: BearerUIModel.mock(),
+        phase: .active,
+        pendingBleModalAction: false
       )
     )
   }
@@ -60,9 +65,18 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
       handleDeepLink()
     case .failure:
       setNewState(
-        documents: [],
-        bearer: nil
+        documents: []
       )
+    }
+  }
+
+  func setPhase(with phase: ScenePhase) {
+    setNewState(phase: phase)
+    if phase == .active && viewState.pendingBleModalAction {
+      DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+        self.setNewState(pendingBleModalAction: false)
+        self.toggleBleModal()
+      }
     }
   }
 
@@ -73,8 +87,38 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
       )
     )
   }
+
   func onShare() {
-    router.push(with: .proximityConnection(presentationCoordinator: WalletKitController.shared.startProximityPresentation()))
+    interactor.getBleAvailability()
+      .sink { [weak self] availability in
+        guard let self = self else { return }
+        switch availability {
+        case .available:
+          self.router.push(
+            with: .proximityConnection(
+              presentationCoordinator: WalletKitController.shared.startProximityPresentation()
+            )
+          )
+        case .noPermission, .disabled:
+          self.toggleBleModal()
+        default:
+          break
+        }
+      }
+      .store(in: &cancellables)
+  }
+
+  func toggleBleModal() {
+    guard viewState.phase == .active else {
+      setNewState(pendingBleModalAction: true)
+      return
+    }
+    isBleModalShowing = !isBleModalShowing
+  }
+
+  func onBleSettings() {
+    toggleBleModal()
+    interactor.openBleSettings()
   }
 
   func onAdd() {
@@ -104,13 +148,17 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
   private func setNewState(
     isLoading: Bool = false,
     documents: [DocumentUIModel]? = nil,
-    bearer: BearerUIModel? = nil
+    bearer: BearerUIModel? = nil,
+    phase: ScenePhase? = nil,
+    pendingBleModalAction: Bool? = nil
   ) {
     setState { previousSate in
         .init(
           isLoading: isLoading,
           documents: documents ?? previousSate.documents,
-          bearer: bearer ?? previousSate.bearer
+          bearer: bearer ?? previousSate.bearer,
+          phase: phase ?? previousSate.phase,
+          pendingBleModalAction: pendingBleModalAction ?? previousSate.pendingBleModalAction
         )
     }
   }

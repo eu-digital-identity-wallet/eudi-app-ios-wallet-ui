@@ -15,6 +15,8 @@
  */
 import Foundation
 import logic_business
+import logic_resources
+import Combine
 
 public enum DashboardPartialState {
   case success(BearerUIModel, [DocumentUIModel])
@@ -23,29 +25,16 @@ public enum DashboardPartialState {
 
 public protocol DashboardInteractorType {
   func fetchDashboard() async -> DashboardPartialState
+  func getBleAvailability() -> AnyPublisher<ReachabilityController.BleAvailibity, Never>
+  func openBleSettings()
 }
 
-public final actor DashboardInteractor: DashboardInteractorType {
+public final class DashboardInteractor: DashboardInteractorType {
 
   private lazy var walletController: WalletKitControllerType = WalletKitController.shared
+  private lazy var reachabilityController: ReachabilityControllerType = ReachabilityController.shared
 
   public init() {}
-
-  private func fetchBearer() -> BearerUIModel? {
-    let documents = self.walletController.fetchDocuments()
-    guard !documents.isEmpty else {
-      return nil
-    }
-    return documents.transformToBearerUi()
-  }
-
-  private func fetchDocuments() -> [DocumentUIModel]? {
-    let documents = self.walletController.fetchDocuments()
-    guard !documents.isEmpty else {
-      return nil
-    }
-    return documents.transformToDocumentUi()
-  }
 
   public func fetchDashboard() async -> DashboardPartialState {
 
@@ -61,5 +50,29 @@ public final actor DashboardInteractor: DashboardInteractorType {
     }
 
     return .success(bearer, document)
+  }
+
+  public func getBleAvailability() -> AnyPublisher<ReachabilityController.BleAvailibity, Never> {
+    return reachabilityController.getBleAvailibity()
+  }
+
+  public func openBleSettings() {
+    reachabilityController.openBleSettings()
+  }
+
+  private func fetchBearer() -> BearerUIModel? {
+    let documents = self.walletController.fetchDocuments()
+    guard !documents.isEmpty else {
+      return nil
+    }
+    return documents.transformToBearerUi()
+  }
+
+  private func fetchDocuments() -> [DocumentUIModel]? {
+    let documents = self.walletController.fetchDocuments()
+    guard !documents.isEmpty else {
+      return nil
+    }
+    return documents.transformToDocumentUi()
   }
 }

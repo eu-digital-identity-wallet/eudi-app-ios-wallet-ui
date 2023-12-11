@@ -37,6 +37,10 @@ let package = Package(
       url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       exact: "0.1.6"
     ),
+    .package(
+      url: "https://github.com/rhummelmose/BluetoothKit.git",
+      branch: "master"
+    ),
     .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
@@ -46,6 +50,7 @@ let package = Package(
         "logic-resources",
         "IOSSecuritySuite",
         "KeychainAccess",
+        "BluetoothKit",
         .product(
           name: "Peppermint",
           package: "peppermint"

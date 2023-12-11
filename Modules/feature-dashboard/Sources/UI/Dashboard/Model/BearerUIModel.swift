@@ -39,7 +39,7 @@ public extension BearerUIModel {
     .init(
       id: UUID().uuidString,
       value: .init(
-        name: "Elena P.",
+        name: "",
         image: Theme.shared.image.user
       )
     )

@@ -232,6 +232,39 @@
         }
       }
     },
+    "ble_disabled_modal_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SETTINGS"
+          }
+        }
+      }
+    },
+    "ble_disabled_modal_content" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable bluetooth to share your information using the QR/TAP option"
+          }
+        }
+      }
+    },
+    "ble_disabled_modal_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable bluetooth?"
+          }
+        }
+      }
+    },
     "cancel_button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -458,7 +491,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "FAQs"
+            "value" : "Enable bluetooth?"
           }
         }
       }
