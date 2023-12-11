@@ -23,14 +23,27 @@ public enum CrossDevicePartialState {
   case failure(Error)
 }
 
-public enum CrossDevicePartialStateState {
+public enum CrossDeviceRequestPartialState {
   case success([RequestDataCell], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
+  case failure(Error)
+}
+
+public enum CrossDeviceResponsePreparationPartialState {
+  case success(RequestItemConvertible)
+  case failure(Error)
+}
+
+public enum CrossDeviceResponsePartialState {
+  case success
   case failure(Error)
 }
 
 public protocol CrossDeviceInteractorType {
   var presentationCoordinator: PresentationSessionCoordinatorType { get }
-  func doWork() async -> CrossDevicePartialState
+
+  func onDeviceEngagement() async -> CrossDeviceRequestPartialState
+  func onResponsePrepare(requestItems: [RequestDataCell]) async -> CrossDeviceResponsePreparationPartialState
+  func onSendResponse() async -> CrossDeviceResponsePartialState
 }
 
 public final actor CrossDeviceInteractor: CrossDeviceInteractorType {
@@ -42,14 +55,19 @@ public final actor CrossDeviceInteractor: CrossDeviceInteractorType {
     self.presentationCoordinator = presentationCoordinator
   }
 
-  public func onRequestReceived() async -> CrossDevicePartialStateState {
+  public func onDeviceEngagement() async -> CrossDeviceRequestPartialState {
+    await presentationCoordinator.initialize()
+    return await onRequestReceived()
+  }
+
+  public func onRequestReceived() async -> CrossDeviceRequestPartialState {
     do {
-      let response = try await presentationSessionCoordinator.requestReceived()
+      let response = try await presentationCoordinator.requestReceived()
       return .success(
         RequestDataUiModel.items(
           for: response.items
         ),
-        relyingParty: getVerifierName(response: response),
+        relyingParty: response.relyingParty,
         dataRequestInfo: response.dataRequestInfo,
         isTrusted: response.isTrusted
       )
@@ -58,9 +76,40 @@ public final actor CrossDeviceInteractor: CrossDeviceInteractorType {
     }
   }
 
-  public func doWork() async -> CrossDevicePartialState {
+  public func onResponsePrepare(requestItems: [RequestDataCell]) async -> CrossDeviceResponsePreparationPartialState {
+    let requestConvertible = requestItems
+      .reduce(into: [RequestDataRow]()) { partialResult, cell in
+        if let item = cell.isDataRow, item.isSelected {
+          partialResult.append(item)
+        }
+
+        if let items = cell.isDataVerification?.items.filter({$0.isSelected}) {
+          partialResult.append(contentsOf: items)
+        }
+      }
+      .reduce(into: RequestItemsWrapper()) {  partialResult, row in
+        var nameSpaceDict = partialResult.requestItems[row.docType, default: [row.namespace: [row.elementKey]]]
+        nameSpaceDict[row.namespace, default: [row.elementKey]].append(row.elementKey)
+        partialResult.requestItems[row.docType] = nameSpaceDict
+      }
+
+    guard requestConvertible.requestItems.isEmpty == false else {
+      return .failure(PresentationSessionError.conversionToRequestItemModel)
+    }
+
+    self.presentationCoordinator.setState(presentationState: .responseToSend(requestConvertible))
+
+    return .success(requestConvertible.asRequestItems())
+  }
+
+  public func onSendResponse() async -> CrossDeviceResponsePartialState {
+
+    guard case PresentationState.responseToSend(let responseItem) = await presentationCoordinator.getState() else {
+      return .failure(PresentationSessionError.invalidState)
+    }
+
     do {
-      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
+      try await presentationCoordinator.sendResponse(response: responseItem)
       return .success
     } catch {
       return .failure(error)

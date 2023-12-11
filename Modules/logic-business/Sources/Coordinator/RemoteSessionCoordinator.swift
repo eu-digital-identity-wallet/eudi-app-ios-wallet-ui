@@ -29,7 +29,7 @@ public final class RemoteSessionCoordinator: PresentationSessionCoordinatorType 
   }
 
   public func initialize() async {
-    let responseData = await session.receiveRequest()
+    _ = await session.receiveRequest()
   }
 
   public func startQrEngagement() async throws -> Data {
@@ -45,15 +45,16 @@ public final class RemoteSessionCoordinator: PresentationSessionCoordinatorType 
       items: session.disclosedDocuments,
       relyingParty: session.readerCertIssuer ?? LocalizableString.shared.get(with: .unknownVerifier),
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
-      // TODO: Update with logic from wallet in order to show or not the trusted verifier checkmark.
-      isTrusted: false
+      isTrusted: session.readerCertIssuerValid == true
     )
     self.presentationStateSubject.value = .requestReceived(presentationRequest)
     return presentationRequest
   }
 
   public func sendResponse(response: RequestItemConvertible) async throws {
+    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems()) {
 
+    }
   }
 
   public func getState() async -> PresentationState {

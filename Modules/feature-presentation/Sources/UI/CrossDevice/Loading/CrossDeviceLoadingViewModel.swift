@@ -63,7 +63,7 @@ final class CrossDeviceLoadingViewModel<Router: RouterHostType, Interactor: Cros
   }
 
   override func doWork() async {
-    switch await interactor.doWork() {
+    switch await interactor.onSendResponse() {
     case .success:
       self.onNavigate(type: .push)
     case .failure(let error):

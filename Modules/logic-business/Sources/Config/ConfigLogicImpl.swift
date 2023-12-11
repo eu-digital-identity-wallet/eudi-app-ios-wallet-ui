@@ -28,4 +28,8 @@ public struct WalletConfig: ConfigLogic {
   public var appVersion: String {
     getBundleValue(key: "CFBundleShortVersionString")
   }
+
+  public var verifierApiUri: String {
+    getBundleValue(key: "Verifier API")
+  }
 }

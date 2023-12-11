@@ -31,21 +31,42 @@ final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: Cros
 
   override func doWork() async {
     self.onStartLoading()
-    switch await interactor.doWork() {
-    case .success:
+    switch await interactor.onDeviceEngagement() {
+    case .success(let items, let relyingParty, _, let isTrusted):
       self.onReceivedItems(
-        with: RequestDataUiModel.mock(),
-        title: .requestDataTitle(["EUDI Wallet"]),
-        relyingParty: "EUDI Wallet",
-        isTrusted: true
+        with: items,
+        title: .requestDataTitle([relyingParty]),
+        relyingParty: relyingParty,
+        isTrusted: isTrusted
       )
     case .failure(let error):
       self.onError(with: error)
     }
   }
 
+  override func onShare() {
+    Task { [weak self] in
+      guard
+        let items = self?.viewState.items,
+        let response = await self?.interactor.onResponsePrepare(requestItems: items)
+      else {
+        return
+      }
+      switch response {
+      case .success:
+        if let route = self?.getSuccessRoute() {
+          self?.router.push(with: route)
+        } else {
+          self?.router.popTo(with: self?.getPopRoute() ?? .dashboard)
+        }
+      case .failure(let error):
+        self?.onError(with: error)
+      }
+    }
+  }
+
   override func getSuccessRoute() -> AppRoute? {
-    .biometry(
+    return .biometry(
       config: UIConfig.Biometry(
         title: getTitle(),
         caption: .requestDataShareBiometryCaption,
@@ -67,8 +88,12 @@ final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: Cros
     )
   }
 
+  override func getPopRoute() -> AppRoute? {
+    return .dashboard
+  }
+
   override func getTitle() -> LocalizableString.Key {
-    .requestDataTitle(["EUDI Conference"])
+    viewState.title
   }
 
   override func getCaption() -> LocalizableString.Key {
@@ -80,7 +105,7 @@ final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: Cros
   }
 
   override func getRelyingParty() -> String {
-    "EUDI Conference"
+    viewState.relyingParty
   }
 
   override func getTitleCaption() -> String {

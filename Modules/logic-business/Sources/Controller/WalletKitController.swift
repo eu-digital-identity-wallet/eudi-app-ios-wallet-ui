@@ -42,9 +42,10 @@ public final class WalletKitController: WalletKitControllerType {
   public private(set) var activeCoordinator: PresentationSessionCoordinatorType?
   private var cancellables = Set<AnyCancellable>()
 
-  internal init() {
+  internal init(configLogic: ConfigLogic = ConfigProvider.shared.getConfigLogic()) {
     wallet.userAuthenticationRequired = false
     wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
+    wallet.openId4VpVerifierApiUri = configLogic.verifierApiUri
   }
 
   public func loadSampleData(dataFiles: [String]) async throws {
