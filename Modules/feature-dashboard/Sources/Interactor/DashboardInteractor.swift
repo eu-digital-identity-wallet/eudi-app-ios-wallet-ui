@@ -25,7 +25,7 @@ public enum DashboardPartialState {
 
 public protocol DashboardInteractorType {
   func fetchDashboard() async -> DashboardPartialState
-  func getBleAvailability() -> AnyPublisher<ReachabilityController.BleAvailibity, Never>
+  func getBleAvailability() async -> ReachabilityController.BleAvailibity
   func openBleSettings()
 }
 
@@ -33,6 +33,8 @@ public final class DashboardInteractor: DashboardInteractorType {
 
   private lazy var walletController: WalletKitControllerType = WalletKitController.shared
   private lazy var reachabilityController: ReachabilityControllerType = ReachabilityController.shared
+
+  private lazy var cancellables = Set<AnyCancellable>()
 
   public init() {}
 
@@ -52,8 +54,12 @@ public final class DashboardInteractor: DashboardInteractorType {
     return .success(bearer, document)
   }
 
-  public func getBleAvailability() -> AnyPublisher<ReachabilityController.BleAvailibity, Never> {
-    return reachabilityController.getBleAvailibity()
+  public func getBleAvailability() async -> ReachabilityController.BleAvailibity {
+    return await withCheckedContinuation { cont in
+      reachabilityController.getBleAvailibity()
+        .sink { cont.resume(returning: $0)}
+        .store(in: &cancellables)
+    }
   }
 
   public func openBleSettings() {

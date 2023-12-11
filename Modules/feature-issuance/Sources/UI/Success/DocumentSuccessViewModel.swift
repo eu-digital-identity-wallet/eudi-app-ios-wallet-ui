@@ -23,13 +23,13 @@ struct DocumentSuccessState: ViewState {
   let caption: LocalizableString.Key
   let holderName: String?
   let config: IssuanceFlowUiConfig
+  let documentIdentifier: String
 }
 
 @MainActor
 final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: DocumentSuccessInteractorType>: BaseViewModel<Router, DocumentSuccessState> {
 
   private let interactor: Interactor
-  private let documentIdentifier: String
 
   public init(router: Router, interactor: Interactor, config: any UIConfigType, documentIdentifier: String) {
 
@@ -38,21 +38,31 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
     }
 
     self.interactor = interactor
-    self.documentIdentifier = documentIdentifier
-
-    // MARK: - TODO REMOVE ONCE REAL DATA
-    interactor.addData()
 
     super.init(
       router: router,
       initialState: .init(
         error: nil,
         title: .issuanceSuccessTitle,
-        caption: .issuanceSuccessCaption([interactor.getDocumentName(for: documentIdentifier)]),
-        holderName: interactor.getHoldersName(for: documentIdentifier),
-        config: config
+        caption: .custom(""),
+        holderName: nil,
+        config: config,
+        documentIdentifier: documentIdentifier
       )
     )
+
+    self.load()
+  }
+
+  // MARK: - TODO REMOVE ONCE REAL DATA
+  private func load() {
+    Task {
+      await interactor.loadSampleData()
+      setNewState(
+        caption: .issuanceSuccessCaption([interactor.getDocumentName(for: viewState.documentIdentifier)]),
+        holderName: interactor.getHoldersName(for: viewState.documentIdentifier)
+      )
+    }
   }
 
   func onIssue() {
@@ -60,9 +70,9 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
     var flow: IssuanceDetailUiConfig.Flow {
       switch viewState.config.flow {
       case .noDocument:
-        return .noDocument(documentIdentifier)
+        return .noDocument(viewState.documentIdentifier)
       case .extraDocument:
-        return .extraDocument(documentIdentifier)
+        return .extraDocument(viewState.documentIdentifier)
       }
     }
 
@@ -76,15 +86,18 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
   }
 
   private func setNewState(
-    error: ContentError.Config? = nil
+    error: ContentError.Config? = nil,
+    caption: LocalizableString.Key? = nil,
+    holderName: String? = nil
   ) {
     setState { previous in
         .init(
           error: error,
           title: previous.title,
-          caption: previous.caption,
-          holderName: previous.holderName,
-          config: previous.config
+          caption: caption ?? previous.caption,
+          holderName: holderName ?? previous.holderName,
+          config: previous.config,
+          documentIdentifier: previous.documentIdentifier
         )
     }
   }

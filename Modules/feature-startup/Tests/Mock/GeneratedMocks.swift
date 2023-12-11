@@ -3120,11 +3120,11 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
     
     
     
-    public func loadSampleData(dataFiles: [String])  {
+    public func loadSampleData(dataFiles: [String]) async throws {
         
-    return cuckoo_manager.call(
+    return try await cuckoo_manager.callThrows(
     """
-    loadSampleData(dataFiles: [String])
+    loadSampleData(dataFiles: [String]) async throws
     """,
             parameters: (dataFiles),
             escapingParameters: (dataFiles),
@@ -3132,7 +3132,47 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: __defaultImplStub!.loadSampleData(dataFiles: dataFiles))
+            defaultCall: await __defaultImplStub!.loadSampleData(dataFiles: dataFiles))
+        
+    }
+    
+    
+    
+    
+    
+    public func clearDocuments() async throws {
+        
+    return try await cuckoo_manager.callThrows(
+    """
+    clearDocuments() async throws
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.clearDocuments())
+        
+    }
+    
+    
+    
+    
+    
+    public func loadDocuments() async throws {
+        
+    return try await cuckoo_manager.callThrows(
+    """
+    loadDocuments() async throws
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.loadDocuments())
         
     }
     
@@ -3206,11 +3246,33 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
         
         
         
-        func loadSampleData<M1: Cuckoo.Matchable>(dataFiles: M1) -> Cuckoo.ProtocolStubNoReturnFunction<([String])> where M1.MatchedType == [String] {
+        func loadSampleData<M1: Cuckoo.Matchable>(dataFiles: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<([String])> where M1.MatchedType == [String] {
             let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: dataFiles) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
     """
-    loadSampleData(dataFiles: [String])
+    loadSampleData(dataFiles: [String]) async throws
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func clearDocuments() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    clearDocuments() async throws
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func loadDocuments() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    loadDocuments() async throws
     """, parameterMatchers: matchers))
         }
         
@@ -3300,7 +3362,31 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
             let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: dataFiles) { $0 }]
             return cuckoo_manager.verify(
     """
-    loadSampleData(dataFiles: [String])
+    loadSampleData(dataFiles: [String]) async throws
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func clearDocuments() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    clearDocuments() async throws
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func loadDocuments() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    loadDocuments() async throws
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -3372,7 +3458,23 @@ public class WalletKitControllerTypeStub: WalletKitControllerType {
     
     
     
-    public func loadSampleData(dataFiles: [String])   {
+    public func loadSampleData(dataFiles: [String]) async throws  {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func clearDocuments() async throws  {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func loadDocuments() async throws  {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

@@ -35,6 +35,7 @@ public final actor StartupInteractor: StartupInteractorType {
   public init() {}
 
   public func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute {
+    try? await walletController.loadDocuments()
     try? await Task.sleep(nanoseconds: splashAnimationDuration.nanoseconds)
     if quickPinInteractor.hasPin() {
       return .biometry(
