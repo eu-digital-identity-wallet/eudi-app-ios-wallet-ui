@@ -23,13 +23,13 @@ struct DocumentSuccessState: ViewState {
   let caption: LocalizableString.Key
   let holderName: String?
   let config: IssuanceFlowUiConfig
+  let documentIdentifier: String
 }
 
 @MainActor
 final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: DocumentSuccessInteractorType>: BaseViewModel<Router, DocumentSuccessState> {
 
   private let interactor: Interactor
-  private let documentIdentifier: String
 
   public init(router: Router, interactor: Interactor, config: any UIConfigType, documentIdentifier: String) {
 
@@ -38,7 +38,6 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
     }
 
     self.interactor = interactor
-    self.documentIdentifier = documentIdentifier
 
     super.init(
       router: router,
@@ -47,7 +46,8 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
         title: .issuanceSuccessTitle,
         caption: .custom(""),
         holderName: nil,
-        config: config
+        config: config,
+        documentIdentifier: documentIdentifier
       )
     )
 
@@ -59,8 +59,8 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
     Task {
       await interactor.loadSampleData()
       setNewState(
-        caption: .issuanceSuccessCaption([interactor.getDocumentName(for: documentIdentifier)]),
-        holderName: interactor.getHoldersName(for: documentIdentifier)
+        caption: .issuanceSuccessCaption([interactor.getDocumentName(for: viewState.documentIdentifier)]),
+        holderName: interactor.getHoldersName(for: viewState.documentIdentifier)
       )
     }
   }
@@ -70,9 +70,9 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
     var flow: IssuanceDetailUiConfig.Flow {
       switch viewState.config.flow {
       case .noDocument:
-        return .noDocument(documentIdentifier)
+        return .noDocument(viewState.documentIdentifier)
       case .extraDocument:
-        return .extraDocument(documentIdentifier)
+        return .extraDocument(viewState.documentIdentifier)
       }
     }
 
@@ -96,7 +96,8 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
           title: previous.title,
           caption: caption ?? previous.caption,
           holderName: holderName ?? previous.holderName,
-          config: previous.config
+          config: previous.config,
+          documentIdentifier: previous.documentIdentifier
         )
     }
   }
