@@ -28,7 +28,9 @@ public protocol WalletKitControllerType {
   func stopPresentation()
   func fetchDocuments() -> [MdocDecodable]
   func fetchDocument(with id: String) -> MdocDecodable?
-  func loadSampleData(dataFiles: [String])
+  func loadSampleData(dataFiles: [String]) async throws
+  func clearDocuments() async throws
+  func loadDocuments() async throws
 }
 
 public final class WalletKitController: WalletKitControllerType {
@@ -40,13 +42,20 @@ public final class WalletKitController: WalletKitControllerType {
   private var cancellables = Set<AnyCancellable>()
 
   internal init() {
-    wallet.loadDocuments()
     wallet.userAuthenticationRequired = false
     wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
   }
 
-  public func loadSampleData(dataFiles: [String]) {
-    try? wallet.loadSampleData(sampleDataFiles: dataFiles)
+  public func loadSampleData(dataFiles: [String]) async throws {
+    return try await wallet.loadSampleData(sampleDataFiles: dataFiles)
+  }
+
+  public func clearDocuments() async throws {
+    return try await wallet.storage.deleteDocuments()
+  }
+
+  public func loadDocuments() async throws {
+    _ = try await wallet.loadDocuments()
   }
 
   public func startProximityPresentation() -> PresentationSessionCoordinatorType {

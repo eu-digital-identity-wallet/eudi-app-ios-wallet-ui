@@ -40,19 +40,29 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
     self.interactor = interactor
     self.documentIdentifier = documentIdentifier
 
-    // MARK: - TODO REMOVE ONCE REAL DATA
-    interactor.addData()
-
     super.init(
       router: router,
       initialState: .init(
         error: nil,
         title: .issuanceSuccessTitle,
-        caption: .issuanceSuccessCaption([interactor.getDocumentName(for: documentIdentifier)]),
-        holderName: interactor.getHoldersName(for: documentIdentifier),
+        caption: .custom(""),
+        holderName: nil,
         config: config
       )
     )
+
+    self.load()
+  }
+
+  // MARK: - TODO REMOVE ONCE REAL DATA
+  private func load() {
+    Task {
+      await interactor.loadSampleData()
+      setNewState(
+        caption: .issuanceSuccessCaption([interactor.getDocumentName(for: documentIdentifier)]),
+        holderName: interactor.getHoldersName(for: documentIdentifier)
+      )
+    }
   }
 
   func onIssue() {
@@ -76,14 +86,16 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
   }
 
   private func setNewState(
-    error: ContentError.Config? = nil
+    error: ContentError.Config? = nil,
+    caption: LocalizableString.Key? = nil,
+    holderName: String? = nil
   ) {
     setState { previous in
         .init(
           error: error,
           title: previous.title,
-          caption: previous.caption,
-          holderName: previous.holderName,
+          caption: caption ?? previous.caption,
+          holderName: holderName ?? previous.holderName,
           config: previous.config
         )
     }

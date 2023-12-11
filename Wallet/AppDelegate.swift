@@ -63,9 +63,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   private func manageStorage() {
     if !prefsController.getBool(forKey: .runAtLeastOnce) {
+      clearDocuments()
       keyChainController.clear()
-      walletKitController.loadSampleData(dataFiles: ["null"])
       prefsController.setValue(true, forKey: .runAtLeastOnce)
+    }
+  }
+
+  private func clearDocuments() {
+    Task {
+      try? await walletKitController.clearDocuments()
     }
   }
 }
