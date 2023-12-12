@@ -50,19 +50,15 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
         documentIdentifier: documentIdentifier
       )
     )
-
-    self.load()
   }
 
-  // MARK: - TODO REMOVE ONCE REAL DATA
-  private func load() {
-    Task {
-      await interactor.loadSampleData()
-      setNewState(
-        caption: .issuanceSuccessCaption([interactor.getDocumentName(for: viewState.documentIdentifier)]),
-        holderName: interactor.getHoldersName(for: viewState.documentIdentifier)
-      )
-    }
+  // MARK: - TODO REWORK ONCE REAL DATA VIA ISSUING
+  func initialize() async {
+    await interactor.loadSampleData()
+    setNewState(
+      caption: .issuanceSuccessCaption([interactor.getDocumentName(for: viewState.documentIdentifier)]),
+      holderName: interactor.getHoldersName(for: viewState.documentIdentifier)
+    )
   }
 
   func onIssue() {

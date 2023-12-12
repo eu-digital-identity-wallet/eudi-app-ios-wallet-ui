@@ -53,6 +53,9 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
 
       footer
     }
+    .task {
+      await viewModel.initialize()
+    }
   }
 
   private var document: some View {
