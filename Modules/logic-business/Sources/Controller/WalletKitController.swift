@@ -110,13 +110,15 @@ extension WalletKitControllerType {
     var displayStrings = wallet.storage.mdocModels
       .compactMap({ $0 })
       .first(where: { $0.docType == documentType.rawValue })?.displayStrings
+      .decodeGender()
+      .parseDates()
+      .mapTrueFalseToLocalizable()
+
     // Check if document type matches one of known models (pid or mdl)
 
-    guard var displayStrings else {
+    guard var displayStrings = displayStrings else {
       return LocalizableString.shared.get(with: .unavailableField)
     }
-
-    decodeGender(displayStrings: &displayStrings)
 
     if documentType == .IsoMdlModel,
        let mdl = wallet.storage.mdlModel {
@@ -161,24 +163,4 @@ extension WalletKitControllerType {
     // Return the value if found, or a static string that field was not found
     return  value ?? LocalizableString.shared.get(with: .unavailableField)
   }
-
-  private func decodeGender(displayStrings: inout [NameValue]) {
-    for (index, string) in displayStrings.enumerated() {
-      if string.name == IsoMdlModel.CodingKeys.sex.rawValue ||
-          string.name == EuPidModel.CodingKeys.gender.rawValue {
-
-        switch string.value {
-        case "1", "male":
-          displayStrings[index].value = "male"
-        case "2", "female":
-          displayStrings[index].value = "female"
-        default:
-          displayStrings[index].value = LocalizableString.shared.get(with: .unavailableField)
-        }
-
-        break
-      }
-    }
-  }
-
 }

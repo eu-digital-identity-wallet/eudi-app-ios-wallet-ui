@@ -78,22 +78,16 @@ extension MdocDecodable {
     let documentFields: [DocumentDetailsUIModel.DocumentField] =
     nameValues
       .compactMap({$0})
+      .decodeGender()
+      .mapTrueFalseToLocalizable()
+      .parseDates()
       .sorted(by: {$0.order < $1.order})
       .map {
         .init(
           id: UUID().uuidString,
           title: LocalizableString.shared.get(with: .dynamic(key: $0.name)),
-          value: tryParseDate(dateString: $0.value)
+          value: $0.value
         )
-      }
-    +
-    ageOverXX
-      .map { key, value in
-          .init(
-            id: UUID().uuidString,
-            title: LocalizableString.shared.get(with: .dynamic(key: "age_over_\(key)")),
-            value: LocalizableString.shared.get(with: value ? .yes : .no)
-          )
       }
 
     var bearerName: String {
