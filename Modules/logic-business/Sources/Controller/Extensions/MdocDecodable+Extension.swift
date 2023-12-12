@@ -127,3 +127,72 @@ public extension MdocDecodable {
     )
   }
 }
+
+extension Array where Element == NameValue {
+
+  public func decodeGender() -> [NameValue] {
+    self.map { nameValue in
+      if nameValue.name == IsoMdlModel.CodingKeys.sex.rawValue ||
+          nameValue.name == EuPidModel.CodingKeys.gender.rawValue {
+        switch nameValue.value {
+        case "1", "male":
+          return NameValue(
+            name: nameValue.name,
+            value: "male",
+            ns: nameValue.ns,
+            order: nameValue.order,
+            children: nameValue.children
+          )
+        case "2", "female":
+          return NameValue(
+            name: nameValue.name,
+            value: "female",
+            ns: nameValue.ns,
+            order: nameValue.order,
+            children: nameValue.children
+          )
+        default:
+          return nameValue
+        }
+
+      } else {
+        return nameValue
+      }
+    }
+  }
+
+  public func mapTrueFalseToLocalizable() -> [NameValue] {
+    self.map {
+      if $0.value == "true" || $0.value == "false" {
+        return NameValue(
+          name: $0.name,
+          value: LocalizableString.shared.get(with: $0.value == "true" ? .yes : .no),
+          ns: $0.ns,
+          order: $0.order,
+          children: $0.children
+        )
+      } else {
+        return $0
+      }
+    }
+  }
+
+  public func parseDates() -> [NameValue] {
+    self.map {
+      NameValue(
+        name: $0.name,
+        value: parseDate(dateString: $0.value),
+        ns: $0.ns,
+        order: $0.order,
+        children: $0.children
+      )
+    }
+  }
+
+  private func parseDate(dateString: String) -> String {
+    Locale.current.localizedDateTime(
+      date: dateString,
+      uiFormatter: "dd MMM yyyy"
+    )
+  }
+}

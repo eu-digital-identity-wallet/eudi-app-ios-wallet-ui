@@ -110,7 +110,15 @@ extension WalletKitControllerType {
     var displayStrings = wallet.storage.mdocModels
       .compactMap({ $0 })
       .first(where: { $0.docType == documentType.rawValue })?.displayStrings
+      .decodeGender()
+      .parseDates()
+      .mapTrueFalseToLocalizable()
+
     // Check if document type matches one of known models (pid or mdl)
+
+    guard var displayStrings = displayStrings else {
+      return LocalizableString.shared.get(with: .unavailableField)
+    }
 
     if documentType == .IsoMdlModel,
        let mdl = wallet.storage.mdlModel {
@@ -130,11 +138,11 @@ extension WalletKitControllerType {
           .dropLast()
         // Dropping last because its a new line character
 
-        displayStrings?.append(.init(name: "driving_privileges", value: String(flatString)))
+        displayStrings.append(.init(name: "driving_privileges", value: String(flatString)))
       }
 
       mdl.ageOverXX.sorted(by: {$0.key < $1.key}).forEach { key, value in
-        displayStrings?.append(.init(
+        displayStrings.append(.init(
           name: "age_over_\(key)",
           value: value ? LocalizableString.shared.get(with: .yes).capitalized : LocalizableString.shared.get(with: .no).capitalized)
         )
@@ -143,16 +151,16 @@ extension WalletKitControllerType {
               let pid = wallet.storage.pidModel {
 
       pid.ageOverXX.sorted(by: {$0.key < $1.key}).forEach { key, value in
-        displayStrings?.append(.init(name: "age_over_\(key)", value: value ? "Yes" : "No"))
+        displayStrings.append(.init(name: "age_over_\(key)", value: value ? "Yes" : "No"))
       }
     }
     // Find the first Value that Matches given Key for document
-    let value = displayStrings?
+
+    let value = displayStrings
       .first(where: { element in
         element.name == elementIdentifier
       })?.value
     // Return the value if found, or a static string that field was not found
     return  value ?? LocalizableString.shared.get(with: .unavailableField)
   }
-
 }
