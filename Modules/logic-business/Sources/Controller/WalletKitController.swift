@@ -85,7 +85,7 @@ public final class WalletKitController: WalletKitControllerType {
 
 extension WalletKitControllerType {
 
-  // TODO: Mandatory fields should be returned in a generic model
+    // TODO: Mandatory fields should be returned in a generic model
   public func mandatoryFields(for documentType: DocumentIdentifier) -> [String] {
     switch documentType {
     case .EuPidDocType:
@@ -97,28 +97,34 @@ extension WalletKitControllerType {
     }
   }
 
-  // TODO: This needs to be made in a more generic way
-  /// A more concrete aproach would be:
-  ///    wallet.storage.mdocModels
-  ///      .compactMap({ $0 })
-  ///      .first(where: { $0.docType == documentType.rawValue })?.displayStrings
-  ///      .first(where: { $0.name == elementIdentifier })?.value ?? LocalizableString.shared.get(with: .unavailableField)
-  ///
+    // TODO: This needs to be made in a more generic way
+    /// A more concrete aproach would be:
+    ///    wallet.storage.mdocModels
+    ///      .compactMap({ $0 })
+    ///      .first(where: { $0.docType == documentType.rawValue })?.displayStrings
+    ///      .first(where: { $0.name == elementIdentifier })?.value ?? LocalizableString.shared.get(with: .unavailableField)
+    ///
   public func valueForElementIdentifier(for documentType: DocumentIdentifier, elementIdentifier: String) -> String {
 
-    // Convert the Stored models to their [Key: Value] array
+      // Convert the Stored models to their [Key: Value] array
     var displayStrings = wallet.storage.mdocModels
       .compactMap({ $0 })
       .first(where: { $0.docType == documentType.rawValue })?.displayStrings
-    // Check if document type matches one of known models (pid or mdl)
+      // Check if document type matches one of known models (pid or mdl)
+
+    guard var displayStrings else {
+      return LocalizableString.shared.get(with: .unavailableField)
+    }
+
+    decodeGender(displayStrings: &displayStrings)
 
     if documentType == .IsoMdlModel,
        let mdl = wallet.storage.mdlModel {
-      // Check if the element key is of type that cannot be converted to string value
+        // Check if the element key is of type that cannot be converted to string value
       if elementIdentifier == IsoMdlModel.CodingKeys.portrait.rawValue || elementIdentifier == IsoMdlModel.CodingKeys.signatureUsualMark.rawValue {
         return "Image Data"
       }
-      // Flatten properties in order to be made in a Key: Value structure
+        // Flatten properties in order to be made in a Key: Value structure
       if let drivingPrivileges = mdl.drivingPrivileges {
         let flatString = drivingPrivileges.drivingPrivileges
           .reduce(into: "", {$0 += $1.vehicleCategoryCode +
@@ -128,13 +134,13 @@ extension WalletKitControllerType {
             """
           })
           .dropLast()
-        // Dropping last because its a new line character
+          // Dropping last because its a new line character
 
-        displayStrings?.append(.init(name: "driving_privileges", value: String(flatString)))
+        displayStrings.append(.init(name: "driving_privileges", value: String(flatString)))
       }
 
       mdl.ageOverXX.sorted(by: {$0.key < $1.key}).forEach { key, value in
-        displayStrings?.append(.init(
+        displayStrings.append(.init(
           name: "age_over_\(key)",
           value: value ? LocalizableString.shared.get(with: .yes).capitalized : LocalizableString.shared.get(with: .no).capitalized)
         )
@@ -143,16 +149,36 @@ extension WalletKitControllerType {
               let pid = wallet.storage.pidModel {
 
       pid.ageOverXX.sorted(by: {$0.key < $1.key}).forEach { key, value in
-        displayStrings?.append(.init(name: "age_over_\(key)", value: value ? "Yes" : "No"))
+        displayStrings.append(.init(name: "age_over_\(key)", value: value ? "Yes" : "No"))
       }
     }
-    // Find the first Value that Matches given Key for document
-    let value = displayStrings?
+      // Find the first Value that Matches given Key for document
+
+    let value = displayStrings
       .first(where: { element in
         element.name == elementIdentifier
       })?.value
-    // Return the value if found, or a static string that field was not found
+      // Return the value if found, or a static string that field was not found
     return  value ?? LocalizableString.shared.get(with: .unavailableField)
+  }
+
+  private func decodeGender(displayStrings: inout [NameValue]) {
+    for (index, string) in displayStrings.enumerated() {
+      if string.name == IsoMdlModel.CodingKeys.sex.rawValue ||
+          string.name == EuPidModel.CodingKeys.gender.rawValue {
+
+        switch string.value {
+        case "1", "male":
+          displayStrings[index].value = "male"
+        case "2", "female":
+          displayStrings[index].value = "female"
+        default:
+          displayStrings[index].value = LocalizableString.shared.get(with: .unavailableField)
+        }
+
+        break
+      }
+    }
   }
 
 }
