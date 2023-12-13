@@ -31,6 +31,7 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
 
   private let interactor: Interactor
   private let deepLinkController: DeepLinkController
+  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
 
   @Published var isMoreModalShowing: Bool = false
   @Published var isBleModalShowing: Bool = false
@@ -90,15 +91,17 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
 
   func onShare() {
     Task { [weak self] in
-      switch await self?.interactor.getBleAvailability() {
+      guard let self else { return }
+
+      switch await self.interactor.getBleAvailability() {
       case .available:
-        self?.router.push(
+        self.router.push(
           with: .proximityConnection(
-            presentationCoordinator: WalletKitController.shared.startProximityPresentation()
+            presentationCoordinator: self.walletKitController.startProximityPresentation()
           )
         )
       case .noPermission, .disabled:
-        self?.toggleBleModal()
+        self.toggleBleModal()
       default:
         break
       }
@@ -145,7 +148,7 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
   func onScanSuccess(scanResult: String) {
     router.push(
       with: .crossDeviceRequest(
-        presentationCoordinator: WalletKitController.shared.startRemotePresentation(
+        presentationCoordinator: walletKitController.startCrossDevicePresentation(
           urlString: scanResult
         )
       )

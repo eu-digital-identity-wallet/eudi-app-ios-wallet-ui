@@ -16,23 +16,100 @@
 import Foundation
 import logic_api
 import logic_business
+import feature_common
 
 public enum SameDevicePartialState {
   case success
   case failure(Error)
 }
 
+public enum SameDeviceRequestPartialState {
+  case success([RequestDataCell], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
+  case failure(Error)
+}
+
+public enum SameDeviceResponsePreparationPartialState {
+  case success(RequestItemConvertible)
+  case failure(Error)
+}
+
+public enum SameDeviceResponsePartialState {
+  case success
+  case failure(Error)
+}
+
 public protocol SameDeviceInteractorType {
-  func doWork() async -> SameDevicePartialState
+  var presentationCoordinator: PresentationSessionCoordinatorType { get }
+
+  func onDeviceEngagement() async -> SameDeviceRequestPartialState
+  func onResponsePrepare(requestItems: [RequestDataCell]) async -> SameDeviceResponsePreparationPartialState
+  func onSendResponse() async -> SameDeviceResponsePartialState
 }
 
 public final actor SameDeviceInteractor: SameDeviceInteractorType {
 
-  public init() {}
+  public let presentationCoordinator: PresentationSessionCoordinatorType
+  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
 
-  public func doWork() async -> SameDevicePartialState {
+  public init(with presentationCoordinator: PresentationSessionCoordinatorType) {
+    self.presentationCoordinator = presentationCoordinator
+  }
+
+  public func onDeviceEngagement() async -> SameDeviceRequestPartialState {
+    await presentationCoordinator.initialize()
+    return await onRequestReceived()
+  }
+
+  public func onRequestReceived() async -> SameDeviceRequestPartialState {
     do {
-      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
+      let response = try await presentationCoordinator.requestReceived()
+      return .success(
+        RequestDataUiModel.items(
+          for: response.items
+        ),
+        relyingParty: response.relyingParty,
+        dataRequestInfo: response.dataRequestInfo,
+        isTrusted: response.isTrusted
+      )
+    } catch {
+      return .failure(error)
+    }
+  }
+
+  public func onResponsePrepare(requestItems: [RequestDataCell]) async -> SameDeviceResponsePreparationPartialState {
+    let requestConvertible = requestItems
+      .reduce(into: [RequestDataRow]()) { partialResult, cell in
+        if let item = cell.isDataRow, item.isSelected {
+          partialResult.append(item)
+        }
+
+        if let items = cell.isDataVerification?.items.filter({$0.isSelected}) {
+          partialResult.append(contentsOf: items)
+        }
+      }
+      .reduce(into: RequestItemsWrapper()) {  partialResult, row in
+        var nameSpaceDict = partialResult.requestItems[row.docType, default: [row.namespace: [row.elementKey]]]
+        nameSpaceDict[row.namespace, default: [row.elementKey]].append(row.elementKey)
+        partialResult.requestItems[row.docType] = nameSpaceDict
+      }
+
+    guard requestConvertible.requestItems.isEmpty == false else {
+      return .failure(PresentationSessionError.conversionToRequestItemModel)
+    }
+
+    self.presentationCoordinator.setState(presentationState: .responseToSend(requestConvertible))
+
+    return .success(requestConvertible.asRequestItems())
+  }
+
+  public func onSendResponse() async -> SameDeviceResponsePartialState {
+
+    guard case PresentationState.responseToSend(let responseItem) = await presentationCoordinator.getState() else {
+      return .failure(PresentationSessionError.invalidState)
+    }
+
+    do {
+      try await presentationCoordinator.sendResponse(response: responseItem)
       return .success
     } catch {
       return .failure(error)

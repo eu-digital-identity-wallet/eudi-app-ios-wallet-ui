@@ -26,6 +26,7 @@ public protocol DeepLinkControllerType {
 public final class DeepLinkController: DeepLinkControllerType {
 
   private lazy var prefsController: PrefsControllerType = PrefsController.shared
+  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
 
   public init() {}
 
@@ -58,9 +59,12 @@ public final class DeepLinkController: DeepLinkControllerType {
 
     removeCachedDeepLinkURL()
 
-    let route: AppRoute? = switch deepLinkAction.action {
+    let route: AppRoute?
+
+    switch deepLinkAction.action {
     case .openid4vp:
-      !routerHost.isScreenForeground(with: .sameDeviceRequest) ? .sameDeviceRequest : nil
+      let session = walletKitController.startSameDevicePresentation(deepLink: deepLinkAction.link)
+      route = !routerHost.isScreenForeground(with: .sameDeviceRequest(presentationCoordinator: session)) ? .sameDeviceRequest(presentationCoordinator: session) : nil
     }
 
     if let route {

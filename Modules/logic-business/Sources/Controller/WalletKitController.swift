@@ -25,7 +25,8 @@ public protocol WalletKitControllerType {
   var activeCoordinator: PresentationSessionCoordinatorType? { get }
 
   func startProximityPresentation() -> PresentationSessionCoordinatorType
-  func startRemotePresentation(urlString: String) -> PresentationSessionCoordinatorType
+  func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType
+  func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType
   func stopPresentation()
   func fetchDocuments() -> [MdocDecodable]
   func fetchDocument(with id: String) -> MdocDecodable?
@@ -40,9 +41,12 @@ public final class WalletKitController: WalletKitControllerType {
   public let wallet = EudiWallet.standard
 
   public private(set) var activeCoordinator: PresentationSessionCoordinatorType?
+
+  private let configLogic: ConfigLogic
   private var cancellables = Set<AnyCancellable>()
 
   internal init(configLogic: ConfigLogic = ConfigProvider.shared.getConfigLogic()) {
+    self.configLogic = configLogic
     wallet.userAuthenticationRequired = false
     wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
     wallet.openId4VpVerifierApiUri = configLogic.verifierApiUri
@@ -71,7 +75,19 @@ public final class WalletKitController: WalletKitControllerType {
     return presentationSessionCoordinator
   }
 
-  public func startRemotePresentation(urlString: String) -> PresentationSessionCoordinatorType {
+  public func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType {
+    self.startRemotePresentation(
+      urlString: decodeDeeplink(
+        link: deepLink
+      ) ?? ""
+    )
+  }
+
+  public func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType {
+    self.startRemotePresentation(urlString: urlString)
+  }
+
+  private func startRemotePresentation(urlString: String) -> PresentationSessionCoordinatorType {
     self.stopPresentation()
 
     let data = urlString.data(using: .utf8) ?? Data()
@@ -96,6 +112,13 @@ public final class WalletKitController: WalletKitControllerType {
 
   public func fetchDocument(with id: String) -> MdocDecodable? {
     wallet.storage.getDocumentModel(docType: id)
+  }
+
+  private func decodeDeeplink(link: URLComponents) -> String? {
+    var baseHostURL = URLComponents(string: configLogic.verifierApiUri)
+
+    baseHostURL?.query = link.query
+    return baseHostURL?.url?.absoluteString
   }
 }
 

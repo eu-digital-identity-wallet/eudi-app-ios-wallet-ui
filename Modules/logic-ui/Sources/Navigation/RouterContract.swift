@@ -29,8 +29,8 @@ public indirect enum AppRoute: Equatable {
   case biometry(config: any UIConfigType)
   case crossDeviceLoader(String, presentationCoordinator: PresentationSessionCoordinatorType)
   case crossDeviceRequest(presentationCoordinator: PresentationSessionCoordinatorType)
-  case sameDeviceLoader(String)
-  case sameDeviceRequest
+  case sameDeviceLoader(String, presentationCoordinator: PresentationSessionCoordinatorType)
+  case sameDeviceRequest(presentationCoordinator: PresentationSessionCoordinatorType)
   case welcome
   case proximityConnection(presentationCoordinator: PresentationSessionCoordinatorType)
   case proximityRequest(presentationCoordinator: PresentationSessionCoordinatorType)

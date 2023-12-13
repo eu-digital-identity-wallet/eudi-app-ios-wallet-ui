@@ -113,14 +113,17 @@ public final class RouterHost: RouterHostType {
         )
       case .crossDeviceRequest(let presentationCoordinator):
         CrossDeviceRequestView(with: self, and: CrossDeviceInteractor(with: presentationCoordinator))
-      case .sameDeviceLoader(let relyingParty):
+      case .sameDeviceLoader(let relyingParty, let presentationCoordinator):
         SameDeviceLoadingView(
           with: self,
-          and: SameDeviceInteractor(),
+          and: SameDeviceInteractor(with: presentationCoordinator),
           relyingParty: relyingParty
         )
-      case .sameDeviceRequest:
-        SameDeviceRequestView(with: self, and: SameDeviceInteractor())
+      case .sameDeviceRequest(let presentationCoordinator):
+        SameDeviceRequestView(
+          with: self,
+          and: SameDeviceInteractor(with: presentationCoordinator)
+        )
       case .welcome:
         WelcomeView(with: self, and: WelcomeInteractor())
       case .issuanceDocumentDetails(let config):
