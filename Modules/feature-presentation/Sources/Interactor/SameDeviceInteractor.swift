@@ -18,32 +18,12 @@ import logic_api
 import logic_business
 import feature_common
 
-public enum SameDevicePartialState {
-  case success
-  case failure(Error)
-}
-
-public enum SameDeviceRequestPartialState {
-  case success([RequestDataCell], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
-  case failure(Error)
-}
-
-public enum SameDeviceResponsePreparationPartialState {
-  case success(RequestItemConvertible)
-  case failure(Error)
-}
-
-public enum SameDeviceResponsePartialState {
-  case success
-  case failure(Error)
-}
-
 public protocol SameDeviceInteractorType {
   var presentationCoordinator: PresentationSessionCoordinatorType { get }
 
-  func onDeviceEngagement() async -> SameDeviceRequestPartialState
-  func onResponsePrepare(requestItems: [RequestDataCell]) async -> SameDeviceResponsePreparationPartialState
-  func onSendResponse() async -> SameDeviceResponsePartialState
+  func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccess, Error>
+  func onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>
+  func onSendResponse() async -> Result<Void, Error>
 }
 
 public final actor SameDeviceInteractor: SameDeviceInteractorType {
@@ -55,28 +35,30 @@ public final actor SameDeviceInteractor: SameDeviceInteractorType {
     self.presentationCoordinator = presentationCoordinator
   }
 
-  public func onDeviceEngagement() async -> SameDeviceRequestPartialState {
+  public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccess, Error> {
     await presentationCoordinator.initialize()
     return await onRequestReceived()
   }
 
-  public func onRequestReceived() async -> SameDeviceRequestPartialState {
+  func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccess, Error> {
     do {
       let response = try await presentationCoordinator.requestReceived()
       return .success(
-        RequestDataUiModel.items(
-          for: response.items
-        ),
-        relyingParty: response.relyingParty,
-        dataRequestInfo: response.dataRequestInfo,
-        isTrusted: response.isTrusted
+        .init(
+          requestDataCells: RequestDataUiModel.items(
+            for: response.items
+          ),
+          relyingParty: response.relyingParty,
+          dataRequestInfo: response.dataRequestInfo,
+          isTrusted: response.isTrusted
+        )
       )
     } catch {
       return .failure(error)
     }
   }
 
-  public func onResponsePrepare(requestItems: [RequestDataCell]) async -> SameDeviceResponsePreparationPartialState {
+  public func onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error> {
     let requestConvertible = requestItems
       .reduce(into: [RequestDataRow]()) { partialResult, cell in
         if let item = cell.isDataRow, item.isSelected {
@@ -102,7 +84,7 @@ public final actor SameDeviceInteractor: SameDeviceInteractorType {
     return .success(requestConvertible.asRequestItems())
   }
 
-  public func onSendResponse() async -> SameDeviceResponsePartialState {
+  public func onSendResponse() async -> Result<Void, Error> {
 
     guard case PresentationState.responseToSend(let responseItem) = await presentationCoordinator.getState() else {
       return .failure(PresentationSessionError.invalidState)

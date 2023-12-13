@@ -32,12 +32,12 @@ final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: Cros
   override func doWork() async {
     self.onStartLoading()
     switch await interactor.onDeviceEngagement() {
-    case .success(let items, let relyingParty, _, let isTrusted):
+    case .success(let authenticationRequest):
       self.onReceivedItems(
-        with: items,
-        title: .requestDataTitle([relyingParty]),
-        relyingParty: relyingParty,
-        isTrusted: isTrusted
+        with: authenticationRequest.requestDataCells,
+        title: .requestDataTitle([authenticationRequest.relyingParty]),
+        relyingParty: authenticationRequest.relyingParty,
+        isTrusted: authenticationRequest.isTrusted
       )
     case .failure(let error):
       self.onError(with: error)
