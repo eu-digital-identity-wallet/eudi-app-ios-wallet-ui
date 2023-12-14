@@ -115,10 +115,7 @@ public final class WalletKitController: WalletKitControllerType {
   }
 
   private func decodeDeeplink(link: URLComponents) -> String? {
-    var baseHostURL = URLComponents(string: configLogic.verifierApiUri)
-
-    baseHostURL?.query = link.query
-    return baseHostURL?.url?.absoluteString
+    return link.removeSchemeFromComponents()?.string
   }
 }
 
