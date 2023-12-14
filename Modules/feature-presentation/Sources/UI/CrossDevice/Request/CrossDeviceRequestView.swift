@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import feature_common
 
-public struct CrossDeviceRequestView<Router: RouterHostType, Interactor: CrossDeviceInteractorType>: View {
+public struct CrossDeviceRequestView<Router: RouterHostType, Interactor: OnlinePresentationInteractorType>: View {
 
   @ObservedObject private var viewModel: CrossDeviceRequestViewModel<Router, Interactor>
 

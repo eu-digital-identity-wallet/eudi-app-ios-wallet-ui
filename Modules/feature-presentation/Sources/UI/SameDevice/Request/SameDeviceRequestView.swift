@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import feature_common
 
-public struct SameDeviceRequestView<Router: RouterHostType, Interactor: SameDeviceInteractorType>: View {
+public struct SameDeviceRequestView<Router: RouterHostType, Interactor: OnlinePresentationInteractorType>: View {
 
   @ObservedObject private var viewModel: SameDeviceRequestViewModel<Router, Interactor>
 

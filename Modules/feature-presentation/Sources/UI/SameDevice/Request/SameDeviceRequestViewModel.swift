@@ -17,7 +17,7 @@
 import feature_common
 
 @MainActor
-final class SameDeviceRequestViewModel<Router: RouterHostType, Interactor: SameDeviceInteractorType>: BaseRequestViewModel<Router> {
+final class SameDeviceRequestViewModel<Router: RouterHostType, Interactor: OnlinePresentationInteractorType>: BaseRequestViewModel<Router> {
 
   private let interactor: Interactor
 

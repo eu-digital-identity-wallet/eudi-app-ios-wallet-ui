@@ -17,7 +17,7 @@
 import feature_common
 
 @MainActor
-final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: CrossDeviceInteractorType>: BaseRequestViewModel<Router> {
+final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: OnlinePresentationInteractorType>: BaseRequestViewModel<Router> {
 
   private let interactor: Interactor
 

@@ -18,22 +18,22 @@ import logic_api
 import logic_business
 import feature_common
 
-public struct OnlineAuthenticationRequestSuccess {
+public struct OnlineAuthenticationRequestSuccessModel {
   var requestDataCells: [RequestDataCell]
   var relyingParty: String
   var dataRequestInfo: String
   var isTrusted: Bool
 }
 
-public protocol CrossDeviceInteractorType {
+public protocol OnlinePresentationInteractorType {
   var presentationCoordinator: PresentationSessionCoordinatorType { get }
 
-  func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccess, Error>
+  func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>
   func onSendResponse() async -> Result<Void, Error>
 }
 
-public final actor CrossDeviceInteractor: CrossDeviceInteractorType {
+public final actor OnlinePresentationInteractor: OnlinePresentationInteractorType {
 
   public let presentationCoordinator: PresentationSessionCoordinatorType
   private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
@@ -42,12 +42,12 @@ public final actor CrossDeviceInteractor: CrossDeviceInteractorType {
     self.presentationCoordinator = presentationCoordinator
   }
 
-  public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccess, Error> {
+  public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
     await presentationCoordinator.initialize()
     return await onRequestReceived()
   }
 
-  public func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccess, Error> {
+  public func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
     do {
       let response = try await presentationCoordinator.requestReceived()
       return .success(
