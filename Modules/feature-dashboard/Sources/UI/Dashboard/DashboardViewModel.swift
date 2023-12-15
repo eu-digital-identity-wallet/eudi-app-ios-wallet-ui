@@ -147,7 +147,7 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
 
   func onScanSuccess(scanResult: String) {
     router.push(
-      with: .crossDeviceRequest(
+      with: .presentationRequest(
         presentationCoordinator: walletKitController.startCrossDevicePresentation(
           urlString: scanResult
         )

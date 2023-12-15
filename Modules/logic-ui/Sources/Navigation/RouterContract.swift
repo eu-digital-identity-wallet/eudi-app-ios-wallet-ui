@@ -27,10 +27,8 @@ public indirect enum AppRoute: Equatable {
   case faqs
   case dashboard
   case biometry(config: any UIConfigType)
-  case crossDeviceLoader(String, presentationCoordinator: PresentationSessionCoordinatorType)
-  case crossDeviceRequest(presentationCoordinator: PresentationSessionCoordinatorType)
-  case sameDeviceLoader(String, presentationCoordinator: PresentationSessionCoordinatorType)
-  case sameDeviceRequest(presentationCoordinator: PresentationSessionCoordinatorType)
+  case presentationLoader(String, presentationCoordinator: PresentationSessionCoordinatorType)
+  case presentationRequest(presentationCoordinator: PresentationSessionCoordinatorType)
   case welcome
   case proximityConnection(presentationCoordinator: PresentationSessionCoordinatorType)
   case proximityRequest(presentationCoordinator: PresentationSessionCoordinatorType)
@@ -53,16 +51,12 @@ public indirect enum AppRoute: Equatable {
       "Dashboard"
     case .biometry:
       "Biometry"
-    case .crossDeviceLoader:
-      "CrossDeviceLoader"
-    case .sameDeviceRequest:
-      "SameDeviceRequest"
     case .welcome:
       "Welcome"
-    case .crossDeviceRequest:
-      "CrossDeviceRequest"
-    case .sameDeviceLoader:
-      "SameDeviceLoader"
+    case .presentationLoader:
+      "PresentationLoader"
+    case .presentationRequest:
+      "PresentationRequest"
     case .proximityConnection:
       "ProximityConnection"
     case .proximityRequest:

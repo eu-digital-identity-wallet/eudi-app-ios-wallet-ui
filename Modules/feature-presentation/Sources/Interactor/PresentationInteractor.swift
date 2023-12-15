@@ -25,7 +25,7 @@ public struct OnlineAuthenticationRequestSuccessModel {
   var isTrusted: Bool
 }
 
-public protocol OnlinePresentationInteractorType {
+public protocol PresentationInteractorType {
   var presentationCoordinator: PresentationSessionCoordinatorType { get }
 
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
@@ -33,7 +33,7 @@ public protocol OnlinePresentationInteractorType {
   func onSendResponse() async -> Result<Void, Error>
 }
 
-public final actor OnlinePresentationInteractor: OnlinePresentationInteractorType {
+public final actor PresentationInteractor: PresentationInteractorType {
 
   public let presentationCoordinator: PresentationSessionCoordinatorType
   private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared

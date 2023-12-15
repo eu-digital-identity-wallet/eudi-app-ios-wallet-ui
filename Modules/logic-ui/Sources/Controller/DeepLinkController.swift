@@ -64,7 +64,7 @@ public final class DeepLinkController: DeepLinkControllerType {
     switch deepLinkAction.action {
     case .openid4vp:
       let session = walletKitController.startSameDevicePresentation(deepLink: deepLinkAction.link)
-      route = !routerHost.isScreenForeground(with: .sameDeviceRequest(presentationCoordinator: session)) ? .sameDeviceRequest(presentationCoordinator: session) : nil
+      route = !routerHost.isScreenForeground(with: .presentationRequest(presentationCoordinator: session)) ? .presentationRequest(presentationCoordinator: session) : nil
     }
 
     if let route {

@@ -17,7 +17,7 @@
 import feature_common
 
 @MainActor
-final class SameDeviceRequestViewModel<Router: RouterHostType, Interactor: OnlinePresentationInteractorType>: BaseRequestViewModel<Router> {
+final class PresentationRequestViewModel<Router: RouterHostType, Interactor: PresentationInteractorType>: BaseRequestViewModel<Router> {
 
   private let interactor: Interactor
 
@@ -72,7 +72,7 @@ final class SameDeviceRequestViewModel<Router: RouterHostType, Interactor: Onlin
         caption: .requestDataShareBiometryCaption,
         quickPinOnlyCaption: .requestDataShareBiometryCaption,
         navigationSuccessConfig: .init(
-          screen: .crossDeviceLoader(
+          screen: .presentationLoader(
             getRelyingParty(),
             presentationCoordinator: interactor.presentationCoordinator
           ),
