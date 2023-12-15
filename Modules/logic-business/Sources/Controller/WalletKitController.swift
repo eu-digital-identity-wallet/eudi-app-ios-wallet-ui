@@ -115,6 +115,11 @@ public final class WalletKitController: WalletKitControllerType {
   }
 
   private func decodeDeeplink(link: URLComponents) -> String? {
+    // Handling requests of the form 
+    //    mdoc-openid4vp://https://eudi.netcompany-intrasoft.com?client_id=Verifier&request_uri=https://eudi.netcompany-intrasoft.com/wallet/request.jwt/OWB1_xVU7ndoHmirBn7S2JpcC5fFPzAXGCY1fTLxDjczVATjzQvre_w4yEcMB4FO5KwuyYXXw-JottarKgEvRQ
+    // so we need to drop scheme and forward slashes and keep the rest of the url in order to
+    // pass to wallet
+
     return link.removeSchemeFromComponents()?.string
   }
 }
