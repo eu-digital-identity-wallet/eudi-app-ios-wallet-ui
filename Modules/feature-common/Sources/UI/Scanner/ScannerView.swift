@@ -55,6 +55,8 @@ public struct ScannerView: View {
       ) {
         dismiss.toggle()
       }
+      .nearlyTransparentView()
+      .ignoresSafeArea(edges: .horizontal)
       .padding()
 
     }
