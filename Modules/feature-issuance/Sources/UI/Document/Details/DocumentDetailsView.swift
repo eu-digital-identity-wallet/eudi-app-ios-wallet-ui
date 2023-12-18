@@ -42,11 +42,21 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
         VSpacer.medium()
 
         ForEach(viewModel.viewState.document.documentFields) { documentFieldContent in
-          KeyValueView(
-            title: .custom(documentFieldContent.title),
-            subTitle: .custom(documentFieldContent.value),
-            isLoading: viewModel.viewState.isLoading
-          )
+
+          switch documentFieldContent.value {
+          case .string(let value):
+            KeyValueView(
+              title: .custom(documentFieldContent.title),
+              subTitle: .custom(value),
+              isLoading: viewModel.viewState.isLoading
+            )
+          case .image(let data):
+            KeyValueView(
+              title: .custom(documentFieldContent.title),
+              image: Image(data: data),
+              isLoading: viewModel.viewState.isLoading
+            )
+          }
 
           VSpacer.medium()
         }

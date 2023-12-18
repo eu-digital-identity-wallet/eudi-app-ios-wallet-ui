@@ -18,8 +18,13 @@ import logic_resources
 
 public struct KeyValueView: View {
 
+  enum Value {
+    case string(LocalizableString.Key)
+    case image(Image)
+  }
+
   let title: LocalizableString.Key
-  let subTitle: LocalizableString.Key
+  let value: Value
   let alignment: KeyValueView.Alignment
   let isLoading: Bool
 
@@ -30,7 +35,19 @@ public struct KeyValueView: View {
     isLoading: Bool = false
   ) {
     self.title = title
-    self.subTitle = subTitle
+    self.value = .string(subTitle)
+    self.alignment = alignment
+    self.isLoading = isLoading
+  }
+
+  public init(
+    title: LocalizableString.Key,
+    image: Image,
+    alignment: KeyValueView.Alignment = .start,
+    isLoading: Bool = false
+  ) {
+    self.title = title
+    self.value = .image(image)
     self.alignment = alignment
     self.isLoading = isLoading
   }
@@ -52,13 +69,7 @@ public struct KeyValueView: View {
               .lineLimit(1)
           }
 
-        Text(subTitle)
-          .foregroundColor(Theme.shared.color.textPrimaryDark)
-          .typography(ThemeManager.shared.font.bodyLarge)
-          .if(isLoading) { view in
-            view
-              .lineLimit(1)
-          }
+        valueContent
 
         Spacer()
 
@@ -69,6 +80,27 @@ public struct KeyValueView: View {
       }
     }
     .shimmer(isLoading: self.isLoading)
+  }
+
+  private var valueContent: AnyView {
+    switch value {
+    case .string(let key):
+      Text(key)
+        .foregroundColor(Theme.shared.color.textPrimaryDark)
+        .typography(ThemeManager.shared.font.bodyLarge)
+        .if(isLoading) { view in
+          view
+            .lineLimit(1)
+        }
+        .eraseToAnyView()
+    case .image(let image):
+      image
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .frame(maxHeight: 50)
+        .eraseToAnyView()
+    }
+
   }
 }
 

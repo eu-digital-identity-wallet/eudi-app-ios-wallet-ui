@@ -1434,6 +1434,17 @@
         }
       }
     },
+    "shown_above" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shown Above"
+          }
+        }
+      }
+    },
     "signature_usual_mark" : {
       "extractionState" : "manual",
       "localizations" : {
