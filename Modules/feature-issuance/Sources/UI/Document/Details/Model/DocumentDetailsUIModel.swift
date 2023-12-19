@@ -78,16 +78,21 @@ public extension DocumentDetailsUIModel {
 
 extension MdocDecodable {
   func transformToDocumentDetailsUi() -> DocumentDetailsUIModel {
-    
+
+    // TODO: Remove [getDrivingPrivileges()] and compactMap when core returns correct format of driving privileges.
+
+    let values = displayStrings + [getDrivingPrivileges()]
+
     let documentFields: [DocumentDetailsUIModel.DocumentField] =
     flattenValues(
-      input: displayStrings
+      input: values
         .compactMap({$0})
+        .sorted(by: {$0.order < $1.order})
         .decodeGender()
         .mapTrueFalseToLocalizable()
-        .parseDates()
-        .sorted(by: {$0.order < $1.order}),
-      images: displayImages)
+        .parseDates(),
+      images: displayImages
+    )
 
     var bearerName: String {
       guard let fullName = getBearersName() else {
@@ -104,10 +109,8 @@ extension MdocDecodable {
     )
   }
 
-  func flattenValues(input: [NameValue], images: [NameImage]) -> [DocumentDetailsUIModel.DocumentField] {
-    input.reduce(into: []) {
-      partialResult,
-      nameValue in
+  private func flattenValues(input: [NameValue], images: [NameImage]) -> [DocumentDetailsUIModel.DocumentField] {
+    input.reduce(into: []) { partialResult, nameValue in
       let uuid = UUID().uuidString
       let title: String = LocalizableString.shared.get(with: .dynamic(key: nameValue.name))
       if let image = images.first(where: {$0.name == nameValue.name})?.image {
@@ -117,11 +120,7 @@ extension MdocDecodable {
             .init(
               id: uuid,
               title: title,
-              value: .string(
-                LocalizableString.shared.get(
-                  with: .shownAbove
-                )
-              )
+              value: .string(LocalizableString.shared.get(with: .shownAbove))
             )
           )
           return
@@ -154,7 +153,7 @@ extension MdocDecodable {
     }
   }
 
-  func flattenNested(parent: NameValue, nested: [NameValue]) -> NameValue {
+  private func flattenNested(parent: NameValue, nested: [NameValue]) -> NameValue {
     let flat =
     nested
       .decodeGender()
