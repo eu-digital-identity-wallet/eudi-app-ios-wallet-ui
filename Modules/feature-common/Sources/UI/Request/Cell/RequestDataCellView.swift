@@ -37,6 +37,7 @@ extension BaseRequestView {
     var body: some View {
       switch cellModel {
       case .requestDataRow(let row):
+        let value: Any = row.value.string ?? row.value.image ?? ""
         WrapCheckBoxView(
           isSelected: row.isSelected,
           isVisible: row.isVisible,
@@ -44,7 +45,7 @@ extension BaseRequestView {
           isLoading: isLoading,
           id: row.id,
           title: row.title,
-          value: row.value,
+          value: value,
           onTap: self.onTap
         )
         .padding(.bottom)
@@ -79,6 +80,7 @@ extension BaseRequestView {
           VStack(spacing: SPACING_LARGE) {
 
             ForEach(verification.items, id: \.id) {
+              let value: Any = $0.value.string ?? $0.value.image ?? ""
               WrapCheckBoxView(
                 isSelected: $0.isSelected,
                 isVisible: $0.isVisible,
@@ -86,7 +88,7 @@ extension BaseRequestView {
                 isLoading: isLoading,
                 id: $0.id,
                 title: $0.title,
-                value: $0.value
+                value: value
               )
             }
           }

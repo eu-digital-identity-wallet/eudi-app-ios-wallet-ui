@@ -15,8 +15,14 @@
  */
 import SwiftUI
 import logic_resources
+import logic_business
 
 public struct WrapCheckBoxView: View {
+
+  enum Value {
+    case string(String)
+    case image(Image)
+  }
 
   public typealias TapListener = ((String) -> Void)?
 
@@ -26,7 +32,7 @@ public struct WrapCheckBoxView: View {
   let isLoading: Bool
   let id: String
   let title: String
-  let value: String
+  let value: Value
   let onTap: TapListener
 
   var checkBoxColor: Color {
@@ -45,14 +51,14 @@ public struct WrapCheckBoxView: View {
     }
   }
 
-  public init(
+  public init<T>(
     isSelected: Bool,
     isVisible: Bool,
     isEnabled: Bool,
     isLoading: Bool,
     id: String,
     title: String,
-    value: String,
+    value: T,
     onTap: TapListener = nil
   ) {
     self.isSelected = isSelected
@@ -61,7 +67,14 @@ public struct WrapCheckBoxView: View {
     self.isLoading = isLoading
     self.id = id
     self.title = title
-    self.value = value
+    switch value {
+    case let value as Data:
+      self.value = .image(Theme.shared.image.user)
+    case let value as String:
+      self.value = .string(value)
+    default:
+      self.value = .string("")
+    }
     self.onTap = onTap
   }
 
@@ -89,10 +102,18 @@ public struct WrapCheckBoxView: View {
           Text(self.title)
             .typography(ThemeManager.shared.font.bodyMedium)
             .foregroundStyle(ThemeManager.shared.color.textSecondaryDark)
-
-          Text(self.value)
-            .typography(ThemeManager.shared.font.titleMedium)
-            .foregroundStyle(ThemeManager.shared.color.textPrimaryDark)
+          
+          switch value {
+          case .string(let value):
+            Text(value)
+              .typography(ThemeManager.shared.font.titleMedium)
+              .foregroundStyle(ThemeManager.shared.color.textPrimaryDark)
+          case .image(let image):
+            image
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(maxHeight: 50)
+          }
         }
       }
 
