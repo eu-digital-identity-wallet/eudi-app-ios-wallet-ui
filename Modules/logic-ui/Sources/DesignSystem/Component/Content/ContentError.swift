@@ -39,6 +39,7 @@ public struct ContentError: View {
 
       if let action = config.action {
         WrapButtonView(
+          style: .primary,
           title: config.button,
           onAction: action()
         )

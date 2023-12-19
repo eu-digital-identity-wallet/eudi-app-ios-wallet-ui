@@ -17,7 +17,7 @@
 import feature_common
 
 @MainActor
-final class CrossDeviceLoadingViewModel<Router: RouterHostType, Interactor: CrossDeviceInteractorType>: BaseLoadingViewModel<Router> {
+final class PresentationLoadingViewModel<Router: RouterHostType, Interactor: PresentationInteractorType>: BaseLoadingViewModel<Router> {
 
   private let interactor: Interactor
   private let relyingParty: String
@@ -63,7 +63,7 @@ final class CrossDeviceLoadingViewModel<Router: RouterHostType, Interactor: Cros
   }
 
   override func doWork() async {
-    switch await interactor.doWork() {
+    switch await interactor.onSendResponse() {
     case .success:
       self.onNavigate(type: .push)
     case .failure(let error):

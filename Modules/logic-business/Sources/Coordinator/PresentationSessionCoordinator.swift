@@ -46,91 +46,6 @@ public enum PresentationState {
   case error(WalletError)
 }
 
-public final class ProximityPresentationSessionCoordinator: PresentationSessionCoordinatorType {
-
-  public private(set) var presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
-
-  private let session: PresentationSession
-
-  private var cancellables = Set<AnyCancellable>()
-
-  public init(session: PresentationSession) {
-    self.session = session
-
-    self.session.$status
-      .sink { status in
-        switch status {
-        case .qrEngagementReady:
-          self.presentationStateSubject.value = .prepareQr
-        case .responseSent:
-          self.presentationStateSubject.value = .responseToSend(session.disclosedDocuments.items)
-        case .error:
-          if let error = session.uiError {
-            self.presentationStateSubject.value = .error(error)
-          } else {
-            let genericWalletError = WalletError.init(description: LocalizableString.shared.get(with: .genericErrorDesc))
-            self.presentationStateSubject.value = .error(genericWalletError)
-          }
-
-        default:
-          ()
-        }
-      }
-      .store(in: &cancellables)
-  }
-
-  public func initialize() async {
-    await session.startQrEngagement()
-    _ = await session.receiveRequest()
-  }
-
-  public func startQrEngagement() async throws -> Data {
-    guard let deviceEngagement = session.deviceEngagement else {
-      throw session.uiError ?? .init(description: "Failed To Generate QR Code")
-    }
-    self.presentationStateSubject.value = .qrReady(imageData: deviceEngagement)
-    return deviceEngagement
-  }
-
-  public func requestReceived() async throws -> PresentationRequest {
-    guard session.disclosedDocuments.isEmpty == false else {
-      throw session.uiError ?? .init(description: "Failed to Find knonw documents to send")
-    }
-
-    let presentationRequest = PresentationRequest(
-      items: session.disclosedDocuments,
-      relyingParty: session.readerCertIssuer ?? LocalizableString.shared.get(with: .unknownVerifier),
-      dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
-      // TODO: Update with logic from wallet in order to show or not the trusted verifier checkmark.
-      isTrusted: false
-    )
-    self.presentationStateSubject.value = .requestReceived(presentationRequest)
-    return presentationRequest
-  }
-
-  public func sendResponse(response: RequestItemConvertible) async {
-    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems()) {
-      // This closure is used by WalletKit in order to handle the cancelling
-      // of a strong authentication by the user
-      // our implementation uses feature-common -> Biometry to handle strong user authorisation
-    }
-    self.presentationStateSubject.value = .success
-    self.presentationStateSubject.send(completion: .finished)
-  }
-
-  public func getState() async -> PresentationState {
-    self.presentationStateSubject.value
-  }
-
-  public func setState(presentationState: PresentationState) {
-    self.presentationStateSubject.value = presentationState
-  }
-
-  public func onSuccess(completion: () -> Void) {
-    completion()
-  }
-}
-
 public struct PresentationRequest {
 
   public let items: [DocElementsViewModel]
@@ -145,4 +60,5 @@ public enum PresentationSessionError: Error {
   case noDocumentFoundForRequest
   case conversionToRequestItemModel
   case invalidState
+  case failedToParseRemoteURL
 }
