@@ -25,6 +25,8 @@ public protocol WalletKitControllerType {
   var activeCoordinator: PresentationSessionCoordinatorType? { get }
 
   func startProximityPresentation() -> PresentationSessionCoordinatorType
+  func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType
+  func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType
   func stopPresentation()
   func fetchDocuments() -> [MdocDecodable]
   func fetchDocument(with id: String) -> MdocDecodable?
@@ -39,11 +41,15 @@ public final class WalletKitController: WalletKitControllerType {
   public let wallet = EudiWallet.standard
 
   public private(set) var activeCoordinator: PresentationSessionCoordinatorType?
+
+  private let configLogic: ConfigLogic
   private var cancellables = Set<AnyCancellable>()
 
-  internal init() {
+  internal init(configLogic: ConfigLogic = ConfigProvider.shared.getConfigLogic()) {
+    self.configLogic = configLogic
     wallet.userAuthenticationRequired = false
     wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
+    wallet.openId4VpVerifierApiUri = configLogic.verifierApiUri
   }
 
   public func loadSampleData(dataFiles: [String]) async throws {
@@ -69,6 +75,32 @@ public final class WalletKitController: WalletKitControllerType {
     return presentationSessionCoordinator
   }
 
+  public func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType {
+    self.startRemotePresentation(
+      urlString: decodeDeeplink(
+        link: deepLink
+      ) ?? ""
+    )
+  }
+
+  public func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType {
+    self.startRemotePresentation(urlString: urlString)
+  }
+
+  private func startRemotePresentation(urlString: String) -> PresentationSessionCoordinatorType {
+    self.stopPresentation()
+
+    let data = urlString.data(using: .utf8) ?? Data()
+
+    let session = wallet.beginPresentation(flow: .openid4vp(qrCode: data))
+    let presentationSessionCoordinator = RemoteSessionCoordinator(session: session)
+    self.activeCoordinator = presentationSessionCoordinator
+    presentationSessionCoordinator.onSuccess {
+      stopPresentation()
+    }
+    return presentationSessionCoordinator
+  }
+
   public func stopPresentation() {
     self.cancellables.forEach {$0.cancel()}
     self.activeCoordinator = nil
@@ -80,6 +112,15 @@ public final class WalletKitController: WalletKitControllerType {
 
   public func fetchDocument(with id: String) -> MdocDecodable? {
     wallet.storage.getDocumentModel(docType: id)
+  }
+
+  private func decodeDeeplink(link: URLComponents) -> String? {
+    // Handling requests of the form 
+    //    mdoc-openid4vp://https://eudi.netcompany-intrasoft.com?client_id=Verifier&request_uri=https://eudi.netcompany-intrasoft.com/wallet/request.jwt/OWB1_xVU7ndoHmirBn7S2JpcC5fFPzAXGCY1fTLxDjczVATjzQvre_w4yEcMB4FO5KwuyYXXw-JottarKgEvRQ
+    // so we need to drop scheme and forward slashes and keep the rest of the url in order to
+    // pass to wallet
+
+    return link.removeSchemeFromComponents()?.string
   }
 }
 

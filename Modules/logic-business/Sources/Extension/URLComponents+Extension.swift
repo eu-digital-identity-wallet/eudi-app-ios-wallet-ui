@@ -13,19 +13,16 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import SwiftUI
-import logic_ui
-import feature_common
+import Foundation
 
-public struct SameDeviceRequestView<Router: RouterHostType, Interactor: SameDeviceInteractorType>: View {
-
-  @ObservedObject private var viewModel: SameDeviceRequestViewModel<Router, Interactor>
-
-  public init(with router: Router, and interactor: Interactor) {
-    self.viewModel = .init(router: router, interactor: interactor)
-  }
-
-  public var body: some View {
-    BaseRequestView(with: viewModel.router, viewModel: viewModel)
+public extension URLComponents {
+  func removeSchemeFromComponents() -> URLComponents? {
+    var noSchemeUrlComponents = self
+    noSchemeUrlComponents.scheme = nil
+    // Remove first 2 forward slashes that remain after niling the scheme.
+    guard let components = URLComponents(string: String(noSchemeUrlComponents.string?.dropFirst(2) ?? "")) else {
+      return nil
+    }
+    return components
   }
 }

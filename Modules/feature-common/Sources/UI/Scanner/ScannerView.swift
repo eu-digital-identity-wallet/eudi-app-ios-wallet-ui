@@ -50,11 +50,12 @@ public struct ScannerView: View {
       }
 
       ContentHeader(
-        dismissIcon: Theme.shared.image.xmark,
-        foregroundColor: Color.white
+        dismissIcon: Theme.shared.image.xmark
       ) {
         dismiss.toggle()
       }
+      .nearlyTransparentView()
+      .ignoresSafeArea(edges: .horizontal)
       .padding()
 
     }
@@ -63,5 +64,6 @@ public struct ScannerView: View {
       message: errorMessage
     )
     .edgesIgnoringSafeArea(.bottom)
+    .background(Color.black)
   }
 }

@@ -35,6 +35,11 @@ public protocol ConfigLogic {
    * App version.
    */
   var appVersion: String { get }
+
+  /**
+   * Verifier API URI.
+   */
+  var verifierApiUri: String { get }
 }
 
 extension ConfigLogic {

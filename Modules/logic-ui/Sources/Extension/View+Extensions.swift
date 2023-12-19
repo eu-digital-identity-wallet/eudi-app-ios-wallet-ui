@@ -165,3 +165,20 @@ struct ViewDidLoadAsyncModifier: ViewModifier {
       }
   }
 }
+
+public extension View {
+  /// Creates a nearly transparent view with 1% opacity in order to create a tappable area
+  func nearlyTransparentView(opacity: CGFloat = 0.01) -> some View {
+    self.modifier(NearlyTransparentView(opacity: opacity))
+  }
+}
+
+struct NearlyTransparentView: ViewModifier {
+
+  let opacity: CGFloat
+
+  func body(content: Content) -> some View {
+    content
+      .background(Color.white.opacity(opacity))
+  }
+}

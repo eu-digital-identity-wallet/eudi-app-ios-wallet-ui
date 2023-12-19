@@ -6,6 +6,8 @@
 	<string>$(BASE_HOST)</string>
 	<key>Build Type</key>
 	<string>$(BUILD_TYPE)</string>
+	<key>Verifier API</key>
+	<string>$(VERIFIER_API_URI)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

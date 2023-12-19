@@ -17,7 +17,7 @@
 import feature_common
 
 @MainActor
-final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: CrossDeviceInteractorType>: BaseRequestViewModel<Router> {
+final class PresentationRequestViewModel<Router: RouterHostType, Interactor: PresentationInteractorType>: BaseRequestViewModel<Router> {
 
   private let interactor: Interactor
 
@@ -31,31 +31,55 @@ final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: Cros
 
   override func doWork() async {
     self.onStartLoading()
-    switch await interactor.doWork() {
-    case .success:
+    switch await interactor.onDeviceEngagement() {
+    case .success(let authenticationRequest):
       self.onReceivedItems(
-        with: RequestDataUiModel.mock(),
-        title: .requestDataTitle(["EUDI Wallet"]),
-        relyingParty: "EUDI Wallet",
-        isTrusted: true
+        with: authenticationRequest.requestDataCells,
+        title: .requestDataTitle([authenticationRequest.relyingParty]),
+        relyingParty: authenticationRequest.relyingParty,
+        isTrusted: authenticationRequest.isTrusted
       )
     case .failure(let error):
       self.onError(with: error)
     }
   }
 
+  override func onShare() {
+    Task { [weak self] in
+      guard
+        let items = self?.viewState.items,
+        let response = await self?.interactor.onResponsePrepare(requestItems: items)
+      else {
+        return
+      }
+      switch response {
+      case .success:
+        if let route = self?.getSuccessRoute() {
+          self?.router.push(with: route)
+        } else {
+          self?.router.popTo(with: self?.getPopRoute() ?? .dashboard)
+        }
+      case .failure(let error):
+        self?.onError(with: error)
+      }
+    }
+  }
+
   override func getSuccessRoute() -> AppRoute? {
-    .biometry(
+    return .biometry(
       config: UIConfig.Biometry(
         title: getTitle(),
         caption: .requestDataShareBiometryCaption,
         quickPinOnlyCaption: .requestDataShareBiometryCaption,
         navigationSuccessConfig: .init(
-          screen: .crossDeviceLoader(getRelyingParty()),
+          screen: .presentationLoader(
+            getRelyingParty(),
+            presentationCoordinator: interactor.presentationCoordinator
+          ),
           navigationType: .push
         ),
         navigationBackConfig: .init(
-          screen: .crossDeviceRequest,
+          screen: .dashboard,
           navigationType: .pop
         ),
         isPreAuthorization: false,
@@ -64,8 +88,12 @@ final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: Cros
     )
   }
 
+  override func getPopRoute() -> AppRoute? {
+    return .dashboard
+  }
+
   override func getTitle() -> LocalizableString.Key {
-    .requestDataTitle(["EUDI Conference"])
+    viewState.title
   }
 
   override func getCaption() -> LocalizableString.Key {
@@ -77,7 +105,7 @@ final class CrossDeviceRequestViewModel<Router: RouterHostType, Interactor: Cros
   }
 
   override func getRelyingParty() -> String {
-    "EUDI Conference"
+    viewState.relyingParty
   }
 
   override func getTitleCaption() -> String {
