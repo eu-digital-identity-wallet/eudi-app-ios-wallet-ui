@@ -24,6 +24,7 @@ struct WalletUiApp: App {
 	
 	// initialize wallet app
 	init() {
+		UserDefaults.standard.set(true, forKey: "DebugDisplay")
 		wallet = EudiWallet.standard
 		wallet.userAuthenticationRequired = true
 		wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
