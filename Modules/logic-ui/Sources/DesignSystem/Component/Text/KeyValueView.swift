@@ -69,7 +69,7 @@ public struct KeyValueView: View {
               .lineLimit(1)
           }
 
-        valueContent
+        contentValue
 
         Spacer()
 
@@ -82,7 +82,8 @@ public struct KeyValueView: View {
     .shimmer(isLoading: self.isLoading)
   }
 
-  private var valueContent: AnyView {
+  @ViewBuilder
+  private var contentValue: some View {
     switch value {
     case .string(let key):
       Text(key)
@@ -92,13 +93,11 @@ public struct KeyValueView: View {
           view
             .lineLimit(1)
         }
-        .eraseToAnyView()
     case .image(let image):
       image
         .resizable()
         .aspectRatio(contentMode: .fit)
         .frame(maxHeight: 50)
-        .eraseToAnyView()
     }
 
   }

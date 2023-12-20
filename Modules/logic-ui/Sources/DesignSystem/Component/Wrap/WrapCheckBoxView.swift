@@ -51,14 +51,14 @@ public struct WrapCheckBoxView: View {
     }
   }
 
-  public init<T>(
+  public init(
     isSelected: Bool,
     isVisible: Bool,
     isEnabled: Bool,
     isLoading: Bool,
     id: String,
     title: String,
-    value: T,
+    value: Any,
     onTap: TapListener = nil
   ) {
     self.isSelected = isSelected
@@ -76,6 +76,21 @@ public struct WrapCheckBoxView: View {
       self.value = .string("")
     }
     self.onTap = onTap
+  }
+
+  @ViewBuilder
+  private var contentValue: some View {
+    switch value {
+    case .string(let value):
+      Text(value)
+        .typography(ThemeManager.shared.font.titleMedium)
+        .foregroundStyle(ThemeManager.shared.color.textPrimaryDark)
+    case .image(let image):
+      image
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .frame(maxHeight: 50)
+    }
   }
 
   public var body: some View {
@@ -102,18 +117,8 @@ public struct WrapCheckBoxView: View {
           Text(self.title)
             .typography(ThemeManager.shared.font.bodyMedium)
             .foregroundStyle(ThemeManager.shared.color.textSecondaryDark)
-          
-          switch value {
-          case .string(let value):
-            Text(value)
-              .typography(ThemeManager.shared.font.titleMedium)
-              .foregroundStyle(ThemeManager.shared.color.textPrimaryDark)
-          case .image(let image):
-            image
-              .resizable()
-              .aspectRatio(contentMode: .fit)
-              .frame(maxHeight: 50)
-          }
+
+          contentValue
         }
       }
 
