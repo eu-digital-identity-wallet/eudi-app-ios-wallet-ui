@@ -157,9 +157,9 @@ extension MdocDecodable {
       .reduce(into: "") { partialResult, nameValue in
         if let nestedChildren = nameValue.children {
           let deepNested = flattenNested(parent: nameValue, nested: nestedChildren.sorted(by: {$0.order < $1.order}))
-          partialResult += "- \(deepNested.value) \n"
+          partialResult += "\(deepNested.value)\n"
         } else {
-          partialResult += "\(LocalizableString.shared.get(with: .dynamic(key: nameValue.name))): \(nameValue.value) \n"
+          partialResult += "\(LocalizableString.shared.get(with: .dynamic(key: nameValue.name))): \(nameValue.value)\n"
         }
       }
       .dropLast()

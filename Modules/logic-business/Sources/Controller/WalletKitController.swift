@@ -156,7 +156,7 @@ extension WalletKitControllerType {
     }
 
     // Convert the Stored models to their [Key: Value] array
-    var displayStrings = wallet.storage.mdocModels
+    let displayStrings = wallet.storage.mdocModels
       .compactMap({ $0 })
       .first(where: { $0.docType == documentType.rawValue })?.displayStrings
       .decodeGender()
