@@ -789,8 +789,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit";
 			requirement = {
-				kind = exactVersion;
-				version = 0.1.6;
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.7;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
