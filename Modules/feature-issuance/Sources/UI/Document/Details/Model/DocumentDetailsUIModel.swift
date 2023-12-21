@@ -78,14 +78,9 @@ public extension DocumentDetailsUIModel {
 
 extension MdocDecodable {
   func transformToDocumentDetailsUi() -> DocumentDetailsUIModel {
-
-    // TODO: Remove [getDrivingPrivileges()] and compactMap when core returns correct format of driving privileges.
-
-    let values = displayStrings + [getDrivingPrivileges()]
-
     let documentFields: [DocumentDetailsUIModel.DocumentField] =
     flattenValues(
-      input: values
+      input: displayStrings
         .compactMap({$0})
         .sorted(by: {$0.order < $1.order})
         .decodeGender()
@@ -160,12 +155,18 @@ extension MdocDecodable {
       .mapTrueFalseToLocalizable()
       .parseDates()
       .reduce(into: "") { partialResult, nameValue in
-        partialResult += "\(nameValue.name): \(nameValue.value)"
+        if let nestedChildren = nameValue.children {
+          let deepNested = flattenNested(parent: nameValue, nested: nestedChildren.sorted(by: {$0.order < $1.order}))
+          partialResult += "- \(deepNested.value) \n"
+        } else {
+          partialResult += "\(LocalizableString.shared.get(with: .dynamic(key: nameValue.name))): \(nameValue.value) \n"
+        }
       }
+      .dropLast()
 
     return .init(
       name: parent.name,
-      value: flat,
+      value: String(flat),
       ns: parent.ns,
       order: parent.order,
       children: nil
