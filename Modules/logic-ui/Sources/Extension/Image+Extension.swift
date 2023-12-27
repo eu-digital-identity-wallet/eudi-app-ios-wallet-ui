@@ -14,11 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import logic_resources
 
 public extension Image {
-  init(data: Data) {
+  init(data: Data, placeholder: Image = Theme.shared.image.photo) {
     guard let uiImage = UIImage(data: data) else {
-      self.init(data: Data())
+      self = placeholder
       return
     }
     self.init(uiImage: uiImage)
