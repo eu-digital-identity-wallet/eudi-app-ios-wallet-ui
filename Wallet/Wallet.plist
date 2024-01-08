@@ -29,6 +29,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>1</string>
 	<key>Verifier API</key>
 	<string>$(VERIFIER_API_URI)</string>
 </dict>
