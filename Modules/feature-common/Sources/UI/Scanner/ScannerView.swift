@@ -64,6 +64,5 @@ public struct ScannerView: View {
       message: errorMessage
     )
     .edgesIgnoringSafeArea(.bottom)
-    .background(Color.black)
   }
 }

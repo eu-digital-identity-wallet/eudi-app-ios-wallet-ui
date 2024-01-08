@@ -203,6 +203,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "ble_disabled_modal_content")
     case .bleDisabledModalButton:
       bundle.localizedString(forKey: "ble_disabled_modal_button")
+    case .shownAbove:
+      bundle.localizedString(forKey: "shown_above")
     }
   }
 
@@ -297,6 +299,7 @@ public extension LocalizableString {
     case bleDisabledModalTitle
     case bleDisabledModalCaption
     case bleDisabledModalButton
+    case shownAbove
   }
 }
 

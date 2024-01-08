@@ -53,8 +53,31 @@ public enum RequestDataCell: Equatable {
 
 public struct RequestDataRow: Identifiable, Equatable {
 
+  public enum Value: Equatable {
+    case string(String)
+    case image(Data)
+
+    public var string: String? {
+      switch self {
+      case .string(let string):
+        string
+      default:
+        nil
+      }
+    }
+
+    public var image: Data? {
+      switch self {
+      case .image(let image):
+        image
+      default:
+        nil
+      }
+    }
+  }
+
   public let title: String
-  public let value: String
+  public let value: Value
 
   public var id: String
   public var isSelected: Bool
@@ -69,7 +92,7 @@ public struct RequestDataRow: Identifiable, Equatable {
     isSelected: Bool,
     isVisible: Bool,
     title: String,
-    value: String,
+    value: MdocValue,
     elementKey: String = "namespaced_key",
     namespace: String = "doc.namespace",
     docType: String = "mock"
@@ -78,7 +101,12 @@ public struct RequestDataRow: Identifiable, Equatable {
     self.isSelected = isSelected
     self.isVisible = isVisible
     self.title = title
-    self.value = value
+    switch value {
+    case .string(let string):
+      self.value = .string(string)
+    case .image(let imageData):
+      self.value = .image(imageData)
+    }
     self.elementKey = elementKey
     self.namespace = namespace
     self.docType = docType
@@ -238,30 +266,30 @@ public struct RequestDataUiModel {
   public static func mock() -> [RequestDataCell] {
     [
       .requestDataSection(.init(type: .id, title: "Digital ID")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: .string("Tzouvaras"))),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: .string("Stilianos"))),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Date of Birth", value: .string("21-09-1985"))),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Resident Country", value: .string("Greece"))),
       .requestDataVerification(
         .init(
           title: "Verification data",
           items: [
-            .init(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras"),
-            .init(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos"),
-            .init(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985"),
-            .init(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")
+            .init(isSelected: true, isVisible: false, title: "Family Name", value: .string("Tzouvaras")),
+            .init(isSelected: true, isVisible: false, title: "First Name", value: .string("Stilianos")),
+            .init(isSelected: true, isVisible: false, title: "Date of Birth", value: .string("21-09-1985")),
+            .init(isSelected: true, isVisible: false, title: "Resident Country", value: .string("Greece"))
           ]
         )
       ),
       .requestDataSection(.init(type: .mdl, title: "MDL")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: "Tzouvaras")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: "Stilianos")),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: .string("Tzouvaras"))),
+      .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: .string("Stilianos"))),
       .requestDataVerification(
         .init(
           title: "Verification data",
           items: [
-            .init(isSelected: true, isVisible: false, title: "Date of Birth", value: "21-09-1985"),
-            .init(isSelected: true, isVisible: false, title: "Resident Country", value: "Greece")
+            .init(isSelected: true, isVisible: false, title: "Date of Birth", value: .string("21-09-1985")),
+            .init(isSelected: true, isVisible: false, title: "Resident Country", value: .string("Greece"))
           ]
         )
       )
