@@ -6,8 +6,6 @@
 	<string>$(BASE_HOST)</string>
 	<key>Build Type</key>
 	<string>$(BUILD_TYPE)</string>
-	<key>Verifier API</key>
-	<string>$(VERIFIER_API_URI)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -17,7 +15,7 @@
 			<string>eu.europa.ec.euidi</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>mdoc-openid4vp</string>
+				<string>eudi-openid4vp</string>
 			</array>
 		</dict>
 		<dict>
@@ -27,9 +25,11 @@
 			<string>eu.europa.ec.euidi.dev</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>mdoc-openid4vp</string>
+				<string>eudi-openid4vp</string>
 			</array>
 		</dict>
 	</array>
+	<key>Verifier API</key>
+	<string>$(VERIFIER_API_URI)</string>
 </dict>
 </plist>

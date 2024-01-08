@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "a4f854de2c81dd18217a80aaac8fcd35fb0acf9b",
-        "version" : "0.1.51"
+        "revision" : "e16eaa812b7c16177f561a182806b43e1f88e8b1",
+        "version" : "0.1.7"
       }
     },
     {
@@ -141,7 +141,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
         "revision" : "238939a0310d2052b3f2ade8a88fc6befe212efc",
-        "version" : "0.1.51"
+        "version" : "0.1.6"
       }
     },
     {
@@ -239,8 +239,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Sextant.git",
       "state" : {
-        "revision" : "068b73bf9e02af00570fcd94b88463469ec2b1f9",
-        "version" : "0.4.27"
+        "revision" : "2048dc3c339c4d1ded65234f3cbc2658c5acb63b",
+        "version" : "0.4.28"
       }
     },
     {
@@ -259,15 +259,6 @@
       "state" : {
         "revision" : "26cc5e9ae0947092c7139ef7ba612e34646086c7",
         "version" : "0.10.1"
-      }
-    },
-    {
-      "identity" : "swift-argument-parser",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-argument-parser",
-      "state" : {
-        "revision" : "c8ed701b513cf5177118a175d85fbbbcd707ab41",
-        "version" : "1.3.0"
       }
     },
     {
@@ -300,7 +291,7 @@
     {
       "identity" : "swiftui-shimmer",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/markiv/SwiftUI-Shimmer",
+      "location" : "https://github.com/markiv/SwiftUI-Shimmer.git",
       "state" : {
         "revision" : "1f3a620e4abe890d00008cb2af7023d810b433a7",
         "version" : "1.4.0"

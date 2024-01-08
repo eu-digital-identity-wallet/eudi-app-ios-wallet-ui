@@ -5,6 +5,7 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+import feature_common
 import logic_api
 import logic_business
 
@@ -13,37 +14,53 @@ import logic_business
 
 
 
-public class MockCrossDeviceInteractorType: CrossDeviceInteractorType, Cuckoo.ProtocolMock {
+public class MockPresentationInteractorType: PresentationInteractorType, Cuckoo.ProtocolMock {
     
-    public typealias MocksType = CrossDeviceInteractorType
+    public typealias MocksType = PresentationInteractorType
     
-    public typealias Stubbing = __StubbingProxy_CrossDeviceInteractorType
-    public typealias Verification = __VerificationProxy_CrossDeviceInteractorType
+    public typealias Stubbing = __StubbingProxy_PresentationInteractorType
+    public typealias Verification = __VerificationProxy_PresentationInteractorType
 
     public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-    private var __defaultImplStub: CrossDeviceInteractorType?
+    private var __defaultImplStub: PresentationInteractorType?
 
-    public func enableDefaultImplementation(_ stub: CrossDeviceInteractorType) {
+    public func enableDefaultImplementation(_ stub: PresentationInteractorType) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
     
 
     
-
+    
+    
+    
+    public var presentationCoordinator: PresentationSessionCoordinatorType {
+        get {
+            return cuckoo_manager.getter("presentationCoordinator",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.presentationCoordinator)
+        }
+        
+    }
+    
     
 
     
+
     
     
     
-    public func doWork() async -> CrossDevicePartialState {
+    
+    public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
         
     return await cuckoo_manager.call(
     """
-    doWork() async -> CrossDevicePartialState
+    onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
     """,
             parameters: (),
             escapingParameters: (),
@@ -51,13 +68,53 @@ public class MockCrossDeviceInteractorType: CrossDeviceInteractorType, Cuckoo.Pr
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: await __defaultImplStub!.doWork())
+            defaultCall: await __defaultImplStub!.onDeviceEngagement())
+        
+    }
+    
+    
+    
+    
+    
+    public func onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error> {
+        
+    return await cuckoo_manager.call(
+    """
+    onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>
+    """,
+            parameters: (requestItems),
+            escapingParameters: (requestItems),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.onResponsePrepare(requestItems: requestItems))
+        
+    }
+    
+    
+    
+    
+    
+    public func onSendResponse() async -> Result<Void, Error> {
+        
+    return await cuckoo_manager.call(
+    """
+    onSendResponse() async -> Result<Void, Error>
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.onSendResponse())
         
     }
     
     
 
-    public struct __StubbingProxy_CrossDeviceInteractorType: Cuckoo.StubbingProxy {
+    public struct __StubbingProxy_PresentationInteractorType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
@@ -66,19 +123,48 @@ public class MockCrossDeviceInteractorType: CrossDeviceInteractorType, Cuckoo.Pr
         
         
         
+        var presentationCoordinator: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockPresentationInteractorType, PresentationSessionCoordinatorType> {
+            return .init(manager: cuckoo_manager, name: "presentationCoordinator")
+        }
         
-        func doWork() -> Cuckoo.ProtocolStubFunction<(), CrossDevicePartialState> {
+        
+        
+        
+        
+        func onDeviceEngagement() -> Cuckoo.ProtocolStubFunction<(), Result<OnlineAuthenticationRequestSuccessModel, Error>> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockCrossDeviceInteractorType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractorType.self, method:
     """
-    doWork() async -> CrossDevicePartialState
+    onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems: M1) -> Cuckoo.ProtocolStubFunction<([RequestDataCell]), Result<RequestItemConvertible, Error>> where M1.MatchedType == [RequestDataCell] {
+            let matchers: [Cuckoo.ParameterMatcher<([RequestDataCell])>] = [wrap(matchable: requestItems) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractorType.self, method:
+    """
+    onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func onSendResponse() -> Cuckoo.ProtocolStubFunction<(), Result<Void, Error>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractorType.self, method:
+    """
+    onSendResponse() async -> Result<Void, Error>
     """, parameterMatchers: matchers))
         }
         
         
     }
 
-    public struct __VerificationProxy_CrossDeviceInteractorType: Cuckoo.VerificationProxy {
+    public struct __VerificationProxy_PresentationInteractorType: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -90,16 +176,47 @@ public class MockCrossDeviceInteractorType: CrossDeviceInteractorType, Cuckoo.Pr
         }
     
         
+        
+        
+        var presentationCoordinator: Cuckoo.VerifyReadOnlyProperty<PresentationSessionCoordinatorType> {
+            return .init(manager: cuckoo_manager, name: "presentationCoordinator", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
     
         
         
         
         @discardableResult
-        func doWork() -> Cuckoo.__DoNotUse<(), CrossDevicePartialState> {
+        func onDeviceEngagement() -> Cuckoo.__DoNotUse<(), Result<OnlineAuthenticationRequestSuccessModel, Error>> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    doWork() async -> CrossDevicePartialState
+    onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems: M1) -> Cuckoo.__DoNotUse<([RequestDataCell]), Result<RequestItemConvertible, Error>> where M1.MatchedType == [RequestDataCell] {
+            let matchers: [Cuckoo.ParameterMatcher<([RequestDataCell])>] = [wrap(matchable: requestItems) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func onSendResponse() -> Cuckoo.__DoNotUse<(), Result<Void, Error>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    onSendResponse() async -> Result<Void, Error>
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -108,7 +225,18 @@ public class MockCrossDeviceInteractorType: CrossDeviceInteractorType, Cuckoo.Pr
 }
 
 
-public class CrossDeviceInteractorTypeStub: CrossDeviceInteractorType {
+public class PresentationInteractorTypeStub: PresentationInteractorType {
+    
+    
+    
+    
+    public var presentationCoordinator: PresentationSessionCoordinatorType {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (PresentationSessionCoordinatorType).self)
+        }
+        
+    }
+    
     
 
     
@@ -117,8 +245,24 @@ public class CrossDeviceInteractorTypeStub: CrossDeviceInteractorType {
     
     
     
-    public func doWork() async -> CrossDevicePartialState  {
-        return DefaultValueRegistry.defaultValue(for: (CrossDevicePartialState).self)
+    public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>  {
+        return DefaultValueRegistry.defaultValue(for: (Result<OnlineAuthenticationRequestSuccessModel, Error>).self)
+    }
+    
+    
+    
+    
+    
+    public func onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>  {
+        return DefaultValueRegistry.defaultValue(for: (Result<RequestItemConvertible, Error>).self)
+    }
+    
+    
+    
+    
+    
+    public func onSendResponse() async -> Result<Void, Error>  {
+        return DefaultValueRegistry.defaultValue(for: (Result<Void, Error>).self)
     }
     
     
@@ -127,172 +271,6 @@ public class CrossDeviceInteractorTypeStub: CrossDeviceInteractorType {
 
 
 
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_presentation
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-import logic_api
-import logic_business
-
-
-
-
-
-
-public class MockSameDeviceInteractorType: SameDeviceInteractorType, Cuckoo.ProtocolMock {
-    
-    public typealias MocksType = SameDeviceInteractorType
-    
-    public typealias Stubbing = __StubbingProxy_SameDeviceInteractorType
-    public typealias Verification = __VerificationProxy_SameDeviceInteractorType
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    
-    private var __defaultImplStub: SameDeviceInteractorType?
-
-    public func enableDefaultImplementation(_ stub: SameDeviceInteractorType) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-    
-
-    
-
-    
-
-    
-    
-    
-    
-    public func doWork() async -> SameDevicePartialState {
-        
-    return await cuckoo_manager.call(
-    """
-    doWork() async -> SameDevicePartialState
-    """,
-            parameters: (),
-            escapingParameters: (),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: await __defaultImplStub!.doWork())
-        
-    }
-    
-    
-
-    public struct __StubbingProxy_SameDeviceInteractorType: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        
-        
-        
-        func doWork() -> Cuckoo.ProtocolStubFunction<(), SameDevicePartialState> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockSameDeviceInteractorType.self, method:
-    """
-    doWork() async -> SameDevicePartialState
-    """, parameterMatchers: matchers))
-        }
-        
-        
-    }
-
-    public struct __VerificationProxy_SameDeviceInteractorType: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    
-        
-    
-        
-        
-        
-        @discardableResult
-        func doWork() -> Cuckoo.__DoNotUse<(), SameDevicePartialState> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-    """
-    doWork() async -> SameDevicePartialState
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-    }
-}
-
-
-public class SameDeviceInteractorTypeStub: SameDeviceInteractorType {
-    
-
-    
-
-    
-    
-    
-    
-    public func doWork() async -> SameDevicePartialState  {
-        return DefaultValueRegistry.defaultValue(for: (SameDevicePartialState).self)
-    }
-    
-    
-}
-
-
-
-
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_presentation
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
-import feature_common
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_presentation
-@testable import logic_api
-@testable import logic_ui
-
-import feature_common
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_presentation
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
-import feature_common
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_presentation
-@testable import logic_api
-@testable import logic_ui
-
-import feature_common
 
 import Cuckoo
 @testable import logic_business
@@ -870,6 +848,22 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
     }
     
     
+    
+    
+    
+    public var verifierApiUri: String {
+        get {
+            return cuckoo_manager.getter("verifierApiUri",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.verifierApiUri)
+        }
+        
+    }
+    
+    
 
     
 
@@ -900,6 +894,13 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         
         var appVersion: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, String> {
             return .init(manager: cuckoo_manager, name: "appVersion")
+        }
+        
+        
+        
+        
+        var verifierApiUri: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, String> {
+            return .init(manager: cuckoo_manager, name: "verifierApiUri")
         }
         
         
@@ -939,6 +940,13 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         }
         
         
+        
+        
+        var verifierApiUri: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "verifierApiUri", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
     
         
     }
@@ -973,6 +981,17 @@ public class ConfigLogicStub: ConfigLogic {
     
     
     public var appVersion: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var verifierApiUri: String {
         get {
             return DefaultValueRegistry.defaultValue(for: (String).self)
         }
@@ -1492,17 +1511,6 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import feature_presentation
-@testable import logic_api
-@testable import logic_ui
-
-import MdocDataModel18013
-import SwiftUI
-import UIKit
-import logic_resources
 
 import Cuckoo
 @testable import logic_business
@@ -3231,6 +3239,46 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
     
     
     
+    public func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType {
+        
+    return cuckoo_manager.call(
+    """
+    startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType
+    """,
+            parameters: (deepLink),
+            escapingParameters: (deepLink),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.startSameDevicePresentation(deepLink: deepLink))
+        
+    }
+    
+    
+    
+    
+    
+    public func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType {
+        
+    return cuckoo_manager.call(
+    """
+    startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType
+    """,
+            parameters: (urlString),
+            escapingParameters: (urlString),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.startCrossDevicePresentation(urlString: urlString))
+        
+    }
+    
+    
+    
+    
+    
     public func stopPresentation()  {
         
     return cuckoo_manager.call(
@@ -3384,6 +3432,28 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
         
         
         
+        func startSameDevicePresentation<M1: Cuckoo.Matchable>(deepLink: M1) -> Cuckoo.ProtocolStubFunction<(URLComponents), PresentationSessionCoordinatorType> where M1.MatchedType == URLComponents {
+            let matchers: [Cuckoo.ParameterMatcher<(URLComponents)>] = [wrap(matchable: deepLink) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func startCrossDevicePresentation<M1: Cuckoo.Matchable>(urlString: M1) -> Cuckoo.ProtocolStubFunction<(String), PresentationSessionCoordinatorType> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: urlString) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
         func stopPresentation() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
@@ -3486,6 +3556,30 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
             return cuckoo_manager.verify(
     """
     startProximityPresentation() -> PresentationSessionCoordinatorType
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func startSameDevicePresentation<M1: Cuckoo.Matchable>(deepLink: M1) -> Cuckoo.__DoNotUse<(URLComponents), PresentationSessionCoordinatorType> where M1.MatchedType == URLComponents {
+            let matchers: [Cuckoo.ParameterMatcher<(URLComponents)>] = [wrap(matchable: deepLink) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func startCrossDevicePresentation<M1: Cuckoo.Matchable>(urlString: M1) -> Cuckoo.__DoNotUse<(String), PresentationSessionCoordinatorType> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: urlString) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -3598,6 +3692,22 @@ public class WalletKitControllerTypeStub: WalletKitControllerType {
     
     
     public func startProximityPresentation() -> PresentationSessionCoordinatorType  {
+        return DefaultValueRegistry.defaultValue(for: (PresentationSessionCoordinatorType).self)
+    }
+    
+    
+    
+    
+    
+    public func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType  {
+        return DefaultValueRegistry.defaultValue(for: (PresentationSessionCoordinatorType).self)
+    }
+    
+    
+    
+    
+    
+    public func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType  {
         return DefaultValueRegistry.defaultValue(for: (PresentationSessionCoordinatorType).self)
     }
     
@@ -4156,6 +4266,29 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import Combine
+import EudiWalletKit
+import Foundation
+import MdocDataModel18013
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import Combine
+import EudiWalletKit
+import Foundation
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
 import Foundation
 import logic_resources
 
@@ -4263,9 +4396,45 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import MdocDataModel18013
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
 import Foundation
 import MdocDataModel18013
 import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import MdocDataModel18013
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
 
 import Cuckoo
 @testable import logic_business
@@ -6313,6 +6482,7 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
+import logic_business
 import logic_resources
 
 import Cuckoo
@@ -6340,6 +6510,15 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
 
 import Cuckoo
 @testable import logic_business

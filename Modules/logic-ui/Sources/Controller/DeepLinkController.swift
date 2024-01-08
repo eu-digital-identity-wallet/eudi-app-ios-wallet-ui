@@ -40,9 +40,10 @@ public final class DeepLinkController: DeepLinkControllerType {
 
   public func hasDeepLink(url: URL) -> DeepLinkAction? {
     if let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
+       let scheme = components.scheme,
        let params = components.queryItems,
        !params.isEmpty,
-       let action = DeepLinkAction.Action.parseType(with: params) {
+       let action = DeepLinkAction.Action.parseType(with: scheme) {
       return DeepLinkAction(link: components, action: action)
     }
     return nil
@@ -89,19 +90,17 @@ public extension DeepLinkController {
 }
 
 public extension DeepLinkController.DeepLinkAction {
-  enum Action: CaseIterable {
+  enum Action: String {
 
     case openid4vp
 
-    private static var openId4vpParams: [String] {
-      return ["client_id", "request_uri"]
-    }
-
-    public static func parseType(with queryItems: [URLQueryItem]) -> Action? {
-      if Action.openId4vpParams == queryItems.map({ $0.name }) {
+    public static func parseType(with scheme: String) -> Action? {
+      switch scheme {
+      case _ where scheme.contains(openid4vp.rawValue):
         return .openid4vp
+      default:
+        return nil
       }
-      return nil
     }
   }
 }

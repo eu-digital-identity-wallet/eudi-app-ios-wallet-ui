@@ -75,6 +75,22 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
     }
     
     
+    
+    
+    
+    public var verifierApiUri: String {
+        get {
+            return cuckoo_manager.getter("verifierApiUri",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.verifierApiUri)
+        }
+        
+    }
+    
+    
 
     
 
@@ -105,6 +121,13 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         
         var appVersion: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, String> {
             return .init(manager: cuckoo_manager, name: "appVersion")
+        }
+        
+        
+        
+        
+        var verifierApiUri: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, String> {
+            return .init(manager: cuckoo_manager, name: "verifierApiUri")
         }
         
         
@@ -144,6 +167,13 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         }
         
         
+        
+        
+        var verifierApiUri: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "verifierApiUri", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
     
         
     }
@@ -178,6 +208,17 @@ public class ConfigLogicStub: ConfigLogic {
     
     
     public var appVersion: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var verifierApiUri: String {
         get {
             return DefaultValueRegistry.defaultValue(for: (String).self)
         }
@@ -688,14 +729,6 @@ import Cuckoo
 @testable import logic_business
 
 import Foundation
-
-import Cuckoo
-@testable import logic_business
-
-import MdocDataModel18013
-import SwiftUI
-import UIKit
-import logic_resources
 
 import Cuckoo
 @testable import logic_business
@@ -2409,6 +2442,46 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
     
     
     
+    public func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType {
+        
+    return cuckoo_manager.call(
+    """
+    startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType
+    """,
+            parameters: (deepLink),
+            escapingParameters: (deepLink),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.startSameDevicePresentation(deepLink: deepLink))
+        
+    }
+    
+    
+    
+    
+    
+    public func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType {
+        
+    return cuckoo_manager.call(
+    """
+    startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType
+    """,
+            parameters: (urlString),
+            escapingParameters: (urlString),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.startCrossDevicePresentation(urlString: urlString))
+        
+    }
+    
+    
+    
+    
+    
     public func stopPresentation()  {
         
     return cuckoo_manager.call(
@@ -2562,6 +2635,28 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
         
         
         
+        func startSameDevicePresentation<M1: Cuckoo.Matchable>(deepLink: M1) -> Cuckoo.ProtocolStubFunction<(URLComponents), PresentationSessionCoordinatorType> where M1.MatchedType == URLComponents {
+            let matchers: [Cuckoo.ParameterMatcher<(URLComponents)>] = [wrap(matchable: deepLink) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func startCrossDevicePresentation<M1: Cuckoo.Matchable>(urlString: M1) -> Cuckoo.ProtocolStubFunction<(String), PresentationSessionCoordinatorType> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: urlString) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
         func stopPresentation() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
@@ -2664,6 +2759,30 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
             return cuckoo_manager.verify(
     """
     startProximityPresentation() -> PresentationSessionCoordinatorType
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func startSameDevicePresentation<M1: Cuckoo.Matchable>(deepLink: M1) -> Cuckoo.__DoNotUse<(URLComponents), PresentationSessionCoordinatorType> where M1.MatchedType == URLComponents {
+            let matchers: [Cuckoo.ParameterMatcher<(URLComponents)>] = [wrap(matchable: deepLink) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func startCrossDevicePresentation<M1: Cuckoo.Matchable>(urlString: M1) -> Cuckoo.__DoNotUse<(String), PresentationSessionCoordinatorType> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: urlString) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -2776,6 +2895,22 @@ public class WalletKitControllerTypeStub: WalletKitControllerType {
     
     
     public func startProximityPresentation() -> PresentationSessionCoordinatorType  {
+        return DefaultValueRegistry.defaultValue(for: (PresentationSessionCoordinatorType).self)
+    }
+    
+    
+    
+    
+    
+    public func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType  {
+        return DefaultValueRegistry.defaultValue(for: (PresentationSessionCoordinatorType).self)
+    }
+    
+    
+    
+    
+    
+    public func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType  {
         return DefaultValueRegistry.defaultValue(for: (PresentationSessionCoordinatorType).self)
     }
     
@@ -3328,6 +3463,23 @@ public class PresentationSessionCoordinatorTypeStub: PresentationSessionCoordina
 import Cuckoo
 @testable import logic_business
 
+import Combine
+import EudiWalletKit
+import Foundation
+import MdocDataModel18013
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+
+import Combine
+import EudiWalletKit
+import Foundation
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+
 import Foundation
 import logic_resources
 
@@ -3396,9 +3548,33 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 
+import MdocDataModel18013
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+
 import Foundation
 import MdocDataModel18013
 import logic_resources
+
+import Cuckoo
+@testable import logic_business
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+
+import Foundation
+import MdocDataModel18013
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+
+import Foundation
 
 import Cuckoo
 @testable import logic_business
