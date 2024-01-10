@@ -47,7 +47,7 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
         items: RequestDataUiModel.mock(),
         title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
-        relyingParty: "Unknown Verifier",
+        relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
         isTrusted: false
       )
     )

@@ -151,9 +151,9 @@ public struct BaseRequestView<Router: RouterHostType>: View {
 
     let image = switch viewModel.viewState.isContentVisible {
     case true:
-      ThemeManager.shared.image.eye
-    case false:
       ThemeManager.shared.image.eyeSlash
+    case false:
+      ThemeManager.shared.image.eye
     }
 
     return image

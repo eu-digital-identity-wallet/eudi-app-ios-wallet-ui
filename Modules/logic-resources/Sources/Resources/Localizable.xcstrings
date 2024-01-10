@@ -414,7 +414,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "EU PID"
+            "value" : "National ID"
           }
         }
       }
@@ -821,7 +821,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "mDL"
+            "value" : "Driving License"
           }
         }
       }
@@ -1528,7 +1528,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unknown Verifier"
+            "value" : "Verifier"
           }
         }
       }
