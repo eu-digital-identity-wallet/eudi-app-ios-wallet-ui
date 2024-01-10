@@ -112,6 +112,10 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     )
   }
 
+  public func onEmptyDocuments() {
+    setNewState(items: [])
+  }
+
   public func onReceivedItems(
     with items: [RequestDataCell],
     title: LocalizableString.Key,

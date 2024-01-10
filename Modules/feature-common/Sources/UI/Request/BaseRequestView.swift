@@ -69,40 +69,44 @@ public struct BaseRequestView<Router: RouterHostType>: View {
 
       VSpacer.small()
 
-      ScrollView {
-        VStack(spacing: .zero) {
+      if viewModel.viewState.items.isEmpty {
+        noDocumentsFound
+      } else {
+        ScrollView {
+          VStack(spacing: .zero) {
 
-          ForEach(viewModel.viewState.items.indices, id: \.self) { index in
+            ForEach(viewModel.viewState.items.indices, id: \.self) { index in
 
-            let item = viewModel.viewState.items[index]
-            let nextItem: RequestDataCell? = (index + 2) < viewModel.viewState.items.count
-            ? viewModel.viewState.items[index + 1]
-            : nil
+              let item = viewModel.viewState.items[index]
+              let nextItem: RequestDataCell? = (index + 2) < viewModel.viewState.items.count
+              ? viewModel.viewState.items[index + 1]
+              : nil
 
-            if index > 0 {
+              if index > 0 {
+                VSpacer.small()
+              }
+
+              RequestDataCellView(
+                cellModel: item,
+                isLoading: viewModel.viewState.isLoading
+              ) { id in
+                viewModel.onSelectionChanged(id: id)
+              }
+
+              if (index + 1) < viewModel.viewState.items.count,
+                 item.isDataSection == nil,
+                 item.isDataVerification == nil,
+                 nextItem?.isDataRow != nil {
+                Divider()
+              }
+
               VSpacer.small()
             }
-
-            RequestDataCellView(
-              cellModel: item,
-              isLoading: viewModel.viewState.isLoading
-            ) { id in
-              viewModel.onSelectionChanged(id: id)
-            }
-
-            if (index + 1) < viewModel.viewState.items.count,
-               item.isDataSection == nil,
-               item.isDataVerification == nil,
-               nextItem?.isDataRow != nil {
-              Divider()
-            }
-
-            VSpacer.small()
           }
+          .padding(.top)
         }
-        .padding(.top)
+        .bottomFade()
       }
-      .bottomFade()
 
       Spacer()
 
@@ -147,6 +151,31 @@ public struct BaseRequestView<Router: RouterHostType>: View {
     }
   }
 
+  var noDocumentsFound: some View {
+    VStack(alignment: .center) {
+
+      Spacer()
+
+      VStack(alignment: .center, spacing: SPACING_MEDIUM) {
+
+        let imageSize = getScreenRect().width / 4
+
+        Theme.shared.image.exclamationmarkCircle
+          .renderingMode(.template)
+          .resizable()
+          .foregroundStyle(ThemeManager.shared.color.textSecondaryDark)
+          .frame(width: imageSize, height: imageSize)
+
+        Text(.requestDataNoDocument)
+          .typography(ThemeManager.shared.font.bodyMedium)
+          .foregroundColor(ThemeManager.shared.color.textSecondaryDark)
+          .multilineTextAlignment(.center)
+      }
+
+      Spacer()
+    }
+  }
+
   var visibilityIcon: some View {
 
     let image = switch viewModel.viewState.isContentVisible {
@@ -171,7 +200,7 @@ public struct BaseRequestView<Router: RouterHostType>: View {
         style: .primary,
         title: .shareButton,
         isLoading: viewModel.viewState.isLoading,
-        isEnabled: !viewModel.viewState.isLoading,
+        isEnabled: !viewModel.viewState.isLoading && !viewModel.viewState.items.isEmpty,
         onAction: viewModel.onShare()
       )
       WrapButtonView(

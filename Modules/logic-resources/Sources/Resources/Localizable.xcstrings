@@ -1170,6 +1170,17 @@
         }
       }
     },
+    "request_data_no_document" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The requested document is not available in your EUDI Wallet. Please contact the authorised issuer for further information."
+          }
+        }
+      }
+    },
     "request_data_share_biometry_caption" : {
       "extractionState" : "manual",
       "localizations" : {

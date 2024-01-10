@@ -39,8 +39,8 @@ final class PresentationRequestViewModel<Router: RouterHostType, Interactor: Pre
         relyingParty: authenticationRequest.relyingParty,
         isTrusted: authenticationRequest.isTrusted
       )
-    case .failure(let error):
-      self.onError(with: error)
+    case .failure:
+      self.onEmptyDocuments()
     }
   }
 

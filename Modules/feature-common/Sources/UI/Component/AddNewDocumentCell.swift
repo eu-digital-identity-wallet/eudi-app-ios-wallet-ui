@@ -54,18 +54,21 @@ public struct AddNewDocumentCell: View {
 
   public var body: some View {
     HStack {
-      Button(action: !isLoading ? action : {}) {
-        iconStyle
-          .foregroundColor(isEnabled ? Theme.shared.color.primary : Theme.shared.color.textDisabledDark)
-          .frame(maxWidth: 32)
-        Text(title)
-          .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(isEnabled ? Theme.shared.color.textPrimaryDark : Theme.shared.color.textDisabledDark)
-        Spacer()
-        Theme.shared.image.plus
-          .font(.body.bold())
-          .foregroundColor(isEnabled ? Theme.shared.color.primary : Theme.shared.color.textDisabledDark)
-      }
+      Button(
+        action: !isLoading ? action : {},
+        label: {
+          iconStyle
+            .foregroundColor(isEnabled ? Theme.shared.color.primary : Theme.shared.color.textDisabledDark)
+            .frame(maxWidth: 32)
+          Text(title)
+            .typography(Theme.shared.font.bodyLarge)
+            .foregroundColor(isEnabled ? Theme.shared.color.textPrimaryDark : Theme.shared.color.textDisabledDark)
+          Spacer()
+          Theme.shared.image.plus
+            .font(.body.bold())
+            .foregroundColor(isEnabled ? Theme.shared.color.primary : Theme.shared.color.textDisabledDark)
+        }
+      )
       .disabled(!isEnabled)
       .padding(SPACING_MEDIUM_LARGE)
       .background(Theme.shared.color.backgroundDefault)

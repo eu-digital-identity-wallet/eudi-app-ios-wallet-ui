@@ -207,6 +207,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "shown_above")
     case .loadSampleData:
       bundle.localizedString(forKey: "load_sample_data")
+    case .requestDataNoDocument:
+      bundle.localizedString(forKey: "request_data_no_document")
     }
   }
 
@@ -303,6 +305,7 @@ public extension LocalizableString {
     case bleDisabledModalButton
     case shownAbove
     case loadSampleData
+    case requestDataNoDocument
   }
 }
 
