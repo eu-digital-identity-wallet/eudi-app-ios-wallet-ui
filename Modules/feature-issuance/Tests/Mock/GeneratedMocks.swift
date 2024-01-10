@@ -5,6 +5,8 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+import feature_common
+import logic_business
 import logic_resources
 import logic_ui
 
@@ -39,11 +41,31 @@ public class MockAddDocumentInteractorType: AddDocumentInteractorType, Cuckoo.Pr
     
     
     
-    public func fetchStoredDocuments() -> StoredDocumentsPartialState {
+    public func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState {
         
     return cuckoo_manager.call(
     """
-    fetchStoredDocuments() -> StoredDocumentsPartialState
+    fetchStoredDocuments(with: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState
+    """,
+            parameters: (flow),
+            escapingParameters: (flow),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.fetchStoredDocuments(with: flow))
+        
+    }
+    
+    
+    
+    
+    
+    public func loadSampleData() async -> LoadSampleDataPartialState {
+        
+    return await cuckoo_manager.call(
+    """
+    loadSampleData() async -> LoadSampleDataPartialState
     """,
             parameters: (),
             escapingParameters: (),
@@ -51,7 +73,7 @@ public class MockAddDocumentInteractorType: AddDocumentInteractorType, Cuckoo.Pr
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: __defaultImplStub!.fetchStoredDocuments())
+            defaultCall: await __defaultImplStub!.loadSampleData())
         
     }
     
@@ -67,11 +89,22 @@ public class MockAddDocumentInteractorType: AddDocumentInteractorType, Cuckoo.Pr
         
         
         
-        func fetchStoredDocuments() -> Cuckoo.ProtocolStubFunction<(), StoredDocumentsPartialState> {
+        func fetchStoredDocuments<M1: Cuckoo.Matchable>(with flow: M1) -> Cuckoo.ProtocolStubFunction<(IssuanceFlowUiConfig.Flow), StoredDocumentsPartialState> where M1.MatchedType == IssuanceFlowUiConfig.Flow {
+            let matchers: [Cuckoo.ParameterMatcher<(IssuanceFlowUiConfig.Flow)>] = [wrap(matchable: flow) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractorType.self, method:
+    """
+    fetchStoredDocuments(with: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func loadSampleData() -> Cuckoo.ProtocolStubFunction<(), LoadSampleDataPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractorType.self, method:
     """
-    fetchStoredDocuments() -> StoredDocumentsPartialState
+    loadSampleData() async -> LoadSampleDataPartialState
     """, parameterMatchers: matchers))
         }
         
@@ -95,11 +128,23 @@ public class MockAddDocumentInteractorType: AddDocumentInteractorType, Cuckoo.Pr
         
         
         @discardableResult
-        func fetchStoredDocuments() -> Cuckoo.__DoNotUse<(), StoredDocumentsPartialState> {
+        func fetchStoredDocuments<M1: Cuckoo.Matchable>(with flow: M1) -> Cuckoo.__DoNotUse<(IssuanceFlowUiConfig.Flow), StoredDocumentsPartialState> where M1.MatchedType == IssuanceFlowUiConfig.Flow {
+            let matchers: [Cuckoo.ParameterMatcher<(IssuanceFlowUiConfig.Flow)>] = [wrap(matchable: flow) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    fetchStoredDocuments(with: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func loadSampleData() -> Cuckoo.__DoNotUse<(), LoadSampleDataPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    fetchStoredDocuments() -> StoredDocumentsPartialState
+    loadSampleData() async -> LoadSampleDataPartialState
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -117,8 +162,16 @@ public class AddDocumentInteractorTypeStub: AddDocumentInteractorType {
     
     
     
-    public func fetchStoredDocuments() -> StoredDocumentsPartialState  {
+    public func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState  {
         return DefaultValueRegistry.defaultValue(for: (StoredDocumentsPartialState).self)
+    }
+    
+    
+    
+    
+    
+    public func loadSampleData() async -> LoadSampleDataPartialState  {
+        return DefaultValueRegistry.defaultValue(for: (LoadSampleDataPartialState).self)
     }
     
     

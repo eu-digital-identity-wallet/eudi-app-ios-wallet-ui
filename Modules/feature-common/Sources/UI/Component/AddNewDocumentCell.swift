@@ -54,7 +54,7 @@ public struct AddNewDocumentCell: View {
 
   public var body: some View {
     HStack {
-      Button(action: action) {
+      Button(action: !isLoading ? action : {}) {
         iconStyle
           .foregroundColor(isEnabled ? Theme.shared.color.primary : Theme.shared.color.textDisabledDark)
           .frame(maxWidth: 32)

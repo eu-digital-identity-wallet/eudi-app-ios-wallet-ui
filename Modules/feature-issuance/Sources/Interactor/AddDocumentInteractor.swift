@@ -16,23 +16,73 @@
 import Foundation
 import logic_ui
 import logic_resources
+import feature_common
+import logic_business
 
 public protocol AddDocumentInteractorType {
- func fetchStoredDocuments() -> StoredDocumentsPartialState
+  func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState
+  func loadSampleData() async -> LoadSampleDataPartialState
 }
 
 public final class AddDocumentInteractor: AddDocumentInteractorType {
 
+  private lazy var walletController: WalletKitControllerType = WalletKitController.shared
+
   public init() {}
 
-  public func fetchStoredDocuments() -> StoredDocumentsPartialState {
-    // Add Some logic from walletCore about active documents in storage.
-    // Filter the ones we can add, currently Dummy
-    return .success(AddDocumentCellModel.mocks)
+  public func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState {
+    switch flow {
+    case .noDocument:
+      return .success(
+        AddDocumentCellModel.items + [
+          .init(
+            isEnabled: true,
+            documentName: .loadSampleData,
+            image: Theme.shared.image.id,
+            isLoading: false,
+            type: .genericDocument(docType: "load_sample_data")
+          )
+        ]
+      )
+    case .extraDocument:
+      return .success(
+        AddDocumentCellModel.items.map({
+            var item = $0
+            switch item.type {
+            case .EuPidDocType:
+              item.isEnabled = walletController.fetchDocument(
+                with: DocumentIdentifier.EuPidDocType.rawValue
+              ) == nil
+            case .IsoMdlModel:
+              item.isEnabled = walletController.fetchDocument(
+                with: DocumentIdentifier.IsoMdlModel.rawValue
+              ) == nil
+            case .genericDocument:
+              break
+            }
+            return item
+          }
+        )
+      )
+    }
+  }
+
+  public func loadSampleData() async -> LoadSampleDataPartialState {
+    do {
+      try await walletController.loadSampleData(dataFiles: ["EUDI_sample_data"])
+      return .success
+    } catch {
+      return .failure(error)
+    }
   }
 }
 
 public enum StoredDocumentsPartialState {
   case success([AddDocumentCellModel])
+  case failure(Error)
+}
+
+public enum LoadSampleDataPartialState {
+  case success
   case failure(Error)
 }

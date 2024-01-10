@@ -51,7 +51,7 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
             title: cell.documentName,
             isLoading: cell.isLoading,
             action: {
-              viewModel.routeToIssuance(for: cell.type)
+              viewModel.onClick(for: cell.type)
             }
           )
           .padding(.bottom, Theme.shared.shape.small)

@@ -749,6 +749,17 @@
         }
       }
     },
+    "load_sample_data" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Load Sample Data"
+          }
+        }
+      }
+    },
     "login_button" : {
       "extractionState" : "manual",
       "localizations" : {

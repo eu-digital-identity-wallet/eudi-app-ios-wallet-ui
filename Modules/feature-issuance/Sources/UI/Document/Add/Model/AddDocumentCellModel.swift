@@ -21,11 +21,11 @@ import logic_business
 public struct AddDocumentCellModel: Identifiable {
 
   public let id: String
-  public let isEnabled: Bool
   public let documentName: LocalizableString.Key
   public let image: Image
-  public let isLoading: Bool
   public let type: DocumentIdentifier
+  public var isEnabled: Bool
+  public var isLoading: Bool
 
   public init(
     isEnabled: Bool,
@@ -46,24 +46,32 @@ public struct AddDocumentCellModel: Identifiable {
 
 public extension AddDocumentCellModel {
 
-  static var mocks: [AddDocumentCellModel] {
+  static var items: [AddDocumentCellModel] {
     [
       .init(
         isEnabled: true,
         documentName: .pid,
-        image: Theme.shared.image.idStroke,
+        image: Theme.shared.image.id,
+        isLoading: false,
         type: .EuPidDocType
       ),
       .init(
-        isEnabled: false,
+        isEnabled: true,
         documentName: .mdl,
         image: Theme.shared.image.id,
+        isLoading: false,
         type: .IsoMdlModel
       )
     ]
   }
 
-  static func mock() -> AddDocumentCellModel {
-    .init(isEnabled: true, documentName: .pid, image: Theme.shared.image.id, type: .EuPidDocType)
+  static var mocks: [AddDocumentCellModel] {
+    AddDocumentCellModel.items.map({
+        var cell = $0
+        cell.isEnabled = true
+        cell.isLoading = false
+        return cell
+      }
+    )
   }
 }

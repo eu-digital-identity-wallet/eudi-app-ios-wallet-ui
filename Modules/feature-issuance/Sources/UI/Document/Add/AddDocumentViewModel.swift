@@ -29,6 +29,7 @@ struct AddDocumentViewState: ViewState {
   }
 }
 
+@MainActor
 final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocumentInteractorType>: BaseViewModel<Router, AddDocumentViewState> {
 
   private let interactor: Interactor
@@ -49,7 +50,7 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
   }
 
   func fetchStoredDocuments() {
-    switch self.interactor.fetchStoredDocuments() {
+    switch self.interactor.fetchStoredDocuments(with: viewState.config.flow) {
     case .success(let documents):
       self.setNewState(addDocumentCellModels: documents)
     case .failure(let error):
@@ -63,12 +64,33 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
     }
   }
 
-  func routeToIssuance(for documentIdentifier: DocumentIdentifier) {
-    router.push(with: .issuanceExternalLogin(config: viewState.config, documentIdentifier: documentIdentifier.rawValue))
+  func onClick(for documentIdentifier: DocumentIdentifier) {
+    switch documentIdentifier {
+    case .EuPidDocType, .IsoMdlModel:
+      router.push(with: .issuanceExternalLogin(config: viewState.config, documentIdentifier: documentIdentifier.rawValue))
+    case .genericDocument:
+      loadSampleData()
+    }
   }
 
   func pop() {
     router.pop(animated: true)
+  }
+
+  private func loadSampleData() {
+    Task {
+      switch await interactor.loadSampleData() {
+      case .success:
+        router.push(with: .dashboard)
+      case .failure(let error):
+        setNewState(
+          error: .init(
+            description: .custom(error.localizedDescription),
+            cancelAction: self.setNewState(error: nil)
+          )
+        )
+      }
+    }
   }
 
   private func setNewState(
