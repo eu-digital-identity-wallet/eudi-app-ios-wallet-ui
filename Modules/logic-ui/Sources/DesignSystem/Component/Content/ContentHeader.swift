@@ -21,21 +21,21 @@ public struct ContentHeader: View {
   private let title: LocalizableString.Key?
   private let dismissIcon: Image
   private let foregroundColor: Color
-  private let onBack: (() -> Void)?
   private let actions: [Action]?
+  private let onBack: (() -> Void)?
 
   public init(
     title: LocalizableString.Key? = nil,
     dismissIcon: Image = Theme.shared.image.arrowLeft,
     foregroundColor: Color = Theme.shared.color.primary,
-    onBack: (() -> Void)? = nil,
-    actions: [Action]? = nil
+    actions: [Action]? = nil,
+    onBack: (() -> Void)? = nil
   ) {
     self.title = title
     self.dismissIcon = dismissIcon
     self.foregroundColor = foregroundColor
-    self.onBack = onBack
     self.actions = actions
+    self.onBack = onBack
   }
 
   public var body: some View {
@@ -71,10 +71,8 @@ public struct ContentHeader: View {
                 action.callback()
               },
               label: {
-                Image(systemName: action.systemImage)
-                  .resizable()
-                  .scaledToFit()
-                  .frame(height: 25)
+                action.image
+                  .foregroundColor(foregroundColor)
               }
             )
           }
@@ -88,15 +86,25 @@ public struct ContentHeader: View {
 public extension ContentHeader {
   struct Action: Identifiable {
 
-    public var id: String {
-      return systemImage
-    }
-
-    public let systemImage: String
+    public let id: String
+    public let image: Image
     public let callback: () -> Void
 
-    public init(systemImage: String, callback: @autoclosure @escaping () -> Void) {
-      self.systemImage = systemImage
+    public init(
+      systemImage: String,
+      callback: @autoclosure @escaping () -> Void
+    ) {
+      self.id = UUID().uuidString
+      self.image = Image(systemName: systemImage)
+      self.callback = callback
+    }
+
+    public init(
+      image: Image,
+      callback: @autoclosure @escaping () -> Void
+    ) {
+      self.id = UUID().uuidString
+      self.image = image
       self.callback = callback
     }
   }

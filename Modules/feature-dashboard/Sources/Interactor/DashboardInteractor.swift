@@ -40,18 +40,14 @@ public final class DashboardInteractor: DashboardInteractorType {
 
   public func fetchDashboard() async -> DashboardPartialState {
 
-    let document: [DocumentUIModel]? = fetchDocuments()
-    let bearer: BearerUIModel? = fetchBearer()
+    let documents: [DocumentUIModel]? = fetchDocuments()
+    let bearer: BearerUIModel = fetchBearer()
 
-    guard let bearer = bearer else {
-      return .failure(RuntimeError.customError("Unable to fetch bearer info"))
-    }
-
-    guard let document = document else {
+    guard let documents = documents else {
       return .failure(RuntimeError.customError("Unable to fetch documents"))
     }
 
-    return .success(bearer, document)
+    return .success(bearer, documents)
   }
 
   public func getBleAvailability() async -> ReachabilityController.BleAvailibity {
@@ -66,11 +62,8 @@ public final class DashboardInteractor: DashboardInteractorType {
     reachabilityController.openBleSettings()
   }
 
-  private func fetchBearer() -> BearerUIModel? {
+  private func fetchBearer() -> BearerUIModel {
     let documents = self.walletController.fetchDocuments()
-    guard !documents.isEmpty else {
-      return nil
-    }
     return documents.transformToBearerUi()
   }
 

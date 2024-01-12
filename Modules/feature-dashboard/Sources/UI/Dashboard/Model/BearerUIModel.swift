@@ -47,10 +47,10 @@ public extension BearerUIModel {
 }
 
 extension Array where Element == MdocDecodable {
-  func transformToBearerUi() -> BearerUIModel? {
+  func transformToBearerUi() -> BearerUIModel {
 
-    var image: Image?
-    var name: String?
+    var image: Image = Theme.shared.image.user
+    var name: String = ""
 
     self.forEach { item in
       if let bearerName = item.getBearersName() {
@@ -61,8 +61,6 @@ extension Array where Element == MdocDecodable {
         image = tempImage
       }
     }
-
-    guard let name, let image else { return nil }
 
     return .init(
       id: UUID().uuidString,

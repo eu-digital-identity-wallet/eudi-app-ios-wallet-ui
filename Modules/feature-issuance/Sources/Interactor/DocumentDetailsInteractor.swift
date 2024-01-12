@@ -20,6 +20,7 @@ import logic_business
 
 public protocol DocumentDetailsInteractorType {
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
+  func deleteDocument(with id: DocumentIdentifier) async -> DocumentDetailsDeletionPartialState
 }
 
 public final class DocumentDetailsInteractor: DocumentDetailsInteractorType {
@@ -37,9 +38,28 @@ public final class DocumentDetailsInteractor: DocumentDetailsInteractorType {
     }
     return .success(documentDetails)
   }
+
+  public func deleteDocument(with id: DocumentIdentifier) async -> DocumentDetailsDeletionPartialState {
+    do {
+      switch id {
+      case .EuPidDocType:
+        try await walletKitController.clearDocuments()
+      default:
+        try await walletKitController.deleteDocument(with: id.rawValue)
+      }
+    } catch {
+      return .failure(error)
+    }
+    return .success(shouldReboot: id == .EuPidDocType)
+  }
 }
 
 public enum DocumentDetailsPartialState {
   case success(DocumentDetailsUIModel)
+  case failure(Error)
+}
+
+public enum DocumentDetailsDeletionPartialState {
+  case success(shouldReboot: Bool)
   case failure(Error)
 }

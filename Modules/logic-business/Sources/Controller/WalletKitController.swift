@@ -21,6 +21,7 @@ import Combine
 import logic_resources
 
 public protocol WalletKitControllerType {
+
   var wallet: EudiWallet { get }
   var activeCoordinator: PresentationSessionCoordinatorType? { get }
 
@@ -32,6 +33,7 @@ public protocol WalletKitControllerType {
   func fetchDocument(with id: String) -> MdocDecodable?
   func loadSampleData(dataFiles: [String]) async throws
   func clearDocuments() async throws
+  func deleteDocument(with type: String) async throws
   func loadDocuments() async throws
 }
 
@@ -57,7 +59,16 @@ public final class WalletKitController: WalletKitControllerType {
   }
 
   public func clearDocuments() async throws {
-    return try await wallet.storage.deleteDocuments()
+    do {
+      try await wallet.storage.deleteDocuments()
+      wallet.storage.mdocModels = []
+    } catch {
+      throw error
+    }
+  }
+
+  public func deleteDocument(with type: String) async throws {
+    return try await wallet.storage.deleteDocument(docType: type)
   }
 
   public func loadDocuments() async throws {
@@ -115,7 +126,7 @@ public final class WalletKitController: WalletKitControllerType {
   }
 
   private func decodeDeeplink(link: URLComponents) -> String? {
-    // Handling requests of the form 
+    // Handling requests of the form
     //    mdoc-openid4vp://https://eudi.netcompany-intrasoft.com?client_id=Verifier&request_uri=https://eudi.netcompany-intrasoft.com/wallet/request.jwt/OWB1_xVU7ndoHmirBn7S2JpcC5fFPzAXGCY1fTLxDjczVATjzQvre_w4yEcMB4FO5KwuyYXXw-JottarKgEvRQ
     // so we need to drop scheme and forward slashes and keep the rest of the url in order to
     // pass to wallet

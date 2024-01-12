@@ -17,12 +17,14 @@ import Foundation
 import logic_ui
 import logic_resources
 import feature_common
+import logic_business
 
 struct DocumentDetailsViewState: ViewState {
   let document: DocumentDetailsUIModel
   let isLoading: Bool
   let error: ContentError.Config?
   let config: IssuanceDetailUiConfig
+  let toolBarActions: [ContentHeader.Action]?
 
   var isCancellable: Bool {
     return config.isExtraDocument
@@ -35,6 +37,8 @@ struct DocumentDetailsViewState: ViewState {
 
 @MainActor
 final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: DocumentDetailsInteractorType>: BaseViewModel<Router, DocumentDetailsViewState> {
+
+  @Published var isDeletionModalShowing: Bool = false
 
   private let interactor: Interactor
 
@@ -53,7 +57,8 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
         document: DocumentDetailsUIModel.mock(),
         isLoading: true,
         error: nil,
-        config: config
+        config: config,
+        toolBarActions: nil
       )
     )
   }
@@ -63,10 +68,27 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
     switch await self.interactor.fetchStoredDocument(documentId: viewState.config.documentId) {
 
     case .success(let document):
+
+      var actions: [ContentHeader.Action]? {
+        switch viewState.config.flow {
+        case .extraDocument:
+          return [
+            .init(
+              image: Theme.shared.image.trash,
+              callback: self.onShowDeleteModal()
+            )
+          ]
+        case .noDocument:
+          return nil
+        }
+      }
+
       self.setNewState(
         isLoading: false,
-        document: document
+        document: document,
+        toolBarActions: actions
       )
+
     case .failure(let error):
       self.setNewState(
         isLoading: true,
@@ -79,6 +101,7 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
   }
 
   func pop() {
+    isDeletionModalShowing = false
     router.popTo(with: .dashboard)
   }
 
@@ -86,17 +109,57 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
     router.push(with: .dashboard)
   }
 
+  func onDeleteDocument() {
+    isDeletionModalShowing = false
+    onDocumentDelete(with: viewState.document.identifier)
+  }
+
+  func onShowDeleteModal() {
+    isDeletionModalShowing = !isDeletionModalShowing
+  }
+
+  private func onDocumentDelete(with id: DocumentIdentifier) {
+    Task {
+      self.setNewState(
+        isLoading: true
+      )
+      switch await self.interactor.deleteDocument(with: id) {
+      case .success(let shouldReboot):
+        if shouldReboot {
+          self.onReboot()
+        } else {
+          self.pop()
+        }
+      case .failure(let error):
+        self.setNewState(
+          isLoading: false,
+          error: ContentError.Config(
+            description: .custom(error.localizedDescription),
+            cancelAction: self.setNewState(error: nil)
+          )
+        )
+      }
+    }
+  }
+
+  private func onReboot() {
+    isDeletionModalShowing = false
+    router.popTo(with: .startup)
+  }
+
   private func setNewState(
     isLoading: Bool = false,
     document: DocumentDetailsUIModel? = nil,
-    error: ContentError.Config? = nil
+    error: ContentError.Config? = nil,
+    toolBarActions: [ContentHeader.Action]? = nil
   ) {
     setState { previous in
         .init(
           document: document ?? previous.document,
           isLoading: isLoading,
           error: error,
-          config: previous.config
+          config: previous.config,
+          toolBarActions: toolBarActions ?? previous.toolBarActions
         )
     }
   }

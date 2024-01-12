@@ -90,10 +90,31 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
         holdersName: viewModel.viewState.document.holdersName,
         userIcon: viewModel.viewState.document.holdersImage,
         isLoading: viewModel.viewState.isLoading,
+        actions: viewModel.viewState.toolBarActions,
         onBack: viewModel.viewState.isCancellable ? { viewModel.pop() } : nil
       )
 
       content()
+    }
+    .sheetDialog(isPresented: $viewModel.isDeletionModalShowing) {
+      VStack(spacing: SPACING_MEDIUM) {
+
+        ContentTitle(
+          title: .issuanceDetailsDeletionTitle([viewModel.viewState.document.documentName]),
+          caption: .issuanceDetailsDeletionCaption([viewModel.viewState.document.documentName])
+        )
+
+        WrapButtonView(
+          style: .primary,
+          title: .yes,
+          onAction: viewModel.onDeleteDocument()
+        )
+        WrapButtonView(
+          style: .secondary,
+          title: .no,
+          onAction: viewModel.onShowDeleteModal()
+        )
+      }
     }
     .task {
       await self.viewModel.fetchDocumentDetails()

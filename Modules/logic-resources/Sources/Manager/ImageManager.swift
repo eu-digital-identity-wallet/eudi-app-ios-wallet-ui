@@ -44,6 +44,7 @@ public protocol ImageManagerProtocol {
   var pencil: Image { get }
   var qrScan: Image { get }
   var photo: Image { get }
+  var trash: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -76,6 +77,7 @@ final class ImageManager: ImageManagerProtocol {
     case pencil = "ic-edit"
     case qrScan = "ic-qr-scanner"
     case photo = "photo.fill"
+    case trash = "trash"
   }
 
   // MARK: - Properties
@@ -167,5 +169,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var photo: Image {
     Image(systemName: ImageEnum.photo.rawValue)
+  }
+  var trash: Image {
+    Image(systemName: ImageEnum.trash.rawValue)
   }
 }

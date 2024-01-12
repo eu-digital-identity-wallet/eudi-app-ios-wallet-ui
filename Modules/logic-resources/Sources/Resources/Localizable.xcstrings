@@ -639,6 +639,28 @@
         }
       }
     },
+    "issuance_details_doc_deletion_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You will not be able to use your %@ for future verifications"
+          }
+        }
+      }
+    },
+    "issuance_details_doc_deletion_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete %@?"
+          }
+        }
+      }
+    },
     "issuance_external_loading_caption" : {
       "extractionState" : "manual",
       "localizations" : {

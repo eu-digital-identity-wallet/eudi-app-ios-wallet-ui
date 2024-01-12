@@ -209,6 +209,10 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "load_sample_data")
     case .requestDataNoDocument:
       bundle.localizedString(forKey: "request_data_no_document")
+    case .issuanceDetailsDeletionTitle(let args):
+      bundle.localizedStringWithArguments(forKey: "issuance_details_doc_deletion_title", arguments: args)
+    case .issuanceDetailsDeletionCaption(let args):
+      bundle.localizedStringWithArguments(forKey: "issuance_details_doc_deletion_caption", arguments: args)
     }
   }
 
@@ -306,6 +310,8 @@ public extension LocalizableString {
     case shownAbove
     case loadSampleData
     case requestDataNoDocument
+    case issuanceDetailsDeletionTitle([String])
+    case issuanceDetailsDeletionCaption([String])
   }
 }
 

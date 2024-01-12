@@ -24,6 +24,7 @@ public struct DocumentDetailsHeaderView: View {
   let holdersName: String
   let userIcon: Image
   let isLoading: Bool
+  let actions: [ContentHeader.Action]?
   let onBack: (() -> Void)?
 
   public init(
@@ -31,12 +32,14 @@ public struct DocumentDetailsHeaderView: View {
     holdersName: String,
     userIcon: Image,
     isLoading: Bool,
+    actions: [ContentHeader.Action]?,
     onBack: (() -> Void)?
   ) {
     self.holdersName = holdersName
     self.userIcon = userIcon
     self.documentName = documentName
     self.isLoading = isLoading
+    self.actions = actions
     self.onBack = onBack
   }
 
@@ -47,6 +50,7 @@ public struct DocumentDetailsHeaderView: View {
         holdersName: holdersName,
         userIcon: userIcon,
         isLoading: isLoading,
+        actions: actions,
         onBack: onBack
       )
     }
@@ -61,6 +65,7 @@ extension DocumentDetailsHeaderView {
     let holdersName: String
     let userIcon: Image
     let isLoading: Bool
+    let actions: [ContentHeader.Action]?
     let onBack: (() -> Void)?
 
     public init(
@@ -68,12 +73,14 @@ extension DocumentDetailsHeaderView {
       holdersName: String,
       userIcon: Image,
       isLoading: Bool,
+      actions: [ContentHeader.Action]?,
       onBack: (() -> Void)?
     ) {
       self.documentName = documentName
       self.holdersName = holdersName
       self.userIcon = userIcon
       self.isLoading = isLoading
+      self.actions = actions
       self.onBack = onBack
     }
 
@@ -83,7 +90,8 @@ extension DocumentDetailsHeaderView {
         if let onBack {
           ContentHeader(
             dismissIcon: Theme.shared.image.xmark,
-            foregroundColor: Theme.shared.color.primary
+            foregroundColor: Theme.shared.color.primary,
+            actions: actions
           ) {
             onBack()
           }

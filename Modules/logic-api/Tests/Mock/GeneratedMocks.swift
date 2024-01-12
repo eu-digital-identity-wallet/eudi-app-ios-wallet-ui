@@ -3037,6 +3037,26 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
     
     
     
+    public func deleteDocument(with type: String) async throws {
+        
+    return try await cuckoo_manager.callThrows(
+    """
+    deleteDocument(with: String) async throws
+    """,
+            parameters: (type),
+            escapingParameters: (type),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.deleteDocument(with: type))
+        
+    }
+    
+    
+    
+    
+    
     public func loadDocuments() async throws {
         
     return try await cuckoo_manager.callThrows(
@@ -3161,6 +3181,17 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
     """
     clearDocuments() async throws
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func deleteDocument<M1: Cuckoo.Matchable>(with type: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String)> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: type) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    deleteDocument(with: String) async throws
     """, parameterMatchers: matchers))
         }
         
@@ -3305,6 +3336,18 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
         
         
         @discardableResult
+        func deleteDocument<M1: Cuckoo.Matchable>(with type: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: type) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    deleteDocument(with: String) async throws
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
         func loadDocuments() -> Cuckoo.__DoNotUse<(), Void> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
@@ -3406,6 +3449,14 @@ public class WalletKitControllerTypeStub: WalletKitControllerType {
     
     
     public func clearDocuments() async throws  {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func deleteDocument(with type: String) async throws  {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
