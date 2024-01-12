@@ -15,6 +15,8 @@
  */
 
 import XCTest
+@testable import EudiWalletKit
+import MdocDataModel18013
 
 final class mdoc_holderUITests: XCTestCase {
 
@@ -30,6 +32,12 @@ final class mdoc_holderUITests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
+	
+	
+	func testIssueWithVCInoOffer() async throws {
+		let data = try await EudiWalletKit.EudiWallet.standard.createIssuanceRequest(docType: IsoMdlModel.isoDocType, format: .cbor)
+		XCTAssert(data.count > 0)
+	}
 
     func test_mdoc_holder_user_interface() throws {
         // UI tests must launch the application that they test.

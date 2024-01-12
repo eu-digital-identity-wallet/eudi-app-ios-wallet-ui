@@ -22,7 +22,7 @@ import LocalAuthentication
 struct ShareView: View {
 	@State var hasCancelled = false
 	@Environment(\.dismiss) var dismiss
-	var isProximitySharing: Bool { presentationSession.flow.isProximity }
+	var isProximitySharing: Bool { presentationSession.presentationService.flow.isProximity }
 	@ObservedObject var presentationSession: PresentationSession
 	@EnvironmentObject var userWallet: EudiWallet
 	@Environment(\.openURL) private var openURL
@@ -83,7 +83,7 @@ struct ShareView: View {
 			}
 		}.padding().padding()
 		 .task {
-			 if presentationSession.flow.isProximity { await presentationSession.startQrEngagement() }
+			 if isProximitySharing { await presentationSession.startQrEngagement() }
 			 _ = await presentationSession.receiveRequest()
 			}
 	} // body
