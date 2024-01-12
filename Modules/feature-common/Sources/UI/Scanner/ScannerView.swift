@@ -50,7 +50,8 @@ public struct ScannerView: View {
       }
 
       ContentHeader(
-        dismissIcon: Theme.shared.image.xmark
+        dismissIcon: Theme.shared.image.xmark,
+        foregroundColor: Theme.shared.color.white
       ) {
         dismiss.toggle()
       }

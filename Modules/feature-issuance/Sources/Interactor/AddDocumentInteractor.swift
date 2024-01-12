@@ -31,10 +31,29 @@ public final class AddDocumentInteractor: AddDocumentInteractorType {
   public init() {}
 
   public func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState {
+
+    let types = AddDocumentCellModel.items.map({
+        var item = $0
+        switch item.type {
+        case .EuPidDocType:
+          item.isEnabled = walletController.fetchDocument(
+            with: DocumentIdentifier.EuPidDocType.rawValue
+          ) == nil
+        case .IsoMdlModel:
+          item.isEnabled = walletController.fetchDocument(
+            with: DocumentIdentifier.IsoMdlModel.rawValue
+          ) == nil && flow == .extraDocument
+        case .genericDocument:
+          break
+        }
+        return item
+      }
+    )
+
     switch flow {
     case .noDocument:
       return .success(
-        AddDocumentCellModel.items + [
+        types + [
           .init(
             isEnabled: true,
             documentName: .loadSampleData,
@@ -45,25 +64,7 @@ public final class AddDocumentInteractor: AddDocumentInteractorType {
         ]
       )
     case .extraDocument:
-      return .success(
-        AddDocumentCellModel.items.map({
-            var item = $0
-            switch item.type {
-            case .EuPidDocType:
-              item.isEnabled = walletController.fetchDocument(
-                with: DocumentIdentifier.EuPidDocType.rawValue
-              ) == nil
-            case .IsoMdlModel:
-              item.isEnabled = walletController.fetchDocument(
-                with: DocumentIdentifier.IsoMdlModel.rawValue
-              ) == nil
-            case .genericDocument:
-              break
-            }
-            return item
-          }
-        )
-      )
+      return .success(types)
     }
   }
 
