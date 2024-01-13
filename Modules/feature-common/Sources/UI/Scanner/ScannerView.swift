@@ -38,7 +38,10 @@ public struct ScannerView: View {
   public var body: some View {
     ZStack(alignment: .top) {
 
-      CodeScannerView(codeTypes: [.qr], showViewfinder: true) { response in
+      CodeScannerView(
+        codeTypes: [.qr],
+        showViewfinder: true
+      ) { response in
         switch response {
         case .success(let result):
           dismiss.toggle()
@@ -48,6 +51,7 @@ public struct ScannerView: View {
           errorMessage = error.localizedDescription
         }
       }
+      .preferredColorScheme(.dark)
 
       ContentHeader(
         dismissIcon: Theme.shared.image.xmark,
@@ -64,6 +68,7 @@ public struct ScannerView: View {
       show: $displayError,
       message: errorMessage
     )
+    .background(Theme.shared.color.black)
     .edgesIgnoringSafeArea(.bottom)
   }
 }

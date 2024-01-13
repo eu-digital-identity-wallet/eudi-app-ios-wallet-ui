@@ -59,12 +59,7 @@ public final class WalletKitController: WalletKitControllerType {
   }
 
   public func clearDocuments() async throws {
-    do {
-      try await wallet.storage.deleteDocuments()
-      wallet.storage.mdocModels = []
-    } catch {
-      throw error
-    }
+    return try await wallet.storage.deleteDocuments()
   }
 
   public func deleteDocument(with type: String) async throws {

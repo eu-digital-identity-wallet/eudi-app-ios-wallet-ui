@@ -37,7 +37,7 @@ public enum DocumentIdentifier: RawRepresentable, Equatable {
   public var rawValue: String {
     return switch self {
     case .EuPidDocType:
-      MdocDataModel18013.EuPidModel.EuPidDocType
+      MdocDataModel18013.EuPidModel.euPidDocType
     case .IsoMdlModel:
       MdocDataModel18013.IsoMdlModel.isoDocType
     case .genericDocument(let docType):
@@ -47,7 +47,7 @@ public enum DocumentIdentifier: RawRepresentable, Equatable {
 
   public init(rawValue: String) {
     switch rawValue {
-    case MdocDataModel18013.EuPidModel.EuPidDocType:
+    case MdocDataModel18013.EuPidModel.euPidDocType:
       self = .EuPidDocType
     case MdocDataModel18013.IsoMdlModel.isoDocType:
       self = .IsoMdlModel
