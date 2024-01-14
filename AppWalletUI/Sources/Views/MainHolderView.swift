@@ -22,6 +22,7 @@ import CodeScanner
 struct MainHolderView: View {
 	@ObservedObject var storage: StorageManager
 	@State var isPresentingScanner: Bool = false
+	@State var isPresentingConfirm: Bool = false
 	@State var flow: FlowType = .ble
 	@State var hasError: Bool = false
 	@State var uiError: StorageError? = nil
@@ -66,7 +67,9 @@ struct MainHolderView: View {
 					}).accessibilityIdentifier("Share")
 				}
 			}.task {
-				try? await	userWallet.loadDocuments()
+				if !storage.hasData {
+					try? await userWallet.loadDocuments()
+				}
 			}
 			.navigationDestination(for: RouteDestination.self) { destination in
 				switch destination {
@@ -77,10 +80,15 @@ struct MainHolderView: View {
 						  ShareView(presentationSession: session)
 					  }
 				  }.navigationBarTitle("eudi_wallet_prototype_v1", displayMode: .inline).toolbar {
-				ToolbarItemGroup(placement: .navigationBarTrailing) {
-					Button(action: { isPresentingScanner = true }, label: {Image(systemName: "qrcode.viewfinder") })
+					  if userWallet.storage.hasData {
+						  ToolbarItemGroup(placement: .navigationBarTrailing) {
+							  Button(action: { isPresentingConfirm = true }) { Image(systemName: "trash")  }
+							  Button(action: { isPresentingScanner = true }) { Image(systemName: "qrcode.viewfinder") }
+						  }
 				}
 			}.padding()
+			.confirmationDialog("Confirmation", isPresented: $isPresentingConfirm) { Button("Remove all documents?", role: .destructive) {
+				Task { try await storage.deleteDocuments() } } }
 			.sheet(isPresented: $isPresentingScanner) {
 			CodeScannerView(codeTypes: [.qr], scanMode: .once, showViewfinder: true) { response in
 				guard path.count == 0, isPresentingScanner else { return }
