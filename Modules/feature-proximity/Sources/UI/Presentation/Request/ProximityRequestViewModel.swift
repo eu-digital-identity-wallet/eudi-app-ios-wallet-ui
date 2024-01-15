@@ -57,8 +57,8 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
         relyingParty: relyingParty,
         isTrusted: isTrusted
       )
-    case .failure(let error):
-      self.onError(with: error)
+    case .failure:
+      self.onEmptyDocuments()
     }
   }
 
