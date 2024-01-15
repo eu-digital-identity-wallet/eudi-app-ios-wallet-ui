@@ -16,6 +16,7 @@
 
 import SwiftUI
 import EudiWalletKit
+import MdocDataModel18013
 import WalletStorage
 import CodeScanner
 
@@ -25,7 +26,7 @@ struct MainHolderView: View {
 	@State var isPresentingConfirm: Bool = false
 	@State var flow: FlowType = .ble
 	@State var hasError: Bool = false
-	@State var uiError: StorageError? = nil
+	@State var uiError: String? = nil
 	@EnvironmentObject var userWallet: EudiWallet
 	@Binding var path: NavigationPath
 	
@@ -33,16 +34,28 @@ struct MainHolderView: View {
 			VStack(alignment: .center, spacing: 0) {
 				if !storage.hasWellKnownData {
 					Text("no_documents").italic().font(.footnote)
-					Text("start_by_adding_sample_documents").italic().font(.footnote)
+					//Text("start_by_adding_sample_documents").italic().font(.footnote)
 					Button {
 						Task {
 							do { try await userWallet.loadSampleData() }
-						catch { hasError = true; uiError = error as? StorageError; print(error.localizedDescription) }
+						catch { hasError = true; uiError = (error as? StorageError)?.localizedDescription }
 					}
 					} label: {
 						Text("add_sample_documents").padding(12)
-					}.padding(.top, 20).tint(Color("AccentColor"))
-						.buttonStyle(.borderedProminent)
+					}.padding(.top, 20).tint(Color("AccentColor")).buttonStyle(.borderedProminent)
+					Button {
+						Task {
+							do {
+								_ = try await userWallet.issueDocument(docType: EuPidModel.euPidDocType, format: .cbor)
+							}
+							catch {
+								hasError = true
+								uiError = (error as? OpenId4VCIError)?.localizedDescription ?? (error as NSError).localizedDescription
+							}
+					}
+					} label: {
+						Text("issue_pid_document").padding(12)
+					}.padding(.top, 20).tint(Color("AccentColor")).buttonStyle(.borderedProminent)
 				}
 				if let pidModel = storage.pidModel {
 					NavigationLink(value: RouteDestination.docView(docType: pidModel.docType)) {
@@ -107,7 +120,7 @@ struct MainHolderView: View {
 			path.removeLast(path.count)
 			path.append(RouteDestination.shareView(flow: flow))
 		})
-		.alert(isPresented: $hasError, error: uiError) { Button("OK") {} }
+		.alert(isPresented: $hasError, error: WalletError(description: uiError ?? "Unknown error") ) { Button("OK") {} }
 	} // end body
 
 }

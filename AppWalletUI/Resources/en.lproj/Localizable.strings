@@ -90,6 +90,7 @@
 "reader_auth_verifier_untrusted_with_name" = "Untrusted verifier \"%1$s\" is requesting the following information";
 "no_documents" = "No documents";
 "add_sample_documents" = "Add sample documents";
+"issue_pid_document" = "Issue PID document";
 "start_by_adding_sample_documents" = "Start by adding sample documents";
 "connection_mdoc_open" = "Connection to mdoc verifier is open";
 "connection_mdoc_closed" = "Connection to mdoc verifier is closed";

@@ -28,6 +28,16 @@
 				<string>mdoc-openid4vp</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
+			<key>CFBundleURLName</key>
+			<string>eudi-openid4ci</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>eudi-openid4ci</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>

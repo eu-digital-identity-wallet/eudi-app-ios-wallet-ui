@@ -18,7 +18,7 @@ import XCTest
 @testable import EudiWalletKit
 import MdocDataModel18013
 
-final class mdoc_holderUITests: XCTestCase {
+final class appWalletUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -35,11 +35,18 @@ final class mdoc_holderUITests: XCTestCase {
 	
 	
 	func testIssueWithVCInoOffer() async throws {
-		let data = try await EudiWalletKit.EudiWallet.standard.createIssuanceRequest(docType: IsoMdlModel.isoDocType, format: .cbor)
-		XCTAssert(data.count > 0)
+		let wallet = EudiWallet.standard
+		wallet.userAuthenticationRequired = true
+		//wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
+		wallet.verifierApiUri = ProcessInfo.processInfo.environment["VERIFIER_API"] ?? "https://eudi.netcompany-intrasoft.com"
+		wallet.vciIssuerUrl = ProcessInfo.processInfo.environment["VCI_ISSUER_URL"] ?? "https://eudi.netcompany-intrasoft.com/pid-issuer" // "https://preprod.issuer.eudiw.dev/oidc"
+		wallet.vciClientId = ProcessInfo.processInfo.environment["VCI_CLIENT_ID"] ?? "wallet-dev"
+		wallet.vciCallbackScheme = ProcessInfo.processInfo.environment["VCI_CALLBACK_SCHEME"] ?? "urn:ietf:wg:oauth:2.0:oob" // "eu
+		let doc = try await wallet.issueDocument(docType: EuPidModel.euPidDocType, format: .cbor)
+		XCTAssert(doc.data.count > 0)
 	}
 
-    func test_mdoc_holder_user_interface() throws {
+    func app_wallet_ui_user_interface() throws {
         // UI tests must launch the application that they test.
         let app = XCUIApplication()
 		app.launch()

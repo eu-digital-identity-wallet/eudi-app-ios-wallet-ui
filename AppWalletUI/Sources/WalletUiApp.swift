@@ -28,7 +28,10 @@ struct WalletUiApp: App {
 		wallet = EudiWallet.standard
 		wallet.userAuthenticationRequired = true
 		wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
-		wallet.openId4VpVerifierApiUri = ProcessInfo.processInfo.environment["VERIFIER_API"] ?? "http://localhost:8080"
+		wallet.verifierApiUri = ProcessInfo.processInfo.environment["VERIFIER_API"] ?? "https://eudi.netcompany-intrasoft.com"
+		wallet.vciIssuerUrl = ProcessInfo.processInfo.environment["VCI_ISSUER_URL"] ?? "https://eudi.netcompany-intrasoft.com/pid-issuer" // "https://preprod.issuer.eudiw.dev/oidc"
+		wallet.vciClientId = ProcessInfo.processInfo.environment["VCI_CLIENT_ID"] ?? "wallet-dev"
+		wallet.vciCallbackScheme = ProcessInfo.processInfo.environment["VCI_CALLBACK_SCHEME"] ?? "urn:ietf:wg:oauth:2.0:oob" // "eudi-openid4ci"
 	}
 	
 	var body: some Scene {

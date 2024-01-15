@@ -60,6 +60,28 @@
             ReferencedContainer = "container:AppWalletUI.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "VCI_CLIENT_ID"
+            value = "wallet-dev"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "VCI_ISSUER_URL"
+            value = "https://eudi.netcompany-intrasoft.com/pid-issuer"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "VERIFIER_API_URI"
+            value = "https://eudi.netcompany-intrasoft.com"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "VCI_CALLBACK_SCHEME"
+            value = "urn:ietf:wg:oauth:2.0:oob"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
