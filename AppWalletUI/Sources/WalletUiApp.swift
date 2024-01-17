@@ -31,7 +31,7 @@ struct WalletUiApp: App {
 		wallet.verifierApiUri = ProcessInfo.processInfo.environment["VERIFIER_API"] ?? "https://eudi.netcompany-intrasoft.com"
 		wallet.vciIssuerUrl = ProcessInfo.processInfo.environment["VCI_ISSUER_URL"] ?? "https://eudi.netcompany-intrasoft.com/pid-issuer" // "https://preprod.issuer.eudiw.dev/oidc"
 		wallet.vciClientId = ProcessInfo.processInfo.environment["VCI_CLIENT_ID"] ?? "wallet-dev"
-		wallet.vciCallbackScheme = ProcessInfo.processInfo.environment["VCI_CALLBACK_SCHEME"] ?? "urn:ietf:wg:oauth:2.0:oob" // "eudi-openid4ci"
+		wallet.vciRedirectUri = ProcessInfo.processInfo.environment["VCI_REDIRECT_URI"] ?? "eudi-openid4ci://authorize/"
 	}
 	
 	var body: some Scene {

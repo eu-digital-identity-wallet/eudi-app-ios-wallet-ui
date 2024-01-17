@@ -41,7 +41,7 @@ final class appWalletUITests: XCTestCase {
 		wallet.verifierApiUri = ProcessInfo.processInfo.environment["VERIFIER_API"] ?? "https://eudi.netcompany-intrasoft.com"
 		wallet.vciIssuerUrl = ProcessInfo.processInfo.environment["VCI_ISSUER_URL"] ?? "https://eudi.netcompany-intrasoft.com/pid-issuer" // "https://preprod.issuer.eudiw.dev/oidc"
 		wallet.vciClientId = ProcessInfo.processInfo.environment["VCI_CLIENT_ID"] ?? "wallet-dev"
-		wallet.vciCallbackScheme = ProcessInfo.processInfo.environment["VCI_CALLBACK_SCHEME"] ?? "urn:ietf:wg:oauth:2.0:oob" // "eu
+		wallet.vciRedirectUri = ProcessInfo.processInfo.environment["VCI_CALLBACK_SCHEME"] ?? "urn:ietf:wg:oauth:2.0:oob" // "eu
 		let doc = try await wallet.issueDocument(docType: EuPidModel.euPidDocType, format: .cbor)
 		XCTAssert(doc.data.count > 0)
 	}

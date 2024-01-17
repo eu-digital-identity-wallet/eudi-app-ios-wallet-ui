@@ -46,7 +46,7 @@ struct MainHolderView: View {
 					Button {
 						Task {
 							do {
-								_ = try await userWallet.issueDocument(docType: EuPidModel.euPidDocType, format: .cbor)
+								try await userWallet.issueDocument(docType: EuPidModel.euPidDocType, format: .cbor)
 							}
 							catch {
 								hasError = true
