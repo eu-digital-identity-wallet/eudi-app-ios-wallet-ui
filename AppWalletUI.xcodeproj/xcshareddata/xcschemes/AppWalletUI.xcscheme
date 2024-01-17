@@ -78,7 +78,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "VCI_CALLBACK_SCHEME"
-            value = "urn:ietf:wg:oauth:2.0:oob"
+            value = "eudi-openid4ci://authorize/"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

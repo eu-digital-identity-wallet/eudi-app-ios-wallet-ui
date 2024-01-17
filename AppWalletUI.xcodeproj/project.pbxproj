@@ -10,13 +10,14 @@
 		0755E77B9CAAC16263FCBCAF /* RouteDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF6E1195F7E76FB1E65B3A4 /* RouteDestination.swift */; };
 		137C4A49312E72E171DB20AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1D33090D6053A9909551D0F /* LaunchScreen.storyboard */; };
 		2831CAFE3EDD91F1FB6EF3BA /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA18CF671F047E67E2062966 /* CheckboxToggleStyle.swift */; };
-		48A52D30B623E451E21452DC /* Iso18013HolderDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F56BB0335D7B191B6A3F0A /* Iso18013HolderDemoTests.swift */; };
 		4AA91D0A50549036FAB1B023 /* mdoc_holderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9962B21F26110B93252A501 /* mdoc_holderUITests.swift */; };
 		4AC8A4F5D00CE53C32BAF47E /* mdoc_holderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E70A9DCAFF6730722841C9D /* mdoc_holderUITestsLaunchTests.swift */; };
 		646F8E620073B5CD2B1ACC08 /* ButtonControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E024C74A273788B2E6BE2B7 /* ButtonControls.swift */; };
 		68C9142F71DA324B35570DDD /* DocDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C168568AE72A55E14FF960A /* DocDataView.swift */; };
 		6D697236484FE71D3E547213 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 1E6EC900D12B703E7BC17B9D /* CodeScanner */; };
 		AC2B2F7C55C2B9D24B67A706 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 75A663A39A851322A212B0A4 /* Localizable.strings */; };
+		B046DB4E2B5494450009A1A5 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = B046DB4D2B5494450009A1A5 /* CodeScanner */; };
+		B046DB522B5494690009A1A5 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = B046DB512B5494690009A1A5 /* CodeScanner */; };
 		B05C0D772B0F889100A4D8C7 /* EudiWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = B05C0D762B0F889100A4D8C7 /* EudiWalletKit */; };
 		B094F4152B0E4235007A51E6 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = B094F4142B0E4235007A51E6 /* CodeScanner */; };
 		BC7FB05D9F497EC0B13A8497 /* WalletUiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC7642D7306E4537C5A431B /* WalletUiApp.swift */; };
@@ -82,10 +83,8 @@
 
 /* Begin PBXFileReference section */
 		00E5BADE8466669835DCF955 /* AppWalletUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppWalletUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		00F56BB0335D7B191B6A3F0A /* Iso18013HolderDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Iso18013HolderDemoTests.swift; sourceTree = "<group>"; };
 		1E667FD0ED0BE9CDAB8F44CD /* EUDI_sample_data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EUDI_sample_data.json; sourceTree = "<group>"; };
 		233AFB61250D044070A69684 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		35FC666D8D44465BD7AFAFFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4AF6E1195F7E76FB1E65B3A4 /* RouteDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteDestination.swift; sourceTree = "<group>"; };
 		4B218B2FA59CA388735D1C68 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		516949D2D2F47BC10F034815 /* AppWalletUIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppWalletUIUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,6 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B046DB522B5494690009A1A5 /* CodeScanner in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +119,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE28A63A68C500BBF1244A16 /* Mockingbird in Frameworks */,
+				B046DB4E2B5494450009A1A5 /* CodeScanner in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,7 +216,6 @@
 			children = (
 				BC10AFC661F35D13D28D0E72 /* Resources */,
 				1F2BD7A0750585D379650B47 /* Sources */,
-				FC6E68E3809AA5A3EB2C1435 /* Tests */,
 				AD7BD541B7D0F9CB2C3EA414 /* UITests */,
 				792B8A651CDB1597E17DE2EB /* Info.plist */,
 			);
@@ -259,23 +259,6 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		E10BC6F9799496B2B16C1F66 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				00F56BB0335D7B191B6A3F0A /* Iso18013HolderDemoTests.swift */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
-		FC6E68E3809AA5A3EB2C1435 /* Tests */ = {
-			isa = PBXGroup;
-			children = (
-				E10BC6F9799496B2B16C1F66 /* Sources */,
-				35FC666D8D44465BD7AFAFFC /* Info.plist */,
-			);
-			path = Tests;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -294,6 +277,9 @@
 				F7E0506BAC4387E51FC9E8A8 /* PBXTargetDependency */,
 			);
 			name = AppWalletUIUITests;
+			packageProductDependencies = (
+				B046DB512B5494690009A1A5 /* CodeScanner */,
+			);
 			productName = AppWalletUIUITests;
 			productReference = 516949D2D2F47BC10F034815 /* AppWalletUIUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -315,6 +301,7 @@
 			name = AppWalletUITests;
 			packageProductDependencies = (
 				1DE2B3B6C0278F5B747FC69B /* Mockingbird */,
+				B046DB4D2B5494450009A1A5 /* CodeScanner */,
 			);
 			productName = AppWalletUITests;
 			productReference = 00E5BADE8466669835DCF955 /* AppWalletUITests.xctest */;
@@ -419,7 +406,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48A52D30B623E451E21452DC /* Iso18013HolderDemoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -805,6 +791,16 @@
 		};
 		1E6EC900D12B703E7BC17B9D /* CodeScanner */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = CodeScanner;
+		};
+		B046DB4D2B5494450009A1A5 /* CodeScanner */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B094F4132B0E4235007A51E6 /* XCRemoteSwiftPackageReference "CodeScanner" */;
+			productName = CodeScanner;
+		};
+		B046DB512B5494690009A1A5 /* CodeScanner */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B094F4132B0E4235007A51E6 /* XCRemoteSwiftPackageReference "CodeScanner" */;
 			productName = CodeScanner;
 		};
 		B05C0D762B0F889100A4D8C7 /* EudiWalletKit */ = {
