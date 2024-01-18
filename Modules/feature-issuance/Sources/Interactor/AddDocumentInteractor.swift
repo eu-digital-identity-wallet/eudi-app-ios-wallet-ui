@@ -18,10 +18,12 @@ import logic_ui
 import logic_resources
 import feature_common
 import logic_business
+import EudiWalletKit
 
 public protocol AddDocumentInteractorType {
   func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState
   func loadSampleData() async -> LoadSampleDataPartialState
+  func issueDocument(docType: String, format: DataFormat) async -> IssueDocumentPartialState
 }
 
 public final class AddDocumentInteractor: AddDocumentInteractorType {
@@ -33,22 +35,21 @@ public final class AddDocumentInteractor: AddDocumentInteractorType {
   public func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState {
 
     let types = AddDocumentCellModel.items.map({
-        var item = $0
-        switch item.type {
-        case .EuPidDocType:
-          item.isEnabled = walletController.fetchDocument(
-            with: DocumentIdentifier.EuPidDocType.rawValue
-          ) == nil
-        case .IsoMdlModel:
-          item.isEnabled = walletController.fetchDocument(
-            with: DocumentIdentifier.IsoMdlModel.rawValue
-          ) == nil && flow == .extraDocument
-        case .genericDocument:
-          break
-        }
-        return item
+      var item = $0
+      switch item.type {
+      case .EuPidDocType:
+        item.isEnabled = walletController.fetchDocument(
+          with: DocumentIdentifier.EuPidDocType.rawValue
+        ) == nil
+      case .IsoMdlModel:
+        item.isEnabled = walletController.fetchDocument(
+          with: DocumentIdentifier.IsoMdlModel.rawValue
+        ) == nil && flow == .extraDocument
+      case .genericDocument:
+        break
       }
-    )
+      return item
+    })
 
     switch flow {
     case .noDocument:
@@ -76,6 +77,15 @@ public final class AddDocumentInteractor: AddDocumentInteractorType {
       return .failure(error)
     }
   }
+
+  public func issueDocument(docType: String, format: DataFormat) async -> IssueDocumentPartialState {
+    do {
+      let doc = try await walletController.issueDocument(docType: docType, format: format)
+      return .success(doc.docType)
+    } catch {
+      return .failure(error)
+    }
+  }
 }
 
 public enum StoredDocumentsPartialState {
@@ -85,5 +95,10 @@ public enum StoredDocumentsPartialState {
 
 public enum LoadSampleDataPartialState {
   case success
+  case failure(Error)
+}
+
+public enum IssueDocumentPartialState {
+  case success(String)
   case failure(Error)
 }

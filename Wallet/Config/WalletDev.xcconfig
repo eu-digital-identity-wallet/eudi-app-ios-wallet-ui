@@ -1,3 +1,6 @@
 BUILD_TYPE = DEBUG
 BASE_HOST = http:/$()/10.240.36.57:32120/
 VERIFIER_API_URI = https:/$()/eudi.netcompany-intrasoft.com
+VCI_ISSUER_URL = https:/$()/eudi.netcompany-intrasoft.com/pid-issuer
+VCI_CLIENT_ID = wallet-dev
+VCI_REDIRECT_URI = eudi-openid4ci:/$()/authorize/

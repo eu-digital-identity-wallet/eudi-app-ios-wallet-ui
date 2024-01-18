@@ -149,13 +149,6 @@ public final class RouterHost: RouterHostType {
           interactor: QuickPinInteractor(),
           config: config
         )
-      case .issuanceExternalLogin(let config, let documentIdentifier):
-        ExternalLoginView(
-          with: self,
-          and: ExternalLoginInteractor(),
-          config: config,
-          documentIdentifier: documentIdentifier
-        )
       case .issuanceSuccess(let config, let documentIdentifier):
         DocumentSuccessView(
           with: self,

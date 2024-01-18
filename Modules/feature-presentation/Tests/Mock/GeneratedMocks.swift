@@ -851,14 +851,30 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
     
     
     
-    public var verifierApiUri: String {
+    public var verifierConfig: VerifierConfig {
         get {
-            return cuckoo_manager.getter("verifierApiUri",
+            return cuckoo_manager.getter("verifierConfig",
                 superclassCall:
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.verifierApiUri)
+                defaultCall:  __defaultImplStub!.verifierConfig)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var vciConfig: VciConfig {
+        get {
+            return cuckoo_manager.getter("vciConfig",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.vciConfig)
         }
         
     }
@@ -899,8 +915,15 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         
         
         
-        var verifierApiUri: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, String> {
-            return .init(manager: cuckoo_manager, name: "verifierApiUri")
+        var verifierConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, VerifierConfig> {
+            return .init(manager: cuckoo_manager, name: "verifierConfig")
+        }
+        
+        
+        
+        
+        var vciConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, VciConfig> {
+            return .init(manager: cuckoo_manager, name: "vciConfig")
         }
         
         
@@ -942,8 +965,15 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         
         
         
-        var verifierApiUri: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "verifierApiUri", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var verifierConfig: Cuckoo.VerifyReadOnlyProperty<VerifierConfig> {
+            return .init(manager: cuckoo_manager, name: "verifierConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        var vciConfig: Cuckoo.VerifyReadOnlyProperty<VciConfig> {
+            return .init(manager: cuckoo_manager, name: "vciConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         
@@ -991,9 +1021,20 @@ public class ConfigLogicStub: ConfigLogic {
     
     
     
-    public var verifierApiUri: String {
+    public var verifierConfig: VerifierConfig {
         get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
+            return DefaultValueRegistry.defaultValue(for: (VerifierConfig).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var vciConfig: VciConfig {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (VciConfig).self)
         }
         
     }
@@ -3154,6 +3195,7 @@ import Combine
 import EudiWalletKit
 import Foundation
 import MdocDataModel18013
+import WalletStorage
 import logic_resources
 
 
@@ -3416,6 +3458,26 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
     }
     
     
+    
+    
+    
+    public func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document {
+        
+    return try await cuckoo_manager.callThrows(
+    """
+    issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
+    """,
+            parameters: (docType, format),
+            escapingParameters: (docType, format),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: await __defaultImplStub!.issueDocument(docType: docType, format: format))
+        
+    }
+    
+    
 
     public struct __StubbingProxy_WalletKitControllerType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -3545,6 +3607,17 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
     """
     loadDocuments() async throws
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(docType: M1, format: M2) -> Cuckoo.ProtocolStubThrowingFunction<(String, DataFormat), WalletStorage.Document> where M1.MatchedType == String, M2.MatchedType == DataFormat {
+            let matchers: [Cuckoo.ParameterMatcher<(String, DataFormat)>] = [wrap(matchable: docType) { $0.0 }, wrap(matchable: format) { $0.1 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitControllerType.self, method:
+    """
+    issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
     """, parameterMatchers: matchers))
         }
         
@@ -3699,6 +3772,18 @@ public class MockWalletKitControllerType: WalletKitControllerType, Cuckoo.Protoc
         }
         
         
+        
+        
+        @discardableResult
+        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(docType: M1, format: M2) -> Cuckoo.__DoNotUse<(String, DataFormat), WalletStorage.Document> where M1.MatchedType == String, M2.MatchedType == DataFormat {
+            let matchers: [Cuckoo.ParameterMatcher<(String, DataFormat)>] = [wrap(matchable: docType) { $0.0 }, wrap(matchable: format) { $0.1 }]
+            return cuckoo_manager.verify(
+    """
+    issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -3808,6 +3893,14 @@ public class WalletKitControllerTypeStub: WalletKitControllerType {
     
     public func loadDocuments() async throws  {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document  {
+        return DefaultValueRegistry.defaultValue(for: (WalletStorage.Document).self)
     }
     
     

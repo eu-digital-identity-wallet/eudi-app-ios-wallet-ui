@@ -35,7 +35,7 @@ let package = Package(
     ),
     .package(
       url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
-      exact: "0.2.0"
+      exact: "0.2.1"
     ),
     .package(
       url: "https://github.com/rhummelmose/BluetoothKit.git",

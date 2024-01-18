@@ -19,6 +19,7 @@ import EudiWalletKit
 import MdocDataModel18013
 import Combine
 import logic_resources
+import WalletStorage
 
 public protocol WalletKitControllerType {
 
@@ -35,6 +36,7 @@ public protocol WalletKitControllerType {
   func clearDocuments() async throws
   func deleteDocument(with type: String) async throws
   func loadDocuments() async throws
+  func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
 }
 
 public final class WalletKitController: WalletKitControllerType {
@@ -51,7 +53,10 @@ public final class WalletKitController: WalletKitControllerType {
     self.configLogic = configLogic
     wallet.userAuthenticationRequired = false
     wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
-    wallet.openId4VpVerifierApiUri = configLogic.verifierApiUri
+    wallet.verifierApiUri = configLogic.verifierConfig.apiUri
+    wallet.vciIssuerUrl = configLogic.vciConfig.issuerUrl
+    wallet.vciClientId = configLogic.vciConfig.clientId
+    wallet.vciRedirectUri = configLogic.vciConfig.redirectUri
   }
 
   public func loadSampleData(dataFiles: [String]) async throws {
@@ -118,6 +123,11 @@ public final class WalletKitController: WalletKitControllerType {
 
   public func fetchDocument(with id: String) -> MdocDecodable? {
     wallet.storage.getDocumentModel(docType: id)
+  }
+
+  public func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document {
+    let doc = try await wallet.issueDocument(docType: docType, format: format)
+    return doc
   }
 
   private func decodeDeeplink(link: URLComponents) -> String? {

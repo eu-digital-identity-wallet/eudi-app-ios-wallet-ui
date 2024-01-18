@@ -52,9 +52,7 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
     )
   }
 
-  // MARK: - TODO REWORK ONCE REAL DATA VIA ISSUING
   func initialize() async {
-    await interactor.loadSampleData()
     setNewState(
       caption: .issuanceSuccessCaption([interactor.getDocumentName(for: viewState.documentIdentifier)]),
       holderName: interactor.getHoldersName(for: viewState.documentIdentifier)

@@ -109,6 +109,15 @@
       }
     },
     {
+      "identity" : "eudi-lib-ios-openid4vci-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
+      "state" : {
+        "revision" : "33576657be50e70f5a2a178c1cb8749f6ae9507d",
+        "version" : "0.0.3"
+      }
+    },
+    {
       "identity" : "eudi-lib-ios-presentation-exchange-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-presentation-exchange-swift.git",
@@ -131,8 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "dc13669a0b5972311a36053ccc50c08b22daed37",
-        "version" : "0.2.0"
+        "revision" : "3750a446abf8c22e992aa502afd04a80b4c5a59b",
+        "version" : "0.2.1"
       }
     },
     {
@@ -149,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Hitch.git",
       "state" : {
-        "revision" : "0698c164bd972c15e64f517dba63716b7217087b",
-        "version" : "0.4.115"
+        "revision" : "b23dba215ecaf089996b6975cdc996376ce27cd5",
+        "version" : "0.4.117"
       }
     },
     {
@@ -322,6 +331,15 @@
       "state" : {
         "revision" : "1f3a620e4abe890d00008cb2af7023d810b433a7",
         "version" : "1.4.0"
+      }
+    },
+    {
+      "identity" : "swiftyjson",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftyJSON/SwiftyJSON.git",
+      "state" : {
+        "revision" : "2b6054efa051565954e1d2b9da831680026cd768",
+        "version" : "4.3.0"
       }
     },
     {

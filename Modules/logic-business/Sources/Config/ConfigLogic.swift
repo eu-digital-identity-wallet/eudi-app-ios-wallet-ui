@@ -19,6 +19,16 @@ public enum AppBuildType: String {
   case RELEASE, DEBUG
 }
 
+public struct VciConfig {
+  public let issuerUrl: String
+  public let clientId: String
+  public let redirectUri: String
+}
+
+public struct VerifierConfig {
+  public let apiUri: String
+}
+
 public protocol ConfigLogic {
 
   /**
@@ -39,7 +49,12 @@ public protocol ConfigLogic {
   /**
    * Verifier API URI.
    */
-  var verifierApiUri: String { get }
+  var verifierConfig: VerifierConfig { get }
+
+  /**
+   * VCI Configuration
+   */
+  var vciConfig: VciConfig { get }
 }
 
 extension ConfigLogic {

@@ -18,7 +18,6 @@ import logic_business
 public protocol DocumentSuccessInteractorType {
   func getHoldersName(for documentIdentifier: String) -> String?
   func getDocumentName(for documentIdentifier: String) -> String
-  func loadSampleData() async
 }
 
 public final class DocumentSuccessInteractor: DocumentSuccessInteractorType {
@@ -26,10 +25,6 @@ public final class DocumentSuccessInteractor: DocumentSuccessInteractorType {
   private lazy var walletController: WalletKitControllerType = WalletKitController.shared
 
   public init() {}
-
-  public func loadSampleData() async {
-    try? await walletController.loadSampleData(dataFiles: ["EUDI_sample_data"])
-  }
 
   public func getHoldersName(for documentIdentifier: String) -> String? {
     guard

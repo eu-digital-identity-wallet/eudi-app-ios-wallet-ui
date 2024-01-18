@@ -18,6 +18,8 @@ import logic_ui
 import logic_resources
 import logic_business
 import feature_common
+import MdocDataModel18013
+import EudiWalletKit
 
 struct AddDocumentViewState: ViewState {
   let addDocumentCellModels: [AddDocumentCellModel]
@@ -66,8 +68,10 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
 
   func onClick(for documentIdentifier: DocumentIdentifier) {
     switch documentIdentifier {
-    case .EuPidDocType, .IsoMdlModel:
-      router.push(with: .issuanceExternalLogin(config: viewState.config, documentIdentifier: documentIdentifier.rawValue))
+    case .EuPidDocType:
+      issueDocument(docType: EuPidModel.euPidDocType)
+    case .IsoMdlModel:
+      issueDocument(docType: IsoMdlModel.isoDocType)
     case .genericDocument:
       loadSampleData()
     }
@@ -75,6 +79,43 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
 
   func pop() {
     router.pop(animated: true)
+  }
+
+  private func issueDocument(docType: String, format: DataFormat = .cbor) {
+    Task {
+      setNewState(
+        addDocumentCellModels: transformCellLoadingState(with: true)
+      )
+      switch await interactor.issueDocument(
+        docType: docType,
+        format: format
+      ) {
+      case .success(let docType):
+        router.push(
+          with: .issuanceSuccess(
+            config: viewState.config,
+            documentIdentifier: docType
+          )
+        )
+      case .failure(let error):
+        setNewState(
+          addDocumentCellModels: transformCellLoadingState(with: false),
+          error: .init(
+            description: .custom(error.localizedDescription),
+            cancelAction: self.setNewState(error: nil)
+          )
+        )
+      }
+    }
+  }
+
+  private func transformCellLoadingState(with isLoading: Bool) -> [AddDocumentCellModel] {
+    return viewState.addDocumentCellModels.map({
+        var cell = $0
+        cell.isLoading = isLoading
+        return cell
+      }
+    )
   }
 
   private func loadSampleData() {

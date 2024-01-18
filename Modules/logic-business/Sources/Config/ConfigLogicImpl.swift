@@ -29,7 +29,15 @@ public struct WalletConfig: ConfigLogic {
     getBundleValue(key: "CFBundleShortVersionString")
   }
 
-  public var verifierApiUri: String {
-    getBundleValue(key: "Verifier API")
+  public var verifierConfig: VerifierConfig {
+    .init(apiUri: getBundleValue(key: "Verifier API"))
+  }
+
+  public var vciConfig: VciConfig {
+    .init(
+      issuerUrl: getBundleValue(key: "Vci Issuer URL"),
+      clientId: getBundleValue(key: "Vci Client Id"),
+      redirectUri: getBundleValue(key: "Vci Redirect Uri")
+    )
   }
 }
