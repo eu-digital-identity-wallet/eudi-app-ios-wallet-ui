@@ -44,7 +44,7 @@ public final class DashboardInteractor: DashboardInteractorType {
     let bearer: BearerUIModel = fetchBearer()
 
     guard let documents = documents else {
-      return .failure(RuntimeError.customError("Unable to fetch documents"))
+      return .failure(RuntimeError.unableFetchDocuments)
     }
 
     return .success(bearer, documents)

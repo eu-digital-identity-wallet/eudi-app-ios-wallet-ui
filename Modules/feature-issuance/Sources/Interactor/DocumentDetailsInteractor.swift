@@ -30,11 +30,9 @@ public final class DocumentDetailsInteractor: DocumentDetailsInteractorType {
   public init() {}
 
   public func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
-    // Add Some logic from walletCore about active documents in storage.
-    // Fetch document with currendId
     let document = walletKitController.fetchDocument(with: documentId)
     guard let documentDetails = document?.transformToDocumentDetailsUi() else {
-      return .failure(RuntimeError.customError("Failed to map document details"))
+      return .failure(RuntimeError.unableFetchDocument)
     }
     return .success(documentDetails)
   }

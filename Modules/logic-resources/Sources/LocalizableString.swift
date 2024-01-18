@@ -213,6 +213,10 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedStringWithArguments(forKey: "issuance_details_doc_deletion_title", arguments: args)
     case .issuanceDetailsDeletionCaption(let args):
       bundle.localizedStringWithArguments(forKey: "issuance_details_doc_deletion_caption", arguments: args)
+    case .errorUnableFetchDocuments:
+      bundle.localizedString(forKey: "error_unable_fetch_documents")
+    case .errorUnableFetchDocument:
+      bundle.localizedString(forKey: "error_unable_fetch_document")
     }
   }
 
@@ -312,6 +316,8 @@ public extension LocalizableString {
     case requestDataNoDocument
     case issuanceDetailsDeletionTitle([String])
     case issuanceDetailsDeletionCaption([String])
+    case errorUnableFetchDocuments
+    case errorUnableFetchDocument
   }
 }
 
