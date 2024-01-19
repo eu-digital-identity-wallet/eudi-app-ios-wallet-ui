@@ -126,8 +126,7 @@ public final class WalletKitController: WalletKitControllerType {
   }
 
   public func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document {
-    let doc = try await wallet.issueDocument(docType: docType, format: format)
-    return doc
+    return try await wallet.issueDocument(docType: docType, format: format)
   }
 
   private func decodeDeeplink(link: URLComponents) -> String? {
