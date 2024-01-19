@@ -83,7 +83,7 @@ public final class AddDocumentInteractor: AddDocumentInteractorType {
       let doc = try await walletController.issueDocument(docType: docType, format: format)
       return .success(doc.docType)
     } catch {
-      return .failure(error)
+      return .failure(RuntimeError.unableFetchDocument)
     }
   }
 }
