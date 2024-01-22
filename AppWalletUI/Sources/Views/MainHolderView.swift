@@ -38,11 +38,13 @@ struct MainHolderView: View {
 					Button {
 						Task {
 							do { try await wallet.loadSampleData() }
-						catch { hasError = true; uiError = (error as? StorageError)?.localizedDescription }
-					}
+							catch { hasError = true; uiError = (error as? StorageError)?.localizedDescription }
+						}
 					} label: {
 						Text("add_sample_documents").padding(12)
 					}.padding(.top, 20).tint(Color("AccentColor")).buttonStyle(.borderedProminent)
+				}
+				if storage.pidModel == nil {
 					Button {
 						Task {
 							do {
@@ -52,11 +54,13 @@ struct MainHolderView: View {
 								hasError = true
 								uiError = (error as? OpenId4VCIError)?.localizedDescription ?? (error as NSError).localizedDescription
 							}
-					}
+						}
 					} label: {
 						Text("issue_pid_document").padding(12)
 					}.padding(.top, 20).tint(Color("AccentColor")).buttonStyle(.borderedProminent)
-						Button {
+				}
+				if storage.mdlModel == nil {
+					Button {
 						Task {
 							do {
 								try await wallet.issueDocument(docType: IsoMdlModel.isoDocType, format: .cbor)
@@ -65,7 +69,7 @@ struct MainHolderView: View {
 								hasError = true
 								uiError = (error as? OpenId4VCIError)?.localizedDescription ?? (error as NSError).localizedDescription
 							}
-					}
+						}
 					} label: {
 						Text("issue_mdl_document").padding(12)
 					}.padding(.top, 20).tint(Color("AccentColor")).buttonStyle(.borderedProminent)
