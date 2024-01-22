@@ -68,7 +68,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "VCI_ISSUER_URL"
-            value = "https://eudi.netcompany-intrasoft.com/pid-issuer"
+            value = "https://preprod.issuer.eudiw.dev/oidc"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable

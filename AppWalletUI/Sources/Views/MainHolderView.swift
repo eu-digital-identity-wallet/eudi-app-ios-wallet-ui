@@ -56,6 +56,19 @@ struct MainHolderView: View {
 					} label: {
 						Text("issue_pid_document").padding(12)
 					}.padding(.top, 20).tint(Color("AccentColor")).buttonStyle(.borderedProminent)
+						Button {
+						Task {
+							do {
+								try await wallet.issueDocument(docType: IsoMdlModel.isoDocType, format: .cbor)
+							}
+							catch {
+								hasError = true
+								uiError = (error as? OpenId4VCIError)?.localizedDescription ?? (error as NSError).localizedDescription
+							}
+					}
+					} label: {
+						Text("issue_mdl_document").padding(12)
+					}.padding(.top, 20).tint(Color("AccentColor")).buttonStyle(.borderedProminent)
 				}
 				if let pidModel = storage.pidModel {
 					NavigationLink(value: RouteDestination.docView(docType: pidModel.docType)) {
