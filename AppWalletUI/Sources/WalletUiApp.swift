@@ -20,13 +20,11 @@ import EudiWalletKit
 @main
 struct WalletUiApp: App {
 	@State private var path = NavigationPath()
-	var wallet: EudiWallet
+	 var wallet: EudiWallet = EudiWallet.standard
 	
 	// initialize wallet app
 	init() {
 		UserDefaults.standard.set(true, forKey: "DebugDisplay")
-		wallet = EudiWallet.standard
-		wallet.userAuthenticationRequired = true
 		wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
 		wallet.verifierApiUri = ProcessInfo.processInfo.environment["VERIFIER_API"] ?? "https://eudi.netcompany-intrasoft.com"
 		wallet.vciIssuerUrl = ProcessInfo.processInfo.environment["VCI_ISSUER_URL"] ?? "https://eudi.netcompany-intrasoft.com/pid-issuer" // "https://preprod.issuer.eudiw.dev/oidc"

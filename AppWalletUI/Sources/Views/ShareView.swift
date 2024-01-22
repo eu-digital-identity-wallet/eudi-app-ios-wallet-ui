@@ -22,13 +22,16 @@ import LocalAuthentication
 struct ShareView: View {
 	@State var hasCancelled = false
 	@Environment(\.dismiss) var dismiss
-	var isProximitySharing: Bool { presentationSession.presentationService.flow.isProximity }
-	@ObservedObject var presentationSession: PresentationSession
-	@EnvironmentObject var userWallet: EudiWallet
+	@State var isProximitySharing: Bool = false
+	@StateObject var presentationSession = PresentationSession(presentationService: FaultPresentationService(msg: "N/A"))
+	@State var title: String = ""
+	var flow: FlowType
+	@EnvironmentObject var wallet: EudiWallet
 	@Environment(\.openURL) private var openURL
 	
 	var body: some View {
 		VStack(spacing: 16) {
+			Text(verbatim: title).font(.title)
 			Text(verbatim: "Status: \(statusDescription)").foregroundStyle(.blue)
 			if presentationSession.status == .error, let err = presentationSession.uiError {
 				Text(verbatim: err.localizedDescription).foregroundStyle(.red)
@@ -82,9 +85,13 @@ struct ShareView: View {
 				} label: {Label("OK", systemImage: "checkmark.seal").frame(width:200, height: 30)}.buttonStyle(.borderedProminent).padding()
 			}
 		}.padding().padding()
-		 .task {
-			 if isProximitySharing { await presentationSession.startQrEngagement() }
-			 _ = await presentationSession.receiveRequest()
+			.task {
+				let session = wallet.beginPresentation(flow: flow)
+				presentationSession.presentationService = session.presentationService
+				isProximitySharing = presentationSession.presentationService.flow.isProximity
+				title = isProximitySharing ? "Share ID" : "OpenID4VP"
+				if isProximitySharing { await presentationSession.startQrEngagement() }
+				_ = await presentationSession.receiveRequest()
 			}
 	} // body
 		

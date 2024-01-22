@@ -27,7 +27,7 @@ struct MainHolderView: View {
 	@State var flow: FlowType = .ble
 	@State var hasError: Bool = false
 	@State var uiError: String? = nil
-	@EnvironmentObject var userWallet: EudiWallet
+	@EnvironmentObject var wallet: EudiWallet
 	@Binding var path: NavigationPath
 	
 	var body: some View {
@@ -37,7 +37,7 @@ struct MainHolderView: View {
 					//Text("start_by_adding_sample_documents").italic().font(.footnote)
 					Button {
 						Task {
-							do { try await userWallet.loadSampleData() }
+							do { try await wallet.loadSampleData() }
 						catch { hasError = true; uiError = (error as? StorageError)?.localizedDescription }
 					}
 					} label: {
@@ -46,7 +46,7 @@ struct MainHolderView: View {
 					Button {
 						Task {
 							do {
-								try await userWallet.issueDocument(docType: EuPidModel.euPidDocType, format: .cbor)
+								try await wallet.issueDocument(docType: EuPidModel.euPidDocType, format: .cbor)
 							}
 							catch {
 								hasError = true
@@ -81,7 +81,7 @@ struct MainHolderView: View {
 				}
 			}.task {
 				if !storage.hasData {
-					try? await userWallet.loadDocuments()
+					_ = try? await wallet.loadDocuments()
 				}
 			}
 			.navigationDestination(for: RouteDestination.self) { destination in
@@ -89,11 +89,10 @@ struct MainHolderView: View {
 					  case .docView(let docType):
 					DocDataView(docType: docType, storage: storage)
 					  case .shareView(let flow):
-					let session = userWallet.beginPresentation(flow: flow) 
-						  ShareView(presentationSession: session)
+					ShareView(flow: flow).environmentObject(wallet)
 					  }
 				  }.navigationBarTitle("eudi_wallet_prototype_v1", displayMode: .inline).toolbar {
-					  if userWallet.storage.hasData {
+					  if wallet.storage.hasData {
 						  ToolbarItemGroup(placement: .navigationBarTrailing) {
 							  Button(action: { isPresentingConfirm = true }) { Image(systemName: "trash")  }
 							  Button(action: { isPresentingScanner = true }) { Image(systemName: "qrcode.viewfinder") }
