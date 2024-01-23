@@ -82,6 +82,7 @@ public struct RequestDataRow: Identifiable, Equatable {
   public var id: String
   public var isSelected: Bool
   public var isVisible: Bool
+  public var isEnabled: Bool
 
   public var elementKey: String
   public var namespace: String
@@ -104,8 +105,13 @@ public struct RequestDataRow: Identifiable, Equatable {
     switch value {
     case .string(let string):
       self.value = .string(string)
+      self.isEnabled = true
+    case .unavailable(let string):
+      self.value = .string(string)
+      self.isEnabled = false
     case .image(let imageData):
       self.value = .image(imageData)
+      self.isEnabled = true
     }
     self.elementKey = elementKey
     self.namespace = namespace

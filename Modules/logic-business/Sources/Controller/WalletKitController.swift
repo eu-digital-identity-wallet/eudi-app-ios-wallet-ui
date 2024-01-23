@@ -181,7 +181,7 @@ extension WalletKitControllerType {
     // Check if document type matches one of known models (pid or mdl)
 
     guard var displayStrings = displayStrings else {
-      return .string(LocalizableString.shared.get(with: .unavailableField))
+      return .unavailable(LocalizableString.shared.get(with: .unavailableField))
     }
 
     if documentType == .IsoMdlModel,
@@ -195,8 +195,7 @@ extension WalletKitControllerType {
       displayStrings.append(
         contentsOf: decodeAgeOver(ageOverDictionary: mdl.ageOverXX)
       )
-    } else if documentType == .EuPidDocType,
-              let pid = wallet.storage.pidModel {
+    } else if documentType == .EuPidDocType, let pid = wallet.storage.pidModel {
       displayStrings.append(
         contentsOf: decodeAgeOver(ageOverDictionary: pid.ageOverXX)
       )
@@ -208,7 +207,12 @@ extension WalletKitControllerType {
         element.name == elementIdentifier
       })?.value
     // Return the value if found, or a static string that field was not found
-    return  .string(value ?? LocalizableString.shared.get(with: .unavailableField))
+
+    guard let isAvailable = value else {
+      return .unavailable(LocalizableString.shared.get(with: .unavailableField))
+    }
+
+    return .string(isAvailable)
   }
 
   private func decodeAgeOver(ageOverDictionary: [Int: Bool]) -> [NameValue] {

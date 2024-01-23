@@ -17,11 +17,14 @@ import Foundation
 
 public enum MdocValue {
   case string(String)
+  case unavailable(String)
   case image(Data)
 
   public var string: String? {
     switch self {
     case .string(let string):
+      string
+    case .unavailable(let string):
       string
     default:
       nil

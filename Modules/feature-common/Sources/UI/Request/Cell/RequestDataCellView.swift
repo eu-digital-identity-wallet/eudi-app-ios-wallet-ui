@@ -41,7 +41,7 @@ extension BaseRequestView {
         WrapCheckBoxView(
           isSelected: row.isSelected,
           isVisible: row.isVisible,
-          isEnabled: true,
+          isEnabled: row.isEnabled,
           isLoading: isLoading,
           id: row.id,
           title: row.title,
