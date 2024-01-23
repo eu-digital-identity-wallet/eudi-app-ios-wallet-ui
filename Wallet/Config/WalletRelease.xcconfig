@@ -1,6 +1,6 @@
 BUILD_TYPE = RELEASE
 BASE_HOST = https:/$()/eudi.netcompany-intrasoft.com/
 VERIFIER_API_URI = https:/$()/eudi.netcompany-intrasoft.com
-VCI_ISSUER_URL = https:/$()/eudi.netcompany-intrasoft.com/pid-issuer
+VCI_ISSUER_URL = https:/$()/preprod.issuer.eudiw.dev/oidc
 VCI_CLIENT_ID = wallet-dev
 VCI_REDIRECT_URI = eudi-openid4ci:/$()/authorize/
