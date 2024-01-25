@@ -15,7 +15,7 @@ let package = Package(
   dependencies: [
     .package(
       url: "https://github.com/Brightify/Cuckoo.git",
-      .upToNextMinor(from: "1.9.1")
+      from: "1.10.4"
     ),
     .package(
       url: "https://github.com/groue/CombineExpectations.git",

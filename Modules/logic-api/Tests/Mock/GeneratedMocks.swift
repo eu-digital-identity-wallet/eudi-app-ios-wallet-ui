@@ -1225,6 +1225,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_api
 
+import Cuckoo
 import Foundation
 import KeychainAccess
 

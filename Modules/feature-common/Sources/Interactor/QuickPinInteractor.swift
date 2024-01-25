@@ -35,6 +35,11 @@ public final class QuickPinInteractor: QuickPinInteractorType {
 
   public init() {}
 
+  convenience init(keyChainController: KeyChainControllerType) {
+    self.init()
+    self.keyChainController = keyChainController
+  }
+
   public func setPin(newPin: String) {
     keyChainController.storeValue(key: .devicePin, value: newPin)
   }

@@ -15,8 +15,9 @@
  */
 import Foundation
 import KeychainAccess
+import Cuckoo
 
-public enum KeychainWrapper: String {
+public enum KeychainWrapper: String, Matchable {
   case deviceVendorId
   case devicePin
 }

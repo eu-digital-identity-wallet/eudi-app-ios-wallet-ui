@@ -779,6 +779,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_ui
 
+import Cuckoo
 import Foundation
 import KeychainAccess
 

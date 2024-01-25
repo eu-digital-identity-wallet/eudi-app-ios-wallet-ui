@@ -1565,6 +1565,7 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import Cuckoo
 import Foundation
 import KeychainAccess
 

@@ -9,7 +9,6 @@
     }
   ],
   "defaultOptions" : {
-    "codeCoverage" : false,
     "targetForVariableExpansion" : {
       "containerPath" : "container:EUDI Reference App.xcodeproj",
       "identifier" : "F14907B72ABAF54B00DDFE56",
