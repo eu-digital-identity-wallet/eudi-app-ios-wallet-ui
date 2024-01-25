@@ -48,7 +48,7 @@ struct MainHolderView: View {
 					Button {
 						Task {
 							do {
-								try await wallet.issueDocument(docType: EuPidModel.euPidDocType, format: .cbor)
+								try await wallet.issueDocument(docType: EuPidModel.euPidDocType, format: .cbor, useSecureEnclave: true)
 							}
 							catch {
 								hasError = true
@@ -63,7 +63,7 @@ struct MainHolderView: View {
 					Button {
 						Task {
 							do {
-								try await wallet.issueDocument(docType: IsoMdlModel.isoDocType, format: .cbor)
+								try await wallet.issueDocument(docType: IsoMdlModel.isoDocType, format: .cbor, useSecureEnclave: true)
 							}
 							catch {
 								hasError = true
