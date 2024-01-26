@@ -97,6 +97,7 @@ struct MainHolderView: View {
 					}).accessibilityIdentifier("Share")
 				}
 			}.task {
+				// try? await wallet.deleteDocuments()
 				if !storage.hasData {
 					_ = try? await wallet.loadDocuments()
 				}
