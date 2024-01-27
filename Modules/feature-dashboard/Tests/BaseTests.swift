@@ -13,32 +13,16 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-
 @testable import feature_dashboard
-@testable import logic_api
-@testable import logic_test
 @testable import feature_test
+@testable import logic_test
 
-class BaseTests: EudiTest {
+final class BaseTests: EudiTest {
+    func testExample() throws {
+        // XCTest Documentation
+        // https://developer.apple.com/documentation/xctest
 
-  override func setUp() async throws {
-    try await super.setUp()
-  }
-
-  override func tearDown() {
-    super.tearDown()
-  }
-
-  func testBusinessLogic() {
-
-    let mock = MockConfigLogic()
-
-    stub(mock) { stub in
-      when(stub.walletHostUrl.get).thenReturn(Constants.urlMock)
+        // Defining Test Cases and Test Methods
+        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
     }
-
-    XCTAssertEqual(mock.walletHostUrl, Constants.urlMock)
-
-    XCTAssertTrue(true, Constants.urlMock)
-  }
 }

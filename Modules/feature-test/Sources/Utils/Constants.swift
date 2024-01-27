@@ -15,5 +15,4 @@
  */
 
 final class Constants {
-  static let urlMock = "test.com"
 }

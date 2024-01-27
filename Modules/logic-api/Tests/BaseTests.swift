@@ -13,21 +13,15 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+@testable import logic_api
+@testable import logic_test
 
-import Foundation
-import XCTest
+final class BaseTests: EudiTest {
+    func testExample() throws {
+        // XCTest Documentation
+        // https://developer.apple.com/documentation/xctest
 
-class BaseTests: XCTestCase {
-
-  override func setUp() async throws {
-    try await super.setUp()
-  }
-
-  override func tearDown() {
-    super.tearDown()
-  }
-
-  func test() {
-    XCTAssert(true, "Test passed!")
-  }
+        // Defining Test Cases and Test Methods
+        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
+    }
 }
