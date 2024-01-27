@@ -34,11 +34,11 @@ class BaseTests: EudiTest {
     let mock = MockConfigLogic()
     
     stub(mock) { stub in
-      when(stub.baseHost.get).thenReturn(SampleConstants.urlMock)
+      when(stub.walletHostUrl.get).thenReturn(Constants.urlMock)
     }
     
-    XCTAssertEqual(mock.baseHost, SampleConstants.urlMock)
+    XCTAssertEqual(mock.walletHostUrl, Constants.urlMock)
     
-    XCTAssertTrue(true, SampleConstants.urlMock)
+    XCTAssertTrue(true, Constants.urlMock)
   }
 }

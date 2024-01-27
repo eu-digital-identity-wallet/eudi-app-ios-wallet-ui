@@ -809,14 +809,14 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
     
     
     
-    public var baseHost: String {
+    public var walletHostUrl: String {
         get {
-            return cuckoo_manager.getter("baseHost",
+            return cuckoo_manager.getter("walletHostUrl",
                 superclassCall:
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.baseHost)
+                defaultCall:  __defaultImplStub!.walletHostUrl)
         }
         
     }
@@ -900,8 +900,8 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         
         
         
-        var baseHost: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, String> {
-            return .init(manager: cuckoo_manager, name: "baseHost")
+        var walletHostUrl: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, String> {
+            return .init(manager: cuckoo_manager, name: "walletHostUrl")
         }
         
         
@@ -950,8 +950,8 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         
         
         
-        var baseHost: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "baseHost", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var walletHostUrl: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "walletHostUrl", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         
@@ -994,7 +994,7 @@ public class ConfigLogicStub: ConfigLogic {
     
     
     
-    public var baseHost: String {
+    public var walletHostUrl: String {
         get {
             return DefaultValueRegistry.defaultValue(for: (String).self)
         }
@@ -1565,7 +1565,6 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
-import Cuckoo
 import Foundation
 import KeychainAccess
 

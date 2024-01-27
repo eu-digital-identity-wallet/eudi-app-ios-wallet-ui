@@ -32,7 +32,7 @@ public actor NetworkManager: GlobalActor {
     let request = self.prepare(
       request: request,
       parameters: parameters,
-      baseHost: self.configLogic.baseHost
+      baseHost: self.configLogic.walletHostUrl
     )
 
     return try await withCheckedThrowingContinuation { continuation in

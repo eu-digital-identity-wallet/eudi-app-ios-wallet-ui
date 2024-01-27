@@ -32,9 +32,9 @@ public struct VerifierConfig {
 public protocol ConfigLogic {
 
   /**
-   * Server base url.
+   * Wallet base url for direct network operation.
    */
-  var baseHost: String { get }
+  var walletHostUrl: String { get }
 
   /**
    * Build type.

@@ -14,6 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 
-final class SampleConstants {
+final class Constants {
   static let urlMock = "test.com"
 }

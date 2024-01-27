@@ -41,10 +41,6 @@ let package = Package(
       url: "https://github.com/rhummelmose/BluetoothKit.git",
       branch: "master"
     ),
-    .package(
-      url: "https://github.com/Brightify/Cuckoo.git",
-      from: "1.10.4"
-    ),
     .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
@@ -66,10 +62,6 @@ let package = Package(
         .product(
           name: "EudiWalletKit",
           package: "eudi-lib-ios-wallet-kit"
-        ),
-        .product(
-          name: "Cuckoo",
-          package: "Cuckoo"
         )
       ],
       path: "./Sources"

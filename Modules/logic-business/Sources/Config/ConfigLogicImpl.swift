@@ -17,8 +17,8 @@ import Foundation
 
 public struct WalletConfig: ConfigLogic {
 
-  public var baseHost: String {
-    getBundleValue(key: "Base Host")
+  public var walletHostUrl: String {
+    getBundleValue(key: "Wallet Host Url")
   }
 
   public var appBuildType: AppBuildType {

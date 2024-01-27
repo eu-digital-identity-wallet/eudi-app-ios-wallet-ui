@@ -171,5 +171,4 @@ final class TestQuickPinInteractor: EudiTest {
       XCTFail("Wrong state \(state)")
     }
   }
-  
 }

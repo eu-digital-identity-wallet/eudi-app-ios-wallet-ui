@@ -13,32 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import logic_business
+import Cuckoo
 
-@testable import feature_dashboard
-@testable import logic_api
-@testable import logic_test
-@testable import feature_test
-
-class BaseTests: EudiTest {
-
-  override func setUp() async throws {
-    try await super.setUp()
-  }
-
-  override func tearDown() {
-    super.tearDown()
-  }
-
-  func testBusinessLogic() {
-
-    let mock = MockConfigLogic()
-
-    stub(mock) { stub in
-      when(stub.walletHostUrl.get).thenReturn(Constants.urlMock)
-    }
-
-    XCTAssertEqual(mock.walletHostUrl, Constants.urlMock)
-
-    XCTAssertTrue(true, Constants.urlMock)
-  }
-}
+extension KeychainWrapper: Matchable {}

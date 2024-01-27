@@ -1,5 +1,5 @@
 BUILD_TYPE = DEBUG
-BASE_HOST = http:/$()/10.240.36.57:32120/
+//WALLET_HOST_URL = 
 VERIFIER_API_URI = https:/$()/eudi.netcompany-intrasoft.com
 VCI_ISSUER_URL = https:/$()/preprod.issuer.eudiw.dev/oidc
 VCI_CLIENT_ID = wallet-dev
