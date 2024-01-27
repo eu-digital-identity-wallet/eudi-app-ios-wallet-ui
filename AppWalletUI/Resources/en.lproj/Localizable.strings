@@ -109,3 +109,4 @@
 "finalize_issuer_error" = "Unable to add issued document in storage";
 "doctype_not_found" = "Document %s not found";
 "USER_REJECTED" = "User rejected";
+"issue_document" = "Issue document";

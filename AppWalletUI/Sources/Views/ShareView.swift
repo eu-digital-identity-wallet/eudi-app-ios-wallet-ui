@@ -23,7 +23,7 @@ struct ShareView: View {
 	@State var hasCancelled = false
 	@Environment(\.dismiss) var dismiss
 	@State var isProximitySharing: Bool = false
-	@StateObject var presentationSession = PresentationSession(presentationService: FaultPresentationService(msg: "N/A"))
+	@StateObject var presentationSession = PresentationSession(presentationService: FaultPresentationService(msg: "N/A"), userAuthenticationRequired: false)
 	@State var title: String = ""
 	var flow: FlowType
 	@EnvironmentObject var wallet: EudiWallet
