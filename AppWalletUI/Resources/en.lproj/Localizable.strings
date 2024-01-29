@@ -15,6 +15,7 @@
  */
 // PID
 "eu_pid_doctype_name" = "EU PID";
+"eu.europa.ec.eudiw.pid.1" = "EU PID";
 "persistent_id" = "Persistent Identifier";
 "family_name_birth" = "Family Name at Birth";
 "first_name_birth" = "First Name at Birth";
@@ -35,6 +36,7 @@
 "age_over_68" = "Age over 68?";
 // mDL
 "mdl_doctype_name" = "mDL";
+"org.iso.18013.5.1.mDL" = "mDL";
 "family_name" = "Family Name";
 "given_name" = "Given Name";
 "birth_date" = "Date of birth";
@@ -109,4 +111,4 @@
 "finalize_issuer_error" = "Unable to add issued document in storage";
 "doctype_not_found" = "Document %s not found";
 "USER_REJECTED" = "User rejected";
-"issue_document" = "Issue document";
+"issue_document" = "Issue {docType} document";

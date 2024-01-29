@@ -27,9 +27,8 @@ struct WalletUiApp: App {
 		UserDefaults.standard.set(true, forKey: "DebugDisplay")
 		wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
 		wallet.verifierApiUri = ProcessInfo.processInfo.environment["VERIFIER_API"] ?? "https://eudi.netcompany-intrasoft.com"
-		wallet.vciIssuerUrl = ProcessInfo.processInfo.environment["VCI_ISSUER_URL"] ?? "https://eudi.netcompany-intrasoft.com/pid-issuer" // "https://preprod.issuer.eudiw.dev/oidc"
-		wallet.vciClientId = ProcessInfo.processInfo.environment["VCI_CLIENT_ID"] ?? "wallet-dev"
-		wallet.vciRedirectUri = ProcessInfo.processInfo.environment["VCI_REDIRECT_URI"] ?? "eudi-openid4ci://authorize/"
+		wallet.openID4VciIssuerUrl = ProcessInfo.processInfo.environment["VCI_ISSUER_URL"] ?? "https://eudi.netcompany-intrasoft.com/pid-issuer" // "https://preprod.issuer.eudiw.dev/oidc"
+		wallet.openID4VciClientId = ProcessInfo.processInfo.environment["VCI_CLIENT_ID"] ?? "wallet-dev"
 	}
 	
 	var body: some Scene {
