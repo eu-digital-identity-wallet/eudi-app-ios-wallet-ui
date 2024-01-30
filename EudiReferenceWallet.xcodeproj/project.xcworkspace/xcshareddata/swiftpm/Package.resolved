@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "7f7f98e53de6f75796be405265cb060a4a1073d5",
-        "version" : "0.1.8"
+        "revision" : "f9811c94bdd6ea756a14f00aff9507eb932ae03d",
+        "version" : "0.2.0"
       }
     },
     {
@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "575e56ff7ec766b2b80e8d719fc036316bf54046",
-        "version" : "0.1.8"
+        "revision" : "268ef13b1bbe58a14b966b6ad336adddddda657a",
+        "version" : "0.1.9"
       }
     },
     {
@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "be8092f90ae8ce669f6a88c1ac5345d31e44ecd8",
-        "version" : "0.1.6"
+        "revision" : "4c8b26fbdbcf8c6110a0e12ba49c59c8158a1b12",
+        "version" : "0.1.7"
       }
     },
     {
@@ -140,8 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "73436c8ef427c2c4664729180712b194ec86eb2d",
-        "version" : "0.2.2"
+        "revision" : "a1cea159bb35c84610666e0995b1b993bd5e6c7b",
+        "version" : "0.2.3"
       }
     },
     {
@@ -149,8 +149,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "ee204d8ed03e23fd24feb11d60df03aeaa12bfb1",
-        "version" : "0.1.7"
+        "revision" : "f66412818bc51b4f5b9fa6777914677da8ecf0c2",
+        "version" : "0.1.8"
       }
     },
     {
@@ -329,8 +329,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/markiv/SwiftUI-Shimmer.git",
       "state" : {
-        "revision" : "1f3a620e4abe890d00008cb2af7023d810b433a7",
-        "version" : "1.4.0"
+        "revision" : "5659a623567cefe258d1e3e67cb65585fbb6ecb6",
+        "version" : "1.4.2"
       }
     },
     {
