@@ -54,9 +54,8 @@ public final class WalletKitController: WalletKitControllerType {
     wallet.userAuthenticationRequired = false
     wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
     wallet.verifierApiUri = configLogic.verifierConfig.apiUri
-    wallet.vciIssuerUrl = configLogic.vciConfig.issuerUrl
-    wallet.vciClientId = configLogic.vciConfig.clientId
-    wallet.vciRedirectUri = configLogic.vciConfig.redirectUri
+    wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
+    wallet.openID4VciClientId = configLogic.vciConfig.clientId
   }
 
   public func loadSampleData(dataFiles: [String]) async throws {
