@@ -85,6 +85,13 @@
         "identifier" : "feature-proximityTests",
         "name" : "feature-proximityTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/logic-analytics",
+        "identifier" : "logic-analytics-test",
+        "name" : "logic-analytics-test"
+      }
     }
   ],
   "version" : 1

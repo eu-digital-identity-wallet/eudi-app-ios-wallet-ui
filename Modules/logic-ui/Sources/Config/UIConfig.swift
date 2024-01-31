@@ -17,9 +17,15 @@
 import Foundation
 import logic_resources
 
-public protocol UIConfigType {}
+public protocol UIConfigType {
+  var log: String { get }
+}
 
-public struct NoConfig: UIConfigType {}
+public struct NoConfig: UIConfigType {
+  public var log: String {
+    return ""
+  }
+}
 
 public struct UIConfig {}
 

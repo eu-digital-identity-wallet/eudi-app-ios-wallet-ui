@@ -17,7 +17,12 @@ import Foundation
 import logic_ui
 
 public struct IssuanceFlowUiConfig: UIConfigType {
+
   public let flow: Flow
+
+  public var log: String {
+    return "flow: \(flow.rawValue)"
+  }
 
   public var isNoDocumentFlow: Bool {
     self.flow == .noDocument
@@ -33,7 +38,7 @@ public struct IssuanceFlowUiConfig: UIConfigType {
 }
 
 public extension IssuanceFlowUiConfig {
-  enum Flow: Equatable {
+  enum Flow: String, Equatable {
     case noDocument
     case extraDocument
   }

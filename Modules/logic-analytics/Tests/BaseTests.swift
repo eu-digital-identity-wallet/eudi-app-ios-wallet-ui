@@ -13,17 +13,15 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_ui
+@testable import logic_analytics
+@testable import logic_test
 
-public extension UIConfig {
+final class BaseTests: EudiTest {
+    func testExample() throws {
+        // XCTest Documentation
+        // https://developer.apple.com/documentation/xctest
 
-  struct Startup: UIConfigType, Equatable {
-
-    public let splashDuration: TimeInterval
-
-    public init(splashDuration: TimeInterval) {
-      self.splashDuration = splashDuration
+        // Defining Test Cases and Test Methods
+        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
     }
-  }
 }

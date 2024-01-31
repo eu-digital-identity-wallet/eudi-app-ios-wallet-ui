@@ -15,6 +15,7 @@
  */
 import logic_ui
 import logic_resources
+import Foundation
 
 public extension UIConfig {
   struct Biometry: UIConfigType, Equatable {
@@ -26,6 +27,14 @@ public extension UIConfig {
     public let navigationBackConfig: NavigationConfig?
     public let isPreAuthorization: Bool
     public let shouldInitializeBiometricOnCreate: Bool
+
+    public var log: String {
+      return "title: \(LocalizableString.shared.get(with: title))" +
+      " onSuccessNav: \(navigationSuccessConfig.screen.info.key)" +
+      " onBackNav: \(navigationBackConfig?.screen.info.key ?? "none")" +
+      " isPreAuthorization: \(isPreAuthorization)" +
+      " shouldInitializeBiometricOnCreate: \(shouldInitializeBiometricOnCreate)"
+    }
 
     public init(
       title: LocalizableString.Key,

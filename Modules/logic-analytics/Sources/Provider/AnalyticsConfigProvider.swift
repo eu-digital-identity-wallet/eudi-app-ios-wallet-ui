@@ -13,22 +13,24 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
 
-import logic_resources
+protocol AnalyticsConfigProviderType {
+  func getConfig() -> AnalyticsConfigType?
+}
 
-public struct WalletUiConfig: ConfigUiLogic {
+struct AnalyticsConfigProvider: AnalyticsConfigProviderType {
 
-  public var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] = [
-    AppRoute.dashboard.info.key: .init(Theme.shared.color.secondary),
-    AppRoute.welcome.info.key: .init(Theme.shared.color.secondary),
-    AppRoute.issuanceDocumentDetails(config: NoConfig()).info.key: .init(Theme.shared.color.secondary)
-  ]
+  static let shared: AnalyticsConfigProviderType = AnalyticsConfigProvider()
 
-  public var landingRoute: AppRoute {
-    return .dashboard
-  }
+  private init() {}
 
-  public init(themeConfiguration: ThemeConfiguration) {
-    Theme.config(themeConfiguration: themeConfiguration)
+  func getConfig() -> AnalyticsConfigType? {
+    guard
+      let object = NSClassFromString("AnalyticsConfig") as? NSObject.Type
+    else {
+      return nil
+    }
+    return object.init() as? AnalyticsConfigType
   }
 }

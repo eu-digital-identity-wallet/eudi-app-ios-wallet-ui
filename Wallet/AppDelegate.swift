@@ -17,6 +17,7 @@ import Foundation
 import UIKit
 import netfox
 import logic_business
+import logic_analytics
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -24,11 +25,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   private lazy var prefsController: PrefsControllerType = PrefsController()
   private lazy var keyChainController: KeyChainControllerType = KeyChainController()
   private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
+  private lazy var analyticsController: AnalyticsControllerType = AnalyticsController.shared
 
   func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
+
+    // Initialize Reporting
+    initializeReporting()
 
     // Check firt run and clear keychain from previous installations
     manageStorage()
@@ -59,6 +64,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       NFX.sharedInstance().ignoreURL(url)
     }
     NFX.sharedInstance().start()
+  }
+
+  private func initializeReporting() {
+    analyticsController.initialize()
   }
 
   private func manageStorage() {
