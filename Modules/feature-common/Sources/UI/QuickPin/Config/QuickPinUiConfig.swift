@@ -17,7 +17,12 @@ import Foundation
 import logic_ui
 
 public struct QuickPinUiConfig: UIConfigType {
+
   public let flow: Flow
+
+  public var string: String {
+    return "flow: \(flow.rawValue)"
+  }
 
   public var isSetFlow: Bool {
     self.flow == .set
@@ -33,7 +38,7 @@ public struct QuickPinUiConfig: UIConfigType {
 }
 
 public extension QuickPinUiConfig {
-  enum Flow: Equatable {
+  enum Flow: String, Equatable {
     case set
     case update
   }

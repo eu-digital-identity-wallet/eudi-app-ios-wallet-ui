@@ -19,7 +19,7 @@ import feature_common
 import logic_business
 
 struct StartupState: ViewState {
-  let config: UIConfig.Startup
+  let splashDuration: TimeInterval
   let isAnimating: Bool
   let setupError: Error?
 }
@@ -32,18 +32,13 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
   init(
     router: Router,
     interactor: Interactor,
-    config: any UIConfigType = UIConfig.Startup(splashDuration: 1.5)
+    splashDuration: TimeInterval = 1.5
   ) {
-
-    guard let config = config as? UIConfig.Startup else {
-      fatalError("StartupViewModel:: Invalid configuraton")
-    }
-
     self.interactor = interactor
     super.init(
       router: router,
       initialState: .init(
-        config: config,
+        splashDuration: splashDuration,
         isAnimating: false,
         setupError: nil
       )
@@ -55,7 +50,7 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
   }
 
   func initialize() async {
-    let route = await interactor.initialize(with: viewState.config.splashDuration)
+    let route = await interactor.initialize(with: viewState.splashDuration)
     setNewState(isAnimating: false)
     router.push(with: route)
   }
@@ -66,7 +61,7 @@ final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteract
   ) {
     setState { previous in
         .init(
-          config: previous.config,
+          splashDuration: previous.splashDuration,
           isAnimating: isAnimating ?? previous.isAnimating,
           setupError: setupError ?? previous.setupError
         )

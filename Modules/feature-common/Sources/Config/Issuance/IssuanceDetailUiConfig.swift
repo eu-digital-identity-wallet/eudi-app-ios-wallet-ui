@@ -17,7 +17,12 @@ import Foundation
 import logic_ui
 
 public struct IssuanceDetailUiConfig: UIConfigType {
+
   public let flow: Flow
+
+  public var string: String {
+    return "flow: \(flow.key)"
+  }
 
   public init(flow: Flow) {
     self.flow = flow
@@ -44,7 +49,17 @@ public struct IssuanceDetailUiConfig: UIConfigType {
 
 public extension IssuanceDetailUiConfig {
   enum Flow: Equatable {
+
     case noDocument(String)
     case extraDocument(String)
+
+    var key: String {
+      return switch self {
+      case .noDocument(let id):
+        "noDocument \(id)"
+      case .extraDocument(let id):
+        "extraDocument \(id)"
+      }
+    }
   }
 }

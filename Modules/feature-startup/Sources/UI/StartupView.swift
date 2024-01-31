@@ -37,7 +37,7 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
           isAnimating: viewModel.viewState.isAnimating
         )
         .onAppear {
-          withAnimation(Animation.easeInOut(duration: viewModel.viewState.config.splashDuration)) {
+          withAnimation(Animation.easeInOut(duration: viewModel.viewState.splashDuration)) {
             viewModel.startAnimatingSplash()
           }
         }

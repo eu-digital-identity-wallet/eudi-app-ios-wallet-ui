@@ -6980,6 +6980,22 @@ public class MockUIConfigType: UIConfigType, Cuckoo.ProtocolMock {
     
 
     
+    
+    
+    
+    public var string: String {
+        get {
+            return cuckoo_manager.getter("string",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.string)
+        }
+        
+    }
+    
+    
 
     
 
@@ -6991,6 +7007,13 @@ public class MockUIConfigType: UIConfigType, Cuckoo.ProtocolMock {
         public init(manager: Cuckoo.MockManager) {
             self.cuckoo_manager = manager
         }
+        
+        
+        
+        var string: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockUIConfigType, String> {
+            return .init(manager: cuckoo_manager, name: "string")
+        }
+        
         
         
     }
@@ -7007,6 +7030,13 @@ public class MockUIConfigType: UIConfigType, Cuckoo.ProtocolMock {
         }
     
         
+        
+        
+        var string: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "string", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
     
         
     }
@@ -7014,6 +7044,17 @@ public class MockUIConfigType: UIConfigType, Cuckoo.ProtocolMock {
 
 
 public class UIConfigTypeStub: UIConfigType {
+    
+    
+    
+    
+    public var string: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+        
+    }
+    
     
 
     

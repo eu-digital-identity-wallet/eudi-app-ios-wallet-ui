@@ -19,7 +19,7 @@ import logic_business
 public indirect enum AppRoute: Equatable {
 
   public static func == (lhs: AppRoute, rhs: AppRoute) -> Bool {
-    return lhs.key == rhs.key
+    return lhs.info.key == rhs.info.key
   }
 
   case startup
@@ -38,38 +38,38 @@ public indirect enum AppRoute: Equatable {
   case issuanceDocumentDetails(config: any UIConfigType)
   case issuanceSuccess(config: any UIConfigType, documentIdentifier: String)
 
-  public var key: String {
+  public var info: (key: String, arguments: [String: String]) {
     return switch self {
     case .startup:
-      "Startup"
+      (key: "Startup", arguments: [:])
     case .faqs:
-      "FAQ"
-    case .success:
-      "Success"
+      (key: "FAQ", arguments: [:])
+    case .success(let config):
+      (key: "Success", arguments: ["config": config.string])
     case .dashboard:
-      "Dashboard"
-    case .biometry:
-      "Biometry"
+      (key: "Dashboard", arguments: [:])
+    case .biometry(let config):
+      (key: "Biometry", arguments: ["config": config.string])
     case .welcome:
-      "Welcome"
-    case .presentationLoader:
-      "PresentationLoader"
+      (key: "Welcome", arguments: [:])
+    case .presentationLoader(let id, _):
+      (key: "PresentationLoader", arguments: ["id": id])
     case .presentationRequest:
-      "PresentationRequest"
+      (key: "PresentationRequest", arguments: [:])
     case .proximityConnection:
-      "ProximityConnection"
+      (key: "ProximityConnection", arguments: [:])
     case .proximityRequest:
-      "ProximityRequest"
-    case .proximityLoader:
-      "ProximityLoader"
-    case .quickPin:
-      "QuickPin"
-    case .issuanceAddDocument:
-      "IssuanceAddDocument"
-    case .issuanceDocumentDetails:
-      "IssuanceDocumentDetails"
-    case .issuanceSuccess:
-      "IssuanceSuccess"
+      (key: "ProximityRequest", arguments: [:])
+    case .proximityLoader(let id, _):
+      (key: "ProximityLoader", arguments: ["id": id])
+    case .quickPin(let config):
+      (key: "QuickPin", arguments: ["config": config.string])
+    case .issuanceAddDocument(let config):
+      (key: "IssuanceAddDocument", arguments: ["config": config.string])
+    case .issuanceDocumentDetails(let config):
+      (key: "IssuanceDocumentDetails", arguments: ["config": config.string])
+    case .issuanceSuccess(let config, let id):
+      (key: "IssuanceSuccess", arguments: ["id": id, "config": config.string])
     }
   }
 }

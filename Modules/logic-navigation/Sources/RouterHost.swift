@@ -18,6 +18,7 @@ import UIPilot
 import logic_ui
 import SwiftUI
 import logic_business
+import logic_analytics
 import feature_startup
 import feature_login
 import feature_common
@@ -32,6 +33,7 @@ public final class RouterHost: RouterHostType {
 
   private let pilot: UIPilot<AppRoute>
   private lazy var uiConfigLogic: ConfigUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
+  private lazy var analyticsController: AnalyticsControllerType = AnalyticsController.shared
 
   private var queueNavigation: [QueueItem] = []
   private let lockInterval: Int = 1000
@@ -45,7 +47,7 @@ public final class RouterHost: RouterHostType {
     guard canNavigate(block: self.push(with: route)) else { return }
     lockNavigation()
     pilot.push(route)
-    onNavigationFollowUp()
+    onNavigationFollowUp(with: route)
   }
 
   public func popTo(with route: AppRoute, inclusive: Bool, animated: Bool) {
@@ -62,7 +64,7 @@ public final class RouterHost: RouterHostType {
     }
     lockNavigation()
     pilot.popTo(route, inclusive: inclusive, animated: animated)
-    onNavigationFollowUp()
+    onNavigationFollowUp(with: route)
   }
 
   public func popTo(with route: AppRoute, inclusive: Bool) {
@@ -81,7 +83,9 @@ public final class RouterHost: RouterHostType {
     }
     lockNavigation()
     pilot.pop(animated: animated)
-    onNavigationFollowUp()
+    if let current = getCurrentScreen() {
+      onNavigationFollowUp(with: current)
+    }
   }
 
   public func pop() {
@@ -162,7 +166,7 @@ public final class RouterHost: RouterHostType {
   }
 
   public func getToolbarConfig() -> UIConfig.ToolBar {
-    guard let screenKey = self.getCurrentScreen()?.key else {
+    guard let screenKey = self.getCurrentScreen()?.info.key else {
       return .init(Theme.shared.color.backgroundPaper)
     }
 
@@ -171,12 +175,12 @@ public final class RouterHost: RouterHostType {
   }
 
   public func isAfterAuthorization() -> Bool {
-    return getCurrentScreen()?.key == uiConfigLogic.landingRoute.key ||
-    pilot.routes.contains(where: { $0.key == uiConfigLogic.landingRoute.key })
+    return getCurrentScreen()?.info.key == uiConfigLogic.landingRoute.info.key ||
+    pilot.routes.contains(where: { $0.info.key == uiConfigLogic.landingRoute.info.key })
   }
 
   public func isScreenForeground(with route: AppRoute) -> Bool {
-    getCurrentScreen()?.key == route.key
+    getCurrentScreen()?.info.key == route.info.key
   }
 
   private func canNavigate(block: @escaping @autoclosure () -> Void) -> Bool {
@@ -202,8 +206,12 @@ public final class RouterHost: RouterHostType {
     item()
   }
 
-  private func onNavigationFollowUp() {
+  private func onNavigationFollowUp(with route: AppRoute) {
     notifyBackgroundColorUpdate()
+    analyticsController.logScreen(
+      screen: route.info.key,
+      arguments: route.info.arguments.mapValues({ "\($0)" })
+    )
   }
 
   private func notifyBackgroundColorUpdate() {

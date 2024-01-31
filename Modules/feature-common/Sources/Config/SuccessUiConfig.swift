@@ -27,6 +27,13 @@ public extension UIConfig {
     public let buttons: [Success.Button]
     public let visualKind: VisualKind
 
+    public var string: String {
+      return "title: \(LocalizableString.shared.get(with: title))" +
+      " caption: \(LocalizableString.shared.get(with: subtitle))" +
+      " buttons: \(buttons.map({ LocalizableString.shared.get(with: $0.title) as String }).joined(separator: ","))" +
+      " actions: \(buttons.map(\.screen.info.key).joined(separator: ","))"
+    }
+
     public init(
       title: LocalizableString.Key,
       subtitle: LocalizableString.Key,
