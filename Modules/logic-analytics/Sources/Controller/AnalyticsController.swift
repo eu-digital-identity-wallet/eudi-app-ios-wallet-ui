@@ -25,24 +25,24 @@ public final class AnalyticsController: AnalyticsControllerType {
 
   public static let shared: AnalyticsControllerType = AnalyticsController()
 
-  private lazy var analyticsConfig: AnalyticsConfigType = AnalyticsConfig()
+  private lazy var analyticsConfig: AnalyticsConfigType? = AnalyticsConfigProvider.shared.getConfig()
 
   private init() {}
 
   public func initialize() {
-    analyticsConfig.analyticsProviders.forEach { (key, provider) in
+    analyticsConfig?.analyticsProviders.forEach { (key, provider) in
       provider.initialize(key: key)
     }
   }
 
   public func logScreen(screen: String, arguments: [String: String]) {
-    analyticsConfig.analyticsProviders.forEach { (_, provider) in
+    analyticsConfig?.analyticsProviders.forEach { (_, provider) in
       provider.logScreen(screen: screen, arguments: arguments)
     }
   }
 
   public func logEvent(event: String, arguments: [String: String]) {
-    analyticsConfig.analyticsProviders.forEach { (_, provider) in
+    analyticsConfig?.analyticsProviders.forEach { (_, provider) in
       provider.logEvent(event: event, arguments: arguments)
     }
   }

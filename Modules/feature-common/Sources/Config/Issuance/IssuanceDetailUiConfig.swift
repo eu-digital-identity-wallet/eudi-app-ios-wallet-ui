@@ -56,9 +56,9 @@ public extension IssuanceDetailUiConfig {
     var key: String {
       return switch self {
       case .noDocument(let id):
-        "noDocument \(id)"
+        "Type: noDocument Id: \(id)"
       case .extraDocument(let id):
-        "extraDocument \(id)"
+        "Type: extraDocument Id: \(id)"
       }
     }
   }

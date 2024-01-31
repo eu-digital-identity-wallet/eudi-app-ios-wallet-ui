@@ -142,7 +142,7 @@ public final class LocalizableString: LocalizableStringType {
     case .loginCaptionQuickPinOnly:
       bundle.localizedString(forKey: "login_caption_quick_pin_only")
     case .loginCaption:
-      bundle.localizedString(forKey: "login_biometry_available")
+      bundle.localizedString(forKey: "login_caption")
     case .quickPinSetSuccessButton:
       bundle.localizedString(forKey: "quick_pin_set_success_button")
     case .quickPinDoNotMatch:

@@ -13,19 +13,6 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-protocol AnalyticsConfigType {
-  /**
-   * Supported Analytics Provider, e.g. Firebase
-   */
-  var analyticsProviders: [String: AnalyticsProviderType] { get }
-}
-
-struct AnalyticsConfig: AnalyticsConfigType {
-  var analyticsProviders: [String: AnalyticsProviderType] {
-    return ["c076a68c-6b3a-458c-9fed-daa7f323df6d": AppCenterProvider()]
-  }
-}
-
 import AppCenter
 import AppCenterCrashes
 import AppCenterAnalytics

@@ -30,9 +30,10 @@ public extension UIConfig {
 
     public var string: String {
       return "title: \(LocalizableString.shared.get(with: title))" +
-      " caption: \(LocalizableString.shared.get(with: caption))" +
       " onSuccessNav: \(navigationSuccessConfig.screen.info.key)" +
-      " onBackNav: \(navigationBackConfig?.screen.info.key ?? "none")"
+      " onBackNav: \(navigationBackConfig?.screen.info.key ?? "none")" +
+      " isPreAuthorization: \(isPreAuthorization)" +
+      " shouldInitializeBiometricOnCreate: \(shouldInitializeBiometricOnCreate)"
     }
 
     public init(
