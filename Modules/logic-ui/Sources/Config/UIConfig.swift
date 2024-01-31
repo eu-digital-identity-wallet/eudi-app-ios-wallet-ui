@@ -18,11 +18,11 @@ import Foundation
 import logic_resources
 
 public protocol UIConfigType {
-  var string: String { get }
+  var log: String { get }
 }
 
 public struct NoConfig: UIConfigType {
-  public var string: String {
+  public var log: String {
     return ""
   }
 }

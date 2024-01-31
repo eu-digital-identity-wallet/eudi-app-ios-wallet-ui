@@ -701,11 +701,6 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
-import AppCenter
-import AppCenterAnalytics
-import AppCenterCrashes
-import AppCenterDistribute
-
 
 
 
@@ -1038,6 +1033,155 @@ public class AnalyticsControllerTypeStub: AnalyticsControllerType {
     
     public func logEvent(event: String, arguments: [String: String])   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import feature_issuance
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import feature_issuance
+@testable import logic_api
+@testable import logic_ui
+
+import AppCenter
+import AppCenterAnalytics
+import AppCenterCrashes
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import feature_issuance
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+
+
+
+
+
+
+ class MockAnalyticsConfigProviderType: AnalyticsConfigProviderType, Cuckoo.ProtocolMock {
+    
+     typealias MocksType = AnalyticsConfigProviderType
+    
+     typealias Stubbing = __StubbingProxy_AnalyticsConfigProviderType
+     typealias Verification = __VerificationProxy_AnalyticsConfigProviderType
+
+     let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: AnalyticsConfigProviderType?
+
+     func enableDefaultImplementation(_ stub: AnalyticsConfigProviderType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+    
+    
+    
+     func getConfig() -> AnalyticsConfigType? {
+        
+    return cuckoo_manager.call(
+    """
+    getConfig() -> AnalyticsConfigType?
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getConfig())
+        
+    }
+    
+    
+
+     struct __StubbingProxy_AnalyticsConfigProviderType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+         init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        
+        func getConfig() -> Cuckoo.ProtocolStubFunction<(), AnalyticsConfigType?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockAnalyticsConfigProviderType.self, method:
+    """
+    getConfig() -> AnalyticsConfigType?
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+     struct __VerificationProxy_AnalyticsConfigProviderType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+         init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+    
+        
+        
+        
+        @discardableResult
+        func getConfig() -> Cuckoo.__DoNotUse<(), AnalyticsConfigType?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    getConfig() -> AnalyticsConfigType?
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+ class AnalyticsConfigProviderTypeStub: AnalyticsConfigProviderType {
+    
+
+    
+
+    
+    
+    
+    
+     func getConfig() -> AnalyticsConfigType?  {
+        return DefaultValueRegistry.defaultValue(for: (AnalyticsConfigType?).self)
     }
     
     
@@ -7134,14 +7278,14 @@ public class MockUIConfigType: UIConfigType, Cuckoo.ProtocolMock {
     
     
     
-    public var string: String {
+    public var log: String {
         get {
-            return cuckoo_manager.getter("string",
+            return cuckoo_manager.getter("log",
                 superclassCall:
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.string)
+                defaultCall:  __defaultImplStub!.log)
         }
         
     }
@@ -7161,8 +7305,8 @@ public class MockUIConfigType: UIConfigType, Cuckoo.ProtocolMock {
         
         
         
-        var string: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockUIConfigType, String> {
-            return .init(manager: cuckoo_manager, name: "string")
+        var log: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockUIConfigType, String> {
+            return .init(manager: cuckoo_manager, name: "log")
         }
         
         
@@ -7183,8 +7327,8 @@ public class MockUIConfigType: UIConfigType, Cuckoo.ProtocolMock {
         
         
         
-        var string: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "string", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var log: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "log", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         
@@ -7199,7 +7343,7 @@ public class UIConfigTypeStub: UIConfigType {
     
     
     
-    public var string: String {
+    public var log: String {
         get {
             return DefaultValueRegistry.defaultValue(for: (String).self)
         }

@@ -29,10 +29,6 @@ let package = Package(
         .product(
           name: "AppCenterCrashes",
           package: "appcenter-sdk-apple"
-        ),
-        .product(
-          name: "AppCenterDistribute",
-          package: "appcenter-sdk-apple"
         )
       ],
       path: "./Sources"

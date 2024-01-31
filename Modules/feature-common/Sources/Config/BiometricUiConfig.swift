@@ -28,7 +28,7 @@ public extension UIConfig {
     public let isPreAuthorization: Bool
     public let shouldInitializeBiometricOnCreate: Bool
 
-    public var string: String {
+    public var log: String {
       return "title: \(LocalizableString.shared.get(with: title))" +
       " onSuccessNav: \(navigationSuccessConfig.screen.info.key)" +
       " onBackNav: \(navigationBackConfig?.screen.info.key ?? "none")" +

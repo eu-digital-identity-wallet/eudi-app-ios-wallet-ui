@@ -45,11 +45,11 @@ public indirect enum AppRoute: Equatable {
     case .faqs:
       (key: "FAQ", arguments: [:])
     case .success(let config):
-      (key: "Success", arguments: ["config": config.string])
+      (key: "Success", arguments: ["config": config.log])
     case .dashboard:
       (key: "Dashboard", arguments: [:])
     case .biometry(let config):
-      (key: "Biometry", arguments: ["config": config.string])
+      (key: "Biometry", arguments: ["config": config.log])
     case .welcome:
       (key: "Welcome", arguments: [:])
     case .presentationLoader(let id, _):
@@ -63,13 +63,13 @@ public indirect enum AppRoute: Equatable {
     case .proximityLoader(let id, _):
       (key: "ProximityLoader", arguments: ["id": id])
     case .quickPin(let config):
-      (key: "QuickPin", arguments: ["config": config.string])
+      (key: "QuickPin", arguments: ["config": config.log])
     case .issuanceAddDocument(let config):
-      (key: "IssuanceAddDocument", arguments: ["config": config.string])
+      (key: "IssuanceAddDocument", arguments: ["config": config.log])
     case .issuanceDocumentDetails(let config):
-      (key: "IssuanceDocumentDetails", arguments: ["config": config.string])
+      (key: "IssuanceDocumentDetails", arguments: ["config": config.log])
     case .issuanceSuccess(let config, let id):
-      (key: "IssuanceSuccess", arguments: ["id": id, "config": config.string])
+      (key: "IssuanceSuccess", arguments: ["id": id, "config": config.log])
     }
   }
 }

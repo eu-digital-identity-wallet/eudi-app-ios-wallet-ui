@@ -20,7 +20,7 @@ public struct IssuanceDetailUiConfig: UIConfigType {
 
   public let flow: Flow
 
-  public var string: String {
+  public var log: String {
     return "flow: \(flow.key)"
   }
 
