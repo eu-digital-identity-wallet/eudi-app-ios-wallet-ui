@@ -210,7 +210,7 @@ public final class RouterHost: RouterHostType {
     notifyBackgroundColorUpdate()
     analyticsController.logScreen(
       screen: route.info.key,
-      arguments: route.info.arguments.mapValues({ "\($0)" })
+      arguments: route.info.arguments
     )
   }
 
