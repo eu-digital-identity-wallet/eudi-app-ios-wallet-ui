@@ -30,15 +30,25 @@ if [ "${ENABLE_PREVIEWS}" = "YES" ]; then
 fi
 
 LOGIC_BUSINESS_MODULE="logic-business"
+LOGIC_ANALYTICS_MODULE="logic-analytics"
 LOGIC_API_MODULE="logic-api"
 LOGIC_UI_MODULE="logic-ui"
 
 SECOND_LEVEL_MODULES=("${LOGIC_API_MODULE}" "${LOGIC_UI_MODULE}")
-FEATURE_MODULES=("feature-dashboard", "feature-login", "feature-startup", "feature-common", "feature-presentation", "feature-issuance", "feature-proximity")
+FEATURE_MODULES=(
+"feature-dashboard",
+"feature-login",
+"feature-startup",
+"feature-common",
+"feature-presentation",
+"feature-issuance",
+"feature-proximity"
+)
 
 IS_BASE_LOGIC_MODULE=1
 IS_SECONDARY_LOGIC_MODULE=2
 IS_FEATURE_MODULE=3
+HAS_NO_RELATIONS=4
 
 # Function Generator
 function generateMocks {
@@ -55,15 +65,21 @@ function generateMocks {
   logic_business_path=""
   logic_ui_path=""
   logic_api_path=""
+  logic_analytics_path=""
   
   if [ $4 == $IS_SECONDARY_LOGIC_MODULE ];
     then
       logic_business_path="${INPUT_DIR}/${LOGIC_BUSINESS_MODULE}/Sources/**/*.swift"
+      logic_analytics_path="${INPUT_DIR}/${LOGIC_ANALYTICS_MODULE}/Sources/**/*.swift"
   elif [ $4 == $IS_FEATURE_MODULE ];
     then
       logic_business_path="${INPUT_DIR}/${LOGIC_BUSINESS_MODULE}/Sources/**/*.swift"
+      logic_analytics_path="${INPUT_DIR}/${LOGIC_ANALYTICS_MODULE}/Sources/**/*.swift"
       logic_api_path="${INPUT_DIR}/${LOGIC_API_MODULE}/Sources/**/*.swift"
       logic_ui_path="${INPUT_DIR}/${LOGIC_UI_MODULE}/Sources/**/*.swift"
+  elif [ $4 == $IS_BASE_LOGIC_MODULE ];
+    then
+      logic_analytics_path="${INPUT_DIR}/${LOGIC_ANALYTICS_MODULE}/Sources/**/*.swift"
   fi
 
  "${PROJECT_DIR}/Mock/run" --download generate $3 --no-class-mocking --no-inheritance --no-header --glob \
@@ -71,7 +87,8 @@ function generateMocks {
   "${INPUT_DIR}/$NEW_1/Sources/**/*.swift" \
   "$logic_business_path" \
   "$logic_ui_path" \
-  "$logic_api_path"
+  "$logic_api_path" \
+  "$logic_analytics_path"
 }
 
 remove_last_comma() {
@@ -88,13 +105,15 @@ remove_last_comma() {
   fi
 }
 
-# Logic Business
+# Logic Analytics
+generateMocks $LOGIC_ANALYTICS_MODULE "Tests" "--testable $LOGIC_ANALYTICS_MODULE" $HAS_NO_RELATIONS
 
-generateMocks $LOGIC_BUSINESS_MODULE "Tests" "--testable $LOGIC_BUSINESS_MODULE" $IS_BASE_LOGIC_MODULE
+# Logic Business
+generateMocks $LOGIC_BUSINESS_MODULE "Tests" "--testable $LOGIC_BUSINESS_MODULE,$LOGIC_ANALYTICS_MODULE" $IS_BASE_LOGIC_MODULE
 
 # Second level Logic Modules
 for module in ${SECOND_LEVEL_MODULES[@]}; do
-  generateMocks $module "Tests" "--testable $LOGIC_BUSINESS_MODULE,$module" $IS_SECONDARY_LOGIC_MODULE
+  generateMocks $module "Tests" "--testable $LOGIC_BUSINESS_MODULE,$LOGIC_ANALYTICS_MODULE,$module" $IS_SECONDARY_LOGIC_MODULE
 done
 
 # Feature Modules
@@ -110,6 +129,6 @@ modulesToImport="${modulesToImport%$delimiter}"
 
 for module in ${FEATURE_MODULES[@]}; do
   NEW_MODULE=$(remove_last_comma "$module")
-  generateMocks $module "Tests" "--testable $LOGIC_BUSINESS_MODULE,$NEW_MODULE,$modulesToImport" $IS_FEATURE_MODULE
+  generateMocks $module "Tests" "--testable $LOGIC_BUSINESS_MODULE,$LOGIC_ANALYTICS_MODULE,$NEW_MODULE,$modulesToImport" $IS_FEATURE_MODULE
 done
 

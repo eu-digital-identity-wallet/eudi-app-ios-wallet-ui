@@ -18,6 +18,10 @@ let package = Package(
       name: "logic-business",
       path: "./logic-business"
     ),
+    .package(
+      name: "logic-analytics",
+      path: "./logic-analytics"
+    ),
     .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
@@ -25,6 +29,7 @@ let package = Package(
       name: "logic-api",
       dependencies: [
         "logic-business",
+        "logic-analytics",
         .product(
           name: "Alamofire",
           package: "Alamofire"
@@ -39,6 +44,7 @@ let package = Package(
     .testTarget(
       name: "logic-api-test",
       dependencies: [
+        "logic-analytics",
         "logic-business",
         "logic-api",
         "logic-test"

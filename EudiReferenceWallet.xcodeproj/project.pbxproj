@@ -20,14 +20,13 @@
 		F0A0139B2AC35ECA00065EAD /* logic-navigation in Resources */ = {isa = PBXBuildFile; fileRef = F0A013952AC35ECA00065EAD /* logic-navigation */; };
 		F0A0139C2AC35ECA00065EAD /* logic-ui in Resources */ = {isa = PBXBuildFile; fileRef = F0A013962AC35ECA00065EAD /* logic-ui */; };
 		F0BFE9B72AD557290062826F /* feature-common in Resources */ = {isa = PBXBuildFile; fileRef = F0BFE9B62AD557290062826F /* feature-common */; };
+		F0C6207E2B6A6246007F903F /* logic-analytics in Resources */ = {isa = PBXBuildFile; fileRef = F0C6207D2B6A6246007F903F /* logic-analytics */; };
 		F12E940F2ABC6C000086EC93 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12E940E2ABC6C000086EC93 /* AppDelegate.swift */; };
 		F14907BC2ABAF54B00DDFE56 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14907BB2ABAF54B00DDFE56 /* Application.swift */; };
 		F14907C02ABAF55000DDFE56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F14907BF2ABAF55000DDFE56 /* Assets.xcassets */; };
 		F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F14907C22ABAF55000DDFE56 /* Preview Assets.xcassets */; };
 		F1CACAE02AC3097100B40DED /* WalletDev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F1CACADF2AC3097100B40DED /* WalletDev.xcconfig */; };
 		F1CACAE22AC3098C00B40DED /* WalletRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F1CACAE12AC3098C00B40DED /* WalletRelease.xcconfig */; };
-		F1CACAE62AC3122700B40DED /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = F1CACAE42AC3122700B40DED /* GoogleService-Info-dev.plist */; };
-		F1CACAE72AC3122700B40DED /* GoogleService-Info-release.plist in Resources */ = {isa = PBXBuildFile; fileRef = F1CACAE52AC3122700B40DED /* GoogleService-Info-release.plist */; };
 		F1E83CFF2ACEA40100FBC0E3 /* logic-navigation in Frameworks */ = {isa = PBXBuildFile; productRef = F1E83CFE2ACEA40100FBC0E3 /* logic-navigation */; };
 		F1E83D1D2ACEE0E800FBC0E3 /* Previewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E83D1C2ACEE0E800FBC0E3 /* Previewer.swift */; };
 /* End PBXBuildFile section */
@@ -51,6 +50,7 @@
 		F0A0BE922AC35925002BE0F5 /* Wallet.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Wallet.xctestplan; sourceTree = "<group>"; };
 		F0A3740D2AC3A92400F301DD /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		F0BFE9B62AD557290062826F /* feature-common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-common"; path = "Modules/feature-common"; sourceTree = "<group>"; };
+		F0C6207D2B6A6246007F903F /* logic-analytics */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-analytics"; path = "Modules/logic-analytics"; sourceTree = "<group>"; };
 		F12E940E2ABC6C000086EC93 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F14907B82ABAF54B00DDFE56 /* Wallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F14907BB2ABAF54B00DDFE56 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
@@ -59,8 +59,6 @@
 		F1596BB02AD40EE000552D1B /* feature-dashboard */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-dashboard"; path = "Modules/feature-dashboard"; sourceTree = "<group>"; };
 		F1CACADF2AC3097100B40DED /* WalletDev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = WalletDev.xcconfig; sourceTree = "<group>"; };
 		F1CACAE12AC3098C00B40DED /* WalletRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = WalletRelease.xcconfig; sourceTree = "<group>"; };
-		F1CACAE42AC3122700B40DED /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
-		F1CACAE52AC3122700B40DED /* GoogleService-Info-release.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-release.plist"; sourceTree = "<group>"; };
 		F1E83CFD2ACE91DD00FBC0E3 /* feature-login */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-login"; path = "Modules/feature-login"; sourceTree = "<group>"; };
 		F1E83D1C2ACEE0E800FBC0E3 /* Previewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -121,7 +119,6 @@
 			children = (
 				1194D22F2B06362900377213 /* Sample */,
 				F09E1EA02AC33A6800779C25 /* Config */,
-				F1CACAE32AC311D300B40DED /* Firebase */,
 				F14907BB2ABAF54B00DDFE56 /* Application.swift */,
 				F12E940E2ABC6C000086EC93 /* AppDelegate.swift */,
 				F1E83D1C2ACEE0E800FBC0E3 /* Previewer.swift */,
@@ -150,6 +147,7 @@
 		F14908692ABC467600DDFE56 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
+				F0C6207D2B6A6246007F903F /* logic-analytics */,
 				F069CC3E2AFAC0AD0033AAC5 /* feature-issuance */,
 				F069CC3D2AFAC0AD0033AAC5 /* feature-proximity */,
 				F05E9F372AFABBC200891E8F /* feature-presentation */,
@@ -166,15 +164,6 @@
 				F0A013962AC35ECA00065EAD /* logic-ui */,
 			);
 			name = Packages;
-			sourceTree = "<group>";
-		};
-		F1CACAE32AC311D300B40DED /* Firebase */ = {
-			isa = PBXGroup;
-			children = (
-				F1CACAE42AC3122700B40DED /* GoogleService-Info-dev.plist */,
-				F1CACAE52AC3122700B40DED /* GoogleService-Info-release.plist */,
-			);
-			path = Firebase;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -243,12 +232,11 @@
 				F06325122AC59AF50004601F /* feature-test in Resources */,
 				F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */,
 				F0A013982AC35ECA00065EAD /* logic-business in Resources */,
-				F1CACAE62AC3122700B40DED /* GoogleService-Info-dev.plist in Resources */,
 				F069CC402AFAC0AD0033AAC5 /* feature-issuance in Resources */,
-				F1CACAE72AC3122700B40DED /* GoogleService-Info-release.plist in Resources */,
 				F14907C02ABAF55000DDFE56 /* Assets.xcassets in Resources */,
 				F06325102AC598370004601F /* logic-test in Resources */,
 				F0A0139B2AC35ECA00065EAD /* logic-navigation in Resources */,
+				F0C6207E2B6A6246007F903F /* logic-analytics in Resources */,
 				F1CACAE02AC3097100B40DED /* WalletDev.xcconfig in Resources */,
 				1194D2332B06363600377213 /* scytales_root_ca.der in Resources */,
 				F0A013992AC35ECA00065EAD /* logic-api in Resources */,

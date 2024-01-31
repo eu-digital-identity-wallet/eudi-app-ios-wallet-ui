@@ -16,7 +16,8 @@ let package = Package(
     .package(name: "logic-test", path: "./logic-test"),
     .package(name: "logic-business", path: "./logic-business"),
     .package(name: "logic-ui", path: "./logic-ui"),
-    .package(name: "logic-api", path: "./logic-api")
+    .package(name: "logic-api", path: "./logic-api"),
+    .package(name: "logic-analytics", path: "./logic-analytics")
   ],
   targets: [
     .target(
@@ -25,7 +26,8 @@ let package = Package(
         "logic-test",
         "logic-business",
         "logic-ui",
-        "logic-api"
+        "logic-api",
+        "logic-analytics"
       ],
       path: "./Sources"
     )
