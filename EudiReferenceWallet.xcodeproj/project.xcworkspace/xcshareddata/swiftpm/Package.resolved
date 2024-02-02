@@ -46,6 +46,15 @@
       }
     },
     {
+      "identity" : "blueecc",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/niscy-eudiw/BlueECC.git",
+      "state" : {
+        "revision" : "15e525cfff2da9b7429285346248e2c67ba0bd12",
+        "version" : "1.2.4"
+      }
+    },
+    {
       "identity" : "bluetoothkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/rhummelmose/BluetoothKit.git",
@@ -140,8 +149,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
       "state" : {
-        "revision" : "c660e111010389cbf7255fff8a1b5a50dd054e15",
-        "version" : "0.0.66"
+        "revision" : "7ea99cedc9520b5de7d03ca7ca718f2d1f87e7b0",
+        "version" : "0.0.69"
       }
     },
     {
@@ -149,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "3fd889859bde0ddfcff7d10a30531e8dc39948cc",
-        "version" : "0.2.4"
+        "revision" : "7cd7f7b7183220d07f30466b8ddde1396e6ffe7b",
+        "version" : "0.2.5"
       }
     },
     {
@@ -176,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/securing/IOSSecuritySuite.git",
       "state" : {
-        "revision" : "57dd401a406f9bf81b60dfe6d5305a27e0751dd4",
-        "version" : "1.9.10"
+        "revision" : "651f1ca002b1060214173e55b9040272ae91abcd",
+        "version" : "1.9.11"
       }
     },
     {
