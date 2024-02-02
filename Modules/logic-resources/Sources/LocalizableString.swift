@@ -81,6 +81,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "success")
     case .requestDataShareSuccess(let args):
       bundle.localizedStringWithArguments(forKey: "request_data_share_sucess_title", arguments: args)
+    case .requestDataShareButton:
+      bundle.localizedString(forKey: "request_data_share_button")
     case .incompleteRequestDataSelection:
       bundle.localizedString(forKey: "incomplete_request_data_selecting")
     case .addDoc:
@@ -250,6 +252,7 @@ public extension LocalizableString {
     case shareDataReview
     case success
     case requestDataShareSuccess([String])
+    case requestDataShareButton
     case incompleteRequestDataSelection
     case addDoc
     case showQRTap

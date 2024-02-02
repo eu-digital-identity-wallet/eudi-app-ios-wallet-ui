@@ -5016,19 +5016,19 @@ public class MockPresentationSessionCoordinatorType: PresentationSessionCoordina
     
     
     
-    public func sendResponse(response: RequestItemConvertible) async throws {
+    public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws {
         
     return try await cuckoo_manager.callThrows(
     """
-    sendResponse(response: RequestItemConvertible) async throws
+    sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws
     """,
-            parameters: (response),
-            escapingParameters: (response),
+            parameters: (response, onSuccess),
+            escapingParameters: (response, onSuccess),
             superclassCall:
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: await __defaultImplStub!.sendResponse(response: response))
+            defaultCall: await __defaultImplStub!.sendResponse(response: response, onSuccess: onSuccess))
         
     }
     
@@ -5146,11 +5146,11 @@ public class MockPresentationSessionCoordinatorType: PresentationSessionCoordina
         
         
         
-        func sendResponse<M1: Cuckoo.Matchable>(response: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(RequestItemConvertible)> where M1.MatchedType == RequestItemConvertible {
-            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: response) { $0 }]
+        func sendResponse<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(response: M1, onSuccess: M2) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(RequestItemConvertible, ((URL?) -> Void)?)> where M1.MatchedType == RequestItemConvertible, M2.OptionalMatchedType == ((URL?) -> Void) {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible, ((URL?) -> Void)?)>] = [wrap(matchable: response) { $0.0 }, wrap(matchable: onSuccess) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPresentationSessionCoordinatorType.self, method:
     """
-    sendResponse(response: RequestItemConvertible) async throws
+    sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws
     """, parameterMatchers: matchers))
         }
         
@@ -5250,11 +5250,11 @@ public class MockPresentationSessionCoordinatorType: PresentationSessionCoordina
         
         
         @discardableResult
-        func sendResponse<M1: Cuckoo.Matchable>(response: M1) -> Cuckoo.__DoNotUse<(RequestItemConvertible), Void> where M1.MatchedType == RequestItemConvertible {
-            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: response) { $0 }]
+        func sendResponse<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(response: M1, onSuccess: M2) -> Cuckoo.__DoNotUse<(RequestItemConvertible, ((URL?) -> Void)?), Void> where M1.MatchedType == RequestItemConvertible, M2.OptionalMatchedType == ((URL?) -> Void) {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible, ((URL?) -> Void)?)>] = [wrap(matchable: response) { $0.0 }, wrap(matchable: onSuccess) { $0.1 }]
             return cuckoo_manager.verify(
     """
-    sendResponse(response: RequestItemConvertible) async throws
+    sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -5349,7 +5349,7 @@ public class PresentationSessionCoordinatorTypeStub: PresentationSessionCoordina
     
     
     
-    public func sendResponse(response: RequestItemConvertible) async throws  {
+    public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws  {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -7308,6 +7308,26 @@ public class MockDeepLinkControllerType: DeepLinkControllerType, Cuckoo.Protocol
     }
     
     
+    
+    
+    
+    public func cacheDeepLinkURL(url: URL)  {
+        
+    return cuckoo_manager.call(
+    """
+    cacheDeepLinkURL(url: URL)
+    """,
+            parameters: (url),
+            escapingParameters: (url),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.cacheDeepLinkURL(url: url))
+        
+    }
+    
+    
 
     public struct __StubbingProxy_DeepLinkControllerType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -7346,6 +7366,17 @@ public class MockDeepLinkControllerType: DeepLinkControllerType, Cuckoo.Protocol
             return .init(stub: cuckoo_manager.createStub(for: MockDeepLinkControllerType.self, method:
     """
     getPendingDeepLinkAction() -> DeepLinkController.DeepLinkAction?
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func cacheDeepLinkURL<M1: Cuckoo.Matchable>(url: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(URL)> where M1.MatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(URL)>] = [wrap(matchable: url) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockDeepLinkControllerType.self, method:
+    """
+    cacheDeepLinkURL(url: URL)
     """, parameterMatchers: matchers))
         }
         
@@ -7402,6 +7433,18 @@ public class MockDeepLinkControllerType: DeepLinkControllerType, Cuckoo.Protocol
         }
         
         
+        
+        
+        @discardableResult
+        func cacheDeepLinkURL<M1: Cuckoo.Matchable>(url: M1) -> Cuckoo.__DoNotUse<(URL), Void> where M1.MatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(URL)>] = [wrap(matchable: url) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    cacheDeepLinkURL(url: URL)
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -7433,6 +7476,14 @@ public class DeepLinkControllerTypeStub: DeepLinkControllerType {
     
     public func getPendingDeepLinkAction() -> DeepLinkController.DeepLinkAction?  {
         return DefaultValueRegistry.defaultValue(for: (DeepLinkController.DeepLinkAction?).self)
+    }
+    
+    
+    
+    
+    
+    public func cacheDeepLinkURL(url: URL)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
     

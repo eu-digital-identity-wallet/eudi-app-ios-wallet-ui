@@ -90,15 +90,17 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
         caption: .requestDataShareBiometryCaption,
         quickPinOnlyCaption: .requestDataShareBiometryCaption,
         navigationSuccessConfig: .init(
-          screen: .proximityLoader(
-            getRelyingParty(),
-            presentationCoordinator: interactor.presentationSessionCoordinator
-          ),
-          navigationType: .push
+          navigationType: .push(
+            .proximityLoader(
+              getRelyingParty(),
+              presentationCoordinator: interactor.presentationSessionCoordinator
+            )
+          )
         ),
         navigationBackConfig: .init(
-          screen: .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator),
-          navigationType: .pop
+          navigationType: .popTo(
+            .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator)
+          )
         ),
         isPreAuthorization: false,
         shouldInitializeBiometricOnCreate: true

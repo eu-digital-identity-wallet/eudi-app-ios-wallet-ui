@@ -34,7 +34,8 @@ import logic_business
 #Preview {
   SuccessView(
     with: PreviewRouter(),
-    and: successConfig()
+    and: successConfig(),
+    also: DeepLinkController()
   )
 }
 
@@ -56,9 +57,9 @@ import logic_business
       caption: .genericErrorDesc,
       quickPinOnlyCaption: .genericErrorDesc,
       navigationSuccessConfig: .init(
-        screen: .success(config: successConfig()), navigationType: .push
+        navigationType: .push(.success(config: successConfig()))
       ),
-      navigationBackConfig: .init(screen: .startup, navigationType: .pop),
+      navigationBackConfig: .init(navigationType: .popTo(.startup)),
       isPreAuthorization: false,
       shouldInitializeBiometricOnCreate: false
     )
@@ -78,8 +79,8 @@ private func successConfig() -> UIConfig.Success {
     buttons: [
       .init(
         title: .custom("LITERAL PLACEHOLDER"),
-        screen: .startup,
-        style: .primary, navigationType: .pop()
+        style: .primary,
+        navigationType: .pop(screen: .startup)
       )
     ],
     visualKind: .defaultIcon

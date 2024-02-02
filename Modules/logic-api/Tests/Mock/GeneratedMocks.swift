@@ -4425,19 +4425,19 @@ public class MockPresentationSessionCoordinatorType: PresentationSessionCoordina
     
     
     
-    public func sendResponse(response: RequestItemConvertible) async throws {
+    public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws {
         
     return try await cuckoo_manager.callThrows(
     """
-    sendResponse(response: RequestItemConvertible) async throws
+    sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws
     """,
-            parameters: (response),
-            escapingParameters: (response),
+            parameters: (response, onSuccess),
+            escapingParameters: (response, onSuccess),
             superclassCall:
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: await __defaultImplStub!.sendResponse(response: response))
+            defaultCall: await __defaultImplStub!.sendResponse(response: response, onSuccess: onSuccess))
         
     }
     
@@ -4555,11 +4555,11 @@ public class MockPresentationSessionCoordinatorType: PresentationSessionCoordina
         
         
         
-        func sendResponse<M1: Cuckoo.Matchable>(response: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(RequestItemConvertible)> where M1.MatchedType == RequestItemConvertible {
-            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: response) { $0 }]
+        func sendResponse<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(response: M1, onSuccess: M2) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(RequestItemConvertible, ((URL?) -> Void)?)> where M1.MatchedType == RequestItemConvertible, M2.OptionalMatchedType == ((URL?) -> Void) {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible, ((URL?) -> Void)?)>] = [wrap(matchable: response) { $0.0 }, wrap(matchable: onSuccess) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPresentationSessionCoordinatorType.self, method:
     """
-    sendResponse(response: RequestItemConvertible) async throws
+    sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws
     """, parameterMatchers: matchers))
         }
         
@@ -4659,11 +4659,11 @@ public class MockPresentationSessionCoordinatorType: PresentationSessionCoordina
         
         
         @discardableResult
-        func sendResponse<M1: Cuckoo.Matchable>(response: M1) -> Cuckoo.__DoNotUse<(RequestItemConvertible), Void> where M1.MatchedType == RequestItemConvertible {
-            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: response) { $0 }]
+        func sendResponse<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(response: M1, onSuccess: M2) -> Cuckoo.__DoNotUse<(RequestItemConvertible, ((URL?) -> Void)?), Void> where M1.MatchedType == RequestItemConvertible, M2.OptionalMatchedType == ((URL?) -> Void) {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible, ((URL?) -> Void)?)>] = [wrap(matchable: response) { $0.0 }, wrap(matchable: onSuccess) { $0.1 }]
             return cuckoo_manager.verify(
     """
-    sendResponse(response: RequestItemConvertible) async throws
+    sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -4758,7 +4758,7 @@ public class PresentationSessionCoordinatorTypeStub: PresentationSessionCoordina
     
     
     
-    public func sendResponse(response: RequestItemConvertible) async throws  {
+    public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws  {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

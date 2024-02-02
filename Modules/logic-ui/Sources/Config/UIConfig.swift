@@ -34,18 +34,27 @@ public extension UIConfig {
   struct NavigationConfig: Equatable {
 
     public enum NavigationType: Equatable {
+      case popTo(AppRoute)
       case pop
-      case push
+      case push(AppRoute)
+
+      public var key: String {
+        return switch self {
+        case .popTo(let appRoute):
+          "pop to \(appRoute)"
+        case .push(let appRoute):
+          "push to \(appRoute)"
+        case .pop:
+          "pop back"
+        }
+      }
     }
 
-    public let screen: AppRoute
     public let navigationType: NavigationType
 
     public init(
-      screen: AppRoute,
       navigationType: NavigationType
     ) {
-      self.screen = screen
       self.navigationType = navigationType
     }
   }

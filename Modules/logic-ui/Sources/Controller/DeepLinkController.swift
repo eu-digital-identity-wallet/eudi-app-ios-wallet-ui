@@ -21,6 +21,7 @@ public protocol DeepLinkControllerType {
   func hasDeepLink(url: URL) -> DeepLinkController.DeepLinkAction?
   func handleDeepLinkAction(routerHost: RouterHostType, deepLinkAction: DeepLinkController.DeepLinkAction)
   func getPendingDeepLinkAction() -> DeepLinkController.DeepLinkAction?
+  func cacheDeepLinkURL(url: URL)
 }
 
 public final class DeepLinkController: DeepLinkControllerType {
@@ -41,10 +42,8 @@ public final class DeepLinkController: DeepLinkControllerType {
   public func hasDeepLink(url: URL) -> DeepLinkAction? {
     if let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
        let scheme = components.scheme,
-       let params = components.queryItems,
-       !params.isEmpty,
        let action = DeepLinkAction.Action.parseType(with: scheme) {
-      return DeepLinkAction(link: components, action: action)
+      return DeepLinkAction(link: components, plainUrl: url, action: action)
     }
     return nil
   }
@@ -60,12 +59,14 @@ public final class DeepLinkController: DeepLinkControllerType {
 
     removeCachedDeepLinkURL()
 
-    let route: AppRoute?
+    var route: AppRoute?
 
     switch deepLinkAction.action {
     case .openid4vp:
       let session = walletKitController.startSameDevicePresentation(deepLink: deepLinkAction.link)
       route = !routerHost.isScreenForeground(with: .presentationRequest(presentationCoordinator: session)) ? .presentationRequest(presentationCoordinator: session) : nil
+    case .external:
+      deepLinkAction.plainUrl.open()
     }
 
     if let route {
@@ -73,7 +74,7 @@ public final class DeepLinkController: DeepLinkControllerType {
     }
   }
 
-  private func cacheDeepLinkURL(url: URL) {
+  public func cacheDeepLinkURL(url: URL) {
     prefsController.setValue(url.absoluteString, forKey: .cachedDeepLink)
   }
 
@@ -85,6 +86,7 @@ public final class DeepLinkController: DeepLinkControllerType {
 public extension DeepLinkController {
   struct DeepLinkAction {
     public let link: URLComponents
+    public let plainUrl: URL
     public let action: Action
   }
 }
@@ -93,13 +95,14 @@ public extension DeepLinkController.DeepLinkAction {
   enum Action: String {
 
     case openid4vp
+    case external
 
     public static func parseType(with scheme: String) -> Action? {
       switch scheme {
       case _ where scheme.contains(openid4vp.rawValue):
         return .openid4vp
       default:
-        return nil
+        return .external
       }
     }
   }

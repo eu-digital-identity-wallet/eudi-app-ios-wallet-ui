@@ -57,7 +57,7 @@ final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: Proxim
     .pleaseWait
   }
 
-  override func getOnSuccessRoute() -> AppRoute? {
+  private func getOnSuccessRoute() -> AppRoute {
     .success(
       config: UIConfig.Success(
         title: .success,
@@ -65,9 +65,8 @@ final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: Proxim
         buttons: [
           .init(
             title: .okButton,
-            screen: .dashboard,
             style: .primary,
-            navigationType: .pop()
+            navigationType: .pop(screen: .dashboard)
           )
         ],
         visualKind: .defaultIcon
@@ -76,13 +75,13 @@ final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: Proxim
   }
 
   override func getOnPopRoute() -> AppRoute? {
-    .dashboard
+    .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator)
   }
 
   override func doWork() async {
     switch await interactor.onSendResponse() {
     case .success:
-      self.onNavigate(type: .push)
+      self.onNavigate(type: .push(getOnSuccessRoute()))
     case .failure(let error):
       self.onError(with: error)
     }

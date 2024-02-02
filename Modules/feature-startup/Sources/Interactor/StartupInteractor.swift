@@ -44,10 +44,11 @@ public final actor StartupInteractor: StartupInteractorType {
           caption: .loginCaption,
           quickPinOnlyCaption: .loginCaptionQuickPinOnly,
           navigationSuccessConfig: .init(
-            screen: hasDocuments
-            ? .dashboard
-            : .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument)),
-            navigationType: .push
+            navigationType: .push(
+              hasDocuments
+              ? .dashboard
+              : .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument))
+            )
           ),
           navigationBackConfig: nil,
           isPreAuthorization: true,

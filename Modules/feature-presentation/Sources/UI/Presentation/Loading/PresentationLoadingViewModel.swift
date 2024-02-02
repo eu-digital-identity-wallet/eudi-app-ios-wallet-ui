@@ -40,17 +40,24 @@ final class PresentationLoadingViewModel<Router: RouterHostType, Interactor: Pre
     .pleaseWait
   }
 
-  override func getOnSuccessRoute() -> AppRoute? {
-    .success(
+  private func getOnSuccessRoute(with url: URL?) -> AppRoute {
+
+    var navigationType: UIConfig.Success.Button.NavigationType {
+      guard let url else {
+        return .pop(screen: .dashboard)
+      }
+      return .deepLink(link: url, popToScreen: .dashboard)
+    }
+
+    return .success(
       config: UIConfig.Success(
         title: .success,
         subtitle: .requestDataShareSuccess([relyingParty]),
         buttons: [
           .init(
-            title: .okButton,
-            screen: .dashboard,
+            title: .requestDataShareButton,
             style: .primary,
-            navigationType: .pop()
+            navigationType: navigationType
           )
         ],
         visualKind: .defaultIcon
@@ -59,13 +66,13 @@ final class PresentationLoadingViewModel<Router: RouterHostType, Interactor: Pre
   }
 
   override func getOnPopRoute() -> AppRoute? {
-    .dashboard
+    .presentationRequest(presentationCoordinator: interactor.presentationCoordinator)
   }
 
   override func doWork() async {
     switch await interactor.onSendResponse() {
-    case .success:
-      self.onNavigate(type: .push)
+    case .success(let url):
+      self.onNavigate(type: .push(getOnSuccessRoute(with: url)))
     case .failure(let error):
       self.onError(with: error)
     }

@@ -31,7 +31,7 @@ public extension UIConfig {
       return "title: \(LocalizableString.shared.get(with: title))" +
       " caption: \(LocalizableString.shared.get(with: subtitle))" +
       " buttons: \(buttons.map({ LocalizableString.shared.get(with: $0.title) as String }).joined(separator: ","))" +
-      " actions: \(buttons.map(\.screen.info.key).joined(separator: ","))"
+      " actions: \(buttons.map(\.navigationType.type).joined(separator: ","))"
     }
 
     public init(
@@ -60,8 +60,6 @@ public extension UIConfig.Success {
     public var id: UUID
 
     public let title: LocalizableString.Key
-    public let screen: AppRoute
-    public let deepLink: URL?
     public let style: Style
     public let navigationType: NavigationType
 
@@ -71,22 +69,30 @@ public extension UIConfig.Success {
     }
 
     public enum NavigationType: Equatable {
-      case pop(inclusive: Bool = false)
-      case push
-      case deepLink
+
+      case pop(screen: AppRoute, inclusive: Bool = false)
+      case push(screen: AppRoute)
+      case deepLink(link: URL, popToScreen: AppRoute)
+
+      public var type: String {
+        return switch self {
+        case .pop(let screen, _):
+          "pop to \(screen)"
+        case .push(let screen):
+          "push to \(screen)"
+        case .deepLink(let link, _):
+          "open \(link)"
+        }
+      }
     }
 
     public init(
       title: LocalizableString.Key,
-      screen: AppRoute,
-      deepLink: URL? = nil,
       style: Style,
       navigationType: NavigationType
     ) {
       self.id = UUID()
       self.title = title
-      self.screen = screen
-      self.deepLink = deepLink
       self.style = style
       self.navigationType = navigationType
     }

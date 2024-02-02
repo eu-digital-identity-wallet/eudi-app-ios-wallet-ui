@@ -157,10 +157,12 @@ final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryIntera
     }
 
     switch config.navigationType {
+    case .popTo(let route):
+      router.popTo(with: route)
+    case .push(let route):
+      router.push(with: route)
     case .pop:
-      router.popTo(with: config.screen)
-    case .push:
-      router.push(with: config.screen)
+      router.pop()
     }
   }
 

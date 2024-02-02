@@ -21,26 +21,31 @@ struct SuccessState: ViewState {
 }
 
 @MainActor
-final class SuccessViewModel<Router: RouterHostType>: BaseViewModel<Router, SuccessState> {
+final class SuccessViewModel<Router: RouterHostType, DeepLinkController: DeepLinkControllerType>: BaseViewModel<Router, SuccessState> {
 
-  init(config: any UIConfigType, router: Router) {
+  private let deepLinkController: DeepLinkController
+
+  init(
+    config: any UIConfigType,
+    router: Router,
+    deepLinkController: DeepLinkController
+  ) {
     guard let config = config as? UIConfig.Success else {
       fatalError("SuccessViewModel:: Invalid configuraton")
     }
+    self.deepLinkController = deepLinkController
     super.init(router: router, initialState: .init(config: config))
   }
 
   func onButtonClicked(with button: UIConfig.Success.Button) {
     switch button.navigationType {
-    case .pop:
-      router.popTo(with: button.screen)
-    case .deepLink:
-      if button.deepLink != nil {
-        //cacheDeepLinkURL(url: link)
-        router.popTo(with: button.screen)
-      }
-    case .push:
-      router.push(with: button.screen)
+    case .pop(let screen, let inclusive):
+      router.popTo(with: screen, inclusive: inclusive)
+    case .deepLink(let url, let popToScreen):
+      deepLinkController.cacheDeepLinkURL(url: url)
+      router.popTo(with: popToScreen)
+    case .push(let screen):
+      router.push(with: screen)
     }
   }
 }

@@ -104,7 +104,7 @@ public final class RouterHost: RouterHostType {
       case .faqs:
         FAQsView(with: self, and: FAQsInteractor())
       case .success(let config):
-        SuccessView(with: self, and: config)
+        SuccessView(with: self, and: config, also: DeepLinkController())
       case .dashboard:
         DashboardView(with: self, and: DashboardInteractor(), also: DeepLinkController())
       case .biometry(let config):

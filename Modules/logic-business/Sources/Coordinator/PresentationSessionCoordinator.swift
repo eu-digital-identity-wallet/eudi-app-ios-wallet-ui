@@ -28,7 +28,7 @@ public protocol PresentationSessionCoordinatorType {
   func initialize() async
   func startQrEngagement() async throws -> Data
   func requestReceived() async throws -> PresentationRequest
-  func sendResponse(response: RequestItemConvertible) async throws
+  func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws
   func onSuccess(completion: () -> Void)
 
   func getState() async -> PresentationState

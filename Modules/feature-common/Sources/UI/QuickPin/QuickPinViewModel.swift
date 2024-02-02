@@ -31,7 +31,6 @@ struct QuickPinState: ViewState {
   let success: LocalizableString.Key
   let successButton: LocalizableString.Key
   let successNavigationType: UIConfig.Success.Button.NavigationType
-  let successNextScreen: AppRoute
   let isCancellable: Bool
   let pinError: LocalizableString.Key?
   let isButtonActive: Bool
@@ -64,10 +63,9 @@ final class QuickPinViewModel<Router: RouterHostType, Interactor: QuickPinIntera
         button: .quickPinNextButton,
         success: config.isSetFlow ? .quickPinSetSuccess : .quickPinUpdateSuccess,
         successButton: config.isSetFlow ? .quickPinSetSuccessButton : .quickPinUpdateSuccessButton,
-        successNavigationType: config.isSetFlow ? .push : .pop(),
-        successNextScreen: config.isSetFlow
-        ? .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument))
-        : .dashboard,
+        successNavigationType: config.isSetFlow
+        ? .push(screen: .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument)))
+        : .pop(screen: .dashboard),
         isCancellable: config.isUpdateFlow,
         pinError: nil,
         isButtonActive: false,
@@ -131,7 +129,6 @@ final class QuickPinViewModel<Router: RouterHostType, Interactor: QuickPinIntera
           buttons: [
             .init(
               title: viewState.successButton,
-              screen: viewState.successNextScreen,
               style: .primary,
               navigationType: viewState.successNavigationType
             )
@@ -175,7 +172,6 @@ final class QuickPinViewModel<Router: RouterHostType, Interactor: QuickPinIntera
           success: previous.success,
           successButton: previous.successButton,
           successNavigationType: previous.successNavigationType,
-          successNextScreen: previous.successNextScreen,
           isCancellable: previous.isCancellable,
           pinError: pinError,
           isButtonActive: isButtonActive ?? previous.isButtonActive,

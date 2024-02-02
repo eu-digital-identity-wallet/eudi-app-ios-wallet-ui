@@ -34,10 +34,6 @@ open class BaseLoadingViewModel<Router: RouterHostType>: BaseViewModel<Router, B
     return .custom("")
   }
 
-  open func getOnSuccessRoute() -> AppRoute? {
-    return nil
-  }
-
   open func getOnPopRoute() -> AppRoute? {
     return nil
   }
@@ -50,10 +46,10 @@ open class BaseLoadingViewModel<Router: RouterHostType>: BaseViewModel<Router, B
       if let route = getOnPopRoute() {
         router.popTo(with: route)
       }
-    case .push:
-      if let route = getOnSuccessRoute() {
-        router.push(with: route)
-      }
+    case .push(let route):
+      router.push(with: route)
+    case .popTo(let route):
+      router.popTo(with: route)
     }
   }
 

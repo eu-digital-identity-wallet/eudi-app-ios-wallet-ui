@@ -30,7 +30,7 @@ public protocol PresentationInteractorType {
 
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>
-  func onSendResponse() async -> Result<Void, Error>
+  func onSendResponse() async -> Result<URL?, Error>
 }
 
 public final actor PresentationInteractor: PresentationInteractorType {
@@ -53,11 +53,11 @@ public final actor PresentationInteractor: PresentationInteractorType {
       return .success(
         .init(
           requestDataCells: RequestDataUiModel.items(
-          for: response.items
-        ),
-        relyingParty: response.relyingParty,
-        dataRequestInfo: response.dataRequestInfo,
-        isTrusted: response.isTrusted
+            for: response.items
+          ),
+          relyingParty: response.relyingParty,
+          dataRequestInfo: response.dataRequestInfo,
+          isTrusted: response.isTrusted
         )
       )
     } catch {
@@ -91,17 +91,22 @@ public final actor PresentationInteractor: PresentationInteractorType {
     return .success(requestConvertible.asRequestItems())
   }
 
-  public func onSendResponse() async -> Result<Void, Error> {
+  public func onSendResponse() async -> Result<URL?, Error> {
 
     guard case PresentationState.responseToSend(let responseItem) = await presentationCoordinator.getState() else {
       return .failure(PresentationSessionError.invalidState)
     }
 
-    do {
-      try await presentationCoordinator.sendResponse(response: responseItem)
-      return .success
-    } catch {
-      return .failure(error)
+    return await withCheckedContinuation { continuation in
+      Task { [weak self] in
+        do {
+          try await self?.presentationCoordinator.sendResponse(response: responseItem) {
+            continuation.resume(returning: .success($0))
+          }
+        } catch {
+          continuation.resume(returning: .failure(error))
+        }
+      }
     }
   }
 }

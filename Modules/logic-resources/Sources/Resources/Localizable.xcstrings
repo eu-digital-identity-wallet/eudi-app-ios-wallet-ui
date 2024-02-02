@@ -1236,6 +1236,17 @@
         }
       }
     },
+    "request_data_share_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONTINUE"
+          }
+        }
+      }
+    },
     "request_data_share_caption" : {
       "extractionState" : "manual",
       "localizations" : {
