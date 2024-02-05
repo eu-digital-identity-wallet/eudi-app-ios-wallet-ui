@@ -75,8 +75,7 @@ public final class ProximityPresentationSessionCoordinator: PresentationSessionC
       items: session.disclosedDocuments,
       relyingParty: session.readerCertIssuer ?? LocalizableString.shared.get(with: .unknownVerifier),
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
-      // TODO: Update with logic from wallet in order to show or not the trusted verifier checkmark.
-      isTrusted: false
+      isTrusted: session.readerCertIssuerValid == true
     )
     self.presentationStateSubject.value = .requestReceived(presentationRequest)
     return presentationRequest
