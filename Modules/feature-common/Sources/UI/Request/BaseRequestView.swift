@@ -143,7 +143,7 @@ public struct BaseRequestView<Router: RouterHostType>: View {
           caption: viewModel.getTrustedRelyingPartyInfo()
         )
 
-        WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onShowRequestInfoModal())
+        WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onVerifiedEntityModal())
       }
     })
     .task {

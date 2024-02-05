@@ -52,7 +52,7 @@ public final class WalletKitController: WalletKitControllerType {
   internal init(configLogic: ConfigLogic = ConfigProvider.shared.getConfigLogic()) {
     self.configLogic = configLogic
     wallet.userAuthenticationRequired = false
-    wallet.trustedReaderCertificates = [Data(name: "scytales_root_ca", ext: "der")!]
+    wallet.trustedReaderCertificates = []
     wallet.verifierApiUri = configLogic.verifierConfig.apiUri
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciClientId = configLogic.vciConfig.clientId

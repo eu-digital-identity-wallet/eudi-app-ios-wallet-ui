@@ -90,7 +90,6 @@ public struct ContentTitle: View {
           .foregroundColor(self.titleColor)
 
       }
-
       Spacer()
     }
   }
