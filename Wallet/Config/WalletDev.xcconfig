@@ -1,6 +1,6 @@
 BUILD_TYPE = DEBUG
 //WALLET_HOST_URL = 
-VERIFIER_API_URI = https:/$()/eudi.netcompany-intrasoft.com/san-dns
+VERIFIER_API_URI = https:/$()/dev.verifier.eudiw.dev
 VCI_ISSUER_URL = https:/$()/preprod.issuer.eudiw.dev/oidc
 VCI_CLIENT_ID = wallet-dev
 VCI_REDIRECT_URI = eudi-openid4ci:/$()/authorize/
