@@ -57,6 +57,7 @@ public final class WalletKitController: WalletKitControllerType {
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciClientId = configLogic.vciConfig.clientId
     wallet.openID4VciRedirectUri = configLogic.vciConfig.redirectUri
+    wallet.trustedReaderCertificates = configLogic.proxmityConfig.trustedCerts
   }
 
   public func loadSampleData(dataFiles: [String]) async throws {

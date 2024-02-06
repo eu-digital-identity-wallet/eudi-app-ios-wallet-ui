@@ -1621,6 +1621,22 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
     }
     
     
+    
+    
+    
+    public var proxmityConfig: ProximityConfig {
+        get {
+            return cuckoo_manager.getter("proxmityConfig",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.proxmityConfig)
+        }
+        
+    }
+    
+    
 
     
 
@@ -1665,6 +1681,13 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         
         var vciConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, VciConfig> {
             return .init(manager: cuckoo_manager, name: "vciConfig")
+        }
+        
+        
+        
+        
+        var proxmityConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, ProximityConfig> {
+            return .init(manager: cuckoo_manager, name: "proxmityConfig")
         }
         
         
@@ -1715,6 +1738,13 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         
         var vciConfig: Cuckoo.VerifyReadOnlyProperty<VciConfig> {
             return .init(manager: cuckoo_manager, name: "vciConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        var proxmityConfig: Cuckoo.VerifyReadOnlyProperty<ProximityConfig> {
+            return .init(manager: cuckoo_manager, name: "proxmityConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         
@@ -1776,6 +1806,17 @@ public class ConfigLogicStub: ConfigLogic {
     public var vciConfig: VciConfig {
         get {
             return DefaultValueRegistry.defaultValue(for: (VciConfig).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var proxmityConfig: ProximityConfig {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (ProximityConfig).self)
         }
         
     }

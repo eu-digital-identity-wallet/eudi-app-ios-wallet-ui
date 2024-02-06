@@ -40,4 +40,11 @@ public struct WalletConfig: ConfigLogic {
       redirectUri: getBundleValue(key: "Vci Redirect Uri")
     )
   }
+
+  public var proxmityConfig: ProximityConfig {
+    guard let cert = Data(name: "eudi_pid_issuer_ut", ext: "der") else {
+      return .init(trustedCerts: [])
+    }
+    return .init(trustedCerts: [cert])
+  }
 }
