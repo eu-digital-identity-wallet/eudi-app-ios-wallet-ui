@@ -27,12 +27,14 @@ public protocol DashboardInteractorType {
   func fetchDashboard() async -> DashboardPartialState
   func getBleAvailability() async -> ReachabilityController.BleAvailibity
   func openBleSettings()
+  func getAppVersion() -> String
 }
 
 public final class DashboardInteractor: DashboardInteractorType {
 
   private lazy var walletController: WalletKitControllerType = WalletKitController.shared
   private lazy var reachabilityController: ReachabilityControllerType = ReachabilityController.shared
+  private lazy var configLogic: ConfigLogic = ConfigProvider.shared.getConfigLogic()
 
   private lazy var cancellables = Set<AnyCancellable>()
 
@@ -60,6 +62,10 @@ public final class DashboardInteractor: DashboardInteractorType {
 
   public func openBleSettings() {
     reachabilityController.openBleSettings()
+  }
+
+  public func getAppVersion() -> String {
+    return configLogic.appVersion
   }
 
   private func fetchBearer() -> BearerUIModel {

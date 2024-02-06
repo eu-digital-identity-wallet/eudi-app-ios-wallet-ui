@@ -98,6 +98,26 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
     }
     
     
+    
+    
+    
+    public func getAppVersion() -> String {
+        
+    return cuckoo_manager.call(
+    """
+    getAppVersion() -> String
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getAppVersion())
+        
+    }
+    
+    
 
     public struct __StubbingProxy_DashboardInteractorType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -136,6 +156,17 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
             return .init(stub: cuckoo_manager.createStub(for: MockDashboardInteractorType.self, method:
     """
     openBleSettings()
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func getAppVersion() -> Cuckoo.ProtocolStubFunction<(), String> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockDashboardInteractorType.self, method:
+    """
+    getAppVersion() -> String
     """, parameterMatchers: matchers))
         }
         
@@ -192,6 +223,18 @@ public class MockDashboardInteractorType: DashboardInteractorType, Cuckoo.Protoc
         }
         
         
+        
+        
+        @discardableResult
+        func getAppVersion() -> Cuckoo.__DoNotUse<(), String> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    getAppVersion() -> String
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
     }
 }
 
@@ -223,6 +266,14 @@ public class DashboardInteractorTypeStub: DashboardInteractorType {
     
     public func openBleSettings()   {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func getAppVersion() -> String  {
+        return DefaultValueRegistry.defaultValue(for: (String).self)
     }
     
     
