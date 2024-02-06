@@ -29,6 +29,10 @@ public struct VerifierConfig {
   public let apiUri: String
 }
 
+public struct ProximityConfig {
+  public let trustedCerts: [Data]
+}
+
 public protocol ConfigLogic {
 
   /**
@@ -55,6 +59,11 @@ public protocol ConfigLogic {
    * VCI Configuration
    */
   var vciConfig: VciConfig { get }
+
+  /**
+   * Proximity Configuration
+   */
+  var proxmityConfig: ProximityConfig { get }
 }
 
 extension ConfigLogic {

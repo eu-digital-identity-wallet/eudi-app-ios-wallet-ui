@@ -11,6 +11,7 @@
 		F05E9F382AFABBC200891E8F /* feature-presentation in Resources */ = {isa = PBXBuildFile; fileRef = F05E9F372AFABBC200891E8F /* feature-presentation */; };
 		F06325102AC598370004601F /* logic-test in Resources */ = {isa = PBXBuildFile; fileRef = F063250F2AC598370004601F /* logic-test */; };
 		F06325122AC59AF50004601F /* feature-test in Resources */ = {isa = PBXBuildFile; fileRef = F06325112AC59AF50004601F /* feature-test */; };
+		F0635CA82B72431D00260E50 /* eudi_pid_issuer_ut.der in Resources */ = {isa = PBXBuildFile; fileRef = F0635CA72B72431D00260E50 /* eudi_pid_issuer_ut.der */; };
 		F069CC3F2AFAC0AD0033AAC5 /* feature-proximity in Resources */ = {isa = PBXBuildFile; fileRef = F069CC3D2AFAC0AD0033AAC5 /* feature-proximity */; };
 		F069CC402AFAC0AD0033AAC5 /* feature-issuance in Resources */ = {isa = PBXBuildFile; fileRef = F069CC3E2AFAC0AD0033AAC5 /* feature-issuance */; };
 		F0A013982AC35ECA00065EAD /* logic-business in Resources */ = {isa = PBXBuildFile; fileRef = F0A013922AC35ECA00065EAD /* logic-business */; };
@@ -37,6 +38,7 @@
 		F05E9F372AFABBC200891E8F /* feature-presentation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-presentation"; path = "Modules/feature-presentation"; sourceTree = "<group>"; };
 		F063250F2AC598370004601F /* logic-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-test"; path = "Modules/logic-test"; sourceTree = "<group>"; };
 		F06325112AC59AF50004601F /* feature-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-test"; path = "Modules/feature-test"; sourceTree = "<group>"; };
+		F0635CA72B72431D00260E50 /* eudi_pid_issuer_ut.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = eudi_pid_issuer_ut.der; sourceTree = "<group>"; };
 		F069CC3D2AFAC0AD0033AAC5 /* feature-proximity */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-proximity"; path = "Modules/feature-proximity"; sourceTree = "<group>"; };
 		F069CC3E2AFAC0AD0033AAC5 /* feature-issuance */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-issuance"; path = "Modules/feature-issuance"; sourceTree = "<group>"; };
 		F09E1EA22AC3443000779C25 /* Wallet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Wallet.plist; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 		1194D22F2B06362900377213 /* Sample */ = {
 			isa = PBXGroup;
 			children = (
+				F0635CA72B72431D00260E50 /* eudi_pid_issuer_ut.der */,
 				1194D2302B06362900377213 /* EUDI_sample_data.json */,
 			);
 			path = Sample;
@@ -235,6 +238,7 @@
 				F0A0139B2AC35ECA00065EAD /* logic-navigation in Resources */,
 				F0C6207E2B6A6246007F903F /* logic-analytics in Resources */,
 				F1CACAE02AC3097100B40DED /* WalletDev.xcconfig in Resources */,
+				F0635CA82B72431D00260E50 /* eudi_pid_issuer_ut.der in Resources */,
 				F0A013992AC35ECA00065EAD /* logic-api in Resources */,
 				F0A0139A2AC35ECA00065EAD /* feature-startup in Resources */,
 				F1CACAE22AC3098C00B40DED /* WalletRelease.xcconfig in Resources */,
