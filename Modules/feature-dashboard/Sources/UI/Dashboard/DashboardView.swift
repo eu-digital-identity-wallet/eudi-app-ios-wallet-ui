@@ -87,6 +87,14 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
             onAction: viewModel.onShowScanner()
           )
         }
+
+        HStack {
+          Spacer()
+          Text(viewModel.viewState.appVersion)
+            .typography(ThemeManager.shared.font.bodyMedium)
+            .foregroundColor(ThemeManager.shared.color.textSecondaryDark)
+          Spacer()
+        }
       }
     }
     .sheetDialog(isPresented: $viewModel.isBleModalShowing) {

@@ -24,6 +24,7 @@ struct DashboardState: ViewState {
   let bearer: BearerUIModel
   let phase: ScenePhase
   let pendingBleModalAction: Bool
+  let appVersion: String
 }
 
 @MainActor
@@ -51,7 +52,8 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
         documents: DocumentUIModel.mocks(),
         bearer: BearerUIModel.mock(),
         phase: .active,
-        pendingBleModalAction: false
+        pendingBleModalAction: false,
+        appVersion: interactor.getAppVersion()
       )
     )
   }
@@ -168,7 +170,8 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
           documents: documents ?? previousSate.documents,
           bearer: bearer ?? previousSate.bearer,
           phase: phase ?? previousSate.phase,
-          pendingBleModalAction: pendingBleModalAction ?? previousSate.pendingBleModalAction
+          pendingBleModalAction: pendingBleModalAction ?? previousSate.pendingBleModalAction,
+          appVersion: previousSate.appVersion
         )
     }
   }
