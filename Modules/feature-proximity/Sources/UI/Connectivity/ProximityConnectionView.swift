@@ -72,15 +72,12 @@ public struct ProximityConnectionView<Router: RouterHostType, Interactor: Proxim
 
   private var nfcFooter: some View {
     VStack(alignment: .center, spacing: SPACING_MEDIUM) {
-
-      Text(.proximityConnectivityNfc)
-        .typography(ThemeManager.shared.font.bodyMedium)
-        .foregroundStyle(ThemeManager.shared.color.textSecondaryDark)
-
-      Theme.shared.image.nfc
+      Theme.shared.image.bluetoothConnect
         .resizable()
+        .renderingMode(.template)
         .scaledToFit()
-        .frame(height: contentSize / 2)
+        .foregroundStyle(ThemeManager.shared.color.primary)
+        .frame(height: contentSize / 3)
     }
     .padding(.vertical, SPACING_EXTRA_LARGE)
     .frame(maxWidth: .infinity, maxHeight: contentSize)

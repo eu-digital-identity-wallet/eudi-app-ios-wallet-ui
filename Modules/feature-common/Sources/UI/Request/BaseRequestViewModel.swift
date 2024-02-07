@@ -160,6 +160,16 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
           row.setVisible(!viewState.isContentVisible)
           return .requestDataRow(row)
         }
+        if var row = $0.isDataVerification {
+          let items = row.items.map({
+              var item = $0
+              item.isVisible = !viewState.isContentVisible
+              return item
+            }
+          )
+          row.setItems(with: items)
+          return .requestDataVerification(row)
+        }
         return $0
       }
     )
