@@ -42,6 +42,8 @@ Issuance
 
 [Issuance](wiki/issuance.mp4)
 
+https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/blob/feature/updated-readme-07-02/wiki/issuance.mp4
+
 Presentation
 
 [Presentation](wiki/presentation.mp4)
