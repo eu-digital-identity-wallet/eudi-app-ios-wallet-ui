@@ -200,7 +200,7 @@ public struct BaseRequestView<Router: RouterHostType>: View {
         style: .primary,
         title: .shareButton,
         isLoading: viewModel.viewState.isLoading,
-        isEnabled: !viewModel.viewState.isLoading && !viewModel.viewState.items.isEmpty,
+        isEnabled: viewModel.viewState.allowShare && !viewModel.viewState.isLoading,
         onAction: viewModel.onShare()
       )
       WrapButtonView(

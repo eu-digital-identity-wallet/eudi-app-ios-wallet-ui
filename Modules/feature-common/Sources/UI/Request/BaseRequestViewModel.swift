@@ -27,6 +27,7 @@ public struct RequestViewState: ViewState {
   public let trustedRelyingPartyInfo: LocalizableString.Key
   public let relyingParty: String
   public let isTrusted: Bool
+  public let allowShare: Bool
 }
 
 @MainActor
@@ -48,7 +49,8 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
         title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
         relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
-        isTrusted: false
+        isTrusted: false,
+        allowShare: false
       )
     )
   }
@@ -126,7 +128,8 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
       items: items,
       title: title,
       relyingParty: relyingParty,
-      isTrusted: isTrusted
+      isTrusted: isTrusted,
+      allowShare: !items.isEmpty
     )
   }
 
@@ -162,10 +165,10 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
         }
         if var row = $0.isDataVerification {
           let items = row.items.map({
-              var item = $0
-              item.isVisible = !viewState.isContentVisible
-              return item
-            }
+            var item = $0
+            item.isVisible = !viewState.isContentVisible
+            return item
+          }
           )
           row.setItems(with: items)
           return .requestDataVerification(row)
@@ -184,13 +187,38 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
       return $0
     }
 
-    let allSelected = items.map { $0.isDataRow?.isSelected ?? true }
+    let allSelected = items.map {
+      if $0.isDataRow?.isEnabled == false {
+        return true
+      }
+      return $0.isDataRow?.isSelected ?? true
+    }
       .filter { !$0 }
       .isEmpty
 
+    let hasVerificationItems = !items.compactMap { $0.isDataVerification }.isEmpty
+
+    let onlyDataRowItems: [RequestDataCell] = items
+      .compactMap {
+        if $0.isDataSection == nil && $0.isDataRow?.isEnabled == true {
+          return $0
+        }
+        return nil
+      }
+
+    let canShare = !onlyDataRowItems.map {
+      if let row = $0.isDataRow {
+        return row.isSelected
+      }
+      return false
+    }
+    .filter { $0 }
+    .isEmpty
+
     setNewState(
       itemsAreAllSelected: allSelected,
-      items: items
+      items: items,
+      allowShare: canShare || hasVerificationItems
     )
   }
 
@@ -210,7 +238,8 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     title: LocalizableString.Key? = nil,
     trustedRelyingPartyInfo: LocalizableString.Key? = nil,
     relyingParty: String? = nil,
-    isTrusted: Bool? = nil
+    isTrusted: Bool? = nil,
+    allowShare: Bool? = nil
   ) {
     setState {
       .init(
@@ -222,7 +251,8 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
         title: title ?? $0.title,
         trustedRelyingPartyInfo: trustedRelyingPartyInfo ?? $0.trustedRelyingPartyInfo,
         relyingParty: relyingParty ?? $0.relyingParty,
-        isTrusted: isTrusted ?? $0.isTrusted
+        isTrusted: isTrusted ?? $0.isTrusted,
+        allowShare: allowShare ?? $0.allowShare
       )
     }
   }
