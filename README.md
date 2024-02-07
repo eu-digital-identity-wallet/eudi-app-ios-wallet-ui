@@ -40,9 +40,7 @@ involved, follow the guidelines found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Issuance
 
-[Issuance](wiki/issuance.mp4)
-
-https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/blob/feature/updated-readme-07-02/wiki/issuance.mp4
+[Issuance](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/1c0eb50c-1caf-4b66-a326-5f9f408656b8)
 
 Presentation
 
