@@ -35,12 +35,15 @@ involved, follow the guidelines found in [CONTRIBUTING.md](CONTRIBUTING.md).
 ## Demo videos
 
 Issuance
+
 [Issuance](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/blob/feature/updated-readme-07-02/wiki/issuance.mp4)
 
 Presentation
+
 [Presentation](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/blob/feature/updated-readme-07-02/wiki/presentation.mp4)
 
 Proximity
+
 [Proximity](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/blob/feature/updated-readme-07-02/wiki/proximity.mp4)
 
 ## How to use the application
