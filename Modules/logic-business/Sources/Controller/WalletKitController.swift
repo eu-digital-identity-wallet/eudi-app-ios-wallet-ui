@@ -147,9 +147,7 @@ extension WalletKitControllerType {
     switch documentType {
     case .EuPidDocType:
       return EuPidModel.pidMandatoryElementKeys
-    case .IsoMdlModel:
-      return IsoMdlModel.isoMandatoryElementKeys
-    case .genericDocument:
+    case .IsoMdlModel, .genericDocument:
       return []
     }
   }
