@@ -39,7 +39,7 @@ involved, follow the guidelines found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Issuance
 
-https://github.com/niscy-eudiw/eudi-app-android-wallet-ui/blob/feature/updated-readme-07-02/wiki/issuance.mp4
+[Issuance](wiki/issuance.mp4)
 
 Presentation
 
