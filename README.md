@@ -16,7 +16,7 @@ The EUDI Wallet Reference Implementation is the application that allows users to
 
 1. To obtain, store and present documents (mDL, PID).
 2. Verify presentations.
-3. Share data on proximity scenarios
+3. Share data on proximity scenarios.
 
 ## Disclaimer
 
@@ -54,7 +54,7 @@ Proximity
 
 Prerequisites
 
-In order to complete the proximity flow described below tiu will need to build the application with xcode. Clobe this repo and make sure you have access to the dependencied below:
+In order to complete the flows described below you will to build and run the application with xcode. Clone this repo and make sure you have access to the dependencies below:
 
 [iso18013-data-model](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git)
 
