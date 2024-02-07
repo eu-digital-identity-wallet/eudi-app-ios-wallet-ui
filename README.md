@@ -117,7 +117,7 @@ Proximity flow
 
 ## Application configuration
 
-You can find instructions on how to configure the application [here]()
+You can find instructions on how to configure the application [here](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/blob/feature/updated-readme-07-02/wiki/configuration.md)
 
 ## License
 
