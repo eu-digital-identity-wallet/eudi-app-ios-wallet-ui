@@ -961,24 +961,13 @@
         }
       }
     },
-    "proximity_connectivity_nfc" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Or use the NFC"
-          }
-        }
-      }
-    },
     "proximity_connectivity_title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show QR or Tap"
+            "value" : "Show QR"
           }
         }
       }
@@ -1506,7 +1495,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SHOW QR/TAP"
+            "value" : "SHOW QR"
           }
         }
       }

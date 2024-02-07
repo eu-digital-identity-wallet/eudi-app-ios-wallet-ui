@@ -109,6 +109,7 @@ public struct RequestDataRow: Identifiable, Equatable {
     case .unavailable(let string):
       self.value = .string(string)
       self.isEnabled = false
+      self.isSelected = false
     case .image(let imageData):
       self.value = .image(imageData)
       self.isEnabled = true
@@ -148,7 +149,7 @@ public struct RequestDataVerification: Identifiable, Equatable {
 
   public var id: String
   public let title: String
-  public let items: [RequestDataRow]
+  public var items: [RequestDataRow]
 
   public init(
     id: String = UUID().uuidString,
@@ -157,6 +158,10 @@ public struct RequestDataVerification: Identifiable, Equatable {
   ) {
     self.id = id
     self.title = title
+    self.items = items
+  }
+
+  mutating func setItems(with items: [RequestDataRow]) {
     self.items = items
   }
 }
@@ -187,14 +192,25 @@ extension RequestDataUiModel {
     var requestDataCell = [RequestDataCell]()
 
     for document in documents {
+
+      // Filter fields for Selectable Disclosed Fields
+      let dataFields = documentSelectiveDisclosableFields(for: document)
+
+      // Filter fields for mandatory keys for verification
+      let verificationFields = documentMandatoryVerificationFields(for: document)
+
+      guard !dataFields.isEmpty || verificationFields != nil else {
+        continue
+      }
+
       // Section Header
       requestDataCell.append(documentSectionHeader(for: document))
 
-      // Filter fields for Selectable Disclosed Fields
-      requestDataCell.append(contentsOf: documentSelectiveDisclosableFields(for: document))
+      if !dataFields.isEmpty {
+        requestDataCell.append(contentsOf: dataFields)
+      }
 
-      // Filter fields for mandatory keys for verification
-      if let verificationFields = documentMandatoryVerificationFields(for: document) {
+      if let verificationFields {
         requestDataCell.append(verificationFields)
       }
     }
@@ -231,8 +247,9 @@ extension RequestDataUiModel {
             ),
             elementKey: $0.elementIdentifier,
             namespace: $0.nameSpace,
-            docType: document.docType))
-
+            docType: document.docType
+          )
+        )
       }
   }
 
@@ -254,7 +271,8 @@ extension RequestDataUiModel {
           ),
           elementKey: $0.elementIdentifier,
           namespace: $0.nameSpace,
-          docType: document.docType)
+          docType: document.docType
+        )
       }
 
     guard mandatoryFields.count > 0 else {
