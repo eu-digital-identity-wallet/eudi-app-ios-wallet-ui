@@ -32,50 +32,18 @@ The released software is a initial development release version:
 We welcome contributions to this project. To ensure that the process is smooth for everyone
 involved, follow the guidelines found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Package structure
+## Demo videos
 
-```mermaid
-graph TD;
-    logic-resources-->logic-ui;
-    logic-business-->logic-ui;
-    logic-business-->logic-api;
-    
-    logic-business-->feature-common;
-    logic-ui-->feature-common;
-    logic-api-->feature-common;
+Issuance
+[Issuance](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/blob/feature/updated-readme-07-02/wiki/issuance.mp4)
 
-    feature-common-->feature-login;
-    feature-common-->feature-dashboard;
-    feature-common-->feature-startup;
+Presentation
+[Presentation](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/blob/feature/updated-readme-07-02/wiki/presentation.mp4)
 
-    feature-login-->logic-navigation;
-    feature-dashboard-->logic-navigation;
-    feature-startup-->logic-navigation;
+Proximity
+[Proximity](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/blob/feature/updated-readme-07-02/wiki/proximity.mp4)
 
-    logic-navigation-->EudiReferenceWallet;
-```
-
-## Creating a new feature module
-
-1. Create a new Swift package library in the Modules subdirectory. Please use the _feature-*{new-addition}*_ format; e.g. **feature-dashboard**
-2. Add this package to the project by dragging it to the Packages directory in the project navigator in xcode.
-3. Add **feature-common** as a dependency so you can take advantage of the existing codebase in your new feature.
-4. Make sure the path in your target points to **./Sources**; **./Tests** for your test target.
-
-If you want to gain access to the entire apps mock infrastructure (classes and structs), so you can leverage it in your unit tests, you can:
-
-1. Add your new package to swiftlint to be ignored:
-    - "Modules/feature-*new-addition*/Tests/*"
-    - "Modules/feature-*new-addition*/.build/*"
-2. Under your Test folder in you package add a Mock folder and place an empty file called GeneratedMocks.swift therein.
-3. Edit *root*/Mock/GenerateMocks.sh, and append your package name to the FEATURE_MODULES variable.
-4. run **./Mock/GenerateMocks.sh** from the project root.
-
-## SwiftUI previews
-
-As of xcode 15.0 preview for SwiftUI view that are located in local swift packages are not reliable.
-
-We recommend using the main target for previews. Please Check **Previewer.swift** for an example that utilises our local package infrastructure to achieve previewing.
+## How to use the application
 
 ## License
 
