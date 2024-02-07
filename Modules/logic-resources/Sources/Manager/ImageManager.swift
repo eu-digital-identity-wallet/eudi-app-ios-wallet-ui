@@ -45,6 +45,7 @@ public protocol ImageManagerProtocol {
   var qrScan: Image { get }
   var photo: Image { get }
   var trash: Image { get }
+  var bluetoothConnect: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -78,6 +79,7 @@ final class ImageManager: ImageManagerProtocol {
     case qrScan = "ic-qr-scanner"
     case photo = "photo.fill"
     case trash = "trash"
+    case bluetoothConnect = "bluetooth-connect"
   }
 
   // MARK: - Properties
@@ -172,5 +174,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var trash: Image {
     Image(systemName: ImageEnum.trash.rawValue)
+  }
+  var bluetoothConnect: Image {
+    Image(ImageEnum.bluetoothConnect.rawValue, bundle: bundle)
   }
 }

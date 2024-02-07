@@ -146,10 +146,18 @@ extension WalletKitControllerType {
   public func mandatoryFields(for documentType: DocumentIdentifier) -> [String] {
     switch documentType {
     case .EuPidDocType:
-      return EuPidModel.pidMandatoryElementKeys
-    case .IsoMdlModel:
-      return IsoMdlModel.isoMandatoryElementKeys
-    case .genericDocument:
+      return [
+        "issuance_date",
+        "expiry_date",
+        "issuing_authority",
+        "document_number",
+        "administrative_number",
+        "issuing_country",
+        "issuing_jurisdiction",
+        "portrait",
+        "portrait_capture_date"
+      ]
+    case .IsoMdlModel, .genericDocument:
       return []
     }
   }
