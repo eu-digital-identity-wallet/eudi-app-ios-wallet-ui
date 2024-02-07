@@ -44,11 +44,11 @@ Issuance
 
 Presentation
 
-[Presentation](wiki/presentation.mp4)
+[Presentation](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/636a4556-4136-49c3-8533-c4f792389b79)
 
 Proximity
 
-[Proximity](wiki/proximity.mp4)
+[Proximity](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/c1a80121-0e5b-4408-a505-7b1fdaa4b015)
 
 ## How to use the application
 
