@@ -45,6 +45,8 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
         addAction: viewModel.onAdd(),
         shareAction: viewModel.onShare()
       )
+
+      VSpacer.small()
     }
     .background(ThemeManager.shared.color.backgroundPaper)
   }
@@ -63,50 +65,54 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
       content()
     }
     .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {
-      VStack(spacing: .zero) {
+      SheetContent {
+        VStack(spacing: .zero) {
 
-        ContentTitle(
-          title: .moreOptions
-        )
-
-        VSpacer.medium()
-
-        Group {
-          WrapButtonView(
-            title: .changeQuickPinOption,
-            backgroundColor: .clear,
-            icon: Theme.shared.image.pencil,
-            gravity: .start,
-            onAction: viewModel.onUpdatePin()
+          ContentTitle(
+            title: .moreOptions
           )
-          WrapButtonView(
-            title: .scanQrCode,
-            backgroundColor: .clear,
-            icon: Theme.shared.image.qrScan,
-            gravity: .start,
-            onAction: viewModel.onShowScanner()
-          )
-        }
 
-        HStack {
-          Spacer()
-          Text(viewModel.viewState.appVersion)
-            .typography(ThemeManager.shared.font.bodyMedium)
-            .foregroundColor(ThemeManager.shared.color.textSecondaryDark)
-          Spacer()
+          VSpacer.medium()
+
+          Group {
+            WrapButtonView(
+              title: .changeQuickPinOption,
+              backgroundColor: .clear,
+              icon: Theme.shared.image.pencil,
+              gravity: .start,
+              onAction: viewModel.onUpdatePin()
+            )
+            WrapButtonView(
+              title: .scanQrCode,
+              backgroundColor: .clear,
+              icon: Theme.shared.image.qrScan,
+              gravity: .start,
+              onAction: viewModel.onShowScanner()
+            )
+          }
+
+          HStack {
+            Spacer()
+            Text(viewModel.viewState.appVersion)
+              .typography(ThemeManager.shared.font.bodyMedium)
+              .foregroundColor(ThemeManager.shared.color.textSecondaryDark)
+            Spacer()
+          }
         }
       }
     }
     .sheetDialog(isPresented: $viewModel.isBleModalShowing) {
-      VStack(spacing: SPACING_MEDIUM) {
+      SheetContent {
+        VStack(spacing: SPACING_MEDIUM) {
 
-        ContentTitle(
-          title: .bleDisabledModalTitle,
-          caption: .bleDisabledModalCaption
-        )
+          ContentTitle(
+            title: .bleDisabledModalTitle,
+            caption: .bleDisabledModalCaption
+          )
 
-        WrapButtonView(style: .primary, title: .bleDisabledModalButton, onAction: viewModel.onBleSettings())
-        WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.toggleBleModal())
+          WrapButtonView(style: .primary, title: .bleDisabledModalButton, onAction: viewModel.onBleSettings())
+          WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.toggleBleModal())
+        }
       }
     }
     .task {

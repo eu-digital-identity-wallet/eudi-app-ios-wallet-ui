@@ -88,7 +88,7 @@ final class ProximityRequestViewModel<Router: RouterHostType, Interactor: Proxim
       config: UIConfig.Biometry(
         title: getTitle(),
         caption: .requestDataShareBiometryCaption,
-        quickPinOnlyCaption: .requestDataShareBiometryCaption,
+        quickPinOnlyCaption: .requestDataShareQuickPinCaption,
         navigationSuccessConfig: .init(
           navigationType: .push(
             .proximityLoader(

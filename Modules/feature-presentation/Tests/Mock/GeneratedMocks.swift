@@ -7483,6 +7483,16 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import SwiftUI
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
 import PartialSheet
 import SwiftUI
 import logic_resources

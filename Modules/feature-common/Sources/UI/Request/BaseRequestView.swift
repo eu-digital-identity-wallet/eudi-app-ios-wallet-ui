@@ -113,39 +113,45 @@ public struct BaseRequestView<Router: RouterHostType>: View {
       footer
     }
     .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
-      VStack(spacing: SPACING_MEDIUM) {
+      SheetContent {
+        VStack(spacing: SPACING_MEDIUM) {
 
-        ContentTitle(
-          title: .cancelShareSheetTitle,
-          caption: .cancelShareSheetCaption
-        )
+          ContentTitle(
+            title: .cancelShareSheetTitle,
+            caption: .cancelShareSheetCaption
+          )
 
-        WrapButtonView(style: .primary, title: .cancelShareSheetContinue, onAction: viewModel.onShowCancelModal())
-        WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.onPop())
+          WrapButtonView(style: .primary, title: .cancelShareSheetContinue, onAction: viewModel.onShowCancelModal())
+          WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.onPop())
+        }
       }
     }
     .sheetDialog(isPresented: $viewModel.isRequestInfoModalShowing) {
-      VStack(spacing: SPACING_MEDIUM) {
+      SheetContent {
+        VStack(spacing: SPACING_MEDIUM) {
 
-        ContentTitle(
-          title: .requestDataInfoNotice,
-          caption: .requestDataSheetCaption
-        )
+          ContentTitle(
+            title: .requestDataInfoNotice,
+            caption: .requestDataSheetCaption
+          )
 
-        WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onShowRequestInfoModal())
+          WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onShowRequestInfoModal())
+        }
       }
     }
-    .sheetDialog(isPresented: $viewModel.isVerifiedEntityModalShowing, {
-      VStack(spacing: SPACING_MEDIUM) {
+    .sheetDialog(isPresented: $viewModel.isVerifiedEntityModalShowing) {
+      SheetContent {
+        VStack(spacing: SPACING_MEDIUM) {
 
-        ContentTitle(
-          title: viewModel.getTrustedRelyingParty(),
-          caption: viewModel.getTrustedRelyingPartyInfo()
-        )
+          ContentTitle(
+            title: viewModel.getTrustedRelyingParty(),
+            caption: viewModel.getTrustedRelyingPartyInfo()
+          )
 
-        WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onVerifiedEntityModal())
+          WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onVerifiedEntityModal())
+        }
       }
-    })
+    }
     .task {
       await viewModel.doWork()
     }

@@ -27,6 +27,7 @@ struct BiometryState: ViewState {
   let autoBiometryInitiated: Bool
   let biometryImage: Image?
   let isCancellable: Bool
+  let quickPinSize: Int
 }
 
 @MainActor
@@ -61,7 +62,8 @@ final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryIntera
         pendingNavigation: nil,
         autoBiometryInitiated: false,
         biometryImage: interactor.biometricsImage,
-        isCancellable: config.navigationBackConfig != nil
+        isCancellable: config.navigationBackConfig != nil,
+        quickPinSize: 6
       )
     )
 
@@ -133,7 +135,7 @@ final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryIntera
   }
 
   private func processPin(value: String) {
-    if value.count == 4 {
+    if value.count == viewState.quickPinSize {
       switch interactor.isPinValid(with: uiPinInputField) {
       case .success:
         self.authenticated()
@@ -182,7 +184,8 @@ final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryIntera
           pendingNavigation: pendingNavigation ?? previous.pendingNavigation,
           autoBiometryInitiated: autoBiometryInitiated ?? previous.autoBiometryInitiated,
           biometryImage: previous.biometryImage,
-          isCancellable: previous.isCancellable
+          isCancellable: previous.isCancellable,
+          quickPinSize: previous.quickPinSize
         )
     }
   }
