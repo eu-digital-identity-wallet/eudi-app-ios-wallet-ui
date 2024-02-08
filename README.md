@@ -18,6 +18,30 @@ The EUDI Wallet Reference Implementation is the application that allows users to
 2. Verify presentations.
 3. Share data on proximity scenarios.
 
+The EUDIW project provides through this repository an iOS app.
+ 
+The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit) and a list of available libraries to faciliate remote presentation, proximity and issuing test/demo functionality following specification of the [ARF]() including:
+ 
+OID4VP draft 19 (remote presentation), presentation exchange v2.0,
+ 
+ISO18013-5 (proximity presentation),
+ 
+OID4VCI draft 12 (issuing)
+ 
+Issuer functionality, to support development and testing, one can access a OID4VCI test/demo service for issuing at https://issuer.eudiw.dev/oidc. 
+
+[Issuer repository](https://github.com/eu-digital-identity-wallet/eudi-srv-pid-issuer)
+ 
+Relying Party functionality:
+ 
+To support development and testing, one can access a test/demo service for remote presentation at https://verifier.eudiw.dev. 
+
+[Web verifier](https://github.com/eu-digital-identity-wallet/eudi-web-verifier)
+
+ [Verifier resyful backend service](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt).
+ 
+To support proximity an Android Proximity Verifier is available as an app that can request PID and mDL with reader authentication available [here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/mdoc-verifier-testing/distribution_groups/eudi%20verifier%20(testing)%20public)
+
 ## Disclaimer
 
 The released software is a initial development release version: 
@@ -51,6 +75,10 @@ Proximity
 [Proximity](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/01c15157-464a-4da5-8b0a-503943e3864f)
 
 ## How to use the application
+
+Minumum device requirements
+
+Any device that supports iOS 15.0
 
 Prerequisites
 
@@ -97,7 +125,7 @@ If you want to re-issue a document you must delete it first by tapping on the do
 
 Presentation (Online authentication/Same device) flow.
 
-1. Go to the browser application on your device and enter "https://dev.verifier.eudiw.dev/"
+1. Go to the browser application on your device and enter "https://verifier.eudiw.dev"
 2. Tap the first option (selectable) and pick the fields you want to share (e.g. "Family Name" and "Given Name")
 3. Tap "Next" and then "Authorize".
 4. When asked to open the wallet app tap "Open".
@@ -124,6 +152,60 @@ Proximity flow
 ## Application configuration
 
 You can find instructions on how to configure the application [here](wiki/configuration.md)
+
+## Package structure
+
+*logic-resources*: All app resources reside here (images, etc.)
+
+*logic-analytics*: Access to analytics providers.
+
+*logic-business*: App business logic, wallet core resides here.
+
+*logic-ui*: Common UI components.
+
+*feature-common*: Code that is common to all features.
+
+*feature-login*: Login feature.
+
+*feature-dashboard*: The application main screen.
+
+*feature-startup*: The initial screen of the app.
+
+*feature-presentation*: Online authentication feature.
+
+*feature-issuance*: Document issuance feature.
+
+*feature-proximity*: Proximity scenarions feature.
+
+*logic-navigation*: This module has access to all the above modules.
+
+```mermaid
+graph TD;
+    logic-resources-->logic-ui;
+    logic-analytics-->logic-business;
+    logic-business-->logic-ui;
+    logic-business-->logic-api;
+    
+    logic-business-->feature-common;
+    logic-ui-->feature-common;
+    logic-api-->feature-common;
+
+    feature-common-->feature-login;
+    feature-common-->feature-dashboard;
+    feature-common-->feature-startup;
+    feature-common-->feature-presentation;
+    feature-common-->feature-issuance;
+    feature-common-->feature-proximity;
+
+    feature-login-->logic-navigation;
+    feature-dashboard-->logic-navigation;
+    feature-startup-->logic-navigation;
+    feature-presentation-->logic-navigation;
+    feature-issuance-->logic-navigation;
+    feature-proximity-->logic-navigation;
+
+    logic-navigation-->EudiReferenceWallet;
+```
 
 ## License
 
