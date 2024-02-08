@@ -74,7 +74,7 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
         isLoading: viewModel.viewState.isLoading,
         onAction: viewModel.onContinue()
       )
-      .padding(.horizontal)
+      .padding([.horizontal, .bottom])
     }
   }
 
@@ -97,23 +97,25 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
       content()
     }
     .sheetDialog(isPresented: $viewModel.isDeletionModalShowing) {
-      VStack(spacing: SPACING_MEDIUM) {
+      SheetContent {
+        VStack(spacing: SPACING_MEDIUM) {
 
-        ContentTitle(
-          title: .issuanceDetailsDeletionTitle([viewModel.viewState.document.documentName]),
-          caption: .issuanceDetailsDeletionCaption([viewModel.viewState.document.documentName])
-        )
+          ContentTitle(
+            title: .issuanceDetailsDeletionTitle([viewModel.viewState.document.documentName]),
+            caption: .issuanceDetailsDeletionCaption([viewModel.viewState.document.documentName])
+          )
 
-        WrapButtonView(
-          style: .primary,
-          title: .yes,
-          onAction: viewModel.onDeleteDocument()
-        )
-        WrapButtonView(
-          style: .secondary,
-          title: .no,
-          onAction: viewModel.onShowDeleteModal()
-        )
+          WrapButtonView(
+            style: .primary,
+            title: .yes,
+            onAction: viewModel.onDeleteDocument()
+          )
+          WrapButtonView(
+            style: .secondary,
+            title: .no,
+            onAction: viewModel.onShowDeleteModal()
+          )
+        }
       }
     }
     .task {

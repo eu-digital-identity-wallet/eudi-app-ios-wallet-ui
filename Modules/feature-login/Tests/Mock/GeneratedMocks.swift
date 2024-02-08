@@ -255,6 +255,7 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
+import feature_common
 import logic_ui
 
 import Cuckoo
@@ -7419,6 +7420,16 @@ import Cuckoo
 
 import Foundation
 import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
 
 import Cuckoo
 @testable import logic_business
