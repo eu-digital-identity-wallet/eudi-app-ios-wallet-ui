@@ -22,23 +22,25 @@ The EUDIW project provides through this repository an iOS app.
  
 The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit) and a list of available libraries to faciliate remote presentation, proximity and issuing test/demo functionality following specification of the [ARF](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework) including:
  
-OID4VP draft 19 (remote presentation), presentation exchange v2.0,
+- OID4VP draft 19 (remote presentation), presentation exchange v2.0,
  
-ISO18013-5 (proximity presentation),
+- ISO18013-5 (proximity presentation),
  
-OID4VCI draft 12 (issuing)
+- OID4VCI draft 12 (issuing)
  
-Issuer functionality, to support development and testing, one can access a OID4VCI test/demo service for issuing at https://issuer.eudiw.dev/oidc. 
+- Issuer functionality, to support development and testing, one can access a OID4VCI test/demo service for issuing at: 
+  - https://issuer.eudiw.dev/oidc. 
 
-[Issuer repository](https://github.com/eu-digital-identity-wallet/eudi-srv-pid-issuer)
+  - [Issuer source repository](https://github.com/eu-digital-identity-wallet/eudi-srv-pid-issuer)
  
 Relying Party functionality:
  
-To support development and testing, one can access a test/demo service for remote presentation at https://verifier.eudiw.dev. 
+To support development and testing, one can access a test/demo service for remote presentation at:
+  - https://verifier.eudiw.dev. 
 
-[Web verifier](https://github.com/eu-digital-identity-wallet/eudi-web-verifier)
+  - [Web verifier source](https://github.com/eu-digital-identity-wallet/eudi-web-verifier)
 
- [Verifier resyful backend service](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt).
+  - [Verifier resyful backend service source](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt).
  
 To support proximity an Android Proximity Verifier is available as an app that can request PID and mDL with reader authentication available [here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/mdoc-verifier-testing/distribution_groups/eudi%20verifier%20(testing)%20public)
 
@@ -80,7 +82,7 @@ Proximity
 
 Minumum device requirements
 
-Any device that supports iOS 15.0
+- Any device that supports iOS 15.0
 
 Prerequisites
 
@@ -159,7 +161,7 @@ You can find instructions on how to configure the application [here](wiki/config
 
 *logic-resources*: All app resources reside here (images, etc.)
 
-*logic-analytics*: Access to analytics providers.
+*logic-analytics*: Access to analytics providers. Capabilities for test monitoring analytics (i.e. crashes) can be added here (no functionality right now)
 
 *logic-business*: App business logic, wallet core resides here.
 
@@ -183,30 +185,7 @@ You can find instructions on how to configure the application [here](wiki/config
 
 ```mermaid
 graph TD;
-    logic-resources-->logic-ui;
-    logic-analytics-->logic-business;
-    logic-business-->logic-ui;
-    logic-business-->logic-api;
-    
-    logic-business-->feature-common;
-    logic-ui-->feature-common;
-    logic-api-->feature-common;
-
-    feature-common-->feature-login;
-    feature-common-->feature-dashboard;
-    feature-common-->feature-startup;
-    feature-common-->feature-presentation;
-    feature-common-->feature-issuance;
-    feature-common-->feature-proximity;
-
-    feature-login-->logic-navigation;
-    feature-dashboard-->logic-navigation;
-    feature-startup-->logic-navigation;
-    feature-presentation-->logic-navigation;
-    feature-issuance-->logic-navigation;
-    feature-proximity-->logic-navigation;
-
-    logic-navigation-->EudiReferenceWallet;
+    Logic-modules/logic-resources,logic-ui,logic-business,logic-api/-->Feature-modules/feature-common,feature-login,feature-dashboard,feature-startup,feature-presentation,feature-issuance,feature-proximity/;
 ```
 
 ## License
