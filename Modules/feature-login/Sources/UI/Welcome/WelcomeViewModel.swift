@@ -15,6 +15,7 @@
  */
 import Foundation
 import logic_ui
+import feature_common
 
 struct WelcomeState: ViewState {
   let isAnimating: Bool
@@ -43,7 +44,7 @@ final class WelcomeViewModel<Router: RouterHostType, Interactor: WelcomeInteract
   }
 
   func onClickLogin() {
-    router.push(with: .dashboard)
+    router.push(with: .quickPin(config: QuickPinUiConfig(flow: .set)))
   }
 
   private func setNewState(

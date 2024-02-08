@@ -31,7 +31,7 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
 
       PinTextField(
         numericText: $viewModel.uiPinInputField,
-        maxDigits: 4,
+        maxDigits: viewModel.viewState.quickPinSize,
         isSecureEntry: true,
         canFocus: .constant(!viewModel.viewState.areBiometricsEnabled),
         shouldUseFullScreen: false,

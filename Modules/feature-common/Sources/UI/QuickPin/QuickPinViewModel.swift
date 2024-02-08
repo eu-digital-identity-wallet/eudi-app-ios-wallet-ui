@@ -35,6 +35,7 @@ struct QuickPinState: ViewState {
   let pinError: LocalizableString.Key?
   let isButtonActive: Bool
   let step: QuickPinStep
+  let quickPinSize: Int
 }
 
 @MainActor
@@ -69,7 +70,8 @@ final class QuickPinViewModel<Router: RouterHostType, Interactor: QuickPinIntera
         isCancellable: config.isUpdateFlow,
         pinError: nil,
         isButtonActive: false,
-        step: config.isSetFlow ? .firstInput : .validate
+        step: config.isSetFlow ? .firstInput : .validate,
+        quickPinSize: 6
       )
     )
 
@@ -152,7 +154,7 @@ final class QuickPinViewModel<Router: RouterHostType, Interactor: QuickPinIntera
   private func processPin(value: String) {
     setNewState(
       pinError: nil,
-      isButtonActive: value.count == 4
+      isButtonActive: value.count == viewState.quickPinSize
     )
   }
 
@@ -175,7 +177,8 @@ final class QuickPinViewModel<Router: RouterHostType, Interactor: QuickPinIntera
           isCancellable: previous.isCancellable,
           pinError: pinError,
           isButtonActive: isButtonActive ?? previous.isButtonActive,
-          step: step ?? previous.step
+          step: step ?? previous.step,
+          quickPinSize: previous.quickPinSize
         )
     }
   }
