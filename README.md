@@ -62,6 +62,8 @@ involved, follow the guidelines found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Demo videos
 
+_(NOTE: These videos are from the Android version)_
+
 Issuance
 
 [Issuance](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/1c0eb50c-1caf-4b66-a326-5f9f408656b8)
