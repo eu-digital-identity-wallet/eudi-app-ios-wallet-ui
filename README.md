@@ -5,14 +5,54 @@
 * [Overview](#overview)
 * [Disclaimer](#disclaimer)
 * [How to contribute](#how-to-contribute)
-* [Package structure](#package-structure)
-* [Creating a new feature module](#creating-a-new-feature-module)
-* [SwiftUI Previews](#swiftui-previews)
+* [Demo videos](#demo-videos)
+* [How to use the application](#how-to-use-the-application)
+* [Application configuration](#application-configuration)
 * [License](#license)
 
 ## Overview
 
-Comming soon...
+The EUDI Wallet Reference Implementation is built based on the Architecture Reference Framework and aims at showcasing a robust and interoperable platform for digital identification, authentication and electronic signatures based on common standards across the European Union.
+The EUDI Wallet Reference Implementation is based on a modular architecture composed of a set of business agnostic, re-usable components which will be evolved in incremental steps and can be re-used across multiple projects.
+
+The EUDI Wallet Reference Implementation is the application that allows users to:
+
+1. To obtain, store and, present PID and mDL.
+2. Verify presentations.
+3. Share data on proximity scenarios.
+4. Support remote QES and more use cases with the modules included.
+
+The EUDIW project provides through this repository an iOS app. Please refer to the repositories listed in the following sections for more detailed information on how to get started, contribute, and engage with the EUDI Wallet Reference Implementation.
+ 
+# 💡 Specifications Employed
+
+The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit) and a list of available libraries to faciliate remote presentation, proximity and issuing test/demo functionality following specification of the [ARF](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework) including:
+ 
+- OID4VP draft 19 (remote presentation), presentation exchange v2.0,
+ 
+- ISO18013-5 (proximity presentation),
+ 
+- OID4VCI draft 12 (issuing)
+ 
+- Issuer functionality, to support development and testing, one can access a OID4VCI test/demo service for issuing at: 
+  - ```https://issuer.eudiw.dev/oidc.```
+
+  - [OpenID4VCI PID and mDL Issuer (python)](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py)
+ 
+  - [OpenID4VCI PID and mDL Issuer (kotlin)](https://github.com/eu-digital-identity-wallet/eudi-srv-pid-issuer)
+ 
+Relying Party functionality:
+ 
+To support development and testing, one can access a test/demo service for remote presentation at:
+  - https://verifier.eudiw.dev. 
+
+  - [Web verifier source](https://github.com/eu-digital-identity-wallet/eudi-web-verifier)
+
+  - [Verifier restful backend service source](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt).
+ 
+To support proximity an Android Proximity Verifier is available as an app that can request PID and mDL with reader authentication available [here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/mdoc-verifier-testing/distribution_groups/eudi%20verifier%20(testing)%20public)
+
+The issuer, verifier service and verifier app authentication are based on the EUDIW development [IACA](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/tree/main/Wallet/Sample)
 
 ## Disclaimer
 
@@ -32,56 +72,133 @@ The released software is a initial development release version:
 We welcome contributions to this project. To ensure that the process is smooth for everyone
 involved, follow the guidelines found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Demo videos
+
+_(NOTE: These videos are from the Android version)_
+
+Issuance
+
+[Issuance](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/01846fe5-6e57-407c-8e40-6970b36ac6bb)
+
+Presentation
+
+[Presentation](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/f6821b6e-ac2b-4a9f-9fb6-4084fd94ec41)
+
+Proximity
+
+[Proximity](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/156cbc97-7271-451b-8802-b64af250975d)
+
+## How to use the application
+
+Minumum device requirements
+
+- Any device that supports iOS 15.0
+
+Prerequisites
+
+In order to complete the flows described below you will to build and run the application with xcode. Clone this repo and make sure you have access to the dependencies below:
+
+_(NOTE: As of 7/2/2024 the iOS app is not available to download. However, in addition to building the app from source, you can also use the Android app which you can download *[here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/eudi-reference-android/distribution_groups/eudi%20wallet%20(demo)%20public)*)_
+
+[iso18013-data-model](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git)
+
+[iso18013-data-transfer](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git)
+
+[iso18013-security](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git)
+
+[wallet-storage.](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git)
+
+[wallet-kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit)
+
+[openid4vp-swift](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git)
+
+[presentation-exchange-swift](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-presentation-exchange-swift.git)
+
+[openid4vci-swift](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift)
+
+You will also need to download the Android Verifier app [here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/mdoc-verifier-testing/distribution_groups/eudi%20verifier%20(testing)%20public)
+
+App launch
+
+1. Launch the application
+2. You will be presented with a welcome screen were you will be asked to create a PIN for future logins.
+
+Issuance flow
+
+1. Then you will be shown the "Add document" screen.
+2. Pick "National ID".
+3. From the web view that appears select the "FormEU" option and tap submit.
+4. Fill in the form. Any data will do.
+5. You will be shown a success screen. Tap next.
+6. Your "National ID" is displayed. Tap "Continue".
+7. You are now in the "Dashboard" screen.
+
+Here you can tap "Add doc" and issue a new document, e.g. "Driving License".
+
+If you want to re-issue a document you must delete it first by tapping on the document in the "Dashboard" screen and tapping the delete icon in the "Document details" view.
+
+Presentation (Online authentication/Same device) flow.
+
+1. Go to the browser application on your device and enter "https://verifier.eudiw.dev"
+2. Tap the first option (selectable) and pick the fields you want to share (e.g. "Family Name" and "Given Name")
+3. Tap "Next" and then "Authorize".
+4. When asked to open the wallet app tap "Open".
+5. You will be taken back to the app to the "Request" screen. Tap "Share".
+6. Enter the PIN you added in the initail steps.
+7. On success tap "Continue".
+8. A browser will open showing that the Verifier has accepted your request.
+9. Return to the app. You are back to the "Dashboard" screen and the flow is complete.
+
+Proximity flow
+
+1. User logs in successfully to EUDI Wallet app and views the dashboard.
+2. User clicks the 'SHOW QR' button in order to display the QR code.
+3. Relying Party scans the presented QR code.
+4. EUDI Wallet User can view the set of requested data from the relying party.
+
+    1. The distinction between mandatory and optional data elements is depicted.
+    2. The requestor (i.e. relying party) of the data is depicted.
+    3. EUDI Wallet User may select additional optional attributes to be shared.
+5. EUDI Wallet User selects the option to share the attributes.
+6. EUDI Wallet authenticates to share data (quick PIN).
+7. User authorization is accepted - a corresponding message is displayed to the  EUDI Wallet User.
+
+## Application configuration
+
+You can find instructions on how to configure the application [here](wiki/configuration.md)
+
 ## Package structure
+
+*logic-resources*: All app resources reside here (images, etc.)
+
+*logic-analytics*: Access to analytics providers. Capabilities for test monitoring analytics (i.e. crashes) can be added here (no functionality right now)
+
+*logic-business*: App business logic, wallet core resides here.
+
+*logic-ui*: Common UI components.
+
+*feature-common*: Code that is common to all features.
+
+*feature-login*: Login feature.
+
+*feature-dashboard*: The application main screen.
+
+*feature-startup*: The initial screen of the app.
+
+*feature-presentation*: Online authentication feature.
+
+*feature-issuance*: Document issuance feature.
+
+*feature-proximity*: Proximity scenarions feature.
+
+*logic-navigation*: This module has access to all the above modules.
 
 ```mermaid
 graph TD;
-    logic-resources-->logic-ui;
-    logic-business-->logic-ui;
-    logic-business-->logic-api;
-    
-    logic-business-->feature-common;
-    logic-ui-->feature-common;
-    logic-api-->feature-common;
-
-    feature-common-->feature-login;
-    feature-common-->feature-dashboard;
-    feature-common-->feature-startup;
-
-    feature-login-->logic-navigation;
-    feature-dashboard-->logic-navigation;
-    feature-startup-->logic-navigation;
-
-    logic-navigation-->EudiReferenceWallet;
+    Logic-modules/logic-resources,logic-ui,logic-business,logic-api/-->Feature-modules/feature-common,feature-login,feature-dashboard,feature-startup,feature-presentation,feature-issuance,feature-proximity/;
 ```
 
-## Creating a new feature module
-
-1. Create a new Swift package library in the Modules subdirectory. Please use the _feature-*{new-addition}*_ format; e.g. **feature-dashboard**
-2. Add this package to the project by dragging it to the Packages directory in the project navigator in xcode.
-3. Add **feature-common** as a dependency so you can take advantage of the existing codebase in your new feature.
-4. Make sure the path in your target points to **./Sources**; **./Tests** for your test target.
-
-If you want to gain access to the entire apps mock infrastructure (classes and structs), so you can leverage it in your unit tests, you can:
-
-1. Add your new package to swiftlint to be ignored:
-    - "Modules/feature-*new-addition*/Tests/*"
-    - "Modules/feature-*new-addition*/.build/*"
-2. Under your Test folder in you package add a Mock folder and place an empty file called GeneratedMocks.swift therein.
-3. Edit *root*/Mock/GenerateMocks.sh, and append your package name to the FEATURE_MODULES variable.
-4. run **./Mock/GenerateMocks.sh** from the project root.
-
-## SwiftUI previews
-
-As of xcode 15.0 preview for SwiftUI view that are located in local swift packages are not reliable.
-
-We recommend using the main target for previews. Please Check **Previewer.swift** for an example that utilises our local package infrastructure to achieve previewing.
-
 ## License
-
-### Third-party component
-
-Coming soon....
 
 ### License details
 
