@@ -70,7 +70,7 @@ final class PresentationRequestViewModel<Router: RouterHostType, Interactor: Pre
       config: UIConfig.Biometry(
         title: getTitle(),
         caption: .requestDataShareBiometryCaption,
-        quickPinOnlyCaption: .requestDataShareBiometryCaption,
+        quickPinOnlyCaption: .requestDataShareQuickPinCaption,
         navigationSuccessConfig: .init(
           navigationType: .push(
             .presentationLoader(

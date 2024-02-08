@@ -36,10 +36,7 @@ public struct WelcomeView<Router: RouterHostType, Interactor: WelcomeInteractorT
       VStack {
         ZStack {
           Rectangle()
-            .fill(viewModel.viewState.isAnimating
-                  ? Theme.shared.color.primary
-                  : Theme.shared.color.backgroundPaper
-            )
+            .fill(Theme.shared.color.backgroundPaper)
             .ignoresSafeArea()
 
           SplashBackground(

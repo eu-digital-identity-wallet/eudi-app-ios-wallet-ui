@@ -56,24 +56,26 @@ public struct QuickPinView<Router: RouterHostType, Interactor: QuickPinInteracto
       )
     }
     .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
-      VStack(spacing: SPACING_MEDIUM) {
+      SheetContent {
+        VStack(spacing: SPACING_MEDIUM) {
 
-        ContentTitle(
-          title: .quickPinUpdateCancellationTitle,
-          caption: .quickPinUpdateCancellationCaption
-        )
+          ContentTitle(
+            title: .quickPinUpdateCancellationTitle,
+            caption: .quickPinUpdateCancellationCaption
+          )
 
-        WrapButtonView(
-          style: .primary,
-          title: .quickPinUpdateCancellationContinue,
-          onAction:
-            viewModel.onShowCancellationModal()
-        )
-        WrapButtonView(
-          style: .secondary,
-          title: .cancelButton,
-          onAction: viewModel.onPop()
-        )
+          WrapButtonView(
+            style: .primary,
+            title: .quickPinUpdateCancellationContinue,
+            onAction:
+              viewModel.onShowCancellationModal()
+          )
+          WrapButtonView(
+            style: .secondary,
+            title: .cancelButton,
+            onAction: viewModel.onPop()
+          )
+        }
       }
     }
   }
@@ -83,7 +85,7 @@ public struct QuickPinView<Router: RouterHostType, Interactor: QuickPinInteracto
 
       PinTextField(
         numericText: $viewModel.uiPinInputField,
-        maxDigits: 4,
+        maxDigits: viewModel.viewState.quickPinSize,
         isSecureEntry: true,
         canFocus: .constant(true),
         shouldUseFullScreen: false,

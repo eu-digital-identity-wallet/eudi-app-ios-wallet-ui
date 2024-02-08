@@ -28,7 +28,6 @@ struct Application: App {
 
   @State var isScreenCapping: Bool = false
   @State var blurType: BlurType = .none
-  @State var shouldAddBottomPadding: Bool = false
   @State var toolbarConfig: UIConfig.ToolBar = .init(Theme.shared.color.backgroundPaper)
 
   private let routerHost: RouterHostType
@@ -58,9 +57,7 @@ struct Application: App {
           )
 
         routerHost.composeApplication()
-          .if(self.shouldAddBottomPadding == false) {
-            $0.ignoresSafeArea(edges: .bottom)
-          }
+          .ignoresSafeArea(edges: .bottom)
           .attachPartialSheetToRoot()
 
         if isScreenCapping {
@@ -101,9 +98,6 @@ struct Application: App {
       .onReceive(NotificationCenter.default.publisher(for: .shouldChangeBackgroundColor), perform: { _ in
         self.toolbarConfig = routerHost.getToolbarConfig()
       })
-      .task {
-        await checkForHomeIndicator()
-      }
     }
   }
 
@@ -121,13 +115,6 @@ struct Application: App {
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(ThemeManager.shared.color.backgroundPaper)
     .edgesIgnoringSafeArea(.all)
-  }
-
-  private func checkForHomeIndicator() async {
-    try? await Task.sleep(nanoseconds: 1_000_000_000)
-    if UIDevice.current.uiHomeIndicator == .unavailable {
-      self.shouldAddBottomPadding = true
-    }
   }
 }
 
