@@ -69,15 +69,15 @@ _(NOTE: These videos are from the Android version)_
 
 Issuance
 
-[Issuance](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/39c546c5-f92d-489c-a81f-5f5ed2805b5e)
+[Issuance](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/7425358b-5034-4685-8477-4e8a4f9efb4e)
 
 Presentation
 
-[Presentation](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/4dc52f0b-9551-4c2d-8181-2f67c54f5ac8)
+[Presentation](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/a4399329-0af6-4980-961f-b5e0559cd8ec)
 
 Proximity
 
-[Proximity](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/a9901a13-7534-424f-bdbd-208791ea1c84)
+[Proximity](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/5413a7fd-fd34-44ae-baf5-be5fdfe92f2c)
 
 ## How to use the application
 
