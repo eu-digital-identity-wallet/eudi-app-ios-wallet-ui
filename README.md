@@ -52,7 +52,7 @@ To support development and testing, one can access a test/demo service for remot
  
 To support proximity an Android Proximity Verifier is available as an app that can request PID and mDL with reader authentication available [here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/mdoc-verifier-testing/distribution_groups/eudi%20verifier%20(testing)%20public)
 
-The issuer, verifier service and verifier app authentication are based on the EUDIW development [IACA](https://github.com/niscy-eudiw/eudi-app-android-wallet-ui/tree/main/resources-logic/src/main/res/raw)
+The issuer, verifier service and verifier app authentication are based on the EUDIW development [IACA](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/tree/main/Wallet/Sample)
 
 ## Disclaimer
 
