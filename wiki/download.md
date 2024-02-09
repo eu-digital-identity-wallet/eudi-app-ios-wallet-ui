@@ -7,3 +7,5 @@
 2. You will receive an app center invitation.
 
 3. Please allow 2 - 3 days after invite acceptance to be able to download the app.
+
+_NOTE: Upon invite reception, you might be asked to create an app center account if you do not already have one_
