@@ -9,3 +9,5 @@
 3. Please allow 2 - 3 days after invite acceptance to be able to download the app.
 
 _NOTE: Upon invite reception, you might be asked to create an app center account if you do not already have one_
+
+If you have any issue installing the app after you receive an invite please visit [this support link](https://learn.microsoft.com/en-us/appcenter/distribution/testers/testing-ios)
