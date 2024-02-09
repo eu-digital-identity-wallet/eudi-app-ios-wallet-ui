@@ -96,9 +96,19 @@ Minumum device requirements
 
 Prerequisites
 
-In order to complete the flows described below you will to build and run the application with xcode. Clone this repo and make sure you have access to the dependencies below:
+In order to complete the flows described below you will need to build and run the application with xcode. Alternatively you can directly download the app onto you device with the two methods described below.
 
-_(NOTE: As of 7/2/2024 the iOS app is not available to download. However, in addition to building the app from source, you can also use the Android app which you can download *[here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/eudi-reference-android/distribution_groups/eudi%20wallet%20(demo)%20public)*)_
+App center downlaod method (Android app)
+
+In addition to building the app from source, you can also use the Android app which you can download *[here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/eudi-reference-android/distribution_groups/eudi%20wallet%20(demo)%20public)*
+
+Alternative download method (iOS app)
+
+It is possible, while following the instructions [here](wiki/download.md) to download and install the iOS application directly from Appcenter. There are only a limited number of available download slots, so being able to download the app is based on availability as is not guaranteed. 
+
+Run the app from source
+
+Clone this repo and make sure you have access to the dependencies below:
 
 [iso18013-data-model](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git)
 
