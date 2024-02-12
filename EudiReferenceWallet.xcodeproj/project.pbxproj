@@ -196,7 +196,7 @@
 		F14907B02ABAF54B00DDFE56 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = NO;
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1520;
 				TargetAttributes = {
