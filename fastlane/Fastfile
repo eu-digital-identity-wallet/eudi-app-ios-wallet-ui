@@ -14,6 +14,7 @@ platform :ios do
 
     versionName = get_version_number(
       target: ENV["APP_TARGET"],
+      configuration: ENV["APP_VERSION_CONFIG"]
     )
 
     appcenter_build_number = latest_appcenter_release(
