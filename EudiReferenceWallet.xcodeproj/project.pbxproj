@@ -369,7 +369,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet Dev";
+				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -472,7 +472,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet Dev";
+				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
