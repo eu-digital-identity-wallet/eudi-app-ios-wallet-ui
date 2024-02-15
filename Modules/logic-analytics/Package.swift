@@ -34,7 +34,7 @@ let package = Package(
       path: "./Sources"
     ),
     .testTarget(
-      name: "logic-analytics-test",
+      name: "logic-analytics-tests",
       dependencies: [
         "logic-analytics",
         "logic-test"

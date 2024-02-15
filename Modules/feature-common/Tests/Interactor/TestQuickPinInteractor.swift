@@ -34,7 +34,7 @@ final class TestQuickPinInteractor: EudiTest {
     self.keyChainController = nil
   }
   
-  func testSetPin_WhenNewPinIsSet_ThenVerifyKeychainStoreValue() {
+  func testSetPin_WhenNewPinIsSet_ThenVerifyAtLeastOnce() {
     
     // Given
     let pin = "1234"

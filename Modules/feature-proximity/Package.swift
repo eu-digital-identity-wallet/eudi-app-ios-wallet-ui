@@ -24,7 +24,7 @@ let package = Package(
       path: "./Sources"
     ),
     .testTarget(
-      name: "feature-proximityTests",
+      name: "feature-proximity-tests",
       dependencies: [
         "feature-proximity",
         "feature-common",

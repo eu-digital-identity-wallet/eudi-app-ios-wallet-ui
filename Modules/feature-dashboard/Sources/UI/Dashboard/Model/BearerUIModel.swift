@@ -17,9 +17,13 @@ import SwiftUI
 import logic_resources
 import MdocDataModel18013
 import UIKit
+import logic_business
 
-public struct BearerUIModel: Identifiable {
-  public let id: String
+public struct BearerUIModel: Identifiable, Equatable {
+
+  @EquatableNoop
+  public var id: String
+
   public let value: Value
 
   public init(id: String, value: Value) {
@@ -30,7 +34,7 @@ public struct BearerUIModel: Identifiable {
 
 public extension BearerUIModel {
 
-  struct Value {
+  struct Value: Equatable {
     public let name: String
     public let image: Image
   }

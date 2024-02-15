@@ -31,7 +31,7 @@ let package = Package(
       path: "./Sources"
     ),
     .testTarget(
-      name: "feature-common-test",
+      name: "feature-common-tests",
       dependencies: [
         "feature-common",
         "logic-business",
