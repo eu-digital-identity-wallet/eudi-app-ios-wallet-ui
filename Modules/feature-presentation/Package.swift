@@ -24,7 +24,7 @@ let package = Package(
       path: "./Sources"
     ),
     .testTarget(
-      name: "feature-presentationTests",
+      name: "feature-presentation-tests",
       dependencies: [
         "feature-presentation",
         "feature-common",

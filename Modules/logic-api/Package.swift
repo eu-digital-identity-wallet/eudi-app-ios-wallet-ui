@@ -42,7 +42,7 @@ let package = Package(
       path: "./Sources"
     ),
     .testTarget(
-      name: "logic-api-test",
+      name: "logic-api-tests",
       dependencies: [
         "logic-analytics",
         "logic-business",

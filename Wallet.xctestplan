@@ -18,34 +18,6 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:Modules\/feature-startup",
-        "identifier" : "feature-startup-test",
-        "name" : "feature-startup-test"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:Modules\/logic-api",
-        "identifier" : "logic-api-test",
-        "name" : "logic-api-test"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:Modules\/logic-business",
-        "identifier" : "logic-business-test",
-        "name" : "logic-business-test"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:Modules\/logic-ui",
-        "identifier" : "logic-ui-test",
-        "name" : "logic-ui-test"
-      }
-    },
-    {
-      "target" : {
         "containerPath" : "container:Modules\/feature-login",
         "identifier" : "feature-login-tests",
         "name" : "feature-login-tests"
@@ -61,36 +33,64 @@
     {
       "target" : {
         "containerPath" : "container:Modules\/feature-common",
-        "identifier" : "feature-common-test",
-        "name" : "feature-common-test"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:Modules\/feature-presentation",
-        "identifier" : "feature-presentationTests",
-        "name" : "feature-presentationTests"
+        "identifier" : "feature-common-tests",
+        "name" : "feature-common-tests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:Modules\/feature-issuance",
-        "identifier" : "feature-issuanceTests",
-        "name" : "feature-issuanceTests"
+        "identifier" : "feature-issuance-tests",
+        "name" : "feature-issuance-tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/feature-presentation",
+        "identifier" : "feature-presentation-tests",
+        "name" : "feature-presentation-tests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:Modules\/feature-proximity",
-        "identifier" : "feature-proximityTests",
-        "name" : "feature-proximityTests"
+        "identifier" : "feature-proximity-tests",
+        "name" : "feature-proximity-tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/feature-startup",
+        "identifier" : "feature-startup-tests",
+        "name" : "feature-startup-tests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:Modules\/logic-analytics",
-        "identifier" : "logic-analytics-test",
-        "name" : "logic-analytics-test"
+        "identifier" : "logic-analytics-tests",
+        "name" : "logic-analytics-tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/logic-api",
+        "identifier" : "logic-api-tests",
+        "name" : "logic-api-tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/logic-business",
+        "identifier" : "logic-business-tests",
+        "name" : "logic-business-tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/logic-ui",
+        "identifier" : "logic-ui-tests",
+        "name" : "logic-ui-tests"
       }
     }
   ],

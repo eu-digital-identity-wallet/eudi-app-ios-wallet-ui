@@ -13,12 +13,16 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-@_exported import Foundation
-@_exported import XCTest
-@_exported import Cuckoo
-@_exported import CombineExpectations
-@_exported import Combine
+@propertyWrapper
+public struct EquatableNoop<Value>: Equatable {
 
-class EudiTest: XCTestCase {
+  public var wrappedValue: Value
 
+  public init(wrappedValue: Value) {
+    self.wrappedValue = wrappedValue
+  }
+
+  public static func == (lhs: EquatableNoop<Value>, rhs: EquatableNoop<Value>) -> Bool {
+    true
+  }
 }

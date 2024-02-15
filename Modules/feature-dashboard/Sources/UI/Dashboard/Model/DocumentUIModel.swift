@@ -16,9 +16,13 @@
 import Foundation
 import MdocDataModel18013
 import logic_resources
+import logic_business
 
-public struct DocumentUIModel: Identifiable {
-  public let id: String
+public struct DocumentUIModel: Identifiable, Equatable {
+
+  @EquatableNoop
+  public var id: String
+
   public let value: Value
 
   public init(id: String, value: Value) {
@@ -29,8 +33,11 @@ public struct DocumentUIModel: Identifiable {
 
 public extension DocumentUIModel {
 
-  struct Value {
-    public let id: String
+  struct Value: Equatable {
+
+    @EquatableNoop
+    public var id: String
+
     public let title: String
     public let expiresAt: String?
   }

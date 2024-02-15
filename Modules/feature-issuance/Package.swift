@@ -24,7 +24,7 @@ let package = Package(
       path: "./Sources"
     ),
     .testTarget(
-      name: "feature-issuanceTests",
+      name: "feature-issuance-tests",
       dependencies: [
         "feature-issuance",
         "feature-common",

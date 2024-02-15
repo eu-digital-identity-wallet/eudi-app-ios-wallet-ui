@@ -40,6 +40,17 @@ public final class DashboardInteractor: DashboardInteractorType {
 
   public init() {}
 
+  convenience init(
+    walletController: WalletKitControllerType,
+    reachabilityController: ReachabilityControllerType,
+    configLogic: ConfigLogic
+  ) {
+    self.init()
+    self.walletController = walletController
+    self.reachabilityController = reachabilityController
+    self.configLogic = configLogic
+  }
+
   public func fetchDashboard() async -> DashboardPartialState {
 
     let documents: [DocumentUIModel]? = fetchDocuments()

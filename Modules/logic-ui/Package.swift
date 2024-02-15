@@ -83,7 +83,7 @@ let package = Package(
       path: "./Sources"
     ),
     .testTarget(
-      name: "logic-ui-test",
+      name: "logic-ui-tests",
       dependencies: [
         "logic-ui",
         "logic-business",
