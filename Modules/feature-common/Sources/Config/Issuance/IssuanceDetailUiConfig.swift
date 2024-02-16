@@ -16,7 +16,7 @@
 import Foundation
 import logic_ui
 
-public struct IssuanceDetailUiConfig: UIConfigType {
+public struct IssuanceDetailUiConfig: UIConfigType, Equatable {
 
   public let flow: Flow
 

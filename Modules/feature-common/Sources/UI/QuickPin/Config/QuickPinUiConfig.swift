@@ -16,7 +16,7 @@
 import Foundation
 import logic_ui
 
-public struct QuickPinUiConfig: UIConfigType {
+public struct QuickPinUiConfig: UIConfigType, Equatable {
 
   public let flow: Flow
 

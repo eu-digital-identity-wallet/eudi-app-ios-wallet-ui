@@ -124,8 +124,8 @@ final class TestDashboardInteractor: EudiTest {
   }
 }
 
-extension TestDashboardInteractor {
-  private func checkBle(with status: ReachabilityController.BleAvailibity) async {
+private extension TestDashboardInteractor {
+  func checkBle(with status: ReachabilityController.BleAvailibity) async {
     // Given
     let publisher = Just(status).eraseToAnyPublisher()
     stub(reachabilityController) { mock in
@@ -137,7 +137,7 @@ extension TestDashboardInteractor {
     XCTAssertEqual(bleAvailability, status)
   }
   
-  private func stubFetchDocuments(with documents: [MdocDecodable]) {
+  func stubFetchDocuments(with documents: [MdocDecodable]) {
     stub(walletKitController) { mock in
       when(mock).fetchDocuments().thenReturn(documents)
     }

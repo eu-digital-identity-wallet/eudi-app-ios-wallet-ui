@@ -5200,6 +5200,11 @@ import Cuckoo
 @testable import logic_analytics
 @testable import logic_ui
 
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+
 import Combine
 import SwiftUI
 
