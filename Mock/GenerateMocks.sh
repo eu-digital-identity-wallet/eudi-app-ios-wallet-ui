@@ -35,11 +35,13 @@ LOGIC_API_MODULE="logic-api"
 LOGIC_UI_MODULE="logic-ui"
 
 SECOND_LEVEL_MODULES=("${LOGIC_API_MODULE}" "${LOGIC_UI_MODULE}")
+
+FEATURE_COMMON_MODULE="feature-common"
+
 FEATURE_MODULES=(
 "feature-dashboard",
 "feature-login",
 "feature-startup",
-"feature-common",
 "feature-presentation",
 "feature-issuance",
 "feature-proximity"
@@ -49,6 +51,7 @@ IS_BASE_LOGIC_MODULE=1
 IS_SECONDARY_LOGIC_MODULE=2
 IS_FEATURE_MODULE=3
 HAS_NO_RELATIONS=4
+IS_COMMON_FEATURE_MODULE=5
 
 # Function Generator
 function generateMocks {
@@ -66,12 +69,20 @@ function generateMocks {
   logic_ui_path=""
   logic_api_path=""
   logic_analytics_path=""
+  feature_common_path=""
   
   if [ $4 == $IS_SECONDARY_LOGIC_MODULE ];
     then
       logic_business_path="${INPUT_DIR}/${LOGIC_BUSINESS_MODULE}/Sources/**/*.swift"
       logic_analytics_path="${INPUT_DIR}/${LOGIC_ANALYTICS_MODULE}/Sources/**/*.swift"
   elif [ $4 == $IS_FEATURE_MODULE ];
+    then
+      logic_business_path="${INPUT_DIR}/${LOGIC_BUSINESS_MODULE}/Sources/**/*.swift"
+      logic_analytics_path="${INPUT_DIR}/${LOGIC_ANALYTICS_MODULE}/Sources/**/*.swift"
+      logic_api_path="${INPUT_DIR}/${LOGIC_API_MODULE}/Sources/**/*.swift"
+      logic_ui_path="${INPUT_DIR}/${LOGIC_UI_MODULE}/Sources/**/*.swift"
+      feature_common_path="${INPUT_DIR}/${FEATURE_COMMON_MODULE}/Sources/**/*.swift"
+  elif [ $4 == $IS_COMMON_FEATURE_MODULE ];
     then
       logic_business_path="${INPUT_DIR}/${LOGIC_BUSINESS_MODULE}/Sources/**/*.swift"
       logic_analytics_path="${INPUT_DIR}/${LOGIC_ANALYTICS_MODULE}/Sources/**/*.swift"
@@ -88,7 +99,8 @@ function generateMocks {
   "$logic_business_path" \
   "$logic_ui_path" \
   "$logic_api_path" \
-  "$logic_analytics_path"
+  "$logic_analytics_path" \
+  "$feature_common_path"
 }
 
 remove_last_comma() {
@@ -126,6 +138,9 @@ for item in ${SECOND_LEVEL_MODULES[@]}; do
 done
 
 modulesToImport="${modulesToImport%$delimiter}"
+
+# Feature Common Module
+generateMocks $FEATURE_COMMON_MODULE "Tests" "--testable $LOGIC_BUSINESS_MODULE,$LOGIC_ANALYTICS_MODULE,$FEATURE_COMMON_MODULE,$modulesToImport" $IS_COMMON_FEATURE_MODULE
 
 for module in ${FEATURE_MODULES[@]}; do
   NEW_MODULE=$(remove_last_comma "$module")

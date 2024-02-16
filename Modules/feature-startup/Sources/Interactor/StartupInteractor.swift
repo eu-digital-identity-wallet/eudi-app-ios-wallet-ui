@@ -22,20 +22,28 @@ public protocol StartupInteractorType {
   func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute
 }
 
-public final actor StartupInteractor: StartupInteractorType {
+public final class StartupInteractor: StartupInteractorType {
 
-  private lazy var walletController: WalletKitControllerType = WalletKitController.shared
+  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
+  private lazy var quickPinInteractor: QuickPinInteractorType = QuickPinInteractor()
 
   private var hasDocuments: Bool {
-    return !walletController.fetchDocuments().isEmpty
+    return !walletKitController.fetchDocuments().isEmpty
   }
-
-  private lazy var quickPinInteractor: QuickPinInteractorType = QuickPinInteractor()
 
   public init() {}
 
+  convenience init(
+    walletKitController: WalletKitControllerType,
+    quickPinInteractor: QuickPinInteractorType
+  ) {
+    self.init()
+    self.walletKitController = walletKitController
+    self.quickPinInteractor = quickPinInteractor
+  }
+
   public func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute {
-    try? await walletController.loadDocuments()
+    try? await walletKitController.loadDocuments()
     try? await Task.sleep(nanoseconds: splashAnimationDuration.nanoseconds)
     if quickPinInteractor.hasPin() {
       return .biometry(

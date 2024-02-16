@@ -21,7 +21,7 @@ public protocol UIConfigType {
   var log: String { get }
 }
 
-public struct NoConfig: UIConfigType {
+public struct NoConfig: UIConfigType, Equatable {
   public var log: String {
     return ""
   }
