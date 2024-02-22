@@ -66,7 +66,7 @@ final class PresentationRequestViewModel<Router: RouterHostType, Interactor: Pre
   }
 
   override func getSuccessRoute() -> AppRoute? {
-    return .biometry(
+    .biometry(
       config: UIConfig.Biometry(
         title: getTitle(),
         caption: .requestDataShareBiometryCaption,

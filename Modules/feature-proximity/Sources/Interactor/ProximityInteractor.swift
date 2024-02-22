@@ -144,7 +144,11 @@ public final actor ProximityInteractor: ProximityInteractorType {
     }
 
     do {
-      try await presentationSessionCoordinator.sendResponse(response: responseItem, onSuccess: nil)
+      try await presentationSessionCoordinator.sendResponse(
+        response: responseItem,
+        onSuccess: nil,
+        onCancel: nil
+      )
       return .success
     } catch {
       return .failure(error)
