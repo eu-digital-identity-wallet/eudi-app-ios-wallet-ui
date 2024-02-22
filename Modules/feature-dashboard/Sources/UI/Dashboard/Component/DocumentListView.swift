@@ -39,7 +39,7 @@ struct DocumentListView: View {
         spacing: SPACING_SMALL
       ) {
         ForEach(items) { item in
-          DocumentCell(
+          DocumentCellView(
             item: item,
             isLoading: isLoading,
             action: { item in

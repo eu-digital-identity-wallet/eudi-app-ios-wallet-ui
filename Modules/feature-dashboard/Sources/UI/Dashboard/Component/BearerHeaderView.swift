@@ -44,7 +44,7 @@ struct BearerHeaderView: View {
 
   var body: some View {
     VStack(alignment: .leading) {
-      BearerCell(
+      BearerCellView(
         item: item,
         isLoading: isLoading,
         onMoreClicked: onMoreClicked()

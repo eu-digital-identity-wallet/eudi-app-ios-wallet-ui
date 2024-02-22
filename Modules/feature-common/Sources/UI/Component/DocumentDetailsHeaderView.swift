@@ -24,7 +24,7 @@ public struct DocumentDetailsHeaderView: View {
   let holdersName: String
   let userIcon: Image
   let isLoading: Bool
-  let actions: [ContentHeader.Action]?
+  let actions: [ContentHeaderView.Action]?
   let onBack: (() -> Void)?
 
   public init(
@@ -32,7 +32,7 @@ public struct DocumentDetailsHeaderView: View {
     holdersName: String,
     userIcon: Image,
     isLoading: Bool,
-    actions: [ContentHeader.Action]?,
+    actions: [ContentHeaderView.Action]?,
     onBack: (() -> Void)?
   ) {
     self.holdersName = holdersName
@@ -45,7 +45,7 @@ public struct DocumentDetailsHeaderView: View {
 
   public var body: some View {
     VStack {
-      DocumentDetailsHeaderCell(
+      DocumentDetailsHeaderCellView(
         documentName: documentName,
         holdersName: holdersName,
         userIcon: userIcon,
@@ -59,13 +59,13 @@ public struct DocumentDetailsHeaderView: View {
 
 extension DocumentDetailsHeaderView {
 
-  struct DocumentDetailsHeaderCell: View {
+  struct DocumentDetailsHeaderCellView: View {
 
     let documentName: String
     let holdersName: String
     let userIcon: Image
     let isLoading: Bool
-    let actions: [ContentHeader.Action]?
+    let actions: [ContentHeaderView.Action]?
     let onBack: (() -> Void)?
 
     public init(
@@ -73,7 +73,7 @@ extension DocumentDetailsHeaderView {
       holdersName: String,
       userIcon: Image,
       isLoading: Bool,
-      actions: [ContentHeader.Action]?,
+      actions: [ContentHeaderView.Action]?,
       onBack: (() -> Void)?
     ) {
       self.documentName = documentName
@@ -88,7 +88,7 @@ extension DocumentDetailsHeaderView {
       VStack(alignment: .leading, spacing: SPACING_SMALL) {
 
         if let onBack {
-          ContentHeader(
+          ContentHeaderView(
             dismissIcon: Theme.shared.image.xmark,
             foregroundColor: Theme.shared.color.primary,
             actions: actions

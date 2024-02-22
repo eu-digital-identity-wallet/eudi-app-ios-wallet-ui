@@ -17,7 +17,7 @@
 @_exported import logic_resources
 
 public struct BaseLoadingState: ViewState {
-  let error: ContentError.Config?
+  let error: ContentErrorView.Config?
 }
 
 open class BaseLoadingViewModel<Router: RouterHostType>: BaseViewModel<Router, BaseLoadingState> {

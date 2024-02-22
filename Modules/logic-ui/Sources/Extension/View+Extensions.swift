@@ -16,10 +16,28 @@
 import SwiftUI
 import AlertToast
 import PartialSheet
+import Shimmer
+
+public extension View {
+  /// Adds an animated shimmering effect to any view, typically to show that
+  /// an operation is in progress.
+  /// - Parameters:
+  ///   - isLoading: Convenience parameter to conditionally enable the effect. Defaults to `true`.
+  @ViewBuilder func shimmer(
+    isLoading: Bool = true
+  ) -> some View {
+    if isLoading {
+      self.redacted(reason: .placeholder)
+        .shimmering()
+    } else {
+      self
+    }
+  }
+}
 
 public extension View {
   func roundedCorner(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-    clipShape(RoundedCorner(radius: radius, corners: corners) )
+    clipShape(RoundedCornerShape(radius: radius, corners: corners) )
   }
 }
 
@@ -99,7 +117,7 @@ public extension View {
       isPresented: isPresented,
       iPhoneStyle: SheetStyle.iphoneSheetStyle,
       iPadMacStyle: SheetStyle.IpadMacSheetStyle,
-      content: { ContentSheet(content: content) }
+      content: { ContentSheetView(content: content) }
     )
   }
 }
@@ -169,11 +187,11 @@ struct ViewDidLoadAsyncModifier: ViewModifier {
 public extension View {
   /// Creates a nearly transparent view with 0.1% opacity in order to create a tappable area
   func nearlyTransparentView(opacity: CGFloat = 0.001) -> some View {
-    self.modifier(NearlyTransparentView(opacity: opacity))
+    self.modifier(NearlyTransparentModifier(opacity: opacity))
   }
 }
 
-private struct NearlyTransparentView: ViewModifier {
+private struct NearlyTransparentModifier: ViewModifier {
 
   let opacity: CGFloat
 

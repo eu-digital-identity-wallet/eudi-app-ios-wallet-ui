@@ -36,9 +36,9 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
   }
 
   public var body: some View {
-    ContentScreen(errorConfig: viewModel.viewState.error) {
+    ContentScreenView(errorConfig: viewModel.viewState.error) {
 
-      ContentTitle(
+      ContentTitleView(
         title: viewModel.viewState.title,
         caption: viewModel.viewState.caption,
         titleColor: ThemeManager.shared.color.success,

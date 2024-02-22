@@ -16,20 +16,36 @@
 import SwiftUI
 import logic_resources
 
-public struct SheetContent<Content: View>: View {
+public struct ContentEmptyView: View {
 
-  private let content: Content
+  private let title: LocalizableString.Key
+  private let image: Image
+  private let onClick: (() -> Void)?
 
-  public init(@ViewBuilder content: () -> Content) {
-    self.content = content()
+  public init(
+    title: LocalizableString.Key,
+    image: Image = ThemeManager.shared.image.exclamationmarkCircle,
+    onClick: (() -> Void)? = nil
+  ) {
+    self.title = title
+    self.image = image
+    self.onClick = onClick
   }
 
   public var body: some View {
-    ZStack {
-      self.content
+    VStack(alignment: .center, spacing: SPACING_MEDIUM) {
+
+      image
+        .resizable()
+        .scaledToFit()
+        .foregroundColor(Theme.shared.color.backgroundDefault)
+        .frame(height: 50)
+
+      Text(title)
+        .foregroundColor(Theme.shared.color.textPrimaryDark)
     }
-    .if(UIDevice.current.uiHomeIndicator == .unavailable) {
-      $0.padding(.bottom)
+    .onTapGesture {
+      onClick?()
     }
   }
 }

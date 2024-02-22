@@ -18,7 +18,7 @@ import SwiftUI
 import logic_business
 import EudiWalletKit
 
-public enum RequestDataCell: Equatable {
+public enum RequestDataUIModel: Equatable {
   case requestDataRow(RequestDataRow)
   case requestDataSection(RequestDataSection)
   case requestDataVerification(RequestDataVerification)
@@ -188,8 +188,8 @@ public extension RequestDataSection {
 
 extension RequestDataUiModel {
 
-  public static func items(for documents: [DocElementsViewModel]) -> [RequestDataCell] {
-    var requestDataCell = [RequestDataCell]()
+  public static func items(for documents: [DocElementsViewModel]) -> [RequestDataUIModel] {
+    var requestDataCell = [RequestDataUIModel]()
 
     for document in documents {
 
@@ -218,7 +218,7 @@ extension RequestDataUiModel {
     return requestDataCell
   }
 
-  fileprivate static func documentSectionHeader(for document: DocElementsViewModel) -> RequestDataCell {
+  fileprivate static func documentSectionHeader(for document: DocElementsViewModel) -> RequestDataUIModel {
     .requestDataSection(
       .init(
         id: document.docType,
@@ -228,14 +228,14 @@ extension RequestDataUiModel {
     )
   }
 
-  fileprivate static func documentSelectiveDisclosableFields(for document: DocElementsViewModel) -> [RequestDataCell] {
+  fileprivate static func documentSelectiveDisclosableFields(for document: DocElementsViewModel) -> [RequestDataUIModel] {
     document.elements
       .filter { element in
         let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
         return !mandatoryKeys.contains(element.elementIdentifier)
       }
       .map {
-        RequestDataCell.requestDataRow(
+        RequestDataUIModel.requestDataRow(
           RequestDataRow(
             id: $0.id,
             isSelected: true,
@@ -253,7 +253,7 @@ extension RequestDataUiModel {
       }
   }
 
-  fileprivate static func documentMandatoryVerificationFields(for document: DocElementsViewModel) -> RequestDataCell? {
+  fileprivate static func documentMandatoryVerificationFields(for document: DocElementsViewModel) -> RequestDataUIModel? {
     let mandatoryFields = document.elements
       .filter { element in
         let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
@@ -287,7 +287,7 @@ extension RequestDataUiModel {
 }
 
 public struct RequestDataUiModel {
-  public static func mock() -> [RequestDataCell] {
+  public static func mock() -> [RequestDataUIModel] {
     [
       .requestDataSection(.init(type: .id, title: "Digital ID")),
       .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: .string("Tzouvaras"))),

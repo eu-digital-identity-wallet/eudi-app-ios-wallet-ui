@@ -26,16 +26,16 @@ public struct QuickPinView<Router: RouterHostType, Interactor: QuickPinInteracto
   }
 
   public var body: some View {
-    ContentScreen {
+    ContentScreenView {
 
       if viewModel.viewState.isCancellable {
-        ContentHeader(
+        ContentHeaderView(
           dismissIcon: ThemeManager.shared.image.xmark,
           onBack: { viewModel.onShowCancellationModal() }
         )
       }
 
-      ContentTitle(
+      ContentTitleView(
         title: viewModel.viewState.title,
         caption: viewModel.viewState.caption,
         topSpacing: viewModel.viewState.isCancellable ? .withToolbar : .withoutToolbar
@@ -56,10 +56,10 @@ public struct QuickPinView<Router: RouterHostType, Interactor: QuickPinInteracto
       )
     }
     .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
-      SheetContent {
+      SheetContentView {
         VStack(spacing: SPACING_MEDIUM) {
 
-          ContentTitle(
+          ContentTitleView(
             title: .quickPinUpdateCancellationTitle,
             caption: .quickPinUpdateCancellationCaption
           )
@@ -83,7 +83,7 @@ public struct QuickPinView<Router: RouterHostType, Interactor: QuickPinInteracto
   private var pinView: some View {
     VStack(spacing: .zero) {
 
-      PinTextField(
+      PinTextFieldView(
         numericText: $viewModel.uiPinInputField,
         maxDigits: viewModel.viewState.quickPinSize,
         isSecureEntry: true,

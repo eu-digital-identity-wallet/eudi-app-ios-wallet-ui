@@ -19,10 +19,10 @@
 
 public struct RequestViewState: ViewState {
   public let isLoading: Bool
-  public let error: ContentError.Config?
+  public let error: ContentErrorView.Config?
   public let isContentVisible: Bool
   public let itemsAreAllSelected: Bool
-  public let items: [RequestDataCell]
+  public let items: [RequestDataUIModel]
   public let title: LocalizableString.Key
   public let trustedRelyingPartyInfo: LocalizableString.Key
   public let relyingParty: String
@@ -119,7 +119,7 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
   }
 
   public func onReceivedItems(
-    with items: [RequestDataCell],
+    with items: [RequestDataUIModel],
     title: LocalizableString.Key,
     relyingParty: String,
     isTrusted: Bool
@@ -182,7 +182,7 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
     let items = viewState.items.map {
       if var row = $0.isDataRow, row.id == id {
         row.setSelected(!row.isSelected)
-        return RequestDataCell.requestDataRow(row)
+        return RequestDataUIModel.requestDataRow(row)
       }
       return $0
     }
@@ -198,7 +198,7 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
 
     let hasVerificationItems = !items.compactMap { $0.isDataVerification }.isEmpty
 
-    let onlyDataRowItems: [RequestDataCell] = items
+    let onlyDataRowItems: [RequestDataUIModel] = items
       .compactMap {
         if $0.isDataSection == nil && $0.isDataRow?.isEnabled == true {
           return $0
@@ -231,10 +231,10 @@ open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, R
 
   private func setNewState(
     isLoading: Bool = false,
-    error: ContentError.Config? = nil,
+    error: ContentErrorView.Config? = nil,
     isContentVisible: Bool? = nil,
     itemsAreAllSelected: Bool? = nil,
-    items: [RequestDataCell]? = nil,
+    items: [RequestDataUIModel]? = nil,
     title: LocalizableString.Key? = nil,
     trustedRelyingPartyInfo: LocalizableString.Key? = nil,
     relyingParty: String? = nil,

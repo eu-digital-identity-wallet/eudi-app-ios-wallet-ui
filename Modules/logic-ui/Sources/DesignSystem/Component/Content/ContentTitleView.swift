@@ -16,7 +16,7 @@
 import SwiftUI
 import logic_resources
 
-public struct ContentTitle: View {
+public struct ContentTitleView: View {
 
   public typealias TapListener = (() -> Void)?
 
@@ -118,7 +118,7 @@ public struct ContentTitle: View {
   }
 }
 
-public extension ContentTitle {
+public extension ContentTitleView {
   enum TopSpacing: CGFloat {
     case withToolbar = 8
     case withoutToolbar = 16

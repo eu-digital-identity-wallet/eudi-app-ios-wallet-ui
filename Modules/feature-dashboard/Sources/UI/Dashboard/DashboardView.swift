@@ -40,7 +40,7 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
       }
       .bottomFade()
 
-      FloatingActionButtonBar(
+      FloatingActionButtonBarView(
         isLoading: viewModel.viewState.isLoading,
         addAction: viewModel.onAdd(),
         shareAction: viewModel.onShare()
@@ -52,7 +52,7 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
   }
 
   public var body: some View {
-    ContentScreen(
+    ContentScreenView(
       padding: .zero,
       canScroll: false,
       background: ThemeManager.shared.color.secondary
@@ -65,10 +65,10 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
       content()
     }
     .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {
-      SheetContent {
+      SheetContentView {
         VStack(spacing: .zero) {
 
-          ContentTitle(
+          ContentTitleView(
             title: .moreOptions
           )
 
@@ -102,10 +102,10 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
       }
     }
     .sheetDialog(isPresented: $viewModel.isBleModalShowing) {
-      SheetContent {
+      SheetContentView {
         VStack(spacing: SPACING_MEDIUM) {
 
-          ContentTitle(
+          ContentTitleView(
             title: .bleDisabledModalTitle,
             caption: .bleDisabledModalCaption
           )

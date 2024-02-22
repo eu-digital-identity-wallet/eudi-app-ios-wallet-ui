@@ -26,14 +26,14 @@ public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorT
   }
 
   public var body: some View {
-    ContentScreen(
+    ContentScreenView(
       padding: .zero,
       canScroll: false,
       allowBackGesture: false,
       background: Theme.shared.color.primary
     ) {
       ZStack {
-        SplashBackground(
+        SplashBackgroundView(
           isAnimating: viewModel.viewState.isAnimating
         )
         .onAppear {

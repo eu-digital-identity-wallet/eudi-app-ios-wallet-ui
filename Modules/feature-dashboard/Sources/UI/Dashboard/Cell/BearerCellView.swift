@@ -17,7 +17,7 @@ import SwiftUI
 import logic_resources
 
 extension BearerHeaderView {
-  struct BearerCell: View {
+  struct BearerCellView: View {
 
     let item: BearerUIModel
     let isLoading: Bool

@@ -18,7 +18,7 @@ import logic_resources
 import logic_ui
 
 extension DocumentListView {
-  struct DocumentCell: View {
+  struct DocumentCellView: View {
 
     let item: DocumentUIModel
     let action: (DocumentUIModel) -> Void

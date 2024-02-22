@@ -16,7 +16,7 @@
 import SwiftUI
 import logic_resources
 
-public struct FloatingActionButtonBar: View {
+public struct FloatingActionButtonBarView: View {
 
   @Environment(\.colorScheme) var colorScheme
 
@@ -43,7 +43,7 @@ public struct FloatingActionButtonBar: View {
   public var body: some View {
     HStack(spacing: SPACING_MEDIUM) {
 
-      FloatingActionButton(
+      FloatingActionButtonView(
         title: .addDoc,
         textColor: Theme.shared.color.textPrimaryDark,
         backgroundColor: colorScheme == .dark
@@ -55,7 +55,7 @@ public struct FloatingActionButtonBar: View {
         action: addAction
       )
 
-      FloatingActionButton(
+      FloatingActionButtonView(
         title: .showQRTap,
         textColor: Theme.shared.color.white,
         backgroundColor: Theme.shared.color.primary,

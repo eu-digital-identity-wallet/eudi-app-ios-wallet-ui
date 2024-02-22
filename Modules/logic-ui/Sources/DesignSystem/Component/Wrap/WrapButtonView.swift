@@ -60,7 +60,7 @@ public struct WrapButtonView: View {
   }
 
   public init(
-    style: ButtonStyleEnum,
+    style: ButtonViewStyle,
     title: LocalizableString.Key,
     iconColor: Color = Theme.shared.color.primary,
     icon: Image? = nil,

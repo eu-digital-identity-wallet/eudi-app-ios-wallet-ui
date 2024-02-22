@@ -27,7 +27,7 @@ public struct BlurProgressView: View {
 
   public var body: some View {
     ZStack {
-      ContentLoader(
+      ContentLoaderView(
         showLoader: .constant(true),
         width: self.width,
         height: self.height
@@ -38,21 +38,17 @@ public struct BlurProgressView: View {
   }
 }
 
-public struct NormalProgressView: View {
+extension BlurProgressView {
+  struct Blur: UIViewRepresentable {
 
-  let height: CGFloat
-  let width: CGFloat
+    var style: UIBlurEffect.Style = .systemMaterial
 
-  public init(height: CGFloat = 72, width: CGFloat = 72) {
-    self.width = width
-    self.height = height
-  }
+    func makeUIView(context: Context) -> UIVisualEffectView {
+      return UIVisualEffectView(effect: UIBlurEffect(style: style))
+    }
 
-  public var body: some View {
-    ContentLoader(
-      showLoader: .constant(true),
-      width: self.width,
-      height: self.height
-    )
+    func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
+      uiView.effect = UIBlurEffect(style: style)
+    }
   }
 }

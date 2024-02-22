@@ -16,7 +16,7 @@
 import SwiftUI
 import logic_resources
 
-public struct FloatingActionButton: View {
+public struct FloatingActionButtonView: View {
 
   private let title: LocalizableString.Key
   private let textColor: Color
@@ -110,7 +110,7 @@ public struct FloatingActionButtonModifier: ViewModifier {
   public func body(content: Content) -> some View {
     ZStack {
       content
-      FloatingActionButton(
+      FloatingActionButtonView(
         title: title,
         textColor: textColor,
         backgroundColor: backgroundColor,

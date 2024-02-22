@@ -18,7 +18,7 @@ import SwiftUI
 
 import logic_resources
 
-public struct ContentExpandable<Content: View>: View {
+public struct ContentExpandableView<Content: View>: View {
 
   @State private var isExpanded = false
 

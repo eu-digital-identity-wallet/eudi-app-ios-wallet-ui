@@ -79,7 +79,7 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
   }
 
   public var body: some View {
-    ContentScreen(
+    ContentScreenView(
       padding: .zero,
       canScroll: !viewModel.viewState.hasContinueButton,
       errorConfig: viewModel.viewState.error
@@ -97,10 +97,10 @@ public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDe
       content()
     }
     .sheetDialog(isPresented: $viewModel.isDeletionModalShowing) {
-      SheetContent {
+      SheetContentView {
         VStack(spacing: SPACING_MEDIUM) {
 
-          ContentTitle(
+          ContentTitleView(
             title: .issuanceDetailsDeletionTitle([viewModel.viewState.document.documentName]),
             caption: .issuanceDetailsDeletionCaption([viewModel.viewState.document.documentName])
           )

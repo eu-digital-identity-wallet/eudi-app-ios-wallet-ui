@@ -16,7 +16,7 @@
 import SwiftUI
 import logic_resources
 
-public struct AddNewDocumentCell: View {
+public struct AddNewDocumentCellView: View {
 
   let isEnabled: Bool
   let icon: Image
