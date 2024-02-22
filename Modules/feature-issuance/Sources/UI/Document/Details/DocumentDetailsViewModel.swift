@@ -22,9 +22,9 @@ import logic_business
 struct DocumentDetailsViewState: ViewState {
   let document: DocumentDetailsUIModel
   let isLoading: Bool
-  let error: ContentError.Config?
+  let error: ContentErrorView.Config?
   let config: IssuanceDetailUiConfig
-  let toolBarActions: [ContentHeader.Action]?
+  let toolBarActions: [ContentHeaderView.Action]?
 
   var isCancellable: Bool {
     return config.isExtraDocument
@@ -69,7 +69,7 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
 
     case .success(let document):
 
-      var actions: [ContentHeader.Action]? {
+      var actions: [ContentHeaderView.Action]? {
         switch viewState.config.flow {
         case .extraDocument:
           return [
@@ -92,7 +92,7 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
     case .failure(let error):
       self.setNewState(
         isLoading: true,
-        error: ContentError.Config(
+        error: ContentErrorView.Config(
           description: .custom(error.localizedDescription),
           cancelAction: self.pop()
         )
@@ -133,7 +133,7 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
       case .failure(let error):
         self.setNewState(
           isLoading: false,
-          error: ContentError.Config(
+          error: ContentErrorView.Config(
             description: .custom(error.localizedDescription),
             cancelAction: self.setNewState(error: nil)
           )
@@ -150,8 +150,8 @@ final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: Documen
   private func setNewState(
     isLoading: Bool = false,
     document: DocumentDetailsUIModel? = nil,
-    error: ContentError.Config? = nil,
-    toolBarActions: [ContentHeader.Action]? = nil
+    error: ContentErrorView.Config? = nil,
+    toolBarActions: [ContentHeaderView.Action]? = nil
   ) {
     setState { previous in
         .init(

@@ -53,7 +53,7 @@ public struct ScannerView: View {
       }
       .preferredColorScheme(.dark)
 
-      ContentHeader(
+      ContentHeaderView(
         dismissIcon: Theme.shared.image.xmark,
         foregroundColor: Theme.shared.color.white
       ) {

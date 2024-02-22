@@ -13,14 +13,16 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
+import SwiftUI
 
-public struct RoundedCorner: Shape {
-  var radius: CGFloat = .infinity
-  var corners: UIRectCorner = .allCorners
+public struct FastenedDynamicModifier: ViewModifier {
+  public func body(content: Content) -> some View {
+    content.dynamicTypeSize(...DynamicTypeSize.accessibility1)
+  }
+}
 
-  public func path(in rect: CGRect) -> Path {
-    let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-    return Path(path.cgPath)
+public extension View {
+  func fastenDynamicType() -> some View {
+    modifier(FastenedDynamicModifier())
   }
 }

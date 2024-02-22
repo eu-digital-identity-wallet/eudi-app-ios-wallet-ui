@@ -20,7 +20,7 @@ import UIKit
 import logic_resources
 
 struct ProxmityConnectivityState: ViewState {
-  let error: ContentError.Config?
+  let error: ContentErrorView.Config?
   let qrImage: UIImage?
 }
 
@@ -106,7 +106,7 @@ final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: Pro
   }
 
   private func setNewState(
-    error: ContentError.Config? = nil,
+    error: ContentErrorView.Config? = nil,
     qrImage: UIImage? = nil
   ) {
     setState { previousState in

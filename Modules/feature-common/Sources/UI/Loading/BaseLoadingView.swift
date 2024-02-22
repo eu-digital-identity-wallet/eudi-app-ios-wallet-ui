@@ -26,21 +26,21 @@ public struct BaseLoadingView<Router: RouterHostType>: View {
   }
 
   public var body: some View {
-    ContentScreen(errorConfig: viewModel.viewState.error) {
+    ContentScreenView(errorConfig: viewModel.viewState.error) {
 
-      ContentHeader(
+      ContentHeaderView(
         dismissIcon: ThemeManager.shared.image.xmark,
         onBack: { viewModel.onNavigate(type: .pop) }
       )
 
-      ContentTitle(
+      ContentTitleView(
         title: viewModel.getTitle(),
         caption: viewModel.getCaption()
       )
 
       Spacer()
 
-      ContentLoader(showLoader: .constant(true))
+      ContentLoaderView(showLoader: .constant(true))
 
       Spacer()
     }

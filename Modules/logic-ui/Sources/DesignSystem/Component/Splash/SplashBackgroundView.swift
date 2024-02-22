@@ -16,40 +16,27 @@
 import SwiftUI
 import logic_resources
 
-public enum ButtonStyleEnum {
-  case primary
-  case secondary
+public struct SplashBackgroundView: View {
 
-  var textColor: Color {
-    switch self {
-    case .primary:
-      Theme.shared.color.white
-    case .secondary:
-      Theme.shared.color.textPrimaryDark
-    }
+  let isAnimating: Bool
+
+  public init(isAnimating: Bool = false) {
+    self.isAnimating = isAnimating
   }
-  var backgroundColor: Color {
-    switch self {
-    case .primary:
-      Theme.shared.color.primary
-    case .secondary:
-      Theme.shared.color.backgroundPaper
+
+  public var body: some View {
+    ZStack {
+      Rectangle()
+        .fill(ThemeManager.shared.color.backgroundPaper)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea()
+
+      Theme.shared.image.logo
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .frame(width: getScreenRect().width / 2.5)
+        .opacity(isAnimating ? 1.0 : 0)
     }
-  }
-  var borderWidth: CGFloat {
-    switch self {
-    case .primary:
-      0
-    case .secondary:
-      1
-    }
-  }
-  var borderColor: Color {
-    switch self {
-    case .primary:
-        .clear
-    case .secondary:
-      Theme.shared.color.dividerDark
-    }
+    .ignoresSafeArea(.all)
   }
 }

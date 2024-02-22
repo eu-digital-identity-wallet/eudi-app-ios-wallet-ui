@@ -14,34 +14,22 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import ActivityIndicatorView
-import logic_resources
 
-public struct ContentLoader: View {
+public struct NormalProgressView: View {
 
-  @Binding
-  private var showLoader: Bool
+  let height: CGFloat
+  let width: CGFloat
 
-  private let width: CGFloat
-  private let height: CGFloat
-
-  public init(
-    showLoader: Binding<Bool>,
-    width: CGFloat = 50,
-    height: CGFloat = 50
-  ) {
-    self._showLoader = showLoader
+  public init(height: CGFloat = 72, width: CGFloat = 72) {
     self.width = width
     self.height = height
   }
 
-  @ViewBuilder
   public var body: some View {
-    ActivityIndicatorView(
-      isVisible: $showLoader,
-      type: .default(count: 8)
+    ContentLoaderView(
+      showLoader: .constant(true),
+      width: self.width,
+      height: self.height
     )
-    .frame(width: width, height: height)
-    .foregroundColor(Theme.shared.color.primary)
   }
 }

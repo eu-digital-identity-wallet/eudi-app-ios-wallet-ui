@@ -30,7 +30,7 @@ public enum ProximityResponsePreparationPartialState {
 }
 
 public enum ProximityRequestPartialState {
-  case success([RequestDataCell], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
+  case success([RequestDataUIModel], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
   case failure(Error)
 }
 
@@ -53,7 +53,7 @@ public protocol ProximityInteractorType {
   func onDeviceEngagement() async -> ProximityInitialisationPartialState
   func onQRGeneration() async -> ProximityQrCodePartialState
   func onRequestReceived() async -> ProximityRequestPartialState
-  func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState
+  func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> ProximityResponsePreparationPartialState
   func onSendResponse() async -> ProximityResponsePartialState
   func stopPresentation() async
 
@@ -111,7 +111,7 @@ public final actor ProximityInteractor: ProximityInteractorType {
     }
   }
 
-  public func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState {
+  public func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> ProximityResponsePreparationPartialState {
     let requestConvertible = requestItems
       .reduce(into: [RequestDataRow]()) { partialResult, cell in
         if let item = cell.isDataRow, item.isSelected {

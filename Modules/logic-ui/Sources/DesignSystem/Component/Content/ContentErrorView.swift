@@ -17,7 +17,7 @@ import SwiftUI
 import logic_business
 import logic_resources
 
-public struct ContentError: View {
+public struct ContentErrorView: View {
 
   private let config: Config
 
@@ -27,13 +27,13 @@ public struct ContentError: View {
 
   public var body: some View {
 
-    ContentScreen {
+    ContentScreenView {
 
-      ContentHeader(dismissIcon: ThemeManager.shared.image.xmark) {
+      ContentHeaderView(dismissIcon: ThemeManager.shared.image.xmark) {
         config.cancelAction()
       }
 
-      ContentTitle(title: config.title, caption: config.description)
+      ContentTitleView(title: config.title, caption: config.description)
 
       Spacer()
 
@@ -48,7 +48,7 @@ public struct ContentError: View {
   }
 }
 
-public extension ContentError {
+public extension ContentErrorView {
   struct Config {
 
     let title: LocalizableString.Key

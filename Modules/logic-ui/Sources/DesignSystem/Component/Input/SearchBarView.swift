@@ -13,17 +13,36 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
 import SwiftUI
 
-public struct Blur: UIViewRepresentable {
+public struct SearchBarView: View {
+  @Binding var text: String
+  @Binding var commited: Bool
 
-  public var style: UIBlurEffect.Style = .systemMaterial
+  let isloading: Bool
 
-  public func makeUIView(context: Context) -> UIVisualEffectView {
-    return UIVisualEffectView(effect: UIBlurEffect(style: style))
+  public init(
+    text: Binding<String>,
+    commited: Binding<Bool>,
+    isLoading: Bool
+  ) {
+    self._text = text
+    self._commited = commited
+    self.isloading = isLoading
   }
 
-  public func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
-    uiView.effect = UIBlurEffect(style: style)
+  public var body: some View {
+    HStack {
+      FloatingTextFieldView(
+        title: .search,
+        text: $text,
+        showError: false,
+        contentType: .username,
+        useSpringAnimation: false,
+        userHasCommitedChange: $commited
+      )
+    }
+    .shimmer(isLoading: isloading)
   }
 }

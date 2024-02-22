@@ -14,15 +14,34 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import ActivityIndicatorView
+import logic_resources
 
-public struct FastenedDynamicType: ViewModifier {
-  public func body(content: Content) -> some View {
-    content.dynamicTypeSize(...DynamicTypeSize.accessibility1)
+public struct ContentLoaderView: View {
+
+  @Binding
+  private var showLoader: Bool
+
+  private let width: CGFloat
+  private let height: CGFloat
+
+  public init(
+    showLoader: Binding<Bool>,
+    width: CGFloat = 50,
+    height: CGFloat = 50
+  ) {
+    self._showLoader = showLoader
+    self.width = width
+    self.height = height
   }
-}
 
-public extension View {
-  func fastenDynamicType() -> some View {
-    modifier(FastenedDynamicType())
+  @ViewBuilder
+  public var body: some View {
+    ActivityIndicatorView(
+      isVisible: $showLoader,
+      type: .default(count: 8)
+    )
+    .frame(width: width, height: height)
+    .foregroundColor(Theme.shared.color.primary)
   }
 }

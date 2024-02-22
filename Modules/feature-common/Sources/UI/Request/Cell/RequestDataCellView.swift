@@ -21,7 +21,7 @@ import logic_ui
 extension BaseRequestView {
   struct RequestDataCellView: View {
 
-    typealias Cell = RequestDataCell
+    typealias Cell = RequestDataUIModel
     typealias TapListener = ((String) -> Void)?
 
     let cellModel: Cell
@@ -75,7 +75,7 @@ extension BaseRequestView {
         .disabled(isLoading)
         .shimmer(isLoading: isLoading)
       case .requestDataVerification(let verification):
-        ContentExpandable(title: .custom(verification.title)) {
+        ContentExpandableView(title: .custom(verification.title)) {
 
           VStack(spacing: SPACING_LARGE) {
 

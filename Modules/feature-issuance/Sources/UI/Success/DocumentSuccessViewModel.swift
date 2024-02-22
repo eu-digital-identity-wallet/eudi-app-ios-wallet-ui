@@ -18,7 +18,7 @@ import logic_resources
 import feature_common
 
 struct DocumentSuccessState: ViewState {
-  let error: ContentError.Config?
+  let error: ContentErrorView.Config?
   let title: LocalizableString.Key
   let caption: LocalizableString.Key
   let holderName: String?
@@ -80,7 +80,7 @@ final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: Documen
   }
 
   private func setNewState(
-    error: ContentError.Config? = nil,
+    error: ContentErrorView.Config? = nil,
     caption: LocalizableString.Key? = nil,
     holderName: String? = nil
   ) {

@@ -30,7 +30,7 @@ public struct WelcomeView<Router: RouterHostType, Interactor: WelcomeInteractorT
   }
 
   public var body: some View {
-    ContentScreen(
+    ContentScreenView(
       padding: .zero
     ) {
       VStack {
@@ -39,7 +39,7 @@ public struct WelcomeView<Router: RouterHostType, Interactor: WelcomeInteractorT
             .fill(Theme.shared.color.backgroundPaper)
             .ignoresSafeArea()
 
-          SplashBackground(
+          SplashBackgroundView(
             isAnimating: true
           )
           .ignoresSafeArea()

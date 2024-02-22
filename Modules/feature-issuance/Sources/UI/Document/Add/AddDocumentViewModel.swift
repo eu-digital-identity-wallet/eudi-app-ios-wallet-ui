@@ -22,8 +22,8 @@ import MdocDataModel18013
 import EudiWalletKit
 
 struct AddDocumentViewState: ViewState {
-  let addDocumentCellModels: [AddDocumentCellModel]
-  let error: ContentError.Config?
+  let addDocumentCellModels: [AddDocumentUIModel]
+  let error: ContentErrorView.Config?
   let config: IssuanceFlowUiConfig
 
   var isFlowCancellable: Bool {
@@ -44,7 +44,7 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
     super.init(
       router: router,
       initialState: .init(
-        addDocumentCellModels: AddDocumentCellModel.mocks,
+        addDocumentCellModels: AddDocumentUIModel.mocks,
         error: nil,
         config: config
       )
@@ -57,7 +57,7 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
       self.setNewState(addDocumentCellModels: documents)
     case .failure(let error):
       setNewState(
-        error: ContentError.Config(
+        error: ContentErrorView.Config(
           description: .custom(error.localizedDescription),
           cancelAction: self.pop(),
           action: { self.fetchStoredDocuments() }
@@ -109,7 +109,7 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
     }
   }
 
-  private func transformCellLoadingState(with isLoading: Bool) -> [AddDocumentCellModel] {
+  private func transformCellLoadingState(with isLoading: Bool) -> [AddDocumentUIModel] {
     return viewState.addDocumentCellModels.map({
         var cell = $0
         cell.isLoading = isLoading
@@ -135,8 +135,8 @@ final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocument
   }
 
   private func setNewState(
-    addDocumentCellModels: [AddDocumentCellModel]? = nil,
-    error: ContentError.Config? = nil
+    addDocumentCellModels: [AddDocumentUIModel]? = nil,
+    error: ContentErrorView.Config? = nil
   ) {
     setState { previousSate in
         .init(

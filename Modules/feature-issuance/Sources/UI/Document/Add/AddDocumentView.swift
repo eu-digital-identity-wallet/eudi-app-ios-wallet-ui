@@ -35,7 +35,7 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
     ScrollView {
       VStack(spacing: .zero) {
 
-        ContentTitle(
+        ContentTitleView(
           title: .addDocumentTitle,
           caption: .addDocumentSubtitle,
           titleColor: Theme.shared.color.textPrimaryDark,
@@ -45,7 +45,7 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
         VSpacer.large()
 
         ForEach(viewModel.viewState.addDocumentCellModels) { cell in
-          AddNewDocumentCell(
+          AddNewDocumentCellView(
             isEnabled: cell.isEnabled,
             icon: cell.image,
             title: cell.documentName,
@@ -61,10 +61,10 @@ public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInt
   }
 
   public var body: some View {
-    ContentScreen(errorConfig: viewModel.viewState.error) {
+    ContentScreenView(errorConfig: viewModel.viewState.error) {
 
       if viewModel.viewState.isFlowCancellable {
-        ContentHeader(dismissIcon: Theme.shared.image.xmark) {
+        ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
           viewModel.pop()
         }
       }
