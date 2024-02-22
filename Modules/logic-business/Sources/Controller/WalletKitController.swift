@@ -49,9 +49,11 @@ public final class WalletKitController: WalletKitControllerType {
   private let configLogic: ConfigLogic
   private var cancellables = Set<AnyCancellable>()
 
-  internal init(configLogic: ConfigLogic = ConfigProvider.shared.getConfigLogic()) {
+  internal init(
+    configLogic: ConfigLogic = ConfigProvider.shared.getConfigLogic()
+  ) {
     self.configLogic = configLogic
-    wallet.userAuthenticationRequired = false
+    wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
     wallet.trustedReaderCertificates = []
     wallet.verifierApiUri = configLogic.verifierConfig.apiUri
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl

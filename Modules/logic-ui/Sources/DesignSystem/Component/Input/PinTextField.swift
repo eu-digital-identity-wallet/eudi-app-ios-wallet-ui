@@ -43,7 +43,10 @@ public struct PinTextField: View {
 
   private var computeDotsSize: (width: CGFloat, height: CGFloat) {
     guard shouldUseFullScreen else {
-      return (width: 45, height: 55)
+      return (
+        width: 45.0 / UIScreen.main.zoomFactor,
+        height: 55.0 / UIScreen.main.zoomFactor
+      )
     }
     let size = (getScreenRect().width - CGFloat((maxDigits + 1) * 10)) / CGFloat(maxDigits)
     return (width: size, height: (size + 10))

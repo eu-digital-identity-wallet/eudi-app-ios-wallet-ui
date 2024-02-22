@@ -102,7 +102,10 @@ public final actor PresentationInteractor: PresentationInteractorType {
         do {
           try await self?.presentationCoordinator.sendResponse(response: responseItem) {
             continuation.resume(returning: .success($0))
+          } onCancel: {
+            continuation.resume(returning: .failure(PresentationSessionError.invalidState))
           }
+
         } catch {
           continuation.resume(returning: .failure(error))
         }

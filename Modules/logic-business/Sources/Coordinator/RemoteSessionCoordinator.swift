@@ -51,8 +51,8 @@ public final class RemoteSessionCoordinator: PresentationSessionCoordinatorType 
     return presentationRequest
   }
 
-  public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws {
-    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems(), onSuccess: onSuccess)
+  public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async throws {
+    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems(), onCancel: onCancel, onSuccess: onSuccess)
   }
 
   public func getState() async -> PresentationState {
