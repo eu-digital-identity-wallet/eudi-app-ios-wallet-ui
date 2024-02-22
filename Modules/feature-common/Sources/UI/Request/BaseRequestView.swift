@@ -26,10 +26,10 @@ public struct BaseRequestView<Router: RouterHostType>: View {
   }
 
   public var body: some View {
-    ContentScreen(errorConfig: viewModel.viewState.error) {
+    ContentScreenView(errorConfig: viewModel.viewState.error) {
 
       if viewModel.viewState.isTrusted {
-        ContentTitle(
+        ContentTitleView(
           titleDecoration: .icon(
             decorated: viewModel.getRelyingParty(),
             icon: Theme.shared.image.checkMarkSealFill,
@@ -42,7 +42,7 @@ public struct BaseRequestView<Router: RouterHostType>: View {
           }
         )
       } else {
-        ContentTitle(
+        ContentTitleView(
           title: viewModel.getTitle(),
           topSpacing: .withoutToolbar
         )
@@ -78,7 +78,7 @@ public struct BaseRequestView<Router: RouterHostType>: View {
             ForEach(viewModel.viewState.items.indices, id: \.self) { index in
 
               let item = viewModel.viewState.items[index]
-              let nextItem: RequestDataCell? = (index + 2) < viewModel.viewState.items.count
+              let nextItem: RequestDataUIModel? = (index + 2) < viewModel.viewState.items.count
               ? viewModel.viewState.items[index + 1]
               : nil
 
@@ -113,10 +113,10 @@ public struct BaseRequestView<Router: RouterHostType>: View {
       footer
     }
     .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
-      SheetContent {
+      SheetContentView {
         VStack(spacing: SPACING_MEDIUM) {
 
-          ContentTitle(
+          ContentTitleView(
             title: .cancelShareSheetTitle,
             caption: .cancelShareSheetCaption
           )
@@ -127,10 +127,10 @@ public struct BaseRequestView<Router: RouterHostType>: View {
       }
     }
     .sheetDialog(isPresented: $viewModel.isRequestInfoModalShowing) {
-      SheetContent {
+      SheetContentView {
         VStack(spacing: SPACING_MEDIUM) {
 
-          ContentTitle(
+          ContentTitleView(
             title: .requestDataInfoNotice,
             caption: .requestDataSheetCaption
           )
@@ -140,10 +140,10 @@ public struct BaseRequestView<Router: RouterHostType>: View {
       }
     }
     .sheetDialog(isPresented: $viewModel.isVerifiedEntityModalShowing) {
-      SheetContent {
+      SheetContentView {
         VStack(spacing: SPACING_MEDIUM) {
 
-          ContentTitle(
+          ContentTitleView(
             title: viewModel.getTrustedRelyingParty(),
             caption: viewModel.getTrustedRelyingPartyInfo()
           )

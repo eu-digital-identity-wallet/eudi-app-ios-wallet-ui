@@ -34,7 +34,7 @@ public final class AddDocumentInteractor: AddDocumentInteractorType {
 
   public func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState {
 
-    let types = AddDocumentCellModel.items.map({
+    let types = AddDocumentUIModel.items.map({
       var item = $0
       switch item.type {
       case .EuPidDocType:
@@ -89,7 +89,7 @@ public final class AddDocumentInteractor: AddDocumentInteractorType {
 }
 
 public enum StoredDocumentsPartialState {
-  case success([AddDocumentCellModel])
+  case success([AddDocumentUIModel])
   case failure(Error)
 }
 

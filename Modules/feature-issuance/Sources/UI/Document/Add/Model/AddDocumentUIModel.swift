@@ -18,7 +18,7 @@ import SwiftUI
 import logic_resources
 import logic_business
 
-public struct AddDocumentCellModel: Identifiable {
+public struct AddDocumentUIModel: Identifiable {
 
   public let id: String
   public let documentName: LocalizableString.Key
@@ -44,9 +44,9 @@ public struct AddDocumentCellModel: Identifiable {
 
 }
 
-public extension AddDocumentCellModel {
+public extension AddDocumentUIModel {
 
-  static var items: [AddDocumentCellModel] {
+  static var items: [AddDocumentUIModel] {
     [
       .init(
         isEnabled: true,
@@ -65,8 +65,8 @@ public extension AddDocumentCellModel {
     ]
   }
 
-  static var mocks: [AddDocumentCellModel] {
-    AddDocumentCellModel.items.map({
+  static var mocks: [AddDocumentUIModel] {
+    AddDocumentUIModel.items.map({
         var cell = $0
         cell.isEnabled = true
         cell.isLoading = false

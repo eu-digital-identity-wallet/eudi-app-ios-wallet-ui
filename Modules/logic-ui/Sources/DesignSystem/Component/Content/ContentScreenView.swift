@@ -18,14 +18,14 @@ import SwiftUI
 import logic_resources
 import UIPilot
 
-public struct ContentScreen<Content: View>: View {
+public struct ContentScreenView<Content: View>: View {
 
   let content: Content
   let padding: CGFloat
   let canScroll: Bool
   let spacing: CGFloat
   let allowBackGesture: Bool
-  let errorConfig: ContentError.Config?
+  let errorConfig: ContentErrorView.Config?
   let background: Color
 
   public init(
@@ -33,7 +33,7 @@ public struct ContentScreen<Content: View>: View {
     canScroll: Bool = false,
     spacing: CGFloat = .zero,
     allowBackGesture: Bool = false,
-    errorConfig: ContentError.Config? = nil,
+    errorConfig: ContentErrorView.Config? = nil,
     background: Color = Theme.shared.color.backgroundPaper,
     @ViewBuilder content: () -> Content
   ) {
@@ -49,7 +49,7 @@ public struct ContentScreen<Content: View>: View {
   public var body: some View {
     ZStack {
       if let errorConfig {
-        ContentError(config: errorConfig)
+        ContentErrorView(config: errorConfig)
       } else {
         VStack(spacing: spacing) {
           content

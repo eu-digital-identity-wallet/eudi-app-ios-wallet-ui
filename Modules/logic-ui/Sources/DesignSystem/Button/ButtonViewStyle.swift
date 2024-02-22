@@ -16,36 +16,40 @@
 import SwiftUI
 import logic_resources
 
-public struct ContentEmpty: View {
+public enum ButtonViewStyle {
+  case primary
+  case secondary
 
-  private let title: LocalizableString.Key
-  private let image: Image
-  private let onClick: (() -> Void)?
-
-  public init(
-    title: LocalizableString.Key,
-    image: Image = ThemeManager.shared.image.exclamationmarkCircle,
-    onClick: (() -> Void)? = nil
-  ) {
-    self.title = title
-    self.image = image
-    self.onClick = onClick
-  }
-
-  public var body: some View {
-    VStack(alignment: .center, spacing: SPACING_MEDIUM) {
-
-      image
-        .resizable()
-        .scaledToFit()
-        .foregroundColor(Theme.shared.color.backgroundDefault)
-        .frame(height: 50)
-
-      Text(title)
-        .foregroundColor(Theme.shared.color.textPrimaryDark)
+  var textColor: Color {
+    switch self {
+    case .primary:
+      Theme.shared.color.white
+    case .secondary:
+      Theme.shared.color.textPrimaryDark
     }
-    .onTapGesture {
-      onClick?()
+  }
+  var backgroundColor: Color {
+    switch self {
+    case .primary:
+      Theme.shared.color.primary
+    case .secondary:
+      Theme.shared.color.backgroundPaper
+    }
+  }
+  var borderWidth: CGFloat {
+    switch self {
+    case .primary:
+      0
+    case .secondary:
+      1
+    }
+  }
+  var borderColor: Color {
+    switch self {
+    case .primary:
+        .clear
+    case .secondary:
+      Theme.shared.color.dividerDark
     }
   }
 }

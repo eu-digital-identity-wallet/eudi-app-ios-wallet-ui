@@ -29,7 +29,7 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
   private var pinView: some View {
     VStack(spacing: .zero) {
 
-      PinTextField(
+      PinTextFieldView(
         numericText: $viewModel.uiPinInputField,
         maxDigits: viewModel.viewState.quickPinSize,
         isSecureEntry: true,
@@ -54,13 +54,13 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
   @ViewBuilder private var content: some View {
 
     if viewModel.viewState.isCancellable {
-      ContentHeader(
+      ContentHeaderView(
         dismissIcon: ThemeManager.shared.image.xmark,
         onBack: { viewModel.onPop() }
       )
     }
 
-    ContentTitle(
+    ContentTitleView(
       title: viewModel.viewState.config.title,
       caption: viewModel.viewState.areBiometricsEnabled
       ? viewModel.viewState.config.caption
@@ -88,7 +88,7 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
   }
 
   public var body: some View {
-    ContentScreen {
+    ContentScreenView {
       content
         .alert(item: $viewModel.biometryError) { error in
           Alert(

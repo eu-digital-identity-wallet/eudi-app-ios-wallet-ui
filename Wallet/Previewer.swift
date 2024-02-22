@@ -67,7 +67,7 @@ import logic_business
 }
 
 #Preview {
-  FloatingActionButton(title: .custom("FAB"), icon: Theme.shared.image.xmark) {
+  FloatingActionButtonView(title: .custom("FAB"), icon: Theme.shared.image.xmark) {
 
   }
 }

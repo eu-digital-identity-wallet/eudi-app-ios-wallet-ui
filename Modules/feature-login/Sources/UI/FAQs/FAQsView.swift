@@ -27,18 +27,18 @@ public struct FAQsView<Router: RouterHostType, Interactor: FAQsInteractorType>: 
   }
 
   public var body: some View {
-    ContentScreen(canScroll: true) {
+    ContentScreenView(canScroll: true) {
 
-      ContentHeader {
+      ContentHeaderView {
         viewModel.goBack()
       }
 
       ScrollView(showsIndicators: false) {
         VStack(spacing: SPACING_LARGE_MEDIUM) {
 
-          ContentTitle(title: .faqs)
+          ContentTitleView(title: .faqs)
 
-          SearchBar(
+          SearchBarView(
             text: $viewModel.searchText,
             commited: $userIsEditingAlias,
             isLoading: viewModel.viewState.isLoading

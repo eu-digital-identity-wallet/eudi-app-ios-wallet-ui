@@ -29,18 +29,18 @@ public struct ProximityConnectionView<Router: RouterHostType, Interactor: Proxim
   }
 
   public var body: some View {
-    ContentScreen(
+    ContentScreenView(
       padding: .zero,
       canScroll: true,
       errorConfig: viewModel.viewState.error
     ) {
 
-      ContentHeader(dismissIcon: Theme.shared.image.xmark) {
+      ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
         viewModel.goBack()
       }
       .padding([.top, .horizontal], Theme.shared.dimension.padding)
 
-      ContentTitle(
+      ContentTitleView(
         title: .proximityConnectivityTitle,
         caption: .proximityConnectivityCaption,
         titleColor: Theme.shared.color.textPrimaryDark
@@ -55,7 +55,7 @@ public struct ProximityConnectionView<Router: RouterHostType, Interactor: Proxim
             .resizable()
             .transition(.opacity)
         } else {
-          ContentLoader(showLoader: .constant(true))
+          ContentLoaderView(showLoader: .constant(true))
         }
       }
       .frame(width: contentSize, height: contentSize)

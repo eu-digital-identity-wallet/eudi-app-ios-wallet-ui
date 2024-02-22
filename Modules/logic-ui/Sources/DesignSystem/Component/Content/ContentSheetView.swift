@@ -14,21 +14,21 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import Shimmer
+import logic_resources
 
-public extension View {
-  /// Adds an animated shimmering effect to any view, typically to show that
-  /// an operation is in progress.
-  /// - Parameters:
-  ///   - isLoading: Convenience parameter to conditionally enable the effect. Defaults to `true`.
-  @ViewBuilder func shimmer(
-    isLoading: Bool = true
-  ) -> some View {
-    if isLoading {
-      self.redacted(reason: .placeholder)
-        .shimmering()
-    } else {
-      self
+struct ContentSheetView<Content: View>: View {
+
+  private let content: () -> Content
+
+  init(@ViewBuilder content: @escaping () -> Content) {
+    self.content = content
+  }
+
+  public var body: some View {
+    ZStack {
+      content()
     }
+    .padding(.horizontal)
+    .padding(.top, SPACING_LARGE)
   }
 }

@@ -1,0 +1,19 @@
+# Tests
+- GeneratedMocks.swift
+- Test.*.swift
+
+# Config
+- .*Config.*.swift
+- Config.*.swift
+
+# Views/Components
+- BaseViewModel.swift
+- .*View.swift
+- .*Shape.swift
+- .*Style.swift
+- .*Styles.swift
+- .*Modifier.swift
+- EasySpacer.swift
+
+# Extensions
+- .*Extensions.swift

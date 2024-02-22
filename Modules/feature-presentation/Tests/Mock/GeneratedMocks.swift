@@ -1050,7 +1050,7 @@ public class MockPresentationInteractorType: PresentationInteractorType, Cuckoo.
     
     
     
-    public func onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error> {
+    public func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error> {
         
     return await cuckoo_manager.call(
     """
@@ -1116,8 +1116,8 @@ public class MockPresentationInteractorType: PresentationInteractorType, Cuckoo.
         
         
         
-        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems: M1) -> Cuckoo.ProtocolStubFunction<([RequestDataCell]), Result<RequestItemConvertible, Error>> where M1.MatchedType == [RequestDataCell] {
-            let matchers: [Cuckoo.ParameterMatcher<([RequestDataCell])>] = [wrap(matchable: requestItems) { $0 }]
+        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems: M1) -> Cuckoo.ProtocolStubFunction<([RequestDataUIModel]), Result<RequestItemConvertible, Error>> where M1.MatchedType == [RequestDataUIModel] {
+            let matchers: [Cuckoo.ParameterMatcher<([RequestDataUIModel])>] = [wrap(matchable: requestItems) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractorType.self, method:
     """
     onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>
@@ -1174,8 +1174,8 @@ public class MockPresentationInteractorType: PresentationInteractorType, Cuckoo.
         
         
         @discardableResult
-        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems: M1) -> Cuckoo.__DoNotUse<([RequestDataCell]), Result<RequestItemConvertible, Error>> where M1.MatchedType == [RequestDataCell] {
-            let matchers: [Cuckoo.ParameterMatcher<([RequestDataCell])>] = [wrap(matchable: requestItems) { $0 }]
+        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems: M1) -> Cuckoo.__DoNotUse<([RequestDataUIModel]), Result<RequestItemConvertible, Error>> where M1.MatchedType == [RequestDataUIModel] {
+            let matchers: [Cuckoo.ParameterMatcher<([RequestDataUIModel])>] = [wrap(matchable: requestItems) { $0 }]
             return cuckoo_manager.verify(
     """
     onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>
@@ -1227,7 +1227,7 @@ public class PresentationInteractorTypeStub: PresentationInteractorType {
     
     
     
-    public func onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>  {
+    public func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>  {
         return DefaultValueRegistry.defaultValue(for: (Result<RequestItemConvertible, Error>).self)
     }
     

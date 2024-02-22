@@ -16,7 +16,7 @@
 import SwiftUI
 import logic_resources
 
-public struct FloatingTextField<Content: View>: View {
+public struct FloatingTextFieldView<Content: View>: View {
 
   let placeholderScaleFactor = 0.8
 
@@ -154,7 +154,7 @@ public struct FloatingTextField<Content: View>: View {
   }
 }
 
-public extension FloatingTextField {
+public extension FloatingTextFieldView {
   enum FormatType {
     case amount
     case numeric
@@ -163,7 +163,7 @@ public extension FloatingTextField {
   }
 }
 
-private extension FloatingTextField {
+private extension FloatingTextFieldView {
   func formatAmount(with text: String) -> String {
     let replacedText = text.replacingOccurrences(of: ",", with: ".")
     let isFirstCharPunctuation = replacedText.first?.isPunctuation ?? false

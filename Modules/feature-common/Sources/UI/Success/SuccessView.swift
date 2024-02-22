@@ -30,8 +30,8 @@ public struct SuccessView<Router: RouterHostType, DeepLinkController: DeepLinkCo
   }
 
   public var body: some View {
-    ContentScreen {
-      ContentTitle(
+    ContentScreenView {
+      ContentTitleView(
         title: viewmodel.viewState.config.title,
         caption: viewmodel.viewState.config.subtitle,
         titleColor: ThemeManager.shared.color.success,

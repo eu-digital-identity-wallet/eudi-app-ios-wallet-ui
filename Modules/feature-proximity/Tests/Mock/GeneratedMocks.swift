@@ -1111,7 +1111,7 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
     
     
     
-    public func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState {
+    public func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> ProximityResponsePreparationPartialState {
         
     return await cuckoo_manager.call(
     """
@@ -1230,8 +1230,8 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
         
         
         
-        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems: M1) -> Cuckoo.ProtocolStubFunction<([RequestDataCell]), ProximityResponsePreparationPartialState> where M1.MatchedType == [RequestDataCell] {
-            let matchers: [Cuckoo.ParameterMatcher<([RequestDataCell])>] = [wrap(matchable: requestItems) { $0 }]
+        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems: M1) -> Cuckoo.ProtocolStubFunction<([RequestDataUIModel]), ProximityResponsePreparationPartialState> where M1.MatchedType == [RequestDataUIModel] {
+            let matchers: [Cuckoo.ParameterMatcher<([RequestDataUIModel])>] = [wrap(matchable: requestItems) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractorType.self, method:
     """
     onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState
@@ -1335,8 +1335,8 @@ public class MockProximityInteractorType: ProximityInteractorType, Cuckoo.Protoc
         
         
         @discardableResult
-        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems: M1) -> Cuckoo.__DoNotUse<([RequestDataCell]), ProximityResponsePreparationPartialState> where M1.MatchedType == [RequestDataCell] {
-            let matchers: [Cuckoo.ParameterMatcher<([RequestDataCell])>] = [wrap(matchable: requestItems) { $0 }]
+        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems: M1) -> Cuckoo.__DoNotUse<([RequestDataUIModel]), ProximityResponsePreparationPartialState> where M1.MatchedType == [RequestDataUIModel] {
+            let matchers: [Cuckoo.ParameterMatcher<([RequestDataUIModel])>] = [wrap(matchable: requestItems) { $0 }]
             return cuckoo_manager.verify(
     """
     onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState
@@ -1424,7 +1424,7 @@ public class ProximityInteractorTypeStub: ProximityInteractorType {
     
     
     
-    public func onResponsePrepare(requestItems: [RequestDataCell]) async -> ProximityResponsePreparationPartialState  {
+    public func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> ProximityResponsePreparationPartialState  {
         return DefaultValueRegistry.defaultValue(for: (ProximityResponsePreparationPartialState).self)
     }
     

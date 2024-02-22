@@ -13,36 +13,23 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import SwiftUI
+import logic_resources
 
-public struct SearchBar: View {
-  @Binding var text: String
-  @Binding var commited: Bool
+public struct SheetContentView<Content: View>: View {
 
-  let isloading: Bool
+  private let content: Content
 
-  public init(
-    text: Binding<String>,
-    commited: Binding<Bool>,
-    isLoading: Bool
-  ) {
-    self._text = text
-    self._commited = commited
-    self.isloading = isLoading
+  public init(@ViewBuilder content: () -> Content) {
+    self.content = content()
   }
 
   public var body: some View {
-    HStack {
-      FloatingTextField(
-        title: .search,
-        text: $text,
-        showError: false,
-        contentType: .username,
-        useSpringAnimation: false,
-        userHasCommitedChange: $commited
-      )
+    ZStack {
+      self.content
     }
-    .shimmer(isLoading: isloading)
+    .if(UIDevice.current.uiHomeIndicator == .unavailable) {
+      $0.padding(.bottom)
+    }
   }
 }

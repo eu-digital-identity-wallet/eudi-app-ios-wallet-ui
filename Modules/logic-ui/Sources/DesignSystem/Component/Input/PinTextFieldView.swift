@@ -16,7 +16,7 @@
 import SwiftUI
 import logic_resources
 
-public struct PinTextField: View {
+public struct PinTextFieldView: View {
 
   // MARK: - Properties
   private let maxDigits: Int
@@ -220,7 +220,7 @@ private extension Int {
   }
 }
 
-extension PinTextField {
+extension PinTextFieldView {
   enum FieldState {
     case inactive
     case active

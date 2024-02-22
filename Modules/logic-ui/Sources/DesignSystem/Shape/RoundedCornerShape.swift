@@ -13,22 +13,14 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import SwiftUI
-import logic_resources
+import Foundation
 
-struct ContentSheet<Content: View>: View {
+public struct RoundedCornerShape: Shape {
+  var radius: CGFloat = .infinity
+  var corners: UIRectCorner = .allCorners
 
-  private let content: () -> Content
-
-  init(@ViewBuilder content: @escaping () -> Content) {
-    self.content = content
-  }
-
-  public var body: some View {
-    ZStack {
-      content()
-    }
-    .padding(.horizontal)
-    .padding(.top, SPACING_LARGE)
+  public func path(in rect: CGRect) -> Path {
+    let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+    return Path(path.cgPath)
   }
 }

@@ -19,7 +19,7 @@ import logic_business
 import feature_common
 
 public struct OnlineAuthenticationRequestSuccessModel {
-  var requestDataCells: [RequestDataCell]
+  var requestDataCells: [RequestDataUIModel]
   var relyingParty: String
   var dataRequestInfo: String
   var isTrusted: Bool
@@ -29,7 +29,7 @@ public protocol PresentationInteractorType {
   var presentationCoordinator: PresentationSessionCoordinatorType { get }
 
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
-  func onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>
+  func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>
   func onSendResponse() async -> Result<URL?, Error>
 }
 
@@ -65,7 +65,7 @@ public final actor PresentationInteractor: PresentationInteractorType {
     }
   }
 
-  public func onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error> {
+  public func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error> {
     let requestConvertible = requestItems
       .reduce(into: [RequestDataRow]()) { partialResult, cell in
         if let item = cell.isDataRow, item.isSelected {
