@@ -1,11 +1,24 @@
 default_platform(:ios)
 
 platform :ios do
+  desc "Run test coverage"
+  lane :coverage do
+    FileUtils.remove_dir "../xcov_output", true
+    tests
+    xcov(
+      project: ENV["APP_PROJECT"],
+      scheme: ENV["APP_SCHEME"],
+      output_directory: "xcov_output",
+      ignore_file_path: "fastlane/.xcovignore",
+      exclude_targets: ENV["XCOV_EXCLUDE_TARGETS"],
+    )
+  end
+
   desc "Run tests"
   lane :tests do
-    scan
+    scan(scheme: ENV["APP_SCHEME"])
   end
-  
+
   desc "Build EUDI Wallet Demo version and upload it to AppCenter"
   lane :deploy do
     ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "600"
@@ -14,7 +27,7 @@ platform :ios do
 
     versionName = get_version_number(
       target: ENV["APP_TARGET"],
-      configuration: ENV["APP_VERSION_CONFIG"]
+      configuration: ENV["APP_VERSION_CONFIG"],
     )
 
     appcenter_build_number = latest_appcenter_release(
@@ -128,7 +141,7 @@ platform :ios do
       app_name: appName,
       file: path,
       notify_testers: true,
-      destinations: groups
+      destinations: groups,
     )
   end
 

@@ -1,0 +1,14 @@
+# Tests
+- GeneratedMocks.swift
+- Test.*.swift
+
+# Config
+- .*Config.*.swift
+- Config.*.swift
+
+# Views
+- BaseViewModel.swift
+- .*View.swift
+
+# Extensions
+- .*Extensions.swift
