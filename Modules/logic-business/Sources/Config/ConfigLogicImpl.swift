@@ -18,7 +18,7 @@ import Foundation
 public struct WalletConfig: ConfigLogic {
 
   public var userAuthenticationRequired: Bool {
-    getBundleOptionalValue(of: Bool.self, key: "User authentication required") ?? false
+    getBundleValue(key: "Core User Auth").toBool()
   }
 
   public var walletHostUrl: String {

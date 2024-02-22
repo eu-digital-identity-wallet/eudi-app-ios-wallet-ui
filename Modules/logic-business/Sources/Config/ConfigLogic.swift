@@ -66,7 +66,7 @@ public protocol ConfigLogic {
   var proxmityConfig: ProximityConfig { get }
 
   /**
-   * User authentication required
+   * User authentication required accessing core's secure storage
    */
   var userAuthenticationRequired: Bool { get }
 }

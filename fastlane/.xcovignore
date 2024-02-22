@@ -18,6 +18,5 @@
 # Extensions
 - .*Extensions.swift
 
-# AppCenter
-- .*AppCenter.*.swift
-- AppCenter.*.swift
+# Provider
+- .*Provider.swift
