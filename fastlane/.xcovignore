@@ -17,3 +17,7 @@
 
 # Extensions
 - .*Extensions.swift
+
+# AppCenter
+- .*AppCenter.*.swift
+- AppCenter.*.swift
