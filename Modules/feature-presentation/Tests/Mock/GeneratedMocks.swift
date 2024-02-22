@@ -1054,7 +1054,7 @@ public class MockPresentationInteractorType: PresentationInteractorType, Cuckoo.
         
     return await cuckoo_manager.call(
     """
-    onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>
+    onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>
     """,
             parameters: (requestItems),
             escapingParameters: (requestItems),
@@ -1120,7 +1120,7 @@ public class MockPresentationInteractorType: PresentationInteractorType, Cuckoo.
             let matchers: [Cuckoo.ParameterMatcher<([RequestDataUIModel])>] = [wrap(matchable: requestItems) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractorType.self, method:
     """
-    onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>
+    onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>
     """, parameterMatchers: matchers))
         }
         
@@ -1178,7 +1178,7 @@ public class MockPresentationInteractorType: PresentationInteractorType, Cuckoo.
             let matchers: [Cuckoo.ParameterMatcher<([RequestDataUIModel])>] = [wrap(matchable: requestItems) { $0 }]
             return cuckoo_manager.verify(
     """
-    onResponsePrepare(requestItems: [RequestDataCell]) async -> Result<RequestItemConvertible, Error>
+    onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -2610,6 +2610,22 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
     }
     
     
+    
+    
+    
+    public var userAuthenticationRequired: Bool {
+        get {
+            return cuckoo_manager.getter("userAuthenticationRequired",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.userAuthenticationRequired)
+        }
+        
+    }
+    
+    
 
     
 
@@ -2661,6 +2677,13 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         
         var proxmityConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, ProximityConfig> {
             return .init(manager: cuckoo_manager, name: "proxmityConfig")
+        }
+        
+        
+        
+        
+        var userAuthenticationRequired: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, Bool> {
+            return .init(manager: cuckoo_manager, name: "userAuthenticationRequired")
         }
         
         
@@ -2718,6 +2741,13 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         
         var proxmityConfig: Cuckoo.VerifyReadOnlyProperty<ProximityConfig> {
             return .init(manager: cuckoo_manager, name: "proxmityConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        var userAuthenticationRequired: Cuckoo.VerifyReadOnlyProperty<Bool> {
+            return .init(manager: cuckoo_manager, name: "userAuthenticationRequired", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         
@@ -2790,6 +2820,17 @@ public class ConfigLogicStub: ConfigLogic {
     public var proxmityConfig: ProximityConfig {
         get {
             return DefaultValueRegistry.defaultValue(for: (ProximityConfig).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var userAuthenticationRequired: Bool {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Bool).self)
         }
         
     }
@@ -5800,19 +5841,19 @@ public class MockPresentationSessionCoordinatorType: PresentationSessionCoordina
     
     
     
-    public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws {
+    public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async throws {
         
     return try await cuckoo_manager.callThrows(
     """
-    sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws
+    sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async throws
     """,
-            parameters: (response, onSuccess),
-            escapingParameters: (response, onSuccess),
+            parameters: (response, onSuccess, onCancel),
+            escapingParameters: (response, onSuccess, onCancel),
             superclassCall:
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: await __defaultImplStub!.sendResponse(response: response, onSuccess: onSuccess))
+            defaultCall: await __defaultImplStub!.sendResponse(response: response, onSuccess: onSuccess, onCancel: onCancel))
         
     }
     
@@ -5930,11 +5971,11 @@ public class MockPresentationSessionCoordinatorType: PresentationSessionCoordina
         
         
         
-        func sendResponse<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(response: M1, onSuccess: M2) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(RequestItemConvertible, ((URL?) -> Void)?)> where M1.MatchedType == RequestItemConvertible, M2.OptionalMatchedType == ((URL?) -> Void) {
-            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible, ((URL?) -> Void)?)>] = [wrap(matchable: response) { $0.0 }, wrap(matchable: onSuccess) { $0.1 }]
+        func sendResponse<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable, M3: Cuckoo.OptionalMatchable>(response: M1, onSuccess: M2, onCancel: M3) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(RequestItemConvertible, ((URL?) -> Void)?, (() -> Void)?)> where M1.MatchedType == RequestItemConvertible, M2.OptionalMatchedType == ((URL?) -> Void), M3.OptionalMatchedType == (() -> Void) {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible, ((URL?) -> Void)?, (() -> Void)?)>] = [wrap(matchable: response) { $0.0 }, wrap(matchable: onSuccess) { $0.1 }, wrap(matchable: onCancel) { $0.2 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPresentationSessionCoordinatorType.self, method:
     """
-    sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws
+    sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async throws
     """, parameterMatchers: matchers))
         }
         
@@ -6034,11 +6075,11 @@ public class MockPresentationSessionCoordinatorType: PresentationSessionCoordina
         
         
         @discardableResult
-        func sendResponse<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(response: M1, onSuccess: M2) -> Cuckoo.__DoNotUse<(RequestItemConvertible, ((URL?) -> Void)?), Void> where M1.MatchedType == RequestItemConvertible, M2.OptionalMatchedType == ((URL?) -> Void) {
-            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible, ((URL?) -> Void)?)>] = [wrap(matchable: response) { $0.0 }, wrap(matchable: onSuccess) { $0.1 }]
+        func sendResponse<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable, M3: Cuckoo.OptionalMatchable>(response: M1, onSuccess: M2, onCancel: M3) -> Cuckoo.__DoNotUse<(RequestItemConvertible, ((URL?) -> Void)?, (() -> Void)?), Void> where M1.MatchedType == RequestItemConvertible, M2.OptionalMatchedType == ((URL?) -> Void), M3.OptionalMatchedType == (() -> Void) {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible, ((URL?) -> Void)?, (() -> Void)?)>] = [wrap(matchable: response) { $0.0 }, wrap(matchable: onSuccess) { $0.1 }, wrap(matchable: onCancel) { $0.2 }]
             return cuckoo_manager.verify(
     """
-    sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws
+    sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async throws
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -6133,7 +6174,7 @@ public class PresentationSessionCoordinatorTypeStub: PresentationSessionCoordina
     
     
     
-    public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?) async throws  {
+    public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async throws  {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -8291,16 +8332,6 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
-import SwiftUI
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import feature_presentation
-@testable import logic_api
-@testable import logic_ui
-
 import Foundation
 import SwiftUI
 import logic_resources
@@ -8323,15 +8354,7 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import feature_presentation
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
+import logic_resources
 
 import Cuckoo
 @testable import logic_business
@@ -8464,6 +8487,24 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
 import logic_resources
 
 import Cuckoo
@@ -8476,16 +8517,6 @@ import Cuckoo
 import PartialSheet
 import SwiftUI
 import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import feature_presentation
-@testable import logic_api
-@testable import logic_ui
-
-import Shimmer
-import SwiftUI
 
 import Cuckoo
 @testable import logic_business
@@ -8643,8 +8674,19 @@ import Cuckoo
 @testable import logic_api
 @testable import logic_ui
 
+import Foundation
+import UIKit
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import feature_presentation
+@testable import logic_api
+@testable import logic_ui
+
 import AlertToast
 import PartialSheet
+import Shimmer
 import SwiftUI
 
 import Cuckoo
