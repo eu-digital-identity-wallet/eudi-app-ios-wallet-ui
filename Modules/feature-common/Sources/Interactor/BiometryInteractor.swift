@@ -38,6 +38,17 @@ public final class BiometryInteractor: SystemBiometricsInteractor, BiometryInter
   private lazy var prefsController: PrefsControllerType = PrefsController()
   private lazy var quickPinInteractor: QuickPinInteractorType = QuickPinInteractor()
 
+  convenience init(
+    prefsController: PrefsControllerType,
+    quickPinInteractor: QuickPinInteractorType,
+    biometricsController: SystemBiometricsControllerType,
+    useTestDispatcher: Bool = false
+  ) {
+    self.init(with: biometricsController, useTestDispatcher: useTestDispatcher)
+    self.prefsController = prefsController
+    self.quickPinInteractor = quickPinInteractor
+  }
+
   public func isBiometryEnabled() -> Bool {
     prefsController.getBool(forKey: .biometryEnabled)
   }
