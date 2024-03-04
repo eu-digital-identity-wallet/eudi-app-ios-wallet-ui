@@ -906,17 +906,6 @@
         }
       }
     },
-    "persistent_id" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Persistent Identifier"
-          }
-        }
-      }
-    },
     "pid" : {
       "extractionState" : "manual",
       "localizations" : {
