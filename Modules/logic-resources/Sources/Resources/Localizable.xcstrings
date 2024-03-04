@@ -1555,17 +1555,6 @@
         }
       }
     },
-    "unique_id" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unique identifier"
-          }
-        }
-      }
-    },
     "unknown_verifier" : {
       "extractionState" : "manual",
       "localizations" : {
