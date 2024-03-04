@@ -56,7 +56,7 @@
 		F0BFE9B62AD557290062826F /* feature-common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-common"; path = "Modules/feature-common"; sourceTree = "<group>"; };
 		F0C6207D2B6A6246007F903F /* logic-analytics */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-analytics"; path = "Modules/logic-analytics"; sourceTree = "<group>"; };
 		F12E940E2ABC6C000086EC93 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F14907B82ABAF54B00DDFE56 /* Wallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F14907B82ABAF54B00DDFE56 /* EUDI Wallet RI app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EUDI Wallet RI app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F14907BB2ABAF54B00DDFE56 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		F14907BF2ABAF55000DDFE56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F14907C22ABAF55000DDFE56 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -115,7 +115,7 @@
 		F14907B92ABAF54B00DDFE56 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F14907B82ABAF54B00DDFE56 /* Wallet.app */,
+				F14907B82ABAF54B00DDFE56 /* EUDI Wallet RI app.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -193,7 +193,7 @@
 				F1E83CFE2ACEA40100FBC0E3 /* logic-navigation */,
 			);
 			productName = "EUDI Reference App";
-			productReference = F14907B82ABAF54B00DDFE56 /* Wallet.app */;
+			productReference = F14907B82ABAF54B00DDFE56 /* EUDI Wallet RI app.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -375,7 +375,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet Dev";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -391,8 +391,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = "2024.02.1-Demo";
-				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.scytales.euidi;
+				PRODUCT_NAME = "EUDI Wallet RI app";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -475,7 +475,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet Dev";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -491,8 +491,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = "2024.02.1-Demo";
-				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.scytales.euidi;
+				PRODUCT_NAME = "EUDI Wallet RI app";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -655,8 +655,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = "2024.02.1-Dev";
-				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.dev;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.scytales.euidi.dev;
+				PRODUCT_NAME = "EUDI Wallet RI app";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -699,8 +699,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = "2024.02.1-Dev";
-				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.dev;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.scytales.euidi.dev;
+				PRODUCT_NAME = "EUDI Wallet RI app";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
