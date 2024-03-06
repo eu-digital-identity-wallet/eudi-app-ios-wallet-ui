@@ -16,7 +16,6 @@
 
 import feature_common
 
-@MainActor
 final class ProximityLoadingViewModel<Router: RouterHostType, Interactor: ProximityInteractorType>: BaseLoadingViewModel<Router> {
 
   private let interactor: Interactor

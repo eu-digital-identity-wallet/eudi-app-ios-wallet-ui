@@ -16,7 +16,6 @@
 
 import feature_common
 
-@MainActor
 final class PresentationLoadingViewModel<Router: RouterHostType, Interactor: PresentationInteractorType>: BaseLoadingViewModel<Router> {
 
   private let interactor: Interactor

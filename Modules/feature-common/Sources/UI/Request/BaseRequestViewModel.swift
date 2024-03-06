@@ -30,7 +30,6 @@ public struct RequestViewState: ViewState {
   public let allowShare: Bool
 }
 
-@MainActor
 open class BaseRequestViewModel<Router: RouterHostType>: BaseViewModel<Router, RequestViewState> {
 
   @Published var isCancelModalShowing: Bool = false
