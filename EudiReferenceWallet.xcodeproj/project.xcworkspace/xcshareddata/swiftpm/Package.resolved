@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Alamofire/Alamofire.git",
       "state" : {
-        "revision" : "3dc6a42c7727c49bf26508e29b0a0b35f9c7e1ad",
-        "version" : "5.8.1"
+        "revision" : "723fa5a6c65812aec4a0d7cc432ee198883b6e00",
+        "version" : "5.9.0"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/filom/ASN1Decoder",
       "state" : {
-        "revision" : "d30708c89cbbf8f0f27122a53fbd98d0cda079fd",
-        "version" : "1.9.0"
+        "revision" : "7e1523662c69d019a3299bbfb22fb824141dd1f6",
+        "version" : "1.10.0"
       }
     },
     {
@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twostraws/CodeScanner",
       "state" : {
-        "revision" : "bf5d7087015620b250ee6c865b3c9039fc159d1a",
-        "version" : "2.3.3"
+        "revision" : "303bd5adbb61d068c3bcbb839857340c3e6ff8b0",
+        "version" : "2.4.0"
       }
     },
     {
@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "f9811c94bdd6ea756a14f00aff9507eb932ae03d",
-        "version" : "0.2.0"
+        "revision" : "e701f7a417073b8b090c6d62683119cfdb953cbe",
+        "version" : "0.2.1"
       }
     },
     {
@@ -113,8 +113,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "332031d65fdf15bd7d2938849891a756fd6dccec",
-        "version" : "0.2.0"
+        "revision" : "e523d74159d62fc4833bb7bbd73f37c4a0c42223",
+        "version" : "0.2.1"
       }
     },
     {
@@ -122,8 +122,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "c0d935b3919f8e7a383f6b60b4b592abf6afd689",
-        "version" : "0.1.8"
+        "revision" : "b307f5d411688b9b7752971530d108cf96b08f28",
+        "version" : "0.1.9"
       }
     },
     {
@@ -176,8 +176,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Hitch.git",
       "state" : {
-        "revision" : "b23dba215ecaf089996b6975cdc996376ce27cd5",
-        "version" : "0.4.117"
+        "revision" : "aca7b8b88f1b2064e11cbc95eedc56cb134db1b8",
+        "version" : "0.4.121"
       }
     },
     {
@@ -275,8 +275,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Sextant.git",
       "state" : {
-        "revision" : "7c940fcb7a84c9d1a310707f91e1710c9803d8ea",
-        "version" : "0.4.29"
+        "revision" : "8b2a6994db60b12d2a43712b34cd26a01d0af918",
+        "version" : "0.4.30"
       }
     },
     {
@@ -284,8 +284,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Spanker.git",
       "state" : {
-        "revision" : "6b0edd2996d1f3bebb534fb05e20eac6bf8c8739",
-        "version" : "0.2.46"
+        "revision" : "96e58f68274a2e6f370fff153ceb5674a06936c4",
+        "version" : "0.2.47"
       }
     },
     {
@@ -320,8 +320,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "d029d9d39c87bed85b1c50adee7c41795261a192",
-        "version" : "1.0.6"
+        "revision" : "94cf62b3ba8d4bed62680a282d4c25f9c63c2efb",
+        "version" : "1.1.0"
       }
     },
     {
@@ -345,10 +345,10 @@
     {
       "identity" : "swiftcbor",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/scytales-com/SwiftCBOR.git",
+      "location" : "https://github.com/niscy-eudiw/SwiftCBOR.git",
       "state" : {
-        "revision" : "b23ed1e83d5daa3dfaf73846bee06a4681fea55f",
-        "version" : "0.5.0"
+        "revision" : "4b1cc77cb72019593aef716ee50f477e86288ba1",
+        "version" : "0.5.6"
       }
     },
     {
