@@ -24,7 +24,6 @@ struct StartupState: ViewState {
   let setupError: Error?
 }
 
-@MainActor
 final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteractorType>: BaseViewModel<Router, StartupState> {
 
   private let interactor: Interactor

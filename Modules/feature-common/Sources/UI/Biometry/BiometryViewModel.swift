@@ -30,7 +30,6 @@ struct BiometryState: ViewState {
   let quickPinSize: Int
 }
 
-@MainActor
 final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryInteractorType>: BaseViewModel<Router, BiometryState> {
 
   private let AUTO_VERIFY_ON_APPEAR_DELAY = 250

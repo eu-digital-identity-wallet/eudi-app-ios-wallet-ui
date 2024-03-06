@@ -20,7 +20,6 @@ struct SuccessState: ViewState {
   let config: UIConfig.Success
 }
 
-@MainActor
 final class SuccessViewModel<Router: RouterHostType, DeepLinkController: DeepLinkControllerType>: BaseViewModel<Router, SuccessState> {
 
   private let deepLinkController: DeepLinkController

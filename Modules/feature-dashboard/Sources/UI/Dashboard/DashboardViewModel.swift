@@ -27,7 +27,6 @@ struct DashboardState: ViewState {
   let appVersion: String
 }
 
-@MainActor
 final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInteractorType, DeepLinkController: DeepLinkControllerType>: BaseViewModel<Router, DashboardState> {
 
   private let interactor: Interactor

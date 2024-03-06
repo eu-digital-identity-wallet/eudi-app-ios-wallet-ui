@@ -38,7 +38,6 @@ struct QuickPinState: ViewState {
   let quickPinSize: Int
 }
 
-@MainActor
 final class QuickPinViewModel<Router: RouterHostType, Interactor: QuickPinInteractorType>: BaseViewModel<Router, QuickPinState> {
 
   @Published var uiPinInputField: String = ""

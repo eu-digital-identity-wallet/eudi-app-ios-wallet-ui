@@ -17,7 +17,6 @@
 import feature_common
 import logic_business
 
-@MainActor
 final class ProximityRequestViewModel<Router: RouterHostType, Interactor: ProximityInteractorType>: BaseRequestViewModel<Router> {
 
   private let interactor: Interactor

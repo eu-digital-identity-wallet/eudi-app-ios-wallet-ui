@@ -23,7 +23,6 @@ struct FAQState: ViewState {
   let filteredModels: [FAQUIModel]
 }
 
-@MainActor
 final class FAQsViewModel<Router: RouterHostType, Interactor: FAQsInteractorType>: BaseViewModel<Router, FAQState> {
 
   private let interactor: Interactor
