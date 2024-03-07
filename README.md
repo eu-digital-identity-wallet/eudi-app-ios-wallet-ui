@@ -83,19 +83,19 @@ _(NOTE: These videos are from the Android version)_
 
 Issuance
 
-[Issuance](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/01846fe5-6e57-407c-8e40-6970b36ac6bb)
+[Issuance](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/assets/129499766/9e9fb151-38ca-48f7-a0d7-669ce816513b)
 
 Presentation
 
-[Presentation](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/f6821b6e-ac2b-4a9f-9fb6-4084fd94ec41)
+[Presentation](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/assets/129499766/76953733-4841-4581-9c7e-f53499f408f3)
 
 Proximity
 
-[Proximity](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/156cbc97-7271-451b-8802-b64af250975d)
+[Proximity](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/assets/129499766/68c975e1-1f99-441e-acef-e4a42572ab4d)
 
 ## How to use the application
 
-Minumum device requirements
+Minimum device requirements
 
 - Any device that supports iOS 15.0
 
