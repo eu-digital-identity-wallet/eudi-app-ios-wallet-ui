@@ -394,7 +394,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "2024.02.1-Demo";
+				MARKETING_VERSION = "yyyy.mm.v-Demo";
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -497,7 +497,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "2024.02.1-Demo";
+				MARKETING_VERSION = "yyyy.mm.v-Demo";
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -664,7 +664,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "2024.02.1-Dev";
+				MARKETING_VERSION = "yyyy.mm.v-Dev";
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -711,7 +711,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "2024.02.1-Dev";
+				MARKETING_VERSION = "yyyy.mm.v-Dev";
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
