@@ -1,3 +1,20 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+require "date"
+
 default_platform(:ios)
 
 platform :ios do
@@ -25,30 +42,36 @@ platform :ios do
 
     git_pull
 
-    versionName = get_version_number(
-      target: ENV["APP_TARGET"],
-      configuration: ENV["APP_VERSION_CONFIG"],
-    )
-
     appcenter_build_number = latest_appcenter_release(
       appName: ENV["APP_CENTER_APP_NAME"],
-      appVersion: versionName,
       appToken: ENV["APP_CENTER_APP_TOKEN"],
       ownerName: ENV["APP_CENTER_ACCOUNT"],
     )
 
     buildNumber = build_number(versionBuildNumber: appcenter_build_number)
 
-    tagVersion = tag_name(
-      buildName: versionName,
-      buildNumber: buildNumber,
-      brand: ENV["APP_TAG"],
+    calver(
+      target: ENV["APP_TARGET"],
+      configName: ENV["APP_VERSION_CONFIG"],
       buildType: ENV["APP_BUILD_TYPE"],
+      buildCode: buildNumber,
+    )
+
+    versionName = get_version_number(
+      target: ENV["APP_TARGET"],
+      configuration: ENV["APP_VERSION_CONFIG"],
     )
 
     update_build_number(
       target: ENV["APP_TARGET"],
       number: buildNumber,
+    )
+
+    tagVersion = tag_name(
+      buildName: versionName,
+      buildNumber: buildNumber,
+      brand: ENV["APP_TAG"],
+      buildType: ENV["APP_BUILD_TYPE"],
     )
 
     build_app(
@@ -71,7 +94,11 @@ platform :ios do
     )
 
     clean_build_artifacts
-    reset_buildnumber
+    resetVersioning(
+      target: ENV["APP_TARGET"],
+      configName: ENV["APP_VERSION_CONFIG"],
+      buildType: ENV["APP_BUILD_TYPE"],
+    )
 
     add_git_tag(
       tag: tagVersion,
@@ -80,7 +107,23 @@ platform :ios do
     push_git_tags
   end
 
-  desc "Set build number to default 1"
+  desc "Reset version and build number to default"
+  lane :resetVersioning do |values|
+    target = values[:target]
+    configName = values[:configName]
+    buildType = values[:buildType]
+    update_build_number(
+      target: target,
+      number: 1,
+    )
+    update_version(
+      target: target,
+      configName: configName,
+      version: "yyyy.mm.v-#{buildType}",
+    )
+  end
+
+  desc "Set build number"
   lane :update_build_number do |values|
     target = values[:target]
     number = values[:number]
@@ -94,10 +137,15 @@ platform :ios do
     )
   end
 
-  desc "Set build number to default 1"
-  lane :reset_buildnumber do
-    increment_build_number(
-      build_number: 1,
+  desc "Set version"
+  lane :update_version do |values|
+    target = values[:target]
+    configName = values[:configName]
+    version = values[:version]
+    increment_version_number_in_xcodeproj(
+      target: target,
+      version_number: version,
+      build_configuration_name: configName,
     )
   end
 
@@ -106,15 +154,6 @@ platform :ios do
     number = values[:versionBuildNumber].to_i + 1
     puts "Build Number: #{number}"
     number
-  end
-
-  desc "Build Full version"
-  lane :full_version do |values|
-    buildName = values[:buildName]
-    buildNumber = values[:buildNumber]
-    version = "[#{buildName} BUILD_NUMBER=#{buildNumber}]"
-    puts "Full version: #{version}"
-    version
   end
 
   desc "Build Tag Name"
@@ -148,7 +187,6 @@ platform :ios do
   desc "Get Release version From AppCenter"
   lane :latest_appcenter_release do |values|
     appName = values[:appName]
-    appVersion = values[:appVersion]
     appToken = values[:appToken]
     ownerName = values[:ownerName]
     version = "1"
@@ -157,12 +195,27 @@ platform :ios do
         api_token: appToken,
         owner_name: ownerName,
         app_name: appName,
-        version: appVersion,
-      )["build_number"].gsub("#{appVersion}.", "")
+      )["build_number"]
     rescue => ex
       puts ex
     end
     puts "AppCenter Version: #{version}"
     version
+  end
+
+  desc "Build Version"
+  lane :calver do |values|
+    target = values[:target]
+    configName = values[:configName]
+    buildType = values[:buildType]
+    buildCode = values[:buildCode]
+    date = DateTime.now
+    version = "#{date.strftime("%Y.%m")}.#{buildCode}-#{buildType}"
+    puts "Generated Calver: #{version}"
+    update_version(
+      target: target,
+      configName: configName,
+      version: version,
+    )
   end
 end
