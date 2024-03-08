@@ -186,9 +186,11 @@ You can find instructions on how to configure the application [here](wiki/config
 
 *logic-resources*: All app resources reside here (images, etc.)
 
+*logic-core*: Wallet core dependencies.
+
 *logic-analytics*: Access to analytics providers. Capabilities for test monitoring analytics (i.e. crashes) can be added here (no functionality right now)
 
-*logic-business*: App business logic, wallet core resides here.
+*logic-business*: App & Wallet core business logic.
 
 *logic-ui*: Common UI components.
 
@@ -210,7 +212,7 @@ You can find instructions on how to configure the application [here](wiki/config
 
 ```mermaid
 graph TD;
-    Logic-modules/logic-resources,logic-ui,logic-business,logic-api/-->Feature-modules/feature-common,feature-login,feature-dashboard,feature-startup,feature-presentation,feature-issuance,feature-proximity/;
+    Logic-modules/logic-core,logic-resources,logic-ui,logic-business,logic-api/-->Feature-modules/feature-common,feature-login,feature-dashboard,feature-startup,feature-presentation,feature-issuance,feature-proximity/;
 ```
 
 ## License
