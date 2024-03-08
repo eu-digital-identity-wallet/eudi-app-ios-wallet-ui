@@ -1,5 +1,6 @@
 import Cuckoo
 @testable import logic_analytics
+@testable import logic_core
 
 
 
@@ -113,6 +114,7 @@ import Cuckoo
 
 import Cuckoo
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
@@ -340,11 +342,13 @@ public class AnalyticsControllerTypeStub: AnalyticsControllerType {
 
 import Cuckoo
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_analytics
+@testable import logic_core
 
 import AppCenter
 import AppCenterAnalytics
@@ -352,6 +356,7 @@ import AppCenterCrashes
 
 import Cuckoo
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
@@ -477,6 +482,7 @@ import Foundation
 
 import Cuckoo
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
@@ -701,3 +707,13 @@ import Foundation
 
 
 
+
+import Cuckoo
+@testable import logic_analytics
+@testable import logic_core
+
+import EudiWalletKit
+import MdocDataModel18013
+import MdocDataTransfer18013
+import MdocSecurity18013
+import WalletStorage

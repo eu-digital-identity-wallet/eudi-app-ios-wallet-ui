@@ -15,11 +15,9 @@
  */
 
 import Foundation
-import EudiWalletKit
-import MdocDataModel18013
+import logic_core
 import Combine
 import logic_resources
-import WalletStorage
 
 public protocol WalletKitControllerType {
 

@@ -16,7 +16,7 @@
 import XCTest
 import logic_business
 import logic_resources
-import MdocDataModel18013
+import logic_core
 @testable import feature_dashboard
 @testable import logic_test
 @testable import feature_test

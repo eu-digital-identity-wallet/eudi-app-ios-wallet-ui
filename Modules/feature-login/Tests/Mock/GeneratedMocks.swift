@@ -1,6 +1,7 @@
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -12,6 +13,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -22,6 +24,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -32,6 +35,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -44,6 +48,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -505,6 +510,7 @@ public class BiometryInteractorTypeStub: BiometryInteractorType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -789,6 +795,7 @@ public class QuickPinInteractorTypeStub: QuickPinInteractorType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -800,6 +807,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -811,6 +819,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -821,6 +830,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -831,17 +841,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
-@testable import feature_login
-@testable import logic_api
-@testable import logic_ui
-
-import SwiftUI
-import logic_resources
-import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -853,6 +853,19 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import SwiftUI
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -863,6 +876,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -873,6 +887,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -884,6 +899,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -895,6 +911,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -906,6 +923,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -916,6 +934,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -928,18 +947,20 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
 
-import EudiWalletKit
 import Foundation
 import SwiftUI
 import logic_business
+import logic_core
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -953,6 +974,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -964,6 +986,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -974,6 +997,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1104,6 +1128,7 @@ public class FAQsInteractorTypeStub: FAQsInteractorType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1182,6 +1207,7 @@ public class WelcomeInteractorTypeStub: WelcomeInteractorType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1193,6 +1219,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1203,15 +1230,18 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
 
 import Foundation
+import logic_business
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1223,6 +1253,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1234,6 +1265,7 @@ import logic_ui
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1351,6 +1383,7 @@ import Cuckoo
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1582,6 +1615,7 @@ public class AnalyticsControllerTypeStub: AnalyticsControllerType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1591,6 +1625,7 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1602,6 +1637,7 @@ import AppCenterCrashes
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1731,6 +1767,7 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1962,6 +1999,7 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1971,6 +2009,7 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1982,6 +2021,7 @@ import logic_business
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -1989,6 +2029,7 @@ import Cuckoo
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -2282,6 +2323,7 @@ import struct Foundation.Data
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -2291,6 +2333,7 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -2300,6 +2343,7 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -2429,6 +2473,7 @@ public class SampleRepositoryTypeStub: SampleRepositoryType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -2794,6 +2839,7 @@ public class ConfigLogicStub: ConfigLogic {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -2803,6 +2849,7 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -3291,6 +3338,7 @@ public class ConfigSecurityLogicStub: ConfigSecurityLogic {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -3300,6 +3348,7 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -3685,6 +3734,7 @@ public class KeyChainControllerTypeStub: KeyChainControllerType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -4171,6 +4221,7 @@ public class PrefsControllerTypeStub: PrefsControllerType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -4396,6 +4447,7 @@ public class ReachabilityControllerTypeStub: ReachabilityControllerType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -4936,15 +4988,14 @@ public class SecurityControllerTypeStub: SecurityControllerType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
 
 import Combine
-import EudiWalletKit
 import Foundation
-import MdocDataModel18013
-import WalletStorage
+import logic_core
 import logic_resources
 
 
@@ -5662,14 +5713,14 @@ public class WalletKitControllerTypeStub: WalletKitControllerType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
 
 import Combine
-import EudiWalletKit
 import Foundation
-import MdocDataModel18013
+import logic_core
 import logic_resources
 
 
@@ -6157,105 +6208,44 @@ public class PresentationSessionCoordinatorTypeStub: PresentationSessionCoordina
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
-@testable import feature_login
-@testable import logic_api
-@testable import logic_ui
-
-import Combine
-import EudiWalletKit
-import Foundation
-import MdocDataModel18013
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import feature_login
-@testable import logic_api
-@testable import logic_ui
-
-import Combine
-import EudiWalletKit
-import Foundation
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import feature_login
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import feature_login
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import feature_login
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import feature_login
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import feature_login
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import feature_login
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import feature_login
-@testable import logic_api
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
 
 import Combine
 import Foundation
+import logic_core
+import logic_resources
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import Combine
+import Foundation
+import logic_core
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -6265,6 +6255,7 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -6274,6 +6265,7 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -6283,6 +6275,78 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import Combine
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -6293,6 +6357,7 @@ import UIKit
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -6302,28 +6367,31 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
 
-import MdocDataModel18013
 import SwiftUI
+import logic_core
 import logic_resources
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
 
 import Foundation
-import MdocDataModel18013
+import logic_core
 import logic_resources
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -6333,17 +6401,19 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
 
 import Foundation
-import MdocDataModel18013
+import logic_core
 import logic_resources
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -6353,12 +6423,13 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
 
-import EudiWalletKit
 import Foundation
+import logic_core
 
 
 
@@ -6391,11 +6462,11 @@ public class MockRequestItemConvertible: RequestItemConvertible, Cuckoo.Protocol
     
     
     
-    public func asRequestItems() -> RequestItems {
+    public func asRequestItems() -> RequestConvertibleItems {
         
     return cuckoo_manager.call(
     """
-    asRequestItems() -> RequestItems
+    asRequestItems() -> RequestConvertibleItems
     """,
             parameters: (),
             escapingParameters: (),
@@ -6419,11 +6490,11 @@ public class MockRequestItemConvertible: RequestItemConvertible, Cuckoo.Protocol
         
         
         
-        func asRequestItems() -> Cuckoo.ProtocolStubFunction<(), RequestItems> {
+        func asRequestItems() -> Cuckoo.ProtocolStubFunction<(), RequestConvertibleItems> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRequestItemConvertible.self, method:
     """
-    asRequestItems() -> RequestItems
+    asRequestItems() -> RequestConvertibleItems
     """, parameterMatchers: matchers))
         }
         
@@ -6447,11 +6518,11 @@ public class MockRequestItemConvertible: RequestItemConvertible, Cuckoo.Protocol
         
         
         @discardableResult
-        func asRequestItems() -> Cuckoo.__DoNotUse<(), RequestItems> {
+        func asRequestItems() -> Cuckoo.__DoNotUse<(), RequestConvertibleItems> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    asRequestItems() -> RequestItems
+    asRequestItems() -> RequestConvertibleItems
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -6469,8 +6540,8 @@ public class RequestItemConvertibleStub: RequestItemConvertible {
     
     
     
-    public func asRequestItems() -> RequestItems  {
-        return DefaultValueRegistry.defaultValue(for: (RequestItems).self)
+    public func asRequestItems() -> RequestConvertibleItems  {
+        return DefaultValueRegistry.defaultValue(for: (RequestConvertibleItems).self)
     }
     
     
@@ -6483,6 +6554,7 @@ public class RequestItemConvertibleStub: RequestItemConvertible {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -6663,6 +6735,7 @@ public class ConfigProviderTypeStub: ConfigProviderType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -7017,6 +7090,7 @@ public class FormValidatorInteractorStub: FormValidatorInteractor {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -7024,6 +7098,21 @@ import Cuckoo
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
+@testable import feature_login
+@testable import logic_api
+@testable import logic_ui
+
+import EudiWalletKit
+import MdocDataModel18013
+import MdocDataTransfer18013
+import MdocSecurity18013
+import WalletStorage
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -7103,6 +7192,7 @@ public class ViewStateStub: ViewState {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -7379,6 +7469,7 @@ public class SystemBiometricsControllerTypeStub: SystemBiometricsControllerType 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -7687,6 +7778,7 @@ public class SystemBiometricsInteractorTypeStub: SystemBiometricsInteractorType 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -7861,6 +7953,7 @@ public class ConfigUiLogicStub: ConfigUiLogic {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -7870,6 +7963,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -7990,6 +8084,7 @@ public class UIConfigTypeStub: UIConfigType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8273,6 +8368,7 @@ public class DeepLinkControllerTypeStub: DeepLinkControllerType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8284,6 +8380,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8294,6 +8391,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8304,6 +8402,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8313,6 +8412,7 @@ import SwiftUI
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8323,6 +8423,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8334,6 +8435,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8345,6 +8447,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8355,6 +8458,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8366,6 +8470,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8377,6 +8482,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8387,6 +8493,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8397,6 +8504,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8407,6 +8515,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8417,6 +8526,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8427,6 +8537,7 @@ import SwiftUI
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8436,6 +8547,7 @@ import SwiftUI
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8445,6 +8557,7 @@ import SwiftUI
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8455,6 +8568,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8466,6 +8580,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8476,6 +8591,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8487,6 +8603,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8497,6 +8614,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8507,6 +8625,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8516,6 +8635,7 @@ import SwiftUI
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8526,6 +8646,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8537,6 +8658,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8547,6 +8669,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8557,6 +8680,7 @@ import SwiftUI
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8566,6 +8690,7 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8576,6 +8701,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8585,6 +8711,7 @@ import SwiftUI
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8595,6 +8722,7 @@ import logic_resources
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8605,6 +8733,7 @@ import UIKit
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8615,6 +8744,7 @@ import SwiftUI
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8625,6 +8755,7 @@ import UIKit
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -8637,6 +8768,7 @@ import SwiftUI
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui
@@ -9277,6 +9409,7 @@ public class RouterHostTypeStub: RouterHostType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 @testable import feature_login
 @testable import logic_api
 @testable import logic_ui

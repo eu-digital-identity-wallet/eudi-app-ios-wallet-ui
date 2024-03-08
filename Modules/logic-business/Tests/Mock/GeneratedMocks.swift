@@ -1,6 +1,7 @@
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 
 
@@ -115,6 +116,7 @@ import Cuckoo
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
@@ -343,12 +345,14 @@ public class AnalyticsControllerTypeStub: AnalyticsControllerType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import AppCenter
 import AppCenterAnalytics
@@ -357,6 +361,7 @@ import AppCenterCrashes
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
@@ -483,6 +488,7 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
@@ -711,6 +717,7 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
@@ -1073,12 +1080,14 @@ public class ConfigLogicStub: ConfigLogic {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
@@ -1564,12 +1573,14 @@ public class ConfigSecurityLogicStub: ConfigSecurityLogic {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 import KeychainAccess
@@ -1952,6 +1963,7 @@ public class KeyChainControllerTypeStub: KeyChainControllerType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
@@ -2435,6 +2447,7 @@ public class PrefsControllerTypeStub: PrefsControllerType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import BluetoothKit
 import Combine
@@ -2657,6 +2670,7 @@ public class ReachabilityControllerTypeStub: ReachabilityControllerType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Combine
 import Foundation
@@ -3194,12 +3208,11 @@ public class SecurityControllerTypeStub: SecurityControllerType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Combine
-import EudiWalletKit
 import Foundation
-import MdocDataModel18013
-import WalletStorage
+import logic_core
 import logic_resources
 
 
@@ -3917,11 +3930,11 @@ public class WalletKitControllerTypeStub: WalletKitControllerType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Combine
-import EudiWalletKit
 import Foundation
-import MdocDataModel18013
+import logic_core
 import logic_resources
 
 
@@ -4409,68 +4422,77 @@ public class PresentationSessionCoordinatorTypeStub: PresentationSessionCoordina
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Combine
-import EudiWalletKit
 import Foundation
-import MdocDataModel18013
+import logic_core
 import logic_resources
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Combine
-import EudiWalletKit
+import Foundation
+import logic_core
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+
 import Foundation
 import logic_resources
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
-
-import Foundation
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Combine
 import Foundation
@@ -4478,24 +4500,28 @@ import Foundation
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 import UIKit
@@ -4503,51 +4529,58 @@ import UIKit
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
-import MdocDataModel18013
 import SwiftUI
+import logic_core
 import logic_resources
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
-import MdocDataModel18013
+import logic_core
 import logic_resources
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
-import MdocDataModel18013
+import logic_core
 import logic_resources
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Foundation
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
-import EudiWalletKit
 import Foundation
+import logic_core
 
 
 
@@ -4580,11 +4613,11 @@ public class MockRequestItemConvertible: RequestItemConvertible, Cuckoo.Protocol
     
     
     
-    public func asRequestItems() -> RequestItems {
+    public func asRequestItems() -> RequestConvertibleItems {
         
     return cuckoo_manager.call(
     """
-    asRequestItems() -> RequestItems
+    asRequestItems() -> RequestConvertibleItems
     """,
             parameters: (),
             escapingParameters: (),
@@ -4608,11 +4641,11 @@ public class MockRequestItemConvertible: RequestItemConvertible, Cuckoo.Protocol
         
         
         
-        func asRequestItems() -> Cuckoo.ProtocolStubFunction<(), RequestItems> {
+        func asRequestItems() -> Cuckoo.ProtocolStubFunction<(), RequestConvertibleItems> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRequestItemConvertible.self, method:
     """
-    asRequestItems() -> RequestItems
+    asRequestItems() -> RequestConvertibleItems
     """, parameterMatchers: matchers))
         }
         
@@ -4636,11 +4669,11 @@ public class MockRequestItemConvertible: RequestItemConvertible, Cuckoo.Protocol
         
         
         @discardableResult
-        func asRequestItems() -> Cuckoo.__DoNotUse<(), RequestItems> {
+        func asRequestItems() -> Cuckoo.__DoNotUse<(), RequestConvertibleItems> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    asRequestItems() -> RequestItems
+    asRequestItems() -> RequestConvertibleItems
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -4658,8 +4691,8 @@ public class RequestItemConvertibleStub: RequestItemConvertible {
     
     
     
-    public func asRequestItems() -> RequestItems  {
-        return DefaultValueRegistry.defaultValue(for: (RequestItems).self)
+    public func asRequestItems() -> RequestConvertibleItems  {
+        return DefaultValueRegistry.defaultValue(for: (RequestConvertibleItems).self)
     }
     
     
@@ -4672,6 +4705,7 @@ public class RequestItemConvertibleStub: RequestItemConvertible {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import class Foundation.Bundle
 
@@ -4849,6 +4883,7 @@ public class ConfigProviderTypeStub: ConfigProviderType {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
 
 import Combine
 import Foundation
@@ -5200,3 +5235,15 @@ public class FormValidatorInteractorStub: FormValidatorInteractor {
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
+@testable import logic_core
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+
+import EudiWalletKit
+import MdocDataModel18013
+import MdocDataTransfer18013
+import MdocSecurity18013
+import WalletStorage

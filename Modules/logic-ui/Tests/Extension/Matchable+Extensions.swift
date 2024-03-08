@@ -13,36 +13,12 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_core
+import logic_business
+import logic_ui
+import Cuckoo
 
-public protocol RequestItemConvertible {
+extension PrefsController.Key: Matchable {}
 
-  typealias RequestConvertibleItems = [String: [String: [String]]]
+extension AppRoute: Matchable {}
 
-  func asRequestItems() -> RequestConvertibleItems
-}
-
-public struct RequestItemsWrapper: RequestItemConvertible {
-
-  public var requestItems: RequestConvertibleItems
-
-  public init() {
-    requestItems = RequestConvertibleItems()
-  }
-
-  public init(dictionary: RequestConvertibleItems) {
-    self.requestItems = dictionary
-  }
-
-  public func asRequestItems() -> RequestConvertibleItems {
-    requestItems
-  }
-
-}
-
-extension RequestItems: RequestItemConvertible {
-  public func asRequestItems() -> RequestConvertibleItems {
-    return self
-  }
-}
+extension URLComponents: Matchable {}

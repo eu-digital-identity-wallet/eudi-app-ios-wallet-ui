@@ -14,9 +14,13 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import logic_business
 
-public struct FAQUIModel: Identifiable {
-  public let id: String
+public struct FAQUIModel: Identifiable, Equatable {
+
+  @EquatableNoop
+  public var id: String
+
   public let value: Value
 
   public init(id: String, value: Value) {
@@ -26,44 +30,57 @@ public struct FAQUIModel: Identifiable {
 }
 
 public extension FAQUIModel {
-  struct Value {
-    public let id: String
+  struct Value: Equatable {
+
+    @EquatableNoop
+    public var id: String
+
     public let title: String
     public let content: String
   }
 
   static func mocks() -> [FAQUIModel] {
     [
-      .init(id: UUID().uuidString,
-            value: .init(
-              id: UUID().uuidString,
-              title: "Cell 1",
-              content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            )),
-      .init(id: UUID().uuidString,
-            value: .init(
-              id: UUID().uuidString,
-              title: "Cell 2",
-              content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            )),
-      .init(id: UUID().uuidString,
-            value: .init(
-              id: UUID().uuidString,
-              title: "Cell 22",
-              content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            )),
-      .init(id: UUID().uuidString,
-            value: .init(
-              id: UUID().uuidString,
-              title: "Cell 3",
-              content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            )),
-      .init(id: UUID().uuidString,
-            value: .init(
-              id: UUID().uuidString,
-              title: "Cell 4",
-              content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            ))
+      .init(
+        id: UUID().uuidString,
+        value: .init(
+          id: UUID().uuidString,
+          title: "Cell 1",
+          content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        )
+      ),
+      .init(
+        id: UUID().uuidString,
+        value: .init(
+          id: UUID().uuidString,
+          title: "Cell 2",
+          content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        )
+      ),
+      .init(
+        id: UUID().uuidString,
+        value: .init(
+          id: UUID().uuidString,
+          title: "Cell 22",
+          content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        )
+      ),
+      .init(
+        id: UUID().uuidString,
+        value: .init(
+          id: UUID().uuidString,
+          title: "Cell 3",
+          content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        )
+      ),
+      .init(
+        id: UUID().uuidString,
+        value: .init(
+          id: UUID().uuidString,
+          title: "Cell 4",
+          content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        )
+      )
     ]
   }
 }

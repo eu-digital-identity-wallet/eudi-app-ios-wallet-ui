@@ -26,7 +26,9 @@ public protocol FAQsInteractorType {
 }
 
 public final actor FAQsInteractor: FAQsInteractorType {
+
   public init() {}
+
   public func fetchFAQs() async -> FAQsPartialState {
     do {
       try await Task.sleep(nanoseconds: 2 * 1_000_000_000)

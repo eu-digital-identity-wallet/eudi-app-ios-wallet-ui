@@ -16,7 +16,7 @@
 import Foundation
 import SwiftUI
 import logic_business
-import EudiWalletKit
+import logic_core
 
 public enum RequestDataUIModel: Equatable {
   case requestDataRow(RequestDataRow)

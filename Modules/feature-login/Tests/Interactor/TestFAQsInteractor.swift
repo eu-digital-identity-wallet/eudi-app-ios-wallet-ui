@@ -13,15 +13,35 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-@testable import logic_ui
+import XCTest
+import logic_business
+@testable import feature_login
 @testable import logic_test
+@testable import feature_test
 
-final class BaseTests: EudiTest {
-    func testExample() throws {
-        // XCTest Documentation
-        // https://developer.apple.com/documentation/xctest
-
-        // Defining Test Cases and Test Methods
-        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
+final class TestFAQsInteractor: EudiTest {
+  
+  var interactor: FAQsInteractorType!
+  
+  override func setUp() {
+    self.interactor = FAQsInteractor()
+  }
+  
+  override func tearDown() {
+    self.interactor = nil
+  }
+  
+  func testFetchFAQs_WhenRetrievalIsSuccessful_ThenReturnSuccessPartialState() async {
+    // Given
+    let expectedList = FAQUIModel.mocks()
+    // When
+    let state = await interactor.fetchFAQs()
+    // Then
+    switch state {
+    case .success(let faqs):
+      XCTAssertEqual(faqs, expectedList)
+    default:
+      XCTFail("Wrong state \(state)")
     }
+  }
 }

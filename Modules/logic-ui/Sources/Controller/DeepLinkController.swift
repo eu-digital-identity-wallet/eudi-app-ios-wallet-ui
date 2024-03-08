@@ -31,6 +31,15 @@ public final class DeepLinkController: DeepLinkControllerType {
 
   public init() {}
 
+  convenience init(
+    prefsController: PrefsControllerType,
+    walletKitController: WalletKitControllerType
+  ) {
+    self.init()
+    self.prefsController = prefsController
+    self.walletKitController = walletKitController
+  }
+
   public func getPendingDeepLinkAction() -> DeepLinkAction? {
     if let cachedLink = prefsController.getString(forKey: .cachedDeepLink),
        let url = URL(string: cachedLink) {
@@ -84,7 +93,7 @@ public final class DeepLinkController: DeepLinkControllerType {
 }
 
 public extension DeepLinkController {
-  struct DeepLinkAction {
+  struct DeepLinkAction: Equatable {
     public let link: URLComponents
     public let plainUrl: URL
     public let action: Action

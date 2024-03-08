@@ -16,7 +16,7 @@
 import Foundation
 import Combine
 import logic_resources
-import EudiWalletKit
+import logic_core
 
 public final class RemoteSessionCoordinator: PresentationSessionCoordinatorType {
 

@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import MdocDataModel18013
+import logic_core
 
 final class Constants {}
 
@@ -35,4 +35,23 @@ extension Constants {
 
 extension Constants {
   static let randomIdentifier = UUID().uuidString
+}
+
+
+extension Constants {
+  struct MockPresentationService: PresentationService {
+    
+    var flow: EudiWalletKit.FlowType
+    
+    func startQrEngagement() async throws -> Data? { nil }
+    
+    func receiveRequest() async throws -> [String : Any] { [:] }
+    
+    func sendResponse(userAccepted: Bool, itemsToSend: EudiWalletKit.RequestItems, onSuccess: ((URL?) -> Void)?) async throws {}
+  }
+  
+  static let mockPresentationSession = PresentationSession(
+    presentationService: MockPresentationService(flow: .other),
+    userAuthenticationRequired: false
+  )
 }
