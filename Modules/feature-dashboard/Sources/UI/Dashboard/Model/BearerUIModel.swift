@@ -15,7 +15,7 @@
  */
 import SwiftUI
 import logic_resources
-import MdocDataModel18013
+import logic_core
 import UIKit
 import logic_business
 

@@ -13,36 +13,9 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_core
 
-public protocol RequestItemConvertible {
-
-  typealias RequestConvertibleItems = [String: [String: [String]]]
-
-  func asRequestItems() -> RequestConvertibleItems
-}
-
-public struct RequestItemsWrapper: RequestItemConvertible {
-
-  public var requestItems: RequestConvertibleItems
-
-  public init() {
-    requestItems = RequestConvertibleItems()
-  }
-
-  public init(dictionary: RequestConvertibleItems) {
-    self.requestItems = dictionary
-  }
-
-  public func asRequestItems() -> RequestConvertibleItems {
-    requestItems
-  }
-
-}
-
-extension RequestItems: RequestItemConvertible {
-  public func asRequestItems() -> RequestConvertibleItems {
-    return self
-  }
-}
+@_exported import MdocDataModel18013
+@_exported import EudiWalletKit
+@_exported import MdocSecurity18013
+@_exported import MdocDataTransfer18013
+@_exported import WalletStorage

@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import MdocDataModel18013
+import logic_core
 import logic_resources
 
 public extension MdocDecodable {

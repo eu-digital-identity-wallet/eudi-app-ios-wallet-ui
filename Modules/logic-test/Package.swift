@@ -20,13 +20,15 @@ let package = Package(
     .package(
       url: "https://github.com/groue/CombineExpectations.git",
       from: "0.10.0"
-    )
+    ),
+    .package(name: "logic-core", path: "./logic-core"),
   ],
   targets: [
     .target(
       name: "logic-test",
       dependencies: [
         "CombineExpectations",
+        "logic-core",
         .product(
           name: "Cuckoo",
           package: "Cuckoo"

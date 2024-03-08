@@ -53,6 +53,7 @@
 		F0A013962AC35ECA00065EAD /* logic-ui */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-ui"; path = "Modules/logic-ui"; sourceTree = "<group>"; };
 		F0A0BE922AC35925002BE0F5 /* Wallet.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Wallet.xctestplan; sourceTree = "<group>"; };
 		F0A3740D2AC3A92400F301DD /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		F0B440782B9B42B600031137 /* logic-core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-core"; path = "Modules/logic-core"; sourceTree = "<group>"; };
 		F0BFE9B62AD557290062826F /* feature-common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-common"; path = "Modules/feature-common"; sourceTree = "<group>"; };
 		F0C6207D2B6A6246007F903F /* logic-analytics */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-analytics"; path = "Modules/logic-analytics"; sourceTree = "<group>"; };
 		F12E940E2ABC6C000086EC93 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -153,6 +154,7 @@
 		F14908692ABC467600DDFE56 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
+				F0B440782B9B42B600031137 /* logic-core */,
 				F0C6207D2B6A6246007F903F /* logic-analytics */,
 				F069CC3E2AFAC0AD0033AAC5 /* feature-issuance */,
 				F069CC3D2AFAC0AD0033AAC5 /* feature-proximity */,

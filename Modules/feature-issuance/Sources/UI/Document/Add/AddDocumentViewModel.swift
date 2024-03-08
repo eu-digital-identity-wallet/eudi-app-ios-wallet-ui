@@ -18,8 +18,7 @@ import logic_ui
 import logic_resources
 import logic_business
 import feature_common
-import MdocDataModel18013
-import EudiWalletKit
+import logic_core
 
 struct AddDocumentViewState: ViewState {
   let addDocumentCellModels: [AddDocumentUIModel]

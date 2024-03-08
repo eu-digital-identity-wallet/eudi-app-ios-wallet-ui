@@ -18,7 +18,7 @@ import logic_ui
 import logic_resources
 import feature_common
 import logic_business
-import EudiWalletKit
+import logic_core
 
 public protocol AddDocumentInteractorType {
   func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState

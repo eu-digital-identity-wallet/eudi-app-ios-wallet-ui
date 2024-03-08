@@ -34,13 +34,10 @@ let package = Package(
       path: "./logic-resources"
     ),
     .package(
-      url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
-      exact: "0.2.8"
-    ),
-    .package(
       url: "https://github.com/rhummelmose/BluetoothKit.git",
       branch: "master"
     ),
+    .package(name: "logic-core", path: "./logic-core"),
     .package(name: "logic-test", path: "./logic-test"),
     .package(name: "logic-analytics", path: "./logic-analytics")
   ],
@@ -53,6 +50,7 @@ let package = Package(
         "IOSSecuritySuite",
         "KeychainAccess",
         "BluetoothKit",
+        "logic-core",
         .product(
           name: "Peppermint",
           package: "peppermint"
@@ -60,10 +58,6 @@ let package = Package(
         .product(
           name: "libPhoneNumber",
           package: "libPhoneNumber-iOS"
-        ),
-        .product(
-          name: "EudiWalletKit",
-          package: "eudi-lib-ios-wallet-kit"
         )
       ],
       path: "./Sources"
