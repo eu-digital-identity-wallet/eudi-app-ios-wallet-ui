@@ -109,7 +109,7 @@ In addition to building the app from the source, you can also use the Android ap
 
 Alternative download method (iOS app)
 
-It is possible, while following the instructions [here](wiki/download.md) to download and install the iOS application directly from Appcenter. There are only a limited number of available download slots, so being able to download the app is based on availability as is not guaranteed. 
+It is possible, while following the instructions [here](wiki/download.md) to download and install the iOS application directly from [Appcenter](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/eudi-reference-ios/distribution_groups/eudi%20wallet%20ios%20(demo)%20public). There are only a limited number of available download slots, so being able to download the app is based on availability as is not guaranteed. 
 
 Run the app from the source
 
