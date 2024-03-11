@@ -1,13 +1,9 @@
-# Please follow the instructions below to receive an App center invitation:
+# Please follow the instructions below to register your device and download the iOS application:
 
 1. Send an email to eudi.mobile.apps@netcompany.com with your:
-- udid (find your udid [here](https://udid.tech) by opening this link on Safari iOS)
-- Your apple id.
+- UDID (find your UDID [here](https://udid.tech) by opening this link on Safari iOS)
+- Your Apple ID.
 
-2. You will receive an app center invitation.
+2. You will receive a confirmation email that your device has been successfully registered.
 
-3. Please allow 2 - 3 days after invite acceptance to be able to download the app.
-
-_NOTE: Upon invite reception, you might be asked to create an app center account if you do not already have one_
-
-If you have any issue installing the app after you receive an invite please visit [this support link](https://learn.microsoft.com/en-us/appcenter/distribution/testers/testing-ios)
+3. Please allow 2 - 3 days after confirmation to be able to download the app from [here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/eudi-reference-ios/distribution_groups/eudi%20wallet%20ios%20(demo)%20public).
