@@ -1,6 +1,6 @@
 # Please follow the instructions below to register your device and download the iOS application:
 
-1. Send an email to eudi.mobile.apps@netcompany.com with your:
+1. Send an email to eudi.mobile.apps@eudiw.dev with your:
 - UDID (find your UDID [here](https://udid.tech) by opening this link on Safari iOS)
 - Your Apple ID.
 
