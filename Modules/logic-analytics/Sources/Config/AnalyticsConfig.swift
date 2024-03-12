@@ -13,9 +13,9 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-
-protocol AnalyticsProvider {
-  func initialize(key: String)
-  func logScreen(screen: String, arguments: [String: String])
-  func logEvent(event: String, arguments: [String: String])
+protocol AnalyticsConfig {
+  /**
+   * Supported Analytics Provider, e.g. Firebase
+   */
+  var analyticsProviders: [String: AnalyticsProvider] { get }
 }

@@ -56,7 +56,6 @@ public final class SystemBiometricsController: SystemBiometricsControllerType {
   public var biometryType: LABiometryType { context.biometryType }
 
   private lazy var context = LAContext()
-  //private lazy var keychainBiometricController: KeychainBiometricControllerType = KeychainBiometricController()
   private lazy var keyChainController: KeyChainControllerType = KeyChainController()
 
   internal var biometricError: NSError?

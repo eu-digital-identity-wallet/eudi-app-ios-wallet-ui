@@ -16,9 +16,17 @@
 import Foundation
 import KeychainAccess
 
-public enum KeychainWrapper: String {
+public protocol KeychainWrapper {
+  var value: String { get }
+}
+
+public enum KeychainIdentifier: String, KeychainWrapper {
+
+  public var value: String {
+    self.rawValue
+  }
+
   case deviceVendorId
-  case devicePin
 }
 
 public protocol KeyChainControllerType {
@@ -41,15 +49,15 @@ public final class KeyChainController: KeyChainControllerType {
   }()
 
   public func storeValue(key: KeychainWrapper, value: String) {
-    keyChain[key.rawValue] = value
+    keyChain[key.value] = value
   }
 
   public func getValue(key: KeychainWrapper) -> String? {
-    keyChain[key.rawValue]
+    keyChain[key.value]
   }
 
   public func removeObject(key: KeychainWrapper) {
-    try? keyChain.remove(key.rawValue)
+    try? keyChain.remove(key.value)
   }
 
   public func validateKeyChainBiometry() throws {

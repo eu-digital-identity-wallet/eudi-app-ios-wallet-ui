@@ -2,7 +2,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 
 
@@ -118,7 +118,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 
 
@@ -346,7 +346,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -354,7 +354,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import AppCenter
 import AppCenterAnalytics
@@ -364,7 +364,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -492,7 +492,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 
 
@@ -720,104 +720,27 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_api
-
-import Alamofire
-import Foundation
-import logic_business
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_api
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_api
-
-import struct Foundation.Data
+@testable import logic_authentication
 
 
 
 
 
 
- class MockNetworkRequest<Response>: NetworkRequest, Cuckoo.ProtocolMock {
+ class MockPinStorageConfig: PinStorageConfig, Cuckoo.ProtocolMock {
     
-     typealias MocksType = DefaultImplCaller<Response>
+     typealias MocksType = PinStorageConfig
     
-     typealias Stubbing = __StubbingProxy_NetworkRequest
-     typealias Verification = __VerificationProxy_NetworkRequest
+     typealias Stubbing = __StubbingProxy_PinStorageConfig
+     typealias Verification = __VerificationProxy_PinStorageConfig
 
      let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-     class DefaultImplCaller<Response>: NetworkRequest {
-        private let reference: Any
-    
-        private let _getter_storage$$method: () -> NetworkMethod
-         var method: NetworkMethod {
-            get { return _getter_storage$$method() }
-        }
-    
-        private let _getter_storage$$path: () -> String
-         var path: String {
-            get { return _getter_storage$$path() }
-        }
-    
-        private let _getter_storage$$additionalHeaders: () -> [String: String]
-         var additionalHeaders: [String: String] {
-            get { return _getter_storage$$additionalHeaders() }
-        }
-    
-        private let _getter_storage$$body: () -> Data?
-         var body: Data? {
-            get { return _getter_storage$$body() }
-        }
-    
-        
-        
-        init<_CUCKOO$$GENERIC: NetworkRequest>(from defaultImpl: UnsafeMutablePointer<_CUCKOO$$GENERIC>, keeping reference: @escaping @autoclosure () -> Any?) where _CUCKOO$$GENERIC.Response == Response {
-            self.reference = reference
-    
-            _getter_storage$$method = { defaultImpl.pointee.method }
-            
-            _getter_storage$$path = { defaultImpl.pointee.path }
-            
-            _getter_storage$$additionalHeaders = { defaultImpl.pointee.additionalHeaders }
-            
-            _getter_storage$$body = { defaultImpl.pointee.body }
-            
-            
-            
-        }
-        
-        
-    
-        
-    }
+    private var __defaultImplStub: PinStorageConfig?
 
-    private var __defaultImplStub: DefaultImplCaller<Response>?
-
-     func enableDefaultImplementation<_CUCKOO$$GENERIC: NetworkRequest>(_ stub: _CUCKOO$$GENERIC) where _CUCKOO$$GENERIC.Response == Response {
-        var mutableStub = stub
-        __defaultImplStub = DefaultImplCaller(from: &mutableStub, keeping: mutableStub)
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-     func enableDefaultImplementation<_CUCKOO$$GENERIC: NetworkRequest>(mutating stub: UnsafeMutablePointer<_CUCKOO$$GENERIC>) where _CUCKOO$$GENERIC.Response == Response {
-        __defaultImplStub = DefaultImplCaller(from: stub, keeping: nil)
+     func enableDefaultImplementation(_ stub: PinStorageConfig) {
+        __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
     
@@ -826,62 +749,14 @@ import struct Foundation.Data
     
     
     
-     var method: NetworkMethod {
+     var storageProvider: PinStorageProvider {
         get {
-            return cuckoo_manager.getter("method",
+            return cuckoo_manager.getter("storageProvider",
                 superclassCall:
                     
                     Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                     ,
-                defaultCall:  __defaultImplStub!.method)
-        }
-        
-    }
-    
-    
-    
-    
-    
-     var path: String {
-        get {
-            return cuckoo_manager.getter("path",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.path)
-        }
-        
-    }
-    
-    
-    
-    
-    
-     var additionalHeaders: [String: String] {
-        get {
-            return cuckoo_manager.getter("additionalHeaders",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.additionalHeaders)
-        }
-        
-    }
-    
-    
-    
-    
-    
-     var body: Data? {
-        get {
-            return cuckoo_manager.getter("body",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.body)
+                defaultCall:  __defaultImplStub!.storageProvider)
         }
         
     }
@@ -892,7 +767,7 @@ import struct Foundation.Data
 
     
 
-     struct __StubbingProxy_NetworkRequest: Cuckoo.StubbingProxy {
+     struct __StubbingProxy_PinStorageConfig: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
          init(manager: Cuckoo.MockManager) {
@@ -901,36 +776,15 @@ import struct Foundation.Data
         
         
         
-        var method: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockNetworkRequest, NetworkMethod> {
-            return .init(manager: cuckoo_manager, name: "method")
-        }
-        
-        
-        
-        
-        var path: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockNetworkRequest, String> {
-            return .init(manager: cuckoo_manager, name: "path")
-        }
-        
-        
-        
-        
-        var additionalHeaders: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockNetworkRequest, [String: String]> {
-            return .init(manager: cuckoo_manager, name: "additionalHeaders")
-        }
-        
-        
-        
-        
-        var body: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockNetworkRequest, Data?> {
-            return .init(manager: cuckoo_manager, name: "body")
+        var storageProvider: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockPinStorageConfig, PinStorageProvider> {
+            return .init(manager: cuckoo_manager, name: "storageProvider")
         }
         
         
         
     }
 
-     struct __VerificationProxy_NetworkRequest: Cuckoo.VerificationProxy {
+     struct __VerificationProxy_PinStorageConfig: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -944,29 +798,8 @@ import struct Foundation.Data
         
         
         
-        var method: Cuckoo.VerifyReadOnlyProperty<NetworkMethod> {
-            return .init(manager: cuckoo_manager, name: "method", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        var path: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "path", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        var additionalHeaders: Cuckoo.VerifyReadOnlyProperty<[String: String]> {
-            return .init(manager: cuckoo_manager, name: "additionalHeaders", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        var body: Cuckoo.VerifyReadOnlyProperty<Data?> {
-            return .init(manager: cuckoo_manager, name: "body", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var storageProvider: Cuckoo.VerifyReadOnlyProperty<PinStorageProvider> {
+            return .init(manager: cuckoo_manager, name: "storageProvider", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         
@@ -976,47 +809,14 @@ import struct Foundation.Data
 }
 
 
- class NetworkRequestStub<Response>: NetworkRequest {
+ class PinStorageConfigStub: PinStorageConfig {
     
     
     
     
-     var method: NetworkMethod {
+     var storageProvider: PinStorageProvider {
         get {
-            return DefaultValueRegistry.defaultValue(for: (NetworkMethod).self)
-        }
-        
-    }
-    
-    
-    
-    
-    
-     var path: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
-        }
-        
-    }
-    
-    
-    
-    
-    
-     var additionalHeaders: [String: String] {
-        get {
-            return DefaultValueRegistry.defaultValue(for: ([String: String]).self)
-        }
-        
-    }
-    
-    
-    
-    
-    
-     var body: Data? {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Data?).self)
+            return DefaultValueRegistry.defaultValue(for: (PinStorageProvider).self)
         }
         
     }
@@ -1036,44 +836,26 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_api
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_api
-
-import Foundation
+@testable import logic_authentication
 
 
 
 
 
 
-public class MockSampleRepositoryType: SampleRepositoryType, Cuckoo.ProtocolMock {
+public class MockPinStorageControllerType: PinStorageControllerType, Cuckoo.ProtocolMock {
     
-    public typealias MocksType = SampleRepositoryType
+    public typealias MocksType = PinStorageControllerType
     
-    public typealias Stubbing = __StubbingProxy_SampleRepositoryType
-    public typealias Verification = __VerificationProxy_SampleRepositoryType
+    public typealias Stubbing = __StubbingProxy_PinStorageControllerType
+    public typealias Verification = __VerificationProxy_PinStorageControllerType
 
     public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-    private var __defaultImplStub: SampleRepositoryType?
+    private var __defaultImplStub: PinStorageControllerType?
 
-    public func enableDefaultImplementation(_ stub: SampleRepositoryType) {
+    public func enableDefaultImplementation(_ stub: PinStorageControllerType) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
@@ -1087,11 +869,11 @@ public class MockSampleRepositoryType: SampleRepositoryType, Cuckoo.ProtocolMock
     
     
     
-    public func sampleCall() async throws -> SampleResponseDTO {
+    public func retrievePin() -> String? {
         
-    return try await cuckoo_manager.callThrows(
+    return cuckoo_manager.call(
     """
-    sampleCall() async throws -> SampleResponseDTO
+    retrievePin() -> String?
     """,
             parameters: (),
             escapingParameters: (),
@@ -1099,13 +881,53 @@ public class MockSampleRepositoryType: SampleRepositoryType, Cuckoo.ProtocolMock
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: await __defaultImplStub!.sampleCall())
+            defaultCall: __defaultImplStub!.retrievePin())
+        
+    }
+    
+    
+    
+    
+    
+    public func setPin(with pin: String)  {
+        
+    return cuckoo_manager.call(
+    """
+    setPin(with: String)
+    """,
+            parameters: (pin),
+            escapingParameters: (pin),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.setPin(with: pin))
+        
+    }
+    
+    
+    
+    
+    
+    public func isPinValid(with pin: String) -> Bool {
+        
+    return cuckoo_manager.call(
+    """
+    isPinValid(with: String) -> Bool
+    """,
+            parameters: (pin),
+            escapingParameters: (pin),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.isPinValid(with: pin))
         
     }
     
     
 
-    public struct __StubbingProxy_SampleRepositoryType: Cuckoo.StubbingProxy {
+    public struct __StubbingProxy_PinStorageControllerType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
@@ -1115,18 +937,40 @@ public class MockSampleRepositoryType: SampleRepositoryType, Cuckoo.ProtocolMock
         
         
         
-        func sampleCall() -> Cuckoo.ProtocolStubThrowingFunction<(), SampleResponseDTO> {
+        func retrievePin() -> Cuckoo.ProtocolStubFunction<(), String?> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockSampleRepositoryType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockPinStorageControllerType.self, method:
     """
-    sampleCall() async throws -> SampleResponseDTO
+    retrievePin() -> String?
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func setPin<M1: Cuckoo.Matchable>(with pin: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(String)> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPinStorageControllerType.self, method:
+    """
+    setPin(with: String)
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func isPinValid<M1: Cuckoo.Matchable>(with pin: M1) -> Cuckoo.ProtocolStubFunction<(String), Bool> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPinStorageControllerType.self, method:
+    """
+    isPinValid(with: String) -> Bool
     """, parameterMatchers: matchers))
         }
         
         
     }
 
-    public struct __VerificationProxy_SampleRepositoryType: Cuckoo.VerificationProxy {
+    public struct __VerificationProxy_PinStorageControllerType: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -1143,11 +987,35 @@ public class MockSampleRepositoryType: SampleRepositoryType, Cuckoo.ProtocolMock
         
         
         @discardableResult
-        func sampleCall() -> Cuckoo.__DoNotUse<(), SampleResponseDTO> {
+        func retrievePin() -> Cuckoo.__DoNotUse<(), String?> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    sampleCall() async throws -> SampleResponseDTO
+    retrievePin() -> String?
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func setPin<M1: Cuckoo.Matchable>(with pin: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    setPin(with: String)
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func isPinValid<M1: Cuckoo.Matchable>(with pin: M1) -> Cuckoo.__DoNotUse<(String), Bool> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    isPinValid(with: String) -> Bool
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -1156,7 +1024,7 @@ public class MockSampleRepositoryType: SampleRepositoryType, Cuckoo.ProtocolMock
 }
 
 
-public class SampleRepositoryTypeStub: SampleRepositoryType {
+public class PinStorageControllerTypeStub: PinStorageControllerType {
     
 
     
@@ -1165,8 +1033,24 @@ public class SampleRepositoryTypeStub: SampleRepositoryType {
     
     
     
-    public func sampleCall() async throws -> SampleResponseDTO  {
-        return DefaultValueRegistry.defaultValue(for: (SampleResponseDTO).self)
+    public func retrievePin() -> String?  {
+        return DefaultValueRegistry.defaultValue(for: (String?).self)
+    }
+    
+    
+    
+    
+    
+    public func setPin(with pin: String)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+    public func isPinValid(with pin: String) -> Bool  {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
     
@@ -1180,7 +1064,951 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
+
+import Combine
+import Foundation
+import LocalAuthentication
+import SwiftUI
+import logic_business
+
+
+
+
+
+
+public class MockSystemBiometricsControllerType: SystemBiometricsControllerType, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = SystemBiometricsControllerType
+    
+    public typealias Stubbing = __StubbingProxy_SystemBiometricsControllerType
+    public typealias Verification = __VerificationProxy_SystemBiometricsControllerType
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: SystemBiometricsControllerType?
+
+    public func enableDefaultImplementation(_ stub: SystemBiometricsControllerType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+    
+    
+    
+    public var biometryType: LABiometryType {
+        get {
+            return cuckoo_manager.getter("biometryType",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.biometryType)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+    
+    
+    
+    public func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometricsError> {
+        
+    return cuckoo_manager.call(
+    """
+    canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometricsError>
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.canEvaluateForBiometrics())
+        
+    }
+    
+    
+    
+    
+    
+    public func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometricsError> {
+        
+    return cuckoo_manager.call(
+    """
+    evaluateBiometrics() -> AnyPublisher<Void, SystemBiometricsError>
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.evaluateBiometrics())
+        
+    }
+    
+    
+    
+    
+    
+    public func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometricsError> {
+        
+    return cuckoo_manager.call(
+    """
+    requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometricsError>
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.requestBiometricUnlock())
+        
+    }
+    
+    
+
+    public struct __StubbingProxy_SystemBiometricsControllerType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        var biometryType: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockSystemBiometricsControllerType, LABiometryType> {
+            return .init(manager: cuckoo_manager, name: "biometryType")
+        }
+        
+        
+        
+        
+        
+        func canEvaluateForBiometrics() -> Cuckoo.ProtocolStubFunction<(), AnyPublisher<Bool, SystemBiometricsError>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockSystemBiometricsControllerType.self, method:
+    """
+    canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometricsError>
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func evaluateBiometrics() -> Cuckoo.ProtocolStubFunction<(), AnyPublisher<Void, SystemBiometricsError>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockSystemBiometricsControllerType.self, method:
+    """
+    evaluateBiometrics() -> AnyPublisher<Void, SystemBiometricsError>
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func requestBiometricUnlock() -> Cuckoo.ProtocolStubFunction<(), AnyPublisher<Void, SystemBiometricsError>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockSystemBiometricsControllerType.self, method:
+    """
+    requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometricsError>
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_SystemBiometricsControllerType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+        
+        
+        var biometryType: Cuckoo.VerifyReadOnlyProperty<LABiometryType> {
+            return .init(manager: cuckoo_manager, name: "biometryType", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+    
+        
+        
+        
+        @discardableResult
+        func canEvaluateForBiometrics() -> Cuckoo.__DoNotUse<(), AnyPublisher<Bool, SystemBiometricsError>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometricsError>
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func evaluateBiometrics() -> Cuckoo.__DoNotUse<(), AnyPublisher<Void, SystemBiometricsError>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    evaluateBiometrics() -> AnyPublisher<Void, SystemBiometricsError>
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func requestBiometricUnlock() -> Cuckoo.__DoNotUse<(), AnyPublisher<Void, SystemBiometricsError>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometricsError>
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+public class SystemBiometricsControllerTypeStub: SystemBiometricsControllerType {
+    
+    
+    
+    
+    public var biometryType: LABiometryType {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (LABiometryType).self)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+    
+    
+    
+    public func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometricsError>  {
+        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<Bool, SystemBiometricsError>).self)
+    }
+    
+    
+    
+    
+    
+    public func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometricsError>  {
+        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<Void, SystemBiometricsError>).self)
+    }
+    
+    
+    
+    
+    
+    public func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometricsError>  {
+        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<Void, SystemBiometricsError>).self)
+    }
+    
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_authentication
+
+import Combine
+import Foundation
+import LocalAuthentication
+import SwiftUI
+import UIKit
+import logic_resources
+
+
+
+
+
+
+public class MockSystemBiometricsInteractorType: SystemBiometricsInteractorType, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = SystemBiometricsInteractorType
+    
+    public typealias Stubbing = __StubbingProxy_SystemBiometricsInteractorType
+    public typealias Verification = __VerificationProxy_SystemBiometricsInteractorType
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: SystemBiometricsInteractorType?
+
+    public func enableDefaultImplementation(_ stub: SystemBiometricsInteractorType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+    
+    
+    
+    public var biometricsImage: Image? {
+        get {
+            return cuckoo_manager.getter("biometricsImage",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.biometricsImage)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var currentBiometricsMethod: String {
+        get {
+            return cuckoo_manager.getter("currentBiometricsMethod",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.currentBiometricsMethod)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var biometryType: LABiometryType {
+        get {
+            return cuckoo_manager.getter("biometryType",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.biometryType)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+    
+    
+    
+    public func authenticate() -> AnyPublisher<BiometricsState, Never> {
+        
+    return cuckoo_manager.call(
+    """
+    authenticate() -> AnyPublisher<BiometricsState, Never>
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.authenticate())
+        
+    }
+    
+    
+    
+    
+    
+    public func openSettingsURL(action: @escaping () -> Void)  {
+        
+    return cuckoo_manager.call(
+    """
+    openSettingsURL(action: @escaping () -> Void)
+    """,
+            parameters: (action),
+            escapingParameters: (action),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.openSettingsURL(action: action))
+        
+    }
+    
+    
+
+    public struct __StubbingProxy_SystemBiometricsInteractorType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        var biometricsImage: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockSystemBiometricsInteractorType, Image?> {
+            return .init(manager: cuckoo_manager, name: "biometricsImage")
+        }
+        
+        
+        
+        
+        var currentBiometricsMethod: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockSystemBiometricsInteractorType, String> {
+            return .init(manager: cuckoo_manager, name: "currentBiometricsMethod")
+        }
+        
+        
+        
+        
+        var biometryType: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockSystemBiometricsInteractorType, LABiometryType> {
+            return .init(manager: cuckoo_manager, name: "biometryType")
+        }
+        
+        
+        
+        
+        
+        func authenticate() -> Cuckoo.ProtocolStubFunction<(), AnyPublisher<BiometricsState, Never>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockSystemBiometricsInteractorType.self, method:
+    """
+    authenticate() -> AnyPublisher<BiometricsState, Never>
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func openSettingsURL<M1: Cuckoo.Matchable>(action: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(() -> Void)> where M1.MatchedType == () -> Void {
+            let matchers: [Cuckoo.ParameterMatcher<(() -> Void)>] = [wrap(matchable: action) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockSystemBiometricsInteractorType.self, method:
+    """
+    openSettingsURL(action: @escaping () -> Void)
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_SystemBiometricsInteractorType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+        
+        
+        var biometricsImage: Cuckoo.VerifyReadOnlyProperty<Image?> {
+            return .init(manager: cuckoo_manager, name: "biometricsImage", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        var currentBiometricsMethod: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "currentBiometricsMethod", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        var biometryType: Cuckoo.VerifyReadOnlyProperty<LABiometryType> {
+            return .init(manager: cuckoo_manager, name: "biometryType", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+    
+        
+        
+        
+        @discardableResult
+        func authenticate() -> Cuckoo.__DoNotUse<(), AnyPublisher<BiometricsState, Never>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    authenticate() -> AnyPublisher<BiometricsState, Never>
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func openSettingsURL<M1: Cuckoo.Matchable>(action: M1) -> Cuckoo.__DoNotUse<(() -> Void), Void> where M1.MatchedType == () -> Void {
+            let matchers: [Cuckoo.ParameterMatcher<(() -> Void)>] = [wrap(matchable: action) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    openSettingsURL(action: @escaping () -> Void)
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+public class SystemBiometricsInteractorTypeStub: SystemBiometricsInteractorType {
+    
+    
+    
+    
+    public var biometricsImage: Image? {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Image?).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var currentBiometricsMethod: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var biometryType: LABiometryType {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (LABiometryType).self)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+    
+    
+    
+    public func authenticate() -> AnyPublisher<BiometricsState, Never>  {
+        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<BiometricsState, Never>).self)
+    }
+    
+    
+    
+    
+    
+    public func openSettingsURL(action: @escaping () -> Void)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_authentication
+
+
+
+
+
+
+ class MockPinStorageConfigProviderType: PinStorageConfigProviderType, Cuckoo.ProtocolMock {
+    
+     typealias MocksType = PinStorageConfigProviderType
+    
+     typealias Stubbing = __StubbingProxy_PinStorageConfigProviderType
+     typealias Verification = __VerificationProxy_PinStorageConfigProviderType
+
+     let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: PinStorageConfigProviderType?
+
+     func enableDefaultImplementation(_ stub: PinStorageConfigProviderType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+    
+    
+    
+     func getConfig() -> PinStorageConfig {
+        
+    return cuckoo_manager.call(
+    """
+    getConfig() -> PinStorageConfig
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getConfig())
+        
+    }
+    
+    
+
+     struct __StubbingProxy_PinStorageConfigProviderType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+         init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        
+        func getConfig() -> Cuckoo.ProtocolStubFunction<(), PinStorageConfig> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPinStorageConfigProviderType.self, method:
+    """
+    getConfig() -> PinStorageConfig
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+     struct __VerificationProxy_PinStorageConfigProviderType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+         init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+    
+        
+        
+        
+        @discardableResult
+        func getConfig() -> Cuckoo.__DoNotUse<(), PinStorageConfig> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    getConfig() -> PinStorageConfig
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+ class PinStorageConfigProviderTypeStub: PinStorageConfigProviderType {
+    
+
+    
+
+    
+    
+    
+    
+     func getConfig() -> PinStorageConfig  {
+        return DefaultValueRegistry.defaultValue(for: (PinStorageConfig).self)
+    }
+    
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_authentication
+
+
+
+
+
+
+ class MockPinStorageProvider: PinStorageProvider, Cuckoo.ProtocolMock {
+    
+     typealias MocksType = PinStorageProvider
+    
+     typealias Stubbing = __StubbingProxy_PinStorageProvider
+     typealias Verification = __VerificationProxy_PinStorageProvider
+
+     let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: PinStorageProvider?
+
+     func enableDefaultImplementation(_ stub: PinStorageProvider) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+    
+    
+    
+     func retrievePin() -> String? {
+        
+    return cuckoo_manager.call(
+    """
+    retrievePin() -> String?
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.retrievePin())
+        
+    }
+    
+    
+    
+    
+    
+     func setPin(with pin: String)  {
+        
+    return cuckoo_manager.call(
+    """
+    setPin(with: String)
+    """,
+            parameters: (pin),
+            escapingParameters: (pin),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.setPin(with: pin))
+        
+    }
+    
+    
+    
+    
+    
+     func isPinValid(with pin: String) -> Bool {
+        
+    return cuckoo_manager.call(
+    """
+    isPinValid(with: String) -> Bool
+    """,
+            parameters: (pin),
+            escapingParameters: (pin),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.isPinValid(with: pin))
+        
+    }
+    
+    
+
+     struct __StubbingProxy_PinStorageProvider: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+         init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        
+        func retrievePin() -> Cuckoo.ProtocolStubFunction<(), String?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPinStorageProvider.self, method:
+    """
+    retrievePin() -> String?
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func setPin<M1: Cuckoo.Matchable>(with pin: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(String)> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPinStorageProvider.self, method:
+    """
+    setPin(with: String)
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func isPinValid<M1: Cuckoo.Matchable>(with pin: M1) -> Cuckoo.ProtocolStubFunction<(String), Bool> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPinStorageProvider.self, method:
+    """
+    isPinValid(with: String) -> Bool
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+     struct __VerificationProxy_PinStorageProvider: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+         init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+    
+        
+        
+        
+        @discardableResult
+        func retrievePin() -> Cuckoo.__DoNotUse<(), String?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    retrievePin() -> String?
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func setPin<M1: Cuckoo.Matchable>(with pin: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    setPin(with: String)
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func isPinValid<M1: Cuckoo.Matchable>(with pin: M1) -> Cuckoo.__DoNotUse<(String), Bool> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    isPinValid(with: String) -> Bool
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+ class PinStorageProviderStub: PinStorageProvider {
+    
+
+    
+
+    
+    
+    
+    
+     func retrievePin() -> String?  {
+        return DefaultValueRegistry.defaultValue(for: (String?).self)
+    }
+    
+    
+    
+    
+    
+     func setPin(with pin: String)   {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    
+    
+    
+    
+     func isPinValid(with pin: String) -> Bool  {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+    
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_authentication
+
+import logic_business
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_authentication
 
 import Foundation
 
@@ -1544,7 +2372,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -1552,7 +2380,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -2039,7 +2867,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -2047,7 +2875,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 import KeychainAccess
@@ -2541,7 +3369,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -3077,7 +3905,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import BluetoothKit
 import Combine
@@ -3301,7 +4129,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Combine
 import Foundation
@@ -3840,7 +4668,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Combine
 import Foundation
@@ -4563,7 +5391,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Combine
 import Foundation
@@ -5056,7 +5884,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Combine
 import Foundation
@@ -5067,7 +5895,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Combine
 import Foundation
@@ -5078,7 +5906,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 import logic_resources
@@ -5087,7 +5915,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -5095,7 +5923,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -5103,7 +5931,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -5111,7 +5939,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -5119,7 +5947,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -5127,7 +5955,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -5135,7 +5963,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Combine
 import Foundation
@@ -5144,7 +5972,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -5152,7 +5980,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -5160,7 +5988,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -5168,7 +5996,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 import UIKit
@@ -5177,7 +6005,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -5185,7 +6013,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import SwiftUI
 import logic_core
@@ -5195,7 +6023,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 import logic_core
@@ -5205,7 +6033,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -5213,7 +6041,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 import logic_core
@@ -5223,7 +6051,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 
@@ -5231,7 +6059,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Foundation
 import logic_core
@@ -5360,7 +6188,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import class Foundation.Bundle
 
@@ -5539,7 +6367,7 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Combine
 import Foundation
@@ -5892,13 +6720,13 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_core
-@testable import logic_api
+@testable import logic_authentication
 
 import EudiWalletKit
 import MdocDataModel18013

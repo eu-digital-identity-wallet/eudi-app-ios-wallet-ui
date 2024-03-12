@@ -16,21 +16,19 @@
 import Foundation
 
 protocol AnalyticsConfigProviderType {
-  func getConfig() -> AnalyticsConfigType?
+  func getConfig() -> AnalyticsConfig?
 }
 
 struct AnalyticsConfigProvider: AnalyticsConfigProviderType {
 
   static let shared: AnalyticsConfigProviderType = AnalyticsConfigProvider()
 
-  private init() {}
-
-  func getConfig() -> AnalyticsConfigType? {
+  func getConfig() -> AnalyticsConfig? {
     guard
-      let object = NSClassFromString("AnalyticsConfig") as? NSObject.Type
+      let object = NSClassFromString("AnalyticsConfigImpl") as? NSObject.Type
     else {
       return nil
     }
-    return object.init() as? AnalyticsConfigType
+    return object.init() as? AnalyticsConfig
   }
 }

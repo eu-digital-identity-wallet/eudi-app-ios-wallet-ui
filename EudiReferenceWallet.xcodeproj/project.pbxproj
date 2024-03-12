@@ -56,6 +56,7 @@
 		F0B440782B9B42B600031137 /* logic-core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-core"; path = "Modules/logic-core"; sourceTree = "<group>"; };
 		F0BFE9B62AD557290062826F /* feature-common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-common"; path = "Modules/feature-common"; sourceTree = "<group>"; };
 		F0C6207D2B6A6246007F903F /* logic-analytics */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-analytics"; path = "Modules/logic-analytics"; sourceTree = "<group>"; };
+		F0DF43F42BA083DF003498ED /* logic-authentication */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-authentication"; path = "Modules/logic-authentication"; sourceTree = "<group>"; };
 		F12E940E2ABC6C000086EC93 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F14907B82ABAF54B00DDFE56 /* Wallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F14907BB2ABAF54B00DDFE56 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
@@ -154,6 +155,7 @@
 		F14908692ABC467600DDFE56 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
+				F0DF43F42BA083DF003498ED /* logic-authentication */,
 				F0B440782B9B42B600031137 /* logic-core */,
 				F0C6207D2B6A6246007F903F /* logic-analytics */,
 				F069CC3E2AFAC0AD0033AAC5 /* feature-issuance */,

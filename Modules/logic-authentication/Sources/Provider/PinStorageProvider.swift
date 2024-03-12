@@ -14,8 +14,8 @@
  * governing permissions and limitations under the Licence.
  */
 
-protocol AnalyticsProvider {
-  func initialize(key: String)
-  func logScreen(screen: String, arguments: [String: String])
-  func logEvent(event: String, arguments: [String: String])
+protocol PinStorageProvider {
+  func retrievePin() -> String?
+  func setPin(with pin: String)
+  func isPinValid(with pin: String) -> Bool
 }

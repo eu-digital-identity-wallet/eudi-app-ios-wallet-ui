@@ -92,6 +92,13 @@
         "identifier" : "logic-ui-tests",
         "name" : "logic-ui-tests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/logic-authentication",
+        "identifier" : "logic-authentication-tests",
+        "name" : "logic-authentication-tests"
+      }
     }
   ],
   "version" : 1

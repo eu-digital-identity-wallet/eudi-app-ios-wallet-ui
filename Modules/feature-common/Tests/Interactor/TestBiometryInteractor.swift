@@ -15,6 +15,7 @@
  */
 import XCTest
 import logic_business
+import logic_authentication
 @testable import feature_common
 @testable import logic_test
 @testable import feature_test
@@ -87,7 +88,7 @@ final class TestBiometryInteractor: EudiTest {
   func testIsPinValid_WhenQuickPinInteractorReturnsNotValid_ThenReturnFailurePartialState() {
     // Given
     let pin = "1234"
-    let mockedError = RuntimeError.quickPinInvalid
+    let mockedError = AuthenticationError.quickPinInvalid
     stub(quickPinInteractor) { mock in
       when(mock).isPinValid(pin: pin).thenReturn(.failure(mockedError))
     }

@@ -192,6 +192,8 @@ You can find instructions on how to configure the application [here](wiki/config
 
 *logic-business*: App & Wallet core business logic.
 
+*logic-authentication*: PinStorage and System Biometrics Logic.
+
 *logic-ui*: Common UI components.
 
 *feature-common*: Code that is common to all features.
@@ -212,7 +214,7 @@ You can find instructions on how to configure the application [here](wiki/config
 
 ```mermaid
 graph TD;
-    Logic-modules/logic-core,logic-resources,logic-ui,logic-business,logic-api/-->Feature-modules/feature-common,feature-login,feature-dashboard,feature-startup,feature-presentation,feature-issuance,feature-proximity/;
+    Logic-modules/logic-core,logic-resources,logic-ui,logic-business,logic-authentication,logic-api/-->Feature-modules/feature-common,feature-login,feature-dashboard,feature-startup,feature-presentation,feature-issuance,feature-proximity/;
 ```
 
 ## License

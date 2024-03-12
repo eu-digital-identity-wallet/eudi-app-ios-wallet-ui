@@ -15,6 +15,7 @@
  */
 import Foundation
 import logic_ui
+import logic_authentication
 import logic_business
 import SwiftUI
 import Combine

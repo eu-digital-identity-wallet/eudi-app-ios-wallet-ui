@@ -14,8 +14,18 @@
  * governing permissions and limitations under the Licence.
  */
 
-protocol AnalyticsProvider {
-  func initialize(key: String)
-  func logScreen(screen: String, arguments: [String: String])
-  func logEvent(event: String, arguments: [String: String])
+protocol PinStorageConfig {
+  /**
+   * Pin Storage Provider
+   */
+  var storageProvider: PinStorageProvider { get }
+}
+
+struct PinStorageConfigImpl: PinStorageConfig {
+  /**
+   * Pin Storage Provider
+   */
+  var storageProvider: PinStorageProvider {
+    KeychainPinStorageProvider()
+  }
 }
