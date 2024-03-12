@@ -45,10 +45,10 @@ public final class SecurityController: SecurityControllerType {
     guard let vendorId = UIDevice.current.identifierForVendor?.uuidString else {
       return false
     }
-    if let id = keychainController.getValue(key: .deviceVendorId) {
+    if let id = keychainController.getValue(key: KeychainIdentifier.deviceVendorId) {
       return vendorId == id
     }
-    keychainController.storeValue(key: .deviceVendorId, value: vendorId)
+    keychainController.storeValue(key: KeychainIdentifier.deviceVendorId, value: vendorId)
     return true
   }
 

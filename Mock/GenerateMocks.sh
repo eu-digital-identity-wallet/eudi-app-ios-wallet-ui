@@ -34,8 +34,9 @@ LOGIC_BUSINESS_MODULE="logic-business"
 LOGIC_ANALYTICS_MODULE="logic-analytics"
 LOGIC_API_MODULE="logic-api"
 LOGIC_UI_MODULE="logic-ui"
+LOGIC_AUTH_MODULE="logic-authentication"
 
-SECOND_LEVEL_MODULES=("${LOGIC_API_MODULE}" "${LOGIC_UI_MODULE}")
+SECOND_LEVEL_MODULES=("${LOGIC_API_MODULE}" "${LOGIC_UI_MODULE}" "${LOGIC_AUTH_MODULE}")
 
 FEATURE_COMMON_MODULE="feature-common"
 
@@ -71,6 +72,7 @@ function generateMocks {
   logic_ui_path=""
   logic_api_path=""
   logic_analytics_path=""
+  logic_auth_path=""
   feature_common_path=""
   
   if [ $4 == $IS_SECONDARY_LOGIC_MODULE ];
@@ -85,6 +87,7 @@ function generateMocks {
       logic_api_path="${INPUT_DIR}/${LOGIC_API_MODULE}/Sources/**/*.swift"
       logic_ui_path="${INPUT_DIR}/${LOGIC_UI_MODULE}/Sources/**/*.swift"
       logic_core_path="${INPUT_DIR}/${LOGIC_CORE_MODULE}/Sources/**/*.swift"
+      logic_auth_path="${INPUT_DIR}/${LOGIC_AUTH_MODULE}/Sources/**/*.swift"
       feature_common_path="${INPUT_DIR}/${FEATURE_COMMON_MODULE}/Sources/**/*.swift"
   elif [ $4 == $IS_COMMON_FEATURE_MODULE ];
     then
@@ -93,6 +96,7 @@ function generateMocks {
       logic_api_path="${INPUT_DIR}/${LOGIC_API_MODULE}/Sources/**/*.swift"
       logic_ui_path="${INPUT_DIR}/${LOGIC_UI_MODULE}/Sources/**/*.swift"
       logic_core_path="${INPUT_DIR}/${LOGIC_CORE_MODULE}/Sources/**/*.swift"
+      logic_auth_path="${INPUT_DIR}/${LOGIC_AUTH_MODULE}/Sources/**/*.swift"
   elif [ $4 == $IS_BASE_LOGIC_MODULE ];
     then
       logic_core_path="${INPUT_DIR}/${LOGIC_CORE_MODULE}/Sources/**/*.swift"
@@ -110,6 +114,7 @@ function generateMocks {
   "$logic_api_path" \
   "$logic_analytics_path" \
   "$logic_core_path" \
+  "$logic_auth_path" \
   "$feature_common_path"
 }
 

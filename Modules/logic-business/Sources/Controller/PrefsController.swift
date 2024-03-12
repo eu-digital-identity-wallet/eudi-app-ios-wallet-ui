@@ -24,11 +24,12 @@ public protocol PrefsControllerType {
   func getInt(forKey: PrefsController.Key) -> Int
   func remove(forKey: PrefsController.Key)
   func getValue(forKey: PrefsController.Key) -> Any?
+  func getUserLocale() -> String
 }
 
 public class PrefsController: PrefsControllerType {
 
-  public static let shared = PrefsController()
+  public static let shared: PrefsControllerType = PrefsController()
 
   private lazy var userDefaultsWrapper: UserDefaults = {
     UserDefaults.standard

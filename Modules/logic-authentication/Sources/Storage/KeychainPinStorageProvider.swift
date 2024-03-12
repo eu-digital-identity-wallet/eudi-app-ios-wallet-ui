@@ -13,9 +13,30 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import logic_business
 
-protocol AnalyticsProvider {
-  func initialize(key: String)
-  func logScreen(screen: String, arguments: [String: String])
-  func logEvent(event: String, arguments: [String: String])
+final class KeychainPinStorageProvider: PinStorageProvider {
+
+  private lazy var keyChainController: KeyChainControllerType = KeyChainController()
+
+  func retrievePin() -> String? {
+    keyChainController.getValue(key: KeychainIdentifier.devicePin)
+  }
+
+  func setPin(with pin: String) {
+    keyChainController.storeValue(key: KeychainIdentifier.devicePin, value: pin)
+  }
+
+  func isPinValid(with pin: String) -> Bool {
+    keyChainController.getValue(key: KeychainIdentifier.devicePin) == pin
+  }
+}
+
+enum KeychainIdentifier: String, KeychainWrapper {
+
+  public var value: String {
+    self.rawValue
+  }
+
+  case devicePin
 }

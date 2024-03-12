@@ -13,6 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import logic_authentication
 import logic_business
 import Combine
 import Foundation
@@ -31,24 +32,24 @@ public protocol QuickPinInteractorType {
 
 public final class QuickPinInteractor: QuickPinInteractorType {
 
-  private lazy var keyChainController: KeyChainControllerType = KeyChainController()
+  private lazy var pinStorageController: PinStorageControllerType = PinStorageController.shared
 
   public init() {}
 
-  convenience init(keyChainController: KeyChainControllerType) {
+  convenience init(pinStorageController: PinStorageControllerType) {
     self.init()
-    self.keyChainController = keyChainController
+    self.pinStorageController = pinStorageController
   }
 
   public func setPin(newPin: String) {
-    keyChainController.storeValue(key: .devicePin, value: newPin)
+    pinStorageController.setPin(with: newPin)
   }
 
   public func isPinValid(pin: String) -> QuickPinPartialState {
     if self.isCurrentPinValid(pin: pin) {
       return .success
     } else {
-      return .failure(RuntimeError.quickPinInvalid)
+      return .failure(AuthenticationError.quickPinInvalid)
     }
   }
 
@@ -57,15 +58,15 @@ public final class QuickPinInteractor: QuickPinInteractorType {
       self.setPin(newPin: newPin)
       return .success
     } else {
-      return .failure(RuntimeError.quickPinInvalid)
+      return .failure(AuthenticationError.quickPinInvalid)
     }
   }
 
   public func hasPin() -> Bool {
-    return keyChainController.getValue(key: .devicePin)?.isEmpty == false
+    return pinStorageController.retrievePin()?.isEmpty == false
   }
 
   private func isCurrentPinValid(pin: String) -> Bool {
-    return keyChainController.getValue(key: .devicePin) == pin
+    return pinStorageController.isPinValid(with: pin)
   }
 }

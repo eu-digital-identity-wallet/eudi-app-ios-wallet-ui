@@ -15,7 +15,7 @@
  */
 import Foundation
 import logic_ui
-import logic_business
+import logic_authentication
 
 struct BiometryState: ViewState {
   let config: UIConfig.Biometry

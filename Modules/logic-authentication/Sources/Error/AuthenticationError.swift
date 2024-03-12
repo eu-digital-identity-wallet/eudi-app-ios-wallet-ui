@@ -13,9 +13,17 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
+import logic_resources
 
-protocol AnalyticsProvider {
-  func initialize(key: String)
-  func logScreen(screen: String, arguments: [String: String])
-  func logEvent(event: String, arguments: [String: String])
+public enum AuthenticationError: LocalizedError {
+
+  case quickPinInvalid
+
+  public var errorDescription: String? {
+    return switch self {
+    case .quickPinInvalid:
+      LocalizableString.shared.get(with: .invalidQuickPin)
+    }
+  }
 }

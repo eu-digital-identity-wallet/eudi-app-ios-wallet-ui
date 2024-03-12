@@ -14,8 +14,15 @@
  * governing permissions and limitations under the Licence.
  */
 
-protocol AnalyticsProvider {
-  func initialize(key: String)
-  func logScreen(screen: String, arguments: [String: String])
-  func logEvent(event: String, arguments: [String: String])
+protocol PinStorageConfigProviderType {
+  func getConfig() -> PinStorageConfig
+}
+
+struct PinStorageConfigProvider: PinStorageConfigProviderType {
+
+  static let shared: PinStorageConfigProviderType = PinStorageConfigProvider()
+
+  func getConfig() -> PinStorageConfig {
+    PinStorageConfigImpl()
+  }
 }
