@@ -88,7 +88,14 @@ extension MdocDecodable {
         .sorted(by: {$0.order < $1.order})
         .decodeGender()
         .mapTrueFalseToLocalizable()
-        .parseDates(),
+        .parseDates(
+          parser: {
+            Locale.current.localizedDateTime(
+              date: $0,
+              uiFormatter: "dd MMM yyyy"
+            )
+          }
+        ),
       images: displayImages
     )
 
@@ -157,7 +164,14 @@ extension MdocDecodable {
     nested
       .decodeGender()
       .mapTrueFalseToLocalizable()
-      .parseDates()
+      .parseDates(
+        parser: {
+          Locale.current.localizedDateTime(
+            date: $0,
+            uiFormatter: "dd MMM yyyy"
+          )
+        }
+      )
       .reduce(into: "") { partialResult, nameValue in
         if let nestedChildren = nameValue.children {
           let deepNested = flattenNested(parent: nameValue, nested: nestedChildren.sorted(by: {$0.order < $1.order}))

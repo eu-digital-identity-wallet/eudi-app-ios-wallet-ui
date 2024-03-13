@@ -16,6 +16,7 @@
 import Foundation
 import logic_ui
 import logic_business
+import logic_core
 import feature_common
 
 struct DashboardState: ViewState {

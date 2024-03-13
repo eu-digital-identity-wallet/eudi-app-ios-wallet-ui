@@ -16,7 +16,7 @@
 import Foundation
 import logic_ui
 import feature_common
-import logic_business
+import logic_core
 
 public protocol StartupInteractorType {
   func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute

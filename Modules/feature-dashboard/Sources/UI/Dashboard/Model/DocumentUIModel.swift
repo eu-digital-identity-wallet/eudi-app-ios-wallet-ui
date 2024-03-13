@@ -96,7 +96,14 @@ extension Array where Element == MdocDecodable {
         value: .init(
           id: item.docType,
           title: LocalizableString.shared.get(with: .dynamic(key: item.title)),
-          expiresAt: item.getExpiryDate()
+          expiresAt: item.getExpiryDate(
+            parser: {
+              Locale.current.localizedDateTime(
+                date: $0,
+                uiFormatter: "dd MMM yyyy"
+              )
+            }
+          )
         )
       )
     }

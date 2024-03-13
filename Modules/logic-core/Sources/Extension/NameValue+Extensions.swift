@@ -14,7 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import logic_core
 import logic_resources
 
 extension Array where Element == NameValue {
@@ -66,22 +65,15 @@ extension Array where Element == NameValue {
     }
   }
 
-  public func parseDates() -> [NameValue] {
+  public func parseDates(parser: (String) -> String) -> [NameValue] {
     self.map {
       NameValue(
         name: $0.name,
-        value: parseDate(dateString: $0.value),
+        value: parser($0.value),
         ns: $0.ns,
         order: $0.order,
         children: $0.children
       )
     }
-  }
-
-  private func parseDate(dateString: String) -> String {
-    Locale.current.localizedDateTime(
-      date: dateString,
-      uiFormatter: "dd MMM yyyy"
-    )
   }
 }

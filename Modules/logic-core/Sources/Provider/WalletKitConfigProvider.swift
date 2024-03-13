@@ -15,20 +15,15 @@
  */
 import class Foundation.Bundle
 
-public protocol ConfigProviderType {
-  func getConfigLogic() -> ConfigLogic
-  func getConfigSecurityLogic() -> ConfigSecurityLogic
+public protocol WalletKitConfigProviderType {
+  func getWalletKitConfig() -> WalletKitConfig
 }
 
-public struct ConfigProvider: ConfigProviderType {
+public struct WalletKitConfigProvider: WalletKitConfigProviderType {
 
-  public static let shared: ConfigProviderType = ConfigProvider()
+  public static let shared: WalletKitConfigProviderType = WalletKitConfigProvider()
 
-  public func getConfigLogic() -> ConfigLogic {
-    WalletConfig()
-  }
-
-  public func getConfigSecurityLogic() -> ConfigSecurityLogic {
-    WalletSecurityConfig(configLogic: getConfigLogic())
+  public func getWalletKitConfig() -> WalletKitConfig {
+    WalletKitConfigImpl()
   }
 }

@@ -19,14 +19,14 @@ CORE_USER_AUTH = false
 
 3. Trusted certificates
 
-Via the *ConfigLogic* protocol inside the logic-business module.
+Via the *WalletKitConfig* protocol inside the logic-core module.
 
 ```
-public protocol ConfigLogic {
+public protocol WalletKitConfig {
   /**
    * Proximity Configuration
    */
-  var proxmityConfig: ProximityConfig { get }
+  var proximityConfig: ProximityConfig { get }
 }
 ```
 
@@ -36,7 +36,7 @@ public struct ProximityConfig {
 }
 ```
 
-The *WalletConfig* implementation of the ConfigLogic protocol can be located inside the logic-business module *ConfigLogicImpl* file
+The *WalletKitConfigImpl* implementation of the *WalletKitConfig* protocol can be located inside the logic-core module.
 
 The application's certificates are located here:
 

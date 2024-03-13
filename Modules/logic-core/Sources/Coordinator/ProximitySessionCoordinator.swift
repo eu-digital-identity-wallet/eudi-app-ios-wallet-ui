@@ -13,27 +13,55 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+
 import Foundation
 import Combine
 import logic_resources
-import logic_core
 
-public final class RemoteSessionCoordinator: PresentationSessionCoordinatorType {
+public final class ProximityPresentationSessionCoordinator: PresentationSessionCoordinatorType {
 
-  public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
+  public private(set) var presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
 
   private let session: PresentationSession
 
+  private var cancellables = Set<AnyCancellable>()
+
   public init(session: PresentationSession) {
     self.session = session
+
+    self.session.$status
+      .sink { status in
+        switch status {
+        case .qrEngagementReady:
+          self.presentationStateSubject.value = .prepareQr
+        case .responseSent:
+          self.presentationStateSubject.value = .responseToSend(session.disclosedDocuments.items)
+        case .error:
+          if let error = session.uiError {
+            self.presentationStateSubject.value = .error(error)
+          } else {
+            let genericWalletError = WalletError.init(description: LocalizableString.shared.get(with: .genericErrorDesc))
+            self.presentationStateSubject.value = .error(genericWalletError)
+          }
+
+        default:
+          ()
+        }
+      }
+      .store(in: &cancellables)
   }
 
   public func initialize() async {
+    await session.startQrEngagement()
     _ = await session.receiveRequest()
   }
 
   public func startQrEngagement() async throws -> Data {
-    Data()
+    guard let deviceEngagement = session.deviceEngagement else {
+      throw session.uiError ?? .init(description: "Failed To Generate QR Code")
+    }
+    self.presentationStateSubject.value = .qrReady(imageData: deviceEngagement)
+    return deviceEngagement
   }
 
   public func requestReceived() async throws -> PresentationRequest {
@@ -51,8 +79,18 @@ public final class RemoteSessionCoordinator: PresentationSessionCoordinatorType 
     return presentationRequest
   }
 
-  public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async throws {
-    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems(), onCancel: onCancel, onSuccess: onSuccess)
+  public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async {
+    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems()) {
+      // This closure is used by WalletKit in order to handle the cancelling
+      // of a strong authentication by the user
+      // our implementation uses feature-common -> Biometry to handle strong user authorisation
+    }
+    self.presentationStateSubject.value = .success
+    self.presentationStateSubject.send(completion: .finished)
+  }
+
+  public func onSuccess(completion: () -> Void) {
+    completion()
   }
 
   public func getState() async -> PresentationState {
@@ -63,7 +101,4 @@ public final class RemoteSessionCoordinator: PresentationSessionCoordinatorType 
     self.presentationStateSubject.value = presentationState
   }
 
-  public func onSuccess(completion: () -> Void) {
-    completion()
-  }
 }

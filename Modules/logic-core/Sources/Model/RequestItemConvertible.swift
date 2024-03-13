@@ -13,22 +13,34 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import class Foundation.Bundle
+import Foundation
 
-public protocol ConfigProviderType {
-  func getConfigLogic() -> ConfigLogic
-  func getConfigSecurityLogic() -> ConfigSecurityLogic
+public protocol RequestItemConvertible {
+
+  typealias RequestConvertibleItems = [String: [String: [String]]]
+
+  func asRequestItems() -> RequestConvertibleItems
 }
 
-public struct ConfigProvider: ConfigProviderType {
+public struct RequestItemsWrapper: RequestItemConvertible {
 
-  public static let shared: ConfigProviderType = ConfigProvider()
+  public var requestItems: RequestConvertibleItems
 
-  public func getConfigLogic() -> ConfigLogic {
-    WalletConfig()
+  public init() {
+    requestItems = RequestConvertibleItems()
   }
 
-  public func getConfigSecurityLogic() -> ConfigSecurityLogic {
-    WalletSecurityConfig(configLogic: getConfigLogic())
+  public init(dictionary: RequestConvertibleItems) {
+    self.requestItems = dictionary
+  }
+
+  public func asRequestItems() -> RequestConvertibleItems {
+    requestItems
+  }
+}
+
+extension RequestItems: RequestItemConvertible {
+  public func asRequestItems() -> RequestConvertibleItems {
+    return self
   }
 }

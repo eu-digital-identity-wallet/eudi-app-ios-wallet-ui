@@ -14,12 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import logic_core
 import logic_resources
 
 public extension MdocDecodable {
 
-  func getExpiryDate() -> String? {
+  func getExpiryDate(parser: (String) -> String) -> String? {
 
     let expiryDate: String? = switch self {
     case let pid as EuPidModel:
@@ -37,7 +36,7 @@ public extension MdocDecodable {
     }
 
     if let expiryDate {
-      return tryParseDate(dateString: expiryDate)
+      return parser(expiryDate)
     } else {
       return nil
     }
@@ -89,7 +88,7 @@ public extension MdocDecodable {
     return image
   }
 
-  func getDrivingPrivileges() -> NameValue? {
+  func getDrivingPrivileges(parser: (String) -> String) -> NameValue? {
     guard
       let mdl = self as? IsoMdlModel,
       let drivingPrivileges = mdl.drivingPrivileges
@@ -109,20 +108,13 @@ public extension MdocDecodable {
           }
           partialResult +=  """
                             \(LocalizableString.shared.get(with: .vehicleCategory)): \(privilege.vehicleCategoryCode)
-                            \(LocalizableString.shared.get(with: .dateOfIssue)): \(tryParseDate(dateString: issueDate))
-                            \(LocalizableString.shared.get(with: .dateOfExpiry)): \(tryParseDate(dateString: expiryDate))
+                            \(LocalizableString.shared.get(with: .dateOfIssue)): \(parser(issueDate))
+                            \(LocalizableString.shared.get(with: .dateOfExpiry)): \(parser(expiryDate))
 
                             """
         })
           .dropLast()),
       order: IsoMdlModel.CodingKeys.allCases.firstIndex(of: .drivingPrivileges) ?? .max
-    )
-  }
-
-  func tryParseDate(dateString: String) -> String {
-    Locale.current.localizedDateTime(
-      date: dateString,
-      uiFormatter: "dd MMM yyyy"
     )
   }
 }

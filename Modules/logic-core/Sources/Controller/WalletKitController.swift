@@ -15,7 +15,6 @@
  */
 
 import Foundation
-import logic_core
 import Combine
 import logic_resources
 
@@ -44,11 +43,11 @@ public final class WalletKitController: WalletKitControllerType {
 
   public private(set) var activeCoordinator: PresentationSessionCoordinatorType?
 
-  private let configLogic: ConfigLogic
+  private let configLogic: WalletKitConfig
   private var cancellables = Set<AnyCancellable>()
 
   internal init(
-    configLogic: ConfigLogic = ConfigProvider.shared.getConfigLogic()
+    configLogic: WalletKitConfig = WalletKitConfigProvider.shared.getWalletKitConfig()
   ) {
     self.configLogic = configLogic
     wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
@@ -57,7 +56,7 @@ public final class WalletKitController: WalletKitControllerType {
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciClientId = configLogic.vciConfig.clientId
     wallet.openID4VciRedirectUri = configLogic.vciConfig.redirectUri
-    wallet.trustedReaderCertificates = configLogic.proxmityConfig.trustedCerts
+    wallet.trustedReaderCertificates = configLogic.proximityConfig.trustedCerts
   }
 
   public func loadSampleData(dataFiles: [String]) async throws {
@@ -169,7 +168,11 @@ extension WalletKitControllerType {
   ///      .first(where: { $0.docType == documentType.rawValue })?.displayStrings
   ///      .first(where: { $0.name == elementIdentifier })?.value ?? LocalizableString.shared.get(with: .unavailableField)
   ///
-  public func valueForElementIdentifier(for documentType: DocumentIdentifier, elementIdentifier: String) -> MdocValue {
+  public func valueForElementIdentifier(
+    for documentType: DocumentIdentifier,
+    elementIdentifier: String,
+    parser: (String) -> String
+  ) -> MdocValue {
 
     // Check if we have image data and early return them
 
@@ -184,7 +187,7 @@ extension WalletKitControllerType {
       .compactMap({ $0 })
       .first(where: { $0.docType == documentType.rawValue })?.displayStrings
       .decodeGender()
-      .parseDates()
+      .parseDates(parser: parser)
       .mapTrueFalseToLocalizable()
 
     // Check if document type matches one of known models (pid or mdl)
@@ -197,7 +200,7 @@ extension WalletKitControllerType {
        let mdl = wallet.storage.mdlModel {
 
       // Flatten properties in order to be made in a Key: Value structure
-      if let drivingPrivileges = mdl.getDrivingPrivileges() {
+      if let drivingPrivileges = mdl.getDrivingPrivileges(parser: parser) {
         displayStrings.append(drivingPrivileges)
       }
 

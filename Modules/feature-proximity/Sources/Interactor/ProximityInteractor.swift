@@ -15,7 +15,7 @@
  */
 import Foundation
 import logic_api
-import logic_business
+import logic_core
 import UIKit
 import feature_common
 

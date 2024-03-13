@@ -186,11 +186,11 @@ You can find instructions on how to configure the application [here](wiki/config
 
 *logic-resources*: All app resources reside here (images, etc.)
 
-*logic-core*: Wallet core dependencies.
+*logic-core*: Wallet core logic.
 
 *logic-analytics*: Access to analytics providers. Capabilities for test monitoring analytics (i.e. crashes) can be added here (no functionality right now)
 
-*logic-business*: App & Wallet core business logic.
+*logic-business*: App business logic.
 
 *logic-authentication*: PinStorage and System Biometrics Logic.
 

@@ -15,6 +15,7 @@
  */
 import SwiftUI
 import logic_business
+import logic_core
 
 public indirect enum AppRoute: Equatable {
 
