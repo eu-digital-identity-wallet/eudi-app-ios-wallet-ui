@@ -19,20 +19,6 @@ public enum AppBuildType: String {
   case RELEASE, DEBUG
 }
 
-public struct VciConfig {
-  public let issuerUrl: String
-  public let clientId: String
-  public let redirectUri: String
-}
-
-public struct VerifierConfig {
-  public let apiUri: String
-}
-
-public struct ProximityConfig {
-  public let trustedCerts: [Data]
-}
-
 public protocol ConfigLogic {
 
   /**
@@ -49,26 +35,6 @@ public protocol ConfigLogic {
    * App version.
    */
   var appVersion: String { get }
-
-  /**
-   * Verifier API URI.
-   */
-  var verifierConfig: VerifierConfig { get }
-
-  /**
-   * VCI Configuration
-   */
-  var vciConfig: VciConfig { get }
-
-  /**
-   * Proximity Configuration
-   */
-  var proxmityConfig: ProximityConfig { get }
-
-  /**
-   * User authentication required accessing core's secure storage
-   */
-  var userAuthenticationRequired: Bool { get }
 }
 
 extension ConfigLogic {

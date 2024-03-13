@@ -24,8 +24,6 @@ public struct ConfigUiProvider: ConfigUiProviderType {
 
   public static let shared: ConfigUiProviderType = ConfigUiProvider()
 
-  private init() {}
-
   public func getConfigUiLogic() -> ConfigUiLogic {
     WalletUiConfig(themeConfiguration: .default)
   }

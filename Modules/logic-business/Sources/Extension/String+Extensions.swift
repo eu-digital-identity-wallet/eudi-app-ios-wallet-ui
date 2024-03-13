@@ -79,10 +79,6 @@ public extension String {
     }
     return nil
   }
-
-  func toBool() -> Bool {
-    Bool(self) ?? false
-  }
 }
 
 public extension String {

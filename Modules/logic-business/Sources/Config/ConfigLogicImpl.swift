@@ -17,10 +17,6 @@ import Foundation
 
 public struct WalletConfig: ConfigLogic {
 
-  public var userAuthenticationRequired: Bool {
-    getBundleValue(key: "Core User Auth").toBool()
-  }
-
   public var walletHostUrl: String {
     getBundleValue(key: "Wallet Host Url")
   }
@@ -31,24 +27,5 @@ public struct WalletConfig: ConfigLogic {
 
   public var appVersion: String {
     getBundleValue(key: "CFBundleShortVersionString")
-  }
-
-  public var verifierConfig: VerifierConfig {
-    .init(apiUri: getBundleValue(key: "Verifier API"))
-  }
-
-  public var vciConfig: VciConfig {
-    .init(
-      issuerUrl: getBundleValue(key: "Vci Issuer URL"),
-      clientId: getBundleValue(key: "Vci Client Id"),
-      redirectUri: getBundleValue(key: "Vci Redirect Uri")
-    )
-  }
-
-  public var proxmityConfig: ProximityConfig {
-    guard let cert = Data(name: "eudi_pid_issuer_ut", ext: "der") else {
-      return .init(trustedCerts: [])
-    }
-    return .init(trustedCerts: [cert])
   }
 }

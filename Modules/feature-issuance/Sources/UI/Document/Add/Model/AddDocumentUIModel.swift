@@ -16,7 +16,7 @@
 
 import SwiftUI
 import logic_resources
-import logic_business
+import logic_core
 
 public struct AddDocumentUIModel: Identifiable {
 

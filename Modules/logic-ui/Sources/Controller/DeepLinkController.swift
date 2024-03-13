@@ -16,6 +16,7 @@
 
 import Foundation
 import logic_business
+import logic_core
 
 public protocol DeepLinkControllerType {
   func hasDeepLink(url: URL) -> DeepLinkController.DeepLinkAction?

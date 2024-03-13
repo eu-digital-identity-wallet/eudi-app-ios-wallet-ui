@@ -796,70 +796,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
     }
     
     
-    
-    
-    
-    public var verifierConfig: VerifierConfig {
-        get {
-            return cuckoo_manager.getter("verifierConfig",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.verifierConfig)
-        }
-        
-    }
-    
-    
-    
-    
-    
-    public var vciConfig: VciConfig {
-        get {
-            return cuckoo_manager.getter("vciConfig",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.vciConfig)
-        }
-        
-    }
-    
-    
-    
-    
-    
-    public var proxmityConfig: ProximityConfig {
-        get {
-            return cuckoo_manager.getter("proxmityConfig",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.proxmityConfig)
-        }
-        
-    }
-    
-    
-    
-    
-    
-    public var userAuthenticationRequired: Bool {
-        get {
-            return cuckoo_manager.getter("userAuthenticationRequired",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.userAuthenticationRequired)
-        }
-        
-    }
-    
-    
 
     
 
@@ -890,34 +826,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         
         var appVersion: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, String> {
             return .init(manager: cuckoo_manager, name: "appVersion")
-        }
-        
-        
-        
-        
-        var verifierConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, VerifierConfig> {
-            return .init(manager: cuckoo_manager, name: "verifierConfig")
-        }
-        
-        
-        
-        
-        var vciConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, VciConfig> {
-            return .init(manager: cuckoo_manager, name: "vciConfig")
-        }
-        
-        
-        
-        
-        var proxmityConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, ProximityConfig> {
-            return .init(manager: cuckoo_manager, name: "proxmityConfig")
-        }
-        
-        
-        
-        
-        var userAuthenticationRequired: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic, Bool> {
-            return .init(manager: cuckoo_manager, name: "userAuthenticationRequired")
         }
         
         
@@ -957,34 +865,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
         }
         
         
-        
-        
-        var verifierConfig: Cuckoo.VerifyReadOnlyProperty<VerifierConfig> {
-            return .init(manager: cuckoo_manager, name: "verifierConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        var vciConfig: Cuckoo.VerifyReadOnlyProperty<VciConfig> {
-            return .init(manager: cuckoo_manager, name: "vciConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        var proxmityConfig: Cuckoo.VerifyReadOnlyProperty<ProximityConfig> {
-            return .init(manager: cuckoo_manager, name: "proxmityConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        var userAuthenticationRequired: Cuckoo.VerifyReadOnlyProperty<Bool> {
-            return .init(manager: cuckoo_manager, name: "userAuthenticationRequired", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
     
         
     }
@@ -1021,50 +901,6 @@ public class ConfigLogicStub: ConfigLogic {
     public var appVersion: String {
         get {
             return DefaultValueRegistry.defaultValue(for: (String).self)
-        }
-        
-    }
-    
-    
-    
-    
-    
-    public var verifierConfig: VerifierConfig {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (VerifierConfig).self)
-        }
-        
-    }
-    
-    
-    
-    
-    
-    public var vciConfig: VciConfig {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (VciConfig).self)
-        }
-        
-    }
-    
-    
-    
-    
-    
-    public var proxmityConfig: ProximityConfig {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (ProximityConfig).self)
-        }
-        
-    }
-    
-    
-    
-    
-    
-    public var userAuthenticationRequired: Bool {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Bool).self)
         }
         
     }
@@ -3382,9 +3218,902 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_ui
 
+import Foundation
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
 import Combine
 import Foundation
-import logic_core
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+import UIKit
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import class Foundation.Bundle
+
+
+
+
+
+
+public class MockConfigProviderType: ConfigProviderType, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = ConfigProviderType
+    
+    public typealias Stubbing = __StubbingProxy_ConfigProviderType
+    public typealias Verification = __VerificationProxy_ConfigProviderType
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: ConfigProviderType?
+
+    public func enableDefaultImplementation(_ stub: ConfigProviderType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    public func getConfigLogic() -> ConfigLogic {
+        
+    return cuckoo_manager.call(
+    """
+    getConfigLogic() -> ConfigLogic
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getConfigLogic())
+        
+    }
+    
+    
+    
+    
+    
+    public func getConfigSecurityLogic() -> ConfigSecurityLogic {
+        
+    return cuckoo_manager.call(
+    """
+    getConfigSecurityLogic() -> ConfigSecurityLogic
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.getConfigSecurityLogic())
+        
+    }
+    
+    
+
+    public struct __StubbingProxy_ConfigProviderType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        
+        func getConfigLogic() -> Cuckoo.ProtocolStubFunction<(), ConfigLogic> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockConfigProviderType.self, method:
+    """
+    getConfigLogic() -> ConfigLogic
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func getConfigSecurityLogic() -> Cuckoo.ProtocolStubFunction<(), ConfigSecurityLogic> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockConfigProviderType.self, method:
+    """
+    getConfigSecurityLogic() -> ConfigSecurityLogic
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_ConfigProviderType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+    
+        
+        
+        
+        @discardableResult
+        func getConfigLogic() -> Cuckoo.__DoNotUse<(), ConfigLogic> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    getConfigLogic() -> ConfigLogic
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func getConfigSecurityLogic() -> Cuckoo.__DoNotUse<(), ConfigSecurityLogic> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    getConfigSecurityLogic() -> ConfigSecurityLogic
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+public class ConfigProviderTypeStub: ConfigProviderType {
+    
+
+    
+
+    
+    
+    
+    
+    public func getConfigLogic() -> ConfigLogic  {
+        return DefaultValueRegistry.defaultValue(for: (ConfigLogic).self)
+    }
+    
+    
+    
+    
+    
+    public func getConfigSecurityLogic() -> ConfigSecurityLogic  {
+        return DefaultValueRegistry.defaultValue(for: (ConfigSecurityLogic).self)
+    }
+    
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Combine
+import Foundation
+import Peppermint
+import libPhoneNumber
+
+
+
+
+
+
+public class MockFormValidatorType: FormValidatorType, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = FormValidatorType
+    
+    public typealias Stubbing = __StubbingProxy_FormValidatorType
+    public typealias Verification = __VerificationProxy_FormValidatorType
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: FormValidatorType?
+
+    public func enableDefaultImplementation(_ stub: FormValidatorType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    public func validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never> {
+        
+    return cuckoo_manager.call(
+    """
+    validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
+    """,
+            parameters: (form),
+            escapingParameters: (form),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.validateForm(form: form))
+        
+    }
+    
+    
+    
+    
+    
+    public func validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never> {
+        
+    return cuckoo_manager.call(
+    """
+    validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
+    """,
+            parameters: (forms),
+            escapingParameters: (forms),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.validateForms(forms: forms))
+        
+    }
+    
+    
+
+    public struct __StubbingProxy_FormValidatorType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        
+        func validateForm<M1: Cuckoo.Matchable>(form: M1) -> Cuckoo.ProtocolStubFunction<(ValidatableForm), AnyPublisher<FormValidationResult, Never>> where M1.MatchedType == ValidatableForm {
+            let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: form) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockFormValidatorType.self, method:
+    """
+    validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func validateForms<M1: Cuckoo.Matchable>(forms: M1) -> Cuckoo.ProtocolStubFunction<([ValidatableForm]), AnyPublisher<FormsValidationResult, Never>> where M1.MatchedType == [ValidatableForm] {
+            let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: forms) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockFormValidatorType.self, method:
+    """
+    validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_FormValidatorType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+    
+        
+        
+        
+        @discardableResult
+        func validateForm<M1: Cuckoo.Matchable>(form: M1) -> Cuckoo.__DoNotUse<(ValidatableForm), AnyPublisher<FormValidationResult, Never>> where M1.MatchedType == ValidatableForm {
+            let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: form) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func validateForms<M1: Cuckoo.Matchable>(forms: M1) -> Cuckoo.__DoNotUse<([ValidatableForm]), AnyPublisher<FormsValidationResult, Never>> where M1.MatchedType == [ValidatableForm] {
+            let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: forms) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+public class FormValidatorTypeStub: FormValidatorType {
+    
+
+    
+
+    
+    
+    
+    
+    public func validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>  {
+        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<FormValidationResult, Never>).self)
+    }
+    
+    
+    
+    
+    
+    public func validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>  {
+        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<FormsValidationResult, Never>).self)
+    }
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = FormValidatorInteractor
+    
+    public typealias Stubbing = __StubbingProxy_FormValidatorInteractor
+    public typealias Verification = __VerificationProxy_FormValidatorInteractor
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: FormValidatorInteractor?
+
+    public func enableDefaultImplementation(_ stub: FormValidatorInteractor) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+
+    
+
+    
+    
+    
+    
+    public func validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never> {
+        
+    return cuckoo_manager.call(
+    """
+    validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
+    """,
+            parameters: (form),
+            escapingParameters: (form),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.validateForm(form: form))
+        
+    }
+    
+    
+    
+    
+    
+    public func validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never> {
+        
+    return cuckoo_manager.call(
+    """
+    validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
+    """,
+            parameters: (forms),
+            escapingParameters: (forms),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.validateForms(forms: forms))
+        
+    }
+    
+    
+
+    public struct __StubbingProxy_FormValidatorInteractor: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        
+        func validateForm<M1: Cuckoo.Matchable>(form: M1) -> Cuckoo.ProtocolStubFunction<(ValidatableForm), AnyPublisher<FormValidationResult, Never>> where M1.MatchedType == ValidatableForm {
+            let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: form) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockFormValidatorInteractor.self, method:
+    """
+    validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func validateForms<M1: Cuckoo.Matchable>(forms: M1) -> Cuckoo.ProtocolStubFunction<([ValidatableForm]), AnyPublisher<FormsValidationResult, Never>> where M1.MatchedType == [ValidatableForm] {
+            let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: forms) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockFormValidatorInteractor.self, method:
+    """
+    validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
+    """, parameterMatchers: matchers))
+        }
+        
+        
+    }
+
+    public struct __VerificationProxy_FormValidatorInteractor: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+    
+        
+        
+        
+        @discardableResult
+        func validateForm<M1: Cuckoo.Matchable>(form: M1) -> Cuckoo.__DoNotUse<(ValidatableForm), AnyPublisher<FormValidationResult, Never>> where M1.MatchedType == ValidatableForm {
+            let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: form) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func validateForms<M1: Cuckoo.Matchable>(forms: M1) -> Cuckoo.__DoNotUse<([ValidatableForm]), AnyPublisher<FormsValidationResult, Never>> where M1.MatchedType == [ValidatableForm] {
+            let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: forms) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+    }
+}
+
+
+public class FormValidatorInteractorStub: FormValidatorInteractor {
+    
+
+    
+
+    
+    
+    
+    
+    public func validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>  {
+        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<FormValidationResult, Never>).self)
+    }
+    
+    
+    
+    
+    
+    public func validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>  {
+        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<FormsValidationResult, Never>).self)
+    }
+    
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+
+
+
+
+
+
+public class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
+    
+    public typealias MocksType = WalletKitConfig
+    
+    public typealias Stubbing = __StubbingProxy_WalletKitConfig
+    public typealias Verification = __VerificationProxy_WalletKitConfig
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    
+    private var __defaultImplStub: WalletKitConfig?
+
+    public func enableDefaultImplementation(_ stub: WalletKitConfig) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+
+    
+    
+    
+    
+    public var verifierConfig: VerifierConfig {
+        get {
+            return cuckoo_manager.getter("verifierConfig",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.verifierConfig)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var vciConfig: VciConfig {
+        get {
+            return cuckoo_manager.getter("vciConfig",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.vciConfig)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var proximityConfig: ProximityConfig {
+        get {
+            return cuckoo_manager.getter("proximityConfig",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.proximityConfig)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var userAuthenticationRequired: Bool {
+        get {
+            return cuckoo_manager.getter("userAuthenticationRequired",
+                superclassCall:
+                    
+                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                    ,
+                defaultCall:  __defaultImplStub!.userAuthenticationRequired)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+
+    public struct __StubbingProxy_WalletKitConfig: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        
+        
+        var verifierConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig, VerifierConfig> {
+            return .init(manager: cuckoo_manager, name: "verifierConfig")
+        }
+        
+        
+        
+        
+        var vciConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig, VciConfig> {
+            return .init(manager: cuckoo_manager, name: "vciConfig")
+        }
+        
+        
+        
+        
+        var proximityConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig, ProximityConfig> {
+            return .init(manager: cuckoo_manager, name: "proximityConfig")
+        }
+        
+        
+        
+        
+        var userAuthenticationRequired: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig, Bool> {
+            return .init(manager: cuckoo_manager, name: "userAuthenticationRequired")
+        }
+        
+        
+        
+    }
+
+    public struct __VerificationProxy_WalletKitConfig: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        
+        
+        
+        var verifierConfig: Cuckoo.VerifyReadOnlyProperty<VerifierConfig> {
+            return .init(manager: cuckoo_manager, name: "verifierConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        var vciConfig: Cuckoo.VerifyReadOnlyProperty<VciConfig> {
+            return .init(manager: cuckoo_manager, name: "vciConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        var proximityConfig: Cuckoo.VerifyReadOnlyProperty<ProximityConfig> {
+            return .init(manager: cuckoo_manager, name: "proximityConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        var userAuthenticationRequired: Cuckoo.VerifyReadOnlyProperty<Bool> {
+            return .init(manager: cuckoo_manager, name: "userAuthenticationRequired", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+    
+        
+    }
+}
+
+
+public class WalletKitConfigStub: WalletKitConfig {
+    
+    
+    
+    
+    public var verifierConfig: VerifierConfig {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (VerifierConfig).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var vciConfig: VciConfig {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (VciConfig).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var proximityConfig: ProximityConfig {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (ProximityConfig).self)
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public var userAuthenticationRequired: Bool {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Bool).self)
+        }
+        
+    }
+    
+    
+
+    
+
+    
+}
+
+
+
+
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Combine
+import Foundation
 import logic_resources
 
 
@@ -4107,7 +4836,6 @@ import Cuckoo
 
 import Combine
 import Foundation
-import logic_core
 import logic_resources
 
 
@@ -4600,7 +5328,6 @@ import Cuckoo
 
 import Combine
 import Foundation
-import logic_core
 import logic_resources
 
 import Cuckoo
@@ -4611,115 +5338,7 @@ import Cuckoo
 
 import Combine
 import Foundation
-import logic_core
 import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Combine
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
-import UIKit
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
 
 import Cuckoo
 @testable import logic_business
@@ -4728,7 +5347,6 @@ import Cuckoo
 @testable import logic_ui
 
 import SwiftUI
-import logic_core
 import logic_resources
 
 import Cuckoo
@@ -4738,7 +5356,41 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
-import logic_core
+import logic_resources
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import EudiWalletKit
+import MdocDataModel18013
+import MdocDataTransfer18013
+import MdocSecurity18013
+import WalletStorage
+
+import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_core
+@testable import logic_ui
+
+import Foundation
 import logic_resources
 
 import Cuckoo
@@ -4756,25 +5408,6 @@ import Cuckoo
 @testable import logic_ui
 
 import Foundation
-import logic_core
-import logic_resources
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Foundation
-import logic_core
 
 
 
@@ -4909,19 +5542,19 @@ import class Foundation.Bundle
 
 
 
-public class MockConfigProviderType: ConfigProviderType, Cuckoo.ProtocolMock {
+public class MockWalletKitConfigProviderType: WalletKitConfigProviderType, Cuckoo.ProtocolMock {
     
-    public typealias MocksType = ConfigProviderType
+    public typealias MocksType = WalletKitConfigProviderType
     
-    public typealias Stubbing = __StubbingProxy_ConfigProviderType
-    public typealias Verification = __VerificationProxy_ConfigProviderType
+    public typealias Stubbing = __StubbingProxy_WalletKitConfigProviderType
+    public typealias Verification = __VerificationProxy_WalletKitConfigProviderType
 
     public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-    private var __defaultImplStub: ConfigProviderType?
+    private var __defaultImplStub: WalletKitConfigProviderType?
 
-    public func enableDefaultImplementation(_ stub: ConfigProviderType) {
+    public func enableDefaultImplementation(_ stub: WalletKitConfigProviderType) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
@@ -4935,11 +5568,11 @@ public class MockConfigProviderType: ConfigProviderType, Cuckoo.ProtocolMock {
     
     
     
-    public func getConfigLogic() -> ConfigLogic {
+    public func getWalletKitConfig() -> WalletKitConfig {
         
     return cuckoo_manager.call(
     """
-    getConfigLogic() -> ConfigLogic
+    getWalletKitConfig() -> WalletKitConfig
     """,
             parameters: (),
             escapingParameters: (),
@@ -4947,33 +5580,13 @@ public class MockConfigProviderType: ConfigProviderType, Cuckoo.ProtocolMock {
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: __defaultImplStub!.getConfigLogic())
-        
-    }
-    
-    
-    
-    
-    
-    public func getConfigSecurityLogic() -> ConfigSecurityLogic {
-        
-    return cuckoo_manager.call(
-    """
-    getConfigSecurityLogic() -> ConfigSecurityLogic
-    """,
-            parameters: (),
-            escapingParameters: (),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.getConfigSecurityLogic())
+            defaultCall: __defaultImplStub!.getWalletKitConfig())
         
     }
     
     
 
-    public struct __StubbingProxy_ConfigProviderType: Cuckoo.StubbingProxy {
+    public struct __StubbingProxy_WalletKitConfigProviderType: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
@@ -4983,29 +5596,18 @@ public class MockConfigProviderType: ConfigProviderType, Cuckoo.ProtocolMock {
         
         
         
-        func getConfigLogic() -> Cuckoo.ProtocolStubFunction<(), ConfigLogic> {
+        func getWalletKitConfig() -> Cuckoo.ProtocolStubFunction<(), WalletKitConfig> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockConfigProviderType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitConfigProviderType.self, method:
     """
-    getConfigLogic() -> ConfigLogic
-    """, parameterMatchers: matchers))
-        }
-        
-        
-        
-        
-        func getConfigSecurityLogic() -> Cuckoo.ProtocolStubFunction<(), ConfigSecurityLogic> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockConfigProviderType.self, method:
-    """
-    getConfigSecurityLogic() -> ConfigSecurityLogic
+    getWalletKitConfig() -> WalletKitConfig
     """, parameterMatchers: matchers))
         }
         
         
     }
 
-    public struct __VerificationProxy_ConfigProviderType: Cuckoo.VerificationProxy {
+    public struct __VerificationProxy_WalletKitConfigProviderType: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -5022,23 +5624,11 @@ public class MockConfigProviderType: ConfigProviderType, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func getConfigLogic() -> Cuckoo.__DoNotUse<(), ConfigLogic> {
+        func getWalletKitConfig() -> Cuckoo.__DoNotUse<(), WalletKitConfig> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    getConfigLogic() -> ConfigLogic
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        @discardableResult
-        func getConfigSecurityLogic() -> Cuckoo.__DoNotUse<(), ConfigSecurityLogic> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-    """
-    getConfigSecurityLogic() -> ConfigSecurityLogic
+    getWalletKitConfig() -> WalletKitConfig
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -5047,7 +5637,7 @@ public class MockConfigProviderType: ConfigProviderType, Cuckoo.ProtocolMock {
 }
 
 
-public class ConfigProviderTypeStub: ConfigProviderType {
+public class WalletKitConfigProviderTypeStub: WalletKitConfigProviderType {
     
 
     
@@ -5056,16 +5646,8 @@ public class ConfigProviderTypeStub: ConfigProviderType {
     
     
     
-    public func getConfigLogic() -> ConfigLogic  {
-        return DefaultValueRegistry.defaultValue(for: (ConfigLogic).self)
-    }
-    
-    
-    
-    
-    
-    public func getConfigSecurityLogic() -> ConfigSecurityLogic  {
-        return DefaultValueRegistry.defaultValue(for: (ConfigSecurityLogic).self)
+    public func getWalletKitConfig() -> WalletKitConfig  {
+        return DefaultValueRegistry.defaultValue(for: (WalletKitConfig).self)
     }
     
     
@@ -5074,377 +5656,6 @@ public class ConfigProviderTypeStub: ConfigProviderType {
 
 
 
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Combine
-import Foundation
-import Peppermint
-import libPhoneNumber
-
-
-
-
-
-
-public class MockFormValidatorType: FormValidatorType, Cuckoo.ProtocolMock {
-    
-    public typealias MocksType = FormValidatorType
-    
-    public typealias Stubbing = __StubbingProxy_FormValidatorType
-    public typealias Verification = __VerificationProxy_FormValidatorType
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    
-    private var __defaultImplStub: FormValidatorType?
-
-    public func enableDefaultImplementation(_ stub: FormValidatorType) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-    
-
-    
-
-    
-
-    
-    
-    
-    
-    public func validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never> {
-        
-    return cuckoo_manager.call(
-    """
-    validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
-    """,
-            parameters: (form),
-            escapingParameters: (form),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.validateForm(form: form))
-        
-    }
-    
-    
-    
-    
-    
-    public func validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never> {
-        
-    return cuckoo_manager.call(
-    """
-    validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
-    """,
-            parameters: (forms),
-            escapingParameters: (forms),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.validateForms(forms: forms))
-        
-    }
-    
-    
-
-    public struct __StubbingProxy_FormValidatorType: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        
-        
-        
-        func validateForm<M1: Cuckoo.Matchable>(form: M1) -> Cuckoo.ProtocolStubFunction<(ValidatableForm), AnyPublisher<FormValidationResult, Never>> where M1.MatchedType == ValidatableForm {
-            let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: form) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockFormValidatorType.self, method:
-    """
-    validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
-    """, parameterMatchers: matchers))
-        }
-        
-        
-        
-        
-        func validateForms<M1: Cuckoo.Matchable>(forms: M1) -> Cuckoo.ProtocolStubFunction<([ValidatableForm]), AnyPublisher<FormsValidationResult, Never>> where M1.MatchedType == [ValidatableForm] {
-            let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: forms) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockFormValidatorType.self, method:
-    """
-    validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
-    """, parameterMatchers: matchers))
-        }
-        
-        
-    }
-
-    public struct __VerificationProxy_FormValidatorType: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    
-        
-    
-        
-        
-        
-        @discardableResult
-        func validateForm<M1: Cuckoo.Matchable>(form: M1) -> Cuckoo.__DoNotUse<(ValidatableForm), AnyPublisher<FormValidationResult, Never>> where M1.MatchedType == ValidatableForm {
-            let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: form) { $0 }]
-            return cuckoo_manager.verify(
-    """
-    validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        @discardableResult
-        func validateForms<M1: Cuckoo.Matchable>(forms: M1) -> Cuckoo.__DoNotUse<([ValidatableForm]), AnyPublisher<FormsValidationResult, Never>> where M1.MatchedType == [ValidatableForm] {
-            let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: forms) { $0 }]
-            return cuckoo_manager.verify(
-    """
-    validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-    }
-}
-
-
-public class FormValidatorTypeStub: FormValidatorType {
-    
-
-    
-
-    
-    
-    
-    
-    public func validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>  {
-        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<FormValidationResult, Never>).self)
-    }
-    
-    
-    
-    
-    
-    public func validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>  {
-        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<FormsValidationResult, Never>).self)
-    }
-    
-    
-}
-
-
-
-
-
-
-
-
-
-
-public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.ProtocolMock {
-    
-    public typealias MocksType = FormValidatorInteractor
-    
-    public typealias Stubbing = __StubbingProxy_FormValidatorInteractor
-    public typealias Verification = __VerificationProxy_FormValidatorInteractor
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    
-    private var __defaultImplStub: FormValidatorInteractor?
-
-    public func enableDefaultImplementation(_ stub: FormValidatorInteractor) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-    
-
-    
-
-    
-
-    
-    
-    
-    
-    public func validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never> {
-        
-    return cuckoo_manager.call(
-    """
-    validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
-    """,
-            parameters: (form),
-            escapingParameters: (form),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.validateForm(form: form))
-        
-    }
-    
-    
-    
-    
-    
-    public func validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never> {
-        
-    return cuckoo_manager.call(
-    """
-    validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
-    """,
-            parameters: (forms),
-            escapingParameters: (forms),
-            superclassCall:
-                
-                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                ,
-            defaultCall: __defaultImplStub!.validateForms(forms: forms))
-        
-    }
-    
-    
-
-    public struct __StubbingProxy_FormValidatorInteractor: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        
-        
-        
-        func validateForm<M1: Cuckoo.Matchable>(form: M1) -> Cuckoo.ProtocolStubFunction<(ValidatableForm), AnyPublisher<FormValidationResult, Never>> where M1.MatchedType == ValidatableForm {
-            let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: form) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockFormValidatorInteractor.self, method:
-    """
-    validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
-    """, parameterMatchers: matchers))
-        }
-        
-        
-        
-        
-        func validateForms<M1: Cuckoo.Matchable>(forms: M1) -> Cuckoo.ProtocolStubFunction<([ValidatableForm]), AnyPublisher<FormsValidationResult, Never>> where M1.MatchedType == [ValidatableForm] {
-            let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: forms) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockFormValidatorInteractor.self, method:
-    """
-    validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
-    """, parameterMatchers: matchers))
-        }
-        
-        
-    }
-
-    public struct __VerificationProxy_FormValidatorInteractor: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    
-        
-    
-        
-        
-        
-        @discardableResult
-        func validateForm<M1: Cuckoo.Matchable>(form: M1) -> Cuckoo.__DoNotUse<(ValidatableForm), AnyPublisher<FormValidationResult, Never>> where M1.MatchedType == ValidatableForm {
-            let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: form) { $0 }]
-            return cuckoo_manager.verify(
-    """
-    validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-        
-        
-        @discardableResult
-        func validateForms<M1: Cuckoo.Matchable>(forms: M1) -> Cuckoo.__DoNotUse<([ValidatableForm]), AnyPublisher<FormsValidationResult, Never>> where M1.MatchedType == [ValidatableForm] {
-            let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: forms) { $0 }]
-            return cuckoo_manager.verify(
-    """
-    validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
-    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-        }
-        
-        
-    }
-}
-
-
-public class FormValidatorInteractorStub: FormValidatorInteractor {
-    
-
-    
-
-    
-    
-    
-    
-    public func validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>  {
-        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<FormValidationResult, Never>).self)
-    }
-    
-    
-    
-    
-    
-    public func validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>  {
-        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<FormsValidationResult, Never>).self)
-    }
-    
-    
-}
-
-
-
-
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import Cuckoo
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_core
-@testable import logic_ui
-
-import EudiWalletKit
-import MdocDataModel18013
-import MdocDataTransfer18013
-import MdocSecurity18013
-import WalletStorage
 
 import Cuckoo
 @testable import logic_business
@@ -5832,6 +6043,7 @@ import Cuckoo
 
 import Foundation
 import logic_business
+import logic_core
 
 
 
@@ -6442,6 +6654,7 @@ import Cuckoo
 
 import SwiftUI
 import logic_business
+import logic_core
 
 
 

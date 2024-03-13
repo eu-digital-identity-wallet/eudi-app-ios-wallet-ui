@@ -17,7 +17,7 @@ import Foundation
 import logic_ui
 import logic_resources
 import feature_common
-import logic_business
+import logic_core
 
 struct DocumentDetailsViewState: ViewState {
   let document: DocumentDetailsUIModel

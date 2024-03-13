@@ -243,7 +243,13 @@ extension RequestDataUiModel {
             title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
             value: WalletKitController.shared.valueForElementIdentifier(
               for: .init(rawValue: document.docType),
-              elementIdentifier: $0.elementIdentifier
+              elementIdentifier: $0.elementIdentifier,
+              parser: {
+                Locale.current.localizedDateTime(
+                  date: $0,
+                  uiFormatter: "dd MMM yyyy"
+                )
+              }
             ),
             elementKey: $0.elementIdentifier,
             namespace: $0.nameSpace,
@@ -267,7 +273,13 @@ extension RequestDataUiModel {
           title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
           value: WalletKitController.shared.valueForElementIdentifier(
             for: .init(rawValue: document.docType),
-            elementIdentifier: $0.elementIdentifier
+            elementIdentifier: $0.elementIdentifier,
+            parser: {
+              Locale.current.localizedDateTime(
+                date: $0,
+                uiFormatter: "dd MMM yyyy"
+              )
+            }
           ),
           elementKey: $0.elementIdentifier,
           namespace: $0.nameSpace,

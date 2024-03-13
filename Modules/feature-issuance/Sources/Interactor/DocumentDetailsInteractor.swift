@@ -16,6 +16,7 @@
 import Foundation
 import logic_ui
 import logic_resources
+import logic_core
 import logic_business
 
 public protocol DocumentDetailsInteractorType {

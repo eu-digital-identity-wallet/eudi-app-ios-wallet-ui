@@ -13,22 +13,9 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import class Foundation.Bundle
 
-public protocol ConfigProviderType {
-  func getConfigLogic() -> ConfigLogic
-  func getConfigSecurityLogic() -> ConfigSecurityLogic
-}
-
-public struct ConfigProvider: ConfigProviderType {
-
-  public static let shared: ConfigProviderType = ConfigProvider()
-
-  public func getConfigLogic() -> ConfigLogic {
-    WalletConfig()
-  }
-
-  public func getConfigSecurityLogic() -> ConfigSecurityLogic {
-    WalletSecurityConfig(configLogic: getConfigLogic())
+extension String {
+  func toBool() -> Bool {
+    Bool(self) ?? false
   }
 }

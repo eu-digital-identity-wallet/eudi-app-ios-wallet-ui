@@ -18,6 +18,7 @@ import UIKit
 import netfox
 import logic_business
 import logic_analytics
+import logic_core
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

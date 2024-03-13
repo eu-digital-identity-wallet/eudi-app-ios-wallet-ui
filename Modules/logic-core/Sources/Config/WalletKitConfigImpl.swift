@@ -14,35 +14,29 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import logic_core
 
-public protocol RequestItemConvertible {
+public struct WalletKitConfigImpl: WalletKitConfig {
 
-  typealias RequestConvertibleItems = [String: [String: [String]]]
-
-  func asRequestItems() -> RequestConvertibleItems
-}
-
-public struct RequestItemsWrapper: RequestItemConvertible {
-
-  public var requestItems: RequestConvertibleItems
-
-  public init() {
-    requestItems = RequestConvertibleItems()
+  public var userAuthenticationRequired: Bool {
+    getBundleValue(key: "Core User Auth").toBool()
   }
 
-  public init(dictionary: RequestConvertibleItems) {
-    self.requestItems = dictionary
+  public var verifierConfig: VerifierConfig {
+    .init(apiUri: getBundleValue(key: "Verifier API"))
   }
 
-  public func asRequestItems() -> RequestConvertibleItems {
-    requestItems
+  public var vciConfig: VciConfig {
+    .init(
+      issuerUrl: getBundleValue(key: "Vci Issuer URL"),
+      clientId: getBundleValue(key: "Vci Client Id"),
+      redirectUri: getBundleValue(key: "Vci Redirect Uri")
+    )
   }
 
-}
-
-extension RequestItems: RequestItemConvertible {
-  public func asRequestItems() -> RequestConvertibleItems {
-    return self
+  public var proximityConfig: ProximityConfig {
+    guard let cert = Data(name: "eudi_pid_issuer_ut", ext: "der") else {
+      return .init(trustedCerts: [])
+    }
+    return .init(trustedCerts: [cert])
   }
 }
