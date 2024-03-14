@@ -107,7 +107,7 @@ App center download method (Android app)
 
 In addition to building the app from the source, you can also use the Android app which you can download *[here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/eudi-reference-android/distribution_groups/eudi%20wallet%20(demo)%20public)*
 
-Run the app from the source (code build)
+Run the app from the source (xcode build)
 
 Clone this repo and make sure you have access to the dependencies below:
 
