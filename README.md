@@ -101,17 +101,13 @@ Minimum device requirements
 
 Prerequisites
 
-To complete the flows described below you will need to build and run the application with xcode. Alternatively, you can directly download the app onto your device with the two methods described below.
+To complete the flows described below you need to build and run the application with xcode. Alternatively, you can directly download the Android app onto your device.
 
 App center download method (Android app)
 
 In addition to building the app from the source, you can also use the Android app which you can download *[here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/eudi-reference-android/distribution_groups/eudi%20wallet%20(demo)%20public)*
 
-Alternative download method (iOS app)
-
-It is possible, while following the instructions [here](wiki/download.md) to download and install the iOS application directly from [Appcenter](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/eudi-reference-ios/distribution_groups/eudi%20wallet%20ios%20(demo)%20public). There are only a limited number of available download slots, so being able to download the app is based on availability as is not guaranteed. 
-
-Run the app from the source
+Run the app from the source (code build)
 
 Clone this repo and make sure you have access to the dependencies below:
 
