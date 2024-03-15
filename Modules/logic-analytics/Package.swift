@@ -15,8 +15,7 @@ let package = Package(
     .package(
       url: "https://github.com/microsoft/appcenter-sdk-apple.git",
       from: "5.0.4"
-    ),
-    .package(name: "logic-test", path: "./logic-test")
+    )
   ],
   targets: [
     .target(
@@ -32,14 +31,6 @@ let package = Package(
         )
       ],
       path: "./Sources"
-    ),
-    .testTarget(
-      name: "logic-analytics-tests",
-      dependencies: [
-        "logic-analytics",
-        "logic-test"
-      ],
-      path: "./Tests"
     )
   ]
 )

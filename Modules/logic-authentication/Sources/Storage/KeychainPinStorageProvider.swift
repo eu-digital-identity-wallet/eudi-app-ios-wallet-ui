@@ -17,7 +17,7 @@ import logic_business
 
 final class KeychainPinStorageProvider: PinStorageProvider {
 
-  private lazy var keyChainController: KeyChainControllerType = KeyChainController()
+  private lazy var keyChainController: KeyChainControllerType = KeyChainController.shared
 
   func retrievePin() -> String? {
     keyChainController.getValue(key: KeychainIdentifier.devicePin)

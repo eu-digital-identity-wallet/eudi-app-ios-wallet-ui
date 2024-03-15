@@ -37,20 +37,16 @@ let package = Package(
       url: "https://github.com/rhummelmose/BluetoothKit.git",
       branch: "master"
     ),
-    .package(name: "logic-core", path: "./logic-core"),
-    .package(name: "logic-test", path: "./logic-test"),
-    .package(name: "logic-analytics", path: "./logic-analytics")
+    .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
     .target(
       name: "logic-business",
       dependencies: [
         "logic-resources",
-        "logic-analytics",
         "IOSSecuritySuite",
         "KeychainAccess",
         "BluetoothKit",
-        "logic-core",
         .product(
           name: "Peppermint",
           package: "peppermint"
@@ -66,7 +62,6 @@ let package = Package(
       name: "logic-business-tests",
       dependencies: [
         "logic-business",
-        "logic-analytics",
         "logic-test"
       ],
       path: "./Tests"

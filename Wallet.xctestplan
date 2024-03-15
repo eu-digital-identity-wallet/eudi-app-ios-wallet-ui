@@ -67,13 +67,6 @@
     },
     {
       "target" : {
-        "containerPath" : "container:Modules\/logic-analytics",
-        "identifier" : "logic-analytics-tests",
-        "name" : "logic-analytics-tests"
-      }
-    },
-    {
-      "target" : {
         "containerPath" : "container:Modules\/logic-api",
         "identifier" : "logic-api-tests",
         "name" : "logic-api-tests"

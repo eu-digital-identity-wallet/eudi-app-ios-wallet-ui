@@ -36,7 +36,7 @@ public protocol BiometryInteractorType {
 
 public final class BiometryInteractor: SystemBiometricsInteractor, BiometryInteractorType {
 
-  private lazy var prefsController: PrefsControllerType = PrefsController()
+  private lazy var prefsController: PrefsControllerType = PrefsController.shared
   private lazy var quickPinInteractor: QuickPinInteractorType = QuickPinInteractor()
 
   convenience init(
