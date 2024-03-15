@@ -35,8 +35,6 @@ public class PrefsController: PrefsControllerType {
     UserDefaults.standard
   }()
 
-  public init() {}
-
   public func setValue(_ value: Any?, forKey: PrefsController.Key) {
     userDefaultsWrapper.setValue(value, forKey: forKey.rawValue)
   }

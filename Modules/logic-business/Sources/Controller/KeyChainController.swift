@@ -40,9 +40,9 @@ public protocol KeyChainControllerType {
 
 public final class KeyChainController: KeyChainControllerType {
 
-  private let biometryKey = "eu.europa.ec.euidi.biometric.access"
+  public static let shared: KeyChainControllerType = KeyChainController()
 
-  public init() {}
+  private let biometryKey = "eu.europa.ec.euidi.biometric.access"
 
   private lazy var keyChain: Keychain = {
     Keychain()

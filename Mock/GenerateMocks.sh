@@ -99,11 +99,7 @@ function generateMocks {
       logic_auth_path="${INPUT_DIR}/${LOGIC_AUTH_MODULE}/Sources/**/*.swift"
   elif [ $4 == $IS_BASE_LOGIC_MODULE ];
     then
-      logic_core_path="${INPUT_DIR}/${LOGIC_CORE_MODULE}/Sources/**/*.swift"
       logic_analytics_path="${INPUT_DIR}/${LOGIC_ANALYTICS_MODULE}/Sources/**/*.swift"
-  elif [ $4 == $HAS_NO_RELATIONS ];
-    then
-      logic_core_path="${INPUT_DIR}/${LOGIC_CORE_MODULE}/Sources/**/*.swift"
   fi
 
  "${PROJECT_DIR}/Mock/run" --download generate $3 --no-class-mocking --no-inheritance --no-header --glob \
@@ -132,11 +128,8 @@ remove_last_comma() {
   fi
 }
 
-# Logic Analytics
-generateMocks $LOGIC_ANALYTICS_MODULE "Tests" "--testable $LOGIC_ANALYTICS_MODULE,$LOGIC_CORE_MODULE" $HAS_NO_RELATIONS
-
 # Logic Business
-generateMocks $LOGIC_BUSINESS_MODULE "Tests" "--testable $LOGIC_BUSINESS_MODULE,$LOGIC_ANALYTICS_MODULE,$LOGIC_CORE_MODULE" $IS_BASE_LOGIC_MODULE
+generateMocks $LOGIC_BUSINESS_MODULE "Tests" "--testable $LOGIC_BUSINESS_MODULE,$LOGIC_ANALYTICS_MODULE" $IS_BASE_LOGIC_MODULE
 
 # Second level Logic Modules
 for module in ${SECOND_LEVEL_MODULES[@]}; do

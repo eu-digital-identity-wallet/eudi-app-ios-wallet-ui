@@ -91,7 +91,7 @@ final class TestDeepLinkController: EudiTest {
   func testHandleDeepLinkAction_WhenRouterReturnsAfterAuthorizationFlowAndActionIsOpenId4VPAndScreenNotForeground_ThenValidateCachingRemovalAndExecutionOfNavigation() {
     // Given
     let sessionCoordinator = RemoteSessionCoordinator(
-      session: Constants.mockPresentationSession
+      session: Self.mockPresentationSession
     )
     let appRoute = AppRoute.presentationRequest(presentationCoordinator: sessionCoordinator)
     let pendingAction = Self.mockedOpenId4VPDeepLinkAction
@@ -116,7 +116,7 @@ final class TestDeepLinkController: EudiTest {
   func testHandleDeepLinkAction_WhenRouterReturnsAfterAuthorizationFlowAndActionIsOpenId4VPAndScreenIsForeground_ThenValidateCachingRemovalAndRouteNil() {
     // Given
     let sessionCoordinator = RemoteSessionCoordinator(
-      session: Constants.mockPresentationSession
+      session: Self.mockPresentationSession
     )
     let pendingAction = Self.mockedOpenId4VPDeepLinkAction
     
@@ -256,4 +256,22 @@ private extension TestDeepLinkController {
   
   static let mockedMalformedUrl: URL = URL(string: "not_a_valid_url")!
   
+}
+
+private extension TestDeepLinkController {
+  struct MockPresentationService: PresentationService {
+    
+    var flow: EudiWalletKit.FlowType
+    
+    func startQrEngagement() async throws -> Data? { nil }
+    
+    func receiveRequest() async throws -> [String : Any] { [:] }
+    
+    func sendResponse(userAccepted: Bool, itemsToSend: EudiWalletKit.RequestItems, onSuccess: ((URL?) -> Void)?) async throws {}
+  }
+  
+  static let mockPresentationSession = PresentationSession(
+    presentationService: MockPresentationService(flow: .other),
+    userAuthenticationRequired: false
+  )
 }

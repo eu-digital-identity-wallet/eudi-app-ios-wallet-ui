@@ -17,6 +17,10 @@ let package = Package(
       exact: "0.2.8"
     ),
     .package(
+      name: "logic-business",
+      path: "./logic-business"
+    ),
+    .package(
       name: "logic-resources",
       path: "./logic-resources"
     )
@@ -26,6 +30,7 @@ let package = Package(
       name: "logic-core",
       dependencies: [
         "logic-resources",
+        "logic-business",
         .product(
           name: "EudiWalletKit",
           package: "eudi-lib-ios-wallet-kit"

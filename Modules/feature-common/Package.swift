@@ -13,6 +13,7 @@ let package = Package(
     )
   ],
   dependencies: [
+    .package(name: "logic-core", path: "./logic-core"),
     .package(name: "logic-business", path: "./logic-business"),
     .package(name: "logic-ui", path: "./logic-ui"),
     .package(name: "logic-api", path: "./logic-api"),
@@ -24,6 +25,7 @@ let package = Package(
     .target(
       name: "feature-common",
       dependencies: [
+        "logic-core",
         "logic-business",
         "logic-ui",
         "logic-api",
@@ -35,6 +37,7 @@ let package = Package(
     .testTarget(
       name: "feature-common-tests",
       dependencies: [
+        "logic-core",
         "feature-common",
         "logic-business",
         "logic-ui",

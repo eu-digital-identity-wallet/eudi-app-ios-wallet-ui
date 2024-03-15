@@ -23,8 +23,8 @@ import logic_core
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
   private lazy var configSecurityLogic = ConfigProvider.shared.getConfigSecurityLogic()
-  private lazy var prefsController: PrefsControllerType = PrefsController()
-  private lazy var keyChainController: KeyChainControllerType = KeyChainController()
+  private lazy var prefsController: PrefsControllerType = PrefsController.shared
+  private lazy var keyChainController: KeyChainControllerType = KeyChainController.shared
   private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
   private lazy var analyticsController: AnalyticsControllerType = AnalyticsController.shared
 
