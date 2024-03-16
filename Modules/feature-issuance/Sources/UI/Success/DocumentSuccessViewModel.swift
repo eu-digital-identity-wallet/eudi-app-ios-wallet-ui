@@ -26,7 +26,7 @@ struct DocumentSuccessState: ViewState {
   let documentIdentifier: String
 }
 
-final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: DocumentSuccessInteractorType>: BaseViewModel<Router, DocumentSuccessState> {
+final class DocumentSuccessViewModel<Router: RouterHost, Interactor: DocumentSuccessInteractorType>: BaseViewModel<Router, DocumentSuccessState> {
 
   private let interactor: Interactor
 

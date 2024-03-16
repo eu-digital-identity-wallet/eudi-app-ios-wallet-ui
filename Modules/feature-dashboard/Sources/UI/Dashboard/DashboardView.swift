@@ -19,12 +19,12 @@ import logic_resources
 import logic_business
 import feature_common
 
-public struct DashboardView<Router: RouterHostType, Interactor: DashboardInteractorType, DeepLinkController: DeepLinkControllerType>: View {
+public struct DashboardView<Router: RouterHost, Interactor: DashboardInteractorType, Controller: DeepLinkController>: View {
 
-  @ObservedObject private var viewModel: DashboardViewModel<Router, Interactor, DeepLinkController>
+  @ObservedObject private var viewModel: DashboardViewModel<Router, Interactor, Controller>
   @Environment(\.scenePhase) var scenePhase
 
-  public init(with router: Router, and interactor: Interactor, also deepLinkController: DeepLinkController) {
+  public init(with router: Router, and interactor: Interactor, also deepLinkController: Controller) {
     self.viewModel = .init(router: router, interactor: interactor, deepLinkController: deepLinkController)
   }
 
@@ -48,14 +48,14 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
 
       VSpacer.small()
     }
-    .background(ThemeManager.shared.color.backgroundPaper)
+    .background(Theme.shared.color.backgroundPaper)
   }
 
   public var body: some View {
     ContentScreenView(
       padding: .zero,
       canScroll: false,
-      background: ThemeManager.shared.color.secondary
+      background: Theme.shared.color.secondary
     ) {
       BearerHeaderView(
         item: viewModel.viewState.bearer,
@@ -94,8 +94,8 @@ public struct DashboardView<Router: RouterHostType, Interactor: DashboardInterac
           HStack {
             Spacer()
             Text(viewModel.viewState.appVersion)
-              .typography(ThemeManager.shared.font.bodyMedium)
-              .foregroundColor(ThemeManager.shared.color.textSecondaryDark)
+              .typography(Theme.shared.font.bodyMedium)
+              .foregroundColor(Theme.shared.color.textSecondaryDark)
             Spacer()
           }
         }

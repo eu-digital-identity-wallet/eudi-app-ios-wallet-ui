@@ -25,7 +25,7 @@ public protocol LocalizableStringType {
 
 public final class LocalizableString: LocalizableStringType {
 
-  public static var shared: LocalizableStringType = LocalizableString()
+  public static let shared: LocalizableStringType = LocalizableString()
 
   private let bundle: Bundle
 

@@ -29,17 +29,22 @@ import feature_issuance
 
 private typealias QueueItem = () -> Void
 
-public final class RouterHost: RouterHostType {
+final class RouterHostImpl: RouterHost {
 
   private let pilot: UIPilot<AppRoute>
-  private lazy var uiConfigLogic: ConfigUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
-  private lazy var analyticsController: AnalyticsControllerType = AnalyticsController.shared
+  private let uiConfigLogic: ConfigUiLogic
+  private let analyticsController: AnalyticsController
 
   private var queueNavigation: [QueueItem] = []
   private let lockInterval: Int = 1000
   private var isLocked: Bool = false
 
-  public init() {
+  init(
+    uiConfigLogic: ConfigUiLogic,
+    analyticsController: AnalyticsController
+  ) {
+    self.uiConfigLogic = uiConfigLogic
+    self.analyticsController = analyticsController
     self.pilot = UIPilot(initial: .startup, debug: true)
   }
 
@@ -104,9 +109,23 @@ public final class RouterHost: RouterHostType {
       case .faqs:
         FAQsView(with: self, and: FAQsInteractor())
       case .success(let config):
-        SuccessView(with: self, and: config, also: DeepLinkController())
+        SuccessView(
+          with: self,
+          and: config,
+          also: DIGraph.resolver.forceImpl(
+            DeepLinkController.self,
+            DeepLinkControllerImpl.self
+          )
+        )
       case .dashboard:
-        DashboardView(with: self, and: DashboardInteractor(), also: DeepLinkController())
+        DashboardView(
+          with: self,
+          and: DashboardInteractor(),
+          also: DIGraph.resolver.forceImpl(
+            DeepLinkController.self,
+            DeepLinkControllerImpl.self
+          )
+        )
       case .biometry(let config):
         BiometryView(with: self, interactor: BiometryInteractor(), config: config)
       case .presentationLoader(let relyingParty, let presentationCoordinator):

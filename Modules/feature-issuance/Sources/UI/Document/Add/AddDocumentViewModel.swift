@@ -30,7 +30,7 @@ struct AddDocumentViewState: ViewState {
   }
 }
 
-final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocumentInteractorType>: BaseViewModel<Router, AddDocumentViewState> {
+final class AddDocumentViewModel<Router: RouterHost, Interactor: AddDocumentInteractorType>: BaseViewModel<Router, AddDocumentViewState> {
 
   private let interactor: Interactor
 

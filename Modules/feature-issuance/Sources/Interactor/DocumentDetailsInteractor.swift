@@ -26,14 +26,14 @@ public protocol DocumentDetailsInteractorType {
 
 public final class DocumentDetailsInteractor: DocumentDetailsInteractorType {
 
-  private lazy var walletKitController = WalletKitController.shared
+  private lazy var walletKitController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
 
   public init() {}
 
   public func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
     let document = walletKitController.fetchDocument(with: documentId)
     guard let documentDetails = document?.transformToDocumentDetailsUi() else {
-      return .failure(RuntimeError.unableFetchDocument)
+      return .failure(WalletCoreError.unableFetchDocument)
     }
     return .success(documentDetails)
   }

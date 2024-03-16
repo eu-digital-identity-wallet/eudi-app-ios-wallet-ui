@@ -13,22 +13,10 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
 
-import logic_resources
-
-public struct WalletUiConfig: ConfigUiLogic {
-
-  public var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] = [
-    AppRoute.dashboard.info.key: .init(Theme.shared.color.secondary),
-    AppRoute.welcome.info.key: .init(Theme.shared.color.secondary),
-    AppRoute.issuanceDocumentDetails(config: NoConfig()).info.key: .init(Theme.shared.color.secondary)
-  ]
-
-  public var landingRoute: AppRoute {
-    return .dashboard
-  }
-
-  public init(themeConfiguration: ThemeConfiguration) {
-    Theme.config(themeConfiguration: themeConfiguration)
+extension WalletKitConfig {
+  func getBundleValue(key: String) -> String {
+    return Bundle.main.infoDictionary?[key] as? String ?? ""
   }
 }

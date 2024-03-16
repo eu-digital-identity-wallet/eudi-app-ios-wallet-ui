@@ -30,13 +30,13 @@ struct BiometryState: ViewState {
   let quickPinSize: Int
 }
 
-final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryInteractorType>: BaseViewModel<Router, BiometryState> {
+final class BiometryViewModel<Router: RouterHost, Interactor: BiometryInteractorType>: BaseViewModel<Router, BiometryState> {
 
   private let AUTO_VERIFY_ON_APPEAR_DELAY = 250
   private let PIN_INPUT_DEBOUNCE = 250
 
   @Published var uiPinInputField: String = ""
-  @Published var biometryError: SystemBiometricsError?
+  @Published var biometryError: SystemBiometryError?
 
   private let interactor: Interactor
 

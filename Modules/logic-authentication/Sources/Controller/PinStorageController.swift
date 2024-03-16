@@ -14,17 +14,19 @@
  * governing permissions and limitations under the Licence.
  */
 
-public protocol PinStorageControllerType {
+public protocol PinStorageController {
   func retrievePin() -> String?
   func setPin(with pin: String)
   func isPinValid(with pin: String) -> Bool
 }
 
-public class PinStorageController: PinStorageControllerType {
+final class PinStorageControllerImpl: PinStorageController {
 
-  public static let shared: PinStorageControllerType = PinStorageController()
+  private let config: PinStorageConfig
 
-  private lazy var config: PinStorageConfig = PinStorageConfigProvider.shared.getConfig()
+  init(config: PinStorageConfig) {
+    self.config = config
+  }
 
   public func retrievePin() -> String? {
     config.storageProvider.retrievePin()

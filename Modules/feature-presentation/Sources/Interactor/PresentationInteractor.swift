@@ -16,6 +16,7 @@
 import Foundation
 import logic_api
 import logic_core
+import logic_business
 import feature_common
 
 public struct OnlineAuthenticationRequestSuccessModel {
@@ -26,7 +27,7 @@ public struct OnlineAuthenticationRequestSuccessModel {
 }
 
 public protocol PresentationInteractorType {
-  var presentationCoordinator: PresentationSessionCoordinatorType { get }
+  var presentationCoordinator: PresentationSessionCoordinator { get }
 
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>
@@ -35,10 +36,10 @@ public protocol PresentationInteractorType {
 
 public final actor PresentationInteractor: PresentationInteractorType {
 
-  public let presentationCoordinator: PresentationSessionCoordinatorType
-  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
+  public let presentationCoordinator: PresentationSessionCoordinator
+  private lazy var walletKitController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
 
-  public init(with presentationCoordinator: PresentationSessionCoordinatorType) {
+  public init(with presentationCoordinator: PresentationSessionCoordinator) {
     self.presentationCoordinator = presentationCoordinator
   }
 

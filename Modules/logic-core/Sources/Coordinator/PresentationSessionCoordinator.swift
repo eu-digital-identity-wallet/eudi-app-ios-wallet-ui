@@ -17,7 +17,12 @@ import Foundation
 import Combine
 import logic_resources
 
-public protocol PresentationSessionCoordinatorType {
+enum RegistrationName: String {
+  case proximity
+  case remote
+}
+
+public protocol PresentationSessionCoordinator {
 
   var presentationStateSubject: CurrentValueSubject<PresentationState, Never> { get }
 

@@ -13,22 +13,22 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
+import logic_business
+import logic_ui
+import logic_analytics
+import Swinject
 
-protocol AnalyticsConfigProviderType {
-  func getConfig() -> AnalyticsConfig?
-}
+public final class LogicNavAssembly: Assembly {
 
-struct AnalyticsConfigProvider: AnalyticsConfigProviderType {
+  public init() {}
 
-  static let shared: AnalyticsConfigProviderType = AnalyticsConfigProvider()
-
-  func getConfig() -> AnalyticsConfig? {
-    guard
-      let object = NSClassFromString("AnalyticsConfigImpl") as? NSObject.Type
-    else {
-      return nil
+  public func assemble(container: Container) {
+    container.register(RouterHost.self) { r in
+      RouterHostImpl(
+        uiConfigLogic: r.force(ConfigUiLogic.self),
+        analyticsController: r.force(AnalyticsController.self)
+      )
     }
-    return object.init() as? AnalyticsConfig
+    .inObjectScope(ObjectScope.graph)
   }
 }

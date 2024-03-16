@@ -14,11 +14,15 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import PartialSheet
 import logic_ui
 import logic_navigation
 import logic_resources
 import logic_business
-import PartialSheet
+import logic_analytics
+import logic_core
+import logic_authentication
+import logic_api
 
 @main
 struct Application: App {
@@ -30,16 +34,19 @@ struct Application: App {
   @State var blurType: BlurType = .none
   @State var toolbarConfig: UIConfig.ToolBar = .init(Theme.shared.color.backgroundPaper)
 
-  private let routerHost: RouterHostType
+  private let routerHost: RouterHost
   private let configUiLogic: ConfigUiLogic
-  private let securityController: SecurityControllerType
-  private let deepLinkController: DeepLinkControllerType
+  private let securityController: SecurityController
+  private let deepLinkController: DeepLinkController
 
   init() {
-    self.routerHost = RouterHost()
-    self.configUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
-    self.securityController = SecurityController()
-    self.deepLinkController = DeepLinkController()
+
+    Self.setupInjection()
+
+    self.routerHost = DIGraph.resolver.force(RouterHost.self)
+    self.configUiLogic = DIGraph.resolver.force(ConfigUiLogic.self)
+    self.securityController = DIGraph.resolver.force(SecurityController.self)
+    self.deepLinkController = DIGraph.resolver.force(DeepLinkController.self)
     self.toolbarConfig = routerHost.getToolbarConfig()
   }
 
@@ -74,7 +81,7 @@ struct Application: App {
         if let deepLink = deepLinkController.hasDeepLink(url: url) {
           deepLinkController.handleDeepLinkAction(
             routerHost: routerHost,
-            deepLinkAction: deepLink
+            deepLinkExecutable: deepLink
           )
         }
       }
@@ -104,16 +111,16 @@ struct Application: App {
   private func warningScreenCap() -> some View {
     ZStack(alignment: .center) {
       VStack(alignment: .center, spacing: SPACING_EXTRA_LARGE) {
-        ThemeManager.shared.image.logo
+        Theme.shared.image.logo
         Text(.screenCaptureSecurityWarning)
-          .typography(ThemeManager.shared.font.bodyMedium)
-          .foregroundColor(ThemeManager.shared.color.textPrimaryDark)
+          .typography(Theme.shared.font.bodyMedium)
+          .foregroundColor(Theme.shared.color.textPrimaryDark)
           .multilineTextAlignment(.center)
       }
     }
     .padding()
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .background(ThemeManager.shared.color.backgroundPaper)
+    .background(Theme.shared.color.backgroundPaper)
     .edgesIgnoringSafeArea(.all)
   }
 }
@@ -123,5 +130,21 @@ extension Application {
     case inactive
     case background
     case none
+  }
+}
+
+private extension Application {
+  static func setupInjection() {
+    DIGraph.lazyLoad(
+      with: [
+        LogicBusinessAssembly(),
+        LogicAnalyticsAssembly(),
+        LogicCoreAssembly(),
+        LogicUiAssembly(),
+        LogicApiAssembly(),
+        LogicAuthAssembly(),
+        LogicNavAssembly()
+      ]
+    )
   }
 }

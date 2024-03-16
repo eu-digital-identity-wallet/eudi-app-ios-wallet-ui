@@ -24,11 +24,11 @@ import logic_core
 final class TestStartupInteractor: EudiTest {
   
   var interactor: StartupInteractorType!
-  var walletKitController: MockWalletKitControllerType!
+  var walletKitController: MockWalletKitController!
   var quickPinInteractor: MockQuickPinInteractorType!
   
   override func setUp() {
-    self.walletKitController = MockWalletKitControllerType()
+    self.walletKitController = MockWalletKitController()
     self.quickPinInteractor = MockQuickPinInteractorType()
     self.interactor = StartupInteractor(
       walletKitController: walletKitController,

@@ -14,17 +14,19 @@
  * governing permissions and limitations under the Licence.
  */
 
-public protocol AnalyticsControllerType {
+public protocol AnalyticsController {
   func initialize()
   func logScreen(screen: String, arguments: [String: String])
   func logEvent(event: String, arguments: [String: String])
 }
 
-public final class AnalyticsController: AnalyticsControllerType {
+final class AnalyticsControllerImpl: AnalyticsController {
 
-  public static let shared: AnalyticsControllerType = AnalyticsController()
+  private let analyticsConfig: AnalyticsConfig?
 
-  private lazy var analyticsConfig: AnalyticsConfig? = AnalyticsConfigProvider.shared.getConfig()
+  init(analyticsConfig: AnalyticsConfig?) {
+    self.analyticsConfig = analyticsConfig
+  }
 
   public func initialize() {
     analyticsConfig?.analyticsProviders.forEach { (key, provider) in

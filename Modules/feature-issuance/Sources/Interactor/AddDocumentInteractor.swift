@@ -28,7 +28,7 @@ public protocol AddDocumentInteractorType {
 
 public final class AddDocumentInteractor: AddDocumentInteractorType {
 
-  private lazy var walletController: WalletKitControllerType = WalletKitController.shared
+  private lazy var walletController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
 
   public init() {}
 
@@ -83,7 +83,7 @@ public final class AddDocumentInteractor: AddDocumentInteractorType {
       let doc = try await walletController.issueDocument(docType: docType, format: format)
       return .success(doc.docType)
     } catch {
-      return .failure(RuntimeError.unableFetchDocument)
+      return .failure(WalletCoreError.unableFetchDocument)
     }
   }
 }

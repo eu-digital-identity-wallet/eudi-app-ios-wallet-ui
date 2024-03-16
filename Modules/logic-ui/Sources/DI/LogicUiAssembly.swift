@@ -13,17 +13,26 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import class Foundation.Bundle
+import logic_business
+import logic_core
+import Swinject
 
-public protocol WalletKitConfigProviderType {
-  func getWalletKitConfig() -> WalletKitConfig
-}
+public final class LogicUiAssembly: Assembly {
 
-public struct WalletKitConfigProvider: WalletKitConfigProviderType {
+  public init() {}
 
-  public static let shared: WalletKitConfigProviderType = WalletKitConfigProvider()
+  public func assemble(container: Container) {
+    container.register(ConfigUiLogic.self) { _ in
+      ConfigUiLogicImpl(themeConfiguration: .default)
+    }
+    .inObjectScope(ObjectScope.graph)
 
-  public func getWalletKitConfig() -> WalletKitConfig {
-    WalletKitConfigImpl()
+    container.register(DeepLinkController.self) { r in
+      DeepLinkControllerImpl(
+        prefsController: r.force(PrefsController.self),
+        walletKitController: r.force(WalletKitController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

@@ -15,45 +15,33 @@
  */
 import Foundation
 
-public struct WalletSecurityConfig: ConfigSecurityLogic {
+extension ConfigLogic {
 
-  let configLogic: ConfigLogic
-
-  public var blockRootAccess: Bool {
-    false
+  func getBuildType() -> AppBuildType {
+    guard
+      let type = getBundleNullableValue(key: "Build Type"),
+      let buildType = AppBuildType(rawValue: type)
+    else {
+      return AppBuildType.RELEASE
+    }
+    return buildType
   }
 
-  public var blockEmulator: Bool {
-    false
+  func getBundleValue(key: String) -> String {
+    return Bundle.main.infoDictionary?[key] as? String ?? ""
   }
 
-  public var blockDebugMode: Bool {
-    false
+  func getBundleNullableValue(key: String) -> String? {
+    guard let value = Bundle.main.infoDictionary?[key] as? String, !value.isEmpty else {
+      return nil
+    }
+    return value
   }
 
-  public var blockReverseEngineering: Bool {
-    false
+  func getBundleOptionalValue<T>(of type: T.Type, key: String) -> T? {
+    guard let value = Bundle.main.infoDictionary?[key] as? T else {
+      return nil
+    }
+    return value
   }
-
-  public var blockScreenCapture: Bool {
-    false
-  }
-
-  public var blockUnsecureWebContent: Bool {
-    false
-  }
-
-  public var bindToDevice: Bool {
-    false
-  }
-
-  public var profileInformation: (bundleId: String, signature: String)? {
-    nil
-  }
-
-  public var useNetworkLogger: Bool {
-    configLogic.appBuildType == .DEBUG
-  }
-
-  public var networkLoggerExclusionList: [String] = []
 }

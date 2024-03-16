@@ -29,7 +29,7 @@ public enum KeychainIdentifier: String, KeychainWrapper {
   case deviceVendorId
 }
 
-public protocol KeyChainControllerType {
+public protocol KeyChainController {
   func storeValue(key: KeychainWrapper, value: String)
   func getValue(key: KeychainWrapper) -> String?
   func removeObject(key: KeychainWrapper)
@@ -38,9 +38,7 @@ public protocol KeyChainControllerType {
   func clear()
 }
 
-public final class KeyChainController: KeyChainControllerType {
-
-  public static let shared: KeyChainControllerType = KeyChainController()
+final class KeyChainControllerImpl: KeyChainController {
 
   private let biometryKey = "eu.europa.ec.euidi.biometric.access"
 
@@ -74,7 +72,7 @@ public final class KeyChainController: KeyChainControllerType {
   }
 }
 
-private extension KeyChainController {
+private extension KeyChainControllerImpl {
   func setBiometricKey() throws {
     try self.keyChain
       .accessibility(

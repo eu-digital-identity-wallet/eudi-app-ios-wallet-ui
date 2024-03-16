@@ -29,7 +29,7 @@ public protocol ShapeManagerProtocol {
   var highCornerRadiusShape: AnyShape { get }
 }
 
-public final class ShapeManager: ShapeManagerProtocol {
+final class ShapeManager: ShapeManagerProtocol {
 
   public var none: CGFloat = 0
   public var extraSmall: CGFloat = 8

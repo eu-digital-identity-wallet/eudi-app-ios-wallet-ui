@@ -13,19 +13,29 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
+import logic_business
+import Swinject
 
-public struct WalletConfig: ConfigLogic {
+public final class LogicAuthAssembly: Assembly {
 
-  public var walletHostUrl: String {
-    getBundleValue(key: "Wallet Host Url")
-  }
+  public init() {}
 
-  public var appBuildType: AppBuildType {
-    getBuildType()
-  }
+  public func assemble(container: Container) {
+    container.register(PinStorageConfig.self) { _ in
+      PinStorageConfigImpl()
+    }
+    .inObjectScope(ObjectScope.graph)
 
-  public var appVersion: String {
-    getBundleValue(key: "CFBundleShortVersionString")
+    container.register(PinStorageController.self) { r in
+      PinStorageControllerImpl(config: r.force(PinStorageConfig.self))
+    }
+    .inObjectScope(ObjectScope.graph)
+
+    container.register(SystemBiometryController.self) { r in
+      SystemBiometryControllerImpl(
+        keyChainController: r.force(KeyChainController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

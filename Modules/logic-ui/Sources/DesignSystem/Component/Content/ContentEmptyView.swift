@@ -24,7 +24,7 @@ public struct ContentEmptyView: View {
 
   public init(
     title: LocalizableString.Key,
-    image: Image = ThemeManager.shared.image.exclamationmarkCircle,
+    image: Image = Theme.shared.image.exclamationmarkCircle,
     onClick: (() -> Void)? = nil
   ) {
     self.title = title

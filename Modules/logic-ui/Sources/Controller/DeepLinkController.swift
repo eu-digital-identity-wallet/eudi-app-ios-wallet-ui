@@ -18,30 +18,29 @@ import Foundation
 import logic_business
 import logic_core
 
-public protocol DeepLinkControllerType {
-  func hasDeepLink(url: URL) -> DeepLinkController.DeepLinkAction?
-  func handleDeepLinkAction(routerHost: RouterHostType, deepLinkAction: DeepLinkController.DeepLinkAction)
-  func getPendingDeepLinkAction() -> DeepLinkController.DeepLinkAction?
+public struct DeepLink {}
+
+public protocol DeepLinkController {
+  func hasDeepLink(url: URL) -> DeepLink.Executable?
+  func handleDeepLinkAction(routerHost: RouterHost, deepLinkExecutable: DeepLink.Executable)
+  func getPendingDeepLinkAction() -> DeepLink.Executable?
   func cacheDeepLinkURL(url: URL)
 }
 
-public final class DeepLinkController: DeepLinkControllerType {
+public final class DeepLinkControllerImpl: DeepLinkController {
 
-  private lazy var prefsController: PrefsControllerType = PrefsController.shared
-  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
+  private let prefsController: PrefsController
+  private let walletKitController: WalletKitController
 
-  public init() {}
-
-  convenience init(
-    prefsController: PrefsControllerType,
-    walletKitController: WalletKitControllerType
+  init(
+    prefsController: PrefsController,
+    walletKitController: WalletKitController
   ) {
-    self.init()
     self.prefsController = prefsController
     self.walletKitController = walletKitController
   }
 
-  public func getPendingDeepLinkAction() -> DeepLinkAction? {
+  public func getPendingDeepLinkAction() -> DeepLink.Executable? {
     if let cachedLink = prefsController.getString(forKey: .cachedDeepLink),
        let url = URL(string: cachedLink) {
       return hasDeepLink(url: url)
@@ -49,19 +48,19 @@ public final class DeepLinkController: DeepLinkControllerType {
     return nil
   }
 
-  public func hasDeepLink(url: URL) -> DeepLinkAction? {
+  public func hasDeepLink(url: URL) -> DeepLink.Executable? {
     if let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
        let scheme = components.scheme,
-       let action = DeepLinkAction.Action.parseType(with: scheme) {
-      return DeepLinkAction(link: components, plainUrl: url, action: action)
+       let action = DeepLink.Action.parseType(with: scheme) {
+      return DeepLink.Executable(link: components, plainUrl: url, action: action)
     }
     return nil
   }
 
-  public func handleDeepLinkAction(routerHost: RouterHostType, deepLinkAction: DeepLinkAction) {
+  public func handleDeepLinkAction(routerHost: RouterHost, deepLinkExecutable: DeepLink.Executable) {
 
     guard routerHost.isAfterAuthorization() else {
-      if let url = deepLinkAction.link.url {
+      if let url = deepLinkExecutable.link.url {
         cacheDeepLinkURL(url: url)
       }
       return
@@ -71,12 +70,12 @@ public final class DeepLinkController: DeepLinkControllerType {
 
     var route: AppRoute?
 
-    switch deepLinkAction.action {
+    switch deepLinkExecutable.action {
     case .openid4vp:
-      let session = walletKitController.startSameDevicePresentation(deepLink: deepLinkAction.link)
+      let session = walletKitController.startSameDevicePresentation(deepLink: deepLinkExecutable.link)
       route = !routerHost.isScreenForeground(with: .presentationRequest(presentationCoordinator: session)) ? .presentationRequest(presentationCoordinator: session) : nil
     case .external:
-      deepLinkAction.plainUrl.open()
+      deepLinkExecutable.plainUrl.open()
     }
 
     if let route {
@@ -93,15 +92,15 @@ public final class DeepLinkController: DeepLinkControllerType {
   }
 }
 
-public extension DeepLinkController {
-  struct DeepLinkAction: Equatable {
+public extension DeepLink {
+  struct Executable: Equatable {
     public let link: URLComponents
     public let plainUrl: URL
-    public let action: Action
+    public let action: DeepLink.Action
   }
 }
 
-public extension DeepLinkController.DeepLinkAction {
+public extension DeepLink {
   enum Action: String {
 
     case openid4vp

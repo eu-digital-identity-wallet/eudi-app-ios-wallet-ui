@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_core
+import logic_business
 
 public protocol DocumentSuccessInteractorType {
   func getHoldersName(for documentIdentifier: String) -> String?
@@ -22,7 +23,7 @@ public protocol DocumentSuccessInteractorType {
 
 public final class DocumentSuccessInteractor: DocumentSuccessInteractorType {
 
-  private lazy var walletController: WalletKitControllerType = WalletKitController.shared
+  private lazy var walletController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
 
   public init() {}
 

@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import feature_common
 
-public struct ProximityRequestView<Router: RouterHostType, Interactor: ProximityInteractorType>: View {
+public struct ProximityRequestView<Router: RouterHost, Interactor: ProximityInteractorType>: View {
 
   @ObservedObject private var viewModel: ProximityRequestViewModel<Router, Interactor>
 

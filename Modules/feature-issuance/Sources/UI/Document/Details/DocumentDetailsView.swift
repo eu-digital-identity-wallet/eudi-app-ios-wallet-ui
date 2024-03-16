@@ -18,7 +18,7 @@ import logic_ui
 import feature_common
 import logic_resources
 
-public struct DocumentDetailsView<Router: RouterHostType, Interactor: DocumentDetailsInteractorType>: View {
+public struct DocumentDetailsView<Router: RouterHost, Interactor: DocumentDetailsInteractorType>: View {
 
   @ObservedObject var viewModel: DocumentDetailsViewModel<Router, Interactor>
 

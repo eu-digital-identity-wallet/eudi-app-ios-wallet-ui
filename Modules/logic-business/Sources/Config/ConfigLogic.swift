@@ -37,33 +37,17 @@ public protocol ConfigLogic {
   var appVersion: String { get }
 }
 
-extension ConfigLogic {
+struct ConfigLogicImpl: ConfigLogic {
 
-  func getBuildType() -> AppBuildType {
-    guard
-      let type = getBundleNullableValue(key: "Build Type"),
-      let buildType = AppBuildType(rawValue: type)
-    else {
-      return AppBuildType.RELEASE
-    }
-    return buildType
+  public var walletHostUrl: String {
+    getBundleValue(key: "Wallet Host Url")
   }
 
-  func getBundleValue(key: String) -> String {
-    return Bundle.main.infoDictionary?[key] as? String ?? ""
+  public var appBuildType: AppBuildType {
+    getBuildType()
   }
 
-  func getBundleNullableValue(key: String) -> String? {
-    guard let value = Bundle.main.infoDictionary?[key] as? String, !value.isEmpty else {
-      return nil
-    }
-    return value
-  }
-
-  func getBundleOptionalValue<T>(of type: T.Type, key: String) -> T? {
-    guard let value = Bundle.main.infoDictionary?[key] as? T else {
-      return nil
-    }
-    return value
+  public var appVersion: String {
+    getBundleValue(key: "CFBundleShortVersionString")
   }
 }

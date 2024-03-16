@@ -19,18 +19,16 @@ import Network
 import BluetoothKit
 import UIKit
 
-public protocol ReachabilityControllerType {
+public protocol ReachabilityController {
   var networkPath: NWPath { get }
-  func getBleAvailibity() -> AnyPublisher<ReachabilityController.BleAvailibity, Never>
+  func getBleAvailibity() -> AnyPublisher<Reachability.BleAvailibity, Never>
   func openBleSettings()
 }
 
-public final class ReachabilityController: ReachabilityControllerType, BKAvailabilityObserver, ObservableObject {
-
-  public static let shared = ReachabilityController()
+final class ReachabilityControllerImpl: ReachabilityController, BKAvailabilityObserver, ObservableObject {
 
   @Published public private(set) var networkPath: NWPath
-  @Published public private(set) var bleAvailibity: BleAvailibity = .unavailable
+  @Published public private(set) var bleAvailibity: Reachability.BleAvailibity = .unavailable
 
   public private(set) lazy var publisher = makePublisher()
   public private(set) lazy var stream = makeStream()
@@ -74,7 +72,7 @@ public final class ReachabilityController: ReachabilityControllerType, BKAvailab
     stopCentral()
   }
 
-  public func getBleAvailibity() -> AnyPublisher<ReachabilityController.BleAvailibity, Never> {
+  public func getBleAvailibity() -> AnyPublisher<Reachability.BleAvailibity, Never> {
     return Deferred {
       Future { [weak self] promise in
 
@@ -141,7 +139,7 @@ public final class ReachabilityController: ReachabilityControllerType, BKAvailab
   }
 }
 
-public extension ReachabilityController {
+extension ReachabilityControllerImpl {
 
   func availabilityObserver(
     _ availabilityObservable: BluetoothKit.BKAvailabilityObservable,
@@ -157,7 +155,7 @@ public extension ReachabilityController {
     self.bleAvailibity = mapAvailability(.unavailable(cause: unavailabilityCause))
   }
 
-  private func mapAvailability(_ availability: BKAvailability?) -> BleAvailibity {
+  private func mapAvailability(_ availability: BKAvailability?) -> Reachability.BleAvailibity {
     guard let availability = availability else {
       return .unavailable
     }
@@ -172,7 +170,9 @@ public extension ReachabilityController {
   }
 }
 
-public extension ReachabilityController {
+public struct Reachability {}
+
+public extension Reachability {
   enum BleAvailibity: Equatable {
     case available
     case noPermission

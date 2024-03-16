@@ -19,6 +19,10 @@ let package = Package(
     .package(
       name: "logic-resources",
       path: "./logic-resources"
+    ),
+    .package(
+      name: "logic-business",
+      path: "./logic-business"
     )
   ],
   targets: [
@@ -26,6 +30,7 @@ let package = Package(
       name: "logic-core",
       dependencies: [
         "logic-resources",
+        "logic-business",
         .product(
           name: "EudiWalletKit",
           package: "eudi-lib-ios-wallet-kit"

@@ -34,18 +34,18 @@ public protocol BiometryInteractorType {
   func isPinValid(with pin: String) -> QuickPinPartialState
 }
 
-public final class BiometryInteractor: SystemBiometricsInteractor, BiometryInteractorType {
+public final class BiometryInteractor: SystemBiometryInteractorImpl, BiometryInteractorType {
 
-  private lazy var prefsController: PrefsControllerType = PrefsController.shared
+  private lazy var prefsController: PrefsController = DIGraph.resolver.force(PrefsController.self)
   private lazy var quickPinInteractor: QuickPinInteractorType = QuickPinInteractor()
 
   convenience init(
-    prefsController: PrefsControllerType,
+    prefsController: PrefsController,
     quickPinInteractor: QuickPinInteractorType,
-    biometricsController: SystemBiometricsControllerType,
+    biometryController: SystemBiometryController,
     useTestDispatcher: Bool = false
   ) {
-    self.init(with: biometricsController, useTestDispatcher: useTestDispatcher)
+    self.init(with: biometryController, useTestDispatcher: useTestDispatcher)
     self.prefsController = prefsController
     self.quickPinInteractor = quickPinInteractor
   }

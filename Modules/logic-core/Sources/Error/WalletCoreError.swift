@@ -13,22 +13,19 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import class Foundation.Bundle
+import Foundation
+import logic_resources
 
-public protocol ConfigProviderType {
-  func getConfigLogic() -> ConfigLogic
-  func getConfigSecurityLogic() -> ConfigSecurityLogic
-}
+public enum WalletCoreError: LocalizedError {
+  case unableFetchDocuments
+  case unableFetchDocument
 
-public struct ConfigProvider: ConfigProviderType {
-
-  public static let shared: ConfigProviderType = ConfigProvider()
-
-  public func getConfigLogic() -> ConfigLogic {
-    WalletConfig()
-  }
-
-  public func getConfigSecurityLogic() -> ConfigSecurityLogic {
-    WalletSecurityConfig(configLogic: getConfigLogic())
+  public var errorDescription: String? {
+    return switch self {
+    case .unableFetchDocuments:
+      LocalizableString.shared.get(with: .errorUnableFetchDocuments)
+    case .unableFetchDocument:
+      LocalizableString.shared.get(with: .errorUnableFetchDocument)
+    }
   }
 }

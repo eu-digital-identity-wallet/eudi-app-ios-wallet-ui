@@ -28,7 +28,7 @@ public extension Locale {
   ]
 
   private var userSelectedLocale: Locale {
-    return Locale(identifier: PrefsController.shared.getUserLocale())
+    return Locale(identifier: DIGraph.resolver.force(PrefsController.self).getUserLocale())
   }
 
   func localizedDateTime(

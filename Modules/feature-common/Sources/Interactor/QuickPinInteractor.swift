@@ -32,11 +32,11 @@ public protocol QuickPinInteractorType {
 
 public final class QuickPinInteractor: QuickPinInteractorType {
 
-  private lazy var pinStorageController: PinStorageControllerType = PinStorageController.shared
+  private lazy var pinStorageController: PinStorageController = DIGraph.resolver.force(PinStorageController.self)
 
   public init() {}
 
-  convenience init(pinStorageController: PinStorageControllerType) {
+  convenience init(pinStorageController: PinStorageController) {
     self.init()
     self.pinStorageController = pinStorageController
   }

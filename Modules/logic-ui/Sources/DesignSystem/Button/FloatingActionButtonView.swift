@@ -54,7 +54,7 @@ public struct FloatingActionButtonView: View {
             .frame(maxHeight: 25)
             .foregroundStyle(iconColor)
           Text(title)
-            .typography(ThemeManager.shared.font.labelLarge)
+            .typography(Theme.shared.font.labelLarge)
             .lineLimit(1)
             .minimumScaleFactor(0.3)
             .foregroundStyle(textColor)

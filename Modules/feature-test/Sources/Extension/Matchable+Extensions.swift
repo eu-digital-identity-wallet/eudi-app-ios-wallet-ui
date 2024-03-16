@@ -19,6 +19,6 @@ import Cuckoo
 
 extension KeychainIdentifier: Matchable {}
 
-extension PrefsController.Key: Matchable {}
+extension Prefs.Key: Matchable {}
 
 extension AppRoute: Matchable {}

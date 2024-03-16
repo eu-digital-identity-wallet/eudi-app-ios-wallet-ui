@@ -231,7 +231,7 @@ extension RequestDataUiModel {
   fileprivate static func documentSelectiveDisclosableFields(for document: DocElementsViewModel) -> [RequestDataUIModel] {
     document.elements
       .filter { element in
-        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
+        let mandatoryKeys = DIGraph.resolver.force(WalletKitController.self).mandatoryFields(for: .init(rawValue: document.docType))
         return !mandatoryKeys.contains(element.elementIdentifier)
       }
       .map {
@@ -241,7 +241,7 @@ extension RequestDataUiModel {
             isSelected: true,
             isVisible: false,
             title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
-            value: WalletKitController.shared.valueForElementIdentifier(
+            value: DIGraph.resolver.force(WalletKitController.self).valueForElementIdentifier(
               for: .init(rawValue: document.docType),
               elementIdentifier: $0.elementIdentifier,
               parser: {
@@ -262,7 +262,7 @@ extension RequestDataUiModel {
   fileprivate static func documentMandatoryVerificationFields(for document: DocElementsViewModel) -> RequestDataUIModel? {
     let mandatoryFields = document.elements
       .filter { element in
-        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
+        let mandatoryKeys = DIGraph.resolver.force(WalletKitController.self).mandatoryFields(for: .init(rawValue: document.docType))
         return mandatoryKeys.contains(element.elementIdentifier)
       }
       .map {
@@ -271,7 +271,7 @@ extension RequestDataUiModel {
           isSelected: true,
           isVisible: false,
           title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
-          value: WalletKitController.shared.valueForElementIdentifier(
+          value: DIGraph.resolver.force(WalletKitController.self).valueForElementIdentifier(
             for: .init(rawValue: document.docType),
             elementIdentifier: $0.elementIdentifier,
             parser: {

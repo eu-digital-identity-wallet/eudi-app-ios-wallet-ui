@@ -18,25 +18,33 @@ import IOSSecuritySuite
 import Combine
 import UIKit
 
-public protocol SecurityControllerType {
+public protocol SecurityController {
   func isRunningOnEmulator() -> Bool
   func isDeviceJailBroken() -> Bool
   func isReverseEngineered() -> Bool
   func isSignatureValid() -> Bool
   func isDebuggable() -> Bool
-  func isApplicationSecure() -> AnyPublisher<SecurityController.SecurityValidation, Never>
+  func isApplicationSecure() -> AnyPublisher<SecurityValidation.Result, Never>
   func isScreenCaptureDisabled() -> Bool
   func isBlockUnsecureWebContentEnabled() -> Bool
   func isDeviceBindingValid() -> Bool
 }
 
-public final class SecurityController: SecurityControllerType {
+final class SecurityControllerImpl: SecurityController {
 
-  private lazy var configLogic: ConfigLogic = ConfigProvider.shared.getConfigLogic()
-  private lazy var configSecurityLogic: ConfigSecurityLogic = ConfigProvider.shared.getConfigSecurityLogic()
-  private lazy var keychainController: KeyChainControllerType = KeyChainController()
+  private let configLogic: ConfigLogic
+  private let configSecurityLogic: ConfigSecurityLogic
+  private let keychainController: KeyChainController
 
-  public init() {}
+  init(
+    configLogic: ConfigLogic,
+    configSecurityLogic: ConfigSecurityLogic,
+    keychainController: KeyChainController
+  ) {
+    self.configLogic = configLogic
+    self.configSecurityLogic = configSecurityLogic
+    self.keychainController = keychainController
+  }
 
   public func isDeviceBindingValid() -> Bool {
     guard configSecurityLogic.bindToDevice, configLogic.appBuildType == .RELEASE else {
@@ -85,7 +93,7 @@ public final class SecurityController: SecurityControllerType {
     && IOSSecuritySuite.amIDebugged()
   }
 
-  public func isApplicationSecure() -> AnyPublisher<SecurityValidation, Never> {
+  public func isApplicationSecure() -> AnyPublisher<SecurityValidation.Result, Never> {
     return Deferred {
       Future { [weak self] promise in
 
@@ -98,7 +106,7 @@ public final class SecurityController: SecurityControllerType {
         let isDebuggable = self.isDebuggable()
         let isDeviceBindingValid = self.isDeviceBindingValid()
 
-        var code: SecurityController.SecurityErrorCode = .UNKNOWN
+        var code: SecurityValidation.ErrorCode = .UNKNOWN
 
         if isRunningOnEmulator {
           code = .EMULATOR
@@ -115,7 +123,7 @@ public final class SecurityController: SecurityControllerType {
         }
 
         promise(.success(
-          SecurityController.SecurityValidation(
+          SecurityValidation.Result(
             isRunningOnEmulator: isRunningOnEmulator,
             isDeviceJailBroken: isDeviceJailBroken,
             isReverseEngineered: isReverseEngineered,
@@ -138,16 +146,18 @@ public final class SecurityController: SecurityControllerType {
   }
 }
 
-public extension SecurityController {
+public struct SecurityValidation {}
 
-  struct SecurityValidation {
+public extension SecurityValidation {
+
+  struct Result {
     public let isRunningOnEmulator: Bool
     public let isDeviceJailBroken: Bool
     public let isReverseEngineered: Bool
     public let isSignatureValid: Bool
     public let isDebuggable: Bool
     public let isDeviceBindingValid: Bool
-    public let serviceErrorCode: SecurityErrorCode
+    public let serviceErrorCode: ErrorCode
 
     public init(
       isRunningOnEmulator: Bool,
@@ -156,7 +166,7 @@ public extension SecurityController {
       isSignatureValid: Bool,
       isDebuggable: Bool,
       isDeviceBindingValid: Bool,
-      serviceErrorCode: SecurityErrorCode
+      serviceErrorCode: ErrorCode
     ) {
       self.isRunningOnEmulator = isRunningOnEmulator
       self.isDeviceJailBroken = isDeviceJailBroken
@@ -168,7 +178,7 @@ public extension SecurityController {
     }
   }
 
-  enum SecurityErrorCode: String {
+  enum ErrorCode: String {
     case EMULATOR = "1001"
     case JAILBREAK = "1002"
     case SIGNATURE = "1003"

@@ -16,6 +16,7 @@
 import Foundation
 import logic_api
 import logic_core
+import logic_business
 import UIKit
 import feature_common
 
@@ -46,7 +47,7 @@ public enum ProximityQrCodePartialState {
 
 public protocol ProximityInteractorType {
 
-  var presentationSessionCoordinator: PresentationSessionCoordinatorType { get }
+  var presentationSessionCoordinator: PresentationSessionCoordinator { get }
 
   func getSessionStatePublisher() async -> AnyPublisher<PresentationState, Never>
 
@@ -61,10 +62,10 @@ public protocol ProximityInteractorType {
 
 public final actor ProximityInteractor: ProximityInteractorType {
 
-  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
-  public let presentationSessionCoordinator: PresentationSessionCoordinatorType
+  private lazy var walletKitController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
+  public let presentationSessionCoordinator: PresentationSessionCoordinator
 
-  public init(with presentationSessionCoordinator: PresentationSessionCoordinatorType) {
+  public init(with presentationSessionCoordinator: PresentationSessionCoordinator) {
     self.presentationSessionCoordinator = presentationSessionCoordinator
   }
 

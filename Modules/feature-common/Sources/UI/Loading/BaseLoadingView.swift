@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct BaseLoadingView<Router: RouterHostType>: View {
+public struct BaseLoadingView<Router: RouterHost>: View {
 
   @ObservedObject var viewModel: BaseLoadingViewModel<Router>
 
@@ -29,7 +29,7 @@ public struct BaseLoadingView<Router: RouterHostType>: View {
     ContentScreenView(errorConfig: viewModel.viewState.error) {
 
       ContentHeaderView(
-        dismissIcon: ThemeManager.shared.image.xmark,
+        dismissIcon: Theme.shared.image.xmark,
         onBack: { viewModel.onNavigate(type: .pop) }
       )
 

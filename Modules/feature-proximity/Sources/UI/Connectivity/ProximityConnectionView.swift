@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct ProximityConnectionView<Router: RouterHostType, Interactor: ProximityInteractorType>: View {
+public struct ProximityConnectionView<Router: RouterHost, Interactor: ProximityInteractorType>: View {
 
   @ObservedObject private var viewModel: ProximityConnectionViewModel<Router, Interactor>
 
@@ -76,7 +76,7 @@ public struct ProximityConnectionView<Router: RouterHostType, Interactor: Proxim
         .resizable()
         .renderingMode(.template)
         .scaledToFit()
-        .foregroundStyle(ThemeManager.shared.color.primary)
+        .foregroundStyle(Theme.shared.color.primary)
         .frame(height: contentSize / 3)
     }
     .padding(.vertical, SPACING_EXTRA_LARGE)
