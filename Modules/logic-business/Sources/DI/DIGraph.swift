@@ -28,7 +28,7 @@ public final class DIGraph: DIGraphType {
     self.assembler = Assembler()
   }
 
-  public func lazyLoad(with assemblies: [any Assembly]) {
+  public func lazyLoad(with assemblies: [Assembly]) {
     self.assembler.apply(assemblies: assemblies)
   }
 }
@@ -43,7 +43,7 @@ public extension DIGraph {
 }
 
 private extension DIGraph {
-  private static let shared: DIGraphType = DIGraph()
+  static let shared: DIGraphType = DIGraph()
 }
 
 public extension Resolver {
