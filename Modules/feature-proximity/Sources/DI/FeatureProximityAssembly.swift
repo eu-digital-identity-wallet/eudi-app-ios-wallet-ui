@@ -13,19 +13,20 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Swinject
+import logic_core
 
-protocol PinStorageConfig {
-  /**
-   * Pin Storage Provider
-   */
-  var storageProvider: PinStorageProvider { get }
-}
+public final class FeatureProximityAssembly: Assembly {
 
-struct PinStorageConfigImpl: PinStorageConfig {
-  /**
-   * Pin Storage Provider
-   */
-  var storageProvider: PinStorageProvider {
-    KeychainPinStorageProvider()
+  public init() {}
+
+  public func assemble(container: Container) {
+    container.register(ProximityInteractor.self) { r, session in
+      ProximityInteractorImpl(
+        with: session,
+        and: r.force(WalletKitController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

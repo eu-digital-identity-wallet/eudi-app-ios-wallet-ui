@@ -15,21 +15,21 @@
  */
 import Foundation
 
-public struct VciConfig {
+struct VciConfig {
   public let issuerUrl: String
   public let clientId: String
   public let redirectUri: String
 }
 
-public struct VerifierConfig {
+struct VerifierConfig {
   public let apiUri: String
 }
 
-public struct ProximityConfig {
+struct ProximityConfig {
   public let trustedCerts: [Data]
 }
 
-public protocol WalletKitConfig {
+protocol WalletKitConfig {
 
   /**
    * Verifier API URI.
@@ -52,9 +52,28 @@ public protocol WalletKitConfig {
   var userAuthenticationRequired: Bool { get }
 }
 
-extension WalletKitConfig {
+struct WalletKitConfigImpl: WalletKitConfig {
 
-  func getBundleValue(key: String) -> String {
-    return Bundle.main.infoDictionary?[key] as? String ?? ""
+  var userAuthenticationRequired: Bool {
+    getBundleValue(key: "Core User Auth").toBool()
+  }
+
+  var verifierConfig: VerifierConfig {
+    .init(apiUri: getBundleValue(key: "Verifier API"))
+  }
+
+  var vciConfig: VciConfig {
+    .init(
+      issuerUrl: getBundleValue(key: "Vci Issuer URL"),
+      clientId: getBundleValue(key: "Vci Client Id"),
+      redirectUri: getBundleValue(key: "Vci Redirect Uri")
+    )
+  }
+
+  var proximityConfig: ProximityConfig {
+    guard let cert = Data(name: "eudi_pid_issuer_ut", ext: "der") else {
+      return .init(trustedCerts: [])
+    }
+    return .init(trustedCerts: [cert])
   }
 }

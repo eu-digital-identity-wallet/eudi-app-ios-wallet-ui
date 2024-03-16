@@ -35,7 +35,7 @@ struct DocumentDetailsViewState: ViewState {
   }
 }
 
-final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: DocumentDetailsInteractorType>: BaseViewModel<Router, DocumentDetailsViewState> {
+final class DocumentDetailsViewModel<Router: RouterHost, Interactor: DocumentDetailsInteractor>: BaseViewModel<Router, DocumentDetailsViewState> {
 
   @Published var isDeletionModalShowing: Bool = false
 

@@ -19,6 +19,7 @@ import logic_ui
 import SwiftUI
 import logic_business
 import logic_analytics
+import logic_core
 import feature_startup
 import feature_login
 import feature_common
@@ -29,17 +30,22 @@ import feature_issuance
 
 private typealias QueueItem = () -> Void
 
-public final class RouterHost: RouterHostType {
+final class RouterHostImpl: RouterHost {
 
   private let pilot: UIPilot<AppRoute>
-  private lazy var uiConfigLogic: ConfigUiLogic = ConfigUiProvider.shared.getConfigUiLogic()
-  private lazy var analyticsController: AnalyticsControllerType = AnalyticsController.shared
+  private let uiConfigLogic: ConfigUiLogic
+  private let analyticsController: AnalyticsController
 
   private var queueNavigation: [QueueItem] = []
   private let lockInterval: Int = 1000
   private var isLocked: Bool = false
 
-  public init() {
+  init(
+    uiConfigLogic: ConfigUiLogic,
+    analyticsController: AnalyticsController
+  ) {
+    self.uiConfigLogic = uiConfigLogic
+    self.analyticsController = analyticsController
     self.pilot = UIPilot(initial: .startup, debug: true)
   }
 
@@ -100,63 +106,144 @@ public final class RouterHost: RouterHostType {
     return UIPilotHost(pilot) { route in
       switch route {
       case .startup:
-        StartupView(with: self, and: StartupInteractor())
+        StartupView(
+          with: self,
+          and: DIGraph.resolver.forceImpl(
+            StartupInteractor.self,
+            StartupInteractorImpl.self
+          )
+        )
       case .faqs:
-        FAQsView(with: self, and: FAQsInteractor())
+        FAQsView(
+          with: self,
+          and: DIGraph.resolver.forceImpl(
+            FAQsInteractor.self,
+            FAQsInteractorImpl.self
+          )
+        )
       case .success(let config):
-        SuccessView(with: self, and: config, also: DeepLinkController())
+        SuccessView(
+          with: self,
+          and: config,
+          also: DIGraph.resolver.forceImpl(
+            DeepLinkController.self,
+            DeepLinkControllerImpl.self
+          )
+        )
       case .dashboard:
-        DashboardView(with: self, and: DashboardInteractor(), also: DeepLinkController())
+        DashboardView(
+          with: self,
+          and: DIGraph.resolver.forceImpl(
+            DashboardInteractor.self,
+            DashboardInteractorImpl.self
+          ),
+          deeplink: DIGraph.resolver.forceImpl(
+            DeepLinkController.self,
+            DeepLinkControllerImpl.self
+          ),
+          walletKit: DIGraph.resolver.forceImpl(
+            WalletKitController.self,
+            WalletKitControllerImpl.self
+          )
+        )
       case .biometry(let config):
-        BiometryView(with: self, interactor: BiometryInteractor(), config: config)
+        BiometryView(
+          with: self,
+          interactor: DIGraph.resolver.forceImpl(
+            BiometryInteractor.self,
+            BiometryInteractorImpl.self
+          ),
+          config: config
+        )
       case .presentationLoader(let relyingParty, let presentationCoordinator):
         PresentationLoadingView(
           with: self,
-          and: PresentationInteractor(with: presentationCoordinator),
+          and: DIGraph.resolver.forceImpl(
+            PresentationInteractor.self,
+            PresentationInteractorImpl.self,
+            argument: presentationCoordinator
+          ),
           relyingParty: relyingParty
         )
       case .presentationRequest(let presentationCoordinator):
-        PresentationRequestView(with: self, and: PresentationInteractor(with: presentationCoordinator))
+        PresentationRequestView(
+          with: self,
+          and: DIGraph.resolver.forceImpl(
+            PresentationInteractor.self,
+            PresentationInteractorImpl.self,
+            argument: presentationCoordinator
+          )
+        )
       case .welcome:
-        WelcomeView(with: self, and: WelcomeInteractor())
+        WelcomeView(
+          with: self,
+          and: DIGraph.resolver.forceImpl(
+            WelcomeInteractor.self,
+            WelcomeInteractorImpl.self
+          )
+        )
       case .issuanceDocumentDetails(let config):
         DocumentDetailsView(
           with: self,
-          and: DocumentDetailsInteractor(),
+          and: DIGraph.resolver.forceImpl(
+            DocumentDetailsInteractor.self,
+            DocumentDetailsInteractorImpl.self
+          ),
           config: config
         )
       case .issuanceAddDocument(let config):
         AddDocumentView(
           with: self,
-          and: AddDocumentInteractor(),
+          and: DIGraph.resolver.forceImpl(
+            AddDocumentInteractor.self,
+            AddDocumentInteractorImpl.self
+          ),
           config: config
         )
       case .proximityConnection(let presentationSessionCoordinator):
         ProximityConnectionView(
           with: self,
-          and: ProximityInteractor(with: presentationSessionCoordinator)
+          and: DIGraph.resolver.forceImpl(
+            ProximityInteractor.self,
+            ProximityInteractorImpl.self,
+            argument: presentationSessionCoordinator
+          )
         )
       case .proximityRequest(let presentationSessionCoordinator):
         ProximityRequestView(
           with: self,
-          and: ProximityInteractor(with: presentationSessionCoordinator)
+          and: DIGraph.resolver.forceImpl(
+            ProximityInteractor.self,
+            ProximityInteractorImpl.self,
+            argument: presentationSessionCoordinator
+          )
         )
       case .proximityLoader(let relyingParty, let presentationSessionCoordinator):
         ProximityLoadingView(
           with: self,
-          and: ProximityInteractor(with: presentationSessionCoordinator),
+          and: DIGraph.resolver.forceImpl(
+            ProximityInteractor.self,
+            ProximityInteractorImpl.self,
+            argument: presentationSessionCoordinator
+          ),
           relyingParty: relyingParty
         )
       case .quickPin(let config):
         QuickPinView(
           with: self,
-          interactor: QuickPinInteractor(),
+          interactor: DIGraph.resolver.forceImpl(
+            QuickPinInteractor.self,
+            QuickPinInteractorImpl.self
+          ),
           config: config
         )
       case .issuanceSuccess(let config, let documentIdentifier):
         DocumentSuccessView(
           with: self,
-          and: DocumentSuccessInteractor(),
+          and: DIGraph.resolver.forceImpl(
+            DocumentSuccessInteractor.self,
+            DocumentSuccessInteractorImpl.self
+          ),
           config: config,
           documentIdentifier: documentIdentifier
         )

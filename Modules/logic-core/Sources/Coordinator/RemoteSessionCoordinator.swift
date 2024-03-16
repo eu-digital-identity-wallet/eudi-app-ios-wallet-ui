@@ -17,7 +17,7 @@ import Foundation
 import Combine
 import logic_resources
 
-public final class RemoteSessionCoordinator: PresentationSessionCoordinatorType {
+final class RemoteSessionCoordinator: PresentationSessionCoordinator {
 
   public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
 

@@ -67,3 +67,46 @@ public protocol ConfigSecurityLogic {
    */
   var networkLoggerExclusionList: [String] { get }
 }
+
+struct ConfigSecurityLogicImpl: ConfigSecurityLogic {
+
+  let configLogic: ConfigLogic
+
+  public var blockRootAccess: Bool {
+    false
+  }
+
+  public var blockEmulator: Bool {
+    false
+  }
+
+  public var blockDebugMode: Bool {
+    false
+  }
+
+  public var blockReverseEngineering: Bool {
+    false
+  }
+
+  public var blockScreenCapture: Bool {
+    false
+  }
+
+  public var blockUnsecureWebContent: Bool {
+    false
+  }
+
+  public var bindToDevice: Bool {
+    false
+  }
+
+  public var profileInformation: (bundleId: String, signature: String)? {
+    nil
+  }
+
+  public var useNetworkLogger: Bool {
+    configLogic.appBuildType == .DEBUG
+  }
+
+  public var networkLoggerExclusionList: [String] = []
+}

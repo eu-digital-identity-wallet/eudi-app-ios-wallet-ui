@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSuccessInteractorType>: View {
+public struct DocumentSuccessView<Router: RouterHost, Interactor: DocumentSuccessInteractor>: View {
 
   @ObservedObject var viewModel: DocumentSuccessViewModel<Router, Interactor>
 
@@ -41,7 +41,7 @@ public struct DocumentSuccessView<Router: RouterHostType, Interactor: DocumentSu
       ContentTitleView(
         title: viewModel.viewState.title,
         caption: viewModel.viewState.caption,
-        titleColor: ThemeManager.shared.color.success,
+        titleColor: Theme.shared.color.success,
         topSpacing: .withoutToolbar
       )
 

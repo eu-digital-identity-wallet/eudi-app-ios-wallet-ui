@@ -15,12 +15,17 @@ let package = Package(
     .package(
       url: "https://github.com/microsoft/appcenter-sdk-apple.git",
       from: "5.0.4"
+    ),
+    .package(
+      name: "logic-business",
+      path: "./logic-business"
     )
   ],
   targets: [
     .target(
       name: "logic-analytics",
       dependencies: [
+        "logic-business",
         .product(
           name: "AppCenterAnalytics",
           package: "appcenter-sdk-apple"

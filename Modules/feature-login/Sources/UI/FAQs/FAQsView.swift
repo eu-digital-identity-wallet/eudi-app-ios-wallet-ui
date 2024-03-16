@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct FAQsView<Router: RouterHostType, Interactor: FAQsInteractorType>: View {
+public struct FAQsView<Router: RouterHost, Interactor: FAQsInteractor>: View {
 
   @ObservedObject private var viewModel: FAQsViewModel<Router, Interactor>
   @State var userIsEditingAlias = false

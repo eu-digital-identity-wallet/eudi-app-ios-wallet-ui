@@ -21,7 +21,7 @@ import SwiftUI
 import Combine
 import LocalAuthentication
 
-public protocol BiometryInteractorType {
+public protocol BiometryInteractor {
 
   func authenticate() -> AnyPublisher<BiometricsState, Never>
   func openSettingsURL(action: @escaping () -> Void)
@@ -34,20 +34,20 @@ public protocol BiometryInteractorType {
   func isPinValid(with pin: String) -> QuickPinPartialState
 }
 
-public final class BiometryInteractor: SystemBiometricsInteractor, BiometryInteractorType {
+public final class BiometryInteractorImpl: SystemBiometryInteractorImpl, BiometryInteractor {
 
-  private lazy var prefsController: PrefsControllerType = PrefsController.shared
-  private lazy var quickPinInteractor: QuickPinInteractorType = QuickPinInteractor()
+  private let prefsController: PrefsController
+  private let quickPinInteractor: QuickPinInteractor
 
-  convenience init(
-    prefsController: PrefsControllerType,
-    quickPinInteractor: QuickPinInteractorType,
-    biometricsController: SystemBiometricsControllerType,
+  init(
+    prefsController: PrefsController,
+    quickPinInteractor: QuickPinInteractor,
+    biometryController: SystemBiometryController,
     useTestDispatcher: Bool = false
   ) {
-    self.init(with: biometricsController, useTestDispatcher: useTestDispatcher)
     self.prefsController = prefsController
     self.quickPinInteractor = quickPinInteractor
+    super.init(with: biometryController, useTestDispatcher: useTestDispatcher)
   }
 
   public func isBiometryEnabled() -> Bool {

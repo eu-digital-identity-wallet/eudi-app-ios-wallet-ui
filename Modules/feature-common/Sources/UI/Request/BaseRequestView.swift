@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct BaseRequestView<Router: RouterHostType>: View {
+public struct BaseRequestView<Router: RouterHost>: View {
 
   @ObservedObject var viewModel: BaseRequestViewModel<Router>
 
@@ -53,13 +53,13 @@ public struct BaseRequestView<Router: RouterHostType>: View {
       HStack {
 
         let titleText = Text(viewModel.getCaption())
-          .foregroundColor(ThemeManager.shared.color.textSecondaryDark)
+          .foregroundColor(Theme.shared.color.textSecondaryDark)
 
         let whyInfoText = Text(viewModel.getDataRequestInfo())
-          .foregroundColor(ThemeManager.shared.color.textPrimaryDark)
+          .foregroundColor(Theme.shared.color.textPrimaryDark)
 
         Text("\(titleText) \(whyInfoText)")
-          .typography(ThemeManager.shared.font.bodyMedium)
+          .typography(Theme.shared.font.bodyMedium)
           .onTapGesture { viewModel.onShowRequestInfoModal() }
 
         Spacer()
@@ -169,12 +169,12 @@ public struct BaseRequestView<Router: RouterHostType>: View {
         Theme.shared.image.exclamationmarkCircle
           .renderingMode(.template)
           .resizable()
-          .foregroundStyle(ThemeManager.shared.color.textSecondaryDark)
+          .foregroundStyle(Theme.shared.color.textSecondaryDark)
           .frame(width: imageSize, height: imageSize)
 
         Text(.requestDataNoDocument)
-          .typography(ThemeManager.shared.font.bodyMedium)
-          .foregroundColor(ThemeManager.shared.color.textSecondaryDark)
+          .typography(Theme.shared.font.bodyMedium)
+          .foregroundColor(Theme.shared.color.textSecondaryDark)
           .multilineTextAlignment(.center)
       }
 
@@ -186,13 +186,13 @@ public struct BaseRequestView<Router: RouterHostType>: View {
 
     let image = switch viewModel.viewState.isContentVisible {
     case true:
-      ThemeManager.shared.image.eyeSlash
+      Theme.shared.image.eyeSlash
     case false:
-      ThemeManager.shared.image.eye
+      Theme.shared.image.eye
     }
 
     return image
-      .foregroundStyle(ThemeManager.shared.color.primary)
+      .foregroundStyle(Theme.shared.color.primary)
       .onTapGesture {
         viewModel.onContentVisibilityChange()
       }
@@ -223,22 +223,22 @@ public struct BaseRequestView<Router: RouterHostType>: View {
     if !viewModel.viewState.itemsAreAllSelected {
       HStack(spacing: SPACING_MEDIUM) {
 
-        ThemeManager.shared.image.warning
+        Theme.shared.image.warning
           .resizable()
           .renderingMode(.template)
           .scaledToFit()
           .frame(width: 35)
-          .foregroundStyle(ThemeManager.shared.color.warning)
+          .foregroundStyle(Theme.shared.color.warning)
 
         Text(.incompleteRequestDataSelection)
-          .typography(ThemeManager.shared.font.bodyMedium)
-          .foregroundStyle(ThemeManager.shared.color.textPrimaryDark)
+          .typography(Theme.shared.font.bodyMedium)
+          .foregroundStyle(Theme.shared.color.textPrimaryDark)
       }
       .padding()
       .frame(maxWidth: .infinity)
       .overlay(
         RoundedRectangle(cornerRadius: 15)
-          .foregroundStyle(ThemeManager.shared.color.warning.opacity(0.12))
+          .foregroundStyle(Theme.shared.color.warning.opacity(0.12))
       )
     }
   }

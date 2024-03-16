@@ -17,7 +17,7 @@ import logic_business
 import logic_ui
 import Cuckoo
 
-extension PrefsController.Key: Matchable {}
+extension Prefs.Key: Matchable {}
 
 extension AppRoute: Matchable {}
 

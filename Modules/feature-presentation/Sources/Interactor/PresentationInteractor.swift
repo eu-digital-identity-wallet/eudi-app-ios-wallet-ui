@@ -16,6 +16,7 @@
 import Foundation
 import logic_api
 import logic_core
+import logic_business
 import feature_common
 
 public struct OnlineAuthenticationRequestSuccessModel {
@@ -25,21 +26,25 @@ public struct OnlineAuthenticationRequestSuccessModel {
   var isTrusted: Bool
 }
 
-public protocol PresentationInteractorType {
-  var presentationCoordinator: PresentationSessionCoordinatorType { get }
+public protocol PresentationInteractor {
+  var presentationCoordinator: PresentationSessionCoordinator { get }
 
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>
   func onSendResponse() async -> Result<URL?, Error>
 }
 
-public final actor PresentationInteractor: PresentationInteractorType {
+public final actor PresentationInteractorImpl: PresentationInteractor {
 
-  public let presentationCoordinator: PresentationSessionCoordinatorType
-  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
+  public let presentationCoordinator: PresentationSessionCoordinator
+  private let walletKitController: WalletKitController
 
-  public init(with presentationCoordinator: PresentationSessionCoordinatorType) {
+  init(
+    with presentationCoordinator: PresentationSessionCoordinator,
+    and walletKitController: WalletKitController
+  ) {
     self.presentationCoordinator = presentationCoordinator
+    self.walletKitController = walletKitController
   }
 
   public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {

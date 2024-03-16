@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct QuickPinView<Router: RouterHostType, Interactor: QuickPinInteractorType>: View {
+public struct QuickPinView<Router: RouterHost, Interactor: QuickPinInteractor>: View {
 
   @ObservedObject var viewModel: QuickPinViewModel<Router, Interactor>
 
@@ -30,7 +30,7 @@ public struct QuickPinView<Router: RouterHostType, Interactor: QuickPinInteracto
 
       if viewModel.viewState.isCancellable {
         ContentHeaderView(
-          dismissIcon: ThemeManager.shared.image.xmark,
+          dismissIcon: Theme.shared.image.xmark,
           onBack: { viewModel.onShowCancellationModal() }
         )
       }
@@ -97,8 +97,8 @@ public struct QuickPinView<Router: RouterHostType, Interactor: QuickPinInteracto
       if let error = viewModel.viewState.pinError {
         HStack {
           Text(error)
-            .typography(ThemeManager.shared.font.bodyMedium)
-            .foregroundColor(ThemeManager.shared.color.error)
+            .typography(Theme.shared.font.bodyMedium)
+            .foregroundColor(Theme.shared.color.error)
           Spacer()
         }
       }

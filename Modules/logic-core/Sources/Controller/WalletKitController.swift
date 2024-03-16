@@ -17,15 +17,16 @@
 import Foundation
 import Combine
 import logic_resources
+import logic_business
 
-public protocol WalletKitControllerType {
+public protocol WalletKitController {
 
   var wallet: EudiWallet { get }
-  var activeCoordinator: PresentationSessionCoordinatorType? { get }
+  var activeCoordinator: PresentationSessionCoordinator? { get }
 
-  func startProximityPresentation() -> PresentationSessionCoordinatorType
-  func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType
-  func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType
+  func startProximityPresentation() -> PresentationSessionCoordinator
+  func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinator
+  func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinator
   func stopPresentation()
   func fetchDocuments() -> [MdocDecodable]
   func fetchDocument(with id: String) -> MdocDecodable?
@@ -36,19 +37,16 @@ public protocol WalletKitControllerType {
   func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
 }
 
-public final class WalletKitController: WalletKitControllerType {
+public final class WalletKitControllerImpl: WalletKitController {
 
-  public static let shared: WalletKitControllerType = WalletKitController()
   public let wallet = EudiWallet.standard
 
-  public private(set) var activeCoordinator: PresentationSessionCoordinatorType?
+  public private(set) var activeCoordinator: PresentationSessionCoordinator?
 
   private let configLogic: WalletKitConfig
   private var cancellables = Set<AnyCancellable>()
 
-  internal init(
-    configLogic: WalletKitConfig = WalletKitConfigProvider.shared.getWalletKitConfig()
-  ) {
+  init(configLogic: WalletKitConfig) {
     self.configLogic = configLogic
     wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
     wallet.trustedReaderCertificates = []
@@ -75,10 +73,14 @@ public final class WalletKitController: WalletKitControllerType {
     _ = try await wallet.loadDocuments()
   }
 
-  public func startProximityPresentation() -> PresentationSessionCoordinatorType {
+  public func startProximityPresentation() -> PresentationSessionCoordinator {
     self.stopPresentation()
     let session = wallet.beginPresentation(flow: .ble)
-    let presentationSessionCoordinator = ProximityPresentationSessionCoordinator(session: session)
+    let presentationSessionCoordinator = DIGraph.resolver.force(
+      PresentationSessionCoordinator.self,
+      name: RegistrationName.proximity.rawValue,
+      argument: session
+    )
     self.activeCoordinator = presentationSessionCoordinator
     presentationSessionCoordinator.onSuccess {
       stopPresentation()
@@ -86,7 +88,7 @@ public final class WalletKitController: WalletKitControllerType {
     return presentationSessionCoordinator
   }
 
-  public func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinatorType {
+  public func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinator {
     self.startRemotePresentation(
       urlString: decodeDeeplink(
         link: deepLink
@@ -94,17 +96,21 @@ public final class WalletKitController: WalletKitControllerType {
     )
   }
 
-  public func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinatorType {
+  public func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinator {
     self.startRemotePresentation(urlString: urlString)
   }
 
-  private func startRemotePresentation(urlString: String) -> PresentationSessionCoordinatorType {
+  private func startRemotePresentation(urlString: String) -> PresentationSessionCoordinator {
     self.stopPresentation()
 
     let data = urlString.data(using: .utf8) ?? Data()
 
     let session = wallet.beginPresentation(flow: .openid4vp(qrCode: data))
-    let presentationSessionCoordinator = RemoteSessionCoordinator(session: session)
+    let presentationSessionCoordinator = DIGraph.resolver.force(
+      PresentationSessionCoordinator.self,
+      name: RegistrationName.remote.rawValue,
+      argument: session
+    )
     self.activeCoordinator = presentationSessionCoordinator
     presentationSessionCoordinator.onSuccess {
       stopPresentation()
@@ -139,7 +145,7 @@ public final class WalletKitController: WalletKitControllerType {
   }
 }
 
-extension WalletKitControllerType {
+extension WalletKitController {
 
   // TODO: Mandatory fields should be returned in a generic model
   public func mandatoryFields(for documentType: DocumentIdentifier) -> [String] {

@@ -19,15 +19,16 @@ import LocalAuthentication
 import UIKit
 import SwiftUI
 import logic_resources
+import logic_business
 
 public enum BiometricsState: Equatable {
   case idle
   case loading
   case authenticated
-  case failure(SystemBiometricsError)
+  case failure(SystemBiometryError)
 }
 
-public protocol SystemBiometricsInteractorType {
+public protocol SystemBiometryInteractor {
   func authenticate() -> AnyPublisher<BiometricsState, Never>
   func openSettingsURL(action: @escaping () -> Void)
   var biometricsImage: Image? { get }
@@ -35,30 +36,28 @@ public protocol SystemBiometricsInteractorType {
   var biometryType: LABiometryType { get }
 }
 
-open class SystemBiometricsInteractor: SystemBiometricsInteractorType {
+open class SystemBiometryInteractorImpl: SystemBiometryInteractor {
 
-  private lazy var biometricsController: SystemBiometricsControllerType = SystemBiometricsController()
+  private let biometryController: SystemBiometryController
   private lazy var cancellables: Set<AnyCancellable> = []
 
   private var useTestDispatcher: Bool = false
 
   public var biometryType: LABiometryType {
-    biometricsController.biometryType
+    biometryController.biometryType
   }
 
-  public init() {}
-
   public init(
-    with biometricsController: SystemBiometricsControllerType,
+    with biometryController: SystemBiometryController,
     useTestDispatcher: Bool = false
   ) {
-    self.biometricsController = biometricsController
+    self.biometryController = biometryController
     self.useTestDispatcher = useTestDispatcher
   }
 
   public func authenticate() -> AnyPublisher<BiometricsState, Never> {
 
-    let publisher = biometricsController.requestBiometricUnlock()
+    let publisher = biometryController.requestBiometricUnlock()
       .map { BiometricsState.authenticated }
       .catch { error -> AnyPublisher<BiometricsState, Never> in
         return Just(BiometricsState.failure(error)).eraseToAnyPublisher()
@@ -75,17 +74,17 @@ open class SystemBiometricsInteractor: SystemBiometricsInteractorType {
   }
 
   open var biometricsImage: Image? {
-    return switch biometricsController.biometryType {
+    return switch biometryController.biometryType {
     case .faceID:
-      ThemeManager.shared.image.faceId
+      Theme.shared.image.faceId
     case .touchID:
-      ThemeManager.shared.image.touchId
+      Theme.shared.image.touchId
     default: nil
     }
   }
 
   public var currentBiometricsMethod: String {
-    switch biometricsController.biometryType {
+    switch biometryController.biometryType {
     case .faceID:
       return "Face ID"
     case .touchID:

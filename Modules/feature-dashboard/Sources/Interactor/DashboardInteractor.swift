@@ -24,29 +24,26 @@ public enum DashboardPartialState {
   case failure(Error)
 }
 
-public protocol DashboardInteractorType {
+public protocol DashboardInteractor {
   func fetchDashboard() async -> DashboardPartialState
-  func getBleAvailability() async -> ReachabilityController.BleAvailibity
+  func getBleAvailability() async -> Reachability.BleAvailibity
   func openBleSettings()
   func getAppVersion() -> String
 }
 
-public final class DashboardInteractor: DashboardInteractorType {
+public final class DashboardInteractorImpl: DashboardInteractor {
 
-  private lazy var walletController: WalletKitControllerType = WalletKitController.shared
-  private lazy var reachabilityController: ReachabilityControllerType = ReachabilityController.shared
-  private lazy var configLogic: ConfigLogic = ConfigProvider.shared.getConfigLogic()
+  private let walletController: WalletKitController
+  private let reachabilityController: ReachabilityController
+  private let configLogic: ConfigLogic
 
   private lazy var cancellables = Set<AnyCancellable>()
 
-  public init() {}
-
-  convenience init(
-    walletController: WalletKitControllerType,
-    reachabilityController: ReachabilityControllerType,
+  init(
+    walletController: WalletKitController,
+    reachabilityController: ReachabilityController,
     configLogic: ConfigLogic
   ) {
-    self.init()
     self.walletController = walletController
     self.reachabilityController = reachabilityController
     self.configLogic = configLogic
@@ -58,13 +55,13 @@ public final class DashboardInteractor: DashboardInteractorType {
     let bearer: BearerUIModel = fetchBearer()
 
     guard let documents = documents else {
-      return .failure(RuntimeError.unableFetchDocuments)
+      return .failure(WalletCoreError.unableFetchDocuments)
     }
 
     return .success(bearer, documents)
   }
 
-  public func getBleAvailability() async -> ReachabilityController.BleAvailibity {
+  public func getBleAvailability() async -> Reachability.BleAvailibity {
     return await withCheckedContinuation { cont in
       reachabilityController.getBleAvailibity()
         .sink { cont.resume(returning: $0)}

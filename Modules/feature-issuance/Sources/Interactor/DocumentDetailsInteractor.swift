@@ -19,21 +19,23 @@ import logic_resources
 import logic_core
 import logic_business
 
-public protocol DocumentDetailsInteractorType {
+public protocol DocumentDetailsInteractor {
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
   func deleteDocument(with id: DocumentIdentifier) async -> DocumentDetailsDeletionPartialState
 }
 
-public final class DocumentDetailsInteractor: DocumentDetailsInteractorType {
+public final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 
-  private lazy var walletKitController = WalletKitController.shared
+  private let walletController: WalletKitController
 
-  public init() {}
+  public init(walletController: WalletKitController) {
+    self.walletController = walletController
+  }
 
   public func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
-    let document = walletKitController.fetchDocument(with: documentId)
+    let document = walletController.fetchDocument(with: documentId)
     guard let documentDetails = document?.transformToDocumentDetailsUi() else {
-      return .failure(RuntimeError.unableFetchDocument)
+      return .failure(WalletCoreError.unableFetchDocument)
     }
     return .success(documentDetails)
   }
@@ -42,9 +44,9 @@ public final class DocumentDetailsInteractor: DocumentDetailsInteractorType {
     do {
       switch id {
       case .EuPidDocType:
-        try await walletKitController.clearDocuments()
+        try await walletController.clearDocuments()
       default:
-        try await walletKitController.deleteDocument(with: id.rawValue)
+        try await walletController.deleteDocument(with: id.rawValue)
       }
     } catch {
       return .failure(error)

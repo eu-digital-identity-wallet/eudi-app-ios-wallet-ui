@@ -30,7 +30,6 @@
 		F1CACAE02AC3097100B40DED /* WalletDev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F1CACADF2AC3097100B40DED /* WalletDev.xcconfig */; };
 		F1CACAE22AC3098C00B40DED /* WalletDemo.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F1CACAE12AC3098C00B40DED /* WalletDemo.xcconfig */; };
 		F1E83CFF2ACEA40100FBC0E3 /* logic-navigation in Frameworks */ = {isa = PBXBuildFile; productRef = F1E83CFE2ACEA40100FBC0E3 /* logic-navigation */; };
-		F1E83D1D2ACEE0E800FBC0E3 /* Previewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E83D1C2ACEE0E800FBC0E3 /* Previewer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,7 +65,6 @@
 		F1CACADF2AC3097100B40DED /* WalletDev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = WalletDev.xcconfig; sourceTree = "<group>"; };
 		F1CACAE12AC3098C00B40DED /* WalletDemo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = WalletDemo.xcconfig; sourceTree = "<group>"; };
 		F1E83CFD2ACE91DD00FBC0E3 /* feature-login */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-login"; path = "Modules/feature-login"; sourceTree = "<group>"; };
-		F1E83D1C2ACEE0E800FBC0E3 /* Previewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +127,6 @@
 				F09E1EA02AC33A6800779C25 /* Config */,
 				F14907BB2ABAF54B00DDFE56 /* Application.swift */,
 				F12E940E2ABC6C000086EC93 /* AppDelegate.swift */,
-				F1E83D1C2ACEE0E800FBC0E3 /* Previewer.swift */,
 				F14907BF2ABAF55000DDFE56 /* Assets.xcassets */,
 				F14907C12ABAF55000DDFE56 /* Preview Content */,
 				F09E1EA22AC3443000779C25 /* Wallet.plist */,
@@ -208,7 +205,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1530;
 				TargetAttributes = {
 					F14907B72ABAF54B00DDFE56 = {
 						CreatedOnToolsVersion = 15.0;
@@ -290,7 +287,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1E83D1D2ACEE0E800FBC0E3 /* Previewer.swift in Sources */,
 				F12E940F2ABC6C000086EC93 /* AppDelegate.swift in Sources */,
 				F14907BC2ABAF54B00DDFE56 /* Application.swift in Sources */,
 			);

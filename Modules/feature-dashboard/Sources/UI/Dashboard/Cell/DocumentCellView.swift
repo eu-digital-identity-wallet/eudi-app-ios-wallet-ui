@@ -50,8 +50,8 @@ extension DocumentListView {
             Spacer()
 
             Text(.custom(item.value.title))
-              .typography(ThemeManager.shared.font.titleMedium)
-              .foregroundColor(ThemeManager.shared.color.textPrimaryDark)
+              .typography(Theme.shared.font.titleMedium)
+              .foregroundColor(Theme.shared.color.textPrimaryDark)
               .minimumScaleFactor(0.5)
               .lineLimit(1)
 
@@ -59,7 +59,7 @@ extension DocumentListView {
 
             if let expiresAt = item.value.expiresAt {
               Text(.validUntil([expiresAt]))
-                .typography(ThemeManager.shared.font.bodySmall)
+                .typography(Theme.shared.font.bodySmall)
                 .foregroundColor(Theme.shared.color.textSecondaryDark)
                 .minimumScaleFactor(0.5)
                 .lineLimit(2)

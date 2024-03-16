@@ -13,18 +13,30 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import class Foundation.Bundle
 import logic_business
+import Swinject
 
-public protocol ConfigUiProviderType {
-  func getConfigUiLogic() -> ConfigUiLogic
-}
+public final class LogicAuthAssembly: Assembly {
 
-public struct ConfigUiProvider: ConfigUiProviderType {
+  public init() {}
 
-  public static let shared: ConfigUiProviderType = ConfigUiProvider()
+  public func assemble(container: Container) {
 
-  public func getConfigUiLogic() -> ConfigUiLogic {
-    WalletUiConfig(themeConfiguration: .default)
+    container.register(PinStorageProvider.self) { r in
+      KeychainPinStorageProvider(keyChainController: r.force(KeyChainController.self))
+    }
+    .inObjectScope(ObjectScope.graph)
+
+    container.register(PinStorageController.self) { r in
+      PinStorageControllerImpl(provider: r.force(PinStorageProvider.self))
+    }
+    .inObjectScope(ObjectScope.graph)
+
+    container.register(SystemBiometryController.self) { r in
+      SystemBiometryControllerImpl(
+        keyChainController: r.force(KeyChainController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

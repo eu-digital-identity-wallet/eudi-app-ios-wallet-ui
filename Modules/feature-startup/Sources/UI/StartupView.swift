@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct StartupView<Router: RouterHostType, Interactor: StartupInteractorType>: View {
+public struct StartupView<Router: RouterHost, Interactor: StartupInteractor>: View {
 
   @ObservedObject private var viewModel: StartupViewModel<Router, Interactor>
 

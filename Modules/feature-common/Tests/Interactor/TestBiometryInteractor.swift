@@ -22,19 +22,19 @@ import logic_authentication
 
 final class TestBiometryInteractor: EudiTest {
   
-  var interactor: BiometryInteractorType!
-  var prefsController: MockPrefsControllerType!
-  var quickPinInteractor: MockQuickPinInteractorType!
-  var systemBiometricController: MockSystemBiometricsControllerType!
+  var interactor: BiometryInteractor!
+  var prefsController: MockPrefsController!
+  var quickPinInteractor: MockQuickPinInteractor!
+  var systemBiometricController: MockSystemBiometryController!
   
   override func setUp() {
-    self.prefsController = MockPrefsControllerType()
-    self.quickPinInteractor = MockQuickPinInteractorType()
-    self.systemBiometricController = MockSystemBiometricsControllerType()
-    self.interactor = BiometryInteractor(
+    self.prefsController = MockPrefsController()
+    self.quickPinInteractor = MockQuickPinInteractor()
+    self.systemBiometricController = MockSystemBiometryController()
+    self.interactor = BiometryInteractorImpl(
       prefsController: self.prefsController,
       quickPinInteractor: self.quickPinInteractor,
-      biometricsController: self.systemBiometricController,
+      biometryController: self.systemBiometricController,
       useTestDispatcher: true
     )
   }
@@ -49,7 +49,7 @@ final class TestBiometryInteractor: EudiTest {
   func testIsBiometryEnabled_WhenPrefsControllerReturnsTrue_ThenReturnEnabled() {
     // Given
     stub(prefsController) { mock in
-      when(mock).getBool(forKey: PrefsController.Key.biometryEnabled).thenReturn(true)
+      when(mock).getBool(forKey: Prefs.Key.biometryEnabled).thenReturn(true)
     }
     // When
     let isEnabled = interactor.isBiometryEnabled()
@@ -60,7 +60,7 @@ final class TestBiometryInteractor: EudiTest {
   func testIsBiometryEnabled_WhenPrefsControllerReturnsFalse_ThenReturnIsNotEnabled() {
     // Given
     stub(prefsController) { mock in
-      when(mock).getBool(forKey: PrefsController.Key.biometryEnabled).thenReturn(false)
+      when(mock).getBool(forKey: Prefs.Key.biometryEnabled).thenReturn(false)
     }
     // When
     let isEnabled = interactor.isBiometryEnabled()
@@ -106,12 +106,12 @@ final class TestBiometryInteractor: EudiTest {
   func testSetBiometrySelection_WhenMethodCalledWithTrue_ThenVerifyPrefsControllerSet() {
     // Given
     stub(prefsController) { mock in
-      when(mock).setValue(any(), forKey: PrefsController.Key.biometryEnabled).thenDoNothing()
+      when(mock).setValue(any(), forKey: Prefs.Key.biometryEnabled).thenDoNothing()
     }
     // When
     interactor.setBiometrySelection(isEnabled: true)
     // Then
-    verify(prefsController).setValue(any(), forKey: PrefsController.Key.biometryEnabled)
+    verify(prefsController).setValue(any(), forKey: Prefs.Key.biometryEnabled)
   }
   
   func testBiometricsImage_WhenControllerReturnsFaceIdType_ThenReturnFaceIdImage() {
@@ -122,7 +122,7 @@ final class TestBiometryInteractor: EudiTest {
     // When
     let biometryImage = interactor.biometricsImage
     // Then
-    XCTAssertEqual(biometryImage, ThemeManager.shared.image.faceId)
+    XCTAssertEqual(biometryImage, Theme.shared.image.faceId)
   }
   
   func testBiometricsImage_WhenControllerReturnsTouchIdType_ThenReturnTouchIdImage() {
@@ -133,7 +133,7 @@ final class TestBiometryInteractor: EudiTest {
     // When
     let biometryImage = interactor.biometricsImage
     // Then
-    XCTAssertEqual(biometryImage, ThemeManager.shared.image.touchId)
+    XCTAssertEqual(biometryImage, Theme.shared.image.touchId)
   }
   
   func testBiometricsImage_WhenControllerReturnsNotSupportedType_ThenReturnNil() {

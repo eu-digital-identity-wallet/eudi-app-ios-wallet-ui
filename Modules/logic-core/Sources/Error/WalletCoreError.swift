@@ -13,17 +13,19 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import class Foundation.Bundle
+import Foundation
+import logic_resources
 
-public protocol WalletKitConfigProviderType {
-  func getWalletKitConfig() -> WalletKitConfig
-}
+public enum WalletCoreError: LocalizedError {
+  case unableFetchDocuments
+  case unableFetchDocument
 
-public struct WalletKitConfigProvider: WalletKitConfigProviderType {
-
-  public static let shared: WalletKitConfigProviderType = WalletKitConfigProvider()
-
-  public func getWalletKitConfig() -> WalletKitConfig {
-    WalletKitConfigImpl()
+  public var errorDescription: String? {
+    return switch self {
+    case .unableFetchDocuments:
+      LocalizableString.shared.get(with: .errorUnableFetchDocuments)
+    case .unableFetchDocument:
+      LocalizableString.shared.get(with: .errorUnableFetchDocument)
+    }
   }
 }

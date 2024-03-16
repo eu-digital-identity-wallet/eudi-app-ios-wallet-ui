@@ -13,30 +13,32 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Swinject
 import Foundation
 
-public struct WalletKitConfigImpl: WalletKitConfig {
+public final class LogicAnalyticsAssembly: Assembly {
 
-  public var userAuthenticationRequired: Bool {
-    getBundleValue(key: "Core User Auth").toBool()
-  }
+  public init() {}
 
-  public var verifierConfig: VerifierConfig {
-    .init(apiUri: getBundleValue(key: "Verifier API"))
-  }
+  public func assemble(container: Container) {
+    registerConfig(with: container)
 
-  public var vciConfig: VciConfig {
-    .init(
-      issuerUrl: getBundleValue(key: "Vci Issuer URL"),
-      clientId: getBundleValue(key: "Vci Client Id"),
-      redirectUri: getBundleValue(key: "Vci Redirect Uri")
-    )
-  }
-
-  public var proximityConfig: ProximityConfig {
-    guard let cert = Data(name: "eudi_pid_issuer_ut", ext: "der") else {
-      return .init(trustedCerts: [])
+    container.register(AnalyticsController.self) { r in
+      AnalyticsControllerImpl(analyticsConfig: r.resolve(AnalyticsConfig.self))
     }
-    return .init(trustedCerts: [cert])
+    .inObjectScope(ObjectScope.graph)
+  }
+
+  private func registerConfig(with container: Container) {
+    guard
+      let object = NSClassFromString("AnalyticsConfigImpl") as? NSObject.Type,
+      let config = object.init() as? AnalyticsConfig
+    else {
+      return
+    }
+    container.register(AnalyticsConfig.self) { _ in
+      config
+    }
+    .inObjectScope(ObjectScope.graph)
   }
 }

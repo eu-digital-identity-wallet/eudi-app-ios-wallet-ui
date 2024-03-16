@@ -13,22 +13,22 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import class Foundation.Bundle
+import logic_business
+import Swinject
 
-public protocol ConfigProviderType {
-  func getConfigLogic() -> ConfigLogic
-  func getConfigSecurityLogic() -> ConfigSecurityLogic
-}
+public final class LogicApiAssembly: Assembly {
 
-public struct ConfigProvider: ConfigProviderType {
+  public init() {}
 
-  public static let shared: ConfigProviderType = ConfigProvider()
+  public func assemble(container: Container) {
+    container.register(NetworkManager.self) { r in
+      NetworkManagerImpl(configLogic: r.force(ConfigLogic.self))
+    }
+    .inObjectScope(ObjectScope.transient)
 
-  public func getConfigLogic() -> ConfigLogic {
-    WalletConfig()
-  }
-
-  public func getConfigSecurityLogic() -> ConfigSecurityLogic {
-    WalletSecurityConfig(configLogic: getConfigLogic())
+    container.register(SampleRepository.self) { r in
+      SampleRepositoryImpl(networkManager: r.force(NetworkManager.self))
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

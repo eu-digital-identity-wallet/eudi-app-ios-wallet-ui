@@ -20,17 +20,21 @@ import feature_common
 import logic_business
 import logic_core
 
-public protocol AddDocumentInteractorType {
+public protocol AddDocumentInteractor {
   func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState
   func loadSampleData() async -> LoadSampleDataPartialState
   func issueDocument(docType: String, format: DataFormat) async -> IssueDocumentPartialState
 }
 
-public final class AddDocumentInteractor: AddDocumentInteractorType {
+public final class AddDocumentInteractorImpl: AddDocumentInteractor {
 
-  private lazy var walletController: WalletKitControllerType = WalletKitController.shared
+  private let walletController: WalletKitController
 
-  public init() {}
+  init(
+    walletController: WalletKitController
+  ) {
+    self.walletController = walletController
+  }
 
   public func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState {
 
@@ -83,7 +87,7 @@ public final class AddDocumentInteractor: AddDocumentInteractorType {
       let doc = try await walletController.issueDocument(docType: docType, format: format)
       return .success(doc.docType)
     } catch {
-      return .failure(RuntimeError.unableFetchDocument)
+      return .failure(WalletCoreError.unableFetchDocument)
     }
   }
 }

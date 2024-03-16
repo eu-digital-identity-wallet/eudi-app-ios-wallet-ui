@@ -18,7 +18,7 @@ import Foundation
 import Combine
 import logic_resources
 
-public final class ProximityPresentationSessionCoordinator: PresentationSessionCoordinatorType {
+final class ProximityPresentationSessionCoordinator: PresentationSessionCoordinator {
 
   public private(set) var presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
 
@@ -28,7 +28,6 @@ public final class ProximityPresentationSessionCoordinator: PresentationSessionC
 
   public init(session: PresentationSession) {
     self.session = session
-
     self.session.$status
       .sink { status in
         switch status {

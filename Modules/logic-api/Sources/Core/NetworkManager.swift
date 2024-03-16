@@ -17,19 +17,30 @@ import Foundation
 import Alamofire
 import logic_business
 
-public actor NetworkManager: GlobalActor {
+protocol NetworkManager {
+  func execute<R: NetworkRequest, T: Decodable>(
+    with request: R,
+    parameters: [NetworkParameter]?
+  ) async throws -> T
+  func prepare<R: NetworkRequest>(
+    request: R,
+    parameters: [NetworkParameter]?,
+    baseHost: String
+  ) async -> URLRequest
+  func log(request: URLRequest, responseData: Data?)
+}
 
-  public static let shared = NetworkManager()
+actor NetworkManagerImpl: NetworkManager {
 
   private let configLogic: ConfigLogic
 
-  private init(configLogic: ConfigLogic = ConfigProvider.shared.getConfigLogic()) {
+  init(configLogic: ConfigLogic) {
     self.configLogic = configLogic
   }
 
-  func execute<R: NetworkRequest, T: Decodable>(with request: R, parameters: [NetworkParameter]? = nil) async throws -> T {
+  func execute<R: NetworkRequest, T: Decodable>(with request: R, parameters: [NetworkParameter]?) async throws -> T {
 
-    let request = self.prepare(
+    let request = await self.prepare(
       request: request,
       parameters: parameters,
       baseHost: self.configLogic.walletHostUrl
@@ -53,14 +64,12 @@ public actor NetworkManager: GlobalActor {
         }
     }
   }
-}
 
-private extension NetworkManager {
   func prepare<R: NetworkRequest>(
     request: R,
     parameters: [NetworkParameter]?,
     baseHost: String
-  ) -> URLRequest {
+  ) async -> URLRequest {
 
     guard let baseAPI = URL(string: baseHost) else {
       fatalError("No base url provided")
@@ -89,11 +98,8 @@ private extension NetworkManager {
 
     return urlRequest
   }
-}
 
-private extension NetworkManager {
-
-  func log(request: URLRequest, responseData: Data? = nil) {
+  nonisolated func log(request: URLRequest, responseData: Data? = nil) {
     print("1️⃣ Request: " + (request.url?.absoluteString ?? "") )
     print("2️⃣ Request Http Method: " + (request.httpMethod ?? "") )
     print("3️⃣ Request HttpBody: " + (request.httpBody?.prettyJson ?? "") )

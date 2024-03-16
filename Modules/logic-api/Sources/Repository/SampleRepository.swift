@@ -15,15 +15,19 @@
  */
 import Foundation
 
-public protocol SampleRepositoryType {
+public protocol SampleRepository {
   func sampleCall() async throws -> SampleResponseDTO
 }
 
-public final class SampleRepository: SampleRepositoryType {
+final class SampleRepositoryImpl: SampleRepository {
 
-  public init() {}
+  private let networkManager: NetworkManager
+
+  init(networkManager: NetworkManager) {
+    self.networkManager = networkManager
+  }
 
   public func sampleCall() async throws -> SampleResponseDTO {
-    return try await NetworkManager.shared.execute(with: SampleRequest(request: .init()))
+    return try await networkManager.execute(with: SampleRequest(request: .init()), parameters: nil)
   }
 }

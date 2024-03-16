@@ -47,16 +47,16 @@ extension BearerHeaderView {
         userImage
         VStack(alignment: .leading) {
           Text(.welcomeBack)
-            .typography(ThemeManager.shared.font.bodyMedium)
+            .typography(Theme.shared.font.bodyMedium)
             .minimumScaleFactor(0.5)
             .lineLimit(1)
-            .foregroundColor(ThemeManager.shared.color.black)
+            .foregroundColor(Theme.shared.color.black)
           HStack {
             Text(.custom(item.value.name))
-              .typography(ThemeManager.shared.font.headlineSmall)
+              .typography(Theme.shared.font.headlineSmall)
               .minimumScaleFactor(0.5)
               .lineLimit(1)
-              .foregroundColor(ThemeManager.shared.color.black)
+              .foregroundColor(Theme.shared.color.black)
             Spacer()
             Button(
               action: {

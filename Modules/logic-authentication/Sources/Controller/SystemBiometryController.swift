@@ -19,14 +19,14 @@ import Combine
 import SwiftUI
 import logic_business
 
-public protocol SystemBiometricsControllerType {
+public protocol SystemBiometryController {
   var biometryType: LABiometryType { get }
-  func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometricsError>
-  func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometricsError>
-  func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometricsError>
+  func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError>
+  func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometryError>
+  func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometryError>
 }
 
-public enum SystemBiometricsError: Error, LocalizedError, Identifiable {
+public enum SystemBiometryError: Error, LocalizedError, Identifiable {
   case deniedAccess
   case noFaceIdEnrolled
   case noFingerprintEnrolled
@@ -51,16 +51,17 @@ public enum SystemBiometricsError: Error, LocalizedError, Identifiable {
   }
 }
 
-public final class SystemBiometricsController: SystemBiometricsControllerType {
+final class SystemBiometryControllerImpl: SystemBiometryController {
 
   public var biometryType: LABiometryType { context.biometryType }
 
-  private lazy var context = LAContext()
-  private lazy var keyChainController: KeyChainControllerType = KeyChainController.shared
+  private let context = LAContext()
+  private let keyChainController: KeyChainController
 
   internal var biometricError: NSError?
 
-  public init() {
+  public init(keyChainController: KeyChainController) {
+    self.keyChainController = keyChainController
     _ = canEvaluateForBiometrics()
   }
 
@@ -68,35 +69,35 @@ public final class SystemBiometricsController: SystemBiometricsControllerType {
     self.context.invalidate()
   }
 
-  public func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometricsError> {
+  public func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError> {
 
     guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &biometricError) else {
-      return Fail(error: SystemBiometricsError.deniedAccess).eraseToAnyPublisher()
+      return Fail(error: SystemBiometryError.deniedAccess).eraseToAnyPublisher()
     }
 
     if let error = biometricError {
       switch error.code {
       case -6:
-        return Fail(error: SystemBiometricsError.deniedAccess).eraseToAnyPublisher()
+        return Fail(error: SystemBiometryError.deniedAccess).eraseToAnyPublisher()
       case -7:
         if context.biometryType == .faceID {
-          return Fail(error: SystemBiometricsError.noFaceIdEnrolled).eraseToAnyPublisher()
+          return Fail(error: SystemBiometryError.noFaceIdEnrolled).eraseToAnyPublisher()
         } else {
-          return Fail(error: SystemBiometricsError.noFingerprintEnrolled).eraseToAnyPublisher()
+          return Fail(error: SystemBiometryError.noFingerprintEnrolled).eraseToAnyPublisher()
         }
       default:
-        return Fail(error: SystemBiometricsError.biometricError).eraseToAnyPublisher()
+        return Fail(error: SystemBiometryError.biometricError).eraseToAnyPublisher()
       }
     }
 
     guard context.biometryType != .none else {
-      return Fail(error: SystemBiometricsError.biometryNotSupported).eraseToAnyPublisher()
+      return Fail(error: SystemBiometryError.biometryNotSupported).eraseToAnyPublisher()
     }
 
-    return Just(true).setFailureType(to: SystemBiometricsError.self).eraseToAnyPublisher()
+    return Just(true).setFailureType(to: SystemBiometryError.self).eraseToAnyPublisher()
   }
 
-  public func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometricsError> {
+  public func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometryError> {
     return Deferred {
       Future { [weak self] promise in
         guard let self = self else { return }
@@ -105,17 +106,17 @@ public final class SystemBiometricsController: SystemBiometricsControllerType {
           promise(.success(()))
         } catch {
           self.keyChainController.clearKeyChainBiometry()
-          promise(.failure(SystemBiometricsError.biometricError))
+          promise(.failure(SystemBiometryError.biometricError))
         }
       }
     }
     .eraseToAnyPublisher()
   }
 
-  public func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometricsError> {
+  public func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometryError> {
     canEvaluateForBiometrics()
-      .flatMap { [weak self] (_) -> AnyPublisher<Void, SystemBiometricsError> in
-        guard let self = self else { return Fail(error: SystemBiometricsError.biometricError).eraseToAnyPublisher() }
+      .flatMap { [weak self] (_) -> AnyPublisher<Void, SystemBiometryError> in
+        guard let self = self else { return Fail(error: SystemBiometryError.biometricError).eraseToAnyPublisher() }
         return self.evaluateBiometrics()
       }.eraseToAnyPublisher()
   }

@@ -13,16 +13,22 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import logic_business
+import logic_ui
+import logic_analytics
+import Swinject
 
-protocol PinStorageConfigProviderType {
-  func getConfig() -> PinStorageConfig
-}
+public final class LogicNavAssembly: Assembly {
 
-struct PinStorageConfigProvider: PinStorageConfigProviderType {
+  public init() {}
 
-  static let shared: PinStorageConfigProviderType = PinStorageConfigProvider()
-
-  func getConfig() -> PinStorageConfig {
-    PinStorageConfigImpl()
+  public func assemble(container: Container) {
+    container.register(RouterHost.self) { r in
+      RouterHostImpl(
+        uiConfigLogic: r.force(ConfigUiLogic.self),
+        analyticsController: r.force(AnalyticsController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.graph)
   }
 }

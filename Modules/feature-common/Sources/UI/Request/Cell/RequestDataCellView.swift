@@ -54,18 +54,18 @@ extension BaseRequestView {
 
           HStack(spacing: SPACING_SMALL) {
 
-            ThemeManager.shared.image.id
+            Theme.shared.image.id
               .resizable()
               .scaledToFit()
               .frame(width: 45)
 
             Text(section.title)
-              .typography(ThemeManager.shared.font.titleMedium)
-              .foregroundStyle(ThemeManager.shared.color.black)
+              .typography(Theme.shared.font.titleMedium)
+              .foregroundStyle(Theme.shared.color.black)
 
           }
           .padding([.horizontal, .vertical], SPACING_SMALL)
-          .background(ThemeManager.shared.color.secondary)
+          .background(Theme.shared.color.secondary)
           .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
 
           Spacer()

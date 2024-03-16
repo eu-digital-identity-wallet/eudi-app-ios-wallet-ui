@@ -21,10 +21,10 @@ import logic_business
 
 final class TestFAQsInteractor: EudiTest {
   
-  var interactor: FAQsInteractorType!
+  var interactor: FAQsInteractor!
   
   override func setUp() {
-    self.interactor = FAQsInteractor()
+    self.interactor = FAQsInteractorImpl()
   }
   
   override func tearDown() {

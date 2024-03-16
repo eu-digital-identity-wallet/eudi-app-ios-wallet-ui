@@ -13,22 +13,23 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
+import Swinject
+import logic_core
+import feature_common
 
-protocol AnalyticsConfigProviderType {
-  func getConfig() -> AnalyticsConfig?
-}
+public final class FeatureLoginAssembly: Assembly {
 
-struct AnalyticsConfigProvider: AnalyticsConfigProviderType {
+  public init() {}
 
-  static let shared: AnalyticsConfigProviderType = AnalyticsConfigProvider()
-
-  func getConfig() -> AnalyticsConfig? {
-    guard
-      let object = NSClassFromString("AnalyticsConfigImpl") as? NSObject.Type
-    else {
-      return nil
+  public func assemble(container: Container) {
+    container.register(FAQsInteractor.self) { _ in
+      FAQsInteractorImpl()
     }
-    return object.init() as? AnalyticsConfig
+    .inObjectScope(ObjectScope.transient)
+
+    container.register(WelcomeInteractor.self) { _ in
+      WelcomeInteractorImpl()
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

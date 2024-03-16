@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import feature_common
 
-public struct PresentationLoadingView<Router: RouterHostType, Interactor: PresentationInteractorType>: View {
+public struct PresentationLoadingView<Router: RouterHost, Interactor: PresentationInteractor>: View {
 
   @ObservedObject private var viewModel: PresentationLoadingViewModel<Router, Interactor>
 

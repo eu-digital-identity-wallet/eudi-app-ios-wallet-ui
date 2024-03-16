@@ -37,17 +37,17 @@ public struct WrapCheckBoxView: View {
 
   var checkBoxColor: Color {
     if self.isEnabled {
-      ThemeManager.shared.color.primary
+      Theme.shared.color.primary
     } else {
-      ThemeManager.shared.color.textDisabledDark
+      Theme.shared.color.textDisabledDark
     }
   }
 
   var titleTextColor: Color {
     if self.isEnabled {
-      ThemeManager.shared.color.textPrimaryDark
+      Theme.shared.color.textPrimaryDark
     } else {
-      ThemeManager.shared.color.textDisabledDark
+      Theme.shared.color.textDisabledDark
     }
   }
 
@@ -83,8 +83,8 @@ public struct WrapCheckBoxView: View {
     switch value {
     case .string(let value):
       Text(value)
-        .typography(ThemeManager.shared.font.titleMedium)
-        .foregroundStyle(ThemeManager.shared.color.textPrimaryDark)
+        .typography(Theme.shared.font.titleMedium)
+        .foregroundStyle(Theme.shared.color.textPrimaryDark)
     case .image(let image):
       image
         .resizable()
@@ -98,8 +98,8 @@ public struct WrapCheckBoxView: View {
     HStack(spacing: SPACING_SMALL) {
 
       let image: Image = self.isSelected
-      ? ThemeManager.shared.image.checkmarkSquareFill
-      : ThemeManager.shared.image.square
+      ? Theme.shared.image.checkmarkSquareFill
+      : Theme.shared.image.square
 
       image
         .resizable()
@@ -109,14 +109,14 @@ public struct WrapCheckBoxView: View {
 
       if !self.isVisible {
         Text(self.title)
-          .typography(ThemeManager.shared.font.titleMedium)
+          .typography(Theme.shared.font.titleMedium)
           .foregroundStyle(self.titleTextColor)
       } else {
         VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
 
           Text(self.title)
-            .typography(ThemeManager.shared.font.bodyMedium)
-            .foregroundStyle(ThemeManager.shared.color.textSecondaryDark)
+            .typography(Theme.shared.font.bodyMedium)
+            .foregroundStyle(Theme.shared.color.textSecondaryDark)
 
           contentValue
         }

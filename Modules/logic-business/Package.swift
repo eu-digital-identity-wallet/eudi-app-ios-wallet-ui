@@ -37,6 +37,10 @@ let package = Package(
       url: "https://github.com/rhummelmose/BluetoothKit.git",
       branch: "master"
     ),
+    .package(
+      url: "https://github.com/Swinject/Swinject.git",
+      from: "2.8.4"
+    ),
     .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
@@ -47,6 +51,7 @@ let package = Package(
         "IOSSecuritySuite",
         "KeychainAccess",
         "BluetoothKit",
+        "Swinject",
         .product(
           name: "Peppermint",
           package: "peppermint"
