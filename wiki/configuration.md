@@ -64,24 +64,29 @@ The application allows the configuration of the PIN storage. You can configure t
 2. From where the pin will be retrieved
 3. Pin matching and validity
 
-Via the *PinStorageConfig* inside the logic-authentication module.
+Via the *LogicAuthAssembly* inside the logic-authentication module.
 
 ```
-protocol PinStorageConfig {
-  /**
-   * Pin Storage Provider
-   */
-  var storageProvider: PinStorageProvider { get }
+public final class LogicAuthAssembly: Assembly {
+
+  public init() {}
+
+  public func assemble(container: Container) {
+  }
 }
 ```
 
-You can provide your storage implementation by implementing the *PinStorageProvider* protocol and then setting it as default to the *PinStorageConfigImpl*
+You can provide your storage implementation by implementing the *PinStorageProvider* protocol and then providing the implementation inside the Assembly DI Graph *LogicAuthAssembly*
 
 Implementation Example:
 ```
 final class KeychainPinStorageProvider: PinStorageProvider {
 
-  private lazy var keyChainController: KeyChainControllerType = KeyChainController()
+  private let keyChainController: KeyChainController
+
+  init(keyChainController: KeyChainController) {
+    self.keyChainController = keyChainController
+  }
 
   func retrievePin() -> String? {
     keyChainController.getValue(key: KeychainIdentifier.devicePin)
@@ -99,12 +104,8 @@ final class KeychainPinStorageProvider: PinStorageProvider {
 
 Config Example:
 ```
-struct PinStorageConfigImpl: PinStorageConfig {
-  /**
-   * Pin Storage Provider
-   */
-  var storageProvider: PinStorageProvider {
-    KeychainPinStorageProvider()
-  }
+container.register(PinStorageProvider.self) { r in
+  KeychainPinStorageProvider(keyChainController: r.force(KeyChainController.self))
 }
+.inObjectScope(ObjectScope.graph)
 ```
