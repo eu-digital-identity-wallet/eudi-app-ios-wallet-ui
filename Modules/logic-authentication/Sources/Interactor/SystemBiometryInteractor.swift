@@ -38,7 +38,7 @@ public protocol SystemBiometryInteractor {
 
 open class SystemBiometryInteractorImpl: SystemBiometryInteractor {
 
-  private lazy var biometryController: SystemBiometryController = DIGraph.resolver.force(SystemBiometryController.self)
+  private let biometryController: SystemBiometryController
   private lazy var cancellables: Set<AnyCancellable> = []
 
   private var useTestDispatcher: Bool = false
@@ -46,8 +46,6 @@ open class SystemBiometryInteractorImpl: SystemBiometryInteractor {
   public var biometryType: LABiometryType {
     biometryController.biometryType
   }
-
-  public init() {}
 
   public init(
     with biometryController: SystemBiometryController,

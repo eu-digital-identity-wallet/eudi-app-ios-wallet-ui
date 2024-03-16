@@ -16,7 +16,7 @@
 
 import feature_common
 
-final class PresentationRequestViewModel<Router: RouterHost, Interactor: PresentationInteractorType>: BaseRequestViewModel<Router> {
+final class PresentationRequestViewModel<Router: RouterHost, Interactor: PresentationInteractor>: BaseRequestViewModel<Router> {
 
   private let interactor: Interactor
 

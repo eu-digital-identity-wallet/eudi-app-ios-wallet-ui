@@ -22,21 +22,21 @@ public protocol PinStorageController {
 
 final class PinStorageControllerImpl: PinStorageController {
 
-  private let config: PinStorageConfig
+  private let provider: PinStorageProvider
 
-  init(config: PinStorageConfig) {
-    self.config = config
+  init(provider: PinStorageProvider) {
+    self.provider = provider
   }
 
   public func retrievePin() -> String? {
-    config.storageProvider.retrievePin()
+    provider.retrievePin()
   }
 
   public func setPin(with pin: String) {
-    config.storageProvider.setPin(with: pin)
+    provider.setPin(with: pin)
   }
 
   public func isPinValid(with pin: String) -> Bool {
-    config.storageProvider.isPinValid(with: pin)
+    provider.isPinValid(with: pin)
   }
 }

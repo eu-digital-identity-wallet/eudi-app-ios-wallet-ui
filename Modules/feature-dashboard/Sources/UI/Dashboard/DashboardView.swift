@@ -18,14 +18,20 @@ import logic_ui
 import logic_resources
 import logic_business
 import feature_common
+import logic_core
 
-public struct DashboardView<Router: RouterHost, Interactor: DashboardInteractorType, Controller: DeepLinkController>: View {
+public struct DashboardView<Router: RouterHost, Interactor: DashboardInteractor, Controller: DeepLinkController, WalletKit: WalletKitController>: View {
 
-  @ObservedObject private var viewModel: DashboardViewModel<Router, Interactor, Controller>
+  @ObservedObject private var viewModel: DashboardViewModel<Router, Interactor, Controller, WalletKit>
   @Environment(\.scenePhase) var scenePhase
 
-  public init(with router: Router, and interactor: Interactor, also deepLinkController: Controller) {
-    self.viewModel = .init(router: router, interactor: interactor, deepLinkController: deepLinkController)
+  public init(
+    with router: Router,
+    and interactor: Interactor,
+    deeplink deepLinkController: Controller,
+    walletKit: WalletKit
+  ) {
+    self.viewModel = .init(router: router, interactor: interactor, deepLinkController: deepLinkController, walletKit: walletKit)
   }
 
   @ViewBuilder

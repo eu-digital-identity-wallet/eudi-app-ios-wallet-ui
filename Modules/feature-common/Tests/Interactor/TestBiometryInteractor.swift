@@ -22,16 +22,16 @@ import logic_authentication
 
 final class TestBiometryInteractor: EudiTest {
   
-  var interactor: BiometryInteractorType!
+  var interactor: BiometryInteractor!
   var prefsController: MockPrefsController!
-  var quickPinInteractor: MockQuickPinInteractorType!
+  var quickPinInteractor: MockQuickPinInteractor!
   var systemBiometricController: MockSystemBiometryController!
   
   override func setUp() {
     self.prefsController = MockPrefsController()
-    self.quickPinInteractor = MockQuickPinInteractorType()
+    self.quickPinInteractor = MockQuickPinInteractor()
     self.systemBiometricController = MockSystemBiometryController()
-    self.interactor = BiometryInteractor(
+    self.interactor = BiometryInteractorImpl(
       prefsController: self.prefsController,
       quickPinInteractor: self.quickPinInteractor,
       biometryController: self.systemBiometricController,

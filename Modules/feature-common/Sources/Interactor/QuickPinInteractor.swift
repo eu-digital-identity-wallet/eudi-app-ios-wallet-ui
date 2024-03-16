@@ -23,21 +23,18 @@ public enum QuickPinPartialState {
   case failure(Error)
 }
 
-public protocol QuickPinInteractorType {
+public protocol QuickPinInteractor {
   func setPin(newPin: String)
   func isPinValid(pin: String) -> QuickPinPartialState
   func changePin(currentPin: String, newPin: String) -> QuickPinPartialState
   func hasPin() -> Bool
 }
 
-public final class QuickPinInteractor: QuickPinInteractorType {
+public final class QuickPinInteractorImpl: QuickPinInteractor {
 
-  private lazy var pinStorageController: PinStorageController = DIGraph.resolver.force(PinStorageController.self)
+  private let pinStorageController: PinStorageController
 
-  public init() {}
-
-  convenience init(pinStorageController: PinStorageController) {
-    self.init()
+  init(pinStorageController: PinStorageController) {
     self.pinStorageController = pinStorageController
   }
 

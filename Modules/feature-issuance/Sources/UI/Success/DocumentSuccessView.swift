@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct DocumentSuccessView<Router: RouterHost, Interactor: DocumentSuccessInteractorType>: View {
+public struct DocumentSuccessView<Router: RouterHost, Interactor: DocumentSuccessInteractor>: View {
 
   @ObservedObject var viewModel: DocumentSuccessViewModel<Router, Interactor>
 

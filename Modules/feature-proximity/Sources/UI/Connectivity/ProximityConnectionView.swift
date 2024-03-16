@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct ProximityConnectionView<Router: RouterHost, Interactor: ProximityInteractorType>: View {
+public struct ProximityConnectionView<Router: RouterHost, Interactor: ProximityInteractor>: View {
 
   @ObservedObject private var viewModel: ProximityConnectionViewModel<Router, Interactor>
 

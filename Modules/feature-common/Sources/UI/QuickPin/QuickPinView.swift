@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct QuickPinView<Router: RouterHost, Interactor: QuickPinInteractorType>: View {
+public struct QuickPinView<Router: RouterHost, Interactor: QuickPinInteractor>: View {
 
   @ObservedObject var viewModel: QuickPinViewModel<Router, Interactor>
 

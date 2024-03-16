@@ -17,7 +17,7 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct BiometryView<Router: RouterHost, Interactor: BiometryInteractorType>: View {
+public struct BiometryView<Router: RouterHost, Interactor: BiometryInteractor>: View {
 
   @ObservedObject var viewModel: BiometryViewModel<Router, Interactor>
   @Environment(\.scenePhase) var scenePhase

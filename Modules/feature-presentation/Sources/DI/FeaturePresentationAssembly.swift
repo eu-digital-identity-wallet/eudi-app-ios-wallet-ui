@@ -13,26 +13,20 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_api
+import Swinject
+import logic_core
 
-public enum FAQsPartialState {
-  case success([FAQUIModel])
-  case failure(Error)
-}
+public final class FeaturePresentationAssembly: Assembly {
 
-public protocol FAQsInteractor {
-  func fetchFAQs() async -> FAQsPartialState
-}
+  public init() {}
 
-public final actor FAQsInteractorImpl: FAQsInteractor {
-
-  public func fetchFAQs() async -> FAQsPartialState {
-    do {
-      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
-      return .success(FAQUIModel.mocks())
-    } catch {
-      return .failure(error)
+  public func assemble(container: Container) {
+    container.register(PresentationInteractor.self) { r, session in
+      PresentationInteractorImpl(
+        with: session,
+        and: r.force(WalletKitController.self)
+      )
     }
+    .inObjectScope(ObjectScope.transient)
   }
 }

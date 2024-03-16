@@ -13,26 +13,27 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_api
+import Swinject
+import logic_authentication
+import logic_business
 
-public enum FAQsPartialState {
-  case success([FAQUIModel])
-  case failure(Error)
-}
+public final class FeatureCommonAssembly: Assembly {
 
-public protocol FAQsInteractor {
-  func fetchFAQs() async -> FAQsPartialState
-}
+  public init() {}
 
-public final actor FAQsInteractorImpl: FAQsInteractor {
-
-  public func fetchFAQs() async -> FAQsPartialState {
-    do {
-      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
-      return .success(FAQUIModel.mocks())
-    } catch {
-      return .failure(error)
+  public func assemble(container: Container) {
+    container.register(QuickPinInteractor.self) { r in
+      QuickPinInteractorImpl(pinStorageController: r.force(PinStorageController.self))
     }
+    .inObjectScope(ObjectScope.transient)
+
+    container.register(BiometryInteractor.self) { r in
+      BiometryInteractorImpl(
+        prefsController: r.force(PrefsController.self),
+        quickPinInteractor: r.force(QuickPinInteractor.self),
+        biometryController: r.force(SystemBiometryController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

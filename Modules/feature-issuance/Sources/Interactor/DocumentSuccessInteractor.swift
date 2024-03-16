@@ -16,16 +16,18 @@
 import logic_core
 import logic_business
 
-public protocol DocumentSuccessInteractorType {
+public protocol DocumentSuccessInteractor {
   func getHoldersName(for documentIdentifier: String) -> String?
   func getDocumentName(for documentIdentifier: String) -> String
 }
 
-public final class DocumentSuccessInteractor: DocumentSuccessInteractorType {
+public final class DocumentSuccessInteractorImpl: DocumentSuccessInteractor {
 
-  private lazy var walletController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
+  private let walletController: WalletKitController
 
-  public init() {}
+  init(walletController: WalletKitController ) {
+    self.walletController = walletController
+  }
 
   public func getHoldersName(for documentIdentifier: String) -> String? {
     guard

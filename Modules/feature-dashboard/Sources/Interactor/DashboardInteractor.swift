@@ -24,29 +24,26 @@ public enum DashboardPartialState {
   case failure(Error)
 }
 
-public protocol DashboardInteractorType {
+public protocol DashboardInteractor {
   func fetchDashboard() async -> DashboardPartialState
   func getBleAvailability() async -> Reachability.BleAvailibity
   func openBleSettings()
   func getAppVersion() -> String
 }
 
-public final class DashboardInteractor: DashboardInteractorType {
+public final class DashboardInteractorImpl: DashboardInteractor {
 
-  private lazy var walletController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
-  private lazy var reachabilityController: ReachabilityController = DIGraph.resolver.force(ReachabilityController.self)
-  private lazy var configLogic: ConfigLogic = DIGraph.resolver.force(ConfigLogic.self)
+  private let walletController: WalletKitController
+  private let reachabilityController: ReachabilityController
+  private let configLogic: ConfigLogic
 
   private lazy var cancellables = Set<AnyCancellable>()
 
-  public init() {}
-
-  convenience init(
+  init(
     walletController: WalletKitController,
     reachabilityController: ReachabilityController,
     configLogic: ConfigLogic
   ) {
-    self.init()
     self.walletController = walletController
     self.reachabilityController = reachabilityController
     self.configLogic = configLogic

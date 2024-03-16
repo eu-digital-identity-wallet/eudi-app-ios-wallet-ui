@@ -26,7 +26,7 @@ public struct OnlineAuthenticationRequestSuccessModel {
   var isTrusted: Bool
 }
 
-public protocol PresentationInteractorType {
+public protocol PresentationInteractor {
   var presentationCoordinator: PresentationSessionCoordinator { get }
 
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
@@ -34,13 +34,17 @@ public protocol PresentationInteractorType {
   func onSendResponse() async -> Result<URL?, Error>
 }
 
-public final actor PresentationInteractor: PresentationInteractorType {
+public final actor PresentationInteractorImpl: PresentationInteractor {
 
   public let presentationCoordinator: PresentationSessionCoordinator
-  private lazy var walletKitController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
+  private let walletKitController: WalletKitController
 
-  public init(with presentationCoordinator: PresentationSessionCoordinator) {
+  init(
+    with presentationCoordinator: PresentationSessionCoordinator,
+    and walletKitController: WalletKitController
+  ) {
     self.presentationCoordinator = presentationCoordinator
+    self.walletKitController = walletKitController
   }
 
   public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {

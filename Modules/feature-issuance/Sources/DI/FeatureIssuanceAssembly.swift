@@ -13,29 +13,26 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_business
 import Swinject
+import logic_core
 
-public final class LogicAuthAssembly: Assembly {
+public final class FeatureIssuanceAssembly: Assembly {
 
   public init() {}
 
   public func assemble(container: Container) {
-
-    container.register(PinStorageProvider.self) { r in
-      KeychainPinStorageProvider(keyChainController: r.force(KeyChainController.self))
+    container.register(AddDocumentInteractor.self) { r in
+      AddDocumentInteractorImpl(walletController: r.force(WalletKitController.self))
     }
-    .inObjectScope(ObjectScope.graph)
+    .inObjectScope(ObjectScope.transient)
 
-    container.register(PinStorageController.self) { r in
-      PinStorageControllerImpl(provider: r.force(PinStorageProvider.self))
+    container.register(DocumentDetailsInteractor.self) { r in
+      DocumentDetailsInteractorImpl(walletController: r.force(WalletKitController.self))
     }
-    .inObjectScope(ObjectScope.graph)
+    .inObjectScope(ObjectScope.transient)
 
-    container.register(SystemBiometryController.self) { r in
-      SystemBiometryControllerImpl(
-        keyChainController: r.force(KeyChainController.self)
-      )
+    container.register(DocumentSuccessInteractor.self) { r in
+      DocumentSuccessInteractorImpl(walletController: r.force(WalletKitController.self))
     }
     .inObjectScope(ObjectScope.transient)
   }

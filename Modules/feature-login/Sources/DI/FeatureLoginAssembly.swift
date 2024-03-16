@@ -13,19 +13,23 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Swinject
+import logic_core
+import feature_common
 
-protocol PinStorageConfig {
-  /**
-   * Pin Storage Provider
-   */
-  var storageProvider: PinStorageProvider { get }
-}
+public final class FeatureLoginAssembly: Assembly {
 
-struct PinStorageConfigImpl: PinStorageConfig {
-  /**
-   * Pin Storage Provider
-   */
-  var storageProvider: PinStorageProvider {
-    KeychainPinStorageProvider()
+  public init() {}
+
+  public func assemble(container: Container) {
+    container.register(FAQsInteractor.self) { _ in
+      FAQsInteractorImpl()
+    }
+    .inObjectScope(ObjectScope.transient)
+
+    container.register(WelcomeInteractor.self) { _ in
+      WelcomeInteractorImpl()
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

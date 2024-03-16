@@ -45,9 +45,34 @@ import Cuckoo
 @testable import logic_authentication
 
 import Foundation
+import logic_ui
+
+import Cuckoo
+@testable import feature_login
+@testable import logic_business
+@testable import logic_core
+@testable import logic_analytics
+@testable import logic_api
+@testable import logic_ui
+@testable import logic_authentication
+
+import Foundation
 import SwiftUI
 import logic_resources
 import logic_ui
+
+import Cuckoo
+@testable import feature_login
+@testable import logic_business
+@testable import logic_core
+@testable import logic_analytics
+@testable import logic_api
+@testable import logic_ui
+@testable import logic_authentication
+
+import Swinject
+import logic_authentication
+import logic_business
 
 import Cuckoo
 @testable import feature_login
@@ -71,19 +96,19 @@ import logic_ui
 
 
 
-public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.ProtocolMock {
+public class MockBiometryInteractor: BiometryInteractor, Cuckoo.ProtocolMock {
     
-    public typealias MocksType = BiometryInteractorType
+    public typealias MocksType = BiometryInteractor
     
-    public typealias Stubbing = __StubbingProxy_BiometryInteractorType
-    public typealias Verification = __VerificationProxy_BiometryInteractorType
+    public typealias Stubbing = __StubbingProxy_BiometryInteractor
+    public typealias Verification = __VerificationProxy_BiometryInteractor
 
     public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-    private var __defaultImplStub: BiometryInteractorType?
+    private var __defaultImplStub: BiometryInteractor?
 
-    public func enableDefaultImplementation(_ stub: BiometryInteractorType) {
+    public func enableDefaultImplementation(_ stub: BiometryInteractor) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
@@ -243,7 +268,7 @@ public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.Protocol
     
     
 
-    public struct __StubbingProxy_BiometryInteractorType: Cuckoo.StubbingProxy {
+    public struct __StubbingProxy_BiometryInteractor: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
@@ -252,21 +277,21 @@ public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.Protocol
         
         
         
-        var biometricsImage: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockBiometryInteractorType, Image?> {
+        var biometricsImage: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockBiometryInteractor, Image?> {
             return .init(manager: cuckoo_manager, name: "biometricsImage")
         }
         
         
         
         
-        var currentBiometricsMethod: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockBiometryInteractorType, String> {
+        var currentBiometricsMethod: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockBiometryInteractor, String> {
             return .init(manager: cuckoo_manager, name: "currentBiometricsMethod")
         }
         
         
         
         
-        var biometryType: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockBiometryInteractorType, LABiometryType> {
+        var biometryType: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockBiometryInteractor, LABiometryType> {
             return .init(manager: cuckoo_manager, name: "biometryType")
         }
         
@@ -276,7 +301,7 @@ public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.Protocol
         
         func authenticate() -> Cuckoo.ProtocolStubFunction<(), AnyPublisher<BiometricsState, Never>> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractorType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractor.self, method:
     """
     authenticate() -> AnyPublisher<BiometricsState, Never>
     """, parameterMatchers: matchers))
@@ -287,7 +312,7 @@ public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.Protocol
         
         func openSettingsURL<M1: Cuckoo.Matchable>(action: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(() -> Void)> where M1.MatchedType == () -> Void {
             let matchers: [Cuckoo.ParameterMatcher<(() -> Void)>] = [wrap(matchable: action) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractorType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractor.self, method:
     """
     openSettingsURL(action: @escaping () -> Void)
     """, parameterMatchers: matchers))
@@ -298,7 +323,7 @@ public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.Protocol
         
         func isBiometryEnabled() -> Cuckoo.ProtocolStubFunction<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractorType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractor.self, method:
     """
     isBiometryEnabled() -> Bool
     """, parameterMatchers: matchers))
@@ -309,7 +334,7 @@ public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.Protocol
         
         func setBiometrySelection<M1: Cuckoo.Matchable>(isEnabled: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(Bool)> where M1.MatchedType == Bool {
             let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: isEnabled) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractorType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractor.self, method:
     """
     setBiometrySelection(isEnabled: Bool)
     """, parameterMatchers: matchers))
@@ -320,7 +345,7 @@ public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.Protocol
         
         func isPinValid<M1: Cuckoo.Matchable>(with pin: M1) -> Cuckoo.ProtocolStubFunction<(String), QuickPinPartialState> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractorType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockBiometryInteractor.self, method:
     """
     isPinValid(with: String) -> QuickPinPartialState
     """, parameterMatchers: matchers))
@@ -329,7 +354,7 @@ public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.Protocol
         
     }
 
-    public struct __VerificationProxy_BiometryInteractorType: Cuckoo.VerificationProxy {
+    public struct __VerificationProxy_BiometryInteractor: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -428,7 +453,7 @@ public class MockBiometryInteractorType: BiometryInteractorType, Cuckoo.Protocol
 }
 
 
-public class BiometryInteractorTypeStub: BiometryInteractorType {
+public class BiometryInteractorStub: BiometryInteractor {
     
     
     
@@ -532,19 +557,19 @@ import logic_business
 
 
 
-public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.ProtocolMock {
+public class MockQuickPinInteractor: QuickPinInteractor, Cuckoo.ProtocolMock {
     
-    public typealias MocksType = QuickPinInteractorType
+    public typealias MocksType = QuickPinInteractor
     
-    public typealias Stubbing = __StubbingProxy_QuickPinInteractorType
-    public typealias Verification = __VerificationProxy_QuickPinInteractorType
+    public typealias Stubbing = __StubbingProxy_QuickPinInteractor
+    public typealias Verification = __VerificationProxy_QuickPinInteractor
 
     public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-    private var __defaultImplStub: QuickPinInteractorType?
+    private var __defaultImplStub: QuickPinInteractor?
 
-    public func enableDefaultImplementation(_ stub: QuickPinInteractorType) {
+    public func enableDefaultImplementation(_ stub: QuickPinInteractor) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
@@ -636,7 +661,7 @@ public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.Protocol
     
     
 
-    public struct __StubbingProxy_QuickPinInteractorType: Cuckoo.StubbingProxy {
+    public struct __StubbingProxy_QuickPinInteractor: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
@@ -648,7 +673,7 @@ public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.Protocol
         
         func setPin<M1: Cuckoo.Matchable>(newPin: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(String)> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: newPin) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockQuickPinInteractorType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockQuickPinInteractor.self, method:
     """
     setPin(newPin: String)
     """, parameterMatchers: matchers))
@@ -659,7 +684,7 @@ public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.Protocol
         
         func isPinValid<M1: Cuckoo.Matchable>(pin: M1) -> Cuckoo.ProtocolStubFunction<(String), QuickPinPartialState> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: pin) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockQuickPinInteractorType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockQuickPinInteractor.self, method:
     """
     isPinValid(pin: String) -> QuickPinPartialState
     """, parameterMatchers: matchers))
@@ -670,7 +695,7 @@ public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.Protocol
         
         func changePin<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(currentPin: M1, newPin: M2) -> Cuckoo.ProtocolStubFunction<(String, String), QuickPinPartialState> where M1.MatchedType == String, M2.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String, String)>] = [wrap(matchable: currentPin) { $0.0 }, wrap(matchable: newPin) { $0.1 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockQuickPinInteractorType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockQuickPinInteractor.self, method:
     """
     changePin(currentPin: String, newPin: String) -> QuickPinPartialState
     """, parameterMatchers: matchers))
@@ -681,7 +706,7 @@ public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.Protocol
         
         func hasPin() -> Cuckoo.ProtocolStubFunction<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockQuickPinInteractorType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockQuickPinInteractor.self, method:
     """
     hasPin() -> Bool
     """, parameterMatchers: matchers))
@@ -690,7 +715,7 @@ public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.Protocol
         
     }
 
-    public struct __VerificationProxy_QuickPinInteractorType: Cuckoo.VerificationProxy {
+    public struct __VerificationProxy_QuickPinInteractor: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -756,7 +781,7 @@ public class MockQuickPinInteractorType: QuickPinInteractorType, Cuckoo.Protocol
 }
 
 
-public class QuickPinInteractorTypeStub: QuickPinInteractorType {
+public class QuickPinInteractorStub: QuickPinInteractor {
     
 
     
@@ -897,18 +922,6 @@ import Cuckoo
 @testable import logic_ui
 @testable import logic_authentication
 
-import Foundation
-import logic_ui
-
-import Cuckoo
-@testable import feature_login
-@testable import logic_business
-@testable import logic_core
-@testable import logic_analytics
-@testable import logic_api
-@testable import logic_ui
-@testable import logic_authentication
-
 import SwiftUI
 import logic_resources
 import logic_ui
@@ -1028,6 +1041,19 @@ import Cuckoo
 @testable import logic_ui
 @testable import logic_authentication
 
+import Swinject
+import feature_common
+import logic_core
+
+import Cuckoo
+@testable import feature_login
+@testable import logic_business
+@testable import logic_core
+@testable import logic_analytics
+@testable import logic_api
+@testable import logic_ui
+@testable import logic_authentication
+
 import Foundation
 import logic_api
 
@@ -1036,19 +1062,19 @@ import logic_api
 
 
 
-public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
+public class MockFAQsInteractor: FAQsInteractor, Cuckoo.ProtocolMock {
     
-    public typealias MocksType = FAQsInteractorType
+    public typealias MocksType = FAQsInteractor
     
-    public typealias Stubbing = __StubbingProxy_FAQsInteractorType
-    public typealias Verification = __VerificationProxy_FAQsInteractorType
+    public typealias Stubbing = __StubbingProxy_FAQsInteractor
+    public typealias Verification = __VerificationProxy_FAQsInteractor
 
     public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-    private var __defaultImplStub: FAQsInteractorType?
+    private var __defaultImplStub: FAQsInteractor?
 
-    public func enableDefaultImplementation(_ stub: FAQsInteractorType) {
+    public func enableDefaultImplementation(_ stub: FAQsInteractor) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
@@ -1080,7 +1106,7 @@ public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
     
     
 
-    public struct __StubbingProxy_FAQsInteractorType: Cuckoo.StubbingProxy {
+    public struct __StubbingProxy_FAQsInteractor: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
@@ -1092,7 +1118,7 @@ public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
         
         func fetchFAQs() -> Cuckoo.ProtocolStubFunction<(), FAQsPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockFAQsInteractorType.self, method:
+            return .init(stub: cuckoo_manager.createStub(for: MockFAQsInteractor.self, method:
     """
     fetchFAQs() async -> FAQsPartialState
     """, parameterMatchers: matchers))
@@ -1101,7 +1127,7 @@ public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
         
     }
 
-    public struct __VerificationProxy_FAQsInteractorType: Cuckoo.VerificationProxy {
+    public struct __VerificationProxy_FAQsInteractor: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -1131,7 +1157,7 @@ public class MockFAQsInteractorType: FAQsInteractorType, Cuckoo.ProtocolMock {
 }
 
 
-public class FAQsInteractorTypeStub: FAQsInteractorType {
+public class FAQsInteractorStub: FAQsInteractor {
     
 
     
@@ -1160,26 +1186,24 @@ import Cuckoo
 @testable import logic_ui
 @testable import logic_authentication
 
-import Foundation
 
 
 
 
 
-
-public class MockWelcomeInteractorType: WelcomeInteractorType, Cuckoo.ProtocolMock {
+public class MockWelcomeInteractor: WelcomeInteractor, Cuckoo.ProtocolMock {
     
-    public typealias MocksType = WelcomeInteractorType
+    public typealias MocksType = WelcomeInteractor
     
-    public typealias Stubbing = __StubbingProxy_WelcomeInteractorType
-    public typealias Verification = __VerificationProxy_WelcomeInteractorType
+    public typealias Stubbing = __StubbingProxy_WelcomeInteractor
+    public typealias Verification = __VerificationProxy_WelcomeInteractor
 
     public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
     
-    private var __defaultImplStub: WelcomeInteractorType?
+    private var __defaultImplStub: WelcomeInteractor?
 
-    public func enableDefaultImplementation(_ stub: WelcomeInteractorType) {
+    public func enableDefaultImplementation(_ stub: WelcomeInteractor) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
@@ -1191,7 +1215,7 @@ public class MockWelcomeInteractorType: WelcomeInteractorType, Cuckoo.ProtocolMo
 
     
 
-    public struct __StubbingProxy_WelcomeInteractorType: Cuckoo.StubbingProxy {
+    public struct __StubbingProxy_WelcomeInteractor: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
@@ -1201,7 +1225,7 @@ public class MockWelcomeInteractorType: WelcomeInteractorType, Cuckoo.ProtocolMo
         
     }
 
-    public struct __VerificationProxy_WelcomeInteractorType: Cuckoo.VerificationProxy {
+    public struct __VerificationProxy_WelcomeInteractor: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -1219,7 +1243,7 @@ public class MockWelcomeInteractorType: WelcomeInteractorType, Cuckoo.ProtocolMo
 }
 
 
-public class WelcomeInteractorTypeStub: WelcomeInteractorType {
+public class WelcomeInteractorStub: WelcomeInteractor {
     
 
     
@@ -2619,125 +2643,6 @@ public class SampleRepositoryStub: SampleRepository {
         return DefaultValueRegistry.defaultValue(for: (SampleResponseDTO).self)
     }
     
-    
-}
-
-
-
-
-
-import Cuckoo
-@testable import feature_login
-@testable import logic_business
-@testable import logic_core
-@testable import logic_analytics
-@testable import logic_api
-@testable import logic_ui
-@testable import logic_authentication
-
-
-
-
-
-
- class MockPinStorageConfig: PinStorageConfig, Cuckoo.ProtocolMock {
-    
-     typealias MocksType = PinStorageConfig
-    
-     typealias Stubbing = __StubbingProxy_PinStorageConfig
-     typealias Verification = __VerificationProxy_PinStorageConfig
-
-     let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    
-    private var __defaultImplStub: PinStorageConfig?
-
-     func enableDefaultImplementation(_ stub: PinStorageConfig) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-    
-
-    
-    
-    
-    
-     var storageProvider: PinStorageProvider {
-        get {
-            return cuckoo_manager.getter("storageProvider",
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    ,
-                defaultCall:  __defaultImplStub!.storageProvider)
-        }
-        
-    }
-    
-    
-
-    
-
-    
-
-     struct __StubbingProxy_PinStorageConfig: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-         init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        
-        
-        var storageProvider: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockPinStorageConfig, PinStorageProvider> {
-            return .init(manager: cuckoo_manager, name: "storageProvider")
-        }
-        
-        
-        
-    }
-
-     struct __VerificationProxy_PinStorageConfig: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-         init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    
-        
-        
-        
-        var storageProvider: Cuckoo.VerifyReadOnlyProperty<PinStorageProvider> {
-            return .init(manager: cuckoo_manager, name: "storageProvider", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-    
-        
-    }
-}
-
-
- class PinStorageConfigStub: PinStorageConfig {
-    
-    
-    
-    
-     var storageProvider: PinStorageProvider {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (PinStorageProvider).self)
-        }
-        
-    }
-    
-    
-
-    
-
     
 }
 

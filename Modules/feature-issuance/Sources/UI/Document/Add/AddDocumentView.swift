@@ -18,7 +18,7 @@ import logic_ui
 import feature_common
 import logic_resources
 
-public struct AddDocumentView<Router: RouterHost, Interactor: AddDocumentInteractorType>: View {
+public struct AddDocumentView<Router: RouterHost, Interactor: AddDocumentInteractor>: View {
 
   @ObservedObject var viewModel: AddDocumentViewModel<Router, Interactor>
 

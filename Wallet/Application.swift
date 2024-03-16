@@ -23,6 +23,13 @@ import logic_analytics
 import logic_core
 import logic_authentication
 import logic_api
+import feature_common
+import feature_login
+import feature_dashboard
+import feature_startup
+import feature_presentation
+import feature_issuance
+import feature_proximity
 
 @main
 struct Application: App {
@@ -137,13 +144,22 @@ private extension Application {
   static func setupInjection() {
     DIGraph.lazyLoad(
       with: [
+        // Logic Modules
         LogicBusinessAssembly(),
         LogicAnalyticsAssembly(),
         LogicCoreAssembly(),
         LogicUiAssembly(),
         LogicApiAssembly(),
         LogicAuthAssembly(),
-        LogicNavAssembly()
+        LogicNavAssembly(),
+        // Feature Modules
+        FeatureCommonAssembly(),
+        FeatureStartupAssembly(),
+        FeatureDashboardAssembly(),
+        FeatureLoginAssembly(),
+        FeaturePresentationAssembly(),
+        FeatureProximityAssembly(),
+        FeatureIssuanceAssembly()
       ]
     )
   }

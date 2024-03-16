@@ -17,7 +17,11 @@ import logic_business
 
 final class KeychainPinStorageProvider: PinStorageProvider {
 
-  private lazy var keyChainController: KeyChainController = DIGraph.resolver.force(KeyChainController.self)
+  private let keyChainController: KeyChainController
+
+  init(keyChainController: KeyChainController) {
+    self.keyChainController = keyChainController
+  }
 
   func retrievePin() -> String? {
     keyChainController.getValue(key: KeychainIdentifier.devicePin)

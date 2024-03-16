@@ -28,11 +28,11 @@ struct DashboardState: ViewState {
   let appVersion: String
 }
 
-final class DashboardViewModel<Router: RouterHost, Interactor: DashboardInteractorType, Controller: DeepLinkController>: BaseViewModel<Router, DashboardState> {
+final class DashboardViewModel<Router: RouterHost, Interactor: DashboardInteractor, Controller: DeepLinkController, WalletKit: WalletKitController>: BaseViewModel<Router, DashboardState> {
 
   private let interactor: Interactor
   private let deepLinkController: Controller
-  private lazy var walletKitController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
+  private let walletKitController: WalletKit
 
   @Published var isMoreModalShowing: Bool = false
   @Published var isBleModalShowing: Bool = false
@@ -42,9 +42,15 @@ final class DashboardViewModel<Router: RouterHost, Interactor: DashboardInteract
     viewState.bearer.value.name
   }
 
-  init(router: Router, interactor: Interactor, deepLinkController: Controller) {
+  init(
+    router: Router,
+    interactor: Interactor,
+    deepLinkController: Controller,
+    walletKit: WalletKit
+  ) {
     self.interactor = interactor
     self.deepLinkController = deepLinkController
+    self.walletKitController = walletKit
     super.init(
       router: router,
       initialState: .init(

@@ -22,12 +22,12 @@ import logic_business
 
 final class TestQuickPinInteractor: EudiTest {
   
-  var interactor: QuickPinInteractorType!
+  var interactor: QuickPinInteractor!
   var pinStorageController: MockPinStorageController!
   
   override func setUp() {
     self.pinStorageController = MockPinStorageController()
-    self.interactor = QuickPinInteractor(pinStorageController: pinStorageController)
+    self.interactor = QuickPinInteractorImpl(pinStorageController: pinStorageController)
   }
   
   override func tearDown() {

@@ -18,7 +18,7 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct WelcomeView<Router: RouterHost, Interactor: WelcomeInteractorType>: View {
+public struct WelcomeView<Router: RouterHost, Interactor: WelcomeInteractor>: View {
 
   @ObservedObject private var viewModel: WelcomeViewModel<Router, Interactor>
 

@@ -20,17 +20,21 @@ import feature_common
 import logic_business
 import logic_core
 
-public protocol AddDocumentInteractorType {
+public protocol AddDocumentInteractor {
   func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState
   func loadSampleData() async -> LoadSampleDataPartialState
   func issueDocument(docType: String, format: DataFormat) async -> IssueDocumentPartialState
 }
 
-public final class AddDocumentInteractor: AddDocumentInteractorType {
+public final class AddDocumentInteractorImpl: AddDocumentInteractor {
 
-  private lazy var walletController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
+  private let walletController: WalletKitController
 
-  public init() {}
+  init(
+    walletController: WalletKitController
+  ) {
+    self.walletController = walletController
+  }
 
   public func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState {
 

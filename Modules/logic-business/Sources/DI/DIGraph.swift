@@ -78,4 +78,13 @@ public extension Resolver {
   ) -> Implementation {
     resolve(serviceType) as! Implementation
   }
+
+  // swiftlint:disable force_cast
+  func forceImpl<Service, Arg1, Implementation>(
+    _ serviceType: Service.Type,
+    _ implType: Implementation.Type,
+    argument: Arg1
+  ) -> Implementation {
+    resolve(serviceType, argument: argument) as! Implementation
+  }
 }

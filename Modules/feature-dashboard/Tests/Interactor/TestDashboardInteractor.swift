@@ -23,7 +23,7 @@ import logic_core
 
 final class TestDashboardInteractor: EudiTest {
   
-  var interactor: DashboardInteractorType!
+  var interactor: DashboardInteractor!
   var reachabilityController: MockReachabilityController!
   var walletKitController: MockWalletKitController!
   var configLogic: MockConfigLogic!
@@ -32,7 +32,7 @@ final class TestDashboardInteractor: EudiTest {
     self.reachabilityController = MockReachabilityController()
     self.walletKitController = MockWalletKitController()
     self.configLogic = MockConfigLogic()
-    self.interactor = DashboardInteractor(
+    self.interactor = DashboardInteractorImpl(
       walletController: walletKitController,
       reachabilityController: reachabilityController,
       configLogic: configLogic

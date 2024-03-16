@@ -21,7 +21,7 @@ struct WelcomeState: ViewState {
   let isAnimating: Bool
 }
 
-final class WelcomeViewModel<Router: RouterHost, Interactor: WelcomeInteractorType>: BaseViewModel<Router, WelcomeState> {
+final class WelcomeViewModel<Router: RouterHost, Interactor: WelcomeInteractor>: BaseViewModel<Router, WelcomeState> {
 
   private let interactor: Interactor
 

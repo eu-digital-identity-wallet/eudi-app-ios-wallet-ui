@@ -16,7 +16,7 @@
 
 import feature_common
 
-final class PresentationLoadingViewModel<Router: RouterHost, Interactor: PresentationInteractorType>: BaseLoadingViewModel<Router> {
+final class PresentationLoadingViewModel<Router: RouterHost, Interactor: PresentationInteractor>: BaseLoadingViewModel<Router> {
 
   private let interactor: Interactor
   private let relyingParty: String

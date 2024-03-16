@@ -37,7 +37,7 @@ public protocol WalletKitController {
   func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
 }
 
-final class WalletKitControllerImpl: WalletKitController {
+public final class WalletKitControllerImpl: WalletKitController {
 
   public let wallet = EudiWallet.standard
 

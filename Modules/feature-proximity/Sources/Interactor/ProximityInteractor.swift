@@ -45,7 +45,7 @@ public enum ProximityQrCodePartialState {
   case failure(Error)
 }
 
-public protocol ProximityInteractorType {
+public protocol ProximityInteractor {
 
   var presentationSessionCoordinator: PresentationSessionCoordinator { get }
 
@@ -60,13 +60,17 @@ public protocol ProximityInteractorType {
 
 }
 
-public final actor ProximityInteractor: ProximityInteractorType {
+public final actor ProximityInteractorImpl: ProximityInteractor {
 
-  private lazy var walletKitController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
+  private let walletKitController: WalletKitController
   public let presentationSessionCoordinator: PresentationSessionCoordinator
 
-  public init(with presentationSessionCoordinator: PresentationSessionCoordinator) {
+  init(
+    with presentationSessionCoordinator: PresentationSessionCoordinator,
+    and walletKitController: WalletKitController
+  ) {
     self.presentationSessionCoordinator = presentationSessionCoordinator
+    self.walletKitController = walletKitController
   }
 
   public func getSessionStatePublisher() async -> AnyPublisher<PresentationState, Never> {
