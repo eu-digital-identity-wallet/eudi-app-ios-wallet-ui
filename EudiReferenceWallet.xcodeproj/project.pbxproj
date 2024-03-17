@@ -10,6 +10,8 @@
 		1194D2322B06363400377213 /* EUDI_sample_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 1194D2302B06362900377213 /* EUDI_sample_data.json */; };
 		F02921632B8E07870076A58B /* WalletDemoRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */; };
 		F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */; };
+		F02AE38F2BA6E45F00C25C59 /* logic-assembly in Resources */ = {isa = PBXBuildFile; fileRef = F02AE38E2BA6E45F00C25C59 /* logic-assembly */; };
+		F02AE3912BA6E59600C25C59 /* logic-assembly in Frameworks */ = {isa = PBXBuildFile; productRef = F02AE3902BA6E59600C25C59 /* logic-assembly */; };
 		F05E9F382AFABBC200891E8F /* feature-presentation in Resources */ = {isa = PBXBuildFile; fileRef = F05E9F372AFABBC200891E8F /* feature-presentation */; };
 		F06325102AC598370004601F /* logic-test in Resources */ = {isa = PBXBuildFile; fileRef = F063250F2AC598370004601F /* logic-test */; };
 		F06325122AC59AF50004601F /* feature-test in Resources */ = {isa = PBXBuildFile; fileRef = F06325112AC59AF50004601F /* feature-test */; };
@@ -19,7 +21,6 @@
 		F0A013982AC35ECA00065EAD /* logic-business in Resources */ = {isa = PBXBuildFile; fileRef = F0A013922AC35ECA00065EAD /* logic-business */; };
 		F0A013992AC35ECA00065EAD /* logic-api in Resources */ = {isa = PBXBuildFile; fileRef = F0A013932AC35ECA00065EAD /* logic-api */; };
 		F0A0139A2AC35ECA00065EAD /* feature-startup in Resources */ = {isa = PBXBuildFile; fileRef = F0A013942AC35ECA00065EAD /* feature-startup */; };
-		F0A0139B2AC35ECA00065EAD /* logic-navigation in Resources */ = {isa = PBXBuildFile; fileRef = F0A013952AC35ECA00065EAD /* logic-navigation */; };
 		F0A0139C2AC35ECA00065EAD /* logic-ui in Resources */ = {isa = PBXBuildFile; fileRef = F0A013962AC35ECA00065EAD /* logic-ui */; };
 		F0BFE9B72AD557290062826F /* feature-common in Resources */ = {isa = PBXBuildFile; fileRef = F0BFE9B62AD557290062826F /* feature-common */; };
 		F0C6207E2B6A6246007F903F /* logic-analytics in Resources */ = {isa = PBXBuildFile; fileRef = F0C6207D2B6A6246007F903F /* logic-analytics */; };
@@ -29,7 +30,6 @@
 		F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F14907C22ABAF55000DDFE56 /* Preview Assets.xcassets */; };
 		F1CACAE02AC3097100B40DED /* WalletDev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F1CACADF2AC3097100B40DED /* WalletDev.xcconfig */; };
 		F1CACAE22AC3098C00B40DED /* WalletDemo.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F1CACAE12AC3098C00B40DED /* WalletDemo.xcconfig */; };
-		F1E83CFF2ACEA40100FBC0E3 /* logic-navigation in Frameworks */ = {isa = PBXBuildFile; productRef = F1E83CFE2ACEA40100FBC0E3 /* logic-navigation */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +38,7 @@
 		F0290B062AD55C550081EEFF /* GenerateMocks.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = GenerateMocks.sh; path = Mock/GenerateMocks.sh; sourceTree = "<group>"; };
 		F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WalletDemoRelease.xcconfig; sourceTree = "<group>"; };
 		F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WalletDevRelease.xcconfig; sourceTree = "<group>"; };
+		F02AE38E2BA6E45F00C25C59 /* logic-assembly */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-assembly"; path = "Modules/logic-assembly"; sourceTree = "<group>"; };
 		F05E9F372AFABBC200891E8F /* feature-presentation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-presentation"; path = "Modules/feature-presentation"; sourceTree = "<group>"; };
 		F063250F2AC598370004601F /* logic-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-test"; path = "Modules/logic-test"; sourceTree = "<group>"; };
 		F06325112AC59AF50004601F /* feature-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-test"; path = "Modules/feature-test"; sourceTree = "<group>"; };
@@ -48,7 +49,6 @@
 		F0A013922AC35ECA00065EAD /* logic-business */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-business"; path = "Modules/logic-business"; sourceTree = "<group>"; };
 		F0A013932AC35ECA00065EAD /* logic-api */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-api"; path = "Modules/logic-api"; sourceTree = "<group>"; };
 		F0A013942AC35ECA00065EAD /* feature-startup */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-startup"; path = "Modules/feature-startup"; sourceTree = "<group>"; };
-		F0A013952AC35ECA00065EAD /* logic-navigation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-navigation"; path = "Modules/logic-navigation"; sourceTree = "<group>"; };
 		F0A013962AC35ECA00065EAD /* logic-ui */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-ui"; path = "Modules/logic-ui"; sourceTree = "<group>"; };
 		F0A0BE922AC35925002BE0F5 /* Wallet.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Wallet.xctestplan; sourceTree = "<group>"; };
 		F0A3740D2AC3A92400F301DD /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
@@ -72,7 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1E83CFF2ACEA40100FBC0E3 /* logic-navigation in Frameworks */,
+				F02AE3912BA6E59600C25C59 /* logic-assembly in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,6 +152,7 @@
 		F14908692ABC467600DDFE56 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
+				F02AE38E2BA6E45F00C25C59 /* logic-assembly */,
 				F0DF43F42BA083DF003498ED /* logic-authentication */,
 				F0B440782B9B42B600031137 /* logic-core */,
 				F0C6207D2B6A6246007F903F /* logic-analytics */,
@@ -167,7 +168,6 @@
 				F0A013942AC35ECA00065EAD /* feature-startup */,
 				F0A013932AC35ECA00065EAD /* logic-api */,
 				F0A013922AC35ECA00065EAD /* logic-business */,
-				F0A013952AC35ECA00065EAD /* logic-navigation */,
 				F0A013962AC35ECA00065EAD /* logic-ui */,
 			);
 			name = Packages;
@@ -191,7 +191,7 @@
 			);
 			name = Wallet;
 			packageProductDependencies = (
-				F1E83CFE2ACEA40100FBC0E3 /* logic-navigation */,
+				F02AE3902BA6E59600C25C59 /* logic-assembly */,
 			);
 			productName = "EUDI Reference App";
 			productReference = F14907B82ABAF54B00DDFE56 /* Wallet.app */;
@@ -236,13 +236,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				1194D2322B06363400377213 /* EUDI_sample_data.json in Resources */,
+				F02AE38F2BA6E45F00C25C59 /* logic-assembly in Resources */,
 				F06325122AC59AF50004601F /* feature-test in Resources */,
 				F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */,
 				F0A013982AC35ECA00065EAD /* logic-business in Resources */,
 				F069CC402AFAC0AD0033AAC5 /* feature-issuance in Resources */,
 				F14907C02ABAF55000DDFE56 /* Assets.xcassets in Resources */,
 				F06325102AC598370004601F /* logic-test in Resources */,
-				F0A0139B2AC35ECA00065EAD /* logic-navigation in Resources */,
 				F0C6207E2B6A6246007F903F /* logic-analytics in Resources */,
 				F02921632B8E07870076A58B /* WalletDemoRelease.xcconfig in Resources */,
 				F1CACAE02AC3097100B40DED /* WalletDev.xcconfig in Resources */,
@@ -751,9 +751,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F1E83CFE2ACEA40100FBC0E3 /* logic-navigation */ = {
+		F02AE3902BA6E59600C25C59 /* logic-assembly */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = "logic-navigation";
+			productName = "logic-assembly";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

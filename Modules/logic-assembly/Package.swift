@@ -4,12 +4,12 @@
 import PackageDescription
 
 let package = Package(
-  name: "logic-navigation",
+  name: "logic-assembly",
   platforms: [.iOS(.v15)],
   products: [
     .library(
-      name: "logic-navigation",
-      targets: ["logic-navigation"]
+      name: "logic-assembly",
+      targets: ["logic-assembly"]
     )
   ],
   dependencies: [
@@ -23,7 +23,7 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "logic-navigation",
+      name: "logic-assembly",
       dependencies: [
         "feature-common",
         "feature-startup",

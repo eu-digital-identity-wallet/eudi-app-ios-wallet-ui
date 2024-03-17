@@ -206,11 +206,11 @@ You can find instructions on how to configure the application [here](wiki/config
 
 *feature-proximity*: Proximity scenarios feature.
 
-*logic-navigation*: This module has access to all the above modules.
+*logic-assembly*: This module has access to all the above modules and assembles navigation and DI graphs.
 
 ```mermaid
 graph TD;
-    Logic-modules/logic-core,logic-resources,logic-ui,logic-business,logic-authentication,logic-api/-->Feature-modules/feature-common,feature-login,feature-dashboard,feature-startup,feature-presentation,feature-issuance,feature-proximity/;
+    Logic-modules/logic-core,logic-resources,logic-ui,logic-business,logic-authentication,logic-api,logic-assembly/-->Feature-modules/feature-common,feature-login,feature-dashboard,feature-startup,feature-presentation,feature-issuance,feature-proximity/;
 ```
 
 ## License
