@@ -15,21 +15,7 @@
  */
 import SwiftUI
 import PartialSheet
-import logic_ui
-import logic_navigation
-import logic_resources
-import logic_business
-import logic_analytics
-import logic_core
-import logic_authentication
-import logic_api
-import feature_common
-import feature_login
-import feature_dashboard
-import feature_startup
-import feature_presentation
-import feature_issuance
-import feature_proximity
+import logic_assembly
 
 @main
 struct Application: App {
@@ -48,7 +34,8 @@ struct Application: App {
 
   init() {
 
-    Self.setupInjection()
+    // Depedency Injection
+    DIGraph.assembleDependenciesGraph()
 
     self.routerHost = DIGraph.resolver.force(RouterHost.self)
     self.configUiLogic = DIGraph.resolver.force(ConfigUiLogic.self)
@@ -137,30 +124,5 @@ extension Application {
     case inactive
     case background
     case none
-  }
-}
-
-private extension Application {
-  static func setupInjection() {
-    DIGraph.lazyLoad(
-      with: [
-        // Logic Modules
-        LogicBusinessAssembly(),
-        LogicAnalyticsAssembly(),
-        LogicCoreAssembly(),
-        LogicUiAssembly(),
-        LogicApiAssembly(),
-        LogicAuthAssembly(),
-        LogicNavAssembly(),
-        // Feature Modules
-        FeatureCommonAssembly(),
-        FeatureStartupAssembly(),
-        FeatureDashboardAssembly(),
-        FeatureLoginAssembly(),
-        FeaturePresentationAssembly(),
-        FeatureProximityAssembly(),
-        FeatureIssuanceAssembly()
-      ]
-    )
   }
 }

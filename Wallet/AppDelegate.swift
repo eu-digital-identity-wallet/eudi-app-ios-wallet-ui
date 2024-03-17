@@ -16,9 +16,7 @@
 import Foundation
 import UIKit
 import netfox
-import logic_business
-import logic_analytics
-import logic_core
+import logic_assembly
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
