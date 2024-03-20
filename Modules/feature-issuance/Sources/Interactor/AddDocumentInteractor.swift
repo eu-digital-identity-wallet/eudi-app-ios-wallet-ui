@@ -26,7 +26,7 @@ public protocol AddDocumentInteractor {
   func issueDocument(docType: String, format: DataFormat) async -> IssueDocumentPartialState
 }
 
-public final class AddDocumentInteractorImpl: AddDocumentInteractor {
+final class AddDocumentInteractorImpl: AddDocumentInteractor {
 
   private let walletController: WalletKitController
 

@@ -17,11 +17,11 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct StartupView<Router: RouterHost, Interactor: StartupInteractor>: View {
+public struct StartupView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewModel: StartupViewModel<Router, Interactor>
+  @ObservedObject private var viewModel: StartupViewModel<Router>
 
-  public init(with router: Router, and interactor: Interactor) {
+  public init(with router: Router, and interactor: StartupInteractor) {
     self.viewModel = .init(router: router, interactor: interactor)
   }
 

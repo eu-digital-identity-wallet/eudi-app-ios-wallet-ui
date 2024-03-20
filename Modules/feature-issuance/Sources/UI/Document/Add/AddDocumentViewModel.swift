@@ -30,11 +30,15 @@ struct AddDocumentViewState: ViewState {
   }
 }
 
-final class AddDocumentViewModel<Router: RouterHost, Interactor: AddDocumentInteractor>: BaseViewModel<Router, AddDocumentViewState> {
+final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddDocumentViewState> {
 
-  private let interactor: Interactor
+  private let interactor: AddDocumentInteractor
 
-  init(router: Router, interactor: Interactor, config: any UIConfigType) {
+  init(
+    router: Router,
+    interactor: AddDocumentInteractor,
+    config: any UIConfigType
+  ) {
     guard let config = config as? IssuanceFlowUiConfig else {
       fatalError("AddDocumentViewModel:: Invalid configuraton")
     }

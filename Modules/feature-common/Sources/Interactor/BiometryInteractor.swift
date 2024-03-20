@@ -34,7 +34,7 @@ public protocol BiometryInteractor {
   func isPinValid(with pin: String) -> QuickPinPartialState
 }
 
-public final class BiometryInteractorImpl: SystemBiometryInteractorImpl, BiometryInteractor {
+final class BiometryInteractorImpl: SystemBiometryInteractorImpl, BiometryInteractor {
 
   private let prefsController: PrefsController
   private let quickPinInteractor: QuickPinInteractor

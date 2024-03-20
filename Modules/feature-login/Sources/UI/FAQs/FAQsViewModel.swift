@@ -23,12 +23,12 @@ struct FAQState: ViewState {
   let filteredModels: [FAQUIModel]
 }
 
-final class FAQsViewModel<Router: RouterHost, Interactor: FAQsInteractor>: BaseViewModel<Router, FAQState> {
+final class FAQsViewModel<Router: RouterHost>: BaseViewModel<Router, FAQState> {
 
-  private let interactor: Interactor
+  private let interactor: FAQsInteractor
   @Published var searchText = ""
 
-  init(router: Router, interactor: Interactor) {
+  init(router: Router, interactor: FAQsInteractor) {
     self.interactor = interactor
 
     super.init(

@@ -28,11 +28,11 @@ struct DashboardState: ViewState {
   let appVersion: String
 }
 
-final class DashboardViewModel<Router: RouterHost, Interactor: DashboardInteractor, Controller: DeepLinkController, WalletKit: WalletKitController>: BaseViewModel<Router, DashboardState> {
+final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, DashboardState> {
 
-  private let interactor: Interactor
-  private let deepLinkController: Controller
-  private let walletKitController: WalletKit
+  private let interactor: DashboardInteractor
+  private let deepLinkController: DeepLinkController
+  private let walletKitController: WalletKitController
 
   @Published var isMoreModalShowing: Bool = false
   @Published var isBleModalShowing: Bool = false
@@ -44,9 +44,9 @@ final class DashboardViewModel<Router: RouterHost, Interactor: DashboardInteract
 
   init(
     router: Router,
-    interactor: Interactor,
-    deepLinkController: Controller,
-    walletKit: WalletKit
+    interactor: DashboardInteractor,
+    deepLinkController: DeepLinkController,
+    walletKit: WalletKitController
   ) {
     self.interactor = interactor
     self.deepLinkController = deepLinkController

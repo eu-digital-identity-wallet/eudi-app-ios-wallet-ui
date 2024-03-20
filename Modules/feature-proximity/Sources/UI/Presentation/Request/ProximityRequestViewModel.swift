@@ -17,13 +17,13 @@
 import feature_common
 import logic_business
 
-final class ProximityRequestViewModel<Router: RouterHost, Interactor: ProximityInteractor>: BaseRequestViewModel<Router> {
+final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<Router> {
 
-  private let interactor: Interactor
+  private let interactor: ProximityInteractor
 
   init(
     router: Router,
-    interactor: Interactor
+    interactor: ProximityInteractor
   ) {
     self.interactor = interactor
     super.init(router: router)

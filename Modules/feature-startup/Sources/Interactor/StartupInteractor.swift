@@ -23,7 +23,7 @@ public protocol StartupInteractor {
   func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute
 }
 
-public final class StartupInteractorImpl: StartupInteractor {
+final class StartupInteractorImpl: StartupInteractor {
 
   private let walletKitController: WalletKitController
   private let quickPinInteractor: QuickPinInteractor

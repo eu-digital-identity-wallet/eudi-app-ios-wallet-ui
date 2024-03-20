@@ -16,14 +16,14 @@
 
 import feature_common
 
-final class PresentationLoadingViewModel<Router: RouterHost, Interactor: PresentationInteractor>: BaseLoadingViewModel<Router> {
+final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<Router> {
 
-  private let interactor: Interactor
+  private let interactor: PresentationInteractor
   private let relyingParty: String
 
   init(
     router: Router,
-    interactor: Interactor,
+    interactor: PresentationInteractor,
     relyingParty: String
   ) {
     self.interactor = interactor

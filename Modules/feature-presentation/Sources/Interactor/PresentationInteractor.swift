@@ -34,7 +34,7 @@ public protocol PresentationInteractor {
   func onSendResponse() async -> Result<URL?, Error>
 }
 
-public final actor PresentationInteractorImpl: PresentationInteractor {
+final actor PresentationInteractorImpl: PresentationInteractor {
 
   public let presentationCoordinator: PresentationSessionCoordinator
   private let walletKitController: WalletKitController
