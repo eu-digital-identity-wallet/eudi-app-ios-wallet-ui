@@ -16,14 +16,14 @@
 
 import feature_common
 
-final class ProximityLoadingViewModel<Router: RouterHost, Interactor: ProximityInteractor>: BaseLoadingViewModel<Router> {
+final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<Router> {
 
-  private let interactor: Interactor
+  private let interactor: ProximityInteractor
   private let relyingParty: String
 
   init(
     router: Router,
-    interactor: Interactor,
+    interactor: ProximityInteractor,
     relyingParty: String
   ) {
     self.interactor = interactor

@@ -31,7 +31,7 @@ public protocol DashboardInteractor {
   func getAppVersion() -> String
 }
 
-public final class DashboardInteractorImpl: DashboardInteractor {
+final class DashboardInteractorImpl: DashboardInteractor {
 
   private let walletController: WalletKitController
   private let reachabilityController: ReachabilityController

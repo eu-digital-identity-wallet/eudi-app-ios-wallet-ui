@@ -17,13 +17,13 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct DocumentSuccessView<Router: RouterHost, Interactor: DocumentSuccessInteractor>: View {
+public struct DocumentSuccessView<Router: RouterHost>: View {
 
-  @ObservedObject var viewModel: DocumentSuccessViewModel<Router, Interactor>
+  @ObservedObject var viewModel: DocumentSuccessViewModel<Router>
 
   public init(
     with router: Router,
-    and interactor: Interactor,
+    and interactor: DocumentSuccessInteractor,
     config: any UIConfigType,
     documentIdentifier: String
   ) {

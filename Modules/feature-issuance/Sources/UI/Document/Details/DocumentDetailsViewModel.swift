@@ -35,15 +35,15 @@ struct DocumentDetailsViewState: ViewState {
   }
 }
 
-final class DocumentDetailsViewModel<Router: RouterHost, Interactor: DocumentDetailsInteractor>: BaseViewModel<Router, DocumentDetailsViewState> {
+final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, DocumentDetailsViewState> {
 
   @Published var isDeletionModalShowing: Bool = false
 
-  private let interactor: Interactor
+  private let interactor: DocumentDetailsInteractor
 
   init(
     router: Router,
-    interactor: Interactor,
+    interactor: DocumentDetailsInteractor,
     config: any UIConfigType
   ) {
     guard let config = config as? IssuanceDetailUiConfig else {

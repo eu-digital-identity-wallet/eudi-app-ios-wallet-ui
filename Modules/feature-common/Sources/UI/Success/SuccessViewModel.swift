@@ -20,14 +20,14 @@ struct SuccessState: ViewState {
   let config: UIConfig.Success
 }
 
-final class SuccessViewModel<Router: RouterHost, Controller: DeepLinkController>: BaseViewModel<Router, SuccessState> {
+final class SuccessViewModel<Router: RouterHost>: BaseViewModel<Router, SuccessState> {
 
-  private let deepLinkController: Controller
+  private let deepLinkController: DeepLinkController
 
   init(
     config: any UIConfigType,
     router: Router,
-    deepLinkController: Controller
+    deepLinkController: DeepLinkController
   ) {
     guard let config = config as? UIConfig.Success else {
       fatalError("SuccessViewModel:: Invalid configuraton")

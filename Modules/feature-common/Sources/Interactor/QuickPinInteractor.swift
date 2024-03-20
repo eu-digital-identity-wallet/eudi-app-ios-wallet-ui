@@ -30,7 +30,7 @@ public protocol QuickPinInteractor {
   func hasPin() -> Bool
 }
 
-public final class QuickPinInteractorImpl: QuickPinInteractor {
+final class QuickPinInteractorImpl: QuickPinInteractor {
 
   private let pinStorageController: PinStorageController
 

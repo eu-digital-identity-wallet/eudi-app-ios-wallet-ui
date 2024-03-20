@@ -16,4 +16,4 @@
 
 public protocol WelcomeInteractor {}
 
-public final actor WelcomeInteractorImpl: WelcomeInteractor {}
+final class WelcomeInteractorImpl: WelcomeInteractor {}

@@ -17,12 +17,12 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct BiometryView<Router: RouterHost, Interactor: BiometryInteractor>: View {
+public struct BiometryView<Router: RouterHost>: View {
 
-  @ObservedObject var viewModel: BiometryViewModel<Router, Interactor>
+  @ObservedObject var viewModel: BiometryViewModel<Router>
   @Environment(\.scenePhase) var scenePhase
 
-  public init(with router: Router, interactor: Interactor, config: any UIConfigType) {
+  public init(with router: Router, interactor: BiometryInteractor, config: any UIConfigType) {
     self.viewModel = .init(router: router, interactor: interactor, config: config)
   }
 

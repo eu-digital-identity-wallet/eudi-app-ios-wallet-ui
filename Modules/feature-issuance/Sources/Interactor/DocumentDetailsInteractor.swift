@@ -24,7 +24,7 @@ public protocol DocumentDetailsInteractor {
   func deleteDocument(with id: DocumentIdentifier) async -> DocumentDetailsDeletionPartialState
 }
 
-public final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
+final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 
   private let walletController: WalletKitController
 

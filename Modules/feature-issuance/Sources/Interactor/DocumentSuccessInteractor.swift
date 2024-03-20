@@ -21,7 +21,7 @@ public protocol DocumentSuccessInteractor {
   func getDocumentName(for documentIdentifier: String) -> String
 }
 
-public final class DocumentSuccessInteractorImpl: DocumentSuccessInteractor {
+final class DocumentSuccessInteractorImpl: DocumentSuccessInteractor {
 
   private let walletController: WalletKitController
 

@@ -20,18 +20,23 @@ import logic_business
 import feature_common
 import logic_core
 
-public struct DashboardView<Router: RouterHost, Interactor: DashboardInteractor, Controller: DeepLinkController, WalletKit: WalletKitController>: View {
+public struct DashboardView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewModel: DashboardViewModel<Router, Interactor, Controller, WalletKit>
+  @ObservedObject private var viewModel: DashboardViewModel<Router>
   @Environment(\.scenePhase) var scenePhase
 
   public init(
     with router: Router,
-    and interactor: Interactor,
-    deeplink deepLinkController: Controller,
-    walletKit: WalletKit
+    and interactor: DashboardInteractor,
+    deeplinkController: DeepLinkController,
+    walletKit: WalletKitController
   ) {
-    self.viewModel = .init(router: router, interactor: interactor, deepLinkController: deepLinkController, walletKit: walletKit)
+    self.viewModel = .init(
+      router: router,
+      interactor: interactor,
+      deepLinkController: deeplinkController,
+      walletKit: walletKit
+    )
   }
 
   @ViewBuilder

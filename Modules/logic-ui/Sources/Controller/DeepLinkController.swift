@@ -27,7 +27,7 @@ public protocol DeepLinkController {
   func cacheDeepLinkURL(url: URL)
 }
 
-public final class DeepLinkControllerImpl: DeepLinkController {
+final class DeepLinkControllerImpl: DeepLinkController {
 
   private let prefsController: PrefsController
   private let walletKitController: WalletKitController

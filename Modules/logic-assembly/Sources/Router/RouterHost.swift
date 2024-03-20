@@ -97,59 +97,51 @@ final class RouterHostImpl: RouterHost {
       case .startup:
         StartupView(
           with: self,
-          and: DIGraph.resolver.forceImpl(
-            StartupInteractor.self,
-            StartupInteractorImpl.self
+          and: DIGraph.resolver.force(
+            StartupInteractor.self
           )
         )
       case .faqs:
         FAQsView(
           with: self,
-          and: DIGraph.resolver.forceImpl(
-            FAQsInteractor.self,
-            FAQsInteractorImpl.self
+          and: DIGraph.resolver.force(
+            FAQsInteractor.self
           )
         )
       case .success(let config):
         SuccessView(
           with: self,
           and: config,
-          also: DIGraph.resolver.forceImpl(
-            DeepLinkController.self,
-            DeepLinkControllerImpl.self
+          also: DIGraph.resolver.force(
+            DeepLinkController.self
           )
         )
       case .dashboard:
         DashboardView(
           with: self,
-          and: DIGraph.resolver.forceImpl(
-            DashboardInteractor.self,
-            DashboardInteractorImpl.self
+          and: DIGraph.resolver.force(
+            DashboardInteractor.self
           ),
-          deeplink: DIGraph.resolver.forceImpl(
-            DeepLinkController.self,
-            DeepLinkControllerImpl.self
+          deeplinkController: DIGraph.resolver.force(
+            DeepLinkController.self
           ),
-          walletKit: DIGraph.resolver.forceImpl(
-            WalletKitController.self,
-            WalletKitControllerImpl.self
+          walletKit: DIGraph.resolver.force(
+            WalletKitController.self
           )
         )
       case .biometry(let config):
         BiometryView(
           with: self,
-          interactor: DIGraph.resolver.forceImpl(
-            BiometryInteractor.self,
-            BiometryInteractorImpl.self
+          interactor: DIGraph.resolver.force(
+            BiometryInteractor.self
           ),
           config: config
         )
       case .presentationLoader(let relyingParty, let presentationCoordinator):
         PresentationLoadingView(
           with: self,
-          and: DIGraph.resolver.forceImpl(
+          and: DIGraph.resolver.force(
             PresentationInteractor.self,
-            PresentationInteractorImpl.self,
             argument: presentationCoordinator
           ),
           relyingParty: relyingParty
@@ -157,62 +149,55 @@ final class RouterHostImpl: RouterHost {
       case .presentationRequest(let presentationCoordinator):
         PresentationRequestView(
           with: self,
-          and: DIGraph.resolver.forceImpl(
+          and: DIGraph.resolver.force(
             PresentationInteractor.self,
-            PresentationInteractorImpl.self,
             argument: presentationCoordinator
           )
         )
       case .welcome:
         WelcomeView(
           with: self,
-          and: DIGraph.resolver.forceImpl(
-            WelcomeInteractor.self,
-            WelcomeInteractorImpl.self
+          and: DIGraph.resolver.force(
+            WelcomeInteractor.self
           )
         )
       case .issuanceDocumentDetails(let config):
         DocumentDetailsView(
           with: self,
-          and: DIGraph.resolver.forceImpl(
-            DocumentDetailsInteractor.self,
-            DocumentDetailsInteractorImpl.self
+          and: DIGraph.resolver.force(
+            DocumentDetailsInteractor.self
           ),
           config: config
         )
       case .issuanceAddDocument(let config):
         AddDocumentView(
           with: self,
-          and: DIGraph.resolver.forceImpl(
-            AddDocumentInteractor.self,
-            AddDocumentInteractorImpl.self
+          and: DIGraph.resolver.force(
+            AddDocumentInteractor.self
           ),
           config: config
         )
       case .proximityConnection(let presentationSessionCoordinator):
         ProximityConnectionView(
           with: self,
-          and: DIGraph.resolver.forceImpl(
+          and: DIGraph.resolver.force(
             ProximityInteractor.self,
-            ProximityInteractorImpl.self,
             argument: presentationSessionCoordinator
           )
         )
       case .proximityRequest(let presentationSessionCoordinator):
         ProximityRequestView(
           with: self,
-          and: DIGraph.resolver.forceImpl(
+          and: DIGraph.resolver.force(
             ProximityInteractor.self,
-            ProximityInteractorImpl.self,
             argument: presentationSessionCoordinator
           )
         )
       case .proximityLoader(let relyingParty, let presentationSessionCoordinator):
         ProximityLoadingView(
           with: self,
-          and: DIGraph.resolver.forceImpl(
+          and: DIGraph.resolver.force(
             ProximityInteractor.self,
-            ProximityInteractorImpl.self,
             argument: presentationSessionCoordinator
           ),
           relyingParty: relyingParty
@@ -220,18 +205,16 @@ final class RouterHostImpl: RouterHost {
       case .quickPin(let config):
         QuickPinView(
           with: self,
-          interactor: DIGraph.resolver.forceImpl(
-            QuickPinInteractor.self,
-            QuickPinInteractorImpl.self
+          interactor: DIGraph.resolver.force(
+            QuickPinInteractor.self
           ),
           config: config
         )
       case .issuanceSuccess(let config, let documentIdentifier):
         DocumentSuccessView(
           with: self,
-          and: DIGraph.resolver.forceImpl(
-            DocumentSuccessInteractor.self,
-            DocumentSuccessInteractorImpl.self
+          and: DIGraph.resolver.force(
+            DocumentSuccessInteractor.self
           ),
           config: config,
           documentIdentifier: documentIdentifier

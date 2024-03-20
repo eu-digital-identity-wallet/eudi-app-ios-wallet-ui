@@ -17,11 +17,15 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct QuickPinView<Router: RouterHost, Interactor: QuickPinInteractor>: View {
+public struct QuickPinView<Router: RouterHost>: View {
 
-  @ObservedObject var viewModel: QuickPinViewModel<Router, Interactor>
+  @ObservedObject var viewModel: QuickPinViewModel<Router>
 
-  public init(with router: Router, interactor: Interactor, config: any UIConfigType) {
+  public init(
+    with router: Router,
+    interactor: QuickPinInteractor,
+    config: any UIConfigType
+  ) {
     self.viewModel = .init(router: router, interactor: interactor, config: config)
   }
 

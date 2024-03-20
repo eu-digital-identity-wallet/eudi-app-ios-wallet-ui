@@ -18,13 +18,13 @@ import logic_ui
 import feature_common
 import logic_resources
 
-public struct DocumentDetailsView<Router: RouterHost, Interactor: DocumentDetailsInteractor>: View {
+public struct DocumentDetailsView<Router: RouterHost>: View {
 
-  @ObservedObject var viewModel: DocumentDetailsViewModel<Router, Interactor>
+  @ObservedObject var viewModel: DocumentDetailsViewModel<Router>
 
   public init(
     with router: Router,
-    and interactor: Interactor,
+    and interactor: DocumentDetailsInteractor,
     config: any UIConfigType
   ) {
     self.viewModel = DocumentDetailsViewModel(
