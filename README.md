@@ -210,7 +210,55 @@ You can find instructions on how to configure the application [here](wiki/config
 
 ```mermaid
 graph TD;
-    Logic-modules/logic-core,logic-resources,logic-ui,logic-business,logic-authentication,logic-api,logic-assembly/-->Feature-modules/feature-common,feature-login,feature-dashboard,feature-startup,feature-presentation,feature-issuance,feature-proximity/;
+  logic-business --> logic-authentication
+  logic-core --> logic-authentication
+  logic-analytics --> logic-authentication
+  logic-resources --> logic-authentication
+
+  feature-common --> logic-assembly
+  feature-startup --> logic-assembly
+  feature-login --> logic-assembly
+  feature-dashboard --> logic-assembly
+  feature-presentation --> logic-assembly
+  feature-issuance --> logic-assembly
+  feature-proximity --> logic-assembly
+
+  logic-business --> logic-core
+  logic-resources --> logic-core
+
+  logic-business --> logic-analytics
+
+  feature-common --> feature-issuance
+
+  feature-common --> feature-proximity
+
+  feature-common --> feature-presentation
+
+  feature-common --> feature-dashboard
+
+  feature-common --> feature-login
+
+  logic-core --> feature-common
+  logic-business --> feature-common
+  logic-analytics --> feature-common
+  logic-ui --> feature-common
+  logic-api --> feature-common
+  logic-authentication --> feature-common
+
+  feature-common --> feature-startup
+
+  logic-core --> logic-api
+  logic-business --> logic-api
+  logic-analytics --> logic-api
+
+  logic-resources --> logic-business
+
+  logic-business --> logic-ui
+  logic-analytics --> logic-ui
+  logic-resources --> logic-ui
+
+  logic-core --> logic-ui
+
 ```
 
 ## License
