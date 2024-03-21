@@ -210,7 +210,6 @@ You can find instructions on how to configure the application [here](wiki/config
 
 ```mermaid
 graph TD;
-    graph TD;
   logic-business --> logic-authentication
   logic-core --> logic-authentication
   logic-analytics --> logic-authentication
