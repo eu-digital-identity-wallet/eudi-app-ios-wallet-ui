@@ -99,7 +99,8 @@ final class TestDashboardInteractor: EudiTest {
         value: .init(
           id: Constants.randomIdentifier,
           title: "National ID",
-          expiresAt: "30 Mar 2050"
+          expiresAt: "30 Mar 2050",
+          hasExpired: false
         )
       )
     ]

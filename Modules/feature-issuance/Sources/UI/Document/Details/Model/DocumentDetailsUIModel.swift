@@ -24,6 +24,7 @@ public struct DocumentDetailsUIModel {
   public let documentName: String
   public let holdersName: String
   public let holdersImage: Image
+  public let hasExpired: Bool
   public let documentFields: [DocumentField]
 }
 
@@ -46,6 +47,7 @@ public extension DocumentDetailsUIModel {
       documentName: "Digital ID",
       holdersName: "Jane Doe",
       holdersImage: Theme.shared.image.user,
+      hasExpired: false,
       documentFields:
         [
           .init(
@@ -111,6 +113,13 @@ extension MdocDecodable {
       documentName: LocalizableString.shared.get(with: .dynamic(key: title)),
       holdersName: bearerName,
       holdersImage: getPortrait() ?? Theme.shared.image.user,
+      hasExpired: hasExpired(
+        parser: {
+          Locale.current.parseDate(
+            date: $0
+          )
+        }
+      ),
       documentFields: documentFields
     )
   }
@@ -160,8 +169,7 @@ extension MdocDecodable {
   }
 
   private func flattenNested(parent: NameValue, nested: [NameValue]) -> NameValue {
-    let flat =
-    nested
+    let flat = nested
       .decodeGender()
       .mapTrueFalseToLocalizable()
       .parseDates(

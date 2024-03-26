@@ -39,6 +39,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: key)
     case .custom(let literal):
       literal
+    case .space:
+      " "
     case .screenCaptureSecurityWarning:
       bundle.localizedString(forKey: "screen_recording_security_warning")
     case .faqs:
@@ -217,6 +219,10 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "error_unable_fetch_documents")
     case .errorUnableFetchDocument:
       bundle.localizedString(forKey: "error_unable_fetch_document")
+    case .expired:
+      bundle.localizedString(forKey: "expired")
+    case .onExpired(let args):
+      bundle.localizedStringWithArguments(forKey: "on_expired", arguments: args)
     }
   }
 
@@ -229,6 +235,7 @@ public extension LocalizableString {
   enum Key: Equatable {
     case dynamic(key: String)
     case custom(String)
+    case space
     case screenCaptureSecurityWarning
     case faqs
     case search
@@ -318,6 +325,8 @@ public extension LocalizableString {
     case issuanceDetailsDeletionCaption([String])
     case errorUnableFetchDocuments
     case errorUnableFetchDocument
+    case expired
+    case onExpired([String])
   }
 }
 

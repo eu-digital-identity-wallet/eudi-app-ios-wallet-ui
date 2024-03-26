@@ -19,27 +19,18 @@ import logic_resources
 public extension MdocDecodable {
 
   func getExpiryDate(parser: (String) -> String) -> String? {
-
-    let expiryDate: String? = switch self {
-    case let pid as EuPidModel:
-      pid.expiry_date
-    case let mdl as IsoMdlModel:
-      mdl.expiryDate
-    case let generic as GenericMdocModel:
-      generic.displayStrings.first(
-        where: {
-          $0.name.replacingOccurrences(of: "_", with: "").lowercased() == "expirydate"
-        }
-      )?.value
-    default:
-      nil
-    }
-
-    if let expiryDate {
+    if let expiryDate = expiryDateValue {
       return parser(expiryDate)
     } else {
       return nil
     }
+  }
+
+  func hasExpired(parser: (String) -> Date?) -> Bool {
+    guard let value = expiryDateValue, let expiryDate = parser(value) else {
+      return false
+    }
+    return expiryDate < Date.now
   }
 
   func getBearersName() -> (first: String, last: String)? {
@@ -116,5 +107,22 @@ public extension MdocDecodable {
           .dropLast()),
       order: IsoMdlModel.CodingKeys.allCases.firstIndex(of: .drivingPrivileges) ?? .max
     )
+  }
+
+  private var expiryDateValue: String? {
+    return switch self {
+    case let pid as EuPidModel:
+      pid.expiry_date
+    case let mdl as IsoMdlModel:
+      mdl.expiryDate
+    case let generic as GenericMdocModel:
+      generic.displayStrings.first(
+        where: {
+          $0.name.replacingOccurrences(of: "_", with: "").lowercased() == "expirydate"
+        }
+      )?.value
+    default:
+      nil
+    }
   }
 }
