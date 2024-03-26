@@ -42,10 +42,25 @@ extension DocumentListView {
         label: {
           VStack(spacing: .zero) {
 
-            Theme.shared.image.idStroke
-              .foregroundColor(Theme.shared.color.primary)
-              .aspectRatio(contentMode: .fit)
-              .frame(maxWidth: 48)
+            ZStack(alignment: .topTrailing) {
+
+              Theme.shared.image.idStroke
+                .foregroundColor(Theme.shared.color.primary)
+                .aspectRatio(contentMode: .fit)
+
+              if item.value.hasExpired {
+                ZStack {
+                  Theme.shared.image.warning
+                    .renderingMode(.template)
+                    .foregroundColor(Theme.shared.color.warning)
+                    .padding(2)
+                    .background(Theme.shared.color.backgroundDefault)
+                }
+                .background(Theme.shared.color.backgroundPaper)
+                .clipShape(Circle())
+              }
+            }
+            .frame(maxWidth: 48)
 
             Spacer()
 
@@ -58,11 +73,26 @@ extension DocumentListView {
             Spacer()
 
             if let expiresAt = item.value.expiresAt {
-              Text(.validUntil([expiresAt]))
-                .typography(Theme.shared.font.bodySmall)
-                .foregroundColor(Theme.shared.color.textSecondaryDark)
-                .minimumScaleFactor(0.5)
+              if item.value.hasExpired {
+                ZStack {
+                  Text(.expired)
+                    .typography(Theme.shared.font.bodySmall)
+                    .foregroundColor(Theme.shared.color.warning)
+                  + Text(.space)
+                  + Text(.onExpired([expiresAt]))
+                    .typography(Theme.shared.font.bodySmall)
+                    .foregroundColor(Theme.shared.color.textSecondaryDark)
+                }
                 .lineLimit(2)
+                .minimumScaleFactor(0.5)
+
+              } else {
+                Text(.validUntil([expiresAt]))
+                  .typography(Theme.shared.font.bodySmall)
+                  .foregroundColor(Theme.shared.color.textSecondaryDark)
+                  .minimumScaleFactor(0.5)
+                  .lineLimit(2)
+              }
             }
           }
         }

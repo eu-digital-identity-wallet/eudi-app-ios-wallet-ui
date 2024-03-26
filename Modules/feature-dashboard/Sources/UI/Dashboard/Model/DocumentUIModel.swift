@@ -40,49 +40,100 @@ public extension DocumentUIModel {
 
     public let title: String
     public let expiresAt: String?
+    public let hasExpired: Bool
   }
 
   static func mocks() -> [DocumentUIModel] {
     [
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Digital ID", expiresAt: "22/01/2025")
+        value: .init(
+          id: UUID().uuidString,
+          title: "Digital ID",
+          expiresAt: "22/01/2025",
+          hasExpired: false
+        )
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "EUDI Conference", expiresAt: "22/01/2025")
+        value: .init(
+          id: UUID().uuidString,
+          title: "EUDI Conference",
+          expiresAt: "22/01/2025",
+          hasExpired: false
+        )
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Passport", expiresAt: "22/01/2025")
+        value: .init(
+          id: UUID().uuidString,
+          title: "Passport",
+          expiresAt: "22/01/2025",
+          hasExpired: false
+        )
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Document 1", expiresAt: "22/01/2025")
+        value: .init(
+          id: UUID().uuidString,
+          title: "Document 1",
+          expiresAt: "22/01/2025",
+          hasExpired: false
+        )
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Document 2", expiresAt: "22/01/2025")
+        value: .init(
+          id: UUID().uuidString,
+          title: "Document 2",
+          expiresAt: "22/01/2025",
+          hasExpired: false
+        )
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Document 3", expiresAt: "22/01/2025")
+        value: .init(
+          id: UUID().uuidString,
+          title: "Document 3",
+          expiresAt: "22/01/2025",
+          hasExpired: false
+        )
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Document 4", expiresAt: "22/01/2025")
+        value: .init(
+          id: UUID().uuidString,
+          title: "Document 4",
+          expiresAt: "22/01/2025",
+          hasExpired: false
+        )
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Document 5", expiresAt: "22/01/2025")
+        value: .init(
+          id: UUID().uuidString,
+          title: "Document 5",
+          expiresAt: "22/01/2025",
+          hasExpired: false
+        )
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Document 6", expiresAt: "22/01/2025")
+        value: .init(
+          id: UUID().uuidString,
+          title: "Document 6",
+          expiresAt: "22/01/2025",
+          hasExpired: false
+        )
       ),
       .init(
         id: UUID().uuidString,
-        value: .init(id: UUID().uuidString, title: "Passport", expiresAt: "22/01/2025")
+        value: .init(
+          id: UUID().uuidString,
+          title: "Passport",
+          expiresAt: "22/01/2025",
+          hasExpired: false
+        )
       )
     ]
   }
@@ -103,6 +154,9 @@ extension Array where Element == MdocDecodable {
                 uiFormatter: "dd MMM yyyy"
               )
             }
+          ),
+          hasExpired: item.hasExpired(
+            parser: { Locale.current.parseDate(date: $0) }
           )
         )
       )

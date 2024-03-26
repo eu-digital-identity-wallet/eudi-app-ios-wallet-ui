@@ -89,6 +89,7 @@ public struct DocumentDetailsView<Router: RouterHost>: View {
         documentName: viewModel.viewState.document.documentName,
         holdersName: viewModel.viewState.document.holdersName,
         userIcon: viewModel.viewState.document.holdersImage,
+        hasDocumentExpired: viewModel.viewState.document.hasExpired,
         isLoading: viewModel.viewState.isLoading,
         actions: viewModel.viewState.toolBarActions,
         onBack: viewModel.viewState.isCancellable ? { viewModel.pop() } : nil
