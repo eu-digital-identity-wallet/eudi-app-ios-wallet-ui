@@ -109,3 +109,68 @@ container.register(PinStorageProvider.self) { r in
 }
 .inObjectScope(ObjectScope.graph)
 ```
+
+## Analytics configuration
+
+The application allows the configuration of multiple analytics providers. You can configure the following:
+
+1. Initializing the provider (e.g. Firebase, Appcenter, etc...)
+2. Screen logging
+3. Event logging
+
+Via the *AnalyticsConfig* and *LogicAnalyticsAssembly* inside the logic-analytics module.
+
+```
+protocol AnalyticsConfig {
+  /**
+   * Supported Analytics Provider, e.g. Firebase
+   */
+  var analyticsProviders: [String: AnalyticsProvider] { get }
+}
+```
+
+You can provide your implementation by implementing the *AnalyticsProvider* protocol and then adding it to your *AnalyticsConfigImpl* analyticsProviders variable.
+You will also need the provider's token/key, thus requiring a [String: AnalyticsProvider] configuration.
+The project utilizes Dependency Injection (DI), thus requiring adjustment of the *LogicAnalyticsAssembly* graph to provide the configuration.
+
+Implementation Example:
+```
+struct AppCenterProvider: AnalyticsProvider {
+ 
+  func initialize(key: String) {
+    AppCenter.start(
+      withAppSecret: key,
+      services: [
+        Analytics.self
+      ]
+    )
+  }
+ 
+  func logScreen(screen: String, arguments: [String: String]) {
+    if Analytics.enabled {
+      logEvent(event: screen, arguments: arguments)
+    }
+  }
+ 
+  func logEvent(event: String, arguments: [String: String]) {
+    Analytics.trackEvent(event, withProperties: arguments)
+  }
+}
+```
+
+Config Example:
+```
+struct AnalyticsConfigImpl: AnalyticsConfig {
+  var analyticsProviders: [String: AnalyticsProvider] {
+    return ["YOUR_OWN_KEY": AppCenterProvider()]
+  }
+}
+```
+
+Config Construction via DI Graph Example:
+```
+container.register(AnalyticsConfig.self) { _ in
+ AnalyticsConfigImpl()
+}
+.inObjectScope(ObjectScope.graph)
+```
