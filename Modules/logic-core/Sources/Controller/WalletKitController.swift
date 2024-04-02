@@ -35,6 +35,12 @@ public protocol WalletKitController {
   func deleteDocument(with type: String) async throws
   func loadDocuments() async throws
   func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
+  func valueForElementIdentifier(
+    for documentType: DocumentIdentifier,
+    elementIdentifier: String,
+    parser: (String) -> String
+  ) -> MdocValue
+  func mandatoryFields(for documentType: DocumentIdentifier) -> [String]
 }
 
 final class WalletKitControllerImpl: WalletKitController {

@@ -105,7 +105,8 @@ final actor ProximityInteractorImpl: ProximityInteractor {
       let response = try await presentationSessionCoordinator.requestReceived()
       return .success(
         RequestDataUiModel.items(
-          for: response.items
+          for: response.items,
+          walletKitController: self.walletKitController
         ),
         relyingParty: response.relyingParty,
         dataRequestInfo: response.dataRequestInfo,
@@ -127,7 +128,7 @@ final actor ProximityInteractorImpl: ProximityInteractor {
           partialResult.append(contentsOf: items)
         }
       }
-      .reduce(into: RequestItemsWrapper()) {  partialResult, row in
+      .reduce(into: RequestItemsWrapper()) { partialResult, row in
         var nameSpaceDict = partialResult.requestItems[row.docType, default: [row.namespace: [row.elementKey]]]
         nameSpaceDict[row.namespace, default: [row.elementKey]].append(row.elementKey)
         partialResult.requestItems[row.docType] = nameSpaceDict
