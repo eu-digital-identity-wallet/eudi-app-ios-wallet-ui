@@ -58,7 +58,8 @@ final actor PresentationInteractorImpl: PresentationInteractor {
       return .success(
         .init(
           requestDataCells: RequestDataUiModel.items(
-            for: response.items
+            for: response.items,
+            walletKitController: self.walletKitController
           ),
           relyingParty: response.relyingParty,
           dataRequestInfo: response.dataRequestInfo,
