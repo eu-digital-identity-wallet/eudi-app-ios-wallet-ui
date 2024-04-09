@@ -21,17 +21,15 @@ struct WelcomeState: ViewState {
   let isAnimating: Bool
 }
 
-@MainActor
-final class WelcomeViewModel<Router: RouterHostType, Interactor: WelcomeInteractorType>: BaseViewModel<Router, WelcomeState> {
+final class WelcomeViewModel<Router: RouterHost>: BaseViewModel<Router, WelcomeState> {
 
-  private let interactor: Interactor
+  private let interactor: WelcomeInteractor
 
   init(
     router: Router,
-    interactor: Interactor
+    interactor: WelcomeInteractor
   ) {
     self.interactor = interactor
-
     super.init(router: router, initialState: .init(isAnimating: true))
   }
 

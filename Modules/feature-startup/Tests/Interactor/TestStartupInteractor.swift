@@ -15,7 +15,7 @@
  */
 import XCTest
 import logic_business
-import MdocDataModel18013
+import logic_core
 @testable import feature_startup
 @testable import logic_test
 @testable import feature_test
@@ -23,14 +23,14 @@ import MdocDataModel18013
 
 final class TestStartupInteractor: EudiTest {
   
-  var interactor: StartupInteractorType!
-  var walletKitController: MockWalletKitControllerType!
-  var quickPinInteractor: MockQuickPinInteractorType!
+  var interactor: StartupInteractor!
+  var walletKitController: MockWalletKitController!
+  var quickPinInteractor: MockQuickPinInteractor!
   
   override func setUp() {
-    self.walletKitController = MockWalletKitControllerType()
-    self.quickPinInteractor = MockQuickPinInteractorType()
-    self.interactor = StartupInteractor(
+    self.walletKitController = MockWalletKitController()
+    self.quickPinInteractor = MockQuickPinInteractor()
+    self.interactor = StartupInteractorImpl(
       walletKitController: walletKitController,
       quickPinInteractor: quickPinInteractor
     )

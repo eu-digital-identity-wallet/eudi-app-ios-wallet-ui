@@ -15,6 +15,7 @@
  */
 import Foundation
 import logic_api
+import logic_core
 import logic_business
 import UIKit
 import feature_common
@@ -44,9 +45,9 @@ public enum ProximityQrCodePartialState {
   case failure(Error)
 }
 
-public protocol ProximityInteractorType {
+public protocol ProximityInteractor {
 
-  var presentationSessionCoordinator: PresentationSessionCoordinatorType { get }
+  var presentationSessionCoordinator: PresentationSessionCoordinator { get }
 
   func getSessionStatePublisher() async -> AnyPublisher<PresentationState, Never>
 
@@ -59,13 +60,17 @@ public protocol ProximityInteractorType {
 
 }
 
-public final actor ProximityInteractor: ProximityInteractorType {
+final actor ProximityInteractorImpl: ProximityInteractor {
 
-  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
-  public let presentationSessionCoordinator: PresentationSessionCoordinatorType
+  private let walletKitController: WalletKitController
+  public let presentationSessionCoordinator: PresentationSessionCoordinator
 
-  public init(with presentationSessionCoordinator: PresentationSessionCoordinatorType) {
+  init(
+    with presentationSessionCoordinator: PresentationSessionCoordinator,
+    and walletKitController: WalletKitController
+  ) {
     self.presentationSessionCoordinator = presentationSessionCoordinator
+    self.walletKitController = walletKitController
   }
 
   public func getSessionStatePublisher() async -> AnyPublisher<PresentationState, Never> {
@@ -100,7 +105,8 @@ public final actor ProximityInteractor: ProximityInteractorType {
       let response = try await presentationSessionCoordinator.requestReceived()
       return .success(
         RequestDataUiModel.items(
-          for: response.items
+          for: response.items,
+          walletKitController: self.walletKitController
         ),
         relyingParty: response.relyingParty,
         dataRequestInfo: response.dataRequestInfo,
@@ -122,7 +128,7 @@ public final actor ProximityInteractor: ProximityInteractorType {
           partialResult.append(contentsOf: items)
         }
       }
-      .reduce(into: RequestItemsWrapper()) {  partialResult, row in
+      .reduce(into: RequestItemsWrapper()) { partialResult, row in
         var nameSpaceDict = partialResult.requestItems[row.docType, default: [row.namespace: [row.elementKey]]]
         nameSpaceDict[row.namespace, default: [row.elementKey]].append(row.elementKey)
         partialResult.requestItems[row.docType] = nameSpaceDict

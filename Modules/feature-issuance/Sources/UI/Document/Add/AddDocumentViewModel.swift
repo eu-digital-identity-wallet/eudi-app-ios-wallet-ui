@@ -18,8 +18,7 @@ import logic_ui
 import logic_resources
 import logic_business
 import feature_common
-import MdocDataModel18013
-import EudiWalletKit
+import logic_core
 
 struct AddDocumentViewState: ViewState {
   let addDocumentCellModels: [AddDocumentUIModel]
@@ -31,12 +30,15 @@ struct AddDocumentViewState: ViewState {
   }
 }
 
-@MainActor
-final class AddDocumentViewModel<Router: RouterHostType, Interactor: AddDocumentInteractorType>: BaseViewModel<Router, AddDocumentViewState> {
+final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddDocumentViewState> {
 
-  private let interactor: Interactor
+  private let interactor: AddDocumentInteractor
 
-  init(router: Router, interactor: Interactor, config: any UIConfigType) {
+  init(
+    router: Router,
+    interactor: AddDocumentInteractor,
+    config: any UIConfigType
+  ) {
     guard let config = config as? IssuanceFlowUiConfig else {
       fatalError("AddDocumentViewModel:: Invalid configuraton")
     }

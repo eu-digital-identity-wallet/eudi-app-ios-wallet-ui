@@ -16,7 +16,7 @@
 import SwiftUI
 import logic_resources
 import logic_business
-import MdocDataModel18013
+import logic_core
 
 public struct DocumentDetailsUIModel {
 
@@ -24,6 +24,7 @@ public struct DocumentDetailsUIModel {
   public let documentName: String
   public let holdersName: String
   public let holdersImage: Image
+  public let hasExpired: Bool
   public let documentFields: [DocumentField]
 }
 
@@ -46,6 +47,7 @@ public extension DocumentDetailsUIModel {
       documentName: "Digital ID",
       holdersName: "Jane Doe",
       holdersImage: Theme.shared.image.user,
+      hasExpired: false,
       documentFields:
         [
           .init(
@@ -88,7 +90,14 @@ extension MdocDecodable {
         .sorted(by: {$0.order < $1.order})
         .decodeGender()
         .mapTrueFalseToLocalizable()
-        .parseDates(),
+        .parseDates(
+          parser: {
+            Locale.current.localizedDateTime(
+              date: $0,
+              uiFormatter: "dd MMM yyyy"
+            )
+          }
+        ),
       images: displayImages
     )
 
@@ -104,6 +113,13 @@ extension MdocDecodable {
       documentName: LocalizableString.shared.get(with: .dynamic(key: title)),
       holdersName: bearerName,
       holdersImage: getPortrait() ?? Theme.shared.image.user,
+      hasExpired: hasExpired(
+        parser: {
+          Locale.current.parseDate(
+            date: $0
+          )
+        }
+      ),
       documentFields: documentFields
     )
   }
@@ -153,11 +169,17 @@ extension MdocDecodable {
   }
 
   private func flattenNested(parent: NameValue, nested: [NameValue]) -> NameValue {
-    let flat =
-    nested
+    let flat = nested
       .decodeGender()
       .mapTrueFalseToLocalizable()
-      .parseDates()
+      .parseDates(
+        parser: {
+          Locale.current.localizedDateTime(
+            date: $0,
+            uiFormatter: "dd MMM yyyy"
+          )
+        }
+      )
       .reduce(into: "") { partialResult, nameValue in
         if let nestedChildren = nameValue.children {
           let deepNested = flattenNested(parent: nameValue, nested: nestedChildren.sorted(by: {$0.order < $1.order}))

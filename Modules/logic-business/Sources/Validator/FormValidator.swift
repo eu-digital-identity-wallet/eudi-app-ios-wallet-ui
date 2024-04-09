@@ -18,14 +18,12 @@ import Combine
 import Peppermint
 import libPhoneNumber
 
-public protocol FormValidatorType {
+public protocol FormValidator {
   func validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
   func validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
 }
 
-public class FormValidator: FormValidatorType {
-
-  public init() {}
+final class FormValidatorImpl: FormValidator {
 
   public func validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never> {
     return Deferred {

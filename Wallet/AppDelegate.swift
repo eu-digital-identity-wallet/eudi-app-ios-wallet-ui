@@ -16,16 +16,15 @@
 import Foundation
 import UIKit
 import netfox
-import logic_business
-import logic_analytics
+import logic_assembly
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-  private lazy var configSecurityLogic = ConfigProvider.shared.getConfigSecurityLogic()
-  private lazy var prefsController: PrefsControllerType = PrefsController()
-  private lazy var keyChainController: KeyChainControllerType = KeyChainController()
-  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
-  private lazy var analyticsController: AnalyticsControllerType = AnalyticsController.shared
+  private lazy var configSecurityLogic: ConfigSecurityLogic = DIGraph.resolver.force(ConfigSecurityLogic.self)
+  private lazy var prefsController: PrefsController = DIGraph.resolver.force(PrefsController.self)
+  private lazy var keyChainController: KeyChainController = DIGraph.resolver.force(KeyChainController.self)
+  private lazy var walletKitController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
+  private lazy var analyticsController: AnalyticsController = DIGraph.resolver.force(AnalyticsController.self)
 
   func application(
     _ application: UIApplication,

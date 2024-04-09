@@ -15,7 +15,7 @@
  */
 import Foundation
 import logic_ui
-import logic_business
+import logic_authentication
 
 struct BiometryState: ViewState {
   let config: UIConfig.Biometry
@@ -30,20 +30,19 @@ struct BiometryState: ViewState {
   let quickPinSize: Int
 }
 
-@MainActor
-final class BiometryViewModel<Router: RouterHostType, Interactor: BiometryInteractorType>: BaseViewModel<Router, BiometryState> {
+final class BiometryViewModel<Router: RouterHost>: BaseViewModel<Router, BiometryState> {
 
   private let AUTO_VERIFY_ON_APPEAR_DELAY = 250
   private let PIN_INPUT_DEBOUNCE = 250
 
   @Published var uiPinInputField: String = ""
-  @Published var biometryError: SystemBiometricsError?
+  @Published var biometryError: SystemBiometryError?
 
-  private let interactor: Interactor
+  private let interactor: BiometryInteractor
 
   init(
     router: Router,
-    interactor: Interactor,
+    interactor: BiometryInteractor,
     config: any UIConfigType,
     throttlePinInput: Bool = true
   ) {

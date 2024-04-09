@@ -18,7 +18,8 @@
 
 public protocol ViewState {}
 
-open class BaseViewModel<Router: RouterHostType, UiState: ViewState>: ObservableObject {
+@MainActor
+open class BaseViewModel<Router: RouterHost, UiState: ViewState>: ObservableObject {
 
   public lazy var cancellables = Set<AnyCancellable>()
 

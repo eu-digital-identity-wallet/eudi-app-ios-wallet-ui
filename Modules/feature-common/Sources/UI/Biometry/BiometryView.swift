@@ -17,12 +17,12 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteractorType>: View {
+public struct BiometryView<Router: RouterHost>: View {
 
-  @ObservedObject var viewModel: BiometryViewModel<Router, Interactor>
+  @ObservedObject var viewModel: BiometryViewModel<Router>
   @Environment(\.scenePhase) var scenePhase
 
-  public init(with router: Router, interactor: Interactor, config: any UIConfigType) {
+  public init(with router: Router, interactor: BiometryInteractor, config: any UIConfigType) {
     self.viewModel = .init(router: router, interactor: interactor, config: config)
   }
 
@@ -43,8 +43,8 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
       if let error = viewModel.viewState.pinError {
         HStack {
           Text(error)
-            .typography(ThemeManager.shared.font.bodyMedium)
-            .foregroundColor(ThemeManager.shared.color.error)
+            .typography(Theme.shared.font.bodyMedium)
+            .foregroundColor(Theme.shared.color.error)
           Spacer()
         }
       }
@@ -55,7 +55,7 @@ public struct BiometryView<Router: RouterHostType, Interactor: BiometryInteracto
 
     if viewModel.viewState.isCancellable {
       ContentHeaderView(
-        dismissIcon: ThemeManager.shared.image.xmark,
+        dismissIcon: Theme.shared.image.xmark,
         onBack: { viewModel.onPop() }
       )
     }

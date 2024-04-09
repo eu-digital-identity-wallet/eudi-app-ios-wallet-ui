@@ -18,13 +18,13 @@ import logic_ui
 import feature_common
 import logic_resources
 
-public struct AddDocumentView<Router: RouterHostType, Interactor: AddDocumentInteractorType>: View {
+public struct AddDocumentView<Router: RouterHost>: View {
 
-  @ObservedObject var viewModel: AddDocumentViewModel<Router, Interactor>
+  @ObservedObject var viewModel: AddDocumentViewModel<Router>
 
   public init(
     with router: Router,
-    and interactor: Interactor,
+    and interactor: AddDocumentInteractor,
     config: any UIConfigType
   ) {
     self.viewModel = AddDocumentViewModel(router: router, interactor: interactor, config: config)

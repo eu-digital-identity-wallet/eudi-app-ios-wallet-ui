@@ -16,23 +16,23 @@
 import XCTest
 import logic_business
 import logic_resources
-import MdocDataModel18013
+import logic_core
 @testable import feature_dashboard
 @testable import logic_test
 @testable import feature_test
 
 final class TestDashboardInteractor: EudiTest {
   
-  var interactor: DashboardInteractorType!
-  var reachabilityController: MockReachabilityControllerType!
-  var walletKitController: MockWalletKitControllerType!
+  var interactor: DashboardInteractor!
+  var reachabilityController: MockReachabilityController!
+  var walletKitController: MockWalletKitController!
   var configLogic: MockConfigLogic!
   
   override func setUp() {
-    self.reachabilityController = MockReachabilityControllerType()
-    self.walletKitController = MockWalletKitControllerType()
+    self.reachabilityController = MockReachabilityController()
+    self.walletKitController = MockWalletKitController()
     self.configLogic = MockConfigLogic()
-    self.interactor = DashboardInteractor(
+    self.interactor = DashboardInteractorImpl(
       walletController: walletKitController,
       reachabilityController: reachabilityController,
       configLogic: configLogic
@@ -70,11 +70,11 @@ final class TestDashboardInteractor: EudiTest {
   }
   
   func testGetBleAvailability_WhenBleIsAvailable_ThenReturnAvailableEnum() async {
-    await checkBle(with: .available)
+    await checkBle(with: Reachability.BleAvailibity.available)
   }
   
   func testGetBleAvailability_WhenBleIsDisabled_ThenReturnDisabledEnum() async {
-    await checkBle(with: .disabled)
+    await checkBle(with: Reachability.BleAvailibity.disabled)
   }
   
   func testFetchDashboard_WhenWalletKitControllerReturnsEmpty_ThenReturnError() async {
@@ -85,7 +85,7 @@ final class TestDashboardInteractor: EudiTest {
     // Then
     switch state {
     case .failure(let error):
-      XCTAssertEqual(error.localizedDescription, RuntimeError.unableFetchDocuments.localizedDescription)
+      XCTAssertEqual(error.localizedDescription, WalletCoreError.unableFetchDocuments.localizedDescription)
     default:
       XCTFail("Wrong state \(state)")
     }
@@ -99,7 +99,8 @@ final class TestDashboardInteractor: EudiTest {
         value: .init(
           id: Constants.randomIdentifier,
           title: "National ID",
-          expiresAt: "30 Mar 2050"
+          expiresAt: "30 Mar 2050",
+          hasExpired: false
         )
       )
     ]
@@ -125,7 +126,7 @@ final class TestDashboardInteractor: EudiTest {
 }
 
 private extension TestDashboardInteractor {
-  func checkBle(with status: ReachabilityController.BleAvailibity) async {
+  func checkBle(with status: Reachability.BleAvailibity) async {
     // Given
     let publisher = Just(status).eraseToAnyPublisher()
     stub(reachabilityController) { mock in

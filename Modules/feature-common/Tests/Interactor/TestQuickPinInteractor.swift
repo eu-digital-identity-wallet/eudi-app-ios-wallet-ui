@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import XCTest
+import logic_authentication
 import logic_business
 @testable import feature_common
 @testable import logic_test
@@ -21,32 +22,32 @@ import logic_business
 
 final class TestQuickPinInteractor: EudiTest {
   
-  var interactor: QuickPinInteractorType!
-  var keyChainController: MockKeyChainControllerType!
+  var interactor: QuickPinInteractor!
+  var pinStorageController: MockPinStorageController!
   
   override func setUp() {
-    self.keyChainController = MockKeyChainControllerType()
-    self.interactor = QuickPinInteractor(keyChainController: keyChainController)
+    self.pinStorageController = MockPinStorageController()
+    self.interactor = QuickPinInteractorImpl(pinStorageController: pinStorageController)
   }
   
   override func tearDown() {
     self.interactor = nil
-    self.keyChainController = nil
+    self.pinStorageController = nil
   }
   
   func testSetPin_WhenNewPinIsSet_ThenVerifyAtLeastOnce() {
     
     // Given
     let pin = "1234"
-    stub(keyChainController) { mock in
-      when(mock).storeValue(key: any(), value: any()).thenDoNothing()
+    stub(pinStorageController) { mock in
+      when(mock).setPin(with: any()).thenDoNothing()
     }
     
     // When
     interactor.setPin(newPin: pin)
     
     // Then
-    verify(keyChainController).storeValue(key: KeychainWrapper.devicePin, value: pin)
+    verify(pinStorageController).setPin(with: pin)
     
   }
   
@@ -54,8 +55,8 @@ final class TestQuickPinInteractor: EudiTest {
     
     // Given
     let pin = "1234"
-    stub(keyChainController) { mock in
-      when(mock).getValue(key: KeychainWrapper.devicePin).thenReturn(pin)
+    stub(pinStorageController) { mock in
+      when(mock).isPinValid(with: any()).thenReturn(true)
     }
     
     // When
@@ -74,9 +75,8 @@ final class TestQuickPinInteractor: EudiTest {
     
     // Given
     let pin = "1234"
-    let storedPin = "4321"
-    stub(keyChainController) { mock in
-      when(mock).getValue(key: KeychainWrapper.devicePin).thenReturn(storedPin)
+    stub(pinStorageController) { mock in
+      when(mock).isPinValid(with: any()).thenReturn(false)
     }
     
     // When
@@ -85,7 +85,7 @@ final class TestQuickPinInteractor: EudiTest {
     // Then
     switch state {
     case .failure(let error):
-      XCTAssertEqual(error.localizedDescription, RuntimeError.quickPinInvalid.localizedDescription)
+      XCTAssertEqual(error.localizedDescription, AuthenticationError.quickPinInvalid.localizedDescription)
     default:
       XCTFail("Wrong state \(state)")
     }
@@ -95,8 +95,8 @@ final class TestQuickPinInteractor: EudiTest {
     
     // Given
     let pin = "1234"
-    stub(keyChainController) { mock in
-      when(mock).getValue(key: KeychainWrapper.devicePin).thenReturn(pin)
+    stub(pinStorageController) { mock in
+      when(mock).retrievePin().thenReturn(pin)
     }
     
     // When
@@ -109,8 +109,8 @@ final class TestQuickPinInteractor: EudiTest {
   func testHasPin_WhenThereIsNoStoredPin_ThenReturnFalse() {
     
     // Given
-    stub(keyChainController) { mock in
-      when(mock).getValue(key: KeychainWrapper.devicePin).thenReturn(nil)
+    stub(pinStorageController) { mock in
+      when(mock).retrievePin().thenReturn(nil)
     }
     
     // When
@@ -125,18 +125,18 @@ final class TestQuickPinInteractor: EudiTest {
     // Given
     let newPin = "4321"
     let currentPin = "1234"
-    stub(keyChainController) { mock in
-      when(mock).getValue(key: KeychainWrapper.devicePin).thenReturn(currentPin)
+    stub(pinStorageController) { mock in
+      when(mock).isPinValid(with: any()).thenReturn(true)
     }
-    stub(keyChainController) { mock in
-      when(mock).storeValue(key: any(), value: any()).thenDoNothing()
+    stub(pinStorageController) { mock in
+      when(mock).setPin(with: any()).thenDoNothing()
     }
     
     // When
     let state = interactor.changePin(currentPin: currentPin, newPin: newPin)
     
     // Then
-    verify(keyChainController).storeValue(key: KeychainWrapper.devicePin, value: newPin)
+    verify(pinStorageController).setPin(with: newPin)
     
     switch state {
     case .success:
@@ -151,22 +151,22 @@ final class TestQuickPinInteractor: EudiTest {
     // Given
     let newPin = "4321"
     let currentPin = "1234"
-    stub(keyChainController) { mock in
-      when(mock).getValue(key: KeychainWrapper.devicePin).thenReturn(currentPin)
+    stub(pinStorageController) { mock in
+      when(mock).isPinValid(with: any()).thenReturn(false)
     }
-    stub(keyChainController) { mock in
-      when(mock).storeValue(key: any(), value: any()).thenDoNothing()
+    stub(pinStorageController) { mock in
+      when(mock).setPin(with: any()).thenDoNothing()
     }
     
     // When
     let state = interactor.changePin(currentPin: newPin, newPin: newPin)
     
     // Then
-    verify(keyChainController, times(0)).storeValue(key: any(), value: any())
+    verify(pinStorageController, times(0)).setPin(with: any())
     
     switch state {
     case .failure(let error):
-      XCTAssertEqual(error.localizedDescription, RuntimeError.quickPinInvalid.localizedDescription)
+      XCTAssertEqual(error.localizedDescription, AuthenticationError.quickPinInvalid.localizedDescription)
     default:
       XCTFail("Wrong state \(state)")
     }

@@ -1,5 +1,10 @@
 # EUDI iOS Wallet reference application
 
+:heavy_exclamation_mark: **Important!** Before you proceed, please read
+the [EUDI Wallet Reference Implementation project description](https://github.com/eu-digital-identity-wallet/.github/blob/main/profile/reference-implementation.md)
+
+----
+
 ## Table of contents
 
 * [Overview](#overview)
@@ -28,11 +33,11 @@ The EUDIW project provides through this repository an iOS app. Please refer to t
 
 The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit) and a list of available libraries to facilitate remote presentation, proximity, and issuing test/demo functionality following specification of the [ARF](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework) including:
  
-- OID4VP draft 19 (remote presentation), presentation exchange v2.0,
+- OpenID4VP - draft 19 (remote presentation), presentation exchange v2.0,
  
 - ISO18013-5 (proximity presentation),
  
-- OID4VCI draft 12 (issuing)
+- OpenID4VCI draft 12 (issuing)
  
 - Issuer functionality, to support development and testing, one can access an OID4VCI test/demo service for issuing at: 
   - ```https://issuer.eudiw.dev/oidc.```
@@ -78,35 +83,31 @@ _(NOTE: These videos are from the Android version)_
 
 Issuance
 
-[Issuance](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/01846fe5-6e57-407c-8e40-6970b36ac6bb)
+[Issuance](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/assets/129499766/9e9fb151-38ca-48f7-a0d7-669ce816513b)
 
 Presentation
 
-[Presentation](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/f6821b6e-ac2b-4a9f-9fb6-4084fd94ec41)
+[Presentation](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/assets/129499766/76953733-4841-4581-9c7e-f53499f408f3)
 
 Proximity
 
-[Proximity](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/assets/129499163/156cbc97-7271-451b-8802-b64af250975d)
+[Proximity](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/assets/129499766/68c975e1-1f99-441e-acef-e4a42572ab4d)
 
 ## How to use the application
 
-Minumum device requirements
+Minimum device requirements
 
 - Any device that supports iOS 15.0
 
 Prerequisites
 
-To complete the flows described below you will need to build and run the application with xcode. Alternatively, you can directly download the app onto your device with the two methods described below.
+To complete the flows described below you need to build and run the application with xcode. Alternatively, you can directly download the Android app onto your device.
 
 App center download method (Android app)
 
 In addition to building the app from the source, you can also use the Android app which you can download *[here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/eudi-reference-android/distribution_groups/eudi%20wallet%20(demo)%20public)*
 
-Alternative download method (iOS app)
-
-It is possible, while following the instructions [here](wiki/download.md) to download and install the iOS application directly from Appcenter. There are only a limited number of available download slots, so being able to download the app is based on availability as is not guaranteed. 
-
-Run the app from the source
+Run the app from the source (xcode build)
 
 Clone this repo and make sure you have access to the dependencies below:
 
@@ -181,9 +182,13 @@ You can find instructions on how to configure the application [here](wiki/config
 
 *logic-resources*: All app resources reside here (images, etc.)
 
+*logic-core*: Wallet core logic.
+
 *logic-analytics*: Access to analytics providers. Capabilities for test monitoring analytics (i.e. crashes) can be added here (no functionality right now)
 
-*logic-business*: App business logic, wallet core resides here.
+*logic-business*: App business logic.
+
+*logic-authentication*: PinStorage and System Biometrics Logic.
 
 *logic-ui*: Common UI components.
 
@@ -201,11 +206,59 @@ You can find instructions on how to configure the application [here](wiki/config
 
 *feature-proximity*: Proximity scenarios feature.
 
-*logic-navigation*: This module has access to all the above modules.
+*logic-assembly*: This module has access to all the above modules and assembles navigation and DI graphs.
 
 ```mermaid
 graph TD;
-    Logic-modules/logic-resources,logic-ui,logic-business,logic-api/-->Feature-modules/feature-common,feature-login,feature-dashboard,feature-startup,feature-presentation,feature-issuance,feature-proximity/;
+  logic-business --> logic-authentication
+  logic-core --> logic-authentication
+  logic-analytics --> logic-authentication
+  logic-resources --> logic-authentication
+
+  feature-common --> logic-assembly
+  feature-startup --> logic-assembly
+  feature-login --> logic-assembly
+  feature-dashboard --> logic-assembly
+  feature-presentation --> logic-assembly
+  feature-issuance --> logic-assembly
+  feature-proximity --> logic-assembly
+
+  logic-business --> logic-core
+  logic-resources --> logic-core
+
+  logic-business --> logic-analytics
+
+  feature-common --> feature-issuance
+
+  feature-common --> feature-proximity
+
+  feature-common --> feature-presentation
+
+  feature-common --> feature-dashboard
+
+  feature-common --> feature-login
+
+  logic-core --> feature-common
+  logic-business --> feature-common
+  logic-analytics --> feature-common
+  logic-ui --> feature-common
+  logic-api --> feature-common
+  logic-authentication --> feature-common
+
+  feature-common --> feature-startup
+
+  logic-core --> logic-api
+  logic-business --> logic-api
+  logic-analytics --> logic-api
+
+  logic-resources --> logic-business
+
+  logic-business --> logic-ui
+  logic-analytics --> logic-ui
+  logic-resources --> logic-ui
+
+  logic-core --> logic-ui
+
 ```
 
 ## License

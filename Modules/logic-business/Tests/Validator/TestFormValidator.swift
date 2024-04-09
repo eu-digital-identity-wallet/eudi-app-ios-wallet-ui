@@ -26,7 +26,7 @@ final class TestFormValidator: XCTestCase {
   private var validationSuccess : FormValidationResult!
   
   override func setUp() {
-    formValidator = FormValidator()
+    formValidator = FormValidatorImpl()
     validationError = FormValidationResult(isValid: false, message: plainErrorMessage)
     validationSuccess = FormValidationResult(isValid: true)
   }

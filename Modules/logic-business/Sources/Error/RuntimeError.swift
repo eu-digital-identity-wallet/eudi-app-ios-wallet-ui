@@ -20,9 +20,6 @@ public enum RuntimeError: LocalizedError {
 
   case customError(String)
   case genericError
-  case quickPinInvalid
-  case unableFetchDocuments
-  case unableFetchDocument
 
   public var errorDescription: String? {
     return switch self {
@@ -30,12 +27,6 @@ public enum RuntimeError: LocalizedError {
       message
     case .genericError:
       LocalizableString.shared.get(with: .genericErrorDesc)
-    case .quickPinInvalid:
-      LocalizableString.shared.get(with: .invalidQuickPin)
-    case .unableFetchDocuments:
-      LocalizableString.shared.get(with: .errorUnableFetchDocuments)
-    case .unableFetchDocument:
-      LocalizableString.shared.get(with: .errorUnableFetchDocument)
     }
   }
 }

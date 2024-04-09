@@ -16,12 +16,20 @@
 import Foundation
 import KeychainAccess
 
-public enum KeychainWrapper: String {
-  case deviceVendorId
-  case devicePin
+public protocol KeychainWrapper {
+  var value: String { get }
 }
 
-public protocol KeyChainControllerType {
+public enum KeychainIdentifier: String, KeychainWrapper {
+
+  public var value: String {
+    self.rawValue
+  }
+
+  case deviceVendorId
+}
+
+public protocol KeyChainController {
   func storeValue(key: KeychainWrapper, value: String)
   func getValue(key: KeychainWrapper) -> String?
   func removeObject(key: KeychainWrapper)
@@ -30,26 +38,24 @@ public protocol KeyChainControllerType {
   func clear()
 }
 
-public final class KeyChainController: KeyChainControllerType {
+final class KeyChainControllerImpl: KeyChainController {
 
   private let biometryKey = "eu.europa.ec.euidi.biometric.access"
-
-  public init() {}
 
   private lazy var keyChain: Keychain = {
     Keychain()
   }()
 
   public func storeValue(key: KeychainWrapper, value: String) {
-    keyChain[key.rawValue] = value
+    keyChain[key.value] = value
   }
 
   public func getValue(key: KeychainWrapper) -> String? {
-    keyChain[key.rawValue]
+    keyChain[key.value]
   }
 
   public func removeObject(key: KeychainWrapper) {
-    try? keyChain.remove(key.rawValue)
+    try? keyChain.remove(key.value)
   }
 
   public func validateKeyChainBiometry() throws {
@@ -66,7 +72,7 @@ public final class KeyChainController: KeyChainControllerType {
   }
 }
 
-private extension KeyChainController {
+private extension KeyChainControllerImpl {
   func setBiometricKey() throws {
     try self.keyChain
       .accessibility(

@@ -16,28 +16,26 @@
 import Foundation
 import logic_ui
 import feature_common
+import logic_core
 import logic_business
 
-public protocol StartupInteractorType {
+public protocol StartupInteractor {
   func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute
 }
 
-public final class StartupInteractor: StartupInteractorType {
+final class StartupInteractorImpl: StartupInteractor {
 
-  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
-  private lazy var quickPinInteractor: QuickPinInteractorType = QuickPinInteractor()
+  private let walletKitController: WalletKitController
+  private let quickPinInteractor: QuickPinInteractor
 
   private var hasDocuments: Bool {
     return !walletKitController.fetchDocuments().isEmpty
   }
 
-  public init() {}
-
-  convenience init(
-    walletKitController: WalletKitControllerType,
-    quickPinInteractor: QuickPinInteractorType
+  init(
+    walletKitController: WalletKitController,
+    quickPinInteractor: QuickPinInteractor
   ) {
-    self.init()
     self.walletKitController = walletKitController
     self.quickPinInteractor = quickPinInteractor
   }

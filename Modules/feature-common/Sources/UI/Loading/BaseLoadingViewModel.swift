@@ -20,7 +20,7 @@ public struct BaseLoadingState: ViewState {
   let error: ContentErrorView.Config?
 }
 
-open class BaseLoadingViewModel<Router: RouterHostType>: BaseViewModel<Router, BaseLoadingState> {
+open class BaseLoadingViewModel<Router: RouterHost>: BaseViewModel<Router, BaseLoadingState> {
 
   public init(router: Router) {
     super.init(router: router, initialState: .init(error: nil))

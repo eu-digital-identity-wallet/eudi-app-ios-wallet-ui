@@ -30,10 +30,10 @@ public struct SheetStyle {
 
   public static var IpadMacSheetStyle: PSIpadMacStyle {
     return PSIpadMacStyle(
-      backgroundColor: ThemeManager.shared.color.backgroundPaper,
+      backgroundColor: Theme.shared.color.backgroundPaper,
       closeButtonStyle: .icon(
-        image: ThemeManager.shared.image.xmark,
-        color: ThemeManager.shared.color.primary
+        image: Theme.shared.image.xmark,
+        color: Theme.shared.color.primary
       )
     )
   }

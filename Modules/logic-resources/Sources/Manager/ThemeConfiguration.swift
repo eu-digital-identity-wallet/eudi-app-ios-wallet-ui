@@ -16,6 +16,7 @@
 import Foundation
 
 public struct ThemeConfiguration {
+
   public static let `default` = ThemeConfiguration()
 
   var color: ColorManagerProtocol
@@ -24,11 +25,12 @@ public struct ThemeConfiguration {
   var font: TypographyManagerProtocol
   var dimension: DimensionManagerProtocol
 
-  init(color: ColorManagerProtocol? = nil,
-       image: ImageManagerProtocol? = nil,
-       shape: ShapeManagerProtocol? = nil,
-       font: TypographyManagerProtocol? = nil,
-       dimension: DimensionManagerProtocol? = nil
+  init(
+    color: ColorManagerProtocol? = nil,
+    image: ImageManagerProtocol? = nil,
+    shape: ShapeManagerProtocol? = nil,
+    font: TypographyManagerProtocol? = nil,
+    dimension: DimensionManagerProtocol? = nil
   ) {
     self.color = color ?? ColorManager(bundle: .assetsBundle)
     self.image = image ?? ImageManager(bundle: .assetsBundle)

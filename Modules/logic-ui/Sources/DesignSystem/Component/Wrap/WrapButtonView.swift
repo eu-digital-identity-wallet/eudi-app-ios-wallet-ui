@@ -106,7 +106,7 @@ public struct WrapButtonView: View {
           }
 
           Text(title)
-            .typography(ThemeManager.shared.font.labelLarge)
+            .typography(Theme.shared.font.labelLarge)
             .foregroundColor(textColor)
             .buttonStyle(OutlinePressedButtonStyle())
 

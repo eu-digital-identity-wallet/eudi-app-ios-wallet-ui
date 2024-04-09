@@ -24,14 +24,13 @@ struct StartupState: ViewState {
   let setupError: Error?
 }
 
-@MainActor
-final class StartupViewModel<Router: RouterHostType, Interactor: StartupInteractorType>: BaseViewModel<Router, StartupState> {
+final class StartupViewModel<Router: RouterHost>: BaseViewModel<Router, StartupState> {
 
-  private let interactor: Interactor
+  private let interactor: StartupInteractor
 
   init(
     router: Router,
-    interactor: Interactor,
+    interactor: StartupInteractor,
     splashDuration: TimeInterval = 1.5
   ) {
     self.interactor = interactor

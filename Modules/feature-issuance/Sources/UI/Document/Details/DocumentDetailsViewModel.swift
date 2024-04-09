@@ -17,7 +17,7 @@ import Foundation
 import logic_ui
 import logic_resources
 import feature_common
-import logic_business
+import logic_core
 
 struct DocumentDetailsViewState: ViewState {
   let document: DocumentDetailsUIModel
@@ -35,16 +35,15 @@ struct DocumentDetailsViewState: ViewState {
   }
 }
 
-@MainActor
-final class DocumentDetailsViewModel<Router: RouterHostType, Interactor: DocumentDetailsInteractorType>: BaseViewModel<Router, DocumentDetailsViewState> {
+final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, DocumentDetailsViewState> {
 
   @Published var isDeletionModalShowing: Bool = false
 
-  private let interactor: Interactor
+  private let interactor: DocumentDetailsInteractor
 
   init(
     router: Router,
-    interactor: Interactor,
+    interactor: DocumentDetailsInteractor,
     config: any UIConfigType
   ) {
     guard let config = config as? IssuanceDetailUiConfig else {

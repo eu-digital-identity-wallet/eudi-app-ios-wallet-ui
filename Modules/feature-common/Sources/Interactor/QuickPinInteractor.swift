@@ -13,6 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import logic_authentication
 import logic_business
 import Combine
 import Foundation
@@ -22,33 +23,30 @@ public enum QuickPinPartialState {
   case failure(Error)
 }
 
-public protocol QuickPinInteractorType {
+public protocol QuickPinInteractor {
   func setPin(newPin: String)
   func isPinValid(pin: String) -> QuickPinPartialState
   func changePin(currentPin: String, newPin: String) -> QuickPinPartialState
   func hasPin() -> Bool
 }
 
-public final class QuickPinInteractor: QuickPinInteractorType {
+final class QuickPinInteractorImpl: QuickPinInteractor {
 
-  private lazy var keyChainController: KeyChainControllerType = KeyChainController()
+  private let pinStorageController: PinStorageController
 
-  public init() {}
-
-  convenience init(keyChainController: KeyChainControllerType) {
-    self.init()
-    self.keyChainController = keyChainController
+  init(pinStorageController: PinStorageController) {
+    self.pinStorageController = pinStorageController
   }
 
   public func setPin(newPin: String) {
-    keyChainController.storeValue(key: .devicePin, value: newPin)
+    pinStorageController.setPin(with: newPin)
   }
 
   public func isPinValid(pin: String) -> QuickPinPartialState {
     if self.isCurrentPinValid(pin: pin) {
       return .success
     } else {
-      return .failure(RuntimeError.quickPinInvalid)
+      return .failure(AuthenticationError.quickPinInvalid)
     }
   }
 
@@ -57,15 +55,15 @@ public final class QuickPinInteractor: QuickPinInteractorType {
       self.setPin(newPin: newPin)
       return .success
     } else {
-      return .failure(RuntimeError.quickPinInvalid)
+      return .failure(AuthenticationError.quickPinInvalid)
     }
   }
 
   public func hasPin() -> Bool {
-    return keyChainController.getValue(key: .devicePin)?.isEmpty == false
+    return pinStorageController.retrievePin()?.isEmpty == false
   }
 
   private func isCurrentPinValid(pin: String) -> Bool {
-    return keyChainController.getValue(key: .devicePin) == pin
+    return pinStorageController.isPinValid(with: pin)
   }
 }

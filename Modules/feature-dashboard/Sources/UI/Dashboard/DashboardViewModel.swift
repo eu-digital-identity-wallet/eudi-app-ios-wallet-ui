@@ -16,6 +16,7 @@
 import Foundation
 import logic_ui
 import logic_business
+import logic_core
 import feature_common
 
 struct DashboardState: ViewState {
@@ -27,12 +28,11 @@ struct DashboardState: ViewState {
   let appVersion: String
 }
 
-@MainActor
-final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInteractorType, DeepLinkController: DeepLinkControllerType>: BaseViewModel<Router, DashboardState> {
+final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, DashboardState> {
 
-  private let interactor: Interactor
+  private let interactor: DashboardInteractor
   private let deepLinkController: DeepLinkController
-  private lazy var walletKitController: WalletKitControllerType = WalletKitController.shared
+  private let walletKitController: WalletKitController
 
   @Published var isMoreModalShowing: Bool = false
   @Published var isBleModalShowing: Bool = false
@@ -42,9 +42,15 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
     viewState.bearer.value.name
   }
 
-  init(router: Router, interactor: Interactor, deepLinkController: DeepLinkController) {
+  init(
+    router: Router,
+    interactor: DashboardInteractor,
+    deepLinkController: DeepLinkController,
+    walletKit: WalletKitController
+  ) {
     self.interactor = interactor
     self.deepLinkController = deepLinkController
+    self.walletKitController = walletKit
     super.init(
       router: router,
       initialState: .init(
@@ -143,7 +149,7 @@ final class DashboardViewModel<Router: RouterHostType, Interactor: DashboardInte
 
   private func handleDeepLink() {
     if let deepLink = deepLinkController.getPendingDeepLinkAction() {
-      deepLinkController.handleDeepLinkAction(routerHost: router, deepLinkAction: deepLink)
+      deepLinkController.handleDeepLinkAction(routerHost: router, deepLinkExecutable: deepLink)
     }
   }
 

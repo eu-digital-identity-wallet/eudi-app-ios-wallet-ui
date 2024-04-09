@@ -14,8 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_business
+import logic_ui
 import Cuckoo
 
-extension KeychainWrapper: Matchable {}
+extension KeychainIdentifier: Matchable {}
 
-extension PrefsController.Key: Matchable {}
+extension Prefs.Key: Matchable {}
+
+extension AppRoute: Matchable {}

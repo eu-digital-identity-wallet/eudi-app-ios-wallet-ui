@@ -16,7 +16,7 @@
 import Foundation
 import SwiftUI
 import logic_business
-import EudiWalletKit
+import logic_core
 
 public enum RequestDataUIModel: Equatable {
   case requestDataRow(RequestDataRow)
@@ -76,10 +76,12 @@ public struct RequestDataRow: Identifiable, Equatable {
     }
   }
 
+  @EquatableNoop
+  public var id: String
+
   public let title: String
   public let value: Value
 
-  public var id: String
   public var isSelected: Bool
   public var isVisible: Bool
   public var isEnabled: Bool
@@ -188,16 +190,25 @@ public extension RequestDataSection {
 
 extension RequestDataUiModel {
 
-  public static func items(for documents: [DocElementsViewModel]) -> [RequestDataUIModel] {
+  public static func items(
+    for documents: [DocElementsViewModel],
+    walletKitController: WalletKitController
+  ) -> [RequestDataUIModel] {
     var requestDataCell = [RequestDataUIModel]()
 
     for document in documents {
 
       // Filter fields for Selectable Disclosed Fields
-      let dataFields = documentSelectiveDisclosableFields(for: document)
+      let dataFields = documentSelectiveDisclosableFields(
+        for: document,
+        walletKitController: walletKitController
+      )
 
       // Filter fields for mandatory keys for verification
-      let verificationFields = documentMandatoryVerificationFields(for: document)
+      let verificationFields = documentMandatoryVerificationFields(
+        for: document,
+        walletKitController: walletKitController
+      )
 
       guard !dataFields.isEmpty || verificationFields != nil else {
         continue
@@ -228,10 +239,13 @@ extension RequestDataUiModel {
     )
   }
 
-  fileprivate static func documentSelectiveDisclosableFields(for document: DocElementsViewModel) -> [RequestDataUIModel] {
+  fileprivate static func documentSelectiveDisclosableFields(
+    for document: DocElementsViewModel,
+    walletKitController: WalletKitController
+  ) -> [RequestDataUIModel] {
     document.elements
       .filter { element in
-        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
+        let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: document.docType))
         return !mandatoryKeys.contains(element.elementIdentifier)
       }
       .map {
@@ -241,9 +255,15 @@ extension RequestDataUiModel {
             isSelected: true,
             isVisible: false,
             title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
-            value: WalletKitController.shared.valueForElementIdentifier(
+            value: walletKitController.valueForElementIdentifier(
               for: .init(rawValue: document.docType),
-              elementIdentifier: $0.elementIdentifier
+              elementIdentifier: $0.elementIdentifier,
+              parser: {
+                Locale.current.localizedDateTime(
+                  date: $0,
+                  uiFormatter: "dd MMM yyyy"
+                )
+              }
             ),
             elementKey: $0.elementIdentifier,
             namespace: $0.nameSpace,
@@ -253,10 +273,13 @@ extension RequestDataUiModel {
       }
   }
 
-  fileprivate static func documentMandatoryVerificationFields(for document: DocElementsViewModel) -> RequestDataUIModel? {
+  fileprivate static func documentMandatoryVerificationFields(
+    for document: DocElementsViewModel,
+    walletKitController: WalletKitController
+  ) -> RequestDataUIModel? {
     let mandatoryFields = document.elements
       .filter { element in
-        let mandatoryKeys = WalletKitController.shared.mandatoryFields(for: .init(rawValue: document.docType))
+        let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: document.docType))
         return mandatoryKeys.contains(element.elementIdentifier)
       }
       .map {
@@ -265,9 +288,15 @@ extension RequestDataUiModel {
           isSelected: true,
           isVisible: false,
           title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
-          value: WalletKitController.shared.valueForElementIdentifier(
+          value: walletKitController.valueForElementIdentifier(
             for: .init(rawValue: document.docType),
-            elementIdentifier: $0.elementIdentifier
+            elementIdentifier: $0.elementIdentifier,
+            parser: {
+              Locale.current.localizedDateTime(
+                date: $0,
+                uiFormatter: "dd MMM yyyy"
+              )
+            }
           ),
           elementKey: $0.elementIdentifier,
           namespace: $0.nameSpace,

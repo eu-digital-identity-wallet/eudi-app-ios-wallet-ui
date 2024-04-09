@@ -16,14 +16,13 @@
 
 import feature_common
 
-@MainActor
-final class PresentationRequestViewModel<Router: RouterHostType, Interactor: PresentationInteractorType>: BaseRequestViewModel<Router> {
+final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewModel<Router> {
 
-  private let interactor: Interactor
+  private let interactor: PresentationInteractor
 
   init(
     router: Router,
-    interactor: Interactor
+    interactor: PresentationInteractor
   ) {
     self.interactor = interactor
     super.init(router: router)

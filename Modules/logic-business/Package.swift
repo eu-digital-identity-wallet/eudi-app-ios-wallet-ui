@@ -34,25 +34,24 @@ let package = Package(
       path: "./logic-resources"
     ),
     .package(
-      url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
-      exact: "0.2.8"
-    ),
-    .package(
       url: "https://github.com/rhummelmose/BluetoothKit.git",
       branch: "master"
     ),
-    .package(name: "logic-test", path: "./logic-test"),
-    .package(name: "logic-analytics", path: "./logic-analytics")
+    .package(
+      url: "https://github.com/Swinject/Swinject.git",
+      from: "2.8.4"
+    ),
+    .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
     .target(
       name: "logic-business",
       dependencies: [
         "logic-resources",
-        "logic-analytics",
         "IOSSecuritySuite",
         "KeychainAccess",
         "BluetoothKit",
+        "Swinject",
         .product(
           name: "Peppermint",
           package: "peppermint"
@@ -60,10 +59,6 @@ let package = Package(
         .product(
           name: "libPhoneNumber",
           package: "libPhoneNumber-iOS"
-        ),
-        .product(
-          name: "EudiWalletKit",
-          package: "eudi-lib-ios-wallet-kit"
         )
       ],
       path: "./Sources"
@@ -72,7 +67,6 @@ let package = Package(
       name: "logic-business-tests",
       dependencies: [
         "logic-business",
-        "logic-analytics",
         "logic-test"
       ],
       path: "./Tests"

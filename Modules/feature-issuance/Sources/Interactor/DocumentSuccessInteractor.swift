@@ -13,18 +13,21 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import logic_core
 import logic_business
 
-public protocol DocumentSuccessInteractorType {
+public protocol DocumentSuccessInteractor {
   func getHoldersName(for documentIdentifier: String) -> String?
   func getDocumentName(for documentIdentifier: String) -> String
 }
 
-public final class DocumentSuccessInteractor: DocumentSuccessInteractorType {
+final class DocumentSuccessInteractorImpl: DocumentSuccessInteractor {
 
-  private lazy var walletController: WalletKitControllerType = WalletKitController.shared
+  private let walletController: WalletKitController
 
-  public init() {}
+  init(walletController: WalletKitController ) {
+    self.walletController = walletController
+  }
 
   public func getHoldersName(for documentIdentifier: String) -> String? {
     guard

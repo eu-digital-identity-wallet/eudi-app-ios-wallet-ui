@@ -113,18 +113,18 @@ public struct PinTextFieldView: View {
     } else if isSecureEntry {
       let image: Image = input.isEmpty
       ? Image(systemName: "")
-      : ThemeManager.shared.image.circle
+      : Theme.shared.image.circle
       image
         .resizable()
         .frame(width: size, height: size, alignment: .center)
         .foregroundColor(
           hasError
-          ? ThemeManager.shared.color.error
-          : ThemeManager.shared.color.textPrimaryDark
+          ? Theme.shared.color.error
+          : Theme.shared.color.textPrimaryDark
         )
     } else {
       Text(input)
-        .typography(ThemeManager.shared.font.bodyLarge)
+        .typography(Theme.shared.font.bodyLarge)
     }
   }
 
@@ -136,7 +136,7 @@ public struct PinTextFieldView: View {
     HStack {
       Divider()
         .frame(width: 1, height: height)
-        .background(ThemeManager.shared.color.dividerDark)
+        .background(Theme.shared.color.dividerDark)
     }
     .opacity(toggleLine ? 1 : 0)
     .onReceive(timer) { _ in
@@ -231,9 +231,9 @@ extension PinTextFieldView {
     var color: Color {
       return switch self {
       case .inactive:
-        ThemeManager.shared.color.dividerDark
+        Theme.shared.color.dividerDark
       case .active:
-        ThemeManager.shared.color.primary
+        Theme.shared.color.primary
       }
     }
   }

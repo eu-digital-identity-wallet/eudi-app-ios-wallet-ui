@@ -95,7 +95,7 @@ public struct FloatingTextFieldView<Content: View>: View {
         }
         ZStack(alignment: .leading) {
           Text(title)
-            .typography(ThemeManager.shared.font.bodyMedium)
+            .typography(Theme.shared.font.bodyMedium)
             .foregroundColor(
               userHasCommitedChange
               ? labelColor

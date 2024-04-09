@@ -14,6 +14,10 @@ let package = Package(
   ],
   dependencies: [
     .package(
+      name: "logic-core",
+      path: "./logic-core"
+    ),
+    .package(
       name: "logic-business",
       path: "./logic-business"
     ),
@@ -58,6 +62,7 @@ let package = Package(
         "logic-business",
         "logic-resources",
         "logic-analytics",
+        "logic-core",
         "PartialSheet",
         .product(
           name: "CodeScanner",
@@ -87,6 +92,7 @@ let package = Package(
       dependencies: [
         "logic-ui",
         "logic-business",
+        "logic-core",
         "logic-analytics",
         "logic-test"
       ],

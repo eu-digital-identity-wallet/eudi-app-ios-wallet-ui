@@ -13,21 +13,20 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 
-public protocol AnalyticsControllerType {
+public protocol AnalyticsController {
   func initialize()
   func logScreen(screen: String, arguments: [String: String])
   func logEvent(event: String, arguments: [String: String])
 }
 
-public final class AnalyticsController: AnalyticsControllerType {
+final class AnalyticsControllerImpl: AnalyticsController {
 
-  public static let shared: AnalyticsControllerType = AnalyticsController()
+  private let analyticsConfig: AnalyticsConfig?
 
-  private lazy var analyticsConfig: AnalyticsConfigType? = AnalyticsConfigProvider.shared.getConfig()
-
-  private init() {}
+  init(analyticsConfig: AnalyticsConfig?) {
+    self.analyticsConfig = analyticsConfig
+  }
 
   public func initialize() {
     analyticsConfig?.analyticsProviders.forEach { (key, provider) in

@@ -29,8 +29,6 @@ public final class ThemeManager: ThemeManagerProtocol {
 
   public static var shared: ThemeProtocol = AppTheme()
 
-  private init() {}
-
   public class func config(themeConfiguration: ThemeConfiguration) {
     self.shared.themeConfiguration = themeConfiguration
   }

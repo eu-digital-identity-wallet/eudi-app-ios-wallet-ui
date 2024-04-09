@@ -39,21 +39,29 @@ Run tests
 
 Build EUDI Wallet Demo version and upload it to AppCenter
 
+### ios resetVersioning
+
+```sh
+[bundle exec] fastlane ios resetVersioning
+```
+
+Reset version and build number to default
+
 ### ios update_build_number
 
 ```sh
 [bundle exec] fastlane ios update_build_number
 ```
 
-Set build number to default 1
+Set build number
 
-### ios reset_buildnumber
+### ios update_version
 
 ```sh
-[bundle exec] fastlane ios reset_buildnumber
+[bundle exec] fastlane ios update_version
 ```
 
-Set build number to default 1
+Set version
 
 ### ios build_number
 
@@ -62,14 +70,6 @@ Set build number to default 1
 ```
 
 Build Number
-
-### ios full_version
-
-```sh
-[bundle exec] fastlane ios full_version
-```
-
-Build Full version
 
 ### ios tag_name
 
@@ -94,6 +94,14 @@ Upload to AppCenter
 ```
 
 Get Release version From AppCenter
+
+### ios calver
+
+```sh
+[bundle exec] fastlane ios calver
+```
+
+Build Version
 
 ----
 

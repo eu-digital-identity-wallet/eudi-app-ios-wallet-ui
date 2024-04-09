@@ -36,9 +36,9 @@ public struct ContentTitleView: View {
   public init(
     title: LocalizableString.Key,
     caption: LocalizableString.Key? = nil,
-    decorationColor: Color = ThemeManager.shared.color.primary,
-    titleColor: Color = ThemeManager.shared.color.textPrimaryDark,
-    captionColor: Color = ThemeManager.shared.color.textSecondaryDark,
+    decorationColor: Color = Theme.shared.color.primary,
+    titleColor: Color = Theme.shared.color.textPrimaryDark,
+    captionColor: Color = Theme.shared.color.textSecondaryDark,
     topSpacing: TopSpacing = .withToolbar,
     onTap: TapListener = nil
   ) {
@@ -54,9 +54,9 @@ public struct ContentTitleView: View {
   public init(
     titleDecoration: TitleDecoration,
     caption: LocalizableString.Key? = nil,
-    decorationColor: Color = ThemeManager.shared.color.primary,
-    titleColor: Color = ThemeManager.shared.color.textPrimaryDark,
-    captionColor: Color = ThemeManager.shared.color.textSecondaryDark,
+    decorationColor: Color = Theme.shared.color.primary,
+    titleColor: Color = Theme.shared.color.textPrimaryDark,
+    captionColor: Color = Theme.shared.color.textSecondaryDark,
     topSpacing: TopSpacing = .withToolbar,
     onTap: TapListener = nil
   ) {
@@ -74,19 +74,19 @@ public struct ContentTitleView: View {
       switch titleDecoration {
       case .plain(let key):
         Text(key)
-          .typography(ThemeManager.shared.font.headlineSmall)
+          .typography(Theme.shared.font.headlineSmall)
           .foregroundColor(self.titleColor)
       case .icon(let decorated, let icon, let text):
         Text(decorated)
-          .typography(style: ThemeManager.shared.font.headlineSmall)
+          .typography(style: Theme.shared.font.headlineSmall)
           .foregroundColor(self.titleColor)
         +
         Text("\(icon)")
-          .typography(style: ThemeManager.shared.font.headlineSmall)
+          .typography(style: Theme.shared.font.headlineSmall)
           .foregroundColor(self.decorationColor)
         +
         Text(text ?? "")
-          .typography(style: ThemeManager.shared.font.headlineSmall)
+          .typography(style: Theme.shared.font.headlineSmall)
           .foregroundColor(self.titleColor)
 
       }
@@ -109,7 +109,7 @@ public struct ContentTitleView: View {
       if let caption = self.caption {
         HStack {
           Text(caption)
-            .typography(ThemeManager.shared.font.bodyMedium)
+            .typography(Theme.shared.font.bodyMedium)
             .foregroundColor(self.captionColor)
           Spacer()
         }

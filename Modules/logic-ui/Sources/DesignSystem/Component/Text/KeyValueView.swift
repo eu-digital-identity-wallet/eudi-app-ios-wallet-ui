@@ -63,7 +63,7 @@ public struct KeyValueView: View {
 
         Text(title)
           .foregroundColor(Theme.shared.color.textSecondaryDark)
-          .typography(ThemeManager.shared.font.bodyMedium)
+          .typography(Theme.shared.font.bodyMedium)
           .if(isLoading) { view in
             view
               .lineLimit(1)
@@ -88,7 +88,7 @@ public struct KeyValueView: View {
     case .string(let key):
       Text(key)
         .foregroundColor(Theme.shared.color.textPrimaryDark)
-        .typography(ThemeManager.shared.font.bodyLarge)
+        .typography(Theme.shared.font.bodyLarge)
         .if(isLoading) { view in
           view
             .lineLimit(1)

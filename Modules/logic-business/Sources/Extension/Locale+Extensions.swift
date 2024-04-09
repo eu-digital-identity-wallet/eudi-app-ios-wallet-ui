@@ -28,7 +28,10 @@ public extension Locale {
   ]
 
   private var userSelectedLocale: Locale {
-    return Locale(identifier: PrefsController.shared.getUserLocale())
+    guard let identifier = DIGraph.resolver.resolve(PrefsController.self)?.getUserLocale() else {
+      return Locale.current
+    }
+    return Locale(identifier: identifier)
   }
 
   func localizedDateTime(
@@ -41,7 +44,7 @@ public extension Locale {
     dateFormatter.dateFormat = uiFormatter
     dateFormatter.locale = userSelectedLocale
 
-    return parseDate(date: date, uiFormatter: dateFormatter, apiFormatters: formatters)
+    return parseDate(date: date, uiFormatter: dateFormatter, formatters: formatters)
   }
 
   func localizedDateTime(
@@ -56,16 +59,16 @@ public extension Locale {
     dateFormatter.timeStyle = timeStyle
     dateFormatter.locale = userSelectedLocale
 
-    return parseDate(date: date, uiFormatter: dateFormatter, apiFormatters: formatters)
+    return parseDate(date: date, uiFormatter: dateFormatter, formatters: formatters)
   }
 
   private func parseDate(
     date: String,
     uiFormatter: DateFormatter,
-    apiFormatters: [String]
+    formatters: [String] = serviceDateFormatters
   ) -> String {
     var current: Date?
-    for formatter in apiFormatters {
+    for formatter in formatters {
       let parseDateFormatter = DateFormatter()
       parseDateFormatter.dateFormat = formatter
       if let normalDate = parseDateFormatter.date(from: date) {
@@ -81,9 +84,9 @@ public extension Locale {
 
   func parseDate(
     date: String,
-    apiFormatters: [String]
+    formatters: [String] = serviceDateFormatters
   ) -> Date? {
-    for formatter in apiFormatters {
+    for formatter in formatters {
       let parseDateFormatter = DateFormatter()
       parseDateFormatter.dateFormat = formatter
       if let normalDate = parseDateFormatter.date(from: date) {

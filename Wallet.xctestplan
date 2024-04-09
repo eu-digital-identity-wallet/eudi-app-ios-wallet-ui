@@ -67,13 +67,6 @@
     },
     {
       "target" : {
-        "containerPath" : "container:Modules\/logic-analytics",
-        "identifier" : "logic-analytics-tests",
-        "name" : "logic-analytics-tests"
-      }
-    },
-    {
-      "target" : {
         "containerPath" : "container:Modules\/logic-api",
         "identifier" : "logic-api-tests",
         "name" : "logic-api-tests"
@@ -91,6 +84,13 @@
         "containerPath" : "container:Modules\/logic-ui",
         "identifier" : "logic-ui-tests",
         "name" : "logic-ui-tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/logic-authentication",
+        "identifier" : "logic-authentication-tests",
+        "name" : "logic-authentication-tests"
       }
     }
   ],

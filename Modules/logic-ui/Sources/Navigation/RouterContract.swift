@@ -15,6 +15,7 @@
  */
 import SwiftUI
 import logic_business
+import logic_core
 
 public indirect enum AppRoute: Equatable {
 
@@ -27,12 +28,12 @@ public indirect enum AppRoute: Equatable {
   case faqs
   case dashboard
   case biometry(config: any UIConfigType)
-  case presentationLoader(String, presentationCoordinator: PresentationSessionCoordinatorType)
-  case presentationRequest(presentationCoordinator: PresentationSessionCoordinatorType)
+  case presentationLoader(String, presentationCoordinator: PresentationSessionCoordinator)
+  case presentationRequest(presentationCoordinator: PresentationSessionCoordinator)
   case welcome
-  case proximityConnection(presentationCoordinator: PresentationSessionCoordinatorType)
-  case proximityRequest(presentationCoordinator: PresentationSessionCoordinatorType)
-  case proximityLoader(String, presentationCoordinator: PresentationSessionCoordinatorType)
+  case proximityConnection(presentationCoordinator: PresentationSessionCoordinator)
+  case proximityRequest(presentationCoordinator: PresentationSessionCoordinator)
+  case proximityLoader(String, presentationCoordinator: PresentationSessionCoordinator)
   case quickPin(config: any UIConfigType)
   case issuanceAddDocument(config: any UIConfigType)
   case issuanceDocumentDetails(config: any UIConfigType)
@@ -74,7 +75,7 @@ public indirect enum AppRoute: Equatable {
   }
 }
 
-public protocol RouterHostType {
+public protocol RouterHost {
   func push(with route: AppRoute)
   func popTo(with route: AppRoute, inclusive: Bool, animated: Bool)
   func pop(animated: Bool)
@@ -88,7 +89,7 @@ public protocol RouterHostType {
   func isScreenForeground(with route: AppRoute) -> Bool
 }
 
-public class PreviewRouter: RouterHostType {
+public class PreviewRouter: RouterHost {
 
   public init() {}
 

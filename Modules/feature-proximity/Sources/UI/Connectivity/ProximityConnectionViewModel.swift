@@ -24,12 +24,11 @@ struct ProxmityConnectivityState: ViewState {
   let qrImage: UIImage?
 }
 
-@MainActor
-final class ProximityConnectionViewModel<Router: RouterHostType, Interactor: ProximityInteractorType>: BaseViewModel<Router, ProxmityConnectivityState> {
+final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Router, ProxmityConnectivityState> {
 
-  private let interactor: Interactor
+  private let interactor: ProximityInteractor
 
-  init(router: Router, interactor: Interactor) {
+  init(router: Router, interactor: ProximityInteractor) {
     self.interactor = interactor
     super.init(
       router: router,

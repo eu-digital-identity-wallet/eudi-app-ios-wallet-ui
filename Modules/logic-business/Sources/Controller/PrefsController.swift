@@ -15,56 +15,53 @@
  */
 import Foundation
 
-public protocol PrefsControllerType {
-  func setValue(_ value: Any?, forKey: PrefsController.Key)
-  func getString(forKey: PrefsController.Key) -> String?
-  func getOptionalString(forKey: PrefsController.Key) -> String
-  func getBool(forKey: PrefsController.Key) -> Bool
-  func getFloat(forKey: PrefsController.Key) -> Float
-  func getInt(forKey: PrefsController.Key) -> Int
-  func remove(forKey: PrefsController.Key)
-  func getValue(forKey: PrefsController.Key) -> Any?
+public protocol PrefsController {
+  func setValue(_ value: Any?, forKey: Prefs.Key)
+  func getString(forKey: Prefs.Key) -> String?
+  func getOptionalString(forKey: Prefs.Key) -> String
+  func getBool(forKey: Prefs.Key) -> Bool
+  func getFloat(forKey: Prefs.Key) -> Float
+  func getInt(forKey: Prefs.Key) -> Int
+  func remove(forKey: Prefs.Key)
+  func getValue(forKey: Prefs.Key) -> Any?
+  func getUserLocale() -> String
 }
 
-public class PrefsController: PrefsControllerType {
-
-  public static let shared = PrefsController()
+final class PrefsControllerImpl: PrefsController {
 
   private lazy var userDefaultsWrapper: UserDefaults = {
     UserDefaults.standard
   }()
 
-  public init() {}
-
-  public func setValue(_ value: Any?, forKey: PrefsController.Key) {
+  public func setValue(_ value: Any?, forKey: Prefs.Key) {
     userDefaultsWrapper.setValue(value, forKey: forKey.rawValue)
   }
 
-  public func getString(forKey: PrefsController.Key) -> String? {
+  public func getString(forKey: Prefs.Key) -> String? {
     return userDefaultsWrapper.string(forKey: forKey.rawValue)
   }
 
-  public func getOptionalString(forKey: PrefsController.Key) -> String {
+  public func getOptionalString(forKey: Prefs.Key) -> String {
     return userDefaultsWrapper.string(forKey: forKey.rawValue) ?? ""
   }
 
-  public func getFloat(forKey: PrefsController.Key) -> Float {
+  public func getFloat(forKey: Prefs.Key) -> Float {
     return userDefaultsWrapper.float(forKey: forKey.rawValue)
   }
 
-  public func getBool(forKey: PrefsController.Key) -> Bool {
+  public func getBool(forKey: Prefs.Key) -> Bool {
     return userDefaultsWrapper.bool(forKey: forKey.rawValue)
   }
 
-  public func remove(forKey: PrefsController.Key) {
+  public func remove(forKey: Prefs.Key) {
     userDefaultsWrapper.removeObject(forKey: forKey.rawValue)
   }
 
-  public func getValue(forKey: PrefsController.Key) -> Any? {
+  public func getValue(forKey: Prefs.Key) -> Any? {
     return userDefaultsWrapper.value(forKey: forKey.rawValue)
   }
 
-  public func getInt(forKey: PrefsController.Key) -> Int {
+  public func getInt(forKey: Prefs.Key) -> Int {
     return userDefaultsWrapper.integer(forKey: forKey.rawValue)
   }
 
@@ -73,7 +70,9 @@ public class PrefsController: PrefsControllerType {
   }
 }
 
-public extension PrefsController {
+public struct Prefs {}
+
+public extension Prefs {
   enum Key: String {
     case biometryEnabled
     case cachedDeepLink

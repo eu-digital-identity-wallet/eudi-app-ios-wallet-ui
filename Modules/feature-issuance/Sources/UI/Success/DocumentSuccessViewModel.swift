@@ -26,12 +26,16 @@ struct DocumentSuccessState: ViewState {
   let documentIdentifier: String
 }
 
-@MainActor
-final class DocumentSuccessViewModel<Router: RouterHostType, Interactor: DocumentSuccessInteractorType>: BaseViewModel<Router, DocumentSuccessState> {
+final class DocumentSuccessViewModel<Router: RouterHost>: BaseViewModel<Router, DocumentSuccessState> {
 
-  private let interactor: Interactor
+  private let interactor: DocumentSuccessInteractor
 
-  public init(router: Router, interactor: Interactor, config: any UIConfigType, documentIdentifier: String) {
+  public init(
+    router: Router,
+    interactor: DocumentSuccessInteractor,
+    config: any UIConfigType,
+    documentIdentifier: String
+  ) {
 
     guard let config = config as? IssuanceFlowUiConfig else {
       fatalError("ExternalLoginViewModel:: Invalid configuraton")

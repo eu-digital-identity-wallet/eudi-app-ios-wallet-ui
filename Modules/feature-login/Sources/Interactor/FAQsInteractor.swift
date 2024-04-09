@@ -21,12 +21,12 @@ public enum FAQsPartialState {
   case failure(Error)
 }
 
-public protocol FAQsInteractorType {
+public protocol FAQsInteractor {
   func fetchFAQs() async -> FAQsPartialState
 }
 
-public final actor FAQsInteractor: FAQsInteractorType {
-  public init() {}
+final actor FAQsInteractorImpl: FAQsInteractor {
+
   public func fetchFAQs() async -> FAQsPartialState {
     do {
       try await Task.sleep(nanoseconds: 2 * 1_000_000_000)

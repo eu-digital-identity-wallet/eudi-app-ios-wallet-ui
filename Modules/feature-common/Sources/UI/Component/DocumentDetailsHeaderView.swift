@@ -23,6 +23,7 @@ public struct DocumentDetailsHeaderView: View {
   let documentName: String
   let holdersName: String
   let userIcon: Image
+  let hasDocumentExpired: Bool
   let isLoading: Bool
   let actions: [ContentHeaderView.Action]?
   let onBack: (() -> Void)?
@@ -31,6 +32,7 @@ public struct DocumentDetailsHeaderView: View {
     documentName: String,
     holdersName: String,
     userIcon: Image,
+    hasDocumentExpired: Bool,
     isLoading: Bool,
     actions: [ContentHeaderView.Action]?,
     onBack: (() -> Void)?
@@ -38,6 +40,7 @@ public struct DocumentDetailsHeaderView: View {
     self.holdersName = holdersName
     self.userIcon = userIcon
     self.documentName = documentName
+    self.hasDocumentExpired = hasDocumentExpired
     self.isLoading = isLoading
     self.actions = actions
     self.onBack = onBack
@@ -49,6 +52,7 @@ public struct DocumentDetailsHeaderView: View {
         documentName: documentName,
         holdersName: holdersName,
         userIcon: userIcon,
+        hasDocumentExpired: hasDocumentExpired,
         isLoading: isLoading,
         actions: actions,
         onBack: onBack
@@ -64,6 +68,7 @@ extension DocumentDetailsHeaderView {
     let documentName: String
     let holdersName: String
     let userIcon: Image
+    let hasDocumentExpired: Bool
     let isLoading: Bool
     let actions: [ContentHeaderView.Action]?
     let onBack: (() -> Void)?
@@ -72,6 +77,7 @@ extension DocumentDetailsHeaderView {
       documentName: String,
       holdersName: String,
       userIcon: Image,
+      hasDocumentExpired: Bool,
       isLoading: Bool,
       actions: [ContentHeaderView.Action]?,
       onBack: (() -> Void)?
@@ -79,6 +85,7 @@ extension DocumentDetailsHeaderView {
       self.documentName = documentName
       self.holdersName = holdersName
       self.userIcon = userIcon
+      self.hasDocumentExpired = hasDocumentExpired
       self.isLoading = isLoading
       self.actions = actions
       self.onBack = onBack
@@ -116,9 +123,19 @@ extension DocumentDetailsHeaderView {
             .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
 
           if !isLoading {
-            Theme.shared.image.idStroke
-              .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
-              .padding(.leading, -40)
+            ZStack(alignment: .topTrailing) {
+              Theme.shared.image.idStroke
+                .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
+              if hasDocumentExpired {
+                Theme.shared.image.warning
+                  .renderingMode(.template)
+                  .foregroundColor(Theme.shared.color.warning)
+                  .padding(2)
+                  .background(Theme.shared.color.secondary)
+                  .clipShape(Circle())
+              }
+            }
+            .padding(.leading, -40)
           }
           Spacer()
         }

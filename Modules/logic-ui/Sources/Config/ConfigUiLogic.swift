@@ -20,13 +20,26 @@ public typealias AppRouteKey = String
 
 public protocol ConfigUiLogic {
 
-  /**
-   * App Route after authorization Point
-   */
-
   var landingRoute: AppRoute { get }
 
   var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] { get }
 
   init(themeConfiguration: ThemeConfiguration)
+}
+
+struct ConfigUiLogicImpl: ConfigUiLogic {
+
+  public var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] = [
+    AppRoute.dashboard.info.key: .init(Theme.shared.color.secondary),
+    AppRoute.welcome.info.key: .init(Theme.shared.color.secondary),
+    AppRoute.issuanceDocumentDetails(config: NoConfig()).info.key: .init(Theme.shared.color.secondary)
+  ]
+
+  public var landingRoute: AppRoute {
+    return .dashboard
+  }
+
+  public init(themeConfiguration: ThemeConfiguration) {
+    Theme.config(themeConfiguration: themeConfiguration)
+  }
 }

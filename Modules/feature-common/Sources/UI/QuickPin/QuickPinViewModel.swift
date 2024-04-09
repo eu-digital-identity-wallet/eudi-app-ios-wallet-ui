@@ -38,17 +38,16 @@ struct QuickPinState: ViewState {
   let quickPinSize: Int
 }
 
-@MainActor
-final class QuickPinViewModel<Router: RouterHostType, Interactor: QuickPinInteractorType>: BaseViewModel<Router, QuickPinState> {
+final class QuickPinViewModel<Router: RouterHost>: BaseViewModel<Router, QuickPinState> {
 
   @Published var uiPinInputField: String = ""
   @Published var isCancelModalShowing: Bool = false
 
-  private let interactor: Interactor
+  private let interactor: QuickPinInteractor
 
   init(
     router: Router,
-    interactor: Interactor,
+    interactor: QuickPinInteractor,
     config: any UIConfigType
   ) {
     guard let config = config as? QuickPinUiConfig else {

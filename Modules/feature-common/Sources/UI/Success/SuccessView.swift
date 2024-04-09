@@ -17,9 +17,9 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct SuccessView<Router: RouterHostType, DeepLinkController: DeepLinkControllerType>: View {
+public struct SuccessView<Router: RouterHost>: View {
 
-  @ObservedObject var viewmodel: SuccessViewModel<Router, DeepLinkController>
+  @ObservedObject var viewmodel: SuccessViewModel<Router>
 
   public init(
     with router: Router,
@@ -34,7 +34,7 @@ public struct SuccessView<Router: RouterHostType, DeepLinkController: DeepLinkCo
       ContentTitleView(
         title: viewmodel.viewState.config.title,
         caption: viewmodel.viewState.config.subtitle,
-        titleColor: ThemeManager.shared.color.success,
+        titleColor: Theme.shared.color.success,
         topSpacing: .withoutToolbar
       )
       mainView()
@@ -44,7 +44,7 @@ public struct SuccessView<Router: RouterHostType, DeepLinkController: DeepLinkCo
   private func getCenteredIcon() -> Image {
     return switch viewmodel.viewState.config.visualKind {
     case .defaultIcon:
-      ThemeManager.shared.image.checkmarkCircleFill
+      Theme.shared.image.checkmarkCircleFill
     case .customIcon(let image):
       image
     }
@@ -59,7 +59,7 @@ public struct SuccessView<Router: RouterHostType, DeepLinkController: DeepLinkCo
         getCenteredIcon()
           .resizable()
           .scaledToFit()
-          .foregroundColor(ThemeManager.shared.color.success)
+          .foregroundColor(Theme.shared.color.success)
           .frame(height: getScreenRect().width / 2.5)
       }
       Spacer()
