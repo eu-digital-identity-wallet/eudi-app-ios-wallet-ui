@@ -309,9 +309,9 @@
     {
       "identity" : "swift-collections",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/scytales-com/swift-collections.git",
+      "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "b7263391c0f53d1a60b8fe937366fc821ec7f53c",
+        "revision" : "94cf62b3ba8d4bed62680a282d4c25f9c63c2efb",
         "version" : "1.1.0"
       }
     },
@@ -338,8 +338,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/niscy-eudiw/SwiftCBOR.git",
       "state" : {
-        "revision" : "d1b49bb53e94e1577016754e33f916a05d059882",
-        "version" : "0.5.5"
+        "revision" : "74763c2624c09e8702967d8bef01767d12a71615",
+        "version" : "0.5.1"
       }
     },
     {
