@@ -37,15 +37,6 @@
       }
     },
     {
-      "identity" : "asn1decoder",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/filom/ASN1Decoder",
-      "state" : {
-        "revision" : "7e1523662c69d019a3299bbfb22fb824141dd1f6",
-        "version" : "1.10.0"
-      }
-    },
-    {
       "identity" : "blueecc",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/niscy-eudiw/BlueECC.git",
@@ -113,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "f45960f4b00bc25f740122968aaebe1593cecea1",
-        "version" : "0.2.2"
+        "revision" : "3f24b3417dac2525ed830337fe03fd22c4d594e4",
+        "version" : "0.2.3"
       }
     },
     {
@@ -122,8 +113,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "b307f5d411688b9b7752971530d108cf96b08f28",
-        "version" : "0.1.9"
+        "revision" : "a68dc2ce75f4e0ddbf5d45e00594b83f2966142d",
+        "version" : "0.2.0"
       }
     },
     {
@@ -158,8 +149,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "6e58e7f67489cd72d3f01050f4a732b01d69669f",
-        "version" : "0.3.1"
+        "revision" : "219397fa6bf75a38f0e0b99f8d22481b9eb37266",
+        "version" : "0.3.2"
       }
     },
     {
@@ -374,8 +365,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Swinject/Swinject.git",
       "state" : {
-        "revision" : "463cb2d659c8ae34899d18057ea5b1bb86fc3178",
-        "version" : "2.8.4"
+        "revision" : "13d2d7065253eea1e9ce4d9263cf51c783fdf3f0",
+        "version" : "2.8.5"
       }
     },
     {
