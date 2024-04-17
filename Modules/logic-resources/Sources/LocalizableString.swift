@@ -223,6 +223,10 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "expired")
     case .onExpired(let args):
       bundle.localizedStringWithArguments(forKey: "on_expired", arguments: args)
+    case .or:
+      bundle.localizedString(forKey: "or")
+    case .scanQr:
+      bundle.localizedString(forKey: "scan_qr")
     }
   }
 
@@ -327,6 +331,8 @@ public extension LocalizableString {
     case errorUnableFetchDocument
     case expired
     case onExpired([String])
+    case or
+    case scanQr
   }
 }
 

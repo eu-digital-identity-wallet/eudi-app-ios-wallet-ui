@@ -928,6 +928,17 @@
         }
       }
     },
+    "or" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or"
+          }
+        }
+      }
+    },
     "pid" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1419,6 +1430,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Room Number"
+          }
+        }
+      }
+    },
+    "scan_qr" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SCAN QR"
           }
         }
       }

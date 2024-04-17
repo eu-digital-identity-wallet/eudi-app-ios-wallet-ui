@@ -79,6 +79,10 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
     }
   }
 
+  func onScanClick() {
+
+  }
+
   func pop() {
     router.pop(animated: true)
   }
