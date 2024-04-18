@@ -81,7 +81,7 @@ public struct ProximityConnectionView<Router: RouterHost>: View {
     }
     .padding(.vertical, SPACING_EXTRA_LARGE)
     .frame(maxWidth: .infinity, maxHeight: contentSize)
-    .background(Theme.shared.color.primary.opacity(0.12))
+    .background(Theme.shared.color.backgroundDefault.opacity(0.8))
     .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
   }
 }
