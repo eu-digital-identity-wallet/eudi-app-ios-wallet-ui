@@ -21,7 +21,7 @@ import logic_business
 
 public protocol DocumentDetailsInteractor {
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
-  func deleteDocument(with id: DocumentIdentifier) async -> DocumentDetailsDeletionPartialState
+  func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState
 }
 
 final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
@@ -40,18 +40,41 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     return .success(documentDetails)
   }
 
-  public func deleteDocument(with id: DocumentIdentifier) async -> DocumentDetailsDeletionPartialState {
+  public func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
+
+    let successState: DocumentDetailsDeletionPartialState
+
     do {
-      switch id {
-      case .EuPidDocType:
-        try await walletController.clearDocuments()
-      default:
-        try await walletController.deleteDocument(with: id.rawValue)
+
+      var shouldDeleteAllDocuments: Bool {
+        if type == .EuPidDocType {
+
+          let documentPids = walletController.fetchDocuments()
+            .filter({ $0.docType == DocumentTypeIdentifier.EuPidDocType.rawValue })
+
+          guard documentPids.count > 1 else { return true }
+
+          // MARK: - TODO
+          // Once core is ready, change the .title to the new .id and check the sorting
+          return documentPids.sorted { $0.title > $1.title }.first?.title == documentId
+
+        } else {
+          return false
+        }
       }
+
+      if shouldDeleteAllDocuments {
+        try await walletController.clearDocuments()
+        successState = .success(shouldReboot: true)
+      } else {
+        try await walletController.deleteDocument(with: documentId)
+        successState = .success(shouldReboot: false)
+      }
+
     } catch {
       return .failure(error)
     }
-    return .success(shouldReboot: id == .EuPidDocType)
+    return successState
   }
 }
 

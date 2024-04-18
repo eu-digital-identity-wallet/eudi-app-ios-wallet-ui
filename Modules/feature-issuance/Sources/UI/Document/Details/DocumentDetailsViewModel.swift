@@ -110,19 +110,19 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
 
   func onDeleteDocument() {
     isDeletionModalShowing = false
-    onDocumentDelete(with: viewState.document.identifier)
+    onDocumentDelete(with: viewState.document.type, and: viewState.document.id)
   }
 
   func onShowDeleteModal() {
     isDeletionModalShowing = !isDeletionModalShowing
   }
 
-  private func onDocumentDelete(with id: DocumentIdentifier) {
+  private func onDocumentDelete(with type: DocumentTypeIdentifier, and id: String) {
     Task {
       self.setNewState(
         isLoading: true
       )
-      switch await self.interactor.deleteDocument(with: id) {
+      switch await self.interactor.deleteDocument(with: id, and: type) {
       case .success(let shouldReboot):
         if shouldReboot {
           self.onReboot()

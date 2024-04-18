@@ -20,7 +20,7 @@ import feature_common
 struct DocumentSuccessState: ViewState {
   let error: ContentErrorView.Config?
   let title: LocalizableString.Key
-  let caption: LocalizableString.Key
+  let caption: LocalizableString.Key?
   let holderName: String?
   let config: IssuanceFlowUiConfig
   let documentIdentifier: String
@@ -48,7 +48,7 @@ final class DocumentSuccessViewModel<Router: RouterHost>: BaseViewModel<Router, 
       initialState: .init(
         error: nil,
         title: .issuanceSuccessTitle,
-        caption: .custom(""),
+        caption: nil,
         holderName: nil,
         config: config,
         documentIdentifier: documentIdentifier
@@ -58,7 +58,7 @@ final class DocumentSuccessViewModel<Router: RouterHost>: BaseViewModel<Router, 
 
   func initialize() async {
     setNewState(
-      caption: .issuanceSuccessCaption([interactor.getDocumentName(for: viewState.documentIdentifier)]),
+      caption: interactor.getDocumentSuccessCaption(for: viewState.documentIdentifier),
       holderName: interactor.getHoldersName(for: viewState.documentIdentifier)
     )
   }

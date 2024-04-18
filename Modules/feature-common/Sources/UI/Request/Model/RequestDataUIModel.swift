@@ -174,7 +174,7 @@ public extension RequestDataSection {
     case mdl
     case custom(String)
 
-    public init(docType: DocumentIdentifier) {
+    public init(docType: DocumentTypeIdentifier) {
       switch docType {
 
       case .EuPidDocType:
@@ -233,8 +233,8 @@ extension RequestDataUiModel {
     .requestDataSection(
       .init(
         id: document.docType,
-        type: .init(docType: DocumentIdentifier(rawValue: document.docType)),
-        title: DocumentIdentifier(rawValue: document.docType).localizedTitle
+        type: .init(docType: DocumentTypeIdentifier(rawValue: document.docType)),
+        title: DocumentTypeIdentifier(rawValue: document.docType).localizedTitle
       )
     )
   }

@@ -36,11 +36,11 @@ public protocol WalletKitController {
   func loadDocuments() async throws
   func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
   func valueForElementIdentifier(
-    for documentType: DocumentIdentifier,
+    for documentType: DocumentTypeIdentifier,
     elementIdentifier: String,
     parser: (String) -> String
   ) -> MdocValue
-  func mandatoryFields(for documentType: DocumentIdentifier) -> [String]
+  func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String]
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -154,7 +154,7 @@ final class WalletKitControllerImpl: WalletKitController {
 extension WalletKitController {
 
   // TODO: Mandatory fields should be returned in a generic model
-  public func mandatoryFields(for documentType: DocumentIdentifier) -> [String] {
+  public func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String] {
     switch documentType {
     case .EuPidDocType:
       return [
@@ -181,7 +181,7 @@ extension WalletKitController {
   ///      .first(where: { $0.name == elementIdentifier })?.value ?? LocalizableString.shared.get(with: .unavailableField)
   ///
   public func valueForElementIdentifier(
-    for documentType: DocumentIdentifier,
+    for documentType: DocumentTypeIdentifier,
     elementIdentifier: String,
     parser: (String) -> String
   ) -> MdocValue {

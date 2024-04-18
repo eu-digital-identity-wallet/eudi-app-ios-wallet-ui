@@ -42,13 +42,9 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
       var item = $0
       switch item.type {
       case .EuPidDocType:
-        item.isEnabled = walletController.fetchDocument(
-          with: DocumentIdentifier.EuPidDocType.rawValue
-        ) == nil
+        item.isEnabled = true
       case .IsoMdlModel:
-        item.isEnabled = walletController.fetchDocument(
-          with: DocumentIdentifier.IsoMdlModel.rawValue
-        ) == nil && flow == .extraDocument
+        item.isEnabled = flow == .extraDocument
       case .genericDocument:
         break
       }
@@ -85,7 +81,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
   public func issueDocument(docType: String, format: DataFormat) async -> IssueDocumentPartialState {
     do {
       let doc = try await walletController.issueDocument(docType: docType, format: format)
-      return .success(doc.docType)
+      return .success(doc.id)
     } catch {
       return .failure(WalletCoreError.unableFetchDocument)
     }
