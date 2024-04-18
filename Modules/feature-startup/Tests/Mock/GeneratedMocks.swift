@@ -57,6 +57,19 @@ import Cuckoo
 @testable import logic_authentication
 
 import Foundation
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import feature_startup
+@testable import logic_business
+@testable import logic_core
+@testable import logic_analytics
+@testable import logic_api
+@testable import logic_ui
+@testable import logic_authentication
+
+import Foundation
 import SwiftUI
 import logic_resources
 import logic_ui
@@ -1004,6 +1017,20 @@ import Cuckoo
 import CodeScanner
 import Foundation
 import SwiftUI
+import logic_core
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import feature_startup
+@testable import logic_business
+@testable import logic_core
+@testable import logic_analytics
+@testable import logic_api
+@testable import logic_ui
+@testable import logic_authentication
+
+import logic_core
 import logic_resources
 import logic_ui
 

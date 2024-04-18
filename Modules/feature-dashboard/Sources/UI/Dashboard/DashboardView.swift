@@ -129,11 +129,6 @@ public struct DashboardView<Router: RouterHost>: View {
     .task {
       await viewModel.fetch()
     }
-    .fullScreenCover(isPresented: $viewModel.onScan) {
-      ScannerView(dismiss: $viewModel.onScan) { result in
-        viewModel.onScanSuccess(scanResult: result)
-      }
-    }
     .onChange(of: scenePhase) { phase in
       self.viewModel.setPhase(with: phase)
     }

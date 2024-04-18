@@ -22,6 +22,9 @@ public protocol ShapeManagerProtocol {
   var medium: CGFloat { get }
   var large: CGFloat { get }
   var extraLarge: CGFloat { get }
+  var xxLarge: CGFloat { get }
+  var xxxLarge: CGFloat { get }
+  var xxxxLarge: CGFloat { get }
   var full: CGFloat { get }
 
   var capsuleShape: AnyShape { get }
@@ -37,6 +40,9 @@ final class ShapeManager: ShapeManagerProtocol {
   public var medium: CGFloat = 18
   public var large: CGFloat = 20
   public var extraLarge: CGFloat = 24
+  public var xxLarge: CGFloat = 32
+  public var xxxLarge: CGFloat = 48
+  public var xxxxLarge: CGFloat = 56
   public var full: CGFloat = .infinity
 
   public var lowCornerRadius: AnyShape {

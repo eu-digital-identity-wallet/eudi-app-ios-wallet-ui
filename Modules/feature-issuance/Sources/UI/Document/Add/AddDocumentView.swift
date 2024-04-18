@@ -113,7 +113,7 @@ public struct AddDocumentView<Router: RouterHost>: View {
                 .foregroundStyle(Theme.shared.color.primary)
                 .frame(height: contentSize / 6)
 
-              Text(.scanQr)
+              Text(.issuanceScanQr)
                 .typography(Theme.shared.font.titleSmall)
                 .foregroundColor(Theme.shared.color.textPrimaryDark )
             }

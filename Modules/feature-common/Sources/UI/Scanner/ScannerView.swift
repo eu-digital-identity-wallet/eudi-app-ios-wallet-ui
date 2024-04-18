@@ -17,58 +17,63 @@ import Foundation
 import SwiftUI
 import logic_ui
 import logic_resources
+import logic_core
 import CodeScanner
 
-public struct ScannerView: View {
+public struct ScannerView<Router: RouterHost>: View {
 
-  @State var errorMessage = ""
-  @State var displayError = false
+  @ObservedObject private var viewmodel: ScannerViewModel<Router>
 
-  @Binding var dismiss: Bool
-  let action: (String) -> Void
+  private var cameraSurfaceSize: CGFloat = .zero
 
   public init(
-    dismiss: Binding<Bool>,
-    action: @escaping (String) -> Void
+    with router: Router,
+    and config: any UIConfigType,
+    also walletKitController: WalletKitController
   ) {
-    _dismiss = dismiss
-    self.action = action
+    self.viewmodel = .init(
+      config: config,
+      router: router,
+      walletKitController: walletKitController
+    )
+    self.cameraSurfaceSize = getScreenRect().width - (Theme.shared.dimension.padding * 2)
   }
 
   public var body: some View {
-    ZStack(alignment: .top) {
 
-      CodeScannerView(
-        codeTypes: [.qr],
-        showViewfinder: true
-      ) { response in
-        switch response {
-        case .success(let result):
-          dismiss.toggle()
-          action(result.string)
-        case .failure(let error):
-          displayError.toggle()
-          errorMessage = error.localizedDescription
-        }
-      }
-      .preferredColorScheme(.dark)
+    ContentScreenView(errorConfig: viewmodel.viewState.error) {
 
       ContentHeaderView(
         dismissIcon: Theme.shared.image.xmark,
-        foregroundColor: Theme.shared.color.white
-      ) {
-        dismiss.toggle()
-      }
-      .nearlyTransparentView()
-      .ignoresSafeArea(edges: .horizontal)
-      .padding()
+        onBack: { viewmodel.onDismiss() }
+      )
 
+      ContentTitleView(
+        title: viewmodel.viewState.title,
+        caption: viewmodel.viewState.caption
+      )
+
+      Spacer()
+
+      ZStack {
+
+        CodeScannerView(codeTypes: [.qr]) { response in
+          switch response {
+          case .success(let result):
+            viewmodel.onResult(scanResult: result.string)
+          case .failure(let error):
+            viewmodel.onError(with: error)
+          }
+        }
+        .roundedCorner(Theme.shared.shape.xxxxLarge, corners: .allCorners)
+
+        Theme.shared.image.viewFinder
+          .resizable()
+          .foregroundColor(Theme.shared.color.primary)
+      }
+      .frame(maxWidth: .infinity, maxHeight: cameraSurfaceSize)
+
+      Spacer()
     }
-    .onError(
-      show: $displayError,
-      message: errorMessage
-    )
-    .background(Theme.shared.color.black)
-    .edgesIgnoringSafeArea(.bottom)
   }
 }

@@ -35,7 +35,7 @@ let package = Package(
     ),
     .package(
       url: "https://github.com/twostraws/CodeScanner",
-      from: "2.0.0"
+      from: "2.4.1"
     ),
     .package(
       url: "https://github.com/exyte/ActivityIndicatorView.git",

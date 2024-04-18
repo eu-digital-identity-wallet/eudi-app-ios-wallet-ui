@@ -46,6 +46,7 @@ public protocol ImageManagerProtocol {
   var photo: Image { get }
   var trash: Image { get }
   var bluetoothConnect: Image { get }
+  var viewFinder: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -80,6 +81,7 @@ final class ImageManager: ImageManagerProtocol {
     case photo = "photo.fill"
     case trash = "trash"
     case bluetoothConnect = "bluetooth-connect"
+    case viewFinder = "viewfinder"
   }
 
   // MARK: - Properties
@@ -177,5 +179,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var bluetoothConnect: Image {
     Image(ImageEnum.bluetoothConnect.rawValue, bundle: bundle)
+  }
+  var viewFinder: Image {
+    Image(systemName: ImageEnum.viewFinder.rawValue)
   }
 }

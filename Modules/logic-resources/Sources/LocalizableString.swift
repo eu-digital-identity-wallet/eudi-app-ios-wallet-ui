@@ -225,8 +225,12 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedStringWithArguments(forKey: "on_expired", arguments: args)
     case .or:
       bundle.localizedString(forKey: "or")
-    case .scanQr:
-      bundle.localizedString(forKey: "scan_qr")
+    case .issuanceScanQr:
+      bundle.localizedString(forKey: "issuance_scan_qr")
+    case .scannerQrTitle:
+      bundle.localizedString(forKey: "scanner_qr_title")
+    case .scannerQrCaption:
+      bundle.localizedString(forKey: "scanner_qr_caption")
     }
   }
 
@@ -332,7 +336,9 @@ public extension LocalizableString {
     case expired
     case onExpired([String])
     case or
-    case scanQr
+    case issuanceScanQr
+    case scannerQrTitle
+    case scannerQrCaption
   }
 }
 
