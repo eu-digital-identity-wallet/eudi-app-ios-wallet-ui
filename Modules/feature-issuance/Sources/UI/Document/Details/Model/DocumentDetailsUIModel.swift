@@ -20,10 +20,12 @@ import logic_core
 
 public struct DocumentDetailsUIModel {
 
-  public let identifier: DocumentIdentifier
+  public let id: String
+  public let type: DocumentTypeIdentifier
   public let documentName: String
   public let holdersName: String
   public let holdersImage: Image
+  public let createdAt: Date
   public let hasExpired: Bool
   public let documentFields: [DocumentField]
 }
@@ -43,10 +45,12 @@ public extension DocumentDetailsUIModel {
 
   static func mock() -> DocumentDetailsUIModel {
     DocumentDetailsUIModel(
-      identifier: DocumentIdentifier.EuPidDocType,
+      id: UUID().uuidString,
+      type: DocumentTypeIdentifier.EuPidDocType,
       documentName: "Digital ID",
       holdersName: "Jane Doe",
       holdersImage: Theme.shared.image.user,
+      createdAt: Date(),
       hasExpired: false,
       documentFields:
         [
@@ -109,10 +113,14 @@ extension MdocDecodable {
     }
 
     return .init(
-      identifier: .init(rawValue: docType),
+      // MARK: - TODO REPLACE WITH NEW ID FROM CORE
+      id: UUID().uuidString,
+      type: .init(rawValue: docType),
       documentName: LocalizableString.shared.get(with: .dynamic(key: title)),
       holdersName: bearerName,
       holdersImage: getPortrait() ?? Theme.shared.image.user,
+      // MARK: - TODO REPLACE WITH NEW CREATEDAT FROM CORE
+      createdAt: Date(),
       hasExpired: hasExpired(
         parser: {
           Locale.current.parseDate(
