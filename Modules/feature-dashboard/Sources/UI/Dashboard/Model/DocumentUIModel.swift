@@ -40,7 +40,11 @@ public extension DocumentUIModel {
 
     public let type: String
     public let title: String
-    public let createdAt: Date
+
+    // MARK: - TODO EquatableNoop should be removed once core has this value in place.
+    @EquatableNoop
+    public var createdAt: Date
+
     public let expiresAt: String?
     public let hasExpired: Bool
   }

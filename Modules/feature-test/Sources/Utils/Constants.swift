@@ -60,7 +60,7 @@ extension Constants {
   static let mockPresentationRequest = PresentationRequest(
     items: [
       DocElementsViewModel(
-        docType: DocumentIdentifier.IsoMdlModel.rawValue,
+        docType: DocumentTypeIdentifier.IsoMdlModel.rawValue,
         isEnabled: true,
         elements: [
           ElementViewModel(

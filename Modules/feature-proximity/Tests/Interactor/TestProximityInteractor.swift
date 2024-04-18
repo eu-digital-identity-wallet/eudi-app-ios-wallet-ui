@@ -351,9 +351,9 @@ private extension TestProximityInteractor {
   static let mockUiModels: [RequestDataUIModel] = [
     .requestDataSection(
       .init(
-        id: DocumentIdentifier.IsoMdlModel.rawValue,
+        id: DocumentTypeIdentifier.IsoMdlModel.rawValue,
         type: .mdl,
-        title: DocumentIdentifier.IsoMdlModel.localizedTitle
+        title: DocumentTypeIdentifier.IsoMdlModel.localizedTitle
       )
     ),
     .requestDataRow(
@@ -364,13 +364,13 @@ private extension TestProximityInteractor {
         value: .string("elementIdentifier"),
         elementKey: "elementIdentifier",
         namespace: "nameSpace",
-        docType: DocumentIdentifier.IsoMdlModel.rawValue
+        docType: DocumentTypeIdentifier.IsoMdlModel.rawValue
       )
     )
   ]
   
   static let mockRequestItems = [
-    DocumentIdentifier.IsoMdlModel.rawValue: [
+    DocumentTypeIdentifier.IsoMdlModel.rawValue: [
       "nameSpace": [
         "elementIdentifier", "elementIdentifier"
       ]
