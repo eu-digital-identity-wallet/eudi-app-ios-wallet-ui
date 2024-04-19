@@ -716,6 +716,17 @@
         }
       }
     },
+    "issuance_scan_qr" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SCAN QR"
+          }
+        }
+      }
+    },
     "issuance_success_caption" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -924,6 +935,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "on\n%@"
+          }
+        }
+      }
+    },
+    "or" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or"
           }
         }
       }
@@ -1430,6 +1452,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Scan a QR code"
+          }
+        }
+      }
+    },
+    "scanner_qr_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Place the QR code within the frame to start scanning"
+          }
+        }
+      }
+    },
+    "scanner_qr_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan QR"
           }
         }
       }

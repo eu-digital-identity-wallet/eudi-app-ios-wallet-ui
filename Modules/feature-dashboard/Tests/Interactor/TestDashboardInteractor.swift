@@ -97,8 +97,10 @@ final class TestDashboardInteractor: EudiTest {
       .init(
         id: Constants.randomIdentifier,
         value: .init(
-          id: Constants.randomIdentifier,
+          id: Constants.euPidModelId,
+          type: DocumentTypeIdentifier.EuPidDocType.rawValue,
           title: "National ID",
+          createdAt: Constants.documentCreatedAt,
           expiresAt: "30 Mar 2050",
           hasExpired: false
         )

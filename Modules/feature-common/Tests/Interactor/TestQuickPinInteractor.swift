@@ -150,7 +150,6 @@ final class TestQuickPinInteractor: EudiTest {
     
     // Given
     let newPin = "4321"
-    let currentPin = "1234"
     stub(pinStorageController) { mock in
       when(mock).isPinValid(with: any()).thenReturn(false)
     }

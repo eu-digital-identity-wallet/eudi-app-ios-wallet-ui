@@ -57,6 +57,19 @@ import Cuckoo
 @testable import logic_authentication
 
 import Foundation
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import feature_issuance
+@testable import logic_business
+@testable import logic_core
+@testable import logic_analytics
+@testable import logic_api
+@testable import logic_ui
+@testable import logic_authentication
+
+import Foundation
 import SwiftUI
 import logic_resources
 import logic_ui
@@ -1004,6 +1017,20 @@ import Cuckoo
 import CodeScanner
 import Foundation
 import SwiftUI
+import logic_core
+import logic_resources
+import logic_ui
+
+import Cuckoo
+@testable import feature_issuance
+@testable import logic_business
+@testable import logic_core
+@testable import logic_analytics
+@testable import logic_api
+@testable import logic_ui
+@testable import logic_authentication
+
+import logic_core
 import logic_resources
 import logic_ui
 
@@ -1348,19 +1375,19 @@ public class MockDocumentDetailsInteractor: DocumentDetailsInteractor, Cuckoo.Pr
     
     
     
-    public func deleteDocument(with id: DocumentIdentifier) async -> DocumentDetailsDeletionPartialState {
+    public func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
         
     return await cuckoo_manager.call(
     """
-    deleteDocument(with: DocumentIdentifier) async -> DocumentDetailsDeletionPartialState
+    deleteDocument(with: String, and: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState
     """,
-            parameters: (id),
-            escapingParameters: (id),
+            parameters: (documentId, type),
+            escapingParameters: (documentId, type),
             superclassCall:
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: await __defaultImplStub!.deleteDocument(with: id))
+            defaultCall: await __defaultImplStub!.deleteDocument(with: documentId, and: type))
         
     }
     
@@ -1387,11 +1414,11 @@ public class MockDocumentDetailsInteractor: DocumentDetailsInteractor, Cuckoo.Pr
         
         
         
-        func deleteDocument<M1: Cuckoo.Matchable>(with id: M1) -> Cuckoo.ProtocolStubFunction<(DocumentIdentifier), DocumentDetailsDeletionPartialState> where M1.MatchedType == DocumentIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentIdentifier)>] = [wrap(matchable: id) { $0 }]
+        func deleteDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with documentId: M1, and type: M2) -> Cuckoo.ProtocolStubFunction<(String, DocumentTypeIdentifier), DocumentDetailsDeletionPartialState> where M1.MatchedType == String, M2.MatchedType == DocumentTypeIdentifier {
+            let matchers: [Cuckoo.ParameterMatcher<(String, DocumentTypeIdentifier)>] = [wrap(matchable: documentId) { $0.0 }, wrap(matchable: type) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentDetailsInteractor.self, method:
     """
-    deleteDocument(with: DocumentIdentifier) async -> DocumentDetailsDeletionPartialState
+    deleteDocument(with: String, and: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState
     """, parameterMatchers: matchers))
         }
         
@@ -1427,11 +1454,11 @@ public class MockDocumentDetailsInteractor: DocumentDetailsInteractor, Cuckoo.Pr
         
         
         @discardableResult
-        func deleteDocument<M1: Cuckoo.Matchable>(with id: M1) -> Cuckoo.__DoNotUse<(DocumentIdentifier), DocumentDetailsDeletionPartialState> where M1.MatchedType == DocumentIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentIdentifier)>] = [wrap(matchable: id) { $0 }]
+        func deleteDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with documentId: M1, and type: M2) -> Cuckoo.__DoNotUse<(String, DocumentTypeIdentifier), DocumentDetailsDeletionPartialState> where M1.MatchedType == String, M2.MatchedType == DocumentTypeIdentifier {
+            let matchers: [Cuckoo.ParameterMatcher<(String, DocumentTypeIdentifier)>] = [wrap(matchable: documentId) { $0.0 }, wrap(matchable: type) { $0.1 }]
             return cuckoo_manager.verify(
     """
-    deleteDocument(with: DocumentIdentifier) async -> DocumentDetailsDeletionPartialState
+    deleteDocument(with: String, and: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -1457,7 +1484,7 @@ public class DocumentDetailsInteractorStub: DocumentDetailsInteractor {
     
     
     
-    public func deleteDocument(with id: DocumentIdentifier) async -> DocumentDetailsDeletionPartialState  {
+    public func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState  {
         return DefaultValueRegistry.defaultValue(for: (DocumentDetailsDeletionPartialState).self)
     }
     
@@ -1479,6 +1506,7 @@ import Cuckoo
 
 import logic_business
 import logic_core
+import logic_resources
 
 
 
@@ -1531,11 +1559,11 @@ public class MockDocumentSuccessInteractor: DocumentSuccessInteractor, Cuckoo.Pr
     
     
     
-    public func getDocumentName(for documentIdentifier: String) -> String {
+    public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key? {
         
     return cuckoo_manager.call(
     """
-    getDocumentName(for: String) -> String
+    getDocumentSuccessCaption(for: String) -> LocalizableString.Key?
     """,
             parameters: (documentIdentifier),
             escapingParameters: (documentIdentifier),
@@ -1543,7 +1571,7 @@ public class MockDocumentSuccessInteractor: DocumentSuccessInteractor, Cuckoo.Pr
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: __defaultImplStub!.getDocumentName(for: documentIdentifier))
+            defaultCall: __defaultImplStub!.getDocumentSuccessCaption(for: documentIdentifier))
         
     }
     
@@ -1570,11 +1598,11 @@ public class MockDocumentSuccessInteractor: DocumentSuccessInteractor, Cuckoo.Pr
         
         
         
-        func getDocumentName<M1: Cuckoo.Matchable>(for documentIdentifier: M1) -> Cuckoo.ProtocolStubFunction<(String), String> where M1.MatchedType == String {
+        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for documentIdentifier: M1) -> Cuckoo.ProtocolStubFunction<(String), LocalizableString.Key?> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: documentIdentifier) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentSuccessInteractor.self, method:
     """
-    getDocumentName(for: String) -> String
+    getDocumentSuccessCaption(for: String) -> LocalizableString.Key?
     """, parameterMatchers: matchers))
         }
         
@@ -1610,11 +1638,11 @@ public class MockDocumentSuccessInteractor: DocumentSuccessInteractor, Cuckoo.Pr
         
         
         @discardableResult
-        func getDocumentName<M1: Cuckoo.Matchable>(for documentIdentifier: M1) -> Cuckoo.__DoNotUse<(String), String> where M1.MatchedType == String {
+        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for documentIdentifier: M1) -> Cuckoo.__DoNotUse<(String), LocalizableString.Key?> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: documentIdentifier) { $0 }]
             return cuckoo_manager.verify(
     """
-    getDocumentName(for: String) -> String
+    getDocumentSuccessCaption(for: String) -> LocalizableString.Key?
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -1640,8 +1668,8 @@ public class DocumentSuccessInteractorStub: DocumentSuccessInteractor {
     
     
     
-    public func getDocumentName(for documentIdentifier: String) -> String  {
-        return DefaultValueRegistry.defaultValue(for: (String).self)
+    public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key?  {
+        return DefaultValueRegistry.defaultValue(for: (LocalizableString.Key?).self)
     }
     
     
@@ -7805,6 +7833,26 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
     
     
     
+    public func fetchDocuments(with type: String) -> [MdocDecodable] {
+        
+    return cuckoo_manager.call(
+    """
+    fetchDocuments(with: String) -> [MdocDecodable]
+    """,
+            parameters: (type),
+            escapingParameters: (type),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.fetchDocuments(with: type))
+        
+    }
+    
+    
+    
+    
+    
     public func fetchDocument(with id: String) -> MdocDecodable? {
         
     return cuckoo_manager.call(
@@ -7865,19 +7913,19 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
     
     
     
-    public func deleteDocument(with type: String) async throws {
+    public func deleteDocument(with id: String) async throws {
         
     return try await cuckoo_manager.callThrows(
     """
     deleteDocument(with: String) async throws
     """,
-            parameters: (type),
-            escapingParameters: (type),
+            parameters: (id),
+            escapingParameters: (id),
             superclassCall:
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: await __defaultImplStub!.deleteDocument(with: type))
+            defaultCall: await __defaultImplStub!.deleteDocument(with: id))
         
     }
     
@@ -7925,21 +7973,21 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
     
     
     
-    public func valueForElementIdentifier(for documentType: DocumentIdentifier, elementIdentifier: String, parser: (String) -> String) -> MdocValue {
-        		return withoutActuallyEscaping(parser, do: { (parser: @escaping (String) -> String) -> MdocValue in
+    public func valueForElementIdentifier(for documentType: DocumentTypeIdentifier, with documentId: String, elementIdentifier: String, parser: (String) -> String) -> MdocValue {
+        			return withoutActuallyEscaping(parser, do: { (parser: @escaping (String) -> String) -> MdocValue in
 
     return cuckoo_manager.call(
     """
-    valueForElementIdentifier(for: DocumentIdentifier, elementIdentifier: String, parser: (String) -> String) -> MdocValue
+    valueForElementIdentifier(for: DocumentTypeIdentifier, with: String, elementIdentifier: String, parser: (String) -> String) -> MdocValue
     """,
-            parameters: (documentType, elementIdentifier, parser),
-            escapingParameters: (documentType, elementIdentifier, { _ -> String in fatalError("This is a stub! It's not supposed to be called!") }),
+            parameters: (documentType, documentId, elementIdentifier, parser),
+            escapingParameters: (documentType, documentId, elementIdentifier, { _ -> String in fatalError("This is a stub! It's not supposed to be called!") }),
             superclassCall:
                 
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
-            defaultCall: __defaultImplStub!.valueForElementIdentifier(for: documentType, elementIdentifier: elementIdentifier, parser: parser))
-        		})
+            defaultCall: __defaultImplStub!.valueForElementIdentifier(for: documentType, with: documentId, elementIdentifier: elementIdentifier, parser: parser))
+        			})
 
     }
     
@@ -7947,11 +7995,11 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
     
     
     
-    public func mandatoryFields(for documentType: DocumentIdentifier) -> [String] {
+    public func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String] {
         
     return cuckoo_manager.call(
     """
-    mandatoryFields(for: DocumentIdentifier) -> [String]
+    mandatoryFields(for: DocumentTypeIdentifier) -> [String]
     """,
             parameters: (documentType),
             escapingParameters: (documentType),
@@ -8044,6 +8092,17 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         
         
         
+        func fetchDocuments<M1: Cuckoo.Matchable>(with type: M1) -> Cuckoo.ProtocolStubFunction<(String), [MdocDecodable]> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: type) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self, method:
+    """
+    fetchDocuments(with: String) -> [MdocDecodable]
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
         func fetchDocument<M1: Cuckoo.Matchable>(with id: M1) -> Cuckoo.ProtocolStubFunction<(String), MdocDecodable?> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: id) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self, method:
@@ -8077,8 +8136,8 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         
         
         
-        func deleteDocument<M1: Cuckoo.Matchable>(with type: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String)> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: type) { $0 }]
+        func deleteDocument<M1: Cuckoo.Matchable>(with id: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String)> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: id) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self, method:
     """
     deleteDocument(with: String) async throws
@@ -8110,22 +8169,22 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         
         
         
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(for documentType: M1, elementIdentifier: M2, parser: M3) -> Cuckoo.ProtocolStubFunction<(DocumentIdentifier, String, (String) -> String), MdocValue> where M1.MatchedType == DocumentIdentifier, M2.MatchedType == String, M3.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentIdentifier, String, (String) -> String)>] = [wrap(matchable: documentType) { $0.0 }, wrap(matchable: elementIdentifier) { $0.1 }, wrap(matchable: parser) { $0.2 }]
+        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(for documentType: M1, with documentId: M2, elementIdentifier: M3, parser: M4) -> Cuckoo.ProtocolStubFunction<(DocumentTypeIdentifier, String, String, (String) -> String), MdocValue> where M1.MatchedType == DocumentTypeIdentifier, M2.MatchedType == String, M3.MatchedType == String, M4.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier, String, String, (String) -> String)>] = [wrap(matchable: documentType) { $0.0 }, wrap(matchable: documentId) { $0.1 }, wrap(matchable: elementIdentifier) { $0.2 }, wrap(matchable: parser) { $0.3 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self, method:
     """
-    valueForElementIdentifier(for: DocumentIdentifier, elementIdentifier: String, parser: (String) -> String) -> MdocValue
+    valueForElementIdentifier(for: DocumentTypeIdentifier, with: String, elementIdentifier: String, parser: (String) -> String) -> MdocValue
     """, parameterMatchers: matchers))
         }
         
         
         
         
-        func mandatoryFields<M1: Cuckoo.Matchable>(for documentType: M1) -> Cuckoo.ProtocolStubFunction<(DocumentIdentifier), [String]> where M1.MatchedType == DocumentIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentIdentifier)>] = [wrap(matchable: documentType) { $0 }]
+        func mandatoryFields<M1: Cuckoo.Matchable>(for documentType: M1) -> Cuckoo.ProtocolStubFunction<(DocumentTypeIdentifier), [String]> where M1.MatchedType == DocumentTypeIdentifier {
+            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier)>] = [wrap(matchable: documentType) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self, method:
     """
-    mandatoryFields(for: DocumentIdentifier) -> [String]
+    mandatoryFields(for: DocumentTypeIdentifier) -> [String]
     """, parameterMatchers: matchers))
         }
         
@@ -8223,6 +8282,18 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         
         
         @discardableResult
+        func fetchDocuments<M1: Cuckoo.Matchable>(with type: M1) -> Cuckoo.__DoNotUse<(String), [MdocDecodable]> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: type) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    fetchDocuments(with: String) -> [MdocDecodable]
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
         func fetchDocument<M1: Cuckoo.Matchable>(with id: M1) -> Cuckoo.__DoNotUse<(String), MdocDecodable?> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: id) { $0 }]
             return cuckoo_manager.verify(
@@ -8259,8 +8330,8 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func deleteDocument<M1: Cuckoo.Matchable>(with type: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: type) { $0 }]
+        func deleteDocument<M1: Cuckoo.Matchable>(with id: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: id) { $0 }]
             return cuckoo_manager.verify(
     """
     deleteDocument(with: String) async throws
@@ -8295,11 +8366,11 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(for documentType: M1, elementIdentifier: M2, parser: M3) -> Cuckoo.__DoNotUse<(DocumentIdentifier, String, (String) -> String), MdocValue> where M1.MatchedType == DocumentIdentifier, M2.MatchedType == String, M3.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentIdentifier, String, (String) -> String)>] = [wrap(matchable: documentType) { $0.0 }, wrap(matchable: elementIdentifier) { $0.1 }, wrap(matchable: parser) { $0.2 }]
+        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(for documentType: M1, with documentId: M2, elementIdentifier: M3, parser: M4) -> Cuckoo.__DoNotUse<(DocumentTypeIdentifier, String, String, (String) -> String), MdocValue> where M1.MatchedType == DocumentTypeIdentifier, M2.MatchedType == String, M3.MatchedType == String, M4.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier, String, String, (String) -> String)>] = [wrap(matchable: documentType) { $0.0 }, wrap(matchable: documentId) { $0.1 }, wrap(matchable: elementIdentifier) { $0.2 }, wrap(matchable: parser) { $0.3 }]
             return cuckoo_manager.verify(
     """
-    valueForElementIdentifier(for: DocumentIdentifier, elementIdentifier: String, parser: (String) -> String) -> MdocValue
+    valueForElementIdentifier(for: DocumentTypeIdentifier, with: String, elementIdentifier: String, parser: (String) -> String) -> MdocValue
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -8307,11 +8378,11 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func mandatoryFields<M1: Cuckoo.Matchable>(for documentType: M1) -> Cuckoo.__DoNotUse<(DocumentIdentifier), [String]> where M1.MatchedType == DocumentIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentIdentifier)>] = [wrap(matchable: documentType) { $0 }]
+        func mandatoryFields<M1: Cuckoo.Matchable>(for documentType: M1) -> Cuckoo.__DoNotUse<(DocumentTypeIdentifier), [String]> where M1.MatchedType == DocumentTypeIdentifier {
+            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier)>] = [wrap(matchable: documentType) { $0 }]
             return cuckoo_manager.verify(
     """
-    mandatoryFields(for: DocumentIdentifier) -> [String]
+    mandatoryFields(for: DocumentTypeIdentifier) -> [String]
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -8391,6 +8462,14 @@ public class WalletKitControllerStub: WalletKitController {
     
     
     
+    public func fetchDocuments(with type: String) -> [MdocDecodable]  {
+        return DefaultValueRegistry.defaultValue(for: ([MdocDecodable]).self)
+    }
+    
+    
+    
+    
+    
     public func fetchDocument(with id: String) -> MdocDecodable?  {
         return DefaultValueRegistry.defaultValue(for: (MdocDecodable?).self)
     }
@@ -8415,7 +8494,7 @@ public class WalletKitControllerStub: WalletKitController {
     
     
     
-    public func deleteDocument(with type: String) async throws  {
+    public func deleteDocument(with id: String) async throws  {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -8439,7 +8518,7 @@ public class WalletKitControllerStub: WalletKitController {
     
     
     
-    public func valueForElementIdentifier(for documentType: DocumentIdentifier, elementIdentifier: String, parser: (String) -> String) -> MdocValue  {
+    public func valueForElementIdentifier(for documentType: DocumentTypeIdentifier, with documentId: String, elementIdentifier: String, parser: (String) -> String) -> MdocValue  {
         return DefaultValueRegistry.defaultValue(for: (MdocValue).self)
     }
     
@@ -8447,7 +8526,7 @@ public class WalletKitControllerStub: WalletKitController {
     
     
     
-    public func mandatoryFields(for documentType: DocumentIdentifier) -> [String]  {
+    public func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String]  {
         return DefaultValueRegistry.defaultValue(for: ([String]).self)
     }
     

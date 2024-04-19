@@ -53,15 +53,23 @@ public extension BearerUIModel {
 extension Array where Element == MdocDecodable {
   func transformToBearerUi() -> BearerUIModel {
 
-    var image: Image = Theme.shared.image.user
-    var name: String = ""
+    var image: Image?
 
-    self.forEach { item in
-      if let bearerName = item.getBearersName() {
+    var name = self
+      .filter({ $0.docType == DocumentTypeIdentifier.EuPidDocType.rawValue })
+      .sorted { $0.createdAt > $1.createdAt }.last?.getBearersName()?.first
+
+    for item in self {
+
+      guard name == nil || image == nil else {
+        break
+      }
+
+      if name == nil, let bearerName = item.getBearersName() {
         name = bearerName.first
       }
 
-      if let tempImage = item.getPortrait() {
+      if image == nil, let tempImage = item.getPortrait() {
         image = tempImage
       }
     }
@@ -69,8 +77,8 @@ extension Array where Element == MdocDecodable {
     return .init(
       id: UUID().uuidString,
       value: .init(
-        name: name,
-        image: image
+        name: name.orEmpty,
+        image: image ?? Theme.shared.image.user
       )
     )
   }

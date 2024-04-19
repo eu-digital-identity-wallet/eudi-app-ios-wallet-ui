@@ -29,18 +29,20 @@ public protocol WalletKitController {
   func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinator
   func stopPresentation()
   func fetchDocuments() -> [MdocDecodable]
+  func fetchDocuments(with type: String) -> [MdocDecodable]
   func fetchDocument(with id: String) -> MdocDecodable?
   func loadSampleData(dataFiles: [String]) async throws
   func clearDocuments() async throws
-  func deleteDocument(with type: String) async throws
+  func deleteDocument(with id: String) async throws
   func loadDocuments() async throws
   func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
   func valueForElementIdentifier(
-    for documentType: DocumentIdentifier,
+    for documentType: DocumentTypeIdentifier,
+    with documentId: String,
     elementIdentifier: String,
     parser: (String) -> String
   ) -> MdocValue
-  func mandatoryFields(for documentType: DocumentIdentifier) -> [String]
+  func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String]
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -71,8 +73,8 @@ final class WalletKitControllerImpl: WalletKitController {
     return try await wallet.storage.deleteDocuments()
   }
 
-  public func deleteDocument(with type: String) async throws {
-    return try await wallet.storage.deleteDocument(docType: type)
+  public func deleteDocument(with id: String) async throws {
+    return try await wallet.storage.deleteDocument(id: id)
   }
 
   public func loadDocuments() async throws {
@@ -133,8 +135,14 @@ final class WalletKitControllerImpl: WalletKitController {
     return wallet.storage.mdocModels.compactMap({ $0 })
   }
 
+  public func fetchDocuments(with type: String) -> [MdocDecodable] {
+    return wallet.storage.mdocModels
+      .compactMap({ $0 })
+      .filter({ $0.docType == type })
+  }
+
   public func fetchDocument(with id: String) -> MdocDecodable? {
-    wallet.storage.getDocumentModel(docType: id)
+    wallet.storage.getDocumentModel(id: id)
   }
 
   public func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document {
@@ -154,7 +162,7 @@ final class WalletKitControllerImpl: WalletKitController {
 extension WalletKitController {
 
   // TODO: Mandatory fields should be returned in a generic model
-  public func mandatoryFields(for documentType: DocumentIdentifier) -> [String] {
+  public func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String] {
     switch documentType {
     case .EuPidDocType:
       return [
@@ -174,36 +182,30 @@ extension WalletKitController {
   }
 
   // TODO: This needs to be made in a more generic way
-  /// A more concrete aproach would be:
-  ///    wallet.storage.mdocModels
-  ///      .compactMap({ $0 })
-  ///      .first(where: { $0.docType == documentType.rawValue })?.displayStrings
-  ///      .first(where: { $0.name == elementIdentifier })?.value ?? LocalizableString.shared.get(with: .unavailableField)
-  ///
   public func valueForElementIdentifier(
-    for documentType: DocumentIdentifier,
+    for documentType: DocumentTypeIdentifier,
+    with documentId: String,
     elementIdentifier: String,
     parser: (String) -> String
   ) -> MdocValue {
 
     // Check if we have image data and early return them
-
     if let imageName = wallet.storage.mdocModels
-      .first(where: {$0?.docType == documentType.rawValue})??.displayImages
-      .first(where: {$0.name == elementIdentifier}) {
+      .compactMap({ $0 })
+      .first(where: { $0.id == documentId })?.displayImages
+      .first(where: { $0.name == elementIdentifier }) {
       return .image(imageName.image)
     }
 
     // Convert the Stored models to their [Key: Value] array
     let displayStrings = wallet.storage.mdocModels
       .compactMap({ $0 })
-      .first(where: { $0.docType == documentType.rawValue })?.displayStrings
+      .first(where: { $0.id == documentId })?.displayStrings
       .decodeGender()
       .parseDates(parser: parser)
       .mapTrueFalseToLocalizable()
 
     // Check if document type matches one of known models (pid or mdl)
-
     guard var displayStrings = displayStrings else {
       return .unavailable(LocalizableString.shared.get(with: .unavailableField))
     }

@@ -154,11 +154,16 @@ final class TestProximityInteractor: EudiTest {
   func testOnRequestReceived_WhenCoordinatorRequestReceivedReturnsSuccess_ThenVerifySuccessState() async {
     // Given
     let request = Self.mockPresentationRequest
+    let storageDocuments = [Constants.isoMdlModel]
     
     let expectedUiModels = Self.mockUiModels
     
     stub(presentationSessionCoordinator) { mock in
       when(mock).requestReceived().thenReturn(request)
+    }
+    
+    stub(walletKitController) { mock in
+      when(mock).fetchDocuments(with: any()).thenReturn(storageDocuments)
     }
     
     stub(walletKitController) { mock in
@@ -168,6 +173,7 @@ final class TestProximityInteractor: EudiTest {
     stub(walletKitController) { mock in
       when(mock).valueForElementIdentifier(
         for: any(),
+        with: any(),
         elementIdentifier: any(),
         parser: any()
       ).thenReturn(.string("elementIdentifier"))
@@ -351,9 +357,9 @@ private extension TestProximityInteractor {
   static let mockUiModels: [RequestDataUIModel] = [
     .requestDataSection(
       .init(
-        id: DocumentIdentifier.IsoMdlModel.rawValue,
+        id: Constants.isoMdlModelId,
         type: .mdl,
-        title: DocumentIdentifier.IsoMdlModel.localizedTitle
+        title: DocumentTypeIdentifier.IsoMdlModel.localizedTitle
       )
     ),
     .requestDataRow(
@@ -364,13 +370,13 @@ private extension TestProximityInteractor {
         value: .string("elementIdentifier"),
         elementKey: "elementIdentifier",
         namespace: "nameSpace",
-        docType: DocumentIdentifier.IsoMdlModel.rawValue
+        docType: DocumentTypeIdentifier.IsoMdlModel.rawValue
       )
     )
   ]
   
   static let mockRequestItems = [
-    DocumentIdentifier.IsoMdlModel.rawValue: [
+    DocumentTypeIdentifier.IsoMdlModel.rawValue: [
       "nameSpace": [
         "elementIdentifier", "elementIdentifier"
       ]

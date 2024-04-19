@@ -16,7 +16,7 @@
 import Foundation
 import logic_resources
 
-public enum DocumentIdentifier: RawRepresentable, Equatable {
+public enum DocumentTypeIdentifier: RawRepresentable, Equatable {
 
   case EuPidDocType
   case IsoMdlModel

@@ -68,7 +68,7 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
     }
   }
 
-  func onClick(for documentIdentifier: DocumentIdentifier) {
+  func onClick(for documentIdentifier: DocumentTypeIdentifier) {
     switch documentIdentifier {
     case .EuPidDocType:
       issueDocument(docType: EuPidModel.euPidDocType)
@@ -77,6 +77,10 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
     case .genericDocument:
       loadSampleData()
     }
+  }
+
+  func onScanClick() {
+
   }
 
   func pop() {
@@ -92,11 +96,11 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
         docType: docType,
         format: format
       ) {
-      case .success(let docType):
+      case .success(let docId):
         router.push(
           with: .issuanceSuccess(
             config: viewState.config,
-            documentIdentifier: docType
+            documentIdentifier: docId
           )
         )
       case .failure(let error):
