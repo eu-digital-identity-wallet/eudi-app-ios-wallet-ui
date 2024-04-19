@@ -29,6 +29,7 @@ public protocol WalletKitController {
   func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinator
   func stopPresentation()
   func fetchDocuments() -> [MdocDecodable]
+  func fetchDocuments(with type: String) -> [MdocDecodable]
   func fetchDocument(with id: String) -> MdocDecodable?
   func loadSampleData(dataFiles: [String]) async throws
   func clearDocuments() async throws
@@ -37,6 +38,7 @@ public protocol WalletKitController {
   func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
   func valueForElementIdentifier(
     for documentType: DocumentTypeIdentifier,
+    with documentId: String,
     elementIdentifier: String,
     parser: (String) -> String
   ) -> MdocValue
@@ -133,6 +135,12 @@ final class WalletKitControllerImpl: WalletKitController {
     return wallet.storage.mdocModels.compactMap({ $0 })
   }
 
+  public func fetchDocuments(with type: String) -> [MdocDecodable] {
+    return wallet.storage.mdocModels
+      .compactMap({ $0 })
+      .filter({ $0.docType == type })
+  }
+
   public func fetchDocument(with id: String) -> MdocDecodable? {
     wallet.storage.getDocumentModel(id: id)
   }
@@ -174,14 +182,9 @@ extension WalletKitController {
   }
 
   // TODO: This needs to be made in a more generic way
-  /// A more concrete aproach would be:
-  ///    wallet.storage.mdocModels
-  ///      .compactMap({ $0 })
-  ///      .first(where: { $0.docType == documentType.rawValue })?.displayStrings
-  ///      .first(where: { $0.name == elementIdentifier })?.value ?? LocalizableString.shared.get(with: .unavailableField)
-  ///
   public func valueForElementIdentifier(
     for documentType: DocumentTypeIdentifier,
+    with documentId: String,
     elementIdentifier: String,
     parser: (String) -> String
   ) -> MdocValue {
@@ -189,7 +192,7 @@ extension WalletKitController {
     // Check if we have image data and early return them
     if let imageName = wallet.storage.mdocModels
       .compactMap({ $0 })
-      .first(where: { $0.docType == documentType.rawValue })?.displayImages
+      .first(where: { $0.id == documentId })?.displayImages
       .first(where: { $0.name == elementIdentifier }) {
       return .image(imageName.image)
     }
@@ -197,7 +200,7 @@ extension WalletKitController {
     // Convert the Stored models to their [Key: Value] array
     let displayStrings = wallet.storage.mdocModels
       .compactMap({ $0 })
-      .first(where: { $0.docType == documentType.rawValue })?.displayStrings
+      .first(where: { $0.id == documentId })?.displayStrings
       .decodeGender()
       .parseDates(parser: parser)
       .mapTrueFalseToLocalizable()
