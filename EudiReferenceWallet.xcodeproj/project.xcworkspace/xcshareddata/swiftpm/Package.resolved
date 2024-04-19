@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "44464efb1ab5a35c6b5863736e34f973b3313a74",
-        "version" : "0.2.2"
+        "revision" : "b507b918869c24e7b9e7265bee16a192e1013f89",
+        "version" : "0.2.3"
       }
     },
     {
@@ -122,8 +122,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "75fed38a1805b696949c9bc2d2d709a3e59b6646",
-        "version" : "0.0.4"
+        "revision" : "1c06b020e6866906690c2eb36c8718e193659780",
+        "version" : "0.0.5"
       }
     },
     {
@@ -140,8 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
       "state" : {
-        "revision" : "152880755e25cf025f5921b09c030b746dc883cc",
-        "version" : "0.0.72"
+        "revision" : "e822000c9b45040961d74839ce0c75a01391cc3c",
+        "version" : "0.0.71"
       }
     },
     {
@@ -149,8 +149,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "219397fa6bf75a38f0e0b99f8d22481b9eb37266",
-        "version" : "0.3.2"
+        "revision" : "e97b8e0c478164f823fe824661b55d8e866df09c",
+        "version" : "0.3.4"
       }
     },
     {
@@ -167,8 +167,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Hitch.git",
       "state" : {
-        "revision" : "92f32ad70b9e61807cf0cf9fa89993eac2c0dd56",
-        "version" : "0.4.130"
+        "revision" : "733c8e04e04813bc6e3cc105850a4eb657bdacfb",
+        "version" : "0.4.133"
       }
     },
     {
@@ -185,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/niscy-eudiw/JOSESwift.git",
       "state" : {
-        "revision" : "ef86488a729fb1eb85edc3b174f528ac212c5ce6",
-        "version" : "2.4.1"
+        "revision" : "518cedba79ef18867191811b161471298b6cb7c8",
+        "version" : "2.4.1-gcm"
       }
     },
     {
@@ -338,8 +338,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/niscy-eudiw/SwiftCBOR.git",
       "state" : {
-        "revision" : "74763c2624c09e8702967d8bef01767d12a71615",
-        "version" : "0.5.1"
+        "revision" : "310dbc3975a5653237fed304d88a6dd59d04dd30",
+        "version" : "0.5.7"
       }
     },
     {
@@ -365,8 +365,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Swinject/Swinject.git",
       "state" : {
-        "revision" : "13d2d7065253eea1e9ce4d9263cf51c783fdf3f0",
-        "version" : "2.8.5"
+        "revision" : "b45ac37ca19905b2e12c429807e1955a7d43d1fd",
+        "version" : "2.8.6"
       }
     },
     {

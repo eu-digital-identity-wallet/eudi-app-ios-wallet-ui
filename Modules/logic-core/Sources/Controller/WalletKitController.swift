@@ -32,7 +32,7 @@ public protocol WalletKitController {
   func fetchDocument(with id: String) -> MdocDecodable?
   func loadSampleData(dataFiles: [String]) async throws
   func clearDocuments() async throws
-  func deleteDocument(with type: String) async throws
+  func deleteDocument(with id: String) async throws
   func loadDocuments() async throws
   func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
   func valueForElementIdentifier(
@@ -71,8 +71,8 @@ final class WalletKitControllerImpl: WalletKitController {
     return try await wallet.storage.deleteDocuments()
   }
 
-  public func deleteDocument(with type: String) async throws {
-    return try await wallet.storage.deleteDocument(docType: type)
+  public func deleteDocument(with id: String) async throws {
+    return try await wallet.storage.deleteDocument(id: id)
   }
 
   public func loadDocuments() async throws {
@@ -134,7 +134,7 @@ final class WalletKitControllerImpl: WalletKitController {
   }
 
   public func fetchDocument(with id: String) -> MdocDecodable? {
-    wallet.storage.getDocumentModel(docType: id)
+    wallet.storage.getDocumentModel(id: id)
   }
 
   public func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document {
@@ -187,10 +187,10 @@ extension WalletKitController {
   ) -> MdocValue {
 
     // Check if we have image data and early return them
-
     if let imageName = wallet.storage.mdocModels
-      .first(where: {$0?.docType == documentType.rawValue})??.displayImages
-      .first(where: {$0.name == elementIdentifier}) {
+      .compactMap({ $0 })
+      .first(where: { $0.docType == documentType.rawValue })?.displayImages
+      .first(where: { $0.name == elementIdentifier }) {
       return .image(imageName.image)
     }
 
@@ -203,7 +203,6 @@ extension WalletKitController {
       .mapTrueFalseToLocalizable()
 
     // Check if document type matches one of known models (pid or mdl)
-
     guard var displayStrings = displayStrings else {
       return .unavailable(LocalizableString.shared.get(with: .unavailableField))
     }

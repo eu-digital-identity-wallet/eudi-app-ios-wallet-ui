@@ -113,14 +113,12 @@ extension MdocDecodable {
     }
 
     return .init(
-      // MARK: - TODO REPLACE WITH NEW ID FROM CORE
-      id: UUID().uuidString,
+      id: id,
       type: .init(rawValue: docType),
       documentName: LocalizableString.shared.get(with: .dynamic(key: title)),
       holdersName: bearerName,
       holdersImage: getPortrait() ?? Theme.shared.image.user,
-      // MARK: - TODO REPLACE WITH NEW CREATEDAT FROM CORE
-      createdAt: Date(),
+      createdAt: createdAt,
       hasExpired: hasExpired(
         parser: {
           Locale.current.parseDate(

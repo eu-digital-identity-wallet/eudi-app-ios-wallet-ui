@@ -30,8 +30,24 @@ private extension Constants {
 }
 
 extension Constants {
-  static let euPidModel = EuPidModel(response: dr, devicePrivateKey: Constants.pk)!
-  static let isoMdlModel = IsoMdlModel(response: dr, devicePrivateKey: Constants.pk)!
+  
+  static let euPidModelId = "pidId"
+  static let isoMdlModelId = "mdlId"
+  static let documentCreatedAt = Date()
+  
+  static let euPidModel = EuPidModel(
+    id: euPidModelId,
+    createdAt: documentCreatedAt,
+    response: dr,
+    devicePrivateKey: Constants.pk
+  )!
+  
+  static let isoMdlModel = IsoMdlModel(
+    id: isoMdlModelId,
+    createdAt: documentCreatedAt,
+    response: dr,
+    devicePrivateKey: Constants.pk
+  )!
 }
 
 extension Constants {

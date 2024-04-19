@@ -55,11 +55,9 @@ extension Array where Element == MdocDecodable {
 
     var image: Image?
 
-    // MARK: - TODO
-    // Once core is ready, change the .title to the new .id and check the sorting
     var name = self
       .filter({ $0.docType == DocumentTypeIdentifier.EuPidDocType.rawValue })
-      .sorted { $0.title > $1.title }.first?.getBearersName()?.first
+      .sorted { $0.createdAt > $1.createdAt }.last?.getBearersName()?.first
 
     for item in self {
 

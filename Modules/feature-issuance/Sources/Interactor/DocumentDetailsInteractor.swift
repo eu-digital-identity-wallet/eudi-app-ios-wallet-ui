@@ -54,9 +54,7 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 
           guard documentPids.count > 1 else { return true }
 
-          // MARK: - TODO
-          // Once core is ready, change the .title to the new .id and check the sorting
-          return documentPids.sorted { $0.title > $1.title }.first?.title == documentId
+          return documentPids.sorted { $0.createdAt > $1.createdAt }.last?.id == documentId
 
         } else {
           return false

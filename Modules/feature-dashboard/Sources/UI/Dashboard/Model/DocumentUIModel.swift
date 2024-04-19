@@ -40,11 +40,7 @@ public extension DocumentUIModel {
 
     public let type: String
     public let title: String
-
-    // MARK: - TODO EquatableNoop should be removed once core has this value in place.
-    @EquatableNoop
     public var createdAt: Date
-
     public let expiresAt: String?
     public let hasExpired: Bool
   }
@@ -171,12 +167,10 @@ extension Array where Element == MdocDecodable {
       return .init(
         id: UUID().uuidString,
         value: .init(
-          // MARK: - TODO TO BE REPLACED FROM CORE NEW ITEM ID
-          id: UUID().uuidString,
+          id: item.id,
           type: item.docType,
           title: LocalizableString.shared.get(with: .dynamic(key: item.title)),
-          // MARK: - TODO TO BE REPLACED FROM CORE NEW ITEM CREATEDAT
-          createdAt: Date(),
+          createdAt: item.createdAt,
           expiresAt: item.getExpiryDate(
             parser: {
               Locale.current.localizedDateTime(
