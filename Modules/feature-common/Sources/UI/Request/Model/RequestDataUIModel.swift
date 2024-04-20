@@ -198,7 +198,11 @@ extension RequestDataUiModel {
 
     for docElement in docElements {
 
-      for storageDocument in walletKitController.fetchDocuments(with: docElement.docType) {
+      let storageDocuments = walletKitController.fetchDocuments(
+        with: .init(rawValue: docElement.docType)
+      )
+
+      for storageDocument in storageDocuments {
 
         // Filter fields for Selectable Disclosed Fields
         let dataFields = documentSelectiveDisclosableFields(

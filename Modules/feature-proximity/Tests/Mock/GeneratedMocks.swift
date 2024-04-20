@@ -7673,11 +7673,11 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
     
     
     
-    public func fetchDocuments(with type: String) -> [MdocDecodable] {
+    public func fetchDocuments(with type: DocumentTypeIdentifier) -> [MdocDecodable] {
         
     return cuckoo_manager.call(
     """
-    fetchDocuments(with: String) -> [MdocDecodable]
+    fetchDocuments(with: DocumentTypeIdentifier) -> [MdocDecodable]
     """,
             parameters: (type),
             escapingParameters: (type),
@@ -7686,6 +7686,46 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
                 Cuckoo.MockManager.crashOnProtocolSuperclassCall()
                 ,
             defaultCall: __defaultImplStub!.fetchDocuments(with: type))
+        
+    }
+    
+    
+    
+    
+    
+    public func fetchDocuments(excluded: [DocumentTypeIdentifier]) -> [MdocDecodable] {
+        
+    return cuckoo_manager.call(
+    """
+    fetchDocuments(excluded: [DocumentTypeIdentifier]) -> [MdocDecodable]
+    """,
+            parameters: (excluded),
+            escapingParameters: (excluded),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.fetchDocuments(excluded: excluded))
+        
+    }
+    
+    
+    
+    
+    
+    public func fetchMainPidDocument() -> MdocDecodable? {
+        
+    return cuckoo_manager.call(
+    """
+    fetchMainPidDocument() -> MdocDecodable?
+    """,
+            parameters: (),
+            escapingParameters: (),
+            superclassCall:
+                
+                Cuckoo.MockManager.crashOnProtocolSuperclassCall()
+                ,
+            defaultCall: __defaultImplStub!.fetchMainPidDocument())
         
     }
     
@@ -7932,11 +7972,33 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         
         
         
-        func fetchDocuments<M1: Cuckoo.Matchable>(with type: M1) -> Cuckoo.ProtocolStubFunction<(String), [MdocDecodable]> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: type) { $0 }]
+        func fetchDocuments<M1: Cuckoo.Matchable>(with type: M1) -> Cuckoo.ProtocolStubFunction<(DocumentTypeIdentifier), [MdocDecodable]> where M1.MatchedType == DocumentTypeIdentifier {
+            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier)>] = [wrap(matchable: type) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self, method:
     """
-    fetchDocuments(with: String) -> [MdocDecodable]
+    fetchDocuments(with: DocumentTypeIdentifier) -> [MdocDecodable]
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func fetchDocuments<M1: Cuckoo.Matchable>(excluded: M1) -> Cuckoo.ProtocolStubFunction<([DocumentTypeIdentifier]), [MdocDecodable]> where M1.MatchedType == [DocumentTypeIdentifier] {
+            let matchers: [Cuckoo.ParameterMatcher<([DocumentTypeIdentifier])>] = [wrap(matchable: excluded) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self, method:
+    """
+    fetchDocuments(excluded: [DocumentTypeIdentifier]) -> [MdocDecodable]
+    """, parameterMatchers: matchers))
+        }
+        
+        
+        
+        
+        func fetchMainPidDocument() -> Cuckoo.ProtocolStubFunction<(), MdocDecodable?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self, method:
+    """
+    fetchMainPidDocument() -> MdocDecodable?
     """, parameterMatchers: matchers))
         }
         
@@ -8122,11 +8184,35 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func fetchDocuments<M1: Cuckoo.Matchable>(with type: M1) -> Cuckoo.__DoNotUse<(String), [MdocDecodable]> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: type) { $0 }]
+        func fetchDocuments<M1: Cuckoo.Matchable>(with type: M1) -> Cuckoo.__DoNotUse<(DocumentTypeIdentifier), [MdocDecodable]> where M1.MatchedType == DocumentTypeIdentifier {
+            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier)>] = [wrap(matchable: type) { $0 }]
             return cuckoo_manager.verify(
     """
-    fetchDocuments(with: String) -> [MdocDecodable]
+    fetchDocuments(with: DocumentTypeIdentifier) -> [MdocDecodable]
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func fetchDocuments<M1: Cuckoo.Matchable>(excluded: M1) -> Cuckoo.__DoNotUse<([DocumentTypeIdentifier]), [MdocDecodable]> where M1.MatchedType == [DocumentTypeIdentifier] {
+            let matchers: [Cuckoo.ParameterMatcher<([DocumentTypeIdentifier])>] = [wrap(matchable: excluded) { $0 }]
+            return cuckoo_manager.verify(
+    """
+    fetchDocuments(excluded: [DocumentTypeIdentifier]) -> [MdocDecodable]
+    """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+        }
+        
+        
+        
+        
+        @discardableResult
+        func fetchMainPidDocument() -> Cuckoo.__DoNotUse<(), MdocDecodable?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+    """
+    fetchMainPidDocument() -> MdocDecodable?
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -8302,8 +8388,24 @@ public class WalletKitControllerStub: WalletKitController {
     
     
     
-    public func fetchDocuments(with type: String) -> [MdocDecodable]  {
+    public func fetchDocuments(with type: DocumentTypeIdentifier) -> [MdocDecodable]  {
         return DefaultValueRegistry.defaultValue(for: ([MdocDecodable]).self)
+    }
+    
+    
+    
+    
+    
+    public func fetchDocuments(excluded: [DocumentTypeIdentifier]) -> [MdocDecodable]  {
+        return DefaultValueRegistry.defaultValue(for: ([MdocDecodable]).self)
+    }
+    
+    
+    
+    
+    
+    public func fetchMainPidDocument() -> MdocDecodable?  {
+        return DefaultValueRegistry.defaultValue(for: (MdocDecodable?).self)
     }
     
     
