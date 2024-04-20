@@ -80,6 +80,8 @@ final class TestDashboardInteractor: EudiTest {
   func testFetchDashboard_WhenWalletKitControllerReturnsEmpty_ThenReturnError() async {
     // Given
     stubFetchDocuments(with: [])
+    stubFetchDocumentsWithExclusion(with: [])
+    stubFetchMainPidDocument(with: nil)
     // When
     let state = await interactor.fetchDashboard()
     // Then
@@ -104,6 +106,17 @@ final class TestDashboardInteractor: EudiTest {
           expiresAt: "30 Mar 2050",
           hasExpired: false
         )
+      ),
+      .init(
+        id: Constants.randomIdentifier,
+        value: .init(
+          id: Constants.isoMdlModelId,
+          type: DocumentTypeIdentifier.IsoMdlModel.rawValue,
+          title: "Driving License",
+          createdAt: Constants.documentCreatedAt,
+          expiresAt: "30 Mar 2050",
+          hasExpired: false
+        )
       )
     ]
     let expectedBearer: BearerUIModel = .init(
@@ -113,7 +126,9 @@ final class TestDashboardInteractor: EudiTest {
         image: Theme.shared.image.user
       )
     )
-    stubFetchDocuments(with: [Constants.euPidModel])
+    stubFetchDocuments(with: [Constants.euPidModel, Constants.isoMdlModel])
+    stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
+    stubFetchMainPidDocument(with: Constants.euPidModel)
     // When
     let state = await interactor.fetchDashboard()
     // Then
@@ -143,6 +158,18 @@ private extension TestDashboardInteractor {
   func stubFetchDocuments(with documents: [MdocDecodable]) {
     stub(walletKitController) { mock in
       when(mock).fetchDocuments().thenReturn(documents)
+    }
+  }
+  
+  func stubFetchDocumentsWithExclusion(with documents: [MdocDecodable]) {
+    stub(walletKitController) { mock in
+      when(mock).fetchDocuments(excluded: any()).thenReturn(documents)
+    }
+  }
+  
+  func stubFetchMainPidDocument(with document: MdocDecodable?) {
+    stub(walletKitController) { mock in
+      when(mock).fetchMainPidDocument().thenReturn(document)
     }
   }
 }

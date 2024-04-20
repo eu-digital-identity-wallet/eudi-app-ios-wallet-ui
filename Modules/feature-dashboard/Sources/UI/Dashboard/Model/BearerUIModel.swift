@@ -35,8 +35,11 @@ public struct BearerUIModel: Identifiable, Equatable {
 public extension BearerUIModel {
 
   struct Value: Equatable {
+
     public let name: String
-    public let image: Image
+
+    @EquatableNoop
+    public var image: Image
   }
 
   static func mock() -> BearerUIModel {
@@ -48,18 +51,19 @@ public extension BearerUIModel {
       )
     )
   }
-}
 
-extension Array where Element == MdocDecodable {
-  func transformToBearerUi() -> BearerUIModel {
+  static func transformToBearerUi(
+    walletKitController: WalletKitController
+  ) -> BearerUIModel {
 
+    let storageDocuments = walletKitController.fetchDocuments(
+      excluded: [DocumentTypeIdentifier.EuPidDocType]
+    )
+
+    var name = walletKitController.fetchMainPidDocument()?.getBearersName()?.first
     var image: Image?
 
-    var name = self
-      .filter({ $0.docType == DocumentTypeIdentifier.EuPidDocType.rawValue })
-      .sorted { $0.createdAt > $1.createdAt }.last?.getBearersName()?.first
-
-    for item in self {
+    for item in storageDocuments {
 
       guard name == nil || image == nil else {
         break

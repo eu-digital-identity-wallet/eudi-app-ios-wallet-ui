@@ -78,8 +78,9 @@ final class DashboardInteractorImpl: DashboardInteractor {
   }
 
   private func fetchBearer() -> BearerUIModel {
-    let documents = self.walletController.fetchDocuments()
-    return documents.transformToBearerUi()
+    return BearerUIModel.transformToBearerUi(
+      walletKitController: self.walletController
+    )
   }
 
   private func fetchDocuments() -> [DocumentUIModel]? {

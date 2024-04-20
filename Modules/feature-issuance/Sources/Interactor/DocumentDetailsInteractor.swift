@@ -49,12 +49,14 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
       var shouldDeleteAllDocuments: Bool {
         if type == .EuPidDocType {
 
-          let documentPids = walletController.fetchDocuments()
-            .filter({ $0.docType == DocumentTypeIdentifier.EuPidDocType.rawValue })
+          let documentPids = walletController.fetchDocuments(
+            with: DocumentTypeIdentifier.EuPidDocType
+          )
+          let mainPid = walletController.fetchMainPidDocument()
 
           guard documentPids.count > 1 else { return true }
 
-          return documentPids.sorted { $0.createdAt > $1.createdAt }.last?.id == documentId
+          return mainPid?.id == documentId
 
         } else {
           return false

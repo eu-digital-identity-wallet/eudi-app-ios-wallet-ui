@@ -29,7 +29,9 @@ public protocol WalletKitController {
   func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinator
   func stopPresentation()
   func fetchDocuments() -> [MdocDecodable]
-  func fetchDocuments(with type: String) -> [MdocDecodable]
+  func fetchDocuments(with type: DocumentTypeIdentifier) -> [MdocDecodable]
+  func fetchDocuments(excluded: [DocumentTypeIdentifier]) -> [MdocDecodable]
+  func fetchMainPidDocument() -> MdocDecodable?
   func fetchDocument(with id: String) -> MdocDecodable?
   func loadSampleData(dataFiles: [String]) async throws
   func clearDocuments() async throws
@@ -135,10 +137,23 @@ final class WalletKitControllerImpl: WalletKitController {
     return wallet.storage.mdocModels.compactMap({ $0 })
   }
 
-  public func fetchDocuments(with type: String) -> [MdocDecodable] {
+  public func fetchDocuments(with type: DocumentTypeIdentifier) -> [MdocDecodable] {
     return wallet.storage.mdocModels
       .compactMap({ $0 })
-      .filter({ $0.docType == type })
+      .filter({ $0.docType == type.rawValue })
+  }
+
+  func fetchMainPidDocument() -> MdocDecodable? {
+    return fetchDocuments(with: DocumentTypeIdentifier.EuPidDocType)
+      .sorted { $0.createdAt > $1.createdAt }.last
+  }
+
+  func fetchDocuments(excluded: [DocumentTypeIdentifier]) -> [any MdocDecodable] {
+    let excludedRawValues = excluded.map { $0.rawValue }
+    return fetchDocuments().compactMap({
+        excludedRawValues.contains($0.docType) ? nil : $0
+      }
+    )
   }
 
   public func fetchDocument(with id: String) -> MdocDecodable? {
