@@ -23,7 +23,7 @@ public struct AddDocumentUIModel: Identifiable {
   public let id: String
   public let documentName: LocalizableString.Key
   public let image: Image
-  public let type: DocumentIdentifier
+  public let type: DocumentTypeIdentifier
   public var isEnabled: Bool
   public var isLoading: Bool
 
@@ -32,7 +32,7 @@ public struct AddDocumentUIModel: Identifiable {
     documentName: LocalizableString.Key,
     image: Image,
     isLoading: Bool = false,
-    type: DocumentIdentifier
+    type: DocumentTypeIdentifier
   ) {
     self.id = UUID().uuidString
     self.isEnabled = isEnabled

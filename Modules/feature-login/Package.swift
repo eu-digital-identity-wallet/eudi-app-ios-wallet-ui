@@ -31,6 +31,7 @@ let package = Package(
         "feature-common",
         "feature-test"
       ],
-      path: "./Tests")
+      path: "./Tests"
+    )
   ]
 )

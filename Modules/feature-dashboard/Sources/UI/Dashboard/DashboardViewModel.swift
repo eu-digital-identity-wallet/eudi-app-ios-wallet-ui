@@ -36,7 +36,6 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
 
   @Published var isMoreModalShowing: Bool = false
   @Published var isBleModalShowing: Bool = false
-  @Published var onScan: Bool = false
 
   var bearerName: String {
     viewState.bearer.value.name
@@ -144,7 +143,7 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
 
   func onShowScanner() {
     isMoreModalShowing = false
-    onScan = true
+    router.push(with: .qrScanner(config: ScannerUiConfig(flow: .presentation)))
   }
 
   private func handleDeepLink() {

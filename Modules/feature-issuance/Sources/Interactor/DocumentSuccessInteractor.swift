@@ -15,10 +15,11 @@
  */
 import logic_core
 import logic_business
+import logic_resources
 
 public protocol DocumentSuccessInteractor {
   func getHoldersName(for documentIdentifier: String) -> String?
-  func getDocumentName(for documentIdentifier: String) -> String
+  func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key?
 }
 
 final class DocumentSuccessInteractorImpl: DocumentSuccessInteractor {
@@ -38,8 +39,13 @@ final class DocumentSuccessInteractorImpl: DocumentSuccessInteractor {
     return  "\(bearerName.first) \(bearerName.last)"
   }
 
-  public func getDocumentName(for documentIdentifier: String) -> String {
-    DocumentIdentifier(rawValue: documentIdentifier).localizedTitle
+  public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key? {
+    guard
+      let type = walletController.fetchDocument(with: documentIdentifier)?.docType
+    else {
+      return nil
+    }
+    return .issuanceSuccessCaption([DocumentTypeIdentifier(rawValue: type).localizedTitle])
   }
 
 }

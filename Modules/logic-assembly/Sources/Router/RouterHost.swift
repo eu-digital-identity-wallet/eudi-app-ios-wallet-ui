@@ -219,6 +219,14 @@ final class RouterHostImpl: RouterHost {
           config: config,
           documentIdentifier: documentIdentifier
         )
+      case .qrScanner(let config):
+        ScannerView(
+          with: self,
+          and: config,
+          also: DIGraph.resolver.force(
+            WalletKitController.self
+          )
+        )
       }
     }
     .eraseToAnyView()

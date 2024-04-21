@@ -38,7 +38,9 @@ public extension DocumentUIModel {
     @EquatableNoop
     public var id: String
 
+    public let type: String
     public let title: String
+    public var createdAt: Date
     public let expiresAt: String?
     public let hasExpired: Bool
   }
@@ -49,7 +51,9 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          type: UUID().uuidString,
           title: "Digital ID",
+          createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false
         )
@@ -58,7 +62,9 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          type: UUID().uuidString,
           title: "EUDI Conference",
+          createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false
         )
@@ -67,7 +73,9 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          type: UUID().uuidString,
           title: "Passport",
+          createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false
         )
@@ -76,7 +84,9 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          type: UUID().uuidString,
           title: "Document 1",
+          createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false
         )
@@ -85,7 +95,9 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          type: UUID().uuidString,
           title: "Document 2",
+          createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false
         )
@@ -94,7 +106,9 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          type: UUID().uuidString,
           title: "Document 3",
+          createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false
         )
@@ -103,7 +117,9 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          type: UUID().uuidString,
           title: "Document 4",
+          createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false
         )
@@ -112,7 +128,9 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          type: UUID().uuidString,
           title: "Document 5",
+          createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false
         )
@@ -121,7 +139,9 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          type: UUID().uuidString,
           title: "Document 6",
+          createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false
         )
@@ -130,7 +150,9 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          type: UUID().uuidString,
           title: "Passport",
+          createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false
         )
@@ -145,8 +167,10 @@ extension Array where Element == MdocDecodable {
       return .init(
         id: UUID().uuidString,
         value: .init(
-          id: item.docType,
+          id: item.id,
+          type: item.docType,
           title: LocalizableString.shared.get(with: .dynamic(key: item.title)),
+          createdAt: item.createdAt,
           expiresAt: item.getExpiryDate(
             parser: {
               Locale.current.localizedDateTime(

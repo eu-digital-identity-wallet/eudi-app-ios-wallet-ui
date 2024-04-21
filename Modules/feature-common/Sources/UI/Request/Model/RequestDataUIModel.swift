@@ -174,7 +174,7 @@ public extension RequestDataSection {
     case mdl
     case custom(String)
 
-    public init(docType: DocumentIdentifier) {
+    public init(docType: DocumentTypeIdentifier) {
       switch docType {
 
       case .EuPidDocType:
@@ -191,72 +191,83 @@ public extension RequestDataSection {
 extension RequestDataUiModel {
 
   public static func items(
-    for documents: [DocElementsViewModel],
+    for docElements: [DocElementsViewModel],
     walletKitController: WalletKitController
   ) -> [RequestDataUIModel] {
     var requestDataCell = [RequestDataUIModel]()
 
-    for document in documents {
+    for docElement in docElements {
 
-      // Filter fields for Selectable Disclosed Fields
-      let dataFields = documentSelectiveDisclosableFields(
-        for: document,
-        walletKitController: walletKitController
+      let storageDocuments = walletKitController.fetchDocuments(
+        with: .init(rawValue: docElement.docType)
       )
 
-      // Filter fields for mandatory keys for verification
-      let verificationFields = documentMandatoryVerificationFields(
-        for: document,
-        walletKitController: walletKitController
-      )
+      for storageDocument in storageDocuments {
 
-      guard !dataFields.isEmpty || verificationFields != nil else {
-        continue
-      }
+        // Filter fields for Selectable Disclosed Fields
+        let dataFields = documentSelectiveDisclosableFields(
+          for: docElement.elements,
+          with: storageDocument,
+          walletKitController: walletKitController
+        )
 
-      // Section Header
-      requestDataCell.append(documentSectionHeader(for: document))
+        // Filter fields for mandatory keys for verification
+        let verificationFields = documentMandatoryVerificationFields(
+          for: docElement.elements,
+          with: storageDocument,
+          walletKitController: walletKitController
+        )
 
-      if !dataFields.isEmpty {
-        requestDataCell.append(contentsOf: dataFields)
-      }
+        guard !dataFields.isEmpty || verificationFields != nil else {
+          continue
+        }
 
-      if let verificationFields {
-        requestDataCell.append(verificationFields)
+        // Section Header
+        requestDataCell.append(documentSectionHeader(for: storageDocument))
+
+        if !dataFields.isEmpty {
+          requestDataCell.append(contentsOf: dataFields)
+        }
+
+        if let verificationFields {
+          requestDataCell.append(verificationFields)
+        }
       }
     }
 
     return requestDataCell
   }
 
-  fileprivate static func documentSectionHeader(for document: DocElementsViewModel) -> RequestDataUIModel {
+  fileprivate static func documentSectionHeader(for document: MdocDecodable) -> RequestDataUIModel {
     .requestDataSection(
       .init(
-        id: document.docType,
-        type: .init(docType: DocumentIdentifier(rawValue: document.docType)),
-        title: DocumentIdentifier(rawValue: document.docType).localizedTitle
+        id: document.id,
+        type: .init(docType: DocumentTypeIdentifier(rawValue: document.docType)),
+        title: DocumentTypeIdentifier(rawValue: document.docType).localizedTitle
       )
     )
   }
 
   fileprivate static func documentSelectiveDisclosableFields(
-    for document: DocElementsViewModel,
+    for docElements: [ElementViewModel],
+    with storageDocument: MdocDecodable,
     walletKitController: WalletKitController
   ) -> [RequestDataUIModel] {
-    document.elements
+    docElements
       .filter { element in
-        let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: document.docType))
+        let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: storageDocument.docType))
         return !mandatoryKeys.contains(element.elementIdentifier)
       }
       .map {
         RequestDataUIModel.requestDataRow(
           RequestDataRow(
-            id: $0.id,
+            id: "\($0.id)_\(storageDocument.id)",
             isSelected: true,
             isVisible: false,
             title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
             value: walletKitController.valueForElementIdentifier(
-              for: .init(rawValue: document.docType),
+              for: .init(rawValue: storageDocument.docType),
+              with: storageDocument.id,
               elementIdentifier: $0.elementIdentifier,
               parser: {
                 Locale.current.localizedDateTime(
@@ -267,29 +278,31 @@ extension RequestDataUiModel {
             ),
             elementKey: $0.elementIdentifier,
             namespace: $0.nameSpace,
-            docType: document.docType
+            docType: storageDocument.docType
           )
         )
       }
   }
 
   fileprivate static func documentMandatoryVerificationFields(
-    for document: DocElementsViewModel,
+    for docElements: [ElementViewModel],
+    with storageDocument: MdocDecodable,
     walletKitController: WalletKitController
   ) -> RequestDataUIModel? {
-    let mandatoryFields = document.elements
+    let mandatoryFields = docElements
       .filter { element in
-        let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: document.docType))
+        let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: storageDocument.docType))
         return mandatoryKeys.contains(element.elementIdentifier)
       }
       .map {
         RequestDataRow(
-          id: $0.id,
+          id: "\($0.id)_\(storageDocument.id)",
           isSelected: true,
           isVisible: false,
           title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
           value: walletKitController.valueForElementIdentifier(
-            for: .init(rawValue: document.docType),
+            for: .init(rawValue: storageDocument.docType),
+            with: storageDocument.id,
             elementIdentifier: $0.elementIdentifier,
             parser: {
               Locale.current.localizedDateTime(
@@ -300,7 +313,7 @@ extension RequestDataUiModel {
           ),
           elementKey: $0.elementIdentifier,
           namespace: $0.nameSpace,
-          docType: document.docType
+          docType: storageDocument.docType
         )
       }
 

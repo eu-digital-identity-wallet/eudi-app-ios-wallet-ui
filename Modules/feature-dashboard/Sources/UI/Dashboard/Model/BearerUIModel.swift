@@ -35,8 +35,11 @@ public struct BearerUIModel: Identifiable, Equatable {
 public extension BearerUIModel {
 
   struct Value: Equatable {
+
     public let name: String
-    public let image: Image
+
+    @EquatableNoop
+    public var image: Image
   }
 
   static func mock() -> BearerUIModel {
@@ -48,20 +51,29 @@ public extension BearerUIModel {
       )
     )
   }
-}
 
-extension Array where Element == MdocDecodable {
-  func transformToBearerUi() -> BearerUIModel {
+  static func transformToBearerUi(
+    walletKitController: WalletKitController
+  ) -> BearerUIModel {
 
-    var image: Image = Theme.shared.image.user
-    var name: String = ""
+    let storageDocuments = walletKitController.fetchDocuments(
+      excluded: [DocumentTypeIdentifier.EuPidDocType]
+    )
 
-    self.forEach { item in
-      if let bearerName = item.getBearersName() {
+    var name = walletKitController.fetchMainPidDocument()?.getBearersName()?.first
+    var image: Image?
+
+    for item in storageDocuments {
+
+      guard name == nil || image == nil else {
+        break
+      }
+
+      if name == nil, let bearerName = item.getBearersName() {
         name = bearerName.first
       }
 
-      if let tempImage = item.getPortrait() {
+      if image == nil, let tempImage = item.getPortrait() {
         image = tempImage
       }
     }
@@ -69,8 +81,8 @@ extension Array where Element == MdocDecodable {
     return .init(
       id: UUID().uuidString,
       value: .init(
-        name: name,
-        image: image
+        name: name.orEmpty,
+        image: image ?? Theme.shared.image.user
       )
     )
   }
