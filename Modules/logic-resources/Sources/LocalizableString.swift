@@ -231,6 +231,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "scanner_qr_title")
     case .scannerQrCaption:
       bundle.localizedString(forKey: "scanner_qr_caption")
+    case .cameraError:
+      bundle.localizedString(forKey: "camera_error")
     }
   }
 
@@ -339,6 +341,7 @@ public extension LocalizableString {
     case issuanceScanQr
     case scannerQrTitle
     case scannerQrCaption
+    case cameraError
   }
 }
 
