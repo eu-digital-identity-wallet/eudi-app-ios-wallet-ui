@@ -80,7 +80,7 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
   }
 
   func onScanClick() {
-
+    router.push(with: .qrScanner(config: ScannerUiConfig(flow: .issuing)))
   }
 
   func pop() {

@@ -41,7 +41,7 @@ public struct ScannerView<Router: RouterHost>: View {
 
   public var body: some View {
 
-    ContentScreenView(errorConfig: viewmodel.viewState.error) {
+    ContentScreenView {
 
       ContentHeaderView(
         dismissIcon: Theme.shared.image.xmark,
@@ -61,17 +61,24 @@ public struct ScannerView<Router: RouterHost>: View {
           switch response {
           case .success(let result):
             viewmodel.onResult(scanResult: result.string)
-          case .failure(let error):
-            viewmodel.onError(with: error)
+          case .failure:
+            viewmodel.onError()
           }
         }
         .roundedCorner(Theme.shared.shape.xxxxLarge, corners: .allCorners)
+        .padding(EdgeInsets(top: .zero, leading: .zero, bottom: 2, trailing: 2))
 
         Theme.shared.image.viewFinder
           .resizable()
+          .font(.system(size: SPACING_MEDIUM, weight: .ultraLight))
           .foregroundColor(Theme.shared.color.primary)
+
       }
       .frame(maxWidth: .infinity, maxHeight: cameraSurfaceSize)
+      .onError(
+        show: $viewmodel.onShowError,
+        message: LocalizableString.shared.get(with: .cameraError)
+      )
 
       Spacer()
     }

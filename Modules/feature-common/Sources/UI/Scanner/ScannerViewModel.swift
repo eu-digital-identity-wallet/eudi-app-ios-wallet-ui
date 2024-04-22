@@ -19,7 +19,6 @@ import logic_resources
 
 struct ScannerState: ViewState {
   let config: ScannerUiConfig
-  let error: ContentErrorView.Config?
 
   var title: LocalizableString.Key {
     return config.flow.title
@@ -34,6 +33,8 @@ final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerS
 
   private let walletKitController: WalletKitController
 
+  @Published var onShowError: Bool = false
+
   init(
     config: any UIConfigType,
     router: Router,
@@ -43,7 +44,7 @@ final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerS
       fatalError("ScannerViewModel:: Invalid configuraton")
     }
     self.walletKitController = walletKitController
-    super.init(router: router, initialState: .init(config: config, error: nil))
+    super.init(router: router, initialState: .init(config: config))
   }
 
   func onResult(scanResult: String) {
@@ -66,21 +67,7 @@ final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerS
     router.pop()
   }
 
-  func onError(with error: Error?) {
-
-    var errorConfig: ContentErrorView.Config? {
-      guard let error else { return nil }
-      return .init(
-        description: .custom(error.localizedDescription),
-        cancelAction: self.onError(with: nil)
-      )
-    }
-
-    setState {
-      .init(
-        config: $0.config,
-        error: errorConfig
-      )
-    }
+  func onError() {
+    self.onShowError = true
   }
 }

@@ -265,6 +265,17 @@
         }
       }
     },
+    "camera_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camera initialization error. Please check the permissions."
+          }
+        }
+      }
+    },
     "cancel_button" : {
       "extractionState" : "manual",
       "localizations" : {
