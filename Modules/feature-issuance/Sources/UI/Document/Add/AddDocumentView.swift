@@ -133,5 +133,6 @@ public struct AddDocumentView<Router: RouterHost>: View {
     .frame(maxWidth: .infinity, maxHeight: contentSize)
     .background(Theme.shared.color.backgroundDefault.opacity(0.8))
     .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
+    .shimmer(isLoading: viewModel.viewState.isLoading)
   }
 }
