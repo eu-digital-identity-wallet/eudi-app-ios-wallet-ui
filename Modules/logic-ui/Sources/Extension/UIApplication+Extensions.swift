@@ -31,4 +31,8 @@ public extension UIApplication {
       for: nil
     )
   }
+  func openAppSettings() {
+    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+    self.open(url, options: [:])
+  }
 }

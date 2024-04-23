@@ -271,7 +271,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Camera initialization error. Please check the permissions."
+            "value" : "Camera permission not provided\nOpen App Settings"
           }
         }
       }

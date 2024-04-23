@@ -66,19 +66,30 @@ public struct ScannerView<Router: RouterHost>: View {
           }
         }
         .roundedCorner(Theme.shared.shape.xxxxLarge, corners: .allCorners)
-        .padding(EdgeInsets(top: .zero, leading: .zero, bottom: 2, trailing: 2))
+        .padding(
+          EdgeInsets(
+            top: .zero,
+            leading: .zero,
+            bottom: 2,
+            trailing: 2
+          )
+        )
 
         Theme.shared.image.viewFinder
           .resizable()
           .font(.system(size: SPACING_MEDIUM, weight: .ultraLight))
           .foregroundColor(Theme.shared.color.primary)
 
+        if let error = viewmodel.viewState.error {
+          ContentEmptyView(
+            title: error,
+            iconColor: Theme.shared.color.white,
+            textColor: Theme.shared.color.white,
+            onClick: { viewmodel.onErrorClick() }
+          )
+        }
       }
       .frame(maxWidth: .infinity, maxHeight: cameraSurfaceSize)
-      .onError(
-        show: $viewmodel.onShowError,
-        message: LocalizableString.shared.get(with: .cameraError)
-      )
 
       Spacer()
     }

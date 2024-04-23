@@ -20,15 +20,21 @@ public struct ContentEmptyView: View {
 
   private let title: LocalizableString.Key
   private let image: Image
+  private let iconColor: Color
+  private let textColor: Color
   private let onClick: (() -> Void)?
 
   public init(
     title: LocalizableString.Key,
     image: Image = Theme.shared.image.exclamationmarkCircle,
+    iconColor: Color = Theme.shared.color.backgroundDefault,
+    textColor: Color = Theme.shared.color.textPrimaryDark,
     onClick: (() -> Void)? = nil
   ) {
     self.title = title
     self.image = image
+    self.iconColor = iconColor
+    self.textColor = textColor
     self.onClick = onClick
   }
 
@@ -38,11 +44,12 @@ public struct ContentEmptyView: View {
       image
         .resizable()
         .scaledToFit()
-        .foregroundColor(Theme.shared.color.backgroundDefault)
+        .foregroundColor(iconColor)
         .frame(height: 50)
 
       Text(title)
-        .foregroundColor(Theme.shared.color.textPrimaryDark)
+        .multilineTextAlignment(.center)
+        .foregroundColor(textColor)
     }
     .onTapGesture {
       onClick?()
