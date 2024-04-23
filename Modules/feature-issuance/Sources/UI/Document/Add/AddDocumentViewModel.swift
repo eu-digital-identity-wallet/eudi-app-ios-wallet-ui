@@ -28,6 +28,10 @@ struct AddDocumentViewState: ViewState {
   var isFlowCancellable: Bool {
     return config.isExtraDocumentFlow
   }
+
+  var isLoading: Bool {
+    addDocumentCellModels.allSatisfy { $0.isLoading }
+  }
 }
 
 final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddDocumentViewState> {
