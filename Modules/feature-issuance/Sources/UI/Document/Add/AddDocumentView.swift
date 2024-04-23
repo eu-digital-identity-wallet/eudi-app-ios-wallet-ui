@@ -29,7 +29,11 @@ public struct AddDocumentView<Router: RouterHost>: View {
     and interactor: AddDocumentInteractor,
     config: any UIConfigType
   ) {
-    self.viewModel = AddDocumentViewModel(router: router, interactor: interactor, config: config)
+    self.viewModel = AddDocumentViewModel(
+      router: router,
+      interactor: interactor,
+      config: config
+    )
     self.contentSize = getScreenRect().width / 2.0
   }
 
@@ -95,6 +99,7 @@ public struct AddDocumentView<Router: RouterHost>: View {
       Text(.or)
         .typography(Theme.shared.font.bodyMedium)
         .foregroundColor(Theme.shared.color.textSecondaryDark )
+        .shimmer(isLoading: viewModel.viewState.isLoading)
 
       Button(
         action: { self.viewModel.onScanClick() },
@@ -127,12 +132,13 @@ public struct AddDocumentView<Router: RouterHost>: View {
       .background(Theme.shared.color.backgroundDefault)
       .roundedCorner(SPACING_MEDIUM_SMALL, corners: .allCorners)
       .padding(.horizontal)
+      .disabled(viewModel.viewState.isLoading)
+      .shimmer(isLoading: viewModel.viewState.isLoading)
 
       Spacer()
     }
     .frame(maxWidth: .infinity, maxHeight: contentSize)
     .background(Theme.shared.color.backgroundDefault.opacity(0.8))
     .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
-    .shimmer(isLoading: viewModel.viewState.isLoading)
   }
 }
