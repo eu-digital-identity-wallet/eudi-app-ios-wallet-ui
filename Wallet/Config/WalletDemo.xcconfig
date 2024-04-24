@@ -3,5 +3,5 @@ BUILD_TYPE = DEBUG
 VERIFIER_API_URI = https:/$()/verifier.eudiw.dev
 VCI_ISSUER_URL = https:/$()/issuer.eudiw.dev/oidc
 VCI_CLIENT_ID = wallet-demo
-VCI_REDIRECT_URI = eudi-openid4ci:/$()/authorize/
+VCI_REDIRECT_URI = eudi-openid4ci:/$()/authorize
 CORE_USER_AUTH = false

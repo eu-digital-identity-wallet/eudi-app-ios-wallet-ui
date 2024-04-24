@@ -19,7 +19,7 @@ import logic_resources
 
 struct ScannerState: ViewState {
   let config: ScannerUiConfig
-  let error: ContentErrorView.Config?
+  let error: LocalizableString.Key?
 
   var title: LocalizableString.Key {
     return config.flow.title
@@ -66,21 +66,16 @@ final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerS
     router.pop()
   }
 
-  func onError(with error: Error?) {
-
-    var errorConfig: ContentErrorView.Config? {
-      guard let error else { return nil }
-      return .init(
-        description: .custom(error.localizedDescription),
-        cancelAction: self.onError(with: nil)
-      )
-    }
-
+  func onError() {
     setState {
       .init(
         config: $0.config,
-        error: errorConfig
+        error: .cameraError
       )
     }
+  }
+
+  func onErrorClick() {
+    UIApplication.shared.openAppSettings()
   }
 }

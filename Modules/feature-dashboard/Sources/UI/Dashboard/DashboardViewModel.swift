@@ -152,16 +152,6 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
     }
   }
 
-  func onScanSuccess(scanResult: String) {
-    router.push(
-      with: .presentationRequest(
-        presentationCoordinator: walletKitController.startCrossDevicePresentation(
-          urlString: scanResult
-        )
-      )
-    )
-  }
-
   private func setNewState(
     isLoading: Bool = false,
     documents: [DocumentUIModel]? = nil,

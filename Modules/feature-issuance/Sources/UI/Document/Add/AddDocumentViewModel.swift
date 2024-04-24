@@ -28,6 +28,10 @@ struct AddDocumentViewState: ViewState {
   var isFlowCancellable: Bool {
     return config.isExtraDocumentFlow
   }
+
+  var isLoading: Bool {
+    addDocumentCellModels.allSatisfy { $0.isLoading }
+  }
 }
 
 final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddDocumentViewState> {
@@ -80,7 +84,7 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
   }
 
   func onScanClick() {
-
+    router.push(with: .qrScanner(config: ScannerUiConfig(flow: .issuing)))
   }
 
   func pop() {
