@@ -56,9 +56,12 @@ final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerS
           )
         )
       )
-    case .issuing:
-      // MARK: - TODO ADD LOGIC FOR CREDENTIAL OFFER
-      break
+    case .issuing(let config):
+      router.push(
+        with: .credentialOfferRequest(
+          config: config.copy(credentialOfferUri: scanResult)
+        )
+      )
     }
   }
 

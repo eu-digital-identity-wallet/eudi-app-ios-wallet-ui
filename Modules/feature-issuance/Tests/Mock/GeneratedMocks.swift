@@ -2008,14 +2008,14 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
         )
         
     }
-    public func issueDocument(docType p0: String, format p1: DataFormat) async -> IssueDocumentPartialState {
+    public func issueDocument(docType p0: String) async -> IssueDocumentPartialState {
         
         return await cuckoo_manager.call(
-            "issueDocument(docType p0: String, format p1: DataFormat) async -> IssueDocumentPartialState",
-            parameters: (p0, p1),
-            escapingParameters: (p0, p1),
+            "issueDocument(docType p0: String) async -> IssueDocumentPartialState",
+            parameters: (p0),
+            escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.issueDocument(docType: p0, format: p1)
+            defaultCall: await __defaultImplStub!.issueDocument(docType: p0)
         )
         
     }
@@ -2043,10 +2043,10 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
             ))
         }
         
-        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(docType p0: M1, format p1: M2) -> Cuckoo.ProtocolStubFunction<(String, DataFormat), IssueDocumentPartialState> where M1.MatchedType == String, M2.MatchedType == DataFormat {
-            let matchers: [Cuckoo.ParameterMatcher<(String, DataFormat)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func issueDocument<M1: Cuckoo.Matchable>(docType p0: M1) -> Cuckoo.ProtocolStubFunction<(String), IssueDocumentPartialState> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractor.self,
-                method: "issueDocument(docType p0: String, format p1: DataFormat) async -> IssueDocumentPartialState",
+                method: "issueDocument(docType p0: String) async -> IssueDocumentPartialState",
                 parameterMatchers: matchers
             ))
         }
@@ -2088,10 +2088,10 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
         }
         
         @discardableResult
-        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(docType p0: M1, format p1: M2) -> Cuckoo.__DoNotUse<(String, DataFormat), IssueDocumentPartialState> where M1.MatchedType == String, M2.MatchedType == DataFormat {
-            let matchers: [Cuckoo.ParameterMatcher<(String, DataFormat)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func issueDocument<M1: Cuckoo.Matchable>(docType p0: M1) -> Cuckoo.__DoNotUse<(String), IssueDocumentPartialState> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "issueDocument(docType p0: String, format p1: DataFormat) async -> IssueDocumentPartialState",
+                "issueDocument(docType p0: String) async -> IssueDocumentPartialState",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -2112,7 +2112,7 @@ public class AddDocumentInteractorStub:AddDocumentInteractor {
         return DefaultValueRegistry.defaultValue(for: (LoadSampleDataPartialState).self)
     }
     
-    public  func issueDocument(docType p0: String, format p1: DataFormat) async -> IssueDocumentPartialState {
+    public  func issueDocument(docType p0: String) async -> IssueDocumentPartialState {
         return DefaultValueRegistry.defaultValue(for: (IssueDocumentPartialState).self)
     }
 }
@@ -2243,6 +2243,135 @@ public class DocumentDetailsInteractorStub:DocumentDetailsInteractor {
     
     public  func deleteDocument(with p0: String, and p1: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
         return DefaultValueRegistry.defaultValue(for: (DocumentDetailsDeletionPartialState).self)
+    }
+}
+
+
+
+
+// MARK: - Mocks generated from file: 'Modules/feature-issuance/Sources/Interactor/DocumentOfferInteractor.swift'
+
+import Cuckoo
+import Foundation
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.ProtocolMock {
+    public typealias MocksType = DocumentOfferInteractor
+    public typealias Stubbing = __StubbingProxy_DocumentOfferInteractor
+    public typealias Verification = __VerificationProxy_DocumentOfferInteractor
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: DocumentOfferInteractor?
+
+    public func enableDefaultImplementation(_ stub: DocumentOfferInteractor) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public func processOfferRequest(with p0: String) async -> OfferRequestPartialState {
+        
+        return await cuckoo_manager.call(
+            "processOfferRequest(with p0: String) async -> OfferRequestPartialState",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.processOfferRequest(with: p0)
+        )
+        
+    }
+    public func issueDocuments(with p0: String, and p1: DocumentOfferUIModel) async -> IssueOfferDocumentsPartialState {
+        
+        return await cuckoo_manager.call(
+            "issueDocuments(with p0: String, and p1: DocumentOfferUIModel) async -> IssueOfferDocumentsPartialState",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.issueDocuments(with: p0, and: p1)
+        )
+        
+    }
+
+    public struct __StubbingProxy_DocumentOfferInteractor: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func processOfferRequest<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<(String), OfferRequestPartialState> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockDocumentOfferInteractor.self,
+                method: "processOfferRequest(with p0: String) async -> OfferRequestPartialState",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func issueDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with p0: M1, and p1: M2) -> Cuckoo.ProtocolStubFunction<(String, DocumentOfferUIModel), IssueOfferDocumentsPartialState> where M1.MatchedType == String, M2.MatchedType == DocumentOfferUIModel {
+            let matchers: [Cuckoo.ParameterMatcher<(String, DocumentOfferUIModel)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockDocumentOfferInteractor.self,
+                method: "issueDocuments(with p0: String, and p1: DocumentOfferUIModel) async -> IssueOfferDocumentsPartialState",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    public struct __VerificationProxy_DocumentOfferInteractor: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+    
+        
+        @discardableResult
+        func processOfferRequest<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), OfferRequestPartialState> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "processOfferRequest(with p0: String) async -> OfferRequestPartialState",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        @discardableResult
+        func issueDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with p0: M1, and p1: M2) -> Cuckoo.__DoNotUse<(String, DocumentOfferUIModel), IssueOfferDocumentsPartialState> where M1.MatchedType == String, M2.MatchedType == DocumentOfferUIModel {
+            let matchers: [Cuckoo.ParameterMatcher<(String, DocumentOfferUIModel)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return cuckoo_manager.verify(
+                "issueDocuments(with p0: String, and p1: DocumentOfferUIModel) async -> IssueOfferDocumentsPartialState",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+public class DocumentOfferInteractorStub:DocumentOfferInteractor {
+
+
+    
+    public  func processOfferRequest(with p0: String) async -> OfferRequestPartialState {
+        return DefaultValueRegistry.defaultValue(for: (OfferRequestPartialState).self)
+    }
+    
+    public  func issueDocuments(with p0: String, and p1: DocumentOfferUIModel) async -> IssueOfferDocumentsPartialState {
+        return DefaultValueRegistry.defaultValue(for: (IssueOfferDocumentsPartialState).self)
     }
 }
 
@@ -2462,6 +2591,69 @@ import logic_resources
 import Cuckoo
 import SwiftUI
 import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: 'Modules/feature-issuance/Sources/UI/Document/Offer/Component/DocumentOfferCellView.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: 'Modules/feature-issuance/Sources/UI/Document/Offer/DocumentOfferView.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: 'Modules/feature-issuance/Sources/UI/Document/Offer/DocumentOfferViewModel.swift'
+
+import Cuckoo
+import Foundation
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: 'Modules/feature-issuance/Sources/UI/Document/Offer/Model/DocumentOfferUIModel.swift'
+
+import Cuckoo
+import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -6895,6 +7087,28 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         )
         
     }
+    public func resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> [OfferedDocModel] {
+        
+        return try await cuckoo_manager.callThrows(
+            "resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> [OfferedDocModel]",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.resolveOfferUrlDocTypes(uriOffer: p0)
+        )
+        
+    }
+    public func issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat) async throws -> [WalletStorage.Document] {
+        
+        return try await cuckoo_manager.callThrows(
+            "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat) async throws -> [WalletStorage.Document]",
+            parameters: (p0, p1, p2),
+            escapingParameters: (p0, p1, p2),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.issueDocumentsByOfferUrl(offerUri: p0, docTypes: p1, format: p2)
+        )
+        
+    }
     public func valueForElementIdentifier(for p0: DocumentTypeIdentifier, with p1: String, elementIdentifier p2: String, parser p3: (String) -> String) -> MdocValue {
         			return withoutActuallyEscaping(p3, do: { (p3: @escaping (String) -> String) -> MdocValue in
 
@@ -7043,6 +7257,22 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
             let matchers: [Cuckoo.ParameterMatcher<(String, DataFormat)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "issueDocument(docType p0: String, format p1: DataFormat) async throws -> WalletStorage.Document",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func resolveOfferUrlDocTypes<M1: Cuckoo.Matchable>(uriOffer p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), [OfferedDocModel]> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> [OfferedDocModel]",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func issueDocumentsByOfferUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(offerUri p0: M1, docTypes p1: M2, format p2: M3) -> Cuckoo.ProtocolStubThrowingFunction<(String, [OfferedDocModel], DataFormat), [WalletStorage.Document]> where M1.MatchedType == String, M2.MatchedType == [OfferedDocModel], M3.MatchedType == DataFormat {
+            let matchers: [Cuckoo.ParameterMatcher<(String, [OfferedDocModel], DataFormat)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat) async throws -> [WalletStorage.Document]",
                 parameterMatchers: matchers
             ))
         }
@@ -7238,6 +7468,28 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         }
         
         @discardableResult
+        func resolveOfferUrlDocTypes<M1: Cuckoo.Matchable>(uriOffer p0: M1) -> Cuckoo.__DoNotUse<(String), [OfferedDocModel]> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> [OfferedDocModel]",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        @discardableResult
+        func issueDocumentsByOfferUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(offerUri p0: M1, docTypes p1: M2, format p2: M3) -> Cuckoo.__DoNotUse<(String, [OfferedDocModel], DataFormat), [WalletStorage.Document]> where M1.MatchedType == String, M2.MatchedType == [OfferedDocModel], M3.MatchedType == DataFormat {
+            let matchers: [Cuckoo.ParameterMatcher<(String, [OfferedDocModel], DataFormat)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+            return cuckoo_manager.verify(
+                "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat) async throws -> [WalletStorage.Document]",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        @discardableResult
         func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(for p0: M1, with p1: M2, elementIdentifier p2: M3, parser p3: M4) -> Cuckoo.__DoNotUse<(DocumentTypeIdentifier, String, String, (String) -> String), MdocValue> where M1.MatchedType == DocumentTypeIdentifier, M2.MatchedType == String, M3.MatchedType == String, M4.MatchedType == (String) -> String {
             let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier, String, String, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
             return cuckoo_manager.verify(
@@ -7331,6 +7583,14 @@ public class WalletKitControllerStub:WalletKitController {
     
     public  func issueDocument(docType p0: String, format p1: DataFormat) async throws -> WalletStorage.Document {
         return DefaultValueRegistry.defaultValue(for: (WalletStorage.Document).self)
+    }
+    
+    public  func resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> [OfferedDocModel] {
+        return DefaultValueRegistry.defaultValue(for: ([OfferedDocModel]).self)
+    }
+    
+    public  func issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat) async throws -> [WalletStorage.Document] {
+        return DefaultValueRegistry.defaultValue(for: ([WalletStorage.Document]).self)
     }
     
     public  func valueForElementIdentifier(for p0: DocumentTypeIdentifier, with p1: String, elementIdentifier p2: String, parser p3: (String) -> String) -> MdocValue {
