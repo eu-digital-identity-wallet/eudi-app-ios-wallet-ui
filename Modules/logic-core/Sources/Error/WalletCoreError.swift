@@ -19,6 +19,8 @@ import logic_resources
 public enum WalletCoreError: LocalizedError {
   case unableFetchDocuments
   case unableFetchDocument
+  case missingPid
+  case unableToIssueAndStore
 
   public var errorDescription: String? {
     return switch self {
@@ -26,6 +28,10 @@ public enum WalletCoreError: LocalizedError {
       LocalizableString.shared.get(with: .errorUnableFetchDocuments)
     case .unableFetchDocument:
       LocalizableString.shared.get(with: .errorUnableFetchDocument)
+    case .missingPid:
+      LocalizableString.shared.get(with: .missingPid)
+    case .unableToIssueAndStore:
+      LocalizableString.shared.get(with: .unableToIssueAndStore)
     }
   }
 }

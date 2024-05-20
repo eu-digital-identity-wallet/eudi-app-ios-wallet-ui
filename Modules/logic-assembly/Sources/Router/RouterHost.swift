@@ -227,6 +227,14 @@ final class RouterHostImpl: RouterHost {
             WalletKitController.self
           )
         )
+      case .credentialOfferRequest(let config):
+        DocumentOfferView(
+          with: self,
+          and: DIGraph.resolver.force(
+            DocumentOfferInteractor.self
+          ),
+          config: config
+        )
       }
     }
     .eraseToAnyView()

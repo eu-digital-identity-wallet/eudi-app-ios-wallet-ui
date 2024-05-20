@@ -38,6 +38,12 @@ public protocol WalletKitController {
   func deleteDocument(with id: String) async throws
   func loadDocuments() async throws
   func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
+  func resolveOfferUrlDocTypes(uriOffer: String) async throws -> [OfferedDocModel]
+  func issueDocumentsByOfferUrl(
+    offerUri: String,
+    docTypes: [OfferedDocModel],
+    format: DataFormat
+  ) async throws -> [WalletStorage.Document]
   func valueForElementIdentifier(
     for documentType: DocumentTypeIdentifier,
     with documentId: String,
@@ -64,6 +70,23 @@ final class WalletKitControllerImpl: WalletKitController {
     wallet.openID4VciClientId = configLogic.vciConfig.clientId
     wallet.openID4VciRedirectUri = configLogic.vciConfig.redirectUri
     wallet.trustedReaderCertificates = configLogic.proximityConfig.trustedCerts
+  }
+
+  func resolveOfferUrlDocTypes(uriOffer: String) async throws -> [OfferedDocModel] {
+    let documents = try await wallet.resolveOfferUrlDocTypes(uriOffer: uriOffer)
+    return documents.filter { DocumentTypeIdentifier(rawValue: $0.docType).isSupported }
+  }
+
+  func issueDocumentsByOfferUrl(
+    offerUri: String,
+    docTypes: [OfferedDocModel],
+    format: DataFormat
+  ) async throws -> [WalletStorage.Document] {
+    return try await wallet.issueDocumentsByOfferUrl(
+      offerUri: offerUri,
+      docTypes: docTypes,
+      format: format
+    )
   }
 
   public func loadSampleData(dataFiles: [String]) async throws {
@@ -150,8 +173,8 @@ final class WalletKitControllerImpl: WalletKitController {
   func fetchDocuments(excluded: [DocumentTypeIdentifier]) -> [any MdocDecodable] {
     let excludedRawValues = excluded.map { $0.rawValue }
     return fetchDocuments().compactMap({
-        excludedRawValues.contains($0.docType) ? nil : $0
-      }
+      excludedRawValues.contains($0.docType) ? nil : $0
+    }
     )
   }
 

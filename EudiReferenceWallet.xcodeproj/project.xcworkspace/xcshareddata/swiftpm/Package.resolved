@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
       "state" : {
-        "revision" : "1ee5fbb183e18271872acee5e9f62c1c7215b678",
-        "version" : "2.0.2"
+        "revision" : "0825c43e00af987f372776dec3349b65d90d4827",
+        "version" : "2.0.3"
       }
     },
     {
@@ -158,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "78af54a27ea2822fd8102140068970a1c0a969a7",
-        "version" : "0.3.7"
+        "revision" : "661464e3d8d0c90ae683f2fa1319c68622ddf27e",
+        "version" : "0.3.8"
       }
     },
     {

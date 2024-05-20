@@ -287,6 +287,39 @@
         }
       }
     },
+    "cancel_issuance_sheet_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel will redirect you back to the documents list with no new documents"
+          }
+        }
+      }
+    },
+    "cancel_issuance_sheet_continue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONTINUE ISSUANCE"
+          }
+        }
+      }
+    },
+    "cancel_issuance_sheet_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel issuance process?"
+          }
+        }
+      }
+    },
     "cancel_share_sheet_caption" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -349,6 +382,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "EUDI Conference Badge"
+          }
+        }
+      }
+    },
+    "credential_offer_success_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONTINUE"
+          }
+        }
+      }
+    },
+    "credential_offer_success_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your documents from %@ have been successfully issued."
           }
         }
       }
@@ -771,6 +826,17 @@
         }
       }
     },
+    "issue_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISSUE"
+          }
+        }
+      }
+    },
     "issue_date" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -899,6 +965,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Driving License"
+          }
+        }
+      }
+    },
+    "missing_pid" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wallet needs to be activated first with a National ID"
           }
         }
       }
@@ -1232,6 +1309,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Registration ID"
+          }
+        }
+      }
+    },
+    "request_credential_offer_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please confirm the issuance of the following"
+          }
+        }
+      }
+    },
+    "request_credential_offer_no_document" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to fetch and process the credential offer"
+          }
+        }
+      }
+    },
+    "request_credential_offer_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ wants to issue the following in your wallet"
           }
         }
       }
@@ -1617,6 +1727,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "UN distinguishing sign"
+          }
+        }
+      }
+    },
+    "unable_to_issue_and_store_documents" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Something went wrong issuing your document(s)"
           }
         }
       }

@@ -31,10 +31,10 @@ public struct ScannerUiConfig: UIConfigType, Equatable {
 }
 
 public extension ScannerUiConfig {
-  enum Flow: String, Equatable {
+  enum Flow: Equatable {
 
     case presentation
-    case issuing
+    case issuing(IssuanceFlowUiConfig)
 
     var title: LocalizableString.Key {
       return switch self {
@@ -51,6 +51,15 @@ public extension ScannerUiConfig {
           .scannerQrCaption
       case .issuing:
           .scannerQrCaption
+      }
+    }
+
+    var rawValue: String {
+      return switch self {
+      case .presentation:
+        "presentation"
+      case .issuing:
+        "issuing"
       }
     }
   }
