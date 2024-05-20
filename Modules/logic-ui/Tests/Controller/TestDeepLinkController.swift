@@ -73,13 +73,13 @@ final class TestDeepLinkController: EudiTest {
   func testHandleDeepLinkAction_WhenRouterReturnsPreAuthorizationFlow_ThenValidateCachingOfDeepLink() {
     // Given
     stub(prefsController) { mock in
-      when(mock).setValue(any(), forKey: Prefs.Key.cachedDeepLink).thenDoNothing()
+      when(mock.setValue(any(), forKey: Prefs.Key.cachedDeepLink)).thenDoNothing()
     }
     stub(prefsController) { mock in
-      when(mock).remove(forKey: Prefs.Key.cachedDeepLink).thenDoNothing()
+      when(mock.remove(forKey: Prefs.Key.cachedDeepLink)).thenDoNothing()
     }
     stub(routerHost) { mock in
-      when(mock).isAfterAuthorization().thenReturn(false)
+      when(mock.isAfterAuthorization()).thenReturn(false)
     }
     // When
     controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: Self.mockedOpenId4VPDeepLinkAction)
@@ -161,7 +161,7 @@ final class TestDeepLinkController: EudiTest {
   func testGetPendingDeepLinkAction_WhenCachedDeepLinkIsValid_ThenReturnDeepListAction() {
     // Given
     stub(prefsController) { mock in
-      when(mock).getString(forKey: Prefs.Key.cachedDeepLink).thenReturn(Self.mockedOpenId4VPUrl.absoluteString)
+      when(mock.getString(forKey: Prefs.Key.cachedDeepLink)).thenReturn(Self.mockedOpenId4VPUrl.absoluteString)
     }
     // When
     let action = controller.getPendingDeepLinkAction()
@@ -172,7 +172,7 @@ final class TestDeepLinkController: EudiTest {
   func testGetPendingDeepLinkAction_WhenCachedDeepLinkIsInvalid_ThenReturnDeepListActionNil() {
     // Given
     stub(prefsController) { mock in
-      when(mock).getString(forKey: Prefs.Key.cachedDeepLink).thenReturn(Self.mockedMalformedUrl.absoluteString)
+      when(mock.getString(forKey: Prefs.Key.cachedDeepLink)).thenReturn(Self.mockedMalformedUrl.absoluteString)
     }
     // When
     let action = controller.getPendingDeepLinkAction()
@@ -183,7 +183,7 @@ final class TestDeepLinkController: EudiTest {
   func testGetPendingDeepLinkAction_WhenPrefsControllerReturnsNil_ThenReturnDeepListActionNil() {
     // Given
     stub(prefsController) { mock in
-      when(mock).getString(forKey: Prefs.Key.cachedDeepLink).thenReturn(nil)
+      when(mock.getString(forKey: Prefs.Key.cachedDeepLink)).thenReturn(nil)
     }
     // When
     let action = controller.getPendingDeepLinkAction()
@@ -195,7 +195,7 @@ final class TestDeepLinkController: EudiTest {
     // Given
     let url = Self.mockedOpenId4VPUrl
     stub(prefsController) { mock in
-      when(mock).setValue(any(), forKey: Prefs.Key.cachedDeepLink).thenDoNothing()
+      when(mock.setValue(any(), forKey: Prefs.Key.cachedDeepLink)).thenDoNothing()
     }
     // When
     controller.cacheDeepLinkURL(url: url)
@@ -214,26 +214,25 @@ private extension TestDeepLinkController {
     isScreenForeground: Bool
   ) {
     stub(prefsController) { mock in
-      when(mock).setValue(any(), forKey: Prefs.Key.cachedDeepLink).thenDoNothing()
+      when(mock.setValue(any(), forKey: Prefs.Key.cachedDeepLink)).thenDoNothing()
     }
     stub(prefsController) { mock in
-      when(mock).remove(forKey: Prefs.Key.cachedDeepLink).thenDoNothing()
+      when(mock.remove(forKey: Prefs.Key.cachedDeepLink)).thenDoNothing()
     }
     stub(routerHost) { mock in
-      when(mock).isAfterAuthorization().thenReturn(isAfterAuth)
+      when(mock.isAfterAuthorization()).thenReturn(isAfterAuth)
     }
     stub(routerHost) { mock in
-      when(mock).isScreenForeground(with: any()).thenReturn(isScreenForeground)
+      when(mock.isScreenForeground(with: any())).thenReturn(isScreenForeground)
     }
     if let route {
       stub(routerHost) { mock in
-        when(mock).push(with: route).thenDoNothing()
+        when(mock.push(with: route)).thenDoNothing()
       }
     }
     if let coordinator {
       stub(walletKitController) { mock in
-        when(mock).startSameDevicePresentation(deepLink: action.link)
-          .thenReturn(coordinator)
+        when(mock.startSameDevicePresentation(deepLink: action.link)).thenReturn(coordinator)
       }
     }
   }

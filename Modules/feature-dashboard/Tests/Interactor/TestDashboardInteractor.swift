@@ -49,7 +49,7 @@ final class TestDashboardInteractor: EudiTest {
   func testOpenBleSettings_WhenMethodIsCalled_ThenVerifyAtLeastOnce() {
     // Given
     stub(reachabilityController) { mock in
-      when(mock).openBleSettings().thenDoNothing()
+      when(mock.openBleSettings()).thenDoNothing()
     }
     // When
     interactor.openBleSettings()
@@ -61,7 +61,7 @@ final class TestDashboardInteractor: EudiTest {
     // Given
     let appVersion = "2024.2.1-dev"
     stub(configLogic) { mock in
-      when(mock).appVersion.get.thenReturn(appVersion)
+      when(mock.appVersion.get).thenReturn(appVersion)
     }
     // When
     let version = interactor.getAppVersion()
@@ -147,7 +147,7 @@ private extension TestDashboardInteractor {
     // Given
     let publisher = Just(status).eraseToAnyPublisher()
     stub(reachabilityController) { mock in
-      when(mock).getBleAvailibity().thenReturn(publisher)
+      when(mock.getBleAvailibity()).thenReturn(publisher)
     }
     // When
     let bleAvailability = await interactor.getBleAvailability()
@@ -157,19 +157,19 @@ private extension TestDashboardInteractor {
   
   func stubFetchDocuments(with documents: [MdocDecodable]) {
     stub(walletKitController) { mock in
-      when(mock).fetchDocuments().thenReturn(documents)
+      when(mock.fetchDocuments()).thenReturn(documents)
     }
   }
   
   func stubFetchDocumentsWithExclusion(with documents: [MdocDecodable]) {
     stub(walletKitController) { mock in
-      when(mock).fetchDocuments(excluded: any()).thenReturn(documents)
+      when(mock.fetchDocuments(excluded: any())).thenReturn(documents)
     }
   }
   
   func stubFetchMainPidDocument(with document: MdocDecodable?) {
     stub(walletKitController) { mock in
-      when(mock).fetchMainPidDocument().thenReturn(document)
+      when(mock.fetchMainPidDocument()).thenReturn(document)
     }
   }
 }

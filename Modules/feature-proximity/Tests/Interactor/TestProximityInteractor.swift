@@ -48,7 +48,7 @@ final class TestProximityInteractor: EudiTest {
   func testOnDeviceEngagement_WhenInteractorMethodCalled_ThenVerifyCoordinatorInitializedAndState() async {
     // Given
     stub(presentationSessionCoordinator) { mock in
-      when(mock).initialize().thenDoNothing()
+      when(mock.initialize()).thenDoNothing()
     }
     // When
     let state = await interactor.onDeviceEngagement()
@@ -66,7 +66,7 @@ final class TestProximityInteractor: EudiTest {
     // Given
     let publisher: CurrentValueSubject<PresentationState, Never> = CurrentValueSubject(.loading)
     stub(presentationSessionCoordinator) { mock in
-      when(mock).presentationStateSubject.get.thenReturn(publisher)
+      when(mock.presentationStateSubject.get).thenReturn(publisher)
     }
     // When
     _ = await interactor.getSessionStatePublisher()
@@ -78,7 +78,7 @@ final class TestProximityInteractor: EudiTest {
     // Given
     let expectedImage = try XCTUnwrap(UIImage(systemName: "qrcode"))
     stub(presentationSessionCoordinator) { mock in
-      when(mock).startQrEngagement().thenReturn(expectedImage)
+      when(mock.startQrEngagement()).thenReturn(expectedImage)
     }
     // When
     let state = await interactor.onQRGeneration()
@@ -100,7 +100,7 @@ final class TestProximityInteractor: EudiTest {
     let expectedError = PresentationSessionError.qrGeneration
     
     stub(presentationSessionCoordinator) { mock in
-      when(mock).startQrEngagement().thenThrow(expectedError)
+      when(mock.startQrEngagement()).thenThrow(expectedError)
     }
     // When
     let state = await interactor.onQRGeneration()
@@ -123,7 +123,7 @@ final class TestProximityInteractor: EudiTest {
     let expectedError = PresentationSessionError.qrGeneration
     
     stub(presentationSessionCoordinator) { mock in
-      when(mock).startQrEngagement().thenThrow(expectedError)
+      when(mock.startQrEngagement()).thenThrow(expectedError)
     }
     // When
     let state = await interactor.onQRGeneration()
@@ -144,7 +144,7 @@ final class TestProximityInteractor: EudiTest {
   func testStopPresentation_WhenInteractorMethodCalled_ThenVerifyWalletKitControllerStopPresentation() async {
     // Given
     stub(walletKitController) { mock in
-      when(mock).stopPresentation().thenDoNothing()
+      when(mock.stopPresentation()).thenDoNothing()
     }
     // When
     await interactor.stopPresentation()
@@ -160,23 +160,25 @@ final class TestProximityInteractor: EudiTest {
     let expectedUiModels = Self.mockUiModels
     
     stub(presentationSessionCoordinator) { mock in
-      when(mock).requestReceived().thenReturn(request)
+      when(mock.requestReceived()).thenReturn(request)
     }
     
     stub(walletKitController) { mock in
-      when(mock).fetchDocuments(with: any()).thenReturn(storageDocuments)
+      when(mock.fetchDocuments(with: any())).thenReturn(storageDocuments)
     }
     
     stub(walletKitController) { mock in
-      when(mock).mandatoryFields(for: any()).thenReturn([])
+      when(mock.mandatoryFields(for: any())).thenReturn([])
     }
     
     stub(walletKitController) { mock in
-      when(mock).valueForElementIdentifier(
-        for: any(),
-        with: any(),
-        elementIdentifier: any(),
-        parser: any()
+      when(
+        mock.valueForElementIdentifier(
+          for: any(),
+          with: any(),
+          elementIdentifier: any(),
+          parser: any()
+        )
       ).thenReturn(.string("elementIdentifier"))
     }
     
@@ -200,7 +202,7 @@ final class TestProximityInteractor: EudiTest {
     let expectedError = PresentationSessionError.conversionToRequestItemModel
     
     stub(presentationSessionCoordinator) { mock in
-      when(mock).requestReceived().thenThrow(expectedError)
+      when(mock.requestReceived()).thenThrow(expectedError)
     }
     
     // When
@@ -223,7 +225,7 @@ final class TestProximityInteractor: EudiTest {
     let expectedRequestItems = Self.mockRequestItems
     
     stub(presentationSessionCoordinator) { mock in
-      when(mock).setState(presentationState: any()).thenDoNothing()
+      when(mock.setState(presentationState: any())).thenDoNothing()
     }
     
     // When
@@ -261,14 +263,16 @@ final class TestProximityInteractor: EudiTest {
     let presetationState: PresentationState = .responseToSend(Self.mockRequestItems)
     
     stub(presentationSessionCoordinator) { mock in
-      when(mock).getState().thenReturn(presetationState)
+      when(mock.getState()).thenReturn(presetationState)
     }
     
     stub(presentationSessionCoordinator) { mock in
-      when(mock).sendResponse(
-        response: any(),
-        onSuccess: any(),
-        onCancel: any()
+      when(
+        mock.sendResponse(
+          response: any(),
+          onSuccess: any(),
+          onCancel: any()
+        )
       ).thenDoNothing()
     }
     
@@ -297,7 +301,7 @@ final class TestProximityInteractor: EudiTest {
     let expectedError = PresentationSessionError.invalidState
     
     stub(presentationSessionCoordinator) { mock in
-      when(mock).getState().thenReturn(presetationState)
+      when(mock.getState()).thenReturn(presetationState)
     }
     
     // When
@@ -320,14 +324,16 @@ final class TestProximityInteractor: EudiTest {
     let expectedError = PresentationSessionError.noDocumentFoundForRequest
     
     stub(presentationSessionCoordinator) { mock in
-      when(mock).getState().thenReturn(presetationState)
+      when(mock.getState()).thenReturn(presetationState)
     }
     
     stub(presentationSessionCoordinator) { mock in
-      when(mock).sendResponse(
-        response: any(),
-        onSuccess: any(),
-        onCancel: any()
+      when(
+        mock.sendResponse(
+          response: any(),
+          onSuccess: any(),
+          onCancel: any()
+        )
       ).thenThrow(expectedError)
     }
     
