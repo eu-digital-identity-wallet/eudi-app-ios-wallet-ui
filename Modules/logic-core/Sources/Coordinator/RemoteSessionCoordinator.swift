@@ -16,6 +16,7 @@
 import Foundation
 import Combine
 import logic_resources
+import UIKit
 
 final class RemoteSessionCoordinator: PresentationSessionCoordinator {
 
@@ -31,8 +32,8 @@ final class RemoteSessionCoordinator: PresentationSessionCoordinator {
     _ = await session.receiveRequest()
   }
 
-  public func startQrEngagement() async throws -> Data {
-    Data()
+  public func startQrEngagement() async throws -> UIImage {
+    UIImage()
   }
 
   public func requestReceived() async throws -> PresentationRequest {

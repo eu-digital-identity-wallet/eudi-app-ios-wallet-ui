@@ -263,7 +263,7 @@ private extension TestDeepLinkController {
     
     var flow: EudiWalletKit.FlowType
     
-    func startQrEngagement() async throws -> Data? { nil }
+    func startQrEngagement() async throws -> String? { nil }
     
     func receiveRequest() async throws -> [String : Any] { [:] }
     

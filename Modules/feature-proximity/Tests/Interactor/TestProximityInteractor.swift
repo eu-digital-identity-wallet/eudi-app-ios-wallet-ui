@@ -76,9 +76,9 @@ final class TestProximityInteractor: EudiTest {
   
   func testOnQRGeneration_WhenCoordinatorStartQrEngagementReturnsValidData_ThenVerifySuccessAndImage() async throws {
     // Given
-    let expectedData = try XCTUnwrap(UIImage(systemName: "qrcode")?.pngData())
+    let expectedImage = try XCTUnwrap(UIImage(systemName: "qrcode"))
     stub(presentationSessionCoordinator) { mock in
-      when(mock).startQrEngagement().thenReturn(expectedData)
+      when(mock).startQrEngagement().thenReturn(expectedImage)
     }
     // When
     let state = await interactor.onQRGeneration()
@@ -87,7 +87,8 @@ final class TestProximityInteractor: EudiTest {
     switch state {
     case .success(let image):
       let imageData = try XCTUnwrap(image.pngData())
-      XCTAssertEqual(expectedData.count, imageData.count)
+      let expectedImageData = try XCTUnwrap(expectedImage.pngData())
+      XCTAssertEqual(expectedImageData.count, imageData.count)
     default:
       XCTFail("Wrong state \(state)")
     }
@@ -122,7 +123,7 @@ final class TestProximityInteractor: EudiTest {
     let expectedError = PresentationSessionError.qrGeneration
     
     stub(presentationSessionCoordinator) { mock in
-      when(mock).startQrEngagement().thenReturn(Data())
+      when(mock).startQrEngagement().thenThrow(expectedError)
     }
     // When
     let state = await interactor.onQRGeneration()

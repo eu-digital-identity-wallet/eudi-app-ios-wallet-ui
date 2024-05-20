@@ -1081,7 +1081,6 @@ import Cuckoo
 @testable import logic_authentication
 
 import Foundation
-import UIKit
 import feature_common
 import logic_api
 import logic_business
@@ -8490,6 +8489,7 @@ import Cuckoo
 
 import Combine
 import Foundation
+import UIKit
 import logic_resources
 
 
@@ -8566,11 +8566,11 @@ public class MockPresentationSessionCoordinator: PresentationSessionCoordinator,
     
     
     
-    public func startQrEngagement() async throws -> Data {
+    public func startQrEngagement() async throws -> UIImage {
         
     return try await cuckoo_manager.callThrows(
     """
-    startQrEngagement() async throws -> Data
+    startQrEngagement() async throws -> UIImage
     """,
             parameters: (),
             escapingParameters: (),
@@ -8714,11 +8714,11 @@ public class MockPresentationSessionCoordinator: PresentationSessionCoordinator,
         
         
         
-        func startQrEngagement() -> Cuckoo.ProtocolStubThrowingFunction<(), Data> {
+        func startQrEngagement() -> Cuckoo.ProtocolStubThrowingFunction<(), UIImage> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockPresentationSessionCoordinator.self, method:
     """
-    startQrEngagement() async throws -> Data
+    startQrEngagement() async throws -> UIImage
     """, parameterMatchers: matchers))
         }
         
@@ -8816,11 +8816,11 @@ public class MockPresentationSessionCoordinator: PresentationSessionCoordinator,
         
         
         @discardableResult
-        func startQrEngagement() -> Cuckoo.__DoNotUse<(), Data> {
+        func startQrEngagement() -> Cuckoo.__DoNotUse<(), UIImage> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
     """
-    startQrEngagement() async throws -> Data
+    startQrEngagement() async throws -> UIImage
     """, callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
         }
         
@@ -8923,8 +8923,8 @@ public class PresentationSessionCoordinatorStub: PresentationSessionCoordinator 
     
     
     
-    public func startQrEngagement() async throws -> Data  {
-        return DefaultValueRegistry.defaultValue(for: (Data).self)
+    public func startQrEngagement() async throws -> UIImage  {
+        return DefaultValueRegistry.defaultValue(for: (UIImage).self)
     }
     
     
@@ -8985,6 +8985,7 @@ import Cuckoo
 
 import Combine
 import Foundation
+import UIKit
 import logic_resources
 
 import Cuckoo
@@ -8998,6 +8999,7 @@ import Cuckoo
 
 import Combine
 import Foundation
+import UIKit
 import logic_resources
 
 import Cuckoo
