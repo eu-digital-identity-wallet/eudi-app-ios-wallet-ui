@@ -41,7 +41,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
 
   private func getOnSuccessRoute(with url: URL?) -> AppRoute {
 
-    var navigationType: UIConfig.Success.Button.NavigationType {
+    var navigationType: UIConfig.DeepLinkNavigationType {
       guard let url else {
         return .pop(screen: .dashboard)
       }

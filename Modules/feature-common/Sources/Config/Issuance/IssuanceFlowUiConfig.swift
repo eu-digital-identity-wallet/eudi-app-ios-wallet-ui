@@ -19,11 +19,9 @@ import logic_ui
 public struct IssuanceFlowUiConfig: UIConfigType, Equatable {
 
   public let flow: Flow
-  public let credentialOfferUri: String?
 
   public var log: String {
-    return "flow: \(flow.rawValue)" +
-    " credentialOfferUri: \(credentialOfferUri.orEmpty)"
+    return "flow: \(flow.rawValue)"
   }
 
   public var isNoDocumentFlow: Bool {
@@ -34,19 +32,8 @@ public struct IssuanceFlowUiConfig: UIConfigType, Equatable {
     self.flow == .extraDocument
   }
 
-  public init(flow: Flow, credentialOfferUri: String? = nil) {
+  public init(flow: Flow) {
     self.flow = flow
-    self.credentialOfferUri = credentialOfferUri
-  }
-
-  public func copy(
-    flow: Flow? = nil,
-    credentialOfferUri: String? = nil
-  ) -> IssuanceFlowUiConfig {
-    return .init(
-      flow: flow ?? self.flow,
-      credentialOfferUri: credentialOfferUri ?? self.credentialOfferUri
-    )
   }
 }
 

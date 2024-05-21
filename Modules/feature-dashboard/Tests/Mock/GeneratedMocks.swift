@@ -755,10 +755,10 @@ class MockBaseLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<Router>
         )
         
     }
-    public override func onNavigate(type p0: UIConfig.NavigationConfig.NavigationType) {
+    public override func onNavigate(type p0: UIConfig.ThreeWayNavigationType) {
         
         return cuckoo_manager.call(
-            "onNavigate(type p0: UIConfig.NavigationConfig.NavigationType)",
+            "onNavigate(type p0: UIConfig.ThreeWayNavigationType)",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: super.onNavigate(type: p0),
@@ -817,10 +817,10 @@ class MockBaseLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<Router>
             ))
         }
         
-        func onNavigate<M1: Cuckoo.Matchable>(type p0: M1) -> Cuckoo.ClassStubNoReturnFunction<(UIConfig.NavigationConfig.NavigationType)> where M1.MatchedType == UIConfig.NavigationConfig.NavigationType {
-            let matchers: [Cuckoo.ParameterMatcher<(UIConfig.NavigationConfig.NavigationType)>] = [wrap(matchable: p0) { $0 }]
+        func onNavigate<M1: Cuckoo.Matchable>(type p0: M1) -> Cuckoo.ClassStubNoReturnFunction<(UIConfig.ThreeWayNavigationType)> where M1.MatchedType == UIConfig.ThreeWayNavigationType {
+            let matchers: [Cuckoo.ParameterMatcher<(UIConfig.ThreeWayNavigationType)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockBaseLoadingViewModel.self,
-                method: "onNavigate(type p0: UIConfig.NavigationConfig.NavigationType)",
+                method: "onNavigate(type p0: UIConfig.ThreeWayNavigationType)",
                 parameterMatchers: matchers
             ))
         }
@@ -892,10 +892,10 @@ class MockBaseLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<Router>
         }
         
         @discardableResult
-        func onNavigate<M1: Cuckoo.Matchable>(type p0: M1) -> Cuckoo.__DoNotUse<(UIConfig.NavigationConfig.NavigationType), Void> where M1.MatchedType == UIConfig.NavigationConfig.NavigationType {
-            let matchers: [Cuckoo.ParameterMatcher<(UIConfig.NavigationConfig.NavigationType)>] = [wrap(matchable: p0) { $0 }]
+        func onNavigate<M1: Cuckoo.Matchable>(type p0: M1) -> Cuckoo.__DoNotUse<(UIConfig.ThreeWayNavigationType), Void> where M1.MatchedType == UIConfig.ThreeWayNavigationType {
+            let matchers: [Cuckoo.ParameterMatcher<(UIConfig.ThreeWayNavigationType)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "onNavigate(type p0: UIConfig.NavigationConfig.NavigationType)",
+                "onNavigate(type p0: UIConfig.ThreeWayNavigationType)",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -935,7 +935,7 @@ class BaseLoadingViewModelStub<Router: RouterHost>:BaseLoadingViewModel<Router> 
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public override func onNavigate(type p0: UIConfig.NavigationConfig.NavigationType) {
+    public override func onNavigate(type p0: UIConfig.ThreeWayNavigationType) {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -8195,6 +8195,17 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock {
         )
         
     }
+    public func removeCachedDeepLinkURL() {
+        
+        return cuckoo_manager.call(
+            "removeCachedDeepLinkURL()",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.removeCachedDeepLinkURL()
+        )
+        
+    }
 
     public struct __StubbingProxy_DeepLinkController: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -8231,6 +8242,14 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock {
             let matchers: [Cuckoo.ParameterMatcher<(URL)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDeepLinkController.self,
                 method: "cacheDeepLinkURL(url p0: URL)",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func removeCachedDeepLinkURL() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockDeepLinkController.self,
+                method: "removeCachedDeepLinkURL()",
                 parameterMatchers: matchers
             ))
         }
@@ -8292,6 +8311,17 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock {
                 sourceLocation: sourceLocation
             )
         }
+        
+        @discardableResult
+        func removeCachedDeepLinkURL() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "removeCachedDeepLinkURL()",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -8312,6 +8342,10 @@ public class DeepLinkControllerStub:DeepLinkController {
     }
     
     public  func cacheDeepLinkURL(url p0: URL) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public  func removeCachedDeepLinkURL() {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }

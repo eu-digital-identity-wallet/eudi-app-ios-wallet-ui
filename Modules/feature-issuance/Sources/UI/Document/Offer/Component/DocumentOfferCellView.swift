@@ -41,9 +41,13 @@ extension DocumentOfferView {
               .scaledToFit()
               .frame(width: 45)
 
-            Text(cellModel.documentType.localizedTitle)
-              .typography(Theme.shared.font.titleMedium)
-              .foregroundStyle(Theme.shared.color.black)
+            Text(
+              cellModel.documentType.isSupported
+              ? cellModel.documentType.localizedTitle
+              : cellModel.documentName
+            )
+            .typography(Theme.shared.font.titleMedium)
+            .foregroundStyle(Theme.shared.color.black)
 
           }
           .padding([.horizontal, .vertical], SPACING_SMALL)

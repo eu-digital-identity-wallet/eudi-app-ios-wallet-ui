@@ -34,19 +34,23 @@ struct AddDocumentViewState: ViewState {
   }
 }
 
+@MainActor
 final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddDocumentViewState> {
 
   private let interactor: AddDocumentInteractor
+  private let deepLinkController: DeepLinkController
 
   init(
     router: Router,
     interactor: AddDocumentInteractor,
+    deepLinkController: DeepLinkController,
     config: any UIConfigType
   ) {
     guard let config = config as? IssuanceFlowUiConfig else {
       fatalError("AddDocumentViewModel:: Invalid configuraton")
     }
     self.interactor = interactor
+    self.deepLinkController = deepLinkController
     super.init(
       router: router,
       initialState: .init(
@@ -57,16 +61,17 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
     )
   }
 
-  func fetchStoredDocuments() {
+  func fetchStoredDocuments() async {
     switch self.interactor.fetchStoredDocuments(with: viewState.config.flow) {
     case .success(let documents):
       self.setNewState(addDocumentCellModels: documents)
+      self.handleDeepLink()
     case .failure(let error):
       setNewState(
         error: ContentErrorView.Config(
           description: .custom(error.localizedDescription),
           cancelAction: self.pop(),
-          action: { self.fetchStoredDocuments() }
+          action: { Task { await self.fetchStoredDocuments() } }
         )
       )
     }
@@ -118,10 +123,10 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
 
   private func transformCellLoadingState(with isLoading: Bool) -> [AddDocumentUIModel] {
     return viewState.addDocumentCellModels.map({
-        var cell = $0
-        cell.isLoading = isLoading
-        return cell
-      }
+      var cell = $0
+      cell.isLoading = isLoading
+      return cell
+    }
     )
   }
 
@@ -138,6 +143,21 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
           )
         )
       }
+    }
+  }
+
+  private func handleDeepLink() {
+    if let deepLink = deepLinkController.getPendingDeepLinkAction(), deepLink.action == .openid4vci {
+      deepLinkController.removeCachedDeepLinkURL()
+      router.push(
+        with: .credentialOfferRequest(
+          config: UIConfig.Generic(
+            arguments: ["uri": deepLink.plainUrl.absoluteString],
+            navigationSuccessType: .push(.dashboard),
+            navigationCancelType: .pop
+          )
+        )
+      )
     }
   }
 

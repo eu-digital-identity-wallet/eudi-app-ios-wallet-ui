@@ -4320,6 +4320,17 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock {
         )
         
     }
+    public func removeCachedDeepLinkURL() {
+        
+        return cuckoo_manager.call(
+            "removeCachedDeepLinkURL()",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.removeCachedDeepLinkURL()
+        )
+        
+    }
 
     public struct __StubbingProxy_DeepLinkController: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -4356,6 +4367,14 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock {
             let matchers: [Cuckoo.ParameterMatcher<(URL)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDeepLinkController.self,
                 method: "cacheDeepLinkURL(url p0: URL)",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func removeCachedDeepLinkURL() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockDeepLinkController.self,
+                method: "removeCachedDeepLinkURL()",
                 parameterMatchers: matchers
             ))
         }
@@ -4417,6 +4436,17 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock {
                 sourceLocation: sourceLocation
             )
         }
+        
+        @discardableResult
+        func removeCachedDeepLinkURL() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "removeCachedDeepLinkURL()",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -4437,6 +4467,10 @@ public class DeepLinkControllerStub:DeepLinkController {
     }
     
     public  func cacheDeepLinkURL(url p0: URL) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public  func removeCachedDeepLinkURL() {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }

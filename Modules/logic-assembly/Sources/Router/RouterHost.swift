@@ -175,6 +175,9 @@ final class RouterHostImpl: RouterHost {
           and: DIGraph.resolver.force(
             AddDocumentInteractor.self
           ),
+          deeplinkController: DIGraph.resolver.force(
+            DeepLinkController.self
+          ),
           config: config
         )
       case .proximityConnection(let presentationSessionCoordinator):

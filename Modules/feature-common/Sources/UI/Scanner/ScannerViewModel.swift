@@ -57,9 +57,19 @@ final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerS
         )
       )
     case .issuing(let config):
+      var successNavType: UIConfig.TwoWayNavigationType {
+        return switch config.flow {
+        case .noDocument: .push(.dashboard)
+        case .extraDocument: .popTo(.dashboard)
+        }
+      }
       router.push(
         with: .credentialOfferRequest(
-          config: config.copy(credentialOfferUri: scanResult)
+          config: UIConfig.Generic(
+            arguments: ["uri": scanResult],
+            navigationSuccessType: successNavType,
+            navigationCancelType: .popTo(.issuanceAddDocument(config: config))
+          )
         )
       )
     }

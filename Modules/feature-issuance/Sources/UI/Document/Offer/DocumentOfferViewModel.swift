@@ -24,12 +24,20 @@ struct DocumentOfferViewState: ViewState {
   let isLoading: Bool
   let documentOfferUiModel: DocumentOfferUIModel
   let error: ContentErrorView.Config?
-  let config: IssuanceFlowUiConfig
+  let config: UIConfig.Generic
   let offerUri: String
   let allowIssue: Bool
 
   var title: LocalizableString.Key {
     return .requestCredentialOfferTitle([documentOfferUiModel.issuerName])
+  }
+
+  var successNavigation: UIConfig.TwoWayNavigationType {
+    return config.navigationSuccessType
+  }
+
+  var cancelNavigation: UIConfig.ThreeWayNavigationType {
+    return config.navigationCancelType
   }
 }
 
@@ -46,8 +54,8 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     config: any UIConfigType
   ) {
     guard
-      let config = config as? IssuanceFlowUiConfig,
-      let offerUri = config.credentialOfferUri
+      let config = config as? UIConfig.Generic,
+      let offerUri = config.arguments["uri"]
     else {
       fatalError("DocumentOfferViewModel:: Invalid configuraton")
     }
@@ -123,15 +131,22 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
 
   func onPop() {
     isCancelModalShowing = false
-    router.popTo(with: .issuanceAddDocument(config: viewState.config))
+    switch viewState.cancelNavigation {
+    case .popTo(let route):
+      router.popTo(with: route)
+    case .push(let route):
+      router.push(with: route)
+    case .pop:
+      router.pop()
+    }
   }
 
   private func retrieveSuccessRoute(with key: LocalizableString.Key) -> AppRoute {
 
-    var navigationType: UIConfig.Success.Button.NavigationType {
-      return switch self.viewState.config.flow {
-      case .noDocument: .push(screen: .dashboard)
-      case .extraDocument: .pop(screen: .dashboard)
+    var navigationType: UIConfig.DeepLinkNavigationType {
+      return switch self.viewState.successNavigation {
+      case .popTo(let route): .pop(screen: route)
+      case .push(let route): .push(screen: route)
       }
     }
 
