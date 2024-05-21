@@ -68,8 +68,11 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
       if documents.isEmpty {
         return .failure(WalletCoreError.unableToIssueAndStore)
-      } else {
+      } else if documents.count == model.docOffers.count {
         return .success
+      } else {
+        let subtraction = Set(documents.map { $0.docType }).subtracting(Set(model.docOffers.map { $0.docType }))
+        return .partialSuccess(Array(subtraction))
       }
 
     } catch {
@@ -85,5 +88,6 @@ public enum OfferRequestPartialState {
 
 public enum IssueOfferDocumentsPartialState {
   case success
+  case partialSuccess([String])
   case failure(Error)
 }

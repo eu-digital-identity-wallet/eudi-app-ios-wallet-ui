@@ -255,6 +255,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "credential_offer_success_button")
     case .credentialOfferSuccessCaption(let args):
       bundle.localizedStringWithArguments(forKey: "credential_offer_success_caption", arguments: args)
+    case .credentialOfferPartialSuccessCaption(let args):
+      bundle.localizedStringWithArguments(forKey: "request_credential_offer_title", arguments: args)
     }
   }
 
@@ -375,6 +377,7 @@ public extension LocalizableString {
     case cancelIssueSheetContinue
     case credentialOfferSuccessButton
     case credentialOfferSuccessCaption([String])
+    case credentialOfferPartialSuccessCaption([String])
   }
 }
 

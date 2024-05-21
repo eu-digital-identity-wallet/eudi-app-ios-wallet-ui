@@ -91,12 +91,26 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
         and: viewState.documentOfferUiModel
       ) {
       case .success:
-        router.push(with: retrieveSuccessRoute())
+        router.push(
+          with: retrieveSuccessRoute(
+            with: .credentialOfferSuccessCaption([viewState.documentOfferUiModel.issuerName])
+          )
+        )
       case .failure(let error):
         setNewState(
           error: ContentErrorView.Config(
             description: .custom(error.localizedDescription),
             cancelAction: self.setNewState(error: nil)
+          )
+        )
+      case .partialSuccess(let notIssued):
+        router.push(
+          with: retrieveSuccessRoute(
+            with: .credentialOfferPartialSuccessCaption(
+              [
+                viewState.documentOfferUiModel.issuerName, notIssued.joined(separator: ", ")
+              ]
+            )
           )
         )
       }
@@ -112,7 +126,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     router.popTo(with: .issuanceAddDocument(config: viewState.config))
   }
 
-  private func retrieveSuccessRoute() -> AppRoute {
+  private func retrieveSuccessRoute(with key: LocalizableString.Key) -> AppRoute {
 
     var navigationType: UIConfig.Success.Button.NavigationType {
       return switch self.viewState.config.flow {
@@ -124,7 +138,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     return .success(
       config: UIConfig.Success(
         title: .success,
-        subtitle: .credentialOfferSuccessCaption([viewState.documentOfferUiModel.issuerName]),
+        subtitle: key,
         buttons: [
           .init(
             title: .credentialOfferSuccessButton,

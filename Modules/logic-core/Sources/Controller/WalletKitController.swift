@@ -73,8 +73,7 @@ final class WalletKitControllerImpl: WalletKitController {
   }
 
   func resolveOfferUrlDocTypes(uriOffer: String) async throws -> [OfferedDocModel] {
-    let documents = try await wallet.resolveOfferUrlDocTypes(uriOffer: uriOffer)
-    return documents.filter { DocumentTypeIdentifier(rawValue: $0.docType).isSupported }
+    return try await wallet.resolveOfferUrlDocTypes(uriOffer: uriOffer)
   }
 
   func issueDocumentsByOfferUrl(

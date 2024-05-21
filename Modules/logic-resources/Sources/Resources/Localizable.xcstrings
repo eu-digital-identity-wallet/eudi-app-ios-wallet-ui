@@ -386,6 +386,17 @@
         }
       }
     },
+    "credential_offer_partial_success_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your documents from %@ have been successfully issued except %@"
+          }
+        }
+      }
+    },
     "credential_offer_success_button" : {
       "extractionState" : "manual",
       "localizations" : {
