@@ -71,8 +71,12 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       } else if documents.count == model.docOffers.count {
         return .success
       } else {
-        let subtraction = Set(documents.map { $0.docType }).subtracting(Set(model.docOffers.map { $0.docType }))
-        return .partialSuccess(Array(subtraction))
+        
+        let subtraction = Set(model.docOffers.map { $0.docType })
+          .subtracting(Set(documents.map { $0.docType }))
+          .map { DocumentTypeIdentifier(rawValue: $0).localizedTitle }
+        
+        return .partialSuccess(subtraction)
       }
 
     } catch {

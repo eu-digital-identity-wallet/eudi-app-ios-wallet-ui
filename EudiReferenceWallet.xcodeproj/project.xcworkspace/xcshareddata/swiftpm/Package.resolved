@@ -158,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "661464e3d8d0c90ae683f2fa1319c68622ddf27e",
-        "version" : "0.3.8"
+        "revision" : "a5de5cde5c9eebbb35366b0072151dd94391d570",
+        "version" : "0.3.9"
       }
     },
     {
