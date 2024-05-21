@@ -31,6 +31,7 @@ public struct ContentTitleView: View {
   private let titleColor: Color
   private let captionColor: Color
   private let topSpacing: TopSpacing
+  private let isLoading: Bool
   private let onTap: TapListener
 
   public init(
@@ -40,6 +41,7 @@ public struct ContentTitleView: View {
     titleColor: Color = Theme.shared.color.textPrimaryDark,
     captionColor: Color = Theme.shared.color.textSecondaryDark,
     topSpacing: TopSpacing = .withToolbar,
+    isLoading: Bool = false,
     onTap: TapListener = nil
   ) {
     self.titleDecoration = .plain(title)
@@ -48,6 +50,7 @@ public struct ContentTitleView: View {
     self.titleColor = titleColor
     self.captionColor = captionColor
     self.topSpacing = topSpacing
+    self.isLoading = isLoading
     self.onTap = onTap
   }
 
@@ -58,6 +61,7 @@ public struct ContentTitleView: View {
     titleColor: Color = Theme.shared.color.textPrimaryDark,
     captionColor: Color = Theme.shared.color.textSecondaryDark,
     topSpacing: TopSpacing = .withToolbar,
+    isLoading: Bool = false,
     onTap: TapListener = nil
   ) {
     self.titleDecoration = titleDecoration
@@ -66,6 +70,7 @@ public struct ContentTitleView: View {
     self.titleColor = titleColor
     self.captionColor = captionColor
     self.topSpacing = topSpacing
+    self.isLoading = isLoading
     self.onTap = onTap
   }
 
@@ -99,10 +104,11 @@ public struct ContentTitleView: View {
 
       VSpacer.custom(size: topSpacing.rawValue)
 
-      title
-        .onTapGesture(perform: {
+      title.onTapGesture(
+        perform: {
           onTap?()
-        })
+        }
+      )
 
       VSpacer.extraSmall()
 
@@ -115,6 +121,7 @@ public struct ContentTitleView: View {
         }
       }
     }
+    .shimmer(isLoading: self.isLoading)
   }
 }
 

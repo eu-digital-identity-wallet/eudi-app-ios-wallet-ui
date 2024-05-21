@@ -70,17 +70,13 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
         title: getTitle(),
         caption: .requestDataShareBiometryCaption,
         quickPinOnlyCaption: .requestDataShareQuickPinCaption,
-        navigationSuccessConfig: .init(
-          navigationType: .push(
-            .presentationLoader(
-              getRelyingParty(),
-              presentationCoordinator: interactor.presentationCoordinator
-            )
+        navigationSuccessType: .push(
+          .presentationLoader(
+            getRelyingParty(),
+            presentationCoordinator: interactor.presentationCoordinator
           )
         ),
-        navigationBackConfig: .init(
-          navigationType: .popTo(.dashboard)
-        ),
+        navigationBackType: .popTo(.dashboard),
         isPreAuthorization: false,
         shouldInitializeBiometricOnCreate: true
       )

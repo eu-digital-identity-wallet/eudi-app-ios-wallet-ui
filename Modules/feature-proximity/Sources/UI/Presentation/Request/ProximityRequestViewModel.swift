@@ -88,18 +88,14 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
         title: getTitle(),
         caption: .requestDataShareBiometryCaption,
         quickPinOnlyCaption: .requestDataShareQuickPinCaption,
-        navigationSuccessConfig: .init(
-          navigationType: .push(
-            .proximityLoader(
-              getRelyingParty(),
-              presentationCoordinator: interactor.presentationSessionCoordinator
-            )
+        navigationSuccessType: .push(
+          .proximityLoader(
+            getRelyingParty(),
+            presentationCoordinator: interactor.presentationSessionCoordinator
           )
         ),
-        navigationBackConfig: .init(
-          navigationType: .popTo(
-            .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator)
-          )
+        navigationBackType: .popTo(
+          .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator)
         ),
         isPreAuthorization: false,
         shouldInitializeBiometricOnCreate: true

@@ -30,7 +30,7 @@ struct QuickPinState: ViewState {
   let button: LocalizableString.Key
   let success: LocalizableString.Key
   let successButton: LocalizableString.Key
-  let successNavigationType: UIConfig.Success.Button.NavigationType
+  let successNavigationType: UIConfig.DeepLinkNavigationType
   let isCancellable: Bool
   let pinError: LocalizableString.Key?
   let isButtonActive: Bool

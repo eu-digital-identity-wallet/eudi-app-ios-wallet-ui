@@ -23,7 +23,7 @@ import logic_core
 public protocol AddDocumentInteractor {
   func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState
   func loadSampleData() async -> LoadSampleDataPartialState
-  func issueDocument(docType: String, format: DataFormat) async -> IssueDocumentPartialState
+  func issueDocument(docType: String) async -> IssueDocumentPartialState
 }
 
 final class AddDocumentInteractorImpl: AddDocumentInteractor {
@@ -78,12 +78,12 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     }
   }
 
-  public func issueDocument(docType: String, format: DataFormat) async -> IssueDocumentPartialState {
+  public func issueDocument(docType: String) async -> IssueDocumentPartialState {
     do {
-      let doc = try await walletController.issueDocument(docType: docType, format: format)
+      let doc = try await walletController.issueDocument(docType: docType, format: .cbor)
       return .success(doc.id)
     } catch {
-      return .failure(WalletCoreError.unableFetchDocument)
+      return .failure(WalletCoreError.unableToIssueAndStore)
     }
   }
 }

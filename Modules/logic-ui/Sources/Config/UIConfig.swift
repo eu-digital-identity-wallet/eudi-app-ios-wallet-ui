@@ -30,43 +30,89 @@ public struct NoConfig: UIConfigType, Equatable {
 public struct UIConfig {}
 
 public extension UIConfig {
-
-  struct NavigationConfig: Equatable {
-
-    public enum NavigationType: Equatable {
-      case popTo(AppRoute)
-      case pop
-      case push(AppRoute)
-
-      public var key: String {
-        return switch self {
-        case .popTo(let appRoute):
-          "pop to \(appRoute)"
-        case .push(let appRoute):
-          "push to \(appRoute)"
-        case .pop:
-          "pop back"
-        }
-      }
-    }
-
-    public let navigationType: NavigationType
-
-    public init(
-      navigationType: NavigationType
-    ) {
-      self.navigationType = navigationType
-    }
-  }
-}
-
-public extension UIConfig {
   struct ToolBar: Equatable {
 
     public let backgroundColor: Color
 
     public init(_ backgroundColor: Color) {
       self.backgroundColor = backgroundColor
+    }
+  }
+}
+
+public extension UIConfig {
+  enum TwoWayNavigationType: Equatable {
+
+    case popTo(AppRoute)
+    case push(AppRoute)
+
+    public var key: String {
+      return switch self {
+      case .popTo(let appRoute):
+        "pop to \(appRoute)"
+      case .push(let appRoute):
+        "push to \(appRoute)"
+      }
+    }
+  }
+
+  enum ThreeWayNavigationType: Equatable {
+    case popTo(AppRoute)
+    case pop
+    case push(AppRoute)
+
+    public var key: String {
+      return switch self {
+      case .popTo(let appRoute):
+        "pop to \(appRoute)"
+      case .push(let appRoute):
+        "push to \(appRoute)"
+      case .pop:
+        "pop back"
+      }
+    }
+  }
+
+  enum DeepLinkNavigationType: Equatable {
+
+    case pop(screen: AppRoute, inclusive: Bool = false)
+    case push(screen: AppRoute)
+    case deepLink(link: URL, popToScreen: AppRoute)
+
+    public var type: String {
+      return switch self {
+      case .pop(let screen, _):
+        "pop to \(screen)"
+      case .push(let screen):
+        "push to \(screen)"
+      case .deepLink(let link, _):
+        "open \(link)"
+      }
+    }
+  }
+}
+
+public extension UIConfig {
+  struct Generic: UIConfigType, Equatable {
+
+    public let arguments: [String: String]
+    public let navigationSuccessType: TwoWayNavigationType
+    public let navigationCancelType: ThreeWayNavigationType
+
+    public var log: String {
+      return "arguments: '\(arguments.values.joined(separator: ","))" +
+      " onSuccessNav: \(navigationSuccessType.key)" +
+      " onCancelNav: \(navigationCancelType.key)"
+    }
+
+    public init(
+      arguments: [String: String],
+      navigationSuccessType: TwoWayNavigationType,
+      navigationCancelType: ThreeWayNavigationType
+    ) {
+      self.arguments = arguments
+      self.navigationSuccessType = navigationSuccessType
+      self.navigationCancelType = navigationCancelType
     }
   }
 }

@@ -49,7 +49,7 @@ final class TestBiometryInteractor: EudiTest {
   func testIsBiometryEnabled_WhenPrefsControllerReturnsTrue_ThenReturnEnabled() {
     // Given
     stub(prefsController) { mock in
-      when(mock).getBool(forKey: Prefs.Key.biometryEnabled).thenReturn(true)
+      when(mock.getBool(forKey: Prefs.Key.biometryEnabled)).thenReturn(true)
     }
     // When
     let isEnabled = interactor.isBiometryEnabled()
@@ -60,7 +60,7 @@ final class TestBiometryInteractor: EudiTest {
   func testIsBiometryEnabled_WhenPrefsControllerReturnsFalse_ThenReturnIsNotEnabled() {
     // Given
     stub(prefsController) { mock in
-      when(mock).getBool(forKey: Prefs.Key.biometryEnabled).thenReturn(false)
+      when(mock.getBool(forKey: Prefs.Key.biometryEnabled)).thenReturn(false)
     }
     // When
     let isEnabled = interactor.isBiometryEnabled()
@@ -72,7 +72,7 @@ final class TestBiometryInteractor: EudiTest {
     // Given
     let pin = "1234"
     stub(quickPinInteractor) { mock in
-      when(mock).isPinValid(pin: pin).thenReturn(.success)
+      when(mock.isPinValid(pin: pin)).thenReturn(.success)
     }
     // When
     let state = interactor.isPinValid(with: pin)
@@ -90,7 +90,7 @@ final class TestBiometryInteractor: EudiTest {
     let pin = "1234"
     let mockedError = AuthenticationError.quickPinInvalid
     stub(quickPinInteractor) { mock in
-      when(mock).isPinValid(pin: pin).thenReturn(.failure(mockedError))
+      when(mock.isPinValid(pin: pin)).thenReturn(.failure(mockedError))
     }
     // When
     let state = interactor.isPinValid(with: pin)
@@ -106,7 +106,7 @@ final class TestBiometryInteractor: EudiTest {
   func testSetBiometrySelection_WhenMethodCalledWithTrue_ThenVerifyPrefsControllerSet() {
     // Given
     stub(prefsController) { mock in
-      when(mock).setValue(any(), forKey: Prefs.Key.biometryEnabled).thenDoNothing()
+      when(mock.setValue(any(), forKey: Prefs.Key.biometryEnabled)).thenDoNothing()
     }
     // When
     interactor.setBiometrySelection(isEnabled: true)
@@ -117,7 +117,7 @@ final class TestBiometryInteractor: EudiTest {
   func testBiometricsImage_WhenControllerReturnsFaceIdType_ThenReturnFaceIdImage() {
     // Given
     stub(systemBiometricController) { mock in
-      when(mock).biometryType.get.thenReturn(.faceID)
+      when(mock.biometryType.get).thenReturn(.faceID)
     }
     // When
     let biometryImage = interactor.biometricsImage
@@ -128,7 +128,7 @@ final class TestBiometryInteractor: EudiTest {
   func testBiometricsImage_WhenControllerReturnsTouchIdType_ThenReturnTouchIdImage() {
     // Given
     stub(systemBiometricController) { mock in
-      when(mock).biometryType.get.thenReturn(.touchID)
+      when(mock.biometryType.get).thenReturn(.touchID)
     }
     // When
     let biometryImage = interactor.biometricsImage
@@ -139,7 +139,7 @@ final class TestBiometryInteractor: EudiTest {
   func testBiometricsImage_WhenControllerReturnsNotSupportedType_ThenReturnNil() {
     // Given
     stub(systemBiometricController) { mock in
-      when(mock).biometryType.get.thenReturn(.none)
+      when(mock.biometryType.get).thenReturn(.none)
     }
     // When
     let biometryImage = interactor.biometricsImage
@@ -150,7 +150,7 @@ final class TestBiometryInteractor: EudiTest {
   func testBiometricType_WhenControllerReturnsFaceIdType_ThenReturnFaceIdType() {
     // Given
     stub(systemBiometricController) { mock in
-      when(mock).biometryType.get.thenReturn(.faceID)
+      when(mock.biometryType.get).thenReturn(.faceID)
     }
     // When
     let biometryType = interactor.biometryType
@@ -161,7 +161,7 @@ final class TestBiometryInteractor: EudiTest {
   func testBiometricType_WhenControllerReturnsTouchIdType_ThenReturnTouchIdType() {
     // Given
     stub(systemBiometricController) { mock in
-      when(mock).biometryType.get.thenReturn(.touchID)
+      when(mock.biometryType.get).thenReturn(.touchID)
     }
     // When
     let biometryType = interactor.biometryType
@@ -172,7 +172,7 @@ final class TestBiometryInteractor: EudiTest {
   func testCurrentBiometricsMethod_WhenControllerReturnsFaceIdType_ThenReturnFaceIdStringLiteral() {
     // Given
     stub(systemBiometricController) { mock in
-      when(mock).biometryType.get.thenReturn(.faceID)
+      when(mock.biometryType.get).thenReturn(.faceID)
     }
     // When
     let method = interactor.currentBiometricsMethod
@@ -183,7 +183,7 @@ final class TestBiometryInteractor: EudiTest {
   func testCurrentBiometricsMethod_WhenControllerReturnsTouchIdType_ThenReturnTouchIdStringLiteral() {
     // Given
     stub(systemBiometricController) { mock in
-      when(mock).biometryType.get.thenReturn(.touchID)
+      when(mock.biometryType.get).thenReturn(.touchID)
     }
     // When
     let method = interactor.currentBiometricsMethod
@@ -194,7 +194,7 @@ final class TestBiometryInteractor: EudiTest {
   func testCurrentBiometricsMethod_WhenControllerReturnsNotSupportedType_ThenReturnEmptyString() {
     // Given
     stub(systemBiometricController) { mock in
-      when(mock).biometryType.get.thenReturn(.none)
+      when(mock.biometryType.get).thenReturn(.none)
     }
     // When
     let method = interactor.currentBiometricsMethod

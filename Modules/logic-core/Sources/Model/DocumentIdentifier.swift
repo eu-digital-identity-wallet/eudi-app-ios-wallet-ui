@@ -44,6 +44,13 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable {
     }
   }
 
+  public var isSupported: Bool {
+    return switch self {
+    case .EuPidDocType, .IsoMdlModel: true
+    case .genericDocument: false
+    }
+  }
+
   public init(rawValue: String) {
     switch rawValue {
     case MdocDataModel18013.EuPidModel.euPidDocType:

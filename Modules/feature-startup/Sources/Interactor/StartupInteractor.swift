@@ -49,14 +49,12 @@ final class StartupInteractorImpl: StartupInteractor {
           title: .loginTitle,
           caption: .loginCaption,
           quickPinOnlyCaption: .loginCaptionQuickPinOnly,
-          navigationSuccessConfig: .init(
-            navigationType: .push(
-              hasDocuments
-              ? .dashboard
-              : .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument))
-            )
+          navigationSuccessType: .push(
+            hasDocuments
+            ? .dashboard
+            : .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument))
           ),
-          navigationBackConfig: nil,
+          navigationBackType: nil,
           isPreAuthorization: true,
           shouldInitializeBiometricOnCreate: true
         )

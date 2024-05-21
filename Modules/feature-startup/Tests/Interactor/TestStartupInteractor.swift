@@ -100,13 +100,13 @@ final class TestStartupInteractor: EudiTest {
 private extension TestStartupInteractor {
   func stubFetchDocuments(with documents: [MdocDecodable]) {
     stub(walletKitController) { mock in
-      when(mock).loadDocuments().thenDoNothing()
-      when(mock).fetchDocuments().thenReturn(documents)
+      when(mock.loadDocuments()).thenDoNothing()
+      when(mock.fetchDocuments()).thenReturn(documents)
     }
   }
   func stubHasPin(with hasPin: Bool) {
     stub(quickPinInteractor) { mock in
-      when(mock).hasPin().thenReturn(hasPin)
+      when(mock.hasPin()).thenReturn(hasPin)
     }
   }
   func biometryConfig(with hasDocuments: Bool) -> UIConfig.Biometry {
@@ -114,14 +114,12 @@ private extension TestStartupInteractor {
       title: .loginTitle,
       caption: .loginCaption,
       quickPinOnlyCaption: .loginCaptionQuickPinOnly,
-      navigationSuccessConfig: .init(
-        navigationType: .push(
-          hasDocuments
-          ? .dashboard
-          : .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument))
-        )
+      navigationSuccessType: .push(
+        hasDocuments
+        ? .dashboard
+        : .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument))
       ),
-      navigationBackConfig: nil,
+      navigationBackType: nil,
       isPreAuthorization: true,
       shouldInitializeBiometricOnCreate: true
     )

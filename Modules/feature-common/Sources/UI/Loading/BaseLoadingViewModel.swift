@@ -40,7 +40,7 @@ open class BaseLoadingViewModel<Router: RouterHost>: BaseViewModel<Router, BaseL
 
   open func doWork() async {}
 
-  public func onNavigate(type: UIConfig.NavigationConfig.NavigationType) {
+  public func onNavigate(type: UIConfig.ThreeWayNavigationType) {
     switch type {
     case .pop:
       if let route = getOnPopRoute() {

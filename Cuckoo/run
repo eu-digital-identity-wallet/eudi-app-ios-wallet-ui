@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+
+SCRIPT_PATH="$(cd "$(dirname "$0")" && pwd)"
+GENERATOR_NAME="cuckoonator"
+GENERATOR_PATH="$SCRIPT_PATH/$GENERATOR_NAME"
+GREP_OPTIONS=""
+
+echo "Script path: $SCRIPT_PATH"
+echo "Generator path: $GENERATOR_PATH"
+
+function download_generator {
+  echo "Downloading generator version $1..."
+  if [[ ! -z "$GITHUB_ACCESS_TOKEN" ]]; then
+    CURL_OPTIONS=(-H "Authorization: token $GITHUB_ACCESS_TOKEN")
+  fi
+
+  URL="https://api.github.com/repos/Brightify/Cuckoo/releases/tags/$1"
+  DOWNLOAD_URL=$(curl "${CURL_OPTIONS[@]}" "$URL" | grep -oe '"browser_download_url":\s*"[^" ]*"' | grep -oe 'http[^" ]*' | grep "$GENERATOR_NAME" | head -1)
+
+  if [[ -z "$DOWNLOAD_URL" ]]; then
+    echo "Error: Failed to fetch download URL for the Cuckoo Generator."
+    exit 1
+  else
+    echo "Downloading Cuckoo Generator from URL: $DOWNLOAD_URL"
+    curl "${CURL_OPTIONS[@]}" -Lo "$GENERATOR_PATH" "$DOWNLOAD_URL"
+  fi
+  chmod +x "$GENERATOR_NAME"
+}
+
+function get_generator {
+  pushd "$SCRIPT_PATH"
+  if [[ ! -z "$DOWNLOAD" ]]; then
+    download_generator "$LIB_VERSION"
+  else
+    if [[ -d "$SCRIPT_PATH/Generator" ]]; then
+      echo "Building generator..."
+      ./build_generator
+      if [[ "$?" -ne 0 ]]; then
+        echo "Build seems to have failed for some reason. Please file an issue on GitHub."
+        exit 1
+      fi
+      mv "$SCRIPT_PATH/Generator/bin/$GENERATOR_NAME" "$GENERATOR_PATH"
+    else
+      echo "Couldn't build generator – source code not found. (expected in the 'Generator' directory)"
+      echo "Pass the --download option to fetch the binary from GitHub."
+      exit 1
+    fi
+  fi
+  popd
+}
+
+# Source: https://stackoverflow.com/a/58333404/11558478
+function ver_cmp {
+  local IFS=.
+  local V1=($1) V2=($2) I
+  for ((I=0 ; I<${#V1[*]} || I<${#V2[*]} ; I++)) ; do
+      [[ ${V1[$I]:-0} -lt ${V2[$I]:-0} ]] && echo -1 && return
+      [[ ${V1[$I]:-0} -gt ${V2[$I]:-0} ]] && echo 1 && return
+  done
+  echo 0
+}
+
+function ver_lt {
+  [[ $(ver_cmp "$1" "$2") -eq -1 ]]
+}
+
+# parse arguments
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+case $1 in
+  -d|--download)
+    DOWNLOAD=1
+    shift
+  ;;
+
+  -c|--clean)
+    CLEAN=1
+    echo 'Performing clean generator build.'
+    shift
+  ;;
+
+  *)
+    POSITIONAL+=("$1")
+    shift
+  ;;
+esac; done
+set -- "${POSITIONAL[@]}"
+
+LIB_VERSION=$(<version)
+GEN_VERSION=$("$GENERATOR_PATH" --version)
+
+# Procure a generator if it's not available, if clean build is requested, or if the generator version is older than library version.
+if [[ ! -e "$GENERATOR_PATH" ]] || [[ ! -z "$CLEAN" ]] || ver_lt "$GEN_VERSION" "$LIB_VERSION"; then
+  get_generator
+fi
+
+"$GENERATOR_PATH" $@
