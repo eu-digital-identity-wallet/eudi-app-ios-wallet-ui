@@ -38,6 +38,12 @@ public protocol WalletKitController {
   func deleteDocument(with id: String) async throws
   func loadDocuments() async throws
   func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
+  func resolveOfferUrlDocTypes(uriOffer: String) async throws -> [OfferedDocModel]
+  func issueDocumentsByOfferUrl(
+    offerUri: String,
+    docTypes: [OfferedDocModel],
+    format: DataFormat
+  ) async throws -> [WalletStorage.Document]
   func valueForElementIdentifier(
     for documentType: DocumentTypeIdentifier,
     with documentId: String,
@@ -59,12 +65,27 @@ final class WalletKitControllerImpl: WalletKitController {
   init(configLogic: WalletKitConfig) {
     self.configLogic = configLogic
     wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
-    wallet.trustedReaderCertificates = []
     wallet.verifierApiUri = configLogic.verifierConfig.apiUri
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciClientId = configLogic.vciConfig.clientId
     wallet.openID4VciRedirectUri = configLogic.vciConfig.redirectUri
     wallet.trustedReaderCertificates = configLogic.proximityConfig.trustedCerts
+  }
+
+  func resolveOfferUrlDocTypes(uriOffer: String) async throws -> [OfferedDocModel] {
+    return try await wallet.resolveOfferUrlDocTypes(uriOffer: uriOffer)
+  }
+
+  func issueDocumentsByOfferUrl(
+    offerUri: String,
+    docTypes: [OfferedDocModel],
+    format: DataFormat
+  ) async throws -> [WalletStorage.Document] {
+    return try await wallet.issueDocumentsByOfferUrl(
+      offerUri: offerUri,
+      docTypes: docTypes,
+      format: format
+    )
   }
 
   public func loadSampleData(dataFiles: [String]) async throws {
@@ -151,8 +172,8 @@ final class WalletKitControllerImpl: WalletKitController {
   func fetchDocuments(excluded: [DocumentTypeIdentifier]) -> [any MdocDecodable] {
     let excludedRawValues = excluded.map { $0.rawValue }
     return fetchDocuments().compactMap({
-        excludedRawValues.contains($0.docType) ? nil : $0
-      }
+      excludedRawValues.contains($0.docType) ? nil : $0
+    }
     )
   }
 

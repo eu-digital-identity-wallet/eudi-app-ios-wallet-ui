@@ -17,6 +17,7 @@
 import Foundation
 import Combine
 import logic_resources
+import UIKit
 
 final class ProximityPresentationSessionCoordinator: PresentationSessionCoordinator {
 
@@ -55,12 +56,16 @@ final class ProximityPresentationSessionCoordinator: PresentationSessionCoordina
     _ = await session.receiveRequest()
   }
 
-  public func startQrEngagement() async throws -> Data {
-    guard let deviceEngagement = session.deviceEngagement else {
+  public func startQrEngagement() async throws -> UIImage {
+    guard
+      let deviceEngagement = session.deviceEngagement,
+      let qrImage = DeviceEngagement.getQrCodeImage(qrCode: deviceEngagement),
+      let qrImageData = qrImage.pngData()
+    else {
       throw session.uiError ?? .init(description: "Failed To Generate QR Code")
     }
-    self.presentationStateSubject.value = .qrReady(imageData: deviceEngagement)
-    return deviceEngagement
+    self.presentationStateSubject.value = .qrReady(imageData: qrImageData)
+    return qrImage
   }
 
   public func requestReceived() async throws -> PresentationRequest {

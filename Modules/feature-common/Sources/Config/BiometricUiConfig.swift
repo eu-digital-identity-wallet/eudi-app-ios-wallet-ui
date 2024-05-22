@@ -23,15 +23,15 @@ public extension UIConfig {
     public let title: LocalizableString.Key
     public let caption: LocalizableString.Key
     public let quickPinOnlyCaption: LocalizableString.Key
-    public let navigationSuccessConfig: NavigationConfig
-    public let navigationBackConfig: NavigationConfig?
+    public let navigationSuccessType: ThreeWayNavigationType
+    public let navigationBackType: ThreeWayNavigationType?
     public let isPreAuthorization: Bool
     public let shouldInitializeBiometricOnCreate: Bool
 
     public var log: String {
       return "title: \(LocalizableString.shared.get(with: title))" +
-      " onSuccessNav: \(navigationSuccessConfig.navigationType.key)" +
-      " onBackNav: \(navigationBackConfig?.navigationType.key ?? "none")" +
+      " onSuccessNav: \(navigationSuccessType.key)" +
+      " onBackNav: \(navigationBackType?.key ?? "none")" +
       " isPreAuthorization: \(isPreAuthorization)" +
       " shouldInitializeBiometricOnCreate: \(shouldInitializeBiometricOnCreate)"
     }
@@ -40,16 +40,16 @@ public extension UIConfig {
       title: LocalizableString.Key,
       caption: LocalizableString.Key,
       quickPinOnlyCaption: LocalizableString.Key,
-      navigationSuccessConfig: NavigationConfig,
-      navigationBackConfig: NavigationConfig?,
+      navigationSuccessType: ThreeWayNavigationType,
+      navigationBackType: ThreeWayNavigationType?,
       isPreAuthorization: Bool,
       shouldInitializeBiometricOnCreate: Bool
     ) {
       self.title = title
       self.caption = caption
       self.quickPinOnlyCaption = quickPinOnlyCaption
-      self.navigationSuccessConfig = navigationSuccessConfig
-      self.navigationBackConfig = navigationBackConfig
+      self.navigationSuccessType = navigationSuccessType
+      self.navigationBackType = navigationBackType
       self.isPreAuthorization = isPreAuthorization
       self.shouldInitializeBiometricOnCreate = shouldInitializeBiometricOnCreate
     }

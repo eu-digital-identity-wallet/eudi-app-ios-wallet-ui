@@ -16,6 +16,7 @@
 import Foundation
 import Combine
 import logic_resources
+import UIKit
 
 enum RegistrationName: String {
   case proximity
@@ -29,7 +30,7 @@ public protocol PresentationSessionCoordinator {
   init(session: PresentationSession)
 
   func initialize() async
-  func startQrEngagement() async throws -> Data
+  func startQrEngagement() async throws -> UIImage
   func requestReceived() async throws -> PresentationRequest
   func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async throws
   func onSuccess(completion: () -> Void)

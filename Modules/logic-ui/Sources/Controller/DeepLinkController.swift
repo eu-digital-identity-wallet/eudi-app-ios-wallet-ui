@@ -25,6 +25,7 @@ public protocol DeepLinkController {
   func handleDeepLinkAction(routerHost: RouterHost, deepLinkExecutable: DeepLink.Executable)
   func getPendingDeepLinkAction() -> DeepLink.Executable?
   func cacheDeepLinkURL(url: URL)
+  func removeCachedDeepLinkURL()
 }
 
 final class DeepLinkControllerImpl: DeepLinkController {
@@ -73,9 +74,20 @@ final class DeepLinkControllerImpl: DeepLinkController {
     switch deepLinkExecutable.action {
     case .openid4vp:
       let session = walletKitController.startSameDevicePresentation(deepLink: deepLinkExecutable.link)
-      route = !routerHost.isScreenForeground(with: .presentationRequest(presentationCoordinator: session)) ? .presentationRequest(presentationCoordinator: session) : nil
+      route = !routerHost.isScreenForeground(with: .presentationRequest(presentationCoordinator: session))
+      ? .presentationRequest(presentationCoordinator: session)
+      : nil
     case .external:
       deepLinkExecutable.plainUrl.open()
+    case .openid4vci:
+      let config = UIConfig.Generic(
+        arguments: ["uri": deepLinkExecutable.plainUrl.absoluteString],
+        navigationSuccessType: .popTo(.dashboard),
+        navigationCancelType: .pop
+      )
+      route = !routerHost.isScreenForeground(with: .credentialOfferRequest(config: config))
+      ? .credentialOfferRequest(config: config)
+      : nil
     }
 
     if let route {
@@ -87,7 +99,7 @@ final class DeepLinkControllerImpl: DeepLinkController {
     prefsController.setValue(url.absoluteString, forKey: .cachedDeepLink)
   }
 
-  private func removeCachedDeepLinkURL() {
+  public func removeCachedDeepLinkURL() {
     prefsController.remove(forKey: .cachedDeepLink)
   }
 }
@@ -104,12 +116,15 @@ public extension DeepLink {
   enum Action: String {
 
     case openid4vp
+    case openid4vci
     case external
 
     public static func parseType(with scheme: String) -> Action? {
       switch scheme {
       case _ where scheme.contains(openid4vp.rawValue):
         return .openid4vp
+      case _ where scheme.contains(openid4vci.rawValue):
+        return .openid4vci
       default:
         return .external
       }

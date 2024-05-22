@@ -23,7 +23,7 @@ struct BiometryState: ViewState {
   let pinError: String?
   let throttlePinInput: Bool
   let scenePhase: ScenePhase
-  let pendingNavigation: UIConfig.NavigationConfig?
+  let pendingNavigation: UIConfig.ThreeWayNavigationType?
   let autoBiometryInitiated: Bool
   let biometryImage: Image?
   let isCancellable: Bool
@@ -61,7 +61,7 @@ final class BiometryViewModel<Router: RouterHost>: BaseViewModel<Router, Biometr
         pendingNavigation: nil,
         autoBiometryInitiated: false,
         biometryImage: interactor.biometricsImage,
-        isCancellable: config.navigationBackConfig != nil,
+        isCancellable: config.navigationBackType != nil,
         quickPinSize: 6
       )
     )
@@ -79,8 +79,8 @@ final class BiometryViewModel<Router: RouterHost>: BaseViewModel<Router, Biometr
   }
 
   func onPop() {
-    if let backNavigation = viewState.config.navigationBackConfig {
-      doNavigation(config: backNavigation)
+    if let backNavigation = viewState.config.navigationBackType {
+      doNavigation(navigationType: backNavigation)
     }
   }
 
@@ -107,7 +107,7 @@ final class BiometryViewModel<Router: RouterHost>: BaseViewModel<Router, Biometr
   func setPhase(with phase: ScenePhase) {
     setNewState(scenePhase: phase)
     if let pending = viewState.pendingNavigation {
-      doNavigation(config: pending)
+      doNavigation(navigationType: pending)
     }
   }
 
@@ -147,17 +147,17 @@ final class BiometryViewModel<Router: RouterHost>: BaseViewModel<Router, Biometr
   }
 
   private func authenticated() {
-    doNavigation(config: viewState.config.navigationSuccessConfig)
+    doNavigation(navigationType: viewState.config.navigationSuccessType)
   }
 
-  private func doNavigation(config: UIConfig.NavigationConfig) {
+  private func doNavigation(navigationType: UIConfig.ThreeWayNavigationType) {
 
     guard viewState.scenePhase == .active else {
-      setNewState(pendingNavigation: config)
+      setNewState(pendingNavigation: navigationType)
       return
     }
 
-    switch config.navigationType {
+    switch navigationType {
     case .popTo(let route):
       router.popTo(with: route)
     case .push(let route):
@@ -170,7 +170,7 @@ final class BiometryViewModel<Router: RouterHost>: BaseViewModel<Router, Biometr
   private func setNewState(
     pinError: String? = nil,
     scenePhase: ScenePhase? = nil,
-    pendingNavigation: UIConfig.NavigationConfig? = nil,
+    pendingNavigation: UIConfig.ThreeWayNavigationType? = nil,
     autoBiometryInitiated: Bool? = nil
   ) {
     setState { previous in

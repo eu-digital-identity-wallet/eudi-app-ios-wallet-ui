@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import UIKit
 @testable import logic_core
 @testable import EudiWalletKit
 
@@ -59,7 +60,7 @@ extension Constants {
     
     var flow: EudiWalletKit.FlowType
     
-    func startQrEngagement() async throws -> Data? { nil }
+    func startQrEngagement() async throws -> String? { nil }
     
     func receiveRequest() async throws -> [String : Any] { [:] }
     

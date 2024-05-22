@@ -40,7 +40,7 @@ final class TestQuickPinInteractor: EudiTest {
     // Given
     let pin = "1234"
     stub(pinStorageController) { mock in
-      when(mock).setPin(with: any()).thenDoNothing()
+      when(mock.setPin(with: any())).thenDoNothing()
     }
     
     // When
@@ -56,7 +56,7 @@ final class TestQuickPinInteractor: EudiTest {
     // Given
     let pin = "1234"
     stub(pinStorageController) { mock in
-      when(mock).isPinValid(with: any()).thenReturn(true)
+      when(mock.isPinValid(with: any())).thenReturn(true)
     }
     
     // When
@@ -76,7 +76,7 @@ final class TestQuickPinInteractor: EudiTest {
     // Given
     let pin = "1234"
     stub(pinStorageController) { mock in
-      when(mock).isPinValid(with: any()).thenReturn(false)
+      when(mock.isPinValid(with: any())).thenReturn(false)
     }
     
     // When
@@ -96,7 +96,7 @@ final class TestQuickPinInteractor: EudiTest {
     // Given
     let pin = "1234"
     stub(pinStorageController) { mock in
-      when(mock).retrievePin().thenReturn(pin)
+      when(mock.retrievePin()).thenReturn(pin)
     }
     
     // When
@@ -110,7 +110,7 @@ final class TestQuickPinInteractor: EudiTest {
     
     // Given
     stub(pinStorageController) { mock in
-      when(mock).retrievePin().thenReturn(nil)
+      when(mock.retrievePin()).thenReturn(nil)
     }
     
     // When
@@ -126,10 +126,10 @@ final class TestQuickPinInteractor: EudiTest {
     let newPin = "4321"
     let currentPin = "1234"
     stub(pinStorageController) { mock in
-      when(mock).isPinValid(with: any()).thenReturn(true)
+      when(mock.isPinValid(with: any())).thenReturn(true)
     }
     stub(pinStorageController) { mock in
-      when(mock).setPin(with: any()).thenDoNothing()
+      when(mock.setPin(with: any())).thenDoNothing()
     }
     
     // When
@@ -151,10 +151,10 @@ final class TestQuickPinInteractor: EudiTest {
     // Given
     let newPin = "4321"
     stub(pinStorageController) { mock in
-      when(mock).isPinValid(with: any()).thenReturn(false)
+      when(mock.isPinValid(with: any())).thenReturn(false)
     }
     stub(pinStorageController) { mock in
-      when(mock).setPin(with: any()).thenDoNothing()
+      when(mock.setPin(with: any())).thenDoNothing()
     }
     
     // When

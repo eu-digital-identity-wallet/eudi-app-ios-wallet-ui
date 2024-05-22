@@ -175,6 +175,9 @@ final class RouterHostImpl: RouterHost {
           and: DIGraph.resolver.force(
             AddDocumentInteractor.self
           ),
+          deeplinkController: DIGraph.resolver.force(
+            DeepLinkController.self
+          ),
           config: config
         )
       case .proximityConnection(let presentationSessionCoordinator):
@@ -226,6 +229,14 @@ final class RouterHostImpl: RouterHost {
           also: DIGraph.resolver.force(
             WalletKitController.self
           )
+        )
+      case .credentialOfferRequest(let config):
+        DocumentOfferView(
+          with: self,
+          and: DIGraph.resolver.force(
+            DocumentOfferInteractor.self
+          ),
+          config: config
         )
       }
     }

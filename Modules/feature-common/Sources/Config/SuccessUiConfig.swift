@@ -61,35 +61,17 @@ public extension UIConfig.Success {
 
     public let title: LocalizableString.Key
     public let style: Style
-    public let navigationType: NavigationType
+    public let navigationType: UIConfig.DeepLinkNavigationType
 
     public enum Style: Equatable {
       case primary
       case secondary
     }
 
-    public enum NavigationType: Equatable {
-
-      case pop(screen: AppRoute, inclusive: Bool = false)
-      case push(screen: AppRoute)
-      case deepLink(link: URL, popToScreen: AppRoute)
-
-      public var type: String {
-        return switch self {
-        case .pop(let screen, _):
-          "pop to \(screen)"
-        case .push(let screen):
-          "push to \(screen)"
-        case .deepLink(let link, _):
-          "open \(link)"
-        }
-      }
-    }
-
     public init(
       title: LocalizableString.Key,
       style: Style,
-      navigationType: NavigationType
+      navigationType: UIConfig.DeepLinkNavigationType
     ) {
       self.id = UUID()
       self.title = title

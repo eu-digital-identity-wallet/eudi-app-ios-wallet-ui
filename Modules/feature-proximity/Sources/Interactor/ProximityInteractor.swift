@@ -17,7 +17,6 @@ import Foundation
 import logic_api
 import logic_core
 import logic_business
-import UIKit
 import feature_common
 
 public enum ProximityResponsePartialState {
@@ -86,14 +85,8 @@ final actor ProximityInteractorImpl: ProximityInteractor {
 
   public func onQRGeneration() async -> ProximityQrCodePartialState {
     do {
-      let data = try await self.presentationSessionCoordinator.startQrEngagement()
-
-      guard let qrImage = UIImage(data: data) else {
-        return .failure(PresentationSessionError.qrGeneration)
-      }
-
+      let qrImage = try await self.presentationSessionCoordinator.startQrEngagement()
       return .success(qrImage)
-
     } catch {
       return .failure(error)
     }

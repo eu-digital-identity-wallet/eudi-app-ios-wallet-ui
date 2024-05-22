@@ -233,6 +233,30 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "scanner_qr_caption")
     case .cameraError:
       bundle.localizedString(forKey: "camera_error")
+    case .missingPid:
+      bundle.localizedString(forKey: "missing_pid")
+    case .requestCredentialOfferTitle(let args):
+      bundle.localizedStringWithArguments(forKey: "request_credential_offer_title", arguments: args)
+    case .requestCredentialOfferCaption:
+      bundle.localizedString(forKey: "request_credential_offer_caption")
+    case .requestCredentialOfferNoDocument:
+      bundle.localizedString(forKey: "request_credential_offer_no_document")
+    case .unableToIssueAndStore:
+      bundle.localizedString(forKey: "unable_to_issue_and_store_documents")
+    case .issueButton:
+      bundle.localizedString(forKey: "issue_button")
+    case .cancelIssueSheetTitle:
+      bundle.localizedString(forKey: "cancel_issuance_sheet_title")
+    case .cancelIssueSheetCaption:
+      bundle.localizedString(forKey: "cancel_issuance_sheet_caption")
+    case .cancelIssueSheetContinue:
+      bundle.localizedString(forKey: "cancel_issuance_sheet_continue")
+    case .credentialOfferSuccessButton:
+      bundle.localizedString(forKey: "credential_offer_success_button")
+    case .credentialOfferSuccessCaption(let args):
+      bundle.localizedStringWithArguments(forKey: "credential_offer_success_caption", arguments: args)
+    case .credentialOfferPartialSuccessCaption(let args):
+      bundle.localizedStringWithArguments(forKey: "credential_offer_partial_success_caption", arguments: args)
     }
   }
 
@@ -342,6 +366,18 @@ public extension LocalizableString {
     case scannerQrTitle
     case scannerQrCaption
     case cameraError
+    case missingPid
+    case requestCredentialOfferTitle([String])
+    case requestCredentialOfferCaption
+    case requestCredentialOfferNoDocument
+    case unableToIssueAndStore
+    case issueButton
+    case cancelIssueSheetTitle
+    case cancelIssueSheetCaption
+    case cancelIssueSheetContinue
+    case credentialOfferSuccessButton
+    case credentialOfferSuccessCaption([String])
+    case credentialOfferPartialSuccessCaption([String])
   }
 }
 

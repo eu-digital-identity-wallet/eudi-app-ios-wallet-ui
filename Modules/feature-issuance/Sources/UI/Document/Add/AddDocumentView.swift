@@ -27,11 +27,13 @@ public struct AddDocumentView<Router: RouterHost>: View {
   public init(
     with router: Router,
     and interactor: AddDocumentInteractor,
+    deeplinkController: DeepLinkController,
     config: any UIConfigType
   ) {
     self.viewModel = AddDocumentViewModel(
       router: router,
       interactor: interactor,
+      deepLinkController: deeplinkController,
       config: config
     )
     self.contentSize = getScreenRect().width / 2.0
@@ -55,8 +57,8 @@ public struct AddDocumentView<Router: RouterHost>: View {
 
       scanFooter
     }
-    .onAppear {
-      self.viewModel.fetchStoredDocuments()
+    .task {
+      await self.viewModel.fetchStoredDocuments()
     }
   }
 
