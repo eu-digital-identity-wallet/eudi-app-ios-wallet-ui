@@ -53,11 +53,14 @@ public struct WelcomeView<Router: RouterHost>: View {
               title: .loginButton,
               onAction: viewModel.onClickLogin()
             )
+            .accesibilityLocator(WelcomeLocators.loginButton)
+
             WrapButtonView(
               style: .secondary,
               title: .readFaqButton,
               onAction: viewModel.onClickFAQ()
             )
+            .accesibilityLocator(WelcomeLocators.readFaqButton)
           }
           .padding(.vertical, Theme.shared.shape.extraLarge)
           .padding(viewModel.viewState.isAnimating ? 0 : Theme.shared.dimension.padding)
