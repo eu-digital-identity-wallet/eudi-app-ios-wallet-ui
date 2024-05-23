@@ -181,6 +181,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "issuance_success_next_button")
     case .unknownVerifier:
       bundle.localizedString(forKey: "unknown_verifier")
+    case .unknownIssuer:
+      bundle.localizedString(forKey: "unknown_issuer")
     case .expiry:
       bundle.localizedString(forKey: "expiry")
     case .issuedAt:
@@ -340,6 +342,7 @@ public extension LocalizableString {
     case issuanceSuccessCaption([String])
     case issuanceSuccessNextButton
     case unknownVerifier
+    case unknownIssuer
     case expiry
     case issuedAt
     case yes
