@@ -1764,6 +1764,17 @@
         }
       }
     },
+    "unknown_issuer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuer"
+          }
+        }
+      }
+    },
     "unknown_verifier" : {
       "extractionState" : "manual",
       "localizations" : {
