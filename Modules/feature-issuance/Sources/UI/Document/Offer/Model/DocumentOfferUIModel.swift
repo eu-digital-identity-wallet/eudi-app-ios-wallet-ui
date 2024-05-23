@@ -16,6 +16,7 @@
 import Foundation
 import logic_core
 import logic_business
+import logic_resources
 
 public struct DocumentOfferUIModel: Identifiable {
 
@@ -64,7 +65,7 @@ public extension DocumentOfferUIModel {
   static func mock() -> DocumentOfferUIModel {
     return .init(
       id: UUID().uuidString,
-      issuerName: "Issuer",
+      issuerName: LocalizableString.shared.get(with: .unknownIssuer),
       uiOffers: [
         .init(
           id: UUID().uuidString,
@@ -100,7 +101,7 @@ public extension DocumentOfferUIModel {
 extension Array where Element == OfferedDocModel {
   func transformToDocumentOfferUi() -> DocumentOfferUIModel {
 
-    var issuer: String = ""
+    var issuer: String = LocalizableString.shared.get(with: .unknownIssuer)
     var offers: [DocumentOfferUIModel.UIOffer] = []
 
     self.forEach { doc in
