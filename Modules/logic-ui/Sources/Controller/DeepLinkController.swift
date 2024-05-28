@@ -58,9 +58,18 @@ final class DeepLinkControllerImpl: DeepLinkController {
     return nil
   }
 
-  public func handleDeepLinkAction(routerHost: RouterHost, deepLinkExecutable: DeepLink.Executable) {
+  public func handleDeepLinkAction(
+    routerHost: RouterHost,
+    deepLinkExecutable: DeepLink.Executable
+  ) {
 
-    guard routerHost.isAfterAuthorization() else {
+    var isVciExecutable: Bool {
+      deepLinkExecutable.action == .openid4vci && routerHost.isAfterOnBoarding()
+    }
+
+    guard
+      routerHost.isAfterAuthorization() || isVciExecutable
+    else {
       if let url = deepLinkExecutable.link.url {
         cacheDeepLinkURL(url: url)
       }
@@ -69,14 +78,17 @@ final class DeepLinkControllerImpl: DeepLinkController {
 
     removeCachedDeepLinkURL()
 
-    var route: AppRoute?
-
     switch deepLinkExecutable.action {
     case .openid4vp:
       let session = walletKitController.startSameDevicePresentation(deepLink: deepLinkExecutable.link)
-      route = !routerHost.isScreenForeground(with: .presentationRequest(presentationCoordinator: session))
-      ? .presentationRequest(presentationCoordinator: session)
-      : nil
+      if !routerHost.isScreenForeground(with: .presentationRequest(presentationCoordinator: session)) {
+        routerHost.push(with: .presentationRequest(presentationCoordinator: session))
+      } else {
+        postNotification(
+          with: NSNotification.OpenId4VP,
+          and: ["session": session]
+        )
+      }
     case .external:
       deepLinkExecutable.plainUrl.open()
     case .openid4vci:
@@ -85,13 +97,14 @@ final class DeepLinkControllerImpl: DeepLinkController {
         navigationSuccessType: .popTo(.dashboard),
         navigationCancelType: .pop
       )
-      route = !routerHost.isScreenForeground(with: .credentialOfferRequest(config: config))
-      ? .credentialOfferRequest(config: config)
-      : nil
-    }
-
-    if let route {
-      routerHost.push(with: route)
+      if !routerHost.isScreenForeground(with: .credentialOfferRequest(config: config)) {
+        routerHost.push(with: .credentialOfferRequest(config: config))
+      } else {
+        postNotification(
+          with: NSNotification.OpenId4VCI,
+          and: ["uri": deepLinkExecutable.plainUrl.absoluteString]
+        )
+      }
     }
   }
 
@@ -101,6 +114,17 @@ final class DeepLinkControllerImpl: DeepLinkController {
 
   public func removeCachedDeepLinkURL() {
     prefsController.remove(forKey: .cachedDeepLink)
+  }
+
+  private func postNotification(
+    with name: NSNotification.Name,
+    and info: [AnyHashable: Any]? = nil
+  ) {
+    NotificationCenter.default.post(
+      name: name,
+      object: nil,
+      userInfo: info
+    )
   }
 }
 
@@ -130,4 +154,9 @@ public extension DeepLink {
       }
     }
   }
+}
+
+public extension NSNotification {
+  static let OpenId4VP = Notification.Name.init("OpenId4VP")
+  static let OpenId4VCI = Notification.Name.init("OpenId4VCI")
 }

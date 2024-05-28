@@ -132,6 +132,23 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
     )
   }
 
+  public func resetState() {
+    setState { _ in
+        .init(
+          isLoading: true,
+          error: nil,
+          isContentVisible: false,
+          itemsAreAllSelected: true,
+          items: RequestDataUiModel.mock(),
+          title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
+          trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
+          relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
+          isTrusted: false,
+          allowShare: false
+        )
+    }
+  }
+
   func onPop() {
     isRequestInfoModalShowing = false
     isCancelModalShowing = false
@@ -211,8 +228,8 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
       }
       return false
     }
-    .filter { $0 }
-    .isEmpty
+      .filter { $0 }
+      .isEmpty
 
     setNewState(
       itemsAreAllSelected: allSelected,

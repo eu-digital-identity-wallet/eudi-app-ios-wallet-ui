@@ -141,6 +141,25 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     }
   }
 
+  func handleNotification(with info: [AnyHashable: Any]) {
+    guard let uri = info["uri"] as? String else {
+      return
+    }
+    setNewState(
+      isLoading: true,
+      allowIssue: false,
+      config: .init(
+        arguments: ["uri": uri],
+        navigationSuccessType: viewState.config.navigationSuccessType,
+        navigationCancelType: viewState.config.navigationCancelType
+      ),
+      offerUri: uri
+    )
+    Task {
+      await self.processRequest()
+    }
+  }
+
   private func retrieveSuccessRoute(with key: LocalizableString.Key) -> AppRoute {
 
     var navigationType: UIConfig.DeepLinkNavigationType {
@@ -170,15 +189,17 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     isLoading: Bool = false,
     error: ContentErrorView.Config? = nil,
     documentOfferUiModel: DocumentOfferUIModel? = nil,
-    allowIssue: Bool? = nil
+    allowIssue: Bool? = nil,
+    config: UIConfig.Generic? = nil,
+    offerUri: String? = nil
   ) {
     setState { previousSate in
         .init(
           isLoading: isLoading,
           documentOfferUiModel: documentOfferUiModel ?? previousSate.documentOfferUiModel,
           error: error,
-          config: previousSate.config,
-          offerUri: previousSate.offerUri,
+          config: config ?? previousSate.config,
+          offerUri: offerUri ?? previousSate.offerUri,
           allowIssue: allowIssue ?? previousSate.allowIssue
         )
     }

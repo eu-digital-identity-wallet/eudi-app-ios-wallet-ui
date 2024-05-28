@@ -22,6 +22,8 @@ public protocol ConfigUiLogic {
 
   var landingRoute: AppRoute { get }
 
+  var onBoardingRoute: AppRoute { get }
+
   var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] { get }
 
   init(themeConfiguration: ThemeConfiguration)
@@ -37,6 +39,10 @@ struct ConfigUiLogicImpl: ConfigUiLogic {
 
   public var landingRoute: AppRoute {
     return .dashboard
+  }
+
+  var onBoardingRoute: AppRoute {
+    return .issuanceAddDocument(config: NoConfig())
   }
 
   public init(themeConfiguration: ThemeConfiguration) {

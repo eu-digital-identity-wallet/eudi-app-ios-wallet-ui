@@ -80,6 +80,12 @@ public struct DocumentOfferView<Router: RouterHost>: View {
     .task {
       await viewModel.processRequest()
     }
+    .onReceive(NotificationCenter.default.publisher(for: NSNotification.OpenId4VCI)) { data in
+      guard let payload = data.userInfo else {
+        return
+      }
+      viewModel.handleNotification(with: payload)
+    }
   }
 
   var noDocumentsFound: some View {
