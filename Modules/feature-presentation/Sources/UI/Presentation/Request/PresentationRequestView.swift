@@ -26,6 +26,15 @@ public struct PresentationRequestView<Router: RouterHost>: View {
   }
 
   public var body: some View {
-    BaseRequestView(with: viewModel.router, viewModel: viewModel)
+    BaseRequestView(
+      with: viewModel.router,
+      viewModel: viewModel
+    )
+    .onReceive(NotificationCenter.default.publisher(for: NSNotification.OpenId4VP)) { data in
+      guard let payload = data.userInfo else {
+        return
+      }
+      viewModel.handleDeepLinkNotification(with: payload)
+    }
   }
 }

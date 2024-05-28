@@ -15,6 +15,7 @@
  */
 
 import feature_common
+import logic_core
 
 final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewModel<Router> {
 
@@ -113,5 +114,13 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
   override func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
     .requestDataVerifiedEntityMessage
+  }
+
+  func handleDeepLinkNotification(with info: [AnyHashable: Any]) {
+    guard let session = info["session"] as? PresentationSessionCoordinator else {
+      return
+    }
+    interactor.updatePresentationCoordinator(with: session)
+    Task { await doWork() }
   }
 }

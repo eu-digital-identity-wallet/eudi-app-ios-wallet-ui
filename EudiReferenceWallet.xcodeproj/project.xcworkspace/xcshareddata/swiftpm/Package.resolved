@@ -158,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "e6e70bb838ee84cc806595df0bae936deae4ca9f",
-        "version" : "0.4.0"
+        "revision" : "b57a84b1eefe7b9027bf7f53a87287d7e172aa72",
+        "version" : "0.4.1"
       }
     },
     {
@@ -428,8 +428,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/markiv/SwiftUI-Shimmer.git",
       "state" : {
-        "revision" : "5659a623567cefe258d1e3e67cb65585fbb6ecb6",
-        "version" : "1.4.2"
+        "revision" : "e3aa4226b0fafe345ca1c920f516b6a2f3e0aacc",
+        "version" : "1.5.0"
       }
     },
     {

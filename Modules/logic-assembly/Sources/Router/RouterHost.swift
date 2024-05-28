@@ -253,12 +253,23 @@ final class RouterHostImpl: RouterHost {
   }
 
   public func isAfterAuthorization() -> Bool {
-    return getCurrentScreen()?.info.key == uiConfigLogic.landingRoute.info.key ||
-    pilot.routes.contains(where: { $0.info.key == uiConfigLogic.landingRoute.info.key })
+    return isForegroundOrBackStack(with: uiConfigLogic.landingRoute)
+  }
+
+  func isAfterOnBoarding() -> Bool {
+    return isForegroundOrBackStack(with: uiConfigLogic.onBoardingRoute)
   }
 
   public func isScreenForeground(with route: AppRoute) -> Bool {
     getCurrentScreen()?.info.key == route.info.key
+  }
+
+  func isScreenOnBackStack(with route: AppRoute) -> Bool {
+    pilot.routes.contains(where: { $0.info.key == route.info.key })
+  }
+
+  private func isForegroundOrBackStack(with route: AppRoute) -> Bool {
+    return isScreenForeground(with: route) || isScreenOnBackStack(with: route)
   }
 
   private func canNavigate(block: @escaping @autoclosure () -> Void) -> Bool {
