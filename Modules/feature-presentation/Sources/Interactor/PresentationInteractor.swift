@@ -32,11 +32,12 @@ public protocol PresentationInteractor {
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>
   func onSendResponse() async -> Result<URL?, Error>
+  func updatePresentationCoordinator(with coordinator: PresentationSessionCoordinator)
 }
 
-final actor PresentationInteractorImpl: PresentationInteractor {
+final class PresentationInteractorImpl: PresentationInteractor {
 
-  public let presentationCoordinator: PresentationSessionCoordinator
+  public var presentationCoordinator: PresentationSessionCoordinator
   private let walletKitController: WalletKitController
 
   init(
@@ -45,6 +46,10 @@ final actor PresentationInteractorImpl: PresentationInteractor {
   ) {
     self.presentationCoordinator = presentationCoordinator
     self.walletKitController = walletKitController
+  }
+
+  func updatePresentationCoordinator(with coordinator: PresentationSessionCoordinator) {
+    self.presentationCoordinator = coordinator
   }
 
   public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {

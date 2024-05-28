@@ -364,28 +364,6 @@
         }
       }
     },
-    "com.example.conference.badge" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EUDI Conference Badge"
-          }
-        }
-      }
-    },
-    "conference_badge" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EUDI Conference Badge"
-          }
-        }
-      }
-    },
     "credential_offer_partial_success_caption" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -92,7 +92,9 @@ public protocol RouterHost {
   func getCurrentScreen() -> AppRoute?
   func getToolbarConfig() -> UIConfig.ToolBar
   func isAfterAuthorization() -> Bool
+  func isAfterOnBoarding() -> Bool
   func isScreenForeground(with route: AppRoute) -> Bool
+  func isScreenOnBackStack(with route: AppRoute) -> Bool
 }
 
 public class PreviewRouter: RouterHost {
@@ -121,7 +123,15 @@ public class PreviewRouter: RouterHost {
     false
   }
 
+  public func isAfterOnBoarding() -> Bool {
+    true
+  }
+
   public func isScreenForeground(with route: AppRoute) -> Bool {
+    false
+  }
+
+  public func isScreenOnBackStack(with route: AppRoute) -> Bool {
     true
   }
 }
