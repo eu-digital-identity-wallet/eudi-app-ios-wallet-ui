@@ -147,6 +147,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     }
     setNewState(
       isLoading: true,
+      documentOfferUiModel: DocumentOfferUIModel.mock(),
       allowIssue: false,
       config: .init(
         arguments: ["uri": uri],
