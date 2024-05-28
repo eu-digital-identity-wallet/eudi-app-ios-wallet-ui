@@ -120,6 +120,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     guard let session = info["session"] as? PresentationSessionCoordinator else {
       return
     }
+    resetState()
     interactor.updatePresentationCoordinator(with: session)
     Task { await doWork() }
   }
