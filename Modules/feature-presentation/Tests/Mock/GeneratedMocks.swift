@@ -1238,6 +1238,17 @@ class MockBaseRequestViewModel<Router: RouterHost>: BaseRequestViewModel<Router>
         )
         
     }
+    public override func resetState() {
+        
+        return cuckoo_manager.call(
+            "resetState()",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: super.resetState(),
+            defaultCall: __defaultImplStub!.resetState()
+        )
+        
+    }
     override func onPop() {
         
         return cuckoo_manager.call(
@@ -1440,6 +1451,14 @@ class MockBaseRequestViewModel<Router: RouterHost>: BaseRequestViewModel<Router>
             let matchers: [Cuckoo.ParameterMatcher<([RequestDataUIModel], LocalizableString.Key, String, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
             return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
                 method: "onReceivedItems(with p0: [RequestDataUIModel], title p1: LocalizableString.Key, relyingParty p2: String, isTrusted p3: Bool)",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func resetState() -> Cuckoo.ClassStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
+                method: "resetState()",
                 parameterMatchers: matchers
             ))
         }
@@ -1681,6 +1700,17 @@ class MockBaseRequestViewModel<Router: RouterHost>: BaseRequestViewModel<Router>
         }
         
         @discardableResult
+        func resetState() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "resetState()",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        @discardableResult
         func onPop() -> Cuckoo.__DoNotUse<(), Void> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
@@ -1830,6 +1860,10 @@ class BaseRequestViewModelStub<Router: RouterHost>:BaseRequestViewModel<Router> 
     }
     
     public override func onReceivedItems(with p0: [RequestDataUIModel], title p1: LocalizableString.Key, relyingParty p2: String, isTrusted p3: Bool) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public override func resetState() {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -2027,6 +2061,17 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
         )
         
     }
+    public func updatePresentationCoordinator(with p0: PresentationSessionCoordinator) {
+        
+        return cuckoo_manager.call(
+            "updatePresentationCoordinator(with p0: PresentationSessionCoordinator)",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.updatePresentationCoordinator(with: p0)
+        )
+        
+    }
 
     public struct __StubbingProxy_PresentationInteractor: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -2059,6 +2104,14 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractor.self,
                 method: "onSendResponse() async -> Result<URL?, Error>",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func updatePresentationCoordinator<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(PresentationSessionCoordinator)> where M1.MatchedType == PresentationSessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(PresentationSessionCoordinator)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractor.self,
+                method: "updatePresentationCoordinator(with p0: PresentationSessionCoordinator)",
                 parameterMatchers: matchers
             ))
         }
@@ -2112,6 +2165,17 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
                 sourceLocation: sourceLocation
             )
         }
+        
+        @discardableResult
+        func updatePresentationCoordinator<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(PresentationSessionCoordinator), Void> where M1.MatchedType == PresentationSessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(PresentationSessionCoordinator)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "updatePresentationCoordinator(with p0: PresentationSessionCoordinator)",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -2135,6 +2199,10 @@ public class PresentationInteractorStub:PresentationInteractor {
     
     public  func onSendResponse() async -> Result<URL?, Error> {
         return DefaultValueRegistry.defaultValue(for: (Result<URL?, Error>).self)
+    }
+    
+    public  func updatePresentationCoordinator(with p0: PresentationSessionCoordinator) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }
 
@@ -7856,6 +7924,15 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
             )
         }
     }
+    public  var onBoardingRoute: AppRoute {
+        get {
+            return cuckoo_manager.getter(
+                "onBoardingRoute",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.onBoardingRoute
+            )
+        }
+    }
     public  var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] {
         get {
             return cuckoo_manager.getter(
@@ -7880,6 +7957,10 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
             return .init(manager: cuckoo_manager, name: "landingRoute")
         }
         
+        var onBoardingRoute: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigUiLogic,AppRoute> {
+            return .init(manager: cuckoo_manager, name: "onBoardingRoute")
+        }
+        
         var backgroundColorForScreenDictionary: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigUiLogic,[AppRouteKey: UIConfig.ToolBar]> {
             return .init(manager: cuckoo_manager, name: "backgroundColorForScreenDictionary")
         }
@@ -7899,6 +7980,9 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
         var landingRoute: Cuckoo.VerifyReadOnlyProperty<AppRoute> {
             return .init(manager: cuckoo_manager, name: "landingRoute", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
+        var onBoardingRoute: Cuckoo.VerifyReadOnlyProperty<AppRoute> {
+            return .init(manager: cuckoo_manager, name: "onBoardingRoute", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
         var backgroundColorForScreenDictionary: Cuckoo.VerifyReadOnlyProperty<[AppRouteKey: UIConfig.ToolBar]> {
             return .init(manager: cuckoo_manager, name: "backgroundColorForScreenDictionary", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
@@ -7909,6 +7993,12 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
 public class ConfigUiLogicStub:ConfigUiLogic {
     
     public  var landingRoute: AppRoute {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (AppRoute).self)
+        }
+    }
+    
+    public  var onBoardingRoute: AppRoute {
         get {
             return DefaultValueRegistry.defaultValue(for: (AppRoute).self)
         }
@@ -8612,6 +8702,122 @@ import logic_resources
 
 
 
+// MARK: - Mocks generated from file: 'Modules/logic-ui/Sources/DesignSystem/Component/Type/AccesibilityLocatorViewModifier.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_presentation
+
+public class MockLocatorType: LocatorType, Cuckoo.ProtocolMock {
+    public typealias MocksType = LocatorType
+    public typealias Stubbing = __StubbingProxy_LocatorType
+    public typealias Verification = __VerificationProxy_LocatorType
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: LocatorType?
+
+    public func enableDefaultImplementation(_ stub: LocatorType) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    public  var id: String {
+        get {
+            return cuckoo_manager.getter(
+                "id",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.id
+            )
+        }
+    }
+
+
+    public func value() -> String {
+        
+        return cuckoo_manager.call(
+            "value() -> String",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.value()
+        )
+        
+    }
+
+    public struct __StubbingProxy_LocatorType: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        var id: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockLocatorType,String> {
+            return .init(manager: cuckoo_manager, name: "id")
+        }
+        
+        func value() -> Cuckoo.ProtocolStubFunction<(), String> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockLocatorType.self,
+                method: "value() -> String",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    public struct __VerificationProxy_LocatorType: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+        var id: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "id", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+    
+        
+        @discardableResult
+        func value() -> Cuckoo.__DoNotUse<(), String> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "value() -> String",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+public class LocatorTypeStub:LocatorType {
+    
+    public  var id: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+    }
+
+
+    
+    public  func value() -> String {
+        return DefaultValueRegistry.defaultValue(for: (String).self)
+    }
+}
+
+
+
+
 // MARK: - Mocks generated from file: 'Modules/logic-ui/Sources/DesignSystem/Component/Type/FastenedDynamicModifier.swift'
 
 import Cuckoo
@@ -8957,6 +9163,17 @@ public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock {
         )
         
     }
+    public func isAfterOnBoarding() -> Bool {
+        
+        return cuckoo_manager.call(
+            "isAfterOnBoarding() -> Bool",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.isAfterOnBoarding()
+        )
+        
+    }
     public func isScreenForeground(with p0: AppRoute) -> Bool {
         
         return cuckoo_manager.call(
@@ -8965,6 +9182,17 @@ public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock {
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: __defaultImplStub!.isScreenForeground(with: p0)
+        )
+        
+    }
+    public func isScreenOnBackStack(with p0: AppRoute) -> Bool {
+        
+        return cuckoo_manager.call(
+            "isScreenOnBackStack(with p0: AppRoute) -> Bool",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.isScreenOnBackStack(with: p0)
         )
         
     }
@@ -9056,10 +9284,26 @@ public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock {
             ))
         }
         
+        func isAfterOnBoarding() -> Cuckoo.ProtocolStubFunction<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterHost.self,
+                method: "isAfterOnBoarding() -> Bool",
+                parameterMatchers: matchers
+            ))
+        }
+        
         func isScreenForeground<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<(AppRoute), Bool> where M1.MatchedType == AppRoute {
             let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRouterHost.self,
                 method: "isScreenForeground(with p0: AppRoute) -> Bool",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func isScreenOnBackStack<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<(AppRoute), Bool> where M1.MatchedType == AppRoute {
+            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterHost.self,
+                method: "isScreenOnBackStack(with p0: AppRoute) -> Bool",
                 parameterMatchers: matchers
             ))
         }
@@ -9189,10 +9433,32 @@ public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock {
         }
         
         @discardableResult
+        func isAfterOnBoarding() -> Cuckoo.__DoNotUse<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "isAfterOnBoarding() -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        @discardableResult
         func isScreenForeground<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(AppRoute), Bool> where M1.MatchedType == AppRoute {
             let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
                 "isScreenForeground(with p0: AppRoute) -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        @discardableResult
+        func isScreenOnBackStack<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(AppRoute), Bool> where M1.MatchedType == AppRoute {
+            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "isScreenOnBackStack(with p0: AppRoute) -> Bool",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -9245,7 +9511,15 @@ public class RouterHostStub:RouterHost {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
+    public  func isAfterOnBoarding() -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+    
     public  func isScreenForeground(with p0: AppRoute) -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+    
+    public  func isScreenOnBackStack(with p0: AppRoute) -> Bool {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
 }
@@ -9376,6 +9650,17 @@ public class MockPreviewRouter: PreviewRouter, Cuckoo.ClassMock {
         )
         
     }
+    public override func isAfterOnBoarding() -> Bool {
+        
+        return cuckoo_manager.call(
+            "isAfterOnBoarding() -> Bool",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: super.isAfterOnBoarding(),
+            defaultCall: __defaultImplStub!.isAfterOnBoarding()
+        )
+        
+    }
     public override func isScreenForeground(with p0: AppRoute) -> Bool {
         
         return cuckoo_manager.call(
@@ -9384,6 +9669,17 @@ public class MockPreviewRouter: PreviewRouter, Cuckoo.ClassMock {
             escapingParameters: (p0),
             superclassCall: super.isScreenForeground(with: p0),
             defaultCall: __defaultImplStub!.isScreenForeground(with: p0)
+        )
+        
+    }
+    public override func isScreenOnBackStack(with p0: AppRoute) -> Bool {
+        
+        return cuckoo_manager.call(
+            "isScreenOnBackStack(with p0: AppRoute) -> Bool",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: super.isScreenOnBackStack(with: p0),
+            defaultCall: __defaultImplStub!.isScreenOnBackStack(with: p0)
         )
         
     }
@@ -9475,10 +9771,26 @@ public class MockPreviewRouter: PreviewRouter, Cuckoo.ClassMock {
             ))
         }
         
+        func isAfterOnBoarding() -> Cuckoo.ClassStubFunction<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
+                method: "isAfterOnBoarding() -> Bool",
+                parameterMatchers: matchers
+            ))
+        }
+        
         func isScreenForeground<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ClassStubFunction<(AppRoute), Bool> where M1.MatchedType == AppRoute {
             let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
                 method: "isScreenForeground(with p0: AppRoute) -> Bool",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func isScreenOnBackStack<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ClassStubFunction<(AppRoute), Bool> where M1.MatchedType == AppRoute {
+            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
+                method: "isScreenOnBackStack(with p0: AppRoute) -> Bool",
                 parameterMatchers: matchers
             ))
         }
@@ -9608,10 +9920,32 @@ public class MockPreviewRouter: PreviewRouter, Cuckoo.ClassMock {
         }
         
         @discardableResult
+        func isAfterOnBoarding() -> Cuckoo.__DoNotUse<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "isAfterOnBoarding() -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        @discardableResult
         func isScreenForeground<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(AppRoute), Bool> where M1.MatchedType == AppRoute {
             let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
                 "isScreenForeground(with p0: AppRoute) -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        @discardableResult
+        func isScreenOnBackStack<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(AppRoute), Bool> where M1.MatchedType == AppRoute {
+            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "isScreenOnBackStack(with p0: AppRoute) -> Bool",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -9664,7 +9998,15 @@ public class PreviewRouterStub:PreviewRouter {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
+    public override func isAfterOnBoarding() -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+    
     public override func isScreenForeground(with p0: AppRoute) -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+    
+    public override func isScreenOnBackStack(with p0: AppRoute) -> Bool {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
 }
