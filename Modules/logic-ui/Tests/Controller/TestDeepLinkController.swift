@@ -79,7 +79,7 @@ final class TestDeepLinkController: EudiTest {
       when(mock.remove(forKey: Prefs.Key.cachedDeepLink)).thenDoNothing()
     }
     stub(routerHost) { mock in
-      when(mock.isAfterAuthorization()).thenReturn(false)
+      when(mock.userIsLoggedInWithDocuments()).thenReturn(false)
     }
     // When
     controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: Self.mockedOpenId4VPDeepLinkAction)
@@ -220,7 +220,7 @@ private extension TestDeepLinkController {
       when(mock.remove(forKey: Prefs.Key.cachedDeepLink)).thenDoNothing()
     }
     stub(routerHost) { mock in
-      when(mock.isAfterAuthorization()).thenReturn(isAfterAuth)
+      when(mock.userIsLoggedInWithDocuments()).thenReturn(isAfterAuth)
     }
     stub(routerHost) { mock in
       when(mock.isScreenForeground(with: any())).thenReturn(isScreenForeground)
