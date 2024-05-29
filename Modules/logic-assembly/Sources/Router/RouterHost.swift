@@ -252,12 +252,12 @@ final class RouterHostImpl: RouterHost {
     ?? .init(Theme.shared.color.backgroundPaper)
   }
 
-  public func isAfterAuthorization() -> Bool {
-    return isForegroundOrBackStack(with: uiConfigLogic.landingRoute)
+  public func userIsLoggedInWithDocuments() -> Bool {
+    return isForegroundOrBackStack(with: uiConfigLogic.dashboardRoute)
   }
 
-  func isAfterOnBoarding() -> Bool {
-    return isForegroundOrBackStack(with: uiConfigLogic.onBoardingRoute)
+  func userIsLoggedInWithNoDocuments() -> Bool {
+    return isForegroundOrBackStack(with: uiConfigLogic.issuanceRoute)
   }
 
   public func isScreenForeground(with route: AppRoute) -> Bool {
