@@ -8050,21 +8050,21 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
-    public  var landingRoute: AppRoute {
+    public  var dashboardRoute: AppRoute {
         get {
             return cuckoo_manager.getter(
-                "landingRoute",
+                "dashboardRoute",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.landingRoute
+                defaultCall: __defaultImplStub!.dashboardRoute
             )
         }
     }
-    public  var onBoardingRoute: AppRoute {
+    public  var issuanceRoute: AppRoute {
         get {
             return cuckoo_manager.getter(
-                "onBoardingRoute",
+                "issuanceRoute",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.onBoardingRoute
+                defaultCall: __defaultImplStub!.issuanceRoute
             )
         }
     }
@@ -8088,12 +8088,12 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
             self.cuckoo_manager = manager
         }
         
-        var landingRoute: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigUiLogic,AppRoute> {
-            return .init(manager: cuckoo_manager, name: "landingRoute")
+        var dashboardRoute: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigUiLogic,AppRoute> {
+            return .init(manager: cuckoo_manager, name: "dashboardRoute")
         }
         
-        var onBoardingRoute: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigUiLogic,AppRoute> {
-            return .init(manager: cuckoo_manager, name: "onBoardingRoute")
+        var issuanceRoute: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigUiLogic,AppRoute> {
+            return .init(manager: cuckoo_manager, name: "issuanceRoute")
         }
         
         var backgroundColorForScreenDictionary: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigUiLogic,[AppRouteKey: UIConfig.ToolBar]> {
@@ -8112,11 +8112,11 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
             self.sourceLocation = sourceLocation
         }
     
-        var landingRoute: Cuckoo.VerifyReadOnlyProperty<AppRoute> {
-            return .init(manager: cuckoo_manager, name: "landingRoute", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var dashboardRoute: Cuckoo.VerifyReadOnlyProperty<AppRoute> {
+            return .init(manager: cuckoo_manager, name: "dashboardRoute", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
-        var onBoardingRoute: Cuckoo.VerifyReadOnlyProperty<AppRoute> {
-            return .init(manager: cuckoo_manager, name: "onBoardingRoute", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var issuanceRoute: Cuckoo.VerifyReadOnlyProperty<AppRoute> {
+            return .init(manager: cuckoo_manager, name: "issuanceRoute", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         var backgroundColorForScreenDictionary: Cuckoo.VerifyReadOnlyProperty<[AppRouteKey: UIConfig.ToolBar]> {
             return .init(manager: cuckoo_manager, name: "backgroundColorForScreenDictionary", callMatcher: callMatcher, sourceLocation: sourceLocation)
@@ -8127,13 +8127,13 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
 
 public class ConfigUiLogicStub:ConfigUiLogic {
     
-    public  var landingRoute: AppRoute {
+    public  var dashboardRoute: AppRoute {
         get {
             return DefaultValueRegistry.defaultValue(for: (AppRoute).self)
         }
     }
     
-    public  var onBoardingRoute: AppRoute {
+    public  var issuanceRoute: AppRoute {
         get {
             return DefaultValueRegistry.defaultValue(for: (AppRoute).self)
         }
@@ -9287,25 +9287,25 @@ public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock {
         )
         
     }
-    public func isAfterAuthorization() -> Bool {
+    public func userIsLoggedInWithDocuments() -> Bool {
         
         return cuckoo_manager.call(
-            "isAfterAuthorization() -> Bool",
+            "userIsLoggedInWithDocuments() -> Bool",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.isAfterAuthorization()
+            defaultCall: __defaultImplStub!.userIsLoggedInWithDocuments()
         )
         
     }
-    public func isAfterOnBoarding() -> Bool {
+    public func userIsLoggedInWithNoDocuments() -> Bool {
         
         return cuckoo_manager.call(
-            "isAfterOnBoarding() -> Bool",
+            "userIsLoggedInWithNoDocuments() -> Bool",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.isAfterOnBoarding()
+            defaultCall: __defaultImplStub!.userIsLoggedInWithNoDocuments()
         )
         
     }
@@ -9411,18 +9411,18 @@ public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock {
             ))
         }
         
-        func isAfterAuthorization() -> Cuckoo.ProtocolStubFunction<(), Bool> {
+        func userIsLoggedInWithDocuments() -> Cuckoo.ProtocolStubFunction<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRouterHost.self,
-                method: "isAfterAuthorization() -> Bool",
+                method: "userIsLoggedInWithDocuments() -> Bool",
                 parameterMatchers: matchers
             ))
         }
         
-        func isAfterOnBoarding() -> Cuckoo.ProtocolStubFunction<(), Bool> {
+        func userIsLoggedInWithNoDocuments() -> Cuckoo.ProtocolStubFunction<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRouterHost.self,
-                method: "isAfterOnBoarding() -> Bool",
+                method: "userIsLoggedInWithNoDocuments() -> Bool",
                 parameterMatchers: matchers
             ))
         }
@@ -9557,10 +9557,10 @@ public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock {
         }
         
         @discardableResult
-        func isAfterAuthorization() -> Cuckoo.__DoNotUse<(), Bool> {
+        func userIsLoggedInWithDocuments() -> Cuckoo.__DoNotUse<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "isAfterAuthorization() -> Bool",
+                "userIsLoggedInWithDocuments() -> Bool",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -9568,10 +9568,10 @@ public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock {
         }
         
         @discardableResult
-        func isAfterOnBoarding() -> Cuckoo.__DoNotUse<(), Bool> {
+        func userIsLoggedInWithNoDocuments() -> Cuckoo.__DoNotUse<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "isAfterOnBoarding() -> Bool",
+                "userIsLoggedInWithNoDocuments() -> Bool",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -9642,11 +9642,11 @@ public class RouterHostStub:RouterHost {
         return DefaultValueRegistry.defaultValue(for: (UIConfig.ToolBar).self)
     }
     
-    public  func isAfterAuthorization() -> Bool {
+    public  func userIsLoggedInWithDocuments() -> Bool {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
-    public  func isAfterOnBoarding() -> Bool {
+    public  func userIsLoggedInWithNoDocuments() -> Bool {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
@@ -9774,25 +9774,25 @@ public class MockPreviewRouter: PreviewRouter, Cuckoo.ClassMock {
         )
         
     }
-    public override func isAfterAuthorization() -> Bool {
+    public override func userIsLoggedInWithDocuments() -> Bool {
         
         return cuckoo_manager.call(
-            "isAfterAuthorization() -> Bool",
+            "userIsLoggedInWithDocuments() -> Bool",
             parameters: (),
             escapingParameters: (),
-            superclassCall: super.isAfterAuthorization(),
-            defaultCall: __defaultImplStub!.isAfterAuthorization()
+            superclassCall: super.userIsLoggedInWithDocuments(),
+            defaultCall: __defaultImplStub!.userIsLoggedInWithDocuments()
         )
         
     }
-    public override func isAfterOnBoarding() -> Bool {
+    public override func userIsLoggedInWithNoDocuments() -> Bool {
         
         return cuckoo_manager.call(
-            "isAfterOnBoarding() -> Bool",
+            "userIsLoggedInWithNoDocuments() -> Bool",
             parameters: (),
             escapingParameters: (),
-            superclassCall: super.isAfterOnBoarding(),
-            defaultCall: __defaultImplStub!.isAfterOnBoarding()
+            superclassCall: super.userIsLoggedInWithNoDocuments(),
+            defaultCall: __defaultImplStub!.userIsLoggedInWithNoDocuments()
         )
         
     }
@@ -9898,18 +9898,18 @@ public class MockPreviewRouter: PreviewRouter, Cuckoo.ClassMock {
             ))
         }
         
-        func isAfterAuthorization() -> Cuckoo.ClassStubFunction<(), Bool> {
+        func userIsLoggedInWithDocuments() -> Cuckoo.ClassStubFunction<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "isAfterAuthorization() -> Bool",
+                method: "userIsLoggedInWithDocuments() -> Bool",
                 parameterMatchers: matchers
             ))
         }
         
-        func isAfterOnBoarding() -> Cuckoo.ClassStubFunction<(), Bool> {
+        func userIsLoggedInWithNoDocuments() -> Cuckoo.ClassStubFunction<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "isAfterOnBoarding() -> Bool",
+                method: "userIsLoggedInWithNoDocuments() -> Bool",
                 parameterMatchers: matchers
             ))
         }
@@ -10044,10 +10044,10 @@ public class MockPreviewRouter: PreviewRouter, Cuckoo.ClassMock {
         }
         
         @discardableResult
-        func isAfterAuthorization() -> Cuckoo.__DoNotUse<(), Bool> {
+        func userIsLoggedInWithDocuments() -> Cuckoo.__DoNotUse<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "isAfterAuthorization() -> Bool",
+                "userIsLoggedInWithDocuments() -> Bool",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -10055,10 +10055,10 @@ public class MockPreviewRouter: PreviewRouter, Cuckoo.ClassMock {
         }
         
         @discardableResult
-        func isAfterOnBoarding() -> Cuckoo.__DoNotUse<(), Bool> {
+        func userIsLoggedInWithNoDocuments() -> Cuckoo.__DoNotUse<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "isAfterOnBoarding() -> Bool",
+                "userIsLoggedInWithNoDocuments() -> Bool",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -10129,11 +10129,11 @@ public class PreviewRouterStub:PreviewRouter {
         return DefaultValueRegistry.defaultValue(for: (UIConfig.ToolBar).self)
     }
     
-    public override func isAfterAuthorization() -> Bool {
+    public override func userIsLoggedInWithDocuments() -> Bool {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
-    public override func isAfterOnBoarding() -> Bool {
+    public override func userIsLoggedInWithNoDocuments() -> Bool {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     

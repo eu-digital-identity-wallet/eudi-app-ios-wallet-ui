@@ -64,11 +64,11 @@ final class DeepLinkControllerImpl: DeepLinkController {
   ) {
 
     var isVciExecutable: Bool {
-      deepLinkExecutable.action == .openid4vci && routerHost.isAfterOnBoarding()
+      deepLinkExecutable.action == .openid4vci && routerHost.userIsLoggedInWithNoDocuments()
     }
 
     guard
-      routerHost.isAfterAuthorization() || isVciExecutable
+      routerHost.userIsLoggedInWithDocuments() || isVciExecutable
     else {
       if let url = deepLinkExecutable.link.url {
         cacheDeepLinkURL(url: url)

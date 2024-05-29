@@ -91,8 +91,8 @@ public protocol RouterHost {
   func composeApplication() -> AnyView
   func getCurrentScreen() -> AppRoute?
   func getToolbarConfig() -> UIConfig.ToolBar
-  func isAfterAuthorization() -> Bool
-  func isAfterOnBoarding() -> Bool
+  func userIsLoggedInWithDocuments() -> Bool
+  func userIsLoggedInWithNoDocuments() -> Bool
   func isScreenForeground(with route: AppRoute) -> Bool
   func isScreenOnBackStack(with route: AppRoute) -> Bool
 }
@@ -119,11 +119,11 @@ public class PreviewRouter: RouterHost {
 
   public func getToolbarConfig() -> UIConfig.ToolBar { .init(.clear) }
 
-  public func isAfterAuthorization() -> Bool {
+  public func userIsLoggedInWithDocuments() -> Bool {
     false
   }
 
-  public func isAfterOnBoarding() -> Bool {
+  public func userIsLoggedInWithNoDocuments() -> Bool {
     true
   }
 

@@ -20,9 +20,9 @@ public typealias AppRouteKey = String
 
 public protocol ConfigUiLogic {
 
-  var landingRoute: AppRoute { get }
+  var dashboardRoute: AppRoute { get }
 
-  var onBoardingRoute: AppRoute { get }
+  var issuanceRoute: AppRoute { get }
 
   var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] { get }
 
@@ -37,11 +37,11 @@ struct ConfigUiLogicImpl: ConfigUiLogic {
     AppRoute.issuanceDocumentDetails(config: NoConfig()).info.key: .init(Theme.shared.color.secondary)
   ]
 
-  public var landingRoute: AppRoute {
+  public var dashboardRoute: AppRoute {
     return .dashboard
   }
 
-  var onBoardingRoute: AppRoute {
+  var issuanceRoute: AppRoute {
     return .issuanceAddDocument(config: NoConfig())
   }
 
