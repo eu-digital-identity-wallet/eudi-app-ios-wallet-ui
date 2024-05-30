@@ -155,16 +155,11 @@ final class TestProximityInteractor: EudiTest {
   func testOnRequestReceived_WhenCoordinatorRequestReceivedReturnsSuccess_ThenVerifySuccessState() async {
     // Given
     let request = Self.mockPresentationRequest
-    let storageDocuments = [Constants.isoMdlModel]
     
     let expectedUiModels = Self.mockUiModels
     
     stub(presentationSessionCoordinator) { mock in
       when(mock.requestReceived()).thenReturn(request)
-    }
-    
-    stub(walletKitController) { mock in
-      when(mock.fetchDocuments(with: any())).thenReturn(storageDocuments)
     }
     
     stub(walletKitController) { mock in
@@ -371,6 +366,7 @@ private extension TestProximityInteractor {
     ),
     .requestDataRow(
       .init(
+        id: Constants.randomIdentifier,
         isSelected: true,
         isVisible: false,
         title: "elementIdentifier",
@@ -383,7 +379,7 @@ private extension TestProximityInteractor {
   ]
   
   static let mockRequestItems = [
-    DocumentTypeIdentifier.IsoMdlModel.rawValue: [
+    Constants.randomIdentifier : [
       "nameSpace": [
         "elementIdentifier", "elementIdentifier"
       ]
