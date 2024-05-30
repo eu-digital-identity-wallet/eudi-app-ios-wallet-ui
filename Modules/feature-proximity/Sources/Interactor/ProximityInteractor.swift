@@ -122,9 +122,9 @@ final actor ProximityInteractorImpl: ProximityInteractor {
         }
       }
       .reduce(into: RequestItemsWrapper()) { partialResult, row in
-        var nameSpaceDict = partialResult.requestItems[row.docType, default: [row.namespace: [row.elementKey]]]
+        var nameSpaceDict = partialResult.requestItems[row.documentId, default: [row.namespace: [row.elementKey]]]
         nameSpaceDict[row.namespace, default: [row.elementKey]].append(row.elementKey)
-        partialResult.requestItems[row.docType] = nameSpaceDict
+        partialResult.requestItems[row.documentId] = nameSpaceDict
       }
 
     guard requestConvertible.requestItems.isEmpty == false else {

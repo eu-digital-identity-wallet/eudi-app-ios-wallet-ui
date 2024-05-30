@@ -15,6 +15,7 @@
  */
 import Foundation
 import UIKit
+import XCTest
 @testable import logic_core
 @testable import EudiWalletKit
 
@@ -39,14 +40,14 @@ extension Constants {
   static let euPidModel = EuPidModel(
     id: euPidModelId,
     createdAt: documentCreatedAt,
-    response: dr,
+    issuerSigned: dr.documents!.first!.issuerSigned,
     devicePrivateKey: Constants.pk
   )!
   
   static let isoMdlModel = IsoMdlModel(
     id: isoMdlModelId,
     createdAt: documentCreatedAt,
-    response: dr,
+    issuerSigned: dr.documents!.first!.issuerSigned,
     devicePrivateKey: Constants.pk
   )!
 }
@@ -69,6 +70,7 @@ extension Constants {
   
   static let mockPresentationSession = PresentationSession(
     presentationService: MockPresentationService(flow: .other),
+    docIdAndTypes: [:],
     userAuthenticationRequired: false
   )
 }
@@ -77,6 +79,7 @@ extension Constants {
   static let mockPresentationRequest = PresentationRequest(
     items: [
       DocElementsViewModel(
+        docId: Constants.isoMdlModelId,
         docType: DocumentTypeIdentifier.IsoMdlModel.rawValue,
         isEnabled: true,
         elements: [
