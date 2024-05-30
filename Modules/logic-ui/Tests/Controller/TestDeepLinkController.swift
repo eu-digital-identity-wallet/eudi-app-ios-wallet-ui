@@ -270,7 +270,8 @@ private extension TestDeepLinkController {
   }
   
   static let mockPresentationSession = PresentationSession(
-    presentationService: MockPresentationService(flow: .other),
+    presentationService: MockPresentationService(flow: .other), 
+    docIdAndTypes: [:],
     userAuthenticationRequired: false
   )
 }

@@ -90,6 +90,13 @@ public struct RequestDataRow: Identifiable, Equatable {
   public var namespace: String
   public var docType: String
 
+  public var documentId: String {
+    if let lastPart = id.split(separator: "_").last {
+      return String(lastPart)
+    }
+    return id
+  }
+
   public init(
     id: String = UUID().uuidString,
     isSelected: Bool,
@@ -198,23 +205,17 @@ extension RequestDataUiModel {
 
     for docElement in docElements {
 
-      let storageDocuments = walletKitController.fetchDocuments(
-        with: .init(rawValue: docElement.docType)
-      )
-
-      for storageDocument in storageDocuments {
-
         // Filter fields for Selectable Disclosed Fields
         let dataFields = documentSelectiveDisclosableFields(
           for: docElement.elements,
-          with: storageDocument,
+          with: docElement,
           walletKitController: walletKitController
         )
 
         // Filter fields for mandatory keys for verification
         let verificationFields = documentMandatoryVerificationFields(
           for: docElement.elements,
-          with: storageDocument,
+          with: docElement,
           walletKitController: walletKitController
         )
 
@@ -223,7 +224,7 @@ extension RequestDataUiModel {
         }
 
         // Section Header
-        requestDataCell.append(documentSectionHeader(for: storageDocument))
+        requestDataCell.append(documentSectionHeader(for: docElement))
 
         if !dataFields.isEmpty {
           requestDataCell.append(contentsOf: dataFields)
@@ -232,42 +233,41 @@ extension RequestDataUiModel {
         if let verificationFields {
           requestDataCell.append(verificationFields)
         }
-      }
     }
 
     return requestDataCell
   }
 
-  fileprivate static func documentSectionHeader(for document: MdocDecodable) -> RequestDataUIModel {
+  fileprivate static func documentSectionHeader(for docElement: DocElementsViewModel) -> RequestDataUIModel {
     .requestDataSection(
       .init(
-        id: document.id,
-        type: .init(docType: DocumentTypeIdentifier(rawValue: document.docType)),
-        title: DocumentTypeIdentifier(rawValue: document.docType).localizedTitle
+        id: docElement.id,
+        type: .init(docType: DocumentTypeIdentifier(rawValue: docElement.docType)),
+        title: DocumentTypeIdentifier(rawValue: docElement.docType).localizedTitle
       )
     )
   }
 
   fileprivate static func documentSelectiveDisclosableFields(
     for docElements: [ElementViewModel],
-    with storageDocument: MdocDecodable,
+    with docElement: DocElementsViewModel,
     walletKitController: WalletKitController
   ) -> [RequestDataUIModel] {
     docElements
       .filter { element in
-        let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: storageDocument.docType))
+        let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: docElement.docType))
         return !mandatoryKeys.contains(element.elementIdentifier)
       }
       .map {
         RequestDataUIModel.requestDataRow(
           RequestDataRow(
-            id: "\($0.id)_\(storageDocument.id)",
+            id: "\($0.id)_\(docElement.id)",
             isSelected: true,
             isVisible: false,
             title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
             value: walletKitController.valueForElementIdentifier(
-              for: .init(rawValue: storageDocument.docType),
-              with: storageDocument.id,
+              for: .init(rawValue: docElement.docType),
+              with: docElement.id,
               elementIdentifier: $0.elementIdentifier,
               parser: {
                 Locale.current.localizedDateTime(
@@ -278,7 +278,7 @@ extension RequestDataUiModel {
             ),
             elementKey: $0.elementIdentifier,
             namespace: $0.nameSpace,
-            docType: storageDocument.docType
+            docType: docElement.docType
           )
         )
       }
@@ -286,23 +286,23 @@ extension RequestDataUiModel {
 
   fileprivate static func documentMandatoryVerificationFields(
     for docElements: [ElementViewModel],
-    with storageDocument: MdocDecodable,
+    with docElement: DocElementsViewModel,
     walletKitController: WalletKitController
   ) -> RequestDataUIModel? {
     let mandatoryFields = docElements
       .filter { element in
-        let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: storageDocument.docType))
+        let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: docElement.docType))
         return mandatoryKeys.contains(element.elementIdentifier)
       }
       .map {
         RequestDataRow(
-          id: "\($0.id)_\(storageDocument.id)",
+          id: "\($0.id)_\(docElement.id)",
           isSelected: true,
           isVisible: false,
           title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
           value: walletKitController.valueForElementIdentifier(
-            for: .init(rawValue: storageDocument.docType),
-            with: storageDocument.id,
+            for: .init(rawValue: docElement.docType),
+            with: docElement.id,
             elementIdentifier: $0.elementIdentifier,
             parser: {
               Locale.current.localizedDateTime(
@@ -313,7 +313,7 @@ extension RequestDataUiModel {
           ),
           elementKey: $0.elementIdentifier,
           namespace: $0.nameSpace,
-          docType: storageDocument.docType
+          docType: docElement.docType
         )
       }
 
