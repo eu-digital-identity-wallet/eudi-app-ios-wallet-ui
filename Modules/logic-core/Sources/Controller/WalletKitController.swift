@@ -155,12 +155,11 @@ final class WalletKitControllerImpl: WalletKitController {
   }
 
   public func fetchDocuments() -> [MdocDecodable] {
-    return wallet.storage.mdocModels.compactMap({ $0 })
+    return wallet.storage.mdocModels
   }
 
   public func fetchDocuments(with type: DocumentTypeIdentifier) -> [MdocDecodable] {
     return wallet.storage.mdocModels
-      .compactMap({ $0 })
       .filter({ $0.docType == type.rawValue })
   }
 
@@ -171,10 +170,7 @@ final class WalletKitControllerImpl: WalletKitController {
 
   func fetchDocuments(excluded: [DocumentTypeIdentifier]) -> [any MdocDecodable] {
     let excludedRawValues = excluded.map { $0.rawValue }
-    return fetchDocuments().compactMap({
-      excludedRawValues.contains($0.docType) ? nil : $0
-    }
-    )
+    return fetchDocuments().filter { !excludedRawValues.contains($0.docType) }
   }
 
   public func fetchDocument(with id: String) -> MdocDecodable? {
@@ -227,7 +223,6 @@ extension WalletKitController {
 
     // Check if we have image data and early return them
     if let imageName = wallet.storage.mdocModels
-      .compactMap({ $0 })
       .first(where: { $0.id == documentId })?.displayImages
       .first(where: { $0.name == elementIdentifier }) {
       return .image(imageName.image)
@@ -235,7 +230,6 @@ extension WalletKitController {
 
     // Convert the Stored models to their [Key: Value] array
     let displayStrings = wallet.storage.mdocModels
-      .compactMap({ $0 })
       .first(where: { $0.id == documentId })?.displayStrings
       .decodeGender()
       .parseDates(parser: parser)
