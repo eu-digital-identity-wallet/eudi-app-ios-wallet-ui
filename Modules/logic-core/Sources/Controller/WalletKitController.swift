@@ -170,9 +170,7 @@ final class WalletKitControllerImpl: WalletKitController {
 
   func fetchDocuments(excluded: [DocumentTypeIdentifier]) -> [any MdocDecodable] {
     let excludedRawValues = excluded.map { $0.rawValue }
-    return fetchDocuments().filter {
-      excludedRawValues.contains($0.docType)
-    }
+    return fetchDocuments().filter { !excludedRawValues.contains($0.docType) }
   }
 
   public func fetchDocument(with id: String) -> MdocDecodable? {
