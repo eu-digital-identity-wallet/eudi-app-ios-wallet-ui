@@ -2,6 +2,6 @@ BUILD_TYPE = RELEASE
 //WALLET_HOST_URL =
 VERIFIER_API_URI = https:/$()/verifier.eudiw.dev
 VCI_ISSUER_URL = https:/$()/issuer.eudiw.dev/oidc
-VCI_CLIENT_ID = q34M76l0koZ1OCjZDr5r
+VCI_CLIENT_ID = wallet-dev
 VCI_REDIRECT_URI = eudi-openid4ci:/$()/authorize
 CORE_USER_AUTH = false
