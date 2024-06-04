@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twostraws/CodeScanner",
       "state" : {
-        "revision" : "944a6a1ca030dbd890e647a678e718fc2115d35c",
-        "version" : "2.4.1"
+        "revision" : "34da57fb63b47add20de8a85da58191523ccce57",
+        "version" : "2.5.0"
       }
     },
     {
@@ -131,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "979dab6da38ff90126ccb16073996a15e78ca340",
-        "version" : "0.0.7"
+        "revision" : "bc67e4d9c424f752442469313ad1e11479b62bfc",
+        "version" : "0.0.9"
       }
     },
     {
@@ -158,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "eea0fe26dc19b6c06e25d8864911c16f7f53117b",
-        "version" : "0.4.4"
+        "revision" : "39aa72b8858c950ce22b094ab0c9050909357c10",
+        "version" : "0.4.5"
       }
     },
     {
@@ -185,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Hitch.git",
       "state" : {
-        "revision" : "7f6c0067f3e3906a87dd2eb3dc34e240d39149a6",
-        "version" : "0.4.134"
+        "revision" : "1a415afbf026005e77d32b536fa8d26c1b29e59f",
+        "version" : "0.4.138"
       }
     },
     {
@@ -446,8 +446,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Swinject/Swinject.git",
       "state" : {
-        "revision" : "3125943807991bc271d366205d98713696d65a1f",
-        "version" : "2.8.8"
+        "revision" : "be9dbcc7b86811bc131539a20c6f9c2d3e56919f",
+        "version" : "2.9.1"
       }
     },
     {
