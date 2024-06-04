@@ -87,6 +87,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>1</string>
 	<key>Core User Auth</key>
 	<string>${CORE_USER_AUTH}</string>
 	<key>Vci Client Id</key>
