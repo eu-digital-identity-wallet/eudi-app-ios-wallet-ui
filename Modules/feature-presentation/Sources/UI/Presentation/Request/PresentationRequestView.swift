@@ -30,7 +30,7 @@ public struct PresentationRequestView<Router: RouterHost>: View {
       with: viewModel.router,
       viewModel: viewModel
     )
-    .onReceive(NotificationCenter.default.publisher(for: NSNotification.OpenId4VP)) { data in
+    .onReceive(NotificationCenter.default.publisher(for: NSNotification.PresentationVC)) { data in
       guard let payload = data.userInfo else {
         return
       }

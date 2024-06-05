@@ -10,80 +10,13 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>eu.europa.ec.euidi</string>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>eudi-openid4vp</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>eu.europa.ec.euidi.dev</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>eudi-openid4vp</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>eu.europa.ec.euidi</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>openid-credential-offer</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>eu.europa.ec.euidi.dev</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>openid-credential-offer</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>eu.europa.ec.euidi.dev</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
 				<string>mdoc-openid4vp</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>eu.europa.ec.euidi</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>mdoc-openid4vp</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>eu.europa.ec.euidi.dev</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
 				<string>openid4vp</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>eu.europa.ec.euidi</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>openid4vp</string>
+				<string>openid-credential-offer</string>
 			</array>
 		</dict>
 	</array>

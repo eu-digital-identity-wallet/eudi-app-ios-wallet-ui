@@ -7817,6 +7817,100 @@ public class DeepLinkControllerStub:DeepLinkController {
 
 
 
+// MARK: - Mocks generated from file: 'Modules/logic-ui/Sources/Controller/UrlSchemaController.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_proximity
+
+class MockUrlSchemaController: UrlSchemaController, Cuckoo.ProtocolMock {
+    typealias MocksType = UrlSchemaController
+    typealias Stubbing = __StubbingProxy_UrlSchemaController
+    typealias Verification = __VerificationProxy_UrlSchemaController
+
+    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: UrlSchemaController?
+
+    func enableDefaultImplementation(_ stub: UrlSchemaController) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    func retrieveSchemas(with p0: String) -> [String] {
+        
+        return cuckoo_manager.call(
+            "retrieveSchemas(with p0: String) -> [String]",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.retrieveSchemas(with: p0)
+        )
+        
+    }
+
+    struct __StubbingProxy_UrlSchemaController: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func retrieveSchemas<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<(String), [String]> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockUrlSchemaController.self,
+                method: "retrieveSchemas(with p0: String) -> [String]",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    struct __VerificationProxy_UrlSchemaController: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    
+    
+        
+        @discardableResult
+        func retrieveSchemas<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), [String]> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "retrieveSchemas(with p0: String) -> [String]",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+class UrlSchemaControllerStub:UrlSchemaController {
+
+
+    
+     func retrieveSchemas(with p0: String) -> [String] {
+        return DefaultValueRegistry.defaultValue(for: ([String]).self)
+    }
+}
+
+
+
+
 // MARK: - Mocks generated from file: 'Modules/logic-ui/Sources/DesignSystem/Button/ButtonStyles.swift'
 
 import Cuckoo
