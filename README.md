@@ -9,6 +9,7 @@ the [EUDI Wallet Reference Implementation project description](https://github.co
 
 * [Overview](#overview)
 * [Disclaimer](#disclaimer)
+* [Important things to know](#important-things-to-know)
 * [How to contribute](#how-to-contribute)
 * [Demo videos](#demo-videos)
 * [How to use the application](#how-to-use-the-application)
@@ -74,6 +75,17 @@ The released software is an initial development release version:
 -  Users of the software must perform sufficient engineering and additional testing to properly evaluate their application and determine whether any of the open-sourced components is suitable for use in that application.
 -  We strongly recommend not to put this version of the software into production use.
 -  Only the latest version of the software will be supported
+
+## Important things to know
+
+The main purpose of the reference implementation is to showcase the ecosystem and act as a technical example of how to integrate and use all of the available components.
+
+If you're planning to use this application in production, we recommend reviewing the following steps:
+- Configure the application properly by following the guide [here](wiki/configuration.md)
+- Ensure the Pin storage configuration matches your security requirements or provide your own by following this guide [Pin Storage Configuration](wiki/configuration.md#pin-storage-configuration)
+- Ensure the application meets the OWASP MASVS industry standard. Please refer to the following links for further information on the controls you must implement to ensure maximum compliance:
+    - [OWASP MASVS](https://mas.owasp.org/MASVS/)
+    - [App Attestation](https://developer.apple.com/documentation/devicecheck/establishing-your-app-s-integrity)
 
 ## How to contribute
 
