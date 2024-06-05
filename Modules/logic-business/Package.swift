@@ -14,10 +14,6 @@ let package = Package(
   ],
   dependencies: [
     .package(
-      url: "https://github.com/securing/IOSSecuritySuite.git",
-      from: "1.9.5"
-    ),
-    .package(
       url: "https://github.com/kishikawakatsumi/KeychainAccess.git",
       from: "3.0.0"
     ),
@@ -48,7 +44,6 @@ let package = Package(
       name: "logic-business",
       dependencies: [
         "logic-resources",
-        "IOSSecuritySuite",
         "KeychainAccess",
         "BluetoothKit",
         "Swinject",

@@ -17,8 +17,6 @@ import logic_business
 import logic_ui
 import Cuckoo
 
-extension KeychainIdentifier: Matchable {}
-
 extension Prefs.Key: Matchable {}
 
 extension AppRoute: Matchable {}

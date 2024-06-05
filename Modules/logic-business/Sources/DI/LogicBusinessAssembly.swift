@@ -25,11 +25,6 @@ public final class LogicBusinessAssembly: Assembly {
     }
     .inObjectScope(ObjectScope.graph)
 
-    container.register(ConfigSecurityLogic.self) { r in
-      ConfigSecurityLogicImpl(configLogic: r.force(ConfigLogic.self))
-    }
-    .inObjectScope(ObjectScope.graph)
-
     container.register(FormValidator.self) { _ in
       FormValidatorImpl()
     }
@@ -47,15 +42,6 @@ public final class LogicBusinessAssembly: Assembly {
 
     container.register(ReachabilityController.self) { _ in
       ReachabilityControllerImpl()
-    }
-    .inObjectScope(ObjectScope.transient)
-
-    container.register(SecurityController.self) { r in
-      SecurityControllerImpl(
-        configLogic: r.force(ConfigLogic.self),
-        configSecurityLogic: r.force(ConfigSecurityLogic.self),
-        keychainController: r.force(KeyChainController.self)
-      )
     }
     .inObjectScope(ObjectScope.transient)
   }
