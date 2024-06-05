@@ -20,15 +20,6 @@ public protocol KeychainWrapper {
   var value: String { get }
 }
 
-public enum KeychainIdentifier: String, KeychainWrapper {
-
-  public var value: String {
-    self.rawValue
-  }
-
-  case deviceVendorId
-}
-
 public protocol KeyChainController {
   func storeValue(key: KeychainWrapper, value: String)
   func getValue(key: KeychainWrapper) -> String?

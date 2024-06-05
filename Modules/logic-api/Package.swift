@@ -13,7 +13,6 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.6.4"),
-    .package(url: "https://github.com/kasketis/netfox", from: "1.21.0"),
     .package(
       name: "logic-business",
       path: "./logic-business"
@@ -38,10 +37,6 @@ let package = Package(
         .product(
           name: "Alamofire",
           package: "Alamofire"
-        ),
-        .product(
-          name: "netfox",
-          package: "netfox"
         )
       ],
       path: "./Sources"
