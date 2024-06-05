@@ -33,7 +33,7 @@
 			<string>eu.europa.ec.euidi</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>eudi-openid4vci</string>
+				<string>openid-credential-offer</string>
 			</array>
 		</dict>
 		<dict>
@@ -43,7 +43,7 @@
 			<string>eu.europa.ec.euidi.dev</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>eudi-openid4vci</string>
+				<string>openid-credential-offer</string>
 			</array>
 		</dict>
 		<dict>

@@ -64,7 +64,7 @@ final class DeepLinkControllerImpl: DeepLinkController {
   ) {
 
     var isVciExecutable: Bool {
-      deepLinkExecutable.action == .openid4vci && routerHost.userIsLoggedInWithNoDocuments()
+      deepLinkExecutable.action == .credentialOffer && routerHost.userIsLoggedInWithNoDocuments()
     }
 
     guard
@@ -91,7 +91,7 @@ final class DeepLinkControllerImpl: DeepLinkController {
       }
     case .external:
       deepLinkExecutable.plainUrl.open()
-    case .openid4vci:
+    case .credentialOffer:
       let config = UIConfig.Generic(
         arguments: ["uri": deepLinkExecutable.plainUrl.absoluteString],
         navigationSuccessType: .popTo(.dashboard),
@@ -137,18 +137,29 @@ public extension DeepLink {
 }
 
 public extension DeepLink {
-  enum Action: String {
+  enum Action: Equatable {
 
     case openid4vp
-    case openid4vci
+    case credentialOffer
     case external
+
+    var name: String {
+      return switch self {
+      case .openid4vp:
+        "openid4vp"
+      case .credentialOffer:
+        "credential-offer"
+      case .external:
+        "external"
+      }
+    }
 
     public static func parseType(with scheme: String) -> Action? {
       switch scheme {
-      case _ where scheme.contains(openid4vp.rawValue):
+      case _ where scheme.contains(openid4vp.name):
         return .openid4vp
-      case _ where scheme.contains(openid4vci.rawValue):
-        return .openid4vci
+      case _ where scheme.contains(credentialOffer.name):
+        return .credentialOffer
       default:
         return .external
       }
