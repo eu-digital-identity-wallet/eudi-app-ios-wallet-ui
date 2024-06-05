@@ -24,15 +24,18 @@ final class TestDeepLinkController: EudiTest {
   var controller: DeepLinkController!
   var prefsController: MockPrefsController!
   var walletKitController: MockWalletKitController!
+  var urlSchemaController: MockUrlSchemaController!
   var routerHost: MockRouterHost!
   
   override func setUp() {
     self.prefsController = MockPrefsController()
     self.walletKitController = MockWalletKitController()
+    self.urlSchemaController = MockUrlSchemaController()
     self.routerHost = MockRouterHost()
     self.controller = DeepLinkControllerImpl(
       prefsController: prefsController,
-      walletKitController: walletKitController
+      walletKitController: walletKitController,
+      urlSchemaController: urlSchemaController
     )
   }
   
@@ -40,12 +43,16 @@ final class TestDeepLinkController: EudiTest {
     self.controller = nil
     self.prefsController = nil
     self.walletKitController = nil
+    self.urlSchemaController = nil
     self.routerHost = nil
   }
   
   func testHasDeepLink_WhenUrlIsAValidOpenId4VPDeepLink_ThenReturnDeepLinkActionWithOpenId4VPType() {
     // Given
     let expected = Self.mockedOpenId4VPDeepLinkAction
+    stub(urlSchemaController) { mock in
+      when(mock.retrieveSchemas(with: any())).thenReturn(["eudi-openid4vp", "mdoc-openid4vp"])
+    }
     // When
     let action = controller.hasDeepLink(url: Self.mockedOpenId4VPUrl)
     // Then
@@ -55,6 +62,9 @@ final class TestDeepLinkController: EudiTest {
   func testHasDeepLink_WhenUrlIsNotKnownType_ThenReturnDeepLinkActionWithExternalType() {
     // Given
     let expected = Self.mockedExternalDeepLinkAction
+    stub(urlSchemaController) { mock in
+      when(mock.retrieveSchemas(with: any())).thenReturn([])
+    }
     // When
     let action = controller.hasDeepLink(url: Self.mockedExternalUrl)
     // Then
@@ -160,13 +170,17 @@ final class TestDeepLinkController: EudiTest {
   
   func testGetPendingDeepLinkAction_WhenCachedDeepLinkIsValid_ThenReturnDeepListAction() {
     // Given
+    let expected = Self.mockedOpenId4VPDeepLinkAction
     stub(prefsController) { mock in
       when(mock.getString(forKey: Prefs.Key.cachedDeepLink)).thenReturn(Self.mockedOpenId4VPUrl.absoluteString)
+    }
+    stub(urlSchemaController) { mock in
+      when(mock.retrieveSchemas(with: any())).thenReturn(["eudi-openid4vp", "mdoc-openid4vp"])
     }
     // When
     let action = controller.getPendingDeepLinkAction()
     // Then
-    XCTAssertEqual(action, Self.mockedOpenId4VPDeepLinkAction)
+    XCTAssertEqual(action, expected)
   }
   
   func testGetPendingDeepLinkAction_WhenCachedDeepLinkIsInvalid_ThenReturnDeepListActionNil() {
@@ -270,7 +284,7 @@ private extension TestDeepLinkController {
   }
   
   static let mockPresentationSession = PresentationSession(
-    presentationService: MockPresentationService(flow: .other), 
+    presentationService: MockPresentationService(flow: .other),
     docIdAndTypes: [:],
     userAuthenticationRequired: false
   )

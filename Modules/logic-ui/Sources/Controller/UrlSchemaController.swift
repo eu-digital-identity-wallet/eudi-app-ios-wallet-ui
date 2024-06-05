@@ -13,10 +13,21 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+
 import Foundation
 
-extension WalletKitConfig {
-  func getBundleValue(key: String) -> String {
-    return key.valueFromBundle
+protocol UrlSchemaController {
+  func retrieveSchemas(with type: String) -> [String]
+}
+
+final class UrlSchemaControllerImpl: UrlSchemaController {
+  func retrieveSchemas(with type: String) -> [String] {
+    guard
+      let types = Bundle.main.infoDictionary?["CFBundleURLTypes"] as? [[String: Any]],
+      let urlSchemas = types.first?["CFBundleURLSchemes"] as? [String]
+    else {
+      return []
+    }
+    return urlSchemas.filter { $0.contains(type) }
   }
 }

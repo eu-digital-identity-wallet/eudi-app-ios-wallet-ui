@@ -80,7 +80,7 @@ public struct DocumentOfferView<Router: RouterHost>: View {
     .task {
       await viewModel.processRequest()
     }
-    .onReceive(NotificationCenter.default.publisher(for: NSNotification.OpenId4VCI)) { data in
+    .onReceive(NotificationCenter.default.publisher(for: NSNotification.CredentialOffer)) { data in
       guard let payload = data.userInfo else {
         return
       }

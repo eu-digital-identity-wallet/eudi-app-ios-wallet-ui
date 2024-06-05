@@ -121,18 +121,31 @@ public extension String? {
 }
 
 public extension String {
-    func padded(toWidth width: Int, withPad pad: String = " ", startingAt start: Int = 0) -> String {
-        let padLength = width - self.count
-        guard padLength > 0 else { return self }
+  func padded(toWidth width: Int, withPad pad: String = " ", startingAt start: Int = 0) -> String {
+    let padLength = width - self.count
+    guard padLength > 0 else { return self }
 
-        let padding = String(repeating: pad, count: padLength)
-        return padding + self
-    }
+    let padding = String(repeating: pad, count: padLength)
+    return padding + self
+  }
 
   func padded(withPad pad: String = " ", padLength: Int) -> String {
-      guard padLength > 0 else { return self }
+    guard padLength > 0 else { return self }
 
-      let padding = String(repeating: pad, count: padLength)
-      return self + padding
+    let padding = String(repeating: pad, count: padLength)
+    return self + padding
+  }
+}
+
+public extension String {
+  var valueFromBundle: String {
+    Bundle.main.infoDictionary?[self] as? String ?? ""
+  }
+
+  var optionalValueFromBundle: String? {
+    guard let value = Bundle.main.infoDictionary?[self] as? String, !value.isEmpty else {
+      return nil
+    }
+    return value
   }
 }

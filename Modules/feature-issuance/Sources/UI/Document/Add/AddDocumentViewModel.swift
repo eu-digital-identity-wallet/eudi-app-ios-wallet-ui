@@ -147,7 +147,7 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
   }
 
   private func handleDeepLink() {
-    if let deepLink = deepLinkController.getPendingDeepLinkAction(), deepLink.action == .credentialOffer {
+    if let deepLink = deepLinkController.getPendingDeepLinkAction(), deepLink.action == .credential_offer {
       deepLinkController.removeCachedDeepLinkURL()
       router.push(
         with: .credentialOfferRequest(

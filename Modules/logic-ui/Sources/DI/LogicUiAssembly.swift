@@ -27,10 +27,16 @@ public final class LogicUiAssembly: Assembly {
     }
     .inObjectScope(ObjectScope.graph)
 
+    container.register(UrlSchemaController.self) { _ in
+      UrlSchemaControllerImpl()
+    }
+    .inObjectScope(ObjectScope.transient)
+
     container.register(DeepLinkController.self) { r in
       DeepLinkControllerImpl(
         prefsController: r.force(PrefsController.self),
-        walletKitController: r.force(WalletKitController.self)
+        walletKitController: r.force(WalletKitController.self),
+        urlSchemaController: r.force(UrlSchemaController.self)
       )
     }
     .inObjectScope(ObjectScope.transient)
