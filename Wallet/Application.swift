@@ -23,13 +23,11 @@ struct Application: App {
   @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
   @Environment(\.scenePhase) var scenePhase
 
-  @State var isScreenCapping: Bool = false
   @State var blurType: BlurType = .none
   @State var toolbarConfig: UIConfig.ToolBar = .init(Theme.shared.color.backgroundPaper)
 
   private let routerHost: RouterHost
   private let configUiLogic: ConfigUiLogic
-  private let securityController: SecurityController
   private let deepLinkController: DeepLinkController
 
   init() {
@@ -39,7 +37,6 @@ struct Application: App {
 
     self.routerHost = DIGraph.resolver.force(RouterHost.self)
     self.configUiLogic = DIGraph.resolver.force(ConfigUiLogic.self)
-    self.securityController = DIGraph.resolver.force(SecurityController.self)
     self.deepLinkController = DIGraph.resolver.force(DeepLinkController.self)
     self.toolbarConfig = routerHost.getToolbarConfig()
   }
@@ -60,10 +57,6 @@ struct Application: App {
         routerHost.composeApplication()
           .ignoresSafeArea(edges: .bottom)
           .attachPartialSheetToRoot()
-
-        if isScreenCapping {
-          warningScreenCap()
-        }
 
         if blurType != .none {
           BlurView(style: .regular)
@@ -90,32 +83,10 @@ struct Application: App {
         default: break
         }
       }
-      .onReceive(NotificationCenter.default.publisher(for: UIScreen.capturedDidChangeNotification)) { _ in
-        guard self.securityController.isScreenCaptureDisabled() else {
-          return
-        }
-        self.isScreenCapping.toggle()
-      }
       .onReceive(NotificationCenter.default.publisher(for: .shouldChangeBackgroundColor), perform: { _ in
         self.toolbarConfig = routerHost.getToolbarConfig()
       })
     }
-  }
-
-  private func warningScreenCap() -> some View {
-    ZStack(alignment: .center) {
-      VStack(alignment: .center, spacing: SPACING_EXTRA_LARGE) {
-        Theme.shared.image.logo
-        Text(.screenCaptureSecurityWarning)
-          .typography(Theme.shared.font.bodyMedium)
-          .foregroundColor(Theme.shared.color.textPrimaryDark)
-          .multilineTextAlignment(.center)
-      }
-    }
-    .padding()
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .background(Theme.shared.color.backgroundPaper)
-    .edgesIgnoringSafeArea(.all)
   }
 }
 

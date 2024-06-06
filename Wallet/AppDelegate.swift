@@ -15,12 +15,10 @@
  */
 import Foundation
 import UIKit
-import netfox
 import logic_assembly
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-  private lazy var configSecurityLogic: ConfigSecurityLogic = DIGraph.resolver.force(ConfigSecurityLogic.self)
   private lazy var prefsController: PrefsController = DIGraph.resolver.force(PrefsController.self)
   private lazy var keyChainController: KeyChainController = DIGraph.resolver.force(KeyChainController.self)
   private lazy var walletKitController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
@@ -37,9 +35,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Check firt run and clear keychain from previous installations
     manageStorage()
 
-    // Initialize Network Logging
-    initializeNetworkLogging()
-
     return true
   }
 
@@ -51,18 +46,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     case UIApplication.ExtensionPointIdentifier.keyboard: return false
     default: return true
     }
-  }
-
-  private func initializeNetworkLogging() {
-
-    guard configSecurityLogic.useNetworkLogger else {
-      return
-    }
-
-    configSecurityLogic.networkLoggerExclusionList.forEach { url in
-      NFX.sharedInstance().ignoreURL(url)
-    }
-    NFX.sharedInstance().start()
   }
 
   private func initializeReporting() {

@@ -190,15 +190,6 @@
       }
     },
     {
-      "identity" : "iossecuritysuite",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/securing/IOSSecuritySuite.git",
-      "state" : {
-        "revision" : "651f1ca002b1060214173e55b9040272ae91abcd",
-        "version" : "1.9.11"
-      }
-    },
-    {
       "identity" : "joseswift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/niscy-eudiw/JOSESwift.git",
@@ -232,15 +223,6 @@
       "state" : {
         "branch" : "master",
         "revision" : "8327e0d626b59b01f04c5016f5ae85f99dfcb98e"
-      }
-    },
-    {
-      "identity" : "netfox",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kasketis/netfox",
-      "state" : {
-        "revision" : "557576032736fd3140422baefb68b8f76c55088f",
-        "version" : "1.21.0"
       }
     },
     {

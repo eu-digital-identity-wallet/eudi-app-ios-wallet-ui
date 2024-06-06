@@ -28,20 +28,10 @@ extension ConfigLogic {
   }
 
   func getBundleValue(key: String) -> String {
-    return Bundle.main.infoDictionary?[key] as? String ?? ""
+    return key.valueFromBundle
   }
 
   func getBundleNullableValue(key: String) -> String? {
-    guard let value = Bundle.main.infoDictionary?[key] as? String, !value.isEmpty else {
-      return nil
-    }
-    return value
-  }
-
-  func getBundleOptionalValue<T>(of type: T.Type, key: String) -> T? {
-    guard let value = Bundle.main.infoDictionary?[key] as? T else {
-      return nil
-    }
-    return value
+    key.optionalValueFromBundle
   }
 }

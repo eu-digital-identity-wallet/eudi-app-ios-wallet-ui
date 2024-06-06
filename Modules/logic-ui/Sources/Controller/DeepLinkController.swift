@@ -32,13 +32,16 @@ final class DeepLinkControllerImpl: DeepLinkController {
 
   private let prefsController: PrefsController
   private let walletKitController: WalletKitController
+  private let urlSchemaController: UrlSchemaController
 
   init(
     prefsController: PrefsController,
-    walletKitController: WalletKitController
+    walletKitController: WalletKitController,
+    urlSchemaController: UrlSchemaController
   ) {
     self.prefsController = prefsController
     self.walletKitController = walletKitController
+    self.urlSchemaController = urlSchemaController
   }
 
   public func getPendingDeepLinkAction() -> DeepLink.Executable? {
@@ -52,7 +55,7 @@ final class DeepLinkControllerImpl: DeepLinkController {
   public func hasDeepLink(url: URL) -> DeepLink.Executable? {
     if let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
        let scheme = components.scheme,
-       let action = DeepLink.Action.parseType(with: scheme) {
+       let action = DeepLink.Action.parseType(with: scheme, and: urlSchemaController) {
       return DeepLink.Executable(link: components, plainUrl: url, action: action)
     }
     return nil
@@ -64,7 +67,7 @@ final class DeepLinkControllerImpl: DeepLinkController {
   ) {
 
     var isVciExecutable: Bool {
-      deepLinkExecutable.action == .credentialOffer && routerHost.userIsLoggedInWithNoDocuments()
+      deepLinkExecutable.action == .credential_offer && routerHost.userIsLoggedInWithNoDocuments()
     }
 
     guard
@@ -85,23 +88,25 @@ final class DeepLinkControllerImpl: DeepLinkController {
         routerHost.push(with: .presentationRequest(presentationCoordinator: session))
       } else {
         postNotification(
-          with: NSNotification.OpenId4VP,
+          with: NSNotification.PresentationVC,
           and: ["session": session]
         )
       }
     case .external:
       deepLinkExecutable.plainUrl.open()
-    case .credentialOffer:
+    case .credential_offer:
       let config = UIConfig.Generic(
         arguments: ["uri": deepLinkExecutable.plainUrl.absoluteString],
-        navigationSuccessType: .popTo(.dashboard),
+        navigationSuccessType: routerHost.userIsLoggedInWithDocuments()
+        ? .popTo(.dashboard)
+        : .push(.dashboard),
         navigationCancelType: .pop
       )
       if !routerHost.isScreenForeground(with: .credentialOfferRequest(config: config)) {
         routerHost.push(with: .credentialOfferRequest(config: config))
       } else {
         postNotification(
-          with: NSNotification.OpenId4VCI,
+          with: NSNotification.CredentialOffer,
           and: ["uri": deepLinkExecutable.plainUrl.absoluteString]
         )
       }
@@ -137,29 +142,31 @@ public extension DeepLink {
 }
 
 public extension DeepLink {
-  enum Action: Equatable {
+  enum Action: String, Equatable {
 
     case openid4vp
-    case credentialOffer
+    case credential_offer
     case external
 
-    var name: String {
-      return switch self {
-      case .openid4vp:
-        "openid4vp"
-      case .credentialOffer:
-        "credential-offer"
-      case .external:
-        "external"
-      }
+    private var name: String {
+      return rawValue.replacingOccurrences(of: "_", with: "-")
     }
 
-    public static func parseType(with scheme: String) -> Action? {
+    private func getSchemas(
+      with urlSchemaController: UrlSchemaController
+    ) -> [String] {
+      return urlSchemaController.retrieveSchemas(with: name)
+    }
+
+    static func parseType(
+      with scheme: String,
+      and urlSchemaController: UrlSchemaController
+    ) -> Action? {
       switch scheme {
-      case _ where scheme.contains(openid4vp.name):
+      case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme):
         return .openid4vp
-      case _ where scheme.contains(credentialOffer.name):
-        return .credentialOffer
+      case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme):
+        return .credential_offer
       default:
         return .external
       }
@@ -168,6 +175,6 @@ public extension DeepLink {
 }
 
 public extension NSNotification {
-  static let OpenId4VP = Notification.Name.init("OpenId4VP")
-  static let OpenId4VCI = Notification.Name.init("OpenId4VCI")
+  static let PresentationVC = Notification.Name.init("PresentationVC")
+  static let CredentialOffer = Notification.Name.init("CredentialOffer")
 }

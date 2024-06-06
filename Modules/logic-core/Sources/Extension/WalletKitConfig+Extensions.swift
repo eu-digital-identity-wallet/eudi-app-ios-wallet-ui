@@ -17,6 +17,6 @@ import Foundation
 
 extension WalletKitConfig {
   func getBundleValue(key: String) -> String {
-    return Bundle.main.infoDictionary?[key] as? String ?? ""
+    return key.valueFromBundle
   }
 }
