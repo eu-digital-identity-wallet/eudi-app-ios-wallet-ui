@@ -97,7 +97,9 @@ final class DeepLinkControllerImpl: DeepLinkController {
     case .credential_offer:
       let config = UIConfig.Generic(
         arguments: ["uri": deepLinkExecutable.plainUrl.absoluteString],
-        navigationSuccessType: .popTo(.dashboard),
+        navigationSuccessType: routerHost.userIsLoggedInWithDocuments()
+        ? .popTo(.dashboard)
+        : .push(.dashboard),
         navigationCancelType: .pop
       )
       if !routerHost.isScreenForeground(with: .credentialOfferRequest(config: config)) {
