@@ -66,6 +66,7 @@ final class WalletKitControllerImpl: WalletKitController {
     self.configLogic = configLogic
     wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
     wallet.verifierApiUri = configLogic.verifierConfig.apiUri
+    wallet.verifierLegalName = configLogic.verifierConfig.legalName
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciClientId = configLogic.vciConfig.clientId
     wallet.openID4VciRedirectUri = configLogic.vciConfig.redirectUri
