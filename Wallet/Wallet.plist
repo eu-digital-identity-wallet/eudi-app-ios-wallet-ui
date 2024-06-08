@@ -23,7 +23,7 @@
 		</dict>
 	</array>
 	<key>Core User Auth</key>
-	<string>${CORE_USER_AUTH}</string>
+	<string>$(CORE_USER_AUTH)</string>
 	<key>Vci Client Id</key>
 	<string>$(VCI_CLIENT_ID)</string>
 	<key>Vci Issuer URL</key>
@@ -32,6 +32,8 @@
 	<string>$(VCI_REDIRECT_URI)</string>
 	<key>Verifier API</key>
 	<string>$(VERIFIER_API_URI)</string>
+	<key>Verifier Legal Name</key>
+	<string>$(VERIFIER_LEGAL_NAME)</string>
 	<key>Wallet Host Url</key>
 	<string>$(WALLET_HOST_URL)</string>
 </dict>

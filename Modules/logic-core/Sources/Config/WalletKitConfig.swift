@@ -23,6 +23,7 @@ struct VciConfig {
 
 struct VerifierConfig {
   public let apiUri: String
+  public let legalName: String
 }
 
 struct ProximityConfig {
@@ -59,7 +60,10 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var verifierConfig: VerifierConfig {
-    .init(apiUri: getBundleValue(key: "Verifier API"))
+    .init(
+      apiUri: getBundleValue(key: "Verifier API"),
+      legalName: getBundleValue(key: "Verifier Legal Name")
+    )
   }
 
   var vciConfig: VciConfig {
