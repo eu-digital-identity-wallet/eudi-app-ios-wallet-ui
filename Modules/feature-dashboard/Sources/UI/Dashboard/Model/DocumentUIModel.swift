@@ -169,7 +169,7 @@ extension Array where Element == MdocDecodable {
         value: .init(
           id: item.id,
           type: item.docType,
-          title: LocalizableString.shared.get(with: .dynamic(key: item.title)),
+          title: DocumentTypeIdentifier(rawValue: item.docType).localizedTitle,
           createdAt: item.createdAt,
           expiresAt: item.getExpiryDate(
             parser: {

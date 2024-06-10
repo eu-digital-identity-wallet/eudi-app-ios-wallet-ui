@@ -80,7 +80,7 @@ extension Constants {
     items: [
       DocElementsViewModel(
         docId: Constants.isoMdlModelId,
-        docType: DocumentTypeIdentifier.IsoMdlModel.rawValue,
+        docType: DocumentTypeIdentifier.MDL.rawValue,
         isEnabled: true,
         elements: [
           ElementViewModel(

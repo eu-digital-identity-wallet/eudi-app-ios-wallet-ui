@@ -79,12 +79,10 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
 
   func onClick(for documentIdentifier: DocumentTypeIdentifier) {
     switch documentIdentifier {
-    case .EuPidDocType:
-      issueDocument(docType: EuPidModel.euPidDocType)
-    case .IsoMdlModel:
-      issueDocument(docType: IsoMdlModel.isoDocType)
-    case .genericDocument:
+    case .GENERIC:
       loadSampleData()
+    default:
+      issueDocument(docType: documentIdentifier.rawValue)
     }
   }
 

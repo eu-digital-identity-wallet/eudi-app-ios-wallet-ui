@@ -20,8 +20,7 @@ extension Array where Element == NameValue {
 
   public func decodeGender() -> [NameValue] {
     self.map { nameValue in
-      if nameValue.name == IsoMdlModel.CodingKeys.sex.rawValue ||
-          nameValue.name == EuPidModel.CodingKeys.gender.rawValue {
+      if nameValue.name == "sex" || nameValue.name == "gender" {
         switch nameValue.value {
         case "1", "male":
           return NameValue(

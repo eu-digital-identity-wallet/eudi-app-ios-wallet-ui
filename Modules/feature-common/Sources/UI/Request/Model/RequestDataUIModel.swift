@@ -179,16 +179,18 @@ public extension RequestDataSection {
   enum `Type`: Equatable {
     case id
     case mdl
+    case age
     case custom(String)
 
     public init(docType: DocumentTypeIdentifier) {
       switch docType {
-
-      case .EuPidDocType:
+      case .PID:
         self = .id
-      case .IsoMdlModel:
+      case .MDL:
         self = .mdl
-      case .genericDocument(docType: let docType):
+      case .AGE:
+        self = .age
+      case .GENERIC(docType: let docType):
         self = .custom(docType)
       }
     }

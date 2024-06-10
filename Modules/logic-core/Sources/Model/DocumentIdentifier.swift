@@ -18,47 +18,54 @@ import logic_resources
 
 public enum DocumentTypeIdentifier: RawRepresentable, Equatable {
 
-  case EuPidDocType
-  case IsoMdlModel
-  case genericDocument(docType: String)
+  case PID
+  case MDL
+  case AGE
+  case GENERIC(docType: String)
 
   public var localizedTitle: String {
     return switch self {
-    case .EuPidDocType:
+    case .PID:
       LocalizableString.shared.get(with: .pid)
-    case .IsoMdlModel:
+    case .MDL:
       LocalizableString.shared.get(with: .mdl)
-    case .genericDocument(let docType):
+    case .AGE:
+      LocalizableString.shared.get(with: .ageVerification)
+    case .GENERIC(let docType):
       LocalizableString.shared.get(with: .dynamic(key: docType))
     }
   }
 
   public var rawValue: String {
     return switch self {
-    case .EuPidDocType:
-      MdocDataModel18013.EuPidModel.euPidDocType
-    case .IsoMdlModel:
-      MdocDataModel18013.IsoMdlModel.isoDocType
-    case .genericDocument(let docType):
+    case .PID:
+      "eu.europa.ec.eudiw.pid.1"
+    case .MDL:
+      "org.iso.18013.5.1.mDL"
+    case .AGE:
+      "eu.europa.ec.eudiw.pseudonym.age_over_18.1"
+    case .GENERIC(let docType):
       docType
     }
   }
 
   public var isSupported: Bool {
     return switch self {
-    case .EuPidDocType, .IsoMdlModel: true
-    case .genericDocument: false
+    case .PID, .MDL, .AGE: true
+    case .GENERIC: false
     }
   }
 
   public init(rawValue: String) {
     switch rawValue {
-    case MdocDataModel18013.EuPidModel.euPidDocType:
-      self = .EuPidDocType
-    case MdocDataModel18013.IsoMdlModel.isoDocType:
-      self = .IsoMdlModel
+    case "eu.europa.ec.eudiw.pid.1":
+      self = .PID
+    case "org.iso.18013.5.1.mDL":
+      self = .MDL
+    case "eu.europa.ec.eudiw.pseudonym.age_over_18.1":
+      self = .AGE
     default:
-      self = .genericDocument(docType: rawValue)
+      self = .GENERIC(docType: rawValue)
     }
   }
 }
