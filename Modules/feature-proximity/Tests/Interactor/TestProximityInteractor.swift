@@ -361,7 +361,7 @@ private extension TestProximityInteractor {
       .init(
         id: Constants.isoMdlModelId,
         type: .mdl,
-        title: DocumentTypeIdentifier.IsoMdlModel.localizedTitle
+        title: DocumentTypeIdentifier.MDL.localizedTitle
       )
     ),
     .requestDataRow(
@@ -373,7 +373,7 @@ private extension TestProximityInteractor {
         value: .string("elementIdentifier"),
         elementKey: "elementIdentifier",
         namespace: "nameSpace",
-        docType: DocumentTypeIdentifier.IsoMdlModel.rawValue
+        docType: DocumentTypeIdentifier.MDL.rawValue
       )
     )
   ]

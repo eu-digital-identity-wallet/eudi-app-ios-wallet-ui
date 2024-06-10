@@ -100,7 +100,7 @@ final class TestDashboardInteractor: EudiTest {
         id: Constants.randomIdentifier,
         value: .init(
           id: Constants.euPidModelId,
-          type: DocumentTypeIdentifier.EuPidDocType.rawValue,
+          type: DocumentTypeIdentifier.PID.rawValue,
           title: "National ID",
           createdAt: Constants.documentCreatedAt,
           expiresAt: "30 Mar 2050",
@@ -111,7 +111,7 @@ final class TestDashboardInteractor: EudiTest {
         id: Constants.randomIdentifier,
         value: .init(
           id: Constants.isoMdlModelId,
-          type: DocumentTypeIdentifier.IsoMdlModel.rawValue,
+          type: DocumentTypeIdentifier.MDL.rawValue,
           title: "Driving License",
           createdAt: Constants.documentCreatedAt,
           expiresAt: "30 Mar 2050",

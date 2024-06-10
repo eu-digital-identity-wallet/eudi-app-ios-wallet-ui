@@ -47,10 +47,10 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     do {
 
       var shouldDeleteAllDocuments: Bool {
-        if type == .EuPidDocType {
+        if type == .PID {
 
           let documentPids = walletController.fetchDocuments(
-            with: DocumentTypeIdentifier.EuPidDocType
+            with: DocumentTypeIdentifier.PID
           )
           let mainPid = walletController.fetchMainPidDocument()
 
