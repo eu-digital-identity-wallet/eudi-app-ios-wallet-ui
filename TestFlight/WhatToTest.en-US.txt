@@ -1,1 +1,3 @@
 - Support presentation of multiple PID, mDL
+- VCI offer Support
+- Age Verification POC
