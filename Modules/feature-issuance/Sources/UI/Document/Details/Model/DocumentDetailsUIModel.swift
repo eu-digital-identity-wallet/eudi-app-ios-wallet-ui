@@ -46,7 +46,7 @@ public extension DocumentDetailsUIModel {
   static func mock() -> DocumentDetailsUIModel {
     DocumentDetailsUIModel(
       id: UUID().uuidString,
-      type: DocumentTypeIdentifier.EuPidDocType,
+      type: DocumentTypeIdentifier.PID,
       documentName: "Digital ID",
       holdersName: "Jane Doe",
       holdersImage: Theme.shared.image.user,
@@ -112,10 +112,12 @@ extension MdocDecodable {
       return "\(fullName.first) \(fullName.last)"
     }
 
+    let identifier = DocumentTypeIdentifier(rawValue: docType)
+
     return .init(
       id: id,
-      type: .init(rawValue: docType),
-      documentName: LocalizableString.shared.get(with: .dynamic(key: title)),
+      type: identifier,
+      documentName: identifier.localizedTitle,
       holdersName: bearerName,
       holdersImage: getPortrait() ?? Theme.shared.image.user,
       createdAt: createdAt,
@@ -136,7 +138,7 @@ extension MdocDecodable {
       let title: String = LocalizableString.shared.get(with: .dynamic(key: nameValue.name))
       if let image = images.first(where: {$0.name == nameValue.name})?.image {
 
-        guard nameValue.name != IsoMdlModel.CodingKeys.portrait.rawValue else {
+        guard nameValue.name != "portrait" else {
           partialResult.append(
             .init(
               id: uuid,

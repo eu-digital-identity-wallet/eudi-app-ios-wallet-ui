@@ -41,11 +41,13 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     let types = AddDocumentUIModel.items.map({
       var item = $0
       switch item.type {
-      case .EuPidDocType:
+      case .PID:
         item.isEnabled = true
-      case .IsoMdlModel:
+      case .MDL:
         item.isEnabled = flow == .extraDocument
-      case .genericDocument:
+      case .AGE:
+        item.isEnabled = flow == .extraDocument
+      case .GENERIC:
         break
       }
       return item
@@ -60,7 +62,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
             documentName: .loadSampleData,
             image: Theme.shared.image.id,
             isLoading: false,
-            type: .genericDocument(docType: "load_sample_data")
+            type: .GENERIC(docType: "load_sample_data")
           )
         ]
       )

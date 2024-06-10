@@ -165,7 +165,7 @@ final class WalletKitControllerImpl: WalletKitController {
   }
 
   func fetchMainPidDocument() -> MdocDecodable? {
-    return fetchDocuments(with: DocumentTypeIdentifier.EuPidDocType)
+    return fetchDocuments(with: DocumentTypeIdentifier.PID)
       .sorted { $0.createdAt > $1.createdAt }.last
   }
 
@@ -197,7 +197,7 @@ extension WalletKitController {
   // TODO: Mandatory fields should be returned in a generic model
   public func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String] {
     switch documentType {
-    case .EuPidDocType:
+    case .PID:
       return [
         "issuance_date",
         "expiry_date",
@@ -209,7 +209,7 @@ extension WalletKitController {
         "portrait",
         "portrait_capture_date"
       ]
-    case .IsoMdlModel, .genericDocument:
+    case .MDL, .AGE, .GENERIC:
       return []
     }
   }
@@ -241,7 +241,7 @@ extension WalletKitController {
       return .unavailable(LocalizableString.shared.get(with: .unavailableField))
     }
 
-    if documentType == .IsoMdlModel,
+    if documentType == .MDL,
        let mdl = wallet.storage.mdlModel {
 
       // Flatten properties in order to be made in a Key: Value structure
@@ -252,7 +252,7 @@ extension WalletKitController {
       displayStrings.append(
         contentsOf: decodeAgeOver(ageOverDictionary: mdl.ageOverXX)
       )
-    } else if documentType == .EuPidDocType, let pid = wallet.storage.pidModel {
+    } else if documentType == .PID, let pid = wallet.storage.pidModel {
       displayStrings.append(
         contentsOf: decodeAgeOver(ageOverDictionary: pid.ageOverXX)
       )

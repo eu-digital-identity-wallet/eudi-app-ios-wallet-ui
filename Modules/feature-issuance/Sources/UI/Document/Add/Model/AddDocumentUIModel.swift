@@ -53,14 +53,21 @@ public extension AddDocumentUIModel {
         documentName: .pid,
         image: Theme.shared.image.id,
         isLoading: false,
-        type: .EuPidDocType
+        type: .PID
       ),
       .init(
         isEnabled: true,
         documentName: .mdl,
         image: Theme.shared.image.id,
         isLoading: false,
-        type: .IsoMdlModel
+        type: .MDL
+      ),
+      .init(
+        isEnabled: true,
+        documentName: .ageVerification,
+        image: Theme.shared.image.id,
+        isLoading: false,
+        type: .AGE
       )
     ]
   }

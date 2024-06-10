@@ -166,6 +166,17 @@
         }
       }
     },
+    "age_verification" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age Verification"
+          }
+        }
+      }
+    },
     "biometry_open_settings" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -481,17 +492,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unable to fetch documents"
-          }
-        }
-      }
-    },
-    "eu_pid_doctype_name" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "National ID"
           }
         }
       }
@@ -937,17 +937,6 @@
       }
     },
     "mdl" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Driving License"
-          }
-        }
-      }
-    },
-    "mdl_doctype_name" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -1760,6 +1749,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verifier"
+          }
+        }
+      }
+    },
+    "user_pseudonym" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User Pseudonym"
           }
         }
       }

@@ -39,11 +39,11 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
     do {
 
       let offers = try await walletController.resolveOfferUrlDocTypes(uriOffer: uri)
-      let hasPidStored = !walletController.fetchDocuments(with: .EuPidDocType).isEmpty
+      let hasPidStored = !walletController.fetchDocuments(with: .PID).isEmpty
 
       let hasPidInOffer = offers.first(
         where: {
-          DocumentTypeIdentifier(rawValue: $0.docType) == .EuPidDocType
+          DocumentTypeIdentifier(rawValue: $0.docType) == .PID
         }
       ) != nil
 
