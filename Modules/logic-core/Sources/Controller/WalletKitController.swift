@@ -209,7 +209,14 @@ extension WalletKitController {
         "portrait",
         "portrait_capture_date"
       ]
-    case .MDL, .AGE, .GENERIC:
+    case .AGE:
+      return [
+        "issuance_date",
+        "expiry_date",
+        "issuing_country",
+        "issuing_authority"
+      ]
+    case .MDL, .GENERIC:
       return []
     }
   }
