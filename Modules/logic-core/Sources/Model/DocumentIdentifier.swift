@@ -39,11 +39,11 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable {
   public var rawValue: String {
     return switch self {
     case .PID:
-      "eu.europa.ec.eudiw.pid.1"
+      "eu.europa.ec.eudi.pid.1"
     case .MDL:
       "org.iso.18013.5.1.mDL"
     case .AGE:
-      "eu.europa.ec.eudiw.pseudonym.age_over_18.1"
+      "eu.europa.ec.eudi.pseudonym.age_over_18.1"
     case .GENERIC(let docType):
       docType
     }
@@ -58,11 +58,11 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable {
 
   public init(rawValue: String) {
     switch rawValue {
-    case "eu.europa.ec.eudiw.pid.1":
+    case "eu.europa.ec.eudi.pid.1":
       self = .PID
     case "org.iso.18013.5.1.mDL":
       self = .MDL
-    case "eu.europa.ec.eudiw.pseudonym.age_over_18.1":
+    case "eu.europa.ec.eudi.pseudonym.age_over_18.1":
       self = .AGE
     default:
       self = .GENERIC(docType: rawValue)
