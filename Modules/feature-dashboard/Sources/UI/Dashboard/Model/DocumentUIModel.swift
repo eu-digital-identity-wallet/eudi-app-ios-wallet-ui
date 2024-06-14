@@ -165,8 +165,6 @@ extension Array where Element == MdocDecodable {
   func transformToDocumentUi() -> [DocumentUIModel] {
     self.map { item in
       let identifier = DocumentTypeIdentifier(rawValue: item.docType)
-      print(item.title)
-      print(item.displayStrings)
       return .init(
         id: UUID().uuidString,
         value: .init(
