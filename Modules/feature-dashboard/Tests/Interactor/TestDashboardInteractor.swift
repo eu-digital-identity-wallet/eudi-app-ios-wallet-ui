@@ -93,21 +93,20 @@ final class TestDashboardInteractor: EudiTest {
     }
   }
   
-  // MARK: - TODO REACTIVATE PID ONCE NEW SAMPLE CBOR DATA ARE GENERATED WITH CORRECT PID DOCTYPE
   func testFetchDashboard_WhenWalletKitControllerReturnsData_ThenReturnUiModels() async {
     // Given
     let expectedDocuments: [DocumentUIModel] = [
-      //      .init(
-      //        id: Constants.randomIdentifier,
-      //        value: .init(
-      //          id: Constants.euPidModelId,
-      //          type: DocumentTypeIdentifier.PID.rawValue,
-      //          title: "National ID",
-      //          createdAt: Constants.documentCreatedAt,
-      //          expiresAt: "30 Mar 2050",
-      //          hasExpired: false
-      //        )
-      //      ),
+      .init(
+        id: Constants.randomIdentifier,
+        value: .init(
+          id: Constants.euPidModelId,
+          type: DocumentTypeIdentifier.PID.rawValue,
+          title: "National ID",
+          createdAt: Constants.documentCreatedAt,
+          expiresAt: "30 Mar 2050",
+          hasExpired: false
+        )
+      ),
       .init(
         id: Constants.randomIdentifier,
         value: .init(
@@ -129,7 +128,7 @@ final class TestDashboardInteractor: EudiTest {
     )
     stubFetchDocuments(
       with: [
-        //Constants.euPidModel,
+        Constants.euPidModel,
         Constants.isoMdlModel
       ]
     )
