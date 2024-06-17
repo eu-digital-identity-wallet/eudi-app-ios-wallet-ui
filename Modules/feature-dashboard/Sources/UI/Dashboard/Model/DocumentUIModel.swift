@@ -164,12 +164,15 @@ public extension DocumentUIModel {
 extension Array where Element == MdocDecodable {
   func transformToDocumentUi() -> [DocumentUIModel] {
     self.map { item in
+      let identifier = DocumentTypeIdentifier(rawValue: item.docType)
       return .init(
         id: UUID().uuidString,
         value: .init(
           id: item.id,
           type: item.docType,
-          title: DocumentTypeIdentifier(rawValue: item.docType).localizedTitle,
+          title: identifier.isSupported
+          ? identifier.localizedTitle
+          : item.title,
           createdAt: item.createdAt,
           expiresAt: item.getExpiryDate(
             parser: {

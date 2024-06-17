@@ -117,7 +117,9 @@ extension MdocDecodable {
     return .init(
       id: id,
       type: identifier,
-      documentName: identifier.localizedTitle,
+      documentName: identifier.isSupported
+      ? identifier.localizedTitle
+      : title,
       holdersName: bearerName,
       holdersImage: getPortrait() ?? Theme.shared.image.user,
       createdAt: createdAt,

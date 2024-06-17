@@ -126,7 +126,12 @@ final class TestDashboardInteractor: EudiTest {
         image: Theme.shared.image.user
       )
     )
-    stubFetchDocuments(with: [Constants.euPidModel, Constants.isoMdlModel])
+    stubFetchDocuments(
+      with: [
+        Constants.euPidModel,
+        Constants.isoMdlModel
+      ]
+    )
     stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
     stubFetchMainPidDocument(with: Constants.euPidModel)
     // When

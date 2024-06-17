@@ -49,6 +49,13 @@ public extension DocumentOfferUIModel {
     public let documentName: String
     public let documentType: DocumentTypeIdentifier
 
+    var title: String {
+      if documentType.isSupported {
+        return documentType.localizedTitle
+      }
+      return documentName
+    }
+
     public init(
       id: String = UUID().uuidString,
       documentName: String,

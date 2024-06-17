@@ -41,11 +41,7 @@ extension DocumentOfferView {
               .scaledToFit()
               .frame(width: 45)
 
-            Text(
-              cellModel.documentType.isSupported
-              ? cellModel.documentType.localizedTitle
-              : cellModel.documentName
-            )
+            Text(cellModel.title)
             .typography(Theme.shared.font.titleMedium)
             .foregroundStyle(Theme.shared.color.black)
 
