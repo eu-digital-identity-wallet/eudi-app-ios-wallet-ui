@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
       "state" : {
-        "revision" : "0825c43e00af987f372776dec3349b65d90d4827",
-        "version" : "2.0.3"
+        "revision" : "a2fb18b5856a50b1f5626731d7f83ea1feea3686",
+        "version" : "2.0.5"
       }
     },
     {
@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "bf62cc73ae2cea61e98020d2d037c153500207e7",
-        "version" : "0.2.5"
+        "revision" : "12314daf45d637a1afeda321d605f328d422fe8d",
+        "version" : "0.2.6"
       }
     },
     {
@@ -113,8 +113,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "4e18b4b5de1ab2e9c5b9495574667b1a27508a9e",
-        "version" : "0.2.8"
+        "revision" : "ceeddd2a37f579212752bfb38e54efa87ec567e3",
+        "version" : "0.2.9"
       }
     },
     {
@@ -158,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "932714410b45355614feadf12b5ee75a30113246",
-        "version" : "0.4.9"
+        "revision" : "8d73b6bf8e36840c2e84fab5725e1aa82c144544",
+        "version" : "0.5.0"
       }
     },
     {
@@ -329,8 +329,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-certificates.git",
       "state" : {
-        "revision" : "83640c8097acaec17c9835a083e89678cb0f2b66",
-        "version" : "1.3.0"
+        "revision" : "4688f242811d21a9c7a8ad669b3bc5b336759929",
+        "version" : "1.4.0"
       }
     },
     {
@@ -338,8 +338,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-cmark.git",
       "state" : {
-        "revision" : "f218e5d7691f78b55bfa39b367763f4612486c35",
-        "version" : "0.3.0"
+        "revision" : "3bc2f3e25df0cecc5dc269f7ccae65d0f386f06a",
+        "version" : "0.4.0"
       }
     },
     {
@@ -383,8 +383,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-markdown.git",
       "state" : {
-        "revision" : "e4f95e2dc23097a1a9a1dfdfe3fe3ee44de77378",
-        "version" : "0.3.0"
+        "revision" : "4aae40bf6fff5286e0e1672329d17824ce16e081",
+        "version" : "0.4.0"
       }
     },
     {
