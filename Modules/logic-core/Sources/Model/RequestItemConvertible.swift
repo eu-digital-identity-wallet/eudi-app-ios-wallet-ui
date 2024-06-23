@@ -15,10 +15,9 @@
  */
 import Foundation
 
+public typealias RequestConvertibleItems = [String: [String: [String]]]
+
 public protocol RequestItemConvertible {
-
-  typealias RequestConvertibleItems = [String: [String: [String]]]
-
   func asRequestItems() -> RequestConvertibleItems
 }
 
