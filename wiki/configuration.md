@@ -48,45 +48,45 @@ You will also find the IACA certificate here. (trusted iaca root certificates).
 
 According to the specifications issuance and presentation require deep-linking for the same device flows.
 
-If you want to add your own you can do it by altering the *Wallet.plist* file.
+If you want to change or add your own you can do it by adjusting the *Wallet.plist* file.
 
 ```
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>eudi-openid4vp</string>
-				<string>mdoc-openid4vp</string>
-				<string>openid4vp</string>
-				<string>openid-credential-offer</string>
-			</array>
-		</dict>
-	</array>
+<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLName</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>eudi-openid4vp</string>
+			<string>mdoc-openid4vp</string>
+			<string>openid4vp</string>
+			<string>openid-credential-offer</string>
+		</array>
+	</dict>
+</array>
 ```
 
 Let's assume you want to add a new one for the credential offer (e.g. custom-my-offer://) the *Wallet.plist* should look like this:
 
 ```
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>eudi-openid4vp</string>
-				<string>mdoc-openid4vp</string>
-				<string>openid4vp</string>
-				<string>openid-credential-offer</string>
-        <string>custom-my-offer</string>
-			</array>
-		</dict>
-	</array>
+<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLName</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>eudi-openid4vp</string>
+			<string>mdoc-openid4vp</string>
+			<string>openid4vp</string>
+			<string>openid-credential-offer</string>
+			<string>custom-my-offer</string>
+		</array>
+	</dict>
+</array>
 ```
 
 After the *Wallet.plist* adjustment, you must also adjust the *DeepLinkController* inside the logic-ui module.
@@ -118,7 +118,7 @@ public extension DeepLink {
 }
 ```
 
-Adjusted with the new schema implementation:
+Adjusted with the new schema:
 
 ```
 public extension DeepLink {
