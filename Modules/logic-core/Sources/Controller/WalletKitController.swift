@@ -38,11 +38,12 @@ public protocol WalletKitController {
   func deleteDocument(with id: String) async throws
   func loadDocuments() async throws
   func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
-  func resolveOfferUrlDocTypes(uriOffer: String) async throws -> [OfferedDocModel]
+  func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssueModel
   func issueDocumentsByOfferUrl(
     offerUri: String,
     docTypes: [OfferedDocModel],
-    format: DataFormat
+    format: DataFormat,
+    txCodeValue: String?
   ) async throws -> [WalletStorage.Document]
   func valueForElementIdentifier(
     for documentType: DocumentTypeIdentifier,
@@ -73,18 +74,20 @@ final class WalletKitControllerImpl: WalletKitController {
     wallet.trustedReaderCertificates = configLogic.proximityConfig.trustedCerts
   }
 
-  func resolveOfferUrlDocTypes(uriOffer: String) async throws -> [OfferedDocModel] {
+  func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssueModel {
     return try await wallet.resolveOfferUrlDocTypes(uriOffer: uriOffer)
   }
 
   func issueDocumentsByOfferUrl(
     offerUri: String,
     docTypes: [OfferedDocModel],
-    format: DataFormat
+    format: DataFormat,
+    txCodeValue: String?
   ) async throws -> [WalletStorage.Document] {
     return try await wallet.issueDocumentsByOfferUrl(
       offerUri: offerUri,
       docTypes: docTypes,
+      txCodeValue: txCodeValue,
       format: format
     )
   }

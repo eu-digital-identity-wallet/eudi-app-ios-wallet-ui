@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "12314daf45d637a1afeda321d605f328d422fe8d",
-        "version" : "0.2.6"
+        "revision" : "ab3d3e56b2e5cf86030cabe1d4b06b7f08713427",
+        "version" : "0.2.7"
       }
     },
     {
@@ -158,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "e3dc92e705d4910b142ecfea8481d230d931f8a7",
-        "version" : "0.5.1"
+        "revision" : "4e681e1dd5304c57d07a77e4a0bbbc284efa5ef9",
+        "version" : "0.5.2"
       }
     },
     {
@@ -167,8 +167,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "ba9ba8b2b889638d3a4b62358c741b34291848da",
-        "version" : "0.2.0"
+        "revision" : "dc9f7cfd0012898214313b1e2cf2225ddbae1cb0",
+        "version" : "0.2.1"
       }
     },
     {
@@ -185,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Hitch.git",
       "state" : {
-        "revision" : "1a415afbf026005e77d32b536fa8d26c1b29e59f",
-        "version" : "0.4.138"
+        "revision" : "328211598c24f356fccbcb5451cc48e21071a963",
+        "version" : "0.4.139"
       }
     },
     {
@@ -374,8 +374,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "e97a6fcb1ab07462881ac165fdbb37f067e205d5",
-        "version" : "1.5.4"
+        "revision" : "9cb486020ebf03bfa5b5df985387a14a98744537",
+        "version" : "1.6.1"
       }
     },
     {

@@ -18,23 +18,21 @@ import logic_core
 import logic_business
 import logic_resources
 
-public struct DocumentOfferUIModel: Identifiable {
-
-  @EquatableNoop
-  public var id: String
+public struct DocumentOfferUIModel {
 
   public let issuerName: String
+  public let txCode: TxCode?
   public let uiOffers: [UIOffer]
   public let docOffers: [OfferedDocModel]
 
   public init(
-    id: String = UUID().uuidString,
     issuerName: String,
+    txCode: TxCode?,
     uiOffers: [UIOffer],
     docOffers: [OfferedDocModel]
   ) {
-    self.id = id
     self.issuerName = issuerName
+    self.txCode = txCode
     self.uiOffers = uiOffers
     self.docOffers = docOffers
   }
@@ -69,10 +67,23 @@ public extension DocumentOfferUIModel {
 }
 
 public extension DocumentOfferUIModel {
+  struct TxCode {
+
+    let isRequired: Bool
+    let codeLenght: Int
+
+    public init(isRequired: Bool, codeLenght: Int) {
+      self.isRequired = isRequired
+      self.codeLenght = codeLenght
+    }
+  }
+}
+
+public extension DocumentOfferUIModel {
   static func mock() -> DocumentOfferUIModel {
     return .init(
-      id: UUID().uuidString,
       issuerName: LocalizableString.shared.get(with: .unknownIssuer),
+      txCode: nil,
       uiOffers: [
         .init(
           id: UUID().uuidString,
@@ -105,14 +116,26 @@ public extension DocumentOfferUIModel {
   }
 }
 
-extension Array where Element == OfferedDocModel {
+extension OfferedIssueModel {
   func transformToDocumentOfferUi() -> DocumentOfferUIModel {
+    return self.docModels.transformToDocumentOfferUi(
+      with: self.issuerName,
+      codeRequired: self.isTxCodeRequired,
+      codeLength: self.txCodeSpec?.length ?? 0
+    )
+  }
+}
 
-    var issuer: String = LocalizableString.shared.get(with: .unknownIssuer)
+private extension Array where Element == OfferedDocModel {
+  func transformToDocumentOfferUi(
+    with issuerName: String,
+    codeRequired: Bool,
+    codeLength: Int
+  ) -> DocumentOfferUIModel {
+
     var offers: [DocumentOfferUIModel.UIOffer] = []
 
     self.forEach { doc in
-      issuer = doc.issuerName
       offers.append(
         .init(
           documentName: doc.displayName,
@@ -122,7 +145,8 @@ extension Array where Element == OfferedDocModel {
     }
 
     return .init(
-      issuerName: issuer,
+      issuerName: issuerName,
+      txCode: codeRequired ? .init(isRequired: codeRequired, codeLenght: codeLength): nil,
       uiOffers: offers,
       docOffers: self
     )

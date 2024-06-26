@@ -22,7 +22,12 @@ import logic_core
 
 public protocol DocumentOfferInteractor {
   func processOfferRequest(with uri: String) async -> OfferRequestPartialState
-  func issueDocuments(with uri: String, and model: DocumentOfferUIModel) async -> IssueOfferDocumentsPartialState
+  func issueDocuments(
+    with uri: String,
+    model: DocumentOfferUIModel,
+    successNavigation: UIConfig.TwoWayNavigationType,
+    txCodeValue: String?
+  ) async -> IssueOfferDocumentsPartialState
 }
 
 final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
@@ -38,10 +43,10 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
   func processOfferRequest(with uri: String) async -> OfferRequestPartialState {
     do {
 
-      let offers = try await walletController.resolveOfferUrlDocTypes(uriOffer: uri)
+      let offer = try await walletController.resolveOfferUrlDocTypes(uriOffer: uri)
       let hasPidStored = !walletController.fetchDocuments(with: .PID).isEmpty
 
-      let hasPidInOffer = offers.first(
+      let hasPidInOffer = offer.docModels.first(
         where: {
           DocumentTypeIdentifier(rawValue: $0.docType) == .PID
         }
@@ -51,25 +56,36 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
         return .failure(WalletCoreError.missingPid)
       }
 
-      return .success(offers.transformToDocumentOfferUi())
+      return .success(offer.transformToDocumentOfferUi())
     } catch {
       return .failure(error)
     }
   }
 
-  func issueDocuments(with uri: String, and model: DocumentOfferUIModel) async -> IssueOfferDocumentsPartialState {
+  func issueDocuments(
+    with uri: String,
+    model: DocumentOfferUIModel,
+    successNavigation: UIConfig.TwoWayNavigationType,
+    txCodeValue: String?
+  ) async -> IssueOfferDocumentsPartialState {
     do {
 
       let documents = try await walletController.issueDocumentsByOfferUrl(
         offerUri: uri,
         docTypes: model.docOffers,
-        format: .cbor
+        format: .cbor,
+        txCodeValue: txCodeValue
       )
 
       if documents.isEmpty {
         return .failure(WalletCoreError.unableToIssueAndStore)
       } else if documents.count == model.docOffers.count {
-        return .success
+        return .success(
+          retrieveSuccessRoute(
+            with: .credentialOfferSuccessCaption([model.issuerName]),
+            and: successNavigation
+          )
+        )
       } else {
 
         let notIssued = model.docOffers.filter { offer in
@@ -85,12 +101,49 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
           }
         }
 
-        return .partialSuccess(notIssued)
+        return .partialSuccess(
+          retrieveSuccessRoute(
+            with: .credentialOfferPartialSuccessCaption(
+              [
+                model.issuerName, notIssued.joined(separator: ", ")
+              ]
+            ),
+            and: successNavigation
+          )
+        )
       }
 
     } catch {
       return .failure(WalletCoreError.unableToIssueAndStore)
     }
+  }
+
+  private func retrieveSuccessRoute(
+    with key: LocalizableString.Key,
+    and successNavigation: UIConfig.TwoWayNavigationType
+  ) -> AppRoute {
+
+    var navigationType: UIConfig.DeepLinkNavigationType {
+      return switch successNavigation {
+      case .popTo(let route): .pop(screen: route)
+      case .push(let route): .push(screen: route)
+      }
+    }
+
+    return .success(
+      config: UIConfig.Success(
+        title: .success,
+        subtitle: key,
+        buttons: [
+          .init(
+            title: .credentialOfferSuccessButton,
+            style: .primary,
+            navigationType: navigationType
+          )
+        ],
+        visualKind: .defaultIcon
+      )
+    )
   }
 }
 
@@ -100,7 +153,7 @@ public enum OfferRequestPartialState {
 }
 
 public enum IssueOfferDocumentsPartialState {
-  case success
-  case partialSuccess([String])
+  case success(AppRoute)
+  case partialSuccess(AppRoute)
   case failure(Error)
 }

@@ -92,18 +92,22 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
   }
 
   func onIssueDocuments() {
+
+    if let code = viewState.documentOfferUiModel.txCode {
+      // MARK: - TODO CODE SCREEN
+      return
+    }
+
     Task {
       setNewState(isLoading: true)
       switch await self.interactor.issueDocuments(
         with: viewState.offerUri,
-        and: viewState.documentOfferUiModel
+        model: viewState.documentOfferUiModel,
+        successNavigation: self.viewState.successNavigation,
+        txCodeValue: nil
       ) {
-      case .success:
-        router.push(
-          with: retrieveSuccessRoute(
-            with: .credentialOfferSuccessCaption([viewState.documentOfferUiModel.issuerName])
-          )
-        )
+      case .success(let route):
+        router.push(with: route)
       case .failure(let error):
         setNewState(
           error: ContentErrorView.Config(
@@ -111,16 +115,8 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
             cancelAction: self.setNewState(error: nil)
           )
         )
-      case .partialSuccess(let notIssued):
-        router.push(
-          with: retrieveSuccessRoute(
-            with: .credentialOfferPartialSuccessCaption(
-              [
-                viewState.documentOfferUiModel.issuerName, notIssued.joined(separator: ", ")
-              ]
-            )
-          )
-        )
+      case .partialSuccess(let route):
+        router.push(with: route)
       }
     }
   }
@@ -159,31 +155,6 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     Task {
       await self.processRequest()
     }
-  }
-
-  private func retrieveSuccessRoute(with key: LocalizableString.Key) -> AppRoute {
-
-    var navigationType: UIConfig.DeepLinkNavigationType {
-      return switch self.viewState.successNavigation {
-      case .popTo(let route): .pop(screen: route)
-      case .push(let route): .push(screen: route)
-      }
-    }
-
-    return .success(
-      config: UIConfig.Success(
-        title: .success,
-        subtitle: key,
-        buttons: [
-          .init(
-            title: .credentialOfferSuccessButton,
-            style: .primary,
-            navigationType: navigationType
-          )
-        ],
-        visualKind: .defaultIcon
-      )
-    )
   }
 
   private func setNewState(
