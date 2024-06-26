@@ -1104,6 +1104,14 @@ import Foundation
 
 
 
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Extension/Int+Extensions.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_business
+
+
+
 // MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Extension/Locale+Extensions.swift'
 
 import Cuckoo

@@ -24,7 +24,8 @@ public protocol DocumentOfferInteractor {
   func processOfferRequest(with uri: String) async -> OfferRequestPartialState
   func issueDocuments(
     with uri: String,
-    model: DocumentOfferUIModel,
+    issuerName: String,
+    docOffers: [OfferedDocModel],
     successNavigation: UIConfig.TwoWayNavigationType,
     txCodeValue: String?
   ) async -> IssueOfferDocumentsPartialState
@@ -46,6 +47,10 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       let offer = try await walletController.resolveOfferUrlDocTypes(uriOffer: uri)
       let hasPidStored = !walletController.fetchDocuments(with: .PID).isEmpty
 
+      if let codeLength = offer.txCodeSpec?.length, !(4...6).contains(codeLength) {
+        return .failure(WalletCoreError.transactionCodeNotInRange)
+      }
+
       let hasPidInOffer = offer.docModels.first(
         where: {
           DocumentTypeIdentifier(rawValue: $0.docType) == .PID
@@ -64,7 +69,8 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
   func issueDocuments(
     with uri: String,
-    model: DocumentOfferUIModel,
+    issuerName: String,
+    docOffers: [OfferedDocModel],
     successNavigation: UIConfig.TwoWayNavigationType,
     txCodeValue: String?
   ) async -> IssueOfferDocumentsPartialState {
@@ -72,23 +78,23 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
       let documents = try await walletController.issueDocumentsByOfferUrl(
         offerUri: uri,
-        docTypes: model.docOffers,
+        docTypes: docOffers,
         format: .cbor,
         txCodeValue: txCodeValue
       )
 
       if documents.isEmpty {
         return .failure(WalletCoreError.unableToIssueAndStore)
-      } else if documents.count == model.docOffers.count {
+      } else if documents.count == docOffers.count {
         return .success(
           retrieveSuccessRoute(
-            with: .credentialOfferSuccessCaption([model.issuerName]),
+            with: .credentialOfferSuccessCaption([issuerName]),
             and: successNavigation
           )
         )
       } else {
 
-        let notIssued = model.docOffers.filter { offer in
+        let notIssued = docOffers.filter { offer in
           documents.first(
             where: { $0.docType == offer.docType }
           ) == nil
@@ -105,7 +111,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
           retrieveSuccessRoute(
             with: .credentialOfferPartialSuccessCaption(
               [
-                model.issuerName, notIssued.joined(separator: ", ")
+                issuerName, notIssued.joined(separator: ", ")
               ]
             ),
             and: successNavigation

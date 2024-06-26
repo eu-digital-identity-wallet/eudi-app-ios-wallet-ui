@@ -40,6 +40,7 @@ public indirect enum AppRoute: Equatable {
   case issuanceSuccess(config: any UIConfigType, documentIdentifier: String)
   case qrScanner(config: any UIConfigType)
   case credentialOfferRequest(config: any UIConfigType)
+  case issuanceCode(config: any UIConfigType)
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -77,6 +78,8 @@ public indirect enum AppRoute: Equatable {
       (key: "QRScanner", arguments: ["config": config.log])
     case .credentialOfferRequest(let config):
       (key: "CredentialOfferRequest", arguments: ["config": config.log])
+    case .issuanceCode(let config):
+      (key: "IssuanceCode", arguments: ["config": config.log])
     }
   }
 }

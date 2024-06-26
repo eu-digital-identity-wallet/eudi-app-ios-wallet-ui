@@ -18,6 +18,14 @@ import AlertToast
 import PartialSheet
 import Shimmer
 
+private let shimmeringGradient = Gradient(
+  colors: [
+    .black.opacity(0.5),
+    .black,
+    .black.opacity(0.5)
+  ]
+)
+
 public extension View {
   /// Adds an animated shimmering effect to any view, typically to show that
   /// an operation is in progress.
@@ -28,7 +36,7 @@ public extension View {
   ) -> some View {
     if isLoading {
       self.redacted(reason: .placeholder)
-        .shimmering()
+        .shimmering(gradient: shimmeringGradient)
     } else {
       self
     }

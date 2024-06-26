@@ -94,7 +94,18 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
   func onIssueDocuments() {
 
     if let code = viewState.documentOfferUiModel.txCode {
-      // MARK: - TODO CODE SCREEN
+      router.push(
+        with: .issuanceCode(
+          config: IssuanceCodeUiConfig(
+            offerUri: viewState.offerUri,
+            issuerName: viewState.documentOfferUiModel.issuerName,
+            txCodeLength: code.codeLenght,
+            docOffers: viewState.documentOfferUiModel.docOffers,
+            successNavigation: viewState.successNavigation,
+            navigationCancelType: .pop
+          )
+        )
+      )
       return
     }
 
@@ -102,8 +113,9 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
       setNewState(isLoading: true)
       switch await self.interactor.issueDocuments(
         with: viewState.offerUri,
-        model: viewState.documentOfferUiModel,
-        successNavigation: self.viewState.successNavigation,
+        issuerName: viewState.documentOfferUiModel.issuerName,
+        docOffers: viewState.documentOfferUiModel.docOffers,
+        successNavigation: viewState.successNavigation,
         txCodeValue: nil
       ) {
       case .success(let route):

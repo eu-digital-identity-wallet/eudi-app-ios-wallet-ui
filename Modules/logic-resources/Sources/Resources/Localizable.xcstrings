@@ -705,6 +705,28 @@
         }
       }
     },
+    "issuance_code_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type the %@-digit transaction code you received"
+          }
+        }
+      }
+    },
+    "issuance_code_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ requires verification"
+          }
+        }
+      }
+    },
     "issuance_date" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1683,6 +1705,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Success"
+          }
+        }
+      }
+    },
+    "transaction_code_not_in_range" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transaction code length is invalid. Valid range is between 4 to 6 digits"
           }
         }
       }
