@@ -82,7 +82,7 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
         issuerName: viewState.config.issuerName,
         docOffers: viewState.config.docOffers,
         successNavigation: viewState.config.successNavigation,
-        txCodeValue: nil
+        txCodeValue: codeInput
       ) {
       case .success(let route):
         router.push(with: route)
