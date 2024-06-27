@@ -1709,13 +1709,13 @@
         }
       }
     },
-    "transaction_code_not_in_range" : {
+    "transaction_code_format_error" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Transaction code length is invalid. Valid range is between 4 to 6 digits"
+            "value" : "Invalid transaction code format. Length should be between %@ to %@ digits and only numeric characters are allowed."
           }
         }
       }

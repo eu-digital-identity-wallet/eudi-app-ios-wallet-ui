@@ -44,11 +44,16 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
   func processOfferRequest(with uri: String) async -> OfferRequestPartialState {
     do {
 
+      let codeMinLength = 4
+      let codeMaxLength = 6
+
       let offer = try await walletController.resolveOfferUrlDocTypes(uriOffer: uri)
       let hasPidStored = !walletController.fetchDocuments(with: .PID).isEmpty
 
-      if let codeLength = offer.txCodeSpec?.length, !(4...6).contains(codeLength) {
-        return .failure(WalletCoreError.transactionCodeNotInRange)
+      if let spec = offer.txCodeSpec,
+          let codeLength = spec.length,
+         (!(codeMinLength...codeMaxLength).contains(codeLength) || spec.inputMode == .text) {
+        return .failure(WalletCoreError.transactionCodeFormat(["\(codeMinLength)", "\(codeMaxLength)"]))
       }
 
       let hasPidInOffer = offer.docModels.first(
