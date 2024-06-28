@@ -14,6 +14,21 @@ import Foundation
 
 
 
+// MARK: - Mocks generated from file: 'Modules/feature-common/Sources/Config/Issuance/IssuanceCodeUiConfig.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_proximity
+
+
+
 // MARK: - Mocks generated from file: 'Modules/feature-common/Sources/Config/Issuance/IssuanceDetailUiConfig.swift'
 
 import Cuckoo
@@ -5414,6 +5429,21 @@ import Foundation
 
 
 
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Extension/Int+Extensions.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_proximity
+
+
+
 // MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Extension/Locale+Extensions.swift'
 
 import Cuckoo
@@ -6139,9 +6169,9 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         )
     }
     
-    public func resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> [OfferedDocModel] {
+    public func resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> OfferedIssueModel {
         return try await cuckoo_manager.callThrows(
-            "resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> [OfferedDocModel]",
+            "resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> OfferedIssueModel",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -6149,13 +6179,13 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         )
     }
     
-    public func issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat) async throws -> [WalletStorage.Document] {
+    public func issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat, txCodeValue p3: String?) async throws -> [WalletStorage.Document] {
         return try await cuckoo_manager.callThrows(
-            "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat) async throws -> [WalletStorage.Document]",
-            parameters: (p0, p1, p2),
-            escapingParameters: (p0, p1, p2),
+            "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat, txCodeValue p3: String?) async throws -> [WalletStorage.Document]",
+            parameters: (p0, p1, p2, p3),
+            escapingParameters: (p0, p1, p2, p3),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.issueDocumentsByOfferUrl(offerUri: p0, docTypes: p1, format: p2)
+            defaultCall: await __defaultImplStub!.issueDocumentsByOfferUrl(offerUri: p0, docTypes: p1, format: p2, txCodeValue: p3)
         )
     }
     
@@ -6310,18 +6340,18 @@ return cuckoo_manager.call(
             ))
         }
         
-        func resolveOfferUrlDocTypes<M1: Cuckoo.Matchable>(uriOffer p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), [OfferedDocModel]> where M1.MatchedType == String {
+        func resolveOfferUrlDocTypes<M1: Cuckoo.Matchable>(uriOffer p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), OfferedIssueModel> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> [OfferedDocModel]",
+                method: "resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> OfferedIssueModel",
                 parameterMatchers: matchers
             ))
         }
         
-        func issueDocumentsByOfferUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(offerUri p0: M1, docTypes p1: M2, format p2: M3) -> Cuckoo.ProtocolStubThrowingFunction<(String, [OfferedDocModel], DataFormat), [WalletStorage.Document]> where M1.MatchedType == String, M2.MatchedType == [OfferedDocModel], M3.MatchedType == DataFormat {
-            let matchers: [Cuckoo.ParameterMatcher<(String, [OfferedDocModel], DataFormat)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+        func issueDocumentsByOfferUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.OptionalMatchable>(offerUri p0: M1, docTypes p1: M2, format p2: M3, txCodeValue p3: M4) -> Cuckoo.ProtocolStubThrowingFunction<(String, [OfferedDocModel], DataFormat, String?), [WalletStorage.Document]> where M1.MatchedType == String, M2.MatchedType == [OfferedDocModel], M3.MatchedType == DataFormat, M4.OptionalMatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, [OfferedDocModel], DataFormat, String?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat) async throws -> [WalletStorage.Document]",
+                method: "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat, txCodeValue p3: String?) async throws -> [WalletStorage.Document]",
                 parameterMatchers: matchers
             ))
         }
@@ -6532,10 +6562,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func resolveOfferUrlDocTypes<M1: Cuckoo.Matchable>(uriOffer p0: M1) -> Cuckoo.__DoNotUse<(String), [OfferedDocModel]> where M1.MatchedType == String {
+        func resolveOfferUrlDocTypes<M1: Cuckoo.Matchable>(uriOffer p0: M1) -> Cuckoo.__DoNotUse<(String), OfferedIssueModel> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> [OfferedDocModel]",
+                "resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> OfferedIssueModel",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -6544,10 +6574,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func issueDocumentsByOfferUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(offerUri p0: M1, docTypes p1: M2, format p2: M3) -> Cuckoo.__DoNotUse<(String, [OfferedDocModel], DataFormat), [WalletStorage.Document]> where M1.MatchedType == String, M2.MatchedType == [OfferedDocModel], M3.MatchedType == DataFormat {
-            let matchers: [Cuckoo.ParameterMatcher<(String, [OfferedDocModel], DataFormat)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+        func issueDocumentsByOfferUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.OptionalMatchable>(offerUri p0: M1, docTypes p1: M2, format p2: M3, txCodeValue p3: M4) -> Cuckoo.__DoNotUse<(String, [OfferedDocModel], DataFormat, String?), [WalletStorage.Document]> where M1.MatchedType == String, M2.MatchedType == [OfferedDocModel], M3.MatchedType == DataFormat, M4.OptionalMatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, [OfferedDocModel], DataFormat, String?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
             return cuckoo_manager.verify(
-                "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat) async throws -> [WalletStorage.Document]",
+                "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat, txCodeValue p3: String?) async throws -> [WalletStorage.Document]",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -6652,11 +6682,11 @@ public class WalletKitControllerStub:WalletKitController {
         return DefaultValueRegistry.defaultValue(for: (WalletStorage.Document).self)
     }
     
-    public func resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> [OfferedDocModel] {
-        return DefaultValueRegistry.defaultValue(for: ([OfferedDocModel]).self)
+    public func resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> OfferedIssueModel {
+        return DefaultValueRegistry.defaultValue(for: (OfferedIssueModel).self)
     }
     
-    public func issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat) async throws -> [WalletStorage.Document] {
+    public func issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], format p2: DataFormat, txCodeValue p3: String?) async throws -> [WalletStorage.Document] {
         return DefaultValueRegistry.defaultValue(for: ([WalletStorage.Document]).self)
     }
     

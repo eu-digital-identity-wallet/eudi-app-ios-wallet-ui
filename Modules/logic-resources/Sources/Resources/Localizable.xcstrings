@@ -705,6 +705,28 @@
         }
       }
     },
+    "issuance_code_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type the %@-digit transaction code you received"
+          }
+        }
+      }
+    },
+    "issuance_code_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ requires verification"
+          }
+        }
+      }
+    },
     "issuance_date" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1683,6 +1705,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Success"
+          }
+        }
+      }
+    },
+    "transaction_code_format_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid transaction code format. Length should be between %@ to %@ digits and only numeric characters are allowed."
           }
         }
       }
