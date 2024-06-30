@@ -44,6 +44,110 @@ https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/tree/main/Wallet/Sample
 
 You will also find the IACA certificate here. (trusted iaca root certificates).
 
+## DeepLink Schemas configuration
+
+According to the specifications issuance and presentation require deep-linking for the same device flows.
+
+If you want to change or add your own you can do it by adjusting the *Wallet.plist* file.
+
+```
+<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLName</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>eudi-openid4vp</string>
+			<string>mdoc-openid4vp</string>
+			<string>openid4vp</string>
+			<string>openid-credential-offer</string>
+		</array>
+	</dict>
+</array>
+```
+
+Let's assume you want to add a new one for the credential offer (e.g. custom-my-offer://) the *Wallet.plist* should look like this:
+
+```
+<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLName</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>eudi-openid4vp</string>
+			<string>mdoc-openid4vp</string>
+			<string>openid4vp</string>
+			<string>openid-credential-offer</string>
+			<string>custom-my-offer</string>
+		</array>
+	</dict>
+</array>
+```
+
+After the *Wallet.plist* adjustment, you must also adjust the *DeepLinkController* inside the logic-ui module.
+
+Current Implementation:
+
+```
+public extension DeepLink {
+  enum Action: String, Equatable {
+
+    case openid4vp
+    case credential_offer
+    case external
+
+    static func parseType(
+      with scheme: String,
+      and urlSchemaController: UrlSchemaController
+    ) -> Action? {
+      switch scheme {
+      case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme):
+        return .openid4vp
+      case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme):
+        return .credential_offer
+      default:
+        return .external
+      }
+    }
+  }
+}
+```
+
+Adjusted with the new schema:
+
+```
+public extension DeepLink {
+  enum Action: String, Equatable {
+
+    case openid4vp
+    case credential_offer
+    case custom_my_offer
+    case external
+
+    static func parseType(
+      with scheme: String,
+      and urlSchemaController: UrlSchemaController
+    ) -> Action? {
+      switch scheme {
+      case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme):
+        return .openid4vp
+      case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme):
+        return .credential_offer
+      case _ where custom_my_offer.getSchemas(with: urlSchemaController).contains(scheme):
+        return .credential_offer
+      default:
+        return .external
+      }
+    }
+  }
+}
+```
+
 ## Theme configuration
 
 The application allows the configuration of:

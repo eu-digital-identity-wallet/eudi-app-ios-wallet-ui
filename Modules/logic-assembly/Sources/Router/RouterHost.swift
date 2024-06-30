@@ -238,6 +238,14 @@ final class RouterHostImpl: RouterHost {
           ),
           config: config
         )
+      case .issuanceCode(let config):
+        OfferCodeView(
+          with: self,
+          and: DIGraph.resolver.force(
+            DocumentOfferInteractor.self
+          ),
+          config: config
+        )
       }
     }
     .eraseToAnyView()
