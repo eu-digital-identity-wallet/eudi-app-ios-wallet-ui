@@ -219,7 +219,7 @@ extension WalletKitController {
         "issuing_country",
         "issuing_authority"
       ]
-    case .MDL, .GENERIC:
+    default:
       return []
     }
   }
