@@ -148,6 +148,227 @@ public extension DeepLink {
 }
 ```
 
+## Scoped Issuance Document Configuration
+
+Currently, the application supports specific docTypes for scoped issuance (On the Add Document screen the pre-configured buttons like *National ID*, *Driving License*, and *Age verification*).
+
+The supported list and user interface are not configurable because, with the credential offer, you can issue any format-supported document.
+
+To extend the supported list and display a new button for your document, please follow the instructions below.
+
+In *LocalizableString.swift* and *Localizable.xcstrings*, inside logic-resources module, add a new string for document title localization
+
+*Localizable.xcstrings* Example:
+
+```
+"age_verification" : {
+   "extractionState" : "manual",
+   "localizations" : {
+     "en" : {
+	"stringUnit" : {
+	"state" : "translated",
+	"value" : "Age Verification"
+	}
+     }
+   }
+},
+"your_own_document_title" : {
+   "extractionState" : "manual",
+   "localizations" : {
+     "en" : {
+	"stringUnit" : {
+	"state" : "translated",
+	"value" : "Your Document Title"
+	}
+     }
+   }
+},
+```
+
+*LocalizableString.swift* Example:
+
+```
+public extension LocalizableString {
+  enum Key: Equatable {
+   case yourOwn
+  }
+}
+
+public func get(with key: Key) -> String {
+  return switch key {
+    case .ageVerification:
+      bundle.localizedString(forKey: "your_own_document_title")
+  }
+}
+```
+
+In *DocumentIdentifier*, inside the logic-core module, you must add a new case to the enum with your doctype.
+
+Example:
+
+```
+public enum DocumentTypeIdentifier: RawRepresentable, Equatable {
+
+  case PID
+  case MDL
+  case AGE
+  case YOUR_OWN
+  case GENERIC(docType: String)
+
+  public var localizedTitle: String {
+    return switch self {
+    case .PID:
+      LocalizableString.shared.get(with: .pid)
+    case .MDL:
+      LocalizableString.shared.get(with: .mdl)
+    case .AGE:
+      LocalizableString.shared.get(with: .ageVerification)
+    case .YOUR_OWN:
+      LocalizableString.shared.get(with: .yourOwn)
+    case .GENERIC(let docType):
+      LocalizableString.shared.get(with: .dynamic(key: docType))
+    }
+  }
+
+  public var rawValue: String {
+    return switch self {
+    case .PID:
+      Self.pidDocType
+    case .MDL:
+      Self.mdlDocType
+    case .AGE:
+      Self.ageDocType
+    case .YOUR_OWN:
+      Self.yourOwnDocType
+    case .GENERIC(let docType):
+      docType
+    }
+  }
+
+  public var isSupported: Bool {
+    return switch self {
+    case .PID, .MDL, .AGE, .YOUR_OWN: true
+    case .GENERIC: false
+    }
+  }
+
+  public init(rawValue: String) {
+    switch rawValue {
+    case Self.pidDocType:
+      self = .PID
+    case Self.mdlDocType:
+      self = .MDL
+    case Self.ageDocType:
+      self = .AGE
+    case Self.yourOwnDocType:
+      self = .YOUR_OWN
+    default:
+      self = .GENERIC(docType: rawValue)
+    }
+  }
+}
+
+private extension DocumentTypeIdentifier {
+  static let pidDocType = "eu.europa.ec.eudi.pid.1"
+  static let mdlDocType = "org.iso.18013.5.1.mDL"
+  static let ageDocType = "eu.europa.ec.eudi.pseudonym.age_over_18.1"
+  static let yourOwnDocType = "your_own_doctype"
+}
+```
+
+In *RequestDataUIModel*, inside feature-common module, add a new *RequestDataSection.Type*
+
+Example:
+
+```
+public extension RequestDataSection {
+  enum `Type`: Equatable {
+    case id
+    case mdl
+    case age
+    case yourown
+    case custom(String)
+
+    public init(docType: DocumentTypeIdentifier) {
+      switch docType {
+      case .PID:
+        self = .id
+      case .MDL:
+        self = .mdl
+      case .AGE:
+        self = .age
+      case .YOUR_OWN:
+        self = .yourown
+      case .GENERIC(docType: let docType):
+        self = .custom(docType)
+      }
+    }
+  }
+}
+```
+
+In *AddDocumentUIModel*, inside feature-issuance module, please adjust the *AddDocumentUIModel.items* extension variable to add your new document.
+
+```
+public extension AddDocumentUIModel {
+
+  static var items: [AddDocumentUIModel] {
+    [
+      .init(
+        isEnabled: true,
+        documentName: .pid,
+        image: Theme.shared.image.id,
+        isLoading: false,
+        type: .PID
+      ),
+      .init(
+        isEnabled: true,
+        documentName: .mdl,
+        image: Theme.shared.image.id,
+        isLoading: false,
+        type: .MDL
+      ),
+      .init(
+        isEnabled: true,
+        documentName: .ageVerification,
+        image: Theme.shared.image.id,
+        isLoading: false,
+        type: .AGE
+      ),
+      .init(
+        isEnabled: true,
+        documentName: .yourOwn,
+        image: Theme.shared.image.id,
+        isLoading: false,
+        type: .YOUR_OWN
+      )
+    ]
+  }
+```
+
+In *AddDocumentInteractor*, inside feature-issuance module, please adjust the *fetchStoredDocuments* function to add your new document.
+
+Example:
+
+```
+let types = AddDocumentUIModel.items.map({
+  var item = $0
+  switch item.type {
+    case .PID:
+      item.isEnabled = true
+    case .MDL:
+      item.isEnabled = flow == .extraDocument
+    case .AGE:
+      item.isEnabled = flow == .extraDocument
+    case .YOUR_OWN:
+      item.isEnabled = flow == .extraDocument
+    case .GENERIC:
+      break
+    }
+  return item
+})
+```
+
 ## Theme configuration
 
 The application allows the configuration of:
