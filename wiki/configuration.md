@@ -48,9 +48,7 @@ public struct ReaderConfig {
 
 The *WalletKitConfigImpl* implementation of the *WalletKitConfig* protocol can be located inside the logic-core module.
 
-The application's certificates are located here:
-
-https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/tree/main/Wallet/Sample
+The application's IACA certificates are located [here](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/tree/main/Wallet/Sample):
 
 ```
   var readerConfigConfig: ReaderConfig {
@@ -60,8 +58,6 @@ https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/tree/main/Wallet/Sample
     return .init(trustedCerts: [cert])
   }
 ```
-
-You will also find the IACA certificate here. (trusted iaca root certificates).
 
 ## DeepLink Schemas configuration
 
