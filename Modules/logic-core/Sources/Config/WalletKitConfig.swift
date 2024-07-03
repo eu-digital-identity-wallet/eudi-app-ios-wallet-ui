@@ -45,7 +45,7 @@ protocol WalletKitConfig {
   /**
    * Reader Configuration
    */
-  var readerConfigConfig: ReaderConfig { get }
+  var readerConfig: ReaderConfig { get }
 
   /**
    * User authentication required accessing core's secure storage
@@ -74,7 +74,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
     )
   }
 
-  var readerConfigConfig: ReaderConfig {
+  var readerConfig: ReaderConfig {
     guard let cert = Data(name: "eudi_pid_issuer_ut", ext: "der") else {
       return .init(trustedCerts: [])
     }

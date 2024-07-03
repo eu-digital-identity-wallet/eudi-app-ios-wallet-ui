@@ -1931,12 +1931,12 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
         }
     }
     
-    var readerConfigConfig: ReaderConfig {
+    var readerConfig: ReaderConfig {
         get {
             return cuckoo_manager.getter(
-                "readerConfigConfig",
+                "readerConfig",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.readerConfigConfig
+                defaultCall: __defaultImplStub!.readerConfig
             )
         }
     }
@@ -1967,8 +1967,8 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
             return .init(manager: cuckoo_manager, name: "vciConfig")
         }
         
-        var readerConfigConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,ReaderConfig> {
-            return .init(manager: cuckoo_manager, name: "readerConfigConfig")
+        var readerConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,ReaderConfig> {
+            return .init(manager: cuckoo_manager, name: "readerConfig")
         }
         
         var userAuthenticationRequired: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,Bool> {
@@ -1995,8 +1995,8 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
             return .init(manager: cuckoo_manager, name: "vciConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var readerConfigConfig: Cuckoo.VerifyReadOnlyProperty<ReaderConfig> {
-            return .init(manager: cuckoo_manager, name: "readerConfigConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var readerConfig: Cuckoo.VerifyReadOnlyProperty<ReaderConfig> {
+            return .init(manager: cuckoo_manager, name: "readerConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         var userAuthenticationRequired: Cuckoo.VerifyReadOnlyProperty<Bool> {
@@ -2019,7 +2019,7 @@ class WalletKitConfigStub:WalletKitConfig {
         }
     }
     
-    var readerConfigConfig: ReaderConfig {
+    var readerConfig: ReaderConfig {
         get {
             return DefaultValueRegistry.defaultValue(for: (ReaderConfig).self)
         }
