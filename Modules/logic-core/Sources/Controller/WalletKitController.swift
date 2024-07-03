@@ -71,7 +71,7 @@ final class WalletKitControllerImpl: WalletKitController {
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciClientId = configLogic.vciConfig.clientId
     wallet.openID4VciRedirectUri = configLogic.vciConfig.redirectUri
-    wallet.trustedReaderCertificates = configLogic.proximityConfig.trustedCerts
+    wallet.trustedReaderCertificates = configLogic.readerConfig.trustedCerts
   }
 
   func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssueModel {

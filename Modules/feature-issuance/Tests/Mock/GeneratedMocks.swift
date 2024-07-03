@@ -6255,12 +6255,12 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
         }
     }
     
-    var proximityConfig: ProximityConfig {
+    var readerConfig: ReaderConfig {
         get {
             return cuckoo_manager.getter(
-                "proximityConfig",
+                "readerConfig",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.proximityConfig
+                defaultCall: __defaultImplStub!.readerConfig
             )
         }
     }
@@ -6291,8 +6291,8 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
             return .init(manager: cuckoo_manager, name: "vciConfig")
         }
         
-        var proximityConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,ProximityConfig> {
-            return .init(manager: cuckoo_manager, name: "proximityConfig")
+        var readerConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,ReaderConfig> {
+            return .init(manager: cuckoo_manager, name: "readerConfig")
         }
         
         var userAuthenticationRequired: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,Bool> {
@@ -6319,8 +6319,8 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
             return .init(manager: cuckoo_manager, name: "vciConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var proximityConfig: Cuckoo.VerifyReadOnlyProperty<ProximityConfig> {
-            return .init(manager: cuckoo_manager, name: "proximityConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var readerConfig: Cuckoo.VerifyReadOnlyProperty<ReaderConfig> {
+            return .init(manager: cuckoo_manager, name: "readerConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         var userAuthenticationRequired: Cuckoo.VerifyReadOnlyProperty<Bool> {
@@ -6343,9 +6343,9 @@ class WalletKitConfigStub:WalletKitConfig {
         }
     }
     
-    var proximityConfig: ProximityConfig {
+    var readerConfig: ReaderConfig {
         get {
-            return DefaultValueRegistry.defaultValue(for: (ProximityConfig).self)
+            return DefaultValueRegistry.defaultValue(for: (ReaderConfig).self)
         }
     }
     

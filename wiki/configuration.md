@@ -1,5 +1,15 @@
 # How to configure the application
 
+## Table of contents
+
+* [General configuration](#general-configuration)
+* [DeepLink Schemas configuration](#deeplink-schemas-configuration)
+* [Scoped Issuance Document Configuration](#scoped-issuance-document-configuration)
+* [How to work with self-signed certificates](#how-to-work-with-self-signed-certificates)
+* [Theme configuration](#theme-configuration)
+* [Pin Storage configuration](#pin-storage-configuration)
+* [Analytics configuration](#analytics-configuration)
+
 ## General configuration
 
 The application allows the configuration of:
@@ -24,14 +34,14 @@ Via the *WalletKitConfig* protocol inside the logic-core module.
 ```
 public protocol WalletKitConfig {
   /**
-   * Proximity Configuration
+   * Reader Configuration
    */
-  var proximityConfig: ProximityConfig { get }
+  var readerConfig: ReaderConfig { get }
 }
 ```
 
 ```
-public struct ProximityConfig {
+public struct ReaderConfig {
   public let trustedCerts: [Data]
 }
 ```
@@ -41,6 +51,15 @@ The *WalletKitConfigImpl* implementation of the *WalletKitConfig* protocol can b
 The application's certificates are located here:
 
 https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/tree/main/Wallet/Sample
+
+```
+  var readerConfigConfig: ReaderConfig {
+    guard let cert = Data(name: "eudi_pid_issuer_ut", ext: "der") else {
+      return .init(trustedCerts: [])
+    }
+    return .init(trustedCerts: [cert])
+  }
+```
 
 You will also find the IACA certificate here. (trusted iaca root certificates).
 
@@ -368,6 +387,52 @@ let types = AddDocumentUIModel.items.map({
   return item
 })
 ```
+
+## How to work with self-signed certificates
+
+This section describes configuring the application to interact with services utilizing self-signed certificates.
+
+Add these lines of code to the top of the file *WalletKitController*, inside the logic-core module, just below the import statements. 
+
+```
+class SelfSignedDelegate: NSObject, URLSessionDelegate {
+  func urlSession(
+    _ session: URLSession,
+    didReceive challenge: URLAuthenticationChallenge,
+    completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+  ) {
+    // Check if the challenge is for a self-signed certificate
+    if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
+       let trust = challenge.protectionSpace.serverTrust {
+      // Create a URLCredential with the self-signed certificate
+      let credential = URLCredential(trust: trust)
+      // Call the completion handler with the credential to accept the self-signed certificate
+      completionHandler(.useCredential, credential)
+    } else {
+      // For other authentication methods, call the completion handler with a nil credential to reject the request
+      completionHandler(.cancelAuthenticationChallenge, nil)
+    }
+  }
+}
+
+let walletSession: URLSession = {
+  let delegate = SelfSignedDelegate()
+  let configuration = URLSessionConfiguration.default
+  return URLSession(
+    configuration: configuration,
+    delegate: delegate,
+    delegateQueue: nil
+  )
+}()
+```
+
+Once the above is in place add the following:
+
+```
+wallet.urlSession = walletSession
+```
+
+in the initializer. This change will allow the app to interact with web services that rely on self-signed certificates.
 
 ## Theme configuration
 
