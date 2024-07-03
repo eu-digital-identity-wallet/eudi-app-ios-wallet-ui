@@ -17,32 +17,18 @@ This guide aims to assist developers build the iOS application and make it inter
 
 ### Overview
 
-[PID Issuer](https://github.com/eu-digital-identity-wallet/eudi-srv-pid-issuer) is an implementation of a credential issuing service, according to [OpenId4VCI - draft13](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html).
+[EUDIW Issuer](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py) is an implementation of a credential issuing service, according to [OpenId4VCI - draft13](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html).
 
-Visit this, and the primary issuer, online at these adresses:
+Visit this issuer online at this address:
 
-[EUDIW Issue/Primary](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py)
+[EUDIW Issuer](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py)
 
-[PID Issuer/Alternate](https://github.com/eu-digital-identity-wallet/eudi-srv-pid-issuer)
 
 ### Local development environment
 
 ## Issuer
 
-This [Issuer](https://github.com/eu-digital-identity-wallet/eudi-srv-pid-issuer) requires Docker to be installed on your machine. You can find instructions below.
-
-Windows: https://docs.docker.com/desktop/install/windows-install/
-
-macOS https://docs.docker.com/desktop/install/mac-install/
-
-To make the issuer and the Keycloak authentication service accessible, run the following command from the issuer directory:
-
-```
-cd docker-compose
-docker compose up -d
-```
-
-The issuer is then accesible here [https://localhost/pid-issuer/]( https://localhost/pid-issuer/)
+You can follow [these instructions](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py/blob/main/install.md) to run this issuer locally. Once it is running, it is accessible at [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
 ## Verifier
 
@@ -80,8 +66,8 @@ Clone the [iOS repository](https://github.com/eu-digital-identity-wallet/eudi-ap
 
 Open the project file in Xcode. The application has two schemas: "EUDI Wallet Dev" and "EUDI Wallet Demo".
 
-- EUDI Wallet Dev: This target communicates with the services deployed in the staging environment.
-- EUDI Wallet Demo: This target communicates with the services deployed in the production environment.
+- EUDI Wallet Dev: This target communicates with the services deployed in an environment based on the latest main branch.
+- EUDI Wallet Demo: This target communicates with the services deployed in the latest stable environment.
 
 
 Each schema has two configurations: Debug and Release.
@@ -115,7 +101,7 @@ The first step here is to have all three services running locally on your machin
 
 ```
 VERIFIER_API_URI = https:/$()/localhost:8080
-VCI_ISSUER_URL = https:/$()/localhost/pid-issuer 
+VCI_ISSUER_URL = http:/$()/127.0.0.1:5000
 ```
 
 ### How to work with self signed certificates on iOS
