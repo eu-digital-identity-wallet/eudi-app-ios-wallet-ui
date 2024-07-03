@@ -34,14 +34,14 @@ Via the *WalletKitConfig* protocol inside the logic-core module.
 ```
 public protocol WalletKitConfig {
   /**
-   * Proximity Configuration
+   * Reader Configuration
    */
-  var proximityConfig: ProximityConfig { get }
+  var readerConfig: ReaderConfig { get }
 }
 ```
 
 ```
-public struct ProximityConfig {
+public struct ReaderConfig {
   public let trustedCerts: [Data]
 }
 ```
@@ -51,6 +51,15 @@ The *WalletKitConfigImpl* implementation of the *WalletKitConfig* protocol can b
 The application's certificates are located here:
 
 https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/tree/main/Wallet/Sample
+
+```
+  var readerConfigConfig: ReaderConfig {
+    guard let cert = Data(name: "eudi_pid_issuer_ut", ext: "der") else {
+      return .init(trustedCerts: [])
+    }
+    return .init(trustedCerts: [cert])
+  }
+```
 
 You will also find the IACA certificate here. (trusted iaca root certificates).
 
