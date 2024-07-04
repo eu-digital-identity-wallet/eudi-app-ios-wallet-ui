@@ -8,7 +8,7 @@
 
 ## Overview
 
-This guide aims to assist developers build the iOS application.
+This guide aims to assist developers to build the iOS application.
 
 # Setup Apps
 
