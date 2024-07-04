@@ -18,13 +18,13 @@ You need [xcode](https://xcodereleases.com/) and its associated tools installed 
 
 Clone the [iOS repository](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui)
 
-Open the project file in Xcode. The application has two schemas: "EUDI Wallet Dev" and "EUDI Wallet Demo".
+Open the project file in Xcode. The application has two schemes: "EUDI Wallet Dev" and "EUDI Wallet Demo".
 
 - EUDI Wallet Dev: This target communicates with the services deployed in an environment based on the latest main branch.
 - EUDI Wallet Demo: This target communicates with the services deployed in the latest stable environment.
 
 
-Each schema has two configurations: Debug and Release.
+Each scheme has two configurations: Debug and Release.
 
 - Debug: Used when running the app from within Xcode.
 - Release: Used when running the app after it has been distributed via a distribution platform, currently App Center.
