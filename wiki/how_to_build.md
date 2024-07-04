@@ -3,58 +3,12 @@
 ## Table of contents
 
 * [Overview](#overview)
-* [Setup services](#setup-services)
 * [Setup Apps](#setup-apps)
 * [How to work with self signed certificates on iOS](#how-to-work-with-self-signed-certificates-on-ios)
 
 ## Overview
 
-This guide aims to assist developers build the iOS application and make it interact with services that are self hosted. As an example it uses services that run on a local machine.
-
-## Setup services
-
-## Issuer
-
-### Overview
-
-[EUDIW Issuer](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py) is an implementation of a credential issuing service, according to [OpenId4VCI - draft13](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html).
-
-Visit this issuer online at this address:
-
-[EUDIW Issuer](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py)
-
-
-### Local development environment
-
-## Issuer
-
-You can follow [these instructions](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py/blob/main/install.md) to run this issuer locally. Once it is running, it is accessible at [http://127.0.0.1:5000](http://127.0.0.1:5000)
-
-## Verifier
-
-In order to run the Verifier, clone [EUDI Verifier Endpoint](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt). You need to have Java installed on your machine. For macOS in particular we recommend [SDKMAN!](https://sdkman.io/)
-
-From the Verifier directory run the command:
-
-```
-./gradlew bootRun
-```
-
-The verifier will then be accesible at [http://localhost:8080]( http://localhost:8080), and comprehensive documentation on its endpoints and configuration can be found [here](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt).
-
-
-## Verifier web UI
-
-You can clone the Verifier UI [here](https://github.com/eu-digital-identity-wallet/eudi-web-verifier)
-
-You need npm and [Angular CLI](https://github.com/angular/angular-cli) installed on your machine.
-
-In order to access the Verifier UI at [http://localhost:4200](http://localhost:4200) run the following commands:
-
-```
-npm install
-ng serve
-```
+This guide aims to assist developers to build the iOS application.
 
 # Setup Apps
 
@@ -64,13 +18,13 @@ You need [xcode](https://xcodereleases.com/) and its associated tools installed 
 
 Clone the [iOS repository](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui)
 
-Open the project file in Xcode. The application has two schemas: "EUDI Wallet Dev" and "EUDI Wallet Demo".
+Open the project file in Xcode. The application has two schemes: "EUDI Wallet Dev" and "EUDI Wallet Demo".
 
 - EUDI Wallet Dev: This target communicates with the services deployed in an environment based on the latest main branch.
 - EUDI Wallet Demo: This target communicates with the services deployed in the latest stable environment.
 
 
-Each schema has two configurations: Debug and Release.
+Each scheme has two configurations: Debug and Release.
 
 - Debug: Used when running the app from within Xcode.
 - Release: Used when running the app after it has been distributed via a distribution platform, currently App Center.
@@ -97,12 +51,11 @@ CORE_USER_AUTH = false
 
 ### Running with local services
 
-The first step here is to have all three services running locally on your machine as described above under the "Setup services" section, then modify an xcconfig file to points to these services. This requires the changed below:
-
-```
-VERIFIER_API_URI = https:/$()/localhost:8080
-VCI_ISSUER_URL = http:/$()/127.0.0.1:5000
-```
+The first step here is to have all three services running locally on your machine, 
+you can follow these Repositories for further instructions:
+* [Issuer](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py)
+* [Web Verifier UI](https://github.com/eu-digital-identity-wallet/eudi-web-verifier)
+* [Web Verifier Endpoint](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt)
 
 ### How to work with self signed certificates on iOS
 
