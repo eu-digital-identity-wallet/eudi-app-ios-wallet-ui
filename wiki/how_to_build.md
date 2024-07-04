@@ -20,8 +20,8 @@ Clone the [iOS repository](https://github.com/eu-digital-identity-wallet/eudi-ap
 
 Open the project file in Xcode. The application has two schemas: "EUDI Wallet Dev" and "EUDI Wallet Demo".
 
-- EUDI Wallet Dev: This target communicates with the services deployed in the staging environment.
-- EUDI Wallet Demo: This target communicates with the services deployed in the production environment.
+- EUDI Wallet Dev: This target communicates with the services deployed in an environment based on the latest main branch.
+- EUDI Wallet Demo: This target communicates with the services deployed in the latest stable environment.
 
 
 Each schema has two configurations: Debug and Release.
@@ -55,7 +55,7 @@ The first step here is to have all three services running locally on your machin
 
 ```
 VERIFIER_API_URI = https:/$()/localhost:8080
-VCI_ISSUER_URL = https:/$()/localhost/pid-issuer 
+VCI_ISSUER_URL = http:/$()/127.0.0.1:5000
 ```
 
 ### How to work with self signed certificates on iOS

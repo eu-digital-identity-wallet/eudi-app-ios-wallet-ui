@@ -26,7 +26,7 @@ struct VerifierConfig {
   public let legalName: String
 }
 
-struct ProximityConfig {
+struct ReaderConfig {
   public let trustedCerts: [Data]
 }
 
@@ -43,9 +43,9 @@ protocol WalletKitConfig {
   var vciConfig: VciConfig { get }
 
   /**
-   * Proximity Configuration
+   * Reader Configuration
    */
-  var proximityConfig: ProximityConfig { get }
+  var readerConfig: ReaderConfig { get }
 
   /**
    * User authentication required accessing core's secure storage
@@ -74,7 +74,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
     )
   }
 
-  var proximityConfig: ProximityConfig {
+  var readerConfig: ReaderConfig {
     guard let cert = Data(name: "eudi_pid_issuer_ut", ext: "der") else {
       return .init(trustedCerts: [])
     }
