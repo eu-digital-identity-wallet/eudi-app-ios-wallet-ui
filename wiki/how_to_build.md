@@ -3,72 +3,12 @@
 ## Table of contents
 
 * [Overview](#overview)
-* [Setup services](#setup-services)
 * [Setup Apps](#setup-apps)
 * [How to work with self signed certificates on iOS](#how-to-work-with-self-signed-certificates-on-ios)
 
 ## Overview
 
-This guide aims to assist developers build the iOS application and make it interact with services that are self hosted. As an example it uses services that run on a local machine.
-
-## Setup services
-
-## Issuer
-
-### Overview
-
-[PID Issuer](https://github.com/eu-digital-identity-wallet/eudi-srv-pid-issuer) is an implementation of a credential issuing service, according to [OpenId4VCI - draft13](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html).
-
-Visit this, and the primary issuer, online at these adresses:
-
-[EUDIW Issue/Primary](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py)
-
-[PID Issuer/Alternate](https://github.com/eu-digital-identity-wallet/eudi-srv-pid-issuer)
-
-### Local development environment
-
-## Issuer
-
-This [Issuer](https://github.com/eu-digital-identity-wallet/eudi-srv-pid-issuer) requires Docker to be installed on your machine. You can find instructions below.
-
-Windows: https://docs.docker.com/desktop/install/windows-install/
-
-macOS https://docs.docker.com/desktop/install/mac-install/
-
-To make the issuer and the Keycloak authentication service accessible, run the following command from the issuer directory:
-
-```
-cd docker-compose
-docker compose up -d
-```
-
-The issuer is then accesible here [https://localhost/pid-issuer/]( https://localhost/pid-issuer/)
-
-## Verifier
-
-In order to run the Verifier, clone [EUDI Verifier Endpoint](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt). You need to have Java installed on your machine. For macOS in particular we recommend [SDKMAN!](https://sdkman.io/)
-
-From the Verifier directory run the command:
-
-```
-./gradlew bootRun
-```
-
-The verifier will then be accesible at [http://localhost:8080]( http://localhost:8080), and comprehensive documentation on its endpoints and configuration can be found [here](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt).
-
-
-## Verifier web UI
-
-You can clone the Verifier UI [here](https://github.com/eu-digital-identity-wallet/eudi-web-verifier)
-
-You need npm and [Angular CLI](https://github.com/angular/angular-cli) installed on your machine.
-
-In order to access the Verifier UI at [http://localhost:4200](http://localhost:4200) run the following commands:
-
-```
-npm install
-ng serve
-```
+This guide aims to assist developers build the iOS application.
 
 # Setup Apps
 
