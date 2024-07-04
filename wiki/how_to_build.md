@@ -51,12 +51,11 @@ CORE_USER_AUTH = false
 
 ### Running with local services
 
-The first step here is to have all three services running locally on your machine as described above under the "Setup services" section, then modify an xcconfig file to points to these services. This requires the changed below:
-
-```
-VERIFIER_API_URI = https:/$()/localhost:8080
-VCI_ISSUER_URL = http:/$()/127.0.0.1:5000
-```
+The first step here is to have all three services running locally on your machine, 
+you can follow these Repositories for further instructions:
+* [Issuer](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py)
+* [Web Verifier UI](https://github.com/eu-digital-identity-wallet/eudi-web-verifier)
+* [Web Verifier Endpoint](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt)
 
 ### How to work with self signed certificates on iOS
 
