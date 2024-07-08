@@ -32,7 +32,7 @@ public struct OfferCodeView<Router: RouterHost>: View {
   public var body: some View {
     ContentScreenView(errorConfig: viewModel.viewState.error) {
 
-      ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
+      ContentHeaderView {
         viewModel.onPop()
       }
 
