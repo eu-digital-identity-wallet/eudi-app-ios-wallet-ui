@@ -25,7 +25,7 @@ public final class LogicUiAssembly: Assembly {
     container.register(ConfigUiLogic.self) { _ in
       ConfigUiLogicImpl(themeConfiguration: .default)
     }
-    .inObjectScope(ObjectScope.graph)
+    .inObjectScope(ObjectScope.container)
 
     container.register(UrlSchemaController.self) { _ in
       UrlSchemaControllerImpl()

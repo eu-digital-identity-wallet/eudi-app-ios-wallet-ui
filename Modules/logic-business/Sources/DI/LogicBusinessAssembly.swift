@@ -20,23 +20,24 @@ public final class LogicBusinessAssembly: Assembly {
   public init() {}
 
   public func assemble(container: Container) {
-    container.register(ConfigLogic.self) { _ in
-      ConfigLogicImpl()
-    }
-    .inObjectScope(ObjectScope.graph)
-
-    container.register(FormValidator.self) { _ in
-      FormValidatorImpl()
-    }
-    .inObjectScope(ObjectScope.transient)
 
     container.register(KeyChainController.self) { _ in
       KeyChainControllerImpl()
     }
-    .inObjectScope(ObjectScope.transient)
+    .inObjectScope(ObjectScope.container)
 
     container.register(PrefsController.self) { _ in
       PrefsControllerImpl()
+    }
+    .inObjectScope(ObjectScope.container)
+
+    container.register(ConfigLogic.self) { _ in
+      ConfigLogicImpl()
+    }
+    .inObjectScope(ObjectScope.container)
+
+    container.register(FormValidator.self) { _ in
+      FormValidatorImpl()
     }
     .inObjectScope(ObjectScope.transient)
 

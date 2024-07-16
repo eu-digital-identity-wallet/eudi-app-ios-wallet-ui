@@ -30,7 +30,13 @@ public extension MdocDecodable {
     guard let value = expiryDateValue, let expiryDate = parser(value) else {
       return false
     }
-    return expiryDate < Date.now
+    let order = Calendar.current.compare(expiryDate, to: Date.now, toGranularity: .day)
+    switch order {
+    case .orderedAscending:
+      return true
+    default:
+      return false
+    }
   }
 
   func getBearersName() -> (first: String, last: String)? {
