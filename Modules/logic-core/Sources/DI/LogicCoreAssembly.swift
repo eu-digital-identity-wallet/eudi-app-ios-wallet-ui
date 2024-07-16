@@ -23,7 +23,7 @@ public final class LogicCoreAssembly: Assembly {
     container.register(WalletKitConfig.self) { _ in
       WalletKitConfigImpl()
     }
-    .inObjectScope(ObjectScope.graph)
+    .inObjectScope(ObjectScope.container)
 
     container.register(WalletKitController.self) { r in
       WalletKitControllerImpl(configLogic: r.force(WalletKitConfig.self))
