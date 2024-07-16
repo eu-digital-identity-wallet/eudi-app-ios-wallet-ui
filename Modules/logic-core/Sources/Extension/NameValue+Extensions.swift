@@ -76,3 +76,18 @@ extension Array where Element == NameValue {
     }
   }
 }
+
+extension RangeReplaceableCollection where Element == NameValue {
+  mutating func appendOrReplace(_ element: Element) {
+    if let index = self.firstIndex(where: { $0.name == element.name }) {
+      self.replaceSubrange(index...index, with: [element])
+    } else {
+      self.append(element)
+    }
+  }
+  mutating func appendOrReplace(contentsOf elements: [Element]) {
+    elements.forEach { element in
+      self.appendOrReplace(element)
+    }
+  }
+}

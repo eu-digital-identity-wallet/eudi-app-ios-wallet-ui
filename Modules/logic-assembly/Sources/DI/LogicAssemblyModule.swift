@@ -26,6 +26,6 @@ public final class LogicAssemblyModule: Assembly {
         analyticsController: r.force(AnalyticsController.self)
       )
     }
-    .inObjectScope(ObjectScope.graph)
+    .inObjectScope(ObjectScope.container)
   }
 }

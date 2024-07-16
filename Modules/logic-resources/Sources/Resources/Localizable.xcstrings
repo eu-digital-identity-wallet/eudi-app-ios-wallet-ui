@@ -1418,7 +1418,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You successfully shared information with the %@"
+            "value" : "You successfully shared information with %@"
           }
         }
       }

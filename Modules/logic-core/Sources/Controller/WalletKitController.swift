@@ -256,18 +256,20 @@ extension WalletKitController {
 
       // Flatten properties in order to be made in a Key: Value structure
       if let drivingPrivileges = mdl.getDrivingPrivileges(parser: parser) {
-        displayStrings.append(drivingPrivileges)
+        displayStrings.appendOrReplace(drivingPrivileges)
       }
 
-      displayStrings.append(
+      displayStrings.appendOrReplace(
         contentsOf: decodeAgeOver(ageOverDictionary: mdl.ageOverXX)
       )
     } else if documentType == .PID, let pid = wallet.storage.pidModel {
-      displayStrings.append(
+      displayStrings.appendOrReplace(
         contentsOf: decodeAgeOver(ageOverDictionary: pid.ageOverXX)
       )
     }
     // Find the first Value that Matches given Key for document
+
+    displayStrings.forEach { print($0.name) }
 
     let value = displayStrings
       .first(where: { element in
