@@ -124,7 +124,7 @@ public struct WrapCheckBoxView: View {
 
       Spacer()
     }
-    .frame(maxWidth: .infinity, maxHeight: 50)
+    .frame(maxWidth: .infinity)
     .if(self.onTap != nil && self.isEnabled && !self.isLoading) {
       $0.onTapGesture {
         self.onTap?(self.id)
