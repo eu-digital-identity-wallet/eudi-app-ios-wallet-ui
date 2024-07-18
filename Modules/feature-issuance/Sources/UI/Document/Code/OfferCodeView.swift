@@ -32,7 +32,7 @@ public struct OfferCodeView<Router: RouterHost>: View {
   public var body: some View {
     ContentScreenView(errorConfig: viewModel.viewState.error) {
 
-      ContentHeaderView {
+      ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
         viewModel.onPop()
       }
 
@@ -44,11 +44,8 @@ public struct OfferCodeView<Router: RouterHost>: View {
       VSpacer.large()
 
       HStack {
-        Theme.shared.image.textBubble
-          .resizable()
-          .scaledToFit()
+        Theme.shared.image.message
           .foregroundColor(Theme.shared.color.primary)
-          .frame(height: getScreenRect().width / 4)
         Spacer()
       }
 
