@@ -47,7 +47,7 @@ public protocol ImageManagerProtocol {
   var trash: Image { get }
   var bluetoothConnect: Image { get }
   var viewFinder: Image { get }
-  var textBubble: Image { get }
+  var message: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -83,7 +83,7 @@ final class ImageManager: ImageManagerProtocol {
     case trash = "trash"
     case bluetoothConnect = "bluetooth-connect"
     case viewFinder = "viewfinder"
-    case textBubble = "text.bubble"
+    case message = "ic-message"
   }
 
   // MARK: - Properties
@@ -185,7 +185,7 @@ final class ImageManager: ImageManagerProtocol {
   var viewFinder: Image {
     Image(systemName: ImageEnum.viewFinder.rawValue)
   }
-  var textBubble: Image {
-    Image(systemName: ImageEnum.textBubble.rawValue)
+  var message: Image {
+    Image(ImageEnum.message.rawValue, bundle: bundle)
   }
 }
