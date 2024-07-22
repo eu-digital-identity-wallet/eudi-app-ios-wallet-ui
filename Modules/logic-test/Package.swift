@@ -15,7 +15,7 @@ let package = Package(
   dependencies: [
     .package(
       url: "https://github.com/Brightify/Cuckoo.git",
-      from: "2.0.8"
+      from: "2.0.9"
     ),
     .package(
       url: "https://github.com/groue/CombineExpectations.git",
