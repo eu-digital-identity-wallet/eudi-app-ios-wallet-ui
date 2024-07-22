@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
       "state" : {
-        "revision" : "00b050fb5670ac2a5fbba12282613a80cc478de2",
-        "version" : "2.0.8"
+        "revision" : "d0f1b4e1e2b2a94127b66754f3fcc000572efa33",
+        "version" : "2.0.9"
       }
     },
     {
