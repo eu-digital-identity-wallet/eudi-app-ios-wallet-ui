@@ -129,7 +129,7 @@ Clone this repo and make sure you have access to the dependencies below:
 
 [openid4vci-swift](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift)
 
-You will also need to download the Android Verifier app [here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/mdoc-verifier-testing/distribution_groups/eudi%20verifier%20(testing)%20public)
+You will also need to download the Android Verifier app. More information can be found [here](wiki/verifier_proximity.md)
 
 ### App launch
 
