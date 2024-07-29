@@ -21,6 +21,7 @@ extension BearerHeaderView {
 
     let item: BearerUIModel
     let isLoading: Bool
+    let isMoreOptionsEnabled: Bool
     let onMoreClicked: () -> Void
 
     @ViewBuilder
@@ -35,10 +36,12 @@ extension BearerHeaderView {
     init(
       item: BearerUIModel,
       isLoading: Bool,
+      isMoreOptionsEnabled: Bool,
       onMoreClicked: @escaping @autoclosure () -> Void
     ) {
       self.item = item
       self.isLoading = isLoading
+      self.isMoreOptionsEnabled = isMoreOptionsEnabled
       self.onMoreClicked = onMoreClicked
     }
 
@@ -66,9 +69,14 @@ extension BearerHeaderView {
               label: {
                 Theme.shared.image.more
                   .renderingMode(.template)
-                  .foregroundStyle(Theme.shared.color.primary)
+                  .foregroundStyle(
+                    Theme.shared.color.primary.opacity(
+                      isMoreOptionsEnabled ? 1.0 : 0.5
+                    )
+                  )
               }
             )
+            .disabled(!isMoreOptionsEnabled)
           }
         }
         .padding(.horizontal, 6)

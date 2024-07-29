@@ -267,6 +267,20 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedStringWithArguments(forKey: "issuance_code_caption", arguments: args)
     case .transactionCodeFormatError(let args):
       bundle.localizedStringWithArguments(forKey: "transaction_code_format_error", arguments: args)
+    case .inProgress:
+      bundle.localizedString(forKey: "in_progress")
+    case .scopedIssuanceSuccessDeferredCaption:
+      bundle.localizedString(forKey: "scoped_issuance_success_deferred_caption")
+    case .issuanceSuccessDeferredCaption(let args):
+      bundle.localizedStringWithArguments(forKey: "issuance_success_deferred_caption", arguments: args)
+    case .issuanceFailed:
+      bundle.localizedString(forKey: "issuance_failed")
+    case .pending:
+      bundle.localizedString(forKey: "pending")
+    case .deferredDocumentsIssuedModalTitle:
+      bundle.localizedString(forKey: "deferred_document_issued_modal_title")
+    case .defferedDocumentsIssuedModalCaption:
+      bundle.localizedString(forKey: "deferred_document_issued_modal_caption")
     }
   }
 
@@ -393,6 +407,13 @@ public extension LocalizableString {
     case issuanceCodeTitle([String])
     case issuanceCodeCaption([String])
     case transactionCodeFormatError([String])
+    case inProgress
+    case scopedIssuanceSuccessDeferredCaption
+    case issuanceSuccessDeferredCaption([String])
+    case pending
+    case issuanceFailed
+    case deferredDocumentsIssuedModalTitle
+    case defferedDocumentsIssuedModalCaption
   }
 }
 

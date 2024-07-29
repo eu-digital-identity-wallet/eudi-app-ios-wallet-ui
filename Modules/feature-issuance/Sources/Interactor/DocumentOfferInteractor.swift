@@ -48,10 +48,10 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       let codeMaxLength = 6
 
       let offer = try await walletController.resolveOfferUrlDocTypes(uriOffer: uri)
-      let hasPidStored = !walletController.fetchDocuments(with: .PID).isEmpty
+      let hasPidStored = !walletController.fetchIssuedDocuments(with: .PID).isEmpty
 
       if let spec = offer.txCodeSpec,
-          let codeLength = spec.length,
+         let codeLength = spec.length,
          (!(codeMinLength...codeMaxLength).contains(codeLength) || spec.inputMode == .text) {
         return .failure(WalletCoreError.transactionCodeFormat(["\(codeMinLength)", "\(codeMaxLength)"]))
       }
@@ -90,11 +90,24 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
       if documents.isEmpty {
         return .failure(WalletCoreError.unableToIssueAndStore)
+      } else if documents.first(where: { $0.isDeferred }) != nil {
+        return .deferredSuccess(
+          retrieveSuccessRoute(
+            caption: .issuanceSuccessDeferredCaption([issuerName]),
+            successNavigation: successNavigation,
+            title: .init(value: .inProgress, color: Theme.shared.color.warning),
+            buttonTitle: .okButton,
+            visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.warning)
+          )
+        )
       } else if documents.count == docOffers.count {
         return .success(
           retrieveSuccessRoute(
-            with: .credentialOfferSuccessCaption([issuerName]),
-            and: successNavigation
+            caption: .credentialOfferSuccessCaption([issuerName]),
+            successNavigation: successNavigation,
+            title: .init(value: .success),
+            buttonTitle: .credentialOfferSuccessButton,
+            visualKind: .defaultIcon
           )
         )
       } else {
@@ -114,12 +127,15 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
         return .partialSuccess(
           retrieveSuccessRoute(
-            with: .credentialOfferPartialSuccessCaption(
+            caption: .credentialOfferPartialSuccessCaption(
               [
                 issuerName, notIssued.joined(separator: ", ")
               ]
             ),
-            and: successNavigation
+            successNavigation: successNavigation,
+            title: .init(value: .success),
+            buttonTitle: .credentialOfferSuccessButton,
+            visualKind: .defaultIcon
           )
         )
       }
@@ -130,8 +146,11 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
   }
 
   private func retrieveSuccessRoute(
-    with key: LocalizableString.Key,
-    and successNavigation: UIConfig.TwoWayNavigationType
+    caption: LocalizableString.Key,
+    successNavigation: UIConfig.TwoWayNavigationType,
+    title: UIConfig.Success.Title,
+    buttonTitle: LocalizableString.Key,
+    visualKind: UIConfig.Success.VisualKind
   ) -> AppRoute {
 
     var navigationType: UIConfig.DeepLinkNavigationType {
@@ -143,16 +162,16 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
     return .success(
       config: UIConfig.Success(
-        title: .success,
-        subtitle: key,
+        title: title,
+        subtitle: caption,
         buttons: [
           .init(
-            title: .credentialOfferSuccessButton,
+            title: buttonTitle,
             style: .primary,
             navigationType: navigationType
           )
         ],
-        visualKind: .defaultIcon
+        visualKind: visualKind
       )
     )
   }
@@ -166,5 +185,6 @@ public enum OfferRequestPartialState {
 public enum IssueOfferDocumentsPartialState {
   case success(AppRoute)
   case partialSuccess(AppRoute)
+  case deferredSuccess(AppRoute)
   case failure(Error)
 }

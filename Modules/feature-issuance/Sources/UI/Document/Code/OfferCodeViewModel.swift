@@ -95,6 +95,8 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
         )
       case .partialSuccess(let route):
         router.push(with: route)
+      case .deferredSuccess(let route):
+        router.push(with: route)
       }
     }
   }

@@ -39,13 +39,41 @@ struct DocumentListView: View {
         spacing: SPACING_SMALL
       ) {
         ForEach(items) { item in
-          DocumentCellView(
-            item: item,
-            isLoading: isLoading,
-            action: { item in
-              action(item)
-            }
-          )
+          switch item.value.state {
+          case .issued:
+            DocumentCellView(
+              item: item,
+              isLoading: isLoading,
+              action: { item in
+                action(item)
+              }
+            )
+            .disabled(isLoading)
+          case .pending:
+            DocumentDeferredCellView(
+              item: item,
+              isLoading: isLoading,
+              color: Theme.shared.color.warning,
+              icon: Theme.shared.image.clockIndicator,
+              status: .pending,
+              action: { item in
+                action(item)
+              }
+            )
+            .disabled(isLoading)
+          case .failed:
+            DocumentDeferredCellView(
+              item: item,
+              isLoading: isLoading,
+              color: Theme.shared.color.error,
+              icon: Theme.shared.image.errorIndicator,
+              status: .issuanceFailed,
+              action: { item in
+                action(item)
+              }
+            )
+            .disabled(isLoading)
+          }
         }
       }
       .padding(SPACING_LARGE)

@@ -27,6 +27,7 @@ public protocol ImageManagerProtocol {
   var arrowLeft: Image { get }
   var chevronUp: Image { get }
   var chevronDown: Image { get }
+  var chevronRight: Image { get }
   var xmark: Image { get }
   var exclamationmarkCircle: Image { get }
   var circle: Image { get }
@@ -48,6 +49,9 @@ public protocol ImageManagerProtocol {
   var bluetoothConnect: Image { get }
   var viewFinder: Image { get }
   var message: Image { get }
+  var clock: Image { get }
+  var clockIndicator: Image { get }
+  var errorIndicator: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -63,6 +67,7 @@ final class ImageManager: ImageManagerProtocol {
     case arrowLeft = "arrow.left"
     case chevronUp = "chevron.up"
     case chevronDown = "chevron.down"
+    case chevronRight = "chevron.right"
     case xmark = "xmark"
     case exclamationmarkCircle = "exclamationmark.circle"
     case circle = "circle.fill"
@@ -84,6 +89,9 @@ final class ImageManager: ImageManagerProtocol {
     case bluetoothConnect = "bluetooth-connect"
     case viewFinder = "viewfinder"
     case message = "ic-message"
+    case clock = "ic-clock"
+    case clockIndicator = "ic-clock-indicator"
+    case errorIndicator = "ic-error-indicator"
   }
 
   // MARK: - Properties
@@ -124,6 +132,9 @@ final class ImageManager: ImageManagerProtocol {
   }
   var chevronDown: Image {
     Image(systemName: ImageEnum.chevronDown.rawValue)
+  }
+  var chevronRight: Image {
+    Image(systemName: ImageEnum.chevronRight.rawValue)
   }
   var xmark: Image {
     Image(systemName: ImageEnum.xmark.rawValue)
@@ -187,5 +198,14 @@ final class ImageManager: ImageManagerProtocol {
   }
   var message: Image {
     Image(ImageEnum.message.rawValue, bundle: bundle)
+  }
+  var clock: Image {
+    Image(ImageEnum.clock.rawValue, bundle: bundle)
+  }
+  var clockIndicator: Image {
+    Image(ImageEnum.clockIndicator.rawValue, bundle: bundle)
+  }
+  var errorIndicator: Image {
+    Image(ImageEnum.errorIndicator.rawValue, bundle: bundle)
   }
 }

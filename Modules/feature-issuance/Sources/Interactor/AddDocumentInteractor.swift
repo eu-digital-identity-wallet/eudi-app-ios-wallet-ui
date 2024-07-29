@@ -83,7 +83,11 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
   public func issueDocument(docType: String) async -> IssueDocumentPartialState {
     do {
       let doc = try await walletController.issueDocument(docType: docType, format: .cbor)
-      return .success(doc.id)
+      if doc.isDeferred {
+        return .deferredSuccess
+      } else {
+        return .success(doc.id)
+      }
     } catch {
       return .failure(WalletCoreError.unableToIssueAndStore)
     }
@@ -102,5 +106,6 @@ public enum LoadSampleDataPartialState {
 
 public enum IssueDocumentPartialState {
   case success(String)
+  case deferredSuccess
   case failure(Error)
 }
