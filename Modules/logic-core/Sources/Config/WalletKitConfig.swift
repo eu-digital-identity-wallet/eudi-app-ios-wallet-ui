@@ -51,6 +51,11 @@ protocol WalletKitConfig {
    * User authentication required accessing core's secure storage
    */
   var userAuthenticationRequired: Bool { get }
+
+  /**
+   * Service name for documents key chain storage
+   */
+  var documentStorageServiceName: String { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {
@@ -84,5 +89,12 @@ struct WalletKitConfigImpl: WalletKitConfig {
       return .init(trustedCerts: [])
     }
     return .init(trustedCerts: [cert])
+  }
+
+  var documentStorageServiceName: String {
+    guard let identifier = Bundle.main.bundleIdentifier else {
+      return "eudi.document.storage"
+    }
+    return "\(identifier).eudi.document.storage"
   }
 }

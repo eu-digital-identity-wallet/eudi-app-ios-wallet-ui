@@ -65,7 +65,7 @@ final class WalletKitControllerImpl: WalletKitController {
   public private(set) var activeCoordinator: PresentationSessionCoordinator?
 
   private let configLogic: WalletKitConfig
-  private var cancellables = Set<AnyCancellable>()
+  private let cancellables = Set<AnyCancellable>()
 
   init(configLogic: WalletKitConfig) {
     self.configLogic = configLogic
@@ -78,7 +78,7 @@ final class WalletKitControllerImpl: WalletKitController {
       authFlowRedirectionURI: configLogic.vciConfig.redirectUri
     )
     wallet.trustedReaderCertificates = configLogic.readerConfig.trustedCerts
-    wallet.serviceName = Bundle.main.bundleIdentifier.orEmpty
+    wallet.serviceName = configLogic.documentStorageServiceName
   }
 
   func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssuanceModel {

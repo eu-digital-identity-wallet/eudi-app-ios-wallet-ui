@@ -5890,6 +5890,16 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
             )
         }
     }
+    
+    var documentStorageServiceName: String {
+        get {
+            return cuckoo_manager.getter(
+                "documentStorageServiceName",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.documentStorageServiceName
+            )
+        }
+    }
 
 
     struct __StubbingProxy_WalletKitConfig: Cuckoo.StubbingProxy {
@@ -5913,6 +5923,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
         
         var userAuthenticationRequired: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,Bool> {
             return .init(manager: cuckoo_manager, name: "userAuthenticationRequired")
+        }
+        
+        var documentStorageServiceName: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,String> {
+            return .init(manager: cuckoo_manager, name: "documentStorageServiceName")
         }
     }
 
@@ -5942,6 +5956,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
         var userAuthenticationRequired: Cuckoo.VerifyReadOnlyProperty<Bool> {
             return .init(manager: cuckoo_manager, name: "userAuthenticationRequired", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
+        
+        var documentStorageServiceName: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "documentStorageServiceName", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
     }
 }
 
@@ -5968,6 +5986,12 @@ class WalletKitConfigStub:WalletKitConfig {
     var userAuthenticationRequired: Bool {
         get {
             return DefaultValueRegistry.defaultValue(for: (Bool).self)
+        }
+    }
+    
+    var documentStorageServiceName: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
         }
     }
 
