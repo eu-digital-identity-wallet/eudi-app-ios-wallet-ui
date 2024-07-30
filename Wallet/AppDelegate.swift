@@ -62,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   private func clearDocuments() {
     Task {
-      try? await walletKitController.clearDocuments()
+      await walletKitController.clearAllDocuments()
     }
   }
 }

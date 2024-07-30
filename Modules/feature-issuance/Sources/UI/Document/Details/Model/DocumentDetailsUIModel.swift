@@ -119,7 +119,7 @@ extension MdocDecodable {
       type: identifier,
       documentName: identifier.isSupported
       ? identifier.localizedTitle
-      : title,
+      : title ?? identifier.localizedTitle,
       holdersName: bearerName,
       holdersImage: getPortrait() ?? Theme.shared.image.user,
       createdAt: createdAt,

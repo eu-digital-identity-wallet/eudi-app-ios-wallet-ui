@@ -46,6 +46,59 @@ final class TestDashboardInteractor: EudiTest {
     self.configLogic = nil
   }
   
+  func testHasIssuedDocuments_WhenControllerReturnsValues_ThenReturnTrue() {
+    // Given
+    stubFetchIssuedDocuments(
+      with: [
+        Constants.euPidModel,
+        Constants.isoMdlModel
+      ]
+    )
+    // When
+    let result = interactor.hasIssuedDocuments()
+    // Then
+    XCTAssertTrue(result)
+  }
+  
+  func testHasIssuedDocuments_WhenControllerReturnsNoValues_ThenReturnFalse() {
+    // Given
+    stubFetchIssuedDocuments(with: [])
+    // When
+    let result = interactor.hasIssuedDocuments()
+    // Then
+    XCTAssertFalse(result)
+  }
+  
+  func testHasDeferredDocuments_WhenControllerReturnsValues_ThenReturnTrue() {
+    // Given
+    stubFetchDeferredDocuments(
+      with: [
+        .init(
+          docType: "",
+          docDataType: .cbor,
+          data: Data(),
+          privateKeyType: nil,
+          privateKey: nil,
+          createdAt: nil,
+          status: .deferred
+        )
+      ]
+    )
+    // When
+    let result = interactor.hasDeferredDocuments()
+    // Then
+    XCTAssertTrue(result)
+  }
+  
+  func testHasDeferredDocuments_WhenControllerReturnsNoValues_ThenReturnFalse() {
+    // Given
+    stubFetchDeferredDocuments(with: [])
+    // When
+    let result = interactor.hasDeferredDocuments()
+    // Then
+    XCTAssertFalse(result)
+  }
+  
   func testOpenBleSettings_WhenMethodIsCalled_ThenVerifyAtLeastOnce() {
     // Given
     stub(reachabilityController) { mock in
@@ -80,10 +133,11 @@ final class TestDashboardInteractor: EudiTest {
   func testFetchDashboard_WhenWalletKitControllerReturnsEmpty_ThenReturnError() async {
     // Given
     stubFetchDocuments(with: [])
+    stubFetchIssuedDocuments(with: [])
     stubFetchDocumentsWithExclusion(with: [])
     stubFetchMainPidDocument(with: nil)
     // When
-    let state = await interactor.fetchDashboard()
+    let state = await interactor.fetchDashboard(failedDocuments: [])
     // Then
     switch state {
     case .failure(let error):
@@ -104,7 +158,8 @@ final class TestDashboardInteractor: EudiTest {
           title: "National ID",
           createdAt: Constants.documentCreatedAt,
           expiresAt: "30 Mar 2050",
-          hasExpired: false
+          hasExpired: false,
+          state: .issued
         )
       ),
       .init(
@@ -115,7 +170,8 @@ final class TestDashboardInteractor: EudiTest {
           title: "Driving License",
           createdAt: Constants.documentCreatedAt,
           expiresAt: "30 Mar 2050",
-          hasExpired: false
+          hasExpired: false,
+          state: .issued
         )
       )
     ]
@@ -132,15 +188,22 @@ final class TestDashboardInteractor: EudiTest {
         Constants.isoMdlModel
       ]
     )
+    stubFetchIssuedDocuments(
+      with: [
+        Constants.euPidModel,
+        Constants.isoMdlModel
+      ]
+    )
     stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
     stubFetchMainPidDocument(with: Constants.euPidModel)
     // When
-    let state = await interactor.fetchDashboard()
+    let state = await interactor.fetchDashboard(failedDocuments: [])
     // Then
     switch state {
-    case .success(let bearer, let documents):
+    case .success(let bearer, let documents, let hasIssuedDocuments):
       XCTAssertEqual(expectedDocuments, documents)
       XCTAssertEqual(expectedBearer, bearer)
+      XCTAssertTrue(hasIssuedDocuments)
     default:
       XCTFail("Wrong state \(state)")
     }
@@ -162,13 +225,25 @@ private extension TestDashboardInteractor {
   
   func stubFetchDocuments(with documents: [MdocDecodable]) {
     stub(walletKitController) { mock in
-      when(mock.fetchDocuments()).thenReturn(documents)
+      when(mock.fetchAllDocuments()).thenReturn(documents)
+    }
+  }
+  
+  func stubFetchIssuedDocuments(with documents: [MdocDecodable]) {
+    stub(walletKitController) { mock in
+      when(mock.fetchIssuedDocuments()).thenReturn(documents)
+    }
+  }
+  
+  func stubFetchDeferredDocuments(with documents: [WalletStorage.Document]) {
+    stub(walletKitController) { mock in
+      when(mock.fetchDeferredDocuments()).thenReturn(documents)
     }
   }
   
   func stubFetchDocumentsWithExclusion(with documents: [MdocDecodable]) {
     stub(walletKitController) { mock in
-      when(mock.fetchDocuments(excluded: any())).thenReturn(documents)
+      when(mock.fetchIssuedDocuments(excluded: any())).thenReturn(documents)
     }
   }
   

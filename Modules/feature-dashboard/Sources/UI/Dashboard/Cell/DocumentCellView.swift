@@ -44,9 +44,10 @@ extension DocumentListView {
 
             ZStack(alignment: .topTrailing) {
 
-              Theme.shared.image.idStroke
-                .foregroundColor(Theme.shared.color.primary)
+              Theme.shared.image.id
+                .renderingMode(.template)
                 .aspectRatio(contentMode: .fit)
+                .foregroundColor(Theme.shared.color.primary)
 
               if item.value.hasExpired {
                 ZStack {
@@ -101,6 +102,91 @@ extension DocumentListView {
       .padding()
       .background(Theme.shared.color.backgroundDefault)
       .clipShape(.rect(cornerRadius: 16))
+      .shimmer(isLoading: isLoading)
+    }
+  }
+}
+
+extension DocumentListView {
+  struct DocumentDeferredCellView: View {
+
+    let item: DocumentUIModel
+    let action: (DocumentUIModel) -> Void
+    let isLoading: Bool
+    let color: Color
+    let icon: Image
+    let status: LocalizableString.Key
+
+    init(
+      item: DocumentUIModel,
+      isLoading: Bool,
+      color: Color,
+      icon: Image,
+      status: LocalizableString.Key,
+      action: @escaping (DocumentUIModel) -> Void
+    ) {
+      self.item = item
+      self.isLoading = isLoading
+      self.color = color
+      self.icon = icon
+      self.status = status
+      self.action = action
+    }
+
+    var body: some View {
+      Button(
+        action: {
+          action(item)
+        },
+        label: {
+          VStack(spacing: .zero) {
+
+            ZStack(alignment: .topTrailing) {
+
+              Theme.shared.image.id
+                .renderingMode(.template)
+                .aspectRatio(contentMode: .fit)
+                .foregroundColor(Theme.shared.color.textDisabledDark)
+
+              ZStack {
+                icon
+                  .renderingMode(.template)
+                  .foregroundColor(color)
+                  .padding(2)
+                  .background(Theme.shared.color.backgroundDefault)
+              }
+              .background(Theme.shared.color.backgroundPaper)
+              .clipShape(Circle())
+            }
+            .frame(maxWidth: 48)
+
+            Spacer()
+
+            Text(.custom(item.value.title))
+              .typography(Theme.shared.font.titleMedium)
+              .foregroundColor(Theme.shared.color.textDisabledDark)
+              .minimumScaleFactor(0.5)
+              .lineLimit(1)
+
+            Spacer()
+
+            Text(status)
+              .typography(Theme.shared.font.bodySmall)
+              .foregroundColor(color)
+              .minimumScaleFactor(0.5)
+              .lineLimit(2)
+          }
+        }
+      )
+      .frame(maxWidth: .infinity, alignment: .center)
+      .padding()
+      .background(Theme.shared.color.backgroundDefault)
+      .clipShape(.rect(cornerRadius: 16))
+      .overlay {
+        RoundedRectangle(cornerRadius: 16)
+          .stroke(style: StrokeStyle(lineWidth: 1, dash: [6]))
+          .foregroundStyle(Theme.shared.color.textDisabledDark)
+      }
       .shimmer(isLoading: isLoading)
     }
   }

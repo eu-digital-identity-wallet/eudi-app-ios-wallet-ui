@@ -29,7 +29,7 @@ final class StartupInteractorImpl: StartupInteractor {
   private let quickPinInteractor: QuickPinInteractor
 
   private var hasDocuments: Bool {
-    return !walletKitController.fetchDocuments().isEmpty
+    return !walletKitController.fetchAllDocuments().isEmpty
   }
 
   init(

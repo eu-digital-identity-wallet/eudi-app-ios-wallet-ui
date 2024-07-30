@@ -22,20 +22,21 @@ public extension UIConfig {
 
   struct Success: UIConfigType, Equatable {
 
-    public let title: LocalizableString.Key
+    public let title: Title
     public let subtitle: LocalizableString.Key
     public let buttons: [Success.Button]
     public let visualKind: VisualKind
 
     public var log: String {
-      return "title: \(LocalizableString.shared.get(with: title))" +
+      return "title: \(LocalizableString.shared.get(with: title.value))" +
+      "title color: \(title.color)" +
       " caption: \(LocalizableString.shared.get(with: subtitle))" +
       " buttons: \(buttons.map({ LocalizableString.shared.get(with: $0.title) as String }).joined(separator: ","))" +
       " actions: \(buttons.map(\.navigationType.type).joined(separator: ","))"
     }
 
     public init(
-      title: LocalizableString.Key,
+      title: Title,
       subtitle: LocalizableString.Key,
       buttons: [Success.Button],
       visualKind: VisualKind
@@ -49,10 +50,25 @@ public extension UIConfig {
 }
 
 public extension UIConfig.Success {
+  struct Title: Equatable {
+    public let value: LocalizableString.Key
+    public let color: Color
+
+    public init(
+      value: LocalizableString.Key,
+      color: Color = Theme.shared.color.success
+    ) {
+      self.value = value
+      self.color = color
+    }
+  }
+}
+
+public extension UIConfig.Success {
 
   enum VisualKind: Equatable {
     case defaultIcon
-    case customIcon(Image)
+    case customIcon(Image, Color)
   }
 
   struct Button: Identifiable, Equatable {

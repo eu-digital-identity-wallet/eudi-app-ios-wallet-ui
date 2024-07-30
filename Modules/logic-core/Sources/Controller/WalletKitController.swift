@@ -28,17 +28,21 @@ public protocol WalletKitController {
   func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinator
   func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinator
   func stopPresentation()
-  func fetchDocuments() -> [MdocDecodable]
-  func fetchDocuments(with type: DocumentTypeIdentifier) -> [MdocDecodable]
-  func fetchDocuments(excluded: [DocumentTypeIdentifier]) -> [MdocDecodable]
+  func fetchAllDocuments() -> [MdocDecodable]
+  func fetchDeferredDocuments() -> [WalletStorage.Document]
+  func fetchIssuedDocuments() -> [MdocDecodable]
+  func fetchIssuedDocuments(with type: DocumentTypeIdentifier) -> [MdocDecodable]
+  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [MdocDecodable]
   func fetchMainPidDocument() -> MdocDecodable?
   func fetchDocument(with id: String) -> MdocDecodable?
   func loadSampleData(dataFiles: [String]) async throws
-  func clearDocuments() async throws
-  func deleteDocument(with id: String) async throws
+  func clearAllDocuments() async
+  func clearDocuments(status: DocumentStatus) async throws
+  func deleteDocument(with id: String, status: DocumentStatus) async throws
   func loadDocuments() async throws
   func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
-  func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssueModel
+  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> MdocDecodable
+  func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssuanceModel
   func issueDocumentsByOfferUrl(
     offerUri: String,
     docTypes: [OfferedDocModel],
@@ -69,12 +73,15 @@ final class WalletKitControllerImpl: WalletKitController {
     wallet.verifierApiUri = configLogic.verifierConfig.apiUri
     wallet.verifierLegalName = configLogic.verifierConfig.legalName
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
-    wallet.openID4VciClientId = configLogic.vciConfig.clientId
-    wallet.openID4VciRedirectUri = configLogic.vciConfig.redirectUri
+    wallet.openID4VciConfig = .init(
+      clientId: configLogic.vciConfig.clientId,
+      authFlowRedirectionURI: configLogic.vciConfig.redirectUri
+    )
     wallet.trustedReaderCertificates = configLogic.readerConfig.trustedCerts
+    wallet.serviceName = Bundle.main.bundleIdentifier.orEmpty
   }
 
-  func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssueModel {
+  func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssuanceModel {
     return try await wallet.resolveOfferUrlDocTypes(uriOffer: uriOffer)
   }
 
@@ -96,16 +103,22 @@ final class WalletKitControllerImpl: WalletKitController {
     return try await wallet.loadSampleData(sampleDataFiles: dataFiles)
   }
 
-  public func clearDocuments() async throws {
-    return try await wallet.storage.deleteDocuments()
+  public func clearAllDocuments() async {
+    try? await wallet.storage.deleteDocuments(status: DocumentStatus.issued)
+    try? await wallet.storage.deleteDocuments(status: DocumentStatus.deferred)
   }
 
-  public func deleteDocument(with id: String) async throws {
-    return try await wallet.storage.deleteDocument(id: id)
+  public func clearDocuments(status: DocumentStatus) async throws {
+    return try await wallet.storage.deleteDocuments(status: status)
+  }
+
+  public func deleteDocument(with id: String, status: DocumentStatus) async throws {
+    return try await wallet.storage.deleteDocument(id: id, status: status)
   }
 
   public func loadDocuments() async throws {
-    _ = try await wallet.loadDocuments()
+    _ = try await wallet.loadDocuments(status: .issued)
+    _ = try await wallet.loadDocuments(status: .deferred)
   }
 
   public func startProximityPresentation() -> PresentationSessionCoordinator {
@@ -158,23 +171,31 @@ final class WalletKitControllerImpl: WalletKitController {
     self.activeCoordinator = nil
   }
 
-  public func fetchDocuments() -> [MdocDecodable] {
+  func fetchAllDocuments() -> [MdocDecodable] {
+    return fetchIssuedDocuments() + fetchDeferredDocuments().transformToMdocDecodable()
+  }
+
+  func fetchDeferredDocuments() -> [WalletStorage.Document] {
+    return wallet.storage.deferredDocuments
+  }
+
+  public func fetchIssuedDocuments() -> [MdocDecodable] {
     return wallet.storage.mdocModels
   }
 
-  public func fetchDocuments(with type: DocumentTypeIdentifier) -> [MdocDecodable] {
+  public func fetchIssuedDocuments(with type: DocumentTypeIdentifier) -> [MdocDecodable] {
     return wallet.storage.mdocModels
       .filter({ $0.docType == type.rawValue })
   }
 
   func fetchMainPidDocument() -> MdocDecodable? {
-    return fetchDocuments(with: DocumentTypeIdentifier.PID)
+    return fetchIssuedDocuments(with: DocumentTypeIdentifier.PID)
       .sorted { $0.createdAt > $1.createdAt }.last
   }
 
-  func fetchDocuments(excluded: [DocumentTypeIdentifier]) -> [any MdocDecodable] {
+  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [MdocDecodable] {
     let excludedRawValues = excluded.map { $0.rawValue }
-    return fetchDocuments().filter { !excludedRawValues.contains($0.docType) }
+    return fetchIssuedDocuments().filter { !excludedRawValues.contains($0.docType) }
   }
 
   public func fetchDocument(with id: String) -> MdocDecodable? {
@@ -183,6 +204,17 @@ final class WalletKitControllerImpl: WalletKitController {
 
   public func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document {
     return try await wallet.issueDocument(docType: docType, format: format)
+  }
+
+  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> MdocDecodable {
+    let result = try await wallet.requestDeferredIssuance(deferredDoc: doc)
+    if result.isDeferred {
+      return result.transformToMdocDecodable()
+    } else if let doc = fetchDocument(with: result.id) {
+      return doc
+    } else {
+      throw WalletCoreError.unableFetchDocument
+    }
   }
 
   private func decodeDeeplink(link: URLComponents) -> String? {

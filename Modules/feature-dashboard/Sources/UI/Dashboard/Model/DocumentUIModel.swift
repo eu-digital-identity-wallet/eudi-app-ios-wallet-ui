@@ -43,6 +43,7 @@ public extension DocumentUIModel {
     public var createdAt: Date
     public let expiresAt: String?
     public let hasExpired: Bool
+    public let state: State
   }
 
   static func mocks() -> [DocumentUIModel] {
@@ -55,7 +56,8 @@ public extension DocumentUIModel {
           title: "Digital ID",
           createdAt: Date(),
           expiresAt: "22/01/2025",
-          hasExpired: false
+          hasExpired: false,
+          state: .issued
         )
       ),
       .init(
@@ -66,7 +68,8 @@ public extension DocumentUIModel {
           title: "EUDI Conference",
           createdAt: Date(),
           expiresAt: "22/01/2025",
-          hasExpired: false
+          hasExpired: false,
+          state: .issued
         )
       ),
       .init(
@@ -77,7 +80,8 @@ public extension DocumentUIModel {
           title: "Passport",
           createdAt: Date(),
           expiresAt: "22/01/2025",
-          hasExpired: false
+          hasExpired: false,
+          state: .issued
         )
       ),
       .init(
@@ -88,7 +92,8 @@ public extension DocumentUIModel {
           title: "Document 1",
           createdAt: Date(),
           expiresAt: "22/01/2025",
-          hasExpired: false
+          hasExpired: false,
+          state: .issued
         )
       ),
       .init(
@@ -99,7 +104,8 @@ public extension DocumentUIModel {
           title: "Document 2",
           createdAt: Date(),
           expiresAt: "22/01/2025",
-          hasExpired: false
+          hasExpired: false,
+          state: .issued
         )
       ),
       .init(
@@ -110,7 +116,8 @@ public extension DocumentUIModel {
           title: "Document 3",
           createdAt: Date(),
           expiresAt: "22/01/2025",
-          hasExpired: false
+          hasExpired: false,
+          state: .issued
         )
       ),
       .init(
@@ -121,7 +128,8 @@ public extension DocumentUIModel {
           title: "Document 4",
           createdAt: Date(),
           expiresAt: "22/01/2025",
-          hasExpired: false
+          hasExpired: false,
+          state: .issued
         )
       ),
       .init(
@@ -132,7 +140,8 @@ public extension DocumentUIModel {
           title: "Document 5",
           createdAt: Date(),
           expiresAt: "22/01/2025",
-          hasExpired: false
+          hasExpired: false,
+          state: .issued
         )
       ),
       .init(
@@ -143,7 +152,8 @@ public extension DocumentUIModel {
           title: "Document 6",
           createdAt: Date(),
           expiresAt: "22/01/2025",
-          hasExpired: false
+          hasExpired: false,
+          state: .issued
         )
       ),
       .init(
@@ -154,39 +164,57 @@ public extension DocumentUIModel {
           title: "Passport",
           createdAt: Date(),
           expiresAt: "22/01/2025",
-          hasExpired: false
+          hasExpired: false,
+          state: .issued
         )
       )
     ]
   }
 }
 
+public extension DocumentUIModel.Value {
+  enum State: Equatable {
+    case issued
+    case pending
+    case failed
+  }
+}
+
 extension Array where Element == MdocDecodable {
-  func transformToDocumentUi() -> [DocumentUIModel] {
+  func transformToDocumentUi(with failedDocuments: [String] = []) -> [DocumentUIModel] {
     self.map { item in
-      let identifier = DocumentTypeIdentifier(rawValue: item.docType)
-      return .init(
-        id: UUID().uuidString,
-        value: .init(
-          id: item.id,
-          type: item.docType,
-          title: identifier.isSupported
-          ? identifier.localizedTitle
-          : item.title,
-          createdAt: item.createdAt,
-          expiresAt: item.getExpiryDate(
-            parser: {
-              Locale.current.localizedDateTime(
-                date: $0,
-                uiFormatter: "dd MMM yyyy"
-              )
-            }
-          ),
-          hasExpired: item.hasExpired(
-            parser: { Locale.current.parseDate(date: $0) }
-          )
-        )
-      )
+      item.transformToDocumentUi(with: failedDocuments)
     }
+  }
+}
+
+extension MdocDecodable {
+  func transformToDocumentUi(with failedDocuments: [String] = []) -> DocumentUIModel {
+    let identifier = DocumentTypeIdentifier(rawValue: self.docType)
+    return .init(
+      id: UUID().uuidString,
+      value: .init(
+        id: self.id,
+        type: self.docType,
+        title: identifier.isSupported
+        ? identifier.localizedTitle
+        : self.title ?? identifier.localizedTitle,
+        createdAt: self.createdAt,
+        expiresAt: self.getExpiryDate(
+          parser: {
+            Locale.current.localizedDateTime(
+              date: $0,
+              uiFormatter: "dd MMM yyyy"
+            )
+          }
+        ),
+        hasExpired: self.hasExpired(
+          parser: { Locale.current.parseDate(date: $0) }
+        ),
+        state: failedDocuments.contains(where: { $0 == self.id })
+        ? .failed
+        : (self is DeferrredDocument) ? .pending : .issued
+      )
+    )
   }
 }

@@ -18,7 +18,7 @@ import Foundation
 struct VciConfig {
   public let issuerUrl: String
   public let clientId: String
-  public let redirectUri: String
+  public let redirectUri: URL
 }
 
 struct VerifierConfig {
@@ -67,10 +67,15 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var vciConfig: VciConfig {
-    .init(
+    guard
+      let redirectUrl = URL(string: getBundleValue(key: "Vci Redirect Uri"))
+    else {
+      fatalError("Unable to parse VCI Redirect URL")
+    }
+    return .init(
       issuerUrl: getBundleValue(key: "Vci Issuer URL"),
       clientId: getBundleValue(key: "Vci Client Id"),
-      redirectUri: getBundleValue(key: "Vci Redirect Uri")
+      redirectUri: redirectUrl
     )
   }
 

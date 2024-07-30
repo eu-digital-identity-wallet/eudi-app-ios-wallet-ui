@@ -59,7 +59,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   private func getOnSuccessRoute() -> AppRoute {
     .success(
       config: UIConfig.Success(
-        title: .success,
+        title: .init(value: .success),
         subtitle: .requestDataShareSuccess([relyingParty]),
         buttons: [
           .init(

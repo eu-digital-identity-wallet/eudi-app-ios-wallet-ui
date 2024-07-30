@@ -21,6 +21,7 @@ struct BearerHeaderView: View {
 
   let item: BearerUIModel
   let isLoading: Bool
+  let isMoreOptionsEnabled: Bool
   let onMoreClicked: () -> Void
 
   @ViewBuilder
@@ -35,10 +36,12 @@ struct BearerHeaderView: View {
   init(
     item: BearerUIModel,
     isLoading: Bool,
+    isMoreOptionsEnabled: Bool,
     onMoreClicked: @escaping @autoclosure () -> Void
   ) {
     self.item = item
     self.isLoading = isLoading
+    self.isMoreOptionsEnabled = isMoreOptionsEnabled
     self.onMoreClicked = onMoreClicked
   }
 
@@ -47,6 +50,7 @@ struct BearerHeaderView: View {
       BearerCellView(
         item: item,
         isLoading: isLoading,
+        isMoreOptionsEnabled: isMoreOptionsEnabled,
         onMoreClicked: onMoreClicked()
       )
     }

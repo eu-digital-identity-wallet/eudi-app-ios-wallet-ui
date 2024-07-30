@@ -20,15 +20,30 @@ import logic_resources
 import Combine
 
 public enum DashboardPartialState {
-  case success(BearerUIModel, [DocumentUIModel])
+  case success(BearerUIModel, [DocumentUIModel], Bool)
   case failure(Error)
 }
 
+public enum DashboardDeleteDeferredPartialState {
+  case success
+  case noDocuments
+  case failure(Error)
+}
+
+public enum DashboardDeferredPartialState {
+  case completion(issued: [DocumentUIModel], failed: [String])
+  case cancelled
+}
+
 public protocol DashboardInteractor {
-  func fetchDashboard() async -> DashboardPartialState
+  func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState
   func getBleAvailability() async -> Reachability.BleAvailibity
   func openBleSettings()
   func getAppVersion() -> String
+  func hasIssuedDocuments() -> Bool
+  func hasDeferredDocuments() -> Bool
+  func deleteDeferredDocument(with id: String) async -> DashboardDeleteDeferredPartialState
+  func requestDeferredIssuance() async -> DashboardDeferredPartialState
 }
 
 final class DashboardInteractorImpl: DashboardInteractor {
@@ -49,16 +64,24 @@ final class DashboardInteractorImpl: DashboardInteractor {
     self.configLogic = configLogic
   }
 
-  public func fetchDashboard() async -> DashboardPartialState {
+  func hasIssuedDocuments() -> Bool {
+    return !walletController.fetchIssuedDocuments().isEmpty
+  }
 
-    let documents: [DocumentUIModel]? = fetchDocuments()
+  func hasDeferredDocuments() -> Bool {
+    return !walletController.fetchDeferredDocuments().isEmpty
+  }
+
+  public func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState {
+
+    let documents: [DocumentUIModel]? = fetchDocuments(failedDocuments: failedDocuments)
     let bearer: BearerUIModel = fetchBearer()
 
     guard let documents = documents else {
       return .failure(WalletCoreError.unableFetchDocuments)
     }
 
-    return .success(bearer, documents)
+    return .success(bearer, documents, hasIssuedDocuments())
   }
 
   public func getBleAvailability() async -> Reachability.BleAvailibity {
@@ -77,17 +100,48 @@ final class DashboardInteractorImpl: DashboardInteractor {
     return configLogic.appVersion
   }
 
+  func deleteDeferredDocument(with id: String) async -> DashboardDeleteDeferredPartialState {
+    do {
+      try await walletController.deleteDocument(with: id, status: .deferred)
+      return walletController.fetchAllDocuments().isEmpty ? .noDocuments : .success
+    } catch {
+      return .failure(error)
+    }
+  }
+
+  func requestDeferredIssuance() async -> DashboardDeferredPartialState {
+
+    var issued: [DocumentUIModel] = []
+    var failed: [String] = []
+
+    for deferred in walletController.fetchDeferredDocuments() {
+
+      if Task.isCancelled { return .cancelled }
+
+      do {
+        let document = try await walletController.requestDeferredIssuance(with: deferred)
+        if (document is DeferrredDocument) == false {
+          issued.append(document.transformToDocumentUi())
+        }
+      } catch {
+        failed.append(deferred.id)
+      }
+    }
+
+    return .completion(issued: issued, failed: failed)
+  }
+
   private func fetchBearer() -> BearerUIModel {
     return BearerUIModel.transformToBearerUi(
       walletKitController: self.walletController
     )
   }
 
-  private func fetchDocuments() -> [DocumentUIModel]? {
-    let documents = self.walletController.fetchDocuments()
+  private func fetchDocuments(failedDocuments: [String]) -> [DocumentUIModel]? {
+    let documents = self.walletController.fetchAllDocuments()
     guard !documents.isEmpty else {
       return nil
     }
-    return documents.transformToDocumentUi()
+    return documents.transformToDocumentUi(with: failedDocuments)
   }
 }

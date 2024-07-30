@@ -101,7 +101,7 @@ private extension TestStartupInteractor {
   func stubFetchDocuments(with documents: [MdocDecodable]) {
     stub(walletKitController) { mock in
       when(mock.loadDocuments()).thenDoNothing()
-      when(mock.fetchDocuments()).thenReturn(documents)
+      when(mock.fetchAllDocuments()).thenReturn(documents)
     }
   }
   func stubHasPin(with hasPin: Bool) {

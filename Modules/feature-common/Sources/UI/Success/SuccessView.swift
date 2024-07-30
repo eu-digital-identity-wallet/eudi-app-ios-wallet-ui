@@ -32,22 +32,29 @@ public struct SuccessView<Router: RouterHost>: View {
   public var body: some View {
     ContentScreenView {
       ContentTitleView(
-        title: viewmodel.viewState.config.title,
+        title: viewmodel.viewState.config.title.value,
         caption: viewmodel.viewState.config.subtitle,
-        titleColor: Theme.shared.color.success,
+        titleColor: viewmodel.viewState.config.title.color,
         topSpacing: .withoutToolbar
       )
       mainView()
     }
   }
 
-  private func getCenteredIcon() -> Image {
-    return switch viewmodel.viewState.config.visualKind {
+  private func getCenteredIcon() -> some View {
+
+    let imageData: (image: Image, color: Color) = switch viewmodel.viewState.config.visualKind {
     case .defaultIcon:
-      Theme.shared.image.checkmarkCircleFill
-    case .customIcon(let image):
-      image
+      (Theme.shared.image.checkmarkCircleFill, Theme.shared.color.success)
+    case .customIcon(let image, let color):
+      (image, color)
     }
+
+    return imageData.image
+      .resizable()
+      .scaledToFit()
+      .foregroundColor(imageData.color)
+      .frame(height: getScreenRect().width / 2.5)
   }
 
   private func mainView() -> some View {
@@ -57,10 +64,6 @@ public struct SuccessView<Router: RouterHost>: View {
 
       ZStack(alignment: .center) {
         getCenteredIcon()
-          .resizable()
-          .scaledToFit()
-          .foregroundColor(Theme.shared.color.success)
-          .frame(height: getScreenRect().width / 2.5)
       }
       Spacer()
 
