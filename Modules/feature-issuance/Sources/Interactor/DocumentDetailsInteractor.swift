@@ -64,7 +64,7 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
       }
 
       if shouldDeleteAllDocuments {
-        try await walletController.clearAllDocuments()
+        await walletController.clearAllDocuments()
         successState = .success(shouldReboot: true)
       } else {
         try await walletController.deleteDocument(with: documentId, status: .issued)

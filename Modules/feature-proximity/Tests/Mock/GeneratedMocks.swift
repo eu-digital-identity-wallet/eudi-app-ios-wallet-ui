@@ -6149,9 +6149,9 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
         )
     }
     
-    public func clearAllDocuments() async throws {
-        return try await cuckoo_manager.callThrows(
-            "clearAllDocuments() async throws",
+    public func clearAllDocuments() async {
+        return await cuckoo_manager.call(
+            "clearAllDocuments() async",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -6364,10 +6364,10 @@ return cuckoo_manager.call(
             ))
         }
         
-        func clearAllDocuments() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<()> {
+        func clearAllDocuments() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "clearAllDocuments() async throws",
+                method: "clearAllDocuments() async",
                 parameterMatchers: matchers
             ))
         }
@@ -6613,7 +6613,7 @@ return cuckoo_manager.call(
         func clearAllDocuments() -> Cuckoo.__DoNotUse<(), Void> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "clearAllDocuments() async throws",
+                "clearAllDocuments() async",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -6794,7 +6794,7 @@ public class WalletKitControllerStub:WalletKitController {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func clearAllDocuments() async throws {
+    public func clearAllDocuments() async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

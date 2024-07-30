@@ -36,7 +36,7 @@ public protocol WalletKitController {
   func fetchMainPidDocument() -> MdocDecodable?
   func fetchDocument(with id: String) -> MdocDecodable?
   func loadSampleData(dataFiles: [String]) async throws
-  func clearAllDocuments() async throws
+  func clearAllDocuments() async
   func clearDocuments(status: DocumentStatus) async throws
   func deleteDocument(with id: String, status: DocumentStatus) async throws
   func loadDocuments() async throws
@@ -103,13 +103,9 @@ final class WalletKitControllerImpl: WalletKitController {
     return try await wallet.loadSampleData(sampleDataFiles: dataFiles)
   }
 
-  public func clearAllDocuments() async throws {
-    if !fetchIssuedDocuments().isEmpty {
-      try await wallet.storage.deleteDocuments(status: DocumentStatus.issued)
-    }
-    if !fetchDeferredDocuments().isEmpty {
-      try await wallet.storage.deleteDocuments(status: DocumentStatus.deferred)
-    }
+  public func clearAllDocuments() async {
+    try? await wallet.storage.deleteDocuments(status: DocumentStatus.issued)
+    try? await wallet.storage.deleteDocuments(status: DocumentStatus.deferred)
   }
 
   public func clearDocuments(status: DocumentStatus) async throws {
