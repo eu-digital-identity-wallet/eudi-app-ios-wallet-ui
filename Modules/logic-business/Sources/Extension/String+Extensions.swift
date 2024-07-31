@@ -118,6 +118,12 @@ public extension String? {
     }
     return self
   }
+  func ifNull(_ fallback: () -> String) -> String {
+    guard let self = self else {
+      return fallback()
+    }
+    return self
+  }
 }
 
 public extension String {
@@ -147,5 +153,27 @@ public extension String {
       return nil
     }
     return value
+  }
+}
+
+public extension String {
+
+  var decodeBase64: String? {
+    guard
+      let data = Data(base64Encoded: self),
+      let decoded = String(data: data, encoding: .utf8)
+    else {
+      return nil
+    }
+    return decoded
+  }
+
+  var toBase64: String? {
+    guard
+      let data = self.data(using: .utf8)
+    else {
+      return nil
+    }
+    return data.base64EncodedString()
   }
 }

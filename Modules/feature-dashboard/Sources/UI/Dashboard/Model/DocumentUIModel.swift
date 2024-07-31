@@ -198,7 +198,7 @@ extension MdocDecodable {
         type: self.docType,
         title: identifier.isSupported
         ? identifier.localizedTitle
-        : self.title ?? identifier.localizedTitle,
+        : self.displayName ?? identifier.localizedTitle,
         createdAt: self.createdAt,
         expiresAt: self.getExpiryDate(
           parser: {
