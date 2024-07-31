@@ -22,7 +22,7 @@ public struct DeferrredDocument: MdocDecodable {
   public var devicePrivateKey: CoseKeyPrivate?
   public var docType: String
   public var nameSpaces: [NameSpace]?
-  public var title: String?
+  public var displayName: String?
   public var ageOverXX = [Int: Bool]()
   public var displayStrings = [NameValue]()
   public var displayImages = [NameImage]()

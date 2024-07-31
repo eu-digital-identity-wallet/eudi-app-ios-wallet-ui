@@ -80,6 +80,7 @@ final class TestDashboardInteractor: EudiTest {
           privateKeyType: nil,
           privateKey: nil,
           createdAt: nil,
+          displayName: nil,
           status: .deferred
         )
       ]

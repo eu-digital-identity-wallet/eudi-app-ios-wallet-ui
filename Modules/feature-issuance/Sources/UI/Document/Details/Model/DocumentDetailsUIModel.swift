@@ -93,6 +93,7 @@ extension MdocDecodable {
         .compactMap({$0})
         .sorted(by: {$0.order < $1.order})
         .decodeGender()
+        .decodeUserPseudonym()
         .mapTrueFalseToLocalizable()
         .parseDates(
           parser: {
@@ -119,7 +120,7 @@ extension MdocDecodable {
       type: identifier,
       documentName: identifier.isSupported
       ? identifier.localizedTitle
-      : title ?? identifier.localizedTitle,
+      : displayName ?? identifier.localizedTitle,
       holdersName: bearerName,
       holdersImage: getPortrait() ?? Theme.shared.image.user,
       createdAt: createdAt,
@@ -181,6 +182,7 @@ extension MdocDecodable {
   private func flattenNested(parent: NameValue, nested: [NameValue]) -> NameValue {
     let flat = nested
       .decodeGender()
+      .decodeUserPseudonym()
       .mapTrueFalseToLocalizable()
       .parseDates(
         parser: {

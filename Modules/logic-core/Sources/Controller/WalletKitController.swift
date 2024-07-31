@@ -275,6 +275,7 @@ extension WalletKitController {
     let displayStrings = wallet.storage.mdocModels
       .first(where: { $0.id == documentId })?.displayStrings
       .decodeGender()
+      .decodeUserPseudonym()
       .parseDates(parser: parser)
       .mapTrueFalseToLocalizable()
 

@@ -29,7 +29,7 @@ extension WalletStorage.Document {
       id: self.id,
       createdAt: self.createdAt,
       docType: self.docType,
-      title: nil
+      displayName: self.displayName
     )
   }
 }
