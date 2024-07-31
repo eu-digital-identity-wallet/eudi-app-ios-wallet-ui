@@ -15,6 +15,7 @@
  */
 import Swinject
 import logic_core
+import logic_business
 import feature_common
 
 public final class FeatureStartupAssembly: Assembly {
@@ -25,7 +26,9 @@ public final class FeatureStartupAssembly: Assembly {
     container.register(StartupInteractor.self) { r in
       StartupInteractorImpl(
         walletKitController: r.force(WalletKitController.self),
-        quickPinInteractor: r.force(QuickPinInteractor.self)
+        quickPinInteractor: r.force(QuickPinInteractor.self),
+        keyChainController: r.force(KeyChainController.self),
+        prefsController: r.force(PrefsController.self)
       )
     }
     .inObjectScope(ObjectScope.transient)

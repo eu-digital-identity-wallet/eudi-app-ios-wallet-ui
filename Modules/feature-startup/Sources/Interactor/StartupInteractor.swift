@@ -27,6 +27,8 @@ final class StartupInteractorImpl: StartupInteractor {
 
   private let walletKitController: WalletKitController
   private let quickPinInteractor: QuickPinInteractor
+  private let keyChainController: KeyChainController
+  private let prefsController: PrefsController
 
   private var hasDocuments: Bool {
     return !walletKitController.fetchAllDocuments().isEmpty
@@ -34,13 +36,18 @@ final class StartupInteractorImpl: StartupInteractor {
 
   init(
     walletKitController: WalletKitController,
-    quickPinInteractor: QuickPinInteractor
+    quickPinInteractor: QuickPinInteractor,
+    keyChainController: KeyChainController,
+    prefsController: PrefsController
   ) {
     self.walletKitController = walletKitController
     self.quickPinInteractor = quickPinInteractor
+    self.keyChainController = keyChainController
+    self.prefsController = prefsController
   }
 
   public func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute {
+    await manageStorageForFirstRun()
     try? await walletKitController.loadDocuments()
     try? await Task.sleep(nanoseconds: splashAnimationDuration.nanoseconds)
     if quickPinInteractor.hasPin() {
@@ -61,6 +68,14 @@ final class StartupInteractorImpl: StartupInteractor {
       )
     } else {
       return .quickPin(config: QuickPinUiConfig(flow: .set))
+    }
+  }
+
+  private func manageStorageForFirstRun() async {
+    if !prefsController.getBool(forKey: .runAtLeastOnce) {
+      await walletKitController.clearAllDocuments()
+      keyChainController.clear()
+      prefsController.setValue(true, forKey: .runAtLeastOnce)
     }
   }
 }
