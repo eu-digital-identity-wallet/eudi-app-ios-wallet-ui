@@ -19,9 +19,6 @@ import logic_assembly
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-  private lazy var prefsController: PrefsController = DIGraph.resolver.force(PrefsController.self)
-  private lazy var keyChainController: KeyChainController = DIGraph.resolver.force(KeyChainController.self)
-  private lazy var walletKitController: WalletKitController = DIGraph.resolver.force(WalletKitController.self)
   private lazy var analyticsController: AnalyticsController = DIGraph.resolver.force(AnalyticsController.self)
 
   func application(
@@ -31,9 +28,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // Initialize Reporting
     initializeReporting()
-
-    // Check firt run and clear keychain from previous installations
-    manageStorage()
 
     return true
   }
@@ -50,19 +44,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   private func initializeReporting() {
     analyticsController.initialize()
-  }
-
-  private func manageStorage() {
-    if !prefsController.getBool(forKey: .runAtLeastOnce) {
-      clearDocuments()
-      keyChainController.clear()
-      prefsController.setValue(true, forKey: .runAtLeastOnce)
-    }
-  }
-
-  private func clearDocuments() {
-    Task {
-      await walletKitController.clearAllDocuments()
-    }
   }
 }
