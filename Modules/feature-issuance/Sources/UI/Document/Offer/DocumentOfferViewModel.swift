@@ -129,6 +129,8 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
         )
       case .partialSuccess(let route):
         router.push(with: route)
+      case .deferredSuccess(let route):
+        router.push(with: route)
       }
     }
   }

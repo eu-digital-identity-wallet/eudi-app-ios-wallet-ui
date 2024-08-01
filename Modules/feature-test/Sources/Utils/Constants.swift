@@ -42,7 +42,7 @@ extension Constants {
     issuerSigned: dr.documents!.first!.issuerSigned,
     devicePrivateKey: Constants.pk,
     docType: dr.documents!.first!.issuerSigned.issuerAuth.mso.docType,
-    title: "Driving Licence"
+    displayName: "Driving Licence"
   )!
   
   static let euPidModel = GenericMdocModel(
@@ -51,7 +51,7 @@ extension Constants {
     issuerSigned: dr.documents!.last!.issuerSigned,
     devicePrivateKey: Constants.pk,
     docType: dr.documents!.last!.issuerSigned.issuerAuth.mso.docType,
-    title: "National ID"
+    displayName: "National ID"
   )!
 }
 

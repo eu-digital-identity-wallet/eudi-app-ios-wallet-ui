@@ -47,17 +47,26 @@ public struct DashboardView<Router: RouterHost>: View {
         items: viewModel.viewState.documents,
         isLoading: viewModel.viewState.isLoading
       ) { document in
-        viewModel.onDocumentDetails(documentId: document.value.id)
+        switch document.value.state {
+        case .issued:
+          viewModel.onDocumentDetails(documentId: document.value.id)
+        case .pending, .failed:
+          viewModel.onDeleteDeferredDocument(with: document)
+        }
       }
       .bottomFade()
 
-      FloatingActionButtonBarView(
-        isLoading: viewModel.viewState.isLoading,
-        addAction: viewModel.onAdd(),
-        shareAction: viewModel.onShare()
-      )
+      if viewModel.viewState.allowUserInteraction {
 
-      VSpacer.small()
+        FloatingActionButtonBarView(
+          isLoading: viewModel.viewState.isLoading,
+          addAction: viewModel.onAdd(),
+          shareAction: viewModel.onShare()
+        )
+
+        VSpacer.small()
+
+      }
     }
     .background(Theme.shared.color.backgroundPaper)
   }
@@ -71,6 +80,7 @@ public struct DashboardView<Router: RouterHost>: View {
       BearerHeaderView(
         item: viewModel.viewState.bearer,
         isLoading: viewModel.viewState.isLoading,
+        isMoreOptionsEnabled: viewModel.viewState.allowUserInteraction,
         onMoreClicked: viewModel.onMore()
       )
       content()
@@ -126,11 +136,68 @@ public struct DashboardView<Router: RouterHost>: View {
         }
       }
     }
+    .sheetDialog(isPresented: $viewModel.isDeleteDeferredModalShowing) {
+      SheetContentView {
+        VStack(spacing: SPACING_MEDIUM) {
+
+          ContentTitleView(
+            title: .issuanceDetailsDeletionTitle([viewModel.viewState.pendingDocumentTitle]),
+            caption: .issuanceDetailsDeletionCaption([viewModel.viewState.pendingDocumentTitle])
+          )
+
+          WrapButtonView(
+            style: .primary,
+            title: .yes,
+            onAction: viewModel.deleteDeferredDocument()
+          )
+          WrapButtonView(
+            style: .secondary,
+            title: .no,
+            onAction: viewModel.toggleDeleteDeferredModal()
+          )
+        }
+      }
+    }
+    .sheetDialog(isPresented: $viewModel.isSuccededDocumentsModalShowing) {
+      SheetContentView {
+        VStack(spacing: SPACING_MEDIUM) {
+
+          ContentTitleView(
+            title: .deferredDocumentsIssuedModalTitle,
+            caption: .defferedDocumentsIssuedModalCaption
+          )
+
+          VStack(spacing: SPACING_SMALL) {
+            ForEach(viewModel.viewState.succededIssuedDocuments) { item in
+
+              HStack {
+                Text(.custom(item.value.title))
+                Spacer()
+                Theme.shared.image.chevronRight
+                  .renderingMode(.template)
+                  .foregroundStyle(Theme.shared.color.primary)
+              }
+              .padding()
+              .background(Theme.shared.color.backgroundDefault)
+              .clipShape(.rect(cornerRadius: 8))
+              .onTapGesture {
+                viewModel.onDocumentDetails(documentId: item.value.id)
+              }
+
+            }
+          }
+          .padding(.vertical)
+        }
+      }
+    }
     .task {
       await viewModel.fetch()
     }
     .onChange(of: scenePhase) { phase in
       self.viewModel.setPhase(with: phase)
+    }
+    .onDisappear {
+      self.viewModel.onPause()
     }
   }
 }

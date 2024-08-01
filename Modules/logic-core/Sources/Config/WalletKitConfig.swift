@@ -18,7 +18,7 @@ import Foundation
 struct VciConfig {
   public let issuerUrl: String
   public let clientId: String
-  public let redirectUri: String
+  public let redirectUri: URL
 }
 
 struct VerifierConfig {
@@ -51,6 +51,11 @@ protocol WalletKitConfig {
    * User authentication required accessing core's secure storage
    */
   var userAuthenticationRequired: Bool { get }
+
+  /**
+   * Service name for documents key chain storage
+   */
+  var documentStorageServiceName: String { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {
@@ -67,10 +72,15 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var vciConfig: VciConfig {
-    .init(
+    guard
+      let redirectUrl = URL(string: getBundleValue(key: "Vci Redirect Uri"))
+    else {
+      fatalError("Unable to parse VCI Redirect URL")
+    }
+    return .init(
       issuerUrl: getBundleValue(key: "Vci Issuer URL"),
       clientId: getBundleValue(key: "Vci Client Id"),
-      redirectUri: getBundleValue(key: "Vci Redirect Uri")
+      redirectUri: redirectUrl
     )
   }
 
@@ -79,5 +89,12 @@ struct WalletKitConfigImpl: WalletKitConfig {
       return .init(trustedCerts: [])
     }
     return .init(trustedCerts: [cert])
+  }
+
+  var documentStorageServiceName: String {
+    guard let identifier = Bundle.main.bundleIdentifier else {
+      return "eudi.document.storage"
+    }
+    return "\(identifier).eudi.document.storage"
   }
 }

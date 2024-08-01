@@ -115,8 +115,35 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
             cancelAction: self.setNewState(error: nil)
           )
         )
+      case .deferredSuccess:
+        router.push(with: onDeferredSuccess())
       }
     }
+  }
+
+  private func onDeferredSuccess() -> AppRoute {
+    var navigationType: UIConfig.DeepLinkNavigationType {
+      return switch viewState.config.flow {
+      case .noDocument:
+          .push(screen: .dashboard)
+      case .extraDocument:
+          .pop(screen: .dashboard)
+      }
+    }
+    return .success(
+      config: UIConfig.Success(
+        title: .init(value: .inProgress, color: Theme.shared.color.warning),
+        subtitle: .scopedIssuanceSuccessDeferredCaption,
+        buttons: [
+          .init(
+            title: .okButton,
+            style: .primary,
+            navigationType: navigationType
+          )
+        ],
+        visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.warning)
+      )
+    )
   }
 
   private func transformCellLoadingState(with isLoading: Bool) -> [AddDocumentUIModel] {

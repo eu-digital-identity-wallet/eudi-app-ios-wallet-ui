@@ -48,6 +48,22 @@ extension Array where Element == NameValue {
     }
   }
 
+  public func decodeUserPseudonym() -> [NameValue] {
+    self.map { nameValue in
+      if nameValue.name == "user_pseudonym" {
+        return NameValue(
+          name: nameValue.name,
+          value: nameValue.value.decodeBase64.ifNull { nameValue.value },
+          ns: nameValue.ns,
+          order: nameValue.order,
+          children: nameValue.children
+        )
+      } else {
+        return nameValue
+      }
+    }
+  }
+
   public func mapTrueFalseToLocalizable() -> [NameValue] {
     self.map {
       if $0.value == "true" || $0.value == "false" {

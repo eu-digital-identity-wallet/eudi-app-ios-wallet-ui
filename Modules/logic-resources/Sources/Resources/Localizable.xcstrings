@@ -430,6 +430,28 @@
         }
       }
     },
+    "deferred_document_issued_modal_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New documents have been added to your wallet."
+          }
+        }
+      }
+    },
+    "deferred_document_issued_modal_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Documents issued"
+          }
+        }
+      }
+    },
     "DHS_compliance" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -683,6 +705,17 @@
         }
       }
     },
+    "in_progress" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In progress"
+          }
+        }
+      }
+    },
     "incomplete_request_data_selecting" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -793,6 +826,17 @@
         }
       }
     },
+    "issuance_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuance failed"
+          }
+        }
+      }
+    },
     "issuance_scan_qr" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -811,6 +855,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You can now add your %@"
+          }
+        }
+      }
+    },
+    "issuance_success_deferred_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your documents from %@ have been requested. You will be notified when they have been issued to your wallet."
           }
         }
       }
@@ -1034,6 +1089,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Or"
+          }
+        }
+      }
+    },
+    "pending" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pending"
           }
         }
       }
@@ -1595,6 +1661,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Scan QR"
+          }
+        }
+      }
+    },
+    "scoped_issuance_success_deferred_caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your document has been requested. You will be notified when it has been issued to your wallet."
           }
         }
       }

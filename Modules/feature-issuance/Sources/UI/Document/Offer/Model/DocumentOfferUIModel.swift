@@ -116,7 +116,7 @@ public extension DocumentOfferUIModel {
   }
 }
 
-extension OfferedIssueModel {
+extension OfferedIssuanceModel {
   func transformToDocumentOfferUi() -> DocumentOfferUIModel {
     return self.docModels.transformToDocumentOfferUi(
       with: self.issuerName,

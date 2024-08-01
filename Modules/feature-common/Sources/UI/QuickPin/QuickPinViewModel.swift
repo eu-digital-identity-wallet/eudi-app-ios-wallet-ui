@@ -125,7 +125,7 @@ final class QuickPinViewModel<Router: RouterHost>: BaseViewModel<Router, QuickPi
     router.push(
       with: .success(
         config: UIConfig.Success(
-          title: .success,
+          title: .init(value: .success),
           subtitle: viewState.success,
           buttons: [
             .init(

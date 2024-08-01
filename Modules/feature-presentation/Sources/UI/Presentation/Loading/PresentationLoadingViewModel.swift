@@ -50,7 +50,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
 
     return .success(
       config: UIConfig.Success(
-        title: .success,
+        title: .init(value: .success),
         subtitle: .requestDataShareSuccess([relyingParty]),
         buttons: [
           .init(

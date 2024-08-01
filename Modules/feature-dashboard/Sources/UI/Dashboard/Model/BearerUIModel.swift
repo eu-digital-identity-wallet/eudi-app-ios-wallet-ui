@@ -56,7 +56,7 @@ public extension BearerUIModel {
     walletKitController: WalletKitController
   ) -> BearerUIModel {
 
-    let storageDocuments = walletKitController.fetchDocuments(
+    let storageDocuments = walletKitController.fetchIssuedDocuments(
       excluded: [DocumentTypeIdentifier.PID]
     )
 

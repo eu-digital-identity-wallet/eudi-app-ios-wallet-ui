@@ -49,7 +49,7 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
       var shouldDeleteAllDocuments: Bool {
         if type == .PID {
 
-          let documentPids = walletController.fetchDocuments(
+          let documentPids = walletController.fetchIssuedDocuments(
             with: DocumentTypeIdentifier.PID
           )
           let mainPid = walletController.fetchMainPidDocument()
@@ -64,10 +64,10 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
       }
 
       if shouldDeleteAllDocuments {
-        try await walletController.clearDocuments()
+        await walletController.clearAllDocuments()
         successState = .success(shouldReboot: true)
       } else {
-        try await walletController.deleteDocument(with: documentId)
+        try await walletController.deleteDocument(with: documentId, status: .issued)
         successState = .success(shouldReboot: false)
       }
 
