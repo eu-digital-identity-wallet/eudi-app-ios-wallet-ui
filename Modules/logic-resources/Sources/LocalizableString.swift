@@ -281,6 +281,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "deferred_document_issued_modal_title")
     case .defferedDocumentsIssuedModalCaption:
       bundle.localizedString(forKey: "deferred_document_issued_modal_caption")
+    case .retrieveLogs:
+      bundle.localizedString(forKey: "retrieve_logs")
     }
   }
 
@@ -414,6 +416,7 @@ public extension LocalizableString {
     case issuanceFailed
     case deferredDocumentsIssuedModalTitle
     case defferedDocumentsIssuedModalCaption
+    case retrieveLogs
   }
 }
 

@@ -96,6 +96,7 @@ public struct DashboardView<Router: RouterHost>: View {
           VSpacer.medium()
 
           Group {
+
             WrapButtonView(
               title: .changeQuickPinOption,
               backgroundColor: .clear,
@@ -103,6 +104,7 @@ public struct DashboardView<Router: RouterHost>: View {
               gravity: .start,
               onAction: viewModel.onUpdatePin()
             )
+
             WrapButtonView(
               title: .scanQrCode,
               backgroundColor: .clear,
@@ -110,6 +112,10 @@ public struct DashboardView<Router: RouterHost>: View {
               gravity: .start,
               onAction: viewModel.onShowScanner()
             )
+
+            if let url = viewModel.viewState.logFile {
+              shareLogs(with: url)
+            }
           }
 
           HStack {
@@ -198,6 +204,36 @@ public struct DashboardView<Router: RouterHost>: View {
     }
     .onDisappear {
       self.viewModel.onPause()
+    }
+  }
+
+  @ViewBuilder
+  func shareLogs(with fileUrl: URL) -> some View {
+    if #available(iOS 16.0, *) {
+      ShareLink(item: fileUrl) {
+        HStack {
+
+          Theme.shared.image.share
+            .resizable()
+            .scaledToFit()
+            .frame(width: 25, height: 25)
+            .foregroundColor(Theme.shared.color.primary)
+
+          HSpacer.medium()
+
+          Text(.retrieveLogs)
+            .typography(Theme.shared.font.labelLarge)
+            .foregroundColor(Theme.shared.color.textPrimaryDark)
+
+          Spacer()
+        }
+        .padding()
+      }
+      .simultaneousGesture(
+        TapGesture().onEnded() {
+          viewModel.onHideMore()
+        }
+      )
     }
   }
 }

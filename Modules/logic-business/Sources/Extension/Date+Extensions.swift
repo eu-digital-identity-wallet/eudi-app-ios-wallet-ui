@@ -13,25 +13,14 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-
 import Foundation
 
-extension String {
-  func toBool() -> Bool {
-    Bool(self) ?? false
-  }
-}
+public extension Date {
+  var toFileName: String {
 
-extension String {
-  func toTxtFile(_ withName: String) throws -> URL {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
 
-    let url = FileManager.default
-      .temporaryDirectory
-      .appendingPathComponent(withName)
-      .appendingPathExtension("txt")
-
-    try self.write(to: url, atomically: true, encoding: .utf8)
-
-    return url
+    return formatter.string(from: self)
   }
 }
