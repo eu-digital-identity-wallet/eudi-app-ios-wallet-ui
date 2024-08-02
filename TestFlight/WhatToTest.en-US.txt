@@ -1,4 +1,5 @@
 - Support presentation of multiple PID, mDL
+- Logs
 - VCI offer Support
 - PreAuth functionality
 - Age Verification POC
