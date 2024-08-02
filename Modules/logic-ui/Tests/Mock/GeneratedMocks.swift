@@ -401,6 +401,16 @@ class AnalyticsProviderStub:AnalyticsProvider {
 
 
 
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Builder/ArrayBuilder.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+
+
+
 // MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Config/ConfigLogic.swift'
 
 import Cuckoo

@@ -95,27 +95,29 @@ public struct DashboardView<Router: RouterHost>: View {
 
           VSpacer.medium()
 
-          Group {
+          ForEach(viewModel.viewState.moreOptions, id: \.id) { option in
 
-            WrapButtonView(
-              title: .changeQuickPinOption,
-              backgroundColor: .clear,
-              icon: Theme.shared.image.pencil,
-              gravity: .start,
-              onAction: viewModel.onUpdatePin()
-            )
-
-            WrapButtonView(
-              title: .scanQrCode,
-              backgroundColor: .clear,
-              icon: Theme.shared.image.qrScan,
-              gravity: .start,
-              onAction: viewModel.onShowScanner()
-            )
-
-            if let url = viewModel.viewState.logFile {
+            switch option {
+            case .changeQuickPin:
+              WrapButtonView(
+                title: .changeQuickPinOption,
+                backgroundColor: .clear,
+                icon: Theme.shared.image.pencil,
+                gravity: .start,
+                onAction: viewModel.onUpdatePin()
+              )
+            case .scanQrCode:
+              WrapButtonView(
+                title: .scanQrCode,
+                backgroundColor: .clear,
+                icon: Theme.shared.image.qrScan,
+                gravity: .start,
+                onAction: viewModel.onShowScanner()
+              )
+            case .retrieveLogs(let url):
               shareLogs(with: url)
             }
+
           }
 
           HStack {
