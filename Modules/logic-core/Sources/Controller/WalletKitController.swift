@@ -56,7 +56,7 @@ public protocol WalletKitController {
     parser: (String) -> String
   ) -> MdocValue
   func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String]
-  func retrieveLogFile() async -> URL?
+  func retrieveLogFileUrl() -> URL?
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -219,18 +219,13 @@ final class WalletKitControllerImpl: WalletKitController {
     }
   }
 
-  func retrieveLogs() throws -> String {
-    return try wallet.getLogFileContents(configLogic.logFileName)
-  }
-
-  func retrieveLogFile() async -> URL? {
+  func retrieveLogFileUrl() -> URL? {
     guard
-      let log = try? wallet.getLogFileContents(configLogic.logFileName),
-      let file = try? log.toTxtFile("eudi-ios-wallet-\(Date.now.toFileName)-logs")
+      let url = try? EudiWallet.getLogFileURL(configLogic.logFileName)
     else {
       return nil
     }
-    return file
+    return url
   }
 
   private func decodeDeeplink(link: URLComponents) -> String? {
@@ -245,7 +240,6 @@ final class WalletKitControllerImpl: WalletKitController {
 
 extension WalletKitController {
 
-  // TODO: Mandatory fields should be returned in a generic model
   public func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String] {
     switch documentType {
     case .PID:
@@ -272,7 +266,6 @@ extension WalletKitController {
     }
   }
 
-  // TODO: This needs to be made in a more generic way
   public func valueForElementIdentifier(
     for documentType: DocumentTypeIdentifier,
     with documentId: String,

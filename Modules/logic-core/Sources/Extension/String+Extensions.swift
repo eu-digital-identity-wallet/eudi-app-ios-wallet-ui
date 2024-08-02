@@ -21,17 +21,3 @@ extension String {
     Bool(self) ?? false
   }
 }
-
-extension String {
-  func toTxtFile(_ withName: String) throws -> URL {
-
-    let url = FileManager.default
-      .temporaryDirectory
-      .appendingPathComponent(withName)
-      .appendingPathExtension("txt")
-
-    try self.write(to: url, atomically: true, encoding: .utf8)
-
-    return url
-  }
-}
