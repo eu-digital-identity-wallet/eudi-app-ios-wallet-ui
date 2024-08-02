@@ -56,6 +56,7 @@ public protocol WalletKitController {
     parser: (String) -> String
   ) -> MdocValue
   func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String]
+  func retrieveLogFile() async -> URL?
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -79,6 +80,7 @@ final class WalletKitControllerImpl: WalletKitController {
     )
     wallet.trustedReaderCertificates = configLogic.readerConfig.trustedCerts
     wallet.serviceName = configLogic.documentStorageServiceName
+    wallet.logFileName = configLogic.logFileName
   }
 
   func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssuanceModel {
@@ -215,6 +217,20 @@ final class WalletKitControllerImpl: WalletKitController {
     } else {
       throw WalletCoreError.unableFetchDocument
     }
+  }
+
+  func retrieveLogs() throws -> String {
+    return try wallet.getLogFileContents(configLogic.logFileName)
+  }
+
+  func retrieveLogFile() async -> URL? {
+    guard
+      let log = try? wallet.getLogFileContents(configLogic.logFileName),
+      let file = try? log.toTxtFile("eudi-ios-wallet-\(Date.now.toFileName)-logs")
+    else {
+      return nil
+    }
+    return file
   }
 
   private func decodeDeeplink(link: URLComponents) -> String? {

@@ -56,6 +56,11 @@ protocol WalletKitConfig {
    * Service name for documents key chain storage
    */
   var documentStorageServiceName: String { get }
+
+  /**
+   * The name of the file to be created to store logs
+   */
+  var logFileName: String { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {
@@ -96,5 +101,9 @@ struct WalletKitConfigImpl: WalletKitConfig {
       return "eudi.document.storage"
     }
     return "\(identifier).eudi.document.storage"
+  }
+
+  var logFileName: String {
+    return "eudi-ios-wallet-logs"
   }
 }

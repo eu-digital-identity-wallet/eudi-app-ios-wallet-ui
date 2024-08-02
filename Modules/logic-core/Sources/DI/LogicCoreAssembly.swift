@@ -28,7 +28,7 @@ public final class LogicCoreAssembly: Assembly {
     container.register(WalletKitController.self) { r in
       WalletKitControllerImpl(configLogic: r.force(WalletKitConfig.self))
     }
-    .inObjectScope(ObjectScope.graph)
+    .inObjectScope(ObjectScope.container)
 
     container.register(PresentationSessionCoordinator.self, name: RegistrationName.proximity.rawValue) { _, session in
       ProximityPresentationSessionCoordinator(session: session)

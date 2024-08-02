@@ -78,7 +78,7 @@ final class ImageManager: ImageManagerProtocol {
     case square = "square"
     case exclamationmarkOctagon = "exclamationmark.octagon"
     case plus = "plus"
-    case share = "iphone.and.arrow.forward"
+    case share = "square.and.arrow.up"
     case warning = "ic-warning"
     case checkMarkSealFill = "checkmark.seal.fill"
     case more = "ic-more"
