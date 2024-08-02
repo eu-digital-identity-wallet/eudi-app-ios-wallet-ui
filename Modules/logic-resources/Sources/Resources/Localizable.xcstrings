@@ -1621,6 +1621,17 @@
         }
       }
     },
+    "retrieve_logs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retrieve logs"
+          }
+        }
+      }
+    },
     "room_number" : {
       "extractionState" : "manual",
       "localizations" : {

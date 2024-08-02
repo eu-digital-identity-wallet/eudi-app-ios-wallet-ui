@@ -158,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "1255b0526f8c4ec082460db1173f2440761480e9",
-        "version" : "0.6.1"
+        "revision" : "d8a74163b31540224ffdd04f4fc7ec9afbba9bea",
+        "version" : "0.6.2"
       }
     },
     {
@@ -167,8 +167,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "2fbdcb70dca4d14383b06dc584d1346959fd26f6",
-        "version" : "0.2.4"
+        "revision" : "6637d4eee204f972f266a1c1be4b2b00b562ab50",
+        "version" : "0.2.5"
       }
     },
     {
@@ -379,6 +379,15 @@
       }
     },
     {
+      "identity" : "swift-log-file",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/crspybits/swift-log-file",
+      "state" : {
+        "revision" : "aa94b38bf88c7d9cbc87ceafcdffadaffbc2bffa",
+        "version" : "0.1.0"
+      }
+    },
+    {
       "identity" : "swift-markdown",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-markdown.git",
@@ -448,6 +457,15 @@
       "state" : {
         "revision" : "33b8123dd1e68d861d0cfce27879d5ff1755fd21",
         "version" : "2.0.2"
+      }
+    },
+    {
+      "identity" : "xcglogger",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/DaveWoodCom/XCGLogger.git",
+      "state" : {
+        "revision" : "4def3c1c772ca90ad5e7bfc8ac437c3b0b4276cf",
+        "version" : "7.1.5"
       }
     },
     {

@@ -5399,6 +5399,21 @@ import Foundation
 
 
 
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Extension/Date+Extensions.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_proximity
+
+
+
 // MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Extension/Encodable+Extensions.swift'
 
 import Cuckoo
@@ -5900,6 +5915,16 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
             )
         }
     }
+    
+    var logFileName: String {
+        get {
+            return cuckoo_manager.getter(
+                "logFileName",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.logFileName
+            )
+        }
+    }
 
 
     struct __StubbingProxy_WalletKitConfig: Cuckoo.StubbingProxy {
@@ -5927,6 +5952,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
         
         var documentStorageServiceName: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,String> {
             return .init(manager: cuckoo_manager, name: "documentStorageServiceName")
+        }
+        
+        var logFileName: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,String> {
+            return .init(manager: cuckoo_manager, name: "logFileName")
         }
     }
 
@@ -5960,6 +5989,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
         var documentStorageServiceName: Cuckoo.VerifyReadOnlyProperty<String> {
             return .init(manager: cuckoo_manager, name: "documentStorageServiceName", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
+        
+        var logFileName: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "logFileName", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
     }
 }
 
@@ -5990,6 +6023,12 @@ class WalletKitConfigStub:WalletKitConfig {
     }
     
     var documentStorageServiceName: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+    }
+    
+    var logFileName: String {
         get {
             return DefaultValueRegistry.defaultValue(for: (String).self)
         }
@@ -6276,6 +6315,16 @@ return cuckoo_manager.call(
             defaultCall: __defaultImplStub!.mandatoryFields(for: p0)
         )
     }
+    
+    public func retrieveLogFile() async -> URL? {
+        return await cuckoo_manager.call(
+            "retrieveLogFile() async -> URL?",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.retrieveLogFile()
+        )
+    }
 
     public struct __StubbingProxy_WalletKitController: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -6464,6 +6513,14 @@ return cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "mandatoryFields(for p0: DocumentTypeIdentifier) -> [String]",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func retrieveLogFile() -> Cuckoo.ProtocolStubFunction<(), URL?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "retrieveLogFile() async -> URL?",
                 parameterMatchers: matchers
             ))
         }
@@ -6751,6 +6808,18 @@ return cuckoo_manager.call(
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func retrieveLogFile() -> Cuckoo.__DoNotUse<(), URL?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "retrieveLogFile() async -> URL?",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -6856,6 +6925,10 @@ public class WalletKitControllerStub:WalletKitController {
     
     public func mandatoryFields(for p0: DocumentTypeIdentifier) -> [String] {
         return DefaultValueRegistry.defaultValue(for: ([String]).self)
+    }
+    
+    public func retrieveLogFile() async -> URL? {
+        return DefaultValueRegistry.defaultValue(for: (URL?).self)
     }
 }
 
@@ -7244,6 +7317,7 @@ import logic_resources
 // MARK: - Mocks generated from file: 'Modules/logic-core/Sources/Extension/String+Extensions.swift'
 
 import Cuckoo
+import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

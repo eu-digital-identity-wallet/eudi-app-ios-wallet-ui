@@ -30,6 +30,7 @@ struct DashboardState: ViewState {
   let pendingDeletionDocument: DocumentUIModel?
   let succededIssuedDocuments: [DocumentUIModel]
   let failedDocuments: [String]
+  let logFile: URL?
 
   var pendingDocumentTitle: String {
     pendingDeletionDocument?.value.title ?? ""
@@ -75,7 +76,8 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
         allowUserInteraction: interactor.hasIssuedDocuments(),
         pendingDeletionDocument: nil,
         succededIssuedDocuments: [],
-        failedDocuments: []
+        failedDocuments: [],
+        logFile: nil
       )
     )
 
@@ -193,17 +195,25 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
   }
 
   func onMore() {
-    isMoreModalShowing = !isMoreModalShowing
+    Task {
+      let url = await interactor.retrieveLogFile()
+      setNewState(logFile: url)
+      isMoreModalShowing = !isMoreModalShowing
+    }
   }
 
   func onUpdatePin() {
-    isMoreModalShowing = false
+    onHideMore()
     router.push(with: .quickPin(config: QuickPinUiConfig(flow: .update)))
   }
 
   func onShowScanner() {
-    isMoreModalShowing = false
+    onHideMore()
     router.push(with: .qrScanner(config: ScannerUiConfig(flow: .presentation)))
+  }
+
+  func onHideMore() {
+    isMoreModalShowing = false
   }
 
   private func listenForSuccededIssuedModalChanges() {
@@ -253,7 +263,7 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
     else {
       return
     }
-    isMoreModalShowing = false
+    onHideMore()
     isBleModalShowing = false
     isDeleteDeferredModalShowing = false
     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
@@ -270,7 +280,8 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
     allowUserInteraction: Bool? = nil,
     pendingDeletedDocument: DocumentUIModel? = nil,
     succededIssuedDocuments: [DocumentUIModel]? = nil,
-    failedDocuments: [String]? = nil
+    failedDocuments: [String]? = nil,
+    logFile: URL? = nil
   ) {
     setState { previousSate in
         .init(
@@ -283,7 +294,8 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
           allowUserInteraction: allowUserInteraction ?? previousSate.allowUserInteraction,
           pendingDeletionDocument: pendingDeletedDocument ?? previousSate.pendingDeletionDocument,
           succededIssuedDocuments: succededIssuedDocuments ?? previousSate.succededIssuedDocuments,
-          failedDocuments: failedDocuments ?? previousSate.failedDocuments
+          failedDocuments: failedDocuments ?? previousSate.failedDocuments,
+          logFile: logFile ?? previousSate.logFile
         )
     }
   }
@@ -300,7 +312,8 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
           allowUserInteraction: previousSate.allowUserInteraction,
           pendingDeletionDocument: nil,
           succededIssuedDocuments: previousSate.succededIssuedDocuments,
-          failedDocuments: previousSate.failedDocuments
+          failedDocuments: previousSate.failedDocuments,
+          logFile: previousSate.logFile
         )
     }
   }
@@ -317,7 +330,8 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
           allowUserInteraction: previousSate.allowUserInteraction,
           pendingDeletionDocument: previousSate.pendingDeletionDocument,
           succededIssuedDocuments: [],
-          failedDocuments: previousSate.failedDocuments
+          failedDocuments: previousSate.failedDocuments,
+          logFile: previousSate.logFile
         )
     }
   }
