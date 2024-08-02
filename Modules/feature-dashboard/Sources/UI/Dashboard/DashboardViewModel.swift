@@ -215,19 +215,16 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
   }
 
   func onMore() {
-    Task {
-      let url = await interactor.retrieveLogFile()
-      setNewState(
-        moreOptions: buildArray {
-          DashboardState.MoreModalOption.changeQuickPin
-          DashboardState.MoreModalOption.scanQrCode
-          if let url {
-            DashboardState.MoreModalOption.retrieveLogs(url)
-          }
+    setNewState(
+      moreOptions: buildArray {
+        DashboardState.MoreModalOption.changeQuickPin
+        DashboardState.MoreModalOption.scanQrCode
+        if let url = interactor.retrieveLogFileUrl() {
+          DashboardState.MoreModalOption.retrieveLogs(url)
         }
-      )
-      isMoreModalShowing = !isMoreModalShowing
-    }
+      }
+    )
+    isMoreModalShowing = !isMoreModalShowing
   }
 
   func onUpdatePin() {
