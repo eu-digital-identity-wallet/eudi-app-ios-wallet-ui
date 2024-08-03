@@ -30,10 +30,30 @@ struct DashboardState: ViewState {
   let pendingDeletionDocument: DocumentUIModel?
   let succededIssuedDocuments: [DocumentUIModel]
   let failedDocuments: [String]
-  let logFile: URL?
+  let moreOptions: [MoreModalOption]
 
   var pendingDocumentTitle: String {
     pendingDeletionDocument?.value.title ?? ""
+  }
+}
+
+extension DashboardState {
+  enum MoreModalOption: Equatable {
+
+    case changeQuickPin
+    case scanQrCode
+    case retrieveLogs(URL)
+
+    var id: String {
+      return switch self {
+      case .changeQuickPin:
+        "changeQuickPin"
+      case .scanQrCode:
+        "scanQrCode"
+      case .retrieveLogs:
+        "retrieveLogs"
+      }
+    }
   }
 }
 
@@ -77,7 +97,7 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
         pendingDeletionDocument: nil,
         succededIssuedDocuments: [],
         failedDocuments: [],
-        logFile: nil
+        moreOptions: [.changeQuickPin, .scanQrCode]
       )
     )
 
@@ -195,11 +215,16 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
   }
 
   func onMore() {
-    Task {
-      let url = await interactor.retrieveLogFile()
-      setNewState(logFile: url)
-      isMoreModalShowing = !isMoreModalShowing
-    }
+    setNewState(
+      moreOptions: buildArray {
+        DashboardState.MoreModalOption.changeQuickPin
+        DashboardState.MoreModalOption.scanQrCode
+        if let url = interactor.retrieveLogFileUrl() {
+          DashboardState.MoreModalOption.retrieveLogs(url)
+        }
+      }
+    )
+    isMoreModalShowing = !isMoreModalShowing
   }
 
   func onUpdatePin() {
@@ -281,7 +306,7 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
     pendingDeletedDocument: DocumentUIModel? = nil,
     succededIssuedDocuments: [DocumentUIModel]? = nil,
     failedDocuments: [String]? = nil,
-    logFile: URL? = nil
+    moreOptions: [DashboardState.MoreModalOption]? = nil
   ) {
     setState { previousSate in
         .init(
@@ -295,7 +320,7 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
           pendingDeletionDocument: pendingDeletedDocument ?? previousSate.pendingDeletionDocument,
           succededIssuedDocuments: succededIssuedDocuments ?? previousSate.succededIssuedDocuments,
           failedDocuments: failedDocuments ?? previousSate.failedDocuments,
-          logFile: logFile ?? previousSate.logFile
+          moreOptions: moreOptions ?? previousSate.moreOptions
         )
     }
   }
@@ -313,7 +338,7 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
           pendingDeletionDocument: nil,
           succededIssuedDocuments: previousSate.succededIssuedDocuments,
           failedDocuments: previousSate.failedDocuments,
-          logFile: previousSate.logFile
+          moreOptions: previousSate.moreOptions
         )
     }
   }
@@ -331,7 +356,7 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
           pendingDeletionDocument: previousSate.pendingDeletionDocument,
           succededIssuedDocuments: [],
           failedDocuments: previousSate.failedDocuments,
-          logFile: previousSate.logFile
+          moreOptions: previousSate.moreOptions
         )
     }
   }

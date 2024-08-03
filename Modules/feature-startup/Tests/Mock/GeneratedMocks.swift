@@ -3993,6 +3993,20 @@ import Cuckoo
 
 
 
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Builder/ArrayBuilder.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_startup
+
+
+
 // MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Config/ConfigLogic.swift'
 
 import Cuckoo
@@ -5139,21 +5153,6 @@ import Foundation
 
 
 
-// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Extension/Date+Extensions.swift'
-
-import Cuckoo
-import Foundation
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_startup
-
-
-
 // MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Extension/Encodable+Extensions.swift'
 
 import Cuckoo
@@ -6056,13 +6055,13 @@ return cuckoo_manager.call(
         )
     }
     
-    public func retrieveLogFile() async -> URL? {
-        return await cuckoo_manager.call(
-            "retrieveLogFile() async -> URL?",
+    public func retrieveLogFileUrl() -> URL? {
+        return cuckoo_manager.call(
+            "retrieveLogFileUrl() -> URL?",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.retrieveLogFile()
+            defaultCall: __defaultImplStub!.retrieveLogFileUrl()
         )
     }
 
@@ -6257,10 +6256,10 @@ return cuckoo_manager.call(
             ))
         }
         
-        func retrieveLogFile() -> Cuckoo.ProtocolStubFunction<(), URL?> {
+        func retrieveLogFileUrl() -> Cuckoo.ProtocolStubFunction<(), URL?> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "retrieveLogFile() async -> URL?",
+                method: "retrieveLogFileUrl() -> URL?",
                 parameterMatchers: matchers
             ))
         }
@@ -6551,10 +6550,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func retrieveLogFile() -> Cuckoo.__DoNotUse<(), URL?> {
+        func retrieveLogFileUrl() -> Cuckoo.__DoNotUse<(), URL?> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "retrieveLogFile() async -> URL?",
+                "retrieveLogFileUrl() -> URL?",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -6667,7 +6666,7 @@ public class WalletKitControllerStub:WalletKitController {
         return DefaultValueRegistry.defaultValue(for: ([String]).self)
     }
     
-    public func retrieveLogFile() async -> URL? {
+    public func retrieveLogFileUrl() -> URL? {
         return DefaultValueRegistry.defaultValue(for: (URL?).self)
     }
 }

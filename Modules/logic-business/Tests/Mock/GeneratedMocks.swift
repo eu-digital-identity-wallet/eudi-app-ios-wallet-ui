@@ -1,3 +1,10 @@
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Builder/ArrayBuilder.swift'
+
+import Cuckoo
+@testable import logic_business
+
+
+
 // MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Config/ConfigLogic.swift'
 
 import Cuckoo
@@ -1081,14 +1088,6 @@ import Foundation
 
 
 // MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Extension/Data+Extensions.swift'
-
-import Cuckoo
-import Foundation
-@testable import logic_business
-
-
-
-// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Extension/Date+Extensions.swift'
 
 import Cuckoo
 import Foundation

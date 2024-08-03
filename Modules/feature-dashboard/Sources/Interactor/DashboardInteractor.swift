@@ -44,7 +44,7 @@ public protocol DashboardInteractor {
   func hasDeferredDocuments() -> Bool
   func deleteDeferredDocument(with id: String) async -> DashboardDeleteDeferredPartialState
   func requestDeferredIssuance() async -> DashboardDeferredPartialState
-  func retrieveLogFile() async -> URL?
+  func retrieveLogFileUrl() -> URL?
 }
 
 final class DashboardInteractorImpl: DashboardInteractor {
@@ -132,8 +132,8 @@ final class DashboardInteractorImpl: DashboardInteractor {
     return .completion(issued: issued, failed: failed)
   }
 
-  func retrieveLogFile() async -> URL? {
-    return await walletController.retrieveLogFile()
+  func retrieveLogFileUrl() -> URL? {
+    return walletController.retrieveLogFileUrl()
   }
 
   private func fetchBearer() -> BearerUIModel {
