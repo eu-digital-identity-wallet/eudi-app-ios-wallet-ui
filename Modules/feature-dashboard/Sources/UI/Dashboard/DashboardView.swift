@@ -175,26 +175,7 @@ public struct DashboardView<Router: RouterHost>: View {
             caption: .defferedDocumentsIssuedModalCaption
           )
 
-          VStack(spacing: SPACING_SMALL) {
-            ForEach(viewModel.viewState.succededIssuedDocuments) { item in
-
-              HStack {
-                Text(.custom(item.value.title))
-                Spacer()
-                Theme.shared.image.chevronRight
-                  .renderingMode(.template)
-                  .foregroundStyle(Theme.shared.color.primary)
-              }
-              .padding()
-              .background(Theme.shared.color.backgroundDefault)
-              .clipShape(.rect(cornerRadius: 8))
-              .onTapGesture {
-                viewModel.onDocumentDetails(documentId: item.value.id)
-              }
-
-            }
-          }
-          .padding(.vertical)
+          deferredSuccessList()
         }
       }
     }
@@ -207,6 +188,34 @@ public struct DashboardView<Router: RouterHost>: View {
     .onDisappear {
       self.viewModel.onPause()
     }
+  }
+
+  @ViewBuilder
+  func deferredSuccessList() -> some View {
+    VStack(spacing: SPACING_SMALL) {
+      ForEach(viewModel.viewState.succededIssuedDocuments) { item in
+
+        HStack {
+          Text(.custom(item.value.title))
+            .typography(Theme.shared.font.bodyMedium)
+            .foregroundColor(Theme.shared.color.textPrimaryDark)
+
+          Spacer()
+
+          Theme.shared.image.chevronRight
+            .renderingMode(.template)
+            .foregroundStyle(Theme.shared.color.primary)
+        }
+        .padding()
+        .background(Theme.shared.color.backgroundDefault)
+        .clipShape(.rect(cornerRadius: 8))
+        .onTapGesture {
+          viewModel.onDocumentDetails(documentId: item.value.id)
+        }
+
+      }
+    }
+    .padding(.vertical)
   }
 
   @ViewBuilder
