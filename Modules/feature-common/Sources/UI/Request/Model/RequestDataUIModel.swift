@@ -180,6 +180,7 @@ public extension RequestDataSection {
     case id
     case mdl
     case age
+    case photoId
     case custom(String)
 
     public init(docType: DocumentTypeIdentifier) {
@@ -190,6 +191,8 @@ public extension RequestDataSection {
         self = .mdl
       case .AGE:
         self = .age
+      case .PHOTOID:
+        self = .photoId
       case .GENERIC(docType: let docType):
         self = .custom(docType)
       }

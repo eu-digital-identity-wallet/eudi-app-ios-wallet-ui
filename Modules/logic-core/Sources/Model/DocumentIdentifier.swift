@@ -21,6 +21,7 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable {
   case PID
   case MDL
   case AGE
+  case PHOTOID
   case GENERIC(docType: String)
 
   public var localizedTitle: String {
@@ -31,6 +32,8 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable {
       LocalizableString.shared.get(with: .mdl)
     case .AGE:
       LocalizableString.shared.get(with: .ageVerification)
+    case .PHOTOID:
+      LocalizableString.shared.get(with: .photoId)
     case .GENERIC(let docType):
       LocalizableString.shared.get(with: .dynamic(key: docType))
     }
@@ -44,6 +47,8 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable {
       Self.mdlDocType
     case .AGE:
       Self.ageDocType
+    case .PHOTOID:
+      Self.photoIdDocType
     case .GENERIC(let docType):
       docType
     }
@@ -51,7 +56,7 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable {
 
   public var isSupported: Bool {
     return switch self {
-    case .PID, .MDL, .AGE: true
+    case .PID, .MDL, .AGE, .PHOTOID: true
     case .GENERIC: false
     }
   }
@@ -64,6 +69,8 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable {
       self = .MDL
     case Self.ageDocType:
       self = .AGE
+    case Self.photoIdDocType:
+      self = .PHOTOID
     default:
       self = .GENERIC(docType: rawValue)
     }
@@ -74,4 +81,5 @@ private extension DocumentTypeIdentifier {
   static let pidDocType = "eu.europa.ec.eudi.pid.1"
   static let mdlDocType = "org.iso.18013.5.1.mDL"
   static let ageDocType = "eu.europa.ec.eudi.pseudonym.age_over_18.1"
+  static let photoIdDocType = "org.iso.23220.2.photoid.1"
 }
