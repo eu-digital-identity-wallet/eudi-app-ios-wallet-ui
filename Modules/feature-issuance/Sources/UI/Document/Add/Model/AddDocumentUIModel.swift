@@ -68,6 +68,13 @@ public extension AddDocumentUIModel {
         image: Theme.shared.image.id,
         isLoading: false,
         type: .AGE
+      ),
+      .init(
+        isEnabled: true,
+        documentName: .photoId,
+        image: Theme.shared.image.id,
+        isLoading: false,
+        type: .PHOTOID
       )
     ]
   }
