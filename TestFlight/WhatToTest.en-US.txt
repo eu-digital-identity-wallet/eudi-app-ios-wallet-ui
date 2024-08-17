@@ -3,3 +3,4 @@
 - VCI offer Support
 - PreAuth functionality
 - Age Verification POC
+- PhotoID
