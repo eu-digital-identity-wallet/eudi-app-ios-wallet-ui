@@ -23,6 +23,7 @@ enum QuickPinStep {
   case retryInput(String)
 }
 
+@CopyableCombined
 struct QuickPinState: ViewState {
   let config: QuickPinUiConfig
   let title: LocalizableString.Key
@@ -82,15 +83,20 @@ final class QuickPinViewModel<Router: RouterHost>: BaseViewModel<Router, QuickPi
     case .validate:
       onValidate()
     case .firstInput:
-      setNewState(
-        caption: viewState.config.isSetFlow ? .quickPinSetCaptionTwo : .quickPinUpdateCaptionThree,
-        button: .quickPinConfirmButton,
-        step: .retryInput(uiPinInputField)
-      )
+      setState {
+        $0.copy(
+          caption: viewState.config.isSetFlow ? .quickPinSetCaptionTwo : .quickPinUpdateCaptionThree,
+          button: .quickPinConfirmButton,
+          pinError: nil,
+          step: .retryInput(uiPinInputField)
+        )
+      }
       uiPinInputField = ""
     case .retryInput(let previousPin):
       guard previousPin == uiPinInputField else {
-        setNewState(pinError: .quickPinDoNotMatch)
+        setState {
+          $0.copy(pinError: .quickPinDoNotMatch)
+        }
         return
       }
       onSuccess()
@@ -109,14 +115,19 @@ final class QuickPinViewModel<Router: RouterHost>: BaseViewModel<Router, QuickPi
   private func onValidate() {
     switch interactor.isPinValid(pin: uiPinInputField) {
     case .success:
-      setNewState(
-        caption: .quickPinUpdateCaptionTwo,
-        button: .quickPinNextButton,
-        step: .firstInput
-      )
+      setState {
+        $0.copy(
+          caption: .quickPinUpdateCaptionTwo,
+          button: .quickPinNextButton,
+          pinError: nil,
+          step: .firstInput
+        )
+      }
       uiPinInputField = ""
     case .failure(let error):
-      setNewState(pinError: .custom(error.localizedDescription))
+      setState {
+        $0.copy(pinError: .custom(error.localizedDescription))
+      }
     }
   }
 
@@ -151,34 +162,11 @@ final class QuickPinViewModel<Router: RouterHost>: BaseViewModel<Router, QuickPi
   }
 
   private func processPin(value: String) {
-    setNewState(
-      pinError: nil,
-      isButtonActive: value.count == viewState.quickPinSize
-    )
-  }
-
-  private func setNewState(
-    caption: LocalizableString.Key? = nil,
-    button: LocalizableString.Key? = nil,
-    pinError: LocalizableString.Key? = nil,
-    isButtonActive: Bool? = nil,
-    step: QuickPinStep? = nil
-  ) {
-    setState { previous in
-        .init(
-          config: previous.config,
-          title: previous.title,
-          caption: caption ?? previous.caption,
-          button: button ?? previous.button,
-          success: previous.success,
-          successButton: previous.successButton,
-          successNavigationType: previous.successNavigationType,
-          isCancellable: previous.isCancellable,
-          pinError: pinError,
-          isButtonActive: isButtonActive ?? previous.isButtonActive,
-          step: step ?? previous.step,
-          quickPinSize: previous.quickPinSize
-        )
+    setState {
+      $0.copy(
+        pinError: nil,
+        isButtonActive: value.count == viewState.quickPinSize
+      )
     }
   }
 }

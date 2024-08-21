@@ -185,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Hitch.git",
       "state" : {
-        "revision" : "328211598c24f356fccbcb5451cc48e21071a963",
-        "version" : "0.4.139"
+        "revision" : "54079924814303f895b6d9b2cb8adf9dc5e57ea0",
+        "version" : "0.4.145"
       }
     },
     {
@@ -284,8 +284,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Spanker.git",
       "state" : {
-        "revision" : "96e58f68274a2e6f370fff153ceb5674a06936c4",
-        "version" : "0.2.47"
+        "revision" : "7feeebc70a0ec23e9f7ce102f89de0b2286677ae",
+        "version" : "0.2.48"
       }
     },
     {
@@ -356,8 +356,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
       "state" : {
-        "revision" : "8dafe0fdce623f65178689f2d6dea7304f7fbe75",
-        "version" : "3.6.0"
+        "revision" : "a53a7e8f858902659d4784322bede34f4e49097e",
+        "version" : "3.6.1"
       }
     },
     {
@@ -419,8 +419,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/markiv/SwiftUI-Shimmer.git",
       "state" : {
-        "revision" : "e3aa4226b0fafe345ca1c920f516b6a2f3e0aacc",
-        "version" : "1.5.0"
+        "revision" : "0226e21f9bf355d40e07e5f5e1c33679d50e167f",
+        "version" : "1.5.1"
       }
     },
     {

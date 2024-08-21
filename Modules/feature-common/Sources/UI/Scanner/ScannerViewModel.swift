@@ -17,7 +17,9 @@ import logic_ui
 import logic_core
 import logic_resources
 
+@Copyable
 struct ScannerState: ViewState {
+
   let config: ScannerUiConfig
   let error: LocalizableString.Key?
 
@@ -81,10 +83,7 @@ final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerS
 
   func onError() {
     setState {
-      .init(
-        config: $0.config,
-        error: .cameraError
-      )
+      $0.copy(error: .cameraError)
     }
   }
 
