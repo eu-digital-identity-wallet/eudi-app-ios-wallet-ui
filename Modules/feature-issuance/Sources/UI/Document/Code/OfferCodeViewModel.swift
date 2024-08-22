@@ -89,16 +89,13 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
         router.push(with: route)
       case .failure(let error):
         setState {
-          $0
-            .copy(
-              isLoading: false
+          $0.copy(
+            isLoading: false,
+            error: .init(
+              description: .custom(error.localizedDescription),
+              cancelAction: self.resetError()
             )
-            .copy(
-              error: .init(
-                description: .custom(error.localizedDescription),
-                cancelAction: self.resetError()
-              )
-            )
+          )
         }
       case .partialSuccess(let route):
         router.push(with: route)

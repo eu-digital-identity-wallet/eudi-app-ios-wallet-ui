@@ -106,26 +106,22 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
 
   public func onError(with error: Error) {
     setState {
-      $0
-        .copy(
-          isLoading: false
+      $0.copy(
+        isLoading: false,
+        error: .init(
+          description: .custom(error.localizedDescription),
+          cancelAction: self.router.pop(),
+          action: { self.onErrorAction() }
         )
-        .copy(
-          error: .init(
-            description: .custom(error.localizedDescription),
-            cancelAction: self.router.pop(),
-            action: { self.onErrorAction() }
-          )
-        )
+      )
     }
   }
 
   public func onEmptyDocuments() {
     setState {
       $0
-        .copy(isLoading: false)
+        .copy(isLoading: false, items: [])
         .copy(error: nil)
-        .copy(items: [])
     }
   }
 
@@ -137,13 +133,15 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
   ) {
     setState {
       $0
-        .copy(isLoading: false)
+        .copy(
+          isLoading: false,
+          items: items,
+          title: title,
+          relyingParty: relyingParty,
+          isTrusted: isTrusted,
+          allowShare: !items.isEmpty
+        )
         .copy(error: nil)
-        .copy(items: items)
-        .copy(title: title)
-        .copy(relyingParty: relyingParty)
-        .copy(isTrusted: isTrusted)
-        .copy(allowShare: !items.isEmpty)
     }
   }
 
@@ -188,27 +186,26 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
 
   func onContentVisibilityChange() {
     setState {
-      $0
-        .copy(isContentVisible: !viewState.isContentVisible)
-        .copy(
-          items: viewState.items.map {
-            if var row = $0.isDataRow {
-              row.setVisible(!viewState.isContentVisible)
-              return .requestDataRow(row)
-            }
-            if var row = $0.isDataVerification {
-              let items = row.items.map({
-                var item = $0
-                item.isVisible = !viewState.isContentVisible
-                return item
-              }
-              )
-              row.setItems(with: items)
-              return .requestDataVerification(row)
-            }
-            return $0
+      $0.copy(
+        isContentVisible: !viewState.isContentVisible,
+        items: viewState.items.map {
+          if var row = $0.isDataRow {
+            row.setVisible(!viewState.isContentVisible)
+            return .requestDataRow(row)
           }
-        )
+          if var row = $0.isDataVerification {
+            let items = row.items.map({
+              var item = $0
+              item.isVisible = !viewState.isContentVisible
+              return item
+            }
+            )
+            row.setItems(with: items)
+            return .requestDataVerification(row)
+          }
+          return $0
+        }
+      )
     }
   }
 
@@ -250,10 +247,11 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
       .isEmpty
 
     setState {
-      $0
-        .copy(itemsAreAllSelected: allSelected)
-        .copy(items: items)
-        .copy(allowShare: canShare || hasVerificationItems)
+      $0.copy(
+        itemsAreAllSelected: allSelected,
+        items: items,
+        allowShare: canShare || hasVerificationItems
+      )
     }
   }
 

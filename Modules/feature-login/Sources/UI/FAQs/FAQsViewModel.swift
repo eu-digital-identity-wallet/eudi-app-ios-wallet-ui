@@ -70,11 +70,11 @@ final class FAQsViewModel<Router: RouterHost>: BaseViewModel<Router, FAQState> {
     switch await interactor.fetchFAQs() {
     case .success(let faqs):
       setState {
-        $0.copy(isLoading: true).copy(models: faqs)
+        $0.copy(isLoading: true, models: faqs)
       }
     case .failure:
       setState {
-        $0.copy(isLoading: false).copy(models: [])
+        $0.copy(isLoading: false, models: [])
       }
     }
   }

@@ -79,22 +79,24 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     case .success(let uiModel):
       setState {
         $0
-          .copy(isLoading: false)
-          .copy(documentOfferUiModel: uiModel)
+          .copy(
+            isLoading: false,
+            documentOfferUiModel: uiModel,
+            allowIssue: !uiModel.uiOffers.isEmpty
+          )
           .copy(error: nil)
-          .copy(allowIssue: !uiModel.uiOffers.isEmpty)
       }
     case .failure(let error):
       setState {
         $0
-          .copy(isLoading: false)
           .copy(
+            isLoading: false,
             error: ContentErrorView.Config(
               description: .custom(error.localizedDescription),
               cancelAction: self.onPop()
-            )
+            ),
+            allowIssue: false
           )
-          .copy(allowIssue: false)
       }
     }
   }
@@ -130,16 +132,13 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
         router.push(with: route)
       case .failure(let error):
         setState {
-          $0
-            .copy(
-              isLoading: false
+          $0.copy(
+            isLoading: false,
+            error: .init(
+              description: .custom(error.localizedDescription),
+              cancelAction: self.setState { $0.copy(error: nil) }
             )
-            .copy(
-              error: .init(
-                description: .custom(error.localizedDescription),
-                cancelAction: self.setState { $0.copy(error: nil) }
-              )
-            )
+          )
         }
       case .partialSuccess(let route):
         router.push(with: route)
@@ -170,19 +169,18 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
       return
     }
     setState {
-      $0
-        .copy(isLoading: true)
-        .copy(documentOfferUiModel: DocumentOfferUIModel.mock())
-        .copy(error: nil)
-        .copy(
-          config: .init(
-            arguments: ["uri": uri],
-            navigationSuccessType: viewState.config.navigationSuccessType,
-            navigationCancelType: viewState.config.navigationCancelType
-          )
-        )
-        .copy(offerUri: uri)
-        .copy(allowIssue: false)
+      $0.copy(
+        isLoading: true,
+        documentOfferUiModel: DocumentOfferUIModel.mock(),
+        error: nil,
+        config: .init(
+          arguments: ["uri": uri],
+          navigationSuccessType: viewState.config.navigationSuccessType,
+          navigationCancelType: viewState.config.navigationCancelType
+        ),
+        offerUri: uri,
+        allowIssue: false
+      )
     }
     Task {
       await self.processRequest()

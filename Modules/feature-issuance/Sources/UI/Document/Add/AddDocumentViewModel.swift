@@ -116,16 +116,13 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
         )
       case .failure(let error):
         setState {
-          $0
-            .copy(
-              addDocumentCellModels: transformCellLoadingState(with: false)
+          $0.copy(
+            addDocumentCellModels: transformCellLoadingState(with: false),
+            error: .init(
+              description: .custom(error.localizedDescription),
+              cancelAction: self.setState { $0.copy(error: nil) }
             )
-            .copy(
-              error: .init(
-                description: .custom(error.localizedDescription),
-                cancelAction: self.setState { $0.copy(error: nil) }
-              )
-            )
+          )
         }
       case .deferredSuccess:
         router.push(with: onDeferredSuccess())

@@ -33,34 +33,58 @@ public struct CopyableMacro: MemberMacro {
     }
 
     let structVisibility = structDeclSyntax.modifiers.visibilityText() ?? "internal"
+    var variables = structDeclSyntax.memberBlock.members.compactMap { $0.decl.as(VariableDeclSyntax.self) }
+    var bindings = variables.flatMap(\.bindings).filter { accessorIsAllowed($0.accessorBlock?.accessors) }
+    var declSyntax: [DeclSyntax] = []
 
-    let variables = structDeclSyntax.memberBlock.members.compactMap { $0.decl.as(VariableDeclSyntax.self) }
+    // Linear copy creation
+    declSyntax.append(
+      contentsOf: variables.flatMap { variable in
 
-    let bindings = variables.flatMap(\.bindings).filter { accessorIsAllowed($0.accessorBlock?.accessors) }
+        let variableVisibility = variable.modifiers.visibilityText() ?? structVisibility
 
-    return variables.flatMap { variable in
+        return variable.bindings
+          .filter { accessorIsAllowed($0.accessorBlock?.accessors) }
+          .compactMap { binding -> DeclSyntax? in
 
-      let variableVisibility = variable.modifiers.visibilityText() ?? structVisibility
+            let propertyName = binding.pattern
 
-      return variable.bindings
-        .filter { accessorIsAllowed($0.accessorBlock?.accessors) }
-        .compactMap { binding -> DeclSyntax? in
+            guard let typeName = binding.typeAnnotation?.type else {
+              let diagnostic = Diagnostic(node: Syntax(node), message: CopyableDiagnostic.propertyTypeProblem(binding))
+              context.diagnose(diagnostic)
+              return nil
+            }
 
-          let propertyName = binding.pattern
-
-          guard let typeName = binding.typeAnnotation?.type else {
-            let diagnostic = Diagnostic(node: Syntax(node), message: CopyableDiagnostic.propertyTypeProblem(binding))
-            context.diagnose(diagnostic)
-            return nil
+            return """
+                          /// Returns a copy of the caller whose value for `\(propertyName)` is different.
+                          \(raw: variableVisibility) func copy(\(propertyName): \(typeName.trimmed)) -> Self {
+                              .init(\(raw: bindings.map { "\($0.pattern): \($0.pattern)" }.joined(separator: ", ")))
+                          }
+                          """
           }
+      }
+    )
 
-          return """
-                        /// Returns a copy of the caller whose value for `\(propertyName)` is different.
-                        \(raw: variableVisibility) func copy(\(propertyName): \(typeName.trimmed)) -> Self {
-                            .init(\(raw: bindings.map { "\($0.pattern): \($0.pattern)" }.joined(separator: ", ")))
+    // Combined copy creation
+    variables = structDeclSyntax.memberBlock.members
+      .compactMap { $0.decl.as(VariableDeclSyntax.self) }
+      .filter { $0.bindings.allSatisfy { accessorIsAllowed($0.accessorBlock?.accessors) } }
+
+    bindings = variables.flatMap(\.bindings).filter { accessorIsAllowed($0.accessorBlock?.accessors) }
+
+    let parameterListString = bindings
+      .map { binding in "\(binding.pattern): \(binding.typeAnnotation?.type.trimmed ?? "?")? = nil" }
+      .joined(separator: ", ")
+
+    declSyntax.append(
+                        """
+                        /// Returns a copy of the caller whose values are different. All values are optional and the previous value will be used if not set.
+                        \(raw: structVisibility) func copy(\(raw: parameterListString)) -> Self {
+                            .init(\(raw: bindings.map { "\($0.pattern): \($0.pattern) ?? self.\($0.pattern)" }.joined(separator: ", ")))
                         }
                         """
-        }
-    }
+    )
+
+    return declSyntax
   }
 }

@@ -52,3 +52,4 @@ public struct Item {
 }
 
 print("Item copy with new property2: \(Item(property1: "Value1", property2: 1, property3: "Value3", property4: "Value3").copy(property2: 2).property2)")
+print("Item copy with new properties: \(Item(property1: "Value1", property2: 1, property3: "Value3", property4: "Value3").copy(property1: "ValueNew", property2: 3).property1)")
