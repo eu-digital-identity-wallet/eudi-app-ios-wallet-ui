@@ -84,11 +84,12 @@ final class QuickPinViewModel<Router: RouterHost>: BaseViewModel<Router, QuickPi
       onValidate()
     case .firstInput:
       setState {
-        $0
-          .copy(caption: viewState.config.isSetFlow ? .quickPinSetCaptionTwo : .quickPinUpdateCaptionThree)
-          .copy(button: .quickPinConfirmButton)
-          .copy(pinError: nil)
-          .copy(step: .retryInput(uiPinInputField))
+        $0.copy(
+          caption: viewState.config.isSetFlow ? .quickPinSetCaptionTwo : .quickPinUpdateCaptionThree,
+          button: .quickPinConfirmButton,
+          pinError: nil,
+          step: .retryInput(uiPinInputField)
+        )
       }
       uiPinInputField = ""
     case .retryInput(let previousPin):
@@ -116,10 +117,12 @@ final class QuickPinViewModel<Router: RouterHost>: BaseViewModel<Router, QuickPi
     case .success:
       setState {
         $0
-          .copy(caption: .quickPinUpdateCaptionTwo)
-          .copy(button: .quickPinNextButton)
+          .copy(
+            caption: .quickPinUpdateCaptionTwo,
+            button: .quickPinNextButton,
+            step: .firstInput
+          )
           .copy(pinError: nil)
-          .copy(step: .firstInput)
       }
       uiPinInputField = ""
     case .failure(let error):

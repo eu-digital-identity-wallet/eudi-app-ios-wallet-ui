@@ -109,16 +109,17 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
     switch await interactor.fetchDashboard(failedDocuments: viewState.failedDocuments) {
     case .success(let bearer, let documents, let hasIssuedDocuments):
       setState {
-        $0
-          .copy(isLoading: false)
-          .copy(documents: documents)
-          .copy(bearer: bearer)
-          .copy(allowUserInteraction: hasIssuedDocuments)
+        $0.copy(
+          isLoading: false,
+          documents: documents,
+          bearer: bearer,
+          allowUserInteraction: hasIssuedDocuments
+        )
       }
       onDocumentsRetrievedPostActions()
     case .failure:
       setState {
-        $0.copy(isLoading: false).copy(documents: [])
+        $0.copy(isLoading: false, documents: [])
       }
     }
   }
@@ -273,13 +274,12 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
         case .completion(let issued, let failed):
           self.deferredTask?.cancel()
           self.setState {
-            $0
-              .copy(
-                succededIssuedDocuments: !isSuccededDocumentsModalShowing
-                ? issued
-                : $0.succededIssuedDocuments
-              )
-              .copy(failedDocuments: failed)
+            $0.copy(
+              succededIssuedDocuments: !isSuccededDocumentsModalShowing
+              ? issued
+              : $0.succededIssuedDocuments,
+              failedDocuments: failed
+            )
           }
           await fetch()
         case .cancelled, .none: break

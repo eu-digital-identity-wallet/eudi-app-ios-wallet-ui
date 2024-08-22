@@ -85,24 +85,23 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
 
       self.setState {
         $0
-          .copy(document: document)
-          .copy(isLoading: false)
+          .copy(
+            document: document,
+            isLoading: false,
+            toolBarActions: actions
+          )
           .copy(error: nil)
-          .copy(toolBarActions: actions)
       }
 
     case .failure(let error):
       self.setState {
-        $0
-          .copy(
-            isLoading: true
+        $0.copy(
+          isLoading: true,
+          error: .init(
+            description: .custom(error.localizedDescription),
+            cancelAction: self.pop()
           )
-          .copy(
-            error: .init(
-              description: .custom(error.localizedDescription),
-              cancelAction: self.pop()
-            )
-          )
+        )
       }
     }
   }
@@ -139,16 +138,13 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
         }
       case .failure(let error):
         self.setState {
-          $0
-            .copy(
-              isLoading: false
+          $0.copy(
+            isLoading: false,
+            error: .init(
+              description: .custom(error.localizedDescription),
+              cancelAction: self.setState { $0.copy(error: nil) }
             )
-            .copy(
-              error: .init(
-                description: .custom(error.localizedDescription),
-                cancelAction: self.setState { $0.copy(error: nil) }
-              )
-            )
+          )
         }
       }
     }
