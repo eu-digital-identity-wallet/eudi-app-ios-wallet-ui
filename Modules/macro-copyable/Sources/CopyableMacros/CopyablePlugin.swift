@@ -13,36 +13,12 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_ui
-import feature_common
+import SwiftCompilerPlugin
+import SwiftSyntaxMacros
 
-@Copyable
-struct WelcomeState: ViewState {
-  let isAnimating: Bool
-}
-
-final class WelcomeViewModel<Router: RouterHost>: BaseViewModel<Router, WelcomeState> {
-
-  private let interactor: WelcomeInteractor
-
-  init(
-    router: Router,
-    interactor: WelcomeInteractor
-  ) {
-    self.interactor = interactor
-    super.init(router: router, initialState: .init(isAnimating: true))
-  }
-
-  func onAnimationCompletion() {
-    setState { $0.copy(isAnimating: false) }
-  }
-
-  func onClickFAQ() {
-    router.push(with: .faqs)
-  }
-
-  func onClickLogin() {
-    router.push(with: .quickPin(config: QuickPinUiConfig(flow: .set)))
-  }
+@main
+struct CopyablePlugin: CompilerPlugin {
+  let providingMacros: [Macro.Type] = [
+    CopyableMacro.self
+  ]
 }

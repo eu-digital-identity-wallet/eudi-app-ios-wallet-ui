@@ -15,6 +15,7 @@
  */
 @_exported import SwiftUI
 @_exported import Combine
+@_exported import Copyable
 
 public protocol ViewState {}
 

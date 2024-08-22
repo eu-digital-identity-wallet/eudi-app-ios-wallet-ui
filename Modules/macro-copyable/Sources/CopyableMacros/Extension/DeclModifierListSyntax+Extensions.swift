@@ -13,36 +13,14 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_ui
-import feature_common
+import SwiftSyntax
 
-@Copyable
-struct WelcomeState: ViewState {
-  let isAnimating: Bool
-}
+extension DeclModifierListSyntax {
 
-final class WelcomeViewModel<Router: RouterHost>: BaseViewModel<Router, WelcomeState> {
+  private static let visibilityModifiers: Set = ["private", "fileprivate", "internal", "package", "public", "open"]
 
-  private let interactor: WelcomeInteractor
-
-  init(
-    router: Router,
-    interactor: WelcomeInteractor
-  ) {
-    self.interactor = interactor
-    super.init(router: router, initialState: .init(isAnimating: true))
-  }
-
-  func onAnimationCompletion() {
-    setState { $0.copy(isAnimating: false) }
-  }
-
-  func onClickFAQ() {
-    router.push(with: .faqs)
-  }
-
-  func onClickLogin() {
-    router.push(with: .quickPin(config: QuickPinUiConfig(flow: .set)))
+  func visibilityText() -> String? {
+    self.map(\.name.text)
+      .first(where: { Self.visibilityModifiers.contains($0) })
   }
 }

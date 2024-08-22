@@ -13,36 +13,18 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_ui
-import feature_common
+import SwiftSyntax
 
-@Copyable
-struct WelcomeState: ViewState {
-  let isAnimating: Bool
-}
+func accessorIsAllowed(_ accessor: AccessorBlockSyntax.Accessors?) -> Bool {
 
-final class WelcomeViewModel<Router: RouterHost>: BaseViewModel<Router, WelcomeState> {
+  guard let accessor else { return true }
 
-  private let interactor: WelcomeInteractor
-
-  init(
-    router: Router,
-    interactor: WelcomeInteractor
-  ) {
-    self.interactor = interactor
-    super.init(router: router, initialState: .init(isAnimating: true))
-  }
-
-  func onAnimationCompletion() {
-    setState { $0.copy(isAnimating: false) }
-  }
-
-  func onClickFAQ() {
-    router.push(with: .faqs)
-  }
-
-  func onClickLogin() {
-    router.push(with: .quickPin(config: QuickPinUiConfig(flow: .set)))
+  return switch accessor {
+  case .accessors(let accessorDeclListSyntax):
+    !accessorDeclListSyntax.contains {
+      $0.accessorSpecifier.text == "get" || $0.accessorSpecifier.text == "set"
+    }
+  case .getter:
+    false
   }
 }

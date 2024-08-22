@@ -16,6 +16,7 @@
 @_exported import logic_ui
 @_exported import logic_resources
 
+@Copyable
 public struct BaseLoadingState: ViewState {
   let error: ContentErrorView.Config?
 }
@@ -54,20 +55,20 @@ open class BaseLoadingViewModel<Router: RouterHost>: BaseViewModel<Router, BaseL
   }
 
   public func onError(with error: Error) {
-    setState { _ in
-        .init(
-          error: .init(
-            description: .custom(error.localizedDescription),
-            cancelAction: self.onNavigate(type: .pop),
-            action: { self.onErrorAction() }
-          )
+    setState {
+      $0.copy(
+        error: .init(
+          description: .custom(error.localizedDescription),
+          cancelAction: self.onNavigate(type: .pop),
+          action: { self.onErrorAction() }
         )
+      )
     }
   }
 
   private func onErrorAction() {
-    setState { _ in
-        .init(error: nil)
+    setState {
+      $0.copy(error: nil)
     }
     Task {
       await self.doWork()

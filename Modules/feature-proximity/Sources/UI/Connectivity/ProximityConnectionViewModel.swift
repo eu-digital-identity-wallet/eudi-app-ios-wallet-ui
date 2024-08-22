@@ -19,6 +19,7 @@ import logic_business
 import UIKit
 import logic_resources
 
+@Copyable
 struct ProxmityConnectivityState: ViewState {
   let error: ContentErrorView.Config?
   let qrImage: UIImage?
@@ -45,12 +46,7 @@ final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Rout
     case .success:
       await self.onConnectionSuccess()
     case .failure(let error):
-      setNewState(
-        error: .init(
-          description: .custom(error.localizedDescription),
-          cancelAction: self.router.pop()
-        )
-      )
+      self.onError(with: .custom(error.localizedDescription))
     }
   }
 
@@ -61,7 +57,7 @@ final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Rout
         case .prepareQr:
           await self.onQRGeneration()
         case .error:
-          self.onError()
+          self.onError(with: .genericErrorDesc)
         default:
           print(state)
         }
@@ -72,14 +68,9 @@ final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Rout
   private func onQRGeneration() async {
     switch await interactor.onQRGeneration() {
     case .success(let qrImage):
-      setNewState(qrImage: qrImage)
+      setState { $0.copy(error: nil).copy(qrImage: qrImage) }
     case .failure(let error):
-      setNewState(
-        error: .init(
-          description: .custom(error.localizedDescription),
-          cancelAction: self.router.pop()
-        )
-      )
+      self.onError(with: .custom(error.localizedDescription))
     }
   }
 
@@ -95,24 +86,14 @@ final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Rout
     router.push(with: .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator))
   }
 
-  private func onError() {
-    self.setNewState(
-      error: .init(
-        description: .genericErrorDesc,
-        cancelAction: self.router.pop()
-      )
-    )
-  }
-
-  private func setNewState(
-    error: ContentErrorView.Config? = nil,
-    qrImage: UIImage? = nil
-  ) {
-    setState { previousState in
-        .init(
-          error: error,
-          qrImage: qrImage ?? previousState.qrImage
+  private func onError(with desc: LocalizableString.Key) {
+    setState {
+      $0.copy(
+        error: .init(
+          description: desc,
+          cancelAction: self.router.pop()
         )
+      )
     }
   }
 }

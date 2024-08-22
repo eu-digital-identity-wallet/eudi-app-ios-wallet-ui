@@ -7257,6 +7257,7 @@ public class RequestItemConvertibleStub:RequestItemConvertible {
 import Cuckoo
 import SwiftUI
 import Combine
+import Copyable
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
