@@ -16,6 +16,3 @@
 
 @attached(member, names: named(copy))
 public macro Copyable() = #externalMacro(module: "CopyableMacros", type: "CopyableMacro")
-
-@attached(member, names: named(copy))
-public macro CopyableCombined() = #externalMacro(module: "CopyableMacros", type: "CopyableCombinedMacro")

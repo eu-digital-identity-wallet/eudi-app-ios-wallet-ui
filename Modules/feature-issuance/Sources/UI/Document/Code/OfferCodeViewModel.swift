@@ -20,7 +20,7 @@ import logic_business
 import feature_common
 import logic_core
 
-@CopyableCombined
+@Copyable
 struct OfferCodeViewState: ViewState {
   let isLoading: Bool
   let error: ContentErrorView.Config?
@@ -77,7 +77,7 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
   private func onIssueDocuments() {
     Task {
       codeIsFocused = false
-      setState { $0.copy(isLoading: true, error: nil) }
+      setState { $0.copy(isLoading: true).copy(error: nil) }
       switch await self.interactor.issueDocuments(
         with: viewState.config.offerUri,
         issuerName: viewState.config.issuerName,
@@ -89,13 +89,16 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
         router.push(with: route)
       case .failure(let error):
         setState {
-          $0.copy(
-            isLoading: false,
-            error: .init(
-              description: .custom(error.localizedDescription),
-              cancelAction: self.resetError()
+          $0
+            .copy(
+              isLoading: false
             )
-          )
+            .copy(
+              error: .init(
+                description: .custom(error.localizedDescription),
+                cancelAction: self.resetError()
+              )
+            )
         }
       case .partialSuccess(let route):
         router.push(with: route)

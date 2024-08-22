@@ -19,7 +19,7 @@ import logic_resources
 import feature_common
 import logic_core
 
-@CopyableCombined
+@Copyable
 struct DocumentDetailsViewState: ViewState {
   let document: DocumentDetailsUIModel
   let isLoading: Bool
@@ -84,23 +84,25 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
       }
 
       self.setState {
-        $0.copy(
-          document: document,
-          isLoading: false,
-          error: nil,
-          toolBarActions: actions
-        )
+        $0
+          .copy(document: document)
+          .copy(isLoading: false)
+          .copy(error: nil)
+          .copy(toolBarActions: actions)
       }
 
     case .failure(let error):
       self.setState {
-        $0.copy(
-          isLoading: true,
-          error: .init(
-            description: .custom(error.localizedDescription),
-            cancelAction: self.pop()
+        $0
+          .copy(
+            isLoading: true
           )
-        )
+          .copy(
+            error: .init(
+              description: .custom(error.localizedDescription),
+              cancelAction: self.pop()
+            )
+          )
       }
     }
   }
@@ -126,7 +128,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
   private func onDocumentDelete(with type: DocumentTypeIdentifier, and id: String) {
     Task {
 
-      self.setState { $0.copy(isLoading: true, error: nil) }
+      self.setState { $0.copy(isLoading: true).copy(error: nil) }
 
       switch await self.interactor.deleteDocument(with: id, and: type) {
       case .success(let shouldReboot):
@@ -137,13 +139,16 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
         }
       case .failure(let error):
         self.setState {
-          $0.copy(
-            isLoading: false,
-            error: .init(
-              description: .custom(error.localizedDescription),
-              cancelAction: self.setState { $0.copy(error: nil) }
+          $0
+            .copy(
+              isLoading: false
             )
-          )
+            .copy(
+              error: .init(
+                description: .custom(error.localizedDescription),
+                cancelAction: self.setState { $0.copy(error: nil) }
+              )
+            )
         }
       }
     }

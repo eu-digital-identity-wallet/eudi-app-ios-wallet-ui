@@ -17,7 +17,7 @@ import logic_ui
 import logic_resources
 import feature_common
 
-@CopyableCombined
+@Copyable
 struct DocumentSuccessState: ViewState {
   let title: LocalizableString.Key
   let caption: LocalizableString.Key?
@@ -57,10 +57,11 @@ final class DocumentSuccessViewModel<Router: RouterHost>: BaseViewModel<Router, 
 
   func initialize() async {
     setState {
-      $0.copy(
-        caption: interactor.getDocumentSuccessCaption(for: viewState.documentIdentifier),
-        holderName: interactor.getHoldersName(for: viewState.documentIdentifier)
-      )
+      $0
+        .copy(
+          caption: interactor.getDocumentSuccessCaption(for: viewState.documentIdentifier)
+        )
+        .copy(holderName: interactor.getHoldersName(for: viewState.documentIdentifier))
     }
   }
 

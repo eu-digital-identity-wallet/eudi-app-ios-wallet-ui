@@ -23,7 +23,7 @@ enum QuickPinStep {
   case retryInput(String)
 }
 
-@CopyableCombined
+@Copyable
 struct QuickPinState: ViewState {
   let config: QuickPinUiConfig
   let title: LocalizableString.Key
@@ -84,12 +84,11 @@ final class QuickPinViewModel<Router: RouterHost>: BaseViewModel<Router, QuickPi
       onValidate()
     case .firstInput:
       setState {
-        $0.copy(
-          caption: viewState.config.isSetFlow ? .quickPinSetCaptionTwo : .quickPinUpdateCaptionThree,
-          button: .quickPinConfirmButton,
-          pinError: nil,
-          step: .retryInput(uiPinInputField)
-        )
+        $0
+          .copy(caption: viewState.config.isSetFlow ? .quickPinSetCaptionTwo : .quickPinUpdateCaptionThree)
+          .copy(button: .quickPinConfirmButton)
+          .copy(pinError: nil)
+          .copy(step: .retryInput(uiPinInputField))
       }
       uiPinInputField = ""
     case .retryInput(let previousPin):
@@ -116,12 +115,11 @@ final class QuickPinViewModel<Router: RouterHost>: BaseViewModel<Router, QuickPi
     switch interactor.isPinValid(pin: uiPinInputField) {
     case .success:
       setState {
-        $0.copy(
-          caption: .quickPinUpdateCaptionTwo,
-          button: .quickPinNextButton,
-          pinError: nil,
-          step: .firstInput
-        )
+        $0
+          .copy(caption: .quickPinUpdateCaptionTwo)
+          .copy(button: .quickPinNextButton)
+          .copy(pinError: nil)
+          .copy(step: .firstInput)
       }
       uiPinInputField = ""
     case .failure(let error):
@@ -163,10 +161,9 @@ final class QuickPinViewModel<Router: RouterHost>: BaseViewModel<Router, QuickPi
 
   private func processPin(value: String) {
     setState {
-      $0.copy(
-        pinError: nil,
-        isButtonActive: value.count == viewState.quickPinSize
-      )
+      $0
+        .copy(pinError: nil)
+        .copy(isButtonActive: value.count == viewState.quickPinSize)
     }
   }
 }

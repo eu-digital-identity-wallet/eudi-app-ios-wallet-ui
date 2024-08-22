@@ -45,7 +45,9 @@ public struct CopyableMacro: MemberMacro {
       return variable.bindings
         .filter { accessorIsAllowed($0.accessorBlock?.accessors) }
         .compactMap { binding -> DeclSyntax? in
+
           let propertyName = binding.pattern
+
           guard let typeName = binding.typeAnnotation?.type else {
             let diagnostic = Diagnostic(node: Syntax(node), message: CopyableDiagnostic.propertyTypeProblem(binding))
             context.diagnose(diagnostic)

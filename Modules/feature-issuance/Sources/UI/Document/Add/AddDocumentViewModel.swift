@@ -20,7 +20,7 @@ import logic_business
 import feature_common
 import logic_core
 
-@CopyableCombined
+@Copyable
 struct AddDocumentViewState: ViewState {
   let addDocumentCellModels: [AddDocumentUIModel]
   let error: ContentErrorView.Config?
@@ -65,7 +65,7 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
   func fetchStoredDocuments() async {
     switch self.interactor.fetchStoredDocuments(with: viewState.config.flow) {
     case .success(let documents):
-      setState { $0.copy(addDocumentCellModels: documents, error: nil) }
+      setState { $0.copy(addDocumentCellModels: documents).copy(error: nil) }
       handleDeepLink()
     case .failure(let error):
       setState {
@@ -100,10 +100,11 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
   private func issueDocument(docType: String) {
     Task {
       setState {
-        $0.copy(
-          addDocumentCellModels: transformCellLoadingState(with: true),
-          error: nil
-        )
+        $0
+          .copy(
+            addDocumentCellModels: transformCellLoadingState(with: true)
+          )
+          .copy(error: nil)
       }
       switch await interactor.issueDocument(docType: docType) {
       case .success(let docId):
@@ -115,13 +116,16 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
         )
       case .failure(let error):
         setState {
-          $0.copy(
-            addDocumentCellModels: transformCellLoadingState(with: false),
-            error: .init(
-              description: .custom(error.localizedDescription),
-              cancelAction: self.setState { $0.copy(error: nil) }
+          $0
+            .copy(
+              addDocumentCellModels: transformCellLoadingState(with: false)
             )
-          )
+            .copy(
+              error: .init(
+                description: .custom(error.localizedDescription),
+                cancelAction: self.setState { $0.copy(error: nil) }
+              )
+            )
         }
       case .deferredSuccess:
         router.push(with: onDeferredSuccess())

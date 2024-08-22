@@ -19,7 +19,7 @@ import logic_business
 import logic_core
 import feature_common
 
-@CopyableCombined
+@Copyable
 struct DashboardState: ViewState {
   let isLoading: Bool
   let documents: [DocumentUIModel]
@@ -109,20 +109,16 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
     switch await interactor.fetchDashboard(failedDocuments: viewState.failedDocuments) {
     case .success(let bearer, let documents, let hasIssuedDocuments):
       setState {
-        $0.copy(
-          isLoading: false,
-          documents: documents,
-          bearer: bearer,
-          allowUserInteraction: hasIssuedDocuments
-        )
+        $0
+          .copy(isLoading: false)
+          .copy(documents: documents)
+          .copy(bearer: bearer)
+          .copy(allowUserInteraction: hasIssuedDocuments)
       }
       onDocumentsRetrievedPostActions()
     case .failure:
       setState {
-        $0.copy(
-          isLoading: false,
-          documents: []
-        )
+        $0.copy(isLoading: false).copy(documents: [])
       }
     }
   }
@@ -191,7 +187,7 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
     guard let document = viewState.pendingDeletionDocument else {
       return
     }
-    setState { $0.copy(isLoading: true, pendingDeletionDocument: nil) }
+    setState { $0.copy(isLoading: true).copy(pendingDeletionDocument: nil) }
     Task {
       switch await interactor.deleteDeferredDocument(with: document.value.id) {
       case .success:
@@ -277,12 +273,13 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
         case .completion(let issued, let failed):
           self.deferredTask?.cancel()
           self.setState {
-            $0.copy(
-              succededIssuedDocuments: !isSuccededDocumentsModalShowing
-              ? issued
-              : $0.succededIssuedDocuments,
-              failedDocuments: failed
-            )
+            $0
+              .copy(
+                succededIssuedDocuments: !isSuccededDocumentsModalShowing
+                ? issued
+                : $0.succededIssuedDocuments
+              )
+              .copy(failedDocuments: failed)
           }
           await fetch()
         case .cancelled, .none: break

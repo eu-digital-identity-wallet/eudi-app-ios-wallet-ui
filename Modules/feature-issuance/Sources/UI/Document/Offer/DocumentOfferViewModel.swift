@@ -20,7 +20,7 @@ import logic_business
 import feature_common
 import logic_core
 
-@CopyableCombined
+@Copyable
 struct DocumentOfferViewState: ViewState {
   let isLoading: Bool
   let documentOfferUiModel: DocumentOfferUIModel
@@ -78,23 +78,23 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     switch await self.interactor.processOfferRequest(with: viewState.offerUri) {
     case .success(let uiModel):
       setState {
-        $0.copy(
-          isLoading: false,
-          documentOfferUiModel: uiModel,
-          error: nil,
-          allowIssue: !uiModel.uiOffers.isEmpty
-        )
+        $0
+          .copy(isLoading: false)
+          .copy(documentOfferUiModel: uiModel)
+          .copy(error: nil)
+          .copy(allowIssue: !uiModel.uiOffers.isEmpty)
       }
     case .failure(let error):
       setState {
-        $0.copy(
-          isLoading: false,
-          error: ContentErrorView.Config(
-            description: .custom(error.localizedDescription),
-            cancelAction: self.onPop()
-          ),
-          allowIssue: false
-        )
+        $0
+          .copy(isLoading: false)
+          .copy(
+            error: ContentErrorView.Config(
+              description: .custom(error.localizedDescription),
+              cancelAction: self.onPop()
+            )
+          )
+          .copy(allowIssue: false)
       }
     }
   }
@@ -118,7 +118,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     }
 
     Task {
-      setState { $0.copy(isLoading: true, error: nil) }
+      setState { $0.copy(isLoading: true).copy(error: nil) }
       switch await self.interactor.issueDocuments(
         with: viewState.offerUri,
         issuerName: viewState.documentOfferUiModel.issuerName,
@@ -130,13 +130,16 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
         router.push(with: route)
       case .failure(let error):
         setState {
-          $0.copy(
-            isLoading: false,
-            error: .init(
-              description: .custom(error.localizedDescription),
-              cancelAction: self.setState { $0.copy(error: nil) }
+          $0
+            .copy(
+              isLoading: false
             )
-          )
+            .copy(
+              error: .init(
+                description: .custom(error.localizedDescription),
+                cancelAction: self.setState { $0.copy(error: nil) }
+              )
+            )
         }
       case .partialSuccess(let route):
         router.push(with: route)
@@ -167,18 +170,19 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
       return
     }
     setState {
-      $0.copy(
-        isLoading: true,
-        documentOfferUiModel: DocumentOfferUIModel.mock(),
-        error: nil,
-        config: .init(
-          arguments: ["uri": uri],
-          navigationSuccessType: viewState.config.navigationSuccessType,
-          navigationCancelType: viewState.config.navigationCancelType
-        ),
-        offerUri: uri,
-        allowIssue: false
-      )
+      $0
+        .copy(isLoading: true)
+        .copy(documentOfferUiModel: DocumentOfferUIModel.mock())
+        .copy(error: nil)
+        .copy(
+          config: .init(
+            arguments: ["uri": uri],
+            navigationSuccessType: viewState.config.navigationSuccessType,
+            navigationCancelType: viewState.config.navigationCancelType
+          )
+        )
+        .copy(offerUri: uri)
+        .copy(allowIssue: false)
     }
     Task {
       await self.processRequest()

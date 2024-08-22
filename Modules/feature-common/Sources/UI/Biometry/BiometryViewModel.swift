@@ -17,7 +17,7 @@ import Foundation
 import logic_ui
 import logic_authentication
 
-@CopyableCombined
+@Copyable
 struct BiometryState: ViewState {
   let config: UIConfig.Biometry
   let areBiometricsEnabled: Bool

@@ -16,7 +16,7 @@
 import Foundation
 import logic_ui
 
-@CopyableCombined
+@Copyable
 struct FAQState: ViewState {
   let isLoading: Bool
   let searchText: String
@@ -70,17 +70,11 @@ final class FAQsViewModel<Router: RouterHost>: BaseViewModel<Router, FAQState> {
     switch await interactor.fetchFAQs() {
     case .success(let faqs):
       setState {
-        $0.copy(
-          isLoading: true,
-          models: faqs
-        )
+        $0.copy(isLoading: true).copy(models: faqs)
       }
     case .failure:
       setState {
-        $0.copy(
-          isLoading: false,
-          models: []
-        )
+        $0.copy(isLoading: false).copy(models: [])
       }
     }
   }

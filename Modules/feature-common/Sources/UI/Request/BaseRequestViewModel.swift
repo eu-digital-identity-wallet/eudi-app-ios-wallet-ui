@@ -17,7 +17,7 @@
 @_exported import logic_ui
 @_exported import logic_resources
 
-@CopyableCombined
+@Copyable
 public struct RequestViewState: ViewState {
   public let isLoading: Bool
   public let error: ContentErrorView.Config?
@@ -100,33 +100,32 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
 
   public func onStartLoading() {
     setState {
-      $0.copy(
-        isLoading: true,
-        error: nil
-      )
+      $0.copy(isLoading: true).copy(error: nil)
     }
   }
 
   public func onError(with error: Error) {
     setState {
-      $0.copy(
-        isLoading: false,
-        error: .init(
-          description: .custom(error.localizedDescription),
-          cancelAction: self.router.pop(),
-          action: { self.onErrorAction() }
+      $0
+        .copy(
+          isLoading: false
         )
-      )
+        .copy(
+          error: .init(
+            description: .custom(error.localizedDescription),
+            cancelAction: self.router.pop(),
+            action: { self.onErrorAction() }
+          )
+        )
     }
   }
 
   public func onEmptyDocuments() {
     setState {
-      $0.copy(
-        isLoading: false,
-        error: nil,
-        items: []
-      )
+      $0
+        .copy(isLoading: false)
+        .copy(error: nil)
+        .copy(items: [])
     }
   }
 
@@ -137,32 +136,31 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
     isTrusted: Bool
   ) {
     setState {
-      $0.copy(
-        isLoading: false,
-        error: nil,
-        items: items,
-        title: title,
-        relyingParty: relyingParty,
-        isTrusted: isTrusted,
-        allowShare: !items.isEmpty
-      )
+      $0
+        .copy(isLoading: false)
+        .copy(error: nil)
+        .copy(items: items)
+        .copy(title: title)
+        .copy(relyingParty: relyingParty)
+        .copy(isTrusted: isTrusted)
+        .copy(allowShare: !items.isEmpty)
     }
   }
 
   public func resetState() {
-    setState {
-      $0.copy(
-        isLoading: true,
-        error: nil,
-        isContentVisible: false,
-        itemsAreAllSelected: true,
-        items: RequestDataUiModel.mock(),
-        title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
-        trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
-        relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
-        isTrusted: false,
-        allowShare: false
-      )
+    setState { _ in
+        .init(
+          isLoading: true,
+          error: nil,
+          isContentVisible: false,
+          itemsAreAllSelected: true,
+          items: RequestDataUiModel.mock(),
+          title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
+          trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
+          relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
+          isTrusted: false,
+          allowShare: false
+        )
     }
   }
 
@@ -190,26 +188,27 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
 
   func onContentVisibilityChange() {
     setState {
-      $0.copy(
-        isContentVisible: !viewState.isContentVisible,
-        items: viewState.items.map {
-          if var row = $0.isDataRow {
-            row.setVisible(!viewState.isContentVisible)
-            return .requestDataRow(row)
-          }
-          if var row = $0.isDataVerification {
-            let items = row.items.map({
-              var item = $0
-              item.isVisible = !viewState.isContentVisible
-              return item
+      $0
+        .copy(isContentVisible: !viewState.isContentVisible)
+        .copy(
+          items: viewState.items.map {
+            if var row = $0.isDataRow {
+              row.setVisible(!viewState.isContentVisible)
+              return .requestDataRow(row)
             }
-            )
-            row.setItems(with: items)
-            return .requestDataVerification(row)
+            if var row = $0.isDataVerification {
+              let items = row.items.map({
+                var item = $0
+                item.isVisible = !viewState.isContentVisible
+                return item
+              }
+              )
+              row.setItems(with: items)
+              return .requestDataVerification(row)
+            }
+            return $0
           }
-          return $0
-        }
-      )
+        )
     }
   }
 
@@ -251,20 +250,18 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
       .isEmpty
 
     setState {
-      $0.copy(
-        itemsAreAllSelected: allSelected,
-        items: items,
-        allowShare: canShare || hasVerificationItems
-      )
+      $0
+        .copy(itemsAreAllSelected: allSelected)
+        .copy(items: items)
+        .copy(allowShare: canShare || hasVerificationItems)
     }
   }
 
   private func onErrorAction() {
     setState {
-      $0.copy(
-        isLoading: false,
-        error: nil
-      )
+      $0
+        .copy(isLoading: false)
+        .copy(error: nil)
     }
     Task {
       await self.doWork()

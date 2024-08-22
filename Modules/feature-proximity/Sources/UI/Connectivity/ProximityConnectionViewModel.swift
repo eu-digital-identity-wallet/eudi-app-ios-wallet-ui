@@ -19,7 +19,7 @@ import logic_business
 import UIKit
 import logic_resources
 
-@CopyableCombined
+@Copyable
 struct ProxmityConnectivityState: ViewState {
   let error: ContentErrorView.Config?
   let qrImage: UIImage?
@@ -68,7 +68,7 @@ final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Rout
   private func onQRGeneration() async {
     switch await interactor.onQRGeneration() {
     case .success(let qrImage):
-      setState { $0.copy(error: nil, qrImage: qrImage) }
+      setState { $0.copy(error: nil).copy(qrImage: qrImage) }
     case .failure(let error):
       self.onError(with: .custom(error.localizedDescription))
     }

@@ -16,7 +16,7 @@
 import Copyable
 
 @Copyable
-public struct ItemSingleCopy {
+public struct Item {
 
   private(set) var property1: String
   let property2: Int
@@ -51,10 +51,4 @@ public struct ItemSingleCopy {
   }
 }
 
-print("ItemSingleCopy copy with new property2: \(ItemSingleCopy(property1: "Value1", property2: 1, property3: "Value3", property4: "Value3").copy(property2: 2).property2)")
-
-@CopyableCombined
-struct ItemCombinedCopy {
-  let property1: String
-  let property2: Int
-}
+print("Item copy with new property2: \(Item(property1: "Value1", property2: 1, property3: "Value3", property4: "Value3").copy(property2: 2).property2)")
