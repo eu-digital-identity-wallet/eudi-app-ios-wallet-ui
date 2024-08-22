@@ -169,18 +169,19 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
       return
     }
     setState {
-      $0.copy(
-        isLoading: true,
-        documentOfferUiModel: DocumentOfferUIModel.mock(),
-        error: nil,
-        config: .init(
-          arguments: ["uri": uri],
-          navigationSuccessType: viewState.config.navigationSuccessType,
-          navigationCancelType: viewState.config.navigationCancelType
-        ),
-        offerUri: uri,
-        allowIssue: false
-      )
+      $0
+        .copy(
+          isLoading: true,
+          documentOfferUiModel: DocumentOfferUIModel.mock(),
+          config: .init(
+            arguments: ["uri": uri],
+            navigationSuccessType: viewState.config.navigationSuccessType,
+            navigationCancelType: viewState.config.navigationCancelType
+          ),
+          offerUri: uri,
+          allowIssue: false
+        )
+        .copy(error: nil)
     }
     Task {
       await self.processRequest()
