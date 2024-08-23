@@ -11,10 +11,6 @@ let package = Package(
     .library(
       name: "Copyable",
       targets: ["Copyable"]
-    ),
-    .executable(
-      name: "CopyableClient",
-      targets: ["CopyableClient"]
     )
   ],
   dependencies: [
@@ -22,7 +18,7 @@ let package = Package(
   ],
   targets: [
     .macro(
-      name: "CopyableMacros",
+      name: "CopyableMacro",
       dependencies: [
         .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
         .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
@@ -30,8 +26,7 @@ let package = Package(
     ),
     .target(
       name: "Copyable",
-      dependencies: ["CopyableMacros"]
-    ),
-    .executableTarget(name: "CopyableClient", dependencies: ["Copyable"])
+      dependencies: ["CopyableMacro"]
+    )
   ]
 )
