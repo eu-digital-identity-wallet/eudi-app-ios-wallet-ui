@@ -20,6 +20,7 @@ import logic_business
 import feature_common
 import logic_core
 
+@Copyable
 struct AddDocumentViewState: ViewState {
   let addDocumentCellModels: [AddDocumentUIModel]
   let error: ContentErrorView.Config?
@@ -64,16 +65,18 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
   func fetchStoredDocuments() async {
     switch self.interactor.fetchStoredDocuments(with: viewState.config.flow) {
     case .success(let documents):
-      self.setNewState(addDocumentCellModels: documents)
-      self.handleDeepLink()
+      setState { $0.copy(addDocumentCellModels: documents).copy(error: nil) }
+      handleDeepLink()
     case .failure(let error):
-      setNewState(
-        error: ContentErrorView.Config(
-          description: .custom(error.localizedDescription),
-          cancelAction: self.pop(),
-          action: { Task { await self.fetchStoredDocuments() } }
+      setState {
+        $0.copy(
+          error: .init(
+            description: .custom(error.localizedDescription),
+            cancelAction: self.pop(),
+            action: { Task { await self.fetchStoredDocuments() } }
+          )
         )
-      )
+      }
     }
   }
 
@@ -96,9 +99,13 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
 
   private func issueDocument(docType: String) {
     Task {
-      setNewState(
-        addDocumentCellModels: transformCellLoadingState(with: true)
-      )
+      setState {
+        $0
+          .copy(
+            addDocumentCellModels: transformCellLoadingState(with: true)
+          )
+          .copy(error: nil)
+      }
       switch await interactor.issueDocument(docType: docType) {
       case .success(let docId):
         router.push(
@@ -108,13 +115,15 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
           )
         )
       case .failure(let error):
-        setNewState(
-          addDocumentCellModels: transformCellLoadingState(with: false),
-          error: .init(
-            description: .custom(error.localizedDescription),
-            cancelAction: self.setNewState(error: nil)
+        setState {
+          $0.copy(
+            addDocumentCellModels: transformCellLoadingState(with: false),
+            error: .init(
+              description: .custom(error.localizedDescription),
+              cancelAction: self.setState { $0.copy(error: nil) }
+            )
           )
-        )
+        }
       case .deferredSuccess:
         router.push(with: onDeferredSuccess())
       }
@@ -161,12 +170,14 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
       case .success:
         router.push(with: .dashboard)
       case .failure(let error):
-        setNewState(
-          error: .init(
-            description: .custom(error.localizedDescription),
-            cancelAction: self.setNewState(error: nil)
+        setState {
+          $0.copy(
+            error: .init(
+              description: .custom(error.localizedDescription),
+              cancelAction: self.setState { $0.copy(error: nil) }
+            )
           )
-        )
+        }
       }
     }
   }
@@ -183,19 +194,6 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
           )
         )
       )
-    }
-  }
-
-  private func setNewState(
-    addDocumentCellModels: [AddDocumentUIModel]? = nil,
-    error: ContentErrorView.Config? = nil
-  ) {
-    setState { previousSate in
-        .init(
-          addDocumentCellModels: addDocumentCellModels ?? previousSate.addDocumentCellModels,
-          error: error,
-          config: previousSate.config
-        )
     }
   }
 }

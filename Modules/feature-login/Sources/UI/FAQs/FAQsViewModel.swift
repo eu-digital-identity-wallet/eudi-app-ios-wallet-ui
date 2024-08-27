@@ -16,6 +16,7 @@
 import Foundation
 import logic_ui
 
+@Copyable
 struct FAQState: ViewState {
   let isLoading: Bool
   let searchText: String
@@ -55,9 +56,7 @@ final class FAQsViewModel<Router: RouterHost>: BaseViewModel<Router, FAQState> {
       }
       .sink(receiveValue: { [weak self] models in
         guard let self = self else { return }
-        self.setNewState(
-          filteredModels: models
-        )
+        self.setState { $0.copy(filteredModels: models) }
       })
       .store(in: &cancellables)
   }
@@ -65,42 +64,22 @@ final class FAQsViewModel<Router: RouterHost>: BaseViewModel<Router, FAQState> {
   func fetchFAQs() async {
 
     defer {
-      setNewState(
-        isLoading: false
-      )
+      setState { $0.copy(isLoading: false) }
     }
 
     switch await interactor.fetchFAQs() {
     case .success(let faqs):
-      setNewState(
-        isLoading: true,
-        models: faqs
-      )
+      setState {
+        $0.copy(isLoading: true, models: faqs)
+      }
     case .failure:
-      setNewState(
-        isLoading: false,
-        models: []
-      )
+      setState {
+        $0.copy(isLoading: false, models: [])
+      }
     }
   }
 
   func goBack() {
     router.pop(animated: true)
-  }
-
-  private func setNewState(
-    isLoading: Bool? = nil,
-    searchText: String? = nil,
-    models: [FAQUIModel]? = nil,
-    filteredModels: [FAQUIModel]? = nil
-  ) {
-    setState { previousState in
-        .init(
-          isLoading: isLoading ?? previousState.isLoading,
-          searchText: searchText ?? previousState.searchText,
-          models: models ?? previousState.models,
-          filteredModels: filteredModels ?? previousState.filteredModels
-        )
-    }
   }
 }

@@ -20,6 +20,7 @@ import logic_business
 import feature_common
 import logic_core
 
+@Copyable
 struct OfferCodeViewState: ViewState {
   let isLoading: Bool
   let error: ContentErrorView.Config?
@@ -76,7 +77,7 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
   private func onIssueDocuments() {
     Task {
       codeIsFocused = false
-      setNewState(isLoading: true)
+      setState { $0.copy(isLoading: true).copy(error: nil) }
       switch await self.interactor.issueDocuments(
         with: viewState.config.offerUri,
         issuerName: viewState.config.issuerName,
@@ -87,12 +88,15 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
       case .success(let route):
         router.push(with: route)
       case .failure(let error):
-        setNewState(
-          error: ContentErrorView.Config(
-            description: .custom(error.localizedDescription),
-            cancelAction: self.resetError()
+        setState {
+          $0.copy(
+            isLoading: false,
+            error: .init(
+              description: .custom(error.localizedDescription),
+              cancelAction: self.resetError()
+            )
           )
-        )
+        }
       case .partialSuccess(let route):
         router.push(with: route)
       case .deferredSuccess(let route):
@@ -102,7 +106,7 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
   }
 
   private func resetError() {
-    self.setNewState(error: nil)
+    self.setState { $0.copy(error: nil) }
     self.codeInput = ""
     self.codeIsFocused = true
   }
@@ -121,21 +125,6 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
   private func processCode(value: String) {
     if value.count == viewState.config.txCodeLength {
       onIssueDocuments()
-    }
-  }
-
-  private func setNewState(
-    isLoading: Bool = false,
-    error: ContentErrorView.Config? = nil
-  ) {
-    setState { previousSate in
-        .init(
-          isLoading: isLoading,
-          error: error,
-          config: previousSate.config,
-          title: previousSate.title,
-          caption: previousSate.caption
-        )
     }
   }
 }

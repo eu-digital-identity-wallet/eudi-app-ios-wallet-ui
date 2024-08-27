@@ -17,6 +17,7 @@
 @_exported import logic_ui
 @_exported import logic_resources
 
+@Copyable
 public struct RequestViewState: ViewState {
   public let isLoading: Bool
   public let error: ContentErrorView.Config?
@@ -98,23 +99,30 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
   }
 
   public func onStartLoading() {
-    setNewState(
-      isLoading: true
-    )
+    setState {
+      $0.copy(isLoading: true).copy(error: nil)
+    }
   }
 
   public func onError(with error: Error) {
-    setNewState(
-      error: .init(
-        description: .custom(error.localizedDescription),
-        cancelAction: self.router.pop(),
-        action: { self.onErrorAction() }
+    setState {
+      $0.copy(
+        isLoading: false,
+        error: .init(
+          description: .custom(error.localizedDescription),
+          cancelAction: self.router.pop(),
+          action: { self.onErrorAction() }
+        )
       )
-    )
+    }
   }
 
   public func onEmptyDocuments() {
-    setNewState(items: [])
+    setState {
+      $0
+        .copy(isLoading: false, items: [])
+        .copy(error: nil)
+    }
   }
 
   public func onReceivedItems(
@@ -123,13 +131,18 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
     relyingParty: String,
     isTrusted: Bool
   ) {
-    setNewState(
-      items: items,
-      title: title,
-      relyingParty: relyingParty,
-      isTrusted: isTrusted,
-      allowShare: !items.isEmpty
-    )
+    setState {
+      $0
+        .copy(
+          isLoading: false,
+          items: items,
+          title: title,
+          relyingParty: relyingParty,
+          isTrusted: isTrusted,
+          allowShare: !items.isEmpty
+        )
+        .copy(error: nil)
+    }
   }
 
   public func resetState() {
@@ -172,26 +185,28 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
   }
 
   func onContentVisibilityChange() {
-    setNewState(
-      isContentVisible: !viewState.isContentVisible,
-      items: viewState.items.map {
-        if var row = $0.isDataRow {
-          row.setVisible(!viewState.isContentVisible)
-          return .requestDataRow(row)
-        }
-        if var row = $0.isDataVerification {
-          let items = row.items.map({
-            var item = $0
-            item.isVisible = !viewState.isContentVisible
-            return item
+    setState {
+      $0.copy(
+        isContentVisible: !viewState.isContentVisible,
+        items: viewState.items.map {
+          if var row = $0.isDataRow {
+            row.setVisible(!viewState.isContentVisible)
+            return .requestDataRow(row)
           }
-          )
-          row.setItems(with: items)
-          return .requestDataVerification(row)
+          if var row = $0.isDataVerification {
+            let items = row.items.map({
+              var item = $0
+              item.isVisible = !viewState.isContentVisible
+              return item
+            }
+            )
+            row.setItems(with: items)
+            return .requestDataVerification(row)
+          }
+          return $0
         }
-        return $0
-      }
-    )
+      )
+    }
   }
 
   func onSelectionChanged(id: String) {
@@ -231,45 +246,23 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
       .filter { $0 }
       .isEmpty
 
-    setNewState(
-      itemsAreAllSelected: allSelected,
-      items: items,
-      allowShare: canShare || hasVerificationItems
-    )
-  }
-
-  private func onErrorAction() {
-    setNewState()
-    Task {
-      await self.doWork()
+    setState {
+      $0.copy(
+        itemsAreAllSelected: allSelected,
+        items: items,
+        allowShare: canShare || hasVerificationItems
+      )
     }
   }
 
-  private func setNewState(
-    isLoading: Bool = false,
-    error: ContentErrorView.Config? = nil,
-    isContentVisible: Bool? = nil,
-    itemsAreAllSelected: Bool? = nil,
-    items: [RequestDataUIModel]? = nil,
-    title: LocalizableString.Key? = nil,
-    trustedRelyingPartyInfo: LocalizableString.Key? = nil,
-    relyingParty: String? = nil,
-    isTrusted: Bool? = nil,
-    allowShare: Bool? = nil
-  ) {
+  private func onErrorAction() {
     setState {
-      .init(
-        isLoading: isLoading,
-        error: error,
-        isContentVisible: isContentVisible ?? $0.isContentVisible,
-        itemsAreAllSelected: itemsAreAllSelected ?? $0.itemsAreAllSelected,
-        items: items ?? $0.items,
-        title: title ?? $0.title,
-        trustedRelyingPartyInfo: trustedRelyingPartyInfo ?? $0.trustedRelyingPartyInfo,
-        relyingParty: relyingParty ?? $0.relyingParty,
-        isTrusted: isTrusted ?? $0.isTrusted,
-        allowShare: allowShare ?? $0.allowShare
-      )
+      $0
+        .copy(isLoading: false)
+        .copy(error: nil)
+    }
+    Task {
+      await self.doWork()
     }
   }
 }

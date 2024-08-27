@@ -36,7 +36,7 @@ public struct DocumentSuccessView<Router: RouterHost>: View {
   }
 
   public var body: some View {
-    ContentScreenView(errorConfig: viewModel.viewState.error) {
+    ContentScreenView {
 
       ContentTitleView(
         title: viewModel.viewState.title,

@@ -30,6 +30,10 @@ let package = Package(
       path: "./logic-resources"
     ),
     .package(
+      name: "macro-copyable",
+      path: "./macro-copyable"
+    ),
+    .package(
       url: "https://github.com/canopas/UIPilot.git",
       from: "2.0.0"
     ),
@@ -83,6 +87,10 @@ let package = Package(
         .product(
           name: "Shimmer",
           package: "SwiftUI-Shimmer"
+        ),
+        .product(
+          name: "Copyable",
+          package: "macro-copyable"
         )
       ],
       path: "./Sources"

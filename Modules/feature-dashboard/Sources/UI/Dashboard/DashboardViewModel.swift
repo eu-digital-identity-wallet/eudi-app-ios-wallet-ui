@@ -19,6 +19,7 @@ import logic_business
 import logic_core
 import feature_common
 
+@Copyable
 struct DashboardState: ViewState {
   let isLoading: Bool
   let documents: [DocumentUIModel]
@@ -107,24 +108,27 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
   func fetch() async {
     switch await interactor.fetchDashboard(failedDocuments: viewState.failedDocuments) {
     case .success(let bearer, let documents, let hasIssuedDocuments):
-      setNewState(
-        documents: documents,
-        bearer: bearer,
-        allowUserInteraction: hasIssuedDocuments
-      )
+      setState {
+        $0.copy(
+          isLoading: false,
+          documents: documents,
+          bearer: bearer,
+          allowUserInteraction: hasIssuedDocuments
+        )
+      }
       onDocumentsRetrievedPostActions()
     case .failure:
-      setNewState(
-        documents: []
-      )
+      setState {
+        $0.copy(isLoading: false, documents: [])
+      }
     }
   }
 
   func setPhase(with phase: ScenePhase) {
-    setNewState(phase: phase)
+    setState { $0.copy(phase: phase) }
     if phase == .active && viewState.pendingBleModalAction {
       DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-        self.setNewState(pendingBleModalAction: false)
+        self.setState { $0.copy(pendingBleModalAction: false) }
         self.toggleBleModal()
       }
     }
@@ -171,7 +175,7 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
   }
 
   func onDeleteDeferredDocument(with document: DocumentUIModel) {
-    setNewState(pendingDeletedDocument: document)
+    setState { $0.copy(pendingDeletionDocument: document) }
     toggleDeleteDeferredModal()
   }
 
@@ -184,7 +188,7 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
     guard let document = viewState.pendingDeletionDocument else {
       return
     }
-    clearPendingDeleteDocument(isLoading: true)
+    setState { $0.copy(isLoading: true).copy(pendingDeletionDocument: nil) }
     Task {
       switch await interactor.deleteDeferredDocument(with: document.value.id) {
       case .success:
@@ -192,14 +196,14 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
       case .noDocuments:
         router.popTo(with: .startup)
       case .failure:
-        setNewState(isLoading: false)
+        setState { $0.copy(isLoading: false) }
       }
     }
   }
 
   func toggleBleModal() {
     guard viewState.phase == .active else {
-      setNewState(pendingBleModalAction: true)
+      setState { $0.copy(pendingBleModalAction: true) }
       return
     }
     isBleModalShowing = !isBleModalShowing
@@ -215,15 +219,17 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
   }
 
   func onMore() {
-    setNewState(
-      moreOptions: buildArray {
-        DashboardState.MoreModalOption.changeQuickPin
-        DashboardState.MoreModalOption.scanQrCode
-        if let url = interactor.retrieveLogFileUrl() {
-          DashboardState.MoreModalOption.retrieveLogs(url)
+    setState {
+      $0.copy(
+        moreOptions: buildArray {
+          DashboardState.MoreModalOption.changeQuickPin
+          DashboardState.MoreModalOption.scanQrCode
+          if let url = interactor.retrieveLogFileUrl() {
+            DashboardState.MoreModalOption.retrieveLogs(url)
+          }
         }
-      }
-    )
+      )
+    }
     isMoreModalShowing = !isMoreModalShowing
   }
 
@@ -248,7 +254,7 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
       .sink { [weak self] value in
         guard let self = self else { return }
         if !value {
-          self.clearPendingSuccededDocuments()
+          self.setState { $0.copy(succededIssuedDocuments: []) }
         }
       }.store(in: &cancellables)
   }
@@ -267,12 +273,14 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
         switch partialState {
         case .completion(let issued, let failed):
           self.deferredTask?.cancel()
-          setNewState(
-            succededIssuedDocuments: !isSuccededDocumentsModalShowing
-            ? issued
-            : nil,
-            failedDocuments: failed
-          )
+          self.setState {
+            $0.copy(
+              succededIssuedDocuments: !isSuccededDocumentsModalShowing
+              ? issued
+              : $0.succededIssuedDocuments,
+              failedDocuments: failed
+            )
+          }
           await fetch()
         case .cancelled, .none: break
         }
@@ -293,71 +301,6 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
     isDeleteDeferredModalShowing = false
     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
       self.isSuccededDocumentsModalShowing = true
-    }
-  }
-
-  private func setNewState(
-    isLoading: Bool = false,
-    documents: [DocumentUIModel]? = nil,
-    bearer: BearerUIModel? = nil,
-    phase: ScenePhase? = nil,
-    pendingBleModalAction: Bool? = nil,
-    allowUserInteraction: Bool? = nil,
-    pendingDeletedDocument: DocumentUIModel? = nil,
-    succededIssuedDocuments: [DocumentUIModel]? = nil,
-    failedDocuments: [String]? = nil,
-    moreOptions: [DashboardState.MoreModalOption]? = nil
-  ) {
-    setState { previousSate in
-        .init(
-          isLoading: isLoading,
-          documents: documents ?? previousSate.documents,
-          bearer: bearer ?? previousSate.bearer,
-          phase: phase ?? previousSate.phase,
-          pendingBleModalAction: pendingBleModalAction ?? previousSate.pendingBleModalAction,
-          appVersion: previousSate.appVersion,
-          allowUserInteraction: allowUserInteraction ?? previousSate.allowUserInteraction,
-          pendingDeletionDocument: pendingDeletedDocument ?? previousSate.pendingDeletionDocument,
-          succededIssuedDocuments: succededIssuedDocuments ?? previousSate.succededIssuedDocuments,
-          failedDocuments: failedDocuments ?? previousSate.failedDocuments,
-          moreOptions: moreOptions ?? previousSate.moreOptions
-        )
-    }
-  }
-
-  private func clearPendingDeleteDocument(isLoading: Bool? = nil) {
-    setState { previousSate in
-        .init(
-          isLoading: isLoading ?? previousSate.isLoading,
-          documents: previousSate.documents,
-          bearer: previousSate.bearer,
-          phase: previousSate.phase,
-          pendingBleModalAction: previousSate.pendingBleModalAction,
-          appVersion: previousSate.appVersion,
-          allowUserInteraction: previousSate.allowUserInteraction,
-          pendingDeletionDocument: nil,
-          succededIssuedDocuments: previousSate.succededIssuedDocuments,
-          failedDocuments: previousSate.failedDocuments,
-          moreOptions: previousSate.moreOptions
-        )
-    }
-  }
-
-  private func clearPendingSuccededDocuments(isLoading: Bool? = nil) {
-    setState { previousSate in
-        .init(
-          isLoading: isLoading ?? previousSate.isLoading,
-          documents: previousSate.documents,
-          bearer: previousSate.bearer,
-          phase: previousSate.phase,
-          pendingBleModalAction: previousSate.pendingBleModalAction,
-          appVersion: previousSate.appVersion,
-          allowUserInteraction: previousSate.allowUserInteraction,
-          pendingDeletionDocument: previousSate.pendingDeletionDocument,
-          succededIssuedDocuments: [],
-          failedDocuments: previousSate.failedDocuments,
-          moreOptions: previousSate.moreOptions
-        )
     }
   }
 }

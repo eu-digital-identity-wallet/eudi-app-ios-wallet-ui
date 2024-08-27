@@ -19,6 +19,7 @@ import logic_resources
 import feature_common
 import logic_core
 
+@Copyable
 struct DocumentDetailsViewState: ViewState {
   let document: DocumentDetailsUIModel
   let isLoading: Bool
@@ -82,20 +83,26 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
         }
       }
 
-      self.setNewState(
-        isLoading: false,
-        document: document,
-        toolBarActions: actions
-      )
+      self.setState {
+        $0
+          .copy(
+            document: document,
+            isLoading: false,
+            toolBarActions: actions
+          )
+          .copy(error: nil)
+      }
 
     case .failure(let error):
-      self.setNewState(
-        isLoading: true,
-        error: ContentErrorView.Config(
-          description: .custom(error.localizedDescription),
-          cancelAction: self.pop()
+      self.setState {
+        $0.copy(
+          isLoading: true,
+          error: .init(
+            description: .custom(error.localizedDescription),
+            cancelAction: self.pop()
+          )
         )
-      )
+      }
     }
   }
 
@@ -119,9 +126,9 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
 
   private func onDocumentDelete(with type: DocumentTypeIdentifier, and id: String) {
     Task {
-      self.setNewState(
-        isLoading: true
-      )
+
+      self.setState { $0.copy(isLoading: true).copy(error: nil) }
+
       switch await self.interactor.deleteDocument(with: id, and: type) {
       case .success(let shouldReboot):
         if shouldReboot {
@@ -130,13 +137,15 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
           self.pop()
         }
       case .failure(let error):
-        self.setNewState(
-          isLoading: false,
-          error: ContentErrorView.Config(
-            description: .custom(error.localizedDescription),
-            cancelAction: self.setNewState(error: nil)
+        self.setState {
+          $0.copy(
+            isLoading: false,
+            error: .init(
+              description: .custom(error.localizedDescription),
+              cancelAction: self.setState { $0.copy(error: nil) }
+            )
           )
-        )
+        }
       }
     }
   }
@@ -144,22 +153,5 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
   private func onReboot() {
     isDeletionModalShowing = false
     router.popTo(with: .startup)
-  }
-
-  private func setNewState(
-    isLoading: Bool = false,
-    document: DocumentDetailsUIModel? = nil,
-    error: ContentErrorView.Config? = nil,
-    toolBarActions: [ContentHeaderView.Action]? = nil
-  ) {
-    setState { previous in
-        .init(
-          document: document ?? previous.document,
-          isLoading: isLoading,
-          error: error,
-          config: previous.config,
-          toolBarActions: toolBarActions ?? previous.toolBarActions
-        )
-    }
   }
 }

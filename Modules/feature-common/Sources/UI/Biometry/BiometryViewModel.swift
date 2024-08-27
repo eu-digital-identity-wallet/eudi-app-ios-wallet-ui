@@ -17,6 +17,7 @@ import Foundation
 import logic_ui
 import logic_authentication
 
+@Copyable
 struct BiometryState: ViewState {
   let config: UIConfig.Biometry
   let areBiometricsEnabled: Bool
@@ -71,7 +72,7 @@ final class BiometryViewModel<Router: RouterHost>: BaseViewModel<Router, Biometr
 
   func onAppearBiometry() {
     if viewState.config.shouldInitializeBiometricOnCreate, viewState.areBiometricsEnabled, !viewState.autoBiometryInitiated {
-      setNewState(autoBiometryInitiated: true)
+      setState { $0.copy(autoBiometryInitiated: true) }
       DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(AUTO_VERIFY_ON_APPEAR_DELAY)) {
         self.onBiometry()
       }
@@ -105,7 +106,7 @@ final class BiometryViewModel<Router: RouterHost>: BaseViewModel<Router, Biometr
   }
 
   func setPhase(with phase: ScenePhase) {
-    setNewState(scenePhase: phase)
+    setState { $0.copy(scenePhase: phase) }
     if let pending = viewState.pendingNavigation {
       doNavigation(navigationType: pending)
     }
@@ -139,10 +140,10 @@ final class BiometryViewModel<Router: RouterHost>: BaseViewModel<Router, Biometr
       case .success:
         self.authenticated()
       case .failure(let error):
-        setNewState(pinError: error.localizedDescription)
+        setState { $0.copy(pinError: error.localizedDescription) }
       }
     } else {
-      setNewState(pinError: nil)
+      setState { $0.copy(pinError: nil) }
     }
   }
 
@@ -153,7 +154,7 @@ final class BiometryViewModel<Router: RouterHost>: BaseViewModel<Router, Biometr
   private func doNavigation(navigationType: UIConfig.ThreeWayNavigationType) {
 
     guard viewState.scenePhase == .active else {
-      setNewState(pendingNavigation: navigationType)
+      setState { $0.copy(pendingNavigation: navigationType) }
       return
     }
 
@@ -164,28 +165,6 @@ final class BiometryViewModel<Router: RouterHost>: BaseViewModel<Router, Biometr
       router.push(with: route)
     case .pop:
       router.pop()
-    }
-  }
-
-  private func setNewState(
-    pinError: String? = nil,
-    scenePhase: ScenePhase? = nil,
-    pendingNavigation: UIConfig.ThreeWayNavigationType? = nil,
-    autoBiometryInitiated: Bool? = nil
-  ) {
-    setState { previous in
-        .init(
-          config: previous.config,
-          areBiometricsEnabled: previous.areBiometricsEnabled,
-          pinError: pinError,
-          throttlePinInput: previous.throttlePinInput,
-          scenePhase: scenePhase ?? previous.scenePhase,
-          pendingNavigation: pendingNavigation ?? previous.pendingNavigation,
-          autoBiometryInitiated: autoBiometryInitiated ?? previous.autoBiometryInitiated,
-          biometryImage: previous.biometryImage,
-          isCancellable: previous.isCancellable,
-          quickPinSize: previous.quickPinSize
-        )
     }
   }
 }

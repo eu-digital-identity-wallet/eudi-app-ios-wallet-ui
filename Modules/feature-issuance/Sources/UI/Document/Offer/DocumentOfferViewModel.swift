@@ -20,6 +20,7 @@ import logic_business
 import feature_common
 import logic_core
 
+@Copyable
 struct DocumentOfferViewState: ViewState {
   let isLoading: Bool
   let documentOfferUiModel: DocumentOfferUIModel
@@ -76,18 +77,27 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
   func processRequest() async {
     switch await self.interactor.processOfferRequest(with: viewState.offerUri) {
     case .success(let uiModel):
-      setNewState(
-        documentOfferUiModel: uiModel,
-        allowIssue: !uiModel.uiOffers.isEmpty
-      )
+      setState {
+        $0
+          .copy(
+            isLoading: false,
+            documentOfferUiModel: uiModel,
+            allowIssue: !uiModel.uiOffers.isEmpty
+          )
+          .copy(error: nil)
+      }
     case .failure(let error):
-      setNewState(
-        error: ContentErrorView.Config(
-          description: .custom(error.localizedDescription),
-          cancelAction: self.onPop()
-        ),
-        allowIssue: false
-      )
+      setState {
+        $0
+          .copy(
+            isLoading: false,
+            error: ContentErrorView.Config(
+              description: .custom(error.localizedDescription),
+              cancelAction: self.onPop()
+            ),
+            allowIssue: false
+          )
+      }
     }
   }
 
@@ -110,7 +120,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     }
 
     Task {
-      setNewState(isLoading: true)
+      setState { $0.copy(isLoading: true).copy(error: nil) }
       switch await self.interactor.issueDocuments(
         with: viewState.offerUri,
         issuerName: viewState.documentOfferUiModel.issuerName,
@@ -121,12 +131,15 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
       case .success(let route):
         router.push(with: route)
       case .failure(let error):
-        setNewState(
-          error: ContentErrorView.Config(
-            description: .custom(error.localizedDescription),
-            cancelAction: self.setNewState(error: nil)
+        setState {
+          $0.copy(
+            isLoading: false,
+            error: .init(
+              description: .custom(error.localizedDescription),
+              cancelAction: self.setState { $0.copy(error: nil) }
+            )
           )
-        )
+        }
       case .partialSuccess(let route):
         router.push(with: route)
       case .deferredSuccess(let route):
@@ -155,39 +168,23 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     guard let uri = info["uri"] as? String else {
       return
     }
-    setNewState(
-      isLoading: true,
-      documentOfferUiModel: DocumentOfferUIModel.mock(),
-      allowIssue: false,
-      config: .init(
-        arguments: ["uri": uri],
-        navigationSuccessType: viewState.config.navigationSuccessType,
-        navigationCancelType: viewState.config.navigationCancelType
-      ),
-      offerUri: uri
-    )
+    setState {
+      $0
+        .copy(
+          isLoading: true,
+          documentOfferUiModel: DocumentOfferUIModel.mock(),
+          config: .init(
+            arguments: ["uri": uri],
+            navigationSuccessType: viewState.config.navigationSuccessType,
+            navigationCancelType: viewState.config.navigationCancelType
+          ),
+          offerUri: uri,
+          allowIssue: false
+        )
+        .copy(error: nil)
+    }
     Task {
       await self.processRequest()
-    }
-  }
-
-  private func setNewState(
-    isLoading: Bool = false,
-    error: ContentErrorView.Config? = nil,
-    documentOfferUiModel: DocumentOfferUIModel? = nil,
-    allowIssue: Bool? = nil,
-    config: UIConfig.Generic? = nil,
-    offerUri: String? = nil
-  ) {
-    setState { previousSate in
-        .init(
-          isLoading: isLoading,
-          documentOfferUiModel: documentOfferUiModel ?? previousSate.documentOfferUiModel,
-          error: error,
-          config: config ?? previousSate.config,
-          offerUri: offerUri ?? previousSate.offerUri,
-          allowIssue: allowIssue ?? previousSate.allowIssue
-        )
     }
   }
 }

@@ -17,8 +17,8 @@ import logic_ui
 import logic_resources
 import feature_common
 
+@Copyable
 struct DocumentSuccessState: ViewState {
-  let error: ContentErrorView.Config?
   let title: LocalizableString.Key
   let caption: LocalizableString.Key?
   let holderName: String?
@@ -46,7 +46,6 @@ final class DocumentSuccessViewModel<Router: RouterHost>: BaseViewModel<Router, 
     super.init(
       router: router,
       initialState: .init(
-        error: nil,
         title: .issuanceSuccessTitle,
         caption: nil,
         holderName: nil,
@@ -57,10 +56,12 @@ final class DocumentSuccessViewModel<Router: RouterHost>: BaseViewModel<Router, 
   }
 
   func initialize() async {
-    setNewState(
-      caption: interactor.getDocumentSuccessCaption(for: viewState.documentIdentifier),
-      holderName: interactor.getHoldersName(for: viewState.documentIdentifier)
-    )
+    setState {
+      $0.copy(
+        caption: interactor.getDocumentSuccessCaption(for: viewState.documentIdentifier),
+        holderName: interactor.getHoldersName(for: viewState.documentIdentifier)
+      )
+    }
   }
 
   func onIssue() {
@@ -81,22 +82,5 @@ final class DocumentSuccessViewModel<Router: RouterHost>: BaseViewModel<Router, 
         )
       )
     )
-  }
-
-  private func setNewState(
-    error: ContentErrorView.Config? = nil,
-    caption: LocalizableString.Key? = nil,
-    holderName: String? = nil
-  ) {
-    setState { previous in
-        .init(
-          error: error,
-          title: previous.title,
-          caption: caption ?? previous.caption,
-          holderName: holderName ?? previous.holderName,
-          config: previous.config,
-          documentIdentifier: previous.documentIdentifier
-        )
-    }
   }
 }
