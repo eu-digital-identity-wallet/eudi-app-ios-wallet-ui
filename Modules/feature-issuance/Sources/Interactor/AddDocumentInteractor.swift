@@ -24,6 +24,7 @@ public protocol AddDocumentInteractor {
   func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState
   func loadSampleData() async -> LoadSampleDataPartialState
   func issueDocument(docType: String) async -> IssueDocumentPartialState
+  func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState
 }
 
 final class AddDocumentInteractorImpl: AddDocumentInteractor {
@@ -87,9 +88,41 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
       let doc = try await walletController.issueDocument(docType: docType, format: .cbor)
       if doc.isDeferred {
         return .deferredSuccess
+      } else if let authorizePresentationUrl = doc.authorizePresentationUrl {
+        guard
+          let presentationUrl = URL(string: authorizePresentationUrl),
+          let presentationComponents = URLComponents(url: presentationUrl, resolvingAgainstBaseURL: true) else {
+          return .failure(WalletCoreError.unableToIssueAndStore)
+        }
+        let session = walletController.startSameDevicePresentation(deepLink: presentationComponents)
+        return .dynamicIssuance(session)
       } else {
         return .success(doc.id)
       }
+    } catch {
+      return .failure(WalletCoreError.unableToIssueAndStore)
+    }
+  }
+
+  func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState {
+
+    guard let pendingData = await walletController.getDynamicIssuancePendingData() else {
+      return .noPending
+    }
+
+    do {
+
+      let doc = try await walletController.resumePendingIssuance(
+        pendingDoc: pendingData.pendingDoc,
+        webUrl: pendingData.url
+      )
+
+      if doc.status == .issued {
+        return .success(doc.id)
+      } else {
+        return .failure(WalletCoreError.unableToIssueAndStore)
+      }
+
     } catch {
       return .failure(WalletCoreError.unableToIssueAndStore)
     }
@@ -109,5 +142,12 @@ public enum LoadSampleDataPartialState {
 public enum IssueDocumentPartialState {
   case success(String)
   case deferredSuccess
+  case dynamicIssuance(PresentationSessionCoordinator)
+  case failure(Error)
+}
+
+public enum IssueDynamicDocumentPartialState {
+  case success(String)
+  case noPending
   case failure(Error)
 }

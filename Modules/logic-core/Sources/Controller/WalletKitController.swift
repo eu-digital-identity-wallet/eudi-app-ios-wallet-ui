@@ -19,6 +19,13 @@ import Combine
 import logic_resources
 import logic_business
 
+private enum WalletKitKeyChainIdentifier: String, KeychainWrapper {
+  public var value: String {
+    self.rawValue
+  }
+  case dynamicIssuancePendingUrl
+}
+
 public protocol WalletKitController {
 
   var wallet: EudiWallet { get }
@@ -57,6 +64,9 @@ public protocol WalletKitController {
   ) -> MdocValue
   func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String]
   func retrieveLogFileUrl() -> URL?
+  func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document
+  func storeDynamicIssuancePendingUrl(with url: URL)
+  func getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)?
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -66,10 +76,12 @@ final class WalletKitControllerImpl: WalletKitController {
   public private(set) var activeCoordinator: PresentationSessionCoordinator?
 
   private let configLogic: WalletKitConfig
+  private let keyChainController: KeyChainController
   private let cancellables = Set<AnyCancellable>()
 
-  init(configLogic: WalletKitConfig) {
+  init(configLogic: WalletKitConfig, keyChainController: KeyChainController) {
     self.configLogic = configLogic
+    self.keyChainController = keyChainController
     wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
     wallet.verifierApiUri = configLogic.verifierConfig.apiUri
     wallet.verifierLegalName = configLogic.verifierConfig.legalName
@@ -106,8 +118,7 @@ final class WalletKitControllerImpl: WalletKitController {
   }
 
   public func clearAllDocuments() async {
-    try? await wallet.storage.deleteDocuments(status: DocumentStatus.issued)
-    try? await wallet.storage.deleteDocuments(status: DocumentStatus.deferred)
+    try? await wallet.deleteAllDocuments()
   }
 
   public func clearDocuments(status: DocumentStatus) async throws {
@@ -226,6 +237,37 @@ final class WalletKitControllerImpl: WalletKitController {
       return nil
     }
     return url
+  }
+
+  func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document {
+    return try await wallet.resumePendingIssuance(pendingDoc: pendingDoc, webUrl: webUrl)
+  }
+
+  func storeDynamicIssuancePendingUrl(with url: URL) {
+    keyChainController.storeValue(
+      key: WalletKitKeyChainIdentifier.dynamicIssuancePendingUrl,
+      value: url.absoluteString
+    )
+  }
+
+  func getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)? {
+
+    guard
+      let urlString = keyChainController.getValue(key: WalletKitKeyChainIdentifier.dynamicIssuancePendingUrl),
+      let url = URL(string: urlString)
+    else {
+      return nil
+    }
+
+    keyChainController.removeObject(
+      key: WalletKitKeyChainIdentifier.dynamicIssuancePendingUrl
+    )
+
+    guard let pendingDoc = wallet.storage.pendingDocuments.last else {
+      return nil
+    }
+
+    return (pendingDoc: pendingDoc, url: url)
   }
 
   private func decodeDeeplink(link: URLComponents) -> String? {

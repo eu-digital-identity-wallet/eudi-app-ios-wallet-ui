@@ -55,7 +55,8 @@ final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerS
         with: .presentationRequest(
           presentationCoordinator: walletKitController.startCrossDevicePresentation(
             urlString: scanResult
-          )
+          ),
+          originator: .dashboard
         )
       )
     case .issuing(let config):

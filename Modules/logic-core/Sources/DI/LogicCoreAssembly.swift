@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import Swinject
+import logic_business
 
 public final class LogicCoreAssembly: Assembly {
 
@@ -26,7 +27,10 @@ public final class LogicCoreAssembly: Assembly {
     .inObjectScope(ObjectScope.container)
 
     container.register(WalletKitController.self) { r in
-      WalletKitControllerImpl(configLogic: r.force(WalletKitConfig.self))
+      WalletKitControllerImpl(
+        configLogic: r.force(WalletKitConfig.self),
+        keyChainController: r.force(KeyChainController.self)
+      )
     }
     .inObjectScope(ObjectScope.container)
 

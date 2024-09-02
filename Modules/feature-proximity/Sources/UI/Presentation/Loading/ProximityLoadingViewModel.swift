@@ -24,11 +24,12 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   init(
     router: Router,
     interactor: ProximityInteractor,
-    relyingParty: String
+    relyingParty: String,
+    originator: AppRoute
   ) {
     self.interactor = interactor
     self.relyingParty = relyingParty
-    super.init(router: router)
+    super.init(router: router, originator: originator)
 
     Task {
       await self.subscribeToCoordinatorPublisher()
@@ -65,7 +66,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
           .init(
             title: .okButton,
             style: .primary,
-            navigationType: .pop(screen: .dashboard)
+            navigationType: .pop(screen: getOriginator())
           )
         ],
         visualKind: .defaultIcon
@@ -74,7 +75,10 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   }
 
   override func getOnPopRoute() -> AppRoute? {
-    .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator)
+    .proximityRequest(
+      presentationCoordinator: interactor.presentationSessionCoordinator,
+      originator: getOriginator()
+    )
   }
 
   override func doWork() async {

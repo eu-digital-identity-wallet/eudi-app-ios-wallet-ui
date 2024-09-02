@@ -21,8 +21,12 @@ public struct PresentationRequestView<Router: RouterHost>: View {
 
   @ObservedObject private var viewModel: PresentationRequestViewModel<Router>
 
-  public init(with router: Router, and interactor: PresentationInteractor) {
-    self.viewModel = .init(router: router, interactor: interactor)
+  public init(
+    with router: Router,
+    and interactor: PresentationInteractor,
+    originator: AppRoute
+  ) {
+    self.viewModel = .init(router: router, interactor: interactor, originator: originator)
   }
 
   public var body: some View {

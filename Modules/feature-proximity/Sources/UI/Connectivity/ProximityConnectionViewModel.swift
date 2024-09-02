@@ -23,19 +23,21 @@ import logic_resources
 struct ProxmityConnectivityState: ViewState {
   let error: ContentErrorView.Config?
   let qrImage: UIImage?
+  let originator: AppRoute
 }
 
 final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Router, ProxmityConnectivityState> {
 
   private let interactor: ProximityInteractor
 
-  init(router: Router, interactor: ProximityInteractor) {
+  init(router: Router, interactor: ProximityInteractor, originator: AppRoute) {
     self.interactor = interactor
     super.init(
       router: router,
       initialState: .init(
         error: nil,
-        qrImage: nil
+        qrImage: nil,
+        originator: originator
       )
     )
   }
@@ -83,7 +85,12 @@ final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Rout
 
   private func onConnectionSuccess() async {
     cancellables.forEach({$0.cancel()})
-    router.push(with: .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator))
+    router.push(
+      with: .proximityRequest(
+        presentationCoordinator: interactor.presentationSessionCoordinator,
+        originator: viewState.originator
+      )
+    )
   }
 
   private func onError(with desc: LocalizableString.Key) {

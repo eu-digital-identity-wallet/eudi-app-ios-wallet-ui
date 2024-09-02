@@ -24,11 +24,12 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
   init(
     router: Router,
     interactor: PresentationInteractor,
-    relyingParty: String
+    relyingParty: String,
+    originator: AppRoute
   ) {
     self.interactor = interactor
     self.relyingParty = relyingParty
-    super.init(router: router)
+    super.init(router: router, originator: originator)
   }
 
   override func getTitle() -> LocalizableString.Key {
@@ -43,7 +44,11 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
 
     var navigationType: UIConfig.DeepLinkNavigationType {
       guard let url else {
-        return .pop(screen: .dashboard)
+        return .pop(screen: getOriginator())
+      }
+      guard !isDynamicIssuance() else {
+        interactor.storeDynamicIssuancePendingUrl(with: url)
+        return .pop(screen: getOriginator())
       }
       return .deepLink(link: url, popToScreen: .dashboard)
     }
@@ -64,8 +69,22 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
     )
   }
 
+  private func isDynamicIssuance() -> Bool {
+    guard
+      getOriginator().info.key == AppRoute.credentialOfferRequest(config: NoConfig()).info.key ||
+      getOriginator().info.key == AppRoute.issuanceAddDocument(config: NoConfig()).info.key ||
+      getOriginator().info.key == AppRoute.issuanceCode(config: NoConfig()).info.key
+    else {
+      return false
+    }
+    return true
+  }
+
   override func getOnPopRoute() -> AppRoute? {
-    .presentationRequest(presentationCoordinator: interactor.presentationCoordinator)
+    .presentationRequest(
+      presentationCoordinator: interactor.presentationCoordinator,
+      originator: getOriginator()
+    )
   }
 
   override func doWork() async {
