@@ -1,3 +1,4 @@
+- Dynamic Issuance (PID auth.)
 - Support presentation of multiple PID, mDL
 - Logs
 - VCI offer Support
