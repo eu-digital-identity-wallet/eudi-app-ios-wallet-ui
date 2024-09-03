@@ -22,9 +22,12 @@ public protocol UIConfigType {
 }
 
 public struct NoConfig: UIConfigType, Equatable {
+
   public var log: String {
     return ""
   }
+
+  public init() {}
 }
 
 public struct UIConfig {}

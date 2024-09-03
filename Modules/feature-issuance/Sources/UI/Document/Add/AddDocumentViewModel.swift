@@ -62,18 +62,22 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
     )
   }
 
-  func fetchStoredDocuments() async {
+  func initialize() async {
     switch self.interactor.fetchStoredDocuments(with: viewState.config.flow) {
     case .success(let documents):
       setState { $0.copy(addDocumentCellModels: documents).copy(error: nil) }
-      handleDeepLink()
+      if let link = hasDeepLink() {
+        handleDeepLink(with: link)
+      } else {
+        await handleResumeIssuance()
+      }
     case .failure(let error):
       setState {
         $0.copy(
           error: .init(
             description: .custom(error.localizedDescription),
             cancelAction: self.pop(),
-            action: { Task { await self.fetchStoredDocuments() } }
+            action: { Task { await self.initialize() } }
           )
         )
       }
@@ -94,7 +98,40 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
   }
 
   func pop() {
-    router.pop(animated: true)
+    router.pop()
+  }
+
+  private func handleResumeIssuance() async {
+    setState {
+      $0.copy(
+        addDocumentCellModels: transformCellLoadingState(with: true)
+      )
+    }
+    switch await interactor.resumeDynamicIssuance() {
+    case .success(let docId):
+      router.push(
+        with: .issuanceSuccess(
+          config: viewState.config,
+          documentIdentifier: docId
+        )
+      )
+    case .noPending:
+      setState {
+        $0.copy(
+          addDocumentCellModels: transformCellLoadingState(with: false)
+        )
+      }
+    case .failure(let error):
+      setState {
+        $0.copy(
+          addDocumentCellModels: transformCellLoadingState(with: false),
+          error: .init(
+            description: .custom(error.localizedDescription),
+            cancelAction: self.setState { $0.copy(error: nil) }
+          )
+        )
+      }
+    }
   }
 
   private func issueDocument(docType: String) {
@@ -112,6 +149,18 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
           with: .issuanceSuccess(
             config: viewState.config,
             documentIdentifier: docId
+          )
+        )
+      case .dynamicIssuance(let session):
+        setState {
+          $0.copy(
+            addDocumentCellModels: transformCellLoadingState(with: false)
+          )
+        }
+        router.push(
+          with: .presentationRequest(
+            presentationCoordinator: session,
+            originator: .issuanceAddDocument(config: viewState.config)
           )
         )
       case .failure(let error):
@@ -182,18 +231,23 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
     }
   }
 
-  private func handleDeepLink() {
-    if let deepLink = deepLinkController.getPendingDeepLinkAction(), deepLink.action == .credential_offer {
-      deepLinkController.removeCachedDeepLinkURL()
-      router.push(
-        with: .credentialOfferRequest(
-          config: UIConfig.Generic(
-            arguments: ["uri": deepLink.plainUrl.absoluteString],
-            navigationSuccessType: .push(.dashboard),
-            navigationCancelType: .pop
-          )
+  private func hasDeepLink() -> String? {
+    guard let deepLink = deepLinkController.getPendingDeepLinkAction(), deepLink.action == .credential_offer else {
+      return nil
+    }
+    deepLinkController.removeCachedDeepLinkURL()
+    return deepLink.plainUrl.absoluteString
+  }
+
+  private func handleDeepLink(with uri: String) {
+    router.push(
+      with: .credentialOfferRequest(
+        config: UIConfig.Generic(
+          arguments: ["uri": uri],
+          navigationSuccessType: .push(.dashboard),
+          navigationCancelType: .pop
         )
       )
-    }
+    )
   }
 }

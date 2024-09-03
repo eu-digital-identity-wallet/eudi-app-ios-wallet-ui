@@ -84,8 +84,8 @@ final class DeepLinkControllerImpl: DeepLinkController {
     switch deepLinkExecutable.action {
     case .openid4vp:
       let session = walletKitController.startSameDevicePresentation(deepLink: deepLinkExecutable.link)
-      if !routerHost.isScreenForeground(with: .presentationRequest(presentationCoordinator: session)) {
-        routerHost.push(with: .presentationRequest(presentationCoordinator: session))
+      if !routerHost.isScreenForeground(with: .presentationRequest(presentationCoordinator: session, originator: .dashboard)) {
+        routerHost.push(with: .presentationRequest(presentationCoordinator: session, originator: .dashboard))
       } else {
         postNotification(
           with: NSNotification.PresentationVC,

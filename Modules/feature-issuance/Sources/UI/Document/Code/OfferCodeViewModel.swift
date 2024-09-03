@@ -63,6 +63,27 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
     subscribeToCodeInput()
   }
 
+  func checkPendingIssuance() async {
+    switch await interactor.resumeDynamicIssuance(
+      issuerName: viewState.config.issuerName,
+      successNavigation: viewState.config.successNavigation
+    ) {
+    case .success(let route):
+      router.push(with: route)
+    case .noPending: break
+    case .failure(let error):
+      setState {
+        $0.copy(
+          isLoading: false,
+          error: .init(
+            description: .custom(error.localizedDescription),
+            cancelAction: self.setState { $0.copy(error: nil) }
+          )
+        )
+      }
+    }
+  }
+
   func onPop() {
     switch viewState.config.navigationCancelType {
     case .popTo(let route):
@@ -87,6 +108,18 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
       ) {
       case .success(let route):
         router.push(with: route)
+      case .dynamicIssuance(let session):
+        setState {
+          $0.copy(
+            isLoading: false
+          )
+        }
+        router.push(
+          with: .presentationRequest(
+            presentationCoordinator: session,
+            originator: .issuanceCode(config: viewState.config)
+          )
+        )
       case .failure(let error):
         setState {
           $0.copy(

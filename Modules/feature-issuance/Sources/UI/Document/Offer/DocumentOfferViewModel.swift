@@ -28,6 +28,7 @@ struct DocumentOfferViewState: ViewState {
   let config: UIConfig.Generic
   let offerUri: String
   let allowIssue: Bool
+  let initialized: Bool
 
   var title: LocalizableString.Key {
     return .requestCredentialOfferTitle([documentOfferUiModel.issuerName])
@@ -69,12 +70,19 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
         error: nil,
         config: config,
         offerUri: offerUri,
-        allowIssue: false
+        allowIssue: false,
+        initialized: false
       )
     )
   }
 
-  func processRequest() async {
+  func initialize() async {
+
+    if viewState.initialized {
+      await handleResumeIssuance()
+      return
+    }
+
     switch await self.interactor.processOfferRequest(with: viewState.offerUri) {
     case .success(let uiModel):
       setState {
@@ -82,7 +90,8 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
           .copy(
             isLoading: false,
             documentOfferUiModel: uiModel,
-            allowIssue: !uiModel.uiOffers.isEmpty
+            allowIssue: !uiModel.uiOffers.isEmpty,
+            initialized: true
           )
           .copy(error: nil)
       }
@@ -95,7 +104,8 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
               description: .custom(error.localizedDescription),
               cancelAction: self.onPop()
             ),
-            allowIssue: false
+            allowIssue: false,
+            initialized: true
           )
       }
     }
@@ -130,6 +140,18 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
       ) {
       case .success(let route):
         router.push(with: route)
+      case .dynamicIssuance(let session):
+        setState {
+          $0.copy(
+            isLoading: false
+          )
+        }
+        router.push(
+          with: .presentationRequest(
+            presentationCoordinator: session,
+            originator: .credentialOfferRequest(config: viewState.config)
+          )
+        )
       case .failure(let error):
         setState {
           $0.copy(
@@ -179,12 +201,36 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
             navigationCancelType: viewState.config.navigationCancelType
           ),
           offerUri: uri,
-          allowIssue: false
+          allowIssue: false,
+          initialized: false
         )
         .copy(error: nil)
     }
     Task {
-      await self.processRequest()
+      await self.initialize()
+    }
+  }
+
+  private func handleResumeIssuance() async {
+    setState { $0.copy(isLoading: true) }
+    switch await interactor.resumeDynamicIssuance(
+      issuerName: viewState.documentOfferUiModel.issuerName,
+      successNavigation: viewState.successNavigation
+    ) {
+    case .success(let route):
+      router.push(with: route)
+    case .noPending:
+      setState { $0.copy(isLoading: false) }
+    case .failure(let error):
+      setState {
+        $0.copy(
+          isLoading: false,
+          error: .init(
+            description: .custom(error.localizedDescription),
+            cancelAction: self.setState { $0.copy(error: nil) }
+          )
+        )
+      }
     }
   }
 }

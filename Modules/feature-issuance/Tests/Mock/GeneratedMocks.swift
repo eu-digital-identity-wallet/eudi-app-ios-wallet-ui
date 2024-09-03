@@ -772,6 +772,16 @@ class MockBaseLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<Router>
         )
     }
     
+    public override func getOriginator() -> AppRoute {
+        return cuckoo_manager.call(
+            "getOriginator() -> AppRoute",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: super.getOriginator(),
+            defaultCall: __defaultImplStub!.getOriginator()
+        )
+    }
+    
     public override func onNavigate(type p0: UIConfig.ThreeWayNavigationType) {
         return cuckoo_manager.call(
             "onNavigate(type p0: UIConfig.ThreeWayNavigationType)",
@@ -827,6 +837,14 @@ class MockBaseLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<Router>
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockBaseLoadingViewModel.self,
                 method: "doWork() async",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getOriginator() -> Cuckoo.ClassStubFunction<(), AppRoute> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockBaseLoadingViewModel.self,
+                method: "getOriginator() -> AppRoute",
                 parameterMatchers: matchers
             ))
         }
@@ -909,6 +927,18 @@ class MockBaseLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<Router>
         
         
         @discardableResult
+        func getOriginator() -> Cuckoo.__DoNotUse<(), AppRoute> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getOriginator() -> AppRoute",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
         func onNavigate<M1: Cuckoo.Matchable>(type p0: M1) -> Cuckoo.__DoNotUse<(UIConfig.ThreeWayNavigationType), Void> where M1.MatchedType == UIConfig.ThreeWayNavigationType {
             let matchers: [Cuckoo.ParameterMatcher<(UIConfig.ThreeWayNavigationType)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
@@ -951,6 +981,10 @@ class BaseLoadingViewModelStub<Router: RouterHost>:BaseLoadingViewModel<Router> 
     
     override func doWork() async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public override func getOriginator() -> AppRoute {
+        return DefaultValueRegistry.defaultValue(for: (AppRoute).self)
     }
     
     public override func onNavigate(type p0: UIConfig.ThreeWayNavigationType) {
@@ -1206,6 +1240,16 @@ class MockBaseRequestViewModel<Router: RouterHost>: BaseRequestViewModel<Router>
         )
     }
     
+    public override func getOriginator() -> AppRoute {
+        return cuckoo_manager.call(
+            "getOriginator() -> AppRoute",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: super.getOriginator(),
+            defaultCall: __defaultImplStub!.getOriginator()
+        )
+    }
+    
     public override func onStartLoading() {
         return cuckoo_manager.call(
             "onStartLoading()",
@@ -1419,6 +1463,14 @@ class MockBaseRequestViewModel<Router: RouterHost>: BaseRequestViewModel<Router>
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
                 method: "getPopRoute() -> AppRoute?",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getOriginator() -> Cuckoo.ClassStubFunction<(), AppRoute> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
+                method: "getOriginator() -> AppRoute",
                 parameterMatchers: matchers
             ))
         }
@@ -1669,6 +1721,18 @@ class MockBaseRequestViewModel<Router: RouterHost>: BaseRequestViewModel<Router>
         
         
         @discardableResult
+        func getOriginator() -> Cuckoo.__DoNotUse<(), AppRoute> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getOriginator() -> AppRoute",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
         func onStartLoading() -> Cuckoo.__DoNotUse<(), Void> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
@@ -1868,6 +1932,10 @@ class BaseRequestViewModelStub<Router: RouterHost>:BaseRequestViewModel<Router> 
     
     override func getPopRoute() -> AppRoute? {
         return DefaultValueRegistry.defaultValue(for: (AppRoute?).self)
+    }
+    
+    public override func getOriginator() -> AppRoute {
+        return DefaultValueRegistry.defaultValue(for: (AppRoute).self)
     }
     
     public override func onStartLoading() {
@@ -2074,6 +2142,16 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
             defaultCall: await __defaultImplStub!.issueDocument(docType: p0)
         )
     }
+    
+    public func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState {
+        return await cuckoo_manager.call(
+            "resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.resumeDynamicIssuance()
+        )
+    }
 
     public struct __StubbingProxy_AddDocumentInteractor: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -2102,6 +2180,14 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractor.self,
                 method: "issueDocument(docType p0: String) async -> IssueDocumentPartialState",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func resumeDynamicIssuance() -> Cuckoo.ProtocolStubFunction<(), IssueDynamicDocumentPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractor.self,
+                method: "resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState",
                 parameterMatchers: matchers
             ))
         }
@@ -2153,6 +2239,18 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func resumeDynamicIssuance() -> Cuckoo.__DoNotUse<(), IssueDynamicDocumentPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -2170,6 +2268,10 @@ public class AddDocumentInteractorStub:AddDocumentInteractor {
     
     public func issueDocument(docType p0: String) async -> IssueDocumentPartialState {
         return DefaultValueRegistry.defaultValue(for: (IssueDocumentPartialState).self)
+    }
+    
+    public func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState {
+        return DefaultValueRegistry.defaultValue(for: (IssueDynamicDocumentPartialState).self)
     }
 }
 
@@ -2354,6 +2456,16 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
             defaultCall: await __defaultImplStub!.issueDocuments(with: p0, issuerName: p1, docOffers: p2, successNavigation: p3, txCodeValue: p4)
         )
     }
+    
+    public func resumeDynamicIssuance(issuerName p0: String, successNavigation p1: UIConfig.TwoWayNavigationType) async -> OfferDynamicIssuancePartialState {
+        return await cuckoo_manager.call(
+            "resumeDynamicIssuance(issuerName p0: String, successNavigation p1: UIConfig.TwoWayNavigationType) async -> OfferDynamicIssuancePartialState",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.resumeDynamicIssuance(issuerName: p0, successNavigation: p1)
+        )
+    }
 
     public struct __StubbingProxy_DocumentOfferInteractor: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -2374,6 +2486,14 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
             let matchers: [Cuckoo.ParameterMatcher<(String, String, [OfferedDocModel], UIConfig.TwoWayNavigationType, String?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }, wrap(matchable: p4) { $0.4 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentOfferInteractor.self,
                 method: "issueDocuments(with p0: String, issuerName p1: String, docOffers p2: [OfferedDocModel], successNavigation p3: UIConfig.TwoWayNavigationType, txCodeValue p4: String?) async -> IssueOfferDocumentsPartialState",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func resumeDynamicIssuance<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(issuerName p0: M1, successNavigation p1: M2) -> Cuckoo.ProtocolStubFunction<(String, UIConfig.TwoWayNavigationType), OfferDynamicIssuancePartialState> where M1.MatchedType == String, M2.MatchedType == UIConfig.TwoWayNavigationType {
+            let matchers: [Cuckoo.ParameterMatcher<(String, UIConfig.TwoWayNavigationType)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockDocumentOfferInteractor.self,
+                method: "resumeDynamicIssuance(issuerName p0: String, successNavigation p1: UIConfig.TwoWayNavigationType) async -> OfferDynamicIssuancePartialState",
                 parameterMatchers: matchers
             ))
         }
@@ -2413,6 +2533,18 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func resumeDynamicIssuance<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(issuerName p0: M1, successNavigation p1: M2) -> Cuckoo.__DoNotUse<(String, UIConfig.TwoWayNavigationType), OfferDynamicIssuancePartialState> where M1.MatchedType == String, M2.MatchedType == UIConfig.TwoWayNavigationType {
+            let matchers: [Cuckoo.ParameterMatcher<(String, UIConfig.TwoWayNavigationType)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return cuckoo_manager.verify(
+                "resumeDynamicIssuance(issuerName p0: String, successNavigation p1: UIConfig.TwoWayNavigationType) async -> OfferDynamicIssuancePartialState",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -2426,6 +2558,10 @@ public class DocumentOfferInteractorStub:DocumentOfferInteractor {
     
     public func issueDocuments(with p0: String, issuerName p1: String, docOffers p2: [OfferedDocModel], successNavigation p3: UIConfig.TwoWayNavigationType, txCodeValue p4: String?) async -> IssueOfferDocumentsPartialState {
         return DefaultValueRegistry.defaultValue(for: (IssueOfferDocumentsPartialState).self)
+    }
+    
+    public func resumeDynamicIssuance(issuerName p0: String, successNavigation p1: UIConfig.TwoWayNavigationType) async -> OfferDynamicIssuancePartialState {
+        return DefaultValueRegistry.defaultValue(for: (OfferDynamicIssuancePartialState).self)
     }
 }
 
@@ -6708,6 +6844,36 @@ return cuckoo_manager.call(
             defaultCall: __defaultImplStub!.retrieveLogFileUrl()
         )
     }
+    
+    public func resumePendingIssuance(pendingDoc p0: WalletStorage.Document, webUrl p1: URL?) async throws -> WalletStorage.Document {
+        return try await cuckoo_manager.callThrows(
+            "resumePendingIssuance(pendingDoc p0: WalletStorage.Document, webUrl p1: URL?) async throws -> WalletStorage.Document",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.resumePendingIssuance(pendingDoc: p0, webUrl: p1)
+        )
+    }
+    
+    public func storeDynamicIssuancePendingUrl(with p0: URL) {
+        return cuckoo_manager.call(
+            "storeDynamicIssuancePendingUrl(with p0: URL)",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.storeDynamicIssuancePendingUrl(with: p0)
+        )
+    }
+    
+    public func getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)? {
+        return await cuckoo_manager.call(
+            "getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)?",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getDynamicIssuancePendingData()
+        )
+    }
 
     public struct __StubbingProxy_WalletKitController: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -6904,6 +7070,30 @@ return cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "retrieveLogFileUrl() -> URL?",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func resumePendingIssuance<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(pendingDoc p0: M1, webUrl p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(WalletStorage.Document, URL?), WalletStorage.Document> where M1.MatchedType == WalletStorage.Document, M2.OptionalMatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(WalletStorage.Document, URL?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "resumePendingIssuance(pendingDoc p0: WalletStorage.Document, webUrl p1: URL?) async throws -> WalletStorage.Document",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func storeDynamicIssuancePendingUrl<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(URL)> where M1.MatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(URL)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "storeDynamicIssuancePendingUrl(with p0: URL)",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getDynamicIssuancePendingData() -> Cuckoo.ProtocolStubFunction<(), (pendingDoc: WalletStorage.Document, url: URL)?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)?",
                 parameterMatchers: matchers
             ))
         }
@@ -7203,6 +7393,42 @@ return cuckoo_manager.call(
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func resumePendingIssuance<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(pendingDoc p0: M1, webUrl p1: M2) -> Cuckoo.__DoNotUse<(WalletStorage.Document, URL?), WalletStorage.Document> where M1.MatchedType == WalletStorage.Document, M2.OptionalMatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(WalletStorage.Document, URL?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return cuckoo_manager.verify(
+                "resumePendingIssuance(pendingDoc p0: WalletStorage.Document, webUrl p1: URL?) async throws -> WalletStorage.Document",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func storeDynamicIssuancePendingUrl<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(URL), Void> where M1.MatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(URL)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "storeDynamicIssuancePendingUrl(with p0: URL)",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getDynamicIssuancePendingData() -> Cuckoo.__DoNotUse<(), (pendingDoc: WalletStorage.Document, url: URL)?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)?",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -7312,6 +7538,18 @@ public class WalletKitControllerStub:WalletKitController {
     
     public func retrieveLogFileUrl() -> URL? {
         return DefaultValueRegistry.defaultValue(for: (URL?).self)
+    }
+    
+    public func resumePendingIssuance(pendingDoc p0: WalletStorage.Document, webUrl p1: URL?) async throws -> WalletStorage.Document {
+        return DefaultValueRegistry.defaultValue(for: (WalletStorage.Document).self)
+    }
+    
+    public func storeDynamicIssuancePendingUrl(with p0: URL) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)? {
+        return DefaultValueRegistry.defaultValue(for: ((pendingDoc: WalletStorage.Document, url: URL)?).self)
     }
 }
 

@@ -21,8 +21,18 @@ public struct ProximityLoadingView<Router: RouterHost>: View {
 
   @ObservedObject private var viewModel: ProximityLoadingViewModel<Router>
 
-  public init(with router: Router, and interactor: ProximityInteractor, relyingParty: String) {
-    self.viewModel = .init(router: router, interactor: interactor, relyingParty: relyingParty)
+  public init(
+    with router: Router,
+    and interactor: ProximityInteractor,
+    relyingParty: String,
+    originator: AppRoute
+  ) {
+    self.viewModel = .init(
+      router: router,
+      interactor: interactor,
+      relyingParty: relyingParty,
+      originator: originator
+    )
   }
 
   public var body: some View {

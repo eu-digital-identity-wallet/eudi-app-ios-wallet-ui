@@ -137,22 +137,24 @@ final class RouterHostImpl: RouterHost {
           ),
           config: config
         )
-      case .presentationLoader(let relyingParty, let presentationCoordinator):
+      case .presentationLoader(let relyingParty, let presentationCoordinator, let originator):
         PresentationLoadingView(
           with: self,
           and: DIGraph.resolver.force(
             PresentationInteractor.self,
             argument: presentationCoordinator
           ),
-          relyingParty: relyingParty
+          relyingParty: relyingParty,
+          originator: originator
         )
-      case .presentationRequest(let presentationCoordinator):
+      case .presentationRequest(let presentationCoordinator, let originator):
         PresentationRequestView(
           with: self,
           and: DIGraph.resolver.force(
             PresentationInteractor.self,
             argument: presentationCoordinator
-          )
+          ),
+          originator: originator
         )
       case .welcome:
         WelcomeView(
@@ -180,30 +182,33 @@ final class RouterHostImpl: RouterHost {
           ),
           config: config
         )
-      case .proximityConnection(let presentationSessionCoordinator):
+      case .proximityConnection(let presentationSessionCoordinator, let originator):
         ProximityConnectionView(
           with: self,
           and: DIGraph.resolver.force(
             ProximityInteractor.self,
             argument: presentationSessionCoordinator
-          )
+          ),
+          originator: originator
         )
-      case .proximityRequest(let presentationSessionCoordinator):
+      case .proximityRequest(let presentationSessionCoordinator, let originator):
         ProximityRequestView(
           with: self,
           and: DIGraph.resolver.force(
             ProximityInteractor.self,
             argument: presentationSessionCoordinator
-          )
+          ),
+          originator: originator
         )
-      case .proximityLoader(let relyingParty, let presentationSessionCoordinator):
+      case .proximityLoader(let relyingParty, let presentationSessionCoordinator, let originator):
         ProximityLoadingView(
           with: self,
           and: DIGraph.resolver.force(
             ProximityInteractor.self,
             argument: presentationSessionCoordinator
           ),
-          relyingParty: relyingParty
+          relyingParty: relyingParty,
+          originator: originator
         )
       case .quickPin(let config):
         QuickPinView(

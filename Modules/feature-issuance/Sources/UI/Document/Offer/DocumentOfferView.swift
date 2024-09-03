@@ -78,7 +78,7 @@ public struct DocumentOfferView<Router: RouterHost>: View {
       }
     }
     .task {
-      await viewModel.processRequest()
+      await viewModel.initialize()
     }
     .onReceive(NotificationCenter.default.publisher(for: NSNotification.CredentialOffer)) { data in
       guard let payload = data.userInfo else {
