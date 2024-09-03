@@ -2376,6 +2376,36 @@ return cuckoo_manager.call(
             defaultCall: __defaultImplStub!.retrieveLogFileUrl()
         )
     }
+    
+    public func resumePendingIssuance(pendingDoc p0: WalletStorage.Document, webUrl p1: URL?) async throws -> WalletStorage.Document {
+        return try await cuckoo_manager.callThrows(
+            "resumePendingIssuance(pendingDoc p0: WalletStorage.Document, webUrl p1: URL?) async throws -> WalletStorage.Document",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.resumePendingIssuance(pendingDoc: p0, webUrl: p1)
+        )
+    }
+    
+    public func storeDynamicIssuancePendingUrl(with p0: URL) {
+        return cuckoo_manager.call(
+            "storeDynamicIssuancePendingUrl(with p0: URL)",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.storeDynamicIssuancePendingUrl(with: p0)
+        )
+    }
+    
+    public func getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)? {
+        return await cuckoo_manager.call(
+            "getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)?",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getDynamicIssuancePendingData()
+        )
+    }
 
     public struct __StubbingProxy_WalletKitController: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -2572,6 +2602,30 @@ return cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "retrieveLogFileUrl() -> URL?",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func resumePendingIssuance<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(pendingDoc p0: M1, webUrl p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(WalletStorage.Document, URL?), WalletStorage.Document> where M1.MatchedType == WalletStorage.Document, M2.OptionalMatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(WalletStorage.Document, URL?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "resumePendingIssuance(pendingDoc p0: WalletStorage.Document, webUrl p1: URL?) async throws -> WalletStorage.Document",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func storeDynamicIssuancePendingUrl<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(URL)> where M1.MatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(URL)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "storeDynamicIssuancePendingUrl(with p0: URL)",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getDynamicIssuancePendingData() -> Cuckoo.ProtocolStubFunction<(), (pendingDoc: WalletStorage.Document, url: URL)?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)?",
                 parameterMatchers: matchers
             ))
         }
@@ -2871,6 +2925,42 @@ return cuckoo_manager.call(
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func resumePendingIssuance<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(pendingDoc p0: M1, webUrl p1: M2) -> Cuckoo.__DoNotUse<(WalletStorage.Document, URL?), WalletStorage.Document> where M1.MatchedType == WalletStorage.Document, M2.OptionalMatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(WalletStorage.Document, URL?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return cuckoo_manager.verify(
+                "resumePendingIssuance(pendingDoc p0: WalletStorage.Document, webUrl p1: URL?) async throws -> WalletStorage.Document",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func storeDynamicIssuancePendingUrl<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(URL), Void> where M1.MatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(URL)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "storeDynamicIssuancePendingUrl(with p0: URL)",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getDynamicIssuancePendingData() -> Cuckoo.__DoNotUse<(), (pendingDoc: WalletStorage.Document, url: URL)?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)?",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -2980,6 +3070,18 @@ public class WalletKitControllerStub:WalletKitController {
     
     public func retrieveLogFileUrl() -> URL? {
         return DefaultValueRegistry.defaultValue(for: (URL?).self)
+    }
+    
+    public func resumePendingIssuance(pendingDoc p0: WalletStorage.Document, webUrl p1: URL?) async throws -> WalletStorage.Document {
+        return DefaultValueRegistry.defaultValue(for: (WalletStorage.Document).self)
+    }
+    
+    public func storeDynamicIssuancePendingUrl(with p0: URL) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)? {
+        return DefaultValueRegistry.defaultValue(for: ((pendingDoc: WalletStorage.Document, url: URL)?).self)
     }
 }
 

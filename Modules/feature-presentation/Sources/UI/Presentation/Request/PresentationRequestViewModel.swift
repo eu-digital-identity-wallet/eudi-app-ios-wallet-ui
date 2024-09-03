@@ -23,10 +23,11 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
   init(
     router: Router,
-    interactor: PresentationInteractor
+    interactor: PresentationInteractor,
+    originator: AppRoute
   ) {
     self.interactor = interactor
-    super.init(router: router)
+    super.init(router: router, originator: originator)
   }
 
   override func doWork() async {
@@ -74,10 +75,11 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
         navigationSuccessType: .push(
           .presentationLoader(
             getRelyingParty(),
-            presentationCoordinator: interactor.presentationCoordinator
+            presentationCoordinator: interactor.presentationCoordinator,
+            originator: getOriginator()
           )
         ),
-        navigationBackType: .popTo(.dashboard),
+        navigationBackType: .pop,
         isPreAuthorization: false,
         shouldInitializeBiometricOnCreate: true
       )
@@ -85,7 +87,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   override func getPopRoute() -> AppRoute? {
-    return .dashboard
+    return getOriginator()
   }
 
   override func getTitle() -> LocalizableString.Key {

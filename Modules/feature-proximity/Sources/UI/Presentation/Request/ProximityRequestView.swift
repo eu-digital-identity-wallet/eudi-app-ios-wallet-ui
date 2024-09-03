@@ -21,8 +21,16 @@ public struct ProximityRequestView<Router: RouterHost>: View {
 
   @ObservedObject private var viewModel: ProximityRequestViewModel<Router>
 
-  public init(with router: Router, and interactor: ProximityInteractor) {
-    self.viewModel = .init(router: router, interactor: interactor)
+  public init(
+    with router: Router,
+    and interactor: ProximityInteractor,
+    originator: AppRoute
+  ) {
+    self.viewModel = .init(
+      router: router,
+      interactor: interactor,
+      originator: originator
+    )
   }
 
   public var body: some View {

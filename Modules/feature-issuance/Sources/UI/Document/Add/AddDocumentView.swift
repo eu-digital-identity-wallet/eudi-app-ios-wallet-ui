@@ -58,7 +58,7 @@ public struct AddDocumentView<Router: RouterHost>: View {
       scanFooter
     }
     .task {
-      await self.viewModel.fetchStoredDocuments()
+      await self.viewModel.initialize()
     }
   }
 

@@ -19,12 +19,16 @@
 @Copyable
 public struct BaseLoadingState: ViewState {
   let error: ContentErrorView.Config?
+  let originator: AppRoute
 }
 
 open class BaseLoadingViewModel<Router: RouterHost>: BaseViewModel<Router, BaseLoadingState> {
 
-  public init(router: Router) {
-    super.init(router: router, initialState: .init(error: nil))
+  public init(router: Router, originator: AppRoute) {
+    super.init(
+      router: router,
+      initialState: .init(error: nil, originator: originator)
+    )
   }
 
   open func getTitle() -> LocalizableString.Key {
@@ -40,6 +44,10 @@ open class BaseLoadingViewModel<Router: RouterHost>: BaseViewModel<Router, BaseL
   }
 
   open func doWork() async {}
+
+  public func getOriginator() -> AppRoute {
+    return viewState.originator
+  }
 
   public func onNavigate(type: UIConfig.ThreeWayNavigationType) {
     switch type {

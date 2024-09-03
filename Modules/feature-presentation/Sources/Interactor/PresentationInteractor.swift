@@ -33,6 +33,7 @@ public protocol PresentationInteractor {
   func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>
   func onSendResponse() async -> Result<URL?, Error>
   func updatePresentationCoordinator(with coordinator: PresentationSessionCoordinator)
+  func storeDynamicIssuancePendingUrl(with url: URL)
 }
 
 final class PresentationInteractorImpl: PresentationInteractor {
@@ -122,5 +123,9 @@ final class PresentationInteractorImpl: PresentationInteractor {
         }
       }
     }
+  }
+
+  func storeDynamicIssuancePendingUrl(with url: URL) {
+    walletKitController.storeDynamicIssuancePendingUrl(with: url)
   }
 }

@@ -29,6 +29,10 @@ public protocol DocumentOfferInteractor {
     successNavigation: UIConfig.TwoWayNavigationType,
     txCodeValue: String?
   ) async -> IssueOfferDocumentsPartialState
+  func resumeDynamicIssuance(
+    issuerName: String,
+    successNavigation: UIConfig.TwoWayNavigationType
+  ) async -> OfferDynamicIssuancePartialState
 }
 
 final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
@@ -100,6 +104,14 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
             visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.warning)
           )
         )
+      } else if let authorizePresentationUrl = documents.first?.authorizePresentationUrl {
+        guard
+          let presentationUrl = URL(string: authorizePresentationUrl),
+          let presentationComponents = URLComponents(url: presentationUrl, resolvingAgainstBaseURL: true) else {
+          return .failure(WalletCoreError.unableToIssueAndStore)
+        }
+        let session = walletController.startSameDevicePresentation(deepLink: presentationComponents)
+        return .dynamicIssuance(session)
       } else if documents.count == docOffers.count {
         return .success(
           retrieveSuccessRoute(
@@ -138,6 +150,41 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
             visualKind: .defaultIcon
           )
         )
+      }
+
+    } catch {
+      return .failure(WalletCoreError.unableToIssueAndStore)
+    }
+  }
+
+  func resumeDynamicIssuance(
+    issuerName: String,
+    successNavigation: UIConfig.TwoWayNavigationType
+  ) async -> OfferDynamicIssuancePartialState {
+
+    guard let pendingData = await walletController.getDynamicIssuancePendingData() else {
+      return .noPending
+    }
+
+    do {
+
+      let doc = try await walletController.resumePendingIssuance(
+        pendingDoc: pendingData.pendingDoc,
+        webUrl: pendingData.url
+      )
+
+      if doc.status == .issued {
+        return .success(
+          retrieveSuccessRoute(
+            caption: .credentialOfferSuccessCaption([issuerName]),
+            successNavigation: successNavigation,
+            title: .init(value: .success),
+            buttonTitle: .credentialOfferSuccessButton,
+            visualKind: .defaultIcon
+          )
+        )
+      } else {
+        return .failure(WalletCoreError.unableToIssueAndStore)
       }
 
     } catch {
@@ -186,5 +233,12 @@ public enum IssueOfferDocumentsPartialState {
   case success(AppRoute)
   case partialSuccess(AppRoute)
   case deferredSuccess(AppRoute)
+  case dynamicIssuance(PresentationSessionCoordinator)
+  case failure(Error)
+}
+
+public enum OfferDynamicIssuancePartialState {
+  case success(AppRoute)
+  case noPending
   case failure(Error)
 }

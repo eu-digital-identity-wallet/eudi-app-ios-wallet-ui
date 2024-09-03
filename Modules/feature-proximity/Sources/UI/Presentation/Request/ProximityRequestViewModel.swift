@@ -23,10 +23,11 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
 
   init(
     router: Router,
-    interactor: ProximityInteractor
+    interactor: ProximityInteractor,
+    originator: AppRoute
   ) {
     self.interactor = interactor
-    super.init(router: router)
+    super.init(router: router, originator: originator)
 
     Task {
       await self.subscribeToCoordinatorPublisher()
@@ -91,12 +92,11 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
         navigationSuccessType: .push(
           .proximityLoader(
             getRelyingParty(),
-            presentationCoordinator: interactor.presentationSessionCoordinator
+            presentationCoordinator: interactor.presentationSessionCoordinator,
+            originator: getOriginator()
           )
         ),
-        navigationBackType: .popTo(
-          .proximityRequest(presentationCoordinator: interactor.presentationSessionCoordinator)
-        ),
+        navigationBackType: .pop,
         isPreAuthorization: false,
         shouldInitializeBiometricOnCreate: true
       )
@@ -104,7 +104,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   }
 
   override func getPopRoute() -> AppRoute? {
-    return .dashboard
+    return getOriginator()
   }
 
   override func getTitle() -> LocalizableString.Key {

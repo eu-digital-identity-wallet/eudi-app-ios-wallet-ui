@@ -29,6 +29,8 @@ public struct RequestViewState: ViewState {
   public let relyingParty: String
   public let isTrusted: Bool
   public let allowShare: Bool
+  public let originator: AppRoute
+  public let initialized: Bool
 }
 
 open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, RequestViewState> {
@@ -37,7 +39,7 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
   @Published var isRequestInfoModalShowing: Bool = false
   @Published var isVerifiedEntityModalShowing: Bool = false
 
-  public init(router: Router) {
+  public init(router: Router, originator: AppRoute) {
     super.init(
       router: router,
       initialState: .init(
@@ -50,7 +52,9 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
         relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
         isTrusted: false,
-        allowShare: false
+        allowShare: false,
+        originator: originator,
+        initialized: false
       )
     )
   }
@@ -98,6 +102,10 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
     return nil
   }
 
+  public func getOriginator() -> AppRoute {
+    return viewState.originator
+  }
+
   public func onStartLoading() {
     setState {
       $0.copy(isLoading: true).copy(error: nil)
@@ -120,7 +128,7 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
   public func onEmptyDocuments() {
     setState {
       $0
-        .copy(isLoading: false, items: [])
+        .copy(isLoading: false, items: [], initialized: true)
         .copy(error: nil)
     }
   }
@@ -139,14 +147,15 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
           title: title,
           relyingParty: relyingParty,
           isTrusted: isTrusted,
-          allowShare: !items.isEmpty
+          allowShare: !items.isEmpty,
+          initialized: true
         )
         .copy(error: nil)
     }
   }
 
   public func resetState() {
-    setState { _ in
+    setState { previous in
         .init(
           isLoading: true,
           error: nil,
@@ -157,7 +166,9 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
           trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
           relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
           isTrusted: false,
-          allowShare: false
+          allowShare: false,
+          originator: previous.originator,
+          initialized: false
         )
     }
   }

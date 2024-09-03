@@ -55,6 +55,9 @@ public struct OfferCodeView<Router: RouterHost>: View {
         pinView
       }
     }
+    .task {
+      await viewModel.checkPendingIssuance()
+    }
   }
 
   @ViewBuilder

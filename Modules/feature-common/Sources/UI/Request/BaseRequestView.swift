@@ -153,7 +153,9 @@ public struct BaseRequestView<Router: RouterHost>: View {
       }
     }
     .task {
-      await viewModel.doWork()
+      if !viewModel.viewState.initialized {
+        await viewModel.doWork()
+      }
     }
   }
 

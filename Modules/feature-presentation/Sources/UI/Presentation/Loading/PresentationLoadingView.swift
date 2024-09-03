@@ -24,9 +24,15 @@ public struct PresentationLoadingView<Router: RouterHost>: View {
   public init(
     with router: Router,
     and interactor: PresentationInteractor,
-    relyingParty: String
+    relyingParty: String,
+    originator: AppRoute
   ) {
-    self.viewModel = .init(router: router, interactor: interactor, relyingParty: relyingParty)
+    self.viewModel = .init(
+      router: router,
+      interactor: interactor,
+      relyingParty: relyingParty,
+      originator: originator
+    )
   }
 
   public var body: some View {

@@ -23,8 +23,8 @@ public struct ProximityConnectionView<Router: RouterHost>: View {
 
   var contentSize: CGFloat = 0.0
 
-  public init(with router: Router, and interactor: ProximityInteractor) {
-    self.viewModel = .init(router: router, interactor: interactor)
+  public init(with router: Router, and interactor: ProximityInteractor, originator: AppRoute) {
+    self.viewModel = .init(router: router, interactor: interactor, originator: originator)
     self.contentSize = getScreenRect().width / 1.5
   }
 

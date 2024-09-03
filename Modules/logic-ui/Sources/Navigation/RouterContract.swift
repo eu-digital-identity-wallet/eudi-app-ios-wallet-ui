@@ -28,12 +28,26 @@ public indirect enum AppRoute: Equatable {
   case faqs
   case dashboard
   case biometry(config: any UIConfigType)
-  case presentationLoader(String, presentationCoordinator: PresentationSessionCoordinator)
-  case presentationRequest(presentationCoordinator: PresentationSessionCoordinator)
+  case presentationLoader(
+    String,
+    presentationCoordinator: PresentationSessionCoordinator,
+    originator: AppRoute
+  )
+  case presentationRequest(
+    presentationCoordinator: PresentationSessionCoordinator,
+    originator: AppRoute
+  )
   case welcome
-  case proximityConnection(presentationCoordinator: PresentationSessionCoordinator)
-  case proximityRequest(presentationCoordinator: PresentationSessionCoordinator)
-  case proximityLoader(String, presentationCoordinator: PresentationSessionCoordinator)
+  case proximityConnection(presentationCoordinator: PresentationSessionCoordinator, originator: AppRoute)
+  case proximityRequest(
+    presentationCoordinator: PresentationSessionCoordinator,
+    originator: AppRoute
+  )
+  case proximityLoader(
+    String,
+    presentationCoordinator: PresentationSessionCoordinator,
+    originator: AppRoute
+  )
   case quickPin(config: any UIConfigType)
   case issuanceAddDocument(config: any UIConfigType)
   case issuanceDocumentDetails(config: any UIConfigType)
@@ -56,16 +70,16 @@ public indirect enum AppRoute: Equatable {
       (key: "Biometry", arguments: ["config": config.log])
     case .welcome:
       (key: "Welcome", arguments: [:])
-    case .presentationLoader(let id, _):
-      (key: "PresentationLoader", arguments: ["id": id])
-    case .presentationRequest:
-      (key: "PresentationRequest", arguments: [:])
-    case .proximityConnection:
-      (key: "ProximityConnection", arguments: [:])
-    case .proximityRequest:
-      (key: "ProximityRequest", arguments: [:])
-    case .proximityLoader(let id, _):
-      (key: "ProximityLoader", arguments: ["id": id])
+    case .presentationLoader(let id, _, let originator):
+      (key: "PresentationLoader", arguments: ["id": id, "originator": originator.info.key])
+    case .presentationRequest(_, let originator):
+      (key: "PresentationRequest", arguments: ["originator": originator.info.key])
+    case .proximityConnection(_, let originator):
+      (key: "ProximityConnection", arguments: ["originator": originator.info.key])
+    case .proximityRequest(_, let originator):
+      (key: "ProximityRequest", arguments: ["originator": originator.info.key])
+    case .proximityLoader(let id, _, let originator):
+      (key: "ProximityLoader", arguments: ["id": id, "originator": originator.info.key])
     case .quickPin(let config):
       (key: "QuickPin", arguments: ["config": config.log])
     case .issuanceAddDocument(let config):

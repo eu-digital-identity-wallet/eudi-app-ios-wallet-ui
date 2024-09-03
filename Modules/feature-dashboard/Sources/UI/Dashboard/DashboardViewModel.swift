@@ -163,7 +163,8 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
       case .available:
         self.router.push(
           with: .proximityConnection(
-            presentationCoordinator: self.walletKitController.startProximityPresentation()
+            presentationCoordinator: self.walletKitController.startProximityPresentation(),
+            originator: .dashboard
           )
         )
       case .noPermission, .disabled:
