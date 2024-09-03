@@ -71,9 +71,9 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
 
   private func isDynamicIssuance() -> Bool {
     guard
-      getOriginator().info.key == AppRoute.credentialOfferRequest(config: NoConfig()).info.key ||
-      getOriginator().info.key == AppRoute.issuanceAddDocument(config: NoConfig()).info.key ||
-      getOriginator().info.key == AppRoute.issuanceCode(config: NoConfig()).info.key
+      getOriginator() == AppRoute.credentialOfferRequest(config: NoConfig()) ||
+      getOriginator() == AppRoute.issuanceAddDocument(config: NoConfig()) ||
+      getOriginator() == AppRoute.issuanceCode(config: NoConfig())
     else {
       return false
     }
