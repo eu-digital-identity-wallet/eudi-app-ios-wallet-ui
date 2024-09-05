@@ -28,8 +28,10 @@ extension WalletStorage.Document {
     return DeferrredDocument(
       id: self.id,
       createdAt: self.createdAt,
+      modifiedAt: self.modifiedAt,
       docType: self.docType,
-      displayName: self.displayName
+      displayName: self.displayName,
+      statusDescription: self.statusDescription
     )
   }
 }

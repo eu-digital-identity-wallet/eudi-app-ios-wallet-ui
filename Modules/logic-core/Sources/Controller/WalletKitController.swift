@@ -130,8 +130,7 @@ final class WalletKitControllerImpl: WalletKitController {
   }
 
   public func loadDocuments() async throws {
-    _ = try await wallet.loadDocuments(status: .issued)
-    _ = try await wallet.loadDocuments(status: .deferred)
+    _ = try await wallet.loadAllDocuments()
   }
 
   public func startProximityPresentation() -> PresentationSessionCoordinator {
