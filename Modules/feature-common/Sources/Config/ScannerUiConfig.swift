@@ -54,6 +54,10 @@ public extension ScannerUiConfig {
       }
     }
 
+    var informativeText: LocalizableString.Key {
+      return .qrScanInformativeText
+    }
+
     var rawValue: String {
       return switch self {
       case .presentation:

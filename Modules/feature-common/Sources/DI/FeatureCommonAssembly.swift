@@ -16,6 +16,7 @@
 import Swinject
 import logic_authentication
 import logic_business
+import logic_core
 
 public final class FeatureCommonAssembly: Assembly {
 
@@ -32,6 +33,14 @@ public final class FeatureCommonAssembly: Assembly {
         prefsController: r.force(PrefsController.self),
         quickPinInteractor: r.force(QuickPinInteractor.self),
         biometryController: r.force(SystemBiometryController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.transient)
+
+    container.register(ScannerInteractor.self) { r in
+      ScannerInteractorImpl(
+        formValidator: r.force(FormValidator.self),
+        walletKitController: r.force(WalletKitController.self)
       )
     }
     .inObjectScope(ObjectScope.transient)
