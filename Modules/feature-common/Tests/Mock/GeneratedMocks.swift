@@ -598,6 +598,311 @@ public class QuickPinInteractorStub:QuickPinInteractor {
 
 
 
+// MARK: - Mocks generated from file: 'Modules/feature-common/Sources/Interactor/ScannerInteractor.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+public class MockScannerInteractor: ScannerInteractor, Cuckoo.ProtocolMock {
+    public typealias MocksType = ScannerInteractor
+    public typealias Stubbing = __StubbingProxy_ScannerInteractor
+    public typealias Verification = __VerificationProxy_ScannerInteractor
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ScannerInteractor)?
+
+    public func enableDefaultImplementation(_ stub: any ScannerInteractor) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+    
+    public func startCrossDevicePresentation(scanResult p0: String) -> PresentationSessionCoordinator {
+        return cuckoo_manager.call(
+            "startCrossDevicePresentation(scanResult p0: String) -> PresentationSessionCoordinator",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.startCrossDevicePresentation(scanResult: p0)
+        )
+    }
+    
+    public func validateForm(form p0: ValidatableForm) async -> FormValidationResult {
+        return await cuckoo_manager.call(
+            "validateForm(form p0: ValidatableForm) async -> FormValidationResult",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.validateForm(form: p0)
+        )
+    }
+    
+    public func validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult {
+        return await cuckoo_manager.call(
+            "validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.validateForms(forms: p0)
+        )
+    }
+
+    public struct __StubbingProxy_ScannerInteractor: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func startCrossDevicePresentation<M1: Cuckoo.Matchable>(scanResult p0: M1) -> Cuckoo.ProtocolStubFunction<(String), PresentationSessionCoordinator> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockScannerInteractor.self,
+                method: "startCrossDevicePresentation(scanResult p0: String) -> PresentationSessionCoordinator",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func validateForm<M1: Cuckoo.Matchable>(form p0: M1) -> Cuckoo.ProtocolStubFunction<(ValidatableForm), FormValidationResult> where M1.MatchedType == ValidatableForm {
+            let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockScannerInteractor.self,
+                method: "validateForm(form p0: ValidatableForm) async -> FormValidationResult",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func validateForms<M1: Cuckoo.Matchable>(forms p0: M1) -> Cuckoo.ProtocolStubFunction<([ValidatableForm]), FormsValidationResult> where M1.MatchedType == [ValidatableForm] {
+            let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockScannerInteractor.self,
+                method: "validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    public struct __VerificationProxy_ScannerInteractor: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func startCrossDevicePresentation<M1: Cuckoo.Matchable>(scanResult p0: M1) -> Cuckoo.__DoNotUse<(String), PresentationSessionCoordinator> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "startCrossDevicePresentation(scanResult p0: String) -> PresentationSessionCoordinator",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func validateForm<M1: Cuckoo.Matchable>(form p0: M1) -> Cuckoo.__DoNotUse<(ValidatableForm), FormValidationResult> where M1.MatchedType == ValidatableForm {
+            let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "validateForm(form p0: ValidatableForm) async -> FormValidationResult",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func validateForms<M1: Cuckoo.Matchable>(forms p0: M1) -> Cuckoo.__DoNotUse<([ValidatableForm]), FormsValidationResult> where M1.MatchedType == [ValidatableForm] {
+            let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+public class ScannerInteractorStub:ScannerInteractor {
+
+
+    
+    public func startCrossDevicePresentation(scanResult p0: String) -> PresentationSessionCoordinator {
+        return DefaultValueRegistry.defaultValue(for: (PresentationSessionCoordinator).self)
+    }
+    
+    public func validateForm(form p0: ValidatableForm) async -> FormValidationResult {
+        return DefaultValueRegistry.defaultValue(for: (FormValidationResult).self)
+    }
+    
+    public func validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult {
+        return DefaultValueRegistry.defaultValue(for: (FormsValidationResult).self)
+    }
+}
+
+
+class MockScannerInteractorImpl: ScannerInteractorImpl, Cuckoo.ClassMock {
+    typealias MocksType = ScannerInteractorImpl
+    typealias Stubbing = __StubbingProxy_ScannerInteractorImpl
+    typealias Verification = __VerificationProxy_ScannerInteractorImpl
+
+    // Original typealiases
+
+    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: true)
+
+    private var __defaultImplStub: ScannerInteractorImpl?
+
+    func enableDefaultImplementation(_ stub: ScannerInteractorImpl) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+    
+    override func validateForm(form p0: ValidatableForm) async -> FormValidationResult {
+        return await cuckoo_manager.call(
+            "validateForm(form p0: ValidatableForm) async -> FormValidationResult",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: await super.validateForm(form: p0),
+            defaultCall: await __defaultImplStub!.validateForm(form: p0)
+        )
+    }
+    
+    override func validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult {
+        return await cuckoo_manager.call(
+            "validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: await super.validateForms(forms: p0),
+            defaultCall: await __defaultImplStub!.validateForms(forms: p0)
+        )
+    }
+    
+    override func startCrossDevicePresentation(scanResult p0: String) -> PresentationSessionCoordinator {
+        return cuckoo_manager.call(
+            "startCrossDevicePresentation(scanResult p0: String) -> PresentationSessionCoordinator",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: super.startCrossDevicePresentation(scanResult: p0),
+            defaultCall: __defaultImplStub!.startCrossDevicePresentation(scanResult: p0)
+        )
+    }
+
+    struct __StubbingProxy_ScannerInteractorImpl: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func validateForm<M1: Cuckoo.Matchable>(form p0: M1) -> Cuckoo.ClassStubFunction<(ValidatableForm), FormValidationResult> where M1.MatchedType == ValidatableForm {
+            let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockScannerInteractorImpl.self,
+                method: "validateForm(form p0: ValidatableForm) async -> FormValidationResult",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func validateForms<M1: Cuckoo.Matchable>(forms p0: M1) -> Cuckoo.ClassStubFunction<([ValidatableForm]), FormsValidationResult> where M1.MatchedType == [ValidatableForm] {
+            let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockScannerInteractorImpl.self,
+                method: "validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func startCrossDevicePresentation<M1: Cuckoo.Matchable>(scanResult p0: M1) -> Cuckoo.ClassStubFunction<(String), PresentationSessionCoordinator> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockScannerInteractorImpl.self,
+                method: "startCrossDevicePresentation(scanResult p0: String) -> PresentationSessionCoordinator",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    struct __VerificationProxy_ScannerInteractorImpl: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func validateForm<M1: Cuckoo.Matchable>(form p0: M1) -> Cuckoo.__DoNotUse<(ValidatableForm), FormValidationResult> where M1.MatchedType == ValidatableForm {
+            let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "validateForm(form p0: ValidatableForm) async -> FormValidationResult",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func validateForms<M1: Cuckoo.Matchable>(forms p0: M1) -> Cuckoo.__DoNotUse<([ValidatableForm]), FormsValidationResult> where M1.MatchedType == [ValidatableForm] {
+            let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func startCrossDevicePresentation<M1: Cuckoo.Matchable>(scanResult p0: M1) -> Cuckoo.__DoNotUse<(String), PresentationSessionCoordinator> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "startCrossDevicePresentation(scanResult p0: String) -> PresentationSessionCoordinator",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+class ScannerInteractorImplStub:ScannerInteractorImpl {
+
+
+    
+    override func validateForm(form p0: ValidatableForm) async -> FormValidationResult {
+        return DefaultValueRegistry.defaultValue(for: (FormValidationResult).self)
+    }
+    
+    override func validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult {
+        return DefaultValueRegistry.defaultValue(for: (FormsValidationResult).self)
+    }
+    
+    override func startCrossDevicePresentation(scanResult p0: String) -> PresentationSessionCoordinator {
+        return DefaultValueRegistry.defaultValue(for: (PresentationSessionCoordinator).self)
+    }
+}
+
+
+
+
 // MARK: - Mocks generated from file: 'Modules/feature-common/Sources/UI/Biometry/BiometryView.swift'
 
 import Cuckoo
@@ -5233,23 +5538,23 @@ public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock {
     }
 
     
-    public func validateForm(form p0: ValidatableForm) -> AnyPublisher<FormValidationResult, Never> {
-        return cuckoo_manager.call(
-            "validateForm(form p0: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>",
+    public func validateForm(form p0: ValidatableForm) async -> FormValidationResult {
+        return await cuckoo_manager.call(
+            "validateForm(form p0: ValidatableForm) async -> FormValidationResult",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.validateForm(form: p0)
+            defaultCall: await __defaultImplStub!.validateForm(form: p0)
         )
     }
     
-    public func validateForms(forms p0: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never> {
-        return cuckoo_manager.call(
-            "validateForms(forms p0: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>",
+    public func validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult {
+        return await cuckoo_manager.call(
+            "validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.validateForms(forms: p0)
+            defaultCall: await __defaultImplStub!.validateForms(forms: p0)
         )
     }
 
@@ -5260,18 +5565,18 @@ public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock {
             self.cuckoo_manager = manager
         }
         
-        func validateForm<M1: Cuckoo.Matchable>(form p0: M1) -> Cuckoo.ProtocolStubFunction<(ValidatableForm), AnyPublisher<FormValidationResult, Never>> where M1.MatchedType == ValidatableForm {
+        func validateForm<M1: Cuckoo.Matchable>(form p0: M1) -> Cuckoo.ProtocolStubFunction<(ValidatableForm), FormValidationResult> where M1.MatchedType == ValidatableForm {
             let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockFormValidator.self,
-                method: "validateForm(form p0: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>",
+                method: "validateForm(form p0: ValidatableForm) async -> FormValidationResult",
                 parameterMatchers: matchers
             ))
         }
         
-        func validateForms<M1: Cuckoo.Matchable>(forms p0: M1) -> Cuckoo.ProtocolStubFunction<([ValidatableForm]), AnyPublisher<FormsValidationResult, Never>> where M1.MatchedType == [ValidatableForm] {
+        func validateForms<M1: Cuckoo.Matchable>(forms p0: M1) -> Cuckoo.ProtocolStubFunction<([ValidatableForm]), FormsValidationResult> where M1.MatchedType == [ValidatableForm] {
             let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockFormValidator.self,
-                method: "validateForms(forms p0: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>",
+                method: "validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult",
                 parameterMatchers: matchers
             ))
         }
@@ -5290,10 +5595,10 @@ public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func validateForm<M1: Cuckoo.Matchable>(form p0: M1) -> Cuckoo.__DoNotUse<(ValidatableForm), AnyPublisher<FormValidationResult, Never>> where M1.MatchedType == ValidatableForm {
+        func validateForm<M1: Cuckoo.Matchable>(form p0: M1) -> Cuckoo.__DoNotUse<(ValidatableForm), FormValidationResult> where M1.MatchedType == ValidatableForm {
             let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "validateForm(form p0: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>",
+                "validateForm(form p0: ValidatableForm) async -> FormValidationResult",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -5302,10 +5607,10 @@ public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock {
         
         
         @discardableResult
-        func validateForms<M1: Cuckoo.Matchable>(forms p0: M1) -> Cuckoo.__DoNotUse<([ValidatableForm]), AnyPublisher<FormsValidationResult, Never>> where M1.MatchedType == [ValidatableForm] {
+        func validateForms<M1: Cuckoo.Matchable>(forms p0: M1) -> Cuckoo.__DoNotUse<([ValidatableForm]), FormsValidationResult> where M1.MatchedType == [ValidatableForm] {
             let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "validateForms(forms p0: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>",
+                "validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -5318,12 +5623,12 @@ public class FormValidatorStub:FormValidator {
 
 
     
-    public func validateForm(form p0: ValidatableForm) -> AnyPublisher<FormValidationResult, Never> {
-        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<FormValidationResult, Never>).self)
+    public func validateForm(form p0: ValidatableForm) async -> FormValidationResult {
+        return DefaultValueRegistry.defaultValue(for: (FormValidationResult).self)
     }
     
-    public func validateForms(forms p0: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never> {
-        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<FormsValidationResult, Never>).self)
+    public func validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult {
+        return DefaultValueRegistry.defaultValue(for: (FormsValidationResult).self)
     }
 }
 
@@ -5345,23 +5650,23 @@ public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.Protoc
     }
 
     
-    public func validateForm(form p0: ValidatableForm) -> AnyPublisher<FormValidationResult, Never> {
-        return cuckoo_manager.call(
-            "validateForm(form p0: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>",
+    public func validateForm(form p0: ValidatableForm) async -> FormValidationResult {
+        return await cuckoo_manager.call(
+            "validateForm(form p0: ValidatableForm) async -> FormValidationResult",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.validateForm(form: p0)
+            defaultCall: await __defaultImplStub!.validateForm(form: p0)
         )
     }
     
-    public func validateForms(forms p0: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never> {
-        return cuckoo_manager.call(
-            "validateForms(forms p0: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>",
+    public func validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult {
+        return await cuckoo_manager.call(
+            "validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.validateForms(forms: p0)
+            defaultCall: await __defaultImplStub!.validateForms(forms: p0)
         )
     }
 
@@ -5372,18 +5677,18 @@ public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.Protoc
             self.cuckoo_manager = manager
         }
         
-        func validateForm<M1: Cuckoo.Matchable>(form p0: M1) -> Cuckoo.ProtocolStubFunction<(ValidatableForm), AnyPublisher<FormValidationResult, Never>> where M1.MatchedType == ValidatableForm {
+        func validateForm<M1: Cuckoo.Matchable>(form p0: M1) -> Cuckoo.ProtocolStubFunction<(ValidatableForm), FormValidationResult> where M1.MatchedType == ValidatableForm {
             let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockFormValidatorInteractor.self,
-                method: "validateForm(form p0: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>",
+                method: "validateForm(form p0: ValidatableForm) async -> FormValidationResult",
                 parameterMatchers: matchers
             ))
         }
         
-        func validateForms<M1: Cuckoo.Matchable>(forms p0: M1) -> Cuckoo.ProtocolStubFunction<([ValidatableForm]), AnyPublisher<FormsValidationResult, Never>> where M1.MatchedType == [ValidatableForm] {
+        func validateForms<M1: Cuckoo.Matchable>(forms p0: M1) -> Cuckoo.ProtocolStubFunction<([ValidatableForm]), FormsValidationResult> where M1.MatchedType == [ValidatableForm] {
             let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockFormValidatorInteractor.self,
-                method: "validateForms(forms p0: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>",
+                method: "validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult",
                 parameterMatchers: matchers
             ))
         }
@@ -5402,10 +5707,10 @@ public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.Protoc
         
         
         @discardableResult
-        func validateForm<M1: Cuckoo.Matchable>(form p0: M1) -> Cuckoo.__DoNotUse<(ValidatableForm), AnyPublisher<FormValidationResult, Never>> where M1.MatchedType == ValidatableForm {
+        func validateForm<M1: Cuckoo.Matchable>(form p0: M1) -> Cuckoo.__DoNotUse<(ValidatableForm), FormValidationResult> where M1.MatchedType == ValidatableForm {
             let matchers: [Cuckoo.ParameterMatcher<(ValidatableForm)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "validateForm(form p0: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>",
+                "validateForm(form p0: ValidatableForm) async -> FormValidationResult",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -5414,10 +5719,10 @@ public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.Protoc
         
         
         @discardableResult
-        func validateForms<M1: Cuckoo.Matchable>(forms p0: M1) -> Cuckoo.__DoNotUse<([ValidatableForm]), AnyPublisher<FormsValidationResult, Never>> where M1.MatchedType == [ValidatableForm] {
+        func validateForms<M1: Cuckoo.Matchable>(forms p0: M1) -> Cuckoo.__DoNotUse<([ValidatableForm]), FormsValidationResult> where M1.MatchedType == [ValidatableForm] {
             let matchers: [Cuckoo.ParameterMatcher<([ValidatableForm])>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "validateForms(forms p0: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>",
+                "validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -5430,12 +5735,12 @@ public class FormValidatorInteractorStub:FormValidatorInteractor {
 
 
     
-    public func validateForm(form p0: ValidatableForm) -> AnyPublisher<FormValidationResult, Never> {
-        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<FormValidationResult, Never>).self)
+    public func validateForm(form p0: ValidatableForm) async -> FormValidationResult {
+        return DefaultValueRegistry.defaultValue(for: (FormValidationResult).self)
     }
     
-    public func validateForms(forms p0: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never> {
-        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<FormsValidationResult, Never>).self)
+    public func validateForms(forms p0: [ValidatableForm]) async -> FormsValidationResult {
+        return DefaultValueRegistry.defaultValue(for: (FormsValidationResult).self)
     }
 }
 

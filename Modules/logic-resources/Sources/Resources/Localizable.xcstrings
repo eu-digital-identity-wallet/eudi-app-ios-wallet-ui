@@ -1181,6 +1181,17 @@
         }
       }
     },
+    "qr_scan_informative_text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Having trouble scanning the QR Code?\nPlease try an alternative way"
+          }
+        }
+      }
+    },
     "quick_pin_confirm_button" : {
       "extractionState" : "manual",
       "localizations" : {

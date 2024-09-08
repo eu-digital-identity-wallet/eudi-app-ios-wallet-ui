@@ -16,12 +16,17 @@
 import logic_ui
 import logic_core
 import logic_resources
+import logic_business
 
 @Copyable
 struct ScannerState: ViewState {
 
   let config: ScannerUiConfig
   let error: LocalizableString.Key?
+  let showInformativeText: Bool
+  let informativeTest: LocalizableString.Key
+  let allowScanning: Bool
+  let failedScanAttempts: Int
 
   var title: LocalizableString.Key {
     return config.flow.title
@@ -32,30 +37,85 @@ struct ScannerState: ViewState {
   }
 }
 
+private extension ScannerState {
+  static let MAX_ALLOWED_FAILED_SCANS = 5
+}
+
 final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerState> {
 
-  private let walletKitController: WalletKitController
+  private let interactor: ScannerInteractor
 
   init(
     config: any UIConfigType,
     router: Router,
-    walletKitController: WalletKitController
+    interactor: ScannerInteractor
   ) {
     guard let config = config as? ScannerUiConfig else {
       fatalError("ScannerViewModel:: Invalid configuraton")
     }
-    self.walletKitController = walletKitController
-    super.init(router: router, initialState: .init(config: config, error: nil))
+    self.interactor = interactor
+    super.init(
+      router: router,
+      initialState: .init(
+        config: config,
+        error: nil,
+        showInformativeText: false,
+        informativeTest: config.flow.informativeText,
+        allowScanning: true,
+        failedScanAttempts: 0
+      )
+    )
   }
 
   func onResult(scanResult: String) {
+    guard viewState.allowScanning else { return }
+    setState { $0.copy(allowScanning: false) }
+    Task {
+
+      let isValid = await interactor.validateForm(
+        form: .init(
+          inputs: [[Rule.ValidateUrl(errorMessage: "")]: scanResult]
+        )
+      ).isValid
+
+      if isValid {
+        self.onScanResultValidated(scanResult: scanResult)
+      } else {
+
+        let updatedFailedAttempts = viewState.failedScanAttempts + 1
+        let maxFailedAttemptsExceeded = updatedFailedAttempts > ScannerState.MAX_ALLOWED_FAILED_SCANS
+
+        setState {
+          $0.copy(
+            showInformativeText: maxFailedAttemptsExceeded,
+            allowScanning: true,
+            failedScanAttempts: updatedFailedAttempts
+          )
+        }
+      }
+    }
+  }
+
+  func onDismiss() {
+    router.pop()
+  }
+
+  func onError() {
+    setState {
+      $0.copy(error: .cameraError)
+    }
+  }
+
+  func onErrorClick() {
+    UIApplication.shared.openAppSettings()
+  }
+
+  private func onScanResultValidated(scanResult: String) {
     switch viewState.config.flow {
     case .presentation:
       router.push(
         with: .presentationRequest(
-          presentationCoordinator: walletKitController.startCrossDevicePresentation(
-            urlString: scanResult
-          ),
+          presentationCoordinator: interactor.startCrossDevicePresentation(scanResult: scanResult),
           originator: .dashboard
         )
       )
@@ -76,19 +136,5 @@ final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerS
         )
       )
     }
-  }
-
-  func onDismiss() {
-    router.pop()
-  }
-
-  func onError() {
-    setState {
-      $0.copy(error: .cameraError)
-    }
-  }
-
-  func onErrorClick() {
-    UIApplication.shared.openAppSettings()
   }
 }
