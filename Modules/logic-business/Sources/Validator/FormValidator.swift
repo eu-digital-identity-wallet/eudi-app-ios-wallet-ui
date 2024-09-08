@@ -19,56 +19,45 @@ import Peppermint
 import libPhoneNumber
 
 public protocol FormValidator {
-  func validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
-  func validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
+  func validateForm(form: ValidatableForm) async -> FormValidationResult
+  func validateForms(forms: [ValidatableForm]) async -> FormsValidationResult
 }
 
 final class FormValidatorImpl: FormValidator {
 
-  public func validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never> {
-    return Deferred {
-      Future { [weak self] promise in
-        guard let self = self else { return }
-        var foundError = false
-      outerLoop: for input in form.inputs {
+  public func validateForm(form: ValidatableForm) async -> FormValidationResult {
+    var foundError = false
+    for input in form.inputs {
+      let rules = input.key
+      let value = input.value
+      for rule in rules {
+        if let result = self.validateRule(rule: rule, value: value) {
+          foundError = true
+          return result
+        }
+      }
+    }
+    if !foundError {
+      return FormValidationResult(isValid: true)
+    }
+  }
+
+  public func validateForms(forms: [ValidatableForm]) async -> FormsValidationResult {
+    var errors: [String] = []
+    var isValid: Bool = true
+    for form in forms {
+      for input in form.inputs {
         let rules = input.key
         let value = input.value
         for rule in rules {
           if let result = self.validateRule(rule: rule, value: value) {
-            foundError = true
-            promise(.success(result))
-            break outerLoop
+            isValid = false
+            errors.append(result.message)
           }
         }
       }
-        if !foundError {
-          promise(.success(FormValidationResult(isValid: true)))
-        }
-      }
-    }.eraseToAnyPublisher()
-  }
-
-  public func validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never> {
-    return Deferred {
-      Future { [weak self] promise in
-        guard let self = self else { return }
-        var errors: [String] = []
-        var isValid: Bool = true
-        for form in forms {
-          for input in form.inputs {
-            let rules = input.key
-            let value = input.value
-            for rule in rules {
-              if let result = self.validateRule(rule: rule, value: value) {
-                isValid = false
-                errors.append(result.message)
-              }
-            }
-          }
-        }
-        promise(.success(FormsValidationResult(isValid: isValid, messages: errors)))
-      }
-    }.eraseToAnyPublisher()
+    }
+    return FormsValidationResult(isValid: isValid, messages: errors)
   }
 
   private func validateRule(rule: Rule, value: String) -> FormValidationResult? {
@@ -115,9 +104,28 @@ final class FormValidatorImpl: FormValidator {
 
     case .ValidateStringLengths(let lengths, let errorMessage):
       return checkValidationResult(isValid: isLenghtsRangeIncluded(value: value, lenghts: lengths), errorMessage: errorMessage)
+
     case .ValidateNoWhiteSpaces(errorMessage: let errorMessage):
       return checkValidationResult(isValid: !hasWhiteSpaces(value: value), errorMessage: errorMessage)
+
+    case .ValidateUrl(errorMessage: let errorMessage):
+      return checkValidationResult(isValid: isUrlValid(value: value), errorMessage: errorMessage)
     }
+  }
+
+  private func isUrlValid(value: String) -> Bool {
+    guard
+      !value.isEmpty,
+      let decodedString = value.removingPercentEncoding,
+      let url = URL(string: decodedString),
+      let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
+      components.scheme?.isEmpty == false,
+      components.host?.isEmpty == false,
+      components.query?.isEmpty == false
+    else {
+      return false
+    }
+    return true
   }
 
   private func hasWhiteSpaces(value: String) -> Bool {
@@ -248,8 +256,8 @@ public struct FormsValidationResult: Equatable {
 }
 
 public protocol FormValidatorInteractor {
-  func validateForm(form: ValidatableForm) -> AnyPublisher<FormValidationResult, Never>
-  func validateForms(forms: [ValidatableForm]) -> AnyPublisher<FormsValidationResult, Never>
+  func validateForm(form: ValidatableForm) async -> FormValidationResult
+  func validateForms(forms: [ValidatableForm]) async -> FormsValidationResult
 }
 
 public enum Rule: Hashable {
@@ -268,4 +276,5 @@ public enum Rule: Hashable {
   case ValidateMaximumAmount(max: Int, errorMessage: String)
   case ValidateStringLengths(lengths: [Int], errorMessage: String)
   case ValidateNoWhiteSpaces(errorMessage: String)
+  case ValidateUrl(errorMessage: String)
 }

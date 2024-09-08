@@ -31,429 +31,429 @@ final class TestFormValidator: XCTestCase {
     validationSuccess = FormValidationResult(isValid: true)
   }
   
-  func testValidateNotEmptyRule(){
+  func testValidateNotEmptyRule() async {
     let rules = [Rule.ValidateNotEmpty(errorMessage: plainErrorMessage)]
-    validateForm(
+    await validateForm(
       rules,
       "",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "test",
       validationSuccess
     )
   }
   
-  func testValidateEmailRule(){
+  func testValidateEmailRule() async {
     let rules = [Rule.ValidateEmail(errorMessage: plainErrorMessage)]
-    validateForm(
+    await validateForm(
       rules,
       "test@test.com",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       rules,
       "test@",
       validationError
     )
   }
   
-  func testValidatePhoneNumberRule(){
+  func testValidatePhoneNumberRule() async {
     let greekPhoneRule = [Rule.ValidatePhoneNumber(countryCode: "GR", errorMessage: plainErrorMessage)]
     let usPhoneRule = [Rule.ValidatePhoneNumber(countryCode: "US", errorMessage: plainErrorMessage)]
-    validateForm(
+    await validateForm(
       greekPhoneRule,
       "1111111111",
       validationError
     )
-    validateForm(
+    await validateForm(
       greekPhoneRule,
       "15223433333",
       validationError
     )
-    validateForm(
+    await validateForm(
       greekPhoneRule,
       "6941111111",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       usPhoneRule,
       "6941111111",
       validationError
     )
-    validateForm(
+    await validateForm(
       usPhoneRule,
       "6102458772",
       validationSuccess
     )
   }
   
-  func testValidateStringMaxLengthRule(){
+  func testValidateStringMaxLengthRule() async {
     let rules = [Rule.ValidateStringMaxLength(length: 10, errorMessage: plainErrorMessage)]
-    validateForm(
+    await validateForm(
       rules,
       "aaaaaaaaaaa",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "aaaaaaaaaaaaaaa",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "aaaaaaaaa",
       validationSuccess
     )
   }
   
-  func testValidateStringMinLengthRule(){
+  func testValidateStringMinLengthRule() async {
     let rules = [Rule.ValidateStringMinLength(length: 5, errorMessage: plainErrorMessage)]
-    validateForm(
+    await validateForm(
       rules,
       "aaaa",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "a",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "aaaaa",
       validationSuccess
     )
   }
   
-  func testValidateRegexRule(){
+  func testValidateRegexRule() async {
     let atLeastOneCapitalLetterRule = [Rule.ValidateRegex(regex: ".*[A-Z].*", errorMessage: plainErrorMessage)]
     let atLeastOneDigitRule = [Rule.ValidateRegex(regex: ".*(\\d).*", errorMessage: plainErrorMessage)]
     let atLeastOneSpecialCharRule = [Rule.ValidateRegex(regex: ".*[^a-zA-Z0-9].*", errorMessage: plainErrorMessage)]
     let onlyLettersNumbersSpaceAndDashesRule = [Rule.ValidateRegex(regex: "^[a-zA-Z0-9-\\s]+$", errorMessage: plainErrorMessage)]
     
-    validateForm(
+    await validateForm(
       atLeastOneCapitalLetterRule,
       "test",
       validationError
     )
-    validateForm(
+    await validateForm(
       atLeastOneCapitalLetterRule,
       "Test",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       atLeastOneDigitRule,
       "test",
       validationError
     )
-    validateForm(
+    await validateForm(
       atLeastOneDigitRule,
       "test1",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       atLeastOneSpecialCharRule,
       "test",
       validationError
     )
-    validateForm(
+    await validateForm(
       atLeastOneSpecialCharRule,
       "test1@",
       validationSuccess
     )
     
-    validateForm(
+    await validateForm(
       onlyLettersNumbersSpaceAndDashesRule,
       "NL86INGB7482085033",
       validationSuccess
     )
     
-    validateForm(
+    await validateForm(
       onlyLettersNumbersSpaceAndDashesRule,
       "CY82947517727631922532755722",
       validationSuccess
     )
     
-    validateForm(
+    await validateForm(
       onlyLettersNumbersSpaceAndDashesRule,
       "GB57BARC20040114216837",
       validationSuccess
     )
     
-    validateForm(
+    await validateForm(
       onlyLettersNumbersSpaceAndDashesRule,
       "123456789",
       validationSuccess
     )
     
-    validateForm(
+    await validateForm(
       onlyLettersNumbersSpaceAndDashesRule,
       "327821737812367126712",
       validationSuccess
     )
     
-    validateForm(
+    await validateForm(
       onlyLettersNumbersSpaceAndDashesRule,
       "3278 2173781 23671 26712",
       validationSuccess
     )
     
-    validateForm(
+    await validateForm(
       onlyLettersNumbersSpaceAndDashesRule,
       "3278-2173781-23671-26712",
       validationSuccess
     )
     
-    validateForm(
+    await validateForm(
       onlyLettersNumbersSpaceAndDashesRule,
       "3278-2173781 23671-26712",
       validationSuccess
     )
     
-    validateForm(
+    await validateForm(
       onlyLettersNumbersSpaceAndDashesRule,
       "3278-2173781&23671-26712",
       validationError
     )
     
-    validateForm(
+    await validateForm(
       onlyLettersNumbersSpaceAndDashesRule,
       "3278-21£73781£23671-26712",
       validationError
     )
   }
   
-  func testValidateStringRangeRule(){
+  func testValidateStringRangeRule() async {
     let rules = [Rule.ValidateStringRange(minLength: 0, maxLength: 10, errorMessage: plainErrorMessage)]
-    validateForm(
+    await validateForm(
       rules,
       "aaaaaaaaaaa",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "aaaaaaaaaa",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       rules,
       "",
       validationSuccess
     )
   }
   
-  func testValidateStringMatchRule() {
+  func testValidateStringMatchRule() async {
     let isNotCaseSensitiveRule = [Rule.ValidateStringMatch(stringToMatch: "test", errorMessage: plainErrorMessage)]
     let isCaseSensitiveRule = [Rule.ValidateStringMatch(stringToMatch: "test", errorMessage: plainErrorMessage, isCaseSensitive: true)]
-    validateForm(
+    await validateForm(
       isNotCaseSensitiveRule,
       "testt",
       validationError
     )
-    validateForm(
+    await validateForm(
       isNotCaseSensitiveRule,
       "t!@#$",
       validationError
     )
-    validateForm(
+    await validateForm(
       isNotCaseSensitiveRule,
       "",
       validationError
     )
-    validateForm(
+    await validateForm(
       isNotCaseSensitiveRule,
       "TEST",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       isCaseSensitiveRule,
       "TEST",
       validationError
     )
-    validateForm(
+    await validateForm(
       isCaseSensitiveRule,
       "",
       validationError
     )
-    validateForm(
+    await validateForm(
       isCaseSensitiveRule,
       "test",
       validationSuccess
     )
   }
   
-  func testValidateStringNotMatchRule() {
+  func testValidateStringNotMatchRule() async {
     let isNotCaseSensitiveRule = [Rule.ValidateStringNotMatch(stringToMatch: "test", errorMessage: plainErrorMessage)]
     let isCaseSensitiveRule = [Rule.ValidateStringNotMatch(stringToMatch: "test", errorMessage: plainErrorMessage, isCaseSensitive: true)]
-    validateForm(
+    await validateForm(
       isNotCaseSensitiveRule,
       "test",
       validationError
     )
-    validateForm(
+    await validateForm(
       isNotCaseSensitiveRule,
       "TEST",
       validationError
     )
-    validateForm(
+    await validateForm(
       isNotCaseSensitiveRule,
       "",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       isNotCaseSensitiveRule,
       "testt",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       isCaseSensitiveRule,
       "test",
       validationError
     )
-    validateForm(
+    await validateForm(
       isCaseSensitiveRule,
       "Testss",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       isCaseSensitiveRule,
       "TEST",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       isCaseSensitiveRule,
       "",
       validationSuccess
     )
   }
   
-  func testValidateDuplicateCharacterNotInConsecutiveOrderRule() {
+  func testValidateDuplicateCharacterNotInConsecutiveOrderRule() async {
     let maxTimesOfConsecutiveOrder2Rule = [Rule.ValidateDuplicateCharacterNotInConsecutiveOrder(maxTimesOfConsecutiveOrder: 2, errorMessage: plainErrorMessage)]
     let maxTimesOfConsecutiveOrder4Rule = [Rule.ValidateDuplicateCharacterNotInConsecutiveOrder(maxTimesOfConsecutiveOrder: 4, errorMessage: plainErrorMessage)]
-    validateForm(
+    await validateForm(
       maxTimesOfConsecutiveOrder2Rule,
       "1313",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       maxTimesOfConsecutiveOrder2Rule,
       "4356754",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       maxTimesOfConsecutiveOrder2Rule,
       "0191",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       maxTimesOfConsecutiveOrder2Rule,
       "1225",
       validationError
     )
-    validateForm(
+    await validateForm(
       maxTimesOfConsecutiveOrder2Rule,
       "2332",
       validationError
     )
-    validateForm(
+    await validateForm(
       maxTimesOfConsecutiveOrder2Rule,
       "454545454545454555444455455",
       validationError
     )
-    validateForm(
+    await validateForm(
       maxTimesOfConsecutiveOrder2Rule,
       "0024",
       validationError
     )
-    validateForm(
+    await validateForm(
       maxTimesOfConsecutiveOrder4Rule,
       "0024",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       maxTimesOfConsecutiveOrder4Rule,
       "0004",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       maxTimesOfConsecutiveOrder4Rule,
       "0000",
       validationError
     )
-    validateForm(
+    await validateForm(
       maxTimesOfConsecutiveOrder4Rule,
       "35523456337777",
       validationError
     )
   }
   
-  func testValidateNumericNotInConsecutiveSequenceOrderRule() {
+  func testValidateNumericNotInConsecutiveSequenceOrderRule() async {
     let rules = [Rule.ValidateNumericNotInConsecutiveSequenceOrder(length: 4, errorMessage: plainErrorMessage)]
-    validateForm(
+    await validateForm(
       rules,
       "1234",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "4321",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "9876",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "3210",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "0123",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "1235",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       rules,
       "9875",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       rules,
       "0124",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       rules,
       "0923",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       rules,
       "8834834835939534",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       rules,
       "TEST",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       rules,
       "",
       validationSuccess
     )
   }
   
-  func testValidateMultipleForms() {
+  func testValidateMultipleForms() async {
     let forms = [
       ValidatableForm(
         inputs : [
@@ -530,7 +530,7 @@ final class TestFormValidator: XCTestCase {
       )
     ]
     
-    let result = try? formValidator.validateForms(forms: forms).record().next().get()
+    let result = await formValidator.validateForms(forms: forms)
     XCTAssertEqual(FormsValidationResult(
       isValid: false,
       messages: [
@@ -546,94 +546,164 @@ final class TestFormValidator: XCTestCase {
     ), result)
   }
   
-  func testValidateMaximumAmountRule() {
+  func testValidateMaximumAmountRule() async {
     let rules = [Rule.ValidateMaximumAmount(max: 5, errorMessage: plainErrorMessage)]
-    validateForm(
+    await validateForm(
       rules,
       "6",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "12",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "malformed",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "5",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       rules,
       "2",
       validationSuccess
     )
   }
   
-  func testValidateMinimumAmountRule() {
+  func testValidateMinimumAmountRule() async {
     let rules = [Rule.ValidateMinimumAmount(min: 2, errorMessage: plainErrorMessage)]
-    validateForm(
+    await validateForm(
       rules,
       "0",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "1",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "malformed",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "2",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       rules,
       "5",
       validationSuccess
     )
   }
   
-  func testValidateNoWhiteSpaces() {
+  func testValidateNoWhiteSpaces() async {
     let rules = [Rule.ValidateNoWhiteSpaces(errorMessage: plainErrorMessage)]
-    validateForm(
+    await validateForm(
       rules,
       " ",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       " test",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "tes t",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "test ",
       validationError
     )
-    validateForm(
+    await validateForm(
       rules,
       "test",
       validationSuccess
     )
-    validateForm(
+    await validateForm(
       rules,
       "test1!@#$1",
+      validationSuccess
+    )
+  }
+  
+  func testValidateUrl() async {
+    let rules = [Rule.ValidateUrl(errorMessage: plainErrorMessage)]
+    
+    await validateForm(
+      rules,
+      "",
+      validationError
+    )
+    await validateForm(
+      rules,
+      "invalid_url",
+      validationError
+    )
+    await validateForm(
+      rules,
+      "123456789",
+      validationError
+    )
+    await validateForm(
+      rules,
+      "http://example.com",
+      validationError
+    )
+    await validateForm(
+      rules,
+      "https://notarealproject.com/otherpath",
+      validationError
+    )
+    await validateForm(
+      rules,
+      "https://notarealproject.com/bad_query_param?",
+      validationError
+    )
+    await validateForm(
+      rules,
+      "ftp://projectsite.com",
+      validationError
+    )
+    await validateForm(
+      rules,
+      "mocked-scheme://mocked-host?mocked-query-param=some-value",
+      validationSuccess
+    )
+    await validateForm(
+      rules,
+      "mocked.scheme://mocked.host?mocked.query.param=some.value",
+      validationSuccess
+    )
+    await validateForm(
+      rules,
+      "eudi-openid4vp%3A%2F%2Fdev.verifier-backend.eudiw.dev%3Fclient_id%3Ddev.verifier-backend.eudiw.dev%26request_uri%3Dhttps%3A%2F%2Fdev.verifier-backend.eudiw.dev%2Fwallet%2Frequest.jwt%2F1234",
+      validationSuccess
+    )
+    await validateForm(
+      rules,
+      "openid-credential-offer://credential_offer?credential_offer=%7B%22credential_issuer%22:%20%22https://dev.issuer.eudiw.dev%22%2C%20%22credential_configuration_ids%22:%20%5B%22eu.europa.ec.eudi.pid_mdoc%22%5D%2C%20%22grants%22:%20%7B%22urn:ietf:params:oauth:grant-type:pre-authorized_code%22:%20%7B%22pre-authorized_code%22:%20%22some_code%22%2C%20%22tx_code%22:%20%7B%22length%22:%205%2C%20%22input_mode%22:%20%22numeric%22%2C%20%22description%22:%20%22Please%20provide%20the%20one-time%20code.%22%7D%7D%7D%7D",
+      validationSuccess
+    )
+    await validateForm(
+      rules,
+      "eudi-openid4vp://dev.verifier-backend.eudiw.dev?client_id=dev.verifier-backend.eudiw.dev&request_uri=https://dev.verifier-backend.eudiw.dev/wallet/request.jwt/1234",
+      validationSuccess
+    )
+    await validateForm(
+      rules,
+      "openid-credential-offer://credential_offer?credential_offer={\"credential_issuer\": \"https://dev.issuer.eudiw.dev\", \"credential_configuration_ids\": [\"eu.europa.ec.eudi.pid_mdoc\"], \"grants\": {\"urn:ietf:params:oauth:grant-type:pre-authorized_code\": {\"pre-authorized_code\": \"some_code\", \"tx_code\": {\"length\": 5, \"input_mode\": \"numeric\", \"description\": \"Please provide the one-time code.\"}}}}",
       validationSuccess
     )
   }
@@ -642,8 +712,8 @@ final class TestFormValidator: XCTestCase {
     _ rules: [Rule],
     _ value: String,
     _ validationResult: FormValidationResult
-  ) {
-    let result = try? formValidator.validateForm(form: ValidatableForm(inputs: [rules : value])).record().next().get()
+  ) async {
+    let result = await formValidator.validateForm(form: ValidatableForm(inputs: [rules : value]))
     XCTAssertEqual(validationResult, result)
   }
 }
