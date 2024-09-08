@@ -232,7 +232,7 @@ final class RouterHostImpl: RouterHost {
           with: self,
           and: config,
           also: DIGraph.resolver.force(
-            WalletKitController.self
+            ScannerInteractor.self
           )
         )
       case .credentialOfferRequest(let config):

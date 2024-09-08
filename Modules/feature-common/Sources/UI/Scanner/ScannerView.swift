@@ -29,12 +29,12 @@ public struct ScannerView<Router: RouterHost>: View {
   public init(
     with router: Router,
     and config: any UIConfigType,
-    also walletKitController: WalletKitController
+    also interactor: ScannerInteractor
   ) {
     self.viewmodel = .init(
       config: config,
       router: router,
-      walletKitController: walletKitController
+      interactor: interactor
     )
     self.cameraSurfaceSize = getScreenRect().width - (Theme.shared.dimension.padding * 2)
   }

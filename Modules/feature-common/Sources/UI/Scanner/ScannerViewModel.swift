@@ -34,17 +34,17 @@ struct ScannerState: ViewState {
 
 final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerState> {
 
-  private let walletKitController: WalletKitController
+  private let interactor: ScannerInteractor
 
   init(
     config: any UIConfigType,
     router: Router,
-    walletKitController: WalletKitController
+    interactor: ScannerInteractor
   ) {
     guard let config = config as? ScannerUiConfig else {
       fatalError("ScannerViewModel:: Invalid configuraton")
     }
-    self.walletKitController = walletKitController
+    self.interactor = interactor
     super.init(router: router, initialState: .init(config: config, error: nil))
   }
 
@@ -53,9 +53,7 @@ final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerS
     case .presentation:
       router.push(
         with: .presentationRequest(
-          presentationCoordinator: walletKitController.startCrossDevicePresentation(
-            urlString: scanResult
-          ),
+          presentationCoordinator: interactor.startCrossDevicePresentation(scanResult: scanResult),
           originator: .dashboard
         )
       )
