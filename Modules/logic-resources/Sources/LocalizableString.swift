@@ -285,6 +285,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "deferred_document_issued_modal_caption")
     case .retrieveLogs:
       bundle.localizedString(forKey: "retrieve_logs")
+    case .qrScanInformativeText:
+      bundle.localizedString(forKey: "qr_scan_informative_text")
     }
   }
 
@@ -420,6 +422,7 @@ public extension LocalizableString {
     case deferredDocumentsIssuedModalTitle
     case defferedDocumentsIssuedModalCaption
     case retrieveLogs
+    case qrScanInformativeText
   }
 }
 

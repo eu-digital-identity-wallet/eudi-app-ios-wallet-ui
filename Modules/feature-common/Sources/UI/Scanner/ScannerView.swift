@@ -57,7 +57,12 @@ public struct ScannerView<Router: RouterHost>: View {
 
       ZStack {
 
-        CodeScannerView(codeTypes: [.qr]) { response in
+        CodeScannerView(
+          codeTypes: [.qr],
+          scanMode: .continuous,
+          scanInterval: 1.0,
+          shouldVibrateOnSuccess: false
+        ) { response in
           switch response {
           case .success(let result):
             viewmodel.onResult(scanResult: result.string)
@@ -90,6 +95,29 @@ public struct ScannerView<Router: RouterHost>: View {
         }
       }
       .frame(maxWidth: .infinity, maxHeight: cameraSurfaceSize)
+
+      VSpacer.large()
+
+      ZStack {
+        HStack(spacing: SPACING_MEDIUM) {
+
+          Theme.shared.image.errorIndicator
+            .renderingMode(.template)
+            .foregroundStyle(Theme.shared.color.textPrimaryDark)
+
+          Text(viewmodel.viewState.informativeTest)
+            .typography(Theme.shared.font.bodyMedium)
+            .foregroundStyle(Theme.shared.color.textPrimaryDark)
+            .multilineTextAlignment(.center)
+
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(Theme.shared.color.backgroundDefault)
+        .clipShape(Theme.shared.shape.highCornerRadiusShape)
+        .opacity(viewmodel.viewState.showInformativeText ? 1.0 : 0.0)
+      }
+      .animation(.easeInOut, value: viewmodel.viewState.showInformativeText)
 
       Spacer()
     }
