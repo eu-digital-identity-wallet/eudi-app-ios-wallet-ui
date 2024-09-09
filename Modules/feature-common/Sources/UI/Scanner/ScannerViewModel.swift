@@ -74,7 +74,15 @@ final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerS
 
       let isValid = await interactor.validateForm(
         form: .init(
-          inputs: [[Rule.ValidateUrl(errorMessage: "")]: scanResult]
+          inputs: [
+            [
+              Rule.ValidateUrl(
+                errorMessage: "",
+                shouldValidateHost: false,
+                shouldValidatePath: false
+              )
+            ]: scanResult
+          ]
         )
       ).isValid
 
