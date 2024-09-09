@@ -177,3 +177,11 @@ public extension String {
     return data.base64EncodedString()
   }
 }
+
+public extension String? {
+
+  func isNullOrEmpty() -> Bool {
+    return self == nil || self?.isEmpty == true
+  }
+
+}

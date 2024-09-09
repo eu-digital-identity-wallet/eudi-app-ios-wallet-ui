@@ -108,23 +108,58 @@ final class FormValidatorImpl: FormValidator {
     case .ValidateNoWhiteSpaces(errorMessage: let errorMessage):
       return checkValidationResult(isValid: !hasWhiteSpaces(value: value), errorMessage: errorMessage)
 
-    case .ValidateUrl(errorMessage: let errorMessage):
-      return checkValidationResult(isValid: isUrlValid(value: value), errorMessage: errorMessage)
+    case .ValidateUrl(
+      errorMessage: let errorMessage,
+      shouldValidateHost: let shouldValidateHost,
+      shouldValidateSchema: let shouldValidateSchema,
+      shouldValidateQuery: let shouldValidateQuery,
+      shouldValidatePath: let shouldValidatePath
+    ):
+      return checkValidationResult(
+        isValid: isUrlValid(
+          value: value,
+          shouldValidateHost: shouldValidateHost,
+          shouldValidateSchema: shouldValidateSchema,
+          shouldValidateQuery: shouldValidateQuery,
+          shouldValidatePath: shouldValidatePath
+        ),
+        errorMessage: errorMessage
+      )
     }
   }
 
-  private func isUrlValid(value: String) -> Bool {
+  private func isUrlValid(
+    value: String,
+    shouldValidateHost: Bool,
+    shouldValidateSchema: Bool,
+    shouldValidateQuery: Bool,
+    shouldValidatePath: Bool
+  ) -> Bool {
     guard
       !value.isEmpty,
       let decodedString = value.removingPercentEncoding,
       let url = URL(string: decodedString),
-      let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
-      components.scheme?.isEmpty == false,
-      components.host?.isEmpty == false,
-      components.query?.isEmpty == false
+      let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
     else {
       return false
     }
+
+    if shouldValidateHost && components.host.isNullOrEmpty() {
+      return false
+    }
+
+    if shouldValidateSchema && components.scheme.isNullOrEmpty() {
+      return false
+    }
+
+    if shouldValidateQuery && components.query.isNullOrEmpty() {
+      return false
+    }
+
+    if shouldValidatePath && components.path.isEmpty == true {
+      return false
+    }
+
     return true
   }
 
@@ -276,5 +311,11 @@ public enum Rule: Hashable {
   case ValidateMaximumAmount(max: Int, errorMessage: String)
   case ValidateStringLengths(lengths: [Int], errorMessage: String)
   case ValidateNoWhiteSpaces(errorMessage: String)
-  case ValidateUrl(errorMessage: String)
+  case ValidateUrl(
+    errorMessage: String,
+    shouldValidateHost: Bool = true,
+    shouldValidateSchema: Bool = true,
+    shouldValidateQuery: Bool = true,
+    shouldValidatePath: Bool = true
+  )
 }
