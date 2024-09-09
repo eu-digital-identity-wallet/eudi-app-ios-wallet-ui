@@ -144,15 +144,15 @@ final class FormValidatorImpl: FormValidator {
       return false
     }
 
-    if shouldValidateHost && (components.host == nil || components.host?.isEmpty == true) {
+    if shouldValidateHost && components.host.isNullOrEmpty() {
       return false
     }
 
-    if shouldValidateSchema && (components.scheme == nil || components.scheme?.isEmpty == true) {
+    if shouldValidateSchema && components.scheme.isNullOrEmpty() {
       return false
     }
 
-    if shouldValidateQuery && (components.query == nil || components.query?.isEmpty == true) {
+    if shouldValidateQuery && components.query.isNullOrEmpty() {
       return false
     }
 
