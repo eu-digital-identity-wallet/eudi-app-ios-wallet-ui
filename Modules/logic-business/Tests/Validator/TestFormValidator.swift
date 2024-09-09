@@ -639,7 +639,7 @@ final class TestFormValidator: XCTestCase {
   }
   
   func testValidateUrl() async {
-    let rules = [Rule.ValidateUrl(errorMessage: plainErrorMessage)]
+    let rules = [Rule.ValidateUrl(errorMessage: plainErrorMessage, shouldValidatePath: false)]
     
     await validateForm(
       rules,
@@ -704,6 +704,16 @@ final class TestFormValidator: XCTestCase {
     await validateForm(
       rules,
       "openid-credential-offer://credential_offer?credential_offer={\"credential_issuer\": \"https://dev.issuer.eudiw.dev\", \"credential_configuration_ids\": [\"eu.europa.ec.eudi.pid_mdoc\"], \"grants\": {\"urn:ietf:params:oauth:grant-type:pre-authorized_code\": {\"pre-authorized_code\": \"some_code\", \"tx_code\": {\"length\": 5, \"input_mode\": \"numeric\", \"description\": \"Please provide the one-time code.\"}}}}",
+      validationSuccess
+    )
+    await validateForm(
+      [Rule.ValidateUrl(errorMessage: plainErrorMessage, shouldValidateHost: true, shouldValidatePath: false)],
+      "openid-credential-offer://?credential_offer=%7B%22credential_issuer%22:%20%22https://dev.issuer.eudiw.dev%22%2C%20%22credential_configuration_ids%22:%20%5B%22eu.europa.ec.eudi.pid_mdoc%22%5D%2C%20%22grants%22:%20%7B%22urn:ietf:params:oauth:grant-type:pre-authorized_code%22:%20%7B%22pre-authorized_code%22:%20%22some_code%22%2C%20%22tx_code%22:%20%7B%22length%22:%205%2C%20%22input_mode%22:%20%22numeric%22%2C%20%22description%22:%20%22Please%20provide%20the%20one-time%20code.%22%7D%7D%7D%7D",
+      validationError
+    )
+    await validateForm(
+      [Rule.ValidateUrl(errorMessage: plainErrorMessage, shouldValidatePath: true)],
+      "openid-credential-offer://credential_offer/path1/path2?credential_offer=%7B%22credential_issuer%22:%20%22https://dev.issuer.eudiw.dev%22%2C%20%22credential_configuration_ids%22:%20%5B%22eu.europa.ec.eudi.pid_mdoc%22%5D%2C%20%22grants%22:%20%7B%22urn:ietf:params:oauth:grant-type:pre-authorized_code%22:%20%7B%22pre-authorized_code%22:%20%22some_code%22%2C%20%22tx_code%22:%20%7B%22length%22:%205%2C%20%22input_mode%22:%20%22numeric%22%2C%20%22description%22:%20%22Please%20provide%20the%20one-time%20code.%22%7D%7D%7D%7D",
       validationSuccess
     )
   }
