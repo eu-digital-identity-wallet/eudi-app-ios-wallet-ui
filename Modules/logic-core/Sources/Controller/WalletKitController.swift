@@ -122,11 +122,11 @@ final class WalletKitControllerImpl: WalletKitController {
   }
 
   public func clearDocuments(status: DocumentStatus) async throws {
-    return try await wallet.storage.deleteDocuments(status: status)
+    return try await wallet.deleteDocuments(status: status)
   }
 
   public func deleteDocument(with id: String, status: DocumentStatus) async throws {
-    return try await wallet.storage.deleteDocument(id: id, status: status)
+    return try await wallet.deleteDocument(id: id, status: status)
   }
 
   public func loadDocuments() async throws {
@@ -321,33 +321,30 @@ extension WalletKitController {
       return .image(imageName.image)
     }
 
+    guard let document = fetchDocument(with: documentId) else {
+      return .unavailable(LocalizableString.shared.get(with: .errorUnableFetchDocument))
+    }
+
     // Convert the Stored models to their [Key: Value] array
-    let displayStrings = wallet.storage.mdocModels
-      .first(where: { $0.id == documentId })?.displayStrings
+    var displayStrings = document.displayStrings
       .decodeGender()
       .decodeUserPseudonym()
       .parseDates(parser: parser)
       .mapTrueFalseToLocalizable()
 
-    // Check if document type matches one of known models (pid or mdl)
-    guard var displayStrings = displayStrings else {
-      return .unavailable(LocalizableString.shared.get(with: .unavailableField))
-    }
-
-    if documentType == .MDL,
-       let mdl = wallet.storage.mdlModel {
+    if documentType == .MDL {
 
       // Flatten properties in order to be made in a Key: Value structure
-      if let drivingPrivileges = mdl.getDrivingPrivileges(parser: parser) {
+      if let drivingPrivileges = document.getDrivingPrivileges(parser: parser) {
         displayStrings.appendOrReplace(drivingPrivileges)
       }
 
       displayStrings.appendOrReplace(
-        contentsOf: decodeAgeOver(ageOverDictionary: mdl.ageOverXX)
+        contentsOf: decodeAgeOver(ageOverDictionary: document.ageOverXX)
       )
-    } else if documentType == .PID, let pid = wallet.storage.pidModel {
+    } else if documentType == .PID {
       displayStrings.appendOrReplace(
-        contentsOf: decodeAgeOver(ageOverDictionary: pid.ageOverXX)
+        contentsOf: decodeAgeOver(ageOverDictionary: document.ageOverXX)
       )
     }
     // Find the first Value that Matches given Key for document
