@@ -46,7 +46,7 @@ final class DeepLinkControllerImpl: DeepLinkController {
 
   public func getPendingDeepLinkAction() -> DeepLink.Executable? {
     if let cachedLink = prefsController.getString(forKey: .cachedDeepLink),
-       let url = URL(string: cachedLink) {
+       let url = cachedLink.toCompatibleUrl() {
       return hasDeepLink(url: url)
     }
     return nil

@@ -90,7 +90,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
         return .deferredSuccess
       } else if let authorizePresentationUrl = doc.authorizePresentationUrl {
         guard
-          let presentationUrl = URL(string: authorizePresentationUrl),
+          let presentationUrl = authorizePresentationUrl.toCompatibleUrl(),
           let presentationComponents = URLComponents(url: presentationUrl, resolvingAgainstBaseURL: true) else {
           return .failure(WalletCoreError.unableToIssueAndStore)
         }
