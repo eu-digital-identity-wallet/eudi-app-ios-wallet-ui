@@ -71,7 +71,7 @@ actor NetworkManagerImpl: NetworkManager {
     baseHost: String
   ) async -> URLRequest {
 
-    guard let baseAPI = URL(string: baseHost) else {
+    guard let baseAPI = baseHost.toCompatibleUrl() else {
       fatalError("No base url provided")
     }
 

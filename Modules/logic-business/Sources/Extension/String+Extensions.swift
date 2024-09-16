@@ -185,3 +185,16 @@ public extension String? {
   }
 
 }
+
+public extension String {
+  func toCompatibleUrl() -> URL? {
+    guard let decoded = self.removingPercentEncoding else { return nil }
+    return if let url = URL(string: decoded) {
+      url
+    } else if let encodedString = decoded.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let url = URL(string: encodedString) {
+      url
+    } else {
+      nil
+    }
+  }
+}
