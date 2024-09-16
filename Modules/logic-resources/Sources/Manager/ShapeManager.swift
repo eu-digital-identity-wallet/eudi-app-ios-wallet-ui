@@ -66,28 +66,3 @@ final class ShapeManager: ShapeManagerProtocol {
     )
   }
 }
-
-public struct AnyShape: Shape, InsettableShape {
-
-  var insetAmount = 0.0
-
-  private let builder: @MainActor @Sendable (CGRect) -> Path
-
-  init<S: Shape>(_ shape: S) {
-    builder = { rect in
-      let path = shape.path(in: rect)
-      return path
-    }
-  }
-
-  @MainActor
-  public func path(in rect: CGRect) -> Path {
-    return builder(rect)
-  }
-
-  public func inset(by amount: CGFloat) -> some InsettableShape {
-    var arc = self
-    arc.insetAmount += amount
-    return arc
-  }
-}

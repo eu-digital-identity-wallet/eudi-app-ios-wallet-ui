@@ -59,7 +59,7 @@ public protocol ProximityInteractor {
 
 }
 
-final actor ProximityInteractorImpl: ProximityInteractor {
+final class ProximityInteractorImpl: ProximityInteractor {
 
   private let walletKitController: WalletKitController
   public let presentationSessionCoordinator: PresentationSessionCoordinator

@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
   name: "logic-core",
-  platforms: [.iOS(.v15)],
+  platforms: [.iOS(.v16)],
   products: [
     .library(
       name: "logic-core",
