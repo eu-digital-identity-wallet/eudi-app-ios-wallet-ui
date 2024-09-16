@@ -135,10 +135,10 @@ final class FormValidatorImpl: FormValidator {
     shouldValidateQuery: Bool,
     shouldValidatePath: Bool
   ) -> Bool {
+
     guard
       !value.isEmpty,
-      let decodedString = value.removingPercentEncoding,
-      let url = URL(string: decodedString),
+      let url = value.toCompatibleUrl(),
       let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
     else {
       return false

@@ -253,7 +253,7 @@ final class WalletKitControllerImpl: WalletKitController {
 
     guard
       let urlString = keyChainController.getValue(key: WalletKitKeyChainIdentifier.dynamicIssuancePendingUrl),
-      let url = URL(string: urlString)
+      let url = urlString.toCompatibleUrl()
     else {
       return nil
     }
