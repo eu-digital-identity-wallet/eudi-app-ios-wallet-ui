@@ -99,7 +99,7 @@ Proximity
 
 Minimum device requirements
 
-- Any device that supports iOS 15.0
+- Any device that supports iOS 16.0
 
 ### Prerequisites
 
