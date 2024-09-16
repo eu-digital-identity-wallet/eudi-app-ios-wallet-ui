@@ -244,7 +244,7 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
     router.push(with: .qrScanner(config: ScannerUiConfig(flow: .presentation)))
   }
 
-  func onHideMore() {
+  private func onHideMore() {
     isMoreModalShowing = false
   }
 

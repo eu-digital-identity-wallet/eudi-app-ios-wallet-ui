@@ -25,7 +25,7 @@ public protocol FAQsInteractor {
   func fetchFAQs() async -> FAQsPartialState
 }
 
-final actor FAQsInteractorImpl: FAQsInteractor {
+final class FAQsInteractorImpl: FAQsInteractor {
 
   public func fetchFAQs() async -> FAQsPartialState {
     do {
