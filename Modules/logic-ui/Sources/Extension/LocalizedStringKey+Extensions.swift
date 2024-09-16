@@ -45,7 +45,7 @@ extension LocalizedStringKey {
   }
 }
 
-extension LocalizedStringKey: Hashable {
+extension LocalizedStringKey: @retroactive Hashable {
   public func hash(into hasher: inout Hasher) {
     let data = self.data
     hasher.combine(data?.key)

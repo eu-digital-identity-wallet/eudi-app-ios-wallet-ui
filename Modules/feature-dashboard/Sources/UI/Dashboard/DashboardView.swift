@@ -220,31 +220,24 @@ public struct DashboardView<Router: RouterHost>: View {
 
   @ViewBuilder
   func shareLogs(with fileUrl: URL) -> some View {
-    if #available(iOS 16.0, *) {
-      ShareLink(item: fileUrl) {
-        HStack {
+    ShareLink(item: fileUrl) {
+      HStack {
 
-          Theme.shared.image.share
-            .resizable()
-            .scaledToFit()
-            .frame(width: 25, height: 25)
-            .foregroundColor(Theme.shared.color.primary)
+        Theme.shared.image.share
+          .resizable()
+          .scaledToFit()
+          .frame(width: 25, height: 25)
+          .foregroundColor(Theme.shared.color.primary)
 
-          HSpacer.medium()
+        HSpacer.medium()
 
-          Text(.retrieveLogs)
-            .typography(Theme.shared.font.labelLarge)
-            .foregroundColor(Theme.shared.color.textPrimaryDark)
+        Text(.retrieveLogs)
+          .typography(Theme.shared.font.labelLarge)
+          .foregroundColor(Theme.shared.color.textPrimaryDark)
 
-          Spacer()
-        }
-        .padding()
+        Spacer()
       }
-      .simultaneousGesture(
-        TapGesture().onEnded() {
-          viewModel.onHideMore()
-        }
-      )
+      .padding()
     }
   }
 }

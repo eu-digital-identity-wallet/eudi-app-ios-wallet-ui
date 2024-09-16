@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
   name: "feature-startup",
-  platforms: [.iOS(.v15)],
+  platforms: [.iOS(.v16)],
   products: [
     .library(
       name: "feature-startup",

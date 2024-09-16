@@ -18,13 +18,8 @@ import logic_resources
 
 public extension TextField {
   func typography(_ style: TypographyStyle) -> some View {
-    if #available(iOS 16.0, *) {
-      return self
-        .font(style.font)
-        .tracking(style.spacing)
-    } else {
-      return self
-        .font(style.font)
-    }
+    return self
+      .font(style.font)
+      .tracking(style.spacing)
   }
 }
