@@ -131,3 +131,19 @@ public extension ContentTitleView {
     case withoutToolbar = 16
   }
 }
+
+#Preview {
+  Group {
+    ContentTitleView(
+      title: LocalizableString.Key.tryAgain,
+      caption: LocalizableString.Key.tryAgain
+    )
+    .lightModePreview()
+
+    ContentTitleView(
+      title: LocalizableString.Key.tryAgain,
+      caption: LocalizableString.Key.tryAgain
+    )
+    .darkModePreview()
+  }
+}

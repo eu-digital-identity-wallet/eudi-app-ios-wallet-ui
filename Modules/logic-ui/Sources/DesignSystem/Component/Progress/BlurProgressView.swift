@@ -52,3 +52,10 @@ extension BlurProgressView {
     }
   }
 }
+
+#Preview {
+  Group {
+    BlurProgressView().lightModePreview()
+    BlurProgressView().darkModePreview()
+  }
+}

@@ -192,3 +192,34 @@ private extension FloatingTextFieldView {
     return replacedText
   }
 }
+
+#Preview {
+  VStack(spacing: 10) {
+    FloatingTextFieldView(
+      title: .search,
+      text: .constant("text"),
+      showError: false,
+      contentType: .username,
+      useSpringAnimation: false,
+      userHasCommitedChange: .constant(true)
+    )
+    FloatingTextFieldView(
+      title: .search,
+      leftImage: Image(systemName: "calendar"),
+      text: .constant("text"),
+      showError: true,
+      contentType: .password,
+      useSpringAnimation: false,
+      userHasCommitedChange: .constant(false)
+    )
+    FloatingTextFieldView(
+      title: .search,
+      text: .constant("text"),
+      showError: true,
+      contentType: .password,
+      isDisabled: true,
+      trailingContent: { Image(systemName: "calendar") },
+      userHasCommitedChange: .constant(false)
+    )
+  }
+}

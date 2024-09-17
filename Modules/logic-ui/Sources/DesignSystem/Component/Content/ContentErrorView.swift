@@ -72,3 +72,21 @@ public extension ContentErrorView {
     }
   }
 }
+
+#Preview {
+  Group {
+    ContentErrorView(
+      config: ContentErrorView.Config(
+        cancelAction: {}()
+      )
+    )
+    .lightModePreview()
+
+    ContentErrorView(
+      config: ContentErrorView.Config(
+        cancelAction: {}()
+      )
+    )
+    .darkModePreview()
+  }
+}

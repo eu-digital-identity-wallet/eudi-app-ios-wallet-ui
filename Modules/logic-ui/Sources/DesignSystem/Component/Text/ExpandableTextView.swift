@@ -81,3 +81,19 @@ public struct ExpandableTextView: View {
     .shimmer(isLoading: isloading)
   }
 }
+
+#Preview {
+  VStack {
+    ExpandableTextView(
+      title: LocalizableString.Key.addDocumentTitle,
+      content: LocalizableString.Key.addDoc,
+      isloading: false
+    )
+
+    ExpandableTextView(
+      title: LocalizableString.Key.addDocumentTitle,
+      content: LocalizableString.Key.addDoc,
+      isloading: true
+    )
+  }
+}

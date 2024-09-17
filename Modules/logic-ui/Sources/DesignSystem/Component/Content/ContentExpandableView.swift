@@ -73,3 +73,27 @@ public struct ContentExpandableView<Content: View>: View {
     }
   }
 }
+
+#Preview {
+  Group {
+    ContentExpandableView(
+      title: LocalizableString.Key.addDocumentTitle
+    ) {
+      VStack {
+        Text("title")
+        Text("description")
+      }
+    }
+    .lightModePreview()
+
+    ContentExpandableView(
+      title: LocalizableString.Key.addDocumentTitle
+    ) {
+      VStack {
+        Text("title")
+        Text("description")
+      }
+    }
+    .darkModePreview()
+  }
+}

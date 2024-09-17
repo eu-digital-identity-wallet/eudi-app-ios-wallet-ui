@@ -238,3 +238,38 @@ extension PinTextFieldView {
     }
   }
 }
+
+struct PinTextFieldViewPreview: View {
+  @State private var numerText = ""
+
+  var body: some View {
+    VStack(alignment: .center) {
+      PinTextFieldView(
+        numericText: $numerText,
+        maxDigits: 6,
+        isSecureEntry: false
+      )
+
+      PinTextFieldView(
+        numericText: $numerText,
+        maxDigits: 6,
+        isSecureEntry: true
+      )
+
+      PinTextFieldView(
+        numericText: $numerText,
+        maxDigits: 6,
+        isSecureEntry: false,
+        hasError: true
+      )
+    }
+    .padding()
+  }
+}
+
+#Preview {
+  Group {
+    PinTextFieldViewPreview().lightModePreview()
+    PinTextFieldViewPreview().darkModePreview()
+  }
+}
