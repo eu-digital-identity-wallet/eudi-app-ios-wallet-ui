@@ -17,16 +17,16 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct FAQsView<Router: RouterHost>: View {
+struct FAQsView<Router: RouterHost>: View {
 
   @ObservedObject private var viewModel: FAQsViewModel<Router>
   @State var userIsEditingAlias = false
 
-  public init(with router: Router, and interactor: FAQsInteractor) {
-    self.viewModel = .init(router: router, interactor: interactor)
+  init(with viewModel: FAQsViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView(canScroll: true) {
 
       ContentHeaderView {

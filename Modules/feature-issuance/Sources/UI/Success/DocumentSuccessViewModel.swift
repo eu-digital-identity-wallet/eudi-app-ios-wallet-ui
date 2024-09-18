@@ -76,9 +76,11 @@ final class DocumentSuccessViewModel<Router: RouterHost>: BaseViewModel<Router, 
     }
 
     router.push(
-      with: .issuanceDocumentDetails(
-        config: IssuanceDetailUiConfig(
-          flow: flow
+      with: .featureIssuanceModule(
+        .issuanceDocumentDetails(
+          config: IssuanceDetailUiConfig(
+            flow: flow
+          )
         )
       )
     )

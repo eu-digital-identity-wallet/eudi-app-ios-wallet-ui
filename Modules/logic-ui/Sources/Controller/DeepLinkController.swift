@@ -84,8 +84,15 @@ final class DeepLinkControllerImpl: DeepLinkController {
     switch deepLinkExecutable.action {
     case .openid4vp:
       let session = walletKitController.startSameDevicePresentation(deepLink: deepLinkExecutable.link)
-      if !routerHost.isScreenForeground(with: .presentationRequest(presentationCoordinator: session, originator: .dashboard)) {
-        routerHost.push(with: .presentationRequest(presentationCoordinator: session, originator: .dashboard))
+      if !routerHost.isScreenForeground(
+        with: .featurePresentationModule(
+          .presentationRequest(
+            presentationCoordinator: session,
+            originator: .featureDashboardModule(.dashboard)
+          )
+        )
+      ) {
+        routerHost.push(with: .featurePresentationModule(.presentationRequest(presentationCoordinator: session, originator: .featureDashboardModule(.dashboard))))
       } else {
         postNotification(
           with: NSNotification.PresentationVC,
@@ -98,12 +105,12 @@ final class DeepLinkControllerImpl: DeepLinkController {
       let config = UIConfig.Generic(
         arguments: ["uri": deepLinkExecutable.plainUrl.absoluteString],
         navigationSuccessType: routerHost.userIsLoggedInWithDocuments()
-        ? .popTo(.dashboard)
-        : .push(.dashboard),
+        ? .popTo(.featureDashboardModule(.dashboard))
+        : .push(.featureDashboardModule(.dashboard)),
         navigationCancelType: .pop
       )
-      if !routerHost.isScreenForeground(with: .credentialOfferRequest(config: config)) {
-        routerHost.push(with: .credentialOfferRequest(config: config))
+      if !routerHost.isScreenForeground(with: .featureIssuanceModule(.credentialOfferRequest(config: config))) {
+        routerHost.push(with: .featureIssuanceModule(.credentialOfferRequest(config: config)))
       } else {
         postNotification(
           with: NSNotification.CredentialOffer,

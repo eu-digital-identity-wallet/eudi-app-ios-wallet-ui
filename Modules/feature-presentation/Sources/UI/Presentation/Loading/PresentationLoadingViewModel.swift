@@ -50,30 +50,32 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
         interactor.storeDynamicIssuancePendingUrl(with: url)
         return .pop(screen: getOriginator())
       }
-      return .deepLink(link: url, popToScreen: .dashboard)
+      return .deepLink(link: url, popToScreen: .featureDashboardModule(.dashboard))
     }
 
-    return .success(
-      config: UIConfig.Success(
-        title: .init(value: .success),
-        subtitle: .requestDataShareSuccess([relyingParty]),
-        buttons: [
-          .init(
-            title: .requestDataShareButton,
-            style: .primary,
-            navigationType: navigationType
-          )
-        ],
-        visualKind: .defaultIcon
+    return .featureCommonModule(
+      .success(
+        config: UIConfig.Success(
+          title: .init(value: .success),
+          subtitle: .requestDataShareSuccess([relyingParty]),
+          buttons: [
+            .init(
+              title: .requestDataShareButton,
+              style: .primary,
+              navigationType: navigationType
+            )
+          ],
+          visualKind: .defaultIcon
+        )
       )
     )
   }
 
   private func isDynamicIssuance() -> Bool {
     guard
-      getOriginator() == AppRoute.credentialOfferRequest(config: NoConfig()) ||
-      getOriginator() == AppRoute.issuanceAddDocument(config: NoConfig()) ||
-      getOriginator() == AppRoute.issuanceCode(config: NoConfig())
+      getOriginator() == AppRoute.featureIssuanceModule(.credentialOfferRequest(config: NoConfig()))
+        || getOriginator() == AppRoute.featureIssuanceModule(.issuanceAddDocument(config: NoConfig()))
+        || getOriginator() == AppRoute.featureIssuanceModule(.issuanceCode(config: NoConfig()))
     else {
       return false
     }
@@ -81,9 +83,11 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
   }
 
   override func getOnPopRoute() -> AppRoute? {
-    .presentationRequest(
-      presentationCoordinator: interactor.presentationCoordinator,
-      originator: getOriginator()
+    .featurePresentationModule(
+      .presentationRequest(
+        presentationCoordinator: interactor.presentationCoordinator,
+        originator: getOriginator()
+      )
     )
   }
 

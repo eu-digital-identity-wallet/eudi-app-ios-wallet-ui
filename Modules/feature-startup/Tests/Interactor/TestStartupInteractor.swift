@@ -64,9 +64,13 @@ final class TestStartupInteractor: EudiTest {
     let route = await interactor.initialize(with: .zero)
     // Then
     switch route {
-    case .quickPin(let config):
-      let receivedConfig = try XCTUnwrap(config as? QuickPinUiConfig)
-      XCTAssertEqual(receivedConfig, expectedConfig)
+    case .featureCommonModule(let module):
+      if case .quickPin(let config) = module {
+        let receivedConfig = try XCTUnwrap(config as? QuickPinUiConfig)
+        XCTAssertEqual(receivedConfig, expectedConfig)
+      } else {
+        XCTFail("Wrong route \(route)")
+      }
       break
     default:
       XCTFail("Wrong route \(route)")
@@ -85,9 +89,13 @@ final class TestStartupInteractor: EudiTest {
     let route = await interactor.initialize(with: .zero)
     // Then
     switch route {
-    case .biometry(let config):
-      let receivedConfig = try XCTUnwrap(config as? UIConfig.Biometry)
-      XCTAssertEqual(receivedConfig, expectedConfig)
+    case .featureCommonModule(let module):
+      if case .biometry(let config) = module {
+        let receivedConfig = try XCTUnwrap(config as? UIConfig.Biometry)
+        XCTAssertEqual(receivedConfig, expectedConfig)
+      } else {
+        XCTFail("Wrong route \(route)")
+      }
       break
     default:
       XCTFail("Wrong route \(route)")
@@ -106,9 +114,13 @@ final class TestStartupInteractor: EudiTest {
     let route = await interactor.initialize(with: .zero)
     // Then
     switch route {
-    case .biometry(let config):
-      let receivedConfig = try XCTUnwrap(config as? UIConfig.Biometry)
-      XCTAssertEqual(receivedConfig, expectedConfig)
+    case .featureCommonModule(let module):
+      if case .biometry(let config) = module {
+        let receivedConfig = try XCTUnwrap(config as? UIConfig.Biometry)
+        XCTAssertEqual(receivedConfig, expectedConfig)
+      } else {
+        XCTFail("Wrong route \(route)")
+      }
       break
     default:
       XCTFail("Wrong route \(route)")
@@ -127,9 +139,13 @@ final class TestStartupInteractor: EudiTest {
     let route = await interactor.initialize(with: .zero)
     // Then
     switch route {
-    case .quickPin(let config):
-      let receivedConfig = try XCTUnwrap(config as? QuickPinUiConfig)
-      XCTAssertEqual(receivedConfig, expectedConfig)
+    case .featureCommonModule(let module):
+      if case .quickPin(let config) = module {
+        let receivedConfig = try XCTUnwrap(config as? QuickPinUiConfig)
+        XCTAssertEqual(receivedConfig, expectedConfig)
+      } else {
+        XCTFail("Wrong route \(route)")
+      }
       break
     default:
       XCTFail("Wrong route \(route)")
@@ -161,8 +177,8 @@ private extension TestStartupInteractor {
       quickPinOnlyCaption: .loginCaptionQuickPinOnly,
       navigationSuccessType: .push(
         hasDocuments
-        ? .dashboard
-        : .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument))
+        ? .featureDashboardModule(.dashboard)
+        : .featureIssuanceModule(.issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument)))
       ),
       navigationBackType: nil,
       isPreAuthorization: true,

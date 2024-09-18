@@ -17,25 +17,15 @@ import SwiftUI
 import logic_ui
 import feature_common
 
-public struct PresentationLoadingView<Router: RouterHost>: View {
+struct PresentationLoadingView<Router: RouterHost>: View {
 
   @ObservedObject private var viewModel: PresentationLoadingViewModel<Router>
 
-  public init(
-    with router: Router,
-    and interactor: PresentationInteractor,
-    relyingParty: String,
-    originator: AppRoute
-  ) {
-    self.viewModel = .init(
-      router: router,
-      interactor: interactor,
-      relyingParty: relyingParty,
-      originator: originator
-    )
+  init(with viewModel: PresentationLoadingViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
-  public var body: some View {
+  var body: some View {
     BaseLoadingView(with: viewModel.router, viewModel: viewModel)
   }
 }

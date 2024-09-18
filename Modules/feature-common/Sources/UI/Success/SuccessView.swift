@@ -17,19 +17,16 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct SuccessView<Router: RouterHost>: View {
+struct SuccessView<Router: RouterHost>: View {
 
   @ObservedObject var viewmodel: SuccessViewModel<Router>
 
-  public init(
-    with router: Router,
-    and config: any UIConfigType,
-    also deepLinkController: DeepLinkController
-  ) {
-    self.viewmodel = .init(config: config, router: router, deepLinkController: deepLinkController)
+  init(
+    with viewmodel: SuccessViewModel<Router>) {
+    self.viewmodel = viewmodel
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView {
       ContentTitleView(
         title: viewmodel.viewState.config.title.value,

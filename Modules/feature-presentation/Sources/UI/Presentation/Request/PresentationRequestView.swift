@@ -17,19 +17,15 @@ import SwiftUI
 import logic_ui
 import feature_common
 
-public struct PresentationRequestView<Router: RouterHost>: View {
+struct PresentationRequestView<Router: RouterHost>: View {
 
   @ObservedObject private var viewModel: PresentationRequestViewModel<Router>
 
-  public init(
-    with router: Router,
-    and interactor: PresentationInteractor,
-    originator: AppRoute
-  ) {
-    self.viewModel = .init(router: router, interactor: interactor, originator: originator)
+  init(with viewModel: PresentationRequestViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
-  public var body: some View {
+  var body: some View {
     BaseRequestView(
       with: viewModel.router,
       viewModel: viewModel

@@ -35,7 +35,6 @@ struct AddDocumentViewState: ViewState {
   }
 }
 
-@MainActor
 final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddDocumentViewState> {
 
   private let interactor: AddDocumentInteractor
@@ -94,7 +93,7 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
   }
 
   func onScanClick() {
-    router.push(with: .qrScanner(config: ScannerUiConfig(flow: .issuing(viewState.config))))
+    router.push(with: .featureCommonModule(.qrScanner(config: ScannerUiConfig(flow: .issuing(viewState.config)))))
   }
 
   func pop() {
@@ -110,9 +109,11 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
     switch await interactor.resumeDynamicIssuance() {
     case .success(let docId):
       router.push(
-        with: .issuanceSuccess(
-          config: viewState.config,
-          documentIdentifier: docId
+        with: .featureIssuanceModule(
+          .issuanceSuccess(
+            config: viewState.config,
+            documentIdentifier: docId
+          )
         )
       )
     case .noPending:
@@ -146,9 +147,11 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
       switch await interactor.issueDocument(docType: docType) {
       case .success(let docId):
         router.push(
-          with: .issuanceSuccess(
-            config: viewState.config,
-            documentIdentifier: docId
+          with: .featureIssuanceModule(
+            .issuanceSuccess(
+              config: viewState.config,
+              documentIdentifier: docId
+            )
           )
         )
       case .dynamicIssuance(let session):
@@ -158,9 +161,11 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
           )
         }
         router.push(
-          with: .presentationRequest(
-            presentationCoordinator: session,
-            originator: .issuanceAddDocument(config: viewState.config)
+          with: .featurePresentationModule(
+            .presentationRequest(
+              presentationCoordinator: session,
+              originator: .featureIssuanceModule(.issuanceAddDocument(config: viewState.config))
+            )
           )
         )
       case .failure(let error):
@@ -183,23 +188,25 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
     var navigationType: UIConfig.DeepLinkNavigationType {
       return switch viewState.config.flow {
       case .noDocument:
-          .push(screen: .dashboard)
+          .push(screen: .featureDashboardModule(.dashboard))
       case .extraDocument:
-          .pop(screen: .dashboard)
+          .pop(screen: .featureDashboardModule(.dashboard))
       }
     }
-    return .success(
-      config: UIConfig.Success(
-        title: .init(value: .inProgress, color: Theme.shared.color.warning),
-        subtitle: .scopedIssuanceSuccessDeferredCaption,
-        buttons: [
-          .init(
-            title: .okButton,
-            style: .primary,
-            navigationType: navigationType
-          )
-        ],
-        visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.warning)
+    return .featureCommonModule(
+      .success(
+        config: UIConfig.Success(
+          title: .init(value: .inProgress, color: Theme.shared.color.warning),
+          subtitle: .scopedIssuanceSuccessDeferredCaption,
+          buttons: [
+            .init(
+              title: .okButton,
+              style: .primary,
+              navigationType: navigationType
+            )
+          ],
+          visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.warning)
+        )
       )
     )
   }
@@ -217,7 +224,7 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
     Task {
       switch await interactor.loadSampleData() {
       case .success:
-        router.push(with: .dashboard)
+        router.push(with: .featureDashboardModule(.dashboard))
       case .failure(let error):
         setState {
           $0.copy(
@@ -241,11 +248,13 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
 
   private func handleDeepLink(with uri: String) {
     router.push(
-      with: .credentialOfferRequest(
-        config: UIConfig.Generic(
-          arguments: ["uri": uri],
-          navigationSuccessType: .push(.dashboard),
-          navigationCancelType: .pop
+      with: .featureIssuanceModule(
+        .credentialOfferRequest(
+          config: UIConfig.Generic(
+            arguments: ["uri": uri],
+            navigationSuccessType: .push(.featureDashboardModule(.dashboard)),
+            navigationCancelType: .pop
+          )
         )
       )
     )

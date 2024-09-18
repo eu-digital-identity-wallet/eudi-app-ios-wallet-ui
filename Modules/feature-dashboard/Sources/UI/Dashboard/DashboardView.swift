@@ -20,23 +20,13 @@ import logic_business
 import feature_common
 import logic_core
 
-public struct DashboardView<Router: RouterHost>: View {
+struct DashboardView<Router: RouterHost>: View {
 
   @ObservedObject private var viewModel: DashboardViewModel<Router>
   @Environment(\.scenePhase) var scenePhase
 
-  public init(
-    with router: Router,
-    and interactor: DashboardInteractor,
-    deeplinkController: DeepLinkController,
-    walletKit: WalletKitController
-  ) {
-    self.viewModel = .init(
-      router: router,
-      interactor: interactor,
-      deepLinkController: deeplinkController,
-      walletKit: walletKit
-    )
+  public init(with viewModel: DashboardViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
   @ViewBuilder
@@ -71,7 +61,7 @@ public struct DashboardView<Router: RouterHost>: View {
     .background(Theme.shared.color.backgroundPaper)
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView(
       padding: .zero,
       canScroll: false,

@@ -18,28 +18,18 @@ import logic_ui
 import feature_common
 import logic_resources
 
-public struct AddDocumentView<Router: RouterHost>: View {
+struct AddDocumentView<Router: RouterHost>: View {
 
   @ObservedObject var viewModel: AddDocumentViewModel<Router>
 
   var contentSize: CGFloat = 0.0
 
-  public init(
-    with router: Router,
-    and interactor: AddDocumentInteractor,
-    deeplinkController: DeepLinkController,
-    config: any UIConfigType
-  ) {
-    self.viewModel = AddDocumentViewModel(
-      router: router,
-      interactor: interactor,
-      deepLinkController: deeplinkController,
-      config: config
-    )
+  init(with viewModel: AddDocumentViewModel<Router>) {
+    self.viewModel = viewModel
     self.contentSize = getScreenRect().width / 2.0
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView(
       padding: .zero,
       canScroll: true,

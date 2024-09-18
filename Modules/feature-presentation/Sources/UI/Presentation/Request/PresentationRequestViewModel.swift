@@ -58,7 +58,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
         if let route = self?.getSuccessRoute() {
           self?.router.push(with: route)
         } else {
-          self?.router.popTo(with: self?.getPopRoute() ?? .dashboard)
+          self?.router.popTo(with: self?.getPopRoute() ?? .featureDashboardModule(.dashboard))
         }
       case .failure(let error):
         self?.onError(with: error)
@@ -67,21 +67,25 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   override func getSuccessRoute() -> AppRoute? {
-    .biometry(
-      config: UIConfig.Biometry(
-        title: getTitle(),
-        caption: .requestDataShareBiometryCaption,
-        quickPinOnlyCaption: .requestDataShareQuickPinCaption,
-        navigationSuccessType: .push(
-          .presentationLoader(
-            getRelyingParty(),
-            presentationCoordinator: interactor.presentationCoordinator,
-            originator: getOriginator()
-          )
-        ),
-        navigationBackType: .pop,
-        isPreAuthorization: false,
-        shouldInitializeBiometricOnCreate: true
+    .featureCommonModule(
+      .biometry(
+        config: UIConfig.Biometry(
+          title: getTitle(),
+          caption: .requestDataShareBiometryCaption,
+          quickPinOnlyCaption: .requestDataShareQuickPinCaption,
+          navigationSuccessType: .push(
+            .featurePresentationModule(
+              .presentationLoader(
+                getRelyingParty(),
+                presentationCoordinator: interactor.presentationCoordinator,
+                originator: getOriginator()
+              )
+            )
+          ),
+          navigationBackType: .pop,
+          isPreAuthorization: false,
+          shouldInitializeBiometricOnCreate: true
+        )
       )
     )
   }

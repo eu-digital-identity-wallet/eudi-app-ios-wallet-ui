@@ -108,11 +108,11 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
 
   func pop() {
     isDeletionModalShowing = false
-    router.popTo(with: .dashboard)
+    router.popTo(with: .featureDashboardModule(.dashboard))
   }
 
   func onContinue() {
-    router.push(with: .dashboard)
+    router.push(with: .featureDashboardModule(.dashboard))
   }
 
   func onDeleteDocument() {
@@ -152,6 +152,6 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
 
   private func onReboot() {
     isDeletionModalShowing = false
-    router.popTo(with: .startup)
+    router.popTo(with: .featureStartupModule(.startup))
   }
 }

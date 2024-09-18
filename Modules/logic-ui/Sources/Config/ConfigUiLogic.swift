@@ -32,17 +32,17 @@ public protocol ConfigUiLogic {
 struct ConfigUiLogicImpl: ConfigUiLogic {
 
   public var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] = [
-    AppRoute.dashboard.info.key: .init(Theme.shared.color.secondary),
-    AppRoute.welcome.info.key: .init(Theme.shared.color.secondary),
-    AppRoute.issuanceDocumentDetails(config: NoConfig()).info.key: .init(Theme.shared.color.secondary)
+    AppRoute.featureDashboardModule(.dashboard).info.key: .init(Theme.shared.color.secondary),
+    AppRoute.featureLoginModule(.welcome).info.key: .init(Theme.shared.color.secondary),
+    AppRoute.featureIssuanceModule(.issuanceDocumentDetails(config: NoConfig())).info.key: .init(Theme.shared.color.secondary)
   ]
 
   public var dashboardRoute: AppRoute {
-    return .dashboard
+    return .featureDashboardModule(.dashboard)
   }
 
   var issuanceRoute: AppRoute {
-    return .issuanceAddDocument(config: NoConfig())
+    return .featureIssuanceModule(.issuanceAddDocument(config: NoConfig()))
   }
 
   public init(themeConfiguration: ThemeConfiguration) {

@@ -122,24 +122,32 @@ final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerS
     switch viewState.config.flow {
     case .presentation:
       router.push(
-        with: .presentationRequest(
-          presentationCoordinator: interactor.startCrossDevicePresentation(scanResult: scanResult),
-          originator: .dashboard
+        with: .featurePresentationModule(
+          .presentationRequest(
+            presentationCoordinator: interactor.startCrossDevicePresentation(scanResult: scanResult),
+            originator: .featureDashboardModule(.dashboard)
+          )
         )
       )
     case .issuing(let config):
       var successNavType: UIConfig.TwoWayNavigationType {
         return switch config.flow {
-        case .noDocument: .push(.dashboard)
-        case .extraDocument: .popTo(.dashboard)
+        case .noDocument: .push(.featureDashboardModule(.dashboard))
+        case .extraDocument: .popTo(.featureDashboardModule(.dashboard))
         }
       }
       router.push(
-        with: .credentialOfferRequest(
-          config: UIConfig.Generic(
-            arguments: ["uri": scanResult],
-            navigationSuccessType: successNavType,
-            navigationCancelType: .popTo(.issuanceAddDocument(config: config))
+        with: .featureIssuanceModule(
+          .credentialOfferRequest(
+            config: UIConfig.Generic(
+              arguments: ["uri": scanResult],
+              navigationSuccessType: successNavType,
+              navigationCancelType: .popTo(
+                .featureIssuanceModule(
+                  .issuanceAddDocument(config: config)
+                )
+              )
+            )
           )
         )
       )

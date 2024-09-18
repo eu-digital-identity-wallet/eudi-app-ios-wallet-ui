@@ -58,7 +58,6 @@ extension DashboardState {
   }
 }
 
-@MainActor
 final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, DashboardState> {
 
   private let interactor: DashboardInteractor
@@ -149,8 +148,10 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
     isSuccededDocumentsModalShowing = false
 
     router.push(
-      with: .issuanceDocumentDetails(
-        config: IssuanceDetailUiConfig(flow: .extraDocument(documentId))
+      with: .featureIssuanceModule(
+        .issuanceDocumentDetails(
+          config: IssuanceDetailUiConfig(flow: .extraDocument(documentId))
+        )
       )
     )
   }
@@ -162,9 +163,11 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
       switch await self.interactor.getBleAvailability() {
       case .available:
         self.router.push(
-          with: .proximityConnection(
-            presentationCoordinator: self.walletKitController.startProximityPresentation(),
-            originator: .dashboard
+          with: .featureProximityModule(
+            .proximityConnection(
+              presentationCoordinator: self.walletKitController.startProximityPresentation(),
+              originator: .featureDashboardModule(.dashboard)
+            )
           )
         )
       case .noPermission, .disabled:
@@ -195,7 +198,7 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
       case .success:
         await fetch()
       case .noDocuments:
-        router.popTo(with: .startup)
+        router.popTo(with: .featureStartupModule(.startup))
       case .failure:
         setState { $0.copy(isLoading: false) }
       }
@@ -216,7 +219,13 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
   }
 
   func onAdd() {
-    router.push(with: .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .extraDocument)))
+    router.push(
+      with: .featureIssuanceModule(
+        .issuanceAddDocument(
+          config: IssuanceFlowUiConfig(flow: .extraDocument)
+        )
+      )
+    )
   }
 
   func onMore() {
@@ -236,12 +245,12 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
 
   func onUpdatePin() {
     onHideMore()
-    router.push(with: .quickPin(config: QuickPinUiConfig(flow: .update)))
+    router.push(with: .featureCommonModule(.quickPin(config: QuickPinUiConfig(flow: .update))))
   }
 
   func onShowScanner() {
     onHideMore()
-    router.push(with: .qrScanner(config: ScannerUiConfig(flow: .presentation)))
+    router.push(with: .featureCommonModule(.qrScanner(config: ScannerUiConfig(flow: .presentation))))
   }
 
   private func onHideMore() {

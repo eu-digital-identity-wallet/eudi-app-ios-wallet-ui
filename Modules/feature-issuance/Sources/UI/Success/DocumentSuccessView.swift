@@ -17,25 +17,15 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct DocumentSuccessView<Router: RouterHost>: View {
+struct DocumentSuccessView<Router: RouterHost>: View {
 
   @ObservedObject var viewModel: DocumentSuccessViewModel<Router>
 
-  public init(
-    with router: Router,
-    and interactor: DocumentSuccessInteractor,
-    config: any UIConfigType,
-    documentIdentifier: String
-  ) {
-    self.viewModel = .init(
-      router: router,
-      interactor: interactor,
-      config: config,
-      documentIdentifier: documentIdentifier
-    )
+  init(with viewModel: DocumentSuccessViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView {
 
       ContentTitleView(

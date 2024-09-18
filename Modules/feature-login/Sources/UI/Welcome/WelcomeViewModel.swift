@@ -39,10 +39,10 @@ final class WelcomeViewModel<Router: RouterHost>: BaseViewModel<Router, WelcomeS
   }
 
   func onClickFAQ() {
-    router.push(with: .faqs)
+    router.push(with: .featureLoginModule(.faqs))
   }
 
   func onClickLogin() {
-    router.push(with: .quickPin(config: QuickPinUiConfig(flow: .set)))
+    router.push(with: .featureCommonModule(.quickPin(config: QuickPinUiConfig(flow: .set))))
   }
 }
