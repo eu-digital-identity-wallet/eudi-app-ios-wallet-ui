@@ -18,20 +18,12 @@ import logic_ui
 import feature_common
 import logic_resources
 
-public struct DocumentDetailsView<Router: RouterHost>: View {
+struct DocumentDetailsView<Router: RouterHost>: View {
 
   @ObservedObject var viewModel: DocumentDetailsViewModel<Router>
 
-  public init(
-    with router: Router,
-    and interactor: DocumentDetailsInteractor,
-    config: any UIConfigType
-  ) {
-    self.viewModel = DocumentDetailsViewModel(
-      router: router,
-      interactor: interactor,
-      config: config
-    )
+  init(with viewModel: DocumentDetailsViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
   @ViewBuilder
@@ -78,7 +70,7 @@ public struct DocumentDetailsView<Router: RouterHost>: View {
     }
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView(
       padding: .zero,
       canScroll: !viewModel.viewState.hasContinueButton,

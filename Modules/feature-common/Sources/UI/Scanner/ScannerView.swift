@@ -20,26 +20,18 @@ import logic_resources
 import logic_core
 import CodeScanner
 
-public struct ScannerView<Router: RouterHost>: View {
+struct ScannerView<Router: RouterHost>: View {
 
   @ObservedObject private var viewmodel: ScannerViewModel<Router>
 
   private var cameraSurfaceSize: CGFloat = .zero
 
-  public init(
-    with router: Router,
-    and config: any UIConfigType,
-    also interactor: ScannerInteractor
-  ) {
-    self.viewmodel = .init(
-      config: config,
-      router: router,
-      interactor: interactor
-    )
+  init(with viewmodel: ScannerViewModel<Router>) {
+    self.viewmodel = viewmodel
     self.cameraSurfaceSize = getScreenRect().width - (Theme.shared.dimension.padding * 2)
   }
 
-  public var body: some View {
+  var body: some View {
 
     ContentScreenView {
 

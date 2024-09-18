@@ -65,8 +65,8 @@ final class QuickPinViewModel<Router: RouterHost>: BaseViewModel<Router, QuickPi
         success: config.isSetFlow ? .quickPinSetSuccess : .quickPinUpdateSuccess,
         successButton: config.isSetFlow ? .quickPinSetSuccessButton : .quickPinUpdateSuccessButton,
         successNavigationType: config.isSetFlow
-        ? .push(screen: .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument)))
-        : .pop(screen: .dashboard),
+        ? .push(screen: .featureIssuanceModule(.issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument))))
+        : .pop(screen: .featureDashboardModule(.dashboard)),
         isCancellable: config.isUpdateFlow,
         pinError: nil,
         isButtonActive: false,
@@ -136,18 +136,20 @@ final class QuickPinViewModel<Router: RouterHost>: BaseViewModel<Router, QuickPi
   private func onSuccess() {
     interactor.setPin(newPin: uiPinInputField)
     router.push(
-      with: .success(
-        config: UIConfig.Success(
-          title: .init(value: .success),
-          subtitle: viewState.success,
-          buttons: [
-            .init(
-              title: viewState.successButton,
-              style: .primary,
-              navigationType: viewState.successNavigationType
-            )
-          ],
-          visualKind: .defaultIcon
+      with: .featureCommonModule(
+        .success(
+          config: UIConfig.Success(
+            title: .init(value: .success),
+            subtitle: viewState.success,
+            buttons: [
+              .init(
+                title: viewState.successButton,
+                style: .primary,
+                navigationType: viewState.successNavigationType
+              )
+            ],
+            visualKind: .defaultIcon
+          )
         )
       )
     )

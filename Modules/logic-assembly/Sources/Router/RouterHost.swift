@@ -35,7 +35,7 @@ final class RouterHostImpl: RouterHost {
   ) {
     self.uiConfigLogic = uiConfigLogic
     self.analyticsController = analyticsController
-    self.pilot = UIPilot(initial: .startup, debug: true)
+    self.pilot = UIPilot(initial: .featureStartupModule(.startup), debug: true)
   }
 
   public func push(with route: AppRoute) {
@@ -93,167 +93,8 @@ final class RouterHostImpl: RouterHost {
 
   public func composeApplication() -> AnyView {
     return UIPilotHost(pilot) { route in
-      switch route {
-      case .startup:
-        StartupView(
-          with: self,
-          and: DIGraph.resolver.force(
-            StartupInteractor.self
-          )
-        )
-      case .faqs:
-        FAQsView(
-          with: self,
-          and: DIGraph.resolver.force(
-            FAQsInteractor.self
-          )
-        )
-      case .success(let config):
-        SuccessView(
-          with: self,
-          and: config,
-          also: DIGraph.resolver.force(
-            DeepLinkController.self
-          )
-        )
-      case .dashboard:
-        DashboardView(
-          with: self,
-          and: DIGraph.resolver.force(
-            DashboardInteractor.self
-          ),
-          deeplinkController: DIGraph.resolver.force(
-            DeepLinkController.self
-          ),
-          walletKit: DIGraph.resolver.force(
-            WalletKitController.self
-          )
-        )
-      case .biometry(let config):
-        BiometryView(
-          with: self,
-          interactor: DIGraph.resolver.force(
-            BiometryInteractor.self
-          ),
-          config: config
-        )
-      case .presentationLoader(let relyingParty, let presentationCoordinator, let originator):
-        PresentationLoadingView(
-          with: self,
-          and: DIGraph.resolver.force(
-            PresentationInteractor.self,
-            argument: presentationCoordinator
-          ),
-          relyingParty: relyingParty,
-          originator: originator
-        )
-      case .presentationRequest(let presentationCoordinator, let originator):
-        PresentationRequestView(
-          with: self,
-          and: DIGraph.resolver.force(
-            PresentationInteractor.self,
-            argument: presentationCoordinator
-          ),
-          originator: originator
-        )
-      case .welcome:
-        WelcomeView(
-          with: self,
-          and: DIGraph.resolver.force(
-            WelcomeInteractor.self
-          )
-        )
-      case .issuanceDocumentDetails(let config):
-        DocumentDetailsView(
-          with: self,
-          and: DIGraph.resolver.force(
-            DocumentDetailsInteractor.self
-          ),
-          config: config
-        )
-      case .issuanceAddDocument(let config):
-        AddDocumentView(
-          with: self,
-          and: DIGraph.resolver.force(
-            AddDocumentInteractor.self
-          ),
-          deeplinkController: DIGraph.resolver.force(
-            DeepLinkController.self
-          ),
-          config: config
-        )
-      case .proximityConnection(let presentationSessionCoordinator, let originator):
-        ProximityConnectionView(
-          with: self,
-          and: DIGraph.resolver.force(
-            ProximityInteractor.self,
-            argument: presentationSessionCoordinator
-          ),
-          originator: originator
-        )
-      case .proximityRequest(let presentationSessionCoordinator, let originator):
-        ProximityRequestView(
-          with: self,
-          and: DIGraph.resolver.force(
-            ProximityInteractor.self,
-            argument: presentationSessionCoordinator
-          ),
-          originator: originator
-        )
-      case .proximityLoader(let relyingParty, let presentationSessionCoordinator, let originator):
-        ProximityLoadingView(
-          with: self,
-          and: DIGraph.resolver.force(
-            ProximityInteractor.self,
-            argument: presentationSessionCoordinator
-          ),
-          relyingParty: relyingParty,
-          originator: originator
-        )
-      case .quickPin(let config):
-        QuickPinView(
-          with: self,
-          interactor: DIGraph.resolver.force(
-            QuickPinInteractor.self
-          ),
-          config: config
-        )
-      case .issuanceSuccess(let config, let documentIdentifier):
-        DocumentSuccessView(
-          with: self,
-          and: DIGraph.resolver.force(
-            DocumentSuccessInteractor.self
-          ),
-          config: config,
-          documentIdentifier: documentIdentifier
-        )
-      case .qrScanner(let config):
-        ScannerView(
-          with: self,
-          and: config,
-          also: DIGraph.resolver.force(
-            ScannerInteractor.self
-          )
-        )
-      case .credentialOfferRequest(let config):
-        DocumentOfferView(
-          with: self,
-          and: DIGraph.resolver.force(
-            DocumentOfferInteractor.self
-          ),
-          config: config
-        )
-      case .issuanceCode(let config):
-        OfferCodeView(
-          with: self,
-          and: DIGraph.resolver.force(
-            DocumentOfferInteractor.self
-          ),
-          config: config
-        )
-      }
-    }
-    .eraseToAnyView()
+      self.resolveView(route)
+    }.eraseToAnyView()
   }
 
   public func getToolbarConfig() -> UIConfig.ToolBar {
@@ -269,7 +110,7 @@ final class RouterHostImpl: RouterHost {
     return isForegroundOrBackStack(with: uiConfigLogic.dashboardRoute)
   }
 
-  func userIsLoggedInWithNoDocuments() -> Bool {
+  public func userIsLoggedInWithNoDocuments() -> Bool {
     return isForegroundOrBackStack(with: uiConfigLogic.issuanceRoute)
   }
 
@@ -277,9 +118,12 @@ final class RouterHostImpl: RouterHost {
     getCurrentScreen()?.info.key == route.info.key
   }
 
-  func isScreenOnBackStack(with route: AppRoute) -> Bool {
+  public func isScreenOnBackStack(with route: AppRoute) -> Bool {
     pilot.routes.contains(where: { $0.info.key == route.info.key })
   }
+}
+
+private extension RouterHostImpl {
 
   private func isForegroundOrBackStack(with route: AppRoute) -> Bool {
     return isScreenForeground(with: route) || isScreenOnBackStack(with: route)
@@ -318,6 +162,26 @@ final class RouterHostImpl: RouterHost {
 
   private func notifyBackgroundColorUpdate() {
     NotificationCenter.default.post(name: .shouldChangeBackgroundColor, object: nil)
+  }
+
+  @MainActor
+  private func resolveView(_ route: AppRoute) -> AnyView {
+    switch route {
+    case .featureStartupModule(let module):
+      StartupRouter.resolve(module: module, host: self)
+    case .featureLoginModule(let module):
+      LoginRouter.resolve(module: module, host: self)
+    case .featureDashboardModule(let module):
+      DashboardRouter.resolve(module: module, host: self)
+    case .featureCommonModule(let module):
+      CommonRouter.resolve(module: module, host: self)
+    case .featureIssuanceModule(let module):
+      IssuanceRouter.resolve(module: module, host: self)
+    case .featurePresentationModule(let module):
+      PresentationRouter.resolve(module: module, host: self)
+    case .featureProximityModule(let module):
+      ProximityRouter.resolve(module: module, host: self)
+    }
   }
 }
 

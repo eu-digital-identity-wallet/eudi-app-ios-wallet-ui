@@ -207,18 +207,20 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       }
     }
 
-    return .success(
-      config: UIConfig.Success(
-        title: title,
-        subtitle: caption,
-        buttons: [
-          .init(
-            title: buttonTitle,
-            style: .primary,
-            navigationType: navigationType
-          )
-        ],
-        visualKind: visualKind
+    return .featureCommonModule(
+      .success(
+        config: UIConfig.Success(
+          title: title,
+          subtitle: caption,
+          buttons: [
+            .init(
+              title: buttonTitle,
+              style: .primary,
+              navigationType: navigationType
+            )
+          ],
+          visualKind: visualKind
+        )
       )
     )
   }

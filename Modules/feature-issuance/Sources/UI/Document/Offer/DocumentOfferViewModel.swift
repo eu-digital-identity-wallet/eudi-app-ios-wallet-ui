@@ -43,7 +43,6 @@ struct DocumentOfferViewState: ViewState {
   }
 }
 
-@MainActor
 final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, DocumentOfferViewState> {
 
   private let interactor: DocumentOfferInteractor
@@ -115,14 +114,16 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
 
     if let code = viewState.documentOfferUiModel.txCode {
       router.push(
-        with: .issuanceCode(
-          config: IssuanceCodeUiConfig(
-            offerUri: viewState.offerUri,
-            issuerName: viewState.documentOfferUiModel.issuerName,
-            txCodeLength: code.codeLenght,
-            docOffers: viewState.documentOfferUiModel.docOffers,
-            successNavigation: viewState.successNavigation,
-            navigationCancelType: .pop
+        with: .featureIssuanceModule(
+          .issuanceCode(
+            config: IssuanceCodeUiConfig(
+              offerUri: viewState.offerUri,
+              issuerName: viewState.documentOfferUiModel.issuerName,
+              txCodeLength: code.codeLenght,
+              docOffers: viewState.documentOfferUiModel.docOffers,
+              successNavigation: viewState.successNavigation,
+              navigationCancelType: .pop
+            )
           )
         )
       )
@@ -147,9 +148,11 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
           )
         }
         router.push(
-          with: .presentationRequest(
-            presentationCoordinator: session,
-            originator: .credentialOfferRequest(config: viewState.config)
+          with: .featurePresentationModule(
+            .presentationRequest(
+              presentationCoordinator: session,
+              originator: .featureIssuanceModule(.credentialOfferRequest(config: viewState.config))
+            )
           )
         )
       case .failure(let error):

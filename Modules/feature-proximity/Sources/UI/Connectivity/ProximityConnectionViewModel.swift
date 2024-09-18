@@ -86,9 +86,11 @@ final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Rout
   private func onConnectionSuccess() async {
     cancellables.forEach({$0.cancel()})
     router.push(
-      with: .proximityRequest(
-        presentationCoordinator: interactor.presentationSessionCoordinator,
-        originator: viewState.originator
+      with: .featureProximityModule(
+        .proximityRequest(
+          presentationCoordinator: interactor.presentationSessionCoordinator,
+          originator: viewState.originator
+        )
       )
     )
   }

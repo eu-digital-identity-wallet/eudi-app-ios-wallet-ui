@@ -17,13 +17,13 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct BiometryView<Router: RouterHost>: View {
+struct BiometryView<Router: RouterHost>: View {
 
   @ObservedObject var viewModel: BiometryViewModel<Router>
   @Environment(\.scenePhase) var scenePhase
 
-  public init(with router: Router, interactor: BiometryInteractor, config: any UIConfigType) {
-    self.viewModel = .init(router: router, interactor: interactor, config: config)
+  init(with viewModel: BiometryViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
   private var pinView: some View {
@@ -87,7 +87,7 @@ public struct BiometryView<Router: RouterHost>: View {
     }
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView {
       content
         .alert(item: $viewModel.biometryError) { error in

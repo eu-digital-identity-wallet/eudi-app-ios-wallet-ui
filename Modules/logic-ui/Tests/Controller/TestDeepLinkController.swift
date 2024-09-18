@@ -103,7 +103,7 @@ final class TestDeepLinkController: EudiTest {
     let sessionCoordinator = RemoteSessionCoordinator(
       session: Self.mockPresentationSession
     )
-    let appRoute = AppRoute.presentationRequest(presentationCoordinator: sessionCoordinator, originator: .dashboard)
+    let appRoute = AppRoute.featurePresentationModule(.presentationRequest(presentationCoordinator: sessionCoordinator, originator: .featureDashboardModule(.dashboard)))
     let pendingAction = Self.mockedOpenId4VPDeepLinkAction
     
     stubHandleDeepLink(

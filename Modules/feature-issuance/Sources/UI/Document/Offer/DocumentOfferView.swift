@@ -17,19 +17,15 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct DocumentOfferView<Router: RouterHost>: View {
+struct DocumentOfferView<Router: RouterHost>: View {
 
   @ObservedObject var viewModel: DocumentOfferViewModel<Router>
 
-  public init(
-    with router: Router,
-    and interactor: DocumentOfferInteractor,
-    config: any UIConfigType
-  ) {
-    self.viewModel = .init(router: router, interactor: interactor, config: config)
+  init(with viewModel: DocumentOfferViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView(errorConfig: viewModel.viewState.error) {
 
       ContentTitleView(

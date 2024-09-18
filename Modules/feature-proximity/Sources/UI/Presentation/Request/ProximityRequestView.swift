@@ -17,23 +17,15 @@ import SwiftUI
 import logic_ui
 import feature_common
 
-public struct ProximityRequestView<Router: RouterHost>: View {
+struct ProximityRequestView<Router: RouterHost>: View {
 
   @ObservedObject private var viewModel: ProximityRequestViewModel<Router>
 
-  public init(
-    with router: Router,
-    and interactor: ProximityInteractor,
-    originator: AppRoute
-  ) {
-    self.viewModel = .init(
-      router: router,
-      interactor: interactor,
-      originator: originator
-    )
+  init(with viewModel: ProximityRequestViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
-  public var body: some View {
+  var body: some View {
     BaseRequestView(with: viewModel.router, viewModel: viewModel)
   }
 }

@@ -29,7 +29,6 @@ struct OfferCodeViewState: ViewState {
   let caption: LocalizableString.Key
 }
 
-@MainActor
 final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferCodeViewState> {
 
   @Published var codeInput: String = ""
@@ -115,9 +114,13 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
           )
         }
         router.push(
-          with: .presentationRequest(
-            presentationCoordinator: session,
-            originator: .issuanceCode(config: viewState.config)
+          with: .featurePresentationModule(
+            .presentationRequest(
+              presentationCoordinator: session,
+              originator: .featureIssuanceModule(
+                .issuanceCode(config: viewState.config)
+              )
+            )
           )
         )
       case .failure(let error):
