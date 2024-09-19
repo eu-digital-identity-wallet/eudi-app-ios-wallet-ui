@@ -22,11 +22,11 @@ public final class CommonRouter {
   public static func resolve(module: FeatureCommonRouteModule, host: some RouterHost) -> AnyView {
     return switch module {
     case .quickPin(config: let config):
-      BiometryView(
+      QuickPinView(
         with: .init(
           router: host,
           interactor: DIGraph.resolver.force(
-            BiometryInteractor.self
+            QuickPinInteractor.self
           ),
           config: config
         )

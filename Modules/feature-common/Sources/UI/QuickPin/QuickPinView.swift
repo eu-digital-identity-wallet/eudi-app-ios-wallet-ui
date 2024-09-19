@@ -17,19 +17,15 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct QuickPinView<Router: RouterHost>: View {
+struct QuickPinView<Router: RouterHost>: View {
 
   @ObservedObject var viewModel: QuickPinViewModel<Router>
 
-  public init(
-    with router: Router,
-    interactor: QuickPinInteractor,
-    config: any UIConfigType
-  ) {
-    self.viewModel = .init(router: router, interactor: interactor, config: config)
+  init(with viewModel: QuickPinViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView {
 
       if viewModel.viewState.isCancellable {
