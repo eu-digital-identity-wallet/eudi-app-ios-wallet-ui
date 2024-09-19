@@ -8918,7 +8918,126 @@ import Shimmer
 
 
 
-// MARK: - Mocks generated from file: 'Modules/logic-ui/Sources/Navigation/RouterContract.swift'
+// MARK: - Mocks generated from file: 'Modules/logic-ui/Sources/Navigation/AppRoute.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
+// MARK: - Mocks generated from file: 'Modules/logic-ui/Sources/Navigation/AppRouteModule.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+public class MockAppRouteModule: AppRouteModule, Cuckoo.ProtocolMock {
+    public typealias MocksType = AppRouteModule
+    public typealias Stubbing = __StubbingProxy_AppRouteModule
+    public typealias Verification = __VerificationProxy_AppRouteModule
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any AppRouteModule)?
+
+    public func enableDefaultImplementation(_ stub: any AppRouteModule) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+    public var info: (key: String, arguments: [String: String]) {
+        get {
+            return cuckoo_manager.getter(
+                "info",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.info
+            )
+        }
+    }
+    
+    public var id: String {
+        get {
+            return cuckoo_manager.getter(
+                "id",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.id
+            )
+        }
+    }
+
+
+    public struct __StubbingProxy_AppRouteModule: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        var info: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockAppRouteModule,(key: String, arguments: [String: String])> {
+            return .init(manager: cuckoo_manager, name: "info")
+        }
+        
+        var id: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockAppRouteModule,String> {
+            return .init(manager: cuckoo_manager, name: "id")
+        }
+    }
+
+    public struct __VerificationProxy_AppRouteModule: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        var info: Cuckoo.VerifyReadOnlyProperty<(key: String, arguments: [String: String])> {
+            return .init(manager: cuckoo_manager, name: "info", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var id: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "id", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+    }
+}
+
+public class AppRouteModuleStub:AppRouteModule {
+    
+    public var info: (key: String, arguments: [String: String]) {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ((key: String, arguments: [String: String])).self)
+        }
+    }
+    
+    public var id: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+    }
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: 'Modules/logic-ui/Sources/Navigation/RouterHost.swift'
 
 import Cuckoo
 import SwiftUI
@@ -9411,492 +9530,6 @@ public class RouterHostStub:RouterHost {
     }
     
     public func isScreenOnBackStack(with p0: AppRoute) -> Bool {
-        return DefaultValueRegistry.defaultValue(for: (Bool).self)
-    }
-}
-
-
-public class MockPreviewRouter: PreviewRouter, Cuckoo.ClassMock {
-    public typealias MocksType = PreviewRouter
-    public typealias Stubbing = __StubbingProxy_PreviewRouter
-    public typealias Verification = __VerificationProxy_PreviewRouter
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: true)
-
-    private var __defaultImplStub: PreviewRouter?
-
-    public func enableDefaultImplementation(_ stub: PreviewRouter) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-    
-    public override func push(with p0: AppRoute) {
-        return cuckoo_manager.call(
-            "push(with p0: AppRoute)",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: super.push(with: p0),
-            defaultCall: __defaultImplStub!.push(with: p0)
-        )
-    }
-    
-    public override func popTo(with p0: AppRoute, inclusive p1: Bool, animated p2: Bool) {
-        return cuckoo_manager.call(
-            "popTo(with p0: AppRoute, inclusive p1: Bool, animated p2: Bool)",
-            parameters: (p0, p1, p2),
-            escapingParameters: (p0, p1, p2),
-            superclassCall: super.popTo(with: p0, inclusive: p1, animated: p2),
-            defaultCall: __defaultImplStub!.popTo(with: p0, inclusive: p1, animated: p2)
-        )
-    }
-    
-    public override func popTo(with p0: AppRoute, inclusive p1: Bool) {
-        return cuckoo_manager.call(
-            "popTo(with p0: AppRoute, inclusive p1: Bool)",
-            parameters: (p0, p1),
-            escapingParameters: (p0, p1),
-            superclassCall: super.popTo(with: p0, inclusive: p1),
-            defaultCall: __defaultImplStub!.popTo(with: p0, inclusive: p1)
-        )
-    }
-    
-    public override func popTo(with p0: AppRoute) {
-        return cuckoo_manager.call(
-            "popTo(with p0: AppRoute)",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: super.popTo(with: p0),
-            defaultCall: __defaultImplStub!.popTo(with: p0)
-        )
-    }
-    
-    public override func pop(animated p0: Bool) {
-        return cuckoo_manager.call(
-            "pop(animated p0: Bool)",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: super.pop(animated: p0),
-            defaultCall: __defaultImplStub!.pop(animated: p0)
-        )
-    }
-    
-    public override func pop() {
-        return cuckoo_manager.call(
-            "pop()",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.pop(),
-            defaultCall: __defaultImplStub!.pop()
-        )
-    }
-    
-    public override func composeApplication() -> AnyView {
-        return cuckoo_manager.call(
-            "composeApplication() -> AnyView",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.composeApplication(),
-            defaultCall: __defaultImplStub!.composeApplication()
-        )
-    }
-    
-    public override func getCurrentScreen() -> AppRoute? {
-        return cuckoo_manager.call(
-            "getCurrentScreen() -> AppRoute?",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getCurrentScreen(),
-            defaultCall: __defaultImplStub!.getCurrentScreen()
-        )
-    }
-    
-    public override func getToolbarConfig() -> UIConfig.ToolBar {
-        return cuckoo_manager.call(
-            "getToolbarConfig() -> UIConfig.ToolBar",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getToolbarConfig(),
-            defaultCall: __defaultImplStub!.getToolbarConfig()
-        )
-    }
-    
-    public override func userIsLoggedInWithDocuments() -> Bool {
-        return cuckoo_manager.call(
-            "userIsLoggedInWithDocuments() -> Bool",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.userIsLoggedInWithDocuments(),
-            defaultCall: __defaultImplStub!.userIsLoggedInWithDocuments()
-        )
-    }
-    
-    public override func userIsLoggedInWithNoDocuments() -> Bool {
-        return cuckoo_manager.call(
-            "userIsLoggedInWithNoDocuments() -> Bool",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.userIsLoggedInWithNoDocuments(),
-            defaultCall: __defaultImplStub!.userIsLoggedInWithNoDocuments()
-        )
-    }
-    
-    public override func isScreenForeground(with p0: AppRoute) -> Bool {
-        return cuckoo_manager.call(
-            "isScreenForeground(with p0: AppRoute) -> Bool",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: super.isScreenForeground(with: p0),
-            defaultCall: __defaultImplStub!.isScreenForeground(with: p0)
-        )
-    }
-    
-    public override func isScreenOnBackStack(with p0: AppRoute) -> Bool {
-        return cuckoo_manager.call(
-            "isScreenOnBackStack(with p0: AppRoute) -> Bool",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: super.isScreenOnBackStack(with: p0),
-            defaultCall: __defaultImplStub!.isScreenOnBackStack(with: p0)
-        )
-    }
-
-    public struct __StubbingProxy_PreviewRouter: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        func push<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ClassStubNoReturnFunction<(AppRoute)> where M1.MatchedType == AppRoute {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "push(with p0: AppRoute)",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func popTo<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(with p0: M1, inclusive p1: M2, animated p2: M3) -> Cuckoo.ClassStubNoReturnFunction<(AppRoute, Bool, Bool)> where M1.MatchedType == AppRoute, M2.MatchedType == Bool, M3.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute, Bool, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "popTo(with p0: AppRoute, inclusive p1: Bool, animated p2: Bool)",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func popTo<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with p0: M1, inclusive p1: M2) -> Cuckoo.ClassStubNoReturnFunction<(AppRoute, Bool)> where M1.MatchedType == AppRoute, M2.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "popTo(with p0: AppRoute, inclusive p1: Bool)",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func popTo<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ClassStubNoReturnFunction<(AppRoute)> where M1.MatchedType == AppRoute {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "popTo(with p0: AppRoute)",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func pop<M1: Cuckoo.Matchable>(animated p0: M1) -> Cuckoo.ClassStubNoReturnFunction<(Bool)> where M1.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "pop(animated p0: Bool)",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func pop() -> Cuckoo.ClassStubNoReturnFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "pop()",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func composeApplication() -> Cuckoo.ClassStubFunction<(), AnyView> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "composeApplication() -> AnyView",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getCurrentScreen() -> Cuckoo.ClassStubFunction<(), AppRoute?> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "getCurrentScreen() -> AppRoute?",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getToolbarConfig() -> Cuckoo.ClassStubFunction<(), UIConfig.ToolBar> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "getToolbarConfig() -> UIConfig.ToolBar",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func userIsLoggedInWithDocuments() -> Cuckoo.ClassStubFunction<(), Bool> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "userIsLoggedInWithDocuments() -> Bool",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func userIsLoggedInWithNoDocuments() -> Cuckoo.ClassStubFunction<(), Bool> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "userIsLoggedInWithNoDocuments() -> Bool",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func isScreenForeground<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ClassStubFunction<(AppRoute), Bool> where M1.MatchedType == AppRoute {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "isScreenForeground(with p0: AppRoute) -> Bool",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func isScreenOnBackStack<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ClassStubFunction<(AppRoute), Bool> where M1.MatchedType == AppRoute {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockPreviewRouter.self,
-                method: "isScreenOnBackStack(with p0: AppRoute) -> Bool",
-                parameterMatchers: matchers
-            ))
-        }
-    }
-
-    public struct __VerificationProxy_PreviewRouter: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        
-        @discardableResult
-        func push<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(AppRoute), Void> where M1.MatchedType == AppRoute {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "push(with p0: AppRoute)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func popTo<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(with p0: M1, inclusive p1: M2, animated p2: M3) -> Cuckoo.__DoNotUse<(AppRoute, Bool, Bool), Void> where M1.MatchedType == AppRoute, M2.MatchedType == Bool, M3.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute, Bool, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
-            return cuckoo_manager.verify(
-                "popTo(with p0: AppRoute, inclusive p1: Bool, animated p2: Bool)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func popTo<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with p0: M1, inclusive p1: M2) -> Cuckoo.__DoNotUse<(AppRoute, Bool), Void> where M1.MatchedType == AppRoute, M2.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
-            return cuckoo_manager.verify(
-                "popTo(with p0: AppRoute, inclusive p1: Bool)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func popTo<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(AppRoute), Void> where M1.MatchedType == AppRoute {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "popTo(with p0: AppRoute)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func pop<M1: Cuckoo.Matchable>(animated p0: M1) -> Cuckoo.__DoNotUse<(Bool), Void> where M1.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "pop(animated p0: Bool)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func pop() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "pop()",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func composeApplication() -> Cuckoo.__DoNotUse<(), AnyView> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "composeApplication() -> AnyView",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getCurrentScreen() -> Cuckoo.__DoNotUse<(), AppRoute?> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getCurrentScreen() -> AppRoute?",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getToolbarConfig() -> Cuckoo.__DoNotUse<(), UIConfig.ToolBar> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getToolbarConfig() -> UIConfig.ToolBar",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func userIsLoggedInWithDocuments() -> Cuckoo.__DoNotUse<(), Bool> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "userIsLoggedInWithDocuments() -> Bool",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func userIsLoggedInWithNoDocuments() -> Cuckoo.__DoNotUse<(), Bool> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "userIsLoggedInWithNoDocuments() -> Bool",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func isScreenForeground<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(AppRoute), Bool> where M1.MatchedType == AppRoute {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "isScreenForeground(with p0: AppRoute) -> Bool",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func isScreenOnBackStack<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(AppRoute), Bool> where M1.MatchedType == AppRoute {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "isScreenOnBackStack(with p0: AppRoute) -> Bool",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-    }
-}
-
-public class PreviewRouterStub:PreviewRouter {
-
-
-    
-    public override func push(with p0: AppRoute) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public override func popTo(with p0: AppRoute, inclusive p1: Bool, animated p2: Bool) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public override func popTo(with p0: AppRoute, inclusive p1: Bool) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public override func popTo(with p0: AppRoute) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public override func pop(animated p0: Bool) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public override func pop() {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public override func composeApplication() -> AnyView {
-        return DefaultValueRegistry.defaultValue(for: (AnyView).self)
-    }
-    
-    public override func getCurrentScreen() -> AppRoute? {
-        return DefaultValueRegistry.defaultValue(for: (AppRoute?).self)
-    }
-    
-    public override func getToolbarConfig() -> UIConfig.ToolBar {
-        return DefaultValueRegistry.defaultValue(for: (UIConfig.ToolBar).self)
-    }
-    
-    public override func userIsLoggedInWithDocuments() -> Bool {
-        return DefaultValueRegistry.defaultValue(for: (Bool).self)
-    }
-    
-    public override func userIsLoggedInWithNoDocuments() -> Bool {
-        return DefaultValueRegistry.defaultValue(for: (Bool).self)
-    }
-    
-    public override func isScreenForeground(with p0: AppRoute) -> Bool {
-        return DefaultValueRegistry.defaultValue(for: (Bool).self)
-    }
-    
-    public override func isScreenOnBackStack(with p0: AppRoute) -> Bool {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
 }

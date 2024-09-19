@@ -17,19 +17,15 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct OfferCodeView<Router: RouterHost>: View {
+struct OfferCodeView<Router: RouterHost>: View {
 
   @ObservedObject var viewModel: OfferCodeViewModel<Router>
 
-  public init(
-    with router: Router,
-    and interactor: DocumentOfferInteractor,
-    config: any UIConfigType
-  ) {
-    self.viewModel = .init(router: router, interactor: interactor, config: config)
+  init(with viewModel: OfferCodeViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView(errorConfig: viewModel.viewState.error) {
 
       ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {

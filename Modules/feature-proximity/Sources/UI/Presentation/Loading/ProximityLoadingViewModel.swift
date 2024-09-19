@@ -58,26 +58,30 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   }
 
   private func getOnSuccessRoute() -> AppRoute {
-    .success(
-      config: UIConfig.Success(
-        title: .init(value: .success),
-        subtitle: .requestDataShareSuccess([relyingParty]),
-        buttons: [
-          .init(
-            title: .okButton,
-            style: .primary,
-            navigationType: .pop(screen: getOriginator())
-          )
-        ],
-        visualKind: .defaultIcon
+    .featureCommonModule(
+      .success(
+        config: UIConfig.Success(
+          title: .init(value: .success),
+          subtitle: .requestDataShareSuccess([relyingParty]),
+          buttons: [
+            .init(
+              title: .okButton,
+              style: .primary,
+              navigationType: .pop(screen: getOriginator())
+            )
+          ],
+          visualKind: .defaultIcon
+        )
       )
     )
   }
 
   override func getOnPopRoute() -> AppRoute? {
-    .proximityRequest(
-      presentationCoordinator: interactor.presentationSessionCoordinator,
-      originator: getOriginator()
+    .featureProximityModule(
+      .proximityRequest(
+        presentationCoordinator: interactor.presentationSessionCoordinator,
+        originator: getOriginator()
+      )
     )
   }
 

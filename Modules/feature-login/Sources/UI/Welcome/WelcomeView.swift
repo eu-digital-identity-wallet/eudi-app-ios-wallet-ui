@@ -18,18 +18,15 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct WelcomeView<Router: RouterHost>: View {
+struct WelcomeView<Router: RouterHost>: View {
 
   @ObservedObject private var viewModel: WelcomeViewModel<Router>
 
-  public init(
-    with router: Router,
-    and interactor: WelcomeInteractor
-  ) {
-    self.viewModel = .init(router: router, interactor: interactor)
+  public init(with viewModel: WelcomeViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView(
       padding: .zero
     ) {

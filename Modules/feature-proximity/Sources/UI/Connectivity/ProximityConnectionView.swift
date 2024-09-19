@@ -17,18 +17,18 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct ProximityConnectionView<Router: RouterHost>: View {
+struct ProximityConnectionView<Router: RouterHost>: View {
 
   @ObservedObject private var viewModel: ProximityConnectionViewModel<Router>
 
   var contentSize: CGFloat = 0.0
 
-  public init(with router: Router, and interactor: ProximityInteractor, originator: AppRoute) {
-    self.viewModel = .init(router: router, interactor: interactor, originator: originator)
+  init(with viewModel: ProximityConnectionViewModel<Router>) {
+    self.viewModel = viewModel
     self.contentSize = getScreenRect().width / 1.5
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView(
       padding: .zero,
       canScroll: true,

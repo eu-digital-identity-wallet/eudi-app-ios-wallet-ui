@@ -13,19 +13,30 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import SwiftUI
 import logic_ui
-import feature_common
+import logic_business
+import logic_core
 
-struct ProximityLoadingView<Router: RouterHost>: View {
+@MainActor
+public final class DashboardRouter {
 
-  @ObservedObject private var viewModel: ProximityLoadingViewModel<Router>
-
-  init(with viewModel: ProximityLoadingViewModel<Router>) {
-    self.viewModel = viewModel
-  }
-
-  var body: some View {
-    BaseLoadingView(with: viewModel.router, viewModel: viewModel)
+  public static func resolve(module: FeatureDashboardRouteModule, host: some RouterHost) -> AnyView {
+    switch module {
+    case .dashboard:
+      DashboardView(
+        with: .init(
+          router: host,
+          interactor: DIGraph.resolver.force(
+            DashboardInteractor.self
+          ),
+          deepLinkController: DIGraph.resolver.force(
+            DeepLinkController.self
+          ),
+          walletKit: DIGraph.resolver.force(
+            WalletKitController.self
+          )
+        )
+      ).eraseToAnyView()
+    }
   }
 }

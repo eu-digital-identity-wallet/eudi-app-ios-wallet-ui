@@ -17,15 +17,15 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct StartupView<Router: RouterHost>: View {
+struct StartupView<Router: RouterHost>: View {
 
   @ObservedObject private var viewModel: StartupViewModel<Router>
 
-  public init(with router: Router, and interactor: StartupInteractor) {
-    self.viewModel = .init(router: router, interactor: interactor)
+  init(with viewModel: StartupViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView(
       padding: .zero,
       canScroll: false,

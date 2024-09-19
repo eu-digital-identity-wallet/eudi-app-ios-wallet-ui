@@ -13,19 +13,21 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import SwiftUI
-import logic_ui
-import feature_common
+public protocol AppRouteModule: Hashable, Identifiable {
+  var info: (key: String, arguments: [String: String]) { get }
+  var id: String { get }
+}
 
-struct ProximityLoadingView<Router: RouterHost>: View {
-
-  @ObservedObject private var viewModel: ProximityLoadingViewModel<Router>
-
-  init(with viewModel: ProximityLoadingViewModel<Router>) {
-    self.viewModel = viewModel
+public extension AppRouteModule {
+  var id: String {
+    info.key
   }
 
-  var body: some View {
-    BaseLoadingView(with: viewModel.router, viewModel: viewModel)
+  static func == (lhs: Self, rhs: Self) -> Bool {
+    return lhs.id == rhs.id
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(id)
   }
 }

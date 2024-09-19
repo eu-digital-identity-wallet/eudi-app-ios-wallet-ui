@@ -51,23 +51,27 @@ final class StartupInteractorImpl: StartupInteractor {
     try? await walletKitController.loadDocuments()
     try? await Task.sleep(nanoseconds: splashAnimationDuration.nanoseconds)
     if quickPinInteractor.hasPin() {
-      return .biometry(
-        config: UIConfig.Biometry(
-          title: .loginTitle,
-          caption: .loginCaption,
-          quickPinOnlyCaption: .loginCaptionQuickPinOnly,
-          navigationSuccessType: .push(
-            hasDocuments
-            ? .dashboard
-            : .issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument))
-          ),
-          navigationBackType: nil,
-          isPreAuthorization: true,
-          shouldInitializeBiometricOnCreate: true
+      return .featureCommonModule(
+        .biometry(
+          config: UIConfig.Biometry(
+            title: .loginTitle,
+            caption: .loginCaption,
+            quickPinOnlyCaption: .loginCaptionQuickPinOnly,
+            navigationSuccessType: .push(
+              hasDocuments
+              ? .featureDashboardModule(.dashboard)
+              : .featureIssuanceModule(.issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument)))
+            ),
+            navigationBackType: nil,
+            isPreAuthorization: true,
+            shouldInitializeBiometricOnCreate: true
+          )
         )
       )
     } else {
-      return .quickPin(config: QuickPinUiConfig(flow: .set))
+      return .featureCommonModule(
+        .quickPin(config: QuickPinUiConfig(flow: .set))
+      )
     }
   }
 
