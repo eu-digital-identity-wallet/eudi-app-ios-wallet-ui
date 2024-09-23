@@ -60,3 +60,12 @@ struct BearerHeaderView: View {
     .background(Theme.shared.color.backgroundPaper)
   }
 }
+
+#Preview {
+  BearerHeaderView(
+    item: BearerUIModel.mock(name: "Name"),
+    isLoading: false,
+    isMoreOptionsEnabled: true,
+    onMoreClicked: {}()
+  )
+}
