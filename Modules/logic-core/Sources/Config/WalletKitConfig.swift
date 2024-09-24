@@ -21,21 +21,11 @@ struct VciConfig {
   public let redirectUri: URL
 }
 
-struct VerifierConfig {
-  public let apiUri: String
-  public let legalName: String
-}
-
 struct ReaderConfig {
   public let trustedCerts: [Data]
 }
 
 protocol WalletKitConfig {
-
-  /**
-   * Verifier API URI.
-   */
-  var verifierConfig: VerifierConfig { get }
 
   /**
    * VCI Configuration
@@ -67,13 +57,6 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
   var userAuthenticationRequired: Bool {
     getBundleValue(key: "Core User Auth").toBool()
-  }
-
-  var verifierConfig: VerifierConfig {
-    .init(
-      apiUri: getBundleValue(key: "Verifier API"),
-      legalName: getBundleValue(key: "Verifier Legal Name")
-    )
   }
 
   var vciConfig: VciConfig {
