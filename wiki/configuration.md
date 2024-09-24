@@ -20,7 +20,6 @@ The application allows the configuration of:
 Via the *WalletDemo* and *WalletDemoRelease* xcconfigs inside the Wallet/Config folder.
 
 ```
-VERIFIER_API_URI = https:/$()/verifier.eudiw.dev
 VCI_ISSUER_URL = https:/$()/issuer.eudiw.dev/oidc
 VCI_CLIENT_ID = wallet-demo
 VCI_REDIRECT_URI = eudi-openid4ci:/$()/authorize/
@@ -57,6 +56,15 @@ The application's IACA certificates are located [here](https://github.com/eu-dig
     }
     return .init(trustedCerts: [cert])
   }
+```
+
+4. Preregistered Client Scheme
+
+If you plan to use the Preregistered for OpenId4VP configuration, please add the following to the *WalletKitConfigImpl* initializer.
+
+```
+wallet.verifierApiUri = "your_verifier_url"
+wallet.verifierLegalName = "your_verifier_legal_name"
 ```
 
 ## DeepLink Schemas configuration

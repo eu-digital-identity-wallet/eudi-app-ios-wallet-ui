@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twostraws/CodeScanner",
       "state" : {
-        "revision" : "34da57fb63b47add20de8a85da58191523ccce57",
-        "version" : "2.5.0"
+        "revision" : "9fa582f4b36c69c2a55bff5fb3377eb170ae273c",
+        "version" : "2.5.1"
       }
     },
     {
@@ -338,8 +338,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-cmark.git",
       "state" : {
-        "revision" : "3bc2f3e25df0cecc5dc269f7ccae65d0f386f06a",
-        "version" : "0.4.0"
+        "revision" : "3ccff77b2dc5b96b77db3da0d68d28068593fa53",
+        "version" : "0.5.0"
       }
     },
     {
@@ -356,8 +356,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
       "state" : {
-        "revision" : "9f95b4d033a4edd3814b48608db3f2ca90c7218b",
-        "version" : "3.7.0"
+        "revision" : "81bee98e706aee68d39ed5996db069ef2b313d62",
+        "version" : "3.7.1"
       }
     },
     {
@@ -392,8 +392,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-markdown.git",
       "state" : {
-        "revision" : "4aae40bf6fff5286e0e1672329d17824ce16e081",
-        "version" : "0.4.0"
+        "revision" : "8f79cb175981458a0a27e76cb42fee8e17b1a993",
+        "version" : "0.5.0"
       }
     },
     {
@@ -410,8 +410,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/niscy-eudiw/SwiftCBOR.git",
       "state" : {
-        "revision" : "310dbc3975a5653237fed304d88a6dd59d04dd30",
-        "version" : "0.5.7"
+        "revision" : "2c8c55273d4c4aae21bb46c2afbae79ee072eff4",
+        "version" : "0.6.2"
       }
     },
     {

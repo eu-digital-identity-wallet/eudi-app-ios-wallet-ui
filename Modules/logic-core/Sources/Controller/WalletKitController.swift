@@ -83,8 +83,6 @@ final class WalletKitControllerImpl: WalletKitController {
     self.configLogic = configLogic
     self.keyChainController = keyChainController
     wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
-    wallet.verifierApiUri = configLogic.verifierConfig.apiUri
-    wallet.verifierLegalName = configLogic.verifierConfig.legalName
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciConfig = .init(
       clientId: configLogic.vciConfig.clientId,
