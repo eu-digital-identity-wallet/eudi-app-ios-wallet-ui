@@ -63,8 +63,8 @@ The application's IACA certificates are located [here](https://github.com/eu-dig
 If you plan to use the Preregistered for OpenId4VP configuration, please add the following to the *WalletKitConfigImpl* initializer.
 
 ```
-wallet.verifierApiUri = configLogic.verifierConfig.apiUri
-wallet.verifierLegalName = configLogic.verifierConfig.legalName
+wallet.verifierApiUri = "your_verifier_url"
+wallet.verifierLegalName = "your_verifier_legal_name"
 ```
 
 ## DeepLink Schemas configuration
