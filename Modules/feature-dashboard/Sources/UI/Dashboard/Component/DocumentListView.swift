@@ -35,7 +35,7 @@ struct DocumentListView: View {
   var body: some View {
     ScrollView {
       LazyVGrid(
-        columns: [GridItem(), GridItem()],
+        columns: [GridItem(alignment: .top), GridItem(alignment: .top)],
         spacing: SPACING_SMALL
       ) {
         ForEach(items) { item in

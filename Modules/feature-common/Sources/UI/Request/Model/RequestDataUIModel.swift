@@ -244,11 +244,14 @@ extension RequestDataUiModel {
   }
 
   fileprivate static func documentSectionHeader(for docElement: DocElementsViewModel) -> RequestDataUIModel {
-    .requestDataSection(
+    let documentIdentifier = DocumentTypeIdentifier(rawValue: docElement.docType)
+    return .requestDataSection(
       .init(
         id: docElement.id,
-        type: .init(docType: DocumentTypeIdentifier(rawValue: docElement.docType)),
-        title: DocumentTypeIdentifier(rawValue: docElement.docType).localizedTitle
+        type: .init(docType: documentIdentifier),
+        title: documentIdentifier.isSupported
+        ? documentIdentifier.localizedTitle
+        : docElement.displayName.ifNullOrEmpty { documentIdentifier.localizedTitle }
       )
     )
   }
