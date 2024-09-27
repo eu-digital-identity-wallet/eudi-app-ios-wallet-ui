@@ -28,3 +28,42 @@ public protocol RouterHost {
   func isScreenForeground(with route: AppRoute) -> Bool
   func isScreenOnBackStack(with route: AppRoute) -> Bool
 }
+
+public final class PreviewRouter: RouterHost {
+
+  public init() {}
+
+  public func push(with route: AppRoute) {}
+
+  public func popTo(with route: AppRoute, inclusive: Bool, animated: Bool) {}
+
+  public func popTo(with route: AppRoute, inclusive: Bool) {}
+
+  public func popTo(with route: AppRoute) {}
+
+  public func pop(animated: Bool) {}
+
+  public func pop() {}
+
+  public func composeApplication() -> AnyView { EmptyView().eraseToAnyView() }
+
+  public func getCurrentScreen() -> AppRoute? { .none }
+
+  public func getToolbarConfig() -> UIConfig.ToolBar { .init(.clear) }
+
+  public func userIsLoggedInWithDocuments() -> Bool {
+    false
+  }
+
+  public func userIsLoggedInWithNoDocuments() -> Bool {
+    true
+  }
+
+  public func isScreenForeground(with route: AppRoute) -> Bool {
+    false
+  }
+
+  public func isScreenOnBackStack(with route: AppRoute) -> Bool {
+    true
+  }
+}

@@ -137,3 +137,51 @@ public extension WrapButtonView {
     case center, start, end
   }
 }
+
+#Preview {
+  VStack {
+    WrapButtonView(
+      style: .primary,
+      title: LocalizableString.Key.addDoc,
+      icon: Image(systemName: "calendar"),
+      gravity: .center,
+      cornerRadius: 10,
+      onAction: {}()
+    )
+    WrapButtonView(
+      style: .primary,
+      title: LocalizableString.Key.addDoc,
+      icon: Image(systemName: "calendar"),
+      gravity: .start,
+      cornerRadius: 10,
+      onAction: {}()
+    )
+    WrapButtonView(
+      style: .secondary,
+      title: LocalizableString.Key.addDoc,
+      icon: Image(systemName: "calendar"),
+      gravity: .end,
+      cornerRadius: 10,
+      onAction: {}()
+    )
+    WrapButtonView(
+      style: .primary,
+      title: LocalizableString.Key.addDoc,
+      icon: Image(systemName: "calendar"),
+      gravity: .center,
+      isLoading: true,
+      cornerRadius: 10,
+      onAction: {}()
+    )
+    WrapButtonView(
+      style: .primary,
+      title: LocalizableString.Key.addDoc,
+      icon: Image(systemName: "calendar"),
+      gravity: .center,
+      isEnabled: false,
+      cornerRadius: 10,
+      onAction: {}()
+    )
+  }
+  .padding()
+}

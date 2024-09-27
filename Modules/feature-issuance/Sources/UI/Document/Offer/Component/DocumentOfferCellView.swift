@@ -16,6 +16,7 @@
 import SwiftUI
 import logic_resources
 import logic_ui
+import logic_core
 
 extension DocumentOfferView {
   struct DocumentOfferCellView: View {
@@ -42,8 +43,8 @@ extension DocumentOfferView {
               .frame(width: 45)
 
             Text(cellModel.title)
-            .typography(Theme.shared.font.titleMedium)
-            .foregroundStyle(Theme.shared.color.black)
+              .typography(Theme.shared.font.titleMedium)
+              .foregroundStyle(Theme.shared.color.black)
 
           }
           .padding([.horizontal, .vertical], SPACING_SMALL)
@@ -59,4 +60,14 @@ extension DocumentOfferView {
       }
     }
   }
+}
+
+#Preview {
+  DocumentOfferView<PreviewRouter>.DocumentOfferCellView(
+    cellModel: DocumentOfferUIModel.UIOffer(
+      documentName: "Name",
+      documentType: DocumentTypeIdentifier.PID
+    ),
+    isLoading: false
+  )
 }

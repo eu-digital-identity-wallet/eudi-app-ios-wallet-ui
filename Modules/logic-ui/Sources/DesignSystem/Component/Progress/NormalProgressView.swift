@@ -33,3 +33,10 @@ public struct NormalProgressView: View {
     )
   }
 }
+
+#Preview {
+  Group {
+    NormalProgressView().lightModePreview()
+    NormalProgressView().darkModePreview()
+  }
+}

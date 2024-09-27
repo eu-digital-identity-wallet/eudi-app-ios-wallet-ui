@@ -122,3 +122,29 @@ public extension KeyValueView {
     public var value: String
   }
 }
+
+#Preview {
+  Group {
+    KeyValueView(
+      title: .yes,
+      image: Image(systemName: "person"),
+      alignment: .center,
+      isLoading: false
+    )
+
+    KeyValueView(
+      title: .yes,
+      image: Image(systemName: "person"),
+      alignment: .center,
+      isLoading: false
+    )
+    .darkModePreview()
+
+    KeyValueView(
+      title: .yes,
+      image: Image(systemName: "person"),
+      alignment: .center,
+      isLoading: true
+    )
+  }
+}

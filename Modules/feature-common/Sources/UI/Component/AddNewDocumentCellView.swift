@@ -78,3 +78,13 @@ public struct AddNewDocumentCellView: View {
     }
   }
 }
+
+#Preview {
+  AddNewDocumentCellView(
+    isEnabled: true,
+    icon: Image(systemName: "person.text.rectangle"),
+    title: LocalizableString.Key.addDocumentTitle,
+    isLoading: false,
+    action: {}
+  )
+}

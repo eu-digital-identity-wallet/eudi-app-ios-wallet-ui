@@ -135,3 +135,67 @@ public struct WrapCheckBoxView: View {
     .animation(.easeInOut, value: self.isVisible)
   }
 }
+
+struct WrapCheckBoxViewPreview: View {
+  var body: some View {
+    VStack {
+      WrapCheckBoxView(
+        isSelected: false,
+        isVisible: true,
+        isEnabled: true,
+        isLoading: false,
+        id: "1",
+        title: "Title",
+        value: "title"
+      )
+
+      WrapCheckBoxView(
+        isSelected: true,
+        isVisible: true,
+        isEnabled: true,
+        isLoading: false,
+        id: "1",
+        title: "Title",
+        value: "title"
+      )
+
+      WrapCheckBoxView(
+        isSelected: true,
+        isVisible: false,
+        isEnabled: true,
+        isLoading: false,
+        id: "1",
+        title: "Title",
+        value: "title"
+      )
+
+      WrapCheckBoxView(
+        isSelected: true,
+        isVisible: false,
+        isEnabled: true,
+        isLoading: true,
+        id: "1",
+        title: "Title",
+        value: "title"
+      )
+
+      WrapCheckBoxView(
+        isSelected: false,
+        isVisible: true,
+        isEnabled: false,
+        isLoading: false,
+        id: "1",
+        title: "Title",
+        value: "title"
+      )
+    }
+    .padding()
+  }
+}
+
+#Preview {
+  Group {
+    WrapCheckBoxViewPreview().lightModePreview()
+    WrapCheckBoxViewPreview().darkModePreview()
+  }
+}

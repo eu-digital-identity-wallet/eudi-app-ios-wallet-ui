@@ -61,3 +61,12 @@ struct FAQsView<Router: RouterHost>: View {
     .background(Theme.shared.color.backgroundPaper)
   }
 }
+
+#Preview {
+  FAQsView(
+    with: FAQsViewModel(
+      router: PreviewRouter(),
+      interactor: FAQsInteractorImpl()
+    )
+  )
+}

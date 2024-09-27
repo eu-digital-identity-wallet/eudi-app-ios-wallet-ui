@@ -80,3 +80,10 @@ struct DocumentListView: View {
     }
   }
 }
+
+#Preview {
+  DocumentListView(
+    items: DocumentUIModel.mocks(),
+    isLoading: false
+  ) { _ in }
+}

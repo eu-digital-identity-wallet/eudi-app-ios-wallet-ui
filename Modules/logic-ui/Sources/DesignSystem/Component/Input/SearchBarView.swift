@@ -46,3 +46,21 @@ public struct SearchBarView: View {
     .shimmer(isLoading: isloading)
   }
 }
+
+#Preview {
+  Group {
+    SearchBarView(
+      text: .constant("text"),
+      commited: .constant(true),
+      isLoading: false
+    )
+    .lightModePreview()
+
+    SearchBarView(
+      text: .constant("text"),
+      commited: .constant(true),
+      isLoading: false
+    )
+    .darkModePreview()
+  }
+}

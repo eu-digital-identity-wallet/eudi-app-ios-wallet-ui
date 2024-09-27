@@ -42,11 +42,11 @@ public extension BearerUIModel {
     public var image: Image
   }
 
-  static func mock() -> BearerUIModel {
+  static func mock(name: String = "") -> BearerUIModel {
     .init(
       id: UUID().uuidString,
       value: .init(
-        name: "",
+        name: name,
         image: Theme.shared.image.user
       )
     )

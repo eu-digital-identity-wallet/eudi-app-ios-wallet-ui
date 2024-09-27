@@ -71,3 +71,11 @@ public struct FloatingActionButtonBarView: View {
     .background(backgroundColor)
   }
 }
+
+#Preview {
+  FloatingActionButtonBarView(
+    isLoading: false,
+    addAction: {}(),
+    shareAction: {}()
+  )
+}
