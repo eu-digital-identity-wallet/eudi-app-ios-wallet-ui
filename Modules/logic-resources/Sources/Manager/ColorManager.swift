@@ -48,7 +48,7 @@ final class ColorManager: ColorManagerProtocol {
 
   // MARK: - Properties
 
-  enum PaletteColorEnum: String {
+  enum PaletteColorEnum: String, CaseIterable {
     case backgroundDefault
     case backgroundPaper
     case chipBackground
@@ -74,7 +74,7 @@ final class ColorManager: ColorManagerProtocol {
     case textSecondaryLight
   }
 
-  enum BaseColors: String {
+  enum BaseColors: String, CaseIterable {
     case black
     case white
     case blue
@@ -172,5 +172,56 @@ final class ColorManager: ColorManagerProtocol {
     material = MaterialColor(bundle: bundle)
     self.bundle = bundle
   }
+}
 
+struct ColorDescr: Identifiable {
+  var id = UUID()
+  var color: Color
+  var description: String
+}
+
+struct ColorsPreview: View {
+  func colors() -> [ColorDescr] {
+    return ColorManager.PaletteColorEnum.allCases.map { colorEnum in
+      ColorDescr(
+        color: Color(colorEnum.rawValue, bundle: .assetsBundle),
+        description: colorEnum.rawValue
+      )
+    }
+  }
+  func baseColors() -> [ColorDescr] {
+    return ColorManager.BaseColors.allCases.map { colorEnum in
+      ColorDescr(
+        color: Color(colorEnum.rawValue, bundle: .assetsBundle),
+        description: colorEnum.rawValue
+      )
+    }
+  }
+
+  var body: some View {
+    ScrollView {
+      VStack {
+        Text("Palette colors")
+          .font(.title)
+        ForEach(colors()) { touple in
+          ZStack {
+            touple.color
+            Text(touple.description).foregroundColor(Color.black)
+          }
+        }
+        Text("Base colors")
+          .font(.title)
+        ForEach(baseColors()) { touple in
+          ZStack {
+            touple.color
+            Text(touple.description).foregroundColor(Color.black)
+          }
+        }
+      }
+    }
+  }
+}
+
+#Preview {
+  ColorsPreview()
 }

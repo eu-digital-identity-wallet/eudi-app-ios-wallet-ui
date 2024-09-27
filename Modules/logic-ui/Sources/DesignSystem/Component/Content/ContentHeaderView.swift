@@ -109,3 +109,31 @@ public extension ContentHeaderView {
     }
   }
 }
+
+#Preview {
+  Group {
+    ContentHeaderView(
+      title: LocalizableString.Key.loginTitle,
+      actions: [
+        ContentHeaderView.Action(
+          image: Image(systemName: "person"),
+          callback: {}()
+        )
+      ],
+      onBack: {}
+    )
+    .lightModePreview()
+
+    ContentHeaderView(
+      title: LocalizableString.Key.loginTitle,
+      actions: [
+        ContentHeaderView.Action(
+          image: Image(systemName: "person"),
+          callback: {}()
+        )
+      ],
+      onBack: {}
+    )
+    .darkModePreview()
+  }
+}

@@ -5979,16 +5979,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
         cuckoo_manager.enableDefaultStubImplementation()
     }
     
-    var verifierConfig: VerifierConfig {
-        get {
-            return cuckoo_manager.getter(
-                "verifierConfig",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.verifierConfig
-            )
-        }
-    }
-    
     var vciConfig: VciConfig {
         get {
             return cuckoo_manager.getter(
@@ -6047,10 +6037,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
             self.cuckoo_manager = manager
         }
         
-        var verifierConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,VerifierConfig> {
-            return .init(manager: cuckoo_manager, name: "verifierConfig")
-        }
-        
         var vciConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,VciConfig> {
             return .init(manager: cuckoo_manager, name: "vciConfig")
         }
@@ -6083,10 +6069,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
             self.sourceLocation = sourceLocation
         }
         
-        var verifierConfig: Cuckoo.VerifyReadOnlyProperty<VerifierConfig> {
-            return .init(manager: cuckoo_manager, name: "verifierConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
         var vciConfig: Cuckoo.VerifyReadOnlyProperty<VciConfig> {
             return .init(manager: cuckoo_manager, name: "vciConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
@@ -6110,12 +6092,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
 }
 
 class WalletKitConfigStub:WalletKitConfig {
-    
-    var verifierConfig: VerifierConfig {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (VerifierConfig).self)
-        }
-    }
     
     var vciConfig: VciConfig {
         get {
@@ -9288,7 +9264,6 @@ public class AppRouteModuleStub:AppRouteModule {
 // MARK: - Mocks generated from file: 'Modules/logic-ui/Sources/Navigation/RouterHost.swift'
 
 import Cuckoo
-import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

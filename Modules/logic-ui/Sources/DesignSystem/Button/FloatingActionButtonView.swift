@@ -126,3 +126,21 @@ public struct FloatingActionButtonModifier: ViewModifier {
     .edgesIgnoringSafeArea(.all)
   }
 }
+
+#Preview {
+  Group {
+    FloatingActionButtonView(
+      title: LocalizableString.Key.addDocumentSubtitle,
+      icon: Image(systemName: "calendar"),
+      action: {}
+    )
+    .lightModePreview()
+
+    FloatingActionButtonView(
+      title: LocalizableString.Key.addDocumentSubtitle,
+      icon: Image(systemName: "calendar"),
+      action: {}
+    )
+    .darkModePreview()
+  }
+}

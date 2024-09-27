@@ -34,8 +34,8 @@ public struct DocumentDetailsHeaderView: View {
     userIcon: Image,
     hasDocumentExpired: Bool,
     isLoading: Bool,
-    actions: [ContentHeaderView.Action]?,
-    onBack: (() -> Void)?
+    actions: [ContentHeaderView.Action]? = nil,
+    onBack: (() -> Void)? = nil
   ) {
     self.holdersName = holdersName
     self.userIcon = userIcon
@@ -59,6 +59,16 @@ public struct DocumentDetailsHeaderView: View {
       )
     }
   }
+}
+
+#Preview {
+  DocumentDetailsHeaderView(
+    documentName: "National ID",
+    holdersName: "Name",
+    userIcon: Image(systemName: "person"),
+    hasDocumentExpired: false,
+    isLoading: false
+  )
 }
 
 extension DocumentDetailsHeaderView {

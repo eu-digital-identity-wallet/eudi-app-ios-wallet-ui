@@ -30,10 +30,6 @@
 	<string>$(VCI_ISSUER_URL)</string>
 	<key>Vci Redirect Uri</key>
 	<string>$(VCI_REDIRECT_URI)</string>
-	<key>Verifier API</key>
-	<string>$(VERIFIER_API_URI)</string>
-	<key>Verifier Legal Name</key>
-	<string>$(VERIFIER_LEGAL_NAME)</string>
 	<key>Wallet Host Url</key>
 	<string>$(WALLET_HOST_URL)</string>
 </dict>

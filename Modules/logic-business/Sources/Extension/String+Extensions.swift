@@ -124,6 +124,12 @@ public extension String? {
     }
     return self
   }
+  func ifNullOrEmpty(_ fallback: () -> String) -> String {
+    guard let self = self, !self.isEmpty else {
+      return fallback()
+    }
+    return self
+  }
 }
 
 public extension String {

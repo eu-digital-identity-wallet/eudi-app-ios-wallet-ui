@@ -67,7 +67,6 @@ public struct WrapIconView: View {
       if gravity == .center || gravity == .start {
         Spacer()
       }
-
     }
     .padding()
     .background(backgroundColor)
@@ -78,5 +77,23 @@ public struct WrapIconView: View {
 public extension WrapIconView {
   enum Gravity {
     case center, start, end
+  }
+}
+
+#Preview {
+  Group {
+    WrapIconView(
+      title: LocalizableString.Key.addDoc,
+      textColor: Theme.shared.color.textPrimaryDark,
+      systemIcon: "calendar"
+    )
+    .lightModePreview()
+
+    WrapIconView(
+      title: LocalizableString.Key.addDoc,
+      textColor: Theme.shared.color.textPrimaryDark,
+      systemIcon: "calendar"
+    )
+    .darkModePreview()
   }
 }

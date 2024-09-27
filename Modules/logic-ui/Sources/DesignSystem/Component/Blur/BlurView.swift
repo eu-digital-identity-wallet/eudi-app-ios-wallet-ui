@@ -45,3 +45,16 @@ public struct BlurView: UIViewRepresentable {
   ) {
   }
 }
+
+#Preview {
+  Group {
+    BlurView(style: .regular)
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .ignoresSafeArea(.all)
+      .lightModePreview()
+    BlurView(style: .regular)
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .ignoresSafeArea(.all)
+      .darkModePreview()
+  }
+}

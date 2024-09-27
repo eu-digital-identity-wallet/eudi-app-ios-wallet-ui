@@ -41,8 +41,6 @@ The app is configured to use predefined services in the four xcconfig files. The
 
 ```
 BUILD_TYPE = DEBUG
-VERIFIER_API_URI = https:/$()/verifier.eudiw.dev
-VERIFIER_LEGAL_NAME = EUDI Verifier
 VCI_ISSUER_URL = https:/$()/issuer.eudiw.dev
 VCI_CLIENT_ID = wallet-dev
 VCI_REDIRECT_URI = eudi-openid4ci:/$()/authorize

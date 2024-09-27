@@ -99,3 +99,15 @@ extension BaseRequestView {
     }
   }
 }
+
+#Preview {
+  BaseRequestView<PreviewRouter>.RequestDataCellView(
+    cellModel: RequestDataUIModel.requestDataSection(
+      RequestDataSection(
+        id: "id",
+        type: .age,
+        title: "Title"
+      )
+    ),
+    isLoading: false)
+}

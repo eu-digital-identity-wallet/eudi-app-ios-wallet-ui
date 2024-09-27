@@ -45,3 +45,12 @@ public struct ContentLoaderView: View {
     .foregroundColor(Theme.shared.color.primary)
   }
 }
+
+#Preview {
+  Group {
+    ContentLoaderView(showLoader: .constant(true))
+      .lightModePreview()
+    ContentLoaderView(showLoader: .constant(true))
+      .darkModePreview()
+  }
+}

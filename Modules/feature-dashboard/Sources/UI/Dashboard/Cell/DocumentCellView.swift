@@ -63,7 +63,7 @@ extension DocumentListView {
             }
             .frame(maxWidth: 48)
 
-            Spacer()
+            VSpacer.small()
 
             Text(.custom(item.value.title))
               .typography(Theme.shared.font.titleMedium)
@@ -71,9 +71,10 @@ extension DocumentListView {
               .minimumScaleFactor(0.5)
               .lineLimit(1)
 
-            Spacer()
-
             if let expiresAt = item.value.expiresAt {
+
+              Spacer()
+
               if item.value.hasExpired {
                 ZStack {
                   Text(.expired)
@@ -160,7 +161,7 @@ extension DocumentListView {
             }
             .frame(maxWidth: 48)
 
-            Spacer()
+            VSpacer.small()
 
             Text(.custom(item.value.title))
               .typography(Theme.shared.font.titleMedium)

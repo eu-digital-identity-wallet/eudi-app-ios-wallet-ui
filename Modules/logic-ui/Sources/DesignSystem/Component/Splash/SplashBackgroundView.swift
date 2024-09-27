@@ -40,3 +40,10 @@ public struct SplashBackgroundView: View {
     .ignoresSafeArea(.all)
   }
 }
+
+#Preview {
+  Group {
+    SplashBackgroundView()
+    SplashBackgroundView(isAnimating: true)
+  }
+}

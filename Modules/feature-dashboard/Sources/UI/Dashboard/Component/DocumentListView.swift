@@ -35,7 +35,7 @@ struct DocumentListView: View {
   var body: some View {
     ScrollView {
       LazyVGrid(
-        columns: [GridItem(), GridItem()],
+        columns: [GridItem(alignment: .top), GridItem(alignment: .top)],
         spacing: SPACING_SMALL
       ) {
         ForEach(items) { item in
@@ -79,4 +79,11 @@ struct DocumentListView: View {
       .padding(SPACING_LARGE)
     }
   }
+}
+
+#Preview {
+  DocumentListView(
+    items: DocumentUIModel.mocks(),
+    isLoading: false
+  ) { _ in }
 }
