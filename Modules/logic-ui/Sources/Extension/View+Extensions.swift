@@ -215,7 +215,7 @@ extension View {
       .environment(\.colorScheme, .light)
       .previewDisplayName("Light Mode")
   }
-    
+
   func darkModePreview() -> some View {
     return self.background(Color.black)
       .environment(\.colorScheme, .dark)

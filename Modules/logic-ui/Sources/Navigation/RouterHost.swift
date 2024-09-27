@@ -28,7 +28,8 @@ public protocol RouterHost {
   func isScreenForeground(with route: AppRoute) -> Bool
   func isScreenOnBackStack(with route: AppRoute) -> Bool
 }
-public class PreviewRouter: RouterHost {
+
+public final class PreviewRouter: RouterHost {
 
   public init() {}
 

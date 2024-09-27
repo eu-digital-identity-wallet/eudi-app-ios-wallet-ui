@@ -60,13 +60,13 @@ public struct ContentEmptyView: View {
 #Preview {
   Group {
     ContentEmptyView(
-      title: LocalizableString.Key.tryAgain ,
+      title: LocalizableString.Key.tryAgain,
       image: Theme.shared.image.checkmarkCircleFill
     )
     .lightModePreview()
 
     ContentEmptyView(
-      title: LocalizableString.Key.tryAgain ,
+      title: LocalizableString.Key.tryAgain,
       image: Theme.shared.image.checkmarkCircleFill
     )
     .darkModePreview()

@@ -225,4 +225,3 @@ struct ColorsPreview: View {
 #Preview {
   ColorsPreview()
 }
-

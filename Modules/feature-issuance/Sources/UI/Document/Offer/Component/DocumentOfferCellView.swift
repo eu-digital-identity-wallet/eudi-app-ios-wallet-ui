@@ -20,37 +20,37 @@ import logic_core
 
 extension DocumentOfferView {
   struct DocumentOfferCellView: View {
-    
+
     typealias Cell = DocumentOfferUIModel.UIOffer
-    
+
     let cellModel: Cell
     let isLoading: Bool
-    
+
     init(cellModel: Cell, isLoading: Bool) {
       self.cellModel = cellModel
       self.isLoading = isLoading
     }
-    
+
     var body: some View {
       HStack {
         HStack(spacing: .zero) {
-          
+
           HStack(spacing: SPACING_SMALL) {
-            
+
             Theme.shared.image.id
               .resizable()
               .scaledToFit()
               .frame(width: 45)
-            
+
             Text(cellModel.title)
               .typography(Theme.shared.font.titleMedium)
               .foregroundStyle(Theme.shared.color.black)
-            
+
           }
           .padding([.horizontal, .vertical], SPACING_SMALL)
           .background(Theme.shared.color.secondary)
           .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
-          
+
           Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: 50)
