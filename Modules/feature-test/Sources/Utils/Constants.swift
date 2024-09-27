@@ -86,6 +86,7 @@ extension Constants {
       DocElementsViewModel(
         docId: Constants.isoMdlModelId,
         docType: DocumentTypeIdentifier.MDL.rawValue,
+        displayName: "Driving License",
         isEnabled: true,
         elements: [
           ElementViewModel(
