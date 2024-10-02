@@ -147,7 +147,7 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
           title: title,
           relyingParty: relyingParty,
           isTrusted: isTrusted,
-          allowShare: !items.isEmpty,
+          allowShare: canShare(with: items),
           initialized: true
         )
         .copy(error: nil)
@@ -238,7 +238,20 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
       .filter { !$0 }
       .isEmpty
 
-    let hasVerificationItems = !items.compactMap { $0.isDataVerification }.isEmpty
+    setState {
+      $0.copy(
+        itemsAreAllSelected: allSelected,
+        items: items,
+        allowShare: canShare(with: items)
+      )
+    }
+  }
+
+  private func canShare(with items: [RequestDataUIModel]) -> Bool {
+
+    let hasVerificationItems = !items.compactMap {
+      $0.isDataVerification?.items.first(where: { $0.isSelected })
+    }.isEmpty
 
     let onlyDataRowItems: [RequestDataUIModel] = items
       .compactMap {
@@ -257,13 +270,7 @@ open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, Reque
       .filter { $0 }
       .isEmpty
 
-    setState {
-      $0.copy(
-        itemsAreAllSelected: allSelected,
-        items: items,
-        allowShare: canShare || hasVerificationItems
-      )
-    }
+    return canShare || hasVerificationItems
   }
 
   private func onErrorAction() {
