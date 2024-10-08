@@ -13,21 +13,24 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-public protocol AppRouteModule: Hashable, Identifiable, Sendable {
-  var info: (key: String, arguments: [String: String]) { get }
-  var id: String { get }
-}
+import Foundation
 
-public extension AppRouteModule {
-  var id: String {
-    info.key
+@propertyWrapper
+struct Synchronized<T> {
+
+  private let queue = DispatchQueue(label: "eu.europa.ec.euidi.synchronized")
+  private var value: T
+
+  init(wrappedValue: T) {
+    self.value = wrappedValue
   }
 
-  static func == (lhs: Self, rhs: Self) -> Bool {
-    return lhs.id == rhs.id
-  }
-
-  func hash(into hasher: inout Hasher) {
-    hasher.combine(id)
+  var wrappedValue: T {
+    get {
+      return queue.sync { value }
+    }
+    set {
+      queue.sync { value = newValue }
+    }
   }
 }

@@ -63,9 +63,13 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
     )
   }
 
-  func fetchDocumentDetails() async {
+  func fetchDocumentDetails(documentId: String) async {
 
-    switch await self.interactor.fetchStoredDocument(documentId: viewState.config.documentId) {
+    let state = await Task.detached { () -> DocumentDetailsPartialState in
+      return await self.interactor.fetchStoredDocument(documentId: documentId)
+    }.value
+
+    switch state {
 
     case .success(let document):
 
@@ -129,7 +133,11 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
 
       self.setState { $0.copy(isLoading: true).copy(error: nil) }
 
-      switch await self.interactor.deleteDocument(with: id, and: type) {
+      let state = await Task.detached { () -> DocumentDetailsDeletionPartialState in
+        return await self.interactor.deleteDocument(with: id, and: type)
+      }.value
+
+      switch state {
       case .success(let shouldReboot):
         if shouldReboot {
           self.onReboot()

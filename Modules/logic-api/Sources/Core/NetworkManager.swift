@@ -18,7 +18,7 @@ import Alamofire
 import logic_business
 
 protocol NetworkManager {
-  func execute<R: NetworkRequest, T: Decodable>(
+  func execute<R: NetworkRequest, T: Decodable & Sendable>(
     with request: R,
     parameters: [NetworkParameter]?
   ) async throws -> T
@@ -38,7 +38,10 @@ actor NetworkManagerImpl: NetworkManager {
     self.configLogic = configLogic
   }
 
-  func execute<R: NetworkRequest, T: Decodable>(with request: R, parameters: [NetworkParameter]?) async throws -> T {
+  func execute<R: NetworkRequest, T: Decodable & Sendable>(
+    with request: R,
+    parameters: [NetworkParameter]?
+  ) async throws -> T {
 
     let request = await self.prepare(
       request: request,

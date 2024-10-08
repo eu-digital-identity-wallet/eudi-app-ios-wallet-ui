@@ -52,7 +52,9 @@ struct OfferCodeView<Router: RouterHost>: View {
       }
     }
     .task {
-      await viewModel.checkPendingIssuance()
+      await viewModel.checkPendingIssuance(
+        config: viewModel.viewState.config
+      )
     }
   }
 

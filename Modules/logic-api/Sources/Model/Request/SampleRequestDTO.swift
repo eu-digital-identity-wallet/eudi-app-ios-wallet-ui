@@ -15,6 +15,6 @@
  */
 import Foundation
 
-public struct SampleRequestDTO: Encodable, Equatable {
+public struct SampleRequestDTO: Encodable, Equatable, Sendable {
 
 }

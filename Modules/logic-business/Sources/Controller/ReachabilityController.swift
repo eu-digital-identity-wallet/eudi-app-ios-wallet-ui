@@ -35,7 +35,7 @@ final class ReachabilityControllerImpl: ReachabilityController, BKAvailabilityOb
   private let monitor: NWPathMonitor
   private let central = BKCentral()
 
-  public init(
+  init(
     requiredInterfaceType: NWInterface.InterfaceType? = nil,
     prohibitedInterfaceTypes: [NWInterface.InterfaceType]? = nil,
     queue: DispatchQueue = .main

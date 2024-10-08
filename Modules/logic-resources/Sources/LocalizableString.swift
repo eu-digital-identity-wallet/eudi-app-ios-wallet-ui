@@ -296,7 +296,7 @@ public final class LocalizableString: LocalizableStringType {
 }
 
 public extension LocalizableString {
-  enum Key: Equatable {
+  enum Key: Equatable, Sendable {
     case dynamic(key: String)
     case custom(String)
     case space

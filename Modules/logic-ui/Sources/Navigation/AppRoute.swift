@@ -15,7 +15,7 @@
  */
 import SwiftUI
 import logic_business
-import logic_core
+@preconcurrency import logic_core
 
 public enum FeatureStartupRouteModule: AppRouteModule {
 

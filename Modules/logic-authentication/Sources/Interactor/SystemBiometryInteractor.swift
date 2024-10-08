@@ -30,7 +30,7 @@ public enum BiometricsState: Equatable {
 
 public protocol SystemBiometryInteractor {
   func authenticate() -> AnyPublisher<BiometricsState, Never>
-  func openSettingsURL(action: @escaping () -> Void)
+  @MainActor func openSettingsURL(action: @escaping () -> Void)
   var biometricsImage: Image? { get }
   var currentBiometricsMethod: String { get }
   var biometryType: LABiometryType { get }

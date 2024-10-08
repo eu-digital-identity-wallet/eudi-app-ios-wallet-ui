@@ -23,7 +23,7 @@ enum NetworkMethod: String {
   case PATCH
 }
 
-protocol NetworkRequest {
+protocol NetworkRequest: Sendable {
 
   associatedtype Response
 

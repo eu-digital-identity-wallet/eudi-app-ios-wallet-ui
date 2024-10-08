@@ -19,7 +19,7 @@ import Combine
 import logic_resources
 import UIKit
 
-final class ProximityPresentationSessionCoordinator: PresentationSessionCoordinator {
+final class ProximityPresentationSessionCoordinator: PresentationSessionCoordinator, @unchecked Sendable {
 
   public private(set) var presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
 

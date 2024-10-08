@@ -74,7 +74,7 @@ struct DocumentOfferView<Router: RouterHost>: View {
       }
     }
     .task {
-      await viewModel.initialize()
+      await viewModel.initialize(offerUri: viewModel.viewState.offerUri)
     }
     .onReceive(NotificationCenter.default.publisher(for: NSNotification.CredentialOffer)) { data in
       guard let payload = data.userInfo else {
@@ -116,7 +116,7 @@ struct DocumentOfferView<Router: RouterHost>: View {
         title: .issueButton,
         isLoading: viewModel.viewState.isLoading,
         isEnabled: viewModel.viewState.allowIssue && !viewModel.viewState.isLoading,
-        onAction: viewModel.onIssueDocuments()
+        onAction: viewModel.onIssueDocuments(viewState: viewModel.viewState)
       )
       WrapButtonView(
         style: .secondary,

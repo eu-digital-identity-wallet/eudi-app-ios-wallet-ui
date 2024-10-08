@@ -15,6 +15,8 @@
  */
 import Foundation
 
+extension WalletStorage.Document: @retroactive @unchecked Sendable {}
+
 extension Array where Element == WalletStorage.Document {
   func transformToMdocDecodable() -> [MdocDecodable] {
     return self.compactMap { document in

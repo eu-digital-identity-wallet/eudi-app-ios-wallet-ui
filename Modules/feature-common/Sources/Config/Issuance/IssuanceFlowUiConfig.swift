@@ -38,7 +38,7 @@ public struct IssuanceFlowUiConfig: UIConfigType, Equatable {
 }
 
 public extension IssuanceFlowUiConfig {
-  enum Flow: String, Equatable {
+  enum Flow: String, Equatable, Sendable {
     case noDocument
     case extraDocument
   }

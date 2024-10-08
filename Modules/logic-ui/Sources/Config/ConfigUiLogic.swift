@@ -18,7 +18,7 @@ import logic_resources
 
 public typealias AppRouteKey = String
 
-public protocol ConfigUiLogic {
+public protocol ConfigUiLogic: Sendable {
 
   var dashboardRoute: AppRoute { get }
 

@@ -13,21 +13,9 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-public protocol AppRouteModule: Hashable, Identifiable, Sendable {
-  var info: (key: String, arguments: [String: String]) { get }
-  var id: String { get }
-}
+import Foundation
 
-public extension AppRouteModule {
-  var id: String {
-    info.key
-  }
-
-  static func == (lhs: Self, rhs: Self) -> Bool {
-    return lhs.id == rhs.id
-  }
-
-  func hash(into hasher: inout Hasher) {
-    hasher.combine(id)
-  }
+public struct DynamicIssuancePendingData: Sendable {
+  public let pendingDoc: WalletStorage.Document
+  public let url: URL
 }

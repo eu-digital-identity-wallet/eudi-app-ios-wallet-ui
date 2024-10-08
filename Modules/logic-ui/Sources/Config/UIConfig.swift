@@ -17,7 +17,7 @@
 import Foundation
 import logic_resources
 
-public protocol UIConfigType {
+public protocol UIConfigType: Sendable {
   var log: String { get }
 }
 
@@ -30,10 +30,10 @@ public struct NoConfig: UIConfigType, Equatable {
   public init() {}
 }
 
-public struct UIConfig {}
+public struct UIConfig: Sendable {}
 
 public extension UIConfig {
-  struct ToolBar: Equatable {
+  struct ToolBar: Equatable, Sendable {
 
     public let backgroundColor: Color
 
@@ -44,7 +44,7 @@ public extension UIConfig {
 }
 
 public extension UIConfig {
-  enum TwoWayNavigationType: Equatable {
+  enum TwoWayNavigationType: Equatable, Sendable {
 
     case popTo(AppRoute)
     case push(AppRoute)
@@ -59,7 +59,7 @@ public extension UIConfig {
     }
   }
 
-  enum ThreeWayNavigationType: Equatable {
+  enum ThreeWayNavigationType: Equatable, Sendable {
     case popTo(AppRoute)
     case pop
     case push(AppRoute)
@@ -76,7 +76,7 @@ public extension UIConfig {
     }
   }
 
-  enum DeepLinkNavigationType: Equatable {
+  enum DeepLinkNavigationType: Equatable, Sendable {
 
     case pop(screen: AppRoute, inclusive: Bool = false)
     case push(screen: AppRoute)

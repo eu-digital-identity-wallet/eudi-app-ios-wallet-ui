@@ -18,7 +18,7 @@ import SwiftUI
 import logic_resources
 import logic_core
 
-public struct AddDocumentUIModel: Identifiable {
+public struct AddDocumentUIModel: Identifiable, Sendable {
 
   public let id: String
   public let documentName: LocalizableString.Key

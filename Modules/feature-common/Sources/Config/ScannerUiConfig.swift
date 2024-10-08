@@ -31,7 +31,7 @@ public struct ScannerUiConfig: UIConfigType, Equatable {
 }
 
 public extension ScannerUiConfig {
-  enum Flow: Equatable {
+  enum Flow: Equatable, Sendable {
 
     case presentation
     case issuing(IssuanceFlowUiConfig)

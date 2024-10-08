@@ -62,11 +62,16 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
     subscribeToCodeInput()
   }
 
-  func checkPendingIssuance() async {
-    switch await interactor.resumeDynamicIssuance(
-      issuerName: viewState.config.issuerName,
-      successNavigation: viewState.config.successNavigation
-    ) {
+  func checkPendingIssuance(config: IssuanceCodeUiConfig) async {
+
+    let state = await Task.detached { () -> OfferDynamicIssuancePartialState in
+      return await self.interactor.resumeDynamicIssuance(
+        issuerName: config.issuerName,
+        successNavigation: config.successNavigation
+      )
+    }.value
+
+    switch state {
     case .success(let route):
       router.push(with: route)
     case .noPending: break
@@ -94,17 +99,23 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
     }
   }
 
-  private func onIssueDocuments() {
+  private func onIssueDocuments(viewState: OfferCodeViewState) {
     Task {
+
       codeIsFocused = false
       setState { $0.copy(isLoading: true).copy(error: nil) }
-      switch await self.interactor.issueDocuments(
-        with: viewState.config.offerUri,
-        issuerName: viewState.config.issuerName,
-        docOffers: viewState.config.docOffers,
-        successNavigation: viewState.config.successNavigation,
-        txCodeValue: codeInput
-      ) {
+
+      let state = await Task.detached { () -> IssueOfferDocumentsPartialState in
+        return await self.interactor.issueDocuments(
+          with: viewState.config.offerUri,
+          issuerName: viewState.config.issuerName,
+          docOffers: viewState.config.docOffers,
+          successNavigation: viewState.config.successNavigation,
+          txCodeValue: self.codeInput
+        )
+      }.value
+
+      switch state {
       case .success(let route):
         router.push(with: route)
       case .dynamicIssuance(let session):
@@ -160,7 +171,7 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
 
   private func processCode(value: String) {
     if value.count == viewState.config.txCodeLength {
-      onIssueDocuments()
+      onIssueDocuments(viewState: viewState)
     }
   }
 }

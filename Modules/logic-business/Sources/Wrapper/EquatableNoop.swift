@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 @propertyWrapper
-public struct EquatableNoop<Value>: Equatable {
+public struct EquatableNoop<Value: Sendable>: Equatable, Sendable {
 
   public var wrappedValue: Value
 

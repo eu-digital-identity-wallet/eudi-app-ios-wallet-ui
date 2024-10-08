@@ -19,7 +19,7 @@ import logic_core
 import logic_business
 import feature_common
 
-public struct OnlineAuthenticationRequestSuccessModel {
+public struct OnlineAuthenticationRequestSuccessModel: Sendable {
   var requestDataCells: [RequestDataUIModel]
   var relyingParty: String
   var dataRequestInfo: String

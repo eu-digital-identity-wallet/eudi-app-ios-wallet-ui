@@ -38,7 +38,7 @@ public struct QuickPinUiConfig: UIConfigType, Equatable {
 }
 
 public extension QuickPinUiConfig {
-  enum Flow: String, Equatable {
+  enum Flow: String, Equatable, Sendable {
     case set
     case update
   }

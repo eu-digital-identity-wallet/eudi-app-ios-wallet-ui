@@ -75,14 +75,18 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     )
   }
 
-  func initialize() async {
+  func initialize(offerUri: String) async {
 
     if viewState.initialized {
       await handleResumeIssuance()
       return
     }
 
-    switch await self.interactor.processOfferRequest(with: viewState.offerUri) {
+    let state = await Task.detached { () -> OfferRequestPartialState in
+      return await self.interactor.processOfferRequest(with: offerUri)
+    }.value
+
+    switch state {
     case .success(let uiModel):
       setState {
         $0
@@ -110,7 +114,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     }
   }
 
-  func onIssueDocuments() {
+  func onIssueDocuments(viewState: DocumentOfferViewState) {
 
     if let code = viewState.documentOfferUiModel.txCode {
       router.push(
@@ -132,13 +136,18 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
 
     Task {
       setState { $0.copy(isLoading: true).copy(error: nil) }
-      switch await self.interactor.issueDocuments(
-        with: viewState.offerUri,
-        issuerName: viewState.documentOfferUiModel.issuerName,
-        docOffers: viewState.documentOfferUiModel.docOffers,
-        successNavigation: viewState.successNavigation,
-        txCodeValue: nil
-      ) {
+
+      let state = await Task.detached { () -> IssueOfferDocumentsPartialState in
+        return await self.interactor.issueDocuments(
+          with: viewState.offerUri,
+          issuerName: viewState.documentOfferUiModel.issuerName,
+          docOffers: viewState.documentOfferUiModel.docOffers,
+          successNavigation: viewState.successNavigation,
+          txCodeValue: nil
+        )
+      }.value
+
+      switch state {
       case .success(let route):
         router.push(with: route)
       case .dynamicIssuance(let session):
@@ -210,7 +219,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
         .copy(error: nil)
     }
     Task {
-      await self.initialize()
+      await self.initialize(offerUri: viewState.offerUri)
     }
   }
 

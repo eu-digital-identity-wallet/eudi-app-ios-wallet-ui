@@ -18,9 +18,9 @@ import Combine
 import logic_resources
 import UIKit
 
-final class RemoteSessionCoordinator: PresentationSessionCoordinator {
+final class RemoteSessionCoordinator: PresentationSessionCoordinator, @unchecked Sendable {
 
-  public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
+  public let presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
 
   private let session: PresentationSession
 

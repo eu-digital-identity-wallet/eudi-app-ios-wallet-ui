@@ -23,7 +23,7 @@ enum RegistrationName: String {
   case remote
 }
 
-public protocol PresentationSessionCoordinator {
+public protocol PresentationSessionCoordinator: Sendable {
 
   var presentationStateSubject: CurrentValueSubject<PresentationState, Never> { get }
 

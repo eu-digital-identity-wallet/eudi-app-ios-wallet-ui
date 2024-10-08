@@ -15,17 +15,17 @@
  */
 import Foundation
 
-struct VciConfig {
+struct VciConfig: Sendable {
   public let issuerUrl: String
   public let clientId: String
   public let redirectUri: URL
 }
 
-struct ReaderConfig {
+struct ReaderConfig: Sendable {
   public let trustedCerts: [Data]
 }
 
-protocol WalletKitConfig {
+protocol WalletKitConfig: Sendable {
 
   /**
    * VCI Configuration

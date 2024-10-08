@@ -15,7 +15,7 @@
  */
 import Foundation
 
-public protocol ThemeProtocol {
+public protocol ThemeProtocol: Sendable {
   var themeConfiguration: ThemeConfiguration { get }
 
   var image: ImageManagerProtocol { get }
@@ -51,5 +51,4 @@ public final class AppTheme: ThemeProtocol {
   init(themeConfiguration: ThemeConfiguration = ThemeConfiguration()) {
     self.themeConfiguration = themeConfiguration
   }
-
 }

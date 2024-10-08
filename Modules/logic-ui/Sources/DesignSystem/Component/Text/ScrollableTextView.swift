@@ -17,7 +17,8 @@ import SwiftUI
 import logic_resources
 
 public struct ScrollViewSizeKey: PreferenceKey {
-  public static var defaultValue: CGSize = .zero
+
+  public static let defaultValue: CGSize = .zero
 
   public static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
     value = nextValue()

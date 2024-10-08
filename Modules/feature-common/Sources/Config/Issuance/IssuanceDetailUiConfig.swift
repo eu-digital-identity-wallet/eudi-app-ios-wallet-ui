@@ -48,7 +48,7 @@ public struct IssuanceDetailUiConfig: UIConfigType, Equatable {
 }
 
 public extension IssuanceDetailUiConfig {
-  enum Flow: Equatable {
+  enum Flow: Equatable, Sendable {
 
     case noDocument(String)
     case extraDocument(String)

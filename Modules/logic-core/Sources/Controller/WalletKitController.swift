@@ -26,7 +26,7 @@ private enum WalletKitKeyChainIdentifier: String, KeychainWrapper {
   case dynamicIssuancePendingUrl
 }
 
-public protocol WalletKitController {
+public protocol WalletKitController: Sendable {
 
   var wallet: EudiWallet { get }
   var activeCoordinator: PresentationSessionCoordinator? { get }
@@ -66,13 +66,12 @@ public protocol WalletKitController {
   func retrieveLogFileUrl() -> URL?
   func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document
   func storeDynamicIssuancePendingUrl(with url: URL)
-  func getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)?
+  func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData?
 }
 
-final class WalletKitControllerImpl: WalletKitController {
+final class WalletKitControllerImpl: WalletKitController, @unchecked Sendable {
 
-  public let wallet = EudiWallet.standard
-
+  public let wallet: EudiWallet
   public private(set) var activeCoordinator: PresentationSessionCoordinator?
 
   private let configLogic: WalletKitConfig
@@ -82,6 +81,12 @@ final class WalletKitControllerImpl: WalletKitController {
   init(configLogic: WalletKitConfig, keyChainController: KeyChainController) {
     self.configLogic = configLogic
     self.keyChainController = keyChainController
+
+    guard let walletKit = try? EudiWallet() else {
+      fatalError("Unable to Initialize WalletKit")
+    }
+
+    wallet = walletKit
     wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciConfig = .init(
@@ -247,7 +252,7 @@ final class WalletKitControllerImpl: WalletKitController {
     )
   }
 
-  func getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)? {
+  func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData? {
 
     guard
       let urlString = keyChainController.getValue(key: WalletKitKeyChainIdentifier.dynamicIssuancePendingUrl),
@@ -264,7 +269,7 @@ final class WalletKitControllerImpl: WalletKitController {
       return nil
     }
 
-    return (pendingDoc: pendingDoc, url: url)
+    return .init(pendingDoc: pendingDoc, url: url)
   }
 
   private func decodeDeeplink(link: URLComponents) -> String? {
