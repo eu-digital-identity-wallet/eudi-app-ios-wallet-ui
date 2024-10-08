@@ -17,6 +17,7 @@ import Foundation
 import Combine
 
 public extension Publisher where Self.Failure == Never {
+  @MainActor
   func sink(receiveValue: @escaping ((Self.Output) async -> Void)) -> AnyCancellable {
     sink { value in
       Task {

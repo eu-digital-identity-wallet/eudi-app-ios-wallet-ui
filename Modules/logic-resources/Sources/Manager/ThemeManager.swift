@@ -27,9 +27,9 @@ public protocol ThemeManagerProtocol {
 
 public final class ThemeManager: ThemeManagerProtocol {
 
-  public static var shared: ThemeProtocol = AppTheme()
+  nonisolated(unsafe) public static var shared: ThemeProtocol = AppTheme()
 
   public class func config(themeConfiguration: ThemeConfiguration) {
-    self.shared.themeConfiguration = themeConfiguration
+    self.shared = AppTheme(themeConfiguration: themeConfiguration)
   }
 }

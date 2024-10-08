@@ -22,7 +22,10 @@ public struct DeepLink {}
 
 public protocol DeepLinkController {
   func hasDeepLink(url: URL) -> DeepLink.Executable?
-  func handleDeepLinkAction(routerHost: RouterHost, deepLinkExecutable: DeepLink.Executable)
+  @MainActor func handleDeepLinkAction(
+    routerHost: RouterHost,
+    deepLinkExecutable: DeepLink.Executable
+  )
   func getPendingDeepLinkAction() -> DeepLink.Executable?
   func cacheDeepLinkURL(url: URL)
   func removeCachedDeepLinkURL()

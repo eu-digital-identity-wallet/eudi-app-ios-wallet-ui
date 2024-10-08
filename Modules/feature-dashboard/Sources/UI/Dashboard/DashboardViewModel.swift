@@ -159,7 +159,6 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
   func onShare() {
     Task { [weak self] in
       guard let self else { return }
-
       switch await self.interactor.getBleAvailability() {
       case .available:
         self.router.push(

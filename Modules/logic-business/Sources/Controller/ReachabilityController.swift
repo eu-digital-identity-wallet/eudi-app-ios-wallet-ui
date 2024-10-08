@@ -20,23 +20,19 @@ import BluetoothKit
 import UIKit
 
 public protocol ReachabilityController {
-  var networkPath: NWPath { get }
+  func hasInternet() -> Bool
   func getBleAvailibity() -> AnyPublisher<Reachability.BleAvailibity, Never>
-  func openBleSettings()
+  @MainActor func openBleSettings()
 }
 
-final class ReachabilityControllerImpl: ReachabilityController, BKAvailabilityObserver, ObservableObject {
+final class ReachabilityControllerImpl: ReachabilityController, BKAvailabilityObserver, ObservableObject, @unchecked Sendable {
 
-  @Published public private(set) var networkPath: NWPath
-  @Published public private(set) var bleAvailibity: Reachability.BleAvailibity = .unavailable
+  @Published private var networkPath: NWPath
+  @Published private var bleAvailibity: Reachability.BleAvailibity = .unavailable
 
-  public private(set) lazy var publisher = makePublisher()
-  public private(set) lazy var stream = makeStream()
-
-  private let monitor: NWPathMonitor
-  private lazy var subject = CurrentValueSubject<NWPath, Never>(monitor.currentPath)
   private var cancellables = Set<AnyCancellable>()
 
+  private let monitor: NWPathMonitor
   private let central = BKCentral()
 
   public init(
@@ -60,7 +56,6 @@ final class ReachabilityControllerImpl: ReachabilityController, BKAvailabilityOb
 
     monitor.pathUpdateHandler = { [weak self] path in
       self?.networkPath = path
-      self?.subject.send(path)
     }
 
     monitor.start(queue: queue)
@@ -68,8 +63,11 @@ final class ReachabilityControllerImpl: ReachabilityController, BKAvailabilityOb
 
   deinit {
     monitor.cancel()
-    subject.send(completion: .finished)
     stopCentral()
+  }
+
+  func hasInternet() -> Bool {
+    return networkPath.status == .satisfied
   }
 
   public func getBleAvailibity() -> AnyPublisher<Reachability.BleAvailibity, Never> {
@@ -122,21 +120,6 @@ final class ReachabilityControllerImpl: ReachabilityController, BKAvailabilityOb
       error.log()
     }
   }
-
-  private func makePublisher() -> AnyPublisher<NWPath, Never> {
-    return subject.eraseToAnyPublisher()
-  }
-
-  private func makeStream() -> AsyncStream<NWPath> {
-    return AsyncStream { continuation in
-      subject.sink { _ in
-        continuation.finish()
-      } receiveValue: { value in
-        continuation.yield(value)
-      }
-      .store(in: &cancellables)
-    }
-  }
 }
 
 extension ReachabilityControllerImpl {
@@ -173,14 +156,10 @@ extension ReachabilityControllerImpl {
 public struct Reachability {}
 
 public extension Reachability {
-  enum BleAvailibity: Equatable {
+  enum BleAvailibity: Equatable, Sendable {
     case available
     case noPermission
     case disabled
     case unavailable
   }
-}
-
-extension NWPath {
-  public var isReachable: Bool { status == .satisfied }
 }

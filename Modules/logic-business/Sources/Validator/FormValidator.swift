@@ -262,17 +262,17 @@ final class FormValidatorImpl: FormValidator {
   }
 }
 
-public struct ValidatableForm: Equatable {
-  var inputs: [[Rule]: String]
+public struct ValidatableForm: Equatable, Sendable {
+  let inputs: [[Rule]: String]
 
   public init(inputs: [[Rule]: String]) {
     self.inputs = inputs
   }
 }
 
-public struct FormValidationResult: Equatable {
-  public var isValid: Bool
-  public var message: String
+public struct FormValidationResult: Equatable, Sendable {
+  public let isValid: Bool
+  public let message: String
 
   public init(isValid: Bool, message: String = "") {
     self.isValid = isValid
@@ -295,7 +295,7 @@ public protocol FormValidatorInteractor {
   func validateForms(forms: [ValidatableForm]) async -> FormsValidationResult
 }
 
-public enum Rule: Hashable {
+public enum Rule: Hashable, Sendable {
   case ValidateNotEmpty(errorMessage: String)
   case ValidateEmail(errorMessage: String)
   case ValidatePhoneNumber(countryCode: String, errorMessage: String)

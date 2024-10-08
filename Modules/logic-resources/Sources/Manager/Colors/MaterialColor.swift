@@ -15,7 +15,7 @@
  */
 import SwiftUI
 
-public struct MaterialColor {
+public struct MaterialColor: Sendable {
   enum MaterialColors: String {
     case primary
     case onPrimary

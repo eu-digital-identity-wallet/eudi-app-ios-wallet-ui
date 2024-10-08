@@ -17,7 +17,7 @@
 import Foundation
 import SwiftUI
 
-public protocol LocalizableStringType {
+public protocol LocalizableStringType: Sendable {
   static var shared: LocalizableStringType { get }
   func get(with key: LocalizableString.Key) -> String
   func get(with key: LocalizableString.Key) -> LocalizedStringKey

@@ -38,7 +38,7 @@ public enum DashboardDeferredPartialState {
 public protocol DashboardInteractor {
   func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState
   func getBleAvailability() async -> Reachability.BleAvailibity
-  func openBleSettings()
+  @MainActor func openBleSettings()
   func getAppVersion() -> String
   func hasIssuedDocuments() -> Bool
   func hasDeferredDocuments() -> Bool

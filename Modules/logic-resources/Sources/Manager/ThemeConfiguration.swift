@@ -15,15 +15,15 @@
  */
 import Foundation
 
-public struct ThemeConfiguration {
+public struct ThemeConfiguration: Sendable {
 
   public static let `default` = ThemeConfiguration()
 
-  var color: ColorManagerProtocol
-  var image: ImageManagerProtocol
-  var shape: ShapeManagerProtocol
-  var font: TypographyManagerProtocol
-  var dimension: DimensionManagerProtocol
+  let color: ColorManagerProtocol
+  let image: ImageManagerProtocol
+  let shape: ShapeManagerProtocol
+  let font: TypographyManagerProtocol
+  let dimension: DimensionManagerProtocol
 
   init(
     color: ColorManagerProtocol? = nil,
