@@ -28,26 +28,6 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   ) {
     self.interactor = interactor
     super.init(router: router, originator: originator)
-
-    Task {
-      await self.subscribeToCoordinatorPublisher()
-    }
-  }
-
-  func subscribeToCoordinatorPublisher() async {
-    switch self.interactor.getSessionStatePublisher() {
-    case .success(let publisher):
-      for try await state in publisher {
-        switch state {
-        case .error(let error):
-          self.onError(with: error)
-        default:
-          ()
-        }
-      }
-    case .failure(let error):
-      self.onError(with: error)
-    }
   }
 
   override func doWork() async {

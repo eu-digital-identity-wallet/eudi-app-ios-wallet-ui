@@ -29,8 +29,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   ) {
     self.interactor = interactor
     self.relyingParty = relyingParty
-    super.init(router: router, originator: originator)
-
+    super.init(router: router, originator: originator, cancellationTimeout: 5)
     Task {
       await self.subscribeToCoordinatorPublisher()
     }
@@ -43,6 +42,9 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
         switch state {
         case .error(let error):
           self.onError(with: error)
+        case .responseSent:
+          self.interactor.stopPresentation()
+          self.onNavigate(type: .push(getOnSuccessRoute()))
         default:
           ()
         }
@@ -99,8 +101,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
     }.value
 
     switch state {
-    case .success:
-      self.onNavigate(type: .push(getOnSuccessRoute()))
+    case .sent: break
     case .failure(let error):
       self.onError(with: error)
     }

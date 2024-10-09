@@ -19,7 +19,7 @@ import logic_business
 import feature_common
 
 public enum ProximityResponsePartialState: ThreadSafePartialState {
-  case success
+  case sent
   case failure(Error)
 }
 
@@ -63,7 +63,7 @@ public protocol ProximityInteractor: ThreadSafeInteractor {
   func onRequestReceived() async -> ProximityRequestPartialState
   func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> ProximityResponsePreparationPartialState
   func onSendResponse() async -> ProximityResponsePartialState
-  func stopPresentation() async
+  func stopPresentation()
 
 }
 
@@ -170,12 +170,8 @@ final class ProximityInteractorImpl: ProximityInteractor {
     }
 
     do {
-      try await sessionCoordinatorHolder.getActiveProximityCoordinator().sendResponse(
-        response: responseItem,
-        onSuccess: nil,
-        onCancel: nil
-      )
-      return .success
+      try await sessionCoordinatorHolder.getActiveProximityCoordinator().sendResponse(response: responseItem)
+      return .sent
     } catch {
       return .failure(error)
     }
@@ -183,5 +179,6 @@ final class ProximityInteractorImpl: ProximityInteractor {
 
   public func stopPresentation() {
     walletKitController.stopPresentation()
+    try? sessionCoordinatorHolder.getActiveProximityCoordinator().stopPresentation()
   }
 }

@@ -22,6 +22,6 @@ public enum PresentationState: ThreadSafeObject {
   case qrReady(imageData: Data)
   case requestReceived(PresentationRequest)
   case responseToSend(RequestItemConvertible)
-  case success
+  case responseSent(URL?)
   case error(WalletError)
 }

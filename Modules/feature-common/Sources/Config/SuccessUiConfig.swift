@@ -74,6 +74,7 @@ public extension UIConfig.Success {
 
   struct Button: Identifiable, Equatable, ThreadSafeObject {
 
+    @EquatableNoop
     public var id: UUID
 
     public let title: LocalizableString.Key

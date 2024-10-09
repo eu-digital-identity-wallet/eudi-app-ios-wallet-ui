@@ -29,7 +29,29 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
   ) {
     self.interactor = interactor
     self.relyingParty = relyingParty
-    super.init(router: router, originator: originator)
+    super.init(router: router, originator: originator, cancellationTimeout: 5)
+    Task {
+      await self.subscribeToCoordinatorPublisher()
+    }
+  }
+
+  func subscribeToCoordinatorPublisher() async {
+    switch self.interactor.getSessionStatePublisher() {
+    case .success(let publisher):
+      for try await state in publisher {
+        switch state {
+        case .error(let error):
+          self.onError(with: error)
+        case .responseSent(let url):
+          self.interactor.stopPresentation()
+          self.onNavigate(type: .push(getOnSuccessRoute(with: url)))
+        default:
+          ()
+        }
+      }
+    case .failure(let error):
+      self.onError(with: error)
+    }
   }
 
   override func getTitle() -> LocalizableString.Key {
@@ -97,13 +119,12 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
 
   override func doWork() async {
 
-    let result = await Task.detached { () -> Result<URL?, Error> in
+    let result = await Task.detached { () -> RemoteSentResponsePartialState in
       return await self.interactor.onSendResponse()
     }.value
 
     switch result {
-    case .success(let url):
-      self.onNavigate(type: .push(getOnSuccessRoute(with: url)))
+    case .sent: break
     case .failure(let error):
       self.onError(with: error)
     }

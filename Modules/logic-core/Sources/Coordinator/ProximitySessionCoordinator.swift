@@ -29,12 +29,12 @@ public protocol ProximitySessionCoordinator: ThreadSafeProtocol {
   func initialize() async
   func startQrEngagement() async throws -> UIImage
   func requestReceived() async throws -> PresentationRequest
-  func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async throws
-  func onSuccess(completion: () -> Void)
+  func sendResponse(response: RequestItemConvertible) async
 
   func getState() async -> PresentationState
   func setState(presentationState: PresentationState)
   func getStream() -> AsyncStream<PresentationState>
+  func stopPresentation()
 
 }
 
@@ -54,7 +54,7 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
         case .qrEngagementReady:
           self.sendableCurrentValueSubject.setValue(.prepareQr)
         case .responseSent:
-          self.sendableCurrentValueSubject.setValue(.responseToSend(session.disclosedDocuments.items))
+          self.sendableCurrentValueSubject.setValue(.responseSent(nil))
         case .error:
           if let error = session.uiError {
             self.sendableCurrentValueSubject.setValue(.error(error))
@@ -71,7 +71,7 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
   }
 
   deinit {
-    self.sendableAnyCancellable.cancel()
+    stopPresentation()
   }
 
   public func initialize() async {
@@ -106,18 +106,8 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
     return presentationRequest
   }
 
-  public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async {
-    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems()) {
-      // This closure is used by WalletKit in order to handle the cancelling
-      // of a strong authentication by the user
-      // our implementation uses feature-common -> Biometry to handle strong user authorisation
-    }
-    self.sendableCurrentValueSubject.setValue(.success)
-    self.sendableCurrentValueSubject.getSubject().send(completion: .finished)
-  }
-
-  public func onSuccess(completion: () -> Void) {
-    completion()
+  public func sendResponse(response: RequestItemConvertible) async {
+    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems())
   }
 
   public func getState() async -> PresentationState {
@@ -130,5 +120,10 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
 
   func getStream() -> AsyncStream<PresentationState> {
     return sendableCurrentValueSubject.getSubject().toAsyncStream()
+  }
+
+  public func stopPresentation() {
+    self.sendableCurrentValueSubject.getSubject().send(completion: .finished)
+    sendableAnyCancellable.cancel()
   }
 }

@@ -1135,13 +1135,13 @@ public class MockProximityInteractor: ProximityInteractor, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func stopPresentation() async {
-        return await cuckoo_manager.call(
-            "stopPresentation() async",
+    public func stopPresentation() {
+        return cuckoo_manager.call(
+            "stopPresentation()",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.stopPresentation()
+            defaultCall: __defaultImplStub!.stopPresentation()
         )
     }
 
@@ -1211,7 +1211,7 @@ public class MockProximityInteractor: ProximityInteractor, Cuckoo.ProtocolMock, 
         func stopPresentation() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractor.self,
-                method: "stopPresentation() async",
+                method: "stopPresentation()",
                 parameterMatchers: matchers
             ))
         }
@@ -1317,7 +1317,7 @@ public class MockProximityInteractor: ProximityInteractor, Cuckoo.ProtocolMock, 
         func stopPresentation() -> Cuckoo.__DoNotUse<(), Void> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "stopPresentation() async",
+                "stopPresentation()",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1358,7 +1358,7 @@ public class ProximityInteractorStub:ProximityInteractor, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (ProximityResponsePartialState).self)
     }
     
-    public func stopPresentation() async {
+    public func stopPresentation() {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }
@@ -6106,28 +6106,14 @@ public class MockProximitySessionCoordinator: ProximitySessionCoordinator, Cucko
         )
     }
     
-    public func sendResponse(response p0: RequestItemConvertible, onSuccess p1: ((URL?) -> Void)?, onCancel p2: (() -> Void)?) async throws {
-        return try await cuckoo_manager.callThrows(
-            "sendResponse(response p0: RequestItemConvertible, onSuccess p1: ((URL?) -> Void)?, onCancel p2: (() -> Void)?) async throws",
-            parameters: (p0, p1, p2),
-            escapingParameters: (p0, p1, p2),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.sendResponse(response: p0, onSuccess: p1, onCancel: p2)
-        )
-    }
-    
-    public func onSuccess(completion p0: () -> Void) {
-        
-		return withoutActuallyEscaping(p0, do: { (p0: @escaping () -> Void) in
-return cuckoo_manager.call(
-            "onSuccess(completion p0: () -> Void)",
+    public func sendResponse(response p0: RequestItemConvertible) async {
+        return await cuckoo_manager.call(
+            "sendResponse(response p0: RequestItemConvertible) async",
             parameters: (p0),
-            escapingParameters: ({ () in fatalError("This is a stub! It's not supposed to be called!") }),
+            escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.onSuccess(completion: p0)
+            defaultCall: await __defaultImplStub!.sendResponse(response: p0)
         )
-		})
-
     }
     
     public func getState() async -> PresentationState {
@@ -6157,6 +6143,16 @@ return cuckoo_manager.call(
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: __defaultImplStub!.getStream()
+        )
+    }
+    
+    public func stopPresentation() {
+        return cuckoo_manager.call(
+            "stopPresentation()",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.stopPresentation()
         )
     }
 
@@ -6195,18 +6191,10 @@ return cuckoo_manager.call(
             ))
         }
         
-        func sendResponse<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable, M3: Cuckoo.OptionalMatchable>(response p0: M1, onSuccess p1: M2, onCancel p2: M3) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(RequestItemConvertible, ((URL?) -> Void)?, (() -> Void)?)> where M1.MatchedType == RequestItemConvertible, M2.OptionalMatchedType == ((URL?) -> Void), M3.OptionalMatchedType == (() -> Void) {
-            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible, ((URL?) -> Void)?, (() -> Void)?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+        func sendResponse<M1: Cuckoo.Matchable>(response p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(RequestItemConvertible)> where M1.MatchedType == RequestItemConvertible {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockProximitySessionCoordinator.self,
-                method: "sendResponse(response p0: RequestItemConvertible, onSuccess p1: ((URL?) -> Void)?, onCancel p2: (() -> Void)?) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onSuccess<M1: Cuckoo.Matchable>(completion p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(() -> Void)> where M1.MatchedType == () -> Void {
-            let matchers: [Cuckoo.ParameterMatcher<(() -> Void)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockProximitySessionCoordinator.self,
-                method: "onSuccess(completion p0: () -> Void)",
+                method: "sendResponse(response p0: RequestItemConvertible) async",
                 parameterMatchers: matchers
             ))
         }
@@ -6231,6 +6219,14 @@ return cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockProximitySessionCoordinator.self,
                 method: "getStream() -> AsyncStream<PresentationState>",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func stopPresentation() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockProximitySessionCoordinator.self,
+                method: "stopPresentation()",
                 parameterMatchers: matchers
             ))
         }
@@ -6289,22 +6285,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func sendResponse<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable, M3: Cuckoo.OptionalMatchable>(response p0: M1, onSuccess p1: M2, onCancel p2: M3) -> Cuckoo.__DoNotUse<(RequestItemConvertible, ((URL?) -> Void)?, (() -> Void)?), Void> where M1.MatchedType == RequestItemConvertible, M2.OptionalMatchedType == ((URL?) -> Void), M3.OptionalMatchedType == (() -> Void) {
-            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible, ((URL?) -> Void)?, (() -> Void)?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+        func sendResponse<M1: Cuckoo.Matchable>(response p0: M1) -> Cuckoo.__DoNotUse<(RequestItemConvertible), Void> where M1.MatchedType == RequestItemConvertible {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "sendResponse(response p0: RequestItemConvertible, onSuccess p1: ((URL?) -> Void)?, onCancel p2: (() -> Void)?) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onSuccess<M1: Cuckoo.Matchable>(completion p0: M1) -> Cuckoo.__DoNotUse<(() -> Void), Void> where M1.MatchedType == () -> Void {
-            let matchers: [Cuckoo.ParameterMatcher<(() -> Void)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "onSuccess(completion p0: () -> Void)",
+                "sendResponse(response p0: RequestItemConvertible) async",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -6346,6 +6330,18 @@ return cuckoo_manager.call(
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func stopPresentation() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "stopPresentation()",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -6373,11 +6369,7 @@ public class ProximitySessionCoordinatorStub:ProximitySessionCoordinator, @unche
         return DefaultValueRegistry.defaultValue(for: (PresentationRequest).self)
     }
     
-    public func sendResponse(response p0: RequestItemConvertible, onSuccess p1: ((URL?) -> Void)?, onCancel p2: (() -> Void)?) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func onSuccess(completion p0: () -> Void) {
+    public func sendResponse(response p0: RequestItemConvertible) async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -6391,6 +6383,10 @@ public class ProximitySessionCoordinatorStub:ProximitySessionCoordinator, @unche
     
     public func getStream() -> AsyncStream<PresentationState> {
         return DefaultValueRegistry.defaultValue(for: (AsyncStream<PresentationState>).self)
+    }
+    
+    public func stopPresentation() {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }
 
@@ -6461,28 +6457,14 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
         )
     }
     
-    public func sendResponse(response p0: RequestItemConvertible, onSuccess p1: ((URL?) -> Void)?, onCancel p2: (() -> Void)?) async throws {
-        return try await cuckoo_manager.callThrows(
-            "sendResponse(response p0: RequestItemConvertible, onSuccess p1: ((URL?) -> Void)?, onCancel p2: (() -> Void)?) async throws",
-            parameters: (p0, p1, p2),
-            escapingParameters: (p0, p1, p2),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.sendResponse(response: p0, onSuccess: p1, onCancel: p2)
-        )
-    }
-    
-    public func onSuccess(completion p0: () -> Void) {
-        
-		return withoutActuallyEscaping(p0, do: { (p0: @escaping () -> Void) in
-return cuckoo_manager.call(
-            "onSuccess(completion p0: () -> Void)",
+    public func sendResponse(response p0: RequestItemConvertible) async {
+        return await cuckoo_manager.call(
+            "sendResponse(response p0: RequestItemConvertible) async",
             parameters: (p0),
-            escapingParameters: ({ () in fatalError("This is a stub! It's not supposed to be called!") }),
+            escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.onSuccess(completion: p0)
+            defaultCall: await __defaultImplStub!.sendResponse(response: p0)
         )
-		})
-
     }
     
     public func getState() async -> PresentationState {
@@ -6495,6 +6477,16 @@ return cuckoo_manager.call(
         )
     }
     
+    public func getStream() -> AsyncStream<PresentationState> {
+        return cuckoo_manager.call(
+            "getStream() -> AsyncStream<PresentationState>",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.getStream()
+        )
+    }
+    
     public func setState(presentationState p0: PresentationState) {
         return cuckoo_manager.call(
             "setState(presentationState p0: PresentationState)",
@@ -6502,6 +6494,16 @@ return cuckoo_manager.call(
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: __defaultImplStub!.setState(presentationState: p0)
+        )
+    }
+    
+    public func stopPresentation() {
+        return cuckoo_manager.call(
+            "stopPresentation()",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.stopPresentation()
         )
     }
 
@@ -6532,18 +6534,10 @@ return cuckoo_manager.call(
             ))
         }
         
-        func sendResponse<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable, M3: Cuckoo.OptionalMatchable>(response p0: M1, onSuccess p1: M2, onCancel p2: M3) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(RequestItemConvertible, ((URL?) -> Void)?, (() -> Void)?)> where M1.MatchedType == RequestItemConvertible, M2.OptionalMatchedType == ((URL?) -> Void), M3.OptionalMatchedType == (() -> Void) {
-            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible, ((URL?) -> Void)?, (() -> Void)?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+        func sendResponse<M1: Cuckoo.Matchable>(response p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(RequestItemConvertible)> where M1.MatchedType == RequestItemConvertible {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRemoteSessionCoordinator.self,
-                method: "sendResponse(response p0: RequestItemConvertible, onSuccess p1: ((URL?) -> Void)?, onCancel p2: (() -> Void)?) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onSuccess<M1: Cuckoo.Matchable>(completion p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(() -> Void)> where M1.MatchedType == () -> Void {
-            let matchers: [Cuckoo.ParameterMatcher<(() -> Void)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockRemoteSessionCoordinator.self,
-                method: "onSuccess(completion p0: () -> Void)",
+                method: "sendResponse(response p0: RequestItemConvertible) async",
                 parameterMatchers: matchers
             ))
         }
@@ -6556,10 +6550,26 @@ return cuckoo_manager.call(
             ))
         }
         
+        func getStream() -> Cuckoo.ProtocolStubFunction<(), AsyncStream<PresentationState>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRemoteSessionCoordinator.self,
+                method: "getStream() -> AsyncStream<PresentationState>",
+                parameterMatchers: matchers
+            ))
+        }
+        
         func setState<M1: Cuckoo.Matchable>(presentationState p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(PresentationState)> where M1.MatchedType == PresentationState {
             let matchers: [Cuckoo.ParameterMatcher<(PresentationState)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRemoteSessionCoordinator.self,
                 method: "setState(presentationState p0: PresentationState)",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func stopPresentation() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRemoteSessionCoordinator.self,
+                method: "stopPresentation()",
                 parameterMatchers: matchers
             ))
         }
@@ -6606,22 +6616,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func sendResponse<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable, M3: Cuckoo.OptionalMatchable>(response p0: M1, onSuccess p1: M2, onCancel p2: M3) -> Cuckoo.__DoNotUse<(RequestItemConvertible, ((URL?) -> Void)?, (() -> Void)?), Void> where M1.MatchedType == RequestItemConvertible, M2.OptionalMatchedType == ((URL?) -> Void), M3.OptionalMatchedType == (() -> Void) {
-            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible, ((URL?) -> Void)?, (() -> Void)?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+        func sendResponse<M1: Cuckoo.Matchable>(response p0: M1) -> Cuckoo.__DoNotUse<(RequestItemConvertible), Void> where M1.MatchedType == RequestItemConvertible {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "sendResponse(response p0: RequestItemConvertible, onSuccess p1: ((URL?) -> Void)?, onCancel p2: (() -> Void)?) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onSuccess<M1: Cuckoo.Matchable>(completion p0: M1) -> Cuckoo.__DoNotUse<(() -> Void), Void> where M1.MatchedType == () -> Void {
-            let matchers: [Cuckoo.ParameterMatcher<(() -> Void)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "onSuccess(completion p0: () -> Void)",
+                "sendResponse(response p0: RequestItemConvertible) async",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -6642,10 +6640,34 @@ return cuckoo_manager.call(
         
         
         @discardableResult
+        func getStream() -> Cuckoo.__DoNotUse<(), AsyncStream<PresentationState>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getStream() -> AsyncStream<PresentationState>",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
         func setState<M1: Cuckoo.Matchable>(presentationState p0: M1) -> Cuckoo.__DoNotUse<(PresentationState), Void> where M1.MatchedType == PresentationState {
             let matchers: [Cuckoo.ParameterMatcher<(PresentationState)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
                 "setState(presentationState p0: PresentationState)",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func stopPresentation() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "stopPresentation()",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -6674,11 +6696,7 @@ public class RemoteSessionCoordinatorStub:RemoteSessionCoordinator, @unchecked S
         return DefaultValueRegistry.defaultValue(for: (PresentationRequest).self)
     }
     
-    public func sendResponse(response p0: RequestItemConvertible, onSuccess p1: ((URL?) -> Void)?, onCancel p2: (() -> Void)?) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func onSuccess(completion p0: () -> Void) {
+    public func sendResponse(response p0: RequestItemConvertible) async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -6686,7 +6704,15 @@ public class RemoteSessionCoordinatorStub:RemoteSessionCoordinator, @unchecked S
         return DefaultValueRegistry.defaultValue(for: (PresentationState).self)
     }
     
+    public func getStream() -> AsyncStream<PresentationState> {
+        return DefaultValueRegistry.defaultValue(for: (AsyncStream<PresentationState>).self)
+    }
+    
     public func setState(presentationState p0: PresentationState) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func stopPresentation() {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }

@@ -27,11 +27,12 @@ public protocol RemoteSessionCoordinator: ThreadSafeProtocol {
 
   func initialize() async
   func requestReceived() async throws -> PresentationRequest
-  func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async throws
-  func onSuccess(completion: () -> Void)
+  func sendResponse(response: RequestItemConvertible) async
 
   func getState() async -> PresentationState
+  func getStream() -> AsyncStream<PresentationState>
   func setState(presentationState: PresentationState)
+  func stopPresentation()
 
 }
 
@@ -39,10 +40,32 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
 
   let sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> = .init(.loading)
 
+  private let sendableAnyCancellable: SendableAnyCancellable = .init()
+
   private let session: PresentationSession
 
   init(session: PresentationSession) {
     self.session = session
+    self.session.$status
+      .sink { status in
+        switch status {
+        case .error:
+          if let error = session.uiError {
+            self.sendableCurrentValueSubject.setValue(.error(error))
+          } else {
+            let genericWalletError = WalletError.init(description: LocalizableString.shared.get(with: .genericErrorDesc))
+            self.sendableCurrentValueSubject.setValue(.error(genericWalletError))
+          }
+
+        default:
+          ()
+        }
+      }
+      .store(in: &sendableAnyCancellable.cancellables)
+  }
+
+  deinit {
+    stopPresentation()
   }
 
   public func initialize() async {
@@ -64,8 +87,10 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
     return presentationRequest
   }
 
-  public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async throws {
-    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems(), onCancel: onCancel, onSuccess: onSuccess)
+  public func sendResponse(response: RequestItemConvertible) async {
+    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems(), onCancel: nil) { url in
+      self.sendableCurrentValueSubject.setValue(.responseSent(url))
+    }
   }
 
   public func getState() async -> PresentationState {
@@ -76,11 +101,12 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
     self.sendableCurrentValueSubject.setValue(presentationState)
   }
 
-  public func onSuccess(completion: () -> Void) {
-    completion()
-  }
-
   public func getStream() -> AsyncStream<PresentationState> {
     self.sendableCurrentValueSubject.getSubject().toAsyncStream()
+  }
+
+  public func stopPresentation() {
+    self.sendableCurrentValueSubject.getSubject().send(completion: .finished)
+    sendableAnyCancellable.cancel()
   }
 }

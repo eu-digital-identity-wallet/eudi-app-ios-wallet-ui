@@ -15,6 +15,7 @@
  */
 import logic_ui
 import logic_business
+import logic_core
 
 @MainActor
 public final class PresentationRouter {
@@ -31,7 +32,7 @@ public final class PresentationRouter {
           router: host,
           interactor: DIGraph.resolver.force(
             PresentationInteractor.self,
-            argument: presentationCoordinator
+            argument: presentationCoordinator as RemoteSessionCoordinator
           ),
           relyingParty: relyingParty,
           originator: originator
@@ -46,7 +47,7 @@ public final class PresentationRouter {
           router: host,
           interactor: DIGraph.resolver.force(
             PresentationInteractor.self,
-            argument: presentationCoordinator
+            argument: presentationCoordinator as RemoteSessionCoordinator
           ),
           originator: originator
         )

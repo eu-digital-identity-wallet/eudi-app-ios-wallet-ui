@@ -45,6 +45,10 @@ final class TestProximityInteractor: EudiTest {
       when(mock.setActiveProximityCoordinator(any())).thenDoNothing()
     }
     
+    stub(presentationSessionCoordinator) { mock in
+      when(mock.stopPresentation()).thenDoNothing()
+    }
+    
     self.interactor = ProximityInteractorImpl(
       with: presentationSessionCoordinator,
       and: walletKitController,
@@ -216,7 +220,7 @@ final class TestProximityInteractor: EudiTest {
       when(mock.stopPresentation()).thenDoNothing()
     }
     // When
-    await interactor.stopPresentation()
+    interactor.stopPresentation()
     // Then
     verify(walletKitController).stopPresentation()
   }
@@ -333,9 +337,7 @@ final class TestProximityInteractor: EudiTest {
     stub(presentationSessionCoordinator) { mock in
       when(
         mock.sendResponse(
-          response: any(),
-          onSuccess: any(),
-          onCancel: any()
+          response: any()
         )
       ).thenDoNothing()
     }
@@ -345,7 +347,7 @@ final class TestProximityInteractor: EudiTest {
     
     // Then
     switch state {
-    case .success:
+    case .sent:
       XCTAssertTrue(true)
     default:
       XCTFail("Wrong state \(state)")
@@ -353,9 +355,7 @@ final class TestProximityInteractor: EudiTest {
     
     verify(presentationSessionCoordinator).getState()
     verify(presentationSessionCoordinator).sendResponse(
-      response: any(),
-      onSuccess: any(),
-      onCancel: any()
+      response: any()
     )
   }
   
@@ -385,19 +385,15 @@ final class TestProximityInteractor: EudiTest {
   func testOnSendResponse_WhenCoordinatorPresentationStateIsResponseToSendAndSendResponseThrowsError_ThenVerifyFailureState() async {
     // Given
     let presetationState: PresentationState = .responseToSend(Self.mockRequestItems)
-    let expectedError = PresentationSessionError.noDocumentFoundForRequest
+    let expectedError = RuntimeError.genericError
     
     stub(presentationSessionCoordinator) { mock in
       when(mock.getState()).thenReturn(presetationState)
     }
     
-    stub(presentationSessionCoordinator) { mock in
+    stub(sessionHolder) { mock in
       when(
-        mock.sendResponse(
-          response: any(),
-          onSuccess: any(),
-          onCancel: any()
-        )
+        mock.getActiveProximityCoordinator()
       ).thenThrow(expectedError)
     }
     
@@ -407,17 +403,13 @@ final class TestProximityInteractor: EudiTest {
     // Then
     switch state {
     case .failure(let error):
-      XCTAssertEqual(error.localizedDescription, expectedError.localizedDescription)
+      XCTAssertEqual(error.localizedDescription, PresentationSessionError.invalidState.localizedDescription)
     default:
       XCTFail("Wrong state \(state)")
     }
     
-    verify(presentationSessionCoordinator).getState()
-    verify(presentationSessionCoordinator).sendResponse(
-      response: any(),
-      onSuccess: any(),
-      onCancel: any()
-    )
+    verify(presentationSessionCoordinator, times(0)).getState()
+    verify(presentationSessionCoordinator, times(0)).sendResponse(response: any())
   }
 }
 

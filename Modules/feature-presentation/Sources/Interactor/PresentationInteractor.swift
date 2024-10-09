@@ -30,13 +30,25 @@ public enum PresentationCoordinatorPartialState: ThreadSafePartialState {
   case failure(Error)
 }
 
+public enum RemotePublisherPartialState: ThreadSafePartialState {
+  case success(AsyncStream<PresentationState>)
+  case failure(Error)
+}
+
+public enum RemoteSentResponsePartialState: ThreadSafePartialState {
+  case sent
+  case failure(Error)
+}
+
 public protocol PresentationInteractor: ThreadSafeInteractor {
+  func getSessionStatePublisher() -> RemotePublisherPartialState
   func getCoordinator() -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>
-  func onSendResponse() async -> Result<URL?, Error>
+  func onSendResponse() async -> RemoteSentResponsePartialState
   func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator)
   func storeDynamicIssuancePendingUrl(with url: URL)
+  func stopPresentation()
 }
 
 final class PresentationInteractorImpl: PresentationInteractor {
@@ -52,6 +64,14 @@ final class PresentationInteractorImpl: PresentationInteractor {
     self.walletKitController = walletKitController
     self.sessionCoordinatorHolder = sessionCoordinatorHolder
     self.sessionCoordinatorHolder.setActiveRemoteCoordinator(presentationCoordinator)
+  }
+
+  public func getSessionStatePublisher() -> RemotePublisherPartialState {
+    do {
+      return .success(try self.sessionCoordinatorHolder.getActiveRemoteCoordinator().getStream())
+    } catch {
+      return .failure(error)
+    }
   }
 
   public func getCoordinator() -> PresentationCoordinatorPartialState {
@@ -120,7 +140,7 @@ final class PresentationInteractorImpl: PresentationInteractor {
     return .success(requestConvertible.asRequestItems())
   }
 
-  public func onSendResponse() async -> Result<URL?, Error> {
+  public func onSendResponse() async -> RemoteSentResponsePartialState {
 
     guard
       let state = try? await sessionCoordinatorHolder.getActiveRemoteCoordinator().getState(),
@@ -129,23 +149,20 @@ final class PresentationInteractorImpl: PresentationInteractor {
       return .failure(PresentationSessionError.invalidState)
     }
 
-    return await withCheckedContinuation { continuation in
-      Task { [weak self] in
-        do {
-          try await self?.sessionCoordinatorHolder.getActiveRemoteCoordinator().sendResponse(response: responseItem) {
-            continuation.resume(returning: .success($0))
-          } onCancel: {
-            continuation.resume(returning: .failure(PresentationSessionError.invalidState))
-          }
-
-        } catch {
-          continuation.resume(returning: .failure(error))
-        }
-      }
+    do {
+      try await self.sessionCoordinatorHolder.getActiveRemoteCoordinator().sendResponse(response: responseItem)
+      return .sent
+    } catch {
+      return .failure(error)
     }
   }
 
-  func storeDynamicIssuancePendingUrl(with url: URL) {
+  public func storeDynamicIssuancePendingUrl(with url: URL) {
     walletKitController.storeDynamicIssuancePendingUrl(with: url)
+  }
+
+  public func stopPresentation() {
+    walletKitController.stopPresentation()
+    try? sessionCoordinatorHolder.getActiveRemoteCoordinator().stopPresentation()
   }
 }

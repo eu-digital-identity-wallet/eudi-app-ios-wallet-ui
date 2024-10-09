@@ -147,9 +147,6 @@ final class WalletKitControllerImpl: WalletKitController {
       argument: session
     )
     self.sessionCoordinatorHolder.setActiveProximityCoordinator(proximitySessionCoordinator)
-    proximitySessionCoordinator.onSuccess {
-      stopPresentation()
-    }
     return proximitySessionCoordinator
   }
 
@@ -176,9 +173,6 @@ final class WalletKitControllerImpl: WalletKitController {
       argument: session
     )
     self.sessionCoordinatorHolder.setActiveRemoteCoordinator(remoteSessionCoordinator)
-    remoteSessionCoordinator.onSuccess {
-      stopPresentation()
-    }
     return remoteSessionCoordinator
   }
 
