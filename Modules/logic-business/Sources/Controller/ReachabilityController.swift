@@ -30,7 +30,7 @@ final class ReachabilityControllerImpl: ReachabilityController, BKAvailabilityOb
   @Published private var networkPath: NWPath
   @Published private var bleAvailibity: Reachability.BleAvailibity = .unavailable
 
-  private var cancellables = Set<AnyCancellable>()
+  private let sendableAnyCancellable: SendableAnyCancellable = .init()
 
   private let monitor: NWPathMonitor
   private let central = BKCentral()
@@ -63,6 +63,7 @@ final class ReachabilityControllerImpl: ReachabilityController, BKAvailabilityOb
 
   deinit {
     monitor.cancel()
+    sendableAnyCancellable.cancel()
     stopCentral()
   }
 
@@ -85,7 +86,7 @@ final class ReachabilityControllerImpl: ReachabilityController, BKAvailabilityOb
               promise(.success(value))
             }
           )
-          .store(in: &self.cancellables)
+          .store(in: &self.sendableAnyCancellable.cancellables)
 
         self.startCentral()
       }
