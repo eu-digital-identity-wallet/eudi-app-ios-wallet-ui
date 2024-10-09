@@ -18,6 +18,7 @@ import Foundation
 @preconcurrency import Combine
 import logic_resources
 import UIKit
+import logic_business
 
 public protocol ProximitySessionCoordinator: Sendable {
 
@@ -43,7 +44,7 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
 
   private let session: PresentationSession
 
-  nonisolated(unsafe) private var cancellables = Set<AnyCancellable>()
+  private let sendableAnyCancellable: SendableAnyCancellable = .init()
 
   init(session: PresentationSession) {
     self.session = session
@@ -66,11 +67,11 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
           ()
         }
       }
-      .store(in: &cancellables)
+      .store(in: &sendableAnyCancellable.cancellables)
   }
 
   deinit {
-    self.cancellables.forEach { $0.cancel() }
+    self.sendableAnyCancellables.cancel()
   }
 
   public func initialize() async {

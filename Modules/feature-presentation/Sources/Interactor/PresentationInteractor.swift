@@ -26,9 +26,13 @@ public struct OnlineAuthenticationRequestSuccessModel: Sendable {
   var isTrusted: Bool
 }
 
-public protocol PresentationInteractor: Sendable {
-  var presentationCoordinator: RemoteSessionCoordinator { get }
+public enum PresentationCoordinatorPartialState: Sendable {
+  case success(RemoteSessionCoordinator)
+  case failure(Error)
+}
 
+public protocol PresentationInteractor: Sendable {
+  func getCoordinator() -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>
   func onSendResponse() async -> Result<URL?, Error>
@@ -38,29 +42,39 @@ public protocol PresentationInteractor: Sendable {
 
 final class PresentationInteractorImpl: PresentationInteractor {
 
-  nonisolated(unsafe) public private(set) var presentationCoordinator: RemoteSessionCoordinator
+  private let sessionCoordinatorHolder: SessionCoordinatorHolder
   private let walletKitController: WalletKitController
 
   init(
     with presentationCoordinator: RemoteSessionCoordinator,
-    and walletKitController: WalletKitController
+    and walletKitController: WalletKitController,
+    also sessionCoordinatorHolder: SessionCoordinatorHolder
   ) {
-    self.presentationCoordinator = presentationCoordinator
     self.walletKitController = walletKitController
+    self.sessionCoordinatorHolder = sessionCoordinatorHolder
+    self.sessionCoordinatorHolder.setActiveRemoteCoordinator(presentationCoordinator)
   }
 
-  func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator) {
-    self.presentationCoordinator = coordinator
+  public func getCoordinator() -> PresentationCoordinatorPartialState {
+    do {
+      return .success(try self.sessionCoordinatorHolder.getActiveRemoteCoordinator())
+    } catch {
+      return .failure(error)
+    }
+  }
+
+  public func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator) {
+    self.sessionCoordinatorHolder.setActiveRemoteCoordinator(coordinator)
   }
 
   public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
-    await presentationCoordinator.initialize()
+    try? await sessionCoordinatorHolder.getActiveRemoteCoordinator().initialize()
     return await onRequestReceived()
   }
 
   public func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
     do {
-      let response = try await presentationCoordinator.requestReceived()
+      let response = try await sessionCoordinatorHolder.getActiveRemoteCoordinator().requestReceived()
       return .success(
         .init(
           requestDataCells: RequestDataUiModel.items(
@@ -98,21 +112,28 @@ final class PresentationInteractorImpl: PresentationInteractor {
       return .failure(PresentationSessionError.conversionToRequestItemModel)
     }
 
-    self.presentationCoordinator.setState(presentationState: .responseToSend(requestConvertible))
+    do {
+      try self.sessionCoordinatorHolder.getActiveRemoteCoordinator().setState(presentationState: .responseToSend(requestConvertible))
+    } catch {
+      return .failure(error)
+    }
 
     return .success(requestConvertible.asRequestItems())
   }
 
   public func onSendResponse() async -> Result<URL?, Error> {
 
-    guard case PresentationState.responseToSend(let responseItem) = await presentationCoordinator.getState() else {
+    guard
+      let state = try? await sessionCoordinatorHolder.getActiveRemoteCoordinator().getState(),
+      case PresentationState.responseToSend(let responseItem) = state
+    else {
       return .failure(PresentationSessionError.invalidState)
     }
 
     return await withCheckedContinuation { continuation in
       Task { [weak self] in
         do {
-          try await self?.presentationCoordinator.sendResponse(response: responseItem) {
+          try await self?.sessionCoordinatorHolder.getActiveRemoteCoordinator().sendResponse(response: responseItem) {
             continuation.resume(returning: .success($0))
           } onCancel: {
             continuation.resume(returning: .failure(PresentationSessionError.invalidState))

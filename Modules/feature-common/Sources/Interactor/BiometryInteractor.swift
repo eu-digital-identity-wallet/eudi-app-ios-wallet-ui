@@ -47,7 +47,6 @@ final class BiometryInteractorImpl: BiometryInteractor {
   private let quickPinInteractor: QuickPinInteractor
   private let biometryController: SystemBiometryController
 
-  nonisolated(unsafe) private var cancellables: Set<AnyCancellable> = []
   private let useTestDispatcher: Bool
 
   init(

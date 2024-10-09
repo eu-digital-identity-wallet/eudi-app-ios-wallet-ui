@@ -35,13 +35,18 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   }
 
   func subscribeToCoordinatorPublisher() async {
-    for try await state in interactor.getSessionStatePublisher() {
-      switch state {
-      case .error(let error):
-        self.onError(with: error)
-      default:
-        ()
+    switch self.interactor.getSessionStatePublisher() {
+    case .success(let publisher):
+      for try await state in publisher {
+        switch state {
+        case .error(let error):
+          self.onError(with: error)
+        default:
+          ()
+        }
       }
+    case .failure(let error):
+      self.onError(with: error)
     }
   }
 
@@ -88,27 +93,31 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   }
 
   override func getSuccessRoute() -> AppRoute? {
-    .featureCommonModule(
-      .biometry(
-        config: UIConfig.Biometry(
-          title: getTitle(),
-          caption: .requestDataShareBiometryCaption,
-          quickPinOnlyCaption: .requestDataShareQuickPinCaption,
-          navigationSuccessType: .push(
-            .featureProximityModule(
-              .proximityLoader(
-                getRelyingParty(),
-                presentationCoordinator: interactor.presentationSessionCoordinator,
-                originator: getOriginator()
-              )
+    return switch interactor.getCoordinator() {
+    case .success(let proximitySessionCoordinator):
+        .featureCommonModule(
+          .biometry(
+            config: UIConfig.Biometry(
+              title: getTitle(),
+              caption: .requestDataShareBiometryCaption,
+              quickPinOnlyCaption: .requestDataShareQuickPinCaption,
+              navigationSuccessType: .push(
+                .featureProximityModule(
+                  .proximityLoader(
+                    getRelyingParty(),
+                    presentationCoordinator: proximitySessionCoordinator,
+                    originator: getOriginator()
+                  )
+                )
+              ),
+              navigationBackType: .pop,
+              isPreAuthorization: false,
+              shouldInitializeBiometricOnCreate: true
             )
-          ),
-          navigationBackType: .pop,
-          isPreAuthorization: false,
-          shouldInitializeBiometricOnCreate: true
+          )
         )
-      )
-    )
+    case .failure: nil
+    }
   }
 
   override func getPopRoute() -> AppRoute? {

@@ -29,7 +29,8 @@ public final class LogicCoreAssembly: Assembly {
     container.register(WalletKitController.self) { r in
       WalletKitControllerImpl(
         configLogic: r.force(WalletKitConfig.self),
-        keyChainController: r.force(KeyChainController.self)
+        keyChainController: r.force(KeyChainController.self),
+        sessionCoordinatorHolder: r.force(SessionCoordinatorHolder.self)
       )
     }
     .inObjectScope(ObjectScope.container)
@@ -41,6 +42,11 @@ public final class LogicCoreAssembly: Assembly {
 
     container.register(RemoteSessionCoordinator.self) { _, session in
       RemoteSessionCoordinatorImpl(session: session)
+    }
+    .inObjectScope(ObjectScope.transient)
+
+    container.register(SessionCoordinatorHolder.self) { _ in
+      SessionCoordinatorHolderImpl()
     }
     .inObjectScope(ObjectScope.transient)
   }

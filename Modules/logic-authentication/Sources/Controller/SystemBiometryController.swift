@@ -19,6 +19,10 @@ import Combine
 import SwiftUI
 import logic_business
 
+internal final class BiometryError: @unchecked Sendable {
+  internal var value: NSError?
+}
+
 public protocol SystemBiometryController: Sendable {
   var biometryType: LABiometryType { get }
   func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError>
@@ -58,7 +62,7 @@ final class SystemBiometryControllerImpl: SystemBiometryController {
   private let context = LAContext()
   private let keyChainController: KeyChainController
 
-  nonisolated(unsafe) internal var biometricError: NSError?
+  private let biometricError: BiometryError = .init()
 
   public init(keyChainController: KeyChainController) {
     self.keyChainController = keyChainController
@@ -71,11 +75,11 @@ final class SystemBiometryControllerImpl: SystemBiometryController {
 
   public func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError> {
 
-    guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &biometricError) else {
+    guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &biometricError.value) else {
       return Fail(error: SystemBiometryError.deniedAccess).eraseToAnyPublisher()
     }
 
-    if let error = biometricError {
+    if let error = biometricError.value {
       switch error.code {
       case -6:
         return Fail(error: SystemBiometryError.deniedAccess).eraseToAnyPublisher()

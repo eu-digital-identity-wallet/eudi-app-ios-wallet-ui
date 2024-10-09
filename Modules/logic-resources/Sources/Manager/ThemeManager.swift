@@ -18,7 +18,7 @@ import SwiftUI
 
 public typealias Theme = ThemeManager
 
-public protocol ThemeManagerProtocol {
+public protocol ThemeManagerProtocol: Sendable {
 
   static var shared: ThemeProtocol { get }
 

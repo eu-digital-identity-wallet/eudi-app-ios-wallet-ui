@@ -53,7 +53,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
   private let reachabilityController: ReachabilityController
   private let configLogic: ConfigLogic
 
-  nonisolated(unsafe) private var cancellables = Set<AnyCancellable>()
+  private let sendableAnyCancellable: SendableAnyCancellable = .init()
 
   init(
     walletController: WalletKitController,
@@ -89,7 +89,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
     return await withCheckedContinuation { cont in
       reachabilityController.getBleAvailibity()
         .sink { cont.resume(returning: $0)}
-        .store(in: &cancellables)
+        .store(in: &sendableAnyCancellable.cancellables)
     }
   }
 

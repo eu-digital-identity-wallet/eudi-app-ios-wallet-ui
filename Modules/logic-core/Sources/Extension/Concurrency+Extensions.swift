@@ -13,4 +13,9 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+extension WalletStorage.Document: @retroactive @unchecked Sendable {}
+extension PresentationSession: @retroactive @unchecked Sendable {}
+extension OfferedIssuanceModel: @retroactive @unchecked Sendable {}
 extension OfferedDocModel: @retroactive @unchecked Sendable {}
+extension EudiWallet: @retroactive @unchecked Sendable {}
+extension DocElementsViewModel: @retroactive @unchecked Sendable {}

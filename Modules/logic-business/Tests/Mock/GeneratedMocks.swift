@@ -837,17 +837,17 @@ public class MockReachabilityController: ReachabilityController, Cuckoo.Protocol
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
-    
-    public var networkPath: NWPath {
-        get {
-            return cuckoo_manager.getter(
-                "networkPath",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.networkPath
-            )
-        }
-    }
 
+    
+    public func hasInternet() -> Bool {
+        return cuckoo_manager.call(
+            "hasInternet() -> Bool",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.hasInternet()
+        )
+    }
     
     public func getBleAvailibity() -> AnyPublisher<Reachability.BleAvailibity, Never> {
         return cuckoo_manager.call(
@@ -876,8 +876,12 @@ public class MockReachabilityController: ReachabilityController, Cuckoo.Protocol
             self.cuckoo_manager = manager
         }
         
-        var networkPath: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockReachabilityController,NWPath> {
-            return .init(manager: cuckoo_manager, name: "networkPath")
+        func hasInternet() -> Cuckoo.ProtocolStubFunction<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockReachabilityController.self,
+                method: "hasInternet() -> Bool",
+                parameterMatchers: matchers
+            ))
         }
         
         func getBleAvailibity() -> Cuckoo.ProtocolStubFunction<(), AnyPublisher<Reachability.BleAvailibity, Never>> {
@@ -908,8 +912,16 @@ public class MockReachabilityController: ReachabilityController, Cuckoo.Protocol
             self.sourceLocation = sourceLocation
         }
         
-        var networkPath: Cuckoo.VerifyReadOnlyProperty<NWPath> {
-            return .init(manager: cuckoo_manager, name: "networkPath", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        
+        @discardableResult
+        func hasInternet() -> Cuckoo.__DoNotUse<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "hasInternet() -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
         }
         
         
@@ -939,14 +951,12 @@ public class MockReachabilityController: ReachabilityController, Cuckoo.Protocol
 }
 
 public class ReachabilityControllerStub:ReachabilityController {
+
+
     
-    public var networkPath: NWPath {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (NWPath).self)
-        }
+    public func hasInternet() -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
-
-
     
     public func getBleAvailibity() -> AnyPublisher<Reachability.BleAvailibity, Never> {
         return DefaultValueRegistry.defaultValue(for: (AnyPublisher<Reachability.BleAvailibity, Never>).self)
@@ -1423,5 +1433,13 @@ public class FormValidatorInteractorStub:FormValidatorInteractor {
 // MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Wrapper/EquatableNoop.swift'
 
 import Cuckoo
+@testable import logic_business
+
+
+
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Wrapper/Synchronized.swift'
+
+import Cuckoo
+import Foundation
 @testable import logic_business
 

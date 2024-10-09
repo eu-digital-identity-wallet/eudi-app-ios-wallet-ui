@@ -37,13 +37,18 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   }
 
   func subscribeToCoordinatorPublisher() async {
-    for try await state in self.interactor.getSessionStatePublisher() {
-      switch state {
-      case .error(let error):
-        self.onError(with: error)
-      default:
-        ()
+    switch self.interactor.getSessionStatePublisher() {
+    case .success(let publisher):
+      for try await state in publisher {
+        switch state {
+        case .error(let error):
+          self.onError(with: error)
+        default:
+          ()
+        }
       }
+    case .failure(let error):
+      self.onError(with: error)
     }
   }
 
@@ -75,12 +80,16 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   }
 
   override func getOnPopRoute() -> AppRoute? {
-    .featureProximityModule(
-      .proximityRequest(
-        presentationCoordinator: interactor.presentationSessionCoordinator,
-        originator: getOriginator()
-      )
-    )
+    return switch interactor.getCoordinator() {
+    case .success(let proximitySessionCoordinator):
+        .featureProximityModule(
+          .proximityRequest(
+            presentationCoordinator: proximitySessionCoordinator,
+            originator: getOriginator()
+          )
+        )
+    case .failure: nil
+    }
   }
 
   override func doWork() async {

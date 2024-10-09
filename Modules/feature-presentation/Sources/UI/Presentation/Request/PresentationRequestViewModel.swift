@@ -73,27 +73,31 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   override func getSuccessRoute() -> AppRoute? {
-    .featureCommonModule(
-      .biometry(
-        config: UIConfig.Biometry(
-          title: getTitle(),
-          caption: .requestDataShareBiometryCaption,
-          quickPinOnlyCaption: .requestDataShareQuickPinCaption,
-          navigationSuccessType: .push(
-            .featurePresentationModule(
-              .presentationLoader(
-                getRelyingParty(),
-                presentationCoordinator: interactor.presentationCoordinator,
-                originator: getOriginator()
-              )
+    return switch interactor.getCoordinator() {
+    case .success(let remoteSessionCoordinator):
+        .featureCommonModule(
+          .biometry(
+            config: UIConfig.Biometry(
+              title: getTitle(),
+              caption: .requestDataShareBiometryCaption,
+              quickPinOnlyCaption: .requestDataShareQuickPinCaption,
+              navigationSuccessType: .push(
+                .featurePresentationModule(
+                  .presentationLoader(
+                    getRelyingParty(),
+                    presentationCoordinator: remoteSessionCoordinator,
+                    originator: getOriginator()
+                  )
+                )
+              ),
+              navigationBackType: .pop,
+              isPreAuthorization: false,
+              shouldInitializeBiometricOnCreate: true
             )
-          ),
-          navigationBackType: .pop,
-          isPreAuthorization: false,
-          shouldInitializeBiometricOnCreate: true
+          )
         )
-      )
-    )
+    case .failure: nil
+    }
   }
 
   override func getPopRoute() -> AppRoute? {

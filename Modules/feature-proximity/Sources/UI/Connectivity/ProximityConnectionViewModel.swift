@@ -58,15 +58,20 @@ final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Rout
   }
 
   func subscribeToCoordinatorPublisher() async {
-    for try await state in interactor.getSessionStatePublisher() {
-      switch state {
-      case .prepareQr:
-        await self.onQRGeneration()
-      case .error:
-        self.onError(with: .genericErrorDesc)
-      default:
-        ()
+    switch self.interactor.getSessionStatePublisher() {
+    case .success(let publisher):
+      for try await state in publisher {
+        switch state {
+        case .prepareQr:
+          await self.onQRGeneration()
+        case .error:
+          self.onError(with: .genericErrorDesc)
+        default:
+          ()
+        }
       }
+    case .failure(let error):
+      self.onError(with: .custom(error.localizedDescription))
     }
   }
 
@@ -87,15 +92,20 @@ final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Rout
   }
 
   private func onConnectionSuccess() async {
-    cancellables.forEach({$0.cancel()})
-    router.push(
-      with: .featureProximityModule(
-        .proximityRequest(
-          presentationCoordinator: interactor.presentationSessionCoordinator,
-          originator: viewState.originator
+    switch interactor.getCoordinator() {
+    case .success(let proximitySessionCoordinator):
+      cancellables.forEach({$0.cancel()})
+      router.push(
+        with: .featureProximityModule(
+          .proximityRequest(
+            presentationCoordinator: proximitySessionCoordinator,
+            originator: viewState.originator
+          )
         )
       )
-    )
+    case .failure(let error):
+      self.onError(with: .custom(error.localizedDescription))
+    }
   }
 
   private func onError(with desc: LocalizableString.Key) {

@@ -27,11 +27,6 @@ private enum WalletKitKeyChainIdentifier: String, KeychainWrapper {
 }
 
 public protocol WalletKitController: Sendable {
-
-  var wallet: EudiWallet { get }
-  var activeRemoteCoordinator: RemoteSessionCoordinator? { get }
-  var activeProximityCoordinator: ProximitySessionCoordinator? { get }
-
   func startProximityPresentation() -> ProximitySessionCoordinator
   func startSameDevicePresentation(deepLink: URLComponents) -> RemoteSessionCoordinator
   func startCrossDevicePresentation(urlString: String) -> RemoteSessionCoordinator
@@ -72,16 +67,20 @@ public protocol WalletKitController: Sendable {
 
 final class WalletKitControllerImpl: WalletKitController, Sendable {
 
-  public let wallet: EudiWallet
-  nonisolated(unsafe) public private(set) var activeRemoteCoordinator: RemoteSessionCoordinator?
-  nonisolated(unsafe) public private(set) var activeProximityCoordinator: ProximitySessionCoordinator?
+  private let wallet: EudiWallet
+  private let sessionCoordinatorHolder: SessionCoordinatorHolder
 
   private let configLogic: WalletKitConfig
   private let keyChainController: KeyChainController
 
-  init(configLogic: WalletKitConfig, keyChainController: KeyChainController) {
+  init(
+    configLogic: WalletKitConfig,
+    keyChainController: KeyChainController,
+    sessionCoordinatorHolder: SessionCoordinatorHolder
+  ) {
     self.configLogic = configLogic
     self.keyChainController = keyChainController
+    self.sessionCoordinatorHolder = sessionCoordinatorHolder
 
     guard let walletKit = try? EudiWallet() else {
       fatalError("Unable to Initialize WalletKit")
@@ -144,7 +143,7 @@ final class WalletKitControllerImpl: WalletKitController, Sendable {
       ProximitySessionCoordinator.self,
       argument: session
     )
-    self.activeProximityCoordinator = proximitySessionCoordinator
+    self.sessionCoordinatorHolder.setActiveProximityCoordinator(proximitySessionCoordinator)
     proximitySessionCoordinator.onSuccess {
       stopPresentation()
     }
@@ -173,7 +172,7 @@ final class WalletKitControllerImpl: WalletKitController, Sendable {
       RemoteSessionCoordinator.self,
       argument: session
     )
-    self.activeRemoteCoordinator = remoteSessionCoordinator
+    self.sessionCoordinatorHolder.setActiveRemoteCoordinator(remoteSessionCoordinator)
     remoteSessionCoordinator.onSuccess {
       stopPresentation()
     }
@@ -181,8 +180,7 @@ final class WalletKitControllerImpl: WalletKitController, Sendable {
   }
 
   public func stopPresentation() {
-    self.activeProximityCoordinator = nil
-    self.activeRemoteCoordinator = nil
+    self.sessionCoordinatorHolder.clear()
   }
 
   func fetchAllDocuments() -> [MdocDecodable] {

@@ -13,4 +13,15 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-extension OfferedIssuanceModel: @retroactive @unchecked Sendable {}
+import Combine
+
+public final class SendableAnyCancellable: @unchecked Sendable {
+
+  public var cancellables: [AnyCancellable] = []
+
+  public init() {}
+
+  public func cancel() {
+    cancellables.forEach { $0.cancel() }
+  }
+}

@@ -83,12 +83,16 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
   }
 
   override func getOnPopRoute() -> AppRoute? {
-    .featurePresentationModule(
-      .presentationRequest(
-        presentationCoordinator: interactor.presentationCoordinator,
-        originator: getOriginator()
-      )
-    )
+    return switch interactor.getCoordinator() {
+    case .success(let remoteSessionCoordinator):
+        .featurePresentationModule(
+          .presentationRequest(
+            presentationCoordinator: remoteSessionCoordinator,
+            originator: getOriginator()
+          )
+        )
+    case .failure: nil
+    }
   }
 
   override func doWork() async {
