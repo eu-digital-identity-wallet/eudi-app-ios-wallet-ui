@@ -235,7 +235,7 @@ public enum IssueOfferDocumentsPartialState: Sendable {
   case success(AppRoute)
   case partialSuccess(AppRoute)
   case deferredSuccess(AppRoute)
-  case dynamicIssuance(PresentationSessionCoordinator)
+  case dynamicIssuance(RemoteSessionCoordinator)
   case failure(Error)
 }
 

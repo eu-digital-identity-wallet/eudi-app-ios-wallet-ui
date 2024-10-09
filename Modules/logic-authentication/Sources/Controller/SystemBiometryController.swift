@@ -14,19 +14,19 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import LocalAuthentication
+@preconcurrency import LocalAuthentication
 import Combine
 import SwiftUI
 import logic_business
 
-public protocol SystemBiometryController {
+public protocol SystemBiometryController: Sendable {
   var biometryType: LABiometryType { get }
   func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError>
   func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometryError>
   func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometryError>
 }
 
-public enum SystemBiometryError: Error, LocalizedError, Identifiable {
+public enum SystemBiometryError: Error, LocalizedError, Identifiable, Sendable {
   case deniedAccess
   case noFaceIdEnrolled
   case noFingerprintEnrolled
@@ -58,7 +58,7 @@ final class SystemBiometryControllerImpl: SystemBiometryController {
   private let context = LAContext()
   private let keyChainController: KeyChainController
 
-  internal var biometricError: NSError?
+  nonisolated(unsafe) internal var biometricError: NSError?
 
   public init(keyChainController: KeyChainController) {
     self.keyChainController = keyChainController

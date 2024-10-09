@@ -35,21 +35,24 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   }
 
   func subscribeToCoordinatorPublisher() async {
-    await interactor.getSessionStatePublisher()
-      .sink { state in
-        switch state {
-        case .error(let error):
-          self.onError(with: error)
-        default:
-          ()
-        }
+    for try await state in interactor.getSessionStatePublisher() {
+      switch state {
+      case .error(let error):
+        self.onError(with: error)
+      default:
+        ()
       }
-      .store(in: &cancellables)
+    }
   }
 
   override func doWork() async {
     self.onStartLoading()
-    switch await interactor.onRequestReceived() {
+
+    let state = await Task.detached { () -> ProximityRequestPartialState in
+      return await self.interactor.onRequestReceived()
+    }.value
+
+    switch state {
     case .success(let items, let relyingParty, _, let isTrusted):
       self.onReceivedItems(
         with: items,
@@ -63,22 +66,23 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   }
 
   override func onShare() {
-    Task { [weak self] in
-      guard
-        let items = self?.viewState.items,
-        let response = await self?.interactor.onResponsePrepare(requestItems: items)
-      else {
-        return
-      }
+    Task {
+
+      let items = self.viewState.items
+
+      let response = await Task.detached { () -> ProximityResponsePreparationPartialState in
+        return await self.interactor.onResponsePrepare(requestItems: items)
+      }.value
+
       switch response {
       case .success:
-        if let route = self?.getSuccessRoute() {
-          self?.router.push(with: route)
+        if let route = self.getSuccessRoute() {
+          self.router.push(with: route)
         } else {
-          self?.router.pop()
+          self.router.pop()
         }
       case .failure(let error):
-        self?.onError(with: error)
+        self.onError(with: error)
       }
     }
   }

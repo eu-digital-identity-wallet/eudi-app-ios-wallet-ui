@@ -44,7 +44,12 @@ final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Rout
 
   func initialize() async {
     await self.subscribeToCoordinatorPublisher()
-    switch await self.interactor.onDeviceEngagement() {
+
+    let state = await Task.detached { () -> ProximityInitialisationPartialState in
+      return await self.interactor.onDeviceEngagement()
+    }.value
+
+    switch state {
     case .success:
       await self.onConnectionSuccess()
     case .failure(let error):
@@ -53,18 +58,16 @@ final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Rout
   }
 
   func subscribeToCoordinatorPublisher() async {
-    await interactor.getSessionStatePublisher()
-      .sink { state in
-        switch state {
-        case .prepareQr:
-          await self.onQRGeneration()
-        case .error:
-          self.onError(with: .genericErrorDesc)
-        default:
-          print(state)
-        }
+    for try await state in interactor.getSessionStatePublisher() {
+      switch state {
+      case .prepareQr:
+        await self.onQRGeneration()
+      case .error:
+        self.onError(with: .genericErrorDesc)
+      default:
+        ()
       }
-      .store(in: &cancellables)
+    }
   }
 
   private func onQRGeneration() async {

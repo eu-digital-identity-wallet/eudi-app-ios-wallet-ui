@@ -19,23 +19,23 @@ import logic_business
 import logic_resources
 import Combine
 
-public enum DashboardPartialState {
+public enum DashboardPartialState: Sendable {
   case success(BearerUIModel, [DocumentUIModel], Bool)
   case failure(Error)
 }
 
-public enum DashboardDeleteDeferredPartialState {
+public enum DashboardDeleteDeferredPartialState: Sendable {
   case success
   case noDocuments
   case failure(Error)
 }
 
-public enum DashboardDeferredPartialState {
+public enum DashboardDeferredPartialState: Sendable {
   case completion(issued: [DocumentUIModel], failed: [String])
   case cancelled
 }
 
-public protocol DashboardInteractor {
+public protocol DashboardInteractor: Sendable {
   func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState
   func getBleAvailability() async -> Reachability.BleAvailibity
   @MainActor func openBleSettings()
@@ -53,7 +53,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
   private let reachabilityController: ReachabilityController
   private let configLogic: ConfigLogic
 
-  private lazy var cancellables = Set<AnyCancellable>()
+  nonisolated(unsafe) private var cancellables = Set<AnyCancellable>()
 
   init(
     walletController: WalletKitController,

@@ -14,26 +14,38 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import Combine
+@preconcurrency import Combine
 import logic_resources
 import UIKit
 
-final class RemoteSessionCoordinator: PresentationSessionCoordinator, @unchecked Sendable {
+public protocol RemoteSessionCoordinator: Sendable {
+
+  var presentationStateSubject: CurrentValueSubject<PresentationState, Never> { get }
+
+  init(session: PresentationSession)
+
+  func initialize() async
+  func requestReceived() async throws -> PresentationRequest
+  func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async throws
+  func onSuccess(completion: () -> Void)
+
+  func getState() async -> PresentationState
+  func setState(presentationState: PresentationState)
+
+}
+
+final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
 
   public let presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
 
   private let session: PresentationSession
 
-  public init(session: PresentationSession) {
+  init(session: PresentationSession) {
     self.session = session
   }
 
   public func initialize() async {
     _ = await session.receiveRequest()
-  }
-
-  public func startQrEngagement() async throws -> UIImage {
-    UIImage()
   }
 
   public func requestReceived() async throws -> PresentationRequest {
@@ -65,5 +77,9 @@ final class RemoteSessionCoordinator: PresentationSessionCoordinator, @unchecked
 
   public func onSuccess(completion: () -> Void) {
     completion()
+  }
+
+  public func getStream() -> AsyncStream<PresentationState> {
+    return presentationStateSubject.toAsyncStream()
   }
 }

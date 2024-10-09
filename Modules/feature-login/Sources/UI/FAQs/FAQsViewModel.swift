@@ -67,7 +67,11 @@ final class FAQsViewModel<Router: RouterHost>: BaseViewModel<Router, FAQState> {
       setState { $0.copy(isLoading: false) }
     }
 
-    switch await interactor.fetchFAQs() {
+    let state = await Task.detached { () -> FAQsPartialState in
+      return await self.interactor.fetchFAQs()
+    }.value
+
+    switch state {
     case .success(let faqs):
       setState {
         $0.copy(isLoading: true, models: faqs)

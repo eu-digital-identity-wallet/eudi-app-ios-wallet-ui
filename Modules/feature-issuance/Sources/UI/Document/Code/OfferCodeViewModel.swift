@@ -62,7 +62,9 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
     subscribeToCodeInput()
   }
 
-  func checkPendingIssuance(config: IssuanceCodeUiConfig) async {
+  func checkPendingIssuance() async {
+
+    let config: IssuanceCodeUiConfig = viewState.config
 
     let state = await Task.detached { () -> OfferDynamicIssuancePartialState in
       return await self.interactor.resumeDynamicIssuance(
@@ -99,18 +101,20 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
     }
   }
 
-  private func onIssueDocuments(viewState: OfferCodeViewState) {
+  private func onIssueDocuments() {
     Task {
 
       codeIsFocused = false
       setState { $0.copy(isLoading: true).copy(error: nil) }
 
+      let config = viewState.config
+
       let state = await Task.detached { () -> IssueOfferDocumentsPartialState in
         return await self.interactor.issueDocuments(
-          with: viewState.config.offerUri,
-          issuerName: viewState.config.issuerName,
-          docOffers: viewState.config.docOffers,
-          successNavigation: viewState.config.successNavigation,
+          with: config.offerUri,
+          issuerName: config.issuerName,
+          docOffers: config.docOffers,
+          successNavigation: config.successNavigation,
           txCodeValue: self.codeInput
         )
       }.value
@@ -171,7 +175,7 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
 
   private func processCode(value: String) {
     if value.count == viewState.config.txCodeLength {
-      onIssueDocuments(viewState: viewState)
+      onIssueDocuments()
     }
   }
 }

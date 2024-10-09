@@ -19,7 +19,7 @@ import Network
 import BluetoothKit
 import UIKit
 
-public protocol ReachabilityController {
+public protocol ReachabilityController: Sendable {
   func hasInternet() -> Bool
   func getBleAvailibity() -> AnyPublisher<Reachability.BleAvailibity, Never>
   @MainActor func openBleSettings()

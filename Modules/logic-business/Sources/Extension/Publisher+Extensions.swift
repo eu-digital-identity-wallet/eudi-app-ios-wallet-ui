@@ -14,14 +14,26 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import Combine
+@preconcurrency import Combine
 
-public extension Publisher where Self.Failure == Never {
-  @MainActor
-  func sink(receiveValue: @escaping ((Self.Output) async -> Void)) -> AnyCancellable {
-    sink { value in
-      Task {
-        await receiveValue(value)
+public extension Publisher where Self.Failure == Never, Self.Output: Sendable {
+  func toAsyncStream() -> AsyncStream<Self.Output> {
+    return AsyncStream { continuation in
+
+      let cancellable = self.sink(
+        receiveCompletion: { _ in
+          Task {
+            continuation.finish()
+          }
+        },
+        receiveValue: { value in
+          Task {
+            _ = continuation.yield(value)
+          }
+        }
+      )
+      continuation.onTermination = { _ in
+        cancellable.cancel()
       }
     }
   }

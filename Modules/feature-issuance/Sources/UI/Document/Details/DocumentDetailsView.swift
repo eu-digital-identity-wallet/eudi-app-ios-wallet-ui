@@ -112,9 +112,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       }
     }
     .task {
-      await self.viewModel.fetchDocumentDetails(
-        documentId: viewModel.viewState.config.documentId
-      )
+      await self.viewModel.fetchDocumentDetails()
     }
   }
 }

@@ -19,36 +19,36 @@ import logic_core
 import logic_business
 import feature_common
 
-public enum ProximityResponsePartialState {
+public enum ProximityResponsePartialState: Sendable {
   case success
   case failure(Error)
 }
 
-public enum ProximityResponsePreparationPartialState {
+public enum ProximityResponsePreparationPartialState: Sendable {
   case success(RequestItemConvertible)
   case failure(Error)
 }
 
-public enum ProximityRequestPartialState {
+public enum ProximityRequestPartialState: Sendable {
   case success([RequestDataUIModel], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
   case failure(Error)
 }
 
-public enum ProximityInitialisationPartialState {
+public enum ProximityInitialisationPartialState: Sendable {
   case success
   case failure(Error)
 }
 
-public enum ProximityQrCodePartialState {
+public enum ProximityQrCodePartialState: Sendable {
   case success(UIImage)
   case failure(Error)
 }
 
-public protocol ProximityInteractor {
+public protocol ProximityInteractor: Sendable {
 
-  var presentationSessionCoordinator: PresentationSessionCoordinator { get }
+  var presentationSessionCoordinator: ProximitySessionCoordinator { get }
 
-  func getSessionStatePublisher() async -> AnyPublisher<PresentationState, Never>
+  func getSessionStatePublisher() -> AsyncStream<PresentationState>
 
   func onDeviceEngagement() async -> ProximityInitialisationPartialState
   func onQRGeneration() async -> ProximityQrCodePartialState
@@ -62,20 +62,18 @@ public protocol ProximityInteractor {
 final class ProximityInteractorImpl: ProximityInteractor {
 
   private let walletKitController: WalletKitController
-  public let presentationSessionCoordinator: PresentationSessionCoordinator
+  public let presentationSessionCoordinator: ProximitySessionCoordinator
 
   init(
-    with presentationSessionCoordinator: PresentationSessionCoordinator,
+    with presentationSessionCoordinator: ProximitySessionCoordinator,
     and walletKitController: WalletKitController
   ) {
     self.presentationSessionCoordinator = presentationSessionCoordinator
     self.walletKitController = walletKitController
   }
 
-  public func getSessionStatePublisher() async -> AnyPublisher<PresentationState, Never> {
-    presentationSessionCoordinator
-      .presentationStateSubject
-      .eraseToAnyPublisher()
+  public func getSessionStatePublisher() -> AsyncStream<PresentationState> {
+    presentationSessionCoordinator.getStream()
   }
 
   public func onDeviceEngagement() async -> ProximityInitialisationPartialState {

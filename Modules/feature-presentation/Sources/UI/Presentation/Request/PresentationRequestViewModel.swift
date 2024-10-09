@@ -32,7 +32,12 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
   override func doWork() async {
     self.onStartLoading()
-    switch await interactor.onDeviceEngagement() {
+
+    let result = await Task.detached { () -> Result<OnlineAuthenticationRequestSuccessModel, Error> in
+      return await self.interactor.onDeviceEngagement()
+    }.value
+
+    switch result {
     case .success(let authenticationRequest):
       self.onReceivedItems(
         with: authenticationRequest.requestDataCells,
@@ -46,22 +51,23 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   override func onShare() {
-    Task { [weak self] in
-      guard
-        let items = self?.viewState.items,
-        let response = await self?.interactor.onResponsePrepare(requestItems: items)
-      else {
-        return
-      }
-      switch response {
+    Task {
+
+      let items = self.viewState.items
+
+      let result = await Task.detached { () -> Result<RequestItemConvertible, Error> in
+        return await self.interactor.onResponsePrepare(requestItems: items)
+      }.value
+
+      switch result {
       case .success:
-        if let route = self?.getSuccessRoute() {
-          self?.router.push(with: route)
+        if let route = self.getSuccessRoute() {
+          self.router.push(with: route)
         } else {
-          self?.router.popTo(with: self?.getPopRoute() ?? .featureDashboardModule(.dashboard))
+          self.router.popTo(with: self.getPopRoute() ?? .featureDashboardModule(.dashboard))
         }
       case .failure(let error):
-        self?.onError(with: error)
+        self.onError(with: error)
       }
     }
   }
@@ -123,7 +129,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   func handleDeepLinkNotification(with info: [AnyHashable: Any]) {
-    guard let session = info["session"] as? PresentationSessionCoordinator else {
+    guard let session = info["session"] as? RemoteSessionCoordinator else {
       return
     }
     resetState()

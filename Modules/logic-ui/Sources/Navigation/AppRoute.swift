@@ -81,11 +81,11 @@ public indirect enum FeaturePresentationRouteModule: AppRouteModule {
 
   case presentationLoader(
     String,
-    presentationCoordinator: PresentationSessionCoordinator,
+    presentationCoordinator: RemoteSessionCoordinator,
     originator: AppRoute
   )
   case presentationRequest(
-    presentationCoordinator: PresentationSessionCoordinator,
+    presentationCoordinator: RemoteSessionCoordinator,
     originator: AppRoute
   )
 
@@ -101,14 +101,17 @@ public indirect enum FeaturePresentationRouteModule: AppRouteModule {
 
 public indirect enum FeatureProximityRouteModule: AppRouteModule {
 
-  case proximityConnection(presentationCoordinator: PresentationSessionCoordinator, originator: AppRoute)
+  case proximityConnection(
+    presentationCoordinator: ProximitySessionCoordinator,
+    originator: AppRoute
+  )
   case proximityRequest(
-    presentationCoordinator: PresentationSessionCoordinator,
+    presentationCoordinator: ProximitySessionCoordinator,
     originator: AppRoute
   )
   case proximityLoader(
     String,
-    presentationCoordinator: PresentationSessionCoordinator,
+    presentationCoordinator: ProximitySessionCoordinator,
     originator: AppRoute
   )
 

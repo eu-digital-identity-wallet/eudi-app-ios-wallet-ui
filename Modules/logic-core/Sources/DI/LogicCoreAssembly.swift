@@ -34,13 +34,13 @@ public final class LogicCoreAssembly: Assembly {
     }
     .inObjectScope(ObjectScope.container)
 
-    container.register(PresentationSessionCoordinator.self, name: RegistrationName.proximity.rawValue) { _, session in
-      ProximityPresentationSessionCoordinator(session: session)
+    container.register(ProximitySessionCoordinator.self) { _, session in
+      ProximitySessionCoordinatorImpl(session: session)
     }
     .inObjectScope(ObjectScope.transient)
 
-    container.register(PresentationSessionCoordinator.self, name: RegistrationName.remote.rawValue) { _, session in
-      RemoteSessionCoordinator(session: session)
+    container.register(RemoteSessionCoordinator.self) { _, session in
+      RemoteSessionCoordinatorImpl(session: session)
     }
     .inObjectScope(ObjectScope.transient)
   }

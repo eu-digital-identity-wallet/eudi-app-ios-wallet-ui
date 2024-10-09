@@ -18,7 +18,7 @@ import Combine
 import Peppermint
 import libPhoneNumber
 
-public protocol FormValidator {
+public protocol FormValidator: Sendable {
   func validateForm(form: ValidatableForm) async -> FormValidationResult
   func validateForms(forms: [ValidatableForm]) async -> FormsValidationResult
 }
@@ -290,7 +290,7 @@ public struct FormsValidationResult: Equatable {
   }
 }
 
-public protocol FormValidatorInteractor {
+public protocol FormValidatorInteractor: Sendable {
   func validateForm(form: ValidatableForm) async -> FormValidationResult
   func validateForms(forms: [ValidatableForm]) async -> FormsValidationResult
 }

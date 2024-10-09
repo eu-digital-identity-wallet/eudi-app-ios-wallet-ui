@@ -26,30 +26,30 @@ public struct OnlineAuthenticationRequestSuccessModel: Sendable {
   var isTrusted: Bool
 }
 
-public protocol PresentationInteractor {
-  var presentationCoordinator: PresentationSessionCoordinator { get }
+public protocol PresentationInteractor: Sendable {
+  var presentationCoordinator: RemoteSessionCoordinator { get }
 
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>
   func onSendResponse() async -> Result<URL?, Error>
-  func updatePresentationCoordinator(with coordinator: PresentationSessionCoordinator)
+  func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator)
   func storeDynamicIssuancePendingUrl(with url: URL)
 }
 
 final class PresentationInteractorImpl: PresentationInteractor {
 
-  public var presentationCoordinator: PresentationSessionCoordinator
+  nonisolated(unsafe) public private(set) var presentationCoordinator: RemoteSessionCoordinator
   private let walletKitController: WalletKitController
 
   init(
-    with presentationCoordinator: PresentationSessionCoordinator,
+    with presentationCoordinator: RemoteSessionCoordinator,
     and walletKitController: WalletKitController
   ) {
     self.presentationCoordinator = presentationCoordinator
     self.walletKitController = walletKitController
   }
 
-  func updatePresentationCoordinator(with coordinator: PresentationSessionCoordinator) {
+  func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator) {
     self.presentationCoordinator = coordinator
   }
 

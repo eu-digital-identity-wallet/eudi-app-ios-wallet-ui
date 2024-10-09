@@ -14,25 +14,13 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import logic_api
 
-public enum FAQsPartialState: Sendable {
-  case success([FAQUIModel])
-  case failure(Error)
-}
-
-public protocol FAQsInteractor: Sendable {
-  func fetchFAQs() async -> FAQsPartialState
-}
-
-final class FAQsInteractorImpl: FAQsInteractor {
-
-  public func fetchFAQs() async -> FAQsPartialState {
-    do {
-      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
-      return .success(FAQUIModel.mocks())
-    } catch {
-      return .failure(error)
-    }
-  }
+public enum PresentationState: Sendable {
+  case loading
+  case prepareQr
+  case qrReady(imageData: Data)
+  case requestReceived(PresentationRequest)
+  case responseToSend(RequestItemConvertible)
+  case success
+  case error(WalletError)
 }

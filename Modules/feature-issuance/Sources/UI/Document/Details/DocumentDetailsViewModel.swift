@@ -63,7 +63,9 @@ final class DocumentDetailsViewModel<Router: RouterHost>: BaseViewModel<Router, 
     )
   }
 
-  func fetchDocumentDetails(documentId: String) async {
+  func fetchDocumentDetails() async {
+
+    let documentId = viewState.config.documentId
 
     let state = await Task.detached { () -> DocumentDetailsPartialState in
       return await self.interactor.fetchStoredDocument(documentId: documentId)

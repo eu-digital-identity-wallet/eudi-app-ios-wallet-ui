@@ -18,12 +18,12 @@ import logic_business
 import Combine
 import Foundation
 
-public enum QuickPinPartialState {
+public enum QuickPinPartialState: Sendable {
   case success
   case failure(Error)
 }
 
-public protocol QuickPinInteractor {
+public protocol QuickPinInteractor: Sendable {
   func setPin(newPin: String)
   func isPinValid(pin: String) -> QuickPinPartialState
   func changePin(currentPin: String, newPin: String) -> QuickPinPartialState

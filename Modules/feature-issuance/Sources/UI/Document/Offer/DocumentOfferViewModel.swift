@@ -75,12 +75,14 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     )
   }
 
-  func initialize(offerUri: String) async {
+  func initialize() async {
 
     if viewState.initialized {
       await handleResumeIssuance()
       return
     }
+
+    let offerUri = viewState.offerUri
 
     let state = await Task.detached { () -> OfferRequestPartialState in
       return await self.interactor.processOfferRequest(with: offerUri)
@@ -114,7 +116,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     }
   }
 
-  func onIssueDocuments(viewState: DocumentOfferViewState) {
+  func onIssueDocuments() {
 
     if let code = viewState.documentOfferUiModel.txCode {
       router.push(
@@ -137,12 +139,17 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
     Task {
       setState { $0.copy(isLoading: true).copy(error: nil) }
 
+      let offerUri = viewState.offerUri
+      let issuerName = viewState.documentOfferUiModel.issuerName
+      let docOffers = viewState.documentOfferUiModel.docOffers
+      let successNavigation = viewState.successNavigation
+
       let state = await Task.detached { () -> IssueOfferDocumentsPartialState in
         return await self.interactor.issueDocuments(
-          with: viewState.offerUri,
-          issuerName: viewState.documentOfferUiModel.issuerName,
-          docOffers: viewState.documentOfferUiModel.docOffers,
-          successNavigation: viewState.successNavigation,
+          with: offerUri,
+          issuerName: issuerName,
+          docOffers: docOffers,
+          successNavigation: successNavigation,
           txCodeValue: nil
         )
       }.value
@@ -219,16 +226,24 @@ final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, Do
         .copy(error: nil)
     }
     Task {
-      await self.initialize(offerUri: viewState.offerUri)
+      await self.initialize()
     }
   }
 
   private func handleResumeIssuance() async {
     setState { $0.copy(isLoading: true) }
-    switch await interactor.resumeDynamicIssuance(
-      issuerName: viewState.documentOfferUiModel.issuerName,
-      successNavigation: viewState.successNavigation
-    ) {
+
+    let issuerName = viewState.documentOfferUiModel.issuerName
+    let successNavigation = viewState.successNavigation
+
+    let state = await Task.detached { () -> OfferDynamicIssuancePartialState in
+      return await self.interactor.resumeDynamicIssuance(
+        issuerName: issuerName,
+        successNavigation: successNavigation
+      )
+    }.value
+
+    switch state {
     case .success(let route):
       router.push(with: route)
     case .noPending:

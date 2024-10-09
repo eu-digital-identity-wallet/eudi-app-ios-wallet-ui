@@ -92,7 +92,12 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
   }
 
   override func doWork() async {
-    switch await interactor.onSendResponse() {
+
+    let result = await Task.detached { () -> Result<URL?, Error> in
+      return await self.interactor.onSendResponse()
+    }.value
+
+    switch result {
     case .success(let url):
       self.onNavigate(type: .push(getOnSuccessRoute(with: url)))
     case .failure(let error):

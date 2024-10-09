@@ -15,19 +15,37 @@
  */
 
 import Foundation
-import Combine
+@preconcurrency import Combine
 import logic_resources
 import UIKit
 
-final class ProximityPresentationSessionCoordinator: PresentationSessionCoordinator, @unchecked Sendable {
+public protocol ProximitySessionCoordinator: Sendable {
 
-  public private(set) var presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
+  var presentationStateSubject: CurrentValueSubject<PresentationState, Never> { get }
+
+  init(session: PresentationSession)
+
+  func initialize() async
+  func startQrEngagement() async throws -> UIImage
+  func requestReceived() async throws -> PresentationRequest
+  func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async throws
+  func onSuccess(completion: () -> Void)
+
+  func getState() async -> PresentationState
+  func setState(presentationState: PresentationState)
+  func getStream() -> AsyncStream<PresentationState>
+
+}
+
+final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
+
+  public let presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
 
   private let session: PresentationSession
 
-  private var cancellables = Set<AnyCancellable>()
+  nonisolated(unsafe) private var cancellables = Set<AnyCancellable>()
 
-  public init(session: PresentationSession) {
+  init(session: PresentationSession) {
     self.session = session
     self.session.$status
       .sink { status in
@@ -49,6 +67,10 @@ final class ProximityPresentationSessionCoordinator: PresentationSessionCoordina
         }
       }
       .store(in: &cancellables)
+  }
+
+  deinit {
+    self.cancellables.forEach { $0.cancel() }
   }
 
   public func initialize() async {
@@ -105,4 +127,7 @@ final class ProximityPresentationSessionCoordinator: PresentationSessionCoordina
     self.presentationStateSubject.value = presentationState
   }
 
+  func getStream() -> AsyncStream<PresentationState> {
+    return presentationStateSubject.toAsyncStream()
+  }
 }

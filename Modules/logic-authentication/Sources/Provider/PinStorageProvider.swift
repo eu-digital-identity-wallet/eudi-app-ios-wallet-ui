@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-protocol PinStorageProvider {
+protocol PinStorageProvider: Sendable {
   func retrievePin() -> String?
   func setPin(with pin: String)
   func isPinValid(with pin: String) -> Bool

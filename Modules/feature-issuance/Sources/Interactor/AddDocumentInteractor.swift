@@ -142,7 +142,7 @@ public enum LoadSampleDataPartialState: Sendable {
 public enum IssueDocumentPartialState: Sendable {
   case success(String)
   case deferredSuccess
-  case dynamicIssuance(PresentationSessionCoordinator)
+  case dynamicIssuance(RemoteSessionCoordinator)
   case failure(Error)
 }
 

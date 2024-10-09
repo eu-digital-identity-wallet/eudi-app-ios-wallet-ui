@@ -29,11 +29,12 @@ private enum WalletKitKeyChainIdentifier: String, KeychainWrapper {
 public protocol WalletKitController: Sendable {
 
   var wallet: EudiWallet { get }
-  var activeCoordinator: PresentationSessionCoordinator? { get }
+  var activeRemoteCoordinator: RemoteSessionCoordinator? { get }
+  var activeProximityCoordinator: ProximitySessionCoordinator? { get }
 
-  func startProximityPresentation() -> PresentationSessionCoordinator
-  func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinator
-  func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinator
+  func startProximityPresentation() -> ProximitySessionCoordinator
+  func startSameDevicePresentation(deepLink: URLComponents) -> RemoteSessionCoordinator
+  func startCrossDevicePresentation(urlString: String) -> RemoteSessionCoordinator
   func stopPresentation()
   func fetchAllDocuments() -> [MdocDecodable]
   func fetchDeferredDocuments() -> [WalletStorage.Document]
@@ -69,14 +70,14 @@ public protocol WalletKitController: Sendable {
   func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData?
 }
 
-final class WalletKitControllerImpl: WalletKitController, @unchecked Sendable {
+final class WalletKitControllerImpl: WalletKitController, Sendable {
 
   public let wallet: EudiWallet
-  public private(set) var activeCoordinator: PresentationSessionCoordinator?
+  nonisolated(unsafe) public private(set) var activeRemoteCoordinator: RemoteSessionCoordinator?
+  nonisolated(unsafe) public private(set) var activeProximityCoordinator: ProximitySessionCoordinator?
 
   private let configLogic: WalletKitConfig
   private let keyChainController: KeyChainController
-  private let cancellables = Set<AnyCancellable>()
 
   init(configLogic: WalletKitConfig, keyChainController: KeyChainController) {
     self.configLogic = configLogic
@@ -136,22 +137,21 @@ final class WalletKitControllerImpl: WalletKitController, @unchecked Sendable {
     _ = try await wallet.loadAllDocuments()
   }
 
-  public func startProximityPresentation() -> PresentationSessionCoordinator {
+  public func startProximityPresentation() -> ProximitySessionCoordinator {
     self.stopPresentation()
     let session = wallet.beginPresentation(flow: .ble)
-    let presentationSessionCoordinator = DIGraph.resolver.force(
-      PresentationSessionCoordinator.self,
-      name: RegistrationName.proximity.rawValue,
+    let proximitySessionCoordinator = DIGraph.resolver.force(
+      ProximitySessionCoordinator.self,
       argument: session
     )
-    self.activeCoordinator = presentationSessionCoordinator
-    presentationSessionCoordinator.onSuccess {
+    self.activeProximityCoordinator = proximitySessionCoordinator
+    proximitySessionCoordinator.onSuccess {
       stopPresentation()
     }
-    return presentationSessionCoordinator
+    return proximitySessionCoordinator
   }
 
-  public func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinator {
+  public func startSameDevicePresentation(deepLink: URLComponents) -> RemoteSessionCoordinator {
     self.startRemotePresentation(
       urlString: decodeDeeplink(
         link: deepLink
@@ -159,31 +159,30 @@ final class WalletKitControllerImpl: WalletKitController, @unchecked Sendable {
     )
   }
 
-  public func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinator {
+  public func startCrossDevicePresentation(urlString: String) -> RemoteSessionCoordinator {
     self.startRemotePresentation(urlString: urlString)
   }
 
-  private func startRemotePresentation(urlString: String) -> PresentationSessionCoordinator {
+  private func startRemotePresentation(urlString: String) -> RemoteSessionCoordinator {
     self.stopPresentation()
 
     let data = urlString.data(using: .utf8) ?? Data()
 
     let session = wallet.beginPresentation(flow: .openid4vp(qrCode: data))
-    let presentationSessionCoordinator = DIGraph.resolver.force(
-      PresentationSessionCoordinator.self,
-      name: RegistrationName.remote.rawValue,
+    let remoteSessionCoordinator = DIGraph.resolver.force(
+      RemoteSessionCoordinator.self,
       argument: session
     )
-    self.activeCoordinator = presentationSessionCoordinator
-    presentationSessionCoordinator.onSuccess {
+    self.activeRemoteCoordinator = remoteSessionCoordinator
+    remoteSessionCoordinator.onSuccess {
       stopPresentation()
     }
-    return presentationSessionCoordinator
+    return remoteSessionCoordinator
   }
 
   public func stopPresentation() {
-    self.cancellables.forEach {$0.cancel()}
-    self.activeCoordinator = nil
+    self.activeProximityCoordinator = nil
+    self.activeRemoteCoordinator = nil
   }
 
   func fetchAllDocuments() -> [MdocDecodable] {

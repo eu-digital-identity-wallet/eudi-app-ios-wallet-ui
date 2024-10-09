@@ -37,16 +37,14 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   }
 
   func subscribeToCoordinatorPublisher() async {
-    await interactor.getSessionStatePublisher()
-      .sink { state in
-        switch state {
-        case .error(let error):
-          self.onError(with: error)
-        default:
-          ()
-        }
+    for try await state in self.interactor.getSessionStatePublisher() {
+      switch state {
+      case .error(let error):
+        self.onError(with: error)
+      default:
+        ()
       }
-      .store(in: &cancellables)
+    }
   }
 
   override func getTitle() -> LocalizableString.Key {
@@ -86,7 +84,12 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   }
 
   override func doWork() async {
-    switch await interactor.onSendResponse() {
+
+    let state = await Task.detached { () -> ProximityResponsePartialState in
+      return await self.interactor.onSendResponse()
+    }.value
+
+    switch state {
     case .success:
       self.onNavigate(type: .push(getOnSuccessRoute()))
     case .failure(let error):
