@@ -71,7 +71,7 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
   }
 
   deinit {
-    self.sendableAnyCancellables.cancel()
+    self.sendableAnyCancellable.cancel()
   }
 
   public func initialize() async {

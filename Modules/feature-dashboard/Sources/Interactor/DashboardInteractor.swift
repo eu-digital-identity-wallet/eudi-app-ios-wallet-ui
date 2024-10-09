@@ -64,6 +64,10 @@ final class DashboardInteractorImpl: DashboardInteractor {
     self.reachabilityController = reachabilityController
     self.configLogic = configLogic
   }
+  
+  deinit {
+    sendableAnyCancellable.cancel()
+  }
 
   func hasIssuedDocuments() -> Bool {
     return !walletController.fetchIssuedDocuments().isEmpty
