@@ -20,6 +20,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
 
   private let interactor: ProximityInteractor
   private let relyingParty: String
+  private var publisherTask: Task<Void, Error>?
 
   init(
     router: Router,
@@ -29,24 +30,26 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   ) {
     self.interactor = interactor
     self.relyingParty = relyingParty
-    super.init(router: router, originator: originator)
-
-    Task {
-      await self.subscribeToCoordinatorPublisher()
-    }
+    super.init(router: router, originator: originator, cancellationTimeout: 5)
   }
 
   func subscribeToCoordinatorPublisher() async {
-    await interactor.getSessionStatePublisher()
-      .sink { state in
+    switch self.interactor.getSessionStatePublisher() {
+    case .success(let publisher):
+      for try await state in publisher {
         switch state {
         case .error(let error):
           self.onError(with: error)
+        case .responseSent:
+          self.interactor.stopPresentation()
+          self.onNavigate(type: .push(getOnSuccessRoute()))
         default:
           ()
         }
       }
-      .store(in: &cancellables)
+    case .failure(let error):
+      self.onError(with: error)
+    }
   }
 
   override func getTitle() -> LocalizableString.Key {
@@ -58,7 +61,8 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   }
 
   private func getOnSuccessRoute() -> AppRoute {
-    .featureCommonModule(
+    publisherTask?.cancel()
+    return .featureCommonModule(
       .success(
         config: UIConfig.Success(
           title: .init(value: .success),
@@ -77,20 +81,42 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   }
 
   override func getOnPopRoute() -> AppRoute? {
-    .featureProximityModule(
-      .proximityRequest(
-        presentationCoordinator: interactor.presentationSessionCoordinator,
-        originator: getOriginator()
-      )
-    )
+    publisherTask?.cancel()
+    return switch interactor.getCoordinator() {
+    case .success(let proximitySessionCoordinator):
+        .featureProximityModule(
+          .proximityRequest(
+            presentationCoordinator: proximitySessionCoordinator,
+            originator: getOriginator()
+          )
+        )
+    case .failure: nil
+    }
   }
 
   override func doWork() async {
-    switch await interactor.onSendResponse() {
-    case .success:
-      self.onNavigate(type: .push(getOnSuccessRoute()))
+
+    startPublisherTask()
+
+    let state = await Task.detached { () -> ProximityResponsePartialState in
+      return await self.interactor.onSendResponse()
+    }.value
+
+    switch state {
+    case .sent: break
     case .failure(let error):
       self.onError(with: error)
+    }
+  }
+
+  private func startPublisherTask() {
+    if publisherTask == nil || publisherTask?.isCancelled == true {
+      publisherTask = Task {
+        await self.subscribeToCoordinatorPublisher()
+      }
+      Task {
+        try? await self.publisherTask?.value
+      }
     }
   }
 }

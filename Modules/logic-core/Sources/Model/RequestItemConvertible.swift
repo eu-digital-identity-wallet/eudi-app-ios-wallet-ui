@@ -17,7 +17,7 @@ import Foundation
 
 public typealias RequestConvertibleItems = [String: [String: [String]]]
 
-public protocol RequestItemConvertible {
+public protocol RequestItemConvertible: Sendable {
   func asRequestItems() -> RequestConvertibleItems
 }
 

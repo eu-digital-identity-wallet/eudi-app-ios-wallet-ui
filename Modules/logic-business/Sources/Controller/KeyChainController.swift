@@ -14,13 +14,13 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import KeychainAccess
+@preconcurrency import KeychainAccess
 
 public protocol KeychainWrapper {
   var value: String { get }
 }
 
-public protocol KeyChainController {
+public protocol KeyChainController: ThreadSafeController {
   func storeValue(key: KeychainWrapper, value: String)
   func getValue(key: KeychainWrapper) -> String?
   func removeObject(key: KeychainWrapper)
@@ -32,10 +32,7 @@ public protocol KeyChainController {
 final class KeyChainControllerImpl: KeyChainController {
 
   private let biometryKey = "eu.europa.ec.euidi.biometric.access"
-
-  private lazy var keyChain: Keychain = {
-    Keychain()
-  }()
+  private let keyChain: Keychain = Keychain()
 
   public func storeValue(key: KeychainWrapper, value: String) {
     keyChain[key.value] = value

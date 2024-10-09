@@ -20,6 +20,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
 
   private let interactor: PresentationInteractor
   private let relyingParty: String
+  private var publisherTask: Task<Void, Error>?
 
   init(
     router: Router,
@@ -29,7 +30,26 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
   ) {
     self.interactor = interactor
     self.relyingParty = relyingParty
-    super.init(router: router, originator: originator)
+    super.init(router: router, originator: originator, cancellationTimeout: 5)
+  }
+
+  func subscribeToCoordinatorPublisher() async {
+    switch self.interactor.getSessionStatePublisher() {
+    case .success(let publisher):
+      for try await state in publisher {
+        switch state {
+        case .error(let error):
+          self.onError(with: error)
+        case .responseSent(let url):
+          self.interactor.stopPresentation()
+          self.onNavigate(type: .push(getOnSuccessRoute(with: url)))
+        default:
+          ()
+        }
+      }
+    case .failure(let error):
+      self.onError(with: error)
+    }
   }
 
   override func getTitle() -> LocalizableString.Key {
@@ -41,6 +61,8 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
   }
 
   private func getOnSuccessRoute(with url: URL?) -> AppRoute {
+
+    self.publisherTask?.cancel()
 
     var navigationType: UIConfig.DeepLinkNavigationType {
       guard let url else {
@@ -83,20 +105,42 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
   }
 
   override func getOnPopRoute() -> AppRoute? {
-    .featurePresentationModule(
-      .presentationRequest(
-        presentationCoordinator: interactor.presentationCoordinator,
-        originator: getOriginator()
-      )
-    )
+    self.publisherTask?.cancel()
+    return switch interactor.getCoordinator() {
+    case .success(let remoteSessionCoordinator):
+        .featurePresentationModule(
+          .presentationRequest(
+            presentationCoordinator: remoteSessionCoordinator,
+            originator: getOriginator()
+          )
+        )
+    case .failure: nil
+    }
   }
 
   override func doWork() async {
-    switch await interactor.onSendResponse() {
-    case .success(let url):
-      self.onNavigate(type: .push(getOnSuccessRoute(with: url)))
+
+    startPublisherTask()
+
+    let result = await Task.detached { () -> RemoteSentResponsePartialState in
+      return await self.interactor.onSendResponse()
+    }.value
+
+    switch result {
+    case .sent: break
     case .failure(let error):
       self.onError(with: error)
+    }
+  }
+
+  private func startPublisherTask() {
+    if publisherTask == nil || publisherTask?.isCancelled == true {
+      publisherTask = Task {
+        await self.subscribeToCoordinatorPublisher()
+      }
+      Task {
+        try? await self.publisherTask?.value
+      }
     }
   }
 }

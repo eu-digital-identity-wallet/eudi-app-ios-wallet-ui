@@ -35,7 +35,7 @@ struct AddDocumentViewState: ViewState {
   }
 }
 
-final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddDocumentViewState> {
+final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocumentViewState> {
 
   private let interactor: AddDocumentInteractor
   private let deepLinkController: DeepLinkController
@@ -101,12 +101,18 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
   }
 
   private func handleResumeIssuance() async {
+
     setState {
       $0.copy(
         addDocumentCellModels: transformCellLoadingState(with: true)
       )
     }
-    switch await interactor.resumeDynamicIssuance() {
+
+    let state = await Task.detached { () -> IssueDynamicDocumentPartialState in
+      return await self.interactor.resumeDynamicIssuance()
+    }.value
+
+    switch state {
     case .success(let docId):
       router.push(
         with: .featureIssuanceModule(
@@ -144,7 +150,12 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
           )
           .copy(error: nil)
       }
-      switch await interactor.issueDocument(docType: docType) {
+
+      let state = await Task.detached { () -> IssueDocumentPartialState in
+        return await self.interactor.issueDocument(docType: docType)
+      }.value
+
+      switch state {
       case .success(let docId):
         router.push(
           with: .featureIssuanceModule(
@@ -222,7 +233,12 @@ final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddD
 
   private func loadSampleData() {
     Task {
-      switch await interactor.loadSampleData() {
+
+      let state = await Task.detached { () -> LoadSampleDataPartialState in
+        return await self.interactor.loadSampleData()
+      }.value
+
+      switch state {
       case .success:
         router.push(with: .featureDashboardModule(.dashboard))
       case .failure(let error):

@@ -15,6 +15,7 @@
  */
 import Foundation
 import logic_ui
+import logic_business
 
 public struct QuickPinUiConfig: UIConfigType, Equatable {
 
@@ -38,7 +39,7 @@ public struct QuickPinUiConfig: UIConfigType, Equatable {
 }
 
 public extension QuickPinUiConfig {
-  enum Flow: String, Equatable {
+  enum Flow: String, Equatable, ThreadSafeObject {
     case set
     case update
   }

@@ -21,10 +21,17 @@ import SwiftUI
 import Combine
 import LocalAuthentication
 
-public protocol BiometryInteractor {
+public enum BiometricsState: Equatable, ThreadSafePartialState {
+  case idle
+  case loading
+  case authenticated
+  case failure(SystemBiometryError)
+}
+
+public protocol BiometryInteractor: ThreadSafeInteractor {
 
   func authenticate() -> AnyPublisher<BiometricsState, Never>
-  func openSettingsURL(action: @escaping () -> Void)
+  @MainActor func openSettingsURL(action: @escaping () -> Void)
   var biometricsImage: Image? { get }
   var currentBiometricsMethod: String { get }
   var biometryType: LABiometryType { get }
@@ -34,10 +41,13 @@ public protocol BiometryInteractor {
   func isPinValid(with pin: String) -> QuickPinPartialState
 }
 
-final class BiometryInteractorImpl: SystemBiometryInteractorImpl, BiometryInteractor {
+final class BiometryInteractorImpl: BiometryInteractor {
 
   private let prefsController: PrefsController
   private let quickPinInteractor: QuickPinInteractor
+  private let biometryController: SystemBiometryController
+
+  private let useTestDispatcher: Bool
 
   init(
     prefsController: PrefsController,
@@ -47,7 +57,59 @@ final class BiometryInteractorImpl: SystemBiometryInteractorImpl, BiometryIntera
   ) {
     self.prefsController = prefsController
     self.quickPinInteractor = quickPinInteractor
-    super.init(with: biometryController, useTestDispatcher: useTestDispatcher)
+    self.biometryController = biometryController
+    self.useTestDispatcher = useTestDispatcher
+  }
+
+  public var biometryType: LABiometryType {
+    biometryController.biometryType
+  }
+
+  public func authenticate() -> AnyPublisher<BiometricsState, Never> {
+
+    let publisher = biometryController.requestBiometricUnlock()
+      .map { BiometricsState.authenticated }
+      .catch { error -> AnyPublisher<BiometricsState, Never> in
+        return Just(BiometricsState.failure(error)).eraseToAnyPublisher()
+      }
+
+    if !self.useTestDispatcher {
+      return publisher
+        .subscribe(on: DispatchQueue.global(qos: .userInitiated))
+        .receive(on: DispatchQueue.main)
+        .eraseToAnyPublisher()
+    } else {
+      return publisher.eraseToAnyPublisher()
+    }
+  }
+
+  public var biometricsImage: Image? {
+    return switch biometryController.biometryType {
+    case .faceID:
+      Theme.shared.image.faceId
+    case .touchID:
+      Theme.shared.image.touchId
+    default: nil
+    }
+  }
+
+  public var currentBiometricsMethod: String {
+    switch biometryController.biometryType {
+    case .faceID:
+      return "Face ID"
+    case .touchID:
+      return "Touch ID"
+    default:
+      return ""
+    }
+  }
+
+  public func openSettingsURL(action: @escaping () -> Void) {
+    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+    UIApplication.shared.open(url, options: [:]) { success in
+      guard success else { return }
+      action()
+    }
   }
 
   public func isBiometryEnabled() -> Bool {

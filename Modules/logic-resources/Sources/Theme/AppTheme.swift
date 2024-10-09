@@ -15,8 +15,8 @@
  */
 import Foundation
 
-public protocol ThemeProtocol {
-  var themeConfiguration: ThemeConfiguration { get set }
+public protocol ThemeProtocol: Sendable {
+  var themeConfiguration: ThemeConfiguration { get }
 
   var image: ImageManagerProtocol { get }
   var color: ColorManagerProtocol { get }
@@ -25,9 +25,9 @@ public protocol ThemeProtocol {
   var dimension: DimensionManagerProtocol { get }
 }
 
-public class AppTheme: ThemeProtocol {
+public final class AppTheme: ThemeProtocol {
 
-  public var themeConfiguration: ThemeConfiguration
+  public let themeConfiguration: ThemeConfiguration
 
   public var color: ColorManagerProtocol {
     themeConfiguration.color
@@ -51,5 +51,4 @@ public class AppTheme: ThemeProtocol {
   init(themeConfiguration: ThemeConfiguration = ThemeConfiguration()) {
     self.themeConfiguration = themeConfiguration
   }
-
 }

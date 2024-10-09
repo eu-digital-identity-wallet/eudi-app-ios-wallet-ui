@@ -17,7 +17,7 @@ import Foundation
 import UIKit
 
 public extension URL {
-  func open() {
+  @MainActor func open() {
     if UIApplication.shared.canOpenURL(self) {
       UIApplication.shared.open(self)
     }

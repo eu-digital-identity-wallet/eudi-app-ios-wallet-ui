@@ -100,13 +100,13 @@ final class TestDashboardInteractor: EudiTest {
     XCTAssertFalse(result)
   }
   
-  func testOpenBleSettings_WhenMethodIsCalled_ThenVerifyAtLeastOnce() {
+  func testOpenBleSettings_WhenMethodIsCalled_ThenVerifyAtLeastOnce() async {
     // Given
     stub(reachabilityController) { mock in
       when(mock.openBleSettings()).thenDoNothing()
     }
     // When
-    interactor.openBleSettings()
+    await interactor.openBleSettings()
     // Then
     verify(reachabilityController).openBleSettings()
   }

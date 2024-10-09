@@ -22,6 +22,7 @@ public enum WalletCoreError: LocalizedError {
   case missingPid
   case unableToIssueAndStore
   case transactionCodeFormat([String])
+  case unableToPresentAndShare
 
   public var errorDescription: String? {
     return switch self {
@@ -35,6 +36,8 @@ public enum WalletCoreError: LocalizedError {
       LocalizableString.shared.get(with: .unableToIssueAndStore)
     case .transactionCodeFormat(let args):
       LocalizableString.shared.get(with: .transactionCodeFormatError(args))
+    case .unableToPresentAndShare:
+      LocalizableString.shared.get(with: .unableToPresentAndShare)
     }
   }
 }

@@ -18,37 +18,62 @@ import Foundation
 import Combine
 import logic_resources
 import UIKit
+import logic_business
 
-final class ProximityPresentationSessionCoordinator: PresentationSessionCoordinator {
+public protocol ProximitySessionCoordinator: ThreadSafeProtocol {
 
-  public private(set) var presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
+  var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> { get }
+
+  init(session: PresentationSession)
+
+  func initialize() async
+  func startQrEngagement() async throws -> UIImage
+  func requestReceived() async throws -> PresentationRequest
+  func sendResponse(response: RequestItemConvertible) async
+
+  func getState() async -> PresentationState
+  func setState(presentationState: PresentationState)
+  func getStream() -> AsyncStream<PresentationState>
+  func stopPresentation()
+
+}
+
+final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
+
+  let sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> = .init(.loading)
 
   private let session: PresentationSession
 
-  private var cancellables = Set<AnyCancellable>()
+  private let sendableAnyCancellable: SendableAnyCancellable = .init()
 
-  public init(session: PresentationSession) {
+  init(session: PresentationSession) {
     self.session = session
     self.session.$status
-      .sink { status in
+      .sink { [weak self] status in
+        guard let self else { return }
         switch status {
         case .qrEngagementReady:
-          self.presentationStateSubject.value = .prepareQr
+          self.sendableCurrentValueSubject.setValue(.prepareQr)
+        case .requestReceived:
+          self.sendableCurrentValueSubject.setValue(.requestReceived(self.createRequest()))
         case .responseSent:
-          self.presentationStateSubject.value = .responseToSend(session.disclosedDocuments.items)
+          self.sendableCurrentValueSubject.setValue(.responseSent(nil))
         case .error:
-          if let error = session.uiError {
-            self.presentationStateSubject.value = .error(error)
+          if let error = session.uiError?.errorDescription {
+            self.sendableCurrentValueSubject.setValue(.error(RuntimeError.customError(error)))
           } else {
-            let genericWalletError = WalletError.init(description: LocalizableString.shared.get(with: .genericErrorDesc))
-            self.presentationStateSubject.value = .error(genericWalletError)
+            self.sendableCurrentValueSubject.setValue(.error(WalletCoreError.unableToPresentAndShare))
           }
 
         default:
           ()
         }
       }
-      .store(in: &cancellables)
+      .store(in: &sendableAnyCancellable.cancellables)
+  }
+
+  deinit {
+    stopPresentation()
   }
 
   public func initialize() async {
@@ -64,7 +89,7 @@ final class ProximityPresentationSessionCoordinator: PresentationSessionCoordina
     else {
       throw session.uiError ?? .init(description: "Failed To Generate QR Code")
     }
-    self.presentationStateSubject.value = .qrReady(imageData: qrImageData)
+    self.sendableCurrentValueSubject.setValue(.qrReady(imageData: qrImageData))
     return qrImage
   }
 
@@ -72,37 +97,36 @@ final class ProximityPresentationSessionCoordinator: PresentationSessionCoordina
     guard session.disclosedDocuments.isEmpty == false else {
       throw session.uiError ?? .init(description: "Failed to Find knonw documents to send")
     }
+    return createRequest()
+  }
 
-    let presentationRequest = PresentationRequest(
+  public func sendResponse(response: RequestItemConvertible) async {
+    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems())
+  }
+
+  public func getState() async -> PresentationState {
+    self.sendableCurrentValueSubject.getValue()
+  }
+
+  public func setState(presentationState: PresentationState) {
+    self.sendableCurrentValueSubject.setValue(presentationState)
+  }
+
+  func getStream() -> AsyncStream<PresentationState> {
+    return sendableCurrentValueSubject.getSubject().toAsyncStream()
+  }
+
+  public func stopPresentation() {
+    self.sendableCurrentValueSubject.getSubject().send(completion: .finished)
+    sendableAnyCancellable.cancel()
+  }
+
+  private func createRequest() -> PresentationRequest {
+    PresentationRequest(
       items: session.disclosedDocuments,
       relyingParty: session.readerCertIssuer ?? LocalizableString.shared.get(with: .unknownVerifier),
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
       isTrusted: session.readerCertIssuerValid == true
     )
-    self.presentationStateSubject.value = .requestReceived(presentationRequest)
-    return presentationRequest
   }
-
-  public func sendResponse(response: RequestItemConvertible, onSuccess: ((URL?) -> Void)?, onCancel: (() -> Void)?) async {
-    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems()) {
-      // This closure is used by WalletKit in order to handle the cancelling
-      // of a strong authentication by the user
-      // our implementation uses feature-common -> Biometry to handle strong user authorisation
-    }
-    self.presentationStateSubject.value = .success
-    self.presentationStateSubject.send(completion: .finished)
-  }
-
-  public func onSuccess(completion: () -> Void) {
-    completion()
-  }
-
-  public func getState() async -> PresentationState {
-    self.presentationStateSubject.value
-  }
-
-  public func setState(presentationState: PresentationState) {
-    self.presentationStateSubject.value = presentationState
-  }
-
 }

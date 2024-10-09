@@ -26,14 +26,13 @@ private enum WalletKitKeyChainIdentifier: String, KeychainWrapper {
   case dynamicIssuancePendingUrl
 }
 
-public protocol WalletKitController {
+public protocol WalletKitController: ThreadSafeController {
 
   var wallet: EudiWallet { get }
-  var activeCoordinator: PresentationSessionCoordinator? { get }
 
-  func startProximityPresentation() -> PresentationSessionCoordinator
-  func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinator
-  func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinator
+  func startProximityPresentation() -> ProximitySessionCoordinator
+  func startSameDevicePresentation(deepLink: URLComponents) -> RemoteSessionCoordinator
+  func startCrossDevicePresentation(urlString: String) -> RemoteSessionCoordinator
   func stopPresentation()
   func fetchAllDocuments() -> [MdocDecodable]
   func fetchDeferredDocuments() -> [WalletStorage.Document]
@@ -66,22 +65,31 @@ public protocol WalletKitController {
   func retrieveLogFileUrl() -> URL?
   func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document
   func storeDynamicIssuancePendingUrl(with url: URL)
-  func getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)?
+  func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData?
 }
 
 final class WalletKitControllerImpl: WalletKitController {
 
-  public let wallet = EudiWallet.standard
-
-  public private(set) var activeCoordinator: PresentationSessionCoordinator?
+  let wallet: EudiWallet
+  private let sessionCoordinatorHolder: SessionCoordinatorHolder
 
   private let configLogic: WalletKitConfig
   private let keyChainController: KeyChainController
-  private let cancellables = Set<AnyCancellable>()
 
-  init(configLogic: WalletKitConfig, keyChainController: KeyChainController) {
+  init(
+    configLogic: WalletKitConfig,
+    keyChainController: KeyChainController,
+    sessionCoordinatorHolder: SessionCoordinatorHolder
+  ) {
     self.configLogic = configLogic
     self.keyChainController = keyChainController
+    self.sessionCoordinatorHolder = sessionCoordinatorHolder
+
+    guard let walletKit = try? EudiWallet() else {
+      fatalError("Unable to Initialize WalletKit")
+    }
+
+    wallet = walletKit
     wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciConfig = .init(
@@ -131,22 +139,18 @@ final class WalletKitControllerImpl: WalletKitController {
     _ = try await wallet.loadAllDocuments()
   }
 
-  public func startProximityPresentation() -> PresentationSessionCoordinator {
+  public func startProximityPresentation() -> ProximitySessionCoordinator {
     self.stopPresentation()
     let session = wallet.beginPresentation(flow: .ble)
-    let presentationSessionCoordinator = DIGraph.resolver.force(
-      PresentationSessionCoordinator.self,
-      name: RegistrationName.proximity.rawValue,
+    let proximitySessionCoordinator = DIGraph.resolver.force(
+      ProximitySessionCoordinator.self,
       argument: session
     )
-    self.activeCoordinator = presentationSessionCoordinator
-    presentationSessionCoordinator.onSuccess {
-      stopPresentation()
-    }
-    return presentationSessionCoordinator
+    self.sessionCoordinatorHolder.setActiveProximityCoordinator(proximitySessionCoordinator)
+    return proximitySessionCoordinator
   }
 
-  public func startSameDevicePresentation(deepLink: URLComponents) -> PresentationSessionCoordinator {
+  public func startSameDevicePresentation(deepLink: URLComponents) -> RemoteSessionCoordinator {
     self.startRemotePresentation(
       urlString: decodeDeeplink(
         link: deepLink
@@ -154,31 +158,26 @@ final class WalletKitControllerImpl: WalletKitController {
     )
   }
 
-  public func startCrossDevicePresentation(urlString: String) -> PresentationSessionCoordinator {
+  public func startCrossDevicePresentation(urlString: String) -> RemoteSessionCoordinator {
     self.startRemotePresentation(urlString: urlString)
   }
 
-  private func startRemotePresentation(urlString: String) -> PresentationSessionCoordinator {
+  private func startRemotePresentation(urlString: String) -> RemoteSessionCoordinator {
     self.stopPresentation()
 
     let data = urlString.data(using: .utf8) ?? Data()
 
     let session = wallet.beginPresentation(flow: .openid4vp(qrCode: data))
-    let presentationSessionCoordinator = DIGraph.resolver.force(
-      PresentationSessionCoordinator.self,
-      name: RegistrationName.remote.rawValue,
+    let remoteSessionCoordinator = DIGraph.resolver.force(
+      RemoteSessionCoordinator.self,
       argument: session
     )
-    self.activeCoordinator = presentationSessionCoordinator
-    presentationSessionCoordinator.onSuccess {
-      stopPresentation()
-    }
-    return presentationSessionCoordinator
+    self.sessionCoordinatorHolder.setActiveRemoteCoordinator(remoteSessionCoordinator)
+    return remoteSessionCoordinator
   }
 
   public func stopPresentation() {
-    self.cancellables.forEach {$0.cancel()}
-    self.activeCoordinator = nil
+    self.sessionCoordinatorHolder.clear()
   }
 
   func fetchAllDocuments() -> [MdocDecodable] {
@@ -247,7 +246,7 @@ final class WalletKitControllerImpl: WalletKitController {
     )
   }
 
-  func getDynamicIssuancePendingData() async -> (pendingDoc: WalletStorage.Document, url: URL)? {
+  func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData? {
 
     guard
       let urlString = keyChainController.getValue(key: WalletKitKeyChainIdentifier.dynamicIssuancePendingUrl),
@@ -264,7 +263,7 @@ final class WalletKitControllerImpl: WalletKitController {
       return nil
     }
 
-    return (pendingDoc: pendingDoc, url: url)
+    return .init(pendingDoc: pendingDoc, url: url)
   }
 
   private func decodeDeeplink(link: URLComponents) -> String? {

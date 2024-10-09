@@ -26,6 +26,7 @@ public let SPACING_LARGE_MEDIUM: CGFloat = 24
 public let SPACING_LARGE: CGFloat = 32
 public let SPACING_EXTRA_LARGE: CGFloat = 48
 
+@MainActor
 public struct VSpacer {
 
   public static func custom(size: CGFloat) -> some View {
@@ -65,6 +66,7 @@ public struct VSpacer {
   }
 }
 
+@MainActor
 public struct HSpacer {
 
   public static func custom(size: CGFloat) -> some View {

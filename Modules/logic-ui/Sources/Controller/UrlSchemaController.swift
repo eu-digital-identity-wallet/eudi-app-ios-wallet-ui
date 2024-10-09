@@ -15,8 +15,9 @@
  */
 
 import Foundation
+import logic_business
 
-protocol UrlSchemaController {
+protocol UrlSchemaController: ThreadSafeController {
   func retrieveSchemas(with type: String) -> [String]
 }
 

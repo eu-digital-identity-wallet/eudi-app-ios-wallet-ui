@@ -19,7 +19,7 @@ import feature_common
 import logic_core
 import logic_business
 
-public protocol StartupInteractor {
+public protocol StartupInteractor: ThreadSafeInteractor {
   func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute
 }
 

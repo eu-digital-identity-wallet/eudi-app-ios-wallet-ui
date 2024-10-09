@@ -29,7 +29,7 @@ struct OfferCodeViewState: ViewState {
   let caption: LocalizableString.Key
 }
 
-final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferCodeViewState> {
+final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeViewState> {
 
   @Published var codeInput: String = ""
   @Published var codeIsFocused: Bool = true
@@ -63,10 +63,17 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
   }
 
   func checkPendingIssuance() async {
-    switch await interactor.resumeDynamicIssuance(
-      issuerName: viewState.config.issuerName,
-      successNavigation: viewState.config.successNavigation
-    ) {
+
+    let config: IssuanceCodeUiConfig = viewState.config
+
+    let state = await Task.detached { () -> OfferDynamicIssuancePartialState in
+      return await self.interactor.resumeDynamicIssuance(
+        issuerName: config.issuerName,
+        successNavigation: config.successNavigation
+      )
+    }.value
+
+    switch state {
     case .success(let route):
       router.push(with: route)
     case .noPending: break
@@ -96,15 +103,23 @@ final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferC
 
   private func onIssueDocuments() {
     Task {
+
       codeIsFocused = false
       setState { $0.copy(isLoading: true).copy(error: nil) }
-      switch await self.interactor.issueDocuments(
-        with: viewState.config.offerUri,
-        issuerName: viewState.config.issuerName,
-        docOffers: viewState.config.docOffers,
-        successNavigation: viewState.config.successNavigation,
-        txCodeValue: codeInput
-      ) {
+
+      let config = viewState.config
+
+      let state = await Task.detached { () -> IssueOfferDocumentsPartialState in
+        return await self.interactor.issueDocuments(
+          with: config.offerUri,
+          issuerName: config.issuerName,
+          docOffers: config.docOffers,
+          successNavigation: config.successNavigation,
+          txCodeValue: self.codeInput
+        )
+      }.value
+
+      switch state {
       case .success(let route):
         router.push(with: route)
       case .dynamicIssuance(let session):

@@ -18,7 +18,7 @@ import logic_core
 import logic_resources
 import logic_business
 
-public struct DocumentUIModel: Identifiable, Equatable {
+public struct DocumentUIModel: Identifiable, Equatable, ThreadSafeObject {
 
   @EquatableNoop
   public var id: String
@@ -33,7 +33,7 @@ public struct DocumentUIModel: Identifiable, Equatable {
 
 public extension DocumentUIModel {
 
-  struct Value: Equatable {
+  struct Value: Equatable, ThreadSafeObject {
 
     @EquatableNoop
     public var id: String
@@ -173,7 +173,7 @@ public extension DocumentUIModel {
 }
 
 public extension DocumentUIModel.Value {
-  enum State: Equatable {
+  enum State: Equatable, ThreadSafeObject {
     case issued
     case pending
     case failed
