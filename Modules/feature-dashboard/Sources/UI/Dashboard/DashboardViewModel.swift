@@ -58,7 +58,7 @@ extension DashboardState {
   }
 }
 
-final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, DashboardState> {
+final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardState> {
 
   private let interactor: DashboardInteractor
   private let deepLinkController: DeepLinkController

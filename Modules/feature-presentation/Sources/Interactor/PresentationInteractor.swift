@@ -14,24 +14,23 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import logic_api
 import logic_core
 import logic_business
 import feature_common
 
-public struct OnlineAuthenticationRequestSuccessModel: Sendable {
+public struct OnlineAuthenticationRequestSuccessModel: ThreadSafeObject {
   var requestDataCells: [RequestDataUIModel]
   var relyingParty: String
   var dataRequestInfo: String
   var isTrusted: Bool
 }
 
-public enum PresentationCoordinatorPartialState: Sendable {
+public enum PresentationCoordinatorPartialState: ThreadSafePartialState {
   case success(RemoteSessionCoordinator)
   case failure(Error)
 }
 
-public protocol PresentationInteractor: Sendable {
+public protocol PresentationInteractor: ThreadSafeInteractor {
   func getCoordinator() -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>

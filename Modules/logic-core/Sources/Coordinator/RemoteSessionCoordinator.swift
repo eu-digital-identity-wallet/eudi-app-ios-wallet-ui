@@ -14,13 +14,14 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-@preconcurrency import Combine
+import Combine
 import logic_resources
+import logic_business
 import UIKit
 
-public protocol RemoteSessionCoordinator: Sendable {
+public protocol RemoteSessionCoordinator: ThreadSafeProtocol {
 
-  var presentationStateSubject: CurrentValueSubject<PresentationState, Never> { get }
+  var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> { get }
 
   init(session: PresentationSession)
 
@@ -36,7 +37,7 @@ public protocol RemoteSessionCoordinator: Sendable {
 
 final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
 
-  public let presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
+  let sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> = .init(.loading)
 
   private let session: PresentationSession
 
@@ -59,7 +60,7 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
       isTrusted: session.readerCertIssuerValid == true
     )
-    self.presentationStateSubject.value = .requestReceived(presentationRequest)
+    self.sendableCurrentValueSubject.setValue(.requestReceived(presentationRequest))
     return presentationRequest
   }
 
@@ -68,11 +69,11 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
   }
 
   public func getState() async -> PresentationState {
-    self.presentationStateSubject.value
+    self.sendableCurrentValueSubject.getValue()
   }
 
   public func setState(presentationState: PresentationState) {
-    self.presentationStateSubject.value = presentationState
+    self.sendableCurrentValueSubject.setValue(presentationState)
   }
 
   public func onSuccess(completion: () -> Void) {
@@ -80,6 +81,6 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
   }
 
   public func getStream() -> AsyncStream<PresentationState> {
-    return presentationStateSubject.toAsyncStream()
+    self.sendableCurrentValueSubject.getSubject().toAsyncStream()
   }
 }

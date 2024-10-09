@@ -43,7 +43,7 @@ struct DocumentOfferViewState: ViewState {
   }
 }
 
-final class DocumentOfferViewModel<Router: RouterHost>: BaseViewModel<Router, DocumentOfferViewState> {
+final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, DocumentOfferViewState> {
 
   private let interactor: DocumentOfferInteractor
 

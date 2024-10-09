@@ -24,7 +24,7 @@ struct FAQState: ViewState {
   let filteredModels: [FAQUIModel]
 }
 
-final class FAQsViewModel<Router: RouterHost>: BaseViewModel<Router, FAQState> {
+final class FAQsViewModel<Router: RouterHost>: ViewModel<Router, FAQState> {
 
   private let interactor: FAQsInteractor
   @Published var searchText = ""

@@ -22,7 +22,7 @@ struct WelcomeState: ViewState {
   let isAnimating: Bool
 }
 
-final class WelcomeViewModel<Router: RouterHost>: BaseViewModel<Router, WelcomeState> {
+final class WelcomeViewModel<Router: RouterHost>: ViewModel<Router, WelcomeState> {
 
   private let interactor: WelcomeInteractor
 

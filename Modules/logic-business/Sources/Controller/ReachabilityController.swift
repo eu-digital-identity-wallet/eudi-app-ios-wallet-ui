@@ -19,7 +19,7 @@ import Network
 import BluetoothKit
 import UIKit
 
-public protocol ReachabilityController: Sendable {
+public protocol ReachabilityController: ThreadSafeController {
   func hasInternet() -> Bool
   func getBleAvailibity() -> AnyPublisher<Reachability.BleAvailibity, Never>
   @MainActor func openBleSettings()
@@ -157,7 +157,7 @@ extension ReachabilityControllerImpl {
 public struct Reachability {}
 
 public extension Reachability {
-  enum BleAvailibity: Equatable, Sendable {
+  enum BleAvailibity: Equatable, ThreadSafeObject {
     case available
     case noPermission
     case disabled

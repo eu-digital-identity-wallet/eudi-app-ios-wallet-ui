@@ -21,14 +21,14 @@ import SwiftUI
 import Combine
 import LocalAuthentication
 
-public enum BiometricsState: Equatable, Sendable {
+public enum BiometricsState: Equatable, ThreadSafePartialState {
   case idle
   case loading
   case authenticated
   case failure(SystemBiometryError)
 }
 
-public protocol BiometryInteractor: Sendable {
+public protocol BiometryInteractor: ThreadSafeInteractor {
 
   func authenticate() -> AnyPublisher<BiometricsState, Never>
   @MainActor func openSettingsURL(action: @escaping () -> Void)

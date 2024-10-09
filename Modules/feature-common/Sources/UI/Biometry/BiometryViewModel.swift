@@ -31,7 +31,7 @@ struct BiometryState: ViewState {
   let quickPinSize: Int
 }
 
-final class BiometryViewModel<Router: RouterHost>: BaseViewModel<Router, BiometryState> {
+final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometryState> {
 
   private let AUTO_VERIFY_ON_APPEAR_DELAY = 250
   private let PIN_INPUT_DEBOUNCE = 250

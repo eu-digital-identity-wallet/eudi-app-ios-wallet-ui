@@ -16,7 +16,7 @@
 import logic_business
 import logic_core
 
-public protocol ScannerInteractor: FormValidatorInteractor, Sendable {
+public protocol ScannerInteractor: FormValidatorInteractor, ThreadSafeInteractor {
   func startCrossDevicePresentation(scanResult: String) -> RemoteSessionCoordinator
 }
 

@@ -15,14 +15,14 @@
  */
 
 import Foundation
-@preconcurrency import Combine
+import Combine
 import logic_resources
 import UIKit
 import logic_business
 
-public protocol ProximitySessionCoordinator: Sendable {
+public protocol ProximitySessionCoordinator: ThreadSafeProtocol {
 
-  var presentationStateSubject: CurrentValueSubject<PresentationState, Never> { get }
+  var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> { get }
 
   init(session: PresentationSession)
 
@@ -40,7 +40,7 @@ public protocol ProximitySessionCoordinator: Sendable {
 
 final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
 
-  public let presentationStateSubject: CurrentValueSubject<PresentationState, Never> = .init(.loading)
+  let sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> = .init(.loading)
 
   private let session: PresentationSession
 
@@ -52,15 +52,15 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
       .sink { status in
         switch status {
         case .qrEngagementReady:
-          self.presentationStateSubject.value = .prepareQr
+          self.sendableCurrentValueSubject.setValue(.prepareQr)
         case .responseSent:
-          self.presentationStateSubject.value = .responseToSend(session.disclosedDocuments.items)
+          self.sendableCurrentValueSubject.setValue(.responseToSend(session.disclosedDocuments.items))
         case .error:
           if let error = session.uiError {
-            self.presentationStateSubject.value = .error(error)
+            self.sendableCurrentValueSubject.setValue(.error(error))
           } else {
             let genericWalletError = WalletError.init(description: LocalizableString.shared.get(with: .genericErrorDesc))
-            self.presentationStateSubject.value = .error(genericWalletError)
+            self.sendableCurrentValueSubject.setValue(.error(genericWalletError))
           }
 
         default:
@@ -87,7 +87,7 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
     else {
       throw session.uiError ?? .init(description: "Failed To Generate QR Code")
     }
-    self.presentationStateSubject.value = .qrReady(imageData: qrImageData)
+    self.sendableCurrentValueSubject.setValue(.qrReady(imageData: qrImageData))
     return qrImage
   }
 
@@ -102,7 +102,7 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
       isTrusted: session.readerCertIssuerValid == true
     )
-    self.presentationStateSubject.value = .requestReceived(presentationRequest)
+    self.sendableCurrentValueSubject.setValue(.requestReceived(presentationRequest))
     return presentationRequest
   }
 
@@ -112,8 +112,8 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
       // of a strong authentication by the user
       // our implementation uses feature-common -> Biometry to handle strong user authorisation
     }
-    self.presentationStateSubject.value = .success
-    self.presentationStateSubject.send(completion: .finished)
+    self.sendableCurrentValueSubject.setValue(.success)
+    self.sendableCurrentValueSubject.getSubject().send(completion: .finished)
   }
 
   public func onSuccess(completion: () -> Void) {
@@ -121,14 +121,14 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
   }
 
   public func getState() async -> PresentationState {
-    self.presentationStateSubject.value
+    self.sendableCurrentValueSubject.getValue()
   }
 
   public func setState(presentationState: PresentationState) {
-    self.presentationStateSubject.value = presentationState
+    self.sendableCurrentValueSubject.setValue(presentationState)
   }
 
   func getStream() -> AsyncStream<PresentationState> {
-    return presentationStateSubject.toAsyncStream()
+    return sendableCurrentValueSubject.getSubject().toAsyncStream()
   }
 }

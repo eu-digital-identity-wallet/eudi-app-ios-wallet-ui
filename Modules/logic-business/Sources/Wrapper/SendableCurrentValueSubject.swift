@@ -13,9 +13,25 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_business
+import Combine
 
-public struct SampleResponseDTO: Decodable, Equatable, ThreadSafeObject {
+public final class SendableCurrentValueSubject<T: Sendable>: @unchecked Sendable {
 
+  private let subject: CurrentValueSubject<T, Never>
+
+  public init(_ defaultValue: T) {
+    subject = .init(defaultValue)
+  }
+
+  public func getSubject() -> CurrentValueSubject<T, Never> {
+    subject
+  }
+
+  public func setValue(_ value: T) {
+    subject.value = value
+  }
+
+  public func getValue() -> T {
+    subject.value
+  }
 }

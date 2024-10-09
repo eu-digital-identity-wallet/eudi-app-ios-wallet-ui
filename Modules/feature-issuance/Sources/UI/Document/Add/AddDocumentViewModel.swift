@@ -35,7 +35,7 @@ struct AddDocumentViewState: ViewState {
   }
 }
 
-final class AddDocumentViewModel<Router: RouterHost>: BaseViewModel<Router, AddDocumentViewState> {
+final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocumentViewState> {
 
   private let interactor: AddDocumentInteractor
   private let deepLinkController: DeepLinkController

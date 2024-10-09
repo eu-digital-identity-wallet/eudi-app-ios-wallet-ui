@@ -20,7 +20,7 @@ public protocol KeychainWrapper {
   var value: String { get }
 }
 
-public protocol KeyChainController: Sendable {
+public protocol KeyChainController: ThreadSafeController {
   func storeValue(key: KeychainWrapper, value: String)
   func getValue(key: KeychainWrapper) -> String?
   func removeObject(key: KeychainWrapper)

@@ -20,7 +20,7 @@ import feature_common
 import logic_business
 import logic_core
 
-public protocol DocumentOfferInteractor: Sendable {
+public protocol DocumentOfferInteractor: ThreadSafeInteractor {
   func processOfferRequest(with uri: String) async -> OfferRequestPartialState
   func issueDocuments(
     with uri: String,
@@ -226,12 +226,12 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
   }
 }
 
-public enum OfferRequestPartialState: Sendable {
+public enum OfferRequestPartialState: ThreadSafePartialState {
   case success(DocumentOfferUIModel)
   case failure(Error)
 }
 
-public enum IssueOfferDocumentsPartialState: Sendable {
+public enum IssueOfferDocumentsPartialState: ThreadSafePartialState {
   case success(AppRoute)
   case partialSuccess(AppRoute)
   case deferredSuccess(AppRoute)
@@ -239,7 +239,7 @@ public enum IssueOfferDocumentsPartialState: Sendable {
   case failure(Error)
 }
 
-public enum OfferDynamicIssuancePartialState: Sendable {
+public enum OfferDynamicIssuancePartialState: ThreadSafePartialState {
   case success(AppRoute)
   case noPending
   case failure(Error)

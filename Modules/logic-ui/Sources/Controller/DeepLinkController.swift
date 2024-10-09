@@ -20,7 +20,7 @@ import logic_core
 
 public struct DeepLink {}
 
-public protocol DeepLinkController: Sendable {
+public protocol DeepLinkController: ThreadSafeController {
   func hasDeepLink(url: URL) -> DeepLink.Executable?
   @MainActor func handleDeepLinkAction(
     routerHost: RouterHost,
@@ -144,7 +144,7 @@ final class DeepLinkControllerImpl: DeepLinkController {
 }
 
 public extension DeepLink {
-  struct Executable: Equatable, Sendable {
+  struct Executable: Equatable, ThreadSafeObject {
     public let link: URLComponents
     public let plainUrl: URL
     public let action: DeepLink.Action
@@ -152,7 +152,7 @@ public extension DeepLink {
 }
 
 public extension DeepLink {
-  enum Action: String, Equatable, Sendable {
+  enum Action: String, Equatable, ThreadSafeObject {
 
     case openid4vp
     case credential_offer

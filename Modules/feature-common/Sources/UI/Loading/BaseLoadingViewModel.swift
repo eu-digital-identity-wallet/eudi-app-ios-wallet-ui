@@ -22,7 +22,7 @@ public struct BaseLoadingState: ViewState {
   let originator: AppRoute
 }
 
-open class BaseLoadingViewModel<Router: RouterHost>: BaseViewModel<Router, BaseLoadingState> {
+open class BaseLoadingViewModel<Router: RouterHost>: ViewModel<Router, BaseLoadingState> {
 
   public init(router: Router, originator: AppRoute) {
     super.init(

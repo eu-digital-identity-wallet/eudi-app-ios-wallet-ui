@@ -77,11 +77,11 @@ final class TestProximityInteractor: EudiTest {
   
   func testGetSessionStatePublisher_WhenInteractorMethodCalledAndCoordinatorIsValid_ThenVerifyStateSuccess() async {
     // Given
-    let publisher: CurrentValueSubject<PresentationState, Never> = CurrentValueSubject(.loading)
+    let sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> = SendableCurrentValueSubject(.loading)
     let stream: AsyncStream<PresentationState> = AsyncStream { completion in }
     
     stub(presentationSessionCoordinator) { mock in
-      when(mock.presentationStateSubject.get).thenReturn(publisher)
+      when(mock.sendableCurrentValueSubject.get).thenReturn(sendableCurrentValueSubject)
     }
     stub(presentationSessionCoordinator) { mock in
       when(mock.getStream()).thenReturn(stream)

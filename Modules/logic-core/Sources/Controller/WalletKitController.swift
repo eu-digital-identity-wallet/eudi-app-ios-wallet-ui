@@ -26,7 +26,7 @@ private enum WalletKitKeyChainIdentifier: String, KeychainWrapper {
   case dynamicIssuancePendingUrl
 }
 
-public protocol WalletKitController: Sendable {
+public protocol WalletKitController: ThreadSafeController {
 
   var wallet: EudiWallet { get }
 
@@ -68,7 +68,7 @@ public protocol WalletKitController: Sendable {
   func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData?
 }
 
-final class WalletKitControllerImpl: WalletKitController, Sendable {
+final class WalletKitControllerImpl: WalletKitController {
 
   let wallet: EudiWallet
   private let sessionCoordinatorHolder: SessionCoordinatorHolder

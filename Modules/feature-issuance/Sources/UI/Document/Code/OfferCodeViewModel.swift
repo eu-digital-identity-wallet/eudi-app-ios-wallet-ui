@@ -29,7 +29,7 @@ struct OfferCodeViewState: ViewState {
   let caption: LocalizableString.Key
 }
 
-final class OfferCodeViewModel<Router: RouterHost>: BaseViewModel<Router, OfferCodeViewState> {
+final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeViewState> {
 
   @Published var codeInput: String = ""
   @Published var codeIsFocused: Bool = true

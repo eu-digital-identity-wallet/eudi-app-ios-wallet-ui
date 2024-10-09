@@ -14,8 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import logic_business
 
-public struct DynamicIssuancePendingData: Sendable {
+public struct DynamicIssuancePendingData: ThreadSafeObject {
   public let pendingDoc: WalletStorage.Document
   public let url: URL
 }

@@ -14,47 +14,46 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import logic_api
 import logic_core
 import logic_business
 import feature_common
 
-public enum ProximityResponsePartialState: Sendable {
+public enum ProximityResponsePartialState: ThreadSafePartialState {
   case success
   case failure(Error)
 }
 
-public enum ProximityResponsePreparationPartialState: Sendable {
+public enum ProximityResponsePreparationPartialState: ThreadSafePartialState {
   case success(RequestItemConvertible)
   case failure(Error)
 }
 
-public enum ProximityRequestPartialState: Sendable {
+public enum ProximityRequestPartialState: ThreadSafePartialState {
   case success([RequestDataUIModel], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
   case failure(Error)
 }
 
-public enum ProximityInitialisationPartialState: Sendable {
+public enum ProximityInitialisationPartialState: ThreadSafePartialState {
   case success
   case failure(Error)
 }
 
-public enum ProximityQrCodePartialState: Sendable {
+public enum ProximityQrCodePartialState: ThreadSafePartialState {
   case success(UIImage)
   case failure(Error)
 }
 
-public enum ProximityPublisherPartialState: Sendable {
+public enum ProximityPublisherPartialState: ThreadSafePartialState {
   case success(AsyncStream<PresentationState>)
   case failure(Error)
 }
 
-public enum ProximityCoordinatorPartialState: Sendable {
+public enum ProximityCoordinatorPartialState: ThreadSafePartialState {
   case success(ProximitySessionCoordinator)
   case failure(Error)
 }
 
-public protocol ProximityInteractor: Sendable {
+public protocol ProximityInteractor: ThreadSafeInteractor {
 
   func getSessionStatePublisher() -> ProximityPublisherPartialState
   func getCoordinator() -> ProximityCoordinatorPartialState

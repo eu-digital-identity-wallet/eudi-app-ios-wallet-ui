@@ -41,7 +41,7 @@ private extension ScannerState {
   static let MAX_ALLOWED_FAILED_SCANS = 5
 }
 
-final class ScannerViewModel<Router: RouterHost>: BaseViewModel<Router, ScannerState> {
+final class ScannerViewModel<Router: RouterHost>: ViewModel<Router, ScannerState> {
 
   private let interactor: ScannerInteractor
 

@@ -26,7 +26,7 @@ struct ProxmityConnectivityState: ViewState {
   let originator: AppRoute
 }
 
-final class ProximityConnectionViewModel<Router: RouterHost>: BaseViewModel<Router, ProxmityConnectivityState> {
+final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, ProxmityConnectivityState> {
 
   private let interactor: ProximityInteractor
 

@@ -15,6 +15,7 @@
  */
 import logic_ui
 import logic_resources
+import logic_business
 import Foundation
 import SwiftUI
 
@@ -50,7 +51,7 @@ public extension UIConfig {
 }
 
 public extension UIConfig.Success {
-  struct Title: Equatable, Sendable {
+  struct Title: Equatable, ThreadSafeObject {
     public let value: LocalizableString.Key
     public let color: Color
 
@@ -66,12 +67,12 @@ public extension UIConfig.Success {
 
 public extension UIConfig.Success {
 
-  enum VisualKind: Equatable, Sendable {
+  enum VisualKind: Equatable, ThreadSafeObject {
     case defaultIcon
     case customIcon(Image, Color)
   }
 
-  struct Button: Identifiable, Equatable, Sendable {
+  struct Button: Identifiable, Equatable, ThreadSafeObject {
 
     public var id: UUID
 
@@ -79,7 +80,7 @@ public extension UIConfig.Success {
     public let style: Style
     public let navigationType: UIConfig.DeepLinkNavigationType
 
-    public enum Style: Equatable, Sendable {
+    public enum Style: Equatable, ThreadSafeObject {
       case primary
       case secondary
     }

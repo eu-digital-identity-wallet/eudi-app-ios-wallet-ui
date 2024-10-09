@@ -2459,6 +2459,348 @@ import Cuckoo
 
 
 
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Generic/ThreadSafeObject.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+public class MockThreadSafeObject: ThreadSafeObject, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = ThreadSafeObject
+    public typealias Stubbing = __StubbingProxy_ThreadSafeObject
+    public typealias Verification = __VerificationProxy_ThreadSafeObject
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ThreadSafeObject)?
+
+    public func enableDefaultImplementation(_ stub: any ThreadSafeObject) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public struct __StubbingProxy_ThreadSafeObject: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    public struct __VerificationProxy_ThreadSafeObject: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+public class ThreadSafeObjectStub:ThreadSafeObject, @unchecked Sendable {
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Generic/ThreadSafeProtocol.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+public class MockThreadSafeProtocol: ThreadSafeProtocol, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = ThreadSafeProtocol
+    public typealias Stubbing = __StubbingProxy_ThreadSafeProtocol
+    public typealias Verification = __VerificationProxy_ThreadSafeProtocol
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ThreadSafeProtocol)?
+
+    public func enableDefaultImplementation(_ stub: any ThreadSafeProtocol) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public struct __StubbingProxy_ThreadSafeProtocol: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    public struct __VerificationProxy_ThreadSafeProtocol: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+public class ThreadSafeProtocolStub:ThreadSafeProtocol, @unchecked Sendable {
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Specific/ThreadSafeController.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+public class MockThreadSafeController: ThreadSafeController, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = ThreadSafeController
+    public typealias Stubbing = __StubbingProxy_ThreadSafeController
+    public typealias Verification = __VerificationProxy_ThreadSafeController
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ThreadSafeController)?
+
+    public func enableDefaultImplementation(_ stub: any ThreadSafeController) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public struct __StubbingProxy_ThreadSafeController: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    public struct __VerificationProxy_ThreadSafeController: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+public class ThreadSafeControllerStub:ThreadSafeController, @unchecked Sendable {
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Specific/ThreadSafeInteractor.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+public class MockThreadSafeInteractor: ThreadSafeInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = ThreadSafeInteractor
+    public typealias Stubbing = __StubbingProxy_ThreadSafeInteractor
+    public typealias Verification = __VerificationProxy_ThreadSafeInteractor
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ThreadSafeInteractor)?
+
+    public func enableDefaultImplementation(_ stub: any ThreadSafeInteractor) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public struct __StubbingProxy_ThreadSafeInteractor: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    public struct __VerificationProxy_ThreadSafeInteractor: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+public class ThreadSafeInteractorStub:ThreadSafeInteractor, @unchecked Sendable {
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Specific/ThreadSafePartialState.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+public class MockThreadSafePartialState: ThreadSafePartialState, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = ThreadSafePartialState
+    public typealias Stubbing = __StubbingProxy_ThreadSafePartialState
+    public typealias Verification = __VerificationProxy_ThreadSafePartialState
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ThreadSafePartialState)?
+
+    public func enableDefaultImplementation(_ stub: any ThreadSafePartialState) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public struct __StubbingProxy_ThreadSafePartialState: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    public struct __VerificationProxy_ThreadSafePartialState: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+public class ThreadSafePartialStateStub:ThreadSafePartialState, @unchecked Sendable {
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Specific/ThreadSafeProvider.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+public class MockThreadSafeProvider: ThreadSafeProvider, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = ThreadSafeProvider
+    public typealias Stubbing = __StubbingProxy_ThreadSafeProvider
+    public typealias Verification = __VerificationProxy_ThreadSafeProvider
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ThreadSafeProvider)?
+
+    public func enableDefaultImplementation(_ stub: any ThreadSafeProvider) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public struct __StubbingProxy_ThreadSafeProvider: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    public struct __VerificationProxy_ThreadSafeProvider: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+public class ThreadSafeProviderStub:ThreadSafeProvider, @unchecked Sendable {
+
+
+}
+
+
+
+
 // MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Builder/ArrayBuilder.swift'
 
 import Cuckoo
@@ -4030,20 +4372,6 @@ import Cuckoo
 
 
 
-// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Wrapper/Synchronized.swift'
-
-import Cuckoo
-import Foundation
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-
-
-
 // MARK: - Mocks generated from file: 'Modules/logic-core/Sources/Config/WalletKitConfig.swift'
 
 import Cuckoo
@@ -5265,12 +5593,12 @@ public class MockProximitySessionCoordinator: ProximitySessionCoordinator, Cucko
         cuckoo_manager.enableDefaultStubImplementation()
     }
     
-    public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> {
+    public var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> {
         get {
             return cuckoo_manager.getter(
-                "presentationStateSubject",
+                "sendableCurrentValueSubject",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.presentationStateSubject
+                defaultCall: __defaultImplStub!.sendableCurrentValueSubject
             )
         }
     }
@@ -5368,8 +5696,8 @@ return cuckoo_manager.call(
             self.cuckoo_manager = manager
         }
         
-        var presentationStateSubject: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockProximitySessionCoordinator,CurrentValueSubject<PresentationState, Never>> {
-            return .init(manager: cuckoo_manager, name: "presentationStateSubject")
+        var sendableCurrentValueSubject: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockProximitySessionCoordinator,SendableCurrentValueSubject<PresentationState>> {
+            return .init(manager: cuckoo_manager, name: "sendableCurrentValueSubject")
         }
         
         func initialize() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
@@ -5448,8 +5776,8 @@ return cuckoo_manager.call(
             self.sourceLocation = sourceLocation
         }
         
-        var presentationStateSubject: Cuckoo.VerifyReadOnlyProperty<CurrentValueSubject<PresentationState, Never>> {
-            return .init(manager: cuckoo_manager, name: "presentationStateSubject", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var sendableCurrentValueSubject: Cuckoo.VerifyReadOnlyProperty<SendableCurrentValueSubject<PresentationState>> {
+            return .init(manager: cuckoo_manager, name: "sendableCurrentValueSubject", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         
@@ -5552,9 +5880,9 @@ return cuckoo_manager.call(
 
 public class ProximitySessionCoordinatorStub:ProximitySessionCoordinator, @unchecked Sendable {
     
-    public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> {
+    public var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> {
         get {
-            return DefaultValueRegistry.defaultValue(for: (CurrentValueSubject<PresentationState, Never>).self)
+            return DefaultValueRegistry.defaultValue(for: (SendableCurrentValueSubject<PresentationState>).self)
         }
     }
 
@@ -5629,12 +5957,12 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
         cuckoo_manager.enableDefaultStubImplementation()
     }
     
-    public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> {
+    public var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> {
         get {
             return cuckoo_manager.getter(
-                "presentationStateSubject",
+                "sendableCurrentValueSubject",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.presentationStateSubject
+                defaultCall: __defaultImplStub!.sendableCurrentValueSubject
             )
         }
     }
@@ -5712,8 +6040,8 @@ return cuckoo_manager.call(
             self.cuckoo_manager = manager
         }
         
-        var presentationStateSubject: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockRemoteSessionCoordinator,CurrentValueSubject<PresentationState, Never>> {
-            return .init(manager: cuckoo_manager, name: "presentationStateSubject")
+        var sendableCurrentValueSubject: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockRemoteSessionCoordinator,SendableCurrentValueSubject<PresentationState>> {
+            return .init(manager: cuckoo_manager, name: "sendableCurrentValueSubject")
         }
         
         func initialize() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
@@ -5776,8 +6104,8 @@ return cuckoo_manager.call(
             self.sourceLocation = sourceLocation
         }
         
-        var presentationStateSubject: Cuckoo.VerifyReadOnlyProperty<CurrentValueSubject<PresentationState, Never>> {
-            return .init(manager: cuckoo_manager, name: "presentationStateSubject", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var sendableCurrentValueSubject: Cuckoo.VerifyReadOnlyProperty<SendableCurrentValueSubject<PresentationState>> {
+            return .init(manager: cuckoo_manager, name: "sendableCurrentValueSubject", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         
@@ -5856,9 +6184,9 @@ return cuckoo_manager.call(
 
 public class RemoteSessionCoordinatorStub:RemoteSessionCoordinator, @unchecked Sendable {
     
-    public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> {
+    public var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> {
         get {
-            return DefaultValueRegistry.defaultValue(for: (CurrentValueSubject<PresentationState, Never>).self)
+            return DefaultValueRegistry.defaultValue(for: (SendableCurrentValueSubject<PresentationState>).self)
         }
     }
 
@@ -6384,7 +6712,7 @@ public class RequestItemConvertibleStub:RequestItemConvertible, @unchecked Senda
 
 
 
-// MARK: - Mocks generated from file: 'Modules/logic-ui/Sources/Architecture/BaseViewModel.swift'
+// MARK: - Mocks generated from file: 'Modules/logic-ui/Sources/Architecture/ViewModel.swift'
 
 import Cuckoo
 import SwiftUI

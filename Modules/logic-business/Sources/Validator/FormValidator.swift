@@ -18,7 +18,7 @@ import Combine
 import Peppermint
 import libPhoneNumber
 
-public protocol FormValidator: Sendable {
+public protocol FormValidator: ThreadSafeProtocol {
   func validateForm(form: ValidatableForm) async -> FormValidationResult
   func validateForms(forms: [ValidatableForm]) async -> FormsValidationResult
 }
@@ -262,7 +262,7 @@ final class FormValidatorImpl: FormValidator {
   }
 }
 
-public struct ValidatableForm: Equatable, Sendable {
+public struct ValidatableForm: Equatable, ThreadSafeObject {
   let inputs: [[Rule]: String]
 
   public init(inputs: [[Rule]: String]) {
@@ -270,7 +270,7 @@ public struct ValidatableForm: Equatable, Sendable {
   }
 }
 
-public struct FormValidationResult: Equatable, Sendable {
+public struct FormValidationResult: Equatable, ThreadSafeObject {
   public let isValid: Bool
   public let message: String
 
@@ -290,12 +290,12 @@ public struct FormsValidationResult: Equatable {
   }
 }
 
-public protocol FormValidatorInteractor: Sendable {
+public protocol FormValidatorInteractor: ThreadSafeInteractor {
   func validateForm(form: ValidatableForm) async -> FormValidationResult
   func validateForms(forms: [ValidatableForm]) async -> FormsValidationResult
 }
 
-public enum Rule: Hashable, Sendable {
+public enum Rule: Hashable, ThreadSafeObject {
   case ValidateNotEmpty(errorMessage: String)
   case ValidateEmail(errorMessage: String)
   case ValidatePhoneNumber(countryCode: String, errorMessage: String)
