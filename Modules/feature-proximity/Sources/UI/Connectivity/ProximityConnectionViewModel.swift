@@ -18,6 +18,7 @@ import logic_ui
 import logic_business
 import UIKit
 import logic_resources
+import logic_core
 
 @Copyable
 struct ProxmityConnectivityState: ViewState {
@@ -29,6 +30,7 @@ struct ProxmityConnectivityState: ViewState {
 final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, ProxmityConnectivityState> {
 
   private let interactor: ProximityInteractor
+  private var publisherTask: Task<Void, Error>?
 
   init(router: Router, interactor: ProximityInteractor, originator: AppRoute) {
     self.interactor = interactor
@@ -40,21 +42,14 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
         originator: originator
       )
     )
+    publisherTask = Task {
+      await self.subscribeToCoordinatorPublisher()
+    }
   }
 
   func initialize() async {
-    await self.subscribeToCoordinatorPublisher()
-
-    let state = await Task.detached { () -> ProximityInitialisationPartialState in
-      return await self.interactor.onDeviceEngagement()
-    }.value
-
-    switch state {
-    case .success:
-      await self.onConnectionSuccess()
-    case .failure(let error):
-      self.onError(with: .custom(error.localizedDescription))
-    }
+    await self.interactor.onDeviceEngagement()
+    try? await publisherTask?.value
   }
 
   func subscribeToCoordinatorPublisher() async {
@@ -64,14 +59,16 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
         switch state {
         case .prepareQr:
           await self.onQRGeneration()
-        case .error:
-          self.onError(with: .genericErrorDesc)
+        case .requestReceived:
+          self.onConnectionSuccess()
+        case .error(let error):
+          self.onError(with: error)
         default:
           ()
         }
       }
     case .failure(let error):
-      self.onError(with: .custom(error.localizedDescription))
+      self.onError(with: error)
     }
   }
 
@@ -80,7 +77,7 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
     case .success(let qrImage):
       setState { $0.copy(error: nil).copy(qrImage: qrImage) }
     case .failure(let error):
-      self.onError(with: .custom(error.localizedDescription))
+      self.onError(with: error)
     }
   }
 
@@ -89,10 +86,10 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
     router.pop()
   }
 
-  private func onConnectionSuccess() async {
+  private func onConnectionSuccess() {
+    publisherTask?.cancel()
     switch interactor.getCoordinator() {
     case .success(let proximitySessionCoordinator):
-      cancellables.forEach({$0.cancel()})
       router.push(
         with: .featureProximityModule(
           .proximityRequest(
@@ -102,15 +99,15 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
         )
       )
     case .failure(let error):
-      self.onError(with: .custom(error.localizedDescription))
+      self.onError(with: error)
     }
   }
 
-  private func onError(with desc: LocalizableString.Key) {
+  private func onError(with error: Error) {
     setState {
       $0.copy(
         error: .init(
-          description: desc,
+          description: .custom(error.localizedDescription),
           cancelAction: self.router.pop()
         )
       )

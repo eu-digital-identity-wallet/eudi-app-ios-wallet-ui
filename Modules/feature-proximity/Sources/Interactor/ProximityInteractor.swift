@@ -33,11 +33,6 @@ public enum ProximityRequestPartialState: ThreadSafePartialState {
   case failure(Error)
 }
 
-public enum ProximityInitialisationPartialState: ThreadSafePartialState {
-  case success
-  case failure(Error)
-}
-
 public enum ProximityQrCodePartialState: ThreadSafePartialState {
   case success(UIImage)
   case failure(Error)
@@ -58,7 +53,7 @@ public protocol ProximityInteractor: ThreadSafeInteractor {
   func getSessionStatePublisher() -> ProximityPublisherPartialState
   func getCoordinator() -> ProximityCoordinatorPartialState
 
-  func onDeviceEngagement() async -> ProximityInitialisationPartialState
+  func onDeviceEngagement() async
   func onQRGeneration() async -> ProximityQrCodePartialState
   func onRequestReceived() async -> ProximityRequestPartialState
   func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> ProximityResponsePreparationPartialState
@@ -98,9 +93,8 @@ final class ProximityInteractorImpl: ProximityInteractor {
     }
   }
 
-  public func onDeviceEngagement() async -> ProximityInitialisationPartialState {
+  public func onDeviceEngagement() async {
     try? await sessionCoordinatorHolder.getActiveProximityCoordinator().initialize()
-    return .success
   }
 
   public func onQRGeneration() async -> ProximityQrCodePartialState {

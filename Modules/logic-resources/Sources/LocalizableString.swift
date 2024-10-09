@@ -287,6 +287,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "retrieve_logs")
     case .qrScanInformativeText:
       bundle.localizedString(forKey: "qr_scan_informative_text")
+    case .unableToPresentAndShare:
+      bundle.localizedString(forKey: "error_unable_present_documents")
     }
   }
 
@@ -423,6 +425,7 @@ public extension LocalizableString {
     case defferedDocumentsIssuedModalCaption
     case retrieveLogs
     case qrScanInformativeText
+    case unableToPresentAndShare
   }
 }
 

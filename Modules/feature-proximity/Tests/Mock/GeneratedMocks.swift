@@ -1085,9 +1085,9 @@ public class MockProximityInteractor: ProximityInteractor, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func onDeviceEngagement() async -> ProximityInitialisationPartialState {
+    public func onDeviceEngagement() async {
         return await cuckoo_manager.call(
-            "onDeviceEngagement() async -> ProximityInitialisationPartialState",
+            "onDeviceEngagement() async",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -1168,10 +1168,10 @@ public class MockProximityInteractor: ProximityInteractor, Cuckoo.ProtocolMock, 
             ))
         }
         
-        func onDeviceEngagement() -> Cuckoo.ProtocolStubFunction<(), ProximityInitialisationPartialState> {
+        func onDeviceEngagement() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractor.self,
-                method: "onDeviceEngagement() async -> ProximityInitialisationPartialState",
+                method: "onDeviceEngagement() async",
                 parameterMatchers: matchers
             ))
         }
@@ -1254,10 +1254,10 @@ public class MockProximityInteractor: ProximityInteractor, Cuckoo.ProtocolMock, 
         
         
         @discardableResult
-        func onDeviceEngagement() -> Cuckoo.__DoNotUse<(), ProximityInitialisationPartialState> {
+        func onDeviceEngagement() -> Cuckoo.__DoNotUse<(), Void> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "onDeviceEngagement() async -> ProximityInitialisationPartialState",
+                "onDeviceEngagement() async",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1338,8 +1338,8 @@ public class ProximityInteractorStub:ProximityInteractor, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (ProximityCoordinatorPartialState).self)
     }
     
-    public func onDeviceEngagement() async -> ProximityInitialisationPartialState {
-        return DefaultValueRegistry.defaultValue(for: (ProximityInitialisationPartialState).self)
+    public func onDeviceEngagement() async {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
     public func onQRGeneration() async -> ProximityQrCodePartialState {

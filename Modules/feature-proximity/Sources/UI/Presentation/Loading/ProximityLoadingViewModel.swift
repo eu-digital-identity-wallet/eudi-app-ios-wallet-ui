@@ -20,6 +20,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
 
   private let interactor: ProximityInteractor
   private let relyingParty: String
+  private var publisherTask: Task<Void, Error>?
 
   init(
     router: Router,
@@ -30,9 +31,6 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
     self.interactor = interactor
     self.relyingParty = relyingParty
     super.init(router: router, originator: originator, cancellationTimeout: 5)
-    Task {
-      await self.subscribeToCoordinatorPublisher()
-    }
   }
 
   func subscribeToCoordinatorPublisher() async {
@@ -63,7 +61,8 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   }
 
   private func getOnSuccessRoute() -> AppRoute {
-    .featureCommonModule(
+    publisherTask?.cancel()
+    return .featureCommonModule(
       .success(
         config: UIConfig.Success(
           title: .init(value: .success),
@@ -82,6 +81,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   }
 
   override func getOnPopRoute() -> AppRoute? {
+    publisherTask?.cancel()
     return switch interactor.getCoordinator() {
     case .success(let proximitySessionCoordinator):
         .featureProximityModule(
@@ -96,6 +96,8 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
 
   override func doWork() async {
 
+    startPublisherTask()
+
     let state = await Task.detached { () -> ProximityResponsePartialState in
       return await self.interactor.onSendResponse()
     }.value
@@ -104,6 +106,17 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
     case .sent: break
     case .failure(let error):
       self.onError(with: error)
+    }
+  }
+
+  private func startPublisherTask() {
+    if publisherTask == nil || publisherTask?.isCancelled == true {
+      publisherTask = Task {
+        await self.subscribeToCoordinatorPublisher()
+      }
+      Task {
+        try? await self.publisherTask?.value
+      }
     }
   }
 }

@@ -20,6 +20,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
 
   private let interactor: PresentationInteractor
   private let relyingParty: String
+  private var publisherTask: Task<Void, Error>?
 
   init(
     router: Router,
@@ -30,9 +31,6 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
     self.interactor = interactor
     self.relyingParty = relyingParty
     super.init(router: router, originator: originator, cancellationTimeout: 5)
-    Task {
-      await self.subscribeToCoordinatorPublisher()
-    }
   }
 
   func subscribeToCoordinatorPublisher() async {
@@ -63,6 +61,8 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
   }
 
   private func getOnSuccessRoute(with url: URL?) -> AppRoute {
+
+    self.publisherTask?.cancel()
 
     var navigationType: UIConfig.DeepLinkNavigationType {
       guard let url else {
@@ -105,6 +105,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
   }
 
   override func getOnPopRoute() -> AppRoute? {
+    self.publisherTask?.cancel()
     return switch interactor.getCoordinator() {
     case .success(let remoteSessionCoordinator):
         .featurePresentationModule(
@@ -119,6 +120,8 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
 
   override func doWork() async {
 
+    startPublisherTask()
+
     let result = await Task.detached { () -> RemoteSentResponsePartialState in
       return await self.interactor.onSendResponse()
     }.value
@@ -127,6 +130,17 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
     case .sent: break
     case .failure(let error):
       self.onError(with: error)
+    }
+  }
+
+  private func startPublisherTask() {
+    if publisherTask == nil || publisherTask?.isCancelled == true {
+      publisherTask = Task {
+        await self.subscribeToCoordinatorPublisher()
+      }
+      Task {
+        try? await self.publisherTask?.value
+      }
     }
   }
 }

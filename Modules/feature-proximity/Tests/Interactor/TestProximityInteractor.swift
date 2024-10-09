@@ -68,14 +68,8 @@ final class TestProximityInteractor: EudiTest {
       when(mock.initialize()).thenDoNothing()
     }
     // When
-    let state = await interactor.onDeviceEngagement()
+    await interactor.onDeviceEngagement()
     // Then
-    switch state {
-    case .success:
-      XCTAssertTrue(true)
-    default:
-      XCTFail("Wrong state \(state)")
-    }
     verify(presentationSessionCoordinator).initialize()
   }
   

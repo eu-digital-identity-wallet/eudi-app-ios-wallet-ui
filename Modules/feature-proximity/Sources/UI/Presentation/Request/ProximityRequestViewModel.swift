@@ -20,6 +20,7 @@ import logic_business
 final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<Router> {
 
   private let interactor: ProximityInteractor
+  private var publisherTask: Task<Void, Error>?
 
   init(
     router: Router,
@@ -30,8 +31,26 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
     super.init(router: router, originator: originator)
   }
 
+  func subscribeToCoordinatorPublisher() async {
+    switch self.interactor.getSessionStatePublisher() {
+    case .success(let publisher):
+      for try await state in publisher {
+        switch state {
+        case .error(let error):
+          self.onError(with: error)
+        default:
+          ()
+        }
+      }
+    case .failure(let error):
+      self.onError(with: error)
+    }
+  }
+
   override func doWork() async {
+
     self.onStartLoading()
+    self.startPublisherTask()
 
     let state = await Task.detached { () -> ProximityRequestPartialState in
       return await self.interactor.onRequestReceived()
@@ -73,6 +92,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   }
 
   override func getSuccessRoute() -> AppRoute? {
+    publisherTask?.cancel()
     return switch interactor.getCoordinator() {
     case .success(let proximitySessionCoordinator):
         .featureCommonModule(
@@ -101,6 +121,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   }
 
   override func getPopRoute() -> AppRoute? {
+    publisherTask?.cancel()
     return getOriginator()
   }
 
@@ -130,5 +151,16 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
 
   override func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
     .requestDataVerifiedEntityMessage
+  }
+
+  private func startPublisherTask() {
+    if publisherTask == nil || publisherTask?.isCancelled == true {
+      publisherTask = Task {
+        await self.subscribeToCoordinatorPublisher()
+      }
+      Task {
+        try? await self.publisherTask?.value
+      }
+    }
   }
 }

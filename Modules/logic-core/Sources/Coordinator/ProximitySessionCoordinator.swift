@@ -49,18 +49,20 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
   init(session: PresentationSession) {
     self.session = session
     self.session.$status
-      .sink { status in
+      .sink { [weak self] status in
+        guard let self else { return }
         switch status {
         case .qrEngagementReady:
           self.sendableCurrentValueSubject.setValue(.prepareQr)
+        case .requestReceived:
+          self.sendableCurrentValueSubject.setValue(.requestReceived(self.createRequest()))
         case .responseSent:
           self.sendableCurrentValueSubject.setValue(.responseSent(nil))
         case .error:
-          if let error = session.uiError {
-            self.sendableCurrentValueSubject.setValue(.error(error))
+          if let error = session.uiError?.errorDescription {
+            self.sendableCurrentValueSubject.setValue(.error(RuntimeError.customError(error)))
           } else {
-            let genericWalletError = WalletError.init(description: LocalizableString.shared.get(with: .genericErrorDesc))
-            self.sendableCurrentValueSubject.setValue(.error(genericWalletError))
+            self.sendableCurrentValueSubject.setValue(.error(WalletCoreError.unableToPresentAndShare))
           }
 
         default:
@@ -95,15 +97,7 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
     guard session.disclosedDocuments.isEmpty == false else {
       throw session.uiError ?? .init(description: "Failed to Find knonw documents to send")
     }
-
-    let presentationRequest = PresentationRequest(
-      items: session.disclosedDocuments,
-      relyingParty: session.readerCertIssuer ?? LocalizableString.shared.get(with: .unknownVerifier),
-      dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
-      isTrusted: session.readerCertIssuerValid == true
-    )
-    self.sendableCurrentValueSubject.setValue(.requestReceived(presentationRequest))
-    return presentationRequest
+    return createRequest()
   }
 
   public func sendResponse(response: RequestItemConvertible) async {
@@ -125,5 +119,14 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
   public func stopPresentation() {
     self.sendableCurrentValueSubject.getSubject().send(completion: .finished)
     sendableAnyCancellable.cancel()
+  }
+
+  private func createRequest() -> PresentationRequest {
+    PresentationRequest(
+      items: session.disclosedDocuments,
+      relyingParty: session.readerCertIssuer ?? LocalizableString.shared.get(with: .unknownVerifier),
+      dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
+      isTrusted: session.readerCertIssuerValid == true
+    )
   }
 }

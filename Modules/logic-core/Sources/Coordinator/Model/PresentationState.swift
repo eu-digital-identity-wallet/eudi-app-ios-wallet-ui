@@ -23,5 +23,5 @@ public enum PresentationState: ThreadSafeObject {
   case requestReceived(PresentationRequest)
   case responseToSend(RequestItemConvertible)
   case responseSent(URL?)
-  case error(WalletError)
+  case error(Error)
 }
