@@ -14,7 +14,8 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import logic_business
 
-public struct SampleResponseDTO: Decodable, Equatable {
+public struct SampleResponseDTO: Decodable, Equatable, ThreadSafeObject {
 
 }

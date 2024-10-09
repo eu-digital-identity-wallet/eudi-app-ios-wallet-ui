@@ -15,7 +15,7 @@
  */
 import SwiftUI
 
-public protocol ColorManagerProtocol {
+public protocol ColorManagerProtocol: Sendable {
 
   var black: Color { get }
   var white: Color { get }
@@ -162,9 +162,9 @@ final class ColorManager: ColorManagerProtocol {
     Color(PaletteColorEnum.infoMain.rawValue, bundle: bundle)
   }
 
-  var bundle: Bundle
+  let bundle: Bundle
 
-  var material: MaterialColor
+  let material: MaterialColor
 
   // MARK: - Lifecycle
 

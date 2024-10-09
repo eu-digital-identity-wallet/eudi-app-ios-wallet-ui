@@ -15,7 +15,7 @@
  */
 import Foundation
 
-public protocol PrefsController {
+public protocol PrefsController: ThreadSafeController {
   func setValue(_ value: Any?, forKey: Prefs.Key)
   func getString(forKey: Prefs.Key) -> String?
   func getOptionalString(forKey: Prefs.Key) -> String
@@ -29,40 +29,36 @@ public protocol PrefsController {
 
 final class PrefsControllerImpl: PrefsController {
 
-  private lazy var userDefaultsWrapper: UserDefaults = {
-    UserDefaults.standard
-  }()
-
   public func setValue(_ value: Any?, forKey: Prefs.Key) {
-    userDefaultsWrapper.setValue(value, forKey: forKey.rawValue)
+    UserDefaults.standard.setValue(value, forKey: forKey.rawValue)
   }
 
   public func getString(forKey: Prefs.Key) -> String? {
-    return userDefaultsWrapper.string(forKey: forKey.rawValue)
+    return UserDefaults.standard.string(forKey: forKey.rawValue)
   }
 
   public func getOptionalString(forKey: Prefs.Key) -> String {
-    return userDefaultsWrapper.string(forKey: forKey.rawValue) ?? ""
+    return UserDefaults.standard.string(forKey: forKey.rawValue) ?? ""
   }
 
   public func getFloat(forKey: Prefs.Key) -> Float {
-    return userDefaultsWrapper.float(forKey: forKey.rawValue)
+    return UserDefaults.standard.float(forKey: forKey.rawValue)
   }
 
   public func getBool(forKey: Prefs.Key) -> Bool {
-    return userDefaultsWrapper.bool(forKey: forKey.rawValue)
+    return UserDefaults.standard.bool(forKey: forKey.rawValue)
   }
 
   public func remove(forKey: Prefs.Key) {
-    userDefaultsWrapper.removeObject(forKey: forKey.rawValue)
+    UserDefaults.standard.removeObject(forKey: forKey.rawValue)
   }
 
   public func getValue(forKey: Prefs.Key) -> Any? {
-    return userDefaultsWrapper.value(forKey: forKey.rawValue)
+    return UserDefaults.standard.value(forKey: forKey.rawValue)
   }
 
   public func getInt(forKey: Prefs.Key) -> Int {
-    return userDefaultsWrapper.integer(forKey: forKey.rawValue)
+    return UserDefaults.standard.integer(forKey: forKey.rawValue)
   }
 
   public func getUserLocale() -> String {

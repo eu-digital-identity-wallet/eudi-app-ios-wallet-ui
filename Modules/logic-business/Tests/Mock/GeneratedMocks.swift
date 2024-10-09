@@ -1,3 +1,309 @@
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Generic/ThreadSafeObject.swift'
+
+import Cuckoo
+@testable import logic_business
+
+public class MockThreadSafeObject: ThreadSafeObject, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = ThreadSafeObject
+    public typealias Stubbing = __StubbingProxy_ThreadSafeObject
+    public typealias Verification = __VerificationProxy_ThreadSafeObject
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ThreadSafeObject)?
+
+    public func enableDefaultImplementation(_ stub: any ThreadSafeObject) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public struct __StubbingProxy_ThreadSafeObject: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    public struct __VerificationProxy_ThreadSafeObject: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+public class ThreadSafeObjectStub:ThreadSafeObject, @unchecked Sendable {
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Generic/ThreadSafeProtocol.swift'
+
+import Cuckoo
+@testable import logic_business
+
+public class MockThreadSafeProtocol: ThreadSafeProtocol, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = ThreadSafeProtocol
+    public typealias Stubbing = __StubbingProxy_ThreadSafeProtocol
+    public typealias Verification = __VerificationProxy_ThreadSafeProtocol
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ThreadSafeProtocol)?
+
+    public func enableDefaultImplementation(_ stub: any ThreadSafeProtocol) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public struct __StubbingProxy_ThreadSafeProtocol: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    public struct __VerificationProxy_ThreadSafeProtocol: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+public class ThreadSafeProtocolStub:ThreadSafeProtocol, @unchecked Sendable {
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Specific/ThreadSafeController.swift'
+
+import Cuckoo
+@testable import logic_business
+
+public class MockThreadSafeController: ThreadSafeController, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = ThreadSafeController
+    public typealias Stubbing = __StubbingProxy_ThreadSafeController
+    public typealias Verification = __VerificationProxy_ThreadSafeController
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ThreadSafeController)?
+
+    public func enableDefaultImplementation(_ stub: any ThreadSafeController) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public struct __StubbingProxy_ThreadSafeController: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    public struct __VerificationProxy_ThreadSafeController: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+public class ThreadSafeControllerStub:ThreadSafeController, @unchecked Sendable {
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Specific/ThreadSafeInteractor.swift'
+
+import Cuckoo
+@testable import logic_business
+
+public class MockThreadSafeInteractor: ThreadSafeInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = ThreadSafeInteractor
+    public typealias Stubbing = __StubbingProxy_ThreadSafeInteractor
+    public typealias Verification = __VerificationProxy_ThreadSafeInteractor
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ThreadSafeInteractor)?
+
+    public func enableDefaultImplementation(_ stub: any ThreadSafeInteractor) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public struct __StubbingProxy_ThreadSafeInteractor: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    public struct __VerificationProxy_ThreadSafeInteractor: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+public class ThreadSafeInteractorStub:ThreadSafeInteractor, @unchecked Sendable {
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Specific/ThreadSafePartialState.swift'
+
+import Cuckoo
+@testable import logic_business
+
+public class MockThreadSafePartialState: ThreadSafePartialState, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = ThreadSafePartialState
+    public typealias Stubbing = __StubbingProxy_ThreadSafePartialState
+    public typealias Verification = __VerificationProxy_ThreadSafePartialState
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ThreadSafePartialState)?
+
+    public func enableDefaultImplementation(_ stub: any ThreadSafePartialState) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public struct __StubbingProxy_ThreadSafePartialState: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    public struct __VerificationProxy_ThreadSafePartialState: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+public class ThreadSafePartialStateStub:ThreadSafePartialState, @unchecked Sendable {
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Specific/ThreadSafeProvider.swift'
+
+import Cuckoo
+@testable import logic_business
+
+public class MockThreadSafeProvider: ThreadSafeProvider, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = ThreadSafeProvider
+    public typealias Stubbing = __StubbingProxy_ThreadSafeProvider
+    public typealias Verification = __VerificationProxy_ThreadSafeProvider
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ThreadSafeProvider)?
+
+    public func enableDefaultImplementation(_ stub: any ThreadSafeProvider) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public struct __StubbingProxy_ThreadSafeProvider: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    public struct __VerificationProxy_ThreadSafeProvider: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+public class ThreadSafeProviderStub:ThreadSafeProvider, @unchecked Sendable {
+
+
+}
+
+
+
+
 // MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Builder/ArrayBuilder.swift'
 
 import Cuckoo
@@ -11,7 +317,7 @@ import Cuckoo
 import Foundation
 @testable import logic_business
 
-public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
+public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ConfigLogic
     public typealias Stubbing = __StubbingProxy_ConfigLogic
     public typealias Verification = __VerificationProxy_ConfigLogic
@@ -103,7 +409,7 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
     }
 }
 
-public class ConfigLogicStub:ConfigLogic {
+public class ConfigLogicStub:ConfigLogic, @unchecked Sendable {
     
     public var walletHostUrl: String {
         get {
@@ -136,7 +442,7 @@ import Foundation
 import KeychainAccess
 @testable import logic_business
 
-public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock {
+public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = KeychainWrapper
     public typealias Stubbing = __StubbingProxy_KeychainWrapper
     public typealias Verification = __VerificationProxy_KeychainWrapper
@@ -192,7 +498,7 @@ public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock {
     }
 }
 
-public class KeychainWrapperStub:KeychainWrapper {
+public class KeychainWrapperStub:KeychainWrapper, @unchecked Sendable {
     
     public var value: String {
         get {
@@ -204,7 +510,7 @@ public class KeychainWrapperStub:KeychainWrapper {
 }
 
 
-public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock {
+public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = KeyChainController
     public typealias Stubbing = __StubbingProxy_KeyChainController
     public typealias Verification = __VerificationProxy_KeyChainController
@@ -422,7 +728,7 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock {
     }
 }
 
-public class KeyChainControllerStub:KeyChainController {
+public class KeyChainControllerStub:KeyChainController, @unchecked Sendable {
 
 
     
@@ -460,7 +766,7 @@ import Cuckoo
 import Foundation
 @testable import logic_business
 
-public class MockPrefsController: PrefsController, Cuckoo.ProtocolMock {
+public class MockPrefsController: PrefsController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = PrefsController
     public typealias Stubbing = __StubbingProxy_PrefsController
     public typealias Verification = __VerificationProxy_PrefsController
@@ -768,7 +1074,7 @@ public class MockPrefsController: PrefsController, Cuckoo.ProtocolMock {
     }
 }
 
-public class PrefsControllerStub:PrefsController {
+public class PrefsControllerStub:PrefsController, @unchecked Sendable {
 
 
     
@@ -822,7 +1128,7 @@ import BluetoothKit
 import UIKit
 @testable import logic_business
 
-public class MockReachabilityController: ReachabilityController, Cuckoo.ProtocolMock {
+public class MockReachabilityController: ReachabilityController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ReachabilityController
     public typealias Stubbing = __StubbingProxy_ReachabilityController
     public typealias Verification = __VerificationProxy_ReachabilityController
@@ -837,17 +1143,17 @@ public class MockReachabilityController: ReachabilityController, Cuckoo.Protocol
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
-    
-    public var networkPath: NWPath {
-        get {
-            return cuckoo_manager.getter(
-                "networkPath",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.networkPath
-            )
-        }
-    }
 
+    
+    public func hasInternet() -> Bool {
+        return cuckoo_manager.call(
+            "hasInternet() -> Bool",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.hasInternet()
+        )
+    }
     
     public func getBleAvailibity() -> AnyPublisher<Reachability.BleAvailibity, Never> {
         return cuckoo_manager.call(
@@ -876,8 +1182,12 @@ public class MockReachabilityController: ReachabilityController, Cuckoo.Protocol
             self.cuckoo_manager = manager
         }
         
-        var networkPath: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockReachabilityController,NWPath> {
-            return .init(manager: cuckoo_manager, name: "networkPath")
+        func hasInternet() -> Cuckoo.ProtocolStubFunction<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockReachabilityController.self,
+                method: "hasInternet() -> Bool",
+                parameterMatchers: matchers
+            ))
         }
         
         func getBleAvailibity() -> Cuckoo.ProtocolStubFunction<(), AnyPublisher<Reachability.BleAvailibity, Never>> {
@@ -908,8 +1218,16 @@ public class MockReachabilityController: ReachabilityController, Cuckoo.Protocol
             self.sourceLocation = sourceLocation
         }
         
-        var networkPath: Cuckoo.VerifyReadOnlyProperty<NWPath> {
-            return .init(manager: cuckoo_manager, name: "networkPath", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        
+        @discardableResult
+        func hasInternet() -> Cuckoo.__DoNotUse<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "hasInternet() -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
         }
         
         
@@ -938,15 +1256,13 @@ public class MockReachabilityController: ReachabilityController, Cuckoo.Protocol
     }
 }
 
-public class ReachabilityControllerStub:ReachabilityController {
+public class ReachabilityControllerStub:ReachabilityController, @unchecked Sendable {
+
+
     
-    public var networkPath: NWPath {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (NWPath).self)
-        }
+    public func hasInternet() -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
-
-
     
     public func getBleAvailibity() -> AnyPublisher<Reachability.BleAvailibity, Never> {
         return DefaultValueRegistry.defaultValue(for: (AnyPublisher<Reachability.BleAvailibity, Never>).self)
@@ -966,7 +1282,7 @@ import Cuckoo
 import Swinject
 @testable import logic_business
 
-public class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock {
+public class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = DIGraphType
     public typealias Stubbing = __StubbingProxy_DIGraphType
     public typealias Verification = __VerificationProxy_DIGraphType
@@ -1052,7 +1368,7 @@ public class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock {
     }
 }
 
-public class DIGraphTypeStub:DIGraphType {
+public class DIGraphTypeStub:DIGraphType, @unchecked Sendable {
     
     public var assembler: Assembler {
         get {
@@ -1194,7 +1510,7 @@ import Peppermint
 import libPhoneNumber
 @testable import logic_business
 
-public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock {
+public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = FormValidator
     public typealias Stubbing = __StubbingProxy_FormValidator
     public typealias Verification = __VerificationProxy_FormValidator
@@ -1292,7 +1608,7 @@ public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock {
     }
 }
 
-public class FormValidatorStub:FormValidator {
+public class FormValidatorStub:FormValidator, @unchecked Sendable {
 
 
     
@@ -1306,7 +1622,7 @@ public class FormValidatorStub:FormValidator {
 }
 
 
-public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.ProtocolMock {
+public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = FormValidatorInteractor
     public typealias Stubbing = __StubbingProxy_FormValidatorInteractor
     public typealias Verification = __VerificationProxy_FormValidatorInteractor
@@ -1404,7 +1720,7 @@ public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.Protoc
     }
 }
 
-public class FormValidatorInteractorStub:FormValidatorInteractor {
+public class FormValidatorInteractorStub:FormValidatorInteractor, @unchecked Sendable {
 
 
     

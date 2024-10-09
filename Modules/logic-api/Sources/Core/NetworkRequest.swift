@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import struct Foundation.Data
+import logic_business
 
 enum NetworkMethod: String {
   case GET
@@ -23,7 +24,7 @@ enum NetworkMethod: String {
   case PATCH
 }
 
-protocol NetworkRequest {
+protocol NetworkRequest: ThreadSafeProtocol {
 
   associatedtype Response
 

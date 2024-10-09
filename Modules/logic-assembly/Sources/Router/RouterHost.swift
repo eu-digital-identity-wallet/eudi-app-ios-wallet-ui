@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import UIPilot
+@preconcurrency import UIPilot
 import SwiftUI
 
 private typealias QueueItem = () -> Void
@@ -125,11 +125,11 @@ final class RouterHostImpl: RouterHost {
 
 private extension RouterHostImpl {
 
-  private func isForegroundOrBackStack(with route: AppRoute) -> Bool {
+  @MainActor private func isForegroundOrBackStack(with route: AppRoute) -> Bool {
     return isScreenForeground(with: route) || isScreenOnBackStack(with: route)
   }
 
-  private func canNavigate(block: @escaping @autoclosure () -> Void) -> Bool {
+  @MainActor private func canNavigate(block: @escaping @autoclosure () -> Void) -> Bool {
     guard !isLocked else {
       queueNavigation.append(block)
       return false
@@ -137,7 +137,7 @@ private extension RouterHostImpl {
     return true
   }
 
-  private func lockNavigation() {
+  @MainActor private func lockNavigation() {
     isLocked = true
     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(lockInterval)) {
       self.isLocked = false
@@ -145,14 +145,14 @@ private extension RouterHostImpl {
     }
   }
 
-  private func executePendingNavigation() {
+  @MainActor private func executePendingNavigation() {
     guard let item = queueNavigation.getQueuedItem() else {
       return
     }
     item()
   }
 
-  private func onNavigationFollowUp(with route: AppRoute) {
+  @MainActor private func onNavigationFollowUp(with route: AppRoute) {
     notifyBackgroundColorUpdate()
     analyticsController.logScreen(
       screen: route.info.key,
@@ -160,7 +160,7 @@ private extension RouterHostImpl {
     )
   }
 
-  private func notifyBackgroundColorUpdate() {
+  @MainActor private func notifyBackgroundColorUpdate() {
     NotificationCenter.default.post(name: .shouldChangeBackgroundColor, object: nil)
   }
 

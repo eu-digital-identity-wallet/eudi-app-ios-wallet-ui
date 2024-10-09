@@ -15,10 +15,10 @@
  */
 import Foundation
 
-public protocol DimensionManagerProtocol {
+public protocol DimensionManagerProtocol: Sendable {
   var padding: CGFloat { get }
 }
 
 final class DimensionManager: DimensionManagerProtocol {
-  var padding: CGFloat = 16
+  let padding: CGFloat = 16
 }

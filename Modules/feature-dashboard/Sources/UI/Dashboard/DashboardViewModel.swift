@@ -58,7 +58,7 @@ extension DashboardState {
   }
 }
 
-final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, DashboardState> {
+final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardState> {
 
   private let interactor: DashboardInteractor
   private let deepLinkController: DeepLinkController
@@ -105,7 +105,14 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
   }
 
   func fetch() async {
-    switch await interactor.fetchDashboard(failedDocuments: viewState.failedDocuments) {
+
+    let failedDocuments = viewState.failedDocuments
+
+    let state = await Task.detached { () -> DashboardPartialState in
+      return await self.interactor.fetchDashboard(failedDocuments: failedDocuments)
+    }.value
+
+    switch state {
     case .success(let bearer, let documents, let hasIssuedDocuments):
       setState {
         $0.copy(
@@ -157,10 +164,13 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
   }
 
   func onShare() {
-    Task { [weak self] in
-      guard let self else { return }
+    Task {
 
-      switch await self.interactor.getBleAvailability() {
+      let state = await Task.detached { () -> Reachability.BleAvailibity in
+        return await self.interactor.getBleAvailability()
+      }.value
+
+      switch state {
       case .available:
         self.router.push(
           with: .featureProximityModule(
@@ -194,7 +204,12 @@ final class DashboardViewModel<Router: RouterHost>: BaseViewModel<Router, Dashbo
     }
     setState { $0.copy(isLoading: true).copy(pendingDeletionDocument: nil) }
     Task {
-      switch await interactor.deleteDeferredDocument(with: document.value.id) {
+
+      let state = await Task.detached { () -> DashboardDeleteDeferredPartialState in
+        return await self.interactor.deleteDeferredDocument(with: document.value.id)
+      }.value
+
+      switch state {
       case .success:
         await fetch()
       case .noDocuments:

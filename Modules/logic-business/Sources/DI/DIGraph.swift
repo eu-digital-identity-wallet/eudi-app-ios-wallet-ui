@@ -13,9 +13,9 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Swinject
+@preconcurrency import Swinject
 
-public protocol DIGraphType {
+public protocol DIGraphType: ThreadSafeProtocol {
   var assembler: Assembler { get }
   func lazyLoad(with assemblies: [Assembly])
 }

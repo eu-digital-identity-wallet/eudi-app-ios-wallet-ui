@@ -17,7 +17,7 @@
 import Foundation
 import SwiftUI
 
-public protocol LocalizableStringType {
+public protocol LocalizableStringType: Sendable {
   static var shared: LocalizableStringType { get }
   func get(with key: LocalizableString.Key) -> String
   func get(with key: LocalizableString.Key) -> LocalizedStringKey
@@ -287,6 +287,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "retrieve_logs")
     case .qrScanInformativeText:
       bundle.localizedString(forKey: "qr_scan_informative_text")
+    case .unableToPresentAndShare:
+      bundle.localizedString(forKey: "error_unable_present_documents")
     }
   }
 
@@ -296,7 +298,7 @@ public final class LocalizableString: LocalizableStringType {
 }
 
 public extension LocalizableString {
-  enum Key: Equatable {
+  enum Key: Equatable, Sendable {
     case dynamic(key: String)
     case custom(String)
     case space
@@ -423,6 +425,7 @@ public extension LocalizableString {
     case defferedDocumentsIssuedModalCaption
     case retrieveLogs
     case qrScanInformativeText
+    case unableToPresentAndShare
   }
 }
 

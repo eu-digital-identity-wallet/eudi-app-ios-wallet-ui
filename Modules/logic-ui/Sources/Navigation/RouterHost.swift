@@ -13,20 +13,21 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+
 public protocol RouterHost {
-  func push(with route: AppRoute)
-  func popTo(with route: AppRoute, inclusive: Bool, animated: Bool)
-  func pop(animated: Bool)
-  func pop()
-  func popTo(with route: AppRoute, inclusive: Bool)
-  func popTo(with route: AppRoute)
+  @MainActor func push(with route: AppRoute)
+  @MainActor func popTo(with route: AppRoute, inclusive: Bool, animated: Bool)
+  @MainActor func pop(animated: Bool)
+  @MainActor func pop()
+  @MainActor func popTo(with route: AppRoute, inclusive: Bool)
+  @MainActor func popTo(with route: AppRoute)
   @MainActor func composeApplication() -> AnyView
-  func getCurrentScreen() -> AppRoute?
-  func getToolbarConfig() -> UIConfig.ToolBar
-  func userIsLoggedInWithDocuments() -> Bool
-  func userIsLoggedInWithNoDocuments() -> Bool
-  func isScreenForeground(with route: AppRoute) -> Bool
-  func isScreenOnBackStack(with route: AppRoute) -> Bool
+  @MainActor func getCurrentScreen() -> AppRoute?
+  @MainActor func getToolbarConfig() -> UIConfig.ToolBar
+  @MainActor func userIsLoggedInWithDocuments() -> Bool
+  @MainActor func userIsLoggedInWithNoDocuments() -> Bool
+  @MainActor func isScreenForeground(with route: AppRoute) -> Bool
+  @MainActor func isScreenOnBackStack(with route: AppRoute) -> Bool
 }
 
 public final class PreviewRouter: RouterHost {

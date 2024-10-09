@@ -19,7 +19,7 @@ public enum AppBuildType: String {
   case RELEASE, DEBUG
 }
 
-public protocol ConfigLogic {
+public protocol ConfigLogic: Sendable {
 
   /**
    * Wallet base url for direct network operation.

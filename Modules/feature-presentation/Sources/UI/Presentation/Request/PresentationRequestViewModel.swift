@@ -32,7 +32,12 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
   override func doWork() async {
     self.onStartLoading()
-    switch await interactor.onDeviceEngagement() {
+
+    let result = await Task.detached { () -> Result<OnlineAuthenticationRequestSuccessModel, Error> in
+      return await self.interactor.onDeviceEngagement()
+    }.value
+
+    switch result {
     case .success(let authenticationRequest):
       self.onReceivedItems(
         with: authenticationRequest.requestDataCells,
@@ -46,48 +51,53 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   override func onShare() {
-    Task { [weak self] in
-      guard
-        let items = self?.viewState.items,
-        let response = await self?.interactor.onResponsePrepare(requestItems: items)
-      else {
-        return
-      }
-      switch response {
+    Task {
+
+      let items = self.viewState.items
+
+      let result = await Task.detached { () -> Result<RequestItemConvertible, Error> in
+        return await self.interactor.onResponsePrepare(requestItems: items)
+      }.value
+
+      switch result {
       case .success:
-        if let route = self?.getSuccessRoute() {
-          self?.router.push(with: route)
+        if let route = self.getSuccessRoute() {
+          self.router.push(with: route)
         } else {
-          self?.router.popTo(with: self?.getPopRoute() ?? .featureDashboardModule(.dashboard))
+          self.router.popTo(with: self.getPopRoute() ?? .featureDashboardModule(.dashboard))
         }
       case .failure(let error):
-        self?.onError(with: error)
+        self.onError(with: error)
       }
     }
   }
 
   override func getSuccessRoute() -> AppRoute? {
-    .featureCommonModule(
-      .biometry(
-        config: UIConfig.Biometry(
-          title: getTitle(),
-          caption: .requestDataShareBiometryCaption,
-          quickPinOnlyCaption: .requestDataShareQuickPinCaption,
-          navigationSuccessType: .push(
-            .featurePresentationModule(
-              .presentationLoader(
-                getRelyingParty(),
-                presentationCoordinator: interactor.presentationCoordinator,
-                originator: getOriginator()
-              )
+    return switch interactor.getCoordinator() {
+    case .success(let remoteSessionCoordinator):
+        .featureCommonModule(
+          .biometry(
+            config: UIConfig.Biometry(
+              title: getTitle(),
+              caption: .requestDataShareBiometryCaption,
+              quickPinOnlyCaption: .requestDataShareQuickPinCaption,
+              navigationSuccessType: .push(
+                .featurePresentationModule(
+                  .presentationLoader(
+                    getRelyingParty(),
+                    presentationCoordinator: remoteSessionCoordinator,
+                    originator: getOriginator()
+                  )
+                )
+              ),
+              navigationBackType: .pop,
+              isPreAuthorization: false,
+              shouldInitializeBiometricOnCreate: true
             )
-          ),
-          navigationBackType: .pop,
-          isPreAuthorization: false,
-          shouldInitializeBiometricOnCreate: true
+          )
         )
-      )
-    )
+    case .failure: nil
+    }
   }
 
   override func getPopRoute() -> AppRoute? {
@@ -123,7 +133,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   func handleDeepLinkNotification(with info: [AnyHashable: Any]) {
-    guard let session = info["session"] as? PresentationSessionCoordinator else {
+    guard let session = info["session"] as? RemoteSessionCoordinator else {
       return
     }
     resetState()

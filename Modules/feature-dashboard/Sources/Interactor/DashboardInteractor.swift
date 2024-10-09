@@ -19,26 +19,26 @@ import logic_business
 import logic_resources
 import Combine
 
-public enum DashboardPartialState {
+public enum DashboardPartialState: ThreadSafePartialState {
   case success(BearerUIModel, [DocumentUIModel], Bool)
   case failure(Error)
 }
 
-public enum DashboardDeleteDeferredPartialState {
+public enum DashboardDeleteDeferredPartialState: ThreadSafePartialState {
   case success
   case noDocuments
   case failure(Error)
 }
 
-public enum DashboardDeferredPartialState {
+public enum DashboardDeferredPartialState: ThreadSafePartialState {
   case completion(issued: [DocumentUIModel], failed: [String])
   case cancelled
 }
 
-public protocol DashboardInteractor {
+public protocol DashboardInteractor: ThreadSafeInteractor {
   func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState
   func getBleAvailability() async -> Reachability.BleAvailibity
-  func openBleSettings()
+  @MainActor func openBleSettings()
   func getAppVersion() -> String
   func hasIssuedDocuments() -> Bool
   func hasDeferredDocuments() -> Bool
@@ -53,7 +53,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
   private let reachabilityController: ReachabilityController
   private let configLogic: ConfigLogic
 
-  private lazy var cancellables = Set<AnyCancellable>()
+  private let sendableAnyCancellable: SendableAnyCancellable = .init()
 
   init(
     walletController: WalletKitController,
@@ -63,6 +63,10 @@ final class DashboardInteractorImpl: DashboardInteractor {
     self.walletController = walletController
     self.reachabilityController = reachabilityController
     self.configLogic = configLogic
+  }
+
+  deinit {
+    sendableAnyCancellable.cancel()
   }
 
   func hasIssuedDocuments() -> Bool {
@@ -89,7 +93,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
     return await withCheckedContinuation { cont in
       reachabilityController.getBleAvailibity()
         .sink { cont.resume(returning: $0)}
-        .store(in: &cancellables)
+        .store(in: &sendableAnyCancellable.cancellables)
     }
   }
 

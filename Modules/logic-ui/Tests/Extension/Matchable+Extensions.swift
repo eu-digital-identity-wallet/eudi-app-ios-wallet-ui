@@ -17,8 +17,8 @@ import logic_business
 import logic_ui
 import Cuckoo
 
-extension Prefs.Key: Matchable {}
+extension Prefs.Key: @retroactive Matchable {}
 
 extension AppRoute: Matchable {}
 
-extension URLComponents: Matchable {}
+extension URLComponents: @retroactive Matchable {}

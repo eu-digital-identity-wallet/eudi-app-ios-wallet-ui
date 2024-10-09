@@ -15,7 +15,7 @@
  */
 import SwiftUI
 
-public protocol ShapeManagerProtocol {
+public protocol ShapeManagerProtocol: Sendable {
   var none: CGFloat { get }
   var extraSmall: CGFloat { get }
   var small: CGFloat { get }
@@ -34,16 +34,16 @@ public protocol ShapeManagerProtocol {
 
 final class ShapeManager: ShapeManagerProtocol {
 
-  public var none: CGFloat = 0
-  public var extraSmall: CGFloat = 8
-  public var small: CGFloat = 16
-  public var medium: CGFloat = 18
-  public var large: CGFloat = 20
-  public var extraLarge: CGFloat = 24
-  public var xxLarge: CGFloat = 32
-  public var xxxLarge: CGFloat = 48
-  public var xxxxLarge: CGFloat = 56
-  public var full: CGFloat = .infinity
+  public let none: CGFloat = 0
+  public let extraSmall: CGFloat = 8
+  public let small: CGFloat = 16
+  public let medium: CGFloat = 18
+  public let large: CGFloat = 20
+  public let extraLarge: CGFloat = 24
+  public let xxLarge: CGFloat = 32
+  public let xxxLarge: CGFloat = 48
+  public let xxxxLarge: CGFloat = 56
+  public let full: CGFloat = .infinity
 
   public var lowCornerRadius: AnyShape {
     .init(

@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -37,6 +37,10 @@ let package = Package(
       url: "https://github.com/Swinject/Swinject.git",
       from: "2.8.4"
     ),
+    .package(
+      name: "macro-copyable",
+      path: "./macro-copyable"
+    ),
     .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
@@ -54,6 +58,10 @@ let package = Package(
         .product(
           name: "libPhoneNumber",
           package: "libPhoneNumber-iOS"
+        ),
+        .product(
+          name: "Copyable",
+          package: "macro-copyable"
         )
       ],
       path: "./Sources"

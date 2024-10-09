@@ -14,14 +14,14 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import logic_api
+import logic_business
 
-public enum FAQsPartialState {
+public enum FAQsPartialState: ThreadSafePartialState {
   case success([FAQUIModel])
   case failure(Error)
 }
 
-public protocol FAQsInteractor {
+public protocol FAQsInteractor: ThreadSafeInteractor {
   func fetchFAQs() async -> FAQsPartialState
 }
 

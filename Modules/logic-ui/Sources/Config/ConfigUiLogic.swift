@@ -15,10 +15,11 @@
  */
 import Foundation
 import logic_resources
+import logic_business
 
 public typealias AppRouteKey = String
 
-public protocol ConfigUiLogic {
+public protocol ConfigUiLogic: ThreadSafeProtocol {
 
   var dashboardRoute: AppRoute { get }
 

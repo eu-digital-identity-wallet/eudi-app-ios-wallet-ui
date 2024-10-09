@@ -20,6 +20,7 @@ import logic_business
 final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<Router> {
 
   private let interactor: ProximityInteractor
+  private var publisherTask: Task<Void, Error>?
 
   init(
     router: Router,
@@ -28,15 +29,12 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   ) {
     self.interactor = interactor
     super.init(router: router, originator: originator)
-
-    Task {
-      await self.subscribeToCoordinatorPublisher()
-    }
   }
 
   func subscribeToCoordinatorPublisher() async {
-    await interactor.getSessionStatePublisher()
-      .sink { state in
+    switch self.interactor.getSessionStatePublisher() {
+    case .success(let publisher):
+      for try await state in publisher {
         switch state {
         case .error(let error):
           self.onError(with: error)
@@ -44,12 +42,21 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
           ()
         }
       }
-      .store(in: &cancellables)
+    case .failure(let error):
+      self.onError(with: error)
+    }
   }
 
   override func doWork() async {
+
     self.onStartLoading()
-    switch await interactor.onRequestReceived() {
+    self.startPublisherTask()
+
+    let state = await Task.detached { () -> ProximityRequestPartialState in
+      return await self.interactor.onRequestReceived()
+    }.value
+
+    switch state {
     case .success(let items, let relyingParty, _, let isTrusted):
       self.onReceivedItems(
         with: items,
@@ -63,51 +70,58 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   }
 
   override func onShare() {
-    Task { [weak self] in
-      guard
-        let items = self?.viewState.items,
-        let response = await self?.interactor.onResponsePrepare(requestItems: items)
-      else {
-        return
-      }
+    Task {
+
+      let items = self.viewState.items
+
+      let response = await Task.detached { () -> ProximityResponsePreparationPartialState in
+        return await self.interactor.onResponsePrepare(requestItems: items)
+      }.value
+
       switch response {
       case .success:
-        if let route = self?.getSuccessRoute() {
-          self?.router.push(with: route)
+        if let route = self.getSuccessRoute() {
+          self.router.push(with: route)
         } else {
-          self?.router.pop()
+          self.router.pop()
         }
       case .failure(let error):
-        self?.onError(with: error)
+        self.onError(with: error)
       }
     }
   }
 
   override func getSuccessRoute() -> AppRoute? {
-    .featureCommonModule(
-      .biometry(
-        config: UIConfig.Biometry(
-          title: getTitle(),
-          caption: .requestDataShareBiometryCaption,
-          quickPinOnlyCaption: .requestDataShareQuickPinCaption,
-          navigationSuccessType: .push(
-            .featureProximityModule(
-              .proximityLoader(
-                getRelyingParty(),
-                presentationCoordinator: interactor.presentationSessionCoordinator,
-                originator: getOriginator()
-              )
+    publisherTask?.cancel()
+    return switch interactor.getCoordinator() {
+    case .success(let proximitySessionCoordinator):
+        .featureCommonModule(
+          .biometry(
+            config: UIConfig.Biometry(
+              title: getTitle(),
+              caption: .requestDataShareBiometryCaption,
+              quickPinOnlyCaption: .requestDataShareQuickPinCaption,
+              navigationSuccessType: .push(
+                .featureProximityModule(
+                  .proximityLoader(
+                    getRelyingParty(),
+                    presentationCoordinator: proximitySessionCoordinator,
+                    originator: getOriginator()
+                  )
+                )
+              ),
+              navigationBackType: .pop,
+              isPreAuthorization: false,
+              shouldInitializeBiometricOnCreate: true
             )
-          ),
-          navigationBackType: .pop,
-          isPreAuthorization: false,
-          shouldInitializeBiometricOnCreate: true
+          )
         )
-      )
-    )
+    case .failure: nil
+    }
   }
 
   override func getPopRoute() -> AppRoute? {
+    publisherTask?.cancel()
     return getOriginator()
   }
 
@@ -137,5 +151,16 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
 
   override func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
     .requestDataVerifiedEntityMessage
+  }
+
+  private func startPublisherTask() {
+    if publisherTask == nil || publisherTask?.isCancelled == true {
+      publisherTask = Task {
+        await self.subscribeToCoordinatorPublisher()
+      }
+      Task {
+        try? await self.publisherTask?.value
+      }
+    }
   }
 }

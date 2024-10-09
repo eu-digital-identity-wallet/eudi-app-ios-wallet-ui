@@ -20,15 +20,20 @@
 public struct BaseLoadingState: ViewState {
   let error: ContentErrorView.Config?
   let originator: AppRoute
+  let isCancellable: Bool
 }
 
-open class BaseLoadingViewModel<Router: RouterHost>: BaseViewModel<Router, BaseLoadingState> {
+open class BaseLoadingViewModel<Router: RouterHost>: ViewModel<Router, BaseLoadingState> {
 
-  public init(router: Router, originator: AppRoute) {
+  public init(router: Router, originator: AppRoute, cancellationTimeout: Double = 0.0) {
     super.init(
       router: router,
-      initialState: .init(error: nil, originator: originator)
+      initialState: .init(error: nil, originator: originator, isCancellable: cancellationTimeout <= 0)
     )
+
+    if cancellationTimeout > 0 {
+      setCancellationWithTimeout(cancellationTimeout)
+    }
   }
 
   open func getTitle() -> LocalizableString.Key {
@@ -71,6 +76,14 @@ open class BaseLoadingViewModel<Router: RouterHost>: BaseViewModel<Router, BaseL
           action: { self.onErrorAction() }
         )
       )
+    }
+  }
+
+  private func setCancellationWithTimeout(_ timeout: Double) {
+    setState { $0.copy(isCancellable: false) }
+    Task { [weak self] in
+      try? await Task.sleep(seconds: timeout)
+      self?.setState { $0.copy(isCancellable: true) }
     }
   }
 

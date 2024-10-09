@@ -14,78 +14,92 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import logic_api
 import logic_core
 import logic_business
 import feature_common
 
-public enum ProximityResponsePartialState {
-  case success
+public enum ProximityResponsePartialState: ThreadSafePartialState {
+  case sent
   case failure(Error)
 }
 
-public enum ProximityResponsePreparationPartialState {
+public enum ProximityResponsePreparationPartialState: ThreadSafePartialState {
   case success(RequestItemConvertible)
   case failure(Error)
 }
 
-public enum ProximityRequestPartialState {
+public enum ProximityRequestPartialState: ThreadSafePartialState {
   case success([RequestDataUIModel], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
   case failure(Error)
 }
 
-public enum ProximityInitialisationPartialState {
-  case success
-  case failure(Error)
-}
-
-public enum ProximityQrCodePartialState {
+public enum ProximityQrCodePartialState: ThreadSafePartialState {
   case success(UIImage)
   case failure(Error)
 }
 
-public protocol ProximityInteractor {
+public enum ProximityPublisherPartialState: ThreadSafePartialState {
+  case success(AsyncStream<PresentationState>)
+  case failure(Error)
+}
 
-  var presentationSessionCoordinator: PresentationSessionCoordinator { get }
+public enum ProximityCoordinatorPartialState: ThreadSafePartialState {
+  case success(ProximitySessionCoordinator)
+  case failure(Error)
+}
 
-  func getSessionStatePublisher() async -> AnyPublisher<PresentationState, Never>
+public protocol ProximityInteractor: ThreadSafeInteractor {
 
-  func onDeviceEngagement() async -> ProximityInitialisationPartialState
+  func getSessionStatePublisher() -> ProximityPublisherPartialState
+  func getCoordinator() -> ProximityCoordinatorPartialState
+
+  func onDeviceEngagement() async
   func onQRGeneration() async -> ProximityQrCodePartialState
   func onRequestReceived() async -> ProximityRequestPartialState
   func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> ProximityResponsePreparationPartialState
   func onSendResponse() async -> ProximityResponsePartialState
-  func stopPresentation() async
+  func stopPresentation()
 
 }
 
 final class ProximityInteractorImpl: ProximityInteractor {
 
   private let walletKitController: WalletKitController
-  public let presentationSessionCoordinator: PresentationSessionCoordinator
+  private let sessionCoordinatorHolder: SessionCoordinatorHolder
 
   init(
-    with presentationSessionCoordinator: PresentationSessionCoordinator,
-    and walletKitController: WalletKitController
+    with presentationSessionCoordinator: ProximitySessionCoordinator,
+    and walletKitController: WalletKitController,
+    also sessionCoordinatorHolder: SessionCoordinatorHolder
   ) {
-    self.presentationSessionCoordinator = presentationSessionCoordinator
     self.walletKitController = walletKitController
+    self.sessionCoordinatorHolder = sessionCoordinatorHolder
+    self.sessionCoordinatorHolder.setActiveProximityCoordinator(presentationSessionCoordinator)
   }
 
-  public func getSessionStatePublisher() async -> AnyPublisher<PresentationState, Never> {
-    presentationSessionCoordinator
-      .presentationStateSubject
-      .eraseToAnyPublisher()
+  func getCoordinator() -> ProximityCoordinatorPartialState {
+    do {
+      return .success(try sessionCoordinatorHolder.getActiveProximityCoordinator())
+    } catch {
+      return .failure(error)
+    }
   }
 
-  public func onDeviceEngagement() async -> ProximityInitialisationPartialState {
-    await presentationSessionCoordinator.initialize()
-    return .success
+  public func getSessionStatePublisher() -> ProximityPublisherPartialState {
+    do {
+      return .success(try sessionCoordinatorHolder.getActiveProximityCoordinator().getStream())
+    } catch {
+      return .failure(error)
+    }
+  }
+
+  public func onDeviceEngagement() async {
+    try? await sessionCoordinatorHolder.getActiveProximityCoordinator().initialize()
   }
 
   public func onQRGeneration() async -> ProximityQrCodePartialState {
     do {
-      let qrImage = try await self.presentationSessionCoordinator.startQrEngagement()
+      let qrImage = try await self.sessionCoordinatorHolder.getActiveProximityCoordinator().startQrEngagement()
       return .success(qrImage)
     } catch {
       return .failure(error)
@@ -95,7 +109,7 @@ final class ProximityInteractorImpl: ProximityInteractor {
 
   public func onRequestReceived() async -> ProximityRequestPartialState {
     do {
-      let response = try await presentationSessionCoordinator.requestReceived()
+      let response = try await sessionCoordinatorHolder.getActiveProximityCoordinator().requestReceived()
       return .success(
         RequestDataUiModel.items(
           for: response.items,
@@ -131,24 +145,27 @@ final class ProximityInteractorImpl: ProximityInteractor {
       return .failure(PresentationSessionError.conversionToRequestItemModel)
     }
 
-    self.presentationSessionCoordinator.setState(presentationState: .responseToSend(requestConvertible))
+    do {
+      try self.sessionCoordinatorHolder.getActiveProximityCoordinator().setState(presentationState: .responseToSend(requestConvertible))
+    } catch {
+      return .failure(error)
+    }
 
     return .success(requestConvertible.asRequestItems())
   }
 
   public func onSendResponse() async -> ProximityResponsePartialState {
 
-    guard case PresentationState.responseToSend(let responseItem) = await presentationSessionCoordinator.getState() else {
+    guard
+      let state = try? await sessionCoordinatorHolder.getActiveProximityCoordinator().getState(),
+      case PresentationState.responseToSend(let responseItem) = state
+    else {
       return .failure(PresentationSessionError.invalidState)
     }
 
     do {
-      try await presentationSessionCoordinator.sendResponse(
-        response: responseItem,
-        onSuccess: nil,
-        onCancel: nil
-      )
-      return .success
+      try await sessionCoordinatorHolder.getActiveProximityCoordinator().sendResponse(response: responseItem)
+      return .sent
     } catch {
       return .failure(error)
     }
@@ -156,5 +173,6 @@ final class ProximityInteractorImpl: ProximityInteractor {
 
   public func stopPresentation() {
     walletKitController.stopPresentation()
+    try? sessionCoordinatorHolder.getActiveProximityCoordinator().stopPresentation()
   }
 }

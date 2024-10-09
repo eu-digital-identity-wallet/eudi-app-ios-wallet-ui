@@ -30,7 +30,9 @@ public struct BaseLoadingView<Router: RouterHost>: View {
 
       ContentHeaderView(
         dismissIcon: Theme.shared.image.xmark,
-        onBack: { viewModel.onNavigate(type: .pop) }
+        onBack: viewModel.viewState.isCancellable
+        ? { viewModel.onNavigate(type: .pop) }
+        : nil
       )
 
       ContentTitleView(

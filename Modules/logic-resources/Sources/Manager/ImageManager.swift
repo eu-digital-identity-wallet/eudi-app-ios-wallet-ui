@@ -16,7 +16,7 @@
 
 import SwiftUI
 
-public protocol ImageManagerProtocol {
+public protocol ImageManagerProtocol: Sendable {
   var logo: Image { get }
   var faceId: Image { get }
   var id: Image { get }
@@ -96,7 +96,7 @@ final class ImageManager: ImageManagerProtocol {
 
   // MARK: - Properties
 
-  var bundle: Bundle
+  let bundle: Bundle
   // MARK: - Lifecycle
 
   init(bundle: Bundle) {

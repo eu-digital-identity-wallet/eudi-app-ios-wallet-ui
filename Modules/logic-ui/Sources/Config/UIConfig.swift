@@ -16,8 +16,9 @@
 
 import Foundation
 import logic_resources
+import logic_business
 
-public protocol UIConfigType {
+public protocol UIConfigType: ThreadSafeProtocol {
   var log: String { get }
 }
 
@@ -30,10 +31,10 @@ public struct NoConfig: UIConfigType, Equatable {
   public init() {}
 }
 
-public struct UIConfig {}
+public struct UIConfig: ThreadSafeObject {}
 
 public extension UIConfig {
-  struct ToolBar: Equatable {
+  struct ToolBar: Equatable, ThreadSafeObject {
 
     public let backgroundColor: Color
 
@@ -44,7 +45,7 @@ public extension UIConfig {
 }
 
 public extension UIConfig {
-  enum TwoWayNavigationType: Equatable {
+  enum TwoWayNavigationType: Equatable, ThreadSafeObject {
 
     case popTo(AppRoute)
     case push(AppRoute)
@@ -59,7 +60,7 @@ public extension UIConfig {
     }
   }
 
-  enum ThreeWayNavigationType: Equatable {
+  enum ThreeWayNavigationType: Equatable, ThreadSafeObject {
     case popTo(AppRoute)
     case pop
     case push(AppRoute)
@@ -76,7 +77,7 @@ public extension UIConfig {
     }
   }
 
-  enum DeepLinkNavigationType: Equatable {
+  enum DeepLinkNavigationType: Equatable, ThreadSafeObject {
 
     case pop(screen: AppRoute, inclusive: Bool = false)
     case push(screen: AppRoute)

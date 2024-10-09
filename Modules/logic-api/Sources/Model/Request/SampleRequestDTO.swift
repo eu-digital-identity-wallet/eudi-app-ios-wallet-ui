@@ -14,7 +14,8 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import logic_business
 
-public struct SampleRequestDTO: Encodable, Equatable {
+public struct SampleRequestDTO: Encodable, Equatable, ThreadSafeObject {
 
 }

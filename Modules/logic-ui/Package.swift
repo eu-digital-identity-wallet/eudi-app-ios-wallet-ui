@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -28,10 +28,6 @@ let package = Package(
     .package(
       name: "logic-resources",
       path: "./logic-resources"
-    ),
-    .package(
-      name: "macro-copyable",
-      path: "./macro-copyable"
     ),
     .package(
       url: "https://github.com/canopas/UIPilot.git",
@@ -87,10 +83,6 @@ let package = Package(
         .product(
           name: "Shimmer",
           package: "SwiftUI-Shimmer"
-        ),
-        .product(
-          name: "Copyable",
-          package: "macro-copyable"
         )
       ],
       path: "./Sources"

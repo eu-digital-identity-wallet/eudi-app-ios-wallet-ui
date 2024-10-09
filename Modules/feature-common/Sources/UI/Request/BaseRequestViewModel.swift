@@ -33,7 +33,7 @@ public struct RequestViewState: ViewState {
   public let initialized: Bool
 }
 
-open class BaseRequestViewModel<Router: RouterHost>: BaseViewModel<Router, RequestViewState> {
+open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestViewState> {
 
   @Published var isCancelModalShowing: Bool = false
   @Published var isRequestInfoModalShowing: Bool = false

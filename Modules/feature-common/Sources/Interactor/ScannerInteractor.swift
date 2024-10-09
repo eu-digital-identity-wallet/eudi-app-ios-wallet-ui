@@ -16,11 +16,11 @@
 import logic_business
 import logic_core
 
-public protocol ScannerInteractor: FormValidatorInteractor {
-  func startCrossDevicePresentation(scanResult: String) -> PresentationSessionCoordinator
+public protocol ScannerInteractor: FormValidatorInteractor, ThreadSafeInteractor {
+  func startCrossDevicePresentation(scanResult: String) -> RemoteSessionCoordinator
 }
 
-class ScannerInteractorImpl: ScannerInteractor {
+final class ScannerInteractorImpl: ScannerInteractor {
 
   private let formValidator: FormValidator
   private let walletKitController: WalletKitController
@@ -38,7 +38,7 @@ class ScannerInteractorImpl: ScannerInteractor {
     return await formValidator.validateForms(forms: forms)
   }
 
-  func startCrossDevicePresentation(scanResult: String) -> PresentationSessionCoordinator {
+  func startCrossDevicePresentation(scanResult: String) -> RemoteSessionCoordinator {
     return walletKitController.startCrossDevicePresentation(
       urlString: scanResult
     )

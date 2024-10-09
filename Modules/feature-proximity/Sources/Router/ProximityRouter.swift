@@ -15,6 +15,7 @@
  */
 import logic_ui
 import logic_business
+import logic_core
 
 @MainActor
 public final class ProximityRouter {
@@ -30,7 +31,7 @@ public final class ProximityRouter {
           router: host,
           interactor: DIGraph.resolver.force(
             ProximityInteractor.self,
-            argument: presentationCoordinator
+            argument: presentationCoordinator as ProximitySessionCoordinator
           ),
           originator: originator
         )
@@ -44,7 +45,7 @@ public final class ProximityRouter {
           router: host,
           interactor: DIGraph.resolver.force(
             ProximityInteractor.self,
-            argument: presentationCoordinator
+            argument: presentationCoordinator as ProximitySessionCoordinator
           ),
           originator: originator
         )
@@ -59,7 +60,7 @@ public final class ProximityRouter {
           router: host,
           interactor: DIGraph.resolver.force(
             ProximityInteractor.self,
-            argument: presentationCoordinator
+            argument: presentationCoordinator as ProximitySessionCoordinator
           ),
           relyingParty: relyingParty,
           originator: originator
