@@ -80,7 +80,7 @@ final class TestDeepLinkController: EudiTest {
     XCTAssertNil(action)
   }
   
-  func testHandleDeepLinkAction_WhenRouterReturnsPreAuthorizationFlow_ThenValidateCachingOfDeepLink() {
+  func testHandleDeepLinkAction_WhenRouterReturnsPreAuthorizationFlow_ThenValidateCachingOfDeepLink() async {
     // Given
     stub(prefsController) { mock in
       when(mock.setValue(any(), forKey: Prefs.Key.cachedDeepLink)).thenDoNothing()
@@ -92,15 +92,15 @@ final class TestDeepLinkController: EudiTest {
       when(mock.userIsLoggedInWithDocuments()).thenReturn(false)
     }
     // When
-    controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: Self.mockedOpenId4VPDeepLinkAction)
+    await controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: Self.mockedOpenId4VPDeepLinkAction)
     // Then
     verify(prefsController).setValue(any(), forKey: Prefs.Key.cachedDeepLink)
     verify(prefsController, times(0)).remove(forKey: Prefs.Key.cachedDeepLink)
   }
   
-  func testHandleDeepLinkAction_WhenRouterReturnsAfterAuthorizationFlowAndActionIsOpenId4VPAndScreenNotForeground_ThenValidateCachingRemovalAndExecutionOfNavigation() {
+  func testHandleDeepLinkAction_WhenRouterReturnsAfterAuthorizationFlowAndActionIsOpenId4VPAndScreenNotForeground_ThenValidateCachingRemovalAndExecutionOfNavigation() async {
     // Given
-    let sessionCoordinator = RemoteSessionCoordinator(
+    let sessionCoordinator = RemoteSessionCoordinatorImpl(
       session: Self.mockPresentationSession
     )
     let appRoute = AppRoute.featurePresentationModule(.presentationRequest(presentationCoordinator: sessionCoordinator, originator: .featureDashboardModule(.dashboard)))
@@ -115,7 +115,7 @@ final class TestDeepLinkController: EudiTest {
     )
     
     // When
-    controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: pendingAction)
+    await controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: pendingAction)
     // Then
     verify(prefsController, times(0)).setValue(any(), forKey: Prefs.Key.cachedDeepLink)
     verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
@@ -123,9 +123,9 @@ final class TestDeepLinkController: EudiTest {
     verify(routerHost).push(with: appRoute)
   }
   
-  func testHandleDeepLinkAction_WhenRouterReturnsAfterAuthorizationFlowAndActionIsOpenId4VPAndScreenIsForeground_ThenValidateCachingRemovalAndRouteNil() {
+  func testHandleDeepLinkAction_WhenRouterReturnsAfterAuthorizationFlowAndActionIsOpenId4VPAndScreenIsForeground_ThenValidateCachingRemovalAndRouteNil() async {
     // Given
-    let sessionCoordinator = RemoteSessionCoordinator(
+    let sessionCoordinator = RemoteSessionCoordinatorImpl(
       session: Self.mockPresentationSession
     )
     let pendingAction = Self.mockedOpenId4VPDeepLinkAction
@@ -139,7 +139,7 @@ final class TestDeepLinkController: EudiTest {
     )
     
     // When
-    controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: pendingAction)
+    await controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: pendingAction)
     // Then
     verify(prefsController, times(0)).setValue(any(), forKey: Prefs.Key.cachedDeepLink)
     verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
@@ -147,7 +147,7 @@ final class TestDeepLinkController: EudiTest {
     verify(routerHost, times(0)).push(with: any())
   }
   
-  func testHandleDeepLinkAction_WhenRouterReturnsAfterAuthorizationFlowAndActionIsExternal_ThenValidateCachingRemovalAndNoInvocationOfRouter() {
+  func testHandleDeepLinkAction_WhenRouterReturnsAfterAuthorizationFlowAndActionIsExternal_ThenValidateCachingRemovalAndNoInvocationOfRouter() async {
     // Given
     let pendingAction = Self.mockedExternalDeepLinkAction
     
@@ -160,7 +160,7 @@ final class TestDeepLinkController: EudiTest {
     )
     
     // When
-    controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: pendingAction)
+    await controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: pendingAction)
     // Then
     verify(prefsController, times(0)).setValue(any(), forKey: Prefs.Key.cachedDeepLink)
     verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
@@ -221,7 +221,7 @@ final class TestDeepLinkController: EudiTest {
 private extension TestDeepLinkController {
   
   func stubHandleDeepLink(
-    coordinator: PresentationSessionCoordinator?,
+    coordinator: RemoteSessionCoordinator?,
     action: DeepLink.Executable,
     route: AppRoute?,
     isAfterAuth: Bool,

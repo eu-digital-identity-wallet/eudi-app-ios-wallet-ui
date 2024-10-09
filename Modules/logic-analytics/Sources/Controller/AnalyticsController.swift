@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-public protocol AnalyticsController {
+public protocol AnalyticsController: Sendable {
   func initialize()
   func logScreen(screen: String, arguments: [String: String])
   func logEvent(event: String, arguments: [String: String])

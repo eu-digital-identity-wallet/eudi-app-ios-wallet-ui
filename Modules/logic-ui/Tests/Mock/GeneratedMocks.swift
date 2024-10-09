@@ -6,7 +6,7 @@ import Cuckoo
 @testable import logic_analytics
 @testable import logic_ui
 
-class MockAnalyticsConfig: AnalyticsConfig, Cuckoo.ProtocolMock {
+class MockAnalyticsConfig: AnalyticsConfig, Cuckoo.ProtocolMock, @unchecked Sendable {
     typealias MocksType = AnalyticsConfig
     typealias Stubbing = __StubbingProxy_AnalyticsConfig
     typealias Verification = __VerificationProxy_AnalyticsConfig
@@ -62,7 +62,7 @@ class MockAnalyticsConfig: AnalyticsConfig, Cuckoo.ProtocolMock {
     }
 }
 
-class AnalyticsConfigStub:AnalyticsConfig {
+class AnalyticsConfigStub:AnalyticsConfig, @unchecked Sendable {
     
     var analyticsProviders: [String: AnalyticsProvider] {
         get {
@@ -84,7 +84,7 @@ import Cuckoo
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockAnalyticsController: AnalyticsController, Cuckoo.ProtocolMock {
+public class MockAnalyticsController: AnalyticsController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = AnalyticsController
     public typealias Stubbing = __StubbingProxy_AnalyticsController
     public typealias Verification = __VerificationProxy_AnalyticsController
@@ -212,7 +212,7 @@ public class MockAnalyticsController: AnalyticsController, Cuckoo.ProtocolMock {
     }
 }
 
-public class AnalyticsControllerStub:AnalyticsController {
+public class AnalyticsControllerStub:AnalyticsController, @unchecked Sendable {
 
 
     
@@ -253,7 +253,7 @@ import Cuckoo
 @testable import logic_analytics
 @testable import logic_ui
 
-class MockAnalyticsProvider: AnalyticsProvider, Cuckoo.ProtocolMock {
+class MockAnalyticsProvider: AnalyticsProvider, Cuckoo.ProtocolMock, @unchecked Sendable {
     typealias MocksType = AnalyticsProvider
     typealias Stubbing = __StubbingProxy_AnalyticsProvider
     typealias Verification = __VerificationProxy_AnalyticsProvider
@@ -381,7 +381,7 @@ class MockAnalyticsProvider: AnalyticsProvider, Cuckoo.ProtocolMock {
     }
 }
 
-class AnalyticsProviderStub:AnalyticsProvider {
+class AnalyticsProviderStub:AnalyticsProvider, @unchecked Sendable {
 
 
     
@@ -420,7 +420,7 @@ import Foundation
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
+public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ConfigLogic
     public typealias Stubbing = __StubbingProxy_ConfigLogic
     public typealias Verification = __VerificationProxy_ConfigLogic
@@ -512,7 +512,7 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
     }
 }
 
-public class ConfigLogicStub:ConfigLogic {
+public class ConfigLogicStub:ConfigLogic, @unchecked Sendable {
     
     public var walletHostUrl: String {
         get {
@@ -548,7 +548,7 @@ import KeychainAccess
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock {
+public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = KeychainWrapper
     public typealias Stubbing = __StubbingProxy_KeychainWrapper
     public typealias Verification = __VerificationProxy_KeychainWrapper
@@ -604,7 +604,7 @@ public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock {
     }
 }
 
-public class KeychainWrapperStub:KeychainWrapper {
+public class KeychainWrapperStub:KeychainWrapper, @unchecked Sendable {
     
     public var value: String {
         get {
@@ -616,7 +616,7 @@ public class KeychainWrapperStub:KeychainWrapper {
 }
 
 
-public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock {
+public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = KeyChainController
     public typealias Stubbing = __StubbingProxy_KeyChainController
     public typealias Verification = __VerificationProxy_KeyChainController
@@ -834,7 +834,7 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock {
     }
 }
 
-public class KeyChainControllerStub:KeyChainController {
+public class KeyChainControllerStub:KeyChainController, @unchecked Sendable {
 
 
     
@@ -875,7 +875,7 @@ import Foundation
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockPrefsController: PrefsController, Cuckoo.ProtocolMock {
+public class MockPrefsController: PrefsController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = PrefsController
     public typealias Stubbing = __StubbingProxy_PrefsController
     public typealias Verification = __VerificationProxy_PrefsController
@@ -1183,7 +1183,7 @@ public class MockPrefsController: PrefsController, Cuckoo.ProtocolMock {
     }
 }
 
-public class PrefsControllerStub:PrefsController {
+public class PrefsControllerStub:PrefsController, @unchecked Sendable {
 
 
     
@@ -1240,7 +1240,7 @@ import UIKit
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockReachabilityController: ReachabilityController, Cuckoo.ProtocolMock {
+public class MockReachabilityController: ReachabilityController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ReachabilityController
     public typealias Stubbing = __StubbingProxy_ReachabilityController
     public typealias Verification = __VerificationProxy_ReachabilityController
@@ -1368,7 +1368,7 @@ public class MockReachabilityController: ReachabilityController, Cuckoo.Protocol
     }
 }
 
-public class ReachabilityControllerStub:ReachabilityController {
+public class ReachabilityControllerStub:ReachabilityController, @unchecked Sendable {
 
 
     
@@ -1397,7 +1397,7 @@ import Swinject
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock {
+public class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = DIGraphType
     public typealias Stubbing = __StubbingProxy_DIGraphType
     public typealias Verification = __VerificationProxy_DIGraphType
@@ -1483,7 +1483,7 @@ public class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock {
     }
 }
 
-public class DIGraphTypeStub:DIGraphType {
+public class DIGraphTypeStub:DIGraphType, @unchecked Sendable {
     
     public var assembler: Assembler {
         get {
@@ -1670,7 +1670,7 @@ import libPhoneNumber
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock {
+public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = FormValidator
     public typealias Stubbing = __StubbingProxy_FormValidator
     public typealias Verification = __VerificationProxy_FormValidator
@@ -1768,7 +1768,7 @@ public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock {
     }
 }
 
-public class FormValidatorStub:FormValidator {
+public class FormValidatorStub:FormValidator, @unchecked Sendable {
 
 
     
@@ -1782,7 +1782,7 @@ public class FormValidatorStub:FormValidator {
 }
 
 
-public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.ProtocolMock {
+public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = FormValidatorInteractor
     public typealias Stubbing = __StubbingProxy_FormValidatorInteractor
     public typealias Verification = __VerificationProxy_FormValidatorInteractor
@@ -1880,7 +1880,7 @@ public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.Protoc
     }
 }
 
-public class FormValidatorInteractorStub:FormValidatorInteractor {
+public class FormValidatorInteractorStub:FormValidatorInteractor, @unchecked Sendable {
 
 
     
@@ -1926,7 +1926,7 @@ import Foundation
 @testable import logic_analytics
 @testable import logic_ui
 
-class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
+class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Sendable {
     typealias MocksType = WalletKitConfig
     typealias Stubbing = __StubbingProxy_WalletKitConfig
     typealias Verification = __VerificationProxy_WalletKitConfig
@@ -2054,7 +2054,7 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
     }
 }
 
-class WalletKitConfigStub:WalletKitConfig {
+class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
     
     var vciConfig: VciConfig {
         get {
@@ -2103,7 +2103,7 @@ import logic_resources
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
+public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = WalletKitController
     public typealias Stubbing = __StubbingProxy_WalletKitController
     public typealias Verification = __VerificationProxy_WalletKitController
@@ -2117,6 +2117,16 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
     public func enableDefaultImplementation(_ stub: any WalletKitController) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+    public var wallet: EudiWallet {
+        get {
+            return cuckoo_manager.getter(
+                "wallet",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.wallet
+            )
+        }
     }
 
     
@@ -2391,6 +2401,10 @@ return cuckoo_manager.call(
             self.cuckoo_manager = manager
         }
         
+        var wallet: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitController,EudiWallet> {
+            return .init(manager: cuckoo_manager, name: "wallet")
+        }
+        
         func startProximityPresentation() -> Cuckoo.ProtocolStubFunction<(), ProximitySessionCoordinator> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
@@ -2609,6 +2623,10 @@ return cuckoo_manager.call(
             self.cuckoo_manager = manager
             self.callMatcher = callMatcher
             self.sourceLocation = sourceLocation
+        }
+        
+        var wallet: Cuckoo.VerifyReadOnlyProperty<EudiWallet> {
+            return .init(manager: cuckoo_manager, name: "wallet", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         
@@ -2925,7 +2943,13 @@ return cuckoo_manager.call(
     }
 }
 
-public class WalletKitControllerStub:WalletKitController {
+public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
+    
+    public var wallet: EudiWallet {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (EudiWallet).self)
+        }
+    }
 
 
     
@@ -3080,7 +3104,7 @@ import UIKit
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockProximitySessionCoordinator: ProximitySessionCoordinator, Cuckoo.ProtocolMock {
+public class MockProximitySessionCoordinator: ProximitySessionCoordinator, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ProximitySessionCoordinator
     public typealias Stubbing = __StubbingProxy_ProximitySessionCoordinator
     public typealias Verification = __VerificationProxy_ProximitySessionCoordinator
@@ -3381,7 +3405,7 @@ return cuckoo_manager.call(
     }
 }
 
-public class ProximitySessionCoordinatorStub:ProximitySessionCoordinator {
+public class ProximitySessionCoordinatorStub:ProximitySessionCoordinator, @unchecked Sendable {
     
     public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> {
         get {
@@ -3441,7 +3465,7 @@ import UIKit
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.ProtocolMock {
+public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = RemoteSessionCoordinator
     public typealias Stubbing = __StubbingProxy_RemoteSessionCoordinator
     public typealias Verification = __VerificationProxy_RemoteSessionCoordinator
@@ -3682,7 +3706,7 @@ return cuckoo_manager.call(
     }
 }
 
-public class RemoteSessionCoordinatorStub:RemoteSessionCoordinator {
+public class RemoteSessionCoordinatorStub:RemoteSessionCoordinator, @unchecked Sendable {
     
     public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> {
         get {
@@ -3730,7 +3754,7 @@ import Cuckoo
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockSessionCoordinatorHolder: SessionCoordinatorHolder, Cuckoo.ProtocolMock {
+public class MockSessionCoordinatorHolder: SessionCoordinatorHolder, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = SessionCoordinatorHolder
     public typealias Stubbing = __StubbingProxy_SessionCoordinatorHolder
     public typealias Verification = __VerificationProxy_SessionCoordinatorHolder
@@ -3918,7 +3942,7 @@ public class MockSessionCoordinatorHolder: SessionCoordinatorHolder, Cuckoo.Prot
     }
 }
 
-public class SessionCoordinatorHolderStub:SessionCoordinatorHolder {
+public class SessionCoordinatorHolderStub:SessionCoordinatorHolder, @unchecked Sendable {
 
 
     
@@ -4090,7 +4114,7 @@ import Foundation
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockRequestItemConvertible: RequestItemConvertible, Cuckoo.ProtocolMock {
+public class MockRequestItemConvertible: RequestItemConvertible, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = RequestItemConvertible
     public typealias Stubbing = __StubbingProxy_RequestItemConvertible
     public typealias Verification = __VerificationProxy_RequestItemConvertible
@@ -4158,7 +4182,7 @@ public class MockRequestItemConvertible: RequestItemConvertible, Cuckoo.Protocol
     }
 }
 
-public class RequestItemConvertibleStub:RequestItemConvertible {
+public class RequestItemConvertibleStub:RequestItemConvertible, @unchecked Sendable {
 
 
     
@@ -4181,7 +4205,7 @@ import Copyable
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockViewState: ViewState, Cuckoo.ProtocolMock {
+public class MockViewState: ViewState, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ViewState
     public typealias Stubbing = __StubbingProxy_ViewState
     public typealias Verification = __VerificationProxy_ViewState
@@ -4219,148 +4243,9 @@ public class MockViewState: ViewState, Cuckoo.ProtocolMock {
     }
 }
 
-public class ViewStateStub:ViewState {
+public class ViewStateStub:ViewState, @unchecked Sendable {
 
 
-}
-
-
-class MockBaseViewModel<Router: RouterHost, UiState: ViewState>: BaseViewModel<Router, UiState>, Cuckoo.ClassMock {
-    typealias MocksType = BaseViewModel<Router, UiState>
-    typealias Stubbing = __StubbingProxy_BaseViewModel
-    typealias Verification = __VerificationProxy_BaseViewModel
-
-    // Original typealiases
-
-    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: true)
-
-    private var __defaultImplStub: BaseViewModel<Router, UiState>?
-
-    func enableDefaultImplementation(_ stub: BaseViewModel<Router, UiState>) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-    
-    public override var cancellables: Set<AnyCancellable> {
-        get {
-            return cuckoo_manager.getter(
-                "cancellables",
-                superclassCall: super.cancellables,
-                defaultCall: __defaultImplStub!.cancellables
-            )
-        }
-        set {
-            cuckoo_manager.setter(
-                "cancellables",
-                value: newValue,
-                superclassCall: super.cancellables = newValue,
-                defaultCall: __defaultImplStub!.cancellables = newValue
-            )
-        }
-    }
-    
-    public override var viewState: UiState {
-        get {
-            return cuckoo_manager.getter(
-                "viewState",
-                superclassCall: super.viewState,
-                defaultCall: __defaultImplStub!.viewState
-            )
-        }
-    }
-
-    
-    public override func setState(_ p0: (UiState) -> UiState) {
-        
-		return withoutActuallyEscaping(p0, do: { (p0: @escaping (UiState) -> UiState) in
-return cuckoo_manager.call(
-            "setState(_ p0: (UiState) -> UiState)",
-            parameters: (p0),
-            escapingParameters: ({ _ in fatalError("This is a stub! It's not supposed to be called!") }),
-            superclassCall: super.setState(p0),
-            defaultCall: __defaultImplStub!.setState(p0)
-        )
-		})
-
-    }
-
-    struct __StubbingProxy_BaseViewModel: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        var cancellables: Cuckoo.ClassToBeStubbedProperty<MockBaseViewModel,Set<AnyCancellable>> {
-            return .init(manager: cuckoo_manager, name: "cancellables")
-        }
-        
-        var viewState: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockBaseViewModel,UiState> {
-            return .init(manager: cuckoo_manager, name: "viewState")
-        }
-        
-        func setState<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ClassStubNoReturnFunction<((UiState) -> UiState)> where M1.MatchedType == (UiState) -> UiState {
-            let matchers: [Cuckoo.ParameterMatcher<((UiState) -> UiState)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseViewModel.self,
-                method: "setState(_ p0: (UiState) -> UiState)",
-                parameterMatchers: matchers
-            ))
-        }
-    }
-
-    struct __VerificationProxy_BaseViewModel: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        var cancellables: Cuckoo.VerifyProperty<Set<AnyCancellable>> {
-            return .init(manager: cuckoo_manager, name: "cancellables", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var viewState: Cuckoo.VerifyReadOnlyProperty<UiState> {
-            return .init(manager: cuckoo_manager, name: "viewState", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-        @discardableResult
-        func setState<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<((UiState) -> UiState), Void> where M1.MatchedType == (UiState) -> UiState {
-            let matchers: [Cuckoo.ParameterMatcher<((UiState) -> UiState)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "setState(_ p0: (UiState) -> UiState)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-    }
-}
-
-class BaseViewModelStub<Router: RouterHost, UiState: ViewState>:BaseViewModel<Router, UiState> {
-    
-    public override var cancellables: Set<AnyCancellable> {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Set<AnyCancellable>).self)
-        }
-        set {}
-    }
-    
-    public override var viewState: UiState {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (UiState).self)
-        }
-    }
-
-
-    
-    public override func setState(_ p0: (UiState) -> UiState) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
 }
 
 
@@ -4376,7 +4261,7 @@ import logic_resources
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
+public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ConfigUiLogic
     public typealias Stubbing = __StubbingProxy_ConfigUiLogic
     public typealias Verification = __VerificationProxy_ConfigUiLogic
@@ -4469,7 +4354,7 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
     }
 }
 
-public class ConfigUiLogicStub:ConfigUiLogic {
+public class ConfigUiLogicStub:ConfigUiLogic, @unchecked Sendable {
     
     public var dashboardRoute: AppRoute {
         get {
@@ -4507,7 +4392,7 @@ import logic_resources
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockUIConfigType: UIConfigType, Cuckoo.ProtocolMock {
+public class MockUIConfigType: UIConfigType, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = UIConfigType
     public typealias Stubbing = __StubbingProxy_UIConfigType
     public typealias Verification = __VerificationProxy_UIConfigType
@@ -4563,7 +4448,7 @@ public class MockUIConfigType: UIConfigType, Cuckoo.ProtocolMock {
     }
 }
 
-public class UIConfigTypeStub:UIConfigType {
+public class UIConfigTypeStub:UIConfigType, @unchecked Sendable {
     
     public var log: String {
         get {
@@ -4586,7 +4471,7 @@ import Foundation
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock {
+public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = DeepLinkController
     public typealias Stubbing = __StubbingProxy_DeepLinkController
     public typealias Verification = __VerificationProxy_DeepLinkController
@@ -4774,7 +4659,7 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock {
     }
 }
 
-public class DeepLinkControllerStub:DeepLinkController {
+public class DeepLinkControllerStub:DeepLinkController, @unchecked Sendable {
 
 
     
@@ -4811,7 +4696,7 @@ import Foundation
 @testable import logic_analytics
 @testable import logic_ui
 
-class MockUrlSchemaController: UrlSchemaController, Cuckoo.ProtocolMock {
+class MockUrlSchemaController: UrlSchemaController, Cuckoo.ProtocolMock, @unchecked Sendable {
     typealias MocksType = UrlSchemaController
     typealias Stubbing = __StubbingProxy_UrlSchemaController
     typealias Verification = __VerificationProxy_UrlSchemaController
@@ -4879,7 +4764,7 @@ class MockUrlSchemaController: UrlSchemaController, Cuckoo.ProtocolMock {
     }
 }
 
-class UrlSchemaControllerStub:UrlSchemaController {
+class UrlSchemaControllerStub:UrlSchemaController, @unchecked Sendable {
 
 
     
@@ -5179,7 +5064,7 @@ import SwiftUI
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockLocatorType: LocatorType, Cuckoo.ProtocolMock {
+public class MockLocatorType: LocatorType, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = LocatorType
     public typealias Stubbing = __StubbingProxy_LocatorType
     public typealias Verification = __VerificationProxy_LocatorType
@@ -5265,7 +5150,7 @@ public class MockLocatorType: LocatorType, Cuckoo.ProtocolMock {
     }
 }
 
-public class LocatorTypeStub:LocatorType {
+public class LocatorTypeStub:LocatorType, @unchecked Sendable {
     
     public var id: String {
         get {
@@ -5457,7 +5342,7 @@ import Cuckoo
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockAppRouteModule: AppRouteModule, Cuckoo.ProtocolMock {
+public class MockAppRouteModule: AppRouteModule, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = AppRouteModule
     public typealias Stubbing = __StubbingProxy_AppRouteModule
     public typealias Verification = __VerificationProxy_AppRouteModule
@@ -5531,7 +5416,7 @@ public class MockAppRouteModule: AppRouteModule, Cuckoo.ProtocolMock {
     }
 }
 
-public class AppRouteModuleStub:AppRouteModule {
+public class AppRouteModuleStub:AppRouteModule, @unchecked Sendable {
     
     public var info: (key: String, arguments: [String: String]) {
         get {
@@ -5559,7 +5444,7 @@ import Cuckoo
 @testable import logic_analytics
 @testable import logic_ui
 
-public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock {
+public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = RouterHost
     public typealias Stubbing = __StubbingProxy_RouterHost
     public typealias Verification = __VerificationProxy_RouterHost
@@ -5987,7 +5872,7 @@ public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock {
     }
 }
 
-public class RouterHostStub:RouterHost {
+public class RouterHostStub:RouterHost, @unchecked Sendable {
 
 
     

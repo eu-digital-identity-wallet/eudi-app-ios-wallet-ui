@@ -11,7 +11,7 @@ import Cuckoo
 import Foundation
 @testable import logic_business
 
-public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
+public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ConfigLogic
     public typealias Stubbing = __StubbingProxy_ConfigLogic
     public typealias Verification = __VerificationProxy_ConfigLogic
@@ -103,7 +103,7 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
     }
 }
 
-public class ConfigLogicStub:ConfigLogic {
+public class ConfigLogicStub:ConfigLogic, @unchecked Sendable {
     
     public var walletHostUrl: String {
         get {
@@ -136,7 +136,7 @@ import Foundation
 import KeychainAccess
 @testable import logic_business
 
-public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock {
+public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = KeychainWrapper
     public typealias Stubbing = __StubbingProxy_KeychainWrapper
     public typealias Verification = __VerificationProxy_KeychainWrapper
@@ -192,7 +192,7 @@ public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock {
     }
 }
 
-public class KeychainWrapperStub:KeychainWrapper {
+public class KeychainWrapperStub:KeychainWrapper, @unchecked Sendable {
     
     public var value: String {
         get {
@@ -204,7 +204,7 @@ public class KeychainWrapperStub:KeychainWrapper {
 }
 
 
-public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock {
+public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = KeyChainController
     public typealias Stubbing = __StubbingProxy_KeyChainController
     public typealias Verification = __VerificationProxy_KeyChainController
@@ -422,7 +422,7 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock {
     }
 }
 
-public class KeyChainControllerStub:KeyChainController {
+public class KeyChainControllerStub:KeyChainController, @unchecked Sendable {
 
 
     
@@ -460,7 +460,7 @@ import Cuckoo
 import Foundation
 @testable import logic_business
 
-public class MockPrefsController: PrefsController, Cuckoo.ProtocolMock {
+public class MockPrefsController: PrefsController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = PrefsController
     public typealias Stubbing = __StubbingProxy_PrefsController
     public typealias Verification = __VerificationProxy_PrefsController
@@ -768,7 +768,7 @@ public class MockPrefsController: PrefsController, Cuckoo.ProtocolMock {
     }
 }
 
-public class PrefsControllerStub:PrefsController {
+public class PrefsControllerStub:PrefsController, @unchecked Sendable {
 
 
     
@@ -822,7 +822,7 @@ import BluetoothKit
 import UIKit
 @testable import logic_business
 
-public class MockReachabilityController: ReachabilityController, Cuckoo.ProtocolMock {
+public class MockReachabilityController: ReachabilityController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ReachabilityController
     public typealias Stubbing = __StubbingProxy_ReachabilityController
     public typealias Verification = __VerificationProxy_ReachabilityController
@@ -950,7 +950,7 @@ public class MockReachabilityController: ReachabilityController, Cuckoo.Protocol
     }
 }
 
-public class ReachabilityControllerStub:ReachabilityController {
+public class ReachabilityControllerStub:ReachabilityController, @unchecked Sendable {
 
 
     
@@ -976,7 +976,7 @@ import Cuckoo
 import Swinject
 @testable import logic_business
 
-public class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock {
+public class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = DIGraphType
     public typealias Stubbing = __StubbingProxy_DIGraphType
     public typealias Verification = __VerificationProxy_DIGraphType
@@ -1062,7 +1062,7 @@ public class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock {
     }
 }
 
-public class DIGraphTypeStub:DIGraphType {
+public class DIGraphTypeStub:DIGraphType, @unchecked Sendable {
     
     public var assembler: Assembler {
         get {
@@ -1204,7 +1204,7 @@ import Peppermint
 import libPhoneNumber
 @testable import logic_business
 
-public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock {
+public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = FormValidator
     public typealias Stubbing = __StubbingProxy_FormValidator
     public typealias Verification = __VerificationProxy_FormValidator
@@ -1302,7 +1302,7 @@ public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock {
     }
 }
 
-public class FormValidatorStub:FormValidator {
+public class FormValidatorStub:FormValidator, @unchecked Sendable {
 
 
     
@@ -1316,7 +1316,7 @@ public class FormValidatorStub:FormValidator {
 }
 
 
-public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.ProtocolMock {
+public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = FormValidatorInteractor
     public typealias Stubbing = __StubbingProxy_FormValidatorInteractor
     public typealias Verification = __VerificationProxy_FormValidatorInteractor
@@ -1414,7 +1414,7 @@ public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.Protoc
     }
 }
 
-public class FormValidatorInteractorStub:FormValidatorInteractor {
+public class FormValidatorInteractorStub:FormValidatorInteractor, @unchecked Sendable {
 
 
     

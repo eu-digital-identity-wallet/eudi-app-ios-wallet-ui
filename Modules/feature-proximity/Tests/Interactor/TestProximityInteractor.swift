@@ -17,6 +17,7 @@ import XCTest
 import UIKit
 import logic_resources
 import feature_common
+import logic_business
 @testable import logic_core
 @testable import feature_proximity
 @testable import logic_test
@@ -26,16 +27,28 @@ final class TestProximityInteractor: EudiTest {
   
   var interactor: ProximityInteractor!
   var walletKitController: MockWalletKitController!
-  var presentationSessionCoordinator: MockPresentationSessionCoordinator!
+  var presentationSessionCoordinator: MockProximitySessionCoordinator!
+  var sessionHolder: MockSessionCoordinatorHolder!
   
   override func setUp() {
     self.walletKitController = MockWalletKitController()
-    self.presentationSessionCoordinator = MockPresentationSessionCoordinator(
+    self.presentationSessionCoordinator = MockProximitySessionCoordinator(
       session: Constants.mockPresentationSession
     )
+    self.sessionHolder = MockSessionCoordinatorHolder()
+    
+    stub(sessionHolder) { mock in
+      when(mock.getActiveProximityCoordinator()).thenReturn(presentationSessionCoordinator)
+    }
+    
+    stub(sessionHolder) { mock in
+      when(mock.setActiveProximityCoordinator(any())).thenDoNothing()
+    }
+    
     self.interactor = ProximityInteractorImpl(
       with: presentationSessionCoordinator,
-      and: walletKitController
+      and: walletKitController,
+      also: sessionHolder
     )
   }
   
@@ -62,16 +75,72 @@ final class TestProximityInteractor: EudiTest {
     verify(presentationSessionCoordinator).initialize()
   }
   
-  func testGetSessionStatePublisher_WhenInteractorMethodCalled_ThenVerifyCoordinatorPublisherGetter() async {
+  func testGetSessionStatePublisher_WhenInteractorMethodCalledAndCoordinatorIsValid_ThenVerifyStateSuccess() async {
     // Given
     let publisher: CurrentValueSubject<PresentationState, Never> = CurrentValueSubject(.loading)
+    let stream: AsyncStream<PresentationState> = AsyncStream { completion in }
+    
     stub(presentationSessionCoordinator) { mock in
       when(mock.presentationStateSubject.get).thenReturn(publisher)
     }
+    stub(presentationSessionCoordinator) { mock in
+      when(mock.getStream()).thenReturn(stream)
+    }
     // When
-    _ = await interactor.getSessionStatePublisher()
+    let state = interactor.getSessionStatePublisher()
     // Then
-    verify(presentationSessionCoordinator).presentationStateSubject.get()
+    switch state {
+    case .success:
+      XCTAssertTrue(true)
+    default:
+      XCTFail("Wrong state \(state)")
+    }
+  }
+  
+  func testGetSessionStatePublisher_WhenInteractorMethodCalledAndCoordinatorIsNotValid_ThenVerifyStateFailure() async {
+    // Given
+    let expectedError = RuntimeError.genericError
+    stub(sessionHolder) { mock in
+      when(mock.getActiveProximityCoordinator()).thenThrow(expectedError)
+    }
+    // When
+    let state = interactor.getSessionStatePublisher()
+    // Then
+    switch state {
+    case .failure(let error):
+      XCTAssertEqual(error.localizedDescription, expectedError.localizedDescription)
+    default:
+      XCTFail("Wrong state \(state)")
+    }
+  }
+  
+  func testGetCoordinator_WhenInteractorMethodCalledAndCoordinatorIsValid_ThenVerifyStateSuccess() async {
+    // When
+    let state = interactor.getCoordinator()
+    // Then
+    switch state {
+    case .success:
+      XCTAssertTrue(true)
+    default:
+      XCTFail("Wrong state \(state)")
+    }
+  }
+  
+  func testGetCoordinator_WhenInteractorMethodCalledAndCoordinatorIsNotValid_ThenVerifyStateSuccess() async {
+    // Given
+    let expectedError = RuntimeError.genericError
+    stub(sessionHolder) { mock in
+      when(mock.getActiveProximityCoordinator()).thenThrow(expectedError)
+    }
+    // When
+    let state = interactor.getCoordinator()
+    // Then
+    switch state {
+    case .failure(let error):
+      XCTAssertEqual(error.localizedDescription, expectedError.localizedDescription)
+    default:
+      XCTFail("Wrong state \(state)")
+    }
   }
   
   func testOnQRGeneration_WhenCoordinatorStartQrEngagementReturnsValidData_ThenVerifySuccessAndImage() async throws {

@@ -123,7 +123,7 @@ import LocalAuthentication
 @testable import feature_common
 @testable import feature_startup
 
-public class MockBiometryInteractor: BiometryInteractor, Cuckoo.ProtocolMock {
+public class MockBiometryInteractor: BiometryInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = BiometryInteractor
     public typealias Stubbing = __StubbingProxy_BiometryInteractor
     public typealias Verification = __VerificationProxy_BiometryInteractor
@@ -365,7 +365,7 @@ public class MockBiometryInteractor: BiometryInteractor, Cuckoo.ProtocolMock {
     }
 }
 
-public class BiometryInteractorStub:BiometryInteractor {
+public class BiometryInteractorStub:BiometryInteractor, @unchecked Sendable {
     
     public var biometricsImage: Image? {
         get {
@@ -425,7 +425,7 @@ import Foundation
 @testable import feature_common
 @testable import feature_startup
 
-public class MockQuickPinInteractor: QuickPinInteractor, Cuckoo.ProtocolMock {
+public class MockQuickPinInteractor: QuickPinInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = QuickPinInteractor
     public typealias Stubbing = __StubbingProxy_QuickPinInteractor
     public typealias Verification = __VerificationProxy_QuickPinInteractor
@@ -583,7 +583,7 @@ public class MockQuickPinInteractor: QuickPinInteractor, Cuckoo.ProtocolMock {
     }
 }
 
-public class QuickPinInteractorStub:QuickPinInteractor {
+public class QuickPinInteractorStub:QuickPinInteractor, @unchecked Sendable {
 
 
     
@@ -619,7 +619,7 @@ import Cuckoo
 @testable import feature_common
 @testable import feature_startup
 
-public class MockScannerInteractor: ScannerInteractor, Cuckoo.ProtocolMock {
+public class MockScannerInteractor: ScannerInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ScannerInteractor
     public typealias Stubbing = __StubbingProxy_ScannerInteractor
     public typealias Verification = __VerificationProxy_ScannerInteractor
@@ -747,7 +747,7 @@ public class MockScannerInteractor: ScannerInteractor, Cuckoo.ProtocolMock {
     }
 }
 
-public class ScannerInteractorStub:ScannerInteractor {
+public class ScannerInteractorStub:ScannerInteractor, @unchecked Sendable {
 
 
     
@@ -875,288 +875,6 @@ import logic_resources
 @testable import feature_common
 @testable import feature_startup
 
-class MockBaseLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<Router>, Cuckoo.ClassMock {
-    typealias MocksType = BaseLoadingViewModel<Router>
-    typealias Stubbing = __StubbingProxy_BaseLoadingViewModel
-    typealias Verification = __VerificationProxy_BaseLoadingViewModel
-
-    // Original typealiases
-
-    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: true)
-
-    private var __defaultImplStub: BaseLoadingViewModel<Router>?
-
-    func enableDefaultImplementation(_ stub: BaseLoadingViewModel<Router>) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-    
-    override func getTitle() -> LocalizableString.Key {
-        return cuckoo_manager.call(
-            "getTitle() -> LocalizableString.Key",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getTitle(),
-            defaultCall: __defaultImplStub!.getTitle()
-        )
-    }
-    
-    override func getCaption() -> LocalizableString.Key {
-        return cuckoo_manager.call(
-            "getCaption() -> LocalizableString.Key",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getCaption(),
-            defaultCall: __defaultImplStub!.getCaption()
-        )
-    }
-    
-    override func getOnPopRoute() -> AppRoute? {
-        return cuckoo_manager.call(
-            "getOnPopRoute() -> AppRoute?",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getOnPopRoute(),
-            defaultCall: __defaultImplStub!.getOnPopRoute()
-        )
-    }
-    
-    override func doWork() async {
-        return await cuckoo_manager.call(
-            "doWork() async",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: await super.doWork(),
-            defaultCall: await __defaultImplStub!.doWork()
-        )
-    }
-    
-    public override func getOriginator() -> AppRoute {
-        return cuckoo_manager.call(
-            "getOriginator() -> AppRoute",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getOriginator(),
-            defaultCall: __defaultImplStub!.getOriginator()
-        )
-    }
-    
-    public override func onNavigate(type p0: UIConfig.ThreeWayNavigationType) {
-        return cuckoo_manager.call(
-            "onNavigate(type p0: UIConfig.ThreeWayNavigationType)",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: super.onNavigate(type: p0),
-            defaultCall: __defaultImplStub!.onNavigate(type: p0)
-        )
-    }
-    
-    public override func onError(with p0: Error) {
-        return cuckoo_manager.call(
-            "onError(with p0: Error)",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: super.onError(with: p0),
-            defaultCall: __defaultImplStub!.onError(with: p0)
-        )
-    }
-
-    struct __StubbingProxy_BaseLoadingViewModel: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        func getTitle() -> Cuckoo.ClassStubFunction<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseLoadingViewModel.self,
-                method: "getTitle() -> LocalizableString.Key",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getCaption() -> Cuckoo.ClassStubFunction<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseLoadingViewModel.self,
-                method: "getCaption() -> LocalizableString.Key",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getOnPopRoute() -> Cuckoo.ClassStubFunction<(), AppRoute?> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseLoadingViewModel.self,
-                method: "getOnPopRoute() -> AppRoute?",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func doWork() -> Cuckoo.ClassStubNoReturnFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseLoadingViewModel.self,
-                method: "doWork() async",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getOriginator() -> Cuckoo.ClassStubFunction<(), AppRoute> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseLoadingViewModel.self,
-                method: "getOriginator() -> AppRoute",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onNavigate<M1: Cuckoo.Matchable>(type p0: M1) -> Cuckoo.ClassStubNoReturnFunction<(UIConfig.ThreeWayNavigationType)> where M1.MatchedType == UIConfig.ThreeWayNavigationType {
-            let matchers: [Cuckoo.ParameterMatcher<(UIConfig.ThreeWayNavigationType)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseLoadingViewModel.self,
-                method: "onNavigate(type p0: UIConfig.ThreeWayNavigationType)",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onError<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ClassStubNoReturnFunction<(Error)> where M1.MatchedType == Error {
-            let matchers: [Cuckoo.ParameterMatcher<(Error)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseLoadingViewModel.self,
-                method: "onError(with p0: Error)",
-                parameterMatchers: matchers
-            ))
-        }
-    }
-
-    struct __VerificationProxy_BaseLoadingViewModel: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        
-        @discardableResult
-        func getTitle() -> Cuckoo.__DoNotUse<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getTitle() -> LocalizableString.Key",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getCaption() -> Cuckoo.__DoNotUse<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getCaption() -> LocalizableString.Key",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getOnPopRoute() -> Cuckoo.__DoNotUse<(), AppRoute?> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getOnPopRoute() -> AppRoute?",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func doWork() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "doWork() async",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getOriginator() -> Cuckoo.__DoNotUse<(), AppRoute> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getOriginator() -> AppRoute",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onNavigate<M1: Cuckoo.Matchable>(type p0: M1) -> Cuckoo.__DoNotUse<(UIConfig.ThreeWayNavigationType), Void> where M1.MatchedType == UIConfig.ThreeWayNavigationType {
-            let matchers: [Cuckoo.ParameterMatcher<(UIConfig.ThreeWayNavigationType)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "onNavigate(type p0: UIConfig.ThreeWayNavigationType)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onError<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(Error), Void> where M1.MatchedType == Error {
-            let matchers: [Cuckoo.ParameterMatcher<(Error)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "onError(with p0: Error)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-    }
-}
-
-class BaseLoadingViewModelStub<Router: RouterHost>:BaseLoadingViewModel<Router> {
-
-
-    
-    override func getTitle() -> LocalizableString.Key {
-        return DefaultValueRegistry.defaultValue(for: (LocalizableString.Key).self)
-    }
-    
-    override func getCaption() -> LocalizableString.Key {
-        return DefaultValueRegistry.defaultValue(for: (LocalizableString.Key).self)
-    }
-    
-    override func getOnPopRoute() -> AppRoute? {
-        return DefaultValueRegistry.defaultValue(for: (AppRoute?).self)
-    }
-    
-    override func doWork() async {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public override func getOriginator() -> AppRoute {
-        return DefaultValueRegistry.defaultValue(for: (AppRoute).self)
-    }
-    
-    public override func onNavigate(type p0: UIConfig.ThreeWayNavigationType) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public override func onError(with p0: Error) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-}
-
-
 
 
 // MARK: - Mocks generated from file: 'Modules/feature-common/Sources/UI/QuickPin/QuickPinView.swift'
@@ -1218,931 +936,6 @@ import logic_resources
 @testable import logic_authentication
 @testable import feature_common
 @testable import feature_startup
-
-class MockBaseRequestViewModel<Router: RouterHost>: BaseRequestViewModel<Router>, Cuckoo.ClassMock {
-    typealias MocksType = BaseRequestViewModel<Router>
-    typealias Stubbing = __StubbingProxy_BaseRequestViewModel
-    typealias Verification = __VerificationProxy_BaseRequestViewModel
-
-    // Original typealiases
-
-    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: true)
-
-    private var __defaultImplStub: BaseRequestViewModel<Router>?
-
-    func enableDefaultImplementation(_ stub: BaseRequestViewModel<Router>) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-    
-    override var isCancelModalShowing: Bool {
-        get {
-            return cuckoo_manager.getter(
-                "isCancelModalShowing",
-                superclassCall: super.isCancelModalShowing,
-                defaultCall: __defaultImplStub!.isCancelModalShowing
-            )
-        }
-        set {
-            cuckoo_manager.setter(
-                "isCancelModalShowing",
-                value: newValue,
-                superclassCall: super.isCancelModalShowing = newValue,
-                defaultCall: __defaultImplStub!.isCancelModalShowing = newValue
-            )
-        }
-    }
-    
-    override var isRequestInfoModalShowing: Bool {
-        get {
-            return cuckoo_manager.getter(
-                "isRequestInfoModalShowing",
-                superclassCall: super.isRequestInfoModalShowing,
-                defaultCall: __defaultImplStub!.isRequestInfoModalShowing
-            )
-        }
-        set {
-            cuckoo_manager.setter(
-                "isRequestInfoModalShowing",
-                value: newValue,
-                superclassCall: super.isRequestInfoModalShowing = newValue,
-                defaultCall: __defaultImplStub!.isRequestInfoModalShowing = newValue
-            )
-        }
-    }
-    
-    override var isVerifiedEntityModalShowing: Bool {
-        get {
-            return cuckoo_manager.getter(
-                "isVerifiedEntityModalShowing",
-                superclassCall: super.isVerifiedEntityModalShowing,
-                defaultCall: __defaultImplStub!.isVerifiedEntityModalShowing
-            )
-        }
-        set {
-            cuckoo_manager.setter(
-                "isVerifiedEntityModalShowing",
-                value: newValue,
-                superclassCall: super.isVerifiedEntityModalShowing = newValue,
-                defaultCall: __defaultImplStub!.isVerifiedEntityModalShowing = newValue
-            )
-        }
-    }
-
-    
-    override func doWork() async {
-        return await cuckoo_manager.call(
-            "doWork() async",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: await super.doWork(),
-            defaultCall: await __defaultImplStub!.doWork()
-        )
-    }
-    
-    override func getTitle() -> LocalizableString.Key {
-        return cuckoo_manager.call(
-            "getTitle() -> LocalizableString.Key",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getTitle(),
-            defaultCall: __defaultImplStub!.getTitle()
-        )
-    }
-    
-    override func getRelyingParty() -> String {
-        return cuckoo_manager.call(
-            "getRelyingParty() -> String",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getRelyingParty(),
-            defaultCall: __defaultImplStub!.getRelyingParty()
-        )
-    }
-    
-    override func getCaption() -> LocalizableString.Key {
-        return cuckoo_manager.call(
-            "getCaption() -> LocalizableString.Key",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getCaption(),
-            defaultCall: __defaultImplStub!.getCaption()
-        )
-    }
-    
-    override func getDataRequestInfo() -> LocalizableString.Key {
-        return cuckoo_manager.call(
-            "getDataRequestInfo() -> LocalizableString.Key",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getDataRequestInfo(),
-            defaultCall: __defaultImplStub!.getDataRequestInfo()
-        )
-    }
-    
-    override func getSuccessRoute() -> AppRoute? {
-        return cuckoo_manager.call(
-            "getSuccessRoute() -> AppRoute?",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getSuccessRoute(),
-            defaultCall: __defaultImplStub!.getSuccessRoute()
-        )
-    }
-    
-    override func getTitleCaption() -> String {
-        return cuckoo_manager.call(
-            "getTitleCaption() -> String",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getTitleCaption(),
-            defaultCall: __defaultImplStub!.getTitleCaption()
-        )
-    }
-    
-    override func getTrustedRelyingParty() -> LocalizableString.Key {
-        return cuckoo_manager.call(
-            "getTrustedRelyingParty() -> LocalizableString.Key",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getTrustedRelyingParty(),
-            defaultCall: __defaultImplStub!.getTrustedRelyingParty()
-        )
-    }
-    
-    override func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
-        return cuckoo_manager.call(
-            "getTrustedRelyingPartyInfo() -> LocalizableString.Key",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getTrustedRelyingPartyInfo(),
-            defaultCall: __defaultImplStub!.getTrustedRelyingPartyInfo()
-        )
-    }
-    
-    override func onShare() {
-        return cuckoo_manager.call(
-            "onShare()",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.onShare(),
-            defaultCall: __defaultImplStub!.onShare()
-        )
-    }
-    
-    override func getPopRoute() -> AppRoute? {
-        return cuckoo_manager.call(
-            "getPopRoute() -> AppRoute?",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getPopRoute(),
-            defaultCall: __defaultImplStub!.getPopRoute()
-        )
-    }
-    
-    public override func getOriginator() -> AppRoute {
-        return cuckoo_manager.call(
-            "getOriginator() -> AppRoute",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.getOriginator(),
-            defaultCall: __defaultImplStub!.getOriginator()
-        )
-    }
-    
-    public override func onStartLoading() {
-        return cuckoo_manager.call(
-            "onStartLoading()",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.onStartLoading(),
-            defaultCall: __defaultImplStub!.onStartLoading()
-        )
-    }
-    
-    public override func onError(with p0: Error) {
-        return cuckoo_manager.call(
-            "onError(with p0: Error)",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: super.onError(with: p0),
-            defaultCall: __defaultImplStub!.onError(with: p0)
-        )
-    }
-    
-    public override func onEmptyDocuments() {
-        return cuckoo_manager.call(
-            "onEmptyDocuments()",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.onEmptyDocuments(),
-            defaultCall: __defaultImplStub!.onEmptyDocuments()
-        )
-    }
-    
-    public override func onReceivedItems(with p0: [RequestDataUIModel], title p1: LocalizableString.Key, relyingParty p2: String, isTrusted p3: Bool) {
-        return cuckoo_manager.call(
-            "onReceivedItems(with p0: [RequestDataUIModel], title p1: LocalizableString.Key, relyingParty p2: String, isTrusted p3: Bool)",
-            parameters: (p0, p1, p2, p3),
-            escapingParameters: (p0, p1, p2, p3),
-            superclassCall: super.onReceivedItems(with: p0, title: p1, relyingParty: p2, isTrusted: p3),
-            defaultCall: __defaultImplStub!.onReceivedItems(with: p0, title: p1, relyingParty: p2, isTrusted: p3)
-        )
-    }
-    
-    public override func resetState() {
-        return cuckoo_manager.call(
-            "resetState()",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.resetState(),
-            defaultCall: __defaultImplStub!.resetState()
-        )
-    }
-    
-    override func onPop() {
-        return cuckoo_manager.call(
-            "onPop()",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.onPop(),
-            defaultCall: __defaultImplStub!.onPop()
-        )
-    }
-    
-    override func onShowCancelModal() {
-        return cuckoo_manager.call(
-            "onShowCancelModal()",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.onShowCancelModal(),
-            defaultCall: __defaultImplStub!.onShowCancelModal()
-        )
-    }
-    
-    override func onShowRequestInfoModal() {
-        return cuckoo_manager.call(
-            "onShowRequestInfoModal()",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.onShowRequestInfoModal(),
-            defaultCall: __defaultImplStub!.onShowRequestInfoModal()
-        )
-    }
-    
-    override func onVerifiedEntityModal() {
-        return cuckoo_manager.call(
-            "onVerifiedEntityModal()",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.onVerifiedEntityModal(),
-            defaultCall: __defaultImplStub!.onVerifiedEntityModal()
-        )
-    }
-    
-    override func onContentVisibilityChange() {
-        return cuckoo_manager.call(
-            "onContentVisibilityChange()",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: super.onContentVisibilityChange(),
-            defaultCall: __defaultImplStub!.onContentVisibilityChange()
-        )
-    }
-    
-    override func onSelectionChanged(id p0: String) {
-        return cuckoo_manager.call(
-            "onSelectionChanged(id p0: String)",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: super.onSelectionChanged(id: p0),
-            defaultCall: __defaultImplStub!.onSelectionChanged(id: p0)
-        )
-    }
-
-    struct __StubbingProxy_BaseRequestViewModel: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        var isCancelModalShowing: Cuckoo.ClassToBeStubbedProperty<MockBaseRequestViewModel,Bool> {
-            return .init(manager: cuckoo_manager, name: "isCancelModalShowing")
-        }
-        
-        var isRequestInfoModalShowing: Cuckoo.ClassToBeStubbedProperty<MockBaseRequestViewModel,Bool> {
-            return .init(manager: cuckoo_manager, name: "isRequestInfoModalShowing")
-        }
-        
-        var isVerifiedEntityModalShowing: Cuckoo.ClassToBeStubbedProperty<MockBaseRequestViewModel,Bool> {
-            return .init(manager: cuckoo_manager, name: "isVerifiedEntityModalShowing")
-        }
-        
-        func doWork() -> Cuckoo.ClassStubNoReturnFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "doWork() async",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getTitle() -> Cuckoo.ClassStubFunction<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "getTitle() -> LocalizableString.Key",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getRelyingParty() -> Cuckoo.ClassStubFunction<(), String> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "getRelyingParty() -> String",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getCaption() -> Cuckoo.ClassStubFunction<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "getCaption() -> LocalizableString.Key",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getDataRequestInfo() -> Cuckoo.ClassStubFunction<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "getDataRequestInfo() -> LocalizableString.Key",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getSuccessRoute() -> Cuckoo.ClassStubFunction<(), AppRoute?> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "getSuccessRoute() -> AppRoute?",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getTitleCaption() -> Cuckoo.ClassStubFunction<(), String> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "getTitleCaption() -> String",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getTrustedRelyingParty() -> Cuckoo.ClassStubFunction<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "getTrustedRelyingParty() -> LocalizableString.Key",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getTrustedRelyingPartyInfo() -> Cuckoo.ClassStubFunction<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "getTrustedRelyingPartyInfo() -> LocalizableString.Key",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onShare() -> Cuckoo.ClassStubNoReturnFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "onShare()",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getPopRoute() -> Cuckoo.ClassStubFunction<(), AppRoute?> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "getPopRoute() -> AppRoute?",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getOriginator() -> Cuckoo.ClassStubFunction<(), AppRoute> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "getOriginator() -> AppRoute",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onStartLoading() -> Cuckoo.ClassStubNoReturnFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "onStartLoading()",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onError<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ClassStubNoReturnFunction<(Error)> where M1.MatchedType == Error {
-            let matchers: [Cuckoo.ParameterMatcher<(Error)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "onError(with p0: Error)",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onEmptyDocuments() -> Cuckoo.ClassStubNoReturnFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "onEmptyDocuments()",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onReceivedItems<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, title p1: M2, relyingParty p2: M3, isTrusted p3: M4) -> Cuckoo.ClassStubNoReturnFunction<([RequestDataUIModel], LocalizableString.Key, String, Bool)> where M1.MatchedType == [RequestDataUIModel], M2.MatchedType == LocalizableString.Key, M3.MatchedType == String, M4.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<([RequestDataUIModel], LocalizableString.Key, String, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "onReceivedItems(with p0: [RequestDataUIModel], title p1: LocalizableString.Key, relyingParty p2: String, isTrusted p3: Bool)",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func resetState() -> Cuckoo.ClassStubNoReturnFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "resetState()",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onPop() -> Cuckoo.ClassStubNoReturnFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "onPop()",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onShowCancelModal() -> Cuckoo.ClassStubNoReturnFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "onShowCancelModal()",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onShowRequestInfoModal() -> Cuckoo.ClassStubNoReturnFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "onShowRequestInfoModal()",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onVerifiedEntityModal() -> Cuckoo.ClassStubNoReturnFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "onVerifiedEntityModal()",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onContentVisibilityChange() -> Cuckoo.ClassStubNoReturnFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "onContentVisibilityChange()",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func onSelectionChanged<M1: Cuckoo.Matchable>(id p0: M1) -> Cuckoo.ClassStubNoReturnFunction<(String)> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseRequestViewModel.self,
-                method: "onSelectionChanged(id p0: String)",
-                parameterMatchers: matchers
-            ))
-        }
-    }
-
-    struct __VerificationProxy_BaseRequestViewModel: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        var isCancelModalShowing: Cuckoo.VerifyProperty<Bool> {
-            return .init(manager: cuckoo_manager, name: "isCancelModalShowing", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var isRequestInfoModalShowing: Cuckoo.VerifyProperty<Bool> {
-            return .init(manager: cuckoo_manager, name: "isRequestInfoModalShowing", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var isVerifiedEntityModalShowing: Cuckoo.VerifyProperty<Bool> {
-            return .init(manager: cuckoo_manager, name: "isVerifiedEntityModalShowing", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-        @discardableResult
-        func doWork() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "doWork() async",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getTitle() -> Cuckoo.__DoNotUse<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getTitle() -> LocalizableString.Key",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getRelyingParty() -> Cuckoo.__DoNotUse<(), String> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getRelyingParty() -> String",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getCaption() -> Cuckoo.__DoNotUse<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getCaption() -> LocalizableString.Key",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getDataRequestInfo() -> Cuckoo.__DoNotUse<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getDataRequestInfo() -> LocalizableString.Key",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getSuccessRoute() -> Cuckoo.__DoNotUse<(), AppRoute?> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getSuccessRoute() -> AppRoute?",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getTitleCaption() -> Cuckoo.__DoNotUse<(), String> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getTitleCaption() -> String",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getTrustedRelyingParty() -> Cuckoo.__DoNotUse<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getTrustedRelyingParty() -> LocalizableString.Key",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getTrustedRelyingPartyInfo() -> Cuckoo.__DoNotUse<(), LocalizableString.Key> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getTrustedRelyingPartyInfo() -> LocalizableString.Key",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onShare() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "onShare()",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getPopRoute() -> Cuckoo.__DoNotUse<(), AppRoute?> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getPopRoute() -> AppRoute?",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getOriginator() -> Cuckoo.__DoNotUse<(), AppRoute> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getOriginator() -> AppRoute",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onStartLoading() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "onStartLoading()",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onError<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(Error), Void> where M1.MatchedType == Error {
-            let matchers: [Cuckoo.ParameterMatcher<(Error)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "onError(with p0: Error)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onEmptyDocuments() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "onEmptyDocuments()",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onReceivedItems<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, title p1: M2, relyingParty p2: M3, isTrusted p3: M4) -> Cuckoo.__DoNotUse<([RequestDataUIModel], LocalizableString.Key, String, Bool), Void> where M1.MatchedType == [RequestDataUIModel], M2.MatchedType == LocalizableString.Key, M3.MatchedType == String, M4.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<([RequestDataUIModel], LocalizableString.Key, String, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
-            return cuckoo_manager.verify(
-                "onReceivedItems(with p0: [RequestDataUIModel], title p1: LocalizableString.Key, relyingParty p2: String, isTrusted p3: Bool)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func resetState() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "resetState()",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onPop() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "onPop()",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onShowCancelModal() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "onShowCancelModal()",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onShowRequestInfoModal() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "onShowRequestInfoModal()",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onVerifiedEntityModal() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "onVerifiedEntityModal()",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onContentVisibilityChange() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "onContentVisibilityChange()",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func onSelectionChanged<M1: Cuckoo.Matchable>(id p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "onSelectionChanged(id p0: String)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-    }
-}
-
-class BaseRequestViewModelStub<Router: RouterHost>:BaseRequestViewModel<Router> {
-    
-    override var isCancelModalShowing: Bool {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Bool).self)
-        }
-        set {}
-    }
-    
-    override var isRequestInfoModalShowing: Bool {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Bool).self)
-        }
-        set {}
-    }
-    
-    override var isVerifiedEntityModalShowing: Bool {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Bool).self)
-        }
-        set {}
-    }
-
-
-    
-    override func doWork() async {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    override func getTitle() -> LocalizableString.Key {
-        return DefaultValueRegistry.defaultValue(for: (LocalizableString.Key).self)
-    }
-    
-    override func getRelyingParty() -> String {
-        return DefaultValueRegistry.defaultValue(for: (String).self)
-    }
-    
-    override func getCaption() -> LocalizableString.Key {
-        return DefaultValueRegistry.defaultValue(for: (LocalizableString.Key).self)
-    }
-    
-    override func getDataRequestInfo() -> LocalizableString.Key {
-        return DefaultValueRegistry.defaultValue(for: (LocalizableString.Key).self)
-    }
-    
-    override func getSuccessRoute() -> AppRoute? {
-        return DefaultValueRegistry.defaultValue(for: (AppRoute?).self)
-    }
-    
-    override func getTitleCaption() -> String {
-        return DefaultValueRegistry.defaultValue(for: (String).self)
-    }
-    
-    override func getTrustedRelyingParty() -> LocalizableString.Key {
-        return DefaultValueRegistry.defaultValue(for: (LocalizableString.Key).self)
-    }
-    
-    override func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
-        return DefaultValueRegistry.defaultValue(for: (LocalizableString.Key).self)
-    }
-    
-    override func onShare() {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    override func getPopRoute() -> AppRoute? {
-        return DefaultValueRegistry.defaultValue(for: (AppRoute?).self)
-    }
-    
-    public override func getOriginator() -> AppRoute {
-        return DefaultValueRegistry.defaultValue(for: (AppRoute).self)
-    }
-    
-    public override func onStartLoading() {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public override func onError(with p0: Error) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public override func onEmptyDocuments() {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public override func onReceivedItems(with p0: [RequestDataUIModel], title p1: LocalizableString.Key, relyingParty p2: String, isTrusted p3: Bool) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public override func resetState() {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    override func onPop() {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    override func onShowCancelModal() {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    override func onShowRequestInfoModal() {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    override func onVerifiedEntityModal() {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    override func onContentVisibilityChange() {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    override func onSelectionChanged(id p0: String) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-}
-
 
 
 
@@ -2255,7 +1048,7 @@ import Foundation
 @testable import feature_common
 @testable import feature_startup
 
-public class MockStartupInteractor: StartupInteractor, Cuckoo.ProtocolMock {
+public class MockStartupInteractor: StartupInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = StartupInteractor
     public typealias Stubbing = __StubbingProxy_StartupInteractor
     public typealias Verification = __VerificationProxy_StartupInteractor
@@ -2323,7 +1116,7 @@ public class MockStartupInteractor: StartupInteractor, Cuckoo.ProtocolMock {
     }
 }
 
-public class StartupInteractorStub:StartupInteractor {
+public class StartupInteractorStub:StartupInteractor, @unchecked Sendable {
 
 
     
@@ -2378,7 +1171,7 @@ import Cuckoo
 @testable import feature_common
 @testable import feature_startup
 
-class MockAnalyticsConfig: AnalyticsConfig, Cuckoo.ProtocolMock {
+class MockAnalyticsConfig: AnalyticsConfig, Cuckoo.ProtocolMock, @unchecked Sendable {
     typealias MocksType = AnalyticsConfig
     typealias Stubbing = __StubbingProxy_AnalyticsConfig
     typealias Verification = __VerificationProxy_AnalyticsConfig
@@ -2434,7 +1227,7 @@ class MockAnalyticsConfig: AnalyticsConfig, Cuckoo.ProtocolMock {
     }
 }
 
-class AnalyticsConfigStub:AnalyticsConfig {
+class AnalyticsConfigStub:AnalyticsConfig, @unchecked Sendable {
     
     var analyticsProviders: [String: AnalyticsProvider] {
         get {
@@ -2460,7 +1253,7 @@ import Cuckoo
 @testable import feature_common
 @testable import feature_startup
 
-public class MockAnalyticsController: AnalyticsController, Cuckoo.ProtocolMock {
+public class MockAnalyticsController: AnalyticsController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = AnalyticsController
     public typealias Stubbing = __StubbingProxy_AnalyticsController
     public typealias Verification = __VerificationProxy_AnalyticsController
@@ -2588,7 +1381,7 @@ public class MockAnalyticsController: AnalyticsController, Cuckoo.ProtocolMock {
     }
 }
 
-public class AnalyticsControllerStub:AnalyticsController {
+public class AnalyticsControllerStub:AnalyticsController, @unchecked Sendable {
 
 
     
@@ -2637,7 +1430,7 @@ import Cuckoo
 @testable import feature_common
 @testable import feature_startup
 
-class MockAnalyticsProvider: AnalyticsProvider, Cuckoo.ProtocolMock {
+class MockAnalyticsProvider: AnalyticsProvider, Cuckoo.ProtocolMock, @unchecked Sendable {
     typealias MocksType = AnalyticsProvider
     typealias Stubbing = __StubbingProxy_AnalyticsProvider
     typealias Verification = __VerificationProxy_AnalyticsProvider
@@ -2765,7 +1558,7 @@ class MockAnalyticsProvider: AnalyticsProvider, Cuckoo.ProtocolMock {
     }
 }
 
-class AnalyticsProviderStub:AnalyticsProvider {
+class AnalyticsProviderStub:AnalyticsProvider, @unchecked Sendable {
 
 
     
@@ -2814,7 +1607,7 @@ import Alamofire
 @testable import feature_common
 @testable import feature_startup
 
-class MockNetworkManager: NetworkManager, Cuckoo.ProtocolMock {
+class MockNetworkManager: NetworkManager, Cuckoo.ProtocolMock, @unchecked Sendable {
     typealias MocksType = NetworkManager
     typealias Stubbing = __StubbingProxy_NetworkManager
     typealias Verification = __VerificationProxy_NetworkManager
@@ -2942,7 +1735,7 @@ class MockNetworkManager: NetworkManager, Cuckoo.ProtocolMock {
     }
 }
 
-class NetworkManagerStub:NetworkManager {
+class NetworkManagerStub:NetworkManager, @unchecked Sendable {
 
 
     
@@ -2989,7 +1782,7 @@ import struct Foundation.Data
 @testable import feature_common
 @testable import feature_startup
 
-class MockNetworkRequest<Response>: NetworkRequest, Cuckoo.ProtocolMock {
+class MockNetworkRequest<Response>: NetworkRequest, Cuckoo.ProtocolMock, @unchecked Sendable {
     typealias MocksType = DefaultImplCaller
     typealias Stubbing = __StubbingProxy_NetworkRequest
     typealias Verification = __VerificationProxy_NetworkRequest
@@ -2998,7 +1791,7 @@ class MockNetworkRequest<Response>: NetworkRequest, Cuckoo.ProtocolMock {
 
     let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
-    class DefaultImplCaller: NetworkRequest {
+    class DefaultImplCaller: NetworkRequest, @unchecked Sendable {
         private let reference: Any
     
         private let _getter_storage$$method: () -> NetworkMethod
@@ -3140,7 +1933,7 @@ class MockNetworkRequest<Response>: NetworkRequest, Cuckoo.ProtocolMock {
     }
 }
 
-class NetworkRequestStub<Response>:NetworkRequest {
+class NetworkRequestStub<Response>:NetworkRequest, @unchecked Sendable {
     
     var method: NetworkMethod {
         get {
@@ -3215,7 +2008,7 @@ import Foundation
 @testable import feature_common
 @testable import feature_startup
 
-public class MockSampleRepository: SampleRepository, Cuckoo.ProtocolMock {
+public class MockSampleRepository: SampleRepository, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = SampleRepository
     public typealias Stubbing = __StubbingProxy_SampleRepository
     public typealias Verification = __VerificationProxy_SampleRepository
@@ -3283,7 +2076,7 @@ public class MockSampleRepository: SampleRepository, Cuckoo.ProtocolMock {
     }
 }
 
-public class SampleRepositoryStub:SampleRepository {
+public class SampleRepositoryStub:SampleRepository, @unchecked Sendable {
 
 
     
@@ -3307,7 +2100,7 @@ import Cuckoo
 @testable import feature_common
 @testable import feature_startup
 
-public class MockPinStorageController: PinStorageController, Cuckoo.ProtocolMock {
+public class MockPinStorageController: PinStorageController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = PinStorageController
     public typealias Stubbing = __StubbingProxy_PinStorageController
     public typealias Verification = __VerificationProxy_PinStorageController
@@ -3435,7 +2228,7 @@ public class MockPinStorageController: PinStorageController, Cuckoo.ProtocolMock
     }
 }
 
-public class PinStorageControllerStub:PinStorageController {
+public class PinStorageControllerStub:PinStorageController, @unchecked Sendable {
 
 
     
@@ -3471,7 +2264,7 @@ import SwiftUI
 @testable import feature_common
 @testable import feature_startup
 
-public class MockSystemBiometryController: SystemBiometryController, Cuckoo.ProtocolMock {
+public class MockSystemBiometryController: SystemBiometryController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = SystemBiometryController
     public typealias Stubbing = __StubbingProxy_SystemBiometryController
     public typealias Verification = __VerificationProxy_SystemBiometryController
@@ -3617,7 +2410,7 @@ public class MockSystemBiometryController: SystemBiometryController, Cuckoo.Prot
     }
 }
 
-public class SystemBiometryControllerStub:SystemBiometryController {
+public class SystemBiometryControllerStub:SystemBiometryController, @unchecked Sendable {
     
     public var biometryType: LABiometryType {
         get {
@@ -3671,7 +2464,7 @@ import Cuckoo
 @testable import feature_common
 @testable import feature_startup
 
-class MockPinStorageProvider: PinStorageProvider, Cuckoo.ProtocolMock {
+class MockPinStorageProvider: PinStorageProvider, Cuckoo.ProtocolMock, @unchecked Sendable {
     typealias MocksType = PinStorageProvider
     typealias Stubbing = __StubbingProxy_PinStorageProvider
     typealias Verification = __VerificationProxy_PinStorageProvider
@@ -3799,7 +2592,7 @@ class MockPinStorageProvider: PinStorageProvider, Cuckoo.ProtocolMock {
     }
 }
 
-class PinStorageProviderStub:PinStorageProvider {
+class PinStorageProviderStub:PinStorageProvider, @unchecked Sendable {
 
 
     
@@ -3860,7 +2653,7 @@ import Foundation
 @testable import feature_common
 @testable import feature_startup
 
-public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
+public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ConfigLogic
     public typealias Stubbing = __StubbingProxy_ConfigLogic
     public typealias Verification = __VerificationProxy_ConfigLogic
@@ -3952,7 +2745,7 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock {
     }
 }
 
-public class ConfigLogicStub:ConfigLogic {
+public class ConfigLogicStub:ConfigLogic, @unchecked Sendable {
     
     public var walletHostUrl: String {
         get {
@@ -3992,7 +2785,7 @@ import KeychainAccess
 @testable import feature_common
 @testable import feature_startup
 
-public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock {
+public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = KeychainWrapper
     public typealias Stubbing = __StubbingProxy_KeychainWrapper
     public typealias Verification = __VerificationProxy_KeychainWrapper
@@ -4048,7 +2841,7 @@ public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock {
     }
 }
 
-public class KeychainWrapperStub:KeychainWrapper {
+public class KeychainWrapperStub:KeychainWrapper, @unchecked Sendable {
     
     public var value: String {
         get {
@@ -4060,7 +2853,7 @@ public class KeychainWrapperStub:KeychainWrapper {
 }
 
 
-public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock {
+public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = KeyChainController
     public typealias Stubbing = __StubbingProxy_KeyChainController
     public typealias Verification = __VerificationProxy_KeyChainController
@@ -4278,7 +3071,7 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock {
     }
 }
 
-public class KeyChainControllerStub:KeyChainController {
+public class KeyChainControllerStub:KeyChainController, @unchecked Sendable {
 
 
     
@@ -4323,7 +3116,7 @@ import Foundation
 @testable import feature_common
 @testable import feature_startup
 
-public class MockPrefsController: PrefsController, Cuckoo.ProtocolMock {
+public class MockPrefsController: PrefsController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = PrefsController
     public typealias Stubbing = __StubbingProxy_PrefsController
     public typealias Verification = __VerificationProxy_PrefsController
@@ -4631,7 +3424,7 @@ public class MockPrefsController: PrefsController, Cuckoo.ProtocolMock {
     }
 }
 
-public class PrefsControllerStub:PrefsController {
+public class PrefsControllerStub:PrefsController, @unchecked Sendable {
 
 
     
@@ -4692,7 +3485,7 @@ import UIKit
 @testable import feature_common
 @testable import feature_startup
 
-public class MockReachabilityController: ReachabilityController, Cuckoo.ProtocolMock {
+public class MockReachabilityController: ReachabilityController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ReachabilityController
     public typealias Stubbing = __StubbingProxy_ReachabilityController
     public typealias Verification = __VerificationProxy_ReachabilityController
@@ -4820,7 +3613,7 @@ public class MockReachabilityController: ReachabilityController, Cuckoo.Protocol
     }
 }
 
-public class ReachabilityControllerStub:ReachabilityController {
+public class ReachabilityControllerStub:ReachabilityController, @unchecked Sendable {
 
 
     
@@ -4853,7 +3646,7 @@ import Swinject
 @testable import feature_common
 @testable import feature_startup
 
-public class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock {
+public class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = DIGraphType
     public typealias Stubbing = __StubbingProxy_DIGraphType
     public typealias Verification = __VerificationProxy_DIGraphType
@@ -4939,7 +3732,7 @@ public class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock {
     }
 }
 
-public class DIGraphTypeStub:DIGraphType {
+public class DIGraphTypeStub:DIGraphType, @unchecked Sendable {
     
     public var assembler: Assembler {
         get {
@@ -5186,7 +3979,7 @@ import libPhoneNumber
 @testable import feature_common
 @testable import feature_startup
 
-public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock {
+public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = FormValidator
     public typealias Stubbing = __StubbingProxy_FormValidator
     public typealias Verification = __VerificationProxy_FormValidator
@@ -5284,7 +4077,7 @@ public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock {
     }
 }
 
-public class FormValidatorStub:FormValidator {
+public class FormValidatorStub:FormValidator, @unchecked Sendable {
 
 
     
@@ -5298,7 +4091,7 @@ public class FormValidatorStub:FormValidator {
 }
 
 
-public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.ProtocolMock {
+public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = FormValidatorInteractor
     public typealias Stubbing = __StubbingProxy_FormValidatorInteractor
     public typealias Verification = __VerificationProxy_FormValidatorInteractor
@@ -5396,7 +4189,7 @@ public class MockFormValidatorInteractor: FormValidatorInteractor, Cuckoo.Protoc
     }
 }
 
-public class FormValidatorInteractorStub:FormValidatorInteractor {
+public class FormValidatorInteractorStub:FormValidatorInteractor, @unchecked Sendable {
 
 
     
@@ -5454,7 +4247,7 @@ import Foundation
 @testable import feature_common
 @testable import feature_startup
 
-class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
+class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Sendable {
     typealias MocksType = WalletKitConfig
     typealias Stubbing = __StubbingProxy_WalletKitConfig
     typealias Verification = __VerificationProxy_WalletKitConfig
@@ -5582,7 +4375,7 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock {
     }
 }
 
-class WalletKitConfigStub:WalletKitConfig {
+class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
     
     var vciConfig: VciConfig {
         get {
@@ -5635,7 +4428,7 @@ import logic_resources
 @testable import feature_common
 @testable import feature_startup
 
-public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
+public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = WalletKitController
     public typealias Stubbing = __StubbingProxy_WalletKitController
     public typealias Verification = __VerificationProxy_WalletKitController
@@ -5649,6 +4442,16 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock {
     public func enableDefaultImplementation(_ stub: any WalletKitController) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+    public var wallet: EudiWallet {
+        get {
+            return cuckoo_manager.getter(
+                "wallet",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.wallet
+            )
+        }
     }
 
     
@@ -5923,6 +4726,10 @@ return cuckoo_manager.call(
             self.cuckoo_manager = manager
         }
         
+        var wallet: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitController,EudiWallet> {
+            return .init(manager: cuckoo_manager, name: "wallet")
+        }
+        
         func startProximityPresentation() -> Cuckoo.ProtocolStubFunction<(), ProximitySessionCoordinator> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
@@ -6141,6 +4948,10 @@ return cuckoo_manager.call(
             self.cuckoo_manager = manager
             self.callMatcher = callMatcher
             self.sourceLocation = sourceLocation
+        }
+        
+        var wallet: Cuckoo.VerifyReadOnlyProperty<EudiWallet> {
+            return .init(manager: cuckoo_manager, name: "wallet", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         
@@ -6457,7 +5268,13 @@ return cuckoo_manager.call(
     }
 }
 
-public class WalletKitControllerStub:WalletKitController {
+public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
+    
+    public var wallet: EudiWallet {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (EudiWallet).self)
+        }
+    }
 
 
     
@@ -6628,7 +5445,7 @@ import UIKit
 @testable import feature_common
 @testable import feature_startup
 
-public class MockProximitySessionCoordinator: ProximitySessionCoordinator, Cuckoo.ProtocolMock {
+public class MockProximitySessionCoordinator: ProximitySessionCoordinator, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ProximitySessionCoordinator
     public typealias Stubbing = __StubbingProxy_ProximitySessionCoordinator
     public typealias Verification = __VerificationProxy_ProximitySessionCoordinator
@@ -6929,7 +5746,7 @@ return cuckoo_manager.call(
     }
 }
 
-public class ProximitySessionCoordinatorStub:ProximitySessionCoordinator {
+public class ProximitySessionCoordinatorStub:ProximitySessionCoordinator, @unchecked Sendable {
     
     public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> {
         get {
@@ -6993,7 +5810,7 @@ import UIKit
 @testable import feature_common
 @testable import feature_startup
 
-public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.ProtocolMock {
+public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = RemoteSessionCoordinator
     public typealias Stubbing = __StubbingProxy_RemoteSessionCoordinator
     public typealias Verification = __VerificationProxy_RemoteSessionCoordinator
@@ -7234,7 +6051,7 @@ return cuckoo_manager.call(
     }
 }
 
-public class RemoteSessionCoordinatorStub:RemoteSessionCoordinator {
+public class RemoteSessionCoordinatorStub:RemoteSessionCoordinator, @unchecked Sendable {
     
     public var presentationStateSubject: CurrentValueSubject<PresentationState, Never> {
         get {
@@ -7286,7 +6103,7 @@ import Cuckoo
 @testable import feature_common
 @testable import feature_startup
 
-public class MockSessionCoordinatorHolder: SessionCoordinatorHolder, Cuckoo.ProtocolMock {
+public class MockSessionCoordinatorHolder: SessionCoordinatorHolder, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = SessionCoordinatorHolder
     public typealias Stubbing = __StubbingProxy_SessionCoordinatorHolder
     public typealias Verification = __VerificationProxy_SessionCoordinatorHolder
@@ -7474,7 +6291,7 @@ public class MockSessionCoordinatorHolder: SessionCoordinatorHolder, Cuckoo.Prot
     }
 }
 
-public class SessionCoordinatorHolderStub:SessionCoordinatorHolder {
+public class SessionCoordinatorHolderStub:SessionCoordinatorHolder, @unchecked Sendable {
 
 
     
@@ -7698,7 +6515,7 @@ import Foundation
 @testable import feature_common
 @testable import feature_startup
 
-public class MockRequestItemConvertible: RequestItemConvertible, Cuckoo.ProtocolMock {
+public class MockRequestItemConvertible: RequestItemConvertible, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = RequestItemConvertible
     public typealias Stubbing = __StubbingProxy_RequestItemConvertible
     public typealias Verification = __VerificationProxy_RequestItemConvertible
@@ -7766,7 +6583,7 @@ public class MockRequestItemConvertible: RequestItemConvertible, Cuckoo.Protocol
     }
 }
 
-public class RequestItemConvertibleStub:RequestItemConvertible {
+public class RequestItemConvertibleStub:RequestItemConvertible, @unchecked Sendable {
 
 
     
@@ -7793,7 +6610,7 @@ import Copyable
 @testable import feature_common
 @testable import feature_startup
 
-public class MockViewState: ViewState, Cuckoo.ProtocolMock {
+public class MockViewState: ViewState, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ViewState
     public typealias Stubbing = __StubbingProxy_ViewState
     public typealias Verification = __VerificationProxy_ViewState
@@ -7831,148 +6648,9 @@ public class MockViewState: ViewState, Cuckoo.ProtocolMock {
     }
 }
 
-public class ViewStateStub:ViewState {
+public class ViewStateStub:ViewState, @unchecked Sendable {
 
 
-}
-
-
-class MockBaseViewModel<Router: RouterHost, UiState: ViewState>: BaseViewModel<Router, UiState>, Cuckoo.ClassMock {
-    typealias MocksType = BaseViewModel<Router, UiState>
-    typealias Stubbing = __StubbingProxy_BaseViewModel
-    typealias Verification = __VerificationProxy_BaseViewModel
-
-    // Original typealiases
-
-    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: true)
-
-    private var __defaultImplStub: BaseViewModel<Router, UiState>?
-
-    func enableDefaultImplementation(_ stub: BaseViewModel<Router, UiState>) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-    
-    public override var cancellables: Set<AnyCancellable> {
-        get {
-            return cuckoo_manager.getter(
-                "cancellables",
-                superclassCall: super.cancellables,
-                defaultCall: __defaultImplStub!.cancellables
-            )
-        }
-        set {
-            cuckoo_manager.setter(
-                "cancellables",
-                value: newValue,
-                superclassCall: super.cancellables = newValue,
-                defaultCall: __defaultImplStub!.cancellables = newValue
-            )
-        }
-    }
-    
-    public override var viewState: UiState {
-        get {
-            return cuckoo_manager.getter(
-                "viewState",
-                superclassCall: super.viewState,
-                defaultCall: __defaultImplStub!.viewState
-            )
-        }
-    }
-
-    
-    public override func setState(_ p0: (UiState) -> UiState) {
-        
-		return withoutActuallyEscaping(p0, do: { (p0: @escaping (UiState) -> UiState) in
-return cuckoo_manager.call(
-            "setState(_ p0: (UiState) -> UiState)",
-            parameters: (p0),
-            escapingParameters: ({ _ in fatalError("This is a stub! It's not supposed to be called!") }),
-            superclassCall: super.setState(p0),
-            defaultCall: __defaultImplStub!.setState(p0)
-        )
-		})
-
-    }
-
-    struct __StubbingProxy_BaseViewModel: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        var cancellables: Cuckoo.ClassToBeStubbedProperty<MockBaseViewModel,Set<AnyCancellable>> {
-            return .init(manager: cuckoo_manager, name: "cancellables")
-        }
-        
-        var viewState: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockBaseViewModel,UiState> {
-            return .init(manager: cuckoo_manager, name: "viewState")
-        }
-        
-        func setState<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ClassStubNoReturnFunction<((UiState) -> UiState)> where M1.MatchedType == (UiState) -> UiState {
-            let matchers: [Cuckoo.ParameterMatcher<((UiState) -> UiState)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBaseViewModel.self,
-                method: "setState(_ p0: (UiState) -> UiState)",
-                parameterMatchers: matchers
-            ))
-        }
-    }
-
-    struct __VerificationProxy_BaseViewModel: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        var cancellables: Cuckoo.VerifyProperty<Set<AnyCancellable>> {
-            return .init(manager: cuckoo_manager, name: "cancellables", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var viewState: Cuckoo.VerifyReadOnlyProperty<UiState> {
-            return .init(manager: cuckoo_manager, name: "viewState", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        
-        @discardableResult
-        func setState<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<((UiState) -> UiState), Void> where M1.MatchedType == (UiState) -> UiState {
-            let matchers: [Cuckoo.ParameterMatcher<((UiState) -> UiState)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "setState(_ p0: (UiState) -> UiState)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-    }
-}
-
-class BaseViewModelStub<Router: RouterHost, UiState: ViewState>:BaseViewModel<Router, UiState> {
-    
-    public override var cancellables: Set<AnyCancellable> {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Set<AnyCancellable>).self)
-        }
-        set {}
-    }
-    
-    public override var viewState: UiState {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (UiState).self)
-        }
-    }
-
-
-    
-    public override func setState(_ p0: (UiState) -> UiState) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
 }
 
 
@@ -7992,7 +6670,7 @@ import logic_resources
 @testable import feature_common
 @testable import feature_startup
 
-public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
+public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = ConfigUiLogic
     public typealias Stubbing = __StubbingProxy_ConfigUiLogic
     public typealias Verification = __VerificationProxy_ConfigUiLogic
@@ -8085,7 +6763,7 @@ public class MockConfigUiLogic: ConfigUiLogic, Cuckoo.ProtocolMock {
     }
 }
 
-public class ConfigUiLogicStub:ConfigUiLogic {
+public class ConfigUiLogicStub:ConfigUiLogic, @unchecked Sendable {
     
     public var dashboardRoute: AppRoute {
         get {
@@ -8127,7 +6805,7 @@ import logic_resources
 @testable import feature_common
 @testable import feature_startup
 
-public class MockUIConfigType: UIConfigType, Cuckoo.ProtocolMock {
+public class MockUIConfigType: UIConfigType, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = UIConfigType
     public typealias Stubbing = __StubbingProxy_UIConfigType
     public typealias Verification = __VerificationProxy_UIConfigType
@@ -8183,7 +6861,7 @@ public class MockUIConfigType: UIConfigType, Cuckoo.ProtocolMock {
     }
 }
 
-public class UIConfigTypeStub:UIConfigType {
+public class UIConfigTypeStub:UIConfigType, @unchecked Sendable {
     
     public var log: String {
         get {
@@ -8210,7 +6888,7 @@ import Foundation
 @testable import feature_common
 @testable import feature_startup
 
-public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock {
+public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = DeepLinkController
     public typealias Stubbing = __StubbingProxy_DeepLinkController
     public typealias Verification = __VerificationProxy_DeepLinkController
@@ -8398,7 +7076,7 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock {
     }
 }
 
-public class DeepLinkControllerStub:DeepLinkController {
+public class DeepLinkControllerStub:DeepLinkController, @unchecked Sendable {
 
 
     
@@ -8439,7 +7117,7 @@ import Foundation
 @testable import feature_common
 @testable import feature_startup
 
-class MockUrlSchemaController: UrlSchemaController, Cuckoo.ProtocolMock {
+class MockUrlSchemaController: UrlSchemaController, Cuckoo.ProtocolMock, @unchecked Sendable {
     typealias MocksType = UrlSchemaController
     typealias Stubbing = __StubbingProxy_UrlSchemaController
     typealias Verification = __VerificationProxy_UrlSchemaController
@@ -8507,7 +7185,7 @@ class MockUrlSchemaController: UrlSchemaController, Cuckoo.ProtocolMock {
     }
 }
 
-class UrlSchemaControllerStub:UrlSchemaController {
+class UrlSchemaControllerStub:UrlSchemaController, @unchecked Sendable {
 
 
     
@@ -8903,7 +7581,7 @@ import SwiftUI
 @testable import feature_common
 @testable import feature_startup
 
-public class MockLocatorType: LocatorType, Cuckoo.ProtocolMock {
+public class MockLocatorType: LocatorType, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = LocatorType
     public typealias Stubbing = __StubbingProxy_LocatorType
     public typealias Verification = __VerificationProxy_LocatorType
@@ -8989,7 +7667,7 @@ public class MockLocatorType: LocatorType, Cuckoo.ProtocolMock {
     }
 }
 
-public class LocatorTypeStub:LocatorType {
+public class LocatorTypeStub:LocatorType, @unchecked Sendable {
     
     public var id: String {
         get {
@@ -9241,7 +7919,7 @@ import Cuckoo
 @testable import feature_common
 @testable import feature_startup
 
-public class MockAppRouteModule: AppRouteModule, Cuckoo.ProtocolMock {
+public class MockAppRouteModule: AppRouteModule, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = AppRouteModule
     public typealias Stubbing = __StubbingProxy_AppRouteModule
     public typealias Verification = __VerificationProxy_AppRouteModule
@@ -9315,7 +7993,7 @@ public class MockAppRouteModule: AppRouteModule, Cuckoo.ProtocolMock {
     }
 }
 
-public class AppRouteModuleStub:AppRouteModule {
+public class AppRouteModuleStub:AppRouteModule, @unchecked Sendable {
     
     public var info: (key: String, arguments: [String: String]) {
         get {
@@ -9347,7 +8025,7 @@ import Cuckoo
 @testable import feature_common
 @testable import feature_startup
 
-public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock {
+public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock, @unchecked Sendable {
     public typealias MocksType = RouterHost
     public typealias Stubbing = __StubbingProxy_RouterHost
     public typealias Verification = __VerificationProxy_RouterHost
@@ -9775,7 +8453,7 @@ public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock {
     }
 }
 
-public class RouterHostStub:RouterHost {
+public class RouterHostStub:RouterHost, @unchecked Sendable {
 
 
     

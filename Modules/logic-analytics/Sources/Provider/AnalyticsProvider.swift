@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-protocol AnalyticsProvider {
+protocol AnalyticsProvider: Sendable {
   func initialize(key: String)
   func logScreen(screen: String, arguments: [String: String])
   func logEvent(event: String, arguments: [String: String])

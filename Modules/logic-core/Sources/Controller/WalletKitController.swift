@@ -27,6 +27,9 @@ private enum WalletKitKeyChainIdentifier: String, KeychainWrapper {
 }
 
 public protocol WalletKitController: Sendable {
+
+  var wallet: EudiWallet { get }
+
   func startProximityPresentation() -> ProximitySessionCoordinator
   func startSameDevicePresentation(deepLink: URLComponents) -> RemoteSessionCoordinator
   func startCrossDevicePresentation(urlString: String) -> RemoteSessionCoordinator
@@ -67,7 +70,7 @@ public protocol WalletKitController: Sendable {
 
 final class WalletKitControllerImpl: WalletKitController, Sendable {
 
-  private let wallet: EudiWallet
+  let wallet: EudiWallet
   private let sessionCoordinatorHolder: SessionCoordinatorHolder
 
   private let configLogic: WalletKitConfig

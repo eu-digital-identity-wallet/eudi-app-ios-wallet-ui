@@ -16,7 +16,7 @@
 
 import Foundation
 
-protocol UrlSchemaController {
+protocol UrlSchemaController: Sendable {
   func retrieveSchemas(with type: String) -> [String]
 }
 
