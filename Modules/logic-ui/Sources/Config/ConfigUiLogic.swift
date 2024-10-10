@@ -19,7 +19,7 @@ import logic_business
 
 public typealias AppRouteKey = String
 
-public protocol ConfigUiLogic: ThreadSafeProtocol {
+public protocol ConfigUiLogic: Sendable {
 
   var dashboardRoute: AppRoute { get }
 

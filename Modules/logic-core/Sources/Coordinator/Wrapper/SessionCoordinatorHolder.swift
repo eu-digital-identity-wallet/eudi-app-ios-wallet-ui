@@ -13,9 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_business
 
-public protocol SessionCoordinatorHolder: ThreadSafeProtocol {
+public protocol SessionCoordinatorHolder: Sendable {
   func clear()
   func setActiveRemoteCoordinator(_ coordinator: RemoteSessionCoordinator)
   func setActiveProximityCoordinator(_ coordinator: ProximitySessionCoordinator)

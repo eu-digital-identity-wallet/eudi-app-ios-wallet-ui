@@ -26,7 +26,7 @@ private enum WalletKitKeyChainIdentifier: String, KeychainWrapper {
   case dynamicIssuancePendingUrl
 }
 
-public protocol WalletKitController: ThreadSafeController {
+public protocol WalletKitController: Sendable {
 
   var wallet: EudiWallet { get }
 

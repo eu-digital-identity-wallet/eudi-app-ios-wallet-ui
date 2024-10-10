@@ -19,7 +19,7 @@ import logic_resources
 import logic_business
 import UIKit
 
-public protocol RemoteSessionCoordinator: ThreadSafeProtocol {
+public protocol RemoteSessionCoordinator: Sendable {
 
   var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> { get }
 

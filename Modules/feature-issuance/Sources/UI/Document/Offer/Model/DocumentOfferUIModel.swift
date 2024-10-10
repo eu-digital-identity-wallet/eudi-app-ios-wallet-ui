@@ -18,7 +18,7 @@ import logic_core
 import logic_business
 import logic_resources
 
-public struct DocumentOfferUIModel: ThreadSafeObject {
+public struct DocumentOfferUIModel: Sendable {
 
   public let issuerName: String
   public let txCode: TxCode?
@@ -39,7 +39,7 @@ public struct DocumentOfferUIModel: ThreadSafeObject {
 }
 
 public extension DocumentOfferUIModel {
-  struct UIOffer: Identifiable, ThreadSafeObject {
+  struct UIOffer: Identifiable, Sendable {
 
     @EquatableNoop
     public var id: String
@@ -67,7 +67,7 @@ public extension DocumentOfferUIModel {
 }
 
 public extension DocumentOfferUIModel {
-  struct TxCode: ThreadSafeObject {
+  struct TxCode: Sendable {
 
     let isRequired: Bool
     let codeLenght: Int

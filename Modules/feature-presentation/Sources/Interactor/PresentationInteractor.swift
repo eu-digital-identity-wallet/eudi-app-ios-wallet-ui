@@ -18,29 +18,29 @@ import logic_core
 import logic_business
 import feature_common
 
-public struct OnlineAuthenticationRequestSuccessModel: ThreadSafeObject {
+public struct OnlineAuthenticationRequestSuccessModel: Sendable {
   var requestDataCells: [RequestDataUIModel]
   var relyingParty: String
   var dataRequestInfo: String
   var isTrusted: Bool
 }
 
-public enum PresentationCoordinatorPartialState: ThreadSafePartialState {
+public enum PresentationCoordinatorPartialState: Sendable {
   case success(RemoteSessionCoordinator)
   case failure(Error)
 }
 
-public enum RemotePublisherPartialState: ThreadSafePartialState {
+public enum RemotePublisherPartialState: Sendable {
   case success(AsyncStream<PresentationState>)
   case failure(Error)
 }
 
-public enum RemoteSentResponsePartialState: ThreadSafePartialState {
+public enum RemoteSentResponsePartialState: Sendable {
   case sent
   case failure(Error)
 }
 
-public protocol PresentationInteractor: ThreadSafeInteractor {
+public protocol PresentationInteractor: Sendable {
   func getSessionStatePublisher() -> RemotePublisherPartialState
   func getCoordinator() -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>

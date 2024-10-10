@@ -13,9 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_business
 
-public protocol PinStorageController: ThreadSafeController {
+public protocol PinStorageController: Sendable {
   func retrievePin() -> String?
   func setPin(with pin: String)
   func isPinValid(with pin: String) -> Bool

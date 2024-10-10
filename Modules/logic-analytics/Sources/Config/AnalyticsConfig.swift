@@ -13,9 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_business
 
-protocol AnalyticsConfig: ThreadSafeProtocol {
+protocol AnalyticsConfig: Sendable {
   /**
    * Supported Analytics Provider, e.g. Firebase
    */

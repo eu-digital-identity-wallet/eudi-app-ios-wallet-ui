@@ -20,7 +20,7 @@ import feature_common
 import logic_business
 import logic_core
 
-public protocol AddDocumentInteractor: ThreadSafeInteractor {
+public protocol AddDocumentInteractor: Sendable {
   func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState
   func loadSampleData() async -> LoadSampleDataPartialState
   func issueDocument(docType: String) async -> IssueDocumentPartialState
@@ -129,24 +129,24 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
   }
 }
 
-public enum StoredDocumentsPartialState: ThreadSafePartialState {
+public enum StoredDocumentsPartialState: Sendable {
   case success([AddDocumentUIModel])
   case failure(Error)
 }
 
-public enum LoadSampleDataPartialState: ThreadSafePartialState {
+public enum LoadSampleDataPartialState: Sendable {
   case success
   case failure(Error)
 }
 
-public enum IssueDocumentPartialState: ThreadSafePartialState {
+public enum IssueDocumentPartialState: Sendable {
   case success(String)
   case deferredSuccess
   case dynamicIssuance(RemoteSessionCoordinator)
   case failure(Error)
 }
 
-public enum IssueDynamicDocumentPartialState: ThreadSafePartialState {
+public enum IssueDynamicDocumentPartialState: Sendable {
   case success(String)
   case noPending
   case failure(Error)

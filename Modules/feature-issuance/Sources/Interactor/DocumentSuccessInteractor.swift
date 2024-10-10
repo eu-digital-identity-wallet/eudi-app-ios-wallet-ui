@@ -17,7 +17,7 @@ import logic_core
 import logic_business
 import logic_resources
 
-public protocol DocumentSuccessInteractor: ThreadSafeInteractor {
+public protocol DocumentSuccessInteractor: Sendable {
   func getHoldersName(for documentIdentifier: String) -> String?
   func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key?
 }

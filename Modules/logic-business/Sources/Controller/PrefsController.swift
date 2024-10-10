@@ -15,7 +15,7 @@
  */
 import Foundation
 
-public protocol PrefsController: ThreadSafeController {
+public protocol PrefsController: Sendable {
   func setValue(_ value: Any?, forKey: Prefs.Key)
   func getString(forKey: Prefs.Key) -> String?
   func getOptionalString(forKey: Prefs.Key) -> String

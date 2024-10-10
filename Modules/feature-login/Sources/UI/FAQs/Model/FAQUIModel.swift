@@ -16,7 +16,7 @@
 import Foundation
 import logic_business
 
-public struct FAQUIModel: Identifiable, Equatable, ThreadSafeObject {
+public struct FAQUIModel: Identifiable, Equatable, Sendable {
 
   @EquatableNoop
   public var id: String
@@ -30,7 +30,7 @@ public struct FAQUIModel: Identifiable, Equatable, ThreadSafeObject {
 }
 
 public extension FAQUIModel {
-  struct Value: Equatable, ThreadSafeObject {
+  struct Value: Equatable, Sendable {
 
     @EquatableNoop
     public var id: String
