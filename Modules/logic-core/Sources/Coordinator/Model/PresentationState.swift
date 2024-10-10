@@ -14,9 +14,8 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import logic_business
 
-public enum PresentationState: ThreadSafeObject {
+public enum PresentationState: Sendable {
   case loading
   case prepareQr
   case qrReady(imageData: Data)

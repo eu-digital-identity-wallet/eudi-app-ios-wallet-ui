@@ -18,37 +18,37 @@ import logic_core
 import logic_business
 import feature_common
 
-public enum ProximityResponsePartialState: ThreadSafePartialState {
+public enum ProximityResponsePartialState: Sendable {
   case sent
   case failure(Error)
 }
 
-public enum ProximityResponsePreparationPartialState: ThreadSafePartialState {
+public enum ProximityResponsePreparationPartialState: Sendable {
   case success(RequestItemConvertible)
   case failure(Error)
 }
 
-public enum ProximityRequestPartialState: ThreadSafePartialState {
+public enum ProximityRequestPartialState: Sendable {
   case success([RequestDataUIModel], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
   case failure(Error)
 }
 
-public enum ProximityQrCodePartialState: ThreadSafePartialState {
+public enum ProximityQrCodePartialState: Sendable {
   case success(UIImage)
   case failure(Error)
 }
 
-public enum ProximityPublisherPartialState: ThreadSafePartialState {
+public enum ProximityPublisherPartialState: Sendable {
   case success(AsyncStream<PresentationState>)
   case failure(Error)
 }
 
-public enum ProximityCoordinatorPartialState: ThreadSafePartialState {
+public enum ProximityCoordinatorPartialState: Sendable {
   case success(ProximitySessionCoordinator)
   case failure(Error)
 }
 
-public protocol ProximityInteractor: ThreadSafeInteractor {
+public protocol ProximityInteractor: Sendable {
 
   func getSessionStatePublisher() -> ProximityPublisherPartialState
   func getCoordinator() -> ProximityCoordinatorPartialState

@@ -15,9 +15,8 @@
  */
 import Foundation
 import logic_resources
-import logic_business
 
-public enum DocumentTypeIdentifier: RawRepresentable, Equatable, ThreadSafeObject {
+public enum DocumentTypeIdentifier: RawRepresentable, Equatable, Sendable {
 
   case PID
   case MDL

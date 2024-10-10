@@ -18,7 +18,7 @@ import SwiftUI
 import logic_business
 import logic_core
 
-public enum RequestDataUIModel: Equatable, ThreadSafeObject {
+public enum RequestDataUIModel: Equatable, Sendable {
   case requestDataRow(RequestDataRow)
   case requestDataSection(RequestDataSection)
   case requestDataVerification(RequestDataVerification)
@@ -51,9 +51,9 @@ public enum RequestDataUIModel: Equatable, ThreadSafeObject {
   }
 }
 
-public struct RequestDataRow: Identifiable, Equatable, ThreadSafeObject {
+public struct RequestDataRow: Identifiable, Equatable, Sendable {
 
-  public enum Value: Equatable, ThreadSafeObject {
+  public enum Value: Equatable, Sendable {
     case string(String)
     case image(Data)
 
@@ -137,7 +137,7 @@ public struct RequestDataRow: Identifiable, Equatable, ThreadSafeObject {
   }
 }
 
-public struct RequestDataSection: Identifiable, Equatable, ThreadSafeObject {
+public struct RequestDataSection: Identifiable, Equatable, Sendable {
 
   public var id: String
   public let type: `Type`
@@ -154,7 +154,7 @@ public struct RequestDataSection: Identifiable, Equatable, ThreadSafeObject {
   }
 }
 
-public struct RequestDataVerification: Identifiable, Equatable, ThreadSafeObject {
+public struct RequestDataVerification: Identifiable, Equatable, Sendable {
 
   public var id: String
   public let title: String
@@ -176,7 +176,7 @@ public struct RequestDataVerification: Identifiable, Equatable, ThreadSafeObject
 }
 
 public extension RequestDataSection {
-  enum `Type`: Equatable, ThreadSafeObject {
+  enum `Type`: Equatable, Sendable {
     case id
     case mdl
     case age

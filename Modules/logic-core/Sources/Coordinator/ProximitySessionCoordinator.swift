@@ -20,7 +20,7 @@ import logic_resources
 import UIKit
 import logic_business
 
-public protocol ProximitySessionCoordinator: ThreadSafeProtocol {
+public protocol ProximitySessionCoordinator: Sendable {
 
   var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> { get }
 
