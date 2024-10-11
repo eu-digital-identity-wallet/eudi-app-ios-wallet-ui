@@ -58,7 +58,7 @@
 		F0C6207D2B6A6246007F903F /* logic-analytics */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-analytics"; path = "Modules/logic-analytics"; sourceTree = "<group>"; };
 		F0DF43F42BA083DF003498ED /* logic-authentication */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-authentication"; path = "Modules/logic-authentication"; sourceTree = "<group>"; };
 		F12E940E2ABC6C000086EC93 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F14907B82ABAF54B00DDFE56 /* Wallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F14907B82ABAF54B00DDFE56 /* EudiWallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EudiWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F14907BB2ABAF54B00DDFE56 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		F14907BF2ABAF55000DDFE56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F14907C22ABAF55000DDFE56 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -115,7 +115,7 @@
 		F14907B92ABAF54B00DDFE56 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F14907B82ABAF54B00DDFE56 /* Wallet.app */,
+				F14907B82ABAF54B00DDFE56 /* EudiWallet.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -177,9 +177,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F14907B72ABAF54B00DDFE56 /* Wallet */ = {
+		F14907B72ABAF54B00DDFE56 /* EudiWallet */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F14907DC2ABAF55000DDFE56 /* Build configuration list for PBXNativeTarget "Wallet" */;
+			buildConfigurationList = F14907DC2ABAF55000DDFE56 /* Build configuration list for PBXNativeTarget "EudiWallet" */;
 			buildPhases = (
 				F14907B42ABAF54B00DDFE56 /* Sources */,
 				F14907B52ABAF54B00DDFE56 /* Frameworks */,
@@ -190,12 +190,12 @@
 			);
 			dependencies = (
 			);
-			name = Wallet;
+			name = EudiWallet;
 			packageProductDependencies = (
 				F02AE3902BA6E59600C25C59 /* logic-assembly */,
 			);
 			productName = "EUDI Reference App";
-			productReference = F14907B82ABAF54B00DDFE56 /* Wallet.app */;
+			productReference = F14907B82ABAF54B00DDFE56 /* EudiWallet.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -226,7 +226,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F14907B72ABAF54B00DDFE56 /* Wallet */,
+				F14907B72ABAF54B00DDFE56 /* EudiWallet */,
 			);
 		};
 /* End PBXProject section */
@@ -739,7 +739,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Release Demo";
 		};
-		F14907DC2ABAF55000DDFE56 /* Build configuration list for PBXNativeTarget "Wallet" */ = {
+		F14907DC2ABAF55000DDFE56 /* Build configuration list for PBXNativeTarget "EudiWallet" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F14907DD2ABAF55000DDFE56 /* Debug Dev */,
