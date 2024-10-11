@@ -105,11 +105,11 @@ platform :ios do
       buildType: ENV["APP_BUILD_TYPE"],
     )
 
-    # add_git_tag(
-    #   tag: tagVersion,
-    # )
+    add_git_tag(
+      tag: tagVersion,
+    )
 
-    #push_git_tags
+    push_git_tags
   end
 
   desc "Reset version and build number to default"
