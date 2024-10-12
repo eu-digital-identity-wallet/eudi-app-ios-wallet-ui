@@ -16,12 +16,12 @@
 import Foundation
 import logic_business
 
-public enum FAQsPartialState: ThreadSafePartialState {
+public enum FAQsPartialState: Sendable {
   case success([FAQUIModel])
   case failure(Error)
 }
 
-public protocol FAQsInteractor: ThreadSafeInteractor {
+public protocol FAQsInteractor: Sendable {
   func fetchFAQs() async -> FAQsPartialState
 }
 

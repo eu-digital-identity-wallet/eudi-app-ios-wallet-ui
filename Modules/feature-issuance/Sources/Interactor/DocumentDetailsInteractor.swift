@@ -17,9 +17,8 @@ import Foundation
 import logic_ui
 import logic_resources
 import logic_core
-import logic_business
 
-public protocol DocumentDetailsInteractor: ThreadSafeInteractor {
+public protocol DocumentDetailsInteractor: Sendable {
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
   func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState
 }
@@ -78,12 +77,12 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
   }
 }
 
-public enum DocumentDetailsPartialState: ThreadSafePartialState {
+public enum DocumentDetailsPartialState: Sendable {
   case success(DocumentDetailsUIModel)
   case failure(Error)
 }
 
-public enum DocumentDetailsDeletionPartialState: ThreadSafePartialState {
+public enum DocumentDetailsDeletionPartialState: Sendable {
   case success(shouldReboot: Bool)
   case failure(Error)
 }

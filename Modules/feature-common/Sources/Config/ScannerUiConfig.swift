@@ -16,7 +16,6 @@
 import Foundation
 import logic_ui
 import logic_resources
-import logic_business
 
 public struct ScannerUiConfig: UIConfigType, Equatable {
 
@@ -32,7 +31,7 @@ public struct ScannerUiConfig: UIConfigType, Equatable {
 }
 
 public extension ScannerUiConfig {
-  enum Flow: Equatable, ThreadSafeObject {
+  enum Flow: Equatable, Sendable {
 
     case presentation
     case issuing(IssuanceFlowUiConfig)

@@ -15,6 +15,6 @@
  */
 import logic_business
 
-public protocol WelcomeInteractor: ThreadSafeInteractor {}
+public protocol WelcomeInteractor: Sendable {}
 
 final class WelcomeInteractorImpl: WelcomeInteractor {}

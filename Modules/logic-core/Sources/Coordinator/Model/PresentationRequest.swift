@@ -13,9 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_business
 
-public struct PresentationRequest: ThreadSafeObject {
+public struct PresentationRequest: Sendable {
   public let items: [DocElementsViewModel]
   public let relyingParty: String
   public let dataRequestInfo: String

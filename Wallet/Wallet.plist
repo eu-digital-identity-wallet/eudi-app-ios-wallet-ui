@@ -24,6 +24,8 @@
 	</array>
 	<key>Core User Auth</key>
 	<string>$(CORE_USER_AUTH)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>Vci Client Id</key>
 	<string>$(VCI_CLIENT_ID)</string>
 	<key>Vci Issuer URL</key>

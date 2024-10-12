@@ -42,24 +42,30 @@ platform :ios do
 
     git_pull
 
-    appcenter_build_number = latest_appcenter_release(
-      appName: ENV["APP_CENTER_APP_NAME"],
-      appToken: ENV["APP_CENTER_APP_TOKEN"],
-      ownerName: ENV["APP_CENTER_ACCOUNT"],
+    connect_api = app_store_connect_api_key(
+      key_id: ENV["CONNECT_KEY_ID"],
+      issuer_id: ENV["CONNECT_ISSUER_ID"],
+      key_filepath: ENV["CONNECT_KEY_PATH"],
+      duration: 1200,
+      in_house: false,
     )
 
-    buildNumber = build_number(versionBuildNumber: appcenter_build_number)
+    latestBuildNumber = latest_testflight_build_number(
+      api_key: connect_api,
+      initial_build_number: 0,
+    )
 
-    calver(
-      target: ENV["APP_TARGET"],
-      configName: ENV["APP_VERSION_CONFIG"],
+    buildNumber = build_number(versionBuildNumber: latestBuildNumber)
+
+    fullVersion = full_version(
       buildType: ENV["APP_BUILD_TYPE"],
       buildCode: buildNumber,
     )
 
-    versionName = get_version_number(
+    minified_version(
       target: ENV["APP_TARGET"],
-      configuration: ENV["APP_VERSION_CONFIG"],
+      configName: ENV["APP_VERSION_CONFIG"],
+      fullVersion: fullVersion,
     )
 
     update_build_number(
@@ -68,7 +74,7 @@ platform :ios do
     )
 
     tagVersion = tag_name(
-      buildName: versionName,
+      buildName: fullVersion,
       buildNumber: buildNumber,
       brand: ENV["APP_TAG"],
       buildType: ENV["APP_BUILD_TYPE"],
@@ -77,7 +83,7 @@ platform :ios do
     build_app(
       scheme: ENV["APP_SCHEME"],
       include_bitcode: true,
-      export_method: "ad-hoc",
+      export_method: "app-store",
       export_options: {
         provisioningProfiles: {
           ENV["APP_BUNDLE_ID"] => ENV["APP_PROVISION_PROFILE"],
@@ -85,16 +91,15 @@ platform :ios do
       },
     )
 
-    upload_to_appcenter(
-      appName: ENV["APP_CENTER_APP_NAME"],
-      path: ENV["APP_IPA_PATH"],
-      appToken: ENV["APP_CENTER_APP_TOKEN"],
-      ownerName: ENV["APP_CENTER_ACCOUNT"],
-      groups: ENV["APP_CENTER_GROUPS"],
+    upload_upstore(
+      connectApi: connect_api,
+      binaryName: ENV["APP_IPA_PATH"],
+      bundleId: ENV["APP_BUNDLE_ID"],
     )
 
     clean_build_artifacts
-    resetVersioning(
+
+    reset_project(
       target: ENV["APP_TARGET"],
       configName: ENV["APP_VERSION_CONFIG"],
       buildType: ENV["APP_BUILD_TYPE"],
@@ -108,7 +113,21 @@ platform :ios do
   end
 
   desc "Reset version and build number to default"
-  lane :resetVersioning do |values|
+  lane :upload_upstore do |values|
+    connectApi = values[:connectApi]
+    binaryName = values[:binaryName]
+    bundleId = values[:bundleId]
+    pilot(
+      app_identifier: bundleId,
+      api_key: connectApi,
+      ipa: binaryName,
+      skip_submission: false,
+      skip_waiting_for_build_processing: true,
+    )
+  end
+
+  desc "Reset default project settings"
+  lane :reset_project do |values|
     target = values[:target]
     configName = values[:configName]
     buildType = values[:buildType]
@@ -119,7 +138,7 @@ platform :ios do
     update_version(
       target: target,
       configName: configName,
-      version: "yyyy.mm.v-#{buildType}",
+      version: "yyyy.mm.v",
     )
   end
 
@@ -167,55 +186,43 @@ platform :ios do
     name
   end
 
-  desc "Upload to AppCenter"
-  lane :upload_to_appcenter do |values|
-    appName = values[:appName]
-    path = values[:path]
-    appToken = values[:appToken]
-    ownerName = values[:ownerName]
-    groups = values[:groups]
-    appcenter_upload(
-      api_token: appToken,
-      owner_name: ownerName,
-      app_name: appName,
-      file: path,
-      notify_testers: true,
-      destinations: groups,
-    )
-  end
-
-  desc "Get Release version From AppCenter"
-  lane :latest_appcenter_release do |values|
-    appName = values[:appName]
-    appToken = values[:appToken]
-    ownerName = values[:ownerName]
-    version = "1"
-    begin
-      version = appcenter_fetch_version_number(
-        api_token: appToken,
-        owner_name: ownerName,
-        app_name: appName,
-      )["build_number"]
-    rescue => ex
-      puts ex
-    end
-    puts "AppCenter Version: #{version}"
-    version
-  end
-
   desc "Build Version"
-  lane :calver do |values|
-    target = values[:target]
-    configName = values[:configName]
+  lane :full_version do |values|
     buildType = values[:buildType]
     buildCode = values[:buildCode]
     date = DateTime.now
     version = "#{date.strftime("%Y.%m")}.#{buildCode}-#{buildType}"
     puts "Generated Calver: #{version}"
+    version
+  end
+
+  desc "Appstore Build Version"
+  lane :minified_version do |values|
+    target = values[:target]
+    configName = values[:configName]
+    fullVersion = values[:fullVersion]
+    version = fullVersion.split("-").first
+    puts "Minified Version For Appstore: #{version}"
     update_version(
       target: target,
       configName: configName,
       version: version,
     )
+  end
+
+  desc "Change App Display Name"
+  lane :update_display_name do |values|
+    displayName = values[:displayName]
+    xcodeproj = values[:xcodeproj]
+    target = values[:target]
+
+    puts "New display name: #{displayName} for #{target} in #{xcodeproj}"
+
+    project = Xcodeproj::Project.open("../#{xcodeproj}")
+    target = project.targets.find { |t| t.name == target }
+    target.build_configurations.each do |config|
+      config.build_settings["INFOPLIST_KEY_CFBundleDisplayName"] = displayName
+    end
+    project.save
   end
 end

@@ -23,14 +23,14 @@ internal final class BiometryError: @unchecked Sendable {
   internal var value: NSError?
 }
 
-public protocol SystemBiometryController: ThreadSafeController {
+public protocol SystemBiometryController: Sendable {
   var biometryType: LABiometryType { get }
   func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError>
   func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometryError>
   func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometryError>
 }
 
-public enum SystemBiometryError: Error, LocalizedError, Identifiable, ThreadSafeObject {
+public enum SystemBiometryError: Error, LocalizedError, Identifiable, Sendable {
   case deniedAccess
   case noFaceIdEnrolled
   case noFingerprintEnrolled

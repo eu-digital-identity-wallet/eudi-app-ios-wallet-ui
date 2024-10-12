@@ -15,7 +15,6 @@
  */
 import Foundation
 import logic_ui
-import logic_business
 
 public struct IssuanceDetailUiConfig: UIConfigType, Equatable {
 
@@ -49,7 +48,7 @@ public struct IssuanceDetailUiConfig: UIConfigType, Equatable {
 }
 
 public extension IssuanceDetailUiConfig {
-  enum Flow: Equatable, ThreadSafeObject {
+  enum Flow: Equatable, Sendable {
 
     case noDocument(String)
     case extraDocument(String)

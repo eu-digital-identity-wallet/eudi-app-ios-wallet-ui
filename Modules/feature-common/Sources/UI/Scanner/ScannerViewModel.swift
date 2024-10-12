@@ -89,7 +89,7 @@ final class ScannerViewModel<Router: RouterHost>: ViewModel<Router, ScannerState
       }.value
 
       if isValid {
-        self.onScanResultValidated(scanResult: scanResult)
+        await self.onScanResultValidated(scanResult: scanResult)
       } else {
 
         let updatedFailedAttempts = viewState.failedScanAttempts + 1
@@ -120,13 +120,13 @@ final class ScannerViewModel<Router: RouterHost>: ViewModel<Router, ScannerState
     UIApplication.shared.openAppSettings()
   }
 
-  private func onScanResultValidated(scanResult: String) {
+  private func onScanResultValidated(scanResult: String) async {
     switch viewState.config.flow {
     case .presentation:
       router.push(
         with: .featurePresentationModule(
           .presentationRequest(
-            presentationCoordinator: interactor.startCrossDevicePresentation(scanResult: scanResult),
+            presentationCoordinator: await interactor.startCrossDevicePresentation(scanResult: scanResult),
             originator: .featureDashboardModule(.dashboard)
           )
         )

@@ -51,7 +51,7 @@ public extension UIConfig {
 }
 
 public extension UIConfig.Success {
-  struct Title: Equatable, ThreadSafeObject {
+  struct Title: Equatable, Sendable {
     public let value: LocalizableString.Key
     public let color: Color
 
@@ -67,12 +67,12 @@ public extension UIConfig.Success {
 
 public extension UIConfig.Success {
 
-  enum VisualKind: Equatable, ThreadSafeObject {
+  enum VisualKind: Equatable, Sendable {
     case defaultIcon
     case customIcon(Image, Color)
   }
 
-  struct Button: Identifiable, Equatable, ThreadSafeObject {
+  struct Button: Identifiable, Equatable, Sendable {
 
     @EquatableNoop
     public var id: UUID
@@ -81,7 +81,7 @@ public extension UIConfig.Success {
     public let style: Style
     public let navigationType: UIConfig.DeepLinkNavigationType
 
-    public enum Style: Equatable, ThreadSafeObject {
+    public enum Style: Equatable, Sendable {
       case primary
       case secondary
     }

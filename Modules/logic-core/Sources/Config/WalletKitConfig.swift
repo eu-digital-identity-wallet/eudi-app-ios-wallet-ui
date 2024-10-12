@@ -14,19 +14,18 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import logic_business
 
-struct VciConfig: ThreadSafeObject {
+struct VciConfig: Sendable {
   public let issuerUrl: String
   public let clientId: String
   public let redirectUri: URL
 }
 
-struct ReaderConfig: ThreadSafeObject {
+struct ReaderConfig: Sendable {
   public let trustedCerts: [Data]
 }
 
-protocol WalletKitConfig: ThreadSafeProtocol {
+protocol WalletKitConfig: Sendable {
 
   /**
    * VCI Configuration

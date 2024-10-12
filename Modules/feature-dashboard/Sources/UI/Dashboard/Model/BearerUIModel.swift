@@ -19,7 +19,7 @@ import logic_core
 import UIKit
 import logic_business
 
-public struct BearerUIModel: Identifiable, Equatable, ThreadSafeObject {
+public struct BearerUIModel: Identifiable, Equatable, Sendable {
 
   @EquatableNoop
   public var id: String
@@ -34,7 +34,7 @@ public struct BearerUIModel: Identifiable, Equatable, ThreadSafeObject {
 
 public extension BearerUIModel {
 
-  struct Value: Equatable, ThreadSafeObject {
+  struct Value: Equatable, Sendable {
 
     public let name: String
 

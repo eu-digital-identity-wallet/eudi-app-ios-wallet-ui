@@ -15,7 +15,7 @@
  */
 @preconcurrency import Swinject
 
-public protocol DIGraphType: ThreadSafeProtocol {
+public protocol DIGraphType: Sendable {
   var assembler: Assembler { get }
   func lazyLoad(with assemblies: [Assembly])
 }

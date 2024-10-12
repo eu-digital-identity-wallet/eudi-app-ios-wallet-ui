@@ -76,6 +76,7 @@ fastlane/screenshots/**/*.png
 fastlane/test_output
 .env.demo
 .env.dev
+*.p8
 
 # Code Injection
 # After new code Injection tools there's a generated folder /iOSInjectionProject

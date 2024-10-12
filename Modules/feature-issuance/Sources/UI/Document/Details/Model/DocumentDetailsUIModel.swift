@@ -18,7 +18,7 @@ import logic_resources
 import logic_business
 import logic_core
 
-public struct DocumentDetailsUIModel: ThreadSafeObject {
+public struct DocumentDetailsUIModel: Sendable {
 
   public let id: String
   public let type: DocumentTypeIdentifier
@@ -32,9 +32,9 @@ public struct DocumentDetailsUIModel: ThreadSafeObject {
 
 public extension DocumentDetailsUIModel {
 
-  struct DocumentField: Identifiable, ThreadSafeObject {
+  struct DocumentField: Identifiable, Sendable {
 
-    public indirect enum Value: ThreadSafeObject {
+    public indirect enum Value: Sendable {
       case string(String)
       case image(Data)
     }

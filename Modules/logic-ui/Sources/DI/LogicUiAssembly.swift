@@ -35,7 +35,6 @@ public final class LogicUiAssembly: Assembly {
     container.register(DeepLinkController.self) { r in
       DeepLinkControllerImpl(
         prefsController: r.force(PrefsController.self),
-        walletKitController: r.force(WalletKitController.self),
         urlSchemaController: r.force(UrlSchemaController.self)
       )
     }

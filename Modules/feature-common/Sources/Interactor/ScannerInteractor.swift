@@ -16,8 +16,8 @@
 import logic_business
 import logic_core
 
-public protocol ScannerInteractor: FormValidatorInteractor, ThreadSafeInteractor {
-  func startCrossDevicePresentation(scanResult: String) -> RemoteSessionCoordinator
+public protocol ScannerInteractor: FormValidatorInteractor, Sendable {
+  func startCrossDevicePresentation(scanResult: String) async -> RemoteSessionCoordinator
 }
 
 final class ScannerInteractorImpl: ScannerInteractor {
@@ -38,8 +38,8 @@ final class ScannerInteractorImpl: ScannerInteractor {
     return await formValidator.validateForms(forms: forms)
   }
 
-  func startCrossDevicePresentation(scanResult: String) -> RemoteSessionCoordinator {
-    return walletKitController.startCrossDevicePresentation(
+  func startCrossDevicePresentation(scanResult: String) async -> RemoteSessionCoordinator {
+    return await walletKitController.startCrossDevicePresentation(
       urlString: scanResult
     )
   }

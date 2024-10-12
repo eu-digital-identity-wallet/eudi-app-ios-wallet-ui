@@ -401,330 +401,6 @@ class AnalyticsProviderStub:AnalyticsProvider, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Generic/ThreadSafeObject.swift'
-
-import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-
-public class MockThreadSafeObject: ThreadSafeObject, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = ThreadSafeObject
-    public typealias Stubbing = __StubbingProxy_ThreadSafeObject
-    public typealias Verification = __VerificationProxy_ThreadSafeObject
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any ThreadSafeObject)?
-
-    public func enableDefaultImplementation(_ stub: any ThreadSafeObject) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-
-    public struct __StubbingProxy_ThreadSafeObject: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-    }
-
-    public struct __VerificationProxy_ThreadSafeObject: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    }
-}
-
-public class ThreadSafeObjectStub:ThreadSafeObject, @unchecked Sendable {
-
-
-}
-
-
-
-
-// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Generic/ThreadSafeProtocol.swift'
-
-import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-
-public class MockThreadSafeProtocol: ThreadSafeProtocol, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = ThreadSafeProtocol
-    public typealias Stubbing = __StubbingProxy_ThreadSafeProtocol
-    public typealias Verification = __VerificationProxy_ThreadSafeProtocol
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any ThreadSafeProtocol)?
-
-    public func enableDefaultImplementation(_ stub: any ThreadSafeProtocol) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-
-    public struct __StubbingProxy_ThreadSafeProtocol: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-    }
-
-    public struct __VerificationProxy_ThreadSafeProtocol: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    }
-}
-
-public class ThreadSafeProtocolStub:ThreadSafeProtocol, @unchecked Sendable {
-
-
-}
-
-
-
-
-// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Specific/ThreadSafeController.swift'
-
-import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-
-public class MockThreadSafeController: ThreadSafeController, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = ThreadSafeController
-    public typealias Stubbing = __StubbingProxy_ThreadSafeController
-    public typealias Verification = __VerificationProxy_ThreadSafeController
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any ThreadSafeController)?
-
-    public func enableDefaultImplementation(_ stub: any ThreadSafeController) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-
-    public struct __StubbingProxy_ThreadSafeController: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-    }
-
-    public struct __VerificationProxy_ThreadSafeController: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    }
-}
-
-public class ThreadSafeControllerStub:ThreadSafeController, @unchecked Sendable {
-
-
-}
-
-
-
-
-// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Specific/ThreadSafeInteractor.swift'
-
-import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-
-public class MockThreadSafeInteractor: ThreadSafeInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = ThreadSafeInteractor
-    public typealias Stubbing = __StubbingProxy_ThreadSafeInteractor
-    public typealias Verification = __VerificationProxy_ThreadSafeInteractor
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any ThreadSafeInteractor)?
-
-    public func enableDefaultImplementation(_ stub: any ThreadSafeInteractor) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-
-    public struct __StubbingProxy_ThreadSafeInteractor: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-    }
-
-    public struct __VerificationProxy_ThreadSafeInteractor: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    }
-}
-
-public class ThreadSafeInteractorStub:ThreadSafeInteractor, @unchecked Sendable {
-
-
-}
-
-
-
-
-// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Specific/ThreadSafePartialState.swift'
-
-import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-
-public class MockThreadSafePartialState: ThreadSafePartialState, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = ThreadSafePartialState
-    public typealias Stubbing = __StubbingProxy_ThreadSafePartialState
-    public typealias Verification = __VerificationProxy_ThreadSafePartialState
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any ThreadSafePartialState)?
-
-    public func enableDefaultImplementation(_ stub: any ThreadSafePartialState) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-
-    public struct __StubbingProxy_ThreadSafePartialState: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-    }
-
-    public struct __VerificationProxy_ThreadSafePartialState: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    }
-}
-
-public class ThreadSafePartialStateStub:ThreadSafePartialState, @unchecked Sendable {
-
-
-}
-
-
-
-
-// MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Architecture/Specific/ThreadSafeProvider.swift'
-
-import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-
-public class MockThreadSafeProvider: ThreadSafeProvider, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = ThreadSafeProvider
-    public typealias Stubbing = __StubbingProxy_ThreadSafeProvider
-    public typealias Verification = __VerificationProxy_ThreadSafeProvider
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any ThreadSafeProvider)?
-
-    public func enableDefaultImplementation(_ stub: any ThreadSafeProvider) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-
-    public struct __StubbingProxy_ThreadSafeProvider: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-    }
-
-    public struct __VerificationProxy_ThreadSafeProvider: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    }
-}
-
-public class ThreadSafeProviderStub:ThreadSafeProvider, @unchecked Sendable {
-
-
-}
-
-
-
-
 // MARK: - Mocks generated from file: 'Modules/logic-business/Sources/Builder/ArrayBuilder.swift'
 
 import Cuckoo
@@ -2443,33 +2119,33 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
     }
 
     
-    public func startProximityPresentation() -> ProximitySessionCoordinator {
-        return cuckoo_manager.call(
-            "startProximityPresentation() -> ProximitySessionCoordinator",
+    public func startProximityPresentation() async -> ProximitySessionCoordinator {
+        return await cuckoo_manager.call(
+            "startProximityPresentation() async -> ProximitySessionCoordinator",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.startProximityPresentation()
+            defaultCall: await __defaultImplStub!.startProximityPresentation()
         )
     }
     
-    public func startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator {
-        return cuckoo_manager.call(
-            "startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator",
+    public func startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator {
+        return await cuckoo_manager.call(
+            "startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.startSameDevicePresentation(deepLink: p0)
+            defaultCall: await __defaultImplStub!.startSameDevicePresentation(deepLink: p0)
         )
     }
     
-    public func startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator {
-        return cuckoo_manager.call(
-            "startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator",
+    public func startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator {
+        return await cuckoo_manager.call(
+            "startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.startCrossDevicePresentation(urlString: p0)
+            defaultCall: await __defaultImplStub!.startCrossDevicePresentation(urlString: p0)
         )
     }
     
@@ -2721,7 +2397,7 @@ return cuckoo_manager.call(
         func startProximityPresentation() -> Cuckoo.ProtocolStubFunction<(), ProximitySessionCoordinator> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "startProximityPresentation() -> ProximitySessionCoordinator",
+                method: "startProximityPresentation() async -> ProximitySessionCoordinator",
                 parameterMatchers: matchers
             ))
         }
@@ -2729,7 +2405,7 @@ return cuckoo_manager.call(
         func startSameDevicePresentation<M1: Cuckoo.Matchable>(deepLink p0: M1) -> Cuckoo.ProtocolStubFunction<(URLComponents), RemoteSessionCoordinator> where M1.MatchedType == URLComponents {
             let matchers: [Cuckoo.ParameterMatcher<(URLComponents)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator",
+                method: "startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator",
                 parameterMatchers: matchers
             ))
         }
@@ -2737,7 +2413,7 @@ return cuckoo_manager.call(
         func startCrossDevicePresentation<M1: Cuckoo.Matchable>(urlString p0: M1) -> Cuckoo.ProtocolStubFunction<(String), RemoteSessionCoordinator> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator",
+                method: "startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator",
                 parameterMatchers: matchers
             ))
         }
@@ -2947,7 +2623,7 @@ return cuckoo_manager.call(
         func startProximityPresentation() -> Cuckoo.__DoNotUse<(), ProximitySessionCoordinator> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "startProximityPresentation() -> ProximitySessionCoordinator",
+                "startProximityPresentation() async -> ProximitySessionCoordinator",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -2959,7 +2635,7 @@ return cuckoo_manager.call(
         func startSameDevicePresentation<M1: Cuckoo.Matchable>(deepLink p0: M1) -> Cuckoo.__DoNotUse<(URLComponents), RemoteSessionCoordinator> where M1.MatchedType == URLComponents {
             let matchers: [Cuckoo.ParameterMatcher<(URLComponents)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator",
+                "startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -2971,7 +2647,7 @@ return cuckoo_manager.call(
         func startCrossDevicePresentation<M1: Cuckoo.Matchable>(urlString p0: M1) -> Cuckoo.__DoNotUse<(String), RemoteSessionCoordinator> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator",
+                "startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -3266,15 +2942,15 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
 
 
     
-    public func startProximityPresentation() -> ProximitySessionCoordinator {
+    public func startProximityPresentation() async -> ProximitySessionCoordinator {
         return DefaultValueRegistry.defaultValue(for: (ProximitySessionCoordinator).self)
     }
     
-    public func startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator {
+    public func startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator {
         return DefaultValueRegistry.defaultValue(for: (RemoteSessionCoordinator).self)
     }
     
-    public func startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator {
+    public func startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator {
         return DefaultValueRegistry.defaultValue(for: (RemoteSessionCoordinator).self)
     }
     
@@ -4321,16 +3997,6 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: 'Modules/logic-core/Sources/Extension/Concurrency+Extensions.swift'
-
-import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-
-
-
 // MARK: - Mocks generated from file: 'Modules/logic-core/Sources/Extension/MdocDecodable+Extensions.swift'
 
 import Cuckoo
@@ -4837,13 +4503,13 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock, @u
         )
     }
     
-    public func handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable) {
+    public func handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable, remoteSessionCoordinator p2: RemoteSessionCoordinator?) {
         return cuckoo_manager.call(
-            "handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable)",
-            parameters: (p0, p1),
-            escapingParameters: (p0, p1),
+            "handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable, remoteSessionCoordinator p2: RemoteSessionCoordinator?)",
+            parameters: (p0, p1, p2),
+            escapingParameters: (p0, p1, p2),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.handleDeepLinkAction(routerHost: p0, deepLinkExecutable: p1)
+            defaultCall: __defaultImplStub!.handleDeepLinkAction(routerHost: p0, deepLinkExecutable: p1, remoteSessionCoordinator: p2)
         )
     }
     
@@ -4892,10 +4558,10 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock, @u
             ))
         }
         
-        func handleDeepLinkAction<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(routerHost p0: M1, deepLinkExecutable p1: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(RouterHost, DeepLink.Executable)> where M1.MatchedType == RouterHost, M2.MatchedType == DeepLink.Executable {
-            let matchers: [Cuckoo.ParameterMatcher<(RouterHost, DeepLink.Executable)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func handleDeepLinkAction<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.OptionalMatchable>(routerHost p0: M1, deepLinkExecutable p1: M2, remoteSessionCoordinator p2: M3) -> Cuckoo.ProtocolStubNoReturnFunction<(RouterHost, DeepLink.Executable, RemoteSessionCoordinator?)> where M1.MatchedType == RouterHost, M2.MatchedType == DeepLink.Executable, M3.OptionalMatchedType == RemoteSessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(RouterHost, DeepLink.Executable, RemoteSessionCoordinator?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDeepLinkController.self,
-                method: "handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable)",
+                method: "handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable, remoteSessionCoordinator p2: RemoteSessionCoordinator?)",
                 parameterMatchers: matchers
             ))
         }
@@ -4950,10 +4616,10 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock, @u
         
         
         @discardableResult
-        func handleDeepLinkAction<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(routerHost p0: M1, deepLinkExecutable p1: M2) -> Cuckoo.__DoNotUse<(RouterHost, DeepLink.Executable), Void> where M1.MatchedType == RouterHost, M2.MatchedType == DeepLink.Executable {
-            let matchers: [Cuckoo.ParameterMatcher<(RouterHost, DeepLink.Executable)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func handleDeepLinkAction<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.OptionalMatchable>(routerHost p0: M1, deepLinkExecutable p1: M2, remoteSessionCoordinator p2: M3) -> Cuckoo.__DoNotUse<(RouterHost, DeepLink.Executable, RemoteSessionCoordinator?), Void> where M1.MatchedType == RouterHost, M2.MatchedType == DeepLink.Executable, M3.OptionalMatchedType == RemoteSessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(RouterHost, DeepLink.Executable, RemoteSessionCoordinator?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return cuckoo_manager.verify(
-                "handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable)",
+                "handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable, remoteSessionCoordinator p2: RemoteSessionCoordinator?)",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -5006,7 +4672,7 @@ public class DeepLinkControllerStub:DeepLinkController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (DeepLink.Executable?).self)
     }
     
-    public func handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable) {
+    public func handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable, remoteSessionCoordinator p2: RemoteSessionCoordinator?) {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

@@ -23,18 +23,15 @@ final class TestDeepLinkController: EudiTest {
   
   var controller: DeepLinkController!
   var prefsController: MockPrefsController!
-  var walletKitController: MockWalletKitController!
   var urlSchemaController: MockUrlSchemaController!
   var routerHost: MockRouterHost!
   
   override func setUp() {
     self.prefsController = MockPrefsController()
-    self.walletKitController = MockWalletKitController()
     self.urlSchemaController = MockUrlSchemaController()
     self.routerHost = MockRouterHost()
     self.controller = DeepLinkControllerImpl(
       prefsController: prefsController,
-      walletKitController: walletKitController,
       urlSchemaController: urlSchemaController
     )
   }
@@ -42,7 +39,6 @@ final class TestDeepLinkController: EudiTest {
   override func tearDown() {
     self.controller = nil
     self.prefsController = nil
-    self.walletKitController = nil
     self.urlSchemaController = nil
     self.routerHost = nil
   }
@@ -92,7 +88,11 @@ final class TestDeepLinkController: EudiTest {
       when(mock.userIsLoggedInWithDocuments()).thenReturn(false)
     }
     // When
-    await controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: Self.mockedOpenId4VPDeepLinkAction)
+    await controller.handleDeepLinkAction(
+      routerHost: routerHost,
+      deepLinkExecutable: Self.mockedOpenId4VPDeepLinkAction,
+      remoteSessionCoordinator: nil
+    )
     // Then
     verify(prefsController).setValue(any(), forKey: Prefs.Key.cachedDeepLink)
     verify(prefsController, times(0)).remove(forKey: Prefs.Key.cachedDeepLink)
@@ -107,7 +107,6 @@ final class TestDeepLinkController: EudiTest {
     let pendingAction = Self.mockedOpenId4VPDeepLinkAction
     
     stubHandleDeepLink(
-      coordinator: sessionCoordinator,
       action: pendingAction,
       route: appRoute,
       isAfterAuth: true,
@@ -115,11 +114,14 @@ final class TestDeepLinkController: EudiTest {
     )
     
     // When
-    await controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: pendingAction)
+    await controller.handleDeepLinkAction(
+      routerHost: routerHost,
+      deepLinkExecutable: pendingAction,
+      remoteSessionCoordinator: sessionCoordinator
+    )
     // Then
     verify(prefsController, times(0)).setValue(any(), forKey: Prefs.Key.cachedDeepLink)
     verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
-    verify(walletKitController).startSameDevicePresentation(deepLink: pendingAction.link)
     verify(routerHost).push(with: appRoute)
   }
   
@@ -131,7 +133,6 @@ final class TestDeepLinkController: EudiTest {
     let pendingAction = Self.mockedOpenId4VPDeepLinkAction
     
     stubHandleDeepLink(
-      coordinator: sessionCoordinator,
       action: pendingAction,
       route: nil,
       isAfterAuth: true,
@@ -139,11 +140,14 @@ final class TestDeepLinkController: EudiTest {
     )
     
     // When
-    await controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: pendingAction)
+    await controller.handleDeepLinkAction(
+      routerHost: routerHost,
+      deepLinkExecutable: pendingAction,
+      remoteSessionCoordinator: sessionCoordinator
+    )
     // Then
     verify(prefsController, times(0)).setValue(any(), forKey: Prefs.Key.cachedDeepLink)
     verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
-    verify(walletKitController).startSameDevicePresentation(deepLink: pendingAction.link)
     verify(routerHost, times(0)).push(with: any())
   }
   
@@ -152,7 +156,6 @@ final class TestDeepLinkController: EudiTest {
     let pendingAction = Self.mockedExternalDeepLinkAction
     
     stubHandleDeepLink(
-      coordinator: nil,
       action: pendingAction,
       route: nil,
       isAfterAuth: true,
@@ -160,15 +163,18 @@ final class TestDeepLinkController: EudiTest {
     )
     
     // When
-    await controller.handleDeepLinkAction(routerHost: routerHost, deepLinkExecutable: pendingAction)
+    await controller.handleDeepLinkAction(
+      routerHost: routerHost,
+      deepLinkExecutable: pendingAction,
+      remoteSessionCoordinator: nil
+    )
     // Then
     verify(prefsController, times(0)).setValue(any(), forKey: Prefs.Key.cachedDeepLink)
     verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
-    verify(walletKitController, times(0)).startSameDevicePresentation(deepLink: any())
     verify(routerHost, times(0)).push(with: any())
   }
   
-  func testGetPendingDeepLinkAction_WhenCachedDeepLinkIsValid_ThenReturnDeepListAction() {
+  func testGetPendingDeepLinkAction_WhenCachedDeepLinkIsValidAndActionRequiresCoordinator_ThenReturnDeepListActionAndVerifyCoordinatorFlag() {
     // Given
     let expected = Self.mockedOpenId4VPDeepLinkAction
     stub(prefsController) { mock in
@@ -181,6 +187,23 @@ final class TestDeepLinkController: EudiTest {
     let action = controller.getPendingDeepLinkAction()
     // Then
     XCTAssertEqual(action, expected)
+    XCTAssertEqual(action?.requiresCoordinator, true)
+  }
+  
+  func testGetPendingDeepLinkAction_WhenCachedDeepLinkIsValidAndActionDoesNotRequireCoordinator_ThenReturnDeepListActionAndVerifyCoordinatorFlag() {
+    // Given
+    let expected = Self.mockedExternalDeepLinkAction
+    stub(prefsController) { mock in
+      when(mock.getString(forKey: Prefs.Key.cachedDeepLink)).thenReturn(Self.mockedExternalUrl.absoluteString)
+    }
+    stub(urlSchemaController) { mock in
+      when(mock.retrieveSchemas(with: any())).thenReturn(["eudi-openid4vp", "mdoc-openid4vp"])
+    }
+    // When
+    let action = controller.getPendingDeepLinkAction()
+    // Then
+    XCTAssertEqual(action, expected)
+    XCTAssertEqual(action?.requiresCoordinator, false)
   }
   
   func testGetPendingDeepLinkAction_WhenCachedDeepLinkIsInvalid_ThenReturnDeepListActionNil() {
@@ -221,7 +244,6 @@ final class TestDeepLinkController: EudiTest {
 private extension TestDeepLinkController {
   
   func stubHandleDeepLink(
-    coordinator: RemoteSessionCoordinator?,
     action: DeepLink.Executable,
     route: AppRoute?,
     isAfterAuth: Bool,
@@ -242,11 +264,6 @@ private extension TestDeepLinkController {
     if let route {
       stub(routerHost) { mock in
         when(mock.push(with: route)).thenDoNothing()
-      }
-    }
-    if let coordinator {
-      stub(walletKitController) { mock in
-        when(mock.startSameDevicePresentation(deepLink: action.link)).thenReturn(coordinator)
       }
     }
   }
@@ -273,6 +290,10 @@ private extension TestDeepLinkController {
 
 private extension TestDeepLinkController {
   struct MockPresentationService: PresentationService {
+    
+    func receiveRequest() async throws -> MdocDataTransfer18013.UserRequestInfo {
+      .init(validItemsRequested: RequestItems())
+    }
     
     var flow: EudiWalletKit.FlowType
     

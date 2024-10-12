@@ -1,4 +1,5 @@
 {
+  "originHash" : "bd9348db6acbf6afb77dd321106d0a7faf32368393e9e17a4e590c2ad8beb321",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -104,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "e604f0f0b67c86c3360f848defe85c9a9939b716",
-        "version" : "0.3.1"
+        "revision" : "c1b4383d6fc3387a8ed4c79177548624c4e34e3a",
+        "version" : "0.3.3"
       }
     },
     {
@@ -113,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "0b2741f2ce2b9232e1cf10dce070fcfa3d714dcd",
-        "version" : "0.3.1"
+        "revision" : "2f00a68370572f914997706a29d15d6fc0b89ceb",
+        "version" : "0.3.3"
       }
     },
     {
@@ -122,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "9d4cc4f403ded786b89401bfbc455ab8f83635db",
-        "version" : "0.2.4"
+        "revision" : "13d65a1010ee9e6219f8bccbab6eb32f67405d86",
+        "version" : "0.2.6"
       }
     },
     {
@@ -158,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "511934ddcc59edf56eece753cb22be0b4e9efeeb",
-        "version" : "0.7.0"
+        "revision" : "3f5dc84303cc914d60f751e8a09c910c73d8dbbb",
+        "version" : "0.7.2"
       }
     },
     {
@@ -167,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "373a59f765c80b5319d4064d25c56f75a486af86",
-        "version" : "0.2.8"
+        "revision" : "9fe492a8648877cd3bc39baed50a1b85d4a50273",
+        "version" : "0.3.0"
       }
     },
     {
@@ -478,5 +479,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

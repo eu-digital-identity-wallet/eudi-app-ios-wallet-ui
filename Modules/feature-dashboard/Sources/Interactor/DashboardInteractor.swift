@@ -19,23 +19,23 @@ import logic_business
 import logic_resources
 import Combine
 
-public enum DashboardPartialState: ThreadSafePartialState {
+public enum DashboardPartialState: Sendable {
   case success(BearerUIModel, [DocumentUIModel], Bool)
   case failure(Error)
 }
 
-public enum DashboardDeleteDeferredPartialState: ThreadSafePartialState {
+public enum DashboardDeleteDeferredPartialState: Sendable {
   case success
   case noDocuments
   case failure(Error)
 }
 
-public enum DashboardDeferredPartialState: ThreadSafePartialState {
+public enum DashboardDeferredPartialState: Sendable {
   case completion(issued: [DocumentUIModel], failed: [String])
   case cancelled
 }
 
-public protocol DashboardInteractor: ThreadSafeInteractor {
+public protocol DashboardInteractor: Sendable {
   func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState
   func getBleAvailability() async -> Reachability.BleAvailibity
   @MainActor func openBleSettings()
