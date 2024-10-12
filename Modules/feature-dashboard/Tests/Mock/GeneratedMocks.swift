@@ -636,13 +636,13 @@ public class MockScannerInteractor: ScannerInteractor, Cuckoo.ProtocolMock, @unc
     }
 
     
-    public func startCrossDevicePresentation(scanResult p0: String) -> RemoteSessionCoordinator {
-        return cuckoo_manager.call(
-            "startCrossDevicePresentation(scanResult p0: String) -> RemoteSessionCoordinator",
+    public func startCrossDevicePresentation(scanResult p0: String) async -> RemoteSessionCoordinator {
+        return await cuckoo_manager.call(
+            "startCrossDevicePresentation(scanResult p0: String) async -> RemoteSessionCoordinator",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.startCrossDevicePresentation(scanResult: p0)
+            defaultCall: await __defaultImplStub!.startCrossDevicePresentation(scanResult: p0)
         )
     }
     
@@ -676,7 +676,7 @@ public class MockScannerInteractor: ScannerInteractor, Cuckoo.ProtocolMock, @unc
         func startCrossDevicePresentation<M1: Cuckoo.Matchable>(scanResult p0: M1) -> Cuckoo.ProtocolStubFunction<(String), RemoteSessionCoordinator> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockScannerInteractor.self,
-                method: "startCrossDevicePresentation(scanResult p0: String) -> RemoteSessionCoordinator",
+                method: "startCrossDevicePresentation(scanResult p0: String) async -> RemoteSessionCoordinator",
                 parameterMatchers: matchers
             ))
         }
@@ -714,7 +714,7 @@ public class MockScannerInteractor: ScannerInteractor, Cuckoo.ProtocolMock, @unc
         func startCrossDevicePresentation<M1: Cuckoo.Matchable>(scanResult p0: M1) -> Cuckoo.__DoNotUse<(String), RemoteSessionCoordinator> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "startCrossDevicePresentation(scanResult p0: String) -> RemoteSessionCoordinator",
+                "startCrossDevicePresentation(scanResult p0: String) async -> RemoteSessionCoordinator",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -751,7 +751,7 @@ public class ScannerInteractorStub:ScannerInteractor, @unchecked Sendable {
 
 
     
-    public func startCrossDevicePresentation(scanResult p0: String) -> RemoteSessionCoordinator {
+    public func startCrossDevicePresentation(scanResult p0: String) async -> RemoteSessionCoordinator {
         return DefaultValueRegistry.defaultValue(for: (RemoteSessionCoordinator).self)
     }
     
@@ -4811,33 +4811,33 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
     }
 
     
-    public func startProximityPresentation() -> ProximitySessionCoordinator {
-        return cuckoo_manager.call(
-            "startProximityPresentation() -> ProximitySessionCoordinator",
+    public func startProximityPresentation() async -> ProximitySessionCoordinator {
+        return await cuckoo_manager.call(
+            "startProximityPresentation() async -> ProximitySessionCoordinator",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.startProximityPresentation()
+            defaultCall: await __defaultImplStub!.startProximityPresentation()
         )
     }
     
-    public func startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator {
-        return cuckoo_manager.call(
-            "startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator",
+    public func startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator {
+        return await cuckoo_manager.call(
+            "startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.startSameDevicePresentation(deepLink: p0)
+            defaultCall: await __defaultImplStub!.startSameDevicePresentation(deepLink: p0)
         )
     }
     
-    public func startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator {
-        return cuckoo_manager.call(
-            "startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator",
+    public func startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator {
+        return await cuckoo_manager.call(
+            "startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.startCrossDevicePresentation(urlString: p0)
+            defaultCall: await __defaultImplStub!.startCrossDevicePresentation(urlString: p0)
         )
     }
     
@@ -5089,7 +5089,7 @@ return cuckoo_manager.call(
         func startProximityPresentation() -> Cuckoo.ProtocolStubFunction<(), ProximitySessionCoordinator> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "startProximityPresentation() -> ProximitySessionCoordinator",
+                method: "startProximityPresentation() async -> ProximitySessionCoordinator",
                 parameterMatchers: matchers
             ))
         }
@@ -5097,7 +5097,7 @@ return cuckoo_manager.call(
         func startSameDevicePresentation<M1: Cuckoo.Matchable>(deepLink p0: M1) -> Cuckoo.ProtocolStubFunction<(URLComponents), RemoteSessionCoordinator> where M1.MatchedType == URLComponents {
             let matchers: [Cuckoo.ParameterMatcher<(URLComponents)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator",
+                method: "startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator",
                 parameterMatchers: matchers
             ))
         }
@@ -5105,7 +5105,7 @@ return cuckoo_manager.call(
         func startCrossDevicePresentation<M1: Cuckoo.Matchable>(urlString p0: M1) -> Cuckoo.ProtocolStubFunction<(String), RemoteSessionCoordinator> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator",
+                method: "startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator",
                 parameterMatchers: matchers
             ))
         }
@@ -5315,7 +5315,7 @@ return cuckoo_manager.call(
         func startProximityPresentation() -> Cuckoo.__DoNotUse<(), ProximitySessionCoordinator> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "startProximityPresentation() -> ProximitySessionCoordinator",
+                "startProximityPresentation() async -> ProximitySessionCoordinator",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -5327,7 +5327,7 @@ return cuckoo_manager.call(
         func startSameDevicePresentation<M1: Cuckoo.Matchable>(deepLink p0: M1) -> Cuckoo.__DoNotUse<(URLComponents), RemoteSessionCoordinator> where M1.MatchedType == URLComponents {
             let matchers: [Cuckoo.ParameterMatcher<(URLComponents)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator",
+                "startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -5339,7 +5339,7 @@ return cuckoo_manager.call(
         func startCrossDevicePresentation<M1: Cuckoo.Matchable>(urlString p0: M1) -> Cuckoo.__DoNotUse<(String), RemoteSessionCoordinator> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator",
+                "startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -5634,15 +5634,15 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
 
 
     
-    public func startProximityPresentation() -> ProximitySessionCoordinator {
+    public func startProximityPresentation() async -> ProximitySessionCoordinator {
         return DefaultValueRegistry.defaultValue(for: (ProximitySessionCoordinator).self)
     }
     
-    public func startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator {
+    public func startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator {
         return DefaultValueRegistry.defaultValue(for: (RemoteSessionCoordinator).self)
     }
     
-    public func startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator {
+    public func startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator {
         return DefaultValueRegistry.defaultValue(for: (RemoteSessionCoordinator).self)
     }
     
@@ -6717,20 +6717,6 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: 'Modules/logic-core/Sources/Extension/Concurrency+Extensions.swift'
-
-import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
 // MARK: - Mocks generated from file: 'Modules/logic-core/Sources/Extension/MdocDecodable+Extensions.swift'
 
 import Cuckoo
@@ -7297,13 +7283,13 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock, @u
         )
     }
     
-    public func handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable) {
+    public func handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable, remoteSessionCoordinator p2: RemoteSessionCoordinator?) {
         return cuckoo_manager.call(
-            "handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable)",
-            parameters: (p0, p1),
-            escapingParameters: (p0, p1),
+            "handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable, remoteSessionCoordinator p2: RemoteSessionCoordinator?)",
+            parameters: (p0, p1, p2),
+            escapingParameters: (p0, p1, p2),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.handleDeepLinkAction(routerHost: p0, deepLinkExecutable: p1)
+            defaultCall: __defaultImplStub!.handleDeepLinkAction(routerHost: p0, deepLinkExecutable: p1, remoteSessionCoordinator: p2)
         )
     }
     
@@ -7352,10 +7338,10 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock, @u
             ))
         }
         
-        func handleDeepLinkAction<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(routerHost p0: M1, deepLinkExecutable p1: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(RouterHost, DeepLink.Executable)> where M1.MatchedType == RouterHost, M2.MatchedType == DeepLink.Executable {
-            let matchers: [Cuckoo.ParameterMatcher<(RouterHost, DeepLink.Executable)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func handleDeepLinkAction<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.OptionalMatchable>(routerHost p0: M1, deepLinkExecutable p1: M2, remoteSessionCoordinator p2: M3) -> Cuckoo.ProtocolStubNoReturnFunction<(RouterHost, DeepLink.Executable, RemoteSessionCoordinator?)> where M1.MatchedType == RouterHost, M2.MatchedType == DeepLink.Executable, M3.OptionalMatchedType == RemoteSessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(RouterHost, DeepLink.Executable, RemoteSessionCoordinator?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDeepLinkController.self,
-                method: "handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable)",
+                method: "handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable, remoteSessionCoordinator p2: RemoteSessionCoordinator?)",
                 parameterMatchers: matchers
             ))
         }
@@ -7410,10 +7396,10 @@ public class MockDeepLinkController: DeepLinkController, Cuckoo.ProtocolMock, @u
         
         
         @discardableResult
-        func handleDeepLinkAction<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(routerHost p0: M1, deepLinkExecutable p1: M2) -> Cuckoo.__DoNotUse<(RouterHost, DeepLink.Executable), Void> where M1.MatchedType == RouterHost, M2.MatchedType == DeepLink.Executable {
-            let matchers: [Cuckoo.ParameterMatcher<(RouterHost, DeepLink.Executable)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func handleDeepLinkAction<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.OptionalMatchable>(routerHost p0: M1, deepLinkExecutable p1: M2, remoteSessionCoordinator p2: M3) -> Cuckoo.__DoNotUse<(RouterHost, DeepLink.Executable, RemoteSessionCoordinator?), Void> where M1.MatchedType == RouterHost, M2.MatchedType == DeepLink.Executable, M3.OptionalMatchedType == RemoteSessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(RouterHost, DeepLink.Executable, RemoteSessionCoordinator?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return cuckoo_manager.verify(
-                "handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable)",
+                "handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable, remoteSessionCoordinator p2: RemoteSessionCoordinator?)",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7466,7 +7452,7 @@ public class DeepLinkControllerStub:DeepLinkController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (DeepLink.Executable?).self)
     }
     
-    public func handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable) {
+    public func handleDeepLinkAction(routerHost p0: RouterHost, deepLinkExecutable p1: DeepLink.Executable, remoteSessionCoordinator p2: RemoteSessionCoordinator?) {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

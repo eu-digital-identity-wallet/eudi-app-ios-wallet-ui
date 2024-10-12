@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Wallet.xctestplan"
+            reference = "container:EudiWallet.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

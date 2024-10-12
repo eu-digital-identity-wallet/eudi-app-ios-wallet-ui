@@ -51,7 +51,7 @@
 		F0A013932AC35ECA00065EAD /* logic-api */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-api"; path = "Modules/logic-api"; sourceTree = "<group>"; };
 		F0A013942AC35ECA00065EAD /* feature-startup */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-startup"; path = "Modules/feature-startup"; sourceTree = "<group>"; };
 		F0A013962AC35ECA00065EAD /* logic-ui */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-ui"; path = "Modules/logic-ui"; sourceTree = "<group>"; };
-		F0A0BE922AC35925002BE0F5 /* Wallet.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Wallet.xctestplan; sourceTree = "<group>"; };
+		F0A0BE922AC35925002BE0F5 /* EudiWallet.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EudiWallet.xctestplan; sourceTree = "<group>"; };
 		F0A3740D2AC3A92400F301DD /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		F0B440782B9B42B600031137 /* logic-core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-core"; path = "Modules/logic-core"; sourceTree = "<group>"; };
 		F0BFE9B62AD557290062826F /* feature-common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-common"; path = "Modules/feature-common"; sourceTree = "<group>"; };
@@ -104,7 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				F0A3740D2AC3A92400F301DD /* .swiftlint.yml */,
-				F0A0BE922AC35925002BE0F5 /* Wallet.xctestplan */,
+				F0A0BE922AC35925002BE0F5 /* EudiWallet.xctestplan */,
 				F14907BA2ABAF54B00DDFE56 /* Wallet */,
 				F14908692ABC467600DDFE56 /* Packages */,
 				F14907B92ABAF54B00DDFE56 /* Products */,
