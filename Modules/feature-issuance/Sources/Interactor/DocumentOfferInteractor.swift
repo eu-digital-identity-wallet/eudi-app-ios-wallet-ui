@@ -110,7 +110,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
           let presentationComponents = URLComponents(url: presentationUrl, resolvingAgainstBaseURL: true) else {
           return .failure(WalletCoreError.unableToIssueAndStore)
         }
-        let session = walletController.startSameDevicePresentation(deepLink: presentationComponents)
+        let session = await walletController.startSameDevicePresentation(deepLink: presentationComponents)
         return .dynamicIssuance(session)
       } else if documents.count == docOffers.count {
         return .success(
@@ -173,7 +173,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
         webUrl: pendingData.url
       )
 
-      if doc.status == .issued {
+      if doc.status != .pending {
         return .success(
           retrieveSuccessRoute(
             caption: .credentialOfferSuccessCaption([issuerName]),

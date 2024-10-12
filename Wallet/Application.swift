@@ -29,6 +29,7 @@ struct Application: App {
   private let routerHost: RouterHost
   private let configUiLogic: ConfigUiLogic
   private let deepLinkController: DeepLinkController
+  private let walletKitController: WalletKitController
 
   init() {
 
@@ -38,6 +39,7 @@ struct Application: App {
     self.routerHost = DIGraph.resolver.force(RouterHost.self)
     self.configUiLogic = DIGraph.resolver.force(ConfigUiLogic.self)
     self.deepLinkController = DIGraph.resolver.force(DeepLinkController.self)
+    self.walletKitController = DIGraph.resolver.force(WalletKitController.self)
     self.toolbarConfig = routerHost.getToolbarConfig()
   }
 
@@ -66,10 +68,15 @@ struct Application: App {
       }
       .onOpenURL { url in
         if let deepLink = deepLinkController.hasDeepLink(url: url) {
-          deepLinkController.handleDeepLinkAction(
-            routerHost: routerHost,
-            deepLinkExecutable: deepLink
-          )
+          Task {
+            deepLinkController.handleDeepLinkAction(
+              routerHost: routerHost,
+              deepLinkExecutable: deepLink,
+              remoteSessionCoordinator: deepLink.requiresCoordinator
+              ? await walletKitController.startSameDevicePresentation(deepLink: deepLink.link)
+              : nil
+            )
+          }
         }
       }
       .onChange(of: scenePhase) { phase in

@@ -2637,33 +2637,33 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
     }
 
     
-    public func startProximityPresentation() -> ProximitySessionCoordinator {
-        return cuckoo_manager.call(
-            "startProximityPresentation() -> ProximitySessionCoordinator",
+    public func startProximityPresentation() async -> ProximitySessionCoordinator {
+        return await cuckoo_manager.call(
+            "startProximityPresentation() async -> ProximitySessionCoordinator",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.startProximityPresentation()
+            defaultCall: await __defaultImplStub!.startProximityPresentation()
         )
     }
     
-    public func startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator {
-        return cuckoo_manager.call(
-            "startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator",
+    public func startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator {
+        return await cuckoo_manager.call(
+            "startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.startSameDevicePresentation(deepLink: p0)
+            defaultCall: await __defaultImplStub!.startSameDevicePresentation(deepLink: p0)
         )
     }
     
-    public func startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator {
-        return cuckoo_manager.call(
-            "startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator",
+    public func startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator {
+        return await cuckoo_manager.call(
+            "startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.startCrossDevicePresentation(urlString: p0)
+            defaultCall: await __defaultImplStub!.startCrossDevicePresentation(urlString: p0)
         )
     }
     
@@ -2915,7 +2915,7 @@ return cuckoo_manager.call(
         func startProximityPresentation() -> Cuckoo.ProtocolStubFunction<(), ProximitySessionCoordinator> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "startProximityPresentation() -> ProximitySessionCoordinator",
+                method: "startProximityPresentation() async -> ProximitySessionCoordinator",
                 parameterMatchers: matchers
             ))
         }
@@ -2923,7 +2923,7 @@ return cuckoo_manager.call(
         func startSameDevicePresentation<M1: Cuckoo.Matchable>(deepLink p0: M1) -> Cuckoo.ProtocolStubFunction<(URLComponents), RemoteSessionCoordinator> where M1.MatchedType == URLComponents {
             let matchers: [Cuckoo.ParameterMatcher<(URLComponents)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator",
+                method: "startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator",
                 parameterMatchers: matchers
             ))
         }
@@ -2931,7 +2931,7 @@ return cuckoo_manager.call(
         func startCrossDevicePresentation<M1: Cuckoo.Matchable>(urlString p0: M1) -> Cuckoo.ProtocolStubFunction<(String), RemoteSessionCoordinator> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator",
+                method: "startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator",
                 parameterMatchers: matchers
             ))
         }
@@ -3141,7 +3141,7 @@ return cuckoo_manager.call(
         func startProximityPresentation() -> Cuckoo.__DoNotUse<(), ProximitySessionCoordinator> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "startProximityPresentation() -> ProximitySessionCoordinator",
+                "startProximityPresentation() async -> ProximitySessionCoordinator",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -3153,7 +3153,7 @@ return cuckoo_manager.call(
         func startSameDevicePresentation<M1: Cuckoo.Matchable>(deepLink p0: M1) -> Cuckoo.__DoNotUse<(URLComponents), RemoteSessionCoordinator> where M1.MatchedType == URLComponents {
             let matchers: [Cuckoo.ParameterMatcher<(URLComponents)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator",
+                "startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -3165,7 +3165,7 @@ return cuckoo_manager.call(
         func startCrossDevicePresentation<M1: Cuckoo.Matchable>(urlString p0: M1) -> Cuckoo.__DoNotUse<(String), RemoteSessionCoordinator> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator",
+                "startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -3460,15 +3460,15 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
 
 
     
-    public func startProximityPresentation() -> ProximitySessionCoordinator {
+    public func startProximityPresentation() async -> ProximitySessionCoordinator {
         return DefaultValueRegistry.defaultValue(for: (ProximitySessionCoordinator).self)
     }
     
-    public func startSameDevicePresentation(deepLink p0: URLComponents) -> RemoteSessionCoordinator {
+    public func startSameDevicePresentation(deepLink p0: URLComponents) async -> RemoteSessionCoordinator {
         return DefaultValueRegistry.defaultValue(for: (RemoteSessionCoordinator).self)
     }
     
-    public func startCrossDevicePresentation(urlString p0: String) -> RemoteSessionCoordinator {
+    public func startCrossDevicePresentation(urlString p0: String) async -> RemoteSessionCoordinator {
         return DefaultValueRegistry.defaultValue(for: (RemoteSessionCoordinator).self)
     }
     
@@ -4508,16 +4508,6 @@ public class SessionCoordinatorHolderStub:SessionCoordinatorHolder, @unchecked S
 import Cuckoo
 import Foundation
 import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_authentication
-
-
-
-// MARK: - Mocks generated from file: 'Modules/logic-core/Sources/Extension/Concurrency+Extensions.swift'
-
-import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

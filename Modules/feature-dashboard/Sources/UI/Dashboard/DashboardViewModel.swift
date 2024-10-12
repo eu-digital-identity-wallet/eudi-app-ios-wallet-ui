@@ -175,7 +175,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         self.router.push(
           with: .featureProximityModule(
             .proximityConnection(
-              presentationCoordinator: self.walletKitController.startProximityPresentation(),
+              presentationCoordinator: await self.walletKitController.startProximityPresentation(),
               originator: .featureDashboardModule(.dashboard)
             )
           )
@@ -286,7 +286,15 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
   private func onDocumentsRetrievedPostActions() {
     if let deepLink = deepLinkController.getPendingDeepLinkAction() {
-      deepLinkController.handleDeepLinkAction(routerHost: router, deepLinkExecutable: deepLink)
+      Task {
+        deepLinkController.handleDeepLinkAction(
+          routerHost: router,
+          deepLinkExecutable: deepLink,
+          remoteSessionCoordinator: deepLink.requiresCoordinator
+          ? await walletKitController.startSameDevicePresentation(deepLink: deepLink.link)
+          : nil
+        )
+      }
     } else if interactor.hasDeferredDocuments() && (self.deferredTask == nil || self.deferredTask?.isCancelled == true) {
       self.deferredTask = Task {
         try? await Task.sleep(seconds: 5)

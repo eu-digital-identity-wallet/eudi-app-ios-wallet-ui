@@ -94,7 +94,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
           let presentationComponents = URLComponents(url: presentationUrl, resolvingAgainstBaseURL: true) else {
           return .failure(WalletCoreError.unableToIssueAndStore)
         }
-        let session = walletController.startSameDevicePresentation(deepLink: presentationComponents)
+        let session = await walletController.startSameDevicePresentation(deepLink: presentationComponents)
         return .dynamicIssuance(session)
       } else {
         return .success(doc.id)
@@ -117,7 +117,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
         webUrl: pendingData.url
       )
 
-      if doc.status == .issued {
+      if doc.status != .pending {
         return .success(doc.id)
       } else {
         return .failure(WalletCoreError.unableToIssueAndStore)
