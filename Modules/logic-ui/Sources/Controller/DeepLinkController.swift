@@ -86,7 +86,7 @@ final class DeepLinkControllerImpl: DeepLinkController {
       switch deepLinkExecutable.action {
       case .openid4vp:
         guard let remoteSessionCoordinator else {
-          fatalError("Action OpenId4VP Requires Remote Session Coordinator")
+          fatalError("DeepLink Action OpenId4VP Requires Remote Session Coordinator")
         }
         if !routerHost.isScreenForeground(
           with: .featurePresentationModule(

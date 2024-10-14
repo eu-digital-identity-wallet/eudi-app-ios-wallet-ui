@@ -1,5 +1,5 @@
 {
-  "originHash" : "bd9348db6acbf6afb77dd321106d0a7faf32368393e9e17a4e590c2ad8beb321",
+  "originHash" : "5216b5739cb2d095c6767a2fc069d5c32554cf58a322b58df3a1667221a8f44c",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Alamofire/Alamofire.git",
       "state" : {
-        "revision" : "f455c2975872ccd2d9c81594c658af65716e9b9a",
-        "version" : "5.9.1"
+        "revision" : "ea6a94b7dddffd0ca4d0f29252d95310b84dec84",
+        "version" : "5.10.0"
       }
     },
     {
@@ -159,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "3f5dc84303cc914d60f751e8a09c910c73d8dbbb",
-        "version" : "0.7.2"
+        "revision" : "e1c45a26434f44a241fdd83135eea17a85d79f12",
+        "version" : "0.7.3"
       }
     },
     {
