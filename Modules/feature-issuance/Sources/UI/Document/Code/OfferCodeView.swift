@@ -16,6 +16,7 @@
 import SwiftUI
 import logic_ui
 import logic_resources
+import feature_common
 
 struct OfferCodeView<Router: RouterHost>: View {
 
@@ -27,56 +28,109 @@ struct OfferCodeView<Router: RouterHost>: View {
 
   var body: some View {
     ContentScreenView(errorConfig: viewModel.viewState.error) {
-
-      ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
-        viewModel.onPop()
-      }
-
-      ContentTitleView(
-        title: viewModel.viewState.title,
-        caption: viewModel.viewState.caption
+      content(
+        viewState: viewModel.viewState,
+        codeInput: $viewModel.codeInput,
+        codeIsFocused: $viewModel.codeIsFocused,
+        onPop: viewModel.onPop
       )
-
-      VSpacer.large()
-
-      HStack {
-        Theme.shared.image.message
-          .foregroundColor(Theme.shared.color.primary)
-        Spacer()
-      }
-
-      if viewModel.viewState.isLoading {
-        loader
-      } else {
-        pinView
-      }
     }
     .task {
       await viewModel.checkPendingIssuance()
     }
   }
+}
 
-  @ViewBuilder
-  private var loader: some View {
-    Spacer()
-    ContentLoaderView(showLoader: .constant(true))
+@MainActor
+@ViewBuilder
+fileprivate func loader() -> some View {
+  Spacer()
+  ContentLoaderView(showLoader: .constant(true))
+  Spacer()
+}
+
+@MainActor
+@ViewBuilder
+fileprivate func pinView(
+  isLoading: Bool,
+  txCodeLength: Int,
+  codeInput: Binding<String>,
+  codeIsFocused: Binding<Bool>
+) -> some View {
+
+  VSpacer.large()
+
+  PinTextFieldView(
+    numericText: codeInput,
+    maxDigits: txCodeLength,
+    isSecureEntry: true,
+    canFocus: codeIsFocused,
+    shouldUseFullScreen: false
+  )
+  .disabled(isLoading)
+
+  Spacer()
+}
+
+@MainActor
+@ViewBuilder
+fileprivate func content(
+  viewState: OfferCodeViewState,
+  codeInput: Binding<String>,
+  codeIsFocused: Binding<Bool>,
+  onPop: @escaping () -> Void
+) -> some View {
+  ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
+    onPop()
+  }
+
+  ContentTitleView(
+    title: viewState.title,
+    caption: viewState.caption
+  )
+
+  VSpacer.large()
+
+  HStack {
+    Theme.shared.image.message
+      .foregroundColor(Theme.shared.color.primary)
     Spacer()
   }
 
-  @ViewBuilder
-  private var pinView: some View {
-
-    VSpacer.large()
-
-    PinTextFieldView(
-      numericText: $viewModel.codeInput,
-      maxDigits: viewModel.viewState.config.txCodeLength,
-      isSecureEntry: true,
-      canFocus: $viewModel.codeIsFocused,
-      shouldUseFullScreen: false
+  if viewState.isLoading {
+    loader()
+  } else {
+    pinView(
+      isLoading: viewState.isLoading,
+      txCodeLength: viewState.config.txCodeLength,
+      codeInput: codeInput,
+      codeIsFocused: codeIsFocused
     )
-    .disabled(viewModel.viewState.isLoading)
+  }
+}
 
-    Spacer()
+#Preview {
+  let state = OfferCodeViewState(
+    isLoading: false,
+    error: nil,
+    config: IssuanceCodeUiConfig(
+      offerUri: "",
+      issuerName: "Issuer Name",
+      txCodeLength: 6,
+      docOffers: [],
+      successNavigation: .popTo(.featureLoginModule(.welcome)),
+      navigationCancelType: .pop
+    ),
+    title: LocalizableString.Key.addDocumentTitle,
+    caption: LocalizableString.Key.addDocumentSubtitle
+  )
+
+  ContentScreenView {
+    content(
+      viewState: state,
+      codeInput: .constant("inout"),
+      codeIsFocused: .constant(false),
+      onPop: {}
+    )
   }
 }
