@@ -39,7 +39,7 @@ let package = Package(
     ),
     .package(
       url: "https://github.com/eu-digital-identity-wallet/SwiftCopyableMacro.git",
-      from: "1.0.0"
+      from: "0.0.1"
     ),
     .package(name: "logic-test", path: "./logic-test")
   ],
