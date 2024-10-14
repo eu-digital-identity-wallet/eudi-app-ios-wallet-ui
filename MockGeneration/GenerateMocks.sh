@@ -10,12 +10,14 @@ printr() {
 }
 
 # Use xcodebuild to load build settings into environment variables
-build_settings=$(xcodebuild -project EudiReferenceWallet.xcodeproj -target EudiWallet  -showBuildSettings)
+build_settings=$(xcodebuild -project ../EudiReferenceWallet.xcodeproj -target EudiWallet  -showBuildSettings)
 
 # Set specific build settings as environment variables
 export ACTION=$(echo "$build_settings" | awk -F'=' '/ACTION/{print $2}' | tr -d ' ')
-export PROJECT_DIR=$(echo "$build_settings" | awk -F'=' '/PROJECT_DIR/{print $2}' | tr -d ' ')
 export INPUT_DIR=$(echo "$build_settings" | awk -F'=' '/INPUT_DIR/{print $2}' | tr -d ' ')
+
+# Script Path
+SCRIPT_PATH="$(cd "$(dirname "$0")" && pwd)"
 
 # Type a script or drag a script file from your workspace to insert its path.
 if [ $ACTION == "indexbuild" ]; then
@@ -30,4 +32,4 @@ if [ "${ENABLE_PREVIEWS}" = "YES" ]; then
 fi
 
 # Run Cuckoo Script
-"${PROJECT_DIR}/Cuckoo/run" --configuration "${PROJECT_DIR}/CuckooConfig.toml"
+"${SCRIPT_PATH}/run" --configuration "${SCRIPT_PATH}/CuckooConfig.toml"
