@@ -27,27 +27,53 @@ public struct BaseLoadingView<Router: RouterHost>: View {
 
   public var body: some View {
     ContentScreenView(errorConfig: viewModel.viewState.error) {
-
-      ContentHeaderView(
-        dismissIcon: Theme.shared.image.xmark,
-        onBack: viewModel.viewState.isCancellable
-        ? { viewModel.onNavigate(type: .pop) }
-        : nil
-      )
-
-      ContentTitleView(
+      content(
+        isCancellable: viewModel.viewState.isCancellable,
         title: viewModel.getTitle(),
-        caption: viewModel.getCaption()
+        caption: viewModel.getCaption(),
+        onNavigate: { viewModel.onNavigate(type: .pop) }
       )
-
-      Spacer()
-
-      ContentLoaderView(showLoader: .constant(true))
-
-      Spacer()
     }
     .task {
       await viewModel.doWork()
     }
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func content(
+  isCancellable: Bool,
+  title: LocalizableString.Key,
+  caption: LocalizableString.Key,
+  onNavigate: @escaping () -> Void
+) -> some View {
+  ContentHeaderView(
+    dismissIcon: Theme.shared.image.xmark,
+    onBack: isCancellable
+    ? onNavigate
+    : nil
+  )
+
+  ContentTitleView(
+    title: title,
+    caption: caption
+  )
+
+  Spacer()
+
+  ContentLoaderView(showLoader: .constant(true))
+
+  Spacer()
+}
+
+#Preview {
+  ContentScreenView {
+    content(
+      isCancellable: true,
+      title: .loadSampleData,
+      caption: .requestDataCaption,
+      onNavigate: {}
+    )
   }
 }
