@@ -56,7 +56,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
       if let spec = offer.txCodeSpec,
          let codeLength = spec.length,
-         (!(codeMinLength...codeMaxLength).contains(codeLength) || spec.inputMode == .text) {
+         !(codeMinLength...codeMaxLength).contains(codeLength) || spec.inputMode == .text {
         return .failure(WalletCoreError.transactionCodeFormat(["\(codeMinLength)", "\(codeMaxLength)"]))
       }
 
