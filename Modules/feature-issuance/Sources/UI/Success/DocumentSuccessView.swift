@@ -58,7 +58,7 @@ private func content(
 
   Spacer()
 
-  footer() {
+  footer {
     onIssue()
   }
 }
