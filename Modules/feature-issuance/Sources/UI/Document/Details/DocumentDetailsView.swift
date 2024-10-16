@@ -26,50 +26,6 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     self.viewModel = viewModel
   }
 
-  @ViewBuilder
-  func content() -> some View {
-    ScrollView {
-      VStack(spacing: .zero) {
-
-        VSpacer.medium()
-
-        ForEach(viewModel.viewState.document.documentFields) { documentFieldContent in
-
-          switch documentFieldContent.value {
-          case .string(let value):
-            KeyValueView(
-              title: .custom(documentFieldContent.title),
-              subTitle: .custom(value),
-              isLoading: viewModel.viewState.isLoading
-            )
-          case .image(let data):
-            KeyValueView(
-              title: .custom(documentFieldContent.title),
-              image: Image(data: data),
-              isLoading: viewModel.viewState.isLoading
-            )
-          }
-
-          VSpacer.medium()
-        }
-      }
-      .padding(.horizontal, Theme.shared.dimension.padding)
-    }
-    .if(viewModel.viewState.hasContinueButton) {
-      $0.bottomFade()
-    }
-
-    if viewModel.viewState.hasContinueButton {
-      WrapButtonView(
-        style: .primary,
-        title: .issuanceDetailsContinueButton,
-        isLoading: viewModel.viewState.isLoading,
-        onAction: viewModel.onContinue()
-      )
-      .padding([.horizontal, .bottom])
-    }
-  }
-
   var body: some View {
     ContentScreenView(
       padding: .zero,
@@ -77,17 +33,11 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       errorConfig: viewModel.viewState.error
     ) {
 
-      DocumentDetailsHeaderView(
-        documentName: viewModel.viewState.document.documentName,
-        holdersName: viewModel.viewState.document.holdersName,
-        userIcon: viewModel.viewState.document.holdersImage,
-        hasDocumentExpired: viewModel.viewState.document.hasExpired,
-        isLoading: viewModel.viewState.isLoading,
-        actions: viewModel.viewState.toolBarActions,
-        onBack: viewModel.viewState.isCancellable ? { viewModel.pop() } : nil
-      )
-
-      content()
+      content(viewState: viewModel.viewState) {
+        viewModel.onContinue()
+      } pop: {
+        viewModel.pop()
+      }
     }
     .sheetDialog(isPresented: $viewModel.isDeletionModalShowing) {
       SheetContentView {
@@ -114,5 +64,101 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     .task {
       await self.viewModel.fetchDocumentDetails()
     }
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func content(
+  viewState: DocumentDetailsViewState,
+  onContinue: @escaping () -> Void,
+  pop: @escaping () -> Void
+) -> some View {
+  DocumentDetailsHeaderView(
+    documentName: viewState.document.documentName,
+    holdersName: viewState.document.holdersName,
+    userIcon: viewState.document.holdersImage,
+    hasDocumentExpired: viewState.document.hasExpired,
+    isLoading: viewState.isLoading,
+    actions: viewState.toolBarActions,
+    onBack: viewState.isCancellable ? { pop() } : nil
+  )
+
+  details(viewState: viewState) {
+    onContinue()
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func details(
+  viewState: DocumentDetailsViewState,
+  onContinue: @escaping () -> Void
+) -> some View {
+  ScrollView {
+    VStack(spacing: .zero) {
+
+      VSpacer.medium()
+
+      ForEach(viewState.document.documentFields) { documentFieldContent in
+
+        switch documentFieldContent.value {
+        case .string(let value):
+          KeyValueView(
+            title: .custom(documentFieldContent.title),
+            subTitle: .custom(value),
+            isLoading: viewState.isLoading
+          )
+        case .image(let data):
+          KeyValueView(
+            title: .custom(documentFieldContent.title),
+            image: Image(data: data),
+            isLoading: viewState.isLoading
+          )
+        }
+
+        VSpacer.medium()
+      }
+    }
+    .padding(.horizontal, Theme.shared.dimension.padding)
+  }
+  .if(viewState.hasContinueButton) {
+    $0.bottomFade()
+  }
+
+  if viewState.hasContinueButton {
+    WrapButtonView(
+      style: .primary,
+      title: .issuanceDetailsContinueButton,
+      isLoading: viewState.isLoading,
+      onAction: onContinue()
+    )
+    .padding([.horizontal, .bottom])
+  }
+}
+
+#Preview {
+  let viewState = DocumentDetailsViewState(
+    document: DocumentDetailsUIModel.mock(),
+    isLoading: false,
+    error: nil,
+    config: IssuanceDetailUiConfig(flow: .extraDocument("documentId")),
+    toolBarActions: [
+      .init(
+        image: Theme.shared.image.trash,
+        callback: {}()
+      )
+    ]
+  )
+
+  ContentScreenView(
+    padding: .zero,
+    canScroll: true
+  ) {
+    content(
+      viewState: viewState,
+      onContinue: {},
+      pop: {}
+    )
   }
 }

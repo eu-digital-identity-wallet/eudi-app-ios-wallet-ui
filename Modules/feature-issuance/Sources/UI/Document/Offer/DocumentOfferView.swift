@@ -28,36 +28,12 @@ struct DocumentOfferView<Router: RouterHost>: View {
   var body: some View {
     ContentScreenView(errorConfig: viewModel.viewState.error) {
 
-      ContentTitleView(
-        title: viewModel.viewState.title,
-        caption: .requestCredentialOfferCaption,
-        topSpacing: .withoutToolbar,
-        isLoading: viewModel.viewState.isLoading
+      content(
+        viewState: viewModel.viewState,
+        imageSize: getScreenRect().width / 4,
+        onIssueDocuments: viewModel.onIssueDocuments,
+        onShowCancelModal: viewModel.onShowCancelModal
       )
-
-      VSpacer.small()
-
-      if viewModel.viewState.documentOfferUiModel.uiOffers.isEmpty {
-        noDocumentsFound
-      } else {
-        ScrollView {
-          VStack(spacing: SPACING_SMALL) {
-
-            ForEach(viewModel.viewState.documentOfferUiModel.uiOffers) { cell in
-              DocumentOfferCellView(
-                cellModel: cell,
-                isLoading: viewModel.viewState.isLoading
-              )
-            }
-          }
-          .padding(.top)
-        }
-        .bottomFade()
-      }
-
-      Spacer()
-
-      footer
     }
     .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
       SheetContentView {
@@ -83,46 +59,137 @@ struct DocumentOfferView<Router: RouterHost>: View {
       viewModel.handleNotification(with: payload)
     }
   }
+}
 
-  var noDocumentsFound: some View {
-    VStack(alignment: .center) {
+@MainActor
+@ViewBuilder
+private func content(
+  viewState: DocumentOfferViewState,
+  imageSize: CGFloat,
+  onIssueDocuments: @escaping () -> Void,
+  onShowCancelModal: @escaping () -> Void
+) -> some View {
+  ContentTitleView(
+    title: viewState.title,
+    caption: .requestCredentialOfferCaption,
+    topSpacing: .withoutToolbar,
+    isLoading: viewState.isLoading
+  )
 
-      Spacer()
+  VSpacer.small()
 
-      VStack(alignment: .center, spacing: SPACING_MEDIUM) {
+  if viewState.documentOfferUiModel.uiOffers.isEmpty {
+    noDocumentsFound(imageSize: imageSize)
+  } else {
+    ScrollView {
+      VStack(spacing: SPACING_SMALL) {
 
-        let imageSize = getScreenRect().width / 4
-
-        Theme.shared.image.exclamationmarkCircle
-          .renderingMode(.template)
-          .resizable()
-          .foregroundStyle(Theme.shared.color.textSecondaryDark)
-          .frame(width: imageSize, height: imageSize)
-
-        Text(.requestCredentialOfferNoDocument)
-          .typography(Theme.shared.font.bodyMedium)
-          .foregroundColor(Theme.shared.color.textSecondaryDark)
-          .multilineTextAlignment(.center)
+        ForEach(viewState.documentOfferUiModel.uiOffers) { cell in
+          DocumentOfferCellView(
+            cellModel: cell,
+            isLoading: viewState.isLoading
+          )
+        }
       }
-
-      Spacer()
+      .padding(.top)
     }
+    .bottomFade()
   }
 
-  private var footer: some View {
-    VStack(spacing: SPACING_MEDIUM) {
-      WrapButtonView(
-        style: .primary,
-        title: .issueButton,
-        isLoading: viewModel.viewState.isLoading,
-        isEnabled: viewModel.viewState.allowIssue && !viewModel.viewState.isLoading,
-        onAction: viewModel.onIssueDocuments()
-      )
-      WrapButtonView(
-        style: .secondary,
-        title: .cancelButton,
-        onAction: viewModel.onShowCancelModal()
-      )
+  Spacer()
+
+  VStack(spacing: SPACING_MEDIUM) {
+    WrapButtonView(
+      style: .primary,
+      title: .issueButton,
+      isLoading: viewState.isLoading,
+      isEnabled: viewState.allowIssue && !viewState.isLoading,
+      onAction: onIssueDocuments()
+    )
+    WrapButtonView(
+      style: .secondary,
+      title: .cancelButton,
+      onAction: onShowCancelModal()
+    )
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func noDocumentsFound(imageSize: CGFloat) -> some View {
+  VStack(alignment: .center) {
+
+    Spacer()
+
+    VStack(alignment: .center, spacing: SPACING_MEDIUM) {
+
+      Theme.shared.image.exclamationmarkCircle
+        .renderingMode(.template)
+        .resizable()
+        .foregroundStyle(Theme.shared.color.textSecondaryDark)
+        .frame(width: imageSize, height: imageSize)
+
+      Text(.requestCredentialOfferNoDocument)
+        .typography(Theme.shared.font.bodyMedium)
+        .foregroundColor(Theme.shared.color.textSecondaryDark)
+        .multilineTextAlignment(.center)
     }
+
+    Spacer()
+  }
+}
+
+#Preview {
+  let viewState = DocumentOfferViewState(
+    isLoading: false,
+    documentOfferUiModel: DocumentOfferUIModel.mock(),
+    error: nil,
+    config: UIConfig.Generic(
+      arguments: ["uri": "uri"],
+      navigationSuccessType: .push(.featureDashboardModule(.dashboard)),
+      navigationCancelType: .pop
+    ),
+    offerUri: "offer uri",
+    allowIssue: true,
+    initialized: true
+  )
+
+  ContentScreenView {
+    content(
+      viewState: viewState,
+      imageSize: UIScreen.main.bounds.width / 4,
+      onIssueDocuments: {},
+      onShowCancelModal: {}
+    )
+  }
+}
+
+#Preview("No document") {
+  let viewState = DocumentOfferViewState(
+    isLoading: false,
+    documentOfferUiModel: .init(
+      issuerName: LocalizableString.shared.get(with: .unknownIssuer),
+      txCode: nil,
+      uiOffers: [],
+      docOffers: []
+    ),
+    error: nil,
+    config: UIConfig.Generic(
+      arguments: ["uri": "uri"],
+      navigationSuccessType: .push(.featureDashboardModule(.dashboard)),
+      navigationCancelType: .pop
+    ),
+    offerUri: "offer uri",
+    allowIssue: true,
+    initialized: true
+  )
+
+  ContentScreenView {
+    content(
+      viewState: viewState,
+      imageSize: UIScreen.main.bounds.width / 4,
+      onIssueDocuments: {},
+      onShowCancelModal: {}
+    )
   }
 }

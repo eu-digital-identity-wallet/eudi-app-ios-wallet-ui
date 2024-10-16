@@ -17,6 +17,7 @@ import SwiftUI
 import logic_ui
 import feature_common
 import logic_resources
+import logic_core
 
 struct AddDocumentView<Router: RouterHost>: View {
 
@@ -43,94 +44,125 @@ struct AddDocumentView<Router: RouterHost>: View {
         .padding([.top, .horizontal], Theme.shared.dimension.padding)
       }
 
-      content()
+      content(viewState: viewModel.viewState) { type in
+        viewModel.onClick(for: type)
+      }
 
-      scanFooter
+      scanFooter(viewState: viewModel.viewState, contentSize: contentSize) {
+        self.viewModel.onScanClick()
+      }
     }
     .task {
       await self.viewModel.initialize()
     }
   }
+}
 
-  @ViewBuilder
-  private func content() -> some View {
-    ScrollView {
-      VStack(spacing: .zero) {
+@MainActor
+@ViewBuilder
+private func content(
+  viewState: AddDocumentViewState,
+  action: @escaping (DocumentTypeIdentifier) -> Void
+) -> some View {
+  ScrollView {
+    VStack(spacing: .zero) {
 
-        ContentTitleView(
-          title: .addDocumentTitle,
-          caption: .addDocumentSubtitle,
-          titleColor: Theme.shared.color.textPrimaryDark,
-          topSpacing: viewModel.viewState.isFlowCancellable ? .withToolbar : .withoutToolbar
+      ContentTitleView(
+        title: .addDocumentTitle,
+        caption: .addDocumentSubtitle,
+        titleColor: Theme.shared.color.textPrimaryDark,
+        topSpacing: viewState.isFlowCancellable ? .withToolbar : .withoutToolbar
+      )
+
+      VSpacer.large()
+
+      ForEach(viewState.addDocumentCellModels) { cell in
+        AddNewDocumentCellView(
+          isEnabled: cell.isEnabled,
+          icon: cell.image,
+          title: cell.documentName,
+          isLoading: cell.isLoading,
+          action: {
+            action(cell.type)
+          }
         )
+        .padding(.bottom, Theme.shared.shape.small)
+      }
+    }
+    .padding(.horizontal, Theme.shared.dimension.padding)
+  }
+}
 
-        VSpacer.large()
+@MainActor
+@ViewBuilder
+private func scanFooter(
+  viewState: AddDocumentViewState,
+  contentSize: CGFloat,
+  action: @escaping () -> Void
+) -> some View {
+  VStack(spacing: SPACING_MEDIUM) {
 
-        ForEach(viewModel.viewState.addDocumentCellModels) { cell in
-          AddNewDocumentCellView(
-            isEnabled: cell.isEnabled,
-            icon: cell.image,
-            title: cell.documentName,
-            isLoading: cell.isLoading,
-            action: {
-              viewModel.onClick(for: cell.type)
-            }
-          )
-          .padding(.bottom, Theme.shared.shape.small)
+    Spacer()
+
+    Text(.or)
+      .typography(Theme.shared.font.bodyMedium)
+      .foregroundColor(Theme.shared.color.textSecondaryDark )
+      .shimmer(isLoading: viewState.isLoading)
+
+    Button(
+      action: { action() },
+      label: {
+        HStack {
+          Spacer()
+
+          VStack(alignment: .center) {
+
+            Theme.shared.image.qrScan
+              .resizable()
+              .renderingMode(.template)
+              .scaledToFit()
+              .foregroundStyle(Theme.shared.color.primary)
+              .frame(height: contentSize / 6)
+
+            Text(.issuanceScanQr)
+              .typography(Theme.shared.font.titleSmall)
+              .foregroundColor(Theme.shared.color.textPrimaryDark )
+          }
+          .padding(.vertical)
+
+          Spacer()
         }
       }
-      .padding(.horizontal, Theme.shared.dimension.padding)
-    }
+    )
+    .background(Theme.shared.color.backgroundDefault)
+    .roundedCorner(SPACING_MEDIUM_SMALL, corners: .allCorners)
+    .padding(.horizontal)
+    .disabled(viewState.isLoading)
+    .shimmer(isLoading: viewState.isLoading)
+
+    Spacer()
   }
+  .frame(maxWidth: .infinity, maxHeight: contentSize)
+  .background(Theme.shared.color.backgroundDefault.opacity(0.8))
+  .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
+}
 
-  private var scanFooter: some View {
-    VStack(spacing: SPACING_MEDIUM) {
+#Preview {
+  let viewState = AddDocumentViewState(
+    addDocumentCellModels: AddDocumentUIModel.items,
+    error: nil,
+    config: IssuanceFlowUiConfig(flow: .noDocument)
+  )
 
-      Spacer()
+  ContentScreenView(
+    padding: .zero,
+    canScroll: true
+  ) {
+    ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {}
+      .padding([.top, .horizontal], Theme.shared.dimension.padding)
 
-      Text(.or)
-        .typography(Theme.shared.font.bodyMedium)
-        .foregroundColor(Theme.shared.color.textSecondaryDark )
-        .shimmer(isLoading: viewModel.viewState.isLoading)
+    content(viewState: viewState) { _ in }
 
-      Button(
-        action: { self.viewModel.onScanClick() },
-        label: {
-
-          HStack {
-
-            Spacer()
-
-            VStack(alignment: .center) {
-
-              Theme.shared.image.qrScan
-                .resizable()
-                .renderingMode(.template)
-                .scaledToFit()
-                .foregroundStyle(Theme.shared.color.primary)
-                .frame(height: contentSize / 6)
-
-              Text(.issuanceScanQr)
-                .typography(Theme.shared.font.titleSmall)
-                .foregroundColor(Theme.shared.color.textPrimaryDark )
-            }
-            .padding(.vertical)
-
-            Spacer()
-          }
-
-        }
-      )
-      .background(Theme.shared.color.backgroundDefault)
-      .roundedCorner(SPACING_MEDIUM_SMALL, corners: .allCorners)
-      .padding(.horizontal)
-      .disabled(viewModel.viewState.isLoading)
-      .shimmer(isLoading: viewModel.viewState.isLoading)
-
-      Spacer()
-    }
-    .frame(maxWidth: .infinity, maxHeight: contentSize)
-    .background(Theme.shared.color.backgroundDefault.opacity(0.8))
-    .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
+    scanFooter(viewState: viewState, contentSize: 300) {}
   }
 }
