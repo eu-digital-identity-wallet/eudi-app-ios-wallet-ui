@@ -1,3 +1,5 @@
+- Issuance preview
+
 - Dynamic Issuance (PID auth.)
 - Support presentation of multiple PID, mDL
 - Logs
