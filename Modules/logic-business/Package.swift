@@ -38,8 +38,8 @@ let package = Package(
       from: "2.8.4"
     ),
     .package(
-      name: "macro-copyable",
-      path: "./macro-copyable"
+      url: "https://github.com/eu-digital-identity-wallet/SwiftCopyableMacro.git",
+      from: "0.0.1"
     ),
     .package(name: "logic-test", path: "./logic-test")
   ],
@@ -61,7 +61,7 @@ let package = Package(
         ),
         .product(
           name: "Copyable",
-          package: "macro-copyable"
+          package: "SwiftCopyableMacro"
         )
       ],
       path: "./Sources"

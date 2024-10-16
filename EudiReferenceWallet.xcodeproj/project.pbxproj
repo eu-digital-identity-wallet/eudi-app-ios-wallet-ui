@@ -13,7 +13,6 @@
 		F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */; };
 		F02AE38F2BA6E45F00C25C59 /* logic-assembly in Resources */ = {isa = PBXBuildFile; fileRef = F02AE38E2BA6E45F00C25C59 /* logic-assembly */; };
 		F02AE3912BA6E59600C25C59 /* logic-assembly in Frameworks */ = {isa = PBXBuildFile; productRef = F02AE3902BA6E59600C25C59 /* logic-assembly */; };
-		F05C0E6C2C76294800B66287 /* macro-copyable in Resources */ = {isa = PBXBuildFile; fileRef = F05C0E6B2C76294800B66287 /* macro-copyable */; };
 		F05E9F382AFABBC200891E8F /* feature-presentation in Resources */ = {isa = PBXBuildFile; fileRef = F05E9F372AFABBC200891E8F /* feature-presentation */; };
 		F06325102AC598370004601F /* logic-test in Resources */ = {isa = PBXBuildFile; fileRef = F063250F2AC598370004601F /* logic-test */; };
 		F06325122AC59AF50004601F /* feature-test in Resources */ = {isa = PBXBuildFile; fileRef = F06325112AC59AF50004601F /* feature-test */; };
@@ -41,7 +40,6 @@
 		F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WalletDemoRelease.xcconfig; sourceTree = "<group>"; };
 		F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WalletDevRelease.xcconfig; sourceTree = "<group>"; };
 		F02AE38E2BA6E45F00C25C59 /* logic-assembly */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-assembly"; path = "Modules/logic-assembly"; sourceTree = "<group>"; };
-		F05C0E6B2C76294800B66287 /* macro-copyable */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "macro-copyable"; path = "Modules/macro-copyable"; sourceTree = "<group>"; };
 		F05E9F372AFABBC200891E8F /* feature-presentation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-presentation"; path = "Modules/feature-presentation"; sourceTree = "<group>"; };
 		F063250F2AC598370004601F /* logic-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-test"; path = "Modules/logic-test"; sourceTree = "<group>"; };
 		F06325112AC59AF50004601F /* feature-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-test"; path = "Modules/feature-test"; sourceTree = "<group>"; };
@@ -53,8 +51,7 @@
 		F0A013932AC35ECA00065EAD /* logic-api */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-api"; path = "Modules/logic-api"; sourceTree = "<group>"; };
 		F0A013942AC35ECA00065EAD /* feature-startup */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-startup"; path = "Modules/feature-startup"; sourceTree = "<group>"; };
 		F0A013962AC35ECA00065EAD /* logic-ui */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-ui"; path = "Modules/logic-ui"; sourceTree = "<group>"; };
-		F0A0BE922AC35925002BE0F5 /* Wallet.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Wallet.xctestplan; sourceTree = "<group>"; };
-		F0A3740D2AC3A92400F301DD /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		F0A0BE922AC35925002BE0F5 /* EudiWallet.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EudiWallet.xctestplan; sourceTree = "<group>"; };
 		F0B440782B9B42B600031137 /* logic-core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-core"; path = "Modules/logic-core"; sourceTree = "<group>"; };
 		F0BFE9B62AD557290062826F /* feature-common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-common"; path = "Modules/feature-common"; sourceTree = "<group>"; };
 		F0C6207D2B6A6246007F903F /* logic-analytics */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-analytics"; path = "Modules/logic-analytics"; sourceTree = "<group>"; };
@@ -105,9 +102,7 @@
 		F14907AF2ABAF54B00DDFE56 = {
 			isa = PBXGroup;
 			children = (
-				F0A3740D2AC3A92400F301DD /* .swiftlint.yml */,
-				F0A0BE922AC35925002BE0F5 /* Wallet.xctestplan */,
-				B070C01C2C0A27400061295A /* InfoPlist.strings */,
+				F0A0BE922AC35925002BE0F5 /* EudiWallet.xctestplan */,
 				F14907BA2ABAF54B00DDFE56 /* Wallet */,
 				F14908692ABC467600DDFE56 /* Packages */,
 				F14907B92ABAF54B00DDFE56 /* Products */,
@@ -155,7 +150,6 @@
 		F14908692ABC467600DDFE56 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				F05C0E6B2C76294800B66287 /* macro-copyable */,
 				F02AE38E2BA6E45F00C25C59 /* logic-assembly */,
 				F0DF43F42BA083DF003498ED /* logic-authentication */,
 				F0B440782B9B42B600031137 /* logic-core */,
@@ -260,7 +254,6 @@
 				F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */,
 				F05E9F382AFABBC200891E8F /* feature-presentation in Resources */,
 				F069CC3F2AFAC0AD0033AAC5 /* feature-proximity in Resources */,
-				F05C0E6C2C76294800B66287 /* macro-copyable in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

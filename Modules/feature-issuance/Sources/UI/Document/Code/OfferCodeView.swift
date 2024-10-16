@@ -43,7 +43,7 @@ struct OfferCodeView<Router: RouterHost>: View {
 
 @MainActor
 @ViewBuilder
-fileprivate func loader() -> some View {
+private func loader() -> some View {
   Spacer()
   ContentLoaderView(showLoader: .constant(true))
   Spacer()
@@ -51,7 +51,7 @@ fileprivate func loader() -> some View {
 
 @MainActor
 @ViewBuilder
-fileprivate func pinView(
+private func pinView(
   isLoading: Bool,
   txCodeLength: Int,
   codeInput: Binding<String>,
@@ -74,7 +74,7 @@ fileprivate func pinView(
 
 @MainActor
 @ViewBuilder
-fileprivate func content(
+private func content(
   viewState: OfferCodeViewState,
   codeInput: Binding<String>,
   codeIsFocused: Binding<Bool>,

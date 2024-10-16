@@ -16,6 +16,8 @@
 import SwiftUI
 import logic_ui
 import logic_resources
+import feature_common
+import logic_core
 
 struct DocumentSuccessView<Router: RouterHost>: View {
 
@@ -27,64 +29,95 @@ struct DocumentSuccessView<Router: RouterHost>: View {
 
   var body: some View {
     ContentScreenView {
-
-      ContentTitleView(
-        title: viewModel.viewState.title,
-        caption: viewModel.viewState.caption,
-        titleColor: Theme.shared.color.success,
-        topSpacing: .withoutToolbar
-      )
-
-      VSpacer.large()
-
-      document
-
-      Spacer()
-
-      footer
+      content(viewState: viewModel.viewState) {
+        viewModel.onIssue()
+      }
     }
     .task {
       await viewModel.initialize()
     }
   }
+}
 
-  private var document: some View {
-    VStack(spacing: SPACING_MEDIUM) {
+@MainActor
+@ViewBuilder
+private func content(
+  viewState: DocumentSuccessState,
+  onIssue: @escaping () -> Void
+) -> some View {
+  ContentTitleView(
+    title: viewState.title,
+    caption: viewState.caption,
+    titleColor: Theme.shared.color.success,
+    topSpacing: .withoutToolbar
+  )
 
-      HStack {
+  VSpacer.large()
 
-        Theme.shared.image.user
-          .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
+  document(holderName: viewState.holderName)
 
-        Theme.shared.image.idStroke
-          .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
-          .padding(.leading, -40)
+  Spacer()
 
-        Spacer()
-      }
-
-      HStack {
-        if let holderName = viewModel.viewState.holderName {
-          Text(holderName)
-            .typography(Theme.shared.font.bodyLarge)
-            .foregroundColor(Theme.shared.color.black)
-        }
-
-        Spacer()
-      }
-    }
-    .padding(SPACING_MEDIUM_LARGE)
-    .frame(maxWidth: .infinity)
-    .background(Theme.shared.color.secondary)
-    .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
+  footer {
+    onIssue()
   }
+}
 
-  @ViewBuilder
-  private var footer: some View {
-    WrapButtonView(
-      style: .primary,
-      title: .issuanceSuccessNextButton,
-      onAction: viewModel.onIssue()
-    )
+@MainActor
+@ViewBuilder
+private func footer(action: @escaping () -> Void) -> some View {
+  WrapButtonView(
+    style: .primary,
+    title: .issuanceSuccessNextButton,
+    onAction: action()
+  )
+}
+
+@MainActor
+@ViewBuilder
+private func document(holderName: String?) -> some View {
+  VStack(spacing: SPACING_MEDIUM) {
+
+    HStack {
+
+      Theme.shared.image.user
+        .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
+
+      Theme.shared.image.idStroke
+        .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
+        .padding(.leading, -40)
+
+      Spacer()
+    }
+
+    HStack {
+      if let holderName {
+        Text(holderName)
+          .typography(Theme.shared.font.bodyLarge)
+          .foregroundColor(Theme.shared.color.black)
+      }
+
+      Spacer()
+    }
+  }
+  .padding(SPACING_MEDIUM_LARGE)
+  .frame(maxWidth: .infinity)
+  .background(Theme.shared.color.secondary)
+  .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
+}
+
+#Preview {
+  let viewState = DocumentSuccessState(
+    title: .success,
+    caption: .issuanceSuccessCaption(
+      [DocumentTypeIdentifier(rawValue: "PID").localizedTitle]
+    ),
+    holderName: "Name",
+    config: IssuanceFlowUiConfig(flow: .noDocument),
+    documentIdentifier: "id"
+  )
+
+  ContentScreenView {
+    content(viewState: viewState) {}
   }
 }
