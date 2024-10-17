@@ -34,54 +34,106 @@ struct ProximityConnectionView<Router: RouterHost>: View {
       canScroll: true,
       errorConfig: viewModel.viewState.error
     ) {
-
-      ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
-        viewModel.goBack()
-      }
-      .padding([.top, .horizontal], Theme.shared.dimension.padding)
-
-      ContentTitleView(
-        title: .proximityConnectivityTitle,
-        caption: .proximityConnectivityCaption,
-        titleColor: Theme.shared.color.textPrimaryDark
+      content(
+        viewState: viewModel.viewState,
+        contentSize: contentSize,
+        goBack: viewModel.goBack
       )
-      .padding(.horizontal, Theme.shared.dimension.padding)
-
-      Spacer()
-
-      VStack {
-        if let image = viewModel.viewState.qrImage {
-          Image(uiImage: image)
-            .resizable()
-            .transition(.opacity)
-        } else {
-          ContentLoaderView(showLoader: .constant(true))
-        }
-      }
-      .frame(width: contentSize, height: contentSize)
-
-      Spacer()
-
-      nfcFooter
-
     }
     .task {
       await viewModel.initialize()
     }
   }
+}
 
-  private var nfcFooter: some View {
-    VStack(alignment: .center, spacing: SPACING_MEDIUM) {
-      Theme.shared.image.bluetoothConnect
+@MainActor
+@ViewBuilder
+fileprivate func content(
+  viewState: ProxmityConnectivityState,
+  contentSize: CGFloat,
+  goBack: @escaping () -> Void
+) -> some View {
+  ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
+    goBack()
+  }
+  .padding([.top, .horizontal], Theme.shared.dimension.padding)
+
+  ContentTitleView(
+    title: .proximityConnectivityTitle,
+    caption: .proximityConnectivityCaption,
+    titleColor: Theme.shared.color.textPrimaryDark
+  )
+  .padding(.horizontal, Theme.shared.dimension.padding)
+
+  Spacer()
+
+  VStack {
+    if let image = viewState.qrImage {
+      Image(uiImage: image)
         .resizable()
-        .renderingMode(.template)
-        .scaledToFit()
-        .foregroundStyle(Theme.shared.color.primary)
-        .frame(height: contentSize / 3)
+        .transition(.opacity)
+    } else {
+      ContentLoaderView(showLoader: .constant(true))
     }
-    .padding(.vertical, SPACING_EXTRA_LARGE)
-    .frame(maxWidth: .infinity, maxHeight: contentSize)
-    .background(Theme.shared.color.backgroundDefault.opacity(0.8))
-    .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
+  }
+  .frame(width: contentSize, height: contentSize)
+
+  Spacer()
+
+  nfcFooter(contentSize: contentSize)
+}
+
+@MainActor
+@ViewBuilder
+fileprivate func nfcFooter(contentSize: CGFloat) -> some View {
+  VStack(alignment: .center, spacing: SPACING_MEDIUM) {
+    Theme.shared.image.bluetoothConnect
+      .resizable()
+      .renderingMode(.template)
+      .scaledToFit()
+      .foregroundStyle(Theme.shared.color.primary)
+      .frame(height: contentSize / 3)
+  }
+  .padding(.vertical, SPACING_EXTRA_LARGE)
+  .frame(maxWidth: .infinity, maxHeight: contentSize)
+  .background(Theme.shared.color.backgroundDefault.opacity(0.8))
+  .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
+}
+
+#Preview("Loading") {
+  let viewState = ProxmityConnectivityState(
+    error: nil,
+    qrImage: nil,
+    originator: .featureStartupModule(.startup)
+  )
+
+  ContentScreenView(
+    padding: .zero,
+    canScroll: true
+  ) {
+    content(
+      viewState: viewState,
+      contentSize: 0.0,
+      goBack: {}
+    )
+  }
+}
+
+#Preview {
+  let viewState = ProxmityConnectivityState(
+    error: nil,
+    qrImage: UIImage(systemName: "qrcode"),
+    originator: .featureStartupModule(.startup)
+  )
+
+  ContentScreenView(
+    padding: .zero,
+    canScroll: true
+  ) {
+    content(
+      viewState: viewState,
+      contentSize: 0.0,
+      goBack: {}
+    )
   }
 }
