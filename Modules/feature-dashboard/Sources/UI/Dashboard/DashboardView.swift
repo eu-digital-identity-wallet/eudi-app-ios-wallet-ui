@@ -29,51 +29,24 @@ struct DashboardView<Router: RouterHost>: View {
     self.viewModel = viewModel
   }
 
-  @ViewBuilder
-  func content() -> some View {
-    VStack(spacing: .zero) {
-
-      DocumentListView(
-        items: viewModel.viewState.documents,
-        isLoading: viewModel.viewState.isLoading
-      ) { document in
-        switch document.value.state {
-        case .issued:
-          viewModel.onDocumentDetails(documentId: document.value.id)
-        case .pending, .failed:
-          viewModel.onDeleteDeferredDocument(with: document)
-        }
-      }
-      .bottomFade()
-
-      if viewModel.viewState.allowUserInteraction {
-
-        FloatingActionButtonBarView(
-          isLoading: viewModel.viewState.isLoading,
-          addAction: viewModel.onAdd(),
-          shareAction: viewModel.onShare()
-        )
-
-        VSpacer.small()
-
-      }
-    }
-    .background(Theme.shared.color.backgroundPaper)
-  }
-
   var body: some View {
     ContentScreenView(
       padding: .zero,
       canScroll: false,
       background: Theme.shared.color.secondary
     ) {
-      BearerHeaderView(
-        item: viewModel.viewState.bearer,
-        isLoading: viewModel.viewState.isLoading,
-        isMoreOptionsEnabled: viewModel.viewState.allowUserInteraction,
-        onMoreClicked: viewModel.onMore()
+      content(
+        viewState: viewModel.viewState,
+        onMore: viewModel.onMore,
+        onDocumentDetails: { id in
+          viewModel.onDocumentDetails(documentId: id)
+        },
+        onDeleteDeferredDocument: { doc in
+          viewModel.onDeleteDeferredDocument(with: doc)
+        },
+        onAdd: viewModel.onAdd,
+        onShare: viewModel.onShare
       )
-      content()
     }
     .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {
       SheetContentView {
@@ -229,5 +202,83 @@ struct DashboardView<Router: RouterHost>: View {
       }
       .padding()
     }
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func content(
+  viewState: DashboardState,
+  onMore: @escaping () -> Void,
+  onDocumentDetails: @escaping (String) -> Void,
+  onDeleteDeferredDocument: @escaping (DocumentUIModel) -> Void,
+  onAdd: @escaping () -> Void,
+  onShare: @escaping () -> Void
+) -> some View {
+  BearerHeaderView(
+    item: viewState.bearer,
+    isLoading: viewState.isLoading,
+    isMoreOptionsEnabled: viewState.allowUserInteraction,
+    onMoreClicked: onMore()
+  )
+
+  VStack(spacing: .zero) {
+
+    DocumentListView(
+      items: viewState.documents,
+      isLoading: viewState.isLoading
+    ) { document in
+      switch document.value.state {
+      case .issued:
+        onDocumentDetails(document.value.id)
+      case .pending, .failed:
+        onDeleteDeferredDocument(document)
+      }
+    }
+    .bottomFade()
+
+    if viewState.allowUserInteraction {
+
+      FloatingActionButtonBarView(
+        isLoading: viewState.isLoading,
+        addAction: onAdd(),
+        shareAction: onShare()
+      )
+
+      VSpacer.small()
+
+    }
+  }
+  .background(Theme.shared.color.backgroundPaper)
+}
+
+#Preview {
+  let viewState = DashboardState(
+    isLoading: false,
+    documents: DocumentUIModel.mocks(),
+    bearer: BearerUIModel.mock(),
+    phase: .active,
+    pendingBleModalAction: false,
+    appVersion: "App version",
+    allowUserInteraction: true,
+    pendingDeletionDocument: nil,
+    succededIssuedDocuments: [],
+    failedDocuments: [],
+    moreOptions: [.changeQuickPin, .scanQrCode]
+  )
+
+  ContentScreenView(
+    padding: .zero,
+    canScroll: false,
+    background: Theme.shared.color.secondary
+  ) {
+    content(
+      viewState: viewState,
+      onMore: {},
+      onDocumentDetails: { _ in },
+      onDeleteDeferredDocument: { _ in },
+      onAdd: {},
+      onShare: {}
+    )
   }
 }
