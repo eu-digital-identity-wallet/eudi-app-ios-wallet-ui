@@ -30,41 +30,11 @@ struct WelcomeView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero
     ) {
-      VStack {
-        ZStack {
-          Rectangle()
-            .fill(Theme.shared.color.backgroundPaper)
-            .ignoresSafeArea()
-
-          SplashBackgroundView(
-            isAnimating: true
-          )
-          .ignoresSafeArea()
-          .roundedCorner(Theme.shared.shape.medium, corners: [.bottomLeft, .bottomRight])
-
-        }
-        if !viewModel.viewState.isAnimating {
-          VStack(spacing: SPACING_MEDIUM) {
-            WrapButtonView(
-              style: .primary,
-              title: .loginButton,
-              onAction: viewModel.onClickLogin()
-            )
-            .accesibilityLocator(WelcomeLocators.loginButton)
-
-            WrapButtonView(
-              style: .secondary,
-              title: .readFaqButton,
-              onAction: viewModel.onClickFAQ()
-            )
-            .accesibilityLocator(WelcomeLocators.readFaqButton)
-          }
-          .padding(.vertical, Theme.shared.shape.extraLarge)
-          .padding(viewModel.viewState.isAnimating ? 0 : Theme.shared.dimension.padding)
-          .transition(.move(edge: .bottom))
-        }
-      }
-      .background(Theme.shared.color.backgroundPaper)
+      content(
+        viewState: viewModel.viewState,
+        onClickLogin: viewModel.onClickLogin,
+        onClickFAQ: viewModel.onClickFAQ
+      )
       .onAppear {
         withAnimation(
           .easeOut(duration: 0.66)
@@ -74,5 +44,81 @@ struct WelcomeView<Router: RouterHost>: View {
         }
       }
     }
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func content(
+  viewState: WelcomeState,
+  onClickLogin: @escaping () -> Void,
+  onClickFAQ: @escaping () -> Void
+) -> some View {
+  VStack {
+    ZStack {
+      Rectangle()
+        .fill(Theme.shared.color.backgroundPaper)
+        .ignoresSafeArea()
+
+      SplashBackgroundView(
+        isAnimating: true
+      )
+      .ignoresSafeArea()
+      .roundedCorner(Theme.shared.shape.medium, corners: [.bottomLeft, .bottomRight])
+
+    }
+    if !viewState.isAnimating {
+      VStack(spacing: SPACING_MEDIUM) {
+        WrapButtonView(
+          style: .primary,
+          title: .loginButton,
+          onAction: onClickLogin()
+        )
+        .accesibilityLocator(WelcomeLocators.loginButton)
+
+        WrapButtonView(
+          style: .secondary,
+          title: .readFaqButton,
+          onAction: onClickFAQ()
+        )
+        .accesibilityLocator(WelcomeLocators.readFaqButton)
+      }
+      .padding(.vertical, Theme.shared.shape.extraLarge)
+      .padding(viewState.isAnimating ? 0 : Theme.shared.dimension.padding)
+      .transition(.move(edge: .bottom))
+    }
+  }
+  .background(Theme.shared.color.backgroundPaper)
+}
+
+#Preview {
+  let viewState = WelcomeState(
+    isAnimating: false
+  )
+
+  ContentScreenView(
+    padding: .zero
+  ) {
+    content(
+      viewState: viewState,
+      onClickLogin: {},
+      onClickFAQ: {}
+    )
+  }
+}
+
+#Preview("isAnimating") {
+  let viewState = WelcomeState(
+    isAnimating: true
+  )
+
+  ContentScreenView(
+    padding: .zero
+  ) {
+    content(
+      viewState: viewState,
+      onClickLogin: {},
+      onClickFAQ: {}
+    )
   }
 }
