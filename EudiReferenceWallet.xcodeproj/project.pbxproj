@@ -88,6 +88,14 @@
 			path = Sample;
 			sourceTree = "<group>";
 		};
+		B0AD6D6A2CC1080B007C0793 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				B070C01C2C0A27400061295A /* InfoPlist.strings */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		F09E1EA02AC33A6800779C25 /* Config */ = {
 			isa = PBXGroup;
 			children = (
@@ -107,6 +115,7 @@
 				F14908692ABC467600DDFE56 /* Packages */,
 				F14907B92ABAF54B00DDFE56 /* Products */,
 				F14908182ABC3D0400DDFE56 /* Frameworks */,
+				B0AD6D6A2CC1080B007C0793 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -181,7 +190,6 @@
 				F14907B42ABAF54B00DDFE56 /* Sources */,
 				F14907B52ABAF54B00DDFE56 /* Frameworks */,
 				F14907B62ABAF54B00DDFE56 /* Resources */,
-				F09E1EA52AC3468300779C25 /* Swift Lint */,
 			);
 			buildRules = (
 			);
@@ -258,28 +266,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		F09E1EA52AC3468300779C25 /* Swift Lint */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Swift Lint";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint --fix && swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F14907B42ABAF54B00DDFE56 /* Sources */ = {
