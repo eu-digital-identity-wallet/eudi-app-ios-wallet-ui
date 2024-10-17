@@ -27,32 +27,11 @@ struct QuickPinView<Router: RouterHost>: View {
 
   var body: some View {
     ContentScreenView {
-
-      if viewModel.viewState.isCancellable {
-        ContentHeaderView(
-          dismissIcon: Theme.shared.image.xmark,
-          onBack: { viewModel.onShowCancellationModal() }
-        )
-      }
-
-      ContentTitleView(
-        title: viewModel.viewState.title,
-        caption: viewModel.viewState.caption,
-        topSpacing: viewModel.viewState.isCancellable ? .withToolbar : .withoutToolbar
-      )
-
-      VSpacer.large()
-
-      pinView
-
-      Spacer()
-
-      WrapButtonView(
-        style: .primary,
-        title: viewModel.viewState.button,
-        isLoading: false,
-        isEnabled: viewModel.viewState.isButtonActive,
-        onAction: viewModel.onButtonClick()
+      content(
+        viewState: viewModel.viewState,
+        uiPinInputField: $viewModel.uiPinInputField,
+        onShowCancellationModal: { viewModel.onShowCancellationModal() },
+        onButtonClick: { viewModel.onButtonClick() }
       )
     }
     .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
@@ -79,29 +58,101 @@ struct QuickPinView<Router: RouterHost>: View {
       }
     }
   }
+}
 
-  private var pinView: some View {
-    VStack(spacing: .zero) {
+@MainActor
+@ViewBuilder
+private func content(
+  viewState: QuickPinState,
+  uiPinInputField: Binding<String>,
+  onShowCancellationModal: @escaping () -> Void,
+  onButtonClick: @escaping () -> Void
+) -> some View {
+  if viewState.isCancellable {
+    ContentHeaderView(
+      dismissIcon: Theme.shared.image.xmark,
+      onBack: { onShowCancellationModal() }
+    )
+  }
 
-      PinTextFieldView(
-        numericText: $viewModel.uiPinInputField,
-        maxDigits: viewModel.viewState.quickPinSize,
-        isSecureEntry: true,
-        canFocus: .constant(true),
-        shouldUseFullScreen: false,
-        hasError: viewModel.viewState.pinError != nil
-      )
+  ContentTitleView(
+    title: viewState.title,
+    caption: viewState.caption,
+    topSpacing: viewState.isCancellable ? .withToolbar : .withoutToolbar
+  )
 
-      VSpacer.mediumSmall()
+  VSpacer.large()
 
-      if let error = viewModel.viewState.pinError {
-        HStack {
-          Text(error)
-            .typography(Theme.shared.font.bodyMedium)
-            .foregroundColor(Theme.shared.color.error)
-          Spacer()
-        }
+  pinView(
+    uiPinInputField: uiPinInputField,
+    quickPinSize: viewState.quickPinSize,
+    pinError: viewState.pinError
+  )
+
+  Spacer()
+
+  WrapButtonView(
+    style: .primary,
+    title: viewState.button,
+    isLoading: false,
+    isEnabled: viewState.isButtonActive,
+    onAction: onButtonClick()
+  )
+}
+
+@MainActor
+@ViewBuilder
+private func pinView(
+  uiPinInputField: Binding<String>,
+  quickPinSize: Int,
+  pinError: LocalizableString.Key?
+) -> some View {
+  VStack(spacing: .zero) {
+
+    PinTextFieldView(
+      numericText: uiPinInputField,
+      maxDigits: quickPinSize,
+      isSecureEntry: true,
+      canFocus: .constant(true),
+      shouldUseFullScreen: false,
+      hasError: pinError != nil
+    )
+
+    VSpacer.mediumSmall()
+
+    if let error = pinError {
+      HStack {
+        Text(error)
+          .typography(Theme.shared.font.bodyMedium)
+          .foregroundColor(Theme.shared.color.error)
+        Spacer()
       }
     }
+  }
+}
+
+#Preview {
+  let viewState = QuickPinState(
+    config: QuickPinUiConfig(flow: .set),
+    title: .quickPinSetTitle,
+    caption: .quickPinSetCaptionOne,
+    button: .quickPinNextButton,
+    success: .success,
+    successButton: .quickPinSetSuccessButton,
+    successNavigationType: .push(screen: .featureDashboardModule(.dashboard)),
+    isCancellable: false,
+    pinError: nil,
+    isButtonActive: true,
+    step: .firstInput,
+    quickPinSize: 6
+  )
+
+  ContentScreenView {
+    content(
+      viewState: viewState,
+      uiPinInputField: .constant("PinInput Field"),
+      onShowCancellationModal: {},
+      onButtonClick: {}
+    )
   }
 }

@@ -23,56 +23,91 @@ struct SuccessView<Router: RouterHost>: View {
 
   init(
     with viewmodel: SuccessViewModel<Router>) {
-    self.viewmodel = viewmodel
-  }
+      self.viewmodel = viewmodel
+    }
 
   var body: some View {
     ContentScreenView {
-      ContentTitleView(
-        title: viewmodel.viewState.config.title.value,
-        caption: viewmodel.viewState.config.subtitle,
-        titleColor: viewmodel.viewState.config.title.color,
-        topSpacing: .withoutToolbar
-      )
-      mainView()
+      content(viewState: viewmodel.viewState) { button in
+        viewmodel.onButtonClicked(with: button)
+      }
     }
   }
+}
 
-  private func getCenteredIcon() -> some View {
+@MainActor
+@ViewBuilder
+private func content(
+  viewState: SuccessState,
+  onButtonClicked: @escaping (UIConfig.Success.Button) -> Void
+) -> some View {
+  ContentTitleView(
+    title: viewState.config.title.value,
+    caption: viewState.config.subtitle,
+    titleColor: viewState.config.title.color,
+    topSpacing: .withoutToolbar
+  )
 
-    let imageData: (image: Image, color: Color) = switch viewmodel.viewState.config.visualKind {
-    case .defaultIcon:
-      (Theme.shared.image.checkmarkCircleFill, Theme.shared.color.success)
-    case .customIcon(let image, let color):
-      (image, color)
+  VStack {
+    Spacer()
+
+    ZStack(alignment: .center) {
+      getCenteredIcon(config: viewState.config)
     }
+    Spacer()
 
-    return imageData.image
-      .resizable()
-      .scaledToFit()
-      .foregroundColor(imageData.color)
-      .frame(height: getScreenRect().width / 2.5)
-  }
-
-  private func mainView() -> some View {
     VStack {
-
-      Spacer()
-
-      ZStack(alignment: .center) {
-        getCenteredIcon()
-      }
-      Spacer()
-
-      VStack {
-        ForEach(viewmodel.viewState.config.buttons, id: \.id) { button in
-          WrapButtonView(
-            style: button.style == .primary ? .primary : .secondary,
-            title: button.title,
-            onAction: viewmodel.onButtonClicked(with: button)
-          )
-        }
+      ForEach(viewState.config.buttons, id: \.id) { button in
+        WrapButtonView(
+          style: button.style == .primary ? .primary : .secondary,
+          title: button.title,
+          onAction: onButtonClicked(button)
+        )
       }
     }
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func getCenteredIcon(
+  config: UIConfig.Success
+) -> some View {
+
+  let imageData: (image: Image, color: Color) = switch config.visualKind {
+  case .defaultIcon:
+    (Theme.shared.image.checkmarkCircleFill, Theme.shared.color.success)
+  case .customIcon(let image, let color):
+    (image, color)
+  }
+
+  imageData.image
+    .resizable()
+    .scaledToFit()
+    .foregroundColor(imageData.color)
+    .frame(height: UIScreen.main.bounds.width / 2.5)
+}
+
+#Preview {
+  let viewState = SuccessState(
+    config: UIConfig.Success(
+      title: .init(value: .success),
+      subtitle: .issuanceSuccessDeferredCaption(["Name"]),
+      buttons: [
+        .init(
+          title: LocalizableString.Key.okButton,
+          style: .primary,
+          navigationType: UIConfig.DeepLinkNavigationType.push(screen: .featureDashboardModule(.dashboard))
+        )
+      ],
+      visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.warning)
+    )
+  )
+
+  ContentScreenView {
+    content(
+      viewState: viewState,
+      onButtonClicked: { _ in }
+    )
   }
 }

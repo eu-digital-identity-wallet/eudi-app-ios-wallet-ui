@@ -18,90 +18,88 @@ import SwiftUI
 import logic_resources
 import logic_ui
 
-extension BaseRequestView {
-  struct RequestDataCellView: View {
+struct RequestDataCellView: View {
 
-    typealias Cell = RequestDataUIModel
-    typealias TapListener = ((String) -> Void)?
+  typealias Cell = RequestDataUIModel
+  typealias TapListener = ((String) -> Void)?
 
-    let cellModel: Cell
-    let isLoading: Bool
-    let onTap: TapListener
+  let cellModel: Cell
+  let isLoading: Bool
+  let onTap: TapListener
 
-    init(cellModel: Cell, isLoading: Bool, onTap: TapListener = nil) {
-      self.cellModel = cellModel
-      self.isLoading = isLoading
-      self.onTap = onTap
-    }
+  init(cellModel: Cell, isLoading: Bool, onTap: TapListener = nil) {
+    self.cellModel = cellModel
+    self.isLoading = isLoading
+    self.onTap = onTap
+  }
 
-    var body: some View {
-      switch cellModel {
-      case .requestDataRow(let row):
-        let value: Any = row.value.string ?? row.value.image ?? ""
-        WrapCheckBoxView(
-          isSelected: row.isSelected,
-          isVisible: row.isVisible,
-          isEnabled: row.isEnabled,
-          isLoading: isLoading,
-          id: row.id,
-          title: row.title,
-          value: value,
-          onTap: self.onTap
-        )
-        .padding(.bottom)
-      case .requestDataSection(let section):
-        HStack(spacing: .zero) {
+  var body: some View {
+    switch cellModel {
+    case .requestDataRow(let row):
+      let value: Any = row.value.string ?? row.value.image ?? ""
+      WrapCheckBoxView(
+        isSelected: row.isSelected,
+        isVisible: row.isVisible,
+        isEnabled: row.isEnabled,
+        isLoading: isLoading,
+        id: row.id,
+        title: row.title,
+        value: value,
+        onTap: self.onTap
+      )
+      .padding(.bottom)
+    case .requestDataSection(let section):
+      HStack(spacing: .zero) {
 
-          HStack(spacing: SPACING_SMALL) {
+        HStack(spacing: SPACING_SMALL) {
 
-            Theme.shared.image.id
-              .resizable()
-              .scaledToFit()
-              .frame(width: 45)
+          Theme.shared.image.id
+            .resizable()
+            .scaledToFit()
+            .frame(width: 45)
 
-            Text(section.title)
-              .typography(Theme.shared.font.titleMedium)
-              .foregroundStyle(Theme.shared.color.black)
+          Text(section.title)
+            .typography(Theme.shared.font.titleMedium)
+            .foregroundStyle(Theme.shared.color.black)
 
-          }
-          .padding([.horizontal, .vertical], SPACING_SMALL)
-          .background(Theme.shared.color.secondary)
-          .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
-
-          Spacer()
         }
-        .frame(maxWidth: .infinity, maxHeight: 50)
-        .padding(.bottom)
-        .disabled(isLoading)
-        .shimmer(isLoading: isLoading)
-      case .requestDataVerification(let verification):
-        ContentExpandableView(title: .custom(verification.title)) {
+        .padding([.horizontal, .vertical], SPACING_SMALL)
+        .background(Theme.shared.color.secondary)
+        .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
 
-          VStack(spacing: SPACING_LARGE) {
-
-            ForEach(verification.items, id: \.id) {
-              let value: Any = $0.value.string ?? $0.value.image ?? ""
-              WrapCheckBoxView(
-                isSelected: $0.isSelected,
-                isVisible: $0.isVisible,
-                isEnabled: false,
-                isLoading: isLoading,
-                id: $0.id,
-                title: $0.title,
-                value: value
-              )
-            }
-          }
-        }
-        .padding(.bottom)
-        .shimmer(isLoading: isLoading)
+        Spacer()
       }
+      .frame(maxWidth: .infinity, maxHeight: 50)
+      .padding(.bottom)
+      .disabled(isLoading)
+      .shimmer(isLoading: isLoading)
+    case .requestDataVerification(let verification):
+      ContentExpandableView(title: .custom(verification.title)) {
+
+        VStack(spacing: SPACING_LARGE) {
+
+          ForEach(verification.items, id: \.id) {
+            let value: Any = $0.value.string ?? $0.value.image ?? ""
+            WrapCheckBoxView(
+              isSelected: $0.isSelected,
+              isVisible: $0.isVisible,
+              isEnabled: false,
+              isLoading: isLoading,
+              id: $0.id,
+              title: $0.title,
+              value: value
+            )
+          }
+        }
+      }
+      .padding(.bottom)
+      .shimmer(isLoading: isLoading)
     }
   }
 }
 
 #Preview {
-  BaseRequestView<PreviewRouter>.RequestDataCellView(
+  RequestDataCellView(
     cellModel: RequestDataUIModel.requestDataSection(
       RequestDataSection(
         id: "id",
