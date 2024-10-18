@@ -44,7 +44,7 @@ struct StartupView<Router: RouterHost>: View {
 
 @MainActor
 @ViewBuilder
-fileprivate func content(viewState: StartupState, action: @escaping () -> Void) -> some View {
+private func content(viewState: StartupState, action: @escaping () -> Void) -> some View {
   ZStack {
     SplashBackgroundView(
       isAnimating: viewState.isAnimating

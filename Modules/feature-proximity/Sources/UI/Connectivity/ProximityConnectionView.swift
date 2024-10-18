@@ -48,7 +48,7 @@ struct ProximityConnectionView<Router: RouterHost>: View {
 
 @MainActor
 @ViewBuilder
-fileprivate func content(
+private func content(
   viewState: ProxmityConnectivityState,
   contentSize: CGFloat,
   goBack: @escaping () -> Void
@@ -85,7 +85,7 @@ fileprivate func content(
 
 @MainActor
 @ViewBuilder
-fileprivate func nfcFooter(contentSize: CGFloat) -> some View {
+private func nfcFooter(contentSize: CGFloat) -> some View {
   VStack(alignment: .center, spacing: SPACING_MEDIUM) {
     Theme.shared.image.bluetoothConnect
       .resizable()
