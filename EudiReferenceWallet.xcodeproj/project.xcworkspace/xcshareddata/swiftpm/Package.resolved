@@ -1,5 +1,5 @@
 {
-  "originHash" : "a5e58547b0f4e63d910ba40835224319c1facb7268bf8e8d8f323b74ed0fddbb",
+  "originHash" : "6ef78465160f9ee1ec88d2b5866cb1ca9457f75c58742155bbee3cbb7aa88d45",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Alamofire/Alamofire.git",
       "state" : {
-        "revision" : "ea6a94b7dddffd0ca4d0f29252d95310b84dec84",
-        "version" : "5.10.0"
+        "revision" : "e16d3481f5ed35f0472cb93350085853d754913f",
+        "version" : "5.10.1"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
       "state" : {
-        "revision" : "d0f1b4e1e2b2a94127b66754f3fcc000572efa33",
-        "version" : "2.0.9"
+        "revision" : "305e7a1f55816f5b6410a69c9b031ee7bf602486",
+        "version" : "2.0.10"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-presentation-exchange-swift.git",
       "state" : {
-        "revision" : "bf9396b3bc9ed27a3b740759b045c31d10b0eb62",
-        "version" : "0.1.1"
+        "revision" : "4e1ac57b6772f7f6eac5ef24d977c42e94bc6565",
+        "version" : "0.2.0"
       }
     },
     {
@@ -150,8 +150,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
       "state" : {
-        "revision" : "1a6912fb79646dfaad393625e71aef427e4635b6",
-        "version" : "0.5.0"
+        "revision" : "f103311dd3bd975b12919d4c3c1e099b6cb40330",
+        "version" : "0.6.0"
       }
     },
     {
@@ -159,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "309ed059c2868e23496bca8fc8b88c40aaa2c7a7",
-        "version" : "0.7.5"
+        "revision" : "d745d4f00be8d81e790e9f7b6460dad09ede5b0c",
+        "version" : "0.7.6"
       }
     },
     {
@@ -276,8 +276,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Sextant.git",
       "state" : {
-        "revision" : "52a77d0bce0210cf9557faef7fd0adb9a6da02fb",
-        "version" : "0.4.31"
+        "revision" : "b2141d4a693e2a768720534009cb621252be39a0",
+        "version" : "0.4.33"
       }
     },
     {
@@ -357,8 +357,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
       "state" : {
-        "revision" : "21f7878f2b39d46fd8ba2b06459ccb431cdf876c",
-        "version" : "3.8.1"
+        "revision" : "06dc63c6d8da54ee11ceb268cde1fa68161afc96",
+        "version" : "3.9.1"
       }
     },
     {
