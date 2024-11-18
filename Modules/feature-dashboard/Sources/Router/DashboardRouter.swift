@@ -37,6 +37,15 @@ public final class DashboardRouter {
           )
         )
       ).eraseToAnyView()
+    case .signDocument:
+      SignDocumentView(
+        with: .init(
+          router: host,
+          interactor: DIGraph.resolver.force(
+            DocumentSignInteractor.self
+          )
+        )
+      ).eraseToAnyView()
     }
   }
 }

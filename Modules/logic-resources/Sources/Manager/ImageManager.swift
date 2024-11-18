@@ -52,6 +52,7 @@ public protocol ImageManagerProtocol: Sendable {
   var clock: Image { get }
   var clockIndicator: Image { get }
   var errorIndicator: Image { get }
+  var signDocument: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -92,6 +93,7 @@ final class ImageManager: ImageManagerProtocol {
     case clock = "ic-clock"
     case clockIndicator = "ic-clock-indicator"
     case errorIndicator = "ic-error-indicator"
+    case signDocument = "doc"
   }
 
   // MARK: - Properties
@@ -207,5 +209,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var errorIndicator: Image {
     Image(ImageEnum.errorIndicator.rawValue, bundle: bundle)
+  }
+  var signDocument: Image {
+    Image(systemName: ImageEnum.signDocument.rawValue)
   }
 }

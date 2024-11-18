@@ -77,6 +77,14 @@ struct DashboardView<Router: RouterHost>: View {
                 gravity: .start,
                 onAction: viewModel.onShowScanner()
               )
+            case .signDocument:
+              WrapButtonView(
+                title: .signDocument,
+                backgroundColor: .clear,
+                icon: Theme.shared.image.signDocument,
+                gravity: .start,
+                onAction: viewModel.openSignDocument()
+              )
             case .retrieveLogs(let url):
               shareLogs(with: url)
             }

@@ -22,7 +22,7 @@ public struct AddDocumentUIModel: Identifiable, Sendable {
 
   public let id: String
   public let documentName: LocalizableString.Key
-  public let image: Image
+  public let image: Image?
   public let type: DocumentTypeIdentifier
   public var isEnabled: Bool
   public var isLoading: Bool
@@ -30,7 +30,7 @@ public struct AddDocumentUIModel: Identifiable, Sendable {
   public init(
     isEnabled: Bool,
     documentName: LocalizableString.Key,
-    image: Image,
+    image: Image? = nil,
     isLoading: Bool = false,
     type: DocumentTypeIdentifier
   ) {

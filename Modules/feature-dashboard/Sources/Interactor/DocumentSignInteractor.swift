@@ -13,26 +13,21 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Swinject
-import logic_business
+import Foundation
 import logic_core
+import logic_business
+import logic_resources
 
-public final class FeatureDashboardAssembly: Assembly {
+public enum DocumentSignInteractorPartialState {
+  case launchRQES(URL)
+}
 
-  public init() {}
+public protocol DocumentSignInteractor {
+  func launchRQESSdk(uri: URL) -> DocumentSignInteractorPartialState
+}
 
-  public func assemble(container: Container) {
-    container.register(DashboardInteractor.self) { r in
-      DashboardInteractorImpl(
-        walletController: r.force(WalletKitController.self),
-        reachabilityController: r.force(ReachabilityController.self),
-        configLogic: r.force(ConfigLogic.self)
-      )
-    }
-    .inObjectScope(ObjectScope.transient)
-
-    container.register(DocumentSignInteractor.self) { _ in
-      DocumentSignInteractorImpl()
-    }
+final class DocumentSignInteractorImpl: DocumentSignInteractor {
+  func launchRQESSdk(uri: URL) -> DocumentSignInteractorPartialState {
+    return .launchRQES(uri)
   }
 }
