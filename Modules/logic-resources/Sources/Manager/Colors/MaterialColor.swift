@@ -21,10 +21,17 @@ public struct MaterialColor: Sendable {
     case onPrimary
     case primaryContainer
     case onPrimaryContainer
+    case onPrimaryFixed
+    case onPrimaryFixedVariant
+    case primaryFixedDim
     case secondary
     case onSecondary
     case secondaryContainer
     case onSecondaryContainer
+    case onSecondaryFixed
+    case onSecondaryFixedVariant
+    case secondaryFixed
+    case secondaryFixedDim
     case tertiary
     case onTertiary
     case tertiaryContainer
@@ -40,12 +47,20 @@ public struct MaterialColor: Sendable {
     case surfaceVariant
     case onSurfaceVariant
     case surfaceTint
+    case surfaceDim
+    case surfaceBright
+    case surfaceContainerLowest
+    case surfaceContainerLow
+    case surfaceContainer
+    case surfaceContainerHigh
+    case surfaceContainerHighest
     case outline
     case outlineVariant
     case inverseOnSurface
     case inverseSurface
     case inversePrimary
     case scrim
+    case shadow
   }
 
   var bundle: Bundle
@@ -64,6 +79,18 @@ public struct MaterialColor: Sendable {
   public var onPrimaryContainer: Color {
     Color(MaterialColors.onPrimaryContainer.rawValue, bundle: bundle)
   }
+  public var onPrimaryFixed: Color {
+    Color(MaterialColors.onPrimaryFixed.rawValue, bundle: bundle)
+  }
+  public var onPrimaryFixedVariant: Color {
+    Color(MaterialColors.onPrimaryFixedVariant.rawValue, bundle: bundle)
+  }
+  public var primaryFixedDim: Color {
+    Color(MaterialColors.primaryFixedDim.rawValue, bundle: bundle)
+  }
+  public var secondaryFixedDim: Color {
+    Color(MaterialColors.secondaryFixedDim.rawValue, bundle: bundle)
+  }
 
   // MARK: - Secondary
 
@@ -79,6 +106,15 @@ public struct MaterialColor: Sendable {
   }
   public var onSecondaryContainer: Color {
     Color(MaterialColors.onSecondaryContainer.rawValue, bundle: bundle)
+  }
+  public var onSecondaryFixed: Color {
+    Color(MaterialColors.onSecondaryFixed.rawValue, bundle: bundle)
+  }
+  public var onSecondaryFixedVariant: Color {
+    Color(MaterialColors.onSecondaryFixedVariant.rawValue, bundle: bundle)
+  }
+  public var secondaryFixed: Color {
+    Color(MaterialColors.secondaryFixed.rawValue, bundle: bundle)
   }
 
   // MARK: - Tertiary
@@ -137,6 +173,24 @@ public struct MaterialColor: Sendable {
   public var surfaceTint: Color {
     Color(MaterialColors.surfaceTint.rawValue, bundle: bundle)
   }
+  public var surfaceDim: Color {
+    Color(MaterialColors.surfaceDim.rawValue, bundle: bundle)
+  }
+  public var surfaceBright: Color {
+    Color(MaterialColors.surfaceBright.rawValue, bundle: bundle)
+  }
+  public var surfaceContainerLowest: Color {
+    Color(MaterialColors.surfaceContainerLowest.rawValue, bundle: bundle)
+  }
+  public var surfaceContainerLow: Color {
+    Color(MaterialColors.surfaceContainerLow.rawValue, bundle: bundle)
+  }
+  public var surfaceContainerHigh: Color {
+    Color(MaterialColors.surfaceContainerHigh.rawValue, bundle: bundle)
+  }
+  public var surfaceContainerHighest: Color {
+    Color(MaterialColors.surfaceContainerHighest.rawValue, bundle: bundle)
+  }
 
   // MARK: - Outline
 
@@ -163,5 +217,8 @@ public struct MaterialColor: Sendable {
 
   public var scrim: Color {
     Color(MaterialColors.scrim.rawValue, bundle: bundle)
+  }
+  public var shadow: Color {
+    Color(MaterialColors.shadow.rawValue, bundle: bundle)
   }
 }
