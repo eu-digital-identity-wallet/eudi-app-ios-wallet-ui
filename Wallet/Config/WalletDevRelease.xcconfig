@@ -1,7 +1,3 @@
 BUILD_TYPE = RELEASE
-FLAVOR = DEV
+BUILD_VARIANT = DEV
 //WALLET_HOST_URL =
-VCI_ISSUER_URL = https:/$()/dev.issuer.eudiw.dev
-VCI_CLIENT_ID = wallet-dev
-VCI_REDIRECT_URI = eu.europa.ec.euidi:/$()/authorization
-CORE_USER_AUTH = false

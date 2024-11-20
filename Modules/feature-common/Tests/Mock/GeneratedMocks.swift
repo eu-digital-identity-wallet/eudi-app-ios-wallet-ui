@@ -2521,12 +2521,12 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
         }
     }
     
-    public var flavor: Flavor {
+    public var appBuildVariant: AppBuildVariant {
         get {
             return cuckoo_manager.getter(
-                "flavor",
+                "appBuildVariant",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.flavor
+                defaultCall: __defaultImplStub!.appBuildVariant
             )
         }
     }
@@ -2567,8 +2567,8 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
             return .init(manager: cuckoo_manager, name: "appBuildType")
         }
         
-        var flavor: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic,Flavor> {
-            return .init(manager: cuckoo_manager, name: "flavor")
+        var appBuildVariant: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic,AppBuildVariant> {
+            return .init(manager: cuckoo_manager, name: "appBuildVariant")
         }
         
         var appVersion: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic,String> {
@@ -2599,8 +2599,8 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
             return .init(manager: cuckoo_manager, name: "appBuildType", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var flavor: Cuckoo.VerifyReadOnlyProperty<Flavor> {
-            return .init(manager: cuckoo_manager, name: "flavor", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var appBuildVariant: Cuckoo.VerifyReadOnlyProperty<AppBuildVariant> {
+            return .init(manager: cuckoo_manager, name: "appBuildVariant", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         var appVersion: Cuckoo.VerifyReadOnlyProperty<String> {
@@ -2627,9 +2627,9 @@ public class ConfigLogicStub:ConfigLogic, @unchecked Sendable {
         }
     }
     
-    public var flavor: Flavor {
+    public var appBuildVariant: AppBuildVariant {
         get {
-            return DefaultValueRegistry.defaultValue(for: (Flavor).self)
+            return DefaultValueRegistry.defaultValue(for: (AppBuildVariant).self)
         }
     }
     

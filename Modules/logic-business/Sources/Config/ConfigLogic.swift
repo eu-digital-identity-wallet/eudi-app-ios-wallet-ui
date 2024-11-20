@@ -16,11 +16,11 @@
 import Foundation
 import EudiRQESUi
 
-public enum AppBuildType: String {
+public enum AppBuildType: String, Sendable {
   case RELEASE, DEBUG
 }
 
-public enum Flavor: String {
+public enum AppBuildVariant: String, Sendable {
   case DEMO, DEV
 }
 
@@ -37,9 +37,9 @@ public protocol ConfigLogic: Sendable {
   var appBuildType: AppBuildType { get }
 
   /**
-   * Flavor.
+   * Build Variant.
    */
-  var flavor: Flavor { get }
+  var appBuildVariant: AppBuildVariant { get }
 
   /**
    * App version.
@@ -66,11 +66,11 @@ struct ConfigLogicImpl: ConfigLogic {
     getBundleValue(key: "CFBundleShortVersionString")
   }
 
-  public var flavor: Flavor {
-    getFlavor()
+  public var appBuildVariant: AppBuildVariant {
+    getBuildVariant()
   }
 
   public var rqesConfig: EudiRQESUiConfig {
-    RQESConfig()
+    RQESConfig(buildVariant: appBuildVariant, buildType: appBuildType)
   }
 }

@@ -21,8 +21,8 @@ public final class LogicCoreAssembly: Assembly {
   public init() {}
 
   public func assemble(container: Container) {
-    container.register(WalletKitConfig.self) { _ in
-      WalletKitConfigImpl()
+    container.register(WalletKitConfig.self) { r in
+      WalletKitConfigImpl(configLogic: r.force(ConfigLogic.self))
     }
     .inObjectScope(ObjectScope.container)
 

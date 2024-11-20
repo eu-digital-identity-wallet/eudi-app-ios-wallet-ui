@@ -14,19 +14,49 @@
 
 The application allows the configuration of:
 
-1. Verifier API
-2. Issuing API
+1. Issuing API
 
-Via the *WalletDemo* and *WalletDemoRelease* xcconfigs inside the Wallet/Config folder.
+Via the *WalletKitConfig* protocol inside the logic-core module.
 
 ```
-VCI_ISSUER_URL = https:/$()/issuer.eudiw.dev/oidc
-VCI_CLIENT_ID = wallet-demo
-VCI_REDIRECT_URI = eudi-openid4ci:/$()/authorize/
-CORE_USER_AUTH = false
+public protocol WalletKitConfig {
+  /**
+   * VCI Configuration
+   */
+  var vciConfig: VciConfig { get }
+}
+```
+Based on the Build Variant of the Wallet (e.g. Dev)
+
+```
+struct WalletKitConfigImpl: WalletKitConfig {
+
+  let configLogic: ConfigLogic
+
+  init(configLogic: ConfigLogic) {
+    self.configLogic = configLogic
+  }
+
+  var vciConfig: VciConfig {
+    return switch configLogic.appBuildVariant {
+    case .DEMO:
+        .init(
+          issuerUrl: "your_demo_url",
+          clientId: "your_demo_clientid",
+          redirectUri: URL(string: "your_demo_redirect")!
+        )
+    case .DEV:
+        .init(
+          issuerUrl: "your_dev_url",
+          clientId: "your_dev_clientid",
+          redirectUri: URL(string: "your_dev_redirect")!
+        )
+    }
+  }
+}
 ```
 
-3. Trusted certificates
+2. Trusted certificates
 
 Via the *WalletKitConfig* protocol inside the logic-core module.
 
@@ -58,13 +88,101 @@ The application's IACA certificates are located [here](https://github.com/eu-dig
   }
 ```
 
-4. Preregistered Client Scheme
+3. Preregistered Client Scheme
 
 If you plan to use the Preregistered for OpenId4VP configuration, please add the following to the *WalletKitConfigImpl* initializer.
 
 ```
 wallet.verifierApiUri = "your_verifier_url"
 wallet.verifierLegalName = "your_verifier_legal_name"
+```
+
+4. RQES
+
+Via the *RQESConfig* struct, which implements the *EudiRQESUiConfig* protocol from the RQESUi SDK, inside the logic-business module.
+
+```
+final class RQESConfig: EudiRQESUiConfig {
+
+  let buildVariant: AppBuildVariant
+  let buildType: AppBuildType
+
+  init(buildVariant: AppBuildVariant, buildType: AppBuildType) {
+    self.buildVariant = buildVariant
+    self.buildType = buildType
+  }
+
+  var rssps: [QTSPData]
+
+  var printLogs: Bool
+
+  var rQESConfig: RqesServiceConfig?
+  
+  var translations: [String : [LocalizableKey : String]]
+  
+  var theme: ThemeProtocol
+}
+```
+
+Based on the Build Variant and Type of the Wallet (e.g. Dev Debug)
+
+```
+final class RQESConfig: EudiRQESUiConfig {
+
+  let buildVariant: AppBuildVariant
+  let buildType: AppBuildType
+
+  init(buildVariant: AppBuildVariant, buildType: AppBuildType) {
+    self.buildVariant = buildVariant
+    self.buildType = buildType
+  }
+
+  var rssps: [QTSPData] {
+    return switch buildVariant {
+    case .DEV:
+      [
+        .init(
+          name: "your_dev_name",
+          uri: URL(string: "your_dev_uri")!,
+          scaURL: "your_dev_sca"
+        )
+      ]
+    case .DEMO:
+      [
+        .init(
+          name: "your_demo_name",
+          uri: URL(string: "your_demo_uri")!,
+          scaURL: "your_demo_sca"
+        )
+      ]
+    }
+  }
+
+  var printLogs: Bool {
+    buildType == .DEBUG
+  }
+
+  var rQESConfig: RqesServiceConfig? {
+    return switch buildVariant {
+    case .DEV:
+        .init(
+          clientId: "your_dev_clientid",
+          clientSecret: "your_dev_secret",
+          authFlowRedirectionURI: "your_dev_redirect",
+          signingAlgorithm: your_dev_algo,
+          hashAlgorithm: your_dev_algo
+        )
+    case .DEMO:
+        .init(
+          clientId: "your_demo_clientid",
+          clientSecret: "your_demo_secret",
+          authFlowRedirectionURI: "your_demo_redirect",
+          signingAlgorithm: your_demo_algo,
+          hashAlgorithm: your_demo_algo
+        )
+    }
+  }
+}
 ```
 
 ## DeepLink Schemas configuration

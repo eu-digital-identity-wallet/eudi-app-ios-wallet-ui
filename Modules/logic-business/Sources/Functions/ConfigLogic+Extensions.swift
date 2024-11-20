@@ -27,14 +27,14 @@ extension ConfigLogic {
     return buildType
   }
 
-  func getFlavor() -> Flavor {
+  func getBuildVariant() -> AppBuildVariant {
     guard
-      let name = getBundleNullableValue(key: "Flavor"),
-      let flavor = Flavor(rawValue: name)
+      let name = getBundleNullableValue(key: "Build Variant"),
+      let variant = AppBuildVariant(rawValue: name)
     else {
-      return Flavor.DEV
+      return AppBuildVariant.DEV
     }
-    return flavor
+    return variant
   }
 
   func getBundleValue(key: String) -> String {
