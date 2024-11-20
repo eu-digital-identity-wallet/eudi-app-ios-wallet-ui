@@ -75,7 +75,7 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
     case .dashboard:
       (key: "Dashboard", arguments: [:])
     case .signDocument:
-      (key: "signDocument", arguments: [:])
+      (key: "SignDocument", arguments: [:])
     }
   }
 }

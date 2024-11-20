@@ -15,21 +15,14 @@
  */
 import Foundation
 import logic_ui
-import logic_business
-import logic_core
-import feature_common
-import feature_issuance
 
 @Copyable
-struct SignDocumentState: ViewState {
-  let isLoading: Bool
-  let selectDocumentCard: AddDocumentUIModel
-  let title: String
-  let subtitle: String
-  let error: ContentErrorView.Config?
-}
+struct SignDocumentState: ViewState {}
 
 final class SignDocumentViewModel<Router: RouterHost>: ViewModel<Router, SignDocumentState> {
+
+  @Published var showFilePicker: Bool = false
+
   private let interactor: DocumentSignInteractor
 
   init(
@@ -39,17 +32,7 @@ final class SignDocumentViewModel<Router: RouterHost>: ViewModel<Router, SignDoc
     self.interactor = interactor
     super.init(
       router: router,
-      initialState: .init(
-        isLoading: true,
-        selectDocumentCard: .init(
-          isEnabled: true,
-          documentName: .selectDocument,
-          type: .GENERIC(docType: "Sign Document")
-        ),
-        title: "",
-        subtitle: "",
-        error: nil
-      )
+      initialState: .init()
     )
   }
 
@@ -57,8 +40,13 @@ final class SignDocumentViewModel<Router: RouterHost>: ViewModel<Router, SignDoc
     router.pop()
   }
 
-  func launchRQESSdk() {
-    //TO DO: replace url
-    let state = interactor.launchRQESSdk(uri: URL(filePath: "test")!)
+  func onFileSelection(with url: URL) {
+    Task {
+      await interactor.initiateSigning(url: url)
+    }
+  }
+
+  func onShowFilePicker() {
+    showFilePicker = true
   }
 }

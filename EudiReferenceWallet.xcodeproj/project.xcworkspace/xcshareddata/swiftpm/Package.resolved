@@ -1,5 +1,5 @@
 {
-  "originHash" : "6ef78465160f9ee1ec88d2b5866cb1ca9457f75c58742155bbee3cbb7aa88d45",
+  "originHash" : "7d0f4301fa9dc892754ec72dda03e432ef374c74dd022909d218c8ed3f26bf61",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -143,6 +143,33 @@
       "state" : {
         "revision" : "4e1ac57b6772f7f6eac5ef24d977c42e94bc6565",
         "version" : "0.2.0"
+      }
+    },
+    {
+      "identity" : "eudi-lib-ios-rqes-csc-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-csc-swift.git",
+      "state" : {
+        "revision" : "d286db938dd6bddcd2aa22051e54211227cf5cba",
+        "version" : "0.0.1"
+      }
+    },
+    {
+      "identity" : "eudi-lib-ios-rqes-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-kit.git",
+      "state" : {
+        "revision" : "1bc777cbd408af2d02df95be4c310f4829ae0c18",
+        "version" : "0.0.1"
+      }
+    },
+    {
+      "identity" : "eudi-lib-ios-rqes-ui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/niscy-eudiw/eudi-lib-ios-rqes-ui.git",
+      "state" : {
+        "revision" : "6c7a3f57613129f969889f5940c4e5ffbe692633",
+        "version" : "0.0.5"
       }
     },
     {

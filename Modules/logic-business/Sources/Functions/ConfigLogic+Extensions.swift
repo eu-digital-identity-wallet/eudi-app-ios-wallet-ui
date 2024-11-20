@@ -27,6 +27,16 @@ extension ConfigLogic {
     return buildType
   }
 
+  func getFlavor() -> Flavor {
+    guard
+      let name = getBundleNullableValue(key: "Flavor"),
+      let flavor = Flavor(rawValue: name)
+    else {
+      return Flavor.DEV
+    }
+    return flavor
+  }
+
   func getBundleValue(key: String) -> String {
     return key.valueFromBundle
   }

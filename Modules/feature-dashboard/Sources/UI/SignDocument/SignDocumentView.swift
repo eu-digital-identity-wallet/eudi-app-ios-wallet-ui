@@ -14,11 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import logic_ui
-import logic_resources
-import logic_business
 import feature_common
-import logic_core
 
 struct SignDocumentView<Router: RouterHost>: View {
 
@@ -29,17 +25,27 @@ struct SignDocumentView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    ContentScreenView(
-      padding: .zero
-    ) {
+    ContentScreenView {
+
       ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
         viewModel.pop()
       }
-      .padding([.top, .horizontal], Theme.shared.dimension.padding)
 
       content(viewState: viewModel.viewState) {
-        viewModel.launchRQESSdk()
+        viewModel.onShowFilePicker()
       }
+      .fileImporter(
+        isPresented: $viewModel.showFilePicker,
+        allowedContentTypes: [.pdf],
+        onCompletion: { result in
+          switch result {
+          case .success(let url):
+            viewModel.onFileSelection(with: url)
+          case .failure:
+            break
+          }
+        }
+      )
 
       Spacer()
     }
@@ -52,24 +58,25 @@ private func content(
   viewState: SignDocumentState,
   action: @escaping () -> Void
 ) -> some View {
-  VStack(spacing: .zero) {
+
+  VStack(spacing: SPACING_LARGE) {
+
     ContentTitleView(
       title: .signDocument,
-      caption: .signDocumentSubtitle,
-      titleColor: Theme.shared.color.textPrimaryDark
+      caption: .signDocumentSubtitle
     )
-
-    VSpacer.large()
 
     AddNewDocumentCellView(
-      isEnabled: viewState.selectDocumentCard.isEnabled,
-      icon: viewState.selectDocumentCard.image,
-      title: viewState.selectDocumentCard.documentName,
+      isEnabled: true,
+      title: .selectDocument,
       isLoading: false,
-      action: {
-        action()
-      }
+      action: action()
     )
   }
-  .padding(.horizontal, Theme.shared.dimension.padding)
+}
+
+#Preview {
+  ContentScreenView {
+    content(viewState: .init(), action: {})
+  }
 }

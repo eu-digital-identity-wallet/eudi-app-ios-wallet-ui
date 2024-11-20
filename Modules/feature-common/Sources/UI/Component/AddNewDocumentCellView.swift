@@ -29,7 +29,7 @@ public struct AddNewDocumentCellView: View {
     icon: Image? = nil,
     title: LocalizableString.Key,
     isLoading: Bool,
-    action: @escaping () -> Void
+    action: @autoclosure @escaping () -> Void
   ) {
     self.isEnabled = isEnabled
     self.icon = icon
@@ -85,6 +85,6 @@ public struct AddNewDocumentCellView: View {
     icon: Image(systemName: "person.text.rectangle"),
     title: LocalizableString.Key.addDocumentTitle,
     isLoading: false,
-    action: {}
+    action: {}()
   )
 }

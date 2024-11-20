@@ -14,20 +14,34 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import logic_core
 import logic_business
-import logic_resources
+import EudiRQESUi
 
-public enum DocumentSignInteractorPartialState {
-  case launchRQES(URL)
-}
-
-public protocol DocumentSignInteractor {
-  func launchRQESSdk(uri: URL) -> DocumentSignInteractorPartialState
+public protocol DocumentSignInteractor: Sendable {
+  func initiateSigning(url: URL) async
 }
 
 final class DocumentSignInteractorImpl: DocumentSignInteractor {
-  func launchRQESSdk(uri: URL) -> DocumentSignInteractorPartialState {
-    return .launchRQES(uri)
+
+  private let configLogic: ConfigLogic
+
+  init(configLogic: ConfigLogic) {
+    self.configLogic = configLogic
+  }
+
+  func initiateSigning(url: URL) async {
+
+    let eudiRQESUi: EudiRQESUi
+
+    do {
+      eudiRQESUi = try EudiRQESUi.instance()
+    } catch {
+      eudiRQESUi = EudiRQESUi.init(config: configLogic.rqesConfig)
+    }
+
+    try? await eudiRQESUi.initiate(
+      on: UIApplication.shared.topViewController(),
+      fileUrl: url
+    )
   }
 }

@@ -17,6 +17,7 @@
 import Foundation
 import logic_business
 import logic_core
+import EudiRQESUi
 
 public struct DeepLink {}
 
@@ -121,6 +122,16 @@ final class DeepLinkControllerImpl: DeepLinkController {
             and: ["uri": deepLinkExecutable.plainUrl.absoluteString]
           )
         }
+      case .rqes:
+        guard let code = deepLinkExecutable.link.queryItems?.first(where: { $0.name == "code" })?.value else {
+          return
+        }
+        Task { @MainActor in
+          try? await EudiRQESUi.instance().resume(
+            on: UIApplication.shared.topViewController(),
+            authorizationCode: code
+          )
+        }
       }
   }
 
@@ -162,6 +173,7 @@ public extension DeepLink {
 
     case openid4vp
     case credential_offer
+    case rqes
     case external
 
     private var name: String {
@@ -183,6 +195,8 @@ public extension DeepLink {
         return .openid4vp
       case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme):
         return .credential_offer
+      case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
+        return .rqes
       default:
         return .external
       }
