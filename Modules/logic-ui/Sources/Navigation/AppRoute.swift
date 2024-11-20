@@ -68,11 +68,14 @@ public enum FeatureCommonRouteModule: AppRouteModule {
 public enum FeatureDashboardRouteModule: AppRouteModule {
 
   case dashboard
+  case signDocument
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
     case .dashboard:
       (key: "Dashboard", arguments: [:])
+    case .signDocument:
+      (key: "SignDocument", arguments: [:])
     }
   }
 }

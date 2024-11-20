@@ -1,5 +1,6 @@
 BUILD_TYPE = DEBUG
-//WALLET_HOST_URL = 
+FLAVOR = DEV
+//WALLET_HOST_URL =
 VCI_ISSUER_URL = https:/$()/dev.issuer.eudiw.dev
 VCI_CLIENT_ID = wallet-dev
 VCI_REDIRECT_URI = eu.europa.ec.euidi:/$()/authorization

@@ -17,6 +17,7 @@
 import Foundation
 import logic_business
 import logic_core
+import EudiRQESUi
 
 public struct DeepLink {}
 
@@ -68,60 +69,105 @@ final class DeepLinkControllerImpl: DeepLinkController {
     remoteSessionCoordinator: RemoteSessionCoordinator?
   ) {
 
-      var isVciExecutable: Bool {
-        deepLinkExecutable.action == .credential_offer && routerHost.userIsLoggedInWithNoDocuments()
+    var isVciExecutable: Bool {
+      deepLinkExecutable.action == .credential_offer && routerHost.userIsLoggedInWithNoDocuments()
+    }
+
+    var isRqesPendingAction: Bool {
+      deepLinkExecutable.action == .rqes
+      && !routerHost.isScreenForeground(with: .featureDashboardModule(.dashboard))
+    }
+
+    var shouldPopToDashboardFirst: Bool {
+      routerHost.userIsLoggedInWithDocuments()
+      && isRqesPendingAction
+    }
+
+    guard
+      !shouldPopToDashboardFirst && (routerHost.userIsLoggedInWithDocuments() || isVciExecutable)
+    else {
+      if let url = deepLinkExecutable.link.url {
+        cacheDeepLinkURL(url: url)
       }
-
-      guard
-        routerHost.userIsLoggedInWithDocuments() || isVciExecutable
-      else {
-        if let url = deepLinkExecutable.link.url {
-          cacheDeepLinkURL(url: url)
-        }
-        return
+      if shouldPopToDashboardFirst {
+        routerHost.popTo(
+          with: .featureDashboardModule(.dashboard),
+          inclusive: false,
+          animated: false
+        )
       }
+      return
+    }
 
-      removeCachedDeepLinkURL()
+    removeCachedDeepLinkURL()
 
-      switch deepLinkExecutable.action {
-      case .openid4vp:
-        guard let remoteSessionCoordinator else {
-          fatalError("DeepLink Action OpenId4VP Requires Remote Session Coordinator")
-        }
-        if !routerHost.isScreenForeground(
+    switch deepLinkExecutable.action {
+    case .openid4vp:
+      guard let remoteSessionCoordinator else {
+        fatalError("DeepLink Action OpenId4VP Requires Remote Session Coordinator")
+      }
+      if !routerHost.isScreenForeground(
+        with: .featurePresentationModule(
+          .presentationRequest(
+            presentationCoordinator: remoteSessionCoordinator,
+            originator: .featureDashboardModule(.dashboard)
+          )
+        )
+      ) {
+        routerHost.push(
           with: .featurePresentationModule(
             .presentationRequest(
               presentationCoordinator: remoteSessionCoordinator,
               originator: .featureDashboardModule(.dashboard)
             )
           )
-        ) {
-          routerHost.push(with: .featurePresentationModule(.presentationRequest(presentationCoordinator: remoteSessionCoordinator, originator: .featureDashboardModule(.dashboard))))
-        } else {
-          postNotification(
-            with: NSNotification.PresentationVC,
-            and: ["session": remoteSessionCoordinator]
-          )
-        }
-      case .external:
-        deepLinkExecutable.plainUrl.open()
-      case .credential_offer:
-        let config = UIConfig.Generic(
-          arguments: ["uri": deepLinkExecutable.plainUrl.absoluteString],
-          navigationSuccessType: routerHost.userIsLoggedInWithDocuments()
-          ? .popTo(.featureDashboardModule(.dashboard))
-          : .push(.featureDashboardModule(.dashboard)),
-          navigationCancelType: .pop
         )
-        if !routerHost.isScreenForeground(with: .featureIssuanceModule(.credentialOfferRequest(config: config))) {
-          routerHost.push(with: .featureIssuanceModule(.credentialOfferRequest(config: config)))
-        } else {
-          postNotification(
-            with: NSNotification.CredentialOffer,
-            and: ["uri": deepLinkExecutable.plainUrl.absoluteString]
-          )
-        }
+      } else {
+        postNotification(
+          with: NSNotification.PresentationVC,
+          and: ["session": remoteSessionCoordinator]
+        )
       }
+    case .external:
+      deepLinkExecutable.plainUrl.open()
+    case .credential_offer:
+      let config = UIConfig.Generic(
+        arguments: ["uri": deepLinkExecutable.plainUrl.absoluteString],
+        navigationSuccessType: routerHost.userIsLoggedInWithDocuments()
+        ? .popTo(.featureDashboardModule(.dashboard))
+        : .push(.featureDashboardModule(.dashboard)),
+        navigationCancelType: .pop
+      )
+      if !routerHost.isScreenForeground(with: .featureIssuanceModule(.credentialOfferRequest(config: config))) {
+        routerHost.push(with: .featureIssuanceModule(.credentialOfferRequest(config: config)))
+      } else {
+        postNotification(
+          with: NSNotification.CredentialOffer,
+          and: ["uri": deepLinkExecutable.plainUrl.absoluteString]
+        )
+      }
+    case .rqes:
+
+      guard let code = deepLinkExecutable.link.queryItems?.first(where: { $0.name == "code" })?.value else {
+        return
+      }
+
+      Task { @MainActor in
+
+        while UIApplication.shared.topViewController() == nil {
+          try? await Task.sleep(for: .milliseconds(100))
+        }
+
+        guard let controller = UIApplication.shared.topViewController() else {
+          return
+        }
+
+        try? await EudiRQESUi.instance().resume(
+          on: controller,
+          authorizationCode: code
+        )
+      }
+    }
   }
 
   public func cacheDeepLinkURL(url: URL) {
@@ -162,6 +208,7 @@ public extension DeepLink {
 
     case openid4vp
     case credential_offer
+    case rqes
     case external
 
     private var name: String {
@@ -183,6 +230,8 @@ public extension DeepLink {
         return .openid4vp
       case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme):
         return .credential_offer
+      case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
+        return .rqes
       default:
         return .external
       }

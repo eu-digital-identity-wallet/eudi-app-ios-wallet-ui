@@ -13,26 +13,40 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Swinject
-import logic_business
-import logic_core
+import Foundation
+import logic_ui
 
-public final class FeatureDashboardAssembly: Assembly {
+@Copyable
+struct SignDocumentState: ViewState {}
 
-  public init() {}
+final class SignDocumentViewModel<Router: RouterHost>: ViewModel<Router, SignDocumentState> {
 
-  public func assemble(container: Container) {
-    container.register(DashboardInteractor.self) { r in
-      DashboardInteractorImpl(
-        walletController: r.force(WalletKitController.self),
-        reachabilityController: r.force(ReachabilityController.self),
-        configLogic: r.force(ConfigLogic.self)
-      )
+  @Published var showFilePicker: Bool = false
+
+  private let interactor: DocumentSignInteractor
+
+  init(
+    router: Router,
+    interactor: DocumentSignInteractor
+  ) {
+    self.interactor = interactor
+    super.init(
+      router: router,
+      initialState: .init()
+    )
+  }
+
+  func pop() {
+    router.pop()
+  }
+
+  func onFileSelection(with url: URL) {
+    Task {
+      await interactor.initiateSigning(url: url)
     }
-    .inObjectScope(ObjectScope.transient)
+  }
 
-    container.register(DocumentSignInteractor.self) { r in
-      DocumentSignInteractorImpl(configLogic: r.force(ConfigLogic.self))
-    }
+  func onShowFilePicker() {
+    showFilePicker = true
   }
 }

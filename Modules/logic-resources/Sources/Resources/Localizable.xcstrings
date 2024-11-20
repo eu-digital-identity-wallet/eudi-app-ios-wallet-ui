@@ -1753,6 +1753,17 @@
         }
       }
     },
+    "select_document" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select document"
+          }
+        }
+      }
+    },
     "sex" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1804,6 +1815,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Shown Above"
+          }
+        }
+      }
+    },
+    "sign_document" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign document"
+          }
+        }
+      }
+    },
+    "sign_document_subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a document from your device to sign electronically."
           }
         }
       }

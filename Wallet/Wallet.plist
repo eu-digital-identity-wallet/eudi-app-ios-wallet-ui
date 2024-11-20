@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Flavor</key>
+	<string>$(FLAVOR)</string>
 	<key>Build Type</key>
 	<string>$(BUILD_TYPE)</string>
 	<key>CFBundleURLTypes</key>
@@ -17,6 +19,7 @@
 				<string>mdoc-openid4vp</string>
 				<string>openid4vp</string>
 				<string>openid-credential-offer</string>
+				<string>rqes</string>
 			</array>
 		</dict>
 	</array>

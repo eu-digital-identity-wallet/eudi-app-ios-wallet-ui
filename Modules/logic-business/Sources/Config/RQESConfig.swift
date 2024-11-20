@@ -13,26 +13,31 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Swinject
-import logic_business
-import logic_core
+import EudiRQESUi
 
-public final class FeatureDashboardAssembly: Assembly {
+final class RQESConfig: EudiRQESUiConfig {
 
-  public init() {}
-
-  public func assemble(container: Container) {
-    container.register(DashboardInteractor.self) { r in
-      DashboardInteractorImpl(
-        walletController: r.force(WalletKitController.self),
-        reachabilityController: r.force(ReachabilityController.self),
-        configLogic: r.force(ConfigLogic.self)
+  var rssps: [QTSPData] {
+    [
+      .init(
+        name: "Wallet-Centric",
+        uri: URL(string: "https://walletcentric.signer.eudiw.dev/csc/v2")!,
+        scaURL: "https://walletcentric.signer.eudiw.dev"
       )
-    }
-    .inObjectScope(ObjectScope.transient)
+    ]
+  }
 
-    container.register(DocumentSignInteractor.self) { r in
-      DocumentSignInteractorImpl(configLogic: r.force(ConfigLogic.self))
-    }
+  var printLogs: Bool {
+    true
+  }
+
+  var rQESConfig: RqesServiceConfig? {
+    .init(
+      clientId: "wallet-client",
+      clientSecret: "somesecret2",
+      authFlowRedirectionURI: "rqes://oauth/callback",
+      signingAlgorithm: .RSA,
+      hashAlgorithm: .SHA256
+    )
   }
 }

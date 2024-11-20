@@ -14,9 +14,14 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import EudiRQESUi
 
 public enum AppBuildType: String {
   case RELEASE, DEBUG
+}
+
+public enum Flavor: String {
+  case DEMO, DEV
 }
 
 public protocol ConfigLogic: Sendable {
@@ -32,9 +37,19 @@ public protocol ConfigLogic: Sendable {
   var appBuildType: AppBuildType { get }
 
   /**
+   * Flavor.
+   */
+  var flavor: Flavor { get }
+
+  /**
    * App version.
    */
   var appVersion: String { get }
+
+  /**
+   * RQES Config
+   */
+  var rqesConfig: EudiRQESUiConfig { get }
 }
 
 struct ConfigLogicImpl: ConfigLogic {
@@ -49,5 +64,13 @@ struct ConfigLogicImpl: ConfigLogic {
 
   public var appVersion: String {
     getBundleValue(key: "CFBundleShortVersionString")
+  }
+
+  public var flavor: Flavor {
+    getFlavor()
+  }
+
+  public var rqesConfig: EudiRQESUiConfig {
+    RQESConfig()
   }
 }

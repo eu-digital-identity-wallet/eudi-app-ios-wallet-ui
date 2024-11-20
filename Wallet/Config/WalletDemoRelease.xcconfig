@@ -1,4 +1,5 @@
 BUILD_TYPE = RELEASE
+FLAVOR = DEMO
 //WALLET_HOST_URL =
 VCI_ISSUER_URL = https:/$()/issuer.eudiw.dev
 VCI_CLIENT_ID = wallet-dev

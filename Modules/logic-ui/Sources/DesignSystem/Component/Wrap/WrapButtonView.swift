@@ -99,7 +99,7 @@ public struct WrapButtonView: View {
             icon
               .resizable()
               .scaledToFit()
-              .frame(width: 25)
+              .frame(width: 25, height: 25)
               .foregroundColor(iconColor)
 
             HSpacer.medium()

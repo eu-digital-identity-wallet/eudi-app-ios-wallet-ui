@@ -43,6 +43,7 @@ extension DashboardState {
 
     case changeQuickPin
     case scanQrCode
+    case signDocument
     case retrieveLogs(URL)
 
     var id: String {
@@ -51,6 +52,8 @@ extension DashboardState {
         "changeQuickPin"
       case .scanQrCode:
         "scanQrCode"
+      case .signDocument:
+        "signDocument"
       case .retrieveLogs:
         "retrieveLogs"
       }
@@ -249,6 +252,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         moreOptions: buildArray {
           DashboardState.MoreModalOption.changeQuickPin
           DashboardState.MoreModalOption.scanQrCode
+          DashboardState.MoreModalOption.signDocument
           if let url = interactor.retrieveLogFileUrl() {
             DashboardState.MoreModalOption.retrieveLogs(url)
           }
@@ -256,6 +260,10 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       )
     }
     isMoreModalShowing = !isMoreModalShowing
+  }
+
+  func openSignDocument() {
+    router.push(with: .featureDashboardModule(.signDocument))
   }
 
   func onUpdatePin() {

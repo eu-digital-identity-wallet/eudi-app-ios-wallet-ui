@@ -289,6 +289,12 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "qr_scan_informative_text")
     case .unableToPresentAndShare:
       bundle.localizedString(forKey: "error_unable_present_documents")
+    case .signDocument:
+      bundle.localizedString(forKey: "sign_document")
+    case .signDocumentSubtitle:
+      bundle.localizedString(forKey: "sign_document_subtitle")
+    case .selectDocument:
+      bundle.localizedString(forKey: "select_document")
     }
   }
 
@@ -380,6 +386,9 @@ public extension LocalizableString {
     case yes
     case no
     case scanQrCode
+    case signDocument
+    case signDocumentSubtitle
+    case selectDocument
     case validUntil([String])
     case vehicleCategory
     case dateOfIssue

@@ -13,26 +13,39 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Swinject
+import Foundation
 import logic_business
-import logic_core
+import EudiRQESUi
 
-public final class FeatureDashboardAssembly: Assembly {
+public protocol DocumentSignInteractor: Sendable {
+  func initiateSigning(url: URL) async
+}
 
-  public init() {}
+final class DocumentSignInteractorImpl: DocumentSignInteractor {
 
-  public func assemble(container: Container) {
-    container.register(DashboardInteractor.self) { r in
-      DashboardInteractorImpl(
-        walletController: r.force(WalletKitController.self),
-        reachabilityController: r.force(ReachabilityController.self),
-        configLogic: r.force(ConfigLogic.self)
-      )
+  private let configLogic: ConfigLogic
+
+  init(configLogic: ConfigLogic) {
+    self.configLogic = configLogic
+  }
+
+  func initiateSigning(url: URL) async {
+
+    let eudiRQESUi: EudiRQESUi
+
+    do {
+      eudiRQESUi = try EudiRQESUi.instance()
+    } catch {
+      eudiRQESUi = EudiRQESUi.init(config: configLogic.rqesConfig)
     }
-    .inObjectScope(ObjectScope.transient)
 
-    container.register(DocumentSignInteractor.self) { r in
-      DocumentSignInteractorImpl(configLogic: r.force(ConfigLogic.self))
+    guard let controller = await UIApplication.shared.topViewController() else {
+      return
     }
+
+    try? await eudiRQESUi.initiate(
+      on: controller,
+      fileUrl: url
+    )
   }
 }

@@ -82,9 +82,7 @@ private func content(
           icon: cell.image,
           title: cell.documentName,
           isLoading: cell.isLoading,
-          action: {
-            action(cell.type)
-          }
+          action: action(cell.type)
         )
         .padding(.bottom, Theme.shared.shape.small)
       }

@@ -19,17 +19,17 @@ import logic_resources
 public struct AddNewDocumentCellView: View {
 
   let isEnabled: Bool
-  let icon: Image
+  let icon: Image?
   let title: LocalizableString.Key
   let action: () -> Void
   let isLoading: Bool
 
   public init(
     isEnabled: Bool,
-    icon: Image,
+    icon: Image? = nil,
     title: LocalizableString.Key,
     isLoading: Bool,
-    action: @escaping () -> Void
+    action: @autoclosure @escaping () -> Void
   ) {
     self.isEnabled = isEnabled
     self.icon = icon
@@ -41,12 +41,12 @@ public struct AddNewDocumentCellView: View {
   @ViewBuilder
   var iconStyle: some View {
     if !isEnabled {
-      icon
+      icon?
         .renderingMode(.template)
         .resizable()
         .aspectRatio(contentMode: .fit)
     } else {
-      icon
+      icon?
         .resizable()
         .aspectRatio(contentMode: .fit)
     }
@@ -85,6 +85,6 @@ public struct AddNewDocumentCellView: View {
     icon: Image(systemName: "person.text.rectangle"),
     title: LocalizableString.Key.addDocumentTitle,
     isLoading: false,
-    action: {}
+    action: {}()
   )
 }
