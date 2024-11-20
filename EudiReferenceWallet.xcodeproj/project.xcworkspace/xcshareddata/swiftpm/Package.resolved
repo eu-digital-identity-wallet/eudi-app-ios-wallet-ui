@@ -1,5 +1,5 @@
 {
-  "originHash" : "7d0f4301fa9dc892754ec72dda03e432ef374c74dd022909d218c8ed3f26bf61",
+  "originHash" : "f0cfb8e5251075c914325c1976e84a94bd7d280b51f45925afffb1c93fb051d5",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/niscy-eudiw/eudi-lib-ios-rqes-ui.git",
       "state" : {
-        "revision" : "6c7a3f57613129f969889f5940c4e5ffbe692633",
-        "version" : "0.0.5"
+        "revision" : "3b44300f58d41559ee1265dd4b6c38a07dad0d13",
+        "version" : "0.0.7"
       }
     },
     {

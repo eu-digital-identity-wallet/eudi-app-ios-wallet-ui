@@ -39,8 +39,12 @@ final class DocumentSignInteractorImpl: DocumentSignInteractor {
       eudiRQESUi = EudiRQESUi.init(config: configLogic.rqesConfig)
     }
 
+    guard let controller = await UIApplication.shared.topViewController() else {
+      return
+    }
+
     try? await eudiRQESUi.initiate(
-      on: UIApplication.shared.topViewController(),
+      on: controller,
       fileUrl: url
     )
   }
