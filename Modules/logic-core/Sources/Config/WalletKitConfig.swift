@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import logic_business
 
 struct VciConfig: Sendable {
   public let issuerUrl: String
@@ -55,21 +56,31 @@ protocol WalletKitConfig: Sendable {
 
 struct WalletKitConfigImpl: WalletKitConfig {
 
+  let configLogic: ConfigLogic
+
+  init(configLogic: ConfigLogic) {
+    self.configLogic = configLogic
+  }
+
   var userAuthenticationRequired: Bool {
-    getBundleValue(key: "Core User Auth").toBool()
+    false
   }
 
   var vciConfig: VciConfig {
-    guard
-      let redirectUrl = URL(string: getBundleValue(key: "Vci Redirect Uri"))
-    else {
-      fatalError("Unable to parse VCI Redirect URL")
+    return switch configLogic.appBuildVariant {
+    case .DEMO:
+        .init(
+          issuerUrl: "https://issuer.eudiw.dev",
+          clientId: "wallet-dev",
+          redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!
+        )
+    case .DEV:
+        .init(
+          issuerUrl: "https://dev.issuer.eudiw.dev",
+          clientId: "wallet-dev",
+          redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!
+        )
     }
-    return .init(
-      issuerUrl: getBundleValue(key: "Vci Issuer URL"),
-      clientId: getBundleValue(key: "Vci Client Id"),
-      redirectUri: redirectUrl
-    )
   }
 
   var readerConfig: ReaderConfig {

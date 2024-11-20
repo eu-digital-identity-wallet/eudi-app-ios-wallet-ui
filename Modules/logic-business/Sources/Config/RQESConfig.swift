@@ -17,27 +17,57 @@ import EudiRQESUi
 
 final class RQESConfig: EudiRQESUiConfig {
 
+  let buildVariant: AppBuildVariant
+  let buildType: AppBuildType
+
+  init(buildVariant: AppBuildVariant, buildType: AppBuildType) {
+    self.buildVariant = buildVariant
+    self.buildType = buildType
+  }
+
   var rssps: [QTSPData] {
-    [
-      .init(
-        name: "Wallet-Centric",
-        uri: URL(string: "https://walletcentric.signer.eudiw.dev/csc/v2")!,
-        scaURL: "https://walletcentric.signer.eudiw.dev"
-      )
-    ]
+    return switch buildVariant {
+    case .DEV:
+      [
+        .init(
+          name: "Wallet-Centric",
+          uri: URL(string: "https://walletcentric.signer.eudiw.dev/csc/v2")!,
+          scaURL: "https://walletcentric.signer.eudiw.dev"
+        )
+      ]
+    case .DEMO:
+      [
+        .init(
+          name: "Wallet-Centric",
+          uri: URL(string: "https://walletcentric.signer.eudiw.dev/csc/v2")!,
+          scaURL: "https://walletcentric.signer.eudiw.dev"
+        )
+      ]
+    }
   }
 
   var printLogs: Bool {
-    true
+    buildType == .DEBUG
   }
 
   var rQESConfig: RqesServiceConfig? {
-    .init(
-      clientId: "wallet-client",
-      clientSecret: "somesecret2",
-      authFlowRedirectionURI: "rqes://oauth/callback",
-      signingAlgorithm: .RSA,
-      hashAlgorithm: .SHA256
-    )
+    return switch buildVariant {
+    case .DEV:
+        .init(
+          clientId: "wallet-client",
+          clientSecret: "somesecret2",
+          authFlowRedirectionURI: "rqes://oauth/callback",
+          signingAlgorithm: .RSA,
+          hashAlgorithm: .SHA256
+        )
+    case .DEMO:
+        .init(
+          clientId: "wallet-client",
+          clientSecret: "somesecret2",
+          authFlowRedirectionURI: "rqes://oauth/callback",
+          signingAlgorithm: .RSA,
+          hashAlgorithm: .SHA256
+        )
+    }
   }
 }
