@@ -77,7 +77,7 @@ public struct ReaderConfig {
 
 The *WalletKitConfigImpl* implementation of the *WalletKitConfig* protocol can be located inside the logic-core module.
 
-The application's IACA certificates are located [here](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/tree/main/Wallet/Sample):
+The application's IACA certificates are located [here](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/tree/main/Wallet/Sample)
 
 ```
   var readerConfigConfig: ReaderConfig {
@@ -116,7 +116,7 @@ final class RQESConfig: EudiRQESUiConfig {
 
   var printLogs: Bool
 
-  var rQESConfig: RqesServiceConfig?
+  var rQESConfig: RqesServiceConfig
   
   var translations: [String : [LocalizableKey : String]]
   
@@ -162,7 +162,7 @@ final class RQESConfig: EudiRQESUiConfig {
     buildType == .DEBUG
   }
 
-  var rQESConfig: RqesServiceConfig? {
+  var rQESConfig: RqesServiceConfig {
     return switch buildVariant {
     case .DEV:
         .init(
