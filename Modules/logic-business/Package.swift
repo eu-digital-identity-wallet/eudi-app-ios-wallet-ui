@@ -42,8 +42,8 @@ let package = Package(
       from: "0.0.1"
     ),
     .package(
-      url: "https://github.com/niscy-eudiw/eudi-lib-ios-rqes-ui.git",
-      from: "0.0.10"
+      url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui.git",
+      from: "0.0.1"
     ),
     .package(name: "logic-test", path: "./logic-test")
   ],
