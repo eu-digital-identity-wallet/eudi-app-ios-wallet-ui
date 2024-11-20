@@ -50,7 +50,7 @@ final class RQESConfig: EudiRQESUiConfig {
     buildType == .DEBUG
   }
 
-  var rQESConfig: RqesServiceConfig? {
+  var rQESConfig: RqesServiceConfig {
     return switch buildVariant {
     case .DEV:
         .init(
