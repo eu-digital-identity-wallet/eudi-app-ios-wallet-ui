@@ -95,9 +95,9 @@ you can follow these Repositories for further instructions:
 
 ### How to work with self signed certificates on iOS
 
-In addition to the change below, in order for the app to interact with locally running service a small code change is required to do this succesfully.
+In addition to the change below, in order for the app to interact with locally running service a small code change is required to do this successfully.
 
-Before running the app in the simulator add these lines of code to the top of the file WalletKitController just below the import statments. 
+Before running the app in the simulator add these lines of code to the top of the file WalletKitController just below the import statements. 
 
 ```
 class SelfSignedDelegate: NSObject, URLSessionDelegate {
