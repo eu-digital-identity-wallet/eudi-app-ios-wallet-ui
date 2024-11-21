@@ -27,7 +27,7 @@ Open the project file in Xcode. The application has two schemes: "EUDI Wallet De
 Each scheme has two configurations: Debug and Release.
 
 - Debug: Used when running the app from within Xcode.
-- Release: Used when running the app after it has been distributed via a distribution platform, currently App Center.
+- Release: Used when running the app after it has been distributed via a distribution platform, currently TestFlight.
 
 This setup results in a total of four configurations. All four configurations are defined in the xcconfig files located under the Config folder in the project.
 
@@ -37,15 +37,53 @@ To run the app on a device, follow similar steps to running it on the simulator.
 
 ### Running with remote services
 
-The app is configured to use predefined services in the four xcconfig files. These are the contents of the xcconfig file and you don't need to change anything:
+The app is configured to the type (debug/release) and variant (dev/demo) in the four xcconfig files. These are the contents of the xcconfig file and you don't need to change anything if you don't want to:
 
 ```
-BUILD_TYPE = DEBUG
-VCI_ISSUER_URL = https:/$()/issuer.eudiw.dev
-VCI_CLIENT_ID = wallet-dev
-VCI_REDIRECT_URI = eudi-openid4ci:/$()/authorize
-CORE_USER_AUTH = false
+BUILD_TYPE = RELEASE
+BUILD_VARIANT = DEMO
 ```
+
+The values defined in the `.xcconfig` files are utilized within instances of `WalletKitConfig` and `RQESConfig` to assign the appropriate configurations. These configurations are selected based on the specified build type and build variant defined in the `.xcconfig` files.
+
+Instances of `ConfigLogic` are responsible for interpreting the raw string values extracted from the `.xcconfig` files and converting them into appropriate data types.
+
+```swift
+/**
+ * Build type.
+ */
+var appBuildType: AppBuildType { get }
+
+/**
+ * Build variant.
+ */
+var appBuildVariant: AppBuildVariant { get }
+```
+
+Using this parsed information, instances such as `WalletKitConfig` and `RQESConfig` can determine and assign their specific configurations based on the defined build type and variant.
+
+For instance, here's how `WalletKitConfig` resolves its configuration for OpenID4VCI remote services based on the build variant:
+
+```swift
+var vciConfig: VciConfig {
+    switch configLogic.appBuildVariant {
+    case .DEMO:
+        return .init(
+            issuerUrl: "https://issuer.eudiw.dev",
+            clientId: "wallet-dev",
+            redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!
+        )
+    case .DEV:
+        return .init(
+            issuerUrl: "https://dev.issuer.eudiw.dev",
+            clientId: "wallet-dev",
+            redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!
+        )
+    }
+}
+```
+
+In this example, the `vciConfig` property dynamically assigns configurations such as `issuerUrl`, `clientId`, and `redirectUri` based on the current appBuildVariant. This ensures that the appropriate settings are applied for each variant (e.g., .`DEMO` or `.DEV`).
 
 ### Running with local services
 
@@ -57,9 +95,9 @@ you can follow these Repositories for further instructions:
 
 ### How to work with self signed certificates on iOS
 
-In addition to the change below, in order for the app to interact with locally running service a small code change is required to do this succesfully.
+In addition to the change below, in order for the app to interact with locally running service a small code change is required to do this successfully.
 
-Before running the app in the simulator add these lines of code to the top of the file WalletKitController just below the import statments. 
+Before running the app in the simulator add these lines of code to the top of the file WalletKitController just below the import statements. 
 
 ```
 class SelfSignedDelegate: NSObject, URLSessionDelegate {
