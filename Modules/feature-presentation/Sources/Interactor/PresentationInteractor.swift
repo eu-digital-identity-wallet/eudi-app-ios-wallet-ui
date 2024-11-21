@@ -122,8 +122,9 @@ final class PresentationInteractorImpl: PresentationInteractor {
         }
       }
       .reduce(into: RequestItemsWrapper()) {  partialResult, row in
-        var nameSpaceDict = partialResult.requestItems[row.documentId, default: [row.namespace: [row.elementKey]]]
-        nameSpaceDict[row.namespace, default: [row.elementKey]].append(row.elementKey)
+        let requestItem: RequestItem = .init(elementIdentifier: row.elementKey)
+        var nameSpaceDict = partialResult.requestItems[row.documentId, default: [row.namespace: [requestItem]]]
+        nameSpaceDict[row.namespace, default: [requestItem]].appendIfNotExists(requestItem)
         partialResult.requestItems[row.documentId] = nameSpaceDict
       }
 

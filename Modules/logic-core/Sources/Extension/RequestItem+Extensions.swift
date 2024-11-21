@@ -13,34 +13,10 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import EudiWalletKit
 
-public typealias RequestConvertibleItems = [String: [String: [RequestItem]]]
-
-public protocol RequestItemConvertible: Sendable {
-  func asRequestItems() -> RequestConvertibleItems
-}
-
-public struct RequestItemsWrapper: RequestItemConvertible {
-
-  public var requestItems: RequestConvertibleItems
-
-  public init() {
-    requestItems = RequestConvertibleItems()
-  }
-
-  public init(dictionary: RequestConvertibleItems) {
-    self.requestItems = dictionary
-  }
-
-  public func asRequestItems() -> RequestConvertibleItems {
-    requestItems
-  }
-}
-
-extension RequestItems: RequestItemConvertible {
-  public func asRequestItems() -> RequestConvertibleItems {
-    return self
+extension RequestItem: @retroactive Equatable {
+  public static func == (lhs: RequestItem, rhs: RequestItem) -> Bool {
+    lhs.elementIdentifier == rhs.elementIdentifier
   }
 }

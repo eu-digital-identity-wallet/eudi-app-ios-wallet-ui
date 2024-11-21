@@ -190,14 +190,14 @@ private func content(
       .padding(.top)
     }
     .bottomFade()
+  }
 
-    Spacer()
+  Spacer()
 
-    footer(viewState: viewState) {
-      onShare()
-    } onShowCancelModal: {
-      onShowCancelModal()
-    }
+  footer(viewState: viewState) {
+    onShare()
+  } onShowCancelModal: {
+    onShowCancelModal()
   }
 }
 

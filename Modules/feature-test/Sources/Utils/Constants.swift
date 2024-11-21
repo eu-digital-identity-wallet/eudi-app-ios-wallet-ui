@@ -96,7 +96,8 @@ extension Constants {
           ElementViewModel(
             nameSpace: "nameSpace",
             elementIdentifier: "elementIdentifier",
-            isMandatory: true,
+            isOptional: false,
+            intentToRetain: true,
             isEnabled: true
           )
         ]
