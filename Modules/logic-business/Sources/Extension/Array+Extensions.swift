@@ -27,3 +27,11 @@ public extension Array {
     return indices.contains(index) ? self[index] : nil
   }
 }
+
+public extension Array where Element: Equatable {
+  mutating func appendIfNotExists(_ element: Element) {
+    if !self.contains(element) {
+      self.append(element)
+    }
+  }
+}

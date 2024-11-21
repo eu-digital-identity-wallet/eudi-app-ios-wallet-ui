@@ -436,7 +436,7 @@ private extension TestProximityInteractor {
   static let mockRequestItems = [
     Constants.randomIdentifier : [
       "nameSpace": [
-        "elementIdentifier", "elementIdentifier"
+        RequestItem(elementIdentifier: "elementIdentifier")
       ]
     ]
   ]

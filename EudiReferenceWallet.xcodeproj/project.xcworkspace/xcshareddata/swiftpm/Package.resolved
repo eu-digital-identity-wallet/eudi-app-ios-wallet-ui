@@ -1,5 +1,5 @@
 {
-  "originHash" : "f740c8d4ecb0216d9aa72d386de2b80a8adab3f9dc07057456a86137ebdbf15b",
+  "originHash" : "42c0b7377392d15a2577e8216efa33676882bcb10f643f56331628a1c7779ce2",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -114,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "2f00a68370572f914997706a29d15d6fc0b89ceb",
-        "version" : "0.3.3"
+        "revision" : "900416bcab3e95a17dea2fbf224210521c5b68d6",
+        "version" : "0.3.7"
       }
     },
     {
@@ -186,8 +186,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "d745d4f00be8d81e790e9f7b6460dad09ede5b0c",
-        "version" : "0.7.6"
+        "revision" : "b58b1bf3b33966dcc5b05e4791ffc7f928cb94fb",
+        "version" : "0.7.7"
       }
     },
     {
