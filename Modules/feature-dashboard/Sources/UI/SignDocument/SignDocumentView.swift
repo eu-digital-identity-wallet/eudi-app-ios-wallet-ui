@@ -40,12 +40,7 @@ struct SignDocumentView<Router: RouterHost>: View {
         onCompletion: { result in
           switch result {
           case .success(let url):
-            do {
-              if url.startAccessingSecurityScopedResource() {
-                _  = try Data(contentsOf: url)
-                viewModel.onFileSelection(with: url)
-              }
-            } catch { }
+            viewModel.onFileSelection(with: url)
           case .failure:
             break
           }

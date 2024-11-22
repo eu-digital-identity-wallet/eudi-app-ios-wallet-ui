@@ -42,7 +42,13 @@ final class SignDocumentViewModel<Router: RouterHost>: ViewModel<Router, SignDoc
 
   func onFileSelection(with url: URL) {
     Task {
-      await interactor.initiateSigning(url: url)
+      guard url.startAccessingSecurityScopedResource() else {
+        return
+      }
+      do {
+        _ = try Data(contentsOf: url)
+        await interactor.initiateSigning(url: url)
+      } catch {}
     }
   }
 
