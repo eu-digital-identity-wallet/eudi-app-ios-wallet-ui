@@ -96,67 +96,43 @@ final class TypographyManager: TypographyManagerProtocol {
     TypographyStyle(font: labelSmallFont, spacing: labelSmallSpacing)
   }
 
-  private let displayLargeFont: Font = TypographyStyleEnum.h1.font
-  private let displayMediumFont: Font = TypographyStyleEnum.h2.font
-  private let displaySmallFont: Font = TypographyStyleEnum.h3.font
+    private let displayLargeFont = Font.system(size: 57, weight: .medium) // NOT DONE
+    private let displayMediumFont = Font.system(size: 45, weight: .regular) // NOT DONE
+    private let displaySmallFont = Font.system(size: 36, weight: .regular) // NOT DONE
 
-  private let headlineLargeFont: Font = TypographyStyleEnum.h4.font.weight(.bold)
-  private let headlineMediumFont: Font = TypographyStyleEnum.h4.font
-  private let headlineSmallFont: Font = TypographyStyleEnum.h5.font
+    private let headlineLargeFont = Font.system(size: 32, weight: .regular) // NOT DONE
+    private let headlineMediumFont = Font.system(size: 28, weight: .regular)
+    private let headlineSmallFont = Font.system(size: 24, weight: .regular) // NOT DONE
 
-  private let titleLargeFont: Font = TypographyStyleEnum.h6.font
-  private let titleMediumFont: Font = TypographyStyleEnum.subtitle.font
-  private let titleSmallFont: Font = TypographyStyleEnum.subtitle2.font
+    private let titleLargeFont = Font.system(size: 22, weight: .regular) // NOT DONE
+    private let titleMediumFont = Font.system(size: 16, weight: .medium) // NOT DONE
+    private let titleSmallFont = Font.system(size: 14, weight: .medium) // NOT DONE
 
-  private let bodyLargeFont: Font = TypographyStyleEnum.body1.font
-  private let bodyMediumFont: Font =  TypographyStyleEnum.body2.font
-  private let bodySmallFont: Font =  Font.custom(.regular, relativeTo: .footnote)
+    private let bodyLargeFont = Font.system(size: 17, weight: .regular) // NOT DONE
+    private let bodyMediumFont = Font.system(size: 16, weight: .regular) // NOT DONE
+    private let bodySmallFont = Font.system(size: 15, weight: .regular) // NOT DONE
 
-  private let labelLargeFont: Font = TypographyStyleEnum.button.font
-  private let labelMediumFont: Font = Font.custom(.regular, relativeTo: .body)
-  private let labelSmallFont: Font  = TypographyStyleEnum.overline.font
+    private let labelLargeFont = Font.system(size: 14, weight: .medium) // NOT DONE
+    private let labelMediumFont = Font.system(size: 12, weight: .medium) // NOT DONE
+    private let labelSmallFont = Font.system(size: 11, weight: .medium) // NOT DONE
 
-  private let displayLargeSpacing: CGFloat = TypographyStyleEnum.h1.spacing
-  private let displayMediumSpacing: CGFloat = TypographyStyleEnum.h2.spacing
-  private let displaySmallSpacing: CGFloat = TypographyStyleEnum.h3.spacing
+    private let displayLargeSpacing: CGFloat = 0
+    private let displayMediumSpacing: CGFloat = 0
+    private let displaySmallSpacing: CGFloat = 0
 
-  private let headlineLargeSpacing: CGFloat = TypographyStyleEnum.h4.spacing
-  private let headlineMediumSpacing: CGFloat = TypographyStyleEnum.h4.spacing
-  private let headlineSmallSpacing: CGFloat = TypographyStyleEnum.h5.spacing
+    private let headlineLargeSpacing: CGFloat = 0
+    private let headlineMediumSpacing: CGFloat = 0
+    private let headlineSmallSpacing: CGFloat = 0
 
-  private let titleLargeSpacing: CGFloat = TypographyStyleEnum.h6.spacing
-  private let titleMediumSpacing: CGFloat = TypographyStyleEnum.subtitle.spacing
-  private let titleSmallSpacing: CGFloat = TypographyStyleEnum.subtitle2.spacing
+    private let titleLargeSpacing: CGFloat = 0
+    private let titleMediumSpacing: CGFloat = 0
+    private let titleSmallSpacing: CGFloat = 0
 
-  private let bodyLargeSpacing: CGFloat = TypographyStyleEnum.body1.spacing
-  private let bodyMediumSpacing: CGFloat =  TypographyStyleEnum.body2.spacing
-  private let bodySmallSpacing: CGFloat =  TypographyStyleEnum.body1.spacing
+    private let bodyLargeSpacing: CGFloat = 0
+    private let bodyMediumSpacing: CGFloat =  0
+    private let bodySmallSpacing: CGFloat =  0
 
-  private let labelLargeSpacing: CGFloat = TypographyStyleEnum.button.spacing
-  private let labelMediumSpacing: CGFloat = TypographyStyleEnum.button.spacing
-  private let labelSmallSpacing: CGFloat = TypographyStyleEnum.overline.spacing
-
-  init() {
-    Font.registerFonts()
-  }
-
+    private let labelLargeSpacing: CGFloat = 0
+    private let labelMediumSpacing: CGFloat = 0
+    private let labelSmallSpacing: CGFloat = 0
 }
-
-/*
- --M2--         --M3--                  --DS--
- h1          displayLarge        H1
- h2          displayMedium       H2
- h3          displaySmall        H3
- N/A          headlineLarge       N/A
- h4          headlineMedium      H4
- h5          headlineSmall       H5
- h6          titleLarge          Roboto Medium 20dp
- subtitle1   titleMedium         Roboto Medium 16dp
- subtitle2   titleSmall          Roboto Medium 14dp
- body1      bodyLarge           Body 1
- body2      bodyMedium          Body 2
- caption      bodySmall           Roboto Regular 12dp
- button      labelLarge          BUTTON
- N/A          labelMedium         N/A
- overline    labelSmall          OVERLINE
- */
