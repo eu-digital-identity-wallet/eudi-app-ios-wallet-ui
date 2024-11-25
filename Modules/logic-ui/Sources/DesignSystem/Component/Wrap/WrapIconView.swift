@@ -30,7 +30,7 @@ public struct WrapIconView: View {
   public init(
     title: LocalizableString.Key? = nil,
     textColor: Color = .white,
-    backgroundColor: Color = Theme.shared.color.backgroundPaper,
+    backgroundColor: Color = Theme.shared.color.background,
     systemIcon: String,
     gravity: Gravity = .center,
     isEnabled: Bool = true,
@@ -84,14 +84,14 @@ public extension WrapIconView {
   Group {
     WrapIconView(
       title: LocalizableString.Key.addDoc,
-      textColor: Theme.shared.color.textPrimaryDark,
+      textColor: Theme.shared.color.onSurface,
       systemIcon: "calendar"
     )
     .lightModePreview()
 
     WrapIconView(
       title: LocalizableString.Key.addDoc,
-      textColor: Theme.shared.color.textPrimaryDark,
+      textColor: Theme.shared.color.onSurface,
       systemIcon: "calendar"
     )
     .darkModePreview()

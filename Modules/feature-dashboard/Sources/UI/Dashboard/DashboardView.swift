@@ -95,7 +95,7 @@ struct DashboardView<Router: RouterHost>: View {
             Spacer()
             Text(viewModel.viewState.appVersion)
               .typography(Theme.shared.font.bodyMedium)
-              .foregroundColor(Theme.shared.color.textSecondaryDark)
+              .foregroundColor(Theme.shared.color.onSurface)
             Spacer()
           }
         }
@@ -169,7 +169,7 @@ struct DashboardView<Router: RouterHost>: View {
         HStack {
           Text(.custom(item.value.title))
             .typography(Theme.shared.font.bodyMedium)
-            .foregroundColor(Theme.shared.color.textPrimaryDark)
+            .foregroundColor(Theme.shared.color.onSurface)
 
           Spacer()
 
@@ -178,7 +178,7 @@ struct DashboardView<Router: RouterHost>: View {
             .foregroundStyle(Theme.shared.color.primary)
         }
         .padding()
-        .background(Theme.shared.color.backgroundDefault)
+        .background(Theme.shared.color.background)
         .clipShape(.rect(cornerRadius: 8))
         .onTapGesture {
           viewModel.onDocumentDetails(documentId: item.value.id)
@@ -204,7 +204,7 @@ struct DashboardView<Router: RouterHost>: View {
 
         Text(.retrieveLogs)
           .typography(Theme.shared.font.labelLarge)
-          .foregroundColor(Theme.shared.color.textPrimaryDark)
+          .foregroundColor(Theme.shared.color.onSurface)
 
         Spacer()
       }
@@ -257,7 +257,7 @@ private func content(
 
     }
   }
-  .background(Theme.shared.color.backgroundPaper)
+  .background(Theme.shared.color.surface)
 }
 
 #Preview {
@@ -278,7 +278,7 @@ private func content(
   ContentScreenView(
     padding: .zero,
     canScroll: false,
-    background: Theme.shared.color.secondary
+    background: Theme.shared.color.surface
   ) {
     content(
       viewState: viewState,

@@ -74,7 +74,7 @@ private func content(
     caption: viewState.areBiometricsEnabled
     ? viewState.config.caption
     : viewState.config.quickPinOnlyCaption,
-    titleColor: Theme.shared.color.textPrimaryDark,
+    titleColor: Theme.shared.color.onSurface,
     topSpacing: viewState.isCancellable ? .withToolbar : .withoutToolbar
   )
 

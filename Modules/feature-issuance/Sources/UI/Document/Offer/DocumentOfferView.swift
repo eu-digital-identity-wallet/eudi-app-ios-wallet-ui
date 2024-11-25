@@ -126,12 +126,12 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
       Theme.shared.image.exclamationmarkCircle
         .renderingMode(.template)
         .resizable()
-        .foregroundStyle(Theme.shared.color.textSecondaryDark)
+        .foregroundStyle(Theme.shared.color.onSurface)
         .frame(width: imageSize, height: imageSize)
 
       Text(.requestCredentialOfferNoDocument)
         .typography(Theme.shared.font.bodyMedium)
-        .foregroundColor(Theme.shared.color.textSecondaryDark)
+        .foregroundColor(Theme.shared.color.onSurface)
         .multilineTextAlignment(.center)
     }
 

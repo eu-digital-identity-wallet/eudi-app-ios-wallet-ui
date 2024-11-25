@@ -58,7 +58,7 @@ struct FAQsView<Router: RouterHost>: View {
     .task {
       await viewModel.fetchFAQs()
     }
-    .background(Theme.shared.color.backgroundPaper)
+    .background(Theme.shared.color.onSurface)
   }
 }
 

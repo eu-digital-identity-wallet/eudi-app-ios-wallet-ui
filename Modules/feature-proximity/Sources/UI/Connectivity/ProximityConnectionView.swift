@@ -61,7 +61,7 @@ private func content(
   ContentTitleView(
     title: .proximityConnectivityTitle,
     caption: .proximityConnectivityCaption,
-    titleColor: Theme.shared.color.textPrimaryDark
+    titleColor: Theme.shared.color.onSurface
   )
   .padding(.horizontal, Theme.shared.dimension.padding)
 
@@ -96,7 +96,7 @@ private func nfcFooter(contentSize: CGFloat) -> some View {
   }
   .padding(.vertical, SPACING_EXTRA_LARGE)
   .frame(maxWidth: .infinity, maxHeight: contentSize)
-  .background(Theme.shared.color.backgroundDefault.opacity(0.8))
+  .background(Theme.shared.color.background.opacity(0.8))
   .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
 }
 

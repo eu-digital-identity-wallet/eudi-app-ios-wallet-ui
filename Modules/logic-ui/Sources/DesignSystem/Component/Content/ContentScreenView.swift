@@ -34,7 +34,7 @@ public struct ContentScreenView<Content: View>: View {
     spacing: CGFloat = .zero,
     allowBackGesture: Bool = false,
     errorConfig: ContentErrorView.Config? = nil,
-    background: Color = Theme.shared.color.backgroundPaper,
+    background: Color = Theme.shared.color.background,
     @ViewBuilder content: () -> Content
   ) {
     self.content = content()

@@ -21,16 +21,16 @@ public struct SheetStyle {
 
   public static var iphoneSheetStyle: PSIphoneStyle {
     return PSIphoneStyle(
-      background: .solid(Theme.shared.color.backgroundPaper),
+      background: .solid(Theme.shared.color.background),
       handleBarStyle: .none,
-      cover: .enabled(Theme.shared.color.material.onBackground.opacity(0.5)),
+      cover: .enabled(Theme.shared.color.onBackground.opacity(0.5)),
       cornerRadius: 20
     )
   }
 
   public static var IpadMacSheetStyle: PSIpadMacStyle {
     return PSIpadMacStyle(
-      backgroundColor: Theme.shared.color.backgroundPaper,
+      backgroundColor: Theme.shared.color.background,
       closeButtonStyle: .icon(
         image: Theme.shared.image.xmark,
         color: Theme.shared.color.primary

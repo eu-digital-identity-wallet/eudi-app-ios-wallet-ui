@@ -38,8 +38,8 @@ public struct ContentTitleView: View {
     title: LocalizableString.Key,
     caption: LocalizableString.Key? = nil,
     decorationColor: Color = Theme.shared.color.primary,
-    titleColor: Color = Theme.shared.color.textPrimaryDark,
-    captionColor: Color = Theme.shared.color.textSecondaryDark,
+    titleColor: Color = Theme.shared.color.onSurface,
+    captionColor: Color = Theme.shared.color.onSurfaceVariant,
     topSpacing: TopSpacing = .withToolbar,
     isLoading: Bool = false,
     onTap: TapListener = nil
@@ -58,8 +58,8 @@ public struct ContentTitleView: View {
     titleDecoration: TitleDecoration,
     caption: LocalizableString.Key? = nil,
     decorationColor: Color = Theme.shared.color.primary,
-    titleColor: Color = Theme.shared.color.textPrimaryDark,
-    captionColor: Color = Theme.shared.color.textSecondaryDark,
+    titleColor: Color = Theme.shared.color.onSurface,
+    captionColor: Color = Theme.shared.color.onSurfaceVariant,
     topSpacing: TopSpacing = .withToolbar,
     isLoading: Bool = false,
     onTap: TapListener = nil

@@ -25,7 +25,7 @@ public enum ButtonViewStyle {
     case .primary:
       Theme.shared.color.white
     case .secondary:
-      Theme.shared.color.textPrimaryDark
+      Theme.shared.color.onSurface
     }
   }
   var backgroundColor: Color {
@@ -33,7 +33,7 @@ public enum ButtonViewStyle {
     case .primary:
       Theme.shared.color.primary
     case .secondary:
-      Theme.shared.color.backgroundPaper
+      Theme.shared.color.background
     }
   }
   var borderWidth: CGFloat {
@@ -49,7 +49,7 @@ public enum ButtonViewStyle {
     case .primary:
         .clear
     case .secondary:
-      Theme.shared.color.dividerDark
+      Theme.shared.color.inverseSurface
     }
   }
 }

@@ -72,7 +72,7 @@ private func content(
       ContentTitleView(
         title: .addDocumentTitle,
         caption: .addDocumentSubtitle,
-        titleColor: Theme.shared.color.textPrimaryDark,
+        titleColor: Theme.shared.color.onSurface,
         topSpacing: viewState.isFlowCancellable ? .withToolbar : .withoutToolbar
       )
 
@@ -106,7 +106,7 @@ private func scanFooter(
 
     Text(.or)
       .typography(Theme.shared.font.bodyMedium)
-      .foregroundColor(Theme.shared.color.textSecondaryDark )
+      .foregroundColor(Theme.shared.color.onSurface )
       .shimmer(isLoading: viewState.isLoading)
 
     Button(
@@ -126,7 +126,7 @@ private func scanFooter(
 
             Text(.issuanceScanQr)
               .typography(Theme.shared.font.titleSmall)
-              .foregroundColor(Theme.shared.color.textPrimaryDark )
+              .foregroundColor(Theme.shared.color.onSurface)
           }
           .padding(.vertical)
 
@@ -134,7 +134,7 @@ private func scanFooter(
         }
       }
     )
-    .background(Theme.shared.color.backgroundDefault)
+    .background(Theme.shared.color.surface)
     .roundedCorner(SPACING_MEDIUM_SMALL, corners: .allCorners)
     .padding(.horizontal)
     .disabled(viewState.isLoading)
@@ -143,7 +143,7 @@ private func scanFooter(
     Spacer()
   }
   .frame(maxWidth: .infinity, maxHeight: contentSize)
-  .background(Theme.shared.color.backgroundDefault.opacity(0.8))
+  .background(Theme.shared.color.surface)
   .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
 }
 

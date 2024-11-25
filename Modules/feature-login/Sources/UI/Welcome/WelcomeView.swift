@@ -57,7 +57,7 @@ private func content(
   VStack {
     ZStack {
       Rectangle()
-        .fill(Theme.shared.color.backgroundPaper)
+        .fill(Theme.shared.color.background)
         .ignoresSafeArea()
 
       SplashBackgroundView(
@@ -88,7 +88,7 @@ private func content(
       .transition(.move(edge: .bottom))
     }
   }
-  .background(Theme.shared.color.backgroundPaper)
+  .background(Theme.shared.color.background)
 }
 
 #Preview {

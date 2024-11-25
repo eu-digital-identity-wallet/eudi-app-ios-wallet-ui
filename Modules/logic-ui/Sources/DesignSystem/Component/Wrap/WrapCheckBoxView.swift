@@ -39,15 +39,15 @@ public struct WrapCheckBoxView: View {
     if self.isEnabled {
       Theme.shared.color.primary
     } else {
-      Theme.shared.color.textDisabledDark
+      Theme.shared.color.onSurface
     }
   }
 
   var titleTextColor: Color {
     if self.isEnabled {
-      Theme.shared.color.textPrimaryDark
+      Theme.shared.color.onSurface
     } else {
-      Theme.shared.color.textDisabledDark
+      Theme.shared.color.onSurface
     }
   }
 
@@ -84,7 +84,7 @@ public struct WrapCheckBoxView: View {
     case .string(let value):
       Text(value)
         .typography(Theme.shared.font.titleMedium)
-        .foregroundStyle(Theme.shared.color.textPrimaryDark)
+        .foregroundStyle(Theme.shared.color.onSurface)
     case .image(let image):
       image
         .resizable()
@@ -116,7 +116,7 @@ public struct WrapCheckBoxView: View {
 
           Text(self.title)
             .typography(Theme.shared.font.bodyMedium)
-            .foregroundStyle(Theme.shared.color.textSecondaryDark)
+            .foregroundStyle(Theme.shared.color.onSurface)
 
           contentValue
         }

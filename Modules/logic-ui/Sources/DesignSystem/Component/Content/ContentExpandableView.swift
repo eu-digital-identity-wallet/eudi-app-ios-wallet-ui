@@ -51,7 +51,7 @@ public struct ContentExpandableView<Content: View>: View {
         HStack {
           Text(title)
             .typography(Theme.shared.font.titleSmall)
-            .foregroundColor(Theme.shared.color.textPrimaryDark)
+            .foregroundColor(Theme.shared.color.onSurface)
           Spacer()
           chevron
         }
@@ -64,7 +64,7 @@ public struct ContentExpandableView<Content: View>: View {
       }
     }
     .padding(SPACING_SMALL)
-    .background(Theme.shared.color.backgroundDefault)
+    .background(Theme.shared.color.background)
     .cornerRadius(10)
     .onTapGesture {
       withAnimation {

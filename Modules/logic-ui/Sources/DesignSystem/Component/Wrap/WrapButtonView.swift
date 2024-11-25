@@ -33,7 +33,7 @@ public struct WrapButtonView: View {
 
   public init(
     title: LocalizableString.Key,
-    textColor: Color = Theme.shared.color.textPrimaryDark,
+    textColor: Color = Theme.shared.color.onSurface,
     backgroundColor: Color = Theme.shared.color.primary,
     iconColor: Color = Theme.shared.color.primary,
     icon: Image? = nil,

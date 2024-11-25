@@ -116,17 +116,17 @@ private func content(
 
       Theme.shared.image.errorIndicator
         .renderingMode(.template)
-        .foregroundStyle(Theme.shared.color.textPrimaryDark)
+        .foregroundStyle(Theme.shared.color.onSurface)
 
       Text(viewState.informativeTest)
         .typography(Theme.shared.font.bodyMedium)
-        .foregroundStyle(Theme.shared.color.textPrimaryDark)
+        .foregroundStyle(Theme.shared.color.onSurface)
         .multilineTextAlignment(.center)
 
     }
     .padding()
     .frame(maxWidth: .infinity)
-    .background(Theme.shared.color.backgroundDefault)
+    .background(Theme.shared.color.background)
     .clipShape(Theme.shared.shape.highCornerRadiusShape)
     .opacity(viewState.showInformativeText ? 1.0 : 0.0)
   }

@@ -55,9 +55,9 @@ extension DocumentListView {
                     .renderingMode(.template)
                     .foregroundColor(Theme.shared.color.warning)
                     .padding(2)
-                    .background(Theme.shared.color.backgroundDefault)
+                    .background(Theme.shared.color.background)
                 }
-                .background(Theme.shared.color.backgroundPaper)
+                .background(Theme.shared.color.background)
                 .clipShape(Circle())
               }
             }
@@ -67,7 +67,7 @@ extension DocumentListView {
 
             Text(.custom(item.value.title))
               .typography(Theme.shared.font.titleMedium)
-              .foregroundColor(Theme.shared.color.textPrimaryDark)
+              .foregroundColor(Theme.shared.color.onSurface)
               .minimumScaleFactor(0.5)
               .lineLimit(1)
 
@@ -83,7 +83,7 @@ extension DocumentListView {
                   + Text(.space)
                   + Text(.onExpired([expiresAt]))
                     .typography(Theme.shared.font.bodySmall)
-                    .foregroundColor(Theme.shared.color.textSecondaryDark)
+                    .foregroundColor(Theme.shared.color.onSurface)
                 }
                 .lineLimit(2)
                 .minimumScaleFactor(0.5)
@@ -91,7 +91,7 @@ extension DocumentListView {
               } else {
                 Text(.validUntil([expiresAt]))
                   .typography(Theme.shared.font.bodySmall)
-                  .foregroundColor(Theme.shared.color.textSecondaryDark)
+                  .foregroundColor(Theme.shared.color.onSurface)
                   .minimumScaleFactor(0.5)
                   .lineLimit(2)
               }
@@ -101,7 +101,7 @@ extension DocumentListView {
       )
       .frame(maxWidth: .infinity, alignment: .center)
       .padding()
-      .background(Theme.shared.color.backgroundDefault)
+      .background(Theme.shared.color.background)
       .clipShape(.rect(cornerRadius: 16))
       .shimmer(isLoading: isLoading)
     }
@@ -147,16 +147,16 @@ extension DocumentListView {
               Theme.shared.image.id
                 .renderingMode(.template)
                 .aspectRatio(contentMode: .fit)
-                .foregroundColor(Theme.shared.color.textDisabledDark)
+                .foregroundColor(Theme.shared.color.onSurface)
 
               ZStack {
                 icon
                   .renderingMode(.template)
                   .foregroundColor(color)
                   .padding(2)
-                  .background(Theme.shared.color.backgroundDefault)
+                  .background(Theme.shared.color.background)
               }
-              .background(Theme.shared.color.backgroundPaper)
+              .background(Theme.shared.color.background)
               .clipShape(Circle())
             }
             .frame(maxWidth: 48)
@@ -165,7 +165,7 @@ extension DocumentListView {
 
             Text(.custom(item.value.title))
               .typography(Theme.shared.font.titleMedium)
-              .foregroundColor(Theme.shared.color.textDisabledDark)
+              .foregroundColor(Theme.shared.color.onSurface)
               .minimumScaleFactor(0.5)
               .lineLimit(1)
 
@@ -181,12 +181,12 @@ extension DocumentListView {
       )
       .frame(maxWidth: .infinity, alignment: .center)
       .padding()
-      .background(Theme.shared.color.backgroundDefault)
+      .background(Theme.shared.color.background)
       .clipShape(.rect(cornerRadius: 16))
       .overlay {
         RoundedRectangle(cornerRadius: 16)
           .stroke(style: StrokeStyle(lineWidth: 1, dash: [6]))
-          .foregroundStyle(Theme.shared.color.textDisabledDark)
+          .foregroundStyle(Theme.shared.color.onSurface)
       }
       .shimmer(isLoading: isLoading)
     }

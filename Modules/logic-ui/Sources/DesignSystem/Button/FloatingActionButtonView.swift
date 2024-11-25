@@ -28,10 +28,10 @@ public struct FloatingActionButtonView: View {
 
   public init(
     title: LocalizableString.Key,
-    textColor: Color = Theme.shared.color.textPrimaryDark,
+    textColor: Color = Theme.shared.color.onSurface,
     backgroundColor: Color = Theme.shared.color.primary,
     icon: Image,
-    iconColor: Color = Theme.shared.color.textPrimaryDark,
+    iconColor: Color = Theme.shared.color.onSurface,
     isLoading: Bool = false,
     action: @escaping () -> Void
   ) {
@@ -87,10 +87,10 @@ public struct FloatingActionButtonModifier: ViewModifier {
 
   public init(
     title: LocalizableString.Key,
-    textColor: Color = Theme.shared.color.textPrimaryDark,
+    textColor: Color = Theme.shared.color.onSurface,
     backgroundColor: Color = Theme.shared.color.secondary,
     icon: Image,
-    iconColor: Color = Theme.shared.color.textPrimaryDark,
+    iconColor: Color = Theme.shared.color.onSurface,
     bottomPadding: CGFloat = 20,
     trailingPadding: CGFloat = 15,
     isLoading: Bool = false,

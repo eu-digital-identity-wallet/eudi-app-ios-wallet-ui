@@ -135,10 +135,10 @@ private func content(
   HStack {
 
     let titleText = Text(getCaption)
-      .foregroundColor(Theme.shared.color.textSecondaryDark)
+      .foregroundColor(Theme.shared.color.secondaryFixed)
 
     let whyInfoText = Text(getDataRequestInfo)
-      .foregroundColor(Theme.shared.color.textPrimaryDark)
+      .foregroundColor(Theme.shared.color.onSurface)
 
     Text("\(titleText) \(whyInfoText)")
       .typography(Theme.shared.font.bodyMedium)
@@ -237,12 +237,12 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
       Theme.shared.image.exclamationmarkCircle
         .renderingMode(.template)
         .resizable()
-        .foregroundStyle(Theme.shared.color.textSecondaryDark)
+        .foregroundStyle(Theme.shared.color.secondaryFixed)
         .frame(width: imageSize, height: imageSize)
 
       Text(.requestDataNoDocument)
         .typography(Theme.shared.font.bodyMedium)
-        .foregroundColor(Theme.shared.color.textSecondaryDark)
+        .foregroundColor(Theme.shared.color.secondaryFixed)
         .multilineTextAlignment(.center)
     }
 
@@ -290,7 +290,7 @@ private func missingCredentials(itemsAreAllSelected: Bool) -> some View {
 
       Text(.incompleteRequestDataSelection)
         .typography(Theme.shared.font.bodyMedium)
-        .foregroundStyle(Theme.shared.color.textPrimaryDark)
+        .foregroundStyle(Theme.shared.color.onSurface)
     }
     .padding()
     .frame(maxWidth: .infinity)
