@@ -99,7 +99,7 @@ In addition to the change below, in order for the app to interact with locally r
 
 Before running the app in the simulator add these lines of code to the top of the file WalletKitController just below the import statements. 
 
-```
+```swift
 class SelfSignedDelegate: NSObject, URLSessionDelegate {
   func urlSession(
     _ session: URLSession,
@@ -133,7 +133,7 @@ let walletSession: URLSession = {
 
 Once the above is in place add:
 
-```
+```swift
 wallet.urlSession = walletSession
 ```
 
