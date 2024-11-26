@@ -43,7 +43,12 @@ public struct SplashBackgroundView: View {
 
 #Preview {
   Group {
-    SplashBackgroundView()
+    SplashBackgroundView(isAnimating: true)
+  }
+}
+
+#Preview("Dark Mode") {
+  Group {
     SplashBackgroundView(isAnimating: true)
   }
 }

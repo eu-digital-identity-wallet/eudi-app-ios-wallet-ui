@@ -89,7 +89,6 @@ public struct WrapButtonView: View {
       action: { onAction() },
       label: {
         HStack {
-
           if gravity == .center || gravity == .end {
             Spacer()
           }
@@ -180,6 +179,12 @@ public extension WrapButtonView {
       gravity: .center,
       isEnabled: false,
       cornerRadius: 10,
+      onAction: {}()
+    )
+    WrapButtonView(
+      style: .error,
+      title: LocalizableString.Key.addDoc,
+      gravity: .center,
       onAction: {}()
     )
   }

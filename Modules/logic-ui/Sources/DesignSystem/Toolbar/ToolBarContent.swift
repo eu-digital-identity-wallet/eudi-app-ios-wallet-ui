@@ -15,14 +15,14 @@
  */
 import SwiftUI
 
-struct Action: Identifiable {
-  let id = UUID()
-  let title: String?
-  let image: Image?
-  let disabled: Bool
-  let callback: (() -> Void)?
+public struct Action: Identifiable {
+  public let id = UUID()
+  public let title: String?
+  public let image: Image?
+  public let disabled: Bool
+  public let callback: (() -> Void)?
 
-  init(
+  public init(
     title: String? = nil,
     image: Image? = nil,
     disabled: Bool = false,
@@ -35,12 +35,12 @@ struct Action: Identifiable {
   }
 }
 
-struct ToolBarContent: ToolbarContent {
+public struct ToolBarContent: ToolbarContent {
 
   private let trailingActions: [Action]?
   private let leadingActions: [Action]?
 
-  init(
+  public init(
     trailingActions: [Action]? = nil,
     leadingActions: [Action]? = nil
   ) {
@@ -48,7 +48,7 @@ struct ToolBarContent: ToolbarContent {
     self.leadingActions = leadingActions
   }
 
-  var body: some ToolbarContent {
+  public var body: some ToolbarContent {
     if let leadingActions {
       ToolbarItemGroup(placement: .topBarLeading) {
         ForEach(leadingActions, id: \.id) { action in

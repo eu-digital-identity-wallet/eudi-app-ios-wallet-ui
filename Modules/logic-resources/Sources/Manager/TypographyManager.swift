@@ -96,25 +96,25 @@ final class TypographyManager: TypographyManagerProtocol {
     TypographyStyle(font: labelSmallFont, spacing: labelSmallSpacing)
   }
 
-    private let displayLargeFont = Font.system(size: 57, weight: .medium) // NOT DONE
-    private let displayMediumFont = Font.system(size: 45, weight: .regular) // NOT DONE
-    private let displaySmallFont = Font.system(size: 36, weight: .regular) // NOT DONE
+    private let displayLargeFont = Font.system(size: 57, weight: .medium)
+    private let displayMediumFont = Font.system(size: 45, weight: .regular)
+    private let displaySmallFont = Font.system(size: 36, weight: .regular)
 
-    private let headlineLargeFont = Font.system(size: 32, weight: .regular) // NOT DONE
+    private let headlineLargeFont = Font.system(size: 32, weight: .regular)
     private let headlineMediumFont = Font.system(size: 28, weight: .regular)
-    private let headlineSmallFont = Font.system(size: 24, weight: .regular) // NOT DONE
+    private let headlineSmallFont = Font.system(size: 24, weight: .regular)
 
-    private let titleLargeFont = Font.system(size: 22, weight: .regular) // NOT DONE
-    private let titleMediumFont = Font.system(size: 16, weight: .medium) // NOT DONE
-    private let titleSmallFont = Font.system(size: 14, weight: .medium) // NOT DONE
+    private let titleLargeFont = Font.system(size: 22, weight: .regular)
+    private let titleMediumFont = Font.system(size: 16, weight: .medium)
+    private let titleSmallFont = Font.system(size: 14, weight: .medium)
 
-    private let bodyLargeFont = Font.system(size: 17, weight: .regular) // NOT DONE
-    private let bodyMediumFont = Font.system(size: 16, weight: .regular) // NOT DONE
-    private let bodySmallFont = Font.system(size: 15, weight: .regular) // NOT DONE
+    private let bodyLargeFont = Font.system(size: 17, weight: .regular)
+    private let bodyMediumFont = Font.system(size: 16, weight: .regular)
+    private let bodySmallFont = Font.system(size: 15, weight: .regular)
 
-    private let labelLargeFont = Font.system(size: 14, weight: .medium) // NOT DONE
-    private let labelMediumFont = Font.system(size: 12, weight: .medium) // NOT DONE
-    private let labelSmallFont = Font.system(size: 11, weight: .medium) // NOT DONE
+    private let labelLargeFont = Font.system(size: 17, weight: .medium)
+    private let labelMediumFont = Font.system(size: 12, weight: .medium)
+    private let labelSmallFont = Font.system(size: 11, weight: .medium)
 
     private let displayLargeSpacing: CGFloat = 0
     private let displayMediumSpacing: CGFloat = 0
