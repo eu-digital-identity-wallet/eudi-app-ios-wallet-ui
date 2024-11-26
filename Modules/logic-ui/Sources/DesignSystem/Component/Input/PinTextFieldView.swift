@@ -231,7 +231,7 @@ extension PinTextFieldView {
     var color: Color {
       return switch self {
       case .inactive:
-        Theme.shared.color.onSurface
+        Theme.shared.color.outlineVariant
       case .active:
         Theme.shared.color.primary
       }
