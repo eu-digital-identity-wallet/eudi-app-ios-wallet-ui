@@ -53,6 +53,19 @@ public protocol ImageManagerProtocol: Sendable {
   var clockIndicator: Image { get }
   var errorIndicator: Image { get }
   var signDocument: Image { get }
+  var euditext: Image { get }
+  var walletVerified: Image { get }
+  var congradulationsDocument: Image { get }
+  var bell: Image { get }
+  var menuIcon: Image { get }
+  var filterMenuIcon: Image { get }
+  var bookmarkIcon: Image { get }
+  var gearshape: Image { get }
+  var checkmark: Image { get }
+  var hourglassImage: Image { get }
+  var boltIcon: Image { get }
+  var chooseDocumentImage: Image { get }
+  var scanDocumentImage: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -94,6 +107,19 @@ final class ImageManager: ImageManagerProtocol {
     case clockIndicator = "ic-clock-indicator"
     case errorIndicator = "ic-error-indicator"
     case signDocument = "doc"
+    case euditext = "EUDI-text"
+    case walletVerified = "wallet-verified"
+    case congradulationsDocument = "congradulations-document"
+    case bell
+    case menuIcon = "menu-icon"
+    case filterMenuIcon = "filter-menu-icon"
+    case bookmarkIcon = "bookmark-icon"
+    case gearshape
+    case checkmark
+    case hourglassImage
+    case boltIcon = "bolt-icon"
+    case chooseDocumentImage = "choose-document-image"
+    case scanDocumentImage = "scan-document-image"
   }
 
   // MARK: - Properties
@@ -212,5 +238,44 @@ final class ImageManager: ImageManagerProtocol {
   }
   var signDocument: Image {
     Image(systemName: ImageEnum.signDocument.rawValue)
+  }
+  var euditext: Image {
+    Image(ImageEnum.euditext.rawValue)
+  }
+  var walletVerified: Image {
+    Image(ImageEnum.walletVerified.rawValue)
+  }
+  var congradulationsDocument: Image {
+    Image(ImageEnum.congradulationsDocument.rawValue)
+  }
+  var bell: Image {
+    Image(systemName: ImageEnum.bell.rawValue)
+  }
+  var menuIcon: Image {
+    Image(ImageEnum.menuIcon.rawValue)
+  }
+  var filterMenuIcon: Image {
+    Image(ImageEnum.filterMenuIcon.rawValue)
+  }
+  var bookmarkIcon: Image {
+    Image(ImageEnum.bookmarkIcon.rawValue)
+  }
+  var gearshape: Image {
+    Image(systemName: ImageEnum.gearshape.rawValue)
+  }
+  var checkmark: Image {
+    Image(systemName: ImageEnum.checkmark.rawValue)
+  }
+  var hourglassImage: Image {
+    Image(ImageEnum.hourglassImage.rawValue)
+  }
+  var boltIcon: Image {
+    Image(ImageEnum.boltIcon.rawValue)
+  }
+  var chooseDocumentImage: Image {
+    Image(ImageEnum.chooseDocumentImage.rawValue)
+  }
+  var scanDocumentImage: Image {
+    Image(ImageEnum.scanDocumentImage.rawValue)
   }
 }
