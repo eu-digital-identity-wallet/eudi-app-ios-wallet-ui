@@ -187,6 +187,14 @@ public extension WrapButtonView {
       gravity: .center,
       onAction: {}()
     )
+
+    WrapButtonView(
+      style: .success,
+      title: LocalizableString.Key.addDoc,
+      icon: Image(systemName: "checkmark"),
+      gravity: .center,
+      onAction: {}()
+    )
   }
   .padding()
 }

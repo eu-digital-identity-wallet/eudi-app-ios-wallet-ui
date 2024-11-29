@@ -114,7 +114,7 @@ final class TypographyManager: TypographyManagerProtocol {
 
     private let labelLargeFont = Font.system(size: 17, weight: .medium)
     private let labelMediumFont = Font.system(size: 12, weight: .medium)
-    private let labelSmallFont = Font.system(size: 11, weight: .medium)
+    private let labelSmallFont = Font.system(size: 13, weight: .medium)
 
     private let displayLargeSpacing: CGFloat = 0
     private let displayMediumSpacing: CGFloat = 0
