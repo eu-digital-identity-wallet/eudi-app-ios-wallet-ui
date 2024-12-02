@@ -7,7 +7,7 @@
 - Config.*.swift
 
 # Views/Components
-- BaseViewModel.swift
+- ViewModel.swift
 - .*View.swift
 - .*Shape.swift
 - .*Style.swift
