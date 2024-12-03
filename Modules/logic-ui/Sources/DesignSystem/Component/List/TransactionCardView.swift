@@ -56,14 +56,14 @@ public struct TransactionCardView: View {
 
   public var body: some View {
     WrapCardView(backgroundColor: backgroundColor) {
-      VStack(alignment: .leading, spacing: 16) {
+      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
         VStack(alignment: .leading, spacing: .zero) {
           Text(title)
             .typography(Theme.shared.font.bodyLarge)
             .foregroundStyle(Theme.shared.color.onSurface)
             .if(isVerified) {
-              $0.rightImage(image: Image(systemName: "checkmark"))
+              $0.rightImage(image: Theme.shared.image.walletVerified)
             }
           Text(subtitle)
             .typography(Theme.shared.font.bodyMedium)
@@ -85,7 +85,7 @@ public struct TransactionCardView: View {
           Spacer()
         }
       }
-      .padding(.all, 16)
+      .padding(.all, SPACING_MEDIUM)
     }
   }
 }

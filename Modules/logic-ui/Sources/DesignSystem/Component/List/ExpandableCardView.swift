@@ -1,94 +1,96 @@
+/*
+ * Copyright (c) 2023 European Commission
+ *
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
+ *
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
+ */
 import SwiftUI
+import logic_resources
 
-struct ExpandableCardView: View {
-  let title: String
-  let subtitle: String
-  let details: [DetailItem]
+public struct ExpandableCardView: View {
+  private let title: String
+  private let subtitle: String
+  private let details: [DetailItem]
+  private let backgroundColor: Color
+
+  public init(
+    backgroundColor: Color = Theme.shared.color.surfaceContainer,
+    title: String,
+    subtitle: String,
+    details: [DetailItem]
+  ) {
+    self.title = title
+    self.subtitle = subtitle
+    self.details = details
+    self.backgroundColor = backgroundColor
+  }
 
   @State private var isExpanded: Bool = false
 
-  var body: some View {
-    VStack(spacing: 0) {
-      // Card Header
-      HStack {
-        VStack(alignment: .leading, spacing: 4) {
-          Text(title)
-            .font(.headline)
-            .foregroundColor(.primary)
-          Text(subtitle)
-            .font(.subheadline)
-            .foregroundColor(.secondary)
-        }
-        Spacer()
-        Button(action: {
-          withAnimation {
-            isExpanded.toggle()
-          }
-        }) {
-          Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-            .foregroundColor(.gray)
-        }
-      }
-      .padding()
-      .background(Color(UIColor.systemGray6))
-      .cornerRadius(12)
-      .overlay(
-        RoundedRectangle(cornerRadius: 12)
-          .stroke(Color(UIColor.systemGray4), lineWidth: 1)
-      )
-
-      // Expanded Details
-      if isExpanded {
-        VStack(alignment: .leading, spacing: 8) {
-          ForEach(details) { detail in
-            HStack {
-              Text(detail.title)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-              Spacer()
-              Text(detail.value)
-                .font(.body)
-                .foregroundColor(.primary)
+  public var body: some View {
+    VStack(spacing: .zero) {
+      WrapCardView(
+        backgroundColor: backgroundColor
+      ) {
+        VStack(spacing: .zero) {
+          WrapListItemView(
+            mainText: title,
+            supportingText: subtitle,
+            trailingIcon: isExpanded ? Theme.shared.image.chevronUp : Theme.shared.image.chevronDown
+          ) {
+            withAnimation {
+              isExpanded.toggle()
             }
-            Divider()
+          }
+
+          if isExpanded {
+            ForEach(Array(details.enumerated()), id: \.element.id) { index, detail in
+              WrapListItemView(
+                mainText: detail.title,
+                overlineText: detail.value
+              )
+              if index < details.count - 1 {
+                Divider()
+                  .padding(.horizontal, SPACING_MEDIUM)
+                  .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
+              }
+            }
           }
         }
-        .padding()
-        .background(Color(UIColor.systemGray6))
-        .cornerRadius(12)
-        .overlay(
-          RoundedRectangle(cornerRadius: 12)
-            .stroke(Color(UIColor.systemGray4), lineWidth: 1)
-        )
-        .padding(.top, -8)
       }
     }
-    .padding(.horizontal)
   }
 }
 
-struct DetailItem: Identifiable {
-  let id = UUID()
-  let title: String
-  let value: String
+public struct DetailItem: Identifiable {
+  public let id = UUID()
+  public let title: String
+  public let value: String
 }
 
-// Preview
-struct ExpandableCardView_Previews: PreviewProvider {
-  static var previews: some View {
-    ExpandableCardView(
-      title: "Digital ID",
-      subtitle: "View details",
-      details: [
-        DetailItem(title: "Family name", value: "Doe"),
-        DetailItem(title: "Given names", value: "John"),
-        DetailItem(title: "Date of birth", value: "21 Oct 1994"),
-        DetailItem(title: "Age over 18", value: "Yes"),
-        DetailItem(title: "Date of issue", value: "21 Oct 2023"),
-        DetailItem(title: "Date of expiry", value: "21 Oct 2040"),
-        DetailItem(title: "Issuing authority", value: "GR"),
-        DetailItem(title: "Issuing country", value: "GR")
-      ]
-    )
-  }
+#Preview {
+  ExpandableCardView(
+    title: "Digital ID",
+    subtitle: "View details",
+    details: [
+      DetailItem(title: "Family name", value: "Doe"),
+      DetailItem(title: "Given names", value: "John"),
+      DetailItem(title: "Date of birth", value: "21 Oct 1994"),
+      DetailItem(title: "Age over 18", value: "Yes"),
+      DetailItem(title: "Date of issue", value: "21 Oct 2023"),
+      DetailItem(title: "Date of expiry", value: "21 Oct 2040"),
+      DetailItem(title: "Issuing authority", value: "GR"),
+      DetailItem(title: "Issuing country", value: "GR")
+    ]
+  )
+  .padding()
 }

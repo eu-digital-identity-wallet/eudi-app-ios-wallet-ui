@@ -66,6 +66,10 @@ public extension View {
       self
     }
   }
+
+  func gone(if shouldHide: Bool) -> some View {
+      shouldHide ? AnyView(EmptyView()) : AnyView(self)
+  }
 }
 
 public extension View {

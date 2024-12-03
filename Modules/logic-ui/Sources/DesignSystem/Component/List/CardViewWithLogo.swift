@@ -17,14 +17,14 @@ import SwiftUI
 import logic_resources
 
 public struct CardViewWithLogo: View {
-  public let cornerRadius: CGFloat
-  public let backgroundColor: Color
-  public let icon: Image
-  public let title: String
-  public let subtitle: String
-  public let footer: String
-  public let verifiedIcon: Image?
-  public let isVerified: Bool
+  private let cornerRadius: CGFloat
+  private let backgroundColor: Color
+  private let icon: Image
+  private let title: String
+  private let subtitle: String
+  private let footer: String
+  private let verifiedIcon: Image?
+  private let isVerified: Bool
 
   public init(
     cornerRadius: CGFloat = 13,
@@ -48,7 +48,7 @@ public struct CardViewWithLogo: View {
 
   public var body: some View {
     WrapCardView(backgroundColor: backgroundColor) {
-      VStack(alignment: .leading, spacing: 16) {
+      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
         HStack {
           icon
@@ -66,7 +66,7 @@ public struct CardViewWithLogo: View {
             $0.leftImage(image: Image(systemName: "checkmark"))
           }
 
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
           Text(title)
             .typography(Theme.shared.font.bodyMedium)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
@@ -75,7 +75,7 @@ public struct CardViewWithLogo: View {
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
         }
       }
-      .padding(.all, 16)
+      .padding(.all, SPACING_MEDIUM)
     }
   }
 }

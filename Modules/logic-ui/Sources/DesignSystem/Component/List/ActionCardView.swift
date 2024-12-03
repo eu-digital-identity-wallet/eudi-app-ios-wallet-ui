@@ -17,9 +17,9 @@ import SwiftUI
 import logic_resources
 
 public struct ActionCard: View {
-  public let icon: Image
-  public let title: String
-  public let action: () -> Void
+  private let icon: Image
+  private let title: String
+  private let action: () -> Void
 
   public init(
     icon: Image,
@@ -38,16 +38,16 @@ public struct ActionCard: View {
           .resizable()
           .scaledToFit()
           .frame(width: 64, height: 64)
-          .foregroundColor(Color.blue)
+          .foregroundStyle(Theme.shared.color.primary)
 
         Text(title)
           .typography(Theme.shared.font.labelLarge)
-          .foregroundColor(.blue)
+          .foregroundStyle(Theme.shared.color.primary)
       }
       .frame(maxWidth: .infinity, minHeight: 180)
-      .padding(.vertical, 16)
+      .padding(.vertical, SPACING_MEDIUM)
       .background(Theme.shared.color.surfaceContainer)
-      .cornerRadius(16)
+      .cornerRadius(SPACING_MEDIUM)
     }
   }
 }
@@ -57,17 +57,13 @@ public struct ActionCard: View {
     ActionCard(
       icon: Image(systemName: "doc.text"),
       title: "Choose from list",
-      action: {
-        print("Choose from list tapped")
-      }
+      action: {}
     )
 
     ActionCard(
       icon: Image(systemName: "qrcode"),
       title: "Scan a QR",
-      action: {
-        print("Scan a QR tapped")
-      }
+      action: {}
     )
   }
   .padding()

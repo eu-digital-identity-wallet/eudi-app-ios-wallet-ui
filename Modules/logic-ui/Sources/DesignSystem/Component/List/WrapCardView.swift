@@ -17,9 +17,9 @@ import SwiftUI
 import logic_resources
 
 public struct WrapCardView<Content: View>: View {
-  public let cornerRadius: CGFloat
-  public let backgroundColor: Color
-  public let content: () -> Content
+  private let cornerRadius: CGFloat
+  private let backgroundColor: Color
+  private let content: () -> Content
 
   public init(
     cornerRadius: CGFloat = 13,

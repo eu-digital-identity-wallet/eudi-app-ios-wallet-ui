@@ -17,19 +17,21 @@ import SwiftUI
 import logic_resources
 
 public struct WrapListItemView: View {
-  public let mainText: String
-  public let overlineText: String?
-  public let overlineTextColor: Color
-  public let supportingText: String?
-  public let leadingIcon: Image?
-  public let trailingIcon: Image?
-  public let action: (() -> Void)?
+  private let mainText: String
+  private let overlineText: String?
+  private let overlineTextColor: Color
+  private let supportingText: String?
+  private let isBlur: Bool
+  private let leadingIcon: Image?
+  private let trailingIcon: Image?
+  private let action: (() -> Void)?
 
   public init(
     mainText: String,
     overlineText: String? = nil,
     overlineTextColor: Color = Theme.shared.color.onSurfaceVariant,
     supportingText: String? = nil,
+    isBlur: Bool = false,
     leadingIcon: Image? = nil,
     trailingIcon: Image? = nil,
     action: (() -> Void)? = nil
@@ -38,20 +40,21 @@ public struct WrapListItemView: View {
     self.overlineText = overlineText
     self.overlineTextColor = overlineTextColor
     self.supportingText = supportingText
+    self.isBlur = isBlur
     self.leadingIcon = leadingIcon
     self.trailingIcon = trailingIcon
     self.action = action
   }
 
   public var body: some View {
-    HStack(alignment: .center, spacing: 9) {
+    HStack(alignment: .center, spacing: SPACING_SMALL) {
       if let leadingIcon {
         leadingIcon
           .resizable()
           .frame(width: 40, height: 40)
       }
 
-      VStack(alignment: .leading, spacing: 2) {
+      VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
         if let overlineText = overlineText {
           Text(overlineText)
             .font(.caption)
@@ -73,6 +76,9 @@ public struct WrapListItemView: View {
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .lineLimit(1)
             .truncationMode(.tail)
+            .if(isBlur) {
+              $0.blur(radius: 4, opaque: false)
+            }
         }
       }
       .frame(maxWidth: .infinity, alignment: .leading)
@@ -89,7 +95,7 @@ public struct WrapListItemView: View {
     .onTapGesture {
       action?()
     }
-    .padding(.all, 16)
+    .padding(.all, SPACING_MEDIUM)
   }
 }
 
@@ -130,6 +136,18 @@ public struct WrapListItemView: View {
         overlineText: "Overline Texr",
         overlineTextColor: Theme.shared.color.error,
         supportingText: "Additional Info",
+        leadingIcon: Image(systemName: "heart"),
+        trailingIcon: nil
+      )
+    }
+
+    WrapCardView {
+      WrapListItemView(
+        mainText: "Another Item",
+        overlineText: "Overline Texr",
+        overlineTextColor: Theme.shared.color.error,
+        supportingText: "Additional Info",
+        isBlur: true,
         leadingIcon: Image(systemName: "heart"),
         trailingIcon: nil
       )
