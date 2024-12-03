@@ -1,5 +1,5 @@
 {
-  "originHash" : "47b41594678516ca51843ec13b4d56a035bc5068180ab4f23d427b6858dbebe3",
+  "originHash" : "838c5f7827a09b9b5543cec6aecc5602ae852ebf6cf24be5da5aaad71274429b",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Alamofire/Alamofire.git",
       "state" : {
-        "revision" : "e16d3481f5ed35f0472cb93350085853d754913f",
-        "version" : "5.10.1"
+        "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
+        "version" : "5.10.2"
       }
     },
     {
@@ -78,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twostraws/CodeScanner",
       "state" : {
-        "revision" : "9fa582f4b36c69c2a55bff5fb3377eb170ae273c",
-        "version" : "2.5.1"
+        "revision" : "5e886430238944c7200fc9e10dbf2d9550dba865",
+        "version" : "2.5.2"
       }
     },
     {
@@ -150,8 +150,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-csc-swift.git",
       "state" : {
-        "revision" : "d286db938dd6bddcd2aa22051e54211227cf5cba",
-        "version" : "0.0.1"
+        "revision" : "b10f5a71c1c4399845cf4da63889f059f484275f",
+        "version" : "0.1.0"
       }
     },
     {
@@ -159,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-kit.git",
       "state" : {
-        "revision" : "461d9b83fd4e514ddbadc392b2137fa8b3e89282",
-        "version" : "0.0.5"
+        "revision" : "d14210fa24c79f611495f942f6a45cef1c095d3b",
+        "version" : "0.1.0"
       }
     },
     {
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui.git",
       "state" : {
-        "revision" : "fe962a899ce46d1d261c510ac3ee33f21acedf9c",
-        "version" : "0.0.8"
+        "revision" : "b6c1ded5666e824360a9aa05da12f0c42baf5ae6",
+        "version" : "0.1.0"
       }
     },
     {
@@ -384,8 +384,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
       "state" : {
-        "revision" : "06dc63c6d8da54ee11ceb268cde1fa68161afc96",
-        "version" : "3.9.1"
+        "revision" : "ff0f781cf7c6a22d52957e50b104f5768b50c779",
+        "version" : "3.10.0"
       }
     },
     {
@@ -402,8 +402,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "9cb486020ebf03bfa5b5df985387a14a98744537",
-        "version" : "1.6.1"
+        "revision" : "96a2f8a0fa41e9e09af4585e2724c4e825410b91",
+        "version" : "1.6.2"
       }
     },
     {
