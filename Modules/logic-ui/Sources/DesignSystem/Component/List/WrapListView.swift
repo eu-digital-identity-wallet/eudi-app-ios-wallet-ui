@@ -54,18 +54,28 @@ public struct WrapListView<Item: Identifiable, Content: View>: View {
 }
 
 private struct TransactionHistoryView: View {
-  struct Transaction: Identifiable {
-    let id = UUID()
-    let status: String
-    let title: String
-    let subtitle: String
-    let statusColor: Color
-  }
-
-  let todayTransactions: [Transaction] = [
-    Transaction(status: "Completed", title: "TravelBook", subtitle: "5 minutes ago", statusColor: .green),
-    Transaction(status: "Completed", title: "AirBNB", subtitle: "11:05 AM", statusColor: .green),
-    Transaction(status: "Failed", title: "Natural Bank VISA", subtitle: "11:07 AM", statusColor: .red)
+  let todayTransactions: [ListItemData] = [
+    ListItemData(
+      mainText: "TravelBook",
+      overlineText: "5 minutes ago",
+      supportingText: "Completed",
+      overlineTextColor: .green,
+      trailingContent: .icon(Image(systemName: "chevron.right"))
+    ),
+    ListItemData(
+      mainText: "AirBNB",
+      overlineText: "11:05 AM",
+      supportingText: "Completed",
+      overlineTextColor: .green,
+      trailingContent: .icon(Image(systemName: "chevron.right"))
+    ),
+    ListItemData(
+      mainText: "Natural Bank VISA",
+      overlineText: "11:05 AM",
+      supportingText: "Failed",
+      overlineTextColor: .red,
+      trailingContent: .icon(Image(systemName: "chevron.right"))
+    )
   ]
 
   var body: some View {
@@ -76,11 +86,7 @@ private struct TransactionHistoryView: View {
       ],
       rowContent: { transaction in
         WrapListItemView(
-          mainText: transaction.status,
-          overlineText: transaction.title,
-          overlineTextColor: transaction.statusColor,
-          supportingText: transaction.subtitle,
-          trailingIcon: Image(systemName: "chevron.right")
+          listItem: transaction
         )
       }
     )

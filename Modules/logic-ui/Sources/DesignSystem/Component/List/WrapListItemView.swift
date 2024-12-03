@@ -17,78 +17,73 @@ import SwiftUI
 import logic_resources
 
 public struct WrapListItemView: View {
-  private let mainText: String
-  private let overlineText: String?
-  private let overlineTextColor: Color
-  private let supportingText: String?
-  private let isBlur: Bool
-  private let leadingIcon: Image?
-  private let trailingIcon: Image?
+  private let listItem: ListItemData
   private let action: (() -> Void)?
 
   public init(
-    mainText: String,
-    overlineText: String? = nil,
-    overlineTextColor: Color = Theme.shared.color.onSurfaceVariant,
-    supportingText: String? = nil,
-    isBlur: Bool = false,
-    leadingIcon: Image? = nil,
-    trailingIcon: Image? = nil,
+    listItem: ListItemData,
     action: (() -> Void)? = nil
   ) {
-    self.mainText = mainText
-    self.overlineText = overlineText
-    self.overlineTextColor = overlineTextColor
-    self.supportingText = supportingText
-    self.isBlur = isBlur
-    self.leadingIcon = leadingIcon
-    self.trailingIcon = trailingIcon
+    self.listItem = listItem
     self.action = action
   }
 
   public var body: some View {
     HStack(alignment: .center, spacing: SPACING_SMALL) {
-      if let leadingIcon {
+      if let leadingIcon = listItem.leadingIcon {
         leadingIcon
           .resizable()
           .frame(width: 40, height: 40)
       }
 
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
-        if let overlineText = overlineText {
+        if let overlineText = listItem.overlineText {
           Text(overlineText)
             .font(.caption)
-            .foregroundStyle(overlineTextColor)
+            .foregroundStyle(listItem.overlineTextColor)
             .lineLimit(1)
             .truncationMode(.tail)
         }
 
-        Text(mainText)
+        Text(listItem.mainText)
           .font(.body)
           .foregroundStyle(Theme.shared.color.onSurface)
           .fontWeight(.medium)
           .lineLimit(1)
           .truncationMode(.tail)
 
-        if let supportingText = supportingText {
+        if let supportingText = listItem.supportingText {
           Text(supportingText)
             .font(.subheadline)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .lineLimit(1)
             .truncationMode(.tail)
-            .if(isBlur) {
+            .if(listItem.isBlur) {
               $0.blur(radius: 4, opaque: false)
             }
         }
       }
       .frame(maxWidth: .infinity, alignment: .leading)
 
-      if let trailingIcon {
-        trailingIcon
-          .resizable()
-          .aspectRatio(contentMode: .fit)
-          .frame(width: 14, height: 14)
-          .foregroundColor(Color.accentColor)
+      if let trailingContent = listItem.trailingContent {
+        switch trailingContent {
+        case .icon(let image):
+          image
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 14, height: 14)
+            .foregroundColor(Color.accentColor)
+
+        case .checkbox(let isChecked, let onToggle):
+          Button(action: {
+              onToggle(!isChecked)
+          }) {
+              Image(systemName: isChecked ? "checkmark.square.fill" : "square")
+                  .resizable()
+                  .frame(width: 24, height: 24)
+                  .foregroundColor(.blue)
+          }
+        }
       }
     }
     .contentShape(Rectangle())
@@ -103,53 +98,61 @@ public struct WrapListItemView: View {
   VStack(spacing: 16) {
     WrapCardView {
       WrapListItemView(
-        mainText: "Main Text",
-        overlineText: "Overline Text",
-        supportingText: "Supporting Text",
-        leadingIcon: Image(systemName: "star"),
-        trailingIcon: Image(systemName: "chevron.right")
+        listItem: ListItemData(
+          mainText: "Main Text",
+          overlineText: "Overline Text",
+          supportingText: "Supporting Text",
+          leadingIcon: Image(systemName: "star"),
+          trailingContent: .icon(Image(systemName: "chevron.right"))
+        ),
+        action: {}
       )
     }
 
     WrapCardView {
       WrapListItemView(
-        mainText: "Another Item",
-        overlineText: nil,
-        supportingText: "Additional Info",
-        trailingIcon: nil
+        listItem: ListItemData(
+          mainText: "Another Item",
+          overlineText: nil,
+          supportingText: "Additional Info",
+          leadingIcon: nil
+        )
       )
     }
 
     WrapCardView {
       WrapListItemView(
-        mainText: "Another Item",
-        overlineText: nil,
-        supportingText: "Additional Info",
-        leadingIcon: Image(systemName: "heart"),
-        trailingIcon: nil
+        listItem: ListItemData(
+          mainText: "Another Item",
+          overlineText: nil,
+          supportingText: "Additional Info",
+          leadingIcon: Image(systemName: "heart")
+        )
       )
     }
 
     WrapCardView {
       WrapListItemView(
-        mainText: "Another Item",
-        overlineText: "Overline Texr",
-        overlineTextColor: Theme.shared.color.error,
-        supportingText: "Additional Info",
-        leadingIcon: Image(systemName: "heart"),
-        trailingIcon: nil
+        listItem: ListItemData(
+          mainText: "Another Item",
+          overlineText: "Overline Texr",
+          supportingText: "Additional Info",
+          overlineTextColor: Theme.shared.color.error,
+          leadingIcon: Image(systemName: "heart")
+        )
       )
     }
 
     WrapCardView {
       WrapListItemView(
-        mainText: "Another Item",
-        overlineText: "Overline Texr",
-        overlineTextColor: Theme.shared.color.error,
-        supportingText: "Additional Info",
-        isBlur: true,
-        leadingIcon: Image(systemName: "heart"),
-        trailingIcon: nil
+        listItem: ListItemData(
+          mainText: "Main Text",
+          overlineText: "Overline Text",
+          supportingText: "Supporting Text",
+          leadingIcon: Image(systemName: "star"),
+          trailingContent: .checkbox(true) { _ in }
+        ),
+        action: {}
       )
     }
   }

@@ -16,66 +16,35 @@
 import SwiftUI
 import logic_resources
 
-public struct ExpandableCardView: View {
-  private let title: String
-  private let subtitle: String
+public struct WrapListItemsView: View {
   private let listItems: [ListItemData]
-  private let backgroundColor: Color
+  private let action: (() -> Void)?
 
   public init(
-    backgroundColor: Color = Theme.shared.color.surfaceContainer,
-    title: String,
-    subtitle: String,
-    listItems: [ListItemData]
+    listItems: [ListItemData],
+    action: (() -> Void)? = nil
   ) {
-    self.title = title
-    self.subtitle = subtitle
     self.listItems = listItems
-    self.backgroundColor = backgroundColor
+    self.action = action
   }
 
-  @State private var isExpanded: Bool = false
-
   public var body: some View {
-    VStack(spacing: .zero) {
-      WrapCardView(
-        backgroundColor: backgroundColor
-      ) {
-        VStack(spacing: .zero) {
-          WrapListItemView(
-            listItem: ListItemData(
-              mainText: title,
-              supportingText: subtitle,
-              trailingContent: .icon(isExpanded ? Theme.shared.image.chevronUp : Theme.shared.image.chevronDown)
-            )
-          ) {
-            withAnimation {
-              isExpanded.toggle()
-            }
-          }
-
-          if isExpanded {
-            ForEach(Array(listItems.enumerated()), id: \.element.id) { index, item in
-              WrapListItemView(
-                listItem: item
-              )
-              if index < listItems.count - 1 {
-                Divider()
-                  .padding(.horizontal, SPACING_MEDIUM)
-                  .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
-              }
-            }
-          }
-        }
+    ForEach(Array(listItems.enumerated()), id: \.element.id) { index, item in
+      WrapListItemView(
+        listItem: item,
+        action: action
+      )
+      if index < listItems.count - 1 {
+        Divider()
+          .padding(.horizontal, SPACING_MEDIUM)
+          .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
       }
     }
   }
 }
 
 #Preview {
-  ExpandableCardView(
-    title: "Digital ID",
-    subtitle: "View details",
+  WrapListItemsView(
     listItems: [
       ListItemData(mainText: "Family name", supportingText: "Doe"),
       ListItemData(mainText: "Given names", supportingText: "John"),
