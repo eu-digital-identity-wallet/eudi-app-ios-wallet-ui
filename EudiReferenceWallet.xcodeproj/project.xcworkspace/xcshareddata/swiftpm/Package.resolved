@@ -1,5 +1,5 @@
 {
-  "originHash" : "ef9c14bda8525dda23b71cc80ae3593c76bcbbc6dee67c0f156add3428f1d384",
+  "originHash" : "838c5f7827a09b9b5543cec6aecc5602ae852ebf6cf24be5da5aaad71274429b",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -159,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-kit.git",
       "state" : {
-        "revision" : "461d9b83fd4e514ddbadc392b2137fa8b3e89282",
-        "version" : "0.0.5"
+        "revision" : "d14210fa24c79f611495f942f6a45cef1c095d3b",
+        "version" : "0.1.0"
       }
     },
     {
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui.git",
       "state" : {
-        "revision" : "1b7a81a97ca3015795cef4e35d8791d82f45e651",
-        "version" : "0.0.9"
+        "revision" : "b6c1ded5666e824360a9aa05da12f0c42baf5ae6",
+        "version" : "0.1.0"
       }
     },
     {
