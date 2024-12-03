@@ -66,6 +66,7 @@ public protocol ImageManagerProtocol: Sendable {
   var boltIcon: Image { get }
   var chooseDocumentImage: Image { get }
   var scanDocumentImage: Image { get }
+  var infoCircle: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -120,6 +121,7 @@ final class ImageManager: ImageManagerProtocol {
     case boltIcon = "bolt-icon"
     case chooseDocumentImage = "choose-document-image"
     case scanDocumentImage = "scan-document-image"
+    case infoCircle = "info.circle"
   }
 
   // MARK: - Properties
@@ -277,5 +279,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var scanDocumentImage: Image {
     Image(ImageEnum.scanDocumentImage.rawValue)
+  }
+  var infoCircle: Image {
+    Image(systemName: ImageEnum.infoCircle.rawValue)
   }
 }

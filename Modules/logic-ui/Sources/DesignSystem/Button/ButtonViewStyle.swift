@@ -39,7 +39,7 @@ public enum ButtonViewStyle {
     case .primary:
       Theme.shared.color.primary
     case .secondary:
-      Theme.shared.color.background
+        .clear
     case .error:
       Theme.shared.color.background
     case .success:
