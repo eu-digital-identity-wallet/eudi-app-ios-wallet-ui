@@ -18,11 +18,11 @@ import logic_resources
 
 public struct WrapListItemsView: View {
   private let listItems: [ListItemData]
-  private let action: (() -> Void)?
+  private let action: ((ListItemData) -> Void)?
 
   public init(
     listItems: [ListItemData],
-    action: (() -> Void)? = nil
+    action: ((ListItemData) -> Void)? = nil
   ) {
     self.listItems = listItems
     self.action = action
@@ -32,7 +32,9 @@ public struct WrapListItemsView: View {
     ForEach(Array(listItems.enumerated()), id: \.element.id) { index, item in
       WrapListItemView(
         listItem: item,
-        action: action
+        action: {
+          action?(item)
+        }
       )
       if index < listItems.count - 1 {
         Divider()

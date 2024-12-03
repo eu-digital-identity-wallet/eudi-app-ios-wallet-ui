@@ -55,16 +55,7 @@ public struct ExpandableCardView: View {
           }
 
           if isExpanded {
-            ForEach(Array(listItems.enumerated()), id: \.element.id) { index, item in
-              WrapListItemView(
-                listItem: item
-              )
-              if index < listItems.count - 1 {
-                Divider()
-                  .padding(.horizontal, SPACING_MEDIUM)
-                  .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
-              }
-            }
+            WrapListItemsView(listItems: listItems)
           }
         }
       }
