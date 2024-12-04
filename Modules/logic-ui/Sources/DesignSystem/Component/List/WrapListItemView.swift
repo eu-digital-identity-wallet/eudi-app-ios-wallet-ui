@@ -75,14 +75,13 @@ public struct WrapListItemView: View {
             .foregroundColor(Color.accentColor)
 
         case .checkbox(let isChecked, let onToggle):
-          Button(action: {
-              onToggle(!isChecked)
-          }) {
-              Image(systemName: isChecked ? "checkmark.square.fill" : "square")
-                  .resizable()
-                  .frame(width: 24, height: 24)
-                  .foregroundColor(.blue)
-          }
+          WrapCheckbox(
+            checkboxData: CheckboxData(
+              isChecked: isChecked,
+              enabled: true,
+              onCheckedChange: { _ in
+                onToggle(!isChecked)
+              }))
         }
       }
     }
