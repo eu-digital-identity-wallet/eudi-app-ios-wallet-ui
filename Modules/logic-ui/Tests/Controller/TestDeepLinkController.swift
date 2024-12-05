@@ -291,6 +291,11 @@ private extension TestDeepLinkController {
 private extension TestDeepLinkController {
   struct MockPresentationService: PresentationService {
     
+    func startQrEngagement(secureAreaName: String?, crv: MdocDataModel18013.CoseEcCurve) async throws -> String {
+      ""
+    }
+    
+    
     func receiveRequest() async throws -> MdocDataTransfer18013.UserRequestInfo {
       .init(validItemsRequested: RequestItems())
     }

@@ -77,8 +77,7 @@ final class TestDashboardInteractor: EudiTest {
           docType: "",
           docDataType: .cbor,
           data: Data(),
-          privateKeyType: nil,
-          privateKey: nil,
+          secureAreaName: "",
           createdAt: nil,
           displayName: nil,
           status: .deferred
