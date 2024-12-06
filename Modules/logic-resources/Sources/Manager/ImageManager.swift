@@ -67,6 +67,8 @@ public protocol ImageManagerProtocol: Sendable {
   var chooseDocumentImage: Image { get }
   var scanDocumentImage: Image { get }
   var infoCircle: Image { get }
+  var relyingPartyVerified: Image { get }
+
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -122,6 +124,7 @@ final class ImageManager: ImageManagerProtocol {
     case chooseDocumentImage = "choose-document-image"
     case scanDocumentImage = "scan-document-image"
     case infoCircle = "info.circle"
+    case relyingPartyVerified = "relying-party-verified"
   }
 
   // MARK: - Properties
@@ -242,25 +245,25 @@ final class ImageManager: ImageManagerProtocol {
     Image(systemName: ImageEnum.signDocument.rawValue)
   }
   var euditext: Image {
-    Image(ImageEnum.euditext.rawValue)
+    Image(ImageEnum.euditext.rawValue, bundle: bundle)
   }
   var walletVerified: Image {
-    Image(ImageEnum.walletVerified.rawValue)
+    Image(ImageEnum.walletVerified.rawValue, bundle: bundle)
   }
   var congradulationsDocument: Image {
-    Image(ImageEnum.congradulationsDocument.rawValue)
+    Image(ImageEnum.congradulationsDocument.rawValue, bundle: bundle)
   }
   var bell: Image {
     Image(systemName: ImageEnum.bell.rawValue)
   }
   var menuIcon: Image {
-    Image(ImageEnum.menuIcon.rawValue)
+    Image(ImageEnum.menuIcon.rawValue, bundle: bundle)
   }
   var filterMenuIcon: Image {
-    Image(ImageEnum.filterMenuIcon.rawValue)
+    Image(ImageEnum.filterMenuIcon.rawValue, bundle: bundle)
   }
   var bookmarkIcon: Image {
-    Image(ImageEnum.bookmarkIcon.rawValue)
+    Image(ImageEnum.bookmarkIcon.rawValue, bundle: bundle)
   }
   var gearshape: Image {
     Image(systemName: ImageEnum.gearshape.rawValue)
@@ -269,18 +272,21 @@ final class ImageManager: ImageManagerProtocol {
     Image(systemName: ImageEnum.checkmark.rawValue)
   }
   var hourglassImage: Image {
-    Image(ImageEnum.hourglassImage.rawValue)
+    Image(ImageEnum.hourglassImage.rawValue, bundle: bundle)
   }
   var boltIcon: Image {
-    Image(ImageEnum.boltIcon.rawValue)
+    Image(ImageEnum.boltIcon.rawValue, bundle: bundle)
   }
   var chooseDocumentImage: Image {
-    Image(ImageEnum.chooseDocumentImage.rawValue)
+    Image(ImageEnum.chooseDocumentImage.rawValue, bundle: bundle)
   }
   var scanDocumentImage: Image {
-    Image(ImageEnum.scanDocumentImage.rawValue)
+    Image(ImageEnum.scanDocumentImage.rawValue, bundle: bundle)
   }
   var infoCircle: Image {
     Image(systemName: ImageEnum.infoCircle.rawValue)
+  }
+  var relyingPartyVerified: Image {
+    Image(ImageEnum.relyingPartyVerified.rawValue, bundle: bundle)
   }
 }

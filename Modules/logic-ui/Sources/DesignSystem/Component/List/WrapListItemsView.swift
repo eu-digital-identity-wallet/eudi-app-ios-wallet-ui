@@ -19,12 +19,15 @@ import logic_resources
 public struct WrapListItemsView: View {
   private let listItems: [ListItemData]
   private let action: ((ListItemData) -> Void)?
+  private let mainTextVerticalPadding: CGFloat?
 
   public init(
     listItems: [ListItemData],
+    mainTextVerticalPadding: CGFloat? = nil,
     action: ((ListItemData) -> Void)? = nil
   ) {
     self.listItems = listItems
+    self.mainTextVerticalPadding = mainTextVerticalPadding
     self.action = action
   }
 
@@ -32,6 +35,7 @@ public struct WrapListItemsView: View {
     ForEach(Array(listItems.enumerated()), id: \.element.id) { index, item in
       WrapListItemView(
         listItem: item,
+        mainTextVerticalPadding: mainTextVerticalPadding,
         action: {
           action?(item)
         }

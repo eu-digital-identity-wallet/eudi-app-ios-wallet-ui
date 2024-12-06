@@ -22,7 +22,7 @@ private struct LeftImageModifier: ViewModifier {
 
   init(
     image: Image,
-    spacing: CGFloat = 0,
+    spacing: CGFloat,
     size: CGFloat? = nil
   ) {
     self.image = image
@@ -46,8 +46,8 @@ private struct LeftImageModifier: ViewModifier {
 }
 
 public extension View {
-  func leftImage(image: Image, size: CGFloat? = nil) -> some View {
-    modifier(LeftImageModifier(image: image, size: size))
+  func leftImage(image: Image, spacing: CGFloat = 0, size: CGFloat? = nil) -> some View {
+    modifier(LeftImageModifier(image: image, spacing: spacing, size: size))
   }
 }
 

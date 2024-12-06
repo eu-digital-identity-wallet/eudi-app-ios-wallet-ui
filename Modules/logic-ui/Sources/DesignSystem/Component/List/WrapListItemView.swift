@@ -19,12 +19,15 @@ import logic_resources
 public struct WrapListItemView: View {
   private let listItem: ListItemData
   private let action: (() -> Void)?
+  private let mainTextVerticalPadding: CGFloat?
 
   public init(
     listItem: ListItemData,
+    mainTextVerticalPadding: CGFloat? = nil,
     action: (() -> Void)? = nil
   ) {
     self.listItem = listItem
+    self.mainTextVerticalPadding = mainTextVerticalPadding
     self.action = action
   }
 
@@ -71,7 +74,7 @@ public struct WrapListItemView: View {
           image
             .resizable()
             .aspectRatio(contentMode: .fit)
-            .frame(width: 14, height: 14)
+            .frame(width: 20, height: 20)
             .foregroundColor(Color.accentColor)
 
         case .checkbox(let isChecked, let onToggle):
@@ -89,7 +92,8 @@ public struct WrapListItemView: View {
     .onTapGesture {
       action?()
     }
-    .padding(.all, SPACING_MEDIUM)
+    .padding(.all, mainTextVerticalPadding != nil ? mainTextVerticalPadding : SPACING_MEDIUM)
+    .frame(minHeight: 80, alignment: .leading)
   }
 }
 
@@ -152,6 +156,15 @@ public struct WrapListItemView: View {
           trailingContent: .checkbox(true) { _ in }
         ),
         action: {}
+      )
+    }
+
+    WrapCardView {
+      WrapListItemView(
+        listItem: ListItemData(
+          mainText: "Another Item",
+          trailingContent: .icon(Image(systemName: "plus"))
+        )
       )
     }
   }

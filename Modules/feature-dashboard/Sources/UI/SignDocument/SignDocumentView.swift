@@ -66,12 +66,16 @@ private func content(
       caption: .signDocumentSubtitle
     )
 
-    AddNewDocumentCellView(
-      isEnabled: true,
-      title: .selectDocument,
-      isLoading: false,
-      action: action()
-    )
+    WrapCardView {
+      WrapListItemView(
+        listItem: ListItemData(
+          mainText: LocalizableString.shared.get(with: .selectDocument),
+          trailingContent: .icon(Theme.shared.image.plus)
+        )
+      ) {
+        action()
+      }
+    }
   }
 }
 

@@ -21,17 +21,20 @@ public struct ExpandableCardView: View {
   private let subtitle: String
   private let listItems: [ListItemData]
   private let backgroundColor: Color
+  private let mainTextVerticalPadding: CGFloat?
 
   public init(
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
     title: String,
     subtitle: String,
-    listItems: [ListItemData]
+    listItems: [ListItemData],
+    mainTextVerticalPadding: CGFloat? = nil
   ) {
     self.title = title
     self.subtitle = subtitle
     self.listItems = listItems
     self.backgroundColor = backgroundColor
+    self.mainTextVerticalPadding = mainTextVerticalPadding
   }
 
   @State private var isExpanded: Bool = false
@@ -47,7 +50,8 @@ public struct ExpandableCardView: View {
               mainText: title,
               supportingText: subtitle,
               trailingContent: .icon(isExpanded ? Theme.shared.image.chevronUp : Theme.shared.image.chevronDown)
-            )
+            ),
+            mainTextVerticalPadding: mainTextVerticalPadding
           ) {
             withAnimation {
               isExpanded.toggle()
@@ -55,7 +59,10 @@ public struct ExpandableCardView: View {
           }
 
           if isExpanded {
-            WrapListItemsView(listItems: listItems)
+            WrapListItemsView(
+              listItems: listItems,
+              mainTextVerticalPadding: mainTextVerticalPadding
+            )
           }
         }
       }
