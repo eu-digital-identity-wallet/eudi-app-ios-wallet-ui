@@ -295,7 +295,6 @@ private extension TestDeepLinkController {
       ""
     }
     
-    
     func receiveRequest() async throws -> MdocDataTransfer18013.UserRequestInfo {
       .init(validItemsRequested: RequestItems())
     }
