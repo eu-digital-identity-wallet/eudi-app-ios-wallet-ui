@@ -57,7 +57,7 @@ struct BearerHeaderView: View {
     .padding(.vertical, SPACING_EXTRA_LARGE)
     .background(Theme.shared.color.secondary)
     .roundedCorner(SPACING_MEDIUM, corners: [.bottomLeft, .bottomRight])
-    .background(Theme.shared.color.onSurface)
+    .background(Theme.shared.color.background)
   }
 }
 

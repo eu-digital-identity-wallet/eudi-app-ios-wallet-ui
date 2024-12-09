@@ -103,7 +103,7 @@ final class RouterHostImpl: RouterHost {
     }
 
     return uiConfigLogic.backgroundColorForScreenDictionary[screenKey]
-    ?? .init(Theme.shared.color.onSurface)
+    ?? .init(Theme.shared.color.background)
   }
 
   public func userIsLoggedInWithDocuments() -> Bool {

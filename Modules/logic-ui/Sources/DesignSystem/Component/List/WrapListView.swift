@@ -16,9 +16,29 @@
 import SwiftUI
 import logic_resources
 
-public struct WrapListView<Item: Identifiable, Content: View>: View {
-  public let sections: [(header: String?, items: [Item])]
-  public let rowContent: (Item) -> Content
+public struct WrapListView<Item: Identifiable, Content: View, ListStyleType: ListStyle>: View {
+  private let sections: [(header: String?, items: [Item])]
+  private let rowContent: (Item) -> Content
+  private let style: ListStyleType
+  private let hideRowSeperators: Bool
+  private let listRowBackground: Color
+  private let sectionHeaderColor: Color
+
+  public init(
+    sections: [(header: String?, items: [Item])],
+    style: ListStyleType = .plain,
+    hideRowSeperators: Bool = false,
+    listRowBackground: Color = Theme.shared.color.surfaceContainer,
+    sectionHeaderColor: Color = Theme.shared.color.onSurfaceVariant,
+    @ViewBuilder rowContent: @escaping (Item) -> Content
+  ) {
+    self.sections = sections
+    self.style = style
+    self.hideRowSeperators = hideRowSeperators
+    self.listRowBackground = listRowBackground
+    self.sectionHeaderColor = sectionHeaderColor
+    self.rowContent = rowContent
+  }
 
   public var body: some View {
     List {
@@ -29,27 +49,40 @@ public struct WrapListView<Item: Identifiable, Content: View>: View {
             header:
               Text(header)
               .typography(Theme.shared.font.labelMedium)
-              .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+              .foregroundStyle(sectionHeaderColor)
           ) {
             ForEach(section.items) { item in
               rowContent(item)
+                .if(hideRowSeperators) {
+                  $0.listRowSeparator(.hidden)
+                }
             }
           }
-          .listRowBackground(Theme.shared.color.surfaceContainer)
+          .listRowBackground(listRowBackground)
         } else {
           ForEach(section.items) { item in
             rowContent(item)
+              .if(hideRowSeperators) {
+                $0.listRowSeparator(.hidden)
+              }
           }
+          .listRowBackground(listRowBackground)
         }
       }
     }
-    .listStyle(InsetGroupedListStyle())
+    .listStyle(style)
   }
 }
 
 #Preview {
   NavigationView {
     TransactionHistoryView()
+  }
+}
+
+#Preview("Cards") {
+  NavigationView {
+    DashboardDocumentsView()
   }
 }
 
@@ -84,10 +117,56 @@ private struct TransactionHistoryView: View {
         (header: "Today", items: todayTransactions),
         (header: "This Week", items: todayTransactions)
       ],
+      style: .insetGrouped,
       rowContent: { transaction in
         WrapListItemView(
           listItem: transaction
         )
+      }
+    )
+    .navigationTitle("Transaction History")
+  }
+}
+
+private struct DashboardDocumentsView: View {
+  let todayTransactions: [ListItemData] = [
+    ListItemData(
+      mainText: "TravelBook",
+      overlineText: "5 minutes ago",
+      supportingText: "Completed",
+      overlineTextColor: .green,
+      trailingContent: .icon(Image(systemName: "chevron.right"))
+    ),
+    ListItemData(
+      mainText: "AirBNB",
+      overlineText: "11:05 AM",
+      supportingText: "Completed",
+      overlineTextColor: .green,
+      trailingContent: .icon(Image(systemName: "chevron.right"))
+    ),
+    ListItemData(
+      mainText: "Natural Bank VISA",
+      overlineText: "11:05 AM",
+      supportingText: "Failed",
+      overlineTextColor: .red,
+      trailingContent: .icon(Image(systemName: "chevron.right"))
+    )
+  ]
+
+  var body: some View {
+    WrapListView(
+      sections: [
+        (header: "GOVERNMENT", items: todayTransactions)
+      ],
+      style: .plain,
+      hideRowSeperators: true,
+      listRowBackground: .clear,
+      rowContent: { transaction in
+        WrapCardView {
+          WrapListItemView(
+            listItem: transaction
+          )
+        }
       }
     )
     .navigationTitle("Transaction History")

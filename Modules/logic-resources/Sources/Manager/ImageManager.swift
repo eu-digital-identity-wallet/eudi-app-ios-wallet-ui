@@ -68,7 +68,9 @@ public protocol ImageManagerProtocol: Sendable {
   var scanDocumentImage: Image { get }
   var infoCircle: Image { get }
   var relyingPartyVerified: Image { get }
-
+  var houseFill: Image { get }
+  var docFill: Image { get }
+  var arrowLeftArrowRight: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -125,6 +127,9 @@ final class ImageManager: ImageManagerProtocol {
     case scanDocumentImage = "scan-document-image"
     case infoCircle = "info.circle"
     case relyingPartyVerified = "relying-party-verified"
+    case houseFill = "house.fill"
+    case docFill = "doc.fill"
+    case arrowLeftArrowRight = "arrow.left.arrow.right"
   }
 
   // MARK: - Properties
@@ -288,5 +293,14 @@ final class ImageManager: ImageManagerProtocol {
   }
   var relyingPartyVerified: Image {
     Image(ImageEnum.relyingPartyVerified.rawValue, bundle: bundle)
+  }
+  var houseFill: Image {
+    Image(systemName: ImageEnum.houseFill.rawValue)
+  }
+  var docFill: Image {
+    Image(systemName: ImageEnum.docFill.rawValue)
+  }
+  var arrowLeftArrowRight: Image {
+    Image(systemName: ImageEnum.arrowLeftArrowRight.rawValue)
   }
 }
