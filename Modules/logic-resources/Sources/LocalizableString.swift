@@ -295,6 +295,10 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "sign_document_subtitle")
     case .selectDocument:
       bundle.localizedString(forKey: "select_document")
+    case .itemNotFoundInStorage:
+      bundle.localizedString(forKey: "item_not_found_in_storage")
+    case .itemsNotFoundInStorage:
+      bundle.localizedString(forKey: "items_not_found_in_storage")
     }
   }
 
@@ -435,6 +439,8 @@ public extension LocalizableString {
     case retrieveLogs
     case qrScanInformativeText
     case unableToPresentAndShare
+    case itemNotFoundInStorage
+    case itemsNotFoundInStorage
   }
 }
 

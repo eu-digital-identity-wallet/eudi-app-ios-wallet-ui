@@ -19,7 +19,7 @@ import Combine
 import logic_resources
 import logic_business
 
-private enum WalletKitKeyChainIdentifier: String, KeychainWrapper {
+private enum KeyIdentifier: String, KeyChainWrapper {
   public var value: String {
     self.rawValue
   }
@@ -240,7 +240,7 @@ final class WalletKitControllerImpl: WalletKitController {
 
   func storeDynamicIssuancePendingUrl(with url: URL) {
     keyChainController.storeValue(
-      key: WalletKitKeyChainIdentifier.dynamicIssuancePendingUrl,
+      key: KeyIdentifier.dynamicIssuancePendingUrl,
       value: url.absoluteString
     )
   }
@@ -248,14 +248,14 @@ final class WalletKitControllerImpl: WalletKitController {
   func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData? {
 
     guard
-      let urlString = keyChainController.getValue(key: WalletKitKeyChainIdentifier.dynamicIssuancePendingUrl),
+      let urlString = keyChainController.getValue(key: KeyIdentifier.dynamicIssuancePendingUrl),
       let url = urlString.toCompatibleUrl()
     else {
       return nil
     }
 
     keyChainController.removeObject(
-      key: WalletKitKeyChainIdentifier.dynamicIssuancePendingUrl
+      key: KeyIdentifier.dynamicIssuancePendingUrl
     )
 
     guard let pendingDoc = wallet.storage.pendingDocuments.last else {

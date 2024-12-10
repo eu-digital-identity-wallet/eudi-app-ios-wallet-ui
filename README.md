@@ -218,6 +218,8 @@ The released software is an initial development release version:
 
 *logic-business*: App business logic.
 
+*logic-storage*: Persistent storage cache.
+
 *logic-authentication*: PinStorage and System Biometrics Logic.
 
 *logic-ui*: Common UI components.
@@ -255,6 +257,7 @@ graph TD;
 
   logic-business --> logic-core
   logic-resources --> logic-core
+  logic-resources --> logic-storage
 
   logic-business --> logic-analytics
 
@@ -268,6 +271,7 @@ graph TD;
 
   feature-common --> feature-login
 
+  logic-storage --> feature-common
   logic-core --> feature-common
   logic-business --> feature-common
   logic-analytics --> feature-common
@@ -276,6 +280,8 @@ graph TD;
   logic-authentication --> feature-common
 
   feature-common --> feature-startup
+
+  logic-business --> logic-storage
 
   logic-core --> logic-api
   logic-business --> logic-api

@@ -9,6 +9,7 @@ excluded:
     - "Modules/logic-ui/Tests/.build/*"
     - "Modules/logic-api/Tests/.build/*"
     - "Modules/logic-core/.build/*"
+    - "Modules/logic-storage/.build/*"
     - "Modules/logic-authentication/Tests/*"
     - "Modules/logic-authentication/.build/*"
     - "Modules/feature-test/*"
