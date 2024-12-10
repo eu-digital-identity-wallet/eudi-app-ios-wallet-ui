@@ -285,6 +285,18 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "item_not_found_in_storage")
     case .itemsNotFoundInStorage:
       bundle.localizedString(forKey: "items_not_found_in_storage")
+    case .home:
+      bundle.localizedString(forKey: "home")
+    case .transactions:
+      bundle.localizedString(forKey: "transactions")
+    case .documents:
+      bundle.localizedString(forKey: "documents")
+    case .authenticateAuthoriseTransactions:
+      bundle.localizedString(forKey: "authenticate_authorise_transactions")
+    case .electronicallySignDigitalDocuments:
+      bundle.localizedString(forKey: "electronically_sign_digital_documents")
+    case .learnMore:
+      bundle.localizedString(forKey: "learn_more")
     }
   }
 
@@ -420,6 +432,12 @@ public extension LocalizableString {
     case unableToPresentAndShare
     case itemNotFoundInStorage
     case itemsNotFoundInStorage
+    case home
+    case documents
+    case transactions
+    case authenticateAuthoriseTransactions
+    case electronicallySignDigitalDocuments
+    case learnMore
   }
 }
 

@@ -34,6 +34,7 @@ struct AddDocumentView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: true,
+      allowBackGesture: true,
       errorConfig: viewModel.viewState.error
     ) {
 

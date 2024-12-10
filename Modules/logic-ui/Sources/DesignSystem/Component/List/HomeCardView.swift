@@ -17,20 +17,20 @@ import SwiftUI
 import logic_resources
 
 public struct HomeCardView: View {
-  private let text: String
+  private let text: LocalizableString.Key
   private let buttonText: LocalizableString.Key
   private let illustration: Image?
   private let buttonViewStyle: ButtonViewStyle
-  private let learnMoreText: String?
+  private let learnMoreText: LocalizableString.Key?
   private let learnMoreAction: (() -> Void)?
   private let action: () -> Void
 
   public init(
-    text: String,
+    text: LocalizableString.Key,
     buttonText: LocalizableString.Key,
     illustration: Image? = nil,
     buttonViewStyle: ButtonViewStyle = .primary,
-    learnMoreText: String? = nil,
+    learnMoreText: LocalizableString.Key? = nil,
     learnMoreAction: (() -> Void)? = nil,
     action: @escaping () -> Void
   ) {
@@ -44,26 +44,13 @@ public struct HomeCardView: View {
   }
 
   public var body: some View {
-    VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-      HStack {
+    VStack(alignment: .center, spacing: .zero) {
+      HStack(alignment: .top) {
         VStack(alignment: .leading, spacing: SPACING_MEDIUM_LARGE) {
           Text(text)
-            .typography(Theme.shared.font.titleSmall)
+            .typography(Theme.shared.font.bodyMedium)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .lineLimit(nil)
-
-          if let learnMoreAction, let learnMoreText {
-            Button(action: learnMoreAction) {
-              HStack(spacing: SPACING_EXTRA_SMALL) {
-                Theme.shared.image.infoCircle
-
-                Text(learnMoreText)
-                  .typography(Theme.shared.font.labelLarge)
-              }
-              .foregroundStyle(Theme.shared.color.primary)
-            }
-            .buttonStyle(PlainButtonStyle())
-          }
         }
 
         Spacer()
@@ -81,6 +68,21 @@ public struct HomeCardView: View {
         gravity: .center,
         onAction: action()
       )
+      .padding(.top, SPACING_LARGE)
+
+      if let learnMoreAction, let learnMoreText {
+        Button(action: learnMoreAction) {
+          HStack(spacing: SPACING_EXTRA_SMALL) {
+            Theme.shared.image.infoCircle
+
+            Text(learnMoreText)
+              .typography(Theme.shared.font.labelLarge)
+          }
+          .foregroundStyle(Theme.shared.color.primary)
+        }
+        .buttonStyle(PlainButtonStyle())
+        .padding(.top, SPACING_LARGE_MEDIUM)
+      }
     }
     .padding(SPACING_MEDIUM)
     .background(Theme.shared.color.surfaceContainer)
@@ -92,16 +94,16 @@ public struct HomeCardView: View {
   ScrollView {
     VStack {
       HomeCardView(
-        text: "Authenticate, authorise transactions and share your digital documents.",
+        text: LocalizableString.Key.authenticateAuthoriseTransactions,
         buttonText: LocalizableString.Key.addDocumentTitle,
         illustration: Image(systemName: "person.fill"),
-        learnMoreText: "Learn more",
+        learnMoreText: LocalizableString.Key.learnMore,
         learnMoreAction: {},
         action: {}
       )
 
       HomeCardView(
-        text: "Authenticate, authorise transactions and share your digital documents.",
+        text: LocalizableString.Key.authenticateAuthoriseTransactions,
         buttonText: LocalizableString.Key.addDocumentTitle,
         illustration: Image(systemName: "person.fill"),
         buttonViewStyle: .secondary,
@@ -110,14 +112,14 @@ public struct HomeCardView: View {
       )
 
       HomeCardView(
-        text: "Authenticate, authorise transactions and share your digital documents.",
+        text: LocalizableString.Key.authenticateAuthoriseTransactions,
         buttonText: LocalizableString.Key.addDocumentTitle,
         illustration: Image(systemName: "person.fill"),
         action: {}
       )
 
       HomeCardView(
-        text: "Authenticate, authorise transactions and share your digital documents.",
+        text: LocalizableString.Key.authenticateAuthoriseTransactions,
         buttonText: LocalizableString.Key.addDocumentTitle,
         action: {}
       )

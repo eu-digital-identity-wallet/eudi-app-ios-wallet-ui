@@ -30,6 +30,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: !viewModel.viewState.hasContinueButton,
+      allowBackGesture: true,
       errorConfig: viewModel.viewState.error
     ) {
 

@@ -33,20 +33,47 @@ struct DashboardView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: false,
-      background: Theme.shared.color.secondary
+      navigationTitle: getNavigationTitle(selectedTab: viewModel.selectedTab),
+      toolbarContent: getToolbar(selectedTab: viewModel.selectedTab)
     ) {
-      content(
-        viewState: viewModel.viewState,
-        onMore: viewModel.onMore,
-        onDocumentDetails: { id in
-          viewModel.onDocumentDetails(documentId: id)
-        },
-        onDeleteDeferredDocument: { doc in
-          viewModel.onDeleteDeferredDocument(with: doc)
-        },
-        onAdd: viewModel.onAdd,
-        onShare: viewModel.onShare
-      )
+      TabView(selection: $viewModel.selectedTab) {
+        HomeView(bearer: viewModel.viewState.bearer)
+          .tabItem {
+            Label(
+              LocalizableString.shared.get(with: .home),
+              systemImage: "house.fill"
+            )
+          }
+          .tag(SelectedTab.home)
+
+        content(
+          viewState: viewModel.viewState,
+          onMore: viewModel.onMore,
+          onDocumentDetails: { id in
+            viewModel.onDocumentDetails(documentId: id)
+          },
+          onDeleteDeferredDocument: { doc in
+            viewModel.onDeleteDeferredDocument(with: doc)
+          },
+          onAdd: viewModel.onAdd,
+          onShare: viewModel.onShare
+        )
+        .tabItem {
+          Label(
+            LocalizableString.shared.get(with: .documents),
+            systemImage: "doc.fill")
+        }
+        .tag(SelectedTab.documents)
+
+        TransactionsView()
+          .tabItem {
+            Label(
+              LocalizableString.shared.get(with: .transactions),
+              systemImage: "arrow.left.arrow.right"
+            )
+          }
+          .tag(SelectedTab.transactions)
+      }
     }
     .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {
       SheetContentView {
@@ -88,7 +115,6 @@ struct DashboardView<Router: RouterHost>: View {
             case .retrieveLogs(let url):
               shareLogs(with: url)
             }
-
           }
 
           HStack {
@@ -161,6 +187,52 @@ struct DashboardView<Router: RouterHost>: View {
     }
   }
 
+  func getNavigationTitle(selectedTab: SelectedTab) -> String {
+    switch selectedTab {
+    case .documents:
+      return LocalizableString.shared.get(with: .documents)
+    case .home:
+      return LocalizableString.shared.get(with: .home)
+    case .transactions:
+      return LocalizableString.shared.get(with: .transactions)
+    }
+  }
+
+  func getToolbar(selectedTab: SelectedTab) -> ToolBarContent {
+    switch selectedTab {
+    case .documents:
+      return ToolBarContent(
+        trailingActions: [
+          Action(image: Theme.shared.image.plus) {
+            viewModel.onAdd()
+          },
+          Action(image: Theme.shared.image.filterMenuIcon) {}
+        ],
+        leadingActions: [
+          Action(image: Theme.shared.image.menuIcon) {}
+        ]
+      )
+    case .home:
+      return ToolBarContent(
+        trailingActions: [
+          Action(image: Theme.shared.image.bell) {}
+        ],
+        leadingActions: [
+          Action(image: Theme.shared.image.menuIcon) {}
+        ]
+      )
+    case .transactions:
+      return ToolBarContent(
+        trailingActions: [
+          Action(image: Theme.shared.image.bell) {}
+        ],
+        leadingActions: [
+          Action(image: Theme.shared.image.menuIcon) {}
+        ]
+      )
+    }
+  }
+
   @ViewBuilder
   func deferredSuccessList() -> some View {
     VStack(spacing: SPACING_SMALL) {
@@ -223,41 +295,43 @@ private func content(
   onAdd: @escaping () -> Void,
   onShare: @escaping () -> Void
 ) -> some View {
-  BearerHeaderView(
-    item: viewState.bearer,
-    isLoading: viewState.isLoading,
-    isMoreOptionsEnabled: viewState.allowUserInteraction,
-    onMoreClicked: onMore()
-  )
-
   VStack(spacing: .zero) {
+    BearerHeaderView(
+      item: viewState.bearer,
+      isLoading: viewState.isLoading,
+      isMoreOptionsEnabled: viewState.allowUserInteraction,
+      onMoreClicked: onMore()
+    )
 
-    DocumentListView(
-      items: viewState.documents,
-      isLoading: viewState.isLoading
-    ) { document in
-      switch document.value.state {
-      case .issued:
-        onDocumentDetails(document.value.id)
-      case .pending, .failed:
-        onDeleteDeferredDocument(document)
+    VStack(spacing: .zero) {
+
+      DocumentListView(
+        items: viewState.documents,
+        isLoading: viewState.isLoading
+      ) { document in
+        switch document.value.state {
+        case .issued:
+          onDocumentDetails(document.value.id)
+        case .pending, .failed:
+          onDeleteDeferredDocument(document)
+        }
+      }
+      .bottomFade()
+
+      if viewState.allowUserInteraction {
+
+        FloatingActionButtonBarView(
+          isLoading: viewState.isLoading,
+          addAction: onAdd(),
+          shareAction: onShare()
+        )
+
+        VSpacer.small()
+
       }
     }
-    .bottomFade()
-
-    if viewState.allowUserInteraction {
-
-      FloatingActionButtonBarView(
-        isLoading: viewState.isLoading,
-        addAction: onAdd(),
-        shareAction: onShare()
-      )
-
-      VSpacer.small()
-
-    }
+    .background(Theme.shared.color.surface)
   }
-  .background(Theme.shared.color.surface)
 }
 
 #Preview {

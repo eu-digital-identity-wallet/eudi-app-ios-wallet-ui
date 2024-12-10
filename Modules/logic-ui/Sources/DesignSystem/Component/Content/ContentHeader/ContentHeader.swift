@@ -48,9 +48,9 @@ public struct TextConfig {
   public let maxLines: Int
   public let fontWeight: Font.Weight?
 
-  init(
+  public init(
     font: Font,
-    color: Color,
+    color: Color = Theme.shared.color.onSurface,
     textAlign: TextAlignment = .center,
     maxLines: Int = 2,
     fontWeight: Font.Weight? = nil

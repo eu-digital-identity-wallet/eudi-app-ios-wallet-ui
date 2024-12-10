@@ -71,6 +71,9 @@ public protocol ImageManagerProtocol: Sendable {
   var houseFill: Image { get }
   var docFill: Image { get }
   var arrowLeftArrowRight: Image { get }
+  var logoEuDigitalIndentityWallet: Image { get }
+  var homeContract: Image { get }
+  var homeIdentity: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -130,6 +133,9 @@ final class ImageManager: ImageManagerProtocol {
     case houseFill = "house.fill"
     case docFill = "doc.fill"
     case arrowLeftArrowRight = "arrow.left.arrow.right"
+    case logoEuDigitalIndentityWallet = "logo-eu-digital-indentity-wallet"
+    case homeContract = "home-contract"
+    case homeIdentity = "home-identity"
   }
 
   // MARK: - Properties
@@ -302,5 +308,14 @@ final class ImageManager: ImageManagerProtocol {
   }
   var arrowLeftArrowRight: Image {
     Image(systemName: ImageEnum.arrowLeftArrowRight.rawValue)
+  }
+  var logoEuDigitalIndentityWallet: Image {
+    Image(ImageEnum.logoEuDigitalIndentityWallet.rawValue, bundle: bundle)
+  }
+  var homeContract: Image {
+    Image(ImageEnum.homeContract.rawValue, bundle: bundle)
+  }
+  var homeIdentity: Image {
+    Image(ImageEnum.homeIdentity.rawValue, bundle: bundle)
   }
 }

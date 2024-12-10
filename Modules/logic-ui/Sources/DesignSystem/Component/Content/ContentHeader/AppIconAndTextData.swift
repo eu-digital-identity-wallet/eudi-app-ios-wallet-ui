@@ -19,23 +19,29 @@ import logic_resources
 public struct AppIconAndTextData {
   public let appIcon: Image
   public let appText: Image
+  public let appIconSize: CGFloat
+  public let appTextSize: CGFloat
 
-  public init(appIcon: Image, appText: Image) {
+  public init(
+    appIcon: Image,
+    appText: Image,
+    appIconSize: CGFloat = 40,
+    appTextSize: CGFloat = 40
+  ) {
     self.appIcon = appIcon
     self.appText = appText
+    self.appIconSize = appIconSize
+    self.appTextSize = appTextSize
   }
 }
 
 public struct AppIconAndText: View {
   private let appIconAndTextData: AppIconAndTextData
-  private let iconSize: CGFloat
 
   public init(
-    appIconAndTextData: AppIconAndTextData,
-    iconSize: CGFloat = 40
+    appIconAndTextData: AppIconAndTextData
   ) {
     self.appIconAndTextData = appIconAndTextData
-    self.iconSize = iconSize
   }
 
   public var body: some View {
@@ -43,11 +49,11 @@ public struct AppIconAndText: View {
       appIconAndTextData.appIcon
         .resizable()
         .scaledToFit()
-        .frame(width: iconSize, height: iconSize)
+        .frame(width: appIconAndTextData.appIconSize, height: appIconAndTextData.appIconSize)
       appIconAndTextData.appText
         .resizable()
         .scaledToFit()
-        .frame(width: iconSize, height: iconSize)
+        .frame(width: appIconAndTextData.appTextSize, height: appIconAndTextData.appTextSize)
     }
     .frame(maxWidth: .infinity, alignment: .center)
   }

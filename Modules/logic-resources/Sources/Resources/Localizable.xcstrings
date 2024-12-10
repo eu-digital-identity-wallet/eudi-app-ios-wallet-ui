@@ -45,6 +45,138 @@
         }
       }
     },
+    "age_birth_year" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In what year were you born?"
+          }
+        }
+      }
+    },
+    "age_in_years" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How old are you (in years)?"
+          }
+        }
+      }
+    },
+    "age_over_13" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 13?"
+          }
+        }
+      }
+    },
+    "age_over_15" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 15?"
+          }
+        }
+      }
+    },
+    "age_over_16" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 16?"
+          }
+        }
+      }
+    },
+    "age_over_18" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 18?"
+          }
+        }
+      }
+    },
+    "age_over_21" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 21?"
+          }
+        }
+      }
+    },
+    "age_over_60" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 60?"
+          }
+        }
+      }
+    },
+    "age_over_65" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 65?"
+          }
+        }
+      }
+    },
+    "age_over_68" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age over 68?"
+          }
+        }
+      }
+    },
+    "age_verification" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Age Verification"
+          }
+        }
+      }
+    },
+    "authenticate_authorise_transactions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authenticate, authorise transactions and share your digital documents in person or online."
+          }
+        }
+      }
+    },
     "biometry_open_settings" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -243,6 +375,72 @@
         }
       }
     },
+    "DHS_compliance" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DHS Compliance"
+          }
+        }
+      }
+    },
+    "document_number" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document number"
+          }
+        }
+      }
+    },
+    "documents" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Documents"
+          }
+        }
+      }
+    },
+    "driving_privileges" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Categories of vehicles"
+          }
+        }
+      }
+    },
+    "EDL_credential" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EDL Credential"
+          }
+        }
+      }
+    },
+    "electronically_sign_digital_documents" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Electronically sign digital documents with your wallet by choosing a file from your device or by scanning a QR code."
+          }
+        }
+      }
+    },
     "error_unable_fetch_document" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -316,6 +514,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Houston we have a problem!"
+          }
+        }
+      }
+    },
+    "given_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Given Name"
+          }
+        }
+      }
+    },
+    "given_name_birth" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Given Name at Birth"
+          }
+        }
+      }
+    },
+    "given_name_national_character" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Given name in national characters"
+          }
+        }
+      }
+    },
+    "hair_colour" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hair colour"
+          }
+        }
+      }
+    },
+    "height" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Height (cm)"
+          }
+        }
+      }
+    },
+    "home" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
           }
         }
       }
@@ -525,6 +789,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Items not found in storage"
+          }
+        }
+      }
+    },
+    "learn_more" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Learn more"
+          }
+        }
+      }
+    },
+    "load_sample_data" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Load Sample Data"
           }
         }
       }
@@ -1221,6 +1507,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid transaction code format. Length should be between %@ to %@ digits and only numeric characters are allowed."
+          }
+        }
+      }
+    },
+    "transactions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transactions"
           }
         }
       }

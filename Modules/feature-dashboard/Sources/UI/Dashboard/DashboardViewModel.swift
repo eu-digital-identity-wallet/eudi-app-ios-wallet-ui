@@ -61,6 +61,12 @@ extension DashboardState {
   }
 }
 
+public enum SelectedTab {
+  case home
+  case documents
+  case transactions
+}
+
 final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardState> {
 
   private let interactor: DashboardInteractor
@@ -71,6 +77,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   @Published var isBleModalShowing: Bool = false
   @Published var isDeleteDeferredModalShowing: Bool = false
   @Published var isSuccededDocumentsModalShowing: Bool = false
+  @Published var selectedTab: SelectedTab = .home
 
   private var deferredTask: Task<DashboardDeferredPartialState, Error>?
 

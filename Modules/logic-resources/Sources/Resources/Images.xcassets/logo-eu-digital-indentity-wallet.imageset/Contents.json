@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "logo-eu-digital-indentity-wallet.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
