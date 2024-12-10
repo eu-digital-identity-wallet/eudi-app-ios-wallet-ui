@@ -1,5 +1,5 @@
 {
-  "originHash" : "5de92c7e2b70d2743e96f4e67050d7d80fb05a5e3022038e161dac1b5c9ebdaf",
+  "originHash" : "9657708fa6143dcbe27d842a297b1b763677cb97abad6008e3b3b95e8de1733c",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -132,8 +132,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "176842b11ccd7cf5cc14cc12464ea431d12a2a5c",
-        "version" : "0.9.0"
+        "revision" : "a2d316ac7fd9b010ed528f41b3992be2eea98881",
+        "version" : "0.9.1"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-presentation-exchange-swift.git",
       "state" : {
-        "revision" : "4e1ac57b6772f7f6eac5ef24d977c42e94bc6565",
-        "version" : "0.2.0"
+        "revision" : "21e03b18e4ea349edd21c016b9e0b3a2063285bf",
+        "version" : "0.2.1"
       }
     },
     {
@@ -177,8 +177,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
       "state" : {
-        "revision" : "1049277d9b5818416b313f58a5eaf139de9881b3",
-        "version" : "0.6.1"
+        "revision" : "c72b0f972f765bd106b52c953de0827096398763",
+        "version" : "0.6.2"
       }
     },
     {
@@ -186,8 +186,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "1ce560c5c5a7007de4f46f93adbdbb31bfe56b34",
-        "version" : "0.8.4"
+        "revision" : "5aa8e3ac98f53623f1798fa68763afe83a0eea91",
+        "version" : "0.8.5"
       }
     },
     {
@@ -465,8 +465,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SwiftyJSON/SwiftyJSON.git",
       "state" : {
-        "revision" : "2b6054efa051565954e1d2b9da831680026cd768",
-        "version" : "4.3.0"
+        "revision" : "af76cf3ef710b6ca5f8c05f3a31307d44a3c5828",
+        "version" : "5.0.2"
       }
     },
     {
