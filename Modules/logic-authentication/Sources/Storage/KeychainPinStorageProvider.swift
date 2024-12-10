@@ -24,19 +24,19 @@ final class KeychainPinStorageProvider: PinStorageProvider {
   }
 
   func retrievePin() -> String? {
-    keyChainController.getValue(key: KeychainIdentifier.devicePin)
+    keyChainController.getValue(key: KeyIdentifier.devicePin)
   }
 
   func setPin(with pin: String) {
-    keyChainController.storeValue(key: KeychainIdentifier.devicePin, value: pin)
+    keyChainController.storeValue(key: KeyIdentifier.devicePin, value: pin)
   }
 
   func isPinValid(with pin: String) -> Bool {
-    keyChainController.getValue(key: KeychainIdentifier.devicePin) == pin
+    keyChainController.getValue(key: KeyIdentifier.devicePin) == pin
   }
 }
 
-enum KeychainIdentifier: String, KeychainWrapper {
+private enum KeyIdentifier: String, KeyChainWrapper {
 
   public var value: String {
     self.rawValue

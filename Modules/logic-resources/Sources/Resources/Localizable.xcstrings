@@ -969,6 +969,28 @@
         }
       }
     },
+    "item_not_found_in_storage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Item not found in storage"
+          }
+        }
+      }
+    },
+    "items_not_found_in_storage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Items not found in storage"
+          }
+        }
+      }
+    },
     "load_sample_data" : {
       "extractionState" : "manual",
       "localizations" : {

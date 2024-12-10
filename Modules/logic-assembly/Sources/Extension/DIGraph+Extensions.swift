@@ -27,6 +27,7 @@ public extension DIGraph {
         LogicApiAssembly(),
         LogicAuthAssembly(),
         LogicAssemblyModule(),
+        LogicStorageAssembly(),
         // Feature Modules
         FeatureCommonAssembly(),
         FeatureStartupAssembly(),

@@ -21,6 +21,7 @@
 @_exported import logic_core
 @_exported import logic_authentication
 @_exported import logic_api
+@_exported import logic_storage
 @_exported import feature_common
 @_exported import feature_login
 @_exported import feature_dashboard

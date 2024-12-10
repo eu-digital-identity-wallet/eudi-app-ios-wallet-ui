@@ -16,14 +16,16 @@
 import Foundation
 @preconcurrency import KeychainAccess
 
-public protocol KeychainWrapper {
+public protocol KeyChainWrapper {
   var value: String { get }
 }
 
 public protocol KeyChainController: Sendable {
-  func storeValue(key: KeychainWrapper, value: String)
-  func getValue(key: KeychainWrapper) -> String?
-  func removeObject(key: KeychainWrapper)
+  func storeValue(key: KeyChainWrapper, value: String)
+  func storeValue(key: KeyChainWrapper, value: Data)
+  func getValue(key: KeyChainWrapper) -> String?
+  func getData(key: KeyChainWrapper) -> Data?
+  func removeObject(key: KeyChainWrapper)
   func validateKeyChainBiometry() throws
   func clearKeyChainBiometry()
   func clear()
@@ -34,15 +36,23 @@ final class KeyChainControllerImpl: KeyChainController {
   private let biometryKey = "eu.europa.ec.euidi.biometric.access"
   private let keyChain: Keychain = Keychain()
 
-  public func storeValue(key: KeychainWrapper, value: String) {
+  public func storeValue(key: KeyChainWrapper, value: String) {
     keyChain[key.value] = value
   }
 
-  public func getValue(key: KeychainWrapper) -> String? {
+  public func storeValue(key: KeyChainWrapper, value: Data) {
+    keyChain[data: key.value] = value
+  }
+
+  public func getValue(key: KeyChainWrapper) -> String? {
     keyChain[key.value]
   }
 
-  public func removeObject(key: KeychainWrapper) {
+  func getData(key: KeyChainWrapper) -> Data? {
+    try? keyChain.getData(key.value)
+  }
+
+  public func removeObject(key: KeyChainWrapper) {
     try? keyChain.remove(key.value)
   }
 
@@ -79,4 +89,13 @@ private extension KeyChainControllerImpl {
       clearKeyChainBiometry()
     }
   }
+}
+
+public enum KeyChainIdentifier: String, KeyChainWrapper {
+
+  public var value: String {
+    self.rawValue
+  }
+
+  case realmKey
 }

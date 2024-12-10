@@ -9,11 +9,22 @@
 # Views/Components
 - ViewModel.swift
 - .*View.swift
+- .*ViewModel.swift
 - .*Shape.swift
 - .*Style.swift
 - .*Styles.swift
 - .*Modifier.swift
 - EasySpacer.swift
+
+# Router
+- .*Router.swift
+- AppRoute.swift
+- AppRouteModule.swift
+- RouterHost.swift
+
+# DI
+- .*Assembly.swift
+- DIGraph.swift
 
 # Extensions
 - .*Extensions.swift

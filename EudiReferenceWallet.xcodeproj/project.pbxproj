@@ -35,6 +35,7 @@
 /* Begin PBXFileReference section */
 		1194D2302B06362900377213 /* EUDI_sample_data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EUDI_sample_data.json; sourceTree = "<group>"; };
 		1198ECD72AC453F200F4E71A /* logic-resources */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-resources"; path = "Modules/logic-resources"; sourceTree = "<group>"; };
+		F018D9F32D087C410015876D /* logic-storage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-storage"; path = "Modules/logic-storage"; sourceTree = "<group>"; };
 		F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WalletDemoRelease.xcconfig; sourceTree = "<group>"; };
 		F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WalletDevRelease.xcconfig; sourceTree = "<group>"; };
 		F02AE38E2BA6E45F00C25C59 /* logic-assembly */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-assembly"; path = "Modules/logic-assembly"; sourceTree = "<group>"; };
@@ -148,6 +149,7 @@
 		F14908692ABC467600DDFE56 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
+				F018D9F32D087C410015876D /* logic-storage */,
 				F02AE38E2BA6E45F00C25C59 /* logic-assembly */,
 				F0DF43F42BA083DF003498ED /* logic-authentication */,
 				F0B440782B9B42B600031137 /* logic-core */,

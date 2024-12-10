@@ -185,18 +185,18 @@ import Foundation
 import KeychainAccess
 @testable import logic_business
 
-public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = KeychainWrapper
-    public typealias Stubbing = __StubbingProxy_KeychainWrapper
-    public typealias Verification = __VerificationProxy_KeychainWrapper
+public class MockKeyChainWrapper: KeyChainWrapper, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = KeyChainWrapper
+    public typealias Stubbing = __StubbingProxy_KeyChainWrapper
+    public typealias Verification = __VerificationProxy_KeyChainWrapper
 
     // Original typealiases
 
     public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
-    private var __defaultImplStub: (any KeychainWrapper)?
+    private var __defaultImplStub: (any KeyChainWrapper)?
 
-    public func enableDefaultImplementation(_ stub: any KeychainWrapper) {
+    public func enableDefaultImplementation(_ stub: any KeyChainWrapper) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
@@ -212,19 +212,19 @@ public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock, @uncheck
     }
 
 
-    public struct __StubbingProxy_KeychainWrapper: Cuckoo.StubbingProxy {
+    public struct __StubbingProxy_KeyChainWrapper: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
             self.cuckoo_manager = manager
         }
         
-        var value: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockKeychainWrapper,String> {
+        var value: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockKeyChainWrapper,String> {
             return .init(manager: cuckoo_manager, name: "value")
         }
     }
 
-    public struct __VerificationProxy_KeychainWrapper: Cuckoo.VerificationProxy {
+    public struct __VerificationProxy_KeyChainWrapper: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -241,7 +241,7 @@ public class MockKeychainWrapper: KeychainWrapper, Cuckoo.ProtocolMock, @uncheck
     }
 }
 
-public class KeychainWrapperStub:KeychainWrapper, @unchecked Sendable {
+public class KeyChainWrapperStub:KeyChainWrapper, @unchecked Sendable {
     
     public var value: String {
         get {
@@ -270,9 +270,9 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
     }
 
     
-    public func storeValue(key p0: KeychainWrapper, value p1: String) {
+    public func storeValue(key p0: KeyChainWrapper, value p1: String) {
         return cuckoo_manager.call(
-            "storeValue(key p0: KeychainWrapper, value p1: String)",
+            "storeValue(key p0: KeyChainWrapper, value p1: String)",
             parameters: (p0, p1),
             escapingParameters: (p0, p1),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -280,9 +280,19 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
         )
     }
     
-    public func getValue(key p0: KeychainWrapper) -> String? {
+    public func storeValue(key p0: KeyChainWrapper, value p1: Data) {
         return cuckoo_manager.call(
-            "getValue(key p0: KeychainWrapper) -> String?",
+            "storeValue(key p0: KeyChainWrapper, value p1: Data)",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.storeValue(key: p0, value: p1)
+        )
+    }
+    
+    public func getValue(key p0: KeyChainWrapper) -> String? {
+        return cuckoo_manager.call(
+            "getValue(key p0: KeyChainWrapper) -> String?",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -290,9 +300,19 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
         )
     }
     
-    public func removeObject(key p0: KeychainWrapper) {
+    public func getData(key p0: KeyChainWrapper) -> Data? {
         return cuckoo_manager.call(
-            "removeObject(key p0: KeychainWrapper)",
+            "getData(key p0: KeyChainWrapper) -> Data?",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.getData(key: p0)
+        )
+    }
+    
+    public func removeObject(key p0: KeyChainWrapper) {
+        return cuckoo_manager.call(
+            "removeObject(key p0: KeyChainWrapper)",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -337,26 +357,42 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
             self.cuckoo_manager = manager
         }
         
-        func storeValue<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(key p0: M1, value p1: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(KeychainWrapper, String)> where M1.MatchedType == KeychainWrapper, M2.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(KeychainWrapper, String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func storeValue<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(key p0: M1, value p1: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(KeyChainWrapper, String)> where M1.MatchedType == KeyChainWrapper, M2.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(KeyChainWrapper, String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockKeyChainController.self,
-                method: "storeValue(key p0: KeychainWrapper, value p1: String)",
+                method: "storeValue(key p0: KeyChainWrapper, value p1: String)",
                 parameterMatchers: matchers
             ))
         }
         
-        func getValue<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.ProtocolStubFunction<(KeychainWrapper), String?> where M1.MatchedType == KeychainWrapper {
-            let matchers: [Cuckoo.ParameterMatcher<(KeychainWrapper)>] = [wrap(matchable: p0) { $0 }]
+        func storeValue<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(key p0: M1, value p1: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(KeyChainWrapper, Data)> where M1.MatchedType == KeyChainWrapper, M2.MatchedType == Data {
+            let matchers: [Cuckoo.ParameterMatcher<(KeyChainWrapper, Data)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockKeyChainController.self,
-                method: "getValue(key p0: KeychainWrapper) -> String?",
+                method: "storeValue(key p0: KeyChainWrapper, value p1: Data)",
                 parameterMatchers: matchers
             ))
         }
         
-        func removeObject<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(KeychainWrapper)> where M1.MatchedType == KeychainWrapper {
-            let matchers: [Cuckoo.ParameterMatcher<(KeychainWrapper)>] = [wrap(matchable: p0) { $0 }]
+        func getValue<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.ProtocolStubFunction<(KeyChainWrapper), String?> where M1.MatchedType == KeyChainWrapper {
+            let matchers: [Cuckoo.ParameterMatcher<(KeyChainWrapper)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockKeyChainController.self,
-                method: "removeObject(key p0: KeychainWrapper)",
+                method: "getValue(key p0: KeyChainWrapper) -> String?",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getData<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.ProtocolStubFunction<(KeyChainWrapper), Data?> where M1.MatchedType == KeyChainWrapper {
+            let matchers: [Cuckoo.ParameterMatcher<(KeyChainWrapper)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockKeyChainController.self,
+                method: "getData(key p0: KeyChainWrapper) -> Data?",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func removeObject<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(KeyChainWrapper)> where M1.MatchedType == KeyChainWrapper {
+            let matchers: [Cuckoo.ParameterMatcher<(KeyChainWrapper)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockKeyChainController.self,
+                method: "removeObject(key p0: KeyChainWrapper)",
                 parameterMatchers: matchers
             ))
         }
@@ -399,10 +435,10 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
         
         
         @discardableResult
-        func storeValue<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(key p0: M1, value p1: M2) -> Cuckoo.__DoNotUse<(KeychainWrapper, String), Void> where M1.MatchedType == KeychainWrapper, M2.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(KeychainWrapper, String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func storeValue<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(key p0: M1, value p1: M2) -> Cuckoo.__DoNotUse<(KeyChainWrapper, String), Void> where M1.MatchedType == KeyChainWrapper, M2.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(KeyChainWrapper, String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return cuckoo_manager.verify(
-                "storeValue(key p0: KeychainWrapper, value p1: String)",
+                "storeValue(key p0: KeyChainWrapper, value p1: String)",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -411,10 +447,10 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
         
         
         @discardableResult
-        func getValue<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.__DoNotUse<(KeychainWrapper), String?> where M1.MatchedType == KeychainWrapper {
-            let matchers: [Cuckoo.ParameterMatcher<(KeychainWrapper)>] = [wrap(matchable: p0) { $0 }]
+        func storeValue<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(key p0: M1, value p1: M2) -> Cuckoo.__DoNotUse<(KeyChainWrapper, Data), Void> where M1.MatchedType == KeyChainWrapper, M2.MatchedType == Data {
+            let matchers: [Cuckoo.ParameterMatcher<(KeyChainWrapper, Data)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return cuckoo_manager.verify(
-                "getValue(key p0: KeychainWrapper) -> String?",
+                "storeValue(key p0: KeyChainWrapper, value p1: Data)",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -423,10 +459,34 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
         
         
         @discardableResult
-        func removeObject<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.__DoNotUse<(KeychainWrapper), Void> where M1.MatchedType == KeychainWrapper {
-            let matchers: [Cuckoo.ParameterMatcher<(KeychainWrapper)>] = [wrap(matchable: p0) { $0 }]
+        func getValue<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.__DoNotUse<(KeyChainWrapper), String?> where M1.MatchedType == KeyChainWrapper {
+            let matchers: [Cuckoo.ParameterMatcher<(KeyChainWrapper)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "removeObject(key p0: KeychainWrapper)",
+                "getValue(key p0: KeyChainWrapper) -> String?",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getData<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.__DoNotUse<(KeyChainWrapper), Data?> where M1.MatchedType == KeyChainWrapper {
+            let matchers: [Cuckoo.ParameterMatcher<(KeyChainWrapper)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "getData(key p0: KeyChainWrapper) -> Data?",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func removeObject<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.__DoNotUse<(KeyChainWrapper), Void> where M1.MatchedType == KeyChainWrapper {
+            let matchers: [Cuckoo.ParameterMatcher<(KeyChainWrapper)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "removeObject(key p0: KeyChainWrapper)",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -475,15 +535,23 @@ public class KeyChainControllerStub:KeyChainController, @unchecked Sendable {
 
 
     
-    public func storeValue(key p0: KeychainWrapper, value p1: String) {
+    public func storeValue(key p0: KeyChainWrapper, value p1: String) {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func getValue(key p0: KeychainWrapper) -> String? {
+    public func storeValue(key p0: KeyChainWrapper, value p1: Data) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func getValue(key p0: KeyChainWrapper) -> String? {
         return DefaultValueRegistry.defaultValue(for: (String?).self)
     }
     
-    public func removeObject(key p0: KeychainWrapper) {
+    public func getData(key p0: KeyChainWrapper) -> Data? {
+        return DefaultValueRegistry.defaultValue(for: (Data?).self)
+    }
+    
+    public func removeObject(key p0: KeyChainWrapper) {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
