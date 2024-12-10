@@ -42,14 +42,14 @@ public struct WrapListItemView: View {
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
         if let overlineText = listItem.overlineText {
           Text(overlineText)
-            .font(.caption)
+            .font(Theme.shared.font.labelMedium.font)
             .foregroundStyle(listItem.overlineTextColor)
             .lineLimit(1)
             .truncationMode(.tail)
         }
 
         Text(listItem.mainText)
-          .font(.body)
+          .font(Theme.shared.font.bodyLarge.font)
           .foregroundStyle(Theme.shared.color.onSurface)
           .fontWeight(.medium)
           .lineLimit(1)
@@ -57,7 +57,7 @@ public struct WrapListItemView: View {
 
         if let supportingText = listItem.supportingText {
           Text(supportingText)
-            .font(.subheadline)
+            .font(Theme.shared.font.bodyMedium.font)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .lineLimit(1)
             .truncationMode(.tail)
@@ -104,7 +104,7 @@ public struct WrapListItemView: View {
         listItem: ListItemData(
           mainText: "Main Text",
           overlineText: "Overline Text",
-          supportingText: "Supporting Text",
+          supportingText: "Valid until: 22 March 2030",
           leadingIcon: Image(systemName: "star"),
           trailingContent: .icon(Image(systemName: "chevron.right"))
         ),
@@ -151,7 +151,7 @@ public struct WrapListItemView: View {
         listItem: ListItemData(
           mainText: "Main Text",
           overlineText: "Overline Text",
-          supportingText: "Supporting Text",
+          supportingText: "Valid until: 22 March 2030",
           leadingIcon: Image(systemName: "star"),
           trailingContent: .checkbox(true) { _ in }
         ),

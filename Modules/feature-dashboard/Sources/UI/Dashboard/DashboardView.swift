@@ -36,44 +36,19 @@ struct DashboardView<Router: RouterHost>: View {
       navigationTitle: getNavigationTitle(selectedTab: viewModel.selectedTab),
       toolbarContent: getToolbar(selectedTab: viewModel.selectedTab)
     ) {
-      TabView(selection: $viewModel.selectedTab) {
-        HomeView(bearer: viewModel.viewState.bearer)
-          .tabItem {
-            Label(
-              LocalizableString.shared.get(with: .home),
-              systemImage: "house.fill"
-            )
-          }
-          .tag(SelectedTab.home)
-
-        content(
-          viewState: viewModel.viewState,
-          onMore: viewModel.onMore,
-          onDocumentDetails: { id in
-            viewModel.onDocumentDetails(documentId: id)
-          },
-          onDeleteDeferredDocument: { doc in
-            viewModel.onDeleteDeferredDocument(with: doc)
-          },
-          onAdd: viewModel.onAdd,
-          onShare: viewModel.onShare
-        )
-        .tabItem {
-          Label(
-            LocalizableString.shared.get(with: .documents),
-            systemImage: "doc.fill")
-        }
-        .tag(SelectedTab.documents)
-
-        TransactionsView()
-          .tabItem {
-            Label(
-              LocalizableString.shared.get(with: .transactions),
-              systemImage: "arrow.left.arrow.right"
-            )
-          }
-          .tag(SelectedTab.transactions)
-      }
+      content(
+        viewState: viewModel.viewState,
+        selectedTab: $viewModel.selectedTab,
+        onMore: viewModel.onMore,
+        onDocumentDetails: { id in
+          viewModel.onDocumentDetails(documentId: id)
+        },
+        onDeleteDeferredDocument: { doc in
+          viewModel.onDeleteDeferredDocument(with: doc)
+        },
+        onAdd: viewModel.onAdd,
+        onShare: viewModel.onShare
+      )
     }
     .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {
       SheetContentView {
@@ -289,22 +264,24 @@ struct DashboardView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: DashboardState,
+  selectedTab: Binding<SelectedTab>,
   onMore: @escaping () -> Void,
   onDocumentDetails: @escaping (String) -> Void,
   onDeleteDeferredDocument: @escaping (DocumentUIModel) -> Void,
   onAdd: @escaping () -> Void,
   onShare: @escaping () -> Void
 ) -> some View {
-  VStack(spacing: .zero) {
-    BearerHeaderView(
-      item: viewState.bearer,
-      isLoading: viewState.isLoading,
-      isMoreOptionsEnabled: viewState.allowUserInteraction,
-      onMoreClicked: onMore()
-    )
+  TabView(selection: selectedTab) {
+    HomeView(bearer: viewState.bearer)
+      .tabItem {
+        Label(
+          LocalizableString.shared.get(with: .home),
+          systemImage: "house.fill"
+        )
+      }
+      .tag(SelectedTab.home)
 
     VStack(spacing: .zero) {
-
       DocumentListView(
         items: viewState.documents,
         isLoading: viewState.isLoading
@@ -316,21 +293,23 @@ private func content(
           onDeleteDeferredDocument(document)
         }
       }
-      .bottomFade()
-
-      if viewState.allowUserInteraction {
-
-        FloatingActionButtonBarView(
-          isLoading: viewState.isLoading,
-          addAction: onAdd(),
-          shareAction: onShare()
-        )
-
-        VSpacer.small()
-
-      }
+      .background(Theme.shared.color.surface)
     }
-    .background(Theme.shared.color.surface)
+    .tabItem {
+      Label(
+        LocalizableString.shared.get(with: .documents),
+        systemImage: "doc.fill")
+    }
+    .tag(SelectedTab.documents)
+
+    TransactionsView()
+      .tabItem {
+        Label(
+          LocalizableString.shared.get(with: .transactions),
+          systemImage: "arrow.left.arrow.right"
+        )
+      }
+      .tag(SelectedTab.transactions)
   }
 }
 
@@ -356,6 +335,7 @@ private func content(
   ) {
     content(
       viewState: viewState,
+      selectedTab: .constant(.home),
       onMore: {},
       onDocumentDetails: { _ in },
       onDeleteDeferredDocument: { _ in },

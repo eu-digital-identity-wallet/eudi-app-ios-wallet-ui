@@ -16,7 +16,7 @@
 import logic_resources
 
 public struct ListItemData: Identifiable {
-  public var id = UUID()
+  public var id: String
   public let mainText: String
   public let overlineText: String?
   public let supportingText: String?
@@ -26,6 +26,7 @@ public struct ListItemData: Identifiable {
   public let trailingContent: TrailingContent?
 
   public init(
+    id: String = UUID().uuidString,
     mainText: String,
     overlineText: String? = nil,
     supportingText: String? = nil,
@@ -34,6 +35,7 @@ public struct ListItemData: Identifiable {
     isBlur: Bool = false,
     trailingContent: TrailingContent? = nil
   ) {
+    self.id = id
     self.mainText = mainText
     self.overlineText = overlineText
     self.supportingText = supportingText

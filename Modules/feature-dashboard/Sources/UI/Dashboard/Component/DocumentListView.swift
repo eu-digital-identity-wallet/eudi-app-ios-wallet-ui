@@ -18,6 +18,7 @@ import logic_resources
 import logic_ui
 
 struct DocumentListView: View {
+  @State private var searchText = ""
 
   let items: [DocumentUIModel]
   let action: (DocumentUIModel) -> Void
@@ -33,51 +34,39 @@ struct DocumentListView: View {
     }
 
   var body: some View {
-    ScrollView {
-      LazyVGrid(
-        columns: [GridItem(alignment: .top), GridItem(alignment: .top)],
-        spacing: SPACING_SMALL
-      ) {
-        ForEach(items) { item in
-          switch item.value.state {
-          case .issued:
-            DocumentCellView(
-              item: item,
-              isLoading: isLoading,
-              action: { item in
+    WrapListView(
+      sections: [
+        (header: nil,
+         items: items.map({ document in
+           ListItemData(
+            id: document.value.id,
+            mainText: document.value.title,
+            supportingText: LocalizableString.shared.get(with: .validUntil([document.value.expiresAt ?? ""])),
+            trailingContent: .icon(Theme.shared.image.chevronRight)
+           )
+         })
+        )
+      ],
+      style: .plain,
+      hideRowSeperators: true,
+      listRowBackground: .clear,
+      rowContent: { document in
+        WrapCardView {
+          WrapListItemView(
+            listItem: document) {
+              if let item = items.filter({ $0.value.id == document.id }).first {
                 action(item)
               }
-            )
-            .disabled(isLoading)
-          case .pending:
-            DocumentDeferredCellView(
-              item: item,
-              isLoading: isLoading,
-              color: Theme.shared.color.warning,
-              icon: Theme.shared.image.clockIndicator,
-              status: .pending,
-              action: { item in
-                action(item)
-              }
-            )
-            .disabled(isLoading)
-          case .failed:
-            DocumentDeferredCellView(
-              item: item,
-              isLoading: isLoading,
-              color: Theme.shared.color.error,
-              icon: Theme.shared.image.errorIndicator,
-              status: .issuanceFailed,
-              action: { item in
-                action(item)
-              }
-            )
-            .disabled(isLoading)
-          }
+            }
         }
       }
-      .padding(SPACING_LARGE)
-    }
+    )
+    .searchable(
+      searchText: $searchText,
+      items: items,
+      placeholder: LocalizableString.shared.get(with: .search)
+    ) { _ in }
+    .padding(SPACING_MEDIUM)
   }
 }
 
