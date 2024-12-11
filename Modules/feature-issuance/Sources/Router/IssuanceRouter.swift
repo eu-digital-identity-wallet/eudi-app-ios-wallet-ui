@@ -21,6 +21,13 @@ public final class IssuanceRouter {
 
   public static func resolve(module: FeatureIssuanceRouteModule, host: some RouterHost) -> AnyView {
     switch module {
+    case .issuanceAddDocumentOptions(config: let config):
+      AddDocumentOptionsView(
+        with: .init(
+          router: host,
+          config: config
+        )
+      ).eraseToAnyView()
     case .issuanceAddDocument(config: let config):
       AddDocumentView(
         with: .init(

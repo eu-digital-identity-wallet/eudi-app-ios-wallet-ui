@@ -246,7 +246,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   func onAdd() {
     router.push(
       with: .featureIssuanceModule(
-        .issuanceAddDocument(
+        .issuanceAddDocumentOptions(
           config: IssuanceFlowUiConfig(flow: .extraDocument)
         )
       )

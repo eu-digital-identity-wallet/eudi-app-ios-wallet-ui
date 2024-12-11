@@ -34,6 +34,17 @@
         }
       }
     },
+    "add_documents_to_wallet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add documents to your wallet by choosing from a list or by scanning a provided QR code."
+          }
+        }
+      }
+    },
     "administrative_number" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -316,6 +327,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Change quick pin"
+          }
+        }
+      }
+    },
+    "choose_from_list" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose from list"
+          }
+        }
+      }
+    },
+    "choose_from_list_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a digital document from the list below to add to your wallet. You may add more documents by scanning the QR code provided to you by an authorised issuing service."
           }
         }
       }

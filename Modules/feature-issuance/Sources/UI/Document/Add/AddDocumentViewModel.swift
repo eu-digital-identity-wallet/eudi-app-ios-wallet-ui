@@ -92,7 +92,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
   }
 
   func pop() {
-    router.pop()
+    router.popTo(with: .featureDashboardModule(.dashboard))
   }
 
   private func handleResumeIssuance() async {
