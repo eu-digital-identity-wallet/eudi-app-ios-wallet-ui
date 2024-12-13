@@ -1,10 +1,10 @@
-## How to use the application
+# How to use the application
 
 Minimum device requirements
 
 - Any device that supports iOS 16.0
 
-### Prerequisites
+## Prerequisites
 
 To complete the flows described below you need to build and run the application with xcode. Alternatively, you can directly download the Android app onto your device.
 
@@ -34,12 +34,12 @@ Clone this repo and make sure you have access to the dependencies below:
 
 You will also need to download the Android Verifier app. More information can be found [here](wiki/verifier_proximity.md)
 
-### App launch
+## App launch
 
 1. Launch the application
 2. You will be presented with a welcome screen where you will be asked to create a PIN for future logins.
 
-### Issuance flow (Scoped)
+## Issuance flow (Scoped)
 
 1. Open the "Add document" screen or if it's the first time you open the app, you will be redirected there after you enter or set up your PIN.
 2. Pick "National ID".
@@ -49,7 +49,7 @@ You will also need to download the Android Verifier app. More information can be
 6. Your "National ID" is displayed. Tap "Continue".
 7. You are now on the "Dashboard" screen.
 
-### Issuance flow (Credential Offer)
+## Issuance flow (Credential Offer)
 
 1. Open the "Add document" screen or if it's the first time you open the app, you will be redirected there after you enter or set up your PIN.
 2. Tap "SCAN QR".
@@ -62,7 +62,7 @@ While on the "Dashboard" screen you can tap "Add doc" and issue a new document, 
 
 If you want to re-issue a document you must delete it first by tapping on the document in the "Dashboard" screen and tapping the delete icon in the "Document details" view.
 
-### Presentation (Online authentication/Same device) flow.
+## Presentation (Online authentication/Same device) flow.
 
 1. Go to the browser application on your device and enter "https://verifier.eudiw.dev"
 2. Tap the first option (selectable) and pick the fields you want to share (e.g. "Family Name" and "Given Name")
@@ -74,7 +74,7 @@ If you want to re-issue a document you must delete it first by tapping on the do
 8. A browser will open showing that the Verifier has accepted your request.
 9. Return to the app. You are back to the "Dashboard" screen and the flow is complete.
 
-### Proximity flow
+## Proximity flow
 
 1. The user logs in successfully to the EUDI Wallet app and views the dashboard.
 2. The user clicks the 'SHOW QR' button to display the QR code.
