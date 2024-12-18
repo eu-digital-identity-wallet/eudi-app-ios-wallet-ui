@@ -45,23 +45,13 @@ public extension DocumentOfferUIModel {
     public var id: String
 
     public let documentName: String
-    public let documentType: DocumentTypeIdentifier
-
-    var title: String {
-      if documentType.isSupported {
-        return documentType.localizedTitle
-      }
-      return documentName
-    }
 
     public init(
       id: String = UUID().uuidString,
-      documentName: String,
-      documentType: DocumentTypeIdentifier
+      documentName: String
     ) {
       self.id = id
       self.documentName = documentName
-      self.documentType = documentType
     }
   }
 }
@@ -87,28 +77,23 @@ public extension DocumentOfferUIModel {
       uiOffers: [
         .init(
           id: UUID().uuidString,
-          documentName: "Document Name",
-          documentType: .GENERIC(docType: "")
+          documentName: "Document Name"
         ),
         .init(
           id: UUID().uuidString,
-          documentName: "Document Name",
-          documentType: .GENERIC(docType: "")
+          documentName: "Document Name"
         ),
         .init(
           id: UUID().uuidString,
-          documentName: "Document Name",
-          documentType: .GENERIC(docType: "")
+          documentName: "Document Name"
         ),
         .init(
           id: UUID().uuidString,
-          documentName: "Document Name",
-          documentType: .GENERIC(docType: "")
+          documentName: "Document Name"
         ),
         .init(
           id: UUID().uuidString,
-          documentName: "Document Name",
-          documentType: .GENERIC(docType: "")
+          documentName: "Document Name"
         )
       ],
       docOffers: []
@@ -138,8 +123,7 @@ private extension Array where Element == OfferedDocModel {
     self.forEach { doc in
       offers.append(
         .init(
-          documentName: doc.displayName,
-          documentType: DocumentTypeIdentifier(rawValue: doc.docType)
+          documentName: doc.displayName
         )
       )
     }

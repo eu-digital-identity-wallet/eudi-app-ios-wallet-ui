@@ -21,8 +21,7 @@ import logic_business
 import logic_core
 
 public protocol AddDocumentInteractor: Sendable {
-  func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState
-  func loadSampleData() async -> LoadSampleDataPartialState
+  func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState
   func issueDocument(docType: String) async -> IssueDocumentPartialState
   func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState
 }
@@ -37,55 +36,23 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     self.walletController = walletController
   }
 
-  public func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState {
+  public func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState {
 
-    let types = AddDocumentUIModel.items.map({
-      var item = $0
-      switch item.type {
-      case .PID:
-        item.isEnabled = true
-      case .MDL:
-        item.isEnabled = flow == .extraDocument
-      case .AGE:
-        item.isEnabled = flow == .extraDocument
-      case .PHOTOID:
-        item.isEnabled = flow == .extraDocument
-      case .GENERIC:
-        break
-      }
-      return item
-    })
+    let scopedDocuments: [ScopedDocument] = await walletController.getScopedDocuments()
 
-    switch flow {
-    case .noDocument:
-      return .success(
-        types + [
-          .init(
-            isEnabled: true,
-            documentName: .loadSampleData,
-            image: Theme.shared.image.id,
-            isLoading: false,
-            type: .GENERIC(docType: "load_sample_data")
-          )
-        ]
-      )
-    case .extraDocument:
-      return .success(types)
+    let uiScopedDocuments: [AddDocumentUIModel] = scopedDocuments.map { doc in
+        .init(
+          isEnabled: (doc.identifier == .mDocPid || doc.identifier == .sdJwtPid) || flow == .extraDocument,
+          documentName: .custom(doc.name),
+          type: doc.identifier
+        )
     }
-  }
-
-  public func loadSampleData() async -> LoadSampleDataPartialState {
-    do {
-      try await walletController.loadSampleData(dataFiles: ["EUDI_sample_data"])
-      return .success
-    } catch {
-      return .failure(error)
-    }
+    return .success(uiScopedDocuments)
   }
 
   public func issueDocument(docType: String) async -> IssueDocumentPartialState {
     do {
-      let doc = try await walletController.issueDocument(docType: docType, format: .cbor)
+      let doc = try await walletController.issueDocument(docType: docType)
       if doc.isDeferred {
         return .deferredSuccess
       } else if let authorizePresentationUrl = doc.authorizePresentationUrl {
@@ -131,11 +98,6 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
 
 public enum StoredDocumentsPartialState: Sendable {
   case success([AddDocumentUIModel])
-  case failure(Error)
-}
-
-public enum LoadSampleDataPartialState: Sendable {
-  case success
   case failure(Error)
 }
 

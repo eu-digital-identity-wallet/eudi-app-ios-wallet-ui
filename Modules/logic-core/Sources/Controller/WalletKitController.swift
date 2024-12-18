@@ -18,6 +18,7 @@ import Foundation
 import Combine
 import logic_resources
 import logic_business
+import SwiftUI
 
 private enum KeyIdentifier: String, KeyChainWrapper {
   public var value: String {
@@ -34,25 +35,23 @@ public protocol WalletKitController: Sendable {
   func startSameDevicePresentation(deepLink: URLComponents) async -> RemoteSessionCoordinator
   func startCrossDevicePresentation(urlString: String) async -> RemoteSessionCoordinator
   func stopPresentation()
-  func fetchAllDocuments() -> [MdocDecodable]
+  func fetchAllDocuments() -> [DocClaimsDecodable]
   func fetchDeferredDocuments() -> [WalletStorage.Document]
-  func fetchIssuedDocuments() -> [MdocDecodable]
-  func fetchIssuedDocuments(with type: DocumentTypeIdentifier) -> [MdocDecodable]
-  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [MdocDecodable]
-  func fetchMainPidDocument() -> MdocDecodable?
-  func fetchDocument(with id: String) -> MdocDecodable?
-  func loadSampleData(dataFiles: [String]) async throws
+  func fetchIssuedDocuments() -> [DocClaimsDecodable]
+  func fetchIssuedDocuments(with types: [DocumentTypeIdentifier]) -> [DocClaimsDecodable]
+  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [DocClaimsDecodable]
+  func fetchMainPidDocument() -> DocClaimsDecodable?
+  func fetchDocument(with id: String) -> DocClaimsDecodable?
   func clearAllDocuments() async
   func clearDocuments(status: DocumentStatus) async throws
   func deleteDocument(with id: String, status: DocumentStatus) async throws
   func loadDocuments() async throws
-  func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
-  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> MdocDecodable
+  func issueDocument(docType: String) async throws -> WalletStorage.Document
+  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable
   func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssuanceModel
   func issueDocumentsByOfferUrl(
     offerUri: String,
     docTypes: [OfferedDocModel],
-    format: DataFormat,
     txCodeValue: String?
   ) async throws -> [WalletStorage.Document]
   func valueForElementIdentifier(
@@ -60,12 +59,13 @@ public protocol WalletKitController: Sendable {
     with documentId: String,
     elementIdentifier: String,
     parser: (String) -> String
-  ) -> MdocValue
+  ) -> DocValue
   func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String]
   func retrieveLogFileUrl() -> URL?
   func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document
   func storeDynamicIssuancePendingUrl(with url: URL)
   func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData?
+  func getScopedDocuments() async -> [ScopedDocument]
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -107,19 +107,13 @@ final class WalletKitControllerImpl: WalletKitController {
   func issueDocumentsByOfferUrl(
     offerUri: String,
     docTypes: [OfferedDocModel],
-    format: DataFormat,
     txCodeValue: String?
   ) async throws -> [WalletStorage.Document] {
     return try await wallet.issueDocumentsByOfferUrl(
       offerUri: offerUri,
       docTypes: docTypes,
-      txCodeValue: txCodeValue,
-      format: format
+      txCodeValue: txCodeValue
     )
-  }
-
-  public func loadSampleData(dataFiles: [String]) async throws {
-    return try await wallet.loadSampleData(sampleDataFiles: dataFiles)
   }
 
   public func clearAllDocuments() async {
@@ -179,45 +173,45 @@ final class WalletKitControllerImpl: WalletKitController {
     self.sessionCoordinatorHolder.clear()
   }
 
-  func fetchAllDocuments() -> [MdocDecodable] {
-    return fetchIssuedDocuments() + fetchDeferredDocuments().transformToMdocDecodable()
+  func fetchAllDocuments() -> [DocClaimsDecodable] {
+    return fetchIssuedDocuments() + fetchDeferredDocuments().transformToDocsDecodable()
   }
 
   func fetchDeferredDocuments() -> [WalletStorage.Document] {
     return wallet.storage.deferredDocuments
   }
 
-  public func fetchIssuedDocuments() -> [MdocDecodable] {
-    return wallet.storage.mdocModels
+  public func fetchIssuedDocuments() -> [DocClaimsDecodable] {
+    return wallet.storage.docModels
   }
 
-  public func fetchIssuedDocuments(with type: DocumentTypeIdentifier) -> [MdocDecodable] {
-    return wallet.storage.mdocModels
-      .filter({ $0.docType == type.rawValue })
+  public func fetchIssuedDocuments(with types: [DocumentTypeIdentifier]) -> [DocClaimsDecodable] {
+    return wallet.storage.docModels
+      .filter({ types.map { $0.rawValue }.contains($0.docType) })
   }
 
-  func fetchMainPidDocument() -> MdocDecodable? {
-    return fetchIssuedDocuments(with: DocumentTypeIdentifier.PID)
+  func fetchMainPidDocument() -> DocClaimsDecodable? {
+    return fetchIssuedDocuments(with: [DocumentTypeIdentifier.mDocPid, DocumentTypeIdentifier.sdJwtPid])
       .sorted { $0.createdAt > $1.createdAt }.last
   }
 
-  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [MdocDecodable] {
+  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [DocClaimsDecodable] {
     let excludedRawValues = excluded.map { $0.rawValue }
-    return fetchIssuedDocuments().filter { !excludedRawValues.contains($0.docType) }
+    return fetchIssuedDocuments().filter { !excludedRawValues.contains($0.docType.orEmpty) }
   }
 
-  public func fetchDocument(with id: String) -> MdocDecodable? {
+  public func fetchDocument(with id: String) -> DocClaimsDecodable? {
     wallet.storage.getDocumentModel(id: id)
   }
 
-  public func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document {
-    return try await wallet.issueDocument(docType: docType, format: format)
+  public func issueDocument(docType: String) async throws -> WalletStorage.Document {
+    return try await wallet.issueDocument(docType: docType)
   }
 
-  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> MdocDecodable {
+  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable {
     let result = try await wallet.requestDeferredIssuance(deferredDoc: doc)
     if result.isDeferred {
-      return result.transformToMdocDecodable()
+      return result.transformToDocDecodable()
     } else if let doc = fetchDocument(with: result.id) {
       return doc
     } else {
@@ -273,25 +267,29 @@ final class WalletKitControllerImpl: WalletKitController {
 
     return link.removeSchemeFromComponents()?.string
   }
+
+  func getScopedDocuments() async -> [ScopedDocument] {
+    return configLogic.scopedDocuments
+  }
 }
 
 extension WalletKitController {
 
   public func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String] {
     switch documentType {
-    case .PID:
+    case .mDocPid, .sdJwtPid:
       return [
         "issuance_date",
-        "expiry_date",
+        DocumentJsonKeys.EXPIRY_DATE,
         "issuing_authority",
         "document_number",
         "administrative_number",
         "issuing_country",
         "issuing_jurisdiction",
-        "portrait",
+        DocumentJsonKeys.PORTRAIT,
         "portrait_capture_date"
       ]
-    case .AGE:
+    case .mDocPseudonym:
       return [
         "issuance_date",
         "expiry_date",
@@ -308,68 +306,35 @@ extension WalletKitController {
     with documentId: String,
     elementIdentifier: String,
     parser: (String) -> String
-  ) -> MdocValue {
-
-    // Check if we have image data and early return them
-    if let imageName = wallet.storage.mdocModels
-      .first(where: { $0.id == documentId })?.displayImages
-      .first(where: { $0.name == elementIdentifier }) {
-      return .image(imageName.image)
-    }
+  ) -> DocValue {
 
     guard let document = fetchDocument(with: documentId) else {
       return .unavailable(LocalizableString.shared.get(with: .errorUnableFetchDocument))
     }
 
-    // Convert the Stored models to their [Key: Value] array
-    var displayStrings = document.displayStrings
-      .decodeGender()
-      .decodeUserPseudonym()
-      .parseDates(parser: parser)
-      .mapTrueFalseToLocalizable()
-
-    if documentType == .MDL {
-
-      // Flatten properties in order to be made in a Key: Value structure
-      if let drivingPrivileges = document.getDrivingPrivileges(parser: parser) {
-        displayStrings.appendOrReplace(drivingPrivileges)
-      }
-
-      displayStrings.appendOrReplace(
-        contentsOf: decodeAgeOver(ageOverDictionary: document.ageOverXX)
+    let claims = document.docClaims
+      .parseDates(
+        parser: {
+          Locale.current.localizedDateTime(
+            date: $0,
+            uiFormatter: "dd MMM yyyy"
+          )
+        }
       )
-    } else if documentType == .PID {
-      displayStrings.appendOrReplace(
-        contentsOf: decodeAgeOver(ageOverDictionary: document.ageOverXX)
-      )
-    }
-    // Find the first Value that Matches given Key for document
+      .parseUserPseudonym()
 
-    displayStrings.forEach { print($0.name) }
-
-    let value = displayStrings
-      .first(where: { element in
-        element.name == elementIdentifier
-      })?.value
-    // Return the value if found, or a static string that field was not found
-
-    guard let isAvailable = value else {
+    guard let element = claims.first(where: { $0.name == elementIdentifier }) else {
       return .unavailable(LocalizableString.shared.get(with: .unavailableField))
     }
 
-    return .string(isAvailable)
-  }
-
-  private func decodeAgeOver(ageOverDictionary: [Int: Bool]) -> [NameValue] {
-    var nameValue: [NameValue] = []
-    ageOverDictionary.sorted(by: {$0.key < $1.key}).forEach { key, value in
-      nameValue.append(
-        .init(
-          name: "age_over_\(key)",
-          value: value ? LocalizableString.shared.get(with: .yes) : LocalizableString.shared.get(with: .no)
-        )
-      )
+    if let image = element.dataValue.image {
+      return .image(Image(uiImage: image))
     }
-    return nameValue
+
+    if let nested = element.children {
+      return .string(element.flattenNested(nested: nested).stringValue)
+    }
+
+    return .string(element.stringValue)
   }
 }

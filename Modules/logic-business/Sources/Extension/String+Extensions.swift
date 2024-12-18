@@ -118,13 +118,13 @@ public extension String? {
     }
     return self
   }
-  func ifNull(_ fallback: () -> String) -> String {
+  func ifNil(_ fallback: () -> String) -> String {
     guard let self = self else {
       return fallback()
     }
     return self
   }
-  func ifNullOrEmpty(_ fallback: () -> String) -> String {
+  func ifNilOrEmpty(_ fallback: () -> String) -> String {
     guard let self = self, !self.isEmpty else {
       return fallback()
     }
@@ -186,7 +186,7 @@ public extension String {
 
 public extension String? {
 
-  func isNullOrEmpty() -> Bool {
+  func isNilOrEmpty() -> Bool {
     return self == nil || self?.isEmpty == true
   }
 

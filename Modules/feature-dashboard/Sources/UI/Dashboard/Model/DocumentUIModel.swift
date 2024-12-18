@@ -38,7 +38,6 @@ public extension DocumentUIModel {
     @EquatableNoop
     public var id: String
 
-    public let type: String
     public let title: String
     public var createdAt: Date
     public let expiresAt: String?
@@ -52,7 +51,6 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
-          type: UUID().uuidString,
           title: "Digital ID",
           createdAt: Date(),
           expiresAt: "22/01/2025",
@@ -64,7 +62,6 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
-          type: UUID().uuidString,
           title: "EUDI Conference",
           createdAt: Date(),
           expiresAt: "22/01/2025",
@@ -76,7 +73,6 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
-          type: UUID().uuidString,
           title: "Passport",
           createdAt: Date(),
           expiresAt: "22/01/2025",
@@ -88,7 +84,6 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
-          type: UUID().uuidString,
           title: "Document 1",
           createdAt: Date(),
           expiresAt: "22/01/2025",
@@ -100,7 +95,6 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
-          type: UUID().uuidString,
           title: "Document 2",
           createdAt: Date(),
           expiresAt: "22/01/2025",
@@ -112,7 +106,6 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
-          type: UUID().uuidString,
           title: "Document 3",
           createdAt: Date(),
           expiresAt: "22/01/2025",
@@ -124,7 +117,6 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
-          type: UUID().uuidString,
           title: "Document 4",
           createdAt: Date(),
           expiresAt: "22/01/2025",
@@ -136,7 +128,6 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
-          type: UUID().uuidString,
           title: "Document 5",
           createdAt: Date(),
           expiresAt: "22/01/2025",
@@ -148,7 +139,6 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
-          type: UUID().uuidString,
           title: "Document 6",
           createdAt: Date(),
           expiresAt: "22/01/2025",
@@ -160,7 +150,6 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
-          type: UUID().uuidString,
           title: "Passport",
           createdAt: Date(),
           expiresAt: "22/01/2025",
@@ -180,7 +169,7 @@ public extension DocumentUIModel.Value {
   }
 }
 
-extension Array where Element == MdocDecodable {
+extension Array where Element == DocClaimsDecodable {
   func transformToDocumentUi(with failedDocuments: [String] = []) -> [DocumentUIModel] {
     self.map { item in
       item.transformToDocumentUi(with: failedDocuments)
@@ -188,17 +177,13 @@ extension Array where Element == MdocDecodable {
   }
 }
 
-extension MdocDecodable {
+extension DocClaimsDecodable {
   func transformToDocumentUi(with failedDocuments: [String] = []) -> DocumentUIModel {
-    let identifier = DocumentTypeIdentifier(rawValue: self.docType)
     return .init(
       id: UUID().uuidString,
       value: .init(
         id: self.id,
-        type: self.docType,
-        title: identifier.isSupported
-        ? identifier.localizedTitle
-        : self.displayName ?? identifier.localizedTitle,
+        title: self.displayName.orEmpty,
         createdAt: self.createdAt,
         expiresAt: self.getExpiryDate(
           parser: {

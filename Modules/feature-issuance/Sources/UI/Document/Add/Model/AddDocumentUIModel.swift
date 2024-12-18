@@ -45,47 +45,28 @@ public struct AddDocumentUIModel: Identifiable, Sendable {
 }
 
 public extension AddDocumentUIModel {
-
-  static var items: [AddDocumentUIModel] {
+  static var mocks: [AddDocumentUIModel] {
     [
       .init(
         isEnabled: true,
-        documentName: .pid,
-        image: Theme.shared.image.id,
-        isLoading: false,
-        type: .PID
+        documentName: .custom("Document name 1"),
+        type: .other(formatType: "")
       ),
       .init(
         isEnabled: true,
-        documentName: .mdl,
-        image: Theme.shared.image.id,
-        isLoading: false,
-        type: .MDL
+        documentName: .custom("Document name 2"),
+        type: .other(formatType: "")
       ),
       .init(
         isEnabled: true,
-        documentName: .ageVerification,
-        image: Theme.shared.image.id,
-        isLoading: false,
-        type: .AGE
+        documentName: .custom("Document name 3"),
+        type: .other(formatType: "")
       ),
       .init(
         isEnabled: true,
-        documentName: .photoId,
-        image: Theme.shared.image.id,
-        isLoading: false,
-        type: .PHOTOID
+        documentName: .custom("Document name 4"),
+        type: .other(formatType: "")
       )
     ]
-  }
-
-  static var mocks: [AddDocumentUIModel] {
-    AddDocumentUIModel.items.map({
-        var cell = $0
-        cell.isEnabled = true
-        cell.isLoading = false
-        return cell
-      }
-    )
   }
 }

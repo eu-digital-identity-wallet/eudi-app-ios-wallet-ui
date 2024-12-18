@@ -13,15 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 
-public struct DeferrredDocument: DocClaimsDecodable {
-  public var id: String
-  public var createdAt: Date
-  public var modifiedAt: Date?
-  public var displayName: String?
-  public var docType: String?
-  public var docClaims: [MdocDataModel18013.DocClaim]
-  public var docDataFormat: MdocDataModel18013.DocDataFormat
-  public var ageOverXX: [Int: Bool]
+public struct ScopedDocument: Equatable {
+  public let name: String
+  public let identifier: DocumentTypeIdentifier
 }

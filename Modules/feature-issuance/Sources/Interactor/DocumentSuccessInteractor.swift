@@ -41,11 +41,11 @@ final class DocumentSuccessInteractorImpl: DocumentSuccessInteractor {
 
   public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key? {
     guard
-      let type = walletController.fetchDocument(with: documentIdentifier)?.docType
+      let document = walletController.fetchDocument(with: documentIdentifier)
     else {
       return nil
     }
-    return .issuanceSuccessCaption([DocumentTypeIdentifier(rawValue: type).localizedTitle])
+    return .issuanceSuccessCaption([document.displayName.orEmpty])
   }
 
 }

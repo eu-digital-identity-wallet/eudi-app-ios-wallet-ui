@@ -415,8 +415,7 @@ private extension TestProximityInteractor {
     .requestDataSection(
       .init(
         id: Constants.isoMdlModelId,
-        type: .mdl,
-        title: DocumentTypeIdentifier.MDL.localizedTitle
+        title: Constants.isoMdlName
       )
     ),
     .requestDataRow(
@@ -427,8 +426,7 @@ private extension TestProximityInteractor {
         title: "elementIdentifier",
         value: .string("elementIdentifier"),
         elementKey: "elementIdentifier",
-        namespace: "nameSpace",
-        docType: DocumentTypeIdentifier.MDL.rawValue
+        namespace: "nameSpace"
       )
     )
   ]

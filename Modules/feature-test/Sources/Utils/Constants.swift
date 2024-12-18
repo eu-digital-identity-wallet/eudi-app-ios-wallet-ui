@@ -35,27 +35,61 @@ extension Constants {
   
   static let euPidModelId = "pidId"
   static let isoMdlModelId = "mdlId"
+  static let euPidName = "National ID"
+  static let isoMdlName = "Driving Licence"
+  static let isoMdlDocType = "org.iso.18013.5.1.mDL"
+  static let claimFirstName = "John"
+  static let claimLastName = "Doe"
   static let documentCreatedAt = Date()
+  static let claimExpiredAt = Date()
   
   static let isoMdlModel = GenericMdocModel(
     id: isoMdlModelId,
     createdAt: documentCreatedAt,
-    issuerSigned: dr.documents!.first!.issuerSigned,
-    devicePrivateKey: Constants.pk,
     docType: dr.documents!.first!.issuerSigned.issuerAuth.mso.docType,
-    displayName: "Driving Licence",
-    statusDescription: DocumentStatus.issued.rawValue
-  )!
+    displayName: isoMdlName,
+    docClaims: [
+      .init(
+        name: DocumentJsonKeys.EXPIRY_DATE,
+        dataValue: .date(claimExpiredAt.formatted()),
+        stringValue: claimExpiredAt.formatted()
+      ),
+      .init(
+        name: DocumentJsonKeys.FIRST_NAME,
+        dataValue: .string(claimFirstName),
+        stringValue: claimFirstName
+      ),
+      .init(
+        name: DocumentJsonKeys.LAST_NAME,
+        dataValue: .string(claimLastName),
+        stringValue: claimLastName
+      )
+    ]
+  )
   
   static let euPidModel = GenericMdocModel(
     id: euPidModelId,
     createdAt: documentCreatedAt,
-    issuerSigned: dr.documents!.last!.issuerSigned,
-    devicePrivateKey: Constants.pk,
     docType: dr.documents!.last!.issuerSigned.issuerAuth.mso.docType,
-    displayName: "National ID",
-    statusDescription: DocumentStatus.issued.rawValue
-  )!
+    displayName: euPidName,
+    docClaims: [
+      .init(
+        name: DocumentJsonKeys.EXPIRY_DATE,
+        dataValue: .date(claimExpiredAt.formatted()),
+        stringValue: claimExpiredAt.formatted()
+      ),
+      .init(
+        name: DocumentJsonKeys.FIRST_NAME,
+        dataValue: .string(claimFirstName),
+        stringValue: claimFirstName
+      ),
+      .init(
+        name: DocumentJsonKeys.LAST_NAME,
+        dataValue: .string(claimLastName),
+        stringValue: claimLastName
+      )
+    ]
+  )
 }
 
 extension Constants {
@@ -94,8 +128,8 @@ extension Constants {
     items: [
       DocElementsViewModel(
         docId: Constants.isoMdlModelId,
-        docType: DocumentTypeIdentifier.MDL.rawValue,
-        displayName: "Driving License",
+        docType: isoMdlDocType,
+        displayName: isoMdlName,
         isEnabled: true,
         elements: [
           ElementViewModel(

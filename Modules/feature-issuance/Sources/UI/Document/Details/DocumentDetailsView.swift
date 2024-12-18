@@ -109,10 +109,10 @@ private func details(
             subTitle: .custom(value),
             isLoading: viewState.isLoading
           )
-        case .image(let data):
+        case .image(let image):
           KeyValueView(
             title: .custom(documentFieldContent.title),
-            image: Image(data: data),
+            image: image,
             isLoading: viewState.isLoading
           )
         }

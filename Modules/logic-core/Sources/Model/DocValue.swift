@@ -14,11 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import SwiftUI
 
-public enum MdocValue {
+public enum DocValue {
   case string(String)
   case unavailable(String)
-  case image(Data)
+  case image(Image)
 
   public var string: String? {
     switch self {
@@ -31,7 +32,7 @@ public enum MdocValue {
     }
   }
 
-  public var image: Data? {
+  public var image: Image? {
     switch self {
     case .image(let image):
       image

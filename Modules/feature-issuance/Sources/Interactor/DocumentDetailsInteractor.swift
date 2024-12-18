@@ -46,10 +46,10 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     do {
 
       var shouldDeleteAllDocuments: Bool {
-        if type == .PID {
+        if type == .mDocPid || type == .sdJwtPid {
 
           let documentPids = walletController.fetchIssuedDocuments(
-            with: DocumentTypeIdentifier.PID
+            with: [DocumentTypeIdentifier.mDocPid, DocumentTypeIdentifier.sdJwtPid]
           )
           let mainPid = walletController.fetchMainPidDocument()
 

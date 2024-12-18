@@ -55,7 +55,7 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
 
   public enum Value: Equatable, Sendable {
     case string(String)
-    case image(Data)
+    case image(Image)
 
     public var string: String? {
       switch self {
@@ -66,7 +66,7 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
       }
     }
 
-    public var image: Data? {
+    public var image: Image? {
       switch self {
       case .image(let image):
         image
@@ -88,7 +88,6 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
 
   public var elementKey: String
   public var namespace: String
-  public var docType: String
 
   public var documentId: String {
     if let lastPart = id.split(separator: "_").last {
@@ -102,10 +101,9 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
     isSelected: Bool,
     isVisible: Bool,
     title: String,
-    value: MdocValue,
+    value: DocValue,
     elementKey: String = "namespaced_key",
-    namespace: String = "doc.namespace",
-    docType: String = "mock"
+    namespace: String = "doc.namespace"
   ) {
     self.id = id
     self.isSelected = isSelected
@@ -119,13 +117,12 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
       self.value = .string(string)
       self.isEnabled = false
       self.isSelected = false
-    case .image(let imageData):
-      self.value = .image(imageData)
+    case .image(let image):
+      self.value = .image(image)
       self.isEnabled = true
     }
     self.elementKey = elementKey
     self.namespace = namespace
-    self.docType = docType
   }
 
   public mutating func setSelected(_ isSelected: Bool) {
@@ -140,16 +137,13 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
 public struct RequestDataSection: Identifiable, Equatable, Sendable {
 
   public var id: String
-  public let type: `Type`
   public let title: String
 
   public init(
     id: String = UUID().uuidString,
-    type: `Type`,
     title: String
   ) {
     self.id = id
-    self.type = type
     self.title = title
   }
 }
@@ -172,31 +166,6 @@ public struct RequestDataVerification: Identifiable, Equatable, Sendable {
 
   mutating func setItems(with items: [RequestDataRow]) {
     self.items = items
-  }
-}
-
-public extension RequestDataSection {
-  enum `Type`: Equatable, Sendable {
-    case id
-    case mdl
-    case age
-    case photoId
-    case custom(String)
-
-    public init(docType: DocumentTypeIdentifier) {
-      switch docType {
-      case .PID:
-        self = .id
-      case .MDL:
-        self = .mdl
-      case .AGE:
-        self = .age
-      case .PHOTOID:
-        self = .photoId
-      case .GENERIC(docType: let docType):
-        self = .custom(docType)
-      }
-    }
   }
 }
 
@@ -244,14 +213,10 @@ extension RequestDataUiModel {
   }
 
   fileprivate static func documentSectionHeader(for docElement: DocElementsViewModel) -> RequestDataUIModel {
-    let documentIdentifier = DocumentTypeIdentifier(rawValue: docElement.docType)
     return .requestDataSection(
       .init(
         id: docElement.id,
-        type: .init(docType: documentIdentifier),
-        title: documentIdentifier.isSupported
-        ? documentIdentifier.localizedTitle
-        : docElement.displayName.ifNullOrEmpty { documentIdentifier.localizedTitle }
+        title: docElement.displayName.orEmpty
       )
     )
   }
@@ -272,7 +237,7 @@ extension RequestDataUiModel {
             id: "\($0.id)_\(docElement.id)",
             isSelected: true,
             isVisible: false,
-            title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
+            title: $0.elementIdentifier,
             value: walletKitController.valueForElementIdentifier(
               for: .init(rawValue: docElement.docType),
               with: docElement.id,
@@ -285,8 +250,7 @@ extension RequestDataUiModel {
               }
             ),
             elementKey: $0.elementIdentifier,
-            namespace: $0.nameSpace,
-            docType: docElement.docType
+            namespace: $0.nameSpace
           )
         )
       }
@@ -307,7 +271,7 @@ extension RequestDataUiModel {
           id: "\($0.id)_\(docElement.id)",
           isSelected: true,
           isVisible: false,
-          title: LocalizableString.shared.get(with: .dynamic(key: $0.elementIdentifier)),
+          title: $0.elementIdentifier,
           value: walletKitController.valueForElementIdentifier(
             for: .init(rawValue: docElement.docType),
             with: docElement.id,
@@ -320,8 +284,7 @@ extension RequestDataUiModel {
             }
           ),
           elementKey: $0.elementIdentifier,
-          namespace: $0.nameSpace,
-          docType: docElement.docType
+          namespace: $0.nameSpace
         )
       }
 
@@ -339,7 +302,7 @@ extension RequestDataUiModel {
 public struct RequestDataUiModel {
   public static func mock() -> [RequestDataUIModel] {
     [
-      .requestDataSection(.init(type: .id, title: "Digital ID")),
+      .requestDataSection(.init(title: "Digital ID")),
       .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: .string("Tzouvaras"))),
       .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: .string("Stilianos"))),
       .requestDataRow(.init(isSelected: true, isVisible: false, title: "Date of Birth", value: .string("21-09-1985"))),
@@ -355,7 +318,7 @@ public struct RequestDataUiModel {
           ]
         )
       ),
-      .requestDataSection(.init(type: .mdl, title: "MDL")),
+      .requestDataSection(.init(title: "MDL")),
       .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: .string("Tzouvaras"))),
       .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: .string("Stilianos"))),
       .requestDataVerification(

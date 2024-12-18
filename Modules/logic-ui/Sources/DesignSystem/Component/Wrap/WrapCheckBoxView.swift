@@ -68,8 +68,8 @@ public struct WrapCheckBoxView: View {
     self.id = id
     self.title = title
     switch value {
-    case _ as Data:
-      self.value = .image(Theme.shared.image.photo)
+    case let value as Image:
+      self.value = .image(value)
     case let value as String:
       self.value = .string(value)
     default:

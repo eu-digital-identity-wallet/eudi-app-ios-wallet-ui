@@ -62,7 +62,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
   }
 
   func initialize() async {
-    switch self.interactor.fetchStoredDocuments(with: viewState.config.flow) {
+    switch await self.interactor.fetchScopedDocuments(with: viewState.config.flow) {
     case .success(let documents):
       setState { $0.copy(addDocumentCellModels: documents).copy(error: nil) }
       if let link = hasDeepLink() {
@@ -84,12 +84,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
   }
 
   func onClick(for documentIdentifier: DocumentTypeIdentifier) {
-    switch documentIdentifier {
-    case .GENERIC:
-      loadSampleData()
-    default:
-      issueDocument(docType: documentIdentifier.rawValue)
-    }
+    issueDocument(docType: documentIdentifier.rawValue)
   }
 
   func onScanClick() {
@@ -229,29 +224,6 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
       return cell
     }
     )
-  }
-
-  private func loadSampleData() {
-    Task {
-
-      let state = await Task.detached { () -> LoadSampleDataPartialState in
-        return await self.interactor.loadSampleData()
-      }.value
-
-      switch state {
-      case .success:
-        router.push(with: .featureDashboardModule(.dashboard))
-      case .failure(let error):
-        setState {
-          $0.copy(
-            error: .init(
-              description: .custom(error.localizedDescription),
-              cancelAction: self.setState { $0.copy(error: nil) }
-            )
-          )
-        }
-      }
-    }
   }
 
   private func hasDeepLink() -> String? {

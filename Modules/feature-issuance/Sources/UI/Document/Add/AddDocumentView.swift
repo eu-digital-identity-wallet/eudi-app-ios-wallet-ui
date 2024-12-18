@@ -147,7 +147,7 @@ private func scanFooter(
 
 #Preview {
   let viewState = AddDocumentViewState(
-    addDocumentCellModels: AddDocumentUIModel.items,
+    addDocumentCellModels: AddDocumentUIModel.mocks,
     error: nil,
     config: IssuanceFlowUiConfig(flow: .noDocument)
   )
