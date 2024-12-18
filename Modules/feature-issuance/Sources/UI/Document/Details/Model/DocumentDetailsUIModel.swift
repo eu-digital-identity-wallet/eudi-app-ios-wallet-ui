@@ -18,7 +18,7 @@ import logic_resources
 import logic_business
 import logic_core
 
-public struct DocumentDetailsUIModel: Sendable {
+public struct DocumentDetailsUIModel: Sendable, Equatable {
 
   public let id: String
   public let type: DocumentTypeIdentifier
@@ -32,9 +32,9 @@ public struct DocumentDetailsUIModel: Sendable {
 
 public extension DocumentDetailsUIModel {
 
-  struct DocumentField: Identifiable, Sendable {
+  struct DocumentField: Identifiable, Sendable, Equatable {
 
-    public indirect enum Value: Sendable {
+    public indirect enum Value: Sendable, Equatable {
       case string(String)
       case image(Image)
     }

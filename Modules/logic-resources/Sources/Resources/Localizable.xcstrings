@@ -386,6 +386,50 @@
         }
       }
     },
+    "data_sharing_request" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data sharing request"
+          }
+        }
+      }
+    },
+    "data_sharing_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The following transaction requires your permission and authentication."
+          }
+        }
+      }
+    },
+    "date_of_expiry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date of expiry"
+          }
+        }
+      }
+    },
+    "date_of_issue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date of issue"
+          }
+        }
+      }
+    },
     "deferred_document_issued_modal_caption" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -404,6 +448,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Documents issued"
+          }
+        }
+      }
+    },
+    "delete_document" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete document"
+          }
+        }
+      }
+    },
+    "details" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Details"
           }
         }
       }
@@ -1363,7 +1429,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trusted Relying Party"
+            "value" : "Relying Party"
           }
         }
       }

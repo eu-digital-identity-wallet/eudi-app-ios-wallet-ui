@@ -34,39 +34,30 @@ struct DocumentListView: View {
     }
 
   var body: some View {
-    WrapListView(
-      sections: [
-        (header: nil,
-         items: items.map({ document in
-           ListItemData(
-            id: document.value.id,
-            mainText: document.value.title,
-            supportingText: LocalizableString.shared.get(with: .validUntil([document.value.expiresAt ?? ""])),
-            trailingContent: .icon(Theme.shared.image.chevronRight)
-           )
-         })
-        )
-      ],
-      style: .plain,
-      hideRowSeperators: true,
-      listRowBackground: .clear,
-      rowContent: { document in
+    List {
+      ForEach(items) { item in
         WrapCardView {
           WrapListItemView(
-            listItem: document) {
-              if let item = items.filter({ $0.value.id == document.id }).first {
-                action(item)
-              }
-            }
+            listItem: ListItemData(
+              mainText: item.value.title,
+              supportingText: LocalizableString.shared.get(with: .validUntil([item.value.expiresAt ?? ""])),
+              trailingContent: .icon(Theme.shared.image.chevronRight)
+            )
+          ) {
+            action(item)
+          }
         }
+        .listRowSeparator(.hidden)
       }
-    )
+    }
+    .listStyle(.plain)
+    .clipped()
+    .background(Theme.shared.color.background)
     .searchable(
       searchText: $searchText,
       items: items,
       placeholder: LocalizableString.shared.get(with: .search)
     ) { _ in }
-    .padding(SPACING_MEDIUM)
   }
 }
 

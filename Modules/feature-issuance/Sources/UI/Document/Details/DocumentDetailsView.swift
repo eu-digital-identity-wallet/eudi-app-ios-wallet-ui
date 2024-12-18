@@ -21,6 +21,7 @@ import logic_resources
 struct DocumentDetailsView<Router: RouterHost>: View {
 
   @ObservedObject var viewModel: DocumentDetailsViewModel<Router>
+  @State private var isVisible = false
 
   init(with viewModel: DocumentDetailsViewModel<Router>) {
     self.viewModel = viewModel
@@ -31,37 +32,43 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       padding: .zero,
       canScroll: !viewModel.viewState.hasContinueButton,
       allowBackGesture: true,
-      errorConfig: viewModel.viewState.error
+      errorConfig: viewModel.viewState.error,
+      navigationTitle: LocalizableString.shared.get(with: .details),
+      toolbarContent: ToolBarContent(
+        trailingActions: [
+          Action(image: Theme.shared.image.bookmarkIcon) {},
+          Action(
+            image: isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye) {
+              isVisible.toggle()
+            }
+        ]
+      )
     ) {
 
-      content(viewState: viewModel.viewState) {
-        viewModel.onContinue()
-      } pop: {
+      content(
+        viewState: viewModel.viewState,
+        isVisible: isVisible) {
+          viewModel.onContinue()
+        } onShowDeleteModal: {
+          viewModel.onShowDeleteModal()
+        }
+      pop: {
         viewModel.pop()
       }
     }
-    .sheetDialog(isPresented: $viewModel.isDeletionModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
-
-          ContentTitleView(
-            title: .issuanceDetailsDeletionTitle([viewModel.viewState.document.documentName]),
-            caption: .issuanceDetailsDeletionCaption([viewModel.viewState.document.documentName])
-          )
-
-          WrapButtonView(
-            style: .primary,
-            title: .yes,
-            onAction: viewModel.onDeleteDocument()
-          )
-          WrapButtonView(
-            style: .secondary,
-            title: .no,
-            onAction: viewModel.onShowDeleteModal()
-          )
-        }
+    .confirmationDialog(
+      title: LocalizableString.shared.get(with: .issuanceDetailsDeletionTitle([viewModel.viewState.document.documentName])),
+      message: LocalizableString.shared.get(with: .issuanceDetailsDeletionCaption([viewModel.viewState.document.documentName])),
+      destructiveText: "Delete",
+      baseText: "Cancel",
+      isPresented: $viewModel.isDeletionModalShowing,
+      destructiveAction: {
+        viewModel.onDeleteDocument()
+      },
+      baseAction: {
+        viewModel.onShowDeleteModal()
       }
-    }
+    )
     .task {
       await self.viewModel.fetchDocumentDetails()
     }
@@ -72,69 +79,72 @@ struct DocumentDetailsView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: DocumentDetailsViewState,
+  isVisible: Bool,
   onContinue: @escaping () -> Void,
+  onShowDeleteModal: @escaping () -> Void,
   pop: @escaping () -> Void
 ) -> some View {
-  DocumentDetailsHeaderView(
-    documentName: viewState.document.documentName,
-    holdersName: viewState.document.holdersName,
-    userIcon: viewState.document.holdersImage,
-    hasDocumentExpired: viewState.document.hasExpired,
-    isLoading: viewState.isLoading,
-    actions: viewState.toolBarActions,
-    onBack: viewState.isCancellable ? { pop() } : nil
-  )
-
-  details(viewState: viewState) {
-    onContinue()
-  }
-}
-
-@MainActor
-@ViewBuilder
-private func details(
-  viewState: DocumentDetailsViewState,
-  onContinue: @escaping () -> Void
-) -> some View {
   ScrollView {
-    VStack(spacing: .zero) {
+    VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+      Text(viewState.document.documentName)
+        .font(.largeTitle)
+        .bold()
+        .frame(maxWidth: .infinity, alignment: .leading)
 
-      VSpacer.medium()
-
-      ForEach(viewState.document.documentFields) { documentFieldContent in
-
-        switch documentFieldContent.value {
-        case .string(let value):
-          KeyValueView(
-            title: .custom(documentFieldContent.title),
-            subTitle: .custom(value),
-            isLoading: viewState.isLoading
-          )
-        case .image(let image):
-          KeyValueView(
-            title: .custom(documentFieldContent.title),
-            image: image,
-            isLoading: viewState.isLoading
-          )
+      VStack(spacing: .zero) {
+        WrapCardView {
+          VStack(spacing: .zero) {
+            ForEach(viewState.document.documentFields) { documentFieldContent in
+              switch documentFieldContent.value {
+              case .string(let value):
+                WrapListItemView(
+                  listItem: ListItemData(
+                    mainText: value,
+                    overlineText: documentFieldContent.title,
+                    isBlur: isVisible
+                  ),
+                  minHeight: false
+                )
+              case .image(let image):
+                WrapListItemView(
+                  listItem: ListItemData(
+                    mainText: documentFieldContent.title,
+                    leadingIcon: image,
+                    isBlur: isVisible
+                  ),
+                  minHeight: false
+                )
+              }
+              if documentFieldContent != viewState.document.documentFields.last {
+                Divider()
+                  .padding(.horizontal, SPACING_MEDIUM)
+                  .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
+              }
+            }
+          }
         }
+      }
 
-        VSpacer.medium()
+      if viewState.hasDeleteAction {
+        WrapButtonView(
+          style: .error,
+          title: .deleteDocument,
+          isLoading: viewState.isLoading,
+          onAction: onShowDeleteModal()
+        )
+      }
+
+      if viewState.hasContinueButton {
+        WrapButtonView(
+          style: .primary,
+          title: .issuanceDetailsContinueButton,
+          isLoading: viewState.isLoading,
+          onAction: onContinue()
+        )
       }
     }
-    .padding(.horizontal, Theme.shared.dimension.padding)
-  }
-  .if(viewState.hasContinueButton) {
-    $0.bottomFade()
-  }
-
-  if viewState.hasContinueButton {
-    WrapButtonView(
-      style: .primary,
-      title: .issuanceDetailsContinueButton,
-      isLoading: viewState.isLoading,
-      onAction: onContinue()
-    )
-    .padding([.horizontal, .bottom])
+    .padding(Theme.shared.dimension.padding)
+    .padding(.bottom)
   }
 }
 
@@ -144,12 +154,8 @@ private func details(
     isLoading: false,
     error: nil,
     config: IssuanceDetailUiConfig(flow: .extraDocument("documentId")),
-    toolBarActions: [
-      .init(
-        image: Theme.shared.image.trash,
-        callback: {}()
-      )
-    ]
+    hasDeleteAction: true,
+    documentFieldsCount: DocumentDetailsUIModel.mock().documentFields.count
   )
 
   ContentScreenView(
@@ -158,7 +164,9 @@ private func details(
   ) {
     content(
       viewState: viewState,
+      isVisible: true,
       onContinue: {},
+      onShowDeleteModal: {},
       pop: {}
     )
   }

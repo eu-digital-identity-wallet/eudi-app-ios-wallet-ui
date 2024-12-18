@@ -83,63 +83,10 @@ private func content(
           }
         }
       }
+      .shimmer(isLoading: viewState.isLoading)
     }
     .padding(.horizontal, Theme.shared.dimension.padding)
   }
-}
-
-@MainActor
-@ViewBuilder
-private func scanFooter(
-  viewState: AddDocumentViewState,
-  contentSize: CGFloat,
-  action: @escaping () -> Void
-) -> some View {
-  VStack(spacing: SPACING_MEDIUM) {
-
-    Spacer()
-
-    Text(.or)
-      .typography(Theme.shared.font.bodyMedium)
-      .foregroundColor(Theme.shared.color.onSurface )
-      .shimmer(isLoading: viewState.isLoading)
-
-    Button(
-      action: { action() },
-      label: {
-        HStack {
-          Spacer()
-
-          VStack(alignment: .center) {
-
-            Theme.shared.image.qrScan
-              .resizable()
-              .renderingMode(.template)
-              .scaledToFit()
-              .foregroundStyle(Theme.shared.color.primary)
-              .frame(height: contentSize / 6)
-
-            Text(.issuanceScanQr)
-              .typography(Theme.shared.font.titleSmall)
-              .foregroundColor(Theme.shared.color.onSurface)
-          }
-          .padding(.vertical)
-
-          Spacer()
-        }
-      }
-    )
-    .background(Theme.shared.color.surface)
-    .roundedCorner(SPACING_MEDIUM_SMALL, corners: .allCorners)
-    .padding(.horizontal)
-    .disabled(viewState.isLoading)
-    .shimmer(isLoading: viewState.isLoading)
-
-    Spacer()
-  }
-  .frame(maxWidth: .infinity, maxHeight: contentSize)
-  .background(Theme.shared.color.surface)
-  .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
 }
 
 #Preview {
@@ -149,15 +96,5 @@ private func scanFooter(
     config: IssuanceFlowUiConfig(flow: .noDocument)
   )
 
-  ContentScreenView(
-    padding: .zero,
-    canScroll: true
-  ) {
-    ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {}
-      .padding([.top, .horizontal], Theme.shared.dimension.padding)
-
-    content(viewState: viewState) { _ in }
-
-    scanFooter(viewState: viewState, contentSize: 300) {}
-  }
+  content(viewState: viewState) { _ in }
 }

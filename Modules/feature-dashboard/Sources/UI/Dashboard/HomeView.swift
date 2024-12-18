@@ -31,9 +31,7 @@ public struct HomeView: View {
           config: ContentHeaderConfig(
             appIconAndTextData: AppIconAndTextData(
               appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-              appText: ThemeManager.shared.image.euditext,
-              appIconSize: 60,
-              appTextSize: 60
+              appText: ThemeManager.shared.image.euditext
             ),
             description: "\(LocalizableString.shared.get(with: .welcomeBack)), \(bearer.value.name)",
             descriptionTextConfig: TextConfig(
@@ -53,7 +51,7 @@ public struct HomeView: View {
 
         HomeCardView(
           text: LocalizableString.Key.electronicallySignDigitalDocuments,
-          buttonText: LocalizableString.Key.addDocumentTitle,
+          buttonText: LocalizableString.Key.signDocument,
           illustration: Theme.shared.image.homeContract,
           learnMoreText: LocalizableString.Key.learnMore,
           learnMoreAction: {},

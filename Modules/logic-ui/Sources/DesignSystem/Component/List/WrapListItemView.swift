@@ -20,14 +20,17 @@ public struct WrapListItemView: View {
   private let listItem: ListItemData
   private let action: (() -> Void)?
   private let mainTextVerticalPadding: CGFloat?
+  private let minHeight: Bool
 
   public init(
     listItem: ListItemData,
     mainTextVerticalPadding: CGFloat? = nil,
+    minHeight: Bool = true,
     action: (() -> Void)? = nil
   ) {
     self.listItem = listItem
     self.mainTextVerticalPadding = mainTextVerticalPadding
+    self.minHeight = minHeight
     self.action = action
   }
 
@@ -36,6 +39,7 @@ public struct WrapListItemView: View {
       if let leadingIcon = listItem.leadingIcon {
         leadingIcon
           .resizable()
+          .scaledToFit()
           .frame(width: 40, height: 40)
       }
 
@@ -54,6 +58,9 @@ public struct WrapListItemView: View {
           .fontWeight(.medium)
           .lineLimit(1)
           .truncationMode(.tail)
+          .if(listItem.isBlur) {
+            $0.blur(radius: 4, opaque: false)
+          }
 
         if let supportingText = listItem.supportingText {
           Text(supportingText)
@@ -61,9 +68,6 @@ public struct WrapListItemView: View {
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .lineLimit(1)
             .truncationMode(.tail)
-            .if(listItem.isBlur) {
-              $0.blur(radius: 4, opaque: false)
-            }
         }
       }
       .frame(maxWidth: .infinity, alignment: .leading)
@@ -93,7 +97,9 @@ public struct WrapListItemView: View {
       action?()
     }
     .padding(.all, mainTextVerticalPadding != nil ? mainTextVerticalPadding : SPACING_MEDIUM)
-    .frame(minHeight: 80, alignment: .leading)
+    .if(minHeight) {
+      $0.frame(minHeight: 80, alignment: .leading)
+    }
   }
 }
 

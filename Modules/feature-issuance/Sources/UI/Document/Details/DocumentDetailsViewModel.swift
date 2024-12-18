@@ -25,7 +25,8 @@ struct DocumentDetailsViewState: ViewState {
   let isLoading: Bool
   let error: ContentErrorView.Config?
   let config: IssuanceDetailUiConfig
-  let toolBarActions: [ContentHeaderView.Action]?
+  let hasDeleteAction: Bool
+  let documentFieldsCount: Int
 
   var isCancellable: Bool {
     return config.isExtraDocument
@@ -58,7 +59,8 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         isLoading: true,
         error: nil,
         config: config,
-        toolBarActions: nil
+        hasDeleteAction: false,
+        documentFieldsCount: 0
       )
     )
   }
@@ -75,28 +77,29 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
     case .success(let document):
 
-      var actions: [ContentHeaderView.Action]? {
-        switch viewState.config.flow {
-        case .extraDocument:
-          return [
-            .init(
-              image: Theme.shared.image.trash,
-              callback: self.onShowDeleteModal()
+      switch viewState.config.flow {
+      case .extraDocument:
+        self.setState {
+          $0
+            .copy(
+              document: document,
+              isLoading: false,
+              hasDeleteAction: true,
+              documentFieldsCount: document.documentFields.count
             )
-          ]
-        case .noDocument:
-          return nil
+            .copy(error: nil)
         }
-      }
-
-      self.setState {
-        $0
-          .copy(
-            document: document,
-            isLoading: false,
-            toolBarActions: actions
-          )
-          .copy(error: nil)
+      case .noDocument:
+        self.setState {
+          $0
+            .copy(
+              document: document,
+              isLoading: false,
+              hasDeleteAction: false,
+              documentFieldsCount: document.documentFields.count
+            )
+            .copy(error: nil)
+        }
       }
 
     case .failure(let error):

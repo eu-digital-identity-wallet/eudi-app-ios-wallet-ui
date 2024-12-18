@@ -25,8 +25,8 @@ public struct AppIconAndTextData {
   public init(
     appIcon: Image,
     appText: Image,
-    appIconSize: CGFloat = 40,
-    appTextSize: CGFloat = 40
+    appIconSize: CGFloat = 60,
+    appTextSize: CGFloat = 60
   ) {
     self.appIcon = appIcon
     self.appText = appText
