@@ -4740,16 +4740,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             )
         }
     }
-    
-    var scopedDocuments: [ScopedDocument] {
-        get {
-            return cuckoo_manager.getter(
-                "scopedDocuments",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.scopedDocuments
-            )
-        }
-    }
 
 
     struct __StubbingProxy_WalletKitConfig: Cuckoo.StubbingProxy {
@@ -4777,10 +4767,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         
         var logFileName: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,String> {
             return .init(manager: cuckoo_manager, name: "logFileName")
-        }
-        
-        var scopedDocuments: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,[ScopedDocument]> {
-            return .init(manager: cuckoo_manager, name: "scopedDocuments")
         }
     }
 
@@ -4813,10 +4799,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         
         var logFileName: Cuckoo.VerifyReadOnlyProperty<String> {
             return .init(manager: cuckoo_manager, name: "logFileName", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var scopedDocuments: Cuckoo.VerifyReadOnlyProperty<[ScopedDocument]> {
-            return .init(manager: cuckoo_manager, name: "scopedDocuments", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
     }
 }
@@ -4852,12 +4834,6 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
             return DefaultValueRegistry.defaultValue(for: (String).self)
         }
     }
-    
-    var scopedDocuments: [ScopedDocument] {
-        get {
-            return DefaultValueRegistry.defaultValue(for: ([ScopedDocument]).self)
-        }
-    }
 
 
 }
@@ -4872,6 +4848,7 @@ import Foundation
 import Combine
 import logic_resources
 import SwiftUI
+import OpenID4VCI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -5059,13 +5036,13 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func issueDocument(docType p0: String) async throws -> WalletStorage.Document {
+    public func issueDocument(identifier p0: String) async throws -> WalletStorage.Document {
         return try await cuckoo_manager.callThrows(
-            "issueDocument(docType p0: String) async throws -> WalletStorage.Document",
+            "issueDocument(identifier p0: String) async throws -> WalletStorage.Document",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.issueDocument(docType: p0)
+            defaultCall: await __defaultImplStub!.issueDocument(identifier: p0)
         )
     }
     
@@ -5099,17 +5076,17 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func valueForElementIdentifier(for p0: DocumentTypeIdentifier, with p1: String, elementIdentifier p2: String, parser p3: (String) -> String) -> DocValue {
+    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, parser p2: (String) -> String) -> DocValue {
         
-					return withoutActuallyEscaping(p3, do: { (p3: @escaping (String) -> String) -> DocValue in
+				return withoutActuallyEscaping(p2, do: { (p2: @escaping (String) -> String) -> DocValue in
 return cuckoo_manager.call(
-            "valueForElementIdentifier(for p0: DocumentTypeIdentifier, with p1: String, elementIdentifier p2: String, parser p3: (String) -> String) -> DocValue",
-            parameters: (p0, p1, p2, p3),
-            escapingParameters: (p0, p1, p2, { _ in fatalError("This is a stub! It's not supposed to be called!") }),
+            "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, parser p2: (String) -> String) -> DocValue",
+            parameters: (p0, p1, p2),
+            escapingParameters: (p0, p1, { _ in fatalError("This is a stub! It's not supposed to be called!") }),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.valueForElementIdentifier(for: p0, with: p1, elementIdentifier: p2, parser: p3)
+            defaultCall: __defaultImplStub!.valueForElementIdentifier(with: p0, elementIdentifier: p1, parser: p2)
         )
-					})
+				})
 
     }
     
@@ -5163,9 +5140,9 @@ return cuckoo_manager.call(
         )
     }
     
-    public func getScopedDocuments() async -> [ScopedDocument] {
-        return await cuckoo_manager.call(
-            "getScopedDocuments() async -> [ScopedDocument]",
+    public func getScopedDocuments() async throws -> [ScopedDocument] {
+        return try await cuckoo_manager.callThrows(
+            "getScopedDocuments() async throws -> [ScopedDocument]",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -5304,10 +5281,10 @@ return cuckoo_manager.call(
             ))
         }
         
-        func issueDocument<M1: Cuckoo.Matchable>(docType p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), WalletStorage.Document> where M1.MatchedType == String {
+        func issueDocument<M1: Cuckoo.Matchable>(identifier p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), WalletStorage.Document> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "issueDocument(docType p0: String) async throws -> WalletStorage.Document",
+                method: "issueDocument(identifier p0: String) async throws -> WalletStorage.Document",
                 parameterMatchers: matchers
             ))
         }
@@ -5336,10 +5313,10 @@ return cuckoo_manager.call(
             ))
         }
         
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(for p0: M1, with p1: M2, elementIdentifier p2: M3, parser p3: M4) -> Cuckoo.ProtocolStubFunction<(DocumentTypeIdentifier, String, String, (String) -> String), DocValue> where M1.MatchedType == DocumentTypeIdentifier, M2.MatchedType == String, M3.MatchedType == String, M4.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier, String, String, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, parser p2: M3) -> Cuckoo.ProtocolStubFunction<(String, String, (String) -> String), DocValue> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, String, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "valueForElementIdentifier(for p0: DocumentTypeIdentifier, with p1: String, elementIdentifier p2: String, parser p3: (String) -> String) -> DocValue",
+                method: "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, parser p2: (String) -> String) -> DocValue",
                 parameterMatchers: matchers
             ))
         }
@@ -5384,10 +5361,10 @@ return cuckoo_manager.call(
             ))
         }
         
-        func getScopedDocuments() -> Cuckoo.ProtocolStubFunction<(), [ScopedDocument]> {
+        func getScopedDocuments() -> Cuckoo.ProtocolStubThrowingFunction<(), [ScopedDocument]> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "getScopedDocuments() async -> [ScopedDocument]",
+                method: "getScopedDocuments() async throws -> [ScopedDocument]",
                 parameterMatchers: matchers
             ))
         }
@@ -5590,10 +5567,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func issueDocument<M1: Cuckoo.Matchable>(docType p0: M1) -> Cuckoo.__DoNotUse<(String), WalletStorage.Document> where M1.MatchedType == String {
+        func issueDocument<M1: Cuckoo.Matchable>(identifier p0: M1) -> Cuckoo.__DoNotUse<(String), WalletStorage.Document> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "issueDocument(docType p0: String) async throws -> WalletStorage.Document",
+                "issueDocument(identifier p0: String) async throws -> WalletStorage.Document",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -5638,10 +5615,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(for p0: M1, with p1: M2, elementIdentifier p2: M3, parser p3: M4) -> Cuckoo.__DoNotUse<(DocumentTypeIdentifier, String, String, (String) -> String), DocValue> where M1.MatchedType == DocumentTypeIdentifier, M2.MatchedType == String, M3.MatchedType == String, M4.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier, String, String, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, parser p2: M3) -> Cuckoo.__DoNotUse<(String, String, (String) -> String), DocValue> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, String, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return cuckoo_manager.verify(
-                "valueForElementIdentifier(for p0: DocumentTypeIdentifier, with p1: String, elementIdentifier p2: String, parser p3: (String) -> String) -> DocValue",
+                "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, parser p2: (String) -> String) -> DocValue",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -5713,7 +5690,7 @@ return cuckoo_manager.call(
         func getScopedDocuments() -> Cuckoo.__DoNotUse<(), [ScopedDocument]> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "getScopedDocuments() async -> [ScopedDocument]",
+                "getScopedDocuments() async throws -> [ScopedDocument]",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -5792,7 +5769,7 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func issueDocument(docType p0: String) async throws -> WalletStorage.Document {
+    public func issueDocument(identifier p0: String) async throws -> WalletStorage.Document {
         return DefaultValueRegistry.defaultValue(for: (WalletStorage.Document).self)
     }
     
@@ -5808,7 +5785,7 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: ([WalletStorage.Document]).self)
     }
     
-    public func valueForElementIdentifier(for p0: DocumentTypeIdentifier, with p1: String, elementIdentifier p2: String, parser p3: (String) -> String) -> DocValue {
+    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, parser p2: (String) -> String) -> DocValue {
         return DefaultValueRegistry.defaultValue(for: (DocValue).self)
     }
     
@@ -5832,7 +5809,7 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (DynamicIssuancePendingData?).self)
     }
     
-    public func getScopedDocuments() async -> [ScopedDocument] {
+    public func getScopedDocuments() async throws -> [ScopedDocument] {
         return DefaultValueRegistry.defaultValue(for: ([ScopedDocument]).self)
     }
 }

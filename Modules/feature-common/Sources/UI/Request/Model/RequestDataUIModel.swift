@@ -179,34 +179,34 @@ extension RequestDataUiModel {
 
     for docElement in docElements {
 
-        // Filter fields for Selectable Disclosed Fields
-        let dataFields = documentSelectiveDisclosableFields(
-          for: docElement.elements,
-          with: docElement,
-          walletKitController: walletKitController
-        )
+      // Filter fields for Selectable Disclosed Fields
+      let dataFields = documentSelectiveDisclosableFields(
+        for: docElement.elements,
+        with: docElement,
+        walletKitController: walletKitController
+      )
 
-        // Filter fields for mandatory keys for verification
-        let verificationFields = documentMandatoryVerificationFields(
-          for: docElement.elements,
-          with: docElement,
-          walletKitController: walletKitController
-        )
+      // Filter fields for mandatory keys for verification
+      let verificationFields = documentMandatoryVerificationFields(
+        for: docElement.elements,
+        with: docElement,
+        walletKitController: walletKitController
+      )
 
-        guard !dataFields.isEmpty || verificationFields != nil else {
-          continue
-        }
+      guard !dataFields.isEmpty || verificationFields != nil else {
+        continue
+      }
 
-        // Section Header
-        requestDataCell.append(documentSectionHeader(for: docElement))
+      // Section Header
+      requestDataCell.append(documentSectionHeader(for: docElement))
 
-        if !dataFields.isEmpty {
-          requestDataCell.append(contentsOf: dataFields)
-        }
+      if !dataFields.isEmpty {
+        requestDataCell.append(contentsOf: dataFields)
+      }
 
-        if let verificationFields {
-          requestDataCell.append(verificationFields)
-        }
+      if let verificationFields {
+        requestDataCell.append(verificationFields)
+      }
     }
 
     return requestDataCell
@@ -231,17 +231,16 @@ extension RequestDataUiModel {
         let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: docElement.docType))
         return !mandatoryKeys.contains(element.elementIdentifier)
       }
-      .map {
+      .map { element in
         RequestDataUIModel.requestDataRow(
           RequestDataRow(
-            id: "\($0.id)_\(docElement.id)",
+            id: "\(element.id)_\(docElement.id)",
             isSelected: true,
             isVisible: false,
-            title: $0.elementIdentifier,
+            title: element.displayName.ifNil { element.elementIdentifier },
             value: walletKitController.valueForElementIdentifier(
-              for: .init(rawValue: docElement.docType),
               with: docElement.id,
-              elementIdentifier: $0.elementIdentifier,
+              elementIdentifier: element.elementIdentifier,
               parser: {
                 Locale.current.localizedDateTime(
                   date: $0,
@@ -249,8 +248,8 @@ extension RequestDataUiModel {
                 )
               }
             ),
-            elementKey: $0.elementIdentifier,
-            namespace: $0.nameSpace
+            elementKey: element.elementIdentifier,
+            namespace: element.nameSpace
           )
         )
       }
@@ -266,16 +265,15 @@ extension RequestDataUiModel {
         let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: docElement.docType))
         return mandatoryKeys.contains(element.elementIdentifier)
       }
-      .map {
+      .map { element in
         RequestDataRow(
-          id: "\($0.id)_\(docElement.id)",
+          id: "\(element.id)_\(docElement.id)",
           isSelected: true,
           isVisible: false,
-          title: $0.elementIdentifier,
+          title: element.displayName.ifNil { element.elementIdentifier },
           value: walletKitController.valueForElementIdentifier(
-            for: .init(rawValue: docElement.docType),
             with: docElement.id,
-            elementIdentifier: $0.elementIdentifier,
+            elementIdentifier: element.elementIdentifier,
             parser: {
               Locale.current.localizedDateTime(
                 date: $0,
@@ -283,8 +281,8 @@ extension RequestDataUiModel {
               )
             }
           ),
-          elementKey: $0.elementIdentifier,
-          namespace: $0.nameSpace
+          elementKey: element.elementIdentifier,
+          namespace: element.nameSpace
         )
       }
 

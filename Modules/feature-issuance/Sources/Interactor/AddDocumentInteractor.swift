@@ -22,7 +22,7 @@ import logic_core
 
 public protocol AddDocumentInteractor: Sendable {
   func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState
-  func issueDocument(docType: String) async -> IssueDocumentPartialState
+  func issueDocument(configId: String) async -> IssueDocumentPartialState
   func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState
 }
 
@@ -37,22 +37,27 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
   }
 
   public func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState {
-
-    let scopedDocuments: [ScopedDocument] = await walletController.getScopedDocuments()
-
-    let uiScopedDocuments: [AddDocumentUIModel] = scopedDocuments.map { doc in
-        .init(
-          isEnabled: (doc.identifier == .mDocPid || doc.identifier == .sdJwtPid) || flow == .extraDocument,
-          documentName: .custom(doc.name),
-          type: doc.identifier
-        )
+    do {
+      let documents: [AddDocumentUIModel] = try await walletController.getScopedDocuments().compactMap { doc in
+        if flow == .extraDocument || doc.isPid {
+          return .init(
+            isEnabled: true,
+            documentName: .custom(doc.name),
+            configId: doc.configId
+          )
+        } else {
+          return nil
+        }
+      }
+      return .success(documents)
+    } catch {
+      return .failure(error)
     }
-    return .success(uiScopedDocuments)
   }
 
-  public func issueDocument(docType: String) async -> IssueDocumentPartialState {
+  public func issueDocument(configId: String) async -> IssueDocumentPartialState {
     do {
-      let doc = try await walletController.issueDocument(docType: docType)
+      let doc = try await walletController.issueDocument(identifier: configId)
       if doc.isDeferred {
         return .deferredSuccess
       } else if let authorizePresentationUrl = doc.authorizePresentationUrl {
@@ -84,7 +89,9 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
         webUrl: pendingData.url
       )
 
-      if doc.status != .pending {
+      if doc.status == .deferred {
+        return .deferredSuccess
+      } else if doc.status != .issued {
         return .success(doc.id)
       } else {
         return .failure(WalletCoreError.unableToIssueAndStore)
@@ -111,5 +118,6 @@ public enum IssueDocumentPartialState: Sendable {
 public enum IssueDynamicDocumentPartialState: Sendable {
   case success(String)
   case noPending
+  case deferredSuccess
   case failure(Error)
 }

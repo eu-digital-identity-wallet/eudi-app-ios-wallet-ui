@@ -80,6 +80,7 @@ final class TestDashboardInteractor: EudiTest {
           secureAreaName: nil,
           createdAt: nil,
           metadata: nil,
+          displayName: "",
           status: .deferred
         )
       ]

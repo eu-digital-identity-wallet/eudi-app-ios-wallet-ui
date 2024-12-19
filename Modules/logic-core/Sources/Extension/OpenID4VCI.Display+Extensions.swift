@@ -13,9 +13,13 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
+import OpenID4VCI
 
-public struct ScopedDocument: Equatable {
-  public let name: String
-  public let configId: String
-  public let isPid: Bool
+extension Array where Element == Display {
+  func getName(fallback: String) -> String {
+    return self.first(where: ( {$0.locale == Locale.current}))?.name
+    ?? self.first?.name
+    ?? fallback
+  }
 }

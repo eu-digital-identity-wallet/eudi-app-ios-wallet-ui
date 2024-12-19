@@ -23,7 +23,7 @@ public struct AddDocumentUIModel: Identifiable, Sendable {
   public let id: String
   public let documentName: LocalizableString.Key
   public let image: Image?
-  public let type: DocumentTypeIdentifier
+  public let configId: String
   public var isEnabled: Bool
   public var isLoading: Bool
 
@@ -32,16 +32,15 @@ public struct AddDocumentUIModel: Identifiable, Sendable {
     documentName: LocalizableString.Key,
     image: Image? = nil,
     isLoading: Bool = false,
-    type: DocumentTypeIdentifier
+    configId: String
   ) {
     self.id = UUID().uuidString
     self.isEnabled = isEnabled
     self.documentName = documentName
     self.image = image
     self.isLoading = isLoading
-    self.type = type
+    self.configId = configId
   }
-
 }
 
 public extension AddDocumentUIModel {
@@ -50,22 +49,26 @@ public extension AddDocumentUIModel {
       .init(
         isEnabled: true,
         documentName: .custom("Document name 1"),
-        type: .other(formatType: "")
+        isLoading: true,
+        configId: "id"
       ),
       .init(
         isEnabled: true,
         documentName: .custom("Document name 2"),
-        type: .other(formatType: "")
+        isLoading: true,
+        configId: "id"
       ),
       .init(
         isEnabled: true,
         documentName: .custom("Document name 3"),
-        type: .other(formatType: "")
+        isLoading: true,
+        configId: "id"
       ),
       .init(
         isEnabled: true,
         documentName: .custom("Document name 4"),
-        type: .other(formatType: "")
+        isLoading: true,
+        configId: "id"
       )
     ]
   }

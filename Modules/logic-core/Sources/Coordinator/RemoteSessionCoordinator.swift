@@ -73,7 +73,6 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
     _ = await session.receiveRequest()
   }
 
-  // MARK: - TODO Seems that the Kit doesnt respect the docType for the presentation request, e.g. mdoc request but also fetches sd-jwt
   public func requestReceived() async throws -> PresentationRequest {
     guard session.disclosedDocuments.isEmpty == false else {
       throw session.uiError ?? .init(description: "Failed to Find known documents to send")

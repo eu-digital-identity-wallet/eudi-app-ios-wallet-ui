@@ -52,11 +52,6 @@ protocol WalletKitConfig: Sendable {
    * The name of the file to be created to store logs
    */
   var logFileName: String { get }
-
-  /**
-   * Available documents for scoped issuance
-   */
-  var scopedDocuments: [ScopedDocument] { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {
@@ -104,14 +99,5 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
   var logFileName: String {
     return "eudi-ios-wallet-logs"
-  }
-
-  var scopedDocuments: [ScopedDocument] {
-    [
-      .init(name: "National ID", identifier: .mDocPid),
-      .init(name: "Driving License", identifier: .other(formatType: "org.iso.18013.5.1.mDL")),
-      .init(name: "Age Verification", identifier: .mDocPseudonym),
-      .init(name: "Photo ID", identifier: .other(formatType: "org.iso.23220.2.photoid.1"))
-    ]
   }
 }

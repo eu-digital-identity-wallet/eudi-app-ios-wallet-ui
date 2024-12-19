@@ -24,11 +24,11 @@ extension Array where Element == WalletStorage.Document {
 }
 
 extension WalletStorage.Document {
-  // MARK: - TODO We need a display name here from WalletStorage.Document
   func transformToDocDecodable() -> DocClaimsDecodable {
     return DeferrredDocument(
       id: self.id,
       createdAt: self.createdAt,
+      displayName: self.getDisplayName(Locale.current.systemLanguageCode),
       docClaims: [],
       docDataFormat: self.docDataFormat,
       ageOverXX: [:]

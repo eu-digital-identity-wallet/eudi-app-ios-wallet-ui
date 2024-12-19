@@ -40,6 +40,7 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable, Sendable {
     switch rawValue {
     case Self.mDocPidDocType:
       self = .mDocPid
+      // MARK: - TODO Remove sdJwtPidCredentialConfigType once issue is fixed with 1 proper vct
     case Self.sdJwtPidDocType, Self.sdJwtPidCredentialConfigType:
       self = .sdJwtPid
     case Self.mDocPseudonymDocType:
@@ -50,6 +51,7 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable, Sendable {
   }
 }
 
+// MARK: - TODO Remove sdJwtPidCredentialConfigType once issue is fixed with 1 proper vct
 private extension DocumentTypeIdentifier {
   static let mDocPidDocType = "eu.europa.ec.eudi.pid.1"
   static let sdJwtPidDocType = "urn:eu:europa:ec:eudi:pid:1"

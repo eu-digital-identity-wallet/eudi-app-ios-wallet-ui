@@ -104,7 +104,10 @@ extension Constants {
     }
     
     func receiveRequest() async throws -> MdocDataTransfer18013.UserRequestInfo {
-      .init(validItemsRequested: RequestItems())
+      .init(
+        docDataFormats: [DocumentTypeIdentifier.mDocPid.rawValue : .cbor],
+        validItemsRequested: RequestItems()
+      )
     }
     
     var flow: EudiWalletKit.FlowType
@@ -135,6 +138,7 @@ extension Constants {
           ElementViewModel(
             nameSpace: "nameSpace",
             elementIdentifier: "elementIdentifier",
+            displayName: "displayName",
             isOptional: false,
             intentToRetain: true,
             isEnabled: true

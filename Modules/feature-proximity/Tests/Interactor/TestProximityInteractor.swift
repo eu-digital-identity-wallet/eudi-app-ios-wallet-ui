@@ -236,7 +236,6 @@ final class TestProximityInteractor: EudiTest {
     stub(walletKitController) { mock in
       when(
         mock.valueForElementIdentifier(
-          for: any(),
           with: any(),
           elementIdentifier: any(),
           parser: any()
@@ -423,7 +422,7 @@ private extension TestProximityInteractor {
         id: Constants.randomIdentifier,
         isSelected: true,
         isVisible: false,
-        title: "elementIdentifier",
+        title: "displayName",
         value: .string("elementIdentifier"),
         elementKey: "elementIdentifier",
         namespace: "nameSpace"

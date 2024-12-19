@@ -46,7 +46,7 @@ public protocol WalletKitController: Sendable {
   func clearDocuments(status: DocumentStatus) async throws
   func deleteDocument(with id: String, status: DocumentStatus) async throws
   func loadDocuments() async throws
-  func issueDocument(docType: String) async throws -> WalletStorage.Document
+  func issueDocument(identifier: String) async throws -> WalletStorage.Document
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable
   func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssuanceModel
   func issueDocumentsByOfferUrl(
@@ -55,7 +55,6 @@ public protocol WalletKitController: Sendable {
     txCodeValue: String?
   ) async throws -> [WalletStorage.Document]
   func valueForElementIdentifier(
-    for documentType: DocumentTypeIdentifier,
     with documentId: String,
     elementIdentifier: String,
     parser: (String) -> String
@@ -65,7 +64,7 @@ public protocol WalletKitController: Sendable {
   func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document
   func storeDynamicIssuancePendingUrl(with url: URL)
   func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData?
-  func getScopedDocuments() async -> [ScopedDocument]
+  func getScopedDocuments() async throws -> [ScopedDocument]
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -90,6 +89,7 @@ final class WalletKitControllerImpl: WalletKitController {
     }
 
     wallet = walletKit
+    wallet.uiCulture = Locale.current.systemLanguageCode
     wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciConfig = .init(
@@ -116,23 +116,23 @@ final class WalletKitControllerImpl: WalletKitController {
     )
   }
 
-  public func clearAllDocuments() async {
+  func clearAllDocuments() async {
     try? await wallet.deleteAllDocuments()
   }
 
-  public func clearDocuments(status: DocumentStatus) async throws {
+  func clearDocuments(status: DocumentStatus) async throws {
     return try await wallet.deleteDocuments(status: status)
   }
 
-  public func deleteDocument(with id: String, status: DocumentStatus) async throws {
+  func deleteDocument(with id: String, status: DocumentStatus) async throws {
     return try await wallet.deleteDocument(id: id, status: status)
   }
 
-  public func loadDocuments() async throws {
+  func loadDocuments() async throws {
     _ = try await wallet.loadAllDocuments()
   }
 
-  public func startProximityPresentation() async -> ProximitySessionCoordinator {
+  func startProximityPresentation() async -> ProximitySessionCoordinator {
     self.stopPresentation()
     let session = await wallet.beginPresentation(flow: .ble)
     let proximitySessionCoordinator = DIGraph.resolver.force(
@@ -143,7 +143,7 @@ final class WalletKitControllerImpl: WalletKitController {
     return proximitySessionCoordinator
   }
 
-  public func startSameDevicePresentation(deepLink: URLComponents) async -> RemoteSessionCoordinator {
+  func startSameDevicePresentation(deepLink: URLComponents) async -> RemoteSessionCoordinator {
     await self.startRemotePresentation(
       urlString: decodeDeeplink(
         link: deepLink
@@ -151,25 +151,11 @@ final class WalletKitControllerImpl: WalletKitController {
     )
   }
 
-  public func startCrossDevicePresentation(urlString: String) async -> RemoteSessionCoordinator {
+  func startCrossDevicePresentation(urlString: String) async -> RemoteSessionCoordinator {
     await self.startRemotePresentation(urlString: urlString)
   }
 
-  private func startRemotePresentation(urlString: String) async -> RemoteSessionCoordinator {
-    self.stopPresentation()
-
-    let data = urlString.data(using: .utf8) ?? Data()
-
-    let session = await wallet.beginPresentation(flow: .openid4vp(qrCode: data))
-    let remoteSessionCoordinator = DIGraph.resolver.force(
-      RemoteSessionCoordinator.self,
-      argument: session
-    )
-    self.sessionCoordinatorHolder.setActiveRemoteCoordinator(remoteSessionCoordinator)
-    return remoteSessionCoordinator
-  }
-
-  public func stopPresentation() {
+  func stopPresentation() {
     self.sessionCoordinatorHolder.clear()
   }
 
@@ -181,11 +167,11 @@ final class WalletKitControllerImpl: WalletKitController {
     return wallet.storage.deferredDocuments
   }
 
-  public func fetchIssuedDocuments() -> [DocClaimsDecodable] {
+  func fetchIssuedDocuments() -> [DocClaimsDecodable] {
     return wallet.storage.docModels
   }
 
-  public func fetchIssuedDocuments(with types: [DocumentTypeIdentifier]) -> [DocClaimsDecodable] {
+  func fetchIssuedDocuments(with types: [DocumentTypeIdentifier]) -> [DocClaimsDecodable] {
     return wallet.storage.docModels
       .filter({ types.map { $0.rawValue }.contains($0.docType) })
   }
@@ -200,12 +186,12 @@ final class WalletKitControllerImpl: WalletKitController {
     return fetchIssuedDocuments().filter { !excludedRawValues.contains($0.docType.orEmpty) }
   }
 
-  public func fetchDocument(with id: String) -> DocClaimsDecodable? {
+  func fetchDocument(with id: String) -> DocClaimsDecodable? {
     wallet.storage.getDocumentModel(id: id)
   }
 
-  public func issueDocument(docType: String) async throws -> WalletStorage.Document {
-    return try await wallet.issueDocument(docType: docType)
+  func issueDocument(identifier: String) async throws -> WalletStorage.Document {
+    return try await wallet.issueDocument(docType: nil, scope: nil, identifier: identifier)
   }
 
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable {
@@ -259,7 +245,34 @@ final class WalletKitControllerImpl: WalletKitController {
     return .init(pendingDoc: pendingDoc, url: url)
   }
 
-  private func decodeDeeplink(link: URLComponents) -> String? {
+  func getScopedDocuments() async throws -> [ScopedDocument] {
+    let metadata = try await wallet.getIssuerMetadata()
+    return metadata.credentialsSupported.compactMap { credential in
+      switch credential.value {
+      case .msoMdoc(let config):
+        return ScopedDocument(
+          name: config.display.getName(fallback: credential.key.value),
+          configId: credential.key.value,
+          isPid: DocumentTypeIdentifier(rawValue: config.docType) == .mDocPid
+        )
+      case .sdJwtVc(let config):
+        guard let vct = config.vct else {
+          return nil
+        }
+        return ScopedDocument(
+          name: config.display.getName(fallback: credential.key.value),
+          configId: credential.key.value,
+          isPid: DocumentTypeIdentifier(rawValue: vct) == .sdJwtPid
+        )
+      default: return nil
+      }
+    }
+  }
+}
+
+private extension WalletKitControllerImpl {
+
+  func decodeDeeplink(link: URLComponents) -> String? {
     // Handling requests of the form
     //    mdoc-openid4vp://https://eudi.netcompany-intrasoft.com?client_id=Verifier&request_uri=https://eudi.netcompany-intrasoft.com/wallet/request.jwt/OWB1_xVU7ndoHmirBn7S2JpcC5fFPzAXGCY1fTLxDjczVATjzQvre_w4yEcMB4FO5KwuyYXXw-JottarKgEvRQ
     // so we need to drop scheme and forward slashes and keep the rest of the url in order to
@@ -268,8 +281,18 @@ final class WalletKitControllerImpl: WalletKitController {
     return link.removeSchemeFromComponents()?.string
   }
 
-  func getScopedDocuments() async -> [ScopedDocument] {
-    return configLogic.scopedDocuments
+  func startRemotePresentation(urlString: String) async -> RemoteSessionCoordinator {
+    self.stopPresentation()
+
+    let data = urlString.data(using: .utf8) ?? Data()
+
+    let session = await wallet.beginPresentation(flow: .openid4vp(qrCode: data))
+    let remoteSessionCoordinator = DIGraph.resolver.force(
+      RemoteSessionCoordinator.self,
+      argument: session
+    )
+    self.sessionCoordinatorHolder.setActiveRemoteCoordinator(remoteSessionCoordinator)
+    return remoteSessionCoordinator
   }
 }
 
@@ -302,7 +325,6 @@ extension WalletKitController {
   }
 
   public func valueForElementIdentifier(
-    for documentType: DocumentTypeIdentifier,
     with documentId: String,
     elementIdentifier: String,
     parser: (String) -> String
