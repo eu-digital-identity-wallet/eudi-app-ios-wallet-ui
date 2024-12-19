@@ -13,25 +13,10 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-
-extension Array where Element == WalletStorage.Document {
-  func transformToDocsDecodable() -> [DocClaimsDecodable] {
-    return self.compactMap { document in
-      return document.transformToDocDecodable()
-    }
-  }
-}
-
-extension WalletStorage.Document {
-  func transformToDocDecodable() -> DocClaimsDecodable {
-    return DeferrredDocument(
-      id: self.id,
-      createdAt: self.createdAt,
-      displayName: self.getDisplayName(Locale.current.systemLanguageCode),
-      docClaims: [],
-      docDataFormat: self.docDataFormat,
-      ageOverXX: [:]
-    )
-  }
+public struct DocumentJsonKeys {
+  public static let PORTRAIT = "portrait"
+  public static let FIRST_NAME = "given_name"
+  public static let LAST_NAME = "family_name"
+  public static let USER_PSEUDONYM = "user_pseudonym"
+  public static let EXPIRY_DATE = "expiry_date"
 }

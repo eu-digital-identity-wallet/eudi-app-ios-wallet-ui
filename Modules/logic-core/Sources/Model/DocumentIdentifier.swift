@@ -18,68 +18,43 @@ import logic_resources
 
 public enum DocumentTypeIdentifier: RawRepresentable, Equatable, Sendable {
 
-  case PID
-  case MDL
-  case AGE
-  case PHOTOID
-  case GENERIC(docType: String)
-
-  public var localizedTitle: String {
-    return switch self {
-    case .PID:
-      LocalizableString.shared.get(with: .pid)
-    case .MDL:
-      LocalizableString.shared.get(with: .mdl)
-    case .AGE:
-      LocalizableString.shared.get(with: .ageVerification)
-    case .PHOTOID:
-      LocalizableString.shared.get(with: .photoId)
-    case .GENERIC(let docType):
-      LocalizableString.shared.get(with: .dynamic(key: docType))
-    }
-  }
+  case mDocPid
+  case sdJwtPid
+  case mDocPseudonym
+  case other(formatType: String)
 
   public var rawValue: String {
     return switch self {
-    case .PID:
-      Self.pidDocType
-    case .MDL:
-      Self.mdlDocType
-    case .AGE:
-      Self.ageDocType
-    case .PHOTOID:
-      Self.photoIdDocType
-    case .GENERIC(let docType):
-      docType
-    }
-  }
-
-  public var isSupported: Bool {
-    return switch self {
-    case .PID, .MDL, .AGE, .PHOTOID: true
-    case .GENERIC: false
+    case .mDocPid:
+      Self.mDocPidDocType
+    case .sdJwtPid:
+      Self.sdJwtPidDocType
+    case .mDocPseudonym:
+      Self.mDocPseudonymDocType
+    case .other(let formatType):
+      formatType
     }
   }
 
   public init(rawValue: String) {
     switch rawValue {
-    case Self.pidDocType:
-      self = .PID
-    case Self.mdlDocType:
-      self = .MDL
-    case Self.ageDocType:
-      self = .AGE
-    case Self.photoIdDocType:
-      self = .PHOTOID
+    case Self.mDocPidDocType:
+      self = .mDocPid
+      // MARK: - TODO Remove sdJwtPidCredentialConfigType once issue is fixed with 1 proper vct
+    case Self.sdJwtPidDocType, Self.sdJwtPidCredentialConfigType:
+      self = .sdJwtPid
+    case Self.mDocPseudonymDocType:
+      self = .mDocPseudonym
     default:
-      self = .GENERIC(docType: rawValue)
+      self = .other(formatType: rawValue)
     }
   }
 }
 
+// MARK: - TODO Remove sdJwtPidCredentialConfigType once issue is fixed with 1 proper vct
 private extension DocumentTypeIdentifier {
-  static let pidDocType = "eu.europa.ec.eudi.pid.1"
-  static let mdlDocType = "org.iso.18013.5.1.mDL"
-  static let ageDocType = "eu.europa.ec.eudi.pseudonym.age_over_18.1"
-  static let photoIdDocType = "org.iso.23220.2.photoid.1"
+  static let mDocPidDocType = "eu.europa.ec.eudi.pid.1"
+  static let sdJwtPidDocType = "urn:eu:europa:ec:eudi:pid:1"
+  static let sdJwtPidCredentialConfigType = "eu.europa.ec.eudi.pid_jwt_vc_json"
+  static let mDocPseudonymDocType = "eu.europa.ec.eudi.pseudonym.age_over_18.1"
 }

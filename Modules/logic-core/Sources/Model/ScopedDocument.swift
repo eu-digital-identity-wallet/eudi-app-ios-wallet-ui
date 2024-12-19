@@ -13,25 +13,9 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 
-extension Array where Element == WalletStorage.Document {
-  func transformToDocsDecodable() -> [DocClaimsDecodable] {
-    return self.compactMap { document in
-      return document.transformToDocDecodable()
-    }
-  }
-}
-
-extension WalletStorage.Document {
-  func transformToDocDecodable() -> DocClaimsDecodable {
-    return DeferrredDocument(
-      id: self.id,
-      createdAt: self.createdAt,
-      displayName: self.getDisplayName(Locale.current.systemLanguageCode),
-      docClaims: [],
-      docDataFormat: self.docDataFormat,
-      ageOverXX: [:]
-    )
-  }
+public struct ScopedDocument: Equatable {
+  public let name: String
+  public let configId: String
+  public let isPid: Bool
 }

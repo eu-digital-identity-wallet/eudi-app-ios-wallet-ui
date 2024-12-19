@@ -74,12 +74,13 @@ final class TestDashboardInteractor: EudiTest {
     stubFetchDeferredDocuments(
       with: [
         .init(
-          docType: "",
-          docDataType: .cbor,
+          docType: nil,
+          docDataFormat: .cbor,
           data: Data(),
-          secureAreaName: "",
+          secureAreaName: nil,
           createdAt: nil,
-          displayName: nil,
+          metadata: nil,
+          displayName: "",
           status: .deferred
         )
       ]
@@ -154,10 +155,9 @@ final class TestDashboardInteractor: EudiTest {
         id: Constants.randomIdentifier,
         value: .init(
           id: Constants.euPidModelId,
-          type: DocumentTypeIdentifier.PID.rawValue,
-          title: "National ID",
+          title: Constants.euPidName,
           createdAt: Constants.documentCreatedAt,
-          expiresAt: "30 Mar 2050",
+          expiresAt: Constants.claimExpiredAt.formatted(),
           hasExpired: false,
           state: .issued
         )
@@ -166,10 +166,9 @@ final class TestDashboardInteractor: EudiTest {
         id: Constants.randomIdentifier,
         value: .init(
           id: Constants.isoMdlModelId,
-          type: DocumentTypeIdentifier.MDL.rawValue,
-          title: "Driving License",
+          title: Constants.isoMdlName,
           createdAt: Constants.documentCreatedAt,
-          expiresAt: "30 Mar 2050",
+          expiresAt: Constants.claimExpiredAt.formatted(),
           hasExpired: false,
           state: .issued
         )
@@ -178,7 +177,7 @@ final class TestDashboardInteractor: EudiTest {
     let expectedBearer: BearerUIModel = .init(
       id: Constants.randomIdentifier,
       value: .init(
-        name: "JAN",
+        name: Constants.claimFirstName,
         image: Theme.shared.image.user
       )
     )
@@ -223,13 +222,13 @@ private extension TestDashboardInteractor {
     XCTAssertEqual(bleAvailability, status)
   }
   
-  func stubFetchDocuments(with documents: [MdocDecodable]) {
+  func stubFetchDocuments(with documents: [DocClaimsDecodable]) {
     stub(walletKitController) { mock in
       when(mock.fetchAllDocuments()).thenReturn(documents)
     }
   }
   
-  func stubFetchIssuedDocuments(with documents: [MdocDecodable]) {
+  func stubFetchIssuedDocuments(with documents: [DocClaimsDecodable]) {
     stub(walletKitController) { mock in
       when(mock.fetchIssuedDocuments()).thenReturn(documents)
     }
@@ -241,13 +240,13 @@ private extension TestDashboardInteractor {
     }
   }
   
-  func stubFetchDocumentsWithExclusion(with documents: [MdocDecodable]) {
+  func stubFetchDocumentsWithExclusion(with documents: [DocClaimsDecodable]) {
     stub(walletKitController) { mock in
       when(mock.fetchIssuedDocuments(excluded: any())).thenReturn(documents)
     }
   }
   
-  func stubFetchMainPidDocument(with document: MdocDecodable?) {
+  func stubFetchMainPidDocument(with document: DocClaimsDecodable?) {
     stub(walletKitController) { mock in
       when(mock.fetchMainPidDocument()).thenReturn(document)
     }

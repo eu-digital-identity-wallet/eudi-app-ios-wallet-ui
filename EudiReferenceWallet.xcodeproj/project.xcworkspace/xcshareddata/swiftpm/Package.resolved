@@ -1,5 +1,5 @@
 {
-  "originHash" : "9f057a82d9d7b8b9aaf5e6e6fb50269460c01bbde83b71a2e51eff3bb11a847f",
+  "originHash" : "f350a365146a64c9caf4da0d3f5423c926589bdd106b944c8e324328e8e3f34f",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -92,6 +92,15 @@
       }
     },
     {
+      "identity" : "cryptoswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
+      "state" : {
+        "revision" : "678d442c6f7828def400a70ae15968aef67ef52d",
+        "version" : "1.8.3"
+      }
+    },
+    {
       "identity" : "cuckoo",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
@@ -105,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "cf0a7936ffd94698754c9aa611d0724c3b70b527",
-        "version" : "0.4.1"
+        "revision" : "ef353c447c7716c1fe5f5905ff98e089f5a29d43",
+        "version" : "0.5.1"
       }
     },
     {
@@ -114,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "34b0ca6d1f61e57e967d038a9d1954d25ae6a9dc",
-        "version" : "0.4.1"
+        "revision" : "bb00a75018ad9220880cea3790454ab02fffa6db",
+        "version" : "0.5.1"
       }
     },
     {
@@ -123,8 +132,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "dca2b2aae09753cda3a1ac33d11e83dca40d2201",
-        "version" : "0.3.1"
+        "revision" : "d3d9935b24b05902f840471bb70f651caa7f4cb5",
+        "version" : "0.4.0"
       }
     },
     {
@@ -132,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "a2d316ac7fd9b010ed528f41b3992be2eea98881",
-        "version" : "0.9.1"
+        "revision" : "276778d6e4abfefa7df7628bfaf24af7bd9d3a6f",
+        "version" : "0.10.0"
       }
     },
     {
@@ -177,8 +186,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
       "state" : {
-        "revision" : "c72b0f972f765bd106b52c953de0827096398763",
-        "version" : "0.6.2"
+        "revision" : "8a0f93c2163b5c7210b86fe0fd43ccb2725fe30c",
+        "version" : "0.6.4"
       }
     },
     {
@@ -186,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "5aa8e3ac98f53623f1798fa68763afe83a0eea91",
-        "version" : "0.8.5"
+        "revision" : "9167f16b8528217c362bf5eb68a14fa68bc85fd7",
+        "version" : "0.9.1"
       }
     },
     {
@@ -195,8 +204,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "627cea96c707da6ebb20039eeb467b96336aa8c3",
-        "version" : "0.4.1"
+        "revision" : "4c5c7c6c0a55a139e2b7c54eda0bdb9b9e09a4d4",
+        "version" : "0.4.3"
+      }
+    },
+    {
+      "identity" : "eudi-lib-sdjwt-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-sdjwt-swift.git",
+      "state" : {
+        "revision" : "3921713715d3ff32dea391bdfd4ec8a080db3921",
+        "version" : "0.4.0"
       }
     },
     {
@@ -215,6 +233,15 @@
       "state" : {
         "revision" : "d6c147a1d70992db39a141cb5bf9cf8fbb776250",
         "version" : "0.4.148"
+      }
+    },
+    {
+      "identity" : "jose-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/beatt83/jose-swift.git",
+      "state" : {
+        "revision" : "57fe5a03c83feaf73a84b23c02e641f86482e313",
+        "version" : "4.0.2"
       }
     },
     {
@@ -312,8 +339,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/realm/realm-swift.git",
       "state" : {
-        "revision" : "5553cfd1c789efdb3d6daf7f0cc0733cfe601846",
-        "version" : "10.54.1"
+        "revision" : "a3abcdf95a3176f5ad990239920aad4ef86e00de",
+        "version" : "10.54.2"
+      }
+    },
+    {
+      "identity" : "secp256k1.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/GigaBitcoin/secp256k1.swift.git",
+      "state" : {
+        "revision" : "4c77c7384768acf1093d66ccaacf298d322b10b7",
+        "version" : "0.15.0"
       }
     },
     {

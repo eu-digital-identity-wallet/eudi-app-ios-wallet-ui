@@ -157,7 +157,7 @@ final class TestStartupInteractor: EudiTest {
 
 private extension TestStartupInteractor {
   
-  func stubFetchDocuments(with documents: [MdocDecodable]) {
+  func stubFetchDocuments(with documents: [DocClaimsDecodable]) {
     stub(walletKitController) { mock in
       when(mock.loadDocuments()).thenDoNothing()
       when(mock.fetchAllDocuments()).thenReturn(documents)

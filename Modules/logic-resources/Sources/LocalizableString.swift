@@ -103,14 +103,6 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "read_faqs_button")
     case .loginButton:
       bundle.localizedString(forKey: "login_button")
-    case .pid:
-      bundle.localizedString(forKey: "pid")
-    case .mdl:
-      bundle.localizedString(forKey: "mdl")
-    case .ageVerification:
-      bundle.localizedString(forKey: "age_verification")
-    case .photoId:
-      bundle.localizedString(forKey: "photo_id")
     case .addDocumentTitle:
       bundle.localizedString(forKey: "add_document_title")
     case .addDocumentSubtitle:
@@ -187,10 +179,6 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "unknown_verifier")
     case .unknownIssuer:
       bundle.localizedString(forKey: "unknown_issuer")
-    case .expiry:
-      bundle.localizedString(forKey: "expiry")
-    case .issuedAt:
-      bundle.localizedString(forKey: "issued_at")
     case .yes:
       bundle.localizedString(forKey: "yes")
     case .no:
@@ -213,8 +201,6 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "ble_disabled_modal_button")
     case .shownAbove:
       bundle.localizedString(forKey: "shown_above")
-    case .loadSampleData:
-      bundle.localizedString(forKey: "load_sample_data")
     case .requestDataNoDocument:
       bundle.localizedString(forKey: "request_data_no_document")
     case .issuanceDetailsDeletionTitle(let args):
@@ -343,10 +329,6 @@ public extension LocalizableString {
     case requestDataShareBiometryCaption
     case readFaqButton
     case loginButton
-    case pid
-    case mdl
-    case ageVerification
-    case photoId
     case addDocumentTitle
     case addDocumentSubtitle
     case proximityConnectivityTitle
@@ -385,8 +367,6 @@ public extension LocalizableString {
     case issuanceSuccessNextButton
     case unknownVerifier
     case unknownIssuer
-    case expiry
-    case issuedAt
     case yes
     case no
     case scanQrCode
@@ -401,7 +381,6 @@ public extension LocalizableString {
     case bleDisabledModalCaption
     case bleDisabledModalButton
     case shownAbove
-    case loadSampleData
     case requestDataNoDocument
     case issuanceDetailsDeletionTitle([String])
     case issuanceDetailsDeletionCaption([String])

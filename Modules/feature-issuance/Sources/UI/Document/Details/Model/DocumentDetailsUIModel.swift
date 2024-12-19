@@ -36,7 +36,7 @@ public extension DocumentDetailsUIModel {
 
     public indirect enum Value: Sendable {
       case string(String)
-      case image(Data)
+      case image(Image)
     }
 
     public let id: String
@@ -47,7 +47,7 @@ public extension DocumentDetailsUIModel {
   static func mock() -> DocumentDetailsUIModel {
     DocumentDetailsUIModel(
       id: UUID().uuidString,
-      type: DocumentTypeIdentifier.PID,
+      type: DocumentTypeIdentifier.mDocPid,
       documentName: "Digital ID",
       holdersName: "Jane Doe",
       holdersImage: Theme.shared.image.user,
@@ -85,17 +85,14 @@ public extension DocumentDetailsUIModel {
   }
 }
 
-extension MdocDecodable {
+extension DocClaimsDecodable {
   func transformToDocumentDetailsUi() -> DocumentDetailsUIModel {
 
     let documentFields: [DocumentDetailsUIModel.DocumentField] =
     flattenValues(
-      input: displayStrings
+      input: docClaims
         .compactMap({$0})
         .sorted(by: {$0.order < $1.order})
-        .decodeGender()
-        .decodeUserPseudonym()
-        .mapTrueFalseToLocalizable()
         .parseDates(
           parser: {
             Locale.current.localizedDateTime(
@@ -103,8 +100,8 @@ extension MdocDecodable {
               uiFormatter: "dd MMM yyyy"
             )
           }
-        ),
-      images: displayImages
+        )
+        .parseUserPseudonym()
     )
 
     var bearerName: String {
@@ -114,14 +111,12 @@ extension MdocDecodable {
       return "\(fullName.first) \(fullName.last)"
     }
 
-    let identifier = DocumentTypeIdentifier(rawValue: docType)
+    let identifier = DocumentTypeIdentifier(rawValue: docType.orEmpty)
 
     return .init(
       id: id,
       type: identifier,
-      documentName: identifier.isSupported
-      ? identifier.localizedTitle
-      : displayName ?? identifier.localizedTitle,
+      documentName: displayName.orEmpty,
       holdersName: bearerName,
       holdersImage: getPortrait() ?? Theme.shared.image.user,
       createdAt: createdAt,
@@ -136,13 +131,15 @@ extension MdocDecodable {
     )
   }
 
-  private func flattenValues(input: [NameValue], images: [NameImage]) -> [DocumentDetailsUIModel.DocumentField] {
-    input.reduce(into: []) { partialResult, nameValue in
-      let uuid = UUID().uuidString
-      let title: String = LocalizableString.shared.get(with: .dynamic(key: nameValue.name))
-      if let image = images.first(where: {$0.name == nameValue.name})?.image {
+  private func flattenValues(input: [DocClaim]) -> [DocumentDetailsUIModel.DocumentField] {
+    input.reduce(into: []) { partialResult, docClaim in
 
-        guard nameValue.name != "portrait" else {
+      let uuid = UUID().uuidString
+      let title = docClaim.displayName.ifNilOrEmpty { docClaim.name }
+
+      if let uiImage = docClaim.dataValue.image {
+
+        guard docClaim.name != DocumentJsonKeys.PORTRAIT else {
           partialResult.append(
             .init(
               id: uuid,
@@ -157,15 +154,16 @@ extension MdocDecodable {
           .init(
             id: uuid,
             title: title,
-            value: .image(image)
+            value: .image(Image(uiImage: uiImage))
           )
         )
-      } else if let nested = nameValue.children {
+
+      } else if let nested = docClaim.children {
         partialResult.append(
           .init(
             id: uuid,
             title: title,
-            value: .string(flattenNested(parent: nameValue, nested: nested).value)
+            value: .string(docClaim.flattenNested(nested: nested).stringValue)
           )
         )
       } else {
@@ -173,42 +171,10 @@ extension MdocDecodable {
           .init(
             id: uuid,
             title: title,
-            value: .string(nameValue.value)
+            value: .string(docClaim.stringValue)
           )
         )
       }
     }
-  }
-
-  private func flattenNested(parent: NameValue, nested: [NameValue]) -> NameValue {
-    let flat = nested
-      .decodeGender()
-      .decodeUserPseudonym()
-      .mapTrueFalseToLocalizable()
-      .parseDates(
-        parser: {
-          Locale.current.localizedDateTime(
-            date: $0,
-            uiFormatter: "dd MMM yyyy"
-          )
-        }
-      )
-      .reduce(into: "") { partialResult, nameValue in
-        if let nestedChildren = nameValue.children {
-          let deepNested = flattenNested(parent: nameValue, nested: nestedChildren.sorted(by: {$0.order < $1.order}))
-          partialResult += "\(deepNested.value)\n"
-        } else {
-          partialResult += "\(LocalizableString.shared.get(with: .dynamic(key: nameValue.name))): \(nameValue.value)\n"
-        }
-      }
-      .dropLast()
-
-    return .init(
-      name: parent.name,
-      value: String(flat),
-      ns: parent.ns,
-      order: parent.order,
-      children: nil
-    )
   }
 }

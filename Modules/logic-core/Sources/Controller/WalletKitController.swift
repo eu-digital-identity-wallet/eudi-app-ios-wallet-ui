@@ -18,6 +18,7 @@ import Foundation
 import Combine
 import logic_resources
 import logic_business
+import SwiftUI
 
 private enum KeyIdentifier: String, KeyChainWrapper {
   public var value: String {
@@ -34,38 +35,36 @@ public protocol WalletKitController: Sendable {
   func startSameDevicePresentation(deepLink: URLComponents) async -> RemoteSessionCoordinator
   func startCrossDevicePresentation(urlString: String) async -> RemoteSessionCoordinator
   func stopPresentation()
-  func fetchAllDocuments() -> [MdocDecodable]
+  func fetchAllDocuments() -> [DocClaimsDecodable]
   func fetchDeferredDocuments() -> [WalletStorage.Document]
-  func fetchIssuedDocuments() -> [MdocDecodable]
-  func fetchIssuedDocuments(with type: DocumentTypeIdentifier) -> [MdocDecodable]
-  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [MdocDecodable]
-  func fetchMainPidDocument() -> MdocDecodable?
-  func fetchDocument(with id: String) -> MdocDecodable?
-  func loadSampleData(dataFiles: [String]) async throws
+  func fetchIssuedDocuments() -> [DocClaimsDecodable]
+  func fetchIssuedDocuments(with types: [DocumentTypeIdentifier]) -> [DocClaimsDecodable]
+  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [DocClaimsDecodable]
+  func fetchMainPidDocument() -> DocClaimsDecodable?
+  func fetchDocument(with id: String) -> DocClaimsDecodable?
   func clearAllDocuments() async
   func clearDocuments(status: DocumentStatus) async throws
   func deleteDocument(with id: String, status: DocumentStatus) async throws
   func loadDocuments() async throws
-  func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document
-  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> MdocDecodable
+  func issueDocument(identifier: String) async throws -> WalletStorage.Document
+  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable
   func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssuanceModel
   func issueDocumentsByOfferUrl(
     offerUri: String,
     docTypes: [OfferedDocModel],
-    format: DataFormat,
     txCodeValue: String?
   ) async throws -> [WalletStorage.Document]
   func valueForElementIdentifier(
-    for documentType: DocumentTypeIdentifier,
     with documentId: String,
     elementIdentifier: String,
     parser: (String) -> String
-  ) -> MdocValue
+  ) -> DocValue
   func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String]
   func retrieveLogFileUrl() -> URL?
   func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document
   func storeDynamicIssuancePendingUrl(with url: URL)
   func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData?
+  func getScopedDocuments() async throws -> [ScopedDocument]
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -90,6 +89,7 @@ final class WalletKitControllerImpl: WalletKitController {
     }
 
     wallet = walletKit
+    wallet.uiCulture = Locale.current.systemLanguageCode
     wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciConfig = .init(
@@ -107,38 +107,32 @@ final class WalletKitControllerImpl: WalletKitController {
   func issueDocumentsByOfferUrl(
     offerUri: String,
     docTypes: [OfferedDocModel],
-    format: DataFormat,
     txCodeValue: String?
   ) async throws -> [WalletStorage.Document] {
     return try await wallet.issueDocumentsByOfferUrl(
       offerUri: offerUri,
       docTypes: docTypes,
-      txCodeValue: txCodeValue,
-      format: format
+      txCodeValue: txCodeValue
     )
   }
 
-  public func loadSampleData(dataFiles: [String]) async throws {
-    return try await wallet.loadSampleData(sampleDataFiles: dataFiles)
-  }
-
-  public func clearAllDocuments() async {
+  func clearAllDocuments() async {
     try? await wallet.deleteAllDocuments()
   }
 
-  public func clearDocuments(status: DocumentStatus) async throws {
+  func clearDocuments(status: DocumentStatus) async throws {
     return try await wallet.deleteDocuments(status: status)
   }
 
-  public func deleteDocument(with id: String, status: DocumentStatus) async throws {
+  func deleteDocument(with id: String, status: DocumentStatus) async throws {
     return try await wallet.deleteDocument(id: id, status: status)
   }
 
-  public func loadDocuments() async throws {
+  func loadDocuments() async throws {
     _ = try await wallet.loadAllDocuments()
   }
 
-  public func startProximityPresentation() async -> ProximitySessionCoordinator {
+  func startProximityPresentation() async -> ProximitySessionCoordinator {
     self.stopPresentation()
     let session = await wallet.beginPresentation(flow: .ble)
     let proximitySessionCoordinator = DIGraph.resolver.force(
@@ -149,7 +143,7 @@ final class WalletKitControllerImpl: WalletKitController {
     return proximitySessionCoordinator
   }
 
-  public func startSameDevicePresentation(deepLink: URLComponents) async -> RemoteSessionCoordinator {
+  func startSameDevicePresentation(deepLink: URLComponents) async -> RemoteSessionCoordinator {
     await self.startRemotePresentation(
       urlString: decodeDeeplink(
         link: deepLink
@@ -157,67 +151,53 @@ final class WalletKitControllerImpl: WalletKitController {
     )
   }
 
-  public func startCrossDevicePresentation(urlString: String) async -> RemoteSessionCoordinator {
+  func startCrossDevicePresentation(urlString: String) async -> RemoteSessionCoordinator {
     await self.startRemotePresentation(urlString: urlString)
   }
 
-  private func startRemotePresentation(urlString: String) async -> RemoteSessionCoordinator {
-    self.stopPresentation()
-
-    let data = urlString.data(using: .utf8) ?? Data()
-
-    let session = await wallet.beginPresentation(flow: .openid4vp(qrCode: data))
-    let remoteSessionCoordinator = DIGraph.resolver.force(
-      RemoteSessionCoordinator.self,
-      argument: session
-    )
-    self.sessionCoordinatorHolder.setActiveRemoteCoordinator(remoteSessionCoordinator)
-    return remoteSessionCoordinator
-  }
-
-  public func stopPresentation() {
+  func stopPresentation() {
     self.sessionCoordinatorHolder.clear()
   }
 
-  func fetchAllDocuments() -> [MdocDecodable] {
-    return fetchIssuedDocuments() + fetchDeferredDocuments().transformToMdocDecodable()
+  func fetchAllDocuments() -> [DocClaimsDecodable] {
+    return fetchIssuedDocuments() + fetchDeferredDocuments().transformToDocsDecodable()
   }
 
   func fetchDeferredDocuments() -> [WalletStorage.Document] {
     return wallet.storage.deferredDocuments
   }
 
-  public func fetchIssuedDocuments() -> [MdocDecodable] {
-    return wallet.storage.mdocModels
+  func fetchIssuedDocuments() -> [DocClaimsDecodable] {
+    return wallet.storage.docModels
   }
 
-  public func fetchIssuedDocuments(with type: DocumentTypeIdentifier) -> [MdocDecodable] {
-    return wallet.storage.mdocModels
-      .filter({ $0.docType == type.rawValue })
+  func fetchIssuedDocuments(with types: [DocumentTypeIdentifier]) -> [DocClaimsDecodable] {
+    return wallet.storage.docModels
+      .filter({ types.map { $0.rawValue }.contains($0.docType) })
   }
 
-  func fetchMainPidDocument() -> MdocDecodable? {
-    return fetchIssuedDocuments(with: DocumentTypeIdentifier.PID)
+  func fetchMainPidDocument() -> DocClaimsDecodable? {
+    return fetchIssuedDocuments(with: [DocumentTypeIdentifier.mDocPid, DocumentTypeIdentifier.sdJwtPid])
       .sorted { $0.createdAt > $1.createdAt }.last
   }
 
-  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [MdocDecodable] {
+  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [DocClaimsDecodable] {
     let excludedRawValues = excluded.map { $0.rawValue }
-    return fetchIssuedDocuments().filter { !excludedRawValues.contains($0.docType) }
+    return fetchIssuedDocuments().filter { !excludedRawValues.contains($0.docType.orEmpty) }
   }
 
-  public func fetchDocument(with id: String) -> MdocDecodable? {
+  func fetchDocument(with id: String) -> DocClaimsDecodable? {
     wallet.storage.getDocumentModel(id: id)
   }
 
-  public func issueDocument(docType: String, format: DataFormat) async throws -> WalletStorage.Document {
-    return try await wallet.issueDocument(docType: docType, format: format)
+  func issueDocument(identifier: String) async throws -> WalletStorage.Document {
+    return try await wallet.issueDocument(docType: nil, scope: nil, identifier: identifier)
   }
 
-  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> MdocDecodable {
+  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable {
     let result = try await wallet.requestDeferredIssuance(deferredDoc: doc)
     if result.isDeferred {
-      return result.transformToMdocDecodable()
+      return result.transformToDocDecodable()
     } else if let doc = fetchDocument(with: result.id) {
       return doc
     } else {
@@ -265,7 +245,34 @@ final class WalletKitControllerImpl: WalletKitController {
     return .init(pendingDoc: pendingDoc, url: url)
   }
 
-  private func decodeDeeplink(link: URLComponents) -> String? {
+  func getScopedDocuments() async throws -> [ScopedDocument] {
+    let metadata = try await wallet.getIssuerMetadata()
+    return metadata.credentialsSupported.compactMap { credential in
+      switch credential.value {
+      case .msoMdoc(let config):
+        return ScopedDocument(
+          name: config.display.getName(fallback: credential.key.value),
+          configId: credential.key.value,
+          isPid: DocumentTypeIdentifier(rawValue: config.docType) == .mDocPid
+        )
+      case .sdJwtVc(let config):
+        guard let vct = config.vct else {
+          return nil
+        }
+        return ScopedDocument(
+          name: config.display.getName(fallback: credential.key.value),
+          configId: credential.key.value,
+          isPid: DocumentTypeIdentifier(rawValue: vct) == .sdJwtPid
+        )
+      default: return nil
+      }
+    }
+  }
+}
+
+private extension WalletKitControllerImpl {
+
+  func decodeDeeplink(link: URLComponents) -> String? {
     // Handling requests of the form
     //    mdoc-openid4vp://https://eudi.netcompany-intrasoft.com?client_id=Verifier&request_uri=https://eudi.netcompany-intrasoft.com/wallet/request.jwt/OWB1_xVU7ndoHmirBn7S2JpcC5fFPzAXGCY1fTLxDjczVATjzQvre_w4yEcMB4FO5KwuyYXXw-JottarKgEvRQ
     // so we need to drop scheme and forward slashes and keep the rest of the url in order to
@@ -273,25 +280,39 @@ final class WalletKitControllerImpl: WalletKitController {
 
     return link.removeSchemeFromComponents()?.string
   }
+
+  func startRemotePresentation(urlString: String) async -> RemoteSessionCoordinator {
+    self.stopPresentation()
+
+    let data = urlString.data(using: .utf8) ?? Data()
+
+    let session = await wallet.beginPresentation(flow: .openid4vp(qrCode: data))
+    let remoteSessionCoordinator = DIGraph.resolver.force(
+      RemoteSessionCoordinator.self,
+      argument: session
+    )
+    self.sessionCoordinatorHolder.setActiveRemoteCoordinator(remoteSessionCoordinator)
+    return remoteSessionCoordinator
+  }
 }
 
 extension WalletKitController {
 
   public func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String] {
     switch documentType {
-    case .PID:
+    case .mDocPid, .sdJwtPid:
       return [
         "issuance_date",
-        "expiry_date",
+        DocumentJsonKeys.EXPIRY_DATE,
         "issuing_authority",
         "document_number",
         "administrative_number",
         "issuing_country",
         "issuing_jurisdiction",
-        "portrait",
+        DocumentJsonKeys.PORTRAIT,
         "portrait_capture_date"
       ]
-    case .AGE:
+    case .mDocPseudonym:
       return [
         "issuance_date",
         "expiry_date",
@@ -304,72 +325,38 @@ extension WalletKitController {
   }
 
   public func valueForElementIdentifier(
-    for documentType: DocumentTypeIdentifier,
     with documentId: String,
     elementIdentifier: String,
     parser: (String) -> String
-  ) -> MdocValue {
-
-    // Check if we have image data and early return them
-    if let imageName = wallet.storage.mdocModels
-      .first(where: { $0.id == documentId })?.displayImages
-      .first(where: { $0.name == elementIdentifier }) {
-      return .image(imageName.image)
-    }
+  ) -> DocValue {
 
     guard let document = fetchDocument(with: documentId) else {
       return .unavailable(LocalizableString.shared.get(with: .errorUnableFetchDocument))
     }
 
-    // Convert the Stored models to their [Key: Value] array
-    var displayStrings = document.displayStrings
-      .decodeGender()
-      .decodeUserPseudonym()
-      .parseDates(parser: parser)
-      .mapTrueFalseToLocalizable()
-
-    if documentType == .MDL {
-
-      // Flatten properties in order to be made in a Key: Value structure
-      if let drivingPrivileges = document.getDrivingPrivileges(parser: parser) {
-        displayStrings.appendOrReplace(drivingPrivileges)
-      }
-
-      displayStrings.appendOrReplace(
-        contentsOf: decodeAgeOver(ageOverDictionary: document.ageOverXX)
+    let claims = document.docClaims
+      .parseDates(
+        parser: {
+          Locale.current.localizedDateTime(
+            date: $0,
+            uiFormatter: "dd MMM yyyy"
+          )
+        }
       )
-    } else if documentType == .PID {
-      displayStrings.appendOrReplace(
-        contentsOf: decodeAgeOver(ageOverDictionary: document.ageOverXX)
-      )
-    }
-    // Find the first Value that Matches given Key for document
+      .parseUserPseudonym()
 
-    displayStrings.forEach { print($0.name) }
-
-    let value = displayStrings
-      .first(where: { element in
-        element.name == elementIdentifier
-      })?.value
-    // Return the value if found, or a static string that field was not found
-
-    guard let isAvailable = value else {
+    guard let element = claims.first(where: { $0.name == elementIdentifier }) else {
       return .unavailable(LocalizableString.shared.get(with: .unavailableField))
     }
 
-    return .string(isAvailable)
-  }
-
-  private func decodeAgeOver(ageOverDictionary: [Int: Bool]) -> [NameValue] {
-    var nameValue: [NameValue] = []
-    ageOverDictionary.sorted(by: {$0.key < $1.key}).forEach { key, value in
-      nameValue.append(
-        .init(
-          name: "age_over_\(key)",
-          value: value ? LocalizableString.shared.get(with: .yes) : LocalizableString.shared.get(with: .no)
-        )
-      )
+    if let image = element.dataValue.image {
+      return .image(Image(uiImage: image))
     }
-    return nameValue
+
+    if let nested = element.children {
+      return .string(element.flattenNested(nested: nested).stringValue)
+    }
+
+    return .string(element.stringValue)
   }
 }

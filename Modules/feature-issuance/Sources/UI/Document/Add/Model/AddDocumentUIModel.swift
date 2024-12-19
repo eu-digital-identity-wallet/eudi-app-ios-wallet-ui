@@ -23,7 +23,7 @@ public struct AddDocumentUIModel: Identifiable, Sendable {
   public let id: String
   public let documentName: LocalizableString.Key
   public let image: Image?
-  public let type: DocumentTypeIdentifier
+  public let configId: String
   public var isEnabled: Bool
   public var isLoading: Bool
 
@@ -32,60 +32,44 @@ public struct AddDocumentUIModel: Identifiable, Sendable {
     documentName: LocalizableString.Key,
     image: Image? = nil,
     isLoading: Bool = false,
-    type: DocumentTypeIdentifier
+    configId: String
   ) {
     self.id = UUID().uuidString
     self.isEnabled = isEnabled
     self.documentName = documentName
     self.image = image
     self.isLoading = isLoading
-    self.type = type
+    self.configId = configId
   }
-
 }
 
 public extension AddDocumentUIModel {
-
-  static var items: [AddDocumentUIModel] {
+  static var mocks: [AddDocumentUIModel] {
     [
       .init(
         isEnabled: true,
-        documentName: .pid,
-        image: Theme.shared.image.id,
-        isLoading: false,
-        type: .PID
+        documentName: .custom("Document name 1"),
+        isLoading: true,
+        configId: "id"
       ),
       .init(
         isEnabled: true,
-        documentName: .mdl,
-        image: Theme.shared.image.id,
-        isLoading: false,
-        type: .MDL
+        documentName: .custom("Document name 2"),
+        isLoading: true,
+        configId: "id"
       ),
       .init(
         isEnabled: true,
-        documentName: .ageVerification,
-        image: Theme.shared.image.id,
-        isLoading: false,
-        type: .AGE
+        documentName: .custom("Document name 3"),
+        isLoading: true,
+        configId: "id"
       ),
       .init(
         isEnabled: true,
-        documentName: .photoId,
-        image: Theme.shared.image.id,
-        isLoading: false,
-        type: .PHOTOID
+        documentName: .custom("Document name 4"),
+        isLoading: true,
+        configId: "id"
       )
     ]
-  }
-
-  static var mocks: [AddDocumentUIModel] {
-    AddDocumentUIModel.items.map({
-        var cell = $0
-        cell.isEnabled = true
-        cell.isLoading = false
-        return cell
-      }
-    )
   }
 }

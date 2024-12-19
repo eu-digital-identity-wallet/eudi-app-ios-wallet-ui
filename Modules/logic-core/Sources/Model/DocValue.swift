@@ -14,24 +14,30 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import SwiftUI
 
-extension Array where Element == WalletStorage.Document {
-  func transformToDocsDecodable() -> [DocClaimsDecodable] {
-    return self.compactMap { document in
-      return document.transformToDocDecodable()
+public enum DocValue {
+  case string(String)
+  case unavailable(String)
+  case image(Image)
+
+  public var string: String? {
+    switch self {
+    case .string(let string):
+      string
+    case .unavailable(let string):
+      string
+    default:
+      nil
     }
   }
-}
 
-extension WalletStorage.Document {
-  func transformToDocDecodable() -> DocClaimsDecodable {
-    return DeferrredDocument(
-      id: self.id,
-      createdAt: self.createdAt,
-      displayName: self.getDisplayName(Locale.current.systemLanguageCode),
-      docClaims: [],
-      docDataFormat: self.docDataFormat,
-      ageOverXX: [:]
-    )
+  public var image: Image? {
+    switch self {
+    case .image(let image):
+      image
+    default:
+      nil
+    }
   }
 }

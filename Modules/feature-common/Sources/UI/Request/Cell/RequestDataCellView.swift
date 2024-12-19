@@ -103,9 +103,9 @@ struct RequestDataCellView: View {
     cellModel: RequestDataUIModel.requestDataSection(
       RequestDataSection(
         id: "id",
-        type: .age,
         title: "Title"
       )
     ),
-    isLoading: false)
+    isLoading: false
+  )
 }

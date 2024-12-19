@@ -41,7 +41,7 @@ struct DocumentOfferCellView: View {
             .scaledToFit()
             .frame(width: 45)
 
-          Text(cellModel.title)
+          Text(cellModel.documentName)
             .typography(Theme.shared.font.titleMedium)
             .foregroundStyle(Theme.shared.color.black)
 
@@ -63,8 +63,7 @@ struct DocumentOfferCellView: View {
 #Preview {
   DocumentOfferCellView(
     cellModel: DocumentOfferUIModel.UIOffer(
-      documentName: "Name",
-      documentType: DocumentTypeIdentifier.PID
+      documentName: "Name"
     ),
     isLoading: false
   )

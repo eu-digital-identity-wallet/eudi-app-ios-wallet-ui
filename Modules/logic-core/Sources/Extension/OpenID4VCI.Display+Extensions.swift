@@ -14,29 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import OpenID4VCI
 
-public enum MdocValue {
-  case string(String)
-  case unavailable(String)
-  case image(Data)
-
-  public var string: String? {
-    switch self {
-    case .string(let string):
-      string
-    case .unavailable(let string):
-      string
-    default:
-      nil
-    }
-  }
-
-  public var image: Data? {
-    switch self {
-    case .image(let image):
-      image
-    default:
-      nil
-    }
+extension Array where Element == Display {
+  func getName(fallback: String) -> String {
+    return self.first(where: ( {$0.locale == Locale.current}))?.name
+    ?? self.first?.name
+    ?? fallback
   }
 }

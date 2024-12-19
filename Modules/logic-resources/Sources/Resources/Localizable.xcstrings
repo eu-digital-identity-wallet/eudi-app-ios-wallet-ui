@@ -1,17 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "aamva_sex" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AAMVA Sex"
-          }
-        }
-      }
-    },
     "add_doc" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -56,127 +45,6 @@
         }
       }
     },
-    "age_birth_year" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In what year were you born?"
-          }
-        }
-      }
-    },
-    "age_in_years" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "How old are you (in years)?"
-          }
-        }
-      }
-    },
-    "age_over_13" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 13?"
-          }
-        }
-      }
-    },
-    "age_over_15" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 15?"
-          }
-        }
-      }
-    },
-    "age_over_16" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 16?"
-          }
-        }
-      }
-    },
-    "age_over_18" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 18?"
-          }
-        }
-      }
-    },
-    "age_over_21" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 21?"
-          }
-        }
-      }
-    },
-    "age_over_60" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 60?"
-          }
-        }
-      }
-    },
-    "age_over_65" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 65?"
-          }
-        }
-      }
-    },
-    "age_over_68" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 68?"
-          }
-        }
-      }
-    },
-    "age_verification" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age Verification"
-          }
-        }
-      }
-    },
     "biometry_open_settings" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -184,61 +52,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Go to settings"
-          }
-        }
-      }
-    },
-    "birth_city" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "City of birth"
-          }
-        }
-      }
-    },
-    "birth_country" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Country of birth"
-          }
-        }
-      }
-    },
-    "birth_date" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Date of birth"
-          }
-        }
-      }
-    },
-    "birth_place" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Place of birth"
-          }
-        }
-      }
-    },
-    "birth_state" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "State of birth"
           }
         }
       }
@@ -408,28 +221,6 @@
         }
       }
     },
-    "date_of_expiry" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Date of expiry"
-          }
-        }
-      }
-    },
-    "date_of_issue" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Date of issue"
-          }
-        }
-      }
-    },
     "deferred_document_issued_modal_caption" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -448,50 +239,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Documents issued"
-          }
-        }
-      }
-    },
-    "DHS_compliance" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "DHS Compliance"
-          }
-        }
-      }
-    },
-    "document_number" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Document number"
-          }
-        }
-      }
-    },
-    "driving_privileges" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Categories of vehicles"
-          }
-        }
-      }
-    },
-    "EDL_credential" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EDL Credential"
           }
         }
       }
@@ -540,72 +287,6 @@
         }
       }
     },
-    "expiry" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "expiry"
-          }
-        }
-      }
-    },
-    "expiry_date" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Date of expiry"
-          }
-        }
-      }
-    },
-    "eye_colour" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eye colour"
-          }
-        }
-      }
-    },
-    "family_name" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Family Name"
-          }
-        }
-      }
-    },
-    "family_name_birth" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Family Name at Birth"
-          }
-        }
-      }
-    },
-    "family_name_national_character" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Family name in national characters"
-          }
-        }
-      }
-    },
     "faq_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -613,28 +294,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "FAQ"
-          }
-        }
-      }
-    },
-    "first_name_birth" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "First Name at Birth"
-          }
-        }
-      }
-    },
-    "gender" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gender"
           }
         }
       }
@@ -657,61 +316,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Houston we have a problem!"
-          }
-        }
-      }
-    },
-    "given_name" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Given Name"
-          }
-        }
-      }
-    },
-    "given_name_birth" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Given Name at Birth"
-          }
-        }
-      }
-    },
-    "given_name_national_character" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Given name in national characters"
-          }
-        }
-      }
-    },
-    "hair_colour" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hair colour"
-          }
-        }
-      }
-    },
-    "height" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Height (cm)"
           }
         }
       }
@@ -767,17 +371,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ requires verification"
-          }
-        }
-      }
-    },
-    "issuance_date" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Date of issuance"
           }
         }
       }
@@ -914,61 +507,6 @@
         }
       }
     },
-    "issue_date" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Date of issue"
-          }
-        }
-      }
-    },
-    "issued_at" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Issued at"
-          }
-        }
-      }
-    },
-    "issuing_authority" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Issuing authority"
-          }
-        }
-      }
-    },
-    "issuing_country" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Issuing country"
-          }
-        }
-      }
-    },
-    "issuing_jurisdiction" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Issuing jurisdiction"
-          }
-        }
-      }
-    },
     "item_not_found_in_storage" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -987,17 +525,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Items not found in storage"
-          }
-        }
-      }
-    },
-    "load_sample_data" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Load Sample Data"
           }
         }
       }
@@ -1046,17 +573,6 @@
         }
       }
     },
-    "mdl" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Driving License"
-          }
-        }
-      }
-    },
     "missing_pid" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1075,17 +591,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "More options"
-          }
-        }
-      }
-    },
-    "nationality" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nationality"
           }
         }
       }
@@ -1137,28 +642,6 @@
         }
       }
     },
-    "photo_id" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Photo ID"
-          }
-        }
-      }
-    },
-    "pid" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "National ID"
-          }
-        }
-      }
-    },
     "please_wait" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1166,28 +649,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Please wait..."
-          }
-        }
-      }
-    },
-    "portrait" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Portrait"
-          }
-        }
-      }
-    },
-    "portrait_capture_date" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Portrait image timestamp"
           }
         }
       }
@@ -1599,105 +1060,6 @@
         }
       }
     },
-    "resident_address" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Permanent place of residence"
-          }
-        }
-      }
-    },
-    "resident_city" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resident city"
-          }
-        }
-      }
-    },
-    "resident_country" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resident country"
-          }
-        }
-      }
-    },
-    "resident_house_number" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resident house number"
-          }
-        }
-      }
-    },
-    "resident_postal_code" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resident postal code"
-          }
-        }
-      }
-    },
-    "resident_state" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resident state"
-          }
-        }
-      }
-    },
-    "resident_street" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resident street"
-          }
-        }
-      }
-    },
-    "retrieve_logs" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Retrieve logs"
-          }
-        }
-      }
-    },
-    "room_number" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Room Number"
-          }
-        }
-      }
-    },
     "scan_qr_code" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1764,17 +1126,6 @@
         }
       }
     },
-    "seat_number" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seat Number"
-          }
-        }
-      }
-    },
     "select_document" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1782,17 +1133,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select document"
-          }
-        }
-      }
-    },
-    "sex" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sex"
           }
         }
       }
@@ -1863,17 +1203,6 @@
         }
       }
     },
-    "signature_usual_mark" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Signature / usual mark"
-          }
-        }
-      }
-    },
     "success" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1903,17 +1232,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Try again"
-          }
-        }
-      }
-    },
-    "un_distinguishing_sign" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "UN distinguishing sign"
           }
         }
       }
@@ -1962,17 +1280,6 @@
         }
       }
     },
-    "user_pseudonym" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "User Pseudonym"
-          }
-        }
-      }
-    },
     "valid_until" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1980,28 +1287,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Valid until\n%@"
-          }
-        }
-      }
-    },
-    "vehicle_category_code" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vehicle category code"
-          }
-        }
-      }
-    },
-    "weight" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Weight (kg)"
           }
         }
       }

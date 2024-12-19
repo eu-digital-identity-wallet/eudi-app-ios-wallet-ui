@@ -47,7 +47,9 @@ public struct ScrollableTextView: View {
         )
       }
       .onPreferenceChange(ScrollViewSizeKey.self) { size in
-        contentSize = size
+        Task { @MainActor in
+          contentSize = size
+        }
       }
       .disabled(contentSize.height <= geometry.size.height)
     }
