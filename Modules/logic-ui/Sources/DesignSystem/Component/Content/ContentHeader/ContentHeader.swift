@@ -18,7 +18,7 @@ import logic_resources
 
 public struct ContentHeaderConfig {
   public let appIconAndTextData: AppIconAndTextData
-  public let description: String
+  public let description: String?
   public let descriptionTextConfig: TextConfig?
   public let mainText: String?
   public let mainTextConfig: TextConfig?
@@ -26,7 +26,7 @@ public struct ContentHeaderConfig {
 
   public init(
     appIconAndTextData: AppIconAndTextData,
-    description: String,
+    description: String? = nil,
     descriptionTextConfig: TextConfig? = nil,
     mainText: String? = nil,
     mainTextConfig: TextConfig? = nil,
@@ -76,17 +76,19 @@ public struct ContentHeader: View {
         appIconAndTextData: config.appIconAndTextData
       )
 
-      WrapText(
-        text: config.description,
-        textConfig: config.descriptionTextConfig ?? TextConfig(
-          font: Theme.shared.font.bodyMedium.font,
-          color: Theme.shared.color.onSurface,
-          textAlign: .center,
-          maxLines: 2,
-          fontWeight: nil
+      if let description = config.description {
+        WrapText(
+          text: description,
+          textConfig: config.descriptionTextConfig ?? TextConfig(
+            font: Theme.shared.font.bodyMedium.font,
+            color: Theme.shared.color.onSurface,
+            textAlign: .center,
+            maxLines: 2,
+            fontWeight: nil
+          )
         )
-      )
-      .padding(.vertical, SPACING_SMALL)
+        .padding(.vertical, SPACING_SMALL)
+      }
 
       if let mainText = config.mainText {
         WrapText(

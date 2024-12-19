@@ -23,8 +23,8 @@ public struct CardViewWithLogo: View {
   private let title: String
   private let subtitle: String
   private let footer: String
-  private let verifiedIcon: Image?
   private let isVerified: Bool
+  private let action: (() -> Void)?
 
   public init(
     cornerRadius: CGFloat = 13,
@@ -33,8 +33,8 @@ public struct CardViewWithLogo: View {
     title: String,
     subtitle: String,
     footer: String,
-    verifiedIcon: Image? = nil,
-    isVerified: Bool = false
+    isVerified: Bool = false,
+    action: (() -> Void)? = nil
   ) {
     self.cornerRadius = cornerRadius
     self.backgroundColor = backgroundColor
@@ -42,8 +42,8 @@ public struct CardViewWithLogo: View {
     self.title = title
     self.subtitle = subtitle
     self.footer = footer
-    self.verifiedIcon = verifiedIcon
     self.isVerified = isVerified
+    self.action = action
   }
 
   public var body: some View {
@@ -54,7 +54,7 @@ public struct CardViewWithLogo: View {
           icon
             .resizable()
             .aspectRatio(contentMode: .fit)
-            .frame(width: .infinity, height: 50)
+            .frame(height: 50)
           Spacer()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -63,7 +63,7 @@ public struct CardViewWithLogo: View {
           .typography(Theme.shared.font.bodyLarge)
           .foregroundStyle(Theme.shared.color.onSurface)
           .if(isVerified) {
-            $0.leftImage(image: Image(systemName: "checkmark"))
+            $0.leftImage(image: Theme.shared.image.relyingPartyVerified)
           }
 
         VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
@@ -76,6 +76,10 @@ public struct CardViewWithLogo: View {
         }
       }
       .padding(.all, SPACING_MEDIUM)
+    }
+    .contentShape(Rectangle())
+    .onTapGesture {
+      action?()
     }
   }
 }
@@ -103,7 +107,6 @@ public struct CardViewWithLogo: View {
       title: "Another Organization",
       subtitle: "Non-Government agency",
       footer: "Athens - Greece",
-      verifiedIcon: Image(systemName: "checkmark"),
       isVerified: true
     )
   }

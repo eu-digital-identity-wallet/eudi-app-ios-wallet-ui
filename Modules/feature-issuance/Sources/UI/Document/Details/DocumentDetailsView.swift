@@ -21,7 +21,6 @@ import logic_resources
 struct DocumentDetailsView<Router: RouterHost>: View {
 
   @ObservedObject var viewModel: DocumentDetailsViewModel<Router>
-  @State private var isVisible = false
 
   init(with viewModel: DocumentDetailsViewModel<Router>) {
     self.viewModel = viewModel
@@ -31,29 +30,34 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: !viewModel.viewState.hasContinueButton,
-      allowBackGesture: true,
+      allowBackGesture: false,
       errorConfig: viewModel.viewState.error,
       navigationTitle: LocalizableString.shared.get(with: .details),
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(image: Theme.shared.image.bookmarkIcon) {},
           Action(
-            image: isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye) {
-              isVisible.toggle()
+            image: viewModel.isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye) {
+              viewModel.isVisible.toggle()
             }
+        ],
+        leadingActions: [
+          Action(image: Theme.shared.image.xmark) {
+            viewModel.pop()
+          }
         ]
       )
     ) {
 
       content(
         viewState: viewModel.viewState,
-        isVisible: isVisible) {
-          viewModel.onContinue()
-        } onShowDeleteModal: {
-          viewModel.onShowDeleteModal()
-        }
-      pop: {
-        viewModel.pop()
+        isVisible: viewModel.isVisible
+      ) {
+        viewModel.showAlert = true
+      } onContinue: {
+        viewModel.onContinue()
+      } onShowDeleteModal: {
+        viewModel.onShowDeleteModal()
       }
     }
     .confirmationDialog(
@@ -69,8 +73,18 @@ struct DocumentDetailsView<Router: RouterHost>: View {
         viewModel.onShowDeleteModal()
       }
     )
+    .alertView(
+      isPresented: $viewModel.showAlert,
+      title: LocalizableString.shared.get(with: .trustedRelyingParty),
+      message: LocalizableString.shared.get(with: .trustedRelyingPartyDescription),
+      buttonText: LocalizableString.shared.get(with: .close),
+      onDismiss: {
+        viewModel.showAlert = false
+      }
+    )
     .task {
       await self.viewModel.fetchDocumentDetails()
+      await self.viewModel.fetchIssuerData()
     }
   }
 }
@@ -80,9 +94,9 @@ struct DocumentDetailsView<Router: RouterHost>: View {
 private func content(
   viewState: DocumentDetailsViewState,
   isVisible: Bool,
+  showAlert: @escaping () -> Void,
   onContinue: @escaping () -> Void,
-  onShowDeleteModal: @escaping () -> Void,
-  pop: @escaping () -> Void
+  onShowDeleteModal: @escaping () -> Void
 ) -> some View {
   ScrollView {
     VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
@@ -125,6 +139,21 @@ private func content(
         }
       }
 
+      Text(LocalizableString.shared.get(with: .unknownIssuer))
+        .font(Theme.shared.font.labelSmall.font)
+        .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+        .frame(maxWidth: .infinity, alignment: .leading)
+
+      CardViewWithLogo(
+        icon: viewState.issuerData.icon,
+        title: viewState.issuerData.title,
+        subtitle: viewState.issuerData.subtitle,
+        footer: viewState.issuerData.caption,
+        isVerified: viewState.issuerData.isVerified
+      ) {
+        showAlert()
+      }
+
       if viewState.hasDeleteAction {
         WrapButtonView(
           style: .error,
@@ -151,6 +180,7 @@ private func content(
 #Preview {
   let viewState = DocumentDetailsViewState(
     document: DocumentDetailsUIModel.mock(),
+    issuerData: IssuerDataUIModel.mock(),
     isLoading: false,
     error: nil,
     config: IssuanceDetailUiConfig(flow: .extraDocument("documentId")),
@@ -165,9 +195,9 @@ private func content(
     content(
       viewState: viewState,
       isVisible: true,
+      showAlert: {},
       onContinue: {},
-      onShowDeleteModal: {},
-      pop: {}
+      onShowDeleteModal: {}
     )
   }
 }

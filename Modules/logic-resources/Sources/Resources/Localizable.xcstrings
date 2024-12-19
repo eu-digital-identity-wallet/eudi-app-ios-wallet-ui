@@ -353,6 +353,17 @@
         }
       }
     },
+    "close" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
     "credential_offer_partial_success_caption" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1617,6 +1628,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Transactions"
+          }
+        }
+      }
+    },
+    "trusted_relying_party" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trusted Relying Party"
+          }
+        }
+      }
+    },
+    "trusted_relying_party_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Relying Party is considered trusted when it meets predefined criteria for security, data protection, compliance, and responsible data handling. Trust is reinforced through assessments, audits, and certifications."
           }
         }
       }

@@ -26,20 +26,20 @@ public struct HomeView: View {
 
   public var body: some View {
     ScrollView {
-      VStack(alignment: .center, spacing: SPACING_LARGE_MEDIUM) {
+      VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
         ContentHeader(
           config: ContentHeaderConfig(
             appIconAndTextData: AppIconAndTextData(
               appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
               appText: ThemeManager.shared.image.euditext
-            ),
-            description: "\(LocalizableString.shared.get(with: .welcomeBack)), \(bearer.value.name)",
-            descriptionTextConfig: TextConfig(
-              font: Theme.shared.font.headlineMedium.font,
-              textAlign: .leading
             )
           )
         )
+
+        Text("\(LocalizableString.shared.get(with: .welcomeBack)), \(bearer.value.name)")
+          .font(Theme.shared.font.headlineMedium.font)
+          .foregroundStyle(Theme.shared.color.onSurface)
+
         HomeCardView(
           text: LocalizableString.Key.authenticateAuthoriseTransactions,
           buttonText: LocalizableString.Key.addDocumentTitle,

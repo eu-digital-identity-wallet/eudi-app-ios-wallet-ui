@@ -311,6 +311,12 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "data_sharing_request")
     case .dataSharingTitle:
       bundle.localizedString(forKey: "data_sharing_title")
+    case .close:
+      bundle.localizedString(forKey: "close")
+    case .trustedRelyingParty:
+      bundle.localizedString(forKey: "trusted_relying_party")
+    case .trustedRelyingPartyDescription:
+      bundle.localizedString(forKey: "trusted_relying_party_description")
     }
   }
 
@@ -459,6 +465,9 @@ public extension LocalizableString {
     case details
     case dataSharingRequest
     case dataSharingTitle
+    case close
+    case trustedRelyingParty
+    case trustedRelyingPartyDescription
   }
 }
 
