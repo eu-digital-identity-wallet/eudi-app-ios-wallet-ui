@@ -140,38 +140,6 @@ enableInheritance = true
 protocolsOnly = true
 omitHeaders = false
 
-[modules.FeatureLogin]
-output = "../Modules/feature-login/Tests/Mock/GeneratedMocks.swift"
-testableImports = [
-	"logic_core", 
-	"logic_business", 
-	"logic_analytics",
-	"logic_storage",
-	"logic_ui", 
-	"logic_api", 
-	"logic_authentication",
-	"feature_common",
-	"feature_login"
-]
-sources = [
-	"../Modules/logic-core/Sources/**/*.swift",
-	"../Modules/logic-business/Sources/**/*.swift",
-	"../Modules/logic-analytics/Sources/**/*.swift",
-	"../Modules/logic-storage/Sources/**/*.swift",
-	"../Modules/logic-ui/Sources/**/*.swift",
-	"../Modules/logic-api/Sources/**/*.swift",
-	"../Modules/logic-authentication/Sources/**/*.swift",
-    "../Modules/feature-common/Sources/**/*.swift",
-    "../Modules/feature-login/Sources/**/*.swift"
-]
-
-[modules.FeatureLogin.options]
-glob = true
-keepDocumentation = false
-enableInheritance = true
-protocolsOnly = true
-omitHeaders = false
-
 [modules.FeatureStartup]
 output = "../Modules/feature-startup/Tests/Mock/GeneratedMocks.swift"
 testableImports = [
