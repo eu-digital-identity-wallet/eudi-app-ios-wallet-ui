@@ -24,6 +24,7 @@ import logic_core
 struct DocumentOfferViewState: ViewState {
   let isLoading: Bool
   let documentOfferUiModel: DocumentOfferUIModel
+  let issuerData: IssuerDataUIModel
   let error: ContentErrorView.Config?
   let config: UIConfig.Generic
   let offerUri: String
@@ -66,6 +67,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
       initialState: .init(
         isLoading: true,
         documentOfferUiModel: DocumentOfferUIModel.mock(),
+        issuerData: IssuerDataUIModel.mock(),
         error: nil,
         config: config,
         offerUri: offerUri,
@@ -95,6 +97,13 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
           .copy(
             isLoading: false,
             documentOfferUiModel: uiModel,
+            issuerData: .init(
+              icon: Theme.shared.image.issuerCardImagePlaceholder,
+              title: uiModel.issuerName,
+              subtitle: "Issuing authority",
+              caption: "",
+              isVerified: true
+            ),
             allowIssue: !uiModel.uiOffers.isEmpty,
             initialized: true
           )

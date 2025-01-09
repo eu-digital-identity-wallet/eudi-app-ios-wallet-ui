@@ -253,6 +253,14 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     )
   }
 
+  func onMyWallet() {
+    router.push(
+      with: .featureLoginModule(
+        .sideMenu
+      )
+    )
+  }
+
   func onMore() {
     setState {
       $0.copy(

@@ -105,6 +105,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "login_button")
     case .addDocumentTitle:
       bundle.localizedString(forKey: "add_document_title")
+    case .addDocumentRequest:
+      bundle.localizedString(forKey: "add_document_request")
     case .addDocumentSubtitle:
       bundle.localizedString(forKey: "add_document_subtitle")
     case .proximityConnectivityTitle:
@@ -317,6 +319,10 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "trusted_relying_party")
     case .trustedRelyingPartyDescription:
       bundle.localizedString(forKey: "trusted_relying_party_description")
+    case .issuerWantWalletAddition:
+      bundle.localizedString(forKey: "issuer_want_wallet_addition")
+    case .issuer:
+      bundle.localizedString(forKey: "issuer")
     }
   }
 
@@ -363,6 +369,7 @@ public extension LocalizableString {
     case loginButton
     case addDocumentTitle
     case addDocumentSubtitle
+    case addDocumentRequest
     case proximityConnectivityTitle
     case proximityConnectivityCaption
     case verification
@@ -397,8 +404,10 @@ public extension LocalizableString {
     case issuanceSuccessTitle
     case issuanceSuccessCaption([String])
     case issuanceSuccessNextButton
+    case issuerWantWalletAddition
     case unknownVerifier
     case unknownIssuer
+    case issuer
     case yes
     case no
     case scanQrCode

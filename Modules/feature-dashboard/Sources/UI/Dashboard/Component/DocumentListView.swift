@@ -40,7 +40,7 @@ struct DocumentListView: View {
           WrapListItemView(
             listItem: ListItemData(
               mainText: item.value.title,
-              supportingText: LocalizableString.shared.get(with: .validUntil([item.value.expiresAt ?? ""])),
+              supportingText: item.expiry,
               trailingContent: .icon(Theme.shared.image.chevronRight)
             )
           ) {
@@ -58,6 +58,16 @@ struct DocumentListView: View {
       items: items,
       placeholder: LocalizableString.shared.get(with: .search)
     ) { _ in }
+  }
+}
+
+private extension DocumentUIModel {
+
+  var expiry: String? {
+    guard let expiresAt = value.expiresAt else {
+      return nil
+    }
+    return LocalizableString.shared.get(with: .validUntil([expiresAt])).replacingOccurrences(of: "\n", with: "")
   }
 }
 

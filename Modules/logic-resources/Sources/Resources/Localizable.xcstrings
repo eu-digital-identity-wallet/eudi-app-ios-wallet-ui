@@ -12,6 +12,17 @@
         }
       }
     },
+    "add_document_request" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add document request"
+          }
+        }
+      }
+    },
     "add_document_subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -881,6 +892,28 @@
         }
       }
     },
+    "issuer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuer"
+          }
+        }
+      }
+    },
+    "issuer_want_wallet_addition" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wants to add the following to your wallet:"
+          }
+        }
+      }
+    },
     "item_not_found_in_storage" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1715,7 +1748,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Valid until\n%@"
+            "value" : "Valid until \n%@"
           }
         }
       }

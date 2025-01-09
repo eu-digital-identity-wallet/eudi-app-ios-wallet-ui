@@ -39,6 +39,12 @@ public final class LoginRouter {
           )
         )
       ).eraseToAnyView()
+    case .sideMenu:
+      SideMenuView(
+        with: .init(
+          router: host
+        )
+      ).eraseToAnyView()
     }
   }
 }

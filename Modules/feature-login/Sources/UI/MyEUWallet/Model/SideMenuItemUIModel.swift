@@ -13,32 +13,25 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import SwiftUI
-import logic_ui
-import feature_common
+import Foundation
+import logic_business
 
-struct PresentationRequestView<Router: RouterHost>: View {
+public struct SideMenuItemUIModel: Identifiable {
 
-  @ObservedObject private var viewModel: PresentationRequestViewModel<Router>
+  public var id: String
+  public let title: String
+  public let subTitle: String
+  public let action: (() -> Void)
 
-  init(with viewModel: PresentationRequestViewModel<Router>) {
-    self.viewModel = viewModel
-  }
-
-  var body: some View {
-    BaseRequestView(
-      with: viewModel.router,
-      viewModel: viewModel
-    )
-    .onReceive(
-      NotificationCenter.default.publisher(
-        for: NSNotification.PresentationVC
-      )
-    ) { data in
-      guard let payload = data.userInfo else {
-        return
-      }
-      viewModel.handleDeepLinkNotification(with: payload)
-    }
+  public init(
+    id: String = UUID().uuidString,
+    title: String,
+    subTitle: String = "",
+    action: @escaping (() -> Void)
+  ) {
+    self.id = id
+    self.title = title
+    self.subTitle = subTitle
+    self.action = action
   }
 }

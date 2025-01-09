@@ -184,7 +184,9 @@ struct DashboardView<Router: RouterHost>: View {
           Action(image: Theme.shared.image.filterMenuIcon) {}
         ],
         leadingActions: [
-          Action(image: Theme.shared.image.menuIcon) {}
+          Action(image: Theme.shared.image.menuIcon) {
+            viewModel.onMyWallet()
+          }
         ]
       )
     case .home:
@@ -193,7 +195,9 @@ struct DashboardView<Router: RouterHost>: View {
           Action(image: Theme.shared.image.bell) {}
         ],
         leadingActions: [
-          Action(image: Theme.shared.image.menuIcon) {}
+          Action(image: Theme.shared.image.menuIcon) {
+            viewModel.onMyWallet()
+          }
         ]
       )
     case .transactions:
@@ -202,7 +206,9 @@ struct DashboardView<Router: RouterHost>: View {
           Action(image: Theme.shared.image.bell) {}
         ],
         leadingActions: [
-          Action(image: Theme.shared.image.menuIcon) {}
+          Action(image: Theme.shared.image.menuIcon) {
+            viewModel.onMyWallet()
+          }
         ]
       )
     }

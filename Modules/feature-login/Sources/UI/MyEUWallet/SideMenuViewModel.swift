@@ -13,32 +13,43 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import SwiftUI
+import Foundation
 import logic_ui
 import feature_common
 
-struct PresentationRequestView<Router: RouterHost>: View {
+@Copyable
+struct SideMenuViewState: ViewState {
+  let items: [SideMenuItemUIModel]
+}
 
-  @ObservedObject private var viewModel: PresentationRequestViewModel<Router>
+final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuViewState> {
 
-  init(with viewModel: PresentationRequestViewModel<Router>) {
-    self.viewModel = viewModel
+  init(router: Router) {
+    super.init(
+      router: router,
+      initialState: .init(
+        items: []
+      )
+    )
+
+    setState {
+      $0.copy(items: [
+        .init(title: "Change PIN", action: {
+          self.updatePin()
+        })
+      ])
+    }
   }
 
-  var body: some View {
-    BaseRequestView(
-      with: viewModel.router,
-      viewModel: viewModel
-    )
-    .onReceive(
-      NotificationCenter.default.publisher(
-        for: NSNotification.PresentationVC
+  func updatePin() {
+    router.push(
+      with: .featureCommonModule(
+        .quickPin(
+          config: QuickPinUiConfig(
+            flow: .update
+          )
+        )
       )
-    ) { data in
-      guard let payload = data.userInfo else {
-        return
-      }
-      viewModel.handleDeepLinkNotification(with: payload)
-    }
+    )
   }
 }
