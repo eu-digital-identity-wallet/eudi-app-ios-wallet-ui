@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1194D2322B06363400377213 /* EUDI_sample_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 1194D2302B06362900377213 /* EUDI_sample_data.json */; };
 		F02921632B8E07870076A58B /* WalletDemoRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */; };
 		F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */; };
 		F02AE38F2BA6E45F00C25C59 /* logic-assembly in Resources */ = {isa = PBXBuildFile; fileRef = F02AE38E2BA6E45F00C25C59 /* logic-assembly */; };
@@ -33,7 +32,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1194D2302B06362900377213 /* EUDI_sample_data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EUDI_sample_data.json; sourceTree = "<group>"; };
 		1198ECD72AC453F200F4E71A /* logic-resources */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-resources"; path = "Modules/logic-resources"; sourceTree = "<group>"; };
 		F018D9F32D087C410015876D /* logic-storage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-storage"; path = "Modules/logic-storage"; sourceTree = "<group>"; };
 		F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WalletDemoRelease.xcconfig; sourceTree = "<group>"; };
@@ -63,7 +61,6 @@
 		F1596BB02AD40EE000552D1B /* feature-dashboard */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-dashboard"; path = "Modules/feature-dashboard"; sourceTree = "<group>"; };
 		F1CACADF2AC3097100B40DED /* WalletDev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = WalletDev.xcconfig; sourceTree = "<group>"; };
 		F1CACAE12AC3098C00B40DED /* WalletDemo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = WalletDemo.xcconfig; sourceTree = "<group>"; };
-		F1E83CFD2ACE91DD00FBC0E3 /* feature-login */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-login"; path = "Modules/feature-login"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,7 +79,6 @@
 			isa = PBXGroup;
 			children = (
 				F0635CA72B72431D00260E50 /* eudi_pid_issuer_ut.der */,
-				1194D2302B06362900377213 /* EUDI_sample_data.json */,
 			);
 			path = Sample;
 			sourceTree = "<group>";
@@ -158,7 +154,6 @@
 				F069CC3D2AFAC0AD0033AAC5 /* feature-proximity */,
 				F05E9F372AFABBC200891E8F /* feature-presentation */,
 				F1596BB02AD40EE000552D1B /* feature-dashboard */,
-				F1E83CFD2ACE91DD00FBC0E3 /* feature-login */,
 				F0BFE9B62AD557290062826F /* feature-common */,
 				1198ECD72AC453F200F4E71A /* logic-resources */,
 				F06325112AC59AF50004601F /* feature-test */,
@@ -203,7 +198,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					F14907B72ABAF54B00DDFE56 = {
 						CreatedOnToolsVersion = 15.0;
@@ -233,7 +228,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1194D2322B06363400377213 /* EUDI_sample_data.json in Resources */,
 				F02AE38F2BA6E45F00C25C59 /* logic-assembly in Resources */,
 				F06325122AC59AF50004601F /* feature-test in Resources */,
 				F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */,

@@ -118,7 +118,11 @@ private func content(
       issuerName: "Issuer Name",
       txCodeLength: 6,
       docOffers: [],
-      successNavigation: .popTo(.featureLoginModule(.welcome)),
+      successNavigation: .popTo(
+        .featureIssuanceModule(
+          .credentialOfferRequest(config: NoConfig())
+        )
+      ),
       navigationCancelType: .pop
     ),
     title: LocalizableString.Key.addDocumentTitle,

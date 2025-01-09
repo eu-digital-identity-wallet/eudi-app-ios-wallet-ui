@@ -16,22 +16,22 @@
 import Foundation
 
 extension Array where Element == WalletStorage.Document {
-  func transformToMdocDecodable() -> [MdocDecodable] {
+  func transformToDocsDecodable() -> [DocClaimsDecodable] {
     return self.compactMap { document in
-      return document.transformToMdocDecodable()
+      return document.transformToDocDecodable()
     }
   }
 }
 
 extension WalletStorage.Document {
-  func transformToMdocDecodable() -> MdocDecodable {
+  func transformToDocDecodable() -> DocClaimsDecodable {
     return DeferrredDocument(
       id: self.id,
       createdAt: self.createdAt,
-      modifiedAt: self.modifiedAt,
-      docType: self.docType,
-      displayName: self.displayName,
-      statusDescription: self.statusDescription
+      displayName: self.getDisplayName(Locale.current.systemLanguageCode),
+      docClaims: [],
+      docDataFormat: self.docDataFormat,
+      ageOverXX: [:]
     )
   }
 }

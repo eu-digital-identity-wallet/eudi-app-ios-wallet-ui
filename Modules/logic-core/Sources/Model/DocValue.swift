@@ -14,25 +14,30 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import logic_business
+import SwiftUI
 
-public enum FAQsPartialState: Sendable {
-  case success([FAQUIModel])
-  case failure(Error)
-}
+public enum DocValue {
+  case string(String)
+  case unavailable(String)
+  case image(Image)
 
-public protocol FAQsInteractor: Sendable {
-  func fetchFAQs() async -> FAQsPartialState
-}
+  public var string: String? {
+    switch self {
+    case .string(let string):
+      string
+    case .unavailable(let string):
+      string
+    default:
+      nil
+    }
+  }
 
-final class FAQsInteractorImpl: FAQsInteractor {
-
-  public func fetchFAQs() async -> FAQsPartialState {
-    do {
-      try await Task.sleep(nanoseconds: 2 * 1_000_000_000)
-      return .success(FAQUIModel.mocks())
-    } catch {
-      return .failure(error)
+  public var image: Image? {
+    switch self {
+    case .image(let image):
+      image
+    default:
+      nil
     }
   }
 }

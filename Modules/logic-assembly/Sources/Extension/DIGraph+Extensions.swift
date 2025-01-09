@@ -32,7 +32,6 @@ public extension DIGraph {
         FeatureCommonAssembly(),
         FeatureStartupAssembly(),
         FeatureDashboardAssembly(),
-        FeatureLoginAssembly(),
         FeaturePresentationAssembly(),
         FeatureProximityAssembly(),
         FeatureIssuanceAssembly()

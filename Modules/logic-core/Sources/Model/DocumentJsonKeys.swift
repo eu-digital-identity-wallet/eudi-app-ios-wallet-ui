@@ -13,23 +13,10 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Swinject
-import logic_core
-import feature_common
-
-public final class FeatureLoginAssembly: Assembly {
-
-  public init() {}
-
-  public func assemble(container: Container) {
-    container.register(FAQsInteractor.self) { _ in
-      FAQsInteractorImpl()
-    }
-    .inObjectScope(ObjectScope.transient)
-
-    container.register(WelcomeInteractor.self) { _ in
-      WelcomeInteractorImpl()
-    }
-    .inObjectScope(ObjectScope.transient)
-  }
+public struct DocumentJsonKeys {
+  public static let PORTRAIT = "portrait"
+  public static let FIRST_NAME = "given_name"
+  public static let LAST_NAME = "family_name"
+  public static let USER_PSEUDONYM = "user_pseudonym"
+  public static let EXPIRY_DATE = "expiry_date"
 }

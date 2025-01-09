@@ -13,30 +13,9 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 
-public enum MdocValue {
-  case string(String)
-  case unavailable(String)
-  case image(Data)
-
-  public var string: String? {
-    switch self {
-    case .string(let string):
-      string
-    case .unavailable(let string):
-      string
-    default:
-      nil
-    }
-  }
-
-  public var image: Data? {
-    switch self {
-    case .image(let image):
-      image
-    default:
-      nil
-    }
-  }
+public struct ScopedDocument: Equatable {
+  public let name: String
+  public let configId: String
+  public let isPid: Bool
 }

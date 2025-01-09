@@ -52,7 +52,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       let codeMaxLength = 6
 
       let offer = try await walletController.resolveOfferUrlDocTypes(uriOffer: uri)
-      let hasPidStored = !walletController.fetchIssuedDocuments(with: .PID).isEmpty
+      let hasPidStored = !walletController.fetchIssuedDocuments(with: [.mDocPid, .sdJwtPid]).isEmpty
 
       if let spec = offer.txCodeSpec,
          let codeLength = spec.length,
@@ -61,8 +61,11 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       }
 
       let hasPidInOffer = offer.docModels.first(
-        where: {
-          DocumentTypeIdentifier(rawValue: $0.docType) == .PID
+        where: { offer in
+          let identifier = DocumentTypeIdentifier(rawValue: offer.docType.ifNilOrEmpty { offer.credentialConfigurationIdentifier })
+          // MARK: - TODO Re-activate once SD-JWT PID Rule book is in place in ARF.
+          // return identifier == .mDocPid || identifier == .sdJwtPid
+          return identifier == .mDocPid
         }
       ) != nil
 
@@ -88,7 +91,6 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       let documents = try await walletController.issueDocumentsByOfferUrl(
         offerUri: uri,
         docTypes: docOffers,
-        format: .cbor,
         txCodeValue: txCodeValue
       )
 
@@ -129,12 +131,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
             where: { $0.docType == offer.docType }
           ) == nil
         }.map {
-          let identifier = DocumentTypeIdentifier(rawValue: $0.docType)
-          if identifier.isSupported {
-            return identifier.localizedTitle
-          } else {
-            return $0.displayName
-          }
+          return $0.displayName
         }
 
         return .partialSuccess(

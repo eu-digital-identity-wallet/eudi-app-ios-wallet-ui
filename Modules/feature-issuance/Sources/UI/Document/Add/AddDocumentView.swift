@@ -44,9 +44,11 @@ struct AddDocumentView<Router: RouterHost>: View {
         .padding([.top, .horizontal], Theme.shared.dimension.padding)
       }
 
-      content(viewState: viewModel.viewState) { type in
-        viewModel.onClick(for: type)
+      content(viewState: viewModel.viewState) { id in
+        viewModel.onClick(for: id)
       }
+
+      VSpacer.extraSmall()
 
       scanFooter(viewState: viewModel.viewState, contentSize: contentSize) {
         self.viewModel.onScanClick()
@@ -62,7 +64,7 @@ struct AddDocumentView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: AddDocumentViewState,
-  action: @escaping (DocumentTypeIdentifier) -> Void
+  action: @escaping (String) -> Void
 ) -> some View {
   ScrollView {
     VStack(spacing: .zero) {
@@ -82,7 +84,7 @@ private func content(
           icon: cell.image,
           title: cell.documentName,
           isLoading: cell.isLoading,
-          action: action(cell.type)
+          action: action(cell.configId)
         )
         .padding(.bottom, Theme.shared.shape.small)
       }
@@ -147,7 +149,7 @@ private func scanFooter(
 
 #Preview {
   let viewState = AddDocumentViewState(
-    addDocumentCellModels: AddDocumentUIModel.items,
+    addDocumentCellModels: AddDocumentUIModel.mocks,
     error: nil,
     config: IssuanceFlowUiConfig(flow: .noDocument)
   )

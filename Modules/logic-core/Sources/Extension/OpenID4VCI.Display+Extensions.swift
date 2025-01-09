@@ -13,32 +13,13 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_ui
-import logic_business
+import Foundation
+import OpenID4VCI
 
-@MainActor
-public final class LoginRouter {
-
-  public static func resolve(module: FeatureLoginRouteModule, host: some RouterHost) -> AnyView {
-    switch module {
-    case .welcome:
-      WelcomeView(
-        with: .init(
-          router: host,
-          interactor: DIGraph.resolver.force(
-            WelcomeInteractor.self
-          )
-        )
-      ).eraseToAnyView()
-    case .faqs:
-      FAQsView(
-        with: .init(
-          router: host,
-          interactor: DIGraph.resolver.force(
-            FAQsInteractor.self
-          )
-        )
-      ).eraseToAnyView()
-    }
+extension Array where Element == Display {
+  func getName(fallback: String) -> String {
+    return self.first(where: ( {$0.locale == Locale.current}))?.name
+    ?? self.first?.name
+    ?? fallback
   }
 }

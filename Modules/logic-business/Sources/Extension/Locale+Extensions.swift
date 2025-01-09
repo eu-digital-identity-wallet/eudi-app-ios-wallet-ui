@@ -34,6 +34,10 @@ public extension Locale {
     return Locale(identifier: identifier)
   }
 
+  var systemLanguageCode: String? {
+    Locale.current.language.languageCode?.identifier
+  }
+
   func localizedDateTime(
     date: String,
     uiFormatter: String,

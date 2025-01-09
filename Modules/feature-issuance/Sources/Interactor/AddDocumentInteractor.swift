@@ -21,9 +21,8 @@ import logic_business
 import logic_core
 
 public protocol AddDocumentInteractor: Sendable {
-  func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState
-  func loadSampleData() async -> LoadSampleDataPartialState
-  func issueDocument(docType: String) async -> IssueDocumentPartialState
+  func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState
+  func issueDocument(configId: String) async -> IssueDocumentPartialState
   func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState
 }
 
@@ -37,55 +36,28 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     self.walletController = walletController
   }
 
-  public func fetchStoredDocuments(with flow: IssuanceFlowUiConfig.Flow) -> StoredDocumentsPartialState {
-
-    let types = AddDocumentUIModel.items.map({
-      var item = $0
-      switch item.type {
-      case .PID:
-        item.isEnabled = true
-      case .MDL:
-        item.isEnabled = flow == .extraDocument
-      case .AGE:
-        item.isEnabled = flow == .extraDocument
-      case .PHOTOID:
-        item.isEnabled = flow == .extraDocument
-      case .GENERIC:
-        break
-      }
-      return item
-    })
-
-    switch flow {
-    case .noDocument:
-      return .success(
-        types + [
-          .init(
-            isEnabled: true,
-            documentName: .loadSampleData,
-            image: Theme.shared.image.id,
-            isLoading: false,
-            type: .GENERIC(docType: "load_sample_data")
-          )
-        ]
-      )
-    case .extraDocument:
-      return .success(types)
-    }
-  }
-
-  public func loadSampleData() async -> LoadSampleDataPartialState {
+  public func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState {
     do {
-      try await walletController.loadSampleData(dataFiles: ["EUDI_sample_data"])
-      return .success
+      let documents: [AddDocumentUIModel] = try await walletController.getScopedDocuments().compactMap { doc in
+        if flow == .extraDocument || doc.isPid {
+          return .init(
+            isEnabled: true,
+            documentName: .custom(doc.name),
+            configId: doc.configId
+          )
+        } else {
+          return nil
+        }
+      }
+      return .success(documents)
     } catch {
       return .failure(error)
     }
   }
 
-  public func issueDocument(docType: String) async -> IssueDocumentPartialState {
+  public func issueDocument(configId: String) async -> IssueDocumentPartialState {
     do {
-      let doc = try await walletController.issueDocument(docType: docType, format: .cbor)
+      let doc = try await walletController.issueDocument(identifier: configId)
       if doc.isDeferred {
         return .deferredSuccess
       } else if let authorizePresentationUrl = doc.authorizePresentationUrl {
@@ -117,7 +89,9 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
         webUrl: pendingData.url
       )
 
-      if doc.status != .pending {
+      if doc.status == .deferred {
+        return .deferredSuccess
+      } else if doc.status != .issued {
         return .success(doc.id)
       } else {
         return .failure(WalletCoreError.unableToIssueAndStore)
@@ -134,11 +108,6 @@ public enum StoredDocumentsPartialState: Sendable {
   case failure(Error)
 }
 
-public enum LoadSampleDataPartialState: Sendable {
-  case success
-  case failure(Error)
-}
-
 public enum IssueDocumentPartialState: Sendable {
   case success(String)
   case deferredSuccess
@@ -149,5 +118,6 @@ public enum IssueDocumentPartialState: Sendable {
 public enum IssueDynamicDocumentPartialState: Sendable {
   case success(String)
   case noPending
+  case deferredSuccess
   case failure(Error)
 }

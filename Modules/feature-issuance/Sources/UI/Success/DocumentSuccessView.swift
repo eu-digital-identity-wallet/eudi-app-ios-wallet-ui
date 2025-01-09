@@ -110,7 +110,7 @@ private func document(holderName: String?) -> some View {
   let viewState = DocumentSuccessState(
     title: .success,
     caption: .issuanceSuccessCaption(
-      [DocumentTypeIdentifier(rawValue: "PID").localizedTitle]
+      ["DocumentTitle"]
     ),
     holderName: "Name",
     config: IssuanceFlowUiConfig(flow: .noDocument),

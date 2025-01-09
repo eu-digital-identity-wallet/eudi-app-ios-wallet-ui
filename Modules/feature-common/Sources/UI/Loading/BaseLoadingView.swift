@@ -71,7 +71,7 @@ private func content(
   ContentScreenView {
     content(
       isCancellable: true,
-      title: .loadSampleData,
+      title: .requestDataTitle([""]),
       caption: .requestDataCaption,
       onNavigate: {}
     )

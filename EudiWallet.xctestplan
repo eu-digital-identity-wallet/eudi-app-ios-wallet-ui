@@ -18,13 +18,6 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:Modules\/feature-login",
-        "identifier" : "feature-login-tests",
-        "name" : "feature-login-tests"
-      }
-    },
-    {
-      "target" : {
         "containerPath" : "container:Modules\/feature-dashboard",
         "identifier" : "feature-dashboard-tests",
         "name" : "feature-dashboard-tests"

@@ -15,18 +15,13 @@
  */
 import Foundation
 
-public struct DeferrredDocument: MdocDecodable {
+public struct DeferrredDocument: DocClaimsDecodable {
   public var id: String
   public var createdAt: Date
   public var modifiedAt: Date?
-  public var issuerSigned: IssuerSigned?
-  public var devicePrivateKey: CoseKeyPrivate?
-  public var docType: String
-  public var nameSpaces: [NameSpace]?
   public var displayName: String?
-  public var statusDescription: String?
-  public var ageOverXX = [Int: Bool]()
-  public var displayStrings = [NameValue]()
-  public var displayImages = [NameImage]()
-  public var mandatoryElementKeys: [DataElementIdentifier] = []
+  public var docType: String?
+  public var docClaims: [MdocDataModel18013.DocClaim]
+  public var docDataFormat: MdocDataModel18013.DocDataFormat
+  public var ageOverXX: [Int: Bool]
 }
