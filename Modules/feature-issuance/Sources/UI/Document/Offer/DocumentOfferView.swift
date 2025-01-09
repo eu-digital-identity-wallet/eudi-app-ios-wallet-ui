@@ -134,13 +134,15 @@ private func content(
         .fontWeight(.medium)
         .foregroundStyle(Theme.shared.color.onSurface)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .shimmer(isLoading: viewState.isLoading)
 
         CardViewWithLogo(
           icon: viewState.issuerData.icon,
           title: viewState.issuerData.title,
           subtitle: viewState.issuerData.subtitle,
           footer: viewState.issuerData.caption,
-          isVerified: viewState.issuerData.isVerified
+          isVerified: viewState.issuerData.isVerified,
+          isLoading: viewState.isLoading
         )
       }
       .padding(.top)

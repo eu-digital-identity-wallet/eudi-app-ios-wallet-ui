@@ -24,6 +24,7 @@ public struct CardViewWithLogo: View {
   private let subtitle: String
   private let footer: String
   private let isVerified: Bool
+  private let isLoading: Bool
   private let action: (() -> Void)?
 
   public init(
@@ -34,6 +35,7 @@ public struct CardViewWithLogo: View {
     subtitle: String,
     footer: String,
     isVerified: Bool = false,
+    isLoading: Bool = false,
     action: (() -> Void)? = nil
   ) {
     self.cornerRadius = cornerRadius
@@ -43,6 +45,7 @@ public struct CardViewWithLogo: View {
     self.subtitle = subtitle
     self.footer = footer
     self.isVerified = isVerified
+    self.isLoading = isLoading
     self.action = action
   }
 
@@ -81,6 +84,7 @@ public struct CardViewWithLogo: View {
     .onTapGesture {
       action?()
     }
+    .shimmer(isLoading: isLoading)
   }
 }
 
