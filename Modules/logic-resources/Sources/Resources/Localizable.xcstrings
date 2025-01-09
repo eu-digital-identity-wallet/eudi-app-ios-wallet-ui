@@ -1654,24 +1654,46 @@
         }
       }
     },
-    "scanner_qr_caption" : {
+    "scanner_qr_caption_issuing" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Place the QR code within the frame to start scanning"
+            "value" : "Scan a QR code provided from an issuer to add a digital document to your wallet."
           }
         }
       }
     },
-    "scanner_qr_title" : {
+    "scanner_qr_caption_presentation" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Scan QR"
+            "value" : "Scan a QR code provided from a Relying Party to present a digital document online."
+          }
+        }
+      }
+    },
+    "scanner_qr_title_issuing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan QR to add"
+          }
+        }
+      }
+    },
+    "scanner_qr_title_presentation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Present a document"
           }
         }
       }

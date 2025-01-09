@@ -39,18 +39,18 @@ public extension ScannerUiConfig {
     var title: LocalizableString.Key {
       return switch self {
       case .presentation:
-          .scannerQrTitle
+          .scannerQrTitlePresentation
       case .issuing:
-          .scannerQrTitle
+          .scannerQrTitleIssuing
       }
     }
 
     var caption: LocalizableString.Key {
       return switch self {
       case .presentation:
-          .scannerQrCaption
+          .scannerQrCaptionPresentation
       case .issuing:
-          .scannerQrCaption
+          .scannerQrCaptionIssuing
       }
     }
 

@@ -351,6 +351,14 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "saved_to_favorites_message")
       case .removedFromFavoritesMessages:
         bundle.localizedString(forKey: "removed_from_favorites_messages")
+      case .scannerQrTitleIssuing:
+        bundle.localizedString(forKey: "scanner_qr_title_issuing")
+      case .scannerQrTitlePresentation:
+        bundle.localizedString(forKey: "scanner_qr_title_presentation")
+      case .scannerQrCaptionIssuing:
+        bundle.localizedString(forKey: "scanner_qr_caption_issuing")
+      case .scannerQrCaptionPresentation:
+        bundle.localizedString(forKey: "scanner_qr_caption_presentation")
     }
   }
 
@@ -460,6 +468,10 @@ public extension LocalizableString {
     case onExpired([String])
     case or
     case issuanceScanQr
+    case scannerQrTitleIssuing
+    case scannerQrTitlePresentation
+    case scannerQrCaptionIssuing
+    case scannerQrCaptionPresentation
     case scannerQrTitle
     case scannerQrCaption
     case cameraError

@@ -22,25 +22,29 @@ import CodeScanner
 
 struct ScannerView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewmodel: ScannerViewModel<Router>
+  @ObservedObject private var viewModel: ScannerViewModel<Router>
 
   private var cameraSurfaceSize: CGFloat = .zero
 
-  init(with viewmodel: ScannerViewModel<Router>) {
-    self.viewmodel = viewmodel
+  init(with viewModel: ScannerViewModel<Router>) {
+    self.viewModel = viewModel
     self.cameraSurfaceSize = getScreenRect().width - (Theme.shared.dimension.padding * 2)
   }
 
   var body: some View {
 
-    ContentScreenView {
+    ContentScreenView(
+      allowBackGesture: true,
+      navigationTitle: LocalizableString.shared.get(
+        with: viewModel.viewState.title
+      )
+    ) {
       content(
-        viewState: viewmodel.viewState,
+        viewState: viewModel.viewState,
         cameraSurfaceSize: cameraSurfaceSize,
-        onDismiss: viewmodel.onDismiss,
-        onError: viewmodel.onError,
-        onErrorClick: viewmodel.onErrorClick) { scanResult in
-          viewmodel.onResult(scanResult: scanResult)
+        onError: viewModel.onError,
+        onErrorClick: viewModel.onErrorClick) { scanResult in
+          viewModel.onResult(scanResult: scanResult)
         }
     }
   }
@@ -51,18 +55,12 @@ struct ScannerView<Router: RouterHost>: View {
 private func content(
   viewState: ScannerState,
   cameraSurfaceSize: CGFloat,
-  onDismiss: @escaping () -> Void,
   onError: @escaping () -> Void,
   onErrorClick: @escaping () -> Void,
   onResult: @escaping (_ scanResult: String) -> Void
 ) -> some View {
-  ContentHeaderView(
-    dismissIcon: Theme.shared.image.xmark,
-    onBack: { onDismiss() }
-  )
 
-  ContentTitleView(
-    title: viewState.title,
+  ContentCaptionView(
     caption: viewState.caption
   )
 
@@ -154,7 +152,6 @@ private func content(
     content(
       viewState: viewState,
       cameraSurfaceSize: .zero,
-      onDismiss: {},
       onError: {},
       onErrorClick: {},
       onResult: { _ in }

@@ -106,10 +106,6 @@ final class ScannerViewModel<Router: RouterHost>: ViewModel<Router, ScannerState
     }
   }
 
-  func onDismiss() {
-    router.pop()
-  }
-
   func onError() {
     setState {
       $0.copy(error: .cameraError)
