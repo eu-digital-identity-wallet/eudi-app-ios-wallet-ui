@@ -10,7 +10,7 @@ printr() {
 }
 
 # Use xcodebuild to load build settings into environment variables
-build_settings=$(xcodebuild -project ../EudiReferenceWallet.xcodeproj -target EudiWallet  -showBuildSettings)
+build_settings=$(xcodebuild -project ../EudiReferenceWallet.xcodeproj -target EudiWallet -showBuildSettings)
 
 # Set specific build settings as environment variables
 export ACTION=$(echo "$build_settings" | awk -F'=' '/ACTION/{print $2}' | tr -d ' ')

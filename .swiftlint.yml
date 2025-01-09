@@ -16,8 +16,6 @@ excluded:
     - "Modules/feature-startup/Tests/*"
     - "Modules/feature-common/Tests/*"
     - "Modules/feature-startup/.build/*"
-    - "Modules/feature-login/Tests/*"
-    - "Modules/feature-login/.build/*"
     - "Modules/feature-dashboard/Tests/*"
     - "Modules/feature-dashboard/.build/*"
     - "Modules/feature-common/.build/*"

@@ -169,8 +169,6 @@ private extension RouterHostImpl {
     switch route {
     case .featureStartupModule(let module):
       StartupRouter.resolve(module: module, host: self)
-    case .featureLoginModule(let module):
-      LoginRouter.resolve(module: module, host: self)
     case .featureDashboardModule(let module):
       DashboardRouter.resolve(module: module, host: self)
     case .featureCommonModule(let module):

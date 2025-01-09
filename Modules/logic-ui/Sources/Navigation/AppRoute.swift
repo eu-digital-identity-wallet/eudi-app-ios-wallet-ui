@@ -29,21 +29,6 @@ public enum FeatureStartupRouteModule: AppRouteModule {
   }
 }
 
-public enum FeatureLoginRouteModule: AppRouteModule {
-
-  case welcome
-  case faqs
-
-  public var info: (key: String, arguments: [String: String]) {
-    return switch self {
-    case .welcome:
-      (key: "Welcome", arguments: [:])
-    case .faqs:
-      (key: "FAQ", arguments: [:])
-    }
-  }
-}
-
 public enum FeatureCommonRouteModule: AppRouteModule {
 
   case quickPin(config: any UIConfigType)
@@ -163,7 +148,6 @@ public enum FeatureIssuanceRouteModule: AppRouteModule {
 public enum AppRoute: AppRouteModule {
 
   case featureStartupModule(FeatureStartupRouteModule)
-  case featureLoginModule(FeatureLoginRouteModule)
   case featureDashboardModule(FeatureDashboardRouteModule)
   case featureCommonModule(FeatureCommonRouteModule)
   case featureIssuanceModule(FeatureIssuanceRouteModule)
@@ -173,8 +157,6 @@ public enum AppRoute: AppRouteModule {
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
     case .featureStartupModule(let module):
-      module.info
-    case .featureLoginModule(let module):
       module.info
     case .featureDashboardModule(let module):
       module.info

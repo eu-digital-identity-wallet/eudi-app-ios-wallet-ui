@@ -61,7 +61,6 @@
 		F1596BB02AD40EE000552D1B /* feature-dashboard */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-dashboard"; path = "Modules/feature-dashboard"; sourceTree = "<group>"; };
 		F1CACADF2AC3097100B40DED /* WalletDev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = WalletDev.xcconfig; sourceTree = "<group>"; };
 		F1CACAE12AC3098C00B40DED /* WalletDemo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = WalletDemo.xcconfig; sourceTree = "<group>"; };
-		F1E83CFD2ACE91DD00FBC0E3 /* feature-login */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-login"; path = "Modules/feature-login"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,7 +154,6 @@
 				F069CC3D2AFAC0AD0033AAC5 /* feature-proximity */,
 				F05E9F372AFABBC200891E8F /* feature-presentation */,
 				F1596BB02AD40EE000552D1B /* feature-dashboard */,
-				F1E83CFD2ACE91DD00FBC0E3 /* feature-login */,
 				F0BFE9B62AD557290062826F /* feature-common */,
 				1198ECD72AC453F200F4E71A /* logic-resources */,
 				F06325112AC59AF50004601F /* feature-test */,
