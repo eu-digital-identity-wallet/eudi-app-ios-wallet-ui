@@ -255,16 +255,17 @@ final class WalletKitControllerImpl: WalletKitController {
           configId: credential.key.value,
           isPid: DocumentTypeIdentifier(rawValue: config.docType) == .mDocPid
         )
-        // MARK: - TODO Re-activate once SD-JWT PID Rule book is in place in ARF.
-//      case .sdJwtVc(let config):
-//        guard let vct = config.vct else {
-//          return nil
-//        }
-//        return ScopedDocument(
-//          name: config.display.getName(fallback: credential.key.value),
-//          configId: credential.key.value,
-//          isPid: DocumentTypeIdentifier(rawValue: vct) == .sdJwtPid
-//        )
+        // MARK: - TODO Re-activate isPid Check once SD-JWT PID Rule book is in place in ARF.
+      case .sdJwtVc(let config):
+        //        guard let vct = config.vct else {
+        //          return nil
+        //        }
+        return ScopedDocument(
+          name: config.display.getName(fallback: credential.key.value),
+          configId: credential.key.value,
+          //isPid: DocumentTypeIdentifier(rawValue: vct) == .sdJwtPid
+          isPid: false
+        )
       default: return nil
       }
     }
