@@ -540,6 +540,17 @@
         }
       }
     },
+    "delete_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
     "delete_document" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1423,6 +1434,28 @@
         }
       }
     },
+    "removed_from_favorites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removed from favorites"
+          }
+        }
+      }
+    },
+    "removed_from_favorites_messages" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The document was successfully removed from your favorite list"
+          }
+        }
+      }
+    },
     "request_credential_offer_caption" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1584,6 +1617,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "A relying party is considered trusted when it meets predefined criteria for security, data protection, compliance, and responsible data handling. Trust is reinforced through assessments, audits, and certifications."
+          }
+        }
+      }
+    },
+    "saved_to_favorites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved to favorites"
+          }
+        }
+      }
+    },
+    "saved_to_favorites_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The document was successfully added from your favorite list"
           }
         }
       }

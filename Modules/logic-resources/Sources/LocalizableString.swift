@@ -341,6 +341,16 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "from_device")
       case .autodashboardAuthenticateDialogMessage:
         bundle.localizedString(forKey: "autodashboard_authenticate_dialog_message")
+      case .deleteButton:
+        bundle.localizedString(forKey: "delete_button")
+      case .savedToFavorites:
+        bundle.localizedString(forKey: "saved_to_favorites")
+      case .removedFromFavorites:
+        bundle.localizedString(forKey: "removed_from_favorites")
+      case .savedToFavoritesMessage:
+        bundle.localizedString(forKey: "saved_to_favorites_message")
+      case .removedFromFavoritesMessages:
+        bundle.localizedString(forKey: "removed_from_favorites_messages")
     }
   }
 
@@ -504,6 +514,11 @@ public extension LocalizableString {
     case online
     case fromDevice
     case autodashboardAuthenticateDialogMessage
+    case deleteButton
+    case savedToFavorites
+    case removedFromFavorites
+    case savedToFavoritesMessage
+    case removedFromFavoritesMessages
   }
 }
 

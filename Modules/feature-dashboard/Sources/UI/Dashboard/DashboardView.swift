@@ -65,8 +65,12 @@ struct DashboardView<Router: RouterHost>: View {
       titleVisibility: .visible
     ) {
       Button(LocalizableString.shared.get(with: .cancelButton), role: .cancel) {}
-      Button(LocalizableString.shared.get(with: .inPerson)) { }
-      Button(LocalizableString.shared.get(with: .online)) { }
+      Button(LocalizableString.shared.get(with: .inPerson)) {
+        viewModel.onShowScanner()
+      }
+      Button(LocalizableString.shared.get(with: .online)) {
+        viewModel.onShare()
+      }
     } message: {
       Text(LocalizableString.shared.get(with: .autodashboardAuthenticateDialogMessage))
     }

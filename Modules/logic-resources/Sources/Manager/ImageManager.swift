@@ -61,6 +61,7 @@ public protocol ImageManagerProtocol: Sendable {
   var menuIcon: Image { get }
   var filterMenuIcon: Image { get }
   var bookmarkIcon: Image { get }
+  var bookmarkIconFill: Image { get }
   var gearshape: Image { get }
   var checkmark: Image { get }
   var hourglassImage: Image { get }
@@ -124,7 +125,8 @@ final class ImageManager: ImageManagerProtocol {
     case bell
     case menuIcon = "menu-icon"
     case filterMenuIcon = "filter-menu-icon"
-    case bookmarkIcon = "bookmark-icon"
+    case bookmarkIcon = "bookmark"
+    case bookmarkIconFill = "bookmark.fill"
     case gearshape
     case checkmark
     case hourglassImage
@@ -281,7 +283,10 @@ final class ImageManager: ImageManagerProtocol {
     Image(ImageEnum.filterMenuIcon.rawValue, bundle: bundle)
   }
   var bookmarkIcon: Image {
-    Image(ImageEnum.bookmarkIcon.rawValue, bundle: bundle)
+    Image(systemName: ImageEnum.bookmarkIcon.rawValue)
+  }
+  var bookmarkIconFill: Image {
+    Image(systemName: ImageEnum.bookmarkIconFill.rawValue)
   }
   var gearshape: Image {
     Image(systemName: ImageEnum.gearshape.rawValue)
