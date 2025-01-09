@@ -188,6 +188,61 @@
         }
       }
     },
+    "alert_access_online_services" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access online services"
+          }
+        }
+      }
+    },
+    "alert_access_online_services_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identify yourself to a wide range of public and private online services while protecting your privacy. Prove who you are with just a few taps — no need to manage countless passwords."
+          }
+        }
+      }
+    },
+    "alert_sign_documents_safely" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign documents safely"
+          }
+        }
+      }
+    },
+    "alert_sign_documents_safely_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign documents with just your wallet. Providing a legally binding e-signature will be faster and easier than ever, enabling you to conduct business wherever you are."
+          }
+        }
+      }
+    },
+    "authenticate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authenticate"
+          }
+        }
+      }
+    },
     "authenticate_authorise_transactions" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -195,6 +250,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Authenticate, authorise transactions and share your digital documents in person or online."
+          }
+        }
+      }
+    },
+    "autodashboard_authenticate_dialog_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authenticate by sharing your data in person (in close proximity) or online (website/service)"
           }
         }
       }
@@ -617,6 +683,17 @@
         }
       }
     },
+    "from_device" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From device"
+          }
+        }
+      }
+    },
     "generic_error_description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -701,6 +778,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Home"
+          }
+        }
+      }
+    },
+    "in_person" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In person"
           }
         }
       }
@@ -1045,6 +1133,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "on\n%@"
+          }
+        }
+      }
+    },
+    "online" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Online"
           }
         }
       }

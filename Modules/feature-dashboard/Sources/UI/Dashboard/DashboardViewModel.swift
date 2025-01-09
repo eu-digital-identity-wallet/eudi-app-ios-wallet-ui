@@ -78,6 +78,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   @Published var isDeleteDeferredModalShowing: Bool = false
   @Published var isSuccededDocumentsModalShowing: Bool = false
   @Published var selectedTab: SelectedTab = .home
+  @Published var addDocument: Bool = false
 
   private var deferredTask: Task<DashboardDeferredPartialState, Error>?
 

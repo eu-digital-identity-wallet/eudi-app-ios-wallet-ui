@@ -28,6 +28,7 @@ public protocol ImageManagerProtocol: Sendable {
   var chevronUp: Image { get }
   var chevronDown: Image { get }
   var chevronRight: Image { get }
+  var chevronLeft: Image { get }
   var xmark: Image { get }
   var exclamationmarkCircle: Image { get }
   var circle: Image { get }
@@ -91,6 +92,7 @@ final class ImageManager: ImageManagerProtocol {
     case chevronUp = "chevron.up"
     case chevronDown = "chevron.down"
     case chevronRight = "chevron.right"
+    case chevronLeft = "chevron.left"
     case xmark = "xmark"
     case exclamationmarkCircle = "exclamationmark.circle"
     case circle = "circle.fill"
@@ -181,6 +183,9 @@ final class ImageManager: ImageManagerProtocol {
   }
   var chevronRight: Image {
     Image(systemName: ImageEnum.chevronRight.rawValue)
+  }
+  var chevronLeft: Image {
+    Image(systemName: ImageEnum.chevronLeft.rawValue)
   }
   var xmark: Image {
     Image(systemName: ImageEnum.xmark.rawValue)

@@ -42,7 +42,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
             }
         ],
         leadingActions: [
-          Action(image: Theme.shared.image.xmark) {
+          Action(image: Theme.shared.image.chevronLeft) {
             viewModel.pop()
           }
         ]

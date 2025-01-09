@@ -41,7 +41,7 @@ struct DocumentDetailsViewState: ViewState {
 final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, DocumentDetailsViewState> {
 
   @Published var isDeletionModalShowing: Bool = false
-  @Published var isVisible = false
+  @Published var isVisible = true
   @Published var showAlert = false
 
   private let interactor: DocumentDetailsInteractor
