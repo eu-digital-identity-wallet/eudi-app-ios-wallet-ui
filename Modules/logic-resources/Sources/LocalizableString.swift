@@ -223,10 +223,14 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "or")
     case .issuanceScanQr:
       bundle.localizedString(forKey: "issuance_scan_qr")
-    case .scannerQrTitle:
-      bundle.localizedString(forKey: "scanner_qr_title")
-    case .scannerQrCaption:
-      bundle.localizedString(forKey: "scanner_qr_caption")
+    case .scannerQrTitleIssuing:
+      bundle.localizedString(forKey: "scanner_qr_title_issuing")
+    case .scannerQrTitlePresentation:
+      bundle.localizedString(forKey: "scanner_qr_title_presentation")
+    case .scannerQrCaptionIssuing:
+      bundle.localizedString(forKey: "scanner_qr_caption_issuing")
+    case .scannerQrCaptionPresentation:
+      bundle.localizedString(forKey: "scanner_qr_caption_presentation")
     case .cameraError:
       bundle.localizedString(forKey: "camera_error")
     case .missingPid:
@@ -432,8 +436,10 @@ public extension LocalizableString {
     case onExpired([String])
     case or
     case issuanceScanQr
-    case scannerQrTitle
-    case scannerQrCaption
+    case scannerQrTitleIssuing
+    case scannerQrTitlePresentation
+    case scannerQrCaptionIssuing
+    case scannerQrCaptionPresentation
     case cameraError
     case missingPid
     case requestCredentialOfferTitle([String])
