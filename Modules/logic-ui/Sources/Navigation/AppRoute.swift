@@ -33,7 +33,6 @@ public enum FeatureLoginRouteModule: AppRouteModule {
 
   case welcome
   case faqs
-  case sideMenu
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -41,8 +40,6 @@ public enum FeatureLoginRouteModule: AppRouteModule {
       (key: "Welcome", arguments: [:])
     case .faqs:
       (key: "FAQ", arguments: [:])
-    case .sideMenu:
-      (key: "SideMenu", arguments: [:])
     }
   }
 }
@@ -72,6 +69,7 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
 
   case dashboard
   case signDocument
+  case sideMenu
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -79,6 +77,8 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
       (key: "Dashboard", arguments: [:])
     case .signDocument:
       (key: "SignDocument", arguments: [:])
+    case .sideMenu:
+      (key: "SideMenu", arguments: [:])
     }
   }
 }

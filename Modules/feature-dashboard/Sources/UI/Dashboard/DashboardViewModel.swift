@@ -255,7 +255,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
   func onMyWallet() {
     router.push(
-      with: .featureLoginModule(
+      with: .featureDashboardModule(
         .sideMenu
       )
     )
