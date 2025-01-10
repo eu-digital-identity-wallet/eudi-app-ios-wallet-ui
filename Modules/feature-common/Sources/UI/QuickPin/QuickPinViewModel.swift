@@ -26,6 +26,7 @@ enum QuickPinStep {
 @Copyable
 struct QuickPinState: ViewState {
   let config: QuickPinUiConfig
+  let navigationTitle: LocalizableString.Key
   let title: LocalizableString.Key
   let caption: LocalizableString.Key
   let button: LocalizableString.Key
@@ -59,6 +60,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       router: router,
       initialState: .init(
         config: config,
+        navigationTitle: config.isSetFlow ? .quickPinEnterPin : .quickPinConfirmPin,
         title: config.isSetFlow ? .quickPinSetTitle : .quickPinUpdateTitle,
         caption: config.isSetFlow ? .quickPinSetCaptionOne : .quickPinUpdateCaptionOne,
         button: .quickPinNextButton,
@@ -86,6 +88,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       setState {
         $0
           .copy(
+            navigationTitle: .quickPinConfirmPin,
             caption: viewState.config.isSetFlow ? .quickPinSetCaptionTwo : .quickPinUpdateCaptionThree,
             button: .quickPinConfirmButton,
             step: .retryInput(uiPinInputField)

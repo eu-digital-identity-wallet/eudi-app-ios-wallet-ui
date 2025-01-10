@@ -127,6 +127,10 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "change_quick_pin_option")
     case .quickPinSetTitle:
       bundle.localizedString(forKey: "quick_pin_set_title")
+    case .quickPinEnterPin:
+      bundle.localizedString(forKey: "quick_pin_enter_a_pin")
+    case .quickPinConfirmPin:
+      bundle.localizedString(forKey: "quick_pin_confirm_pin")
     case .quickPinSetCaptionOne:
       bundle.localizedString(forKey: "quick_pin_set_step_one_caption")
     case .quickPinSetCaptionTwo:
@@ -383,6 +387,8 @@ public extension LocalizableString {
     case moreOptions
     case changeQuickPinOption
     case quickPinSetTitle
+    case quickPinEnterPin
+    case quickPinConfirmPin
     case quickPinSetCaptionOne
     case quickPinSetCaptionTwo
     case quickPinNextButton
