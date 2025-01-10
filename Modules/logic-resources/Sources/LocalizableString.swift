@@ -359,6 +359,10 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "scanner_qr_caption_issuing")
       case .scannerQrCaptionPresentation:
         bundle.localizedString(forKey: "scanner_qr_caption_presentation")
+      case .quickPinEnterPin:
+        bundle.localizedString(forKey: "quick_pin_enter_a_pin")
+      case .quickPinConfirmPin:
+        bundle.localizedString(forKey: "quick_pin_confirm_pin")
     }
   }
 
@@ -415,6 +419,8 @@ public extension LocalizableString {
     case moreOptions
     case changeQuickPinOption
     case quickPinSetTitle
+    case quickPinEnterPin
+    case quickPinConfirmPin
     case quickPinSetCaptionOne
     case quickPinSetCaptionTwo
     case quickPinNextButton

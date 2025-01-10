@@ -1236,6 +1236,17 @@
         }
       }
     },
+    "quick_pin_confirm_pin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm PIN"
+          }
+        }
+      }
+    },
     "quick_pin_dont_match" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1247,13 +1258,24 @@
         }
       }
     },
+    "quick_pin_enter_a_pin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a PIN"
+          }
+        }
+      }
+    },
     "quick_pin_next_button" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "NEXT"
+            "value" : "PROCEED"
           }
         }
       }
@@ -1264,7 +1286,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Set a quick pin for future logins"
+            "value" : "Secure your wallet with a PIN code and connect to your National System."
           }
         }
       }
@@ -1308,7 +1330,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Welcome to the EUDI Wallet"
+            "value" : "Welcome to your wallet"
           }
         }
       }
