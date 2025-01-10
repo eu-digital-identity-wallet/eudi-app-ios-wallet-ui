@@ -98,6 +98,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
         .featureCommonModule(
           .biometry(
             config: UIConfig.Biometry(
+              navigationTitle: .biometryConfirmRequest,
               title: getTitle(),
               caption: .requestDataShareBiometryCaption,
               quickPinOnlyCaption: .requestDataShareQuickPinCaption,

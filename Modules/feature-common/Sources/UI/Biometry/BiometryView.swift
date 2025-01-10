@@ -27,11 +27,19 @@ struct BiometryView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    ContentScreenView {
+    ContentScreenView(
+      allowBackGesture: false,
+      navigationTitle: LocalizableString.shared.get(
+        with: viewModel.viewState.config.navigationTitle
+      ),
+      toolbarContent: toolBarContent(
+        viewState: viewModel.viewState,
+        onPop: viewModel.onPop
+      )
+    ) {
       content(
         viewState: viewModel.viewState,
         uiPinInputField: $viewModel.uiPinInputField,
-        onPop: viewModel.onPop,
         onBiometry: viewModel.onBiometry
       )
       .alert(item: $viewModel.biometryError) { error in
@@ -55,19 +63,34 @@ struct BiometryView<Router: RouterHost>: View {
 }
 
 @MainActor
+private func toolBarContent(
+  viewState: BiometryState,
+  onPop: @escaping () -> Void
+) -> ToolBarContent? {
+  var leadingActions: [Action] = []
+  if viewState.isCancellable {
+    leadingActions.append(
+      Action(
+        image: Theme.shared.image.chevronLeft
+      ) {
+        onPop()
+    })
+
+    return ToolBarContent(
+      leadingActions: leadingActions
+    )
+  }
+
+  return nil
+}
+
+@MainActor
 @ViewBuilder
 private func content(
   viewState: BiometryState,
   uiPinInputField: Binding<String>,
-  onPop: @escaping () -> Void,
   onBiometry: @escaping () -> Void
 ) -> some View {
-  if viewState.isCancellable {
-    ContentHeaderView(
-      dismissIcon: Theme.shared.image.xmark,
-      onBack: { onPop() }
-    )
-  }
 
   ContentTitleView(
     title: viewState.config.title,
@@ -135,6 +158,7 @@ private func pinView(
 #Preview {
   let viewState = BiometryState(
     config: UIConfig.Biometry(
+      navigationTitle: .custom("Navigation Title"),
       title: .quickPinSetTitle,
       caption: .loginCaptionQuickPinOnly,
       quickPinOnlyCaption: .requestDataShareQuickPinCaption,
@@ -158,7 +182,6 @@ private func pinView(
     content(
       viewState: viewState,
       uiPinInputField: .constant("uiPinInputField"),
-      onPop: {},
       onBiometry: {})
   }
 }

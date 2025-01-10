@@ -199,6 +199,17 @@
         }
       }
     },
+    "biometry_confirm_request" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm request"
+          }
+        }
+      }
+    },
     "biometry_open_settings" : {
       "extractionState" : "manual",
       "localizations" : {
