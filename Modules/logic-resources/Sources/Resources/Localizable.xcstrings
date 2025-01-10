@@ -188,6 +188,61 @@
         }
       }
     },
+    "alert_access_online_services" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access online services"
+          }
+        }
+      }
+    },
+    "alert_access_online_services_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identify yourself to a wide range of public and private online services while protecting your privacy. Prove who you are with just a few taps — no need to manage countless passwords."
+          }
+        }
+      }
+    },
+    "alert_sign_documents_safely" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign documents safely"
+          }
+        }
+      }
+    },
+    "alert_sign_documents_safely_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign documents with just your wallet. Providing a legally binding e-signature will be faster and easier than ever, enabling you to conduct business wherever you are."
+          }
+        }
+      }
+    },
+    "authenticate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authenticate"
+          }
+        }
+      }
+    },
     "authenticate_authorise_transactions" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -485,6 +540,17 @@
         }
       }
     },
+    "delete_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
     "delete_document" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -628,6 +694,17 @@
         }
       }
     },
+    "from_device" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From device"
+          }
+        }
+      }
+    },
     "generic_error_description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -712,6 +789,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Home"
+          }
+        }
+      }
+    },
+    "in_person" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In person"
           }
         }
       }
@@ -1060,6 +1148,17 @@
         }
       }
     },
+    "online" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Online"
+          }
+        }
+      }
+    },
     "or" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1357,6 +1456,28 @@
         }
       }
     },
+    "removed_from_favorites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removed from favorites"
+          }
+        }
+      }
+    },
+    "removed_from_favorites_messages" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The document was successfully removed from your favorite list"
+          }
+        }
+      }
+    },
     "request_credential_offer_caption" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1518,6 +1639,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "A relying party is considered trusted when it meets predefined criteria for security, data protection, compliance, and responsible data handling. Trust is reinforced through assessments, audits, and certifications."
+          }
+        }
+      }
+    },
+    "saved_to_favorites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved to favorites"
+          }
+        }
+      }
+    },
+    "saved_to_favorites_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The document was successfully added from your favorite list"
           }
         }
       }

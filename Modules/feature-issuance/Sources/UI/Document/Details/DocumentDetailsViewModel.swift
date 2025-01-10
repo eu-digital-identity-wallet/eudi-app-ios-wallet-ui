@@ -41,8 +41,15 @@ struct DocumentDetailsViewState: ViewState {
 final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, DocumentDetailsViewState> {
 
   @Published var isDeletionModalShowing: Bool = false
-  @Published var isVisible = false
+  @Published var isVisible = true
   @Published var showAlert = false
+  @Published var isBookmarked = true
+  @Published var alertType: AlertType?
+
+  enum AlertType {
+    case bookmark
+    case issuer
+  }
 
   private let interactor: DocumentDetailsInteractor
 
@@ -150,6 +157,30 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
   func onShowDeleteModal() {
     isDeletionModalShowing = !isDeletionModalShowing
+  }
+
+  func bookmarked() async {
+    do {
+      let documentId = viewState.config.documentId
+      _ = try await interactor.fetchBookmarks(documentId)
+      isBookmarked = true
+    } catch {
+      isBookmarked = false
+    }
+  }
+
+  func saveBookmark(_ identifier: String) {
+    Task {
+      do {
+        if isBookmarked {
+          try await interactor.delete(identifier)
+          isBookmarked = false
+        } else {
+          try await interactor.save(identifier)
+          isBookmarked = true
+        }
+      } catch {}
+    }
   }
 
   private func onDocumentDelete(with type: DocumentTypeIdentifier, and id: String) {
