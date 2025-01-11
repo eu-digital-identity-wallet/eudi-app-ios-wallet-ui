@@ -19,10 +19,10 @@ public extension View {
   func confirmationDialog(
     title: String,
     message: String,
-    destructiveText: String,
+    destructiveText: String? = nil,
     baseText: String,
     isPresented: Binding<Bool>,
-    destructiveAction: @escaping () -> Void,
+    destructiveAction: (() -> Void)? = nil,
     baseAction: @escaping () -> Void
   ) -> some View {
     self.modifier(
@@ -42,10 +42,10 @@ public extension View {
 struct ConfirmationDialogModifier: ViewModifier {
   let title: String
   let message: String
-  let destructiveText: String
+  let destructiveText: String?
   let baseText: String
   let isPresented: Binding<Bool>
-  let destructiveAction: () -> Void
+  let destructiveAction: (() -> Void)?
   let baseAction: () -> Void
 
   func body(content: Content) -> some View {
@@ -55,8 +55,10 @@ struct ConfirmationDialogModifier: ViewModifier {
         isPresented: isPresented,
         titleVisibility: .visible
       ) {
-        Button(destructiveText, role: .destructive) {
-          destructiveAction()
+        if let destructiveText = destructiveText, let destructiveAction = destructiveAction {
+          Button(destructiveText, role: .destructive) {
+            destructiveAction()
+          }
         }
         Button(baseText, role: .cancel) {
           baseAction()

@@ -21,9 +21,12 @@ import feature_common
 import logic_core
 
 struct DashboardView<Router: RouterHost>: View {
-
   @ObservedObject private var viewModel: DashboardViewModel<Router>
+
   @Environment(\.scenePhase) var scenePhase
+
+  @State private var selectedOptions: Set<String> = []
+  @State private var sortAscending: Bool = true
 
   public init(with viewModel: DashboardViewModel<Router>) {
     self.viewModel = viewModel
@@ -50,94 +53,39 @@ struct DashboardView<Router: RouterHost>: View {
         onShare: viewModel.onShare
       )
     }
-    .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {
-      SheetContentView {
-        VStack(spacing: .zero) {
-
-          ContentTitleView(
-            title: .moreOptions
-          )
-
-          VSpacer.medium()
-
-          ForEach(viewModel.viewState.moreOptions, id: \.id) { option in
-
-            switch option {
-            case .changeQuickPin:
-              WrapButtonView(
-                title: .changeQuickPinOption,
-                backgroundColor: .clear,
-                icon: Theme.shared.image.pencil,
-                gravity: .start,
-                onAction: viewModel.onUpdatePin()
-              )
-            case .scanQrCode:
-              WrapButtonView(
-                title: .scanQrCode,
-                backgroundColor: .clear,
-                icon: Theme.shared.image.qrScan,
-                gravity: .start,
-                onAction: viewModel.onShowScanner()
-              )
-            case .signDocument:
-              WrapButtonView(
-                title: .signDocument,
-                backgroundColor: .clear,
-                icon: Theme.shared.image.signDocument,
-                gravity: .start,
-                onAction: viewModel.openSignDocument()
-              )
-            case .retrieveLogs(let url):
-              shareLogs(with: url)
-            }
-          }
-
-          HStack {
-            Spacer()
-            Text(viewModel.viewState.appVersion)
-              .typography(Theme.shared.font.bodyMedium)
-              .foregroundColor(Theme.shared.color.onSurface)
-            Spacer()
-          }
-        }
-      }
+    .sheet(isPresented: $viewModel.isFilterModalShowing) {
+      FilterListView(
+        selectedOptions: $selectedOptions,
+        sortAscending: $sortAscending,
+        sections: viewModel.documentSections
+      )
     }
-    .sheetDialog(isPresented: $viewModel.isBleModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
-
-          ContentTitleView(
-            title: .bleDisabledModalTitle,
-            caption: .bleDisabledModalCaption
-          )
-
-          WrapButtonView(style: .primary, title: .bleDisabledModalButton, onAction: viewModel.onBleSettings())
-          WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.toggleBleModal())
-        }
+    .confirmationDialog(
+      title: LocalizableString.shared.get(with: .bleDisabledModalTitle),
+      message: LocalizableString.shared.get(with: .bleDisabledModalCaption),
+      destructiveText: LocalizableString.shared.get(with: .cancelButton).capitalized,
+      baseText: LocalizableString.shared.get(with: .bleDisabledModalButton).capitalized,
+      isPresented: $viewModel.isBleModalShowing,
+      destructiveAction: {
+        viewModel.toggleBleModal()
+      },
+      baseAction: {
+        viewModel.onBleSettings()
       }
-    }
-    .sheetDialog(isPresented: $viewModel.isDeleteDeferredModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
-
-          ContentTitleView(
-            title: .issuanceDetailsDeletionTitle([viewModel.viewState.pendingDocumentTitle]),
-            caption: .issuanceDetailsDeletionCaption([viewModel.viewState.pendingDocumentTitle])
-          )
-
-          WrapButtonView(
-            style: .primary,
-            title: .yes,
-            onAction: viewModel.deleteDeferredDocument()
-          )
-          WrapButtonView(
-            style: .secondary,
-            title: .no,
-            onAction: viewModel.toggleDeleteDeferredModal()
-          )
-        }
+    )
+    .confirmationDialog(
+      title: LocalizableString.shared.get(with: .issuanceDetailsDeletionTitle([viewModel.viewState.pendingDocumentTitle])),
+      message: LocalizableString.shared.get(with: .issuanceDetailsDeletionCaption([viewModel.viewState.pendingDocumentTitle])),
+      destructiveText: LocalizableString.shared.get(with: .no),
+      baseText: LocalizableString.shared.get(with: .yes),
+      isPresented: $viewModel.isDeleteDeferredModalShowing,
+      destructiveAction: {
+        viewModel.toggleDeleteDeferredModal()
+      },
+      baseAction: {
+        viewModel.deleteDeferredDocument()
       }
-    }
+    )
     .sheetDialog(isPresented: $viewModel.isSuccededDocumentsModalShowing) {
       SheetContentView {
         VStack(spacing: SPACING_MEDIUM) {
@@ -181,7 +129,9 @@ struct DashboardView<Router: RouterHost>: View {
           Action(image: Theme.shared.image.plus) {
             viewModel.onAdd()
           },
-          Action(image: Theme.shared.image.filterMenuIcon) {}
+          Action(image: Theme.shared.image.filterMenuIcon) {
+            viewModel.showFilters()
+          }
         ],
         leadingActions: [
           Action(image: Theme.shared.image.menuIcon) {}

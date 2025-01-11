@@ -35,20 +35,19 @@ struct DocumentOfferView<Router: RouterHost>: View {
         onShowCancelModal: viewModel.onShowCancelModal
       )
     }
-    .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
-
-          ContentTitleView(
-            title: .cancelIssueSheetTitle,
-            caption: .cancelIssueSheetCaption
-          )
-
-          WrapButtonView(style: .primary, title: .cancelIssueSheetContinue, onAction: viewModel.onShowCancelModal())
-          WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.onPop())
-        }
+    .confirmationDialog(
+      title: LocalizableString.shared.get(with: .cancelIssueSheetTitle),
+      message: LocalizableString.shared.get(with: .cancelIssueSheetCaption),
+      destructiveText: LocalizableString.shared.get(with: .cancelButton),
+      baseText: LocalizableString.shared.get(with: .cancelIssueSheetContinue),
+      isPresented: $viewModel.isCancelModalShowing,
+      destructiveAction: {
+        viewModel.onPop()
+      },
+      baseAction: {
+        viewModel.onShowCancelModal()
       }
-    }
+    )
     .task {
       await viewModel.initialize()
     }

@@ -75,6 +75,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
   @Published var isMoreModalShowing: Bool = false
   @Published var isBleModalShowing: Bool = false
+  @Published var isFilterModalShowing: Bool = false
   @Published var isDeleteDeferredModalShowing: Bool = false
   @Published var isSuccededDocumentsModalShowing: Bool = false
   @Published var selectedTab: SelectedTab = .home
@@ -83,6 +84,24 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
   var bearerName: String {
     viewState.bearer.value.name
+  }
+
+  var documentSections: [FilterSections] {
+    return [
+      .issuedSortingDate,
+      .category(options: [
+        "Government",
+        "Payment cards",
+        "Travel"
+      ]),
+      .issuer(options: [
+        "National Bank of Greece",
+        "Thon Hotel",
+        "Hellenic Goverment",
+        "AEGEAN Airlines",
+        "AADE"
+      ])
+    ]
   }
 
   init(
@@ -245,12 +264,16 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
   func onAdd() {
     router.push(
-      with: .featureIssuanceModule(
+      with: .featureCommonModule(
         .issuanceAddDocumentOptions(
           config: IssuanceFlowUiConfig(flow: .extraDocument)
         )
       )
     )
+  }
+
+  func showFilters() {
+    isFilterModalShowing = true
   }
 
   func onMore() {

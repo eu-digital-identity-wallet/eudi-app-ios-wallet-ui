@@ -34,29 +34,19 @@ struct QuickPinView<Router: RouterHost>: View {
         onButtonClick: { viewModel.onButtonClick() }
       )
     }
-    .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
-
-          ContentTitleView(
-            title: .quickPinUpdateCancellationTitle,
-            caption: .quickPinUpdateCancellationCaption
-          )
-
-          WrapButtonView(
-            style: .primary,
-            title: .quickPinUpdateCancellationContinue,
-            onAction:
-              viewModel.onShowCancellationModal()
-          )
-          WrapButtonView(
-            style: .secondary,
-            title: .cancelButton,
-            onAction: viewModel.onPop()
-          )
-        }
+    .confirmationDialog(
+      title: LocalizableString.shared.get(with: .quickPinUpdateCancellationTitle),
+      message: LocalizableString.shared.get(with: .quickPinUpdateCancellationCaption),
+      destructiveText: LocalizableString.shared.get(with: .cancelButton),
+      baseText: LocalizableString.shared.get(with: .quickPinUpdateCancellationContinue),
+      isPresented: $viewModel.isCancelModalShowing,
+      destructiveAction: {
+        viewModel.onPop()
+      },
+      baseAction: {
+        viewModel.onShowCancellationModal()
       }
-    }
+    )
   }
 }
 

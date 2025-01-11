@@ -89,6 +89,16 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "incomplete_request_data_selecting")
     case .addDoc:
       bundle.localizedString(forKey: "add_doc")
+    case .filters:
+      bundle.localizedString(forKey: "filters")
+    case .sortByIssuedDateSectionTitle:
+      bundle.localizedString(forKey: "sort_by_issued_date")
+    case .categorySectionTitle:
+      bundle.localizedString(forKey: "category")
+    case .issuerSectionTitle:
+      bundle.localizedString(forKey: "issuer")
+    case .totalFiltersCounter(let args):
+      bundle.localizedStringWithArguments(forKey: "totalFiltersCounter", arguments: args)
     case .showQRTap:
       bundle.localizedString(forKey: "show_qr_tap")
     case .welcomeBack:
@@ -313,6 +323,14 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "data_sharing_title")
     case .close:
       bundle.localizedString(forKey: "close")
+    case .all:
+      bundle.localizedString(forKey: "all")
+    case .reset:
+      bundle.localizedString(forKey: "reset")
+    case .ascending:
+      bundle.localizedString(forKey: "ascending")
+    case .descending:
+      bundle.localizedString(forKey: "descending")
     case .trustedRelyingParty:
       bundle.localizedString(forKey: "trusted_relying_party")
     case .trustedRelyingPartyDescription:
@@ -354,6 +372,11 @@ public extension LocalizableString {
     case requestDataShareButton
     case incompleteRequestDataSelection
     case addDoc
+    case filters
+    case sortByIssuedDateSectionTitle
+    case categorySectionTitle
+    case issuerSectionTitle
+    case totalFiltersCounter([String])
     case showQRTap
     case welcomeBack
     case pleaseWait
@@ -466,6 +489,10 @@ public extension LocalizableString {
     case dataSharingRequest
     case dataSharingTitle
     case close
+    case reset
+    case all
+    case descending
+    case ascending
     case trustedRelyingParty
     case trustedRelyingPartyDescription
   }

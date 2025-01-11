@@ -45,46 +45,37 @@ public struct BaseRequestView<Router: RouterHost>: View {
         }
       )
     }
-    .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
-
-          ContentTitleView(
-            title: .cancelShareSheetTitle,
-            caption: .cancelShareSheetCaption
-          )
-
-          WrapButtonView(style: .primary, title: .cancelShareSheetContinue, onAction: viewModel.onShowCancelModal())
-          WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.onPop())
-        }
+    .confirmationDialog(
+      title: LocalizableString.shared.get(with: .cancelShareSheetTitle),
+      message: LocalizableString.shared.get(with: .cancelShareSheetCaption),
+      destructiveText: LocalizableString.shared.get(with: .cancelButton),
+      baseText: LocalizableString.shared.get(with: .cancelShareSheetContinue),
+      isPresented: $viewModel.isCancelModalShowing,
+      destructiveAction: {
+        viewModel.onPop()
+      },
+      baseAction: {
+        viewModel.onShowCancelModal()
       }
-    }
-    .sheetDialog(isPresented: $viewModel.isRequestInfoModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
-
-          ContentTitleView(
-            title: .requestDataInfoNotice,
-            caption: .requestDataSheetCaption
-          )
-
-          WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onShowRequestInfoModal())
-        }
+    )
+    .confirmationDialog(
+      title: LocalizableString.shared.get(with: .requestDataInfoNotice),
+      message: LocalizableString.shared.get(with: .requestDataSheetCaption),
+      baseText: LocalizableString.shared.get(with: .okButton).capitalized,
+      isPresented: $viewModel.isRequestInfoModalShowing,
+      baseAction: {
+        viewModel.onShowRequestInfoModal()
       }
-    }
-    .sheetDialog(isPresented: $viewModel.isVerifiedEntityModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
-
-          ContentTitleView(
-            title: viewModel.getTrustedRelyingParty(),
-            caption: viewModel.getTrustedRelyingPartyInfo()
-          )
-
-          WrapButtonView(style: .primary, title: .okButton, onAction: viewModel.onVerifiedEntityModal())
-        }
+    )
+    .confirmationDialog(
+      title: LocalizableString.shared.get(with: viewModel.getTrustedRelyingParty()),
+      message: LocalizableString.shared.get(with: viewModel.getTrustedRelyingPartyInfo()),
+      baseText: LocalizableString.shared.get(with: .okButton).capitalized,
+      isPresented: $viewModel.isVerifiedEntityModalShowing,
+      baseAction: {
+        viewModel.onVerifiedEntityModal()
       }
-    }
+    )
     .task {
       if !viewModel.viewState.initialized {
         await viewModel.doWork()
