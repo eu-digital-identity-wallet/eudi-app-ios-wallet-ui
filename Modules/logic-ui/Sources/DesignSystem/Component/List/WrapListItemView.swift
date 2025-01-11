@@ -55,7 +55,7 @@ public struct WrapListItemView: View {
         Text(listItem.mainText)
           .font(Theme.shared.font.bodyLarge.font)
           .foregroundStyle(Theme.shared.color.onSurface)
-          .fontWeight(.medium)
+          .fontWeight(listItem.mainStyle == .plain ? .medium : .bold)
           .lineLimit(1)
           .truncationMode(.tail)
           .if(listItem.isBlur) {
@@ -107,7 +107,7 @@ public struct WrapListItemView: View {
   VStack(spacing: 16) {
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: "Main Text",
           overlineText: "Overline Text",
           supportingText: "Valid until: 22 March 2030",
@@ -120,7 +120,7 @@ public struct WrapListItemView: View {
 
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: "Another Item",
           overlineText: nil,
           supportingText: "Additional Info",
@@ -131,7 +131,7 @@ public struct WrapListItemView: View {
 
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: "Another Item",
           overlineText: nil,
           supportingText: "Additional Info",
@@ -142,7 +142,7 @@ public struct WrapListItemView: View {
 
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: "Another Item",
           overlineText: "Overline Texr",
           supportingText: "Additional Info",
@@ -154,7 +154,7 @@ public struct WrapListItemView: View {
 
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: "Main Text",
           overlineText: "Overline Text",
           supportingText: "Valid until: 22 March 2030",
@@ -167,7 +167,7 @@ public struct WrapListItemView: View {
 
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: "Another Item",
           trailingContent: .icon(Image(systemName: "plus"))
         )

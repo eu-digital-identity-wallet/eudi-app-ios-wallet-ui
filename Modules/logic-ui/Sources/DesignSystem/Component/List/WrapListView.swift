@@ -88,21 +88,21 @@ public struct WrapListView<Item: Identifiable, Content: View, ListStyleType: Lis
 
 private struct TransactionHistoryView: View {
   let todayTransactions: [ListItemData] = [
-    ListItemData(
+    .init(
       mainText: "TravelBook",
       overlineText: "5 minutes ago",
       supportingText: "Completed",
       overlineTextColor: .green,
       trailingContent: .icon(Image(systemName: "chevron.right"))
     ),
-    ListItemData(
+    .init(
       mainText: "AirBNB",
       overlineText: "11:05 AM",
       supportingText: "Completed",
       overlineTextColor: .green,
       trailingContent: .icon(Image(systemName: "chevron.right"))
     ),
-    ListItemData(
+    .init(
       mainText: "Natural Bank VISA",
       overlineText: "11:05 AM",
       supportingText: "Failed",
@@ -130,21 +130,21 @@ private struct TransactionHistoryView: View {
 
 private struct DashboardDocumentsView: View {
   let todayTransactions: [ListItemData] = [
-    ListItemData(
+    .init(
       mainText: "TravelBook",
       overlineText: "5 minutes ago",
       supportingText: "Completed",
       overlineTextColor: .green,
       trailingContent: .icon(Image(systemName: "chevron.right"))
     ),
-    ListItemData(
+    .init(
       mainText: "AirBNB",
       overlineText: "11:05 AM",
       supportingText: "Completed",
       overlineTextColor: .green,
       trailingContent: .icon(Image(systemName: "chevron.right"))
     ),
-    ListItemData(
+    .init(
       mainText: "Natural Bank VISA",
       overlineText: "11:05 AM",
       supportingText: "Failed",

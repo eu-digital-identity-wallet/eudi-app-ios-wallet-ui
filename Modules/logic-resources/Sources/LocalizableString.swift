@@ -71,6 +71,8 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "cancel_share_sheet_title")
       case .cancelShareSheetCaption:
         bundle.localizedString(forKey: "cancel_share_sheet_caption")
+      case .documentAdded:
+        bundle.localizedString(forKey: "document_added")
       case .cancelShareSheetContinue:
         bundle.localizedString(forKey: "cancel_share_sheet_continue")
       case .requestDataSheetCaption:
@@ -173,6 +175,8 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "issuance_external_loading_caption")
       case .issuanceSuccessTitle:
         bundle.localizedString(forKey: "issuance_success_title")
+    case .issuanceSuccessTitlePunctuated:
+      bundle.localizedString(forKey: "issuance_success_title_punctuated")
       case .issuanceSuccessCaption(let args):
         bundle.localizedStringWithArguments(forKey: "issuance_success_caption", arguments: args)
       case .issuanceSuccessNextButton:
@@ -394,6 +398,7 @@ public extension LocalizableString {
     case requestDataTitle([String])
     case cancelShareSheetTitle
     case cancelShareSheetCaption
+    case documentAdded
     case cancelShareSheetContinue
     case requestDataSheetCaption
     case okButton
@@ -447,6 +452,7 @@ public extension LocalizableString {
     case issuanceExternalLoadingTitle([String])
     case issuanceExternalLoadingCaption
     case issuanceSuccessTitle
+    case issuanceSuccessTitlePunctuated
     case issuanceSuccessCaption([String])
     case issuanceSuccessNextButton
     case issuerWantWalletAddition

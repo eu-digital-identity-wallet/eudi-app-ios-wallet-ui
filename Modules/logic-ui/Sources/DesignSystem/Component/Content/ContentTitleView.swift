@@ -25,6 +25,7 @@ public struct ContentTitleView: View {
     case icon(decorated: String, icon: Image, text: String?)
   }
 
+  private let titleWeight: Font.Weight
   private let titleDecoration: TitleDecoration
   private let decorationColor: Color
   private let caption: LocalizableString.Key?
@@ -36,6 +37,7 @@ public struct ContentTitleView: View {
 
   public init(
     title: LocalizableString.Key,
+    titleWeight: Font.Weight = .regular,
     caption: LocalizableString.Key? = nil,
     decorationColor: Color = Theme.shared.color.primary,
     titleColor: Color = Theme.shared.color.onSurface,
@@ -44,6 +46,7 @@ public struct ContentTitleView: View {
     isLoading: Bool = false,
     onTap: TapListener = nil
   ) {
+    self.titleWeight = titleWeight
     self.titleDecoration = .plain(title)
     self.caption = caption
     self.decorationColor = decorationColor
@@ -56,6 +59,7 @@ public struct ContentTitleView: View {
 
   public init(
     titleDecoration: TitleDecoration,
+    titleWeight: Font.Weight = .regular,
     caption: LocalizableString.Key? = nil,
     decorationColor: Color = Theme.shared.color.primary,
     titleColor: Color = Theme.shared.color.onSurface,
@@ -64,6 +68,7 @@ public struct ContentTitleView: View {
     isLoading: Bool = false,
     onTap: TapListener = nil
   ) {
+    self.titleWeight = titleWeight
     self.titleDecoration = titleDecoration
     self.decorationColor = decorationColor
     self.caption = caption
@@ -80,6 +85,7 @@ public struct ContentTitleView: View {
       case .plain(let key):
         Text(key)
           .typography(Theme.shared.font.headlineSmall)
+          .fontWeight(titleWeight)
           .foregroundColor(self.titleColor)
       case .icon(let decorated, let icon, let text):
         Text(decorated)

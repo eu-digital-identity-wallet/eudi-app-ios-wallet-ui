@@ -22,19 +22,22 @@ public struct ExpandableCardView: View {
   private let listItems: [ListItemData]
   private let backgroundColor: Color
   private let mainTextVerticalPadding: CGFloat?
+  private let isLoading: Bool
 
   public init(
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
     title: String,
     subtitle: String,
     listItems: [ListItemData],
-    mainTextVerticalPadding: CGFloat? = nil
+    mainTextVerticalPadding: CGFloat? = nil,
+    isLoading: Bool = false
   ) {
     self.title = title
     self.subtitle = subtitle
     self.listItems = listItems
     self.backgroundColor = backgroundColor
     self.mainTextVerticalPadding = mainTextVerticalPadding
+    self.isLoading = isLoading
   }
 
   @State private var isExpanded: Bool = false
@@ -46,15 +49,18 @@ public struct ExpandableCardView: View {
       ) {
         VStack(spacing: .zero) {
           WrapListItemView(
-            listItem: ListItemData(
+            listItem: .init(
               mainText: title,
-              supportingText: subtitle,
+              mainStyle: .bold,
+              supportingText: !isExpanded ? subtitle : nil,
               trailingContent: .icon(isExpanded ? Theme.shared.image.chevronUp : Theme.shared.image.chevronDown)
             ),
             mainTextVerticalPadding: mainTextVerticalPadding
           ) {
-            withAnimation {
-              isExpanded.toggle()
+            if !isLoading {
+              withAnimation {
+                isExpanded.toggle()
+              }
             }
           }
 
@@ -66,6 +72,7 @@ public struct ExpandableCardView: View {
           }
         }
       }
+      .shimmer(isLoading: isLoading)
     }
   }
 }
@@ -75,14 +82,14 @@ public struct ExpandableCardView: View {
     title: "Digital ID",
     subtitle: "View details",
     listItems: [
-      ListItemData(mainText: "Family name", supportingText: "Doe"),
-      ListItemData(mainText: "Given names", supportingText: "John"),
-      ListItemData(mainText: "Date of birth", supportingText: "21 Oct 1994"),
-      ListItemData(mainText: "Age over 18", supportingText: "Yes"),
-      ListItemData(mainText: "Date of issue", supportingText: "21 Oct 2023"),
-      ListItemData(mainText: "Date of expiry", supportingText: "21 Oct 2040"),
-      ListItemData(mainText: "Issuing authority", supportingText: "GR"),
-      ListItemData(mainText: "Issuing country", supportingText: "GR")
+      .init(mainText: "Family name", supportingText: "Doe"),
+      .init(mainText: "Given names", supportingText: "John"),
+      .init(mainText: "Date of birth", supportingText: "21 Oct 1994"),
+      .init(mainText: "Age over 18", supportingText: "Yes"),
+      .init(mainText: "Date of issue", supportingText: "21 Oct 2023"),
+      .init(mainText: "Date of expiry", supportingText: "21 Oct 2040"),
+      .init(mainText: "Issuing authority", supportingText: "GR"),
+      .init(mainText: "Issuing country", supportingText: "GR")
     ]
   )
   .padding()

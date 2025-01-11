@@ -69,7 +69,7 @@ private func content(
 
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: LocalizableString.shared.get(with: .selectDocument),
           trailingContent: .icon(Theme.shared.image.plus)
         )

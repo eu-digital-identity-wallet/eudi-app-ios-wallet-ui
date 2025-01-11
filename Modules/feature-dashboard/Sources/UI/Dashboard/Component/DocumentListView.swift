@@ -38,7 +38,7 @@ struct DocumentListView: View {
       ForEach(items) { item in
         WrapCardView {
           WrapListItemView(
-            listItem: ListItemData(
+            listItem: .init(
               mainText: item.value.title,
               supportingText: item.expiry,
               trailingContent: .icon(Theme.shared.image.chevronRight)

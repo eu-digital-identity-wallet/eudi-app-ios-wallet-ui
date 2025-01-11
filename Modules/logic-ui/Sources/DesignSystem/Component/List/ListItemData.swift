@@ -16,8 +16,15 @@
 import logic_resources
 
 public struct ListItemData: Identifiable {
+
+  public enum MainStyle {
+    case plain
+    case bold
+  }
+
   public var id: String
   public let mainText: String
+  public let mainStyle: MainStyle
   public let overlineText: String?
   public let supportingText: String?
   public let overlineTextColor: Color
@@ -28,6 +35,7 @@ public struct ListItemData: Identifiable {
   public init(
     id: String = UUID().uuidString,
     mainText: String,
+    mainStyle: MainStyle = .plain,
     overlineText: String? = nil,
     supportingText: String? = nil,
     overlineTextColor: Color = Theme.shared.color.onSurfaceVariant,
@@ -37,6 +45,7 @@ public struct ListItemData: Identifiable {
   ) {
     self.id = id
     self.mainText = mainText
+    self.mainStyle = mainStyle
     self.overlineText = overlineText
     self.supportingText = supportingText
     self.overlineTextColor = overlineTextColor

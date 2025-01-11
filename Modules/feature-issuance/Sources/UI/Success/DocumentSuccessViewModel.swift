@@ -24,15 +24,21 @@ struct DocumentSuccessState: ViewState {
   let holderName: String?
   let config: IssuanceFlowUiConfig
   let documentIdentifier: String
+  let document: DocumentDetailsUIModel?
+  let issuerData: IssuerDataUIModel
+  let isLoading: Bool
+  let error: ContentErrorView.Config?
 }
 
 final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, DocumentSuccessState> {
 
   private let interactor: DocumentSuccessInteractor
+  private let detailsInteractor: DocumentDetailsInteractor
 
   public init(
     router: Router,
     interactor: DocumentSuccessInteractor,
+    detailsInteractor: DocumentDetailsInteractor,
     config: any UIConfigType,
     documentIdentifier: String
   ) {
@@ -42,20 +48,28 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
     }
 
     self.interactor = interactor
+    self.detailsInteractor = detailsInteractor
 
     super.init(
       router: router,
       initialState: .init(
-        title: .issuanceSuccessTitle,
+        title: .issuanceSuccessTitlePunctuated,
         caption: nil,
         holderName: nil,
         config: config,
-        documentIdentifier: documentIdentifier
+        documentIdentifier: documentIdentifier,
+        document: DocumentDetailsUIModel.mock(),
+        issuerData: IssuerDataUIModel.mock(),
+        isLoading: true,
+        error: nil
       )
     )
   }
 
   func initialize() async {
+    await fetchDocumentDetails()
+    await fetchIssuerData()
+
     setState {
       $0.copy(
         caption: interactor.getDocumentSuccessCaption(for: viewState.documentIdentifier),
@@ -84,5 +98,61 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
         )
       )
     )
+  }
+
+  func fetchDocumentDetails() async {
+
+    let documentId = viewState.documentIdentifier
+
+    let state = await Task.detached { () -> DocumentDetailsPartialState in
+      return await self.detailsInteractor.fetchStoredDocument(documentId: documentId)
+    }.value
+
+    switch state {
+
+    case .success(let document):
+      switch viewState.config.flow {
+      case .extraDocument:
+        self.setState {
+          $0
+            .copy(
+              document: document,
+              isLoading: false
+            )
+        }
+      default:
+        self.setState {
+          $0
+            .copy(
+              document: nil,
+              isLoading: false
+            )
+        }
+      }
+
+    case .failure:
+      self.setState {
+        $0
+          .copy(
+            document: nil,
+            isLoading: false
+          )
+      }
+    }
+  }
+
+  func fetchIssuerData() async {
+    let issuer = IssuerDataUIModel(
+      icon: Theme.shared.image.issuerCardImagePlaceholder,
+      title: "Another Organization",
+      subtitle: "Non-Government agency",
+      caption: "Athens - Greece",
+      isVerified: true
+    )
+    self.setState {
+      $0.copy(
+        issuerData: issuer
+      )
+    }
   }
 }

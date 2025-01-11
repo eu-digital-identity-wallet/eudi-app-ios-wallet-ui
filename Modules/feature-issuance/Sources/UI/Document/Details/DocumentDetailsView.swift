@@ -142,7 +142,7 @@ private func content(
               switch documentFieldContent.value {
               case .string(let value):
                 WrapListItemView(
-                  listItem: ListItemData(
+                  listItem: .init(
                     mainText: value,
                     overlineText: documentFieldContent.title,
                     isBlur: isVisible
@@ -151,7 +151,7 @@ private func content(
                 )
               case .image(let image):
                 WrapListItemView(
-                  listItem: ListItemData(
+                  listItem: .init(
                     mainText: documentFieldContent.title,
                     leadingIcon: image,
                     isBlur: isVisible
