@@ -76,15 +76,19 @@ struct FilterListView: View {
     .onChange(of: selectedOptions) { _ in
       updateSelectedCount()
     }
+    .onAppear {
+      updateSelectedCount()
+    }
   }
 
   private func categorySection(section: FilterSections) -> some View {
     Section(header: Text(section.sectionTitle)) {
       if section.hasToggle {
         Toggle(LocalizableString.shared.get(with: .all).capitalized, isOn: Binding(
-          get: { togglesState[section.sectionTitle] ?? false },
+          get: {
+            return section.options.allSatisfy { selectedOptions.contains($0) }
+          },
           set: { newValue in
-            togglesState[section.sectionTitle] = newValue
             if newValue {
               selectedOptions.formUnion(section.options)
             } else {
