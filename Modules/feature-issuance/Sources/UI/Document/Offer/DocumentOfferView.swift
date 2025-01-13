@@ -16,6 +16,7 @@
 import SwiftUI
 import logic_ui
 import logic_resources
+import feature_common
 
 struct DocumentOfferView<Router: RouterHost>: View {
 

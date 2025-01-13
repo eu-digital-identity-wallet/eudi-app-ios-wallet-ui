@@ -52,6 +52,18 @@ public final class PresentationRouter {
           originator: originator
         )
       ).eraseToAnyView()
+    case .presentationSuccess(
+      let config
+    ):
+      PresentationSuccessView(
+        with: .init(
+          router: host,
+          config: config,
+          deepLinkController: DIGraph.resolver.force(
+            DeepLinkController.self
+          )
+        )
+      ).eraseToAnyView()
     }
   }
 }
