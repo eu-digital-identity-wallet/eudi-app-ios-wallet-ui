@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import logic_resources
 
 struct SearchableModifier<Item: Identifiable>: ViewModifier {
   @Binding var searchText: String
@@ -22,25 +23,17 @@ struct SearchableModifier<Item: Identifiable>: ViewModifier {
   let onFilteredItems: ([Item]) -> Void
 
   func body(content: Content) -> some View {
-    if #available(iOS 17.0, *) {
+    VStack {
+      CustomSearchBar(
+        text: $searchText,
+        placeholder: placeholder
+      )
+      .padding(.horizontal)
+
       content
-        .searchable(text: $searchText, prompt: placeholder)
         .onChange(of: searchText) { _ in
           filterItems()
         }
-    } else {
-      VStack {
-        CustomSearchBar(
-          text: $searchText,
-          placeholder: placeholder
-        )
-        .padding(.horizontal)
-
-        content
-          .onChange(of: searchText) { _ in
-            filterItems()
-          }
-      }
     }
   }
 
@@ -108,6 +101,10 @@ struct CustomSearchBar: UIViewRepresentable {
     searchBar.placeholder = placeholder
     searchBar.delegate = context.coordinator
     searchBar.autocapitalizationType = .none
+
+    searchBar.backgroundImage = UIImage()
+    searchBar.searchTextField.backgroundColor = .white
+
     return searchBar
   }
 

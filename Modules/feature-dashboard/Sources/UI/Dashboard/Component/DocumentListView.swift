@@ -19,6 +19,7 @@ import logic_ui
 
 struct DocumentListView: View {
   @State private var searchText = ""
+  @State private var filteredItems: [DocumentUIModel] = []
 
   let items: [DocumentUIModel]
   let action: (DocumentUIModel) -> Void
@@ -35,7 +36,7 @@ struct DocumentListView: View {
 
   var body: some View {
     List {
-      ForEach(items) { item in
+      ForEach(filteredItems.isEmpty ? items : filteredItems) { item in
         WrapCardView {
           WrapListItemView(
             listItem: ListItemData(
@@ -57,7 +58,9 @@ struct DocumentListView: View {
       searchText: $searchText,
       items: items,
       placeholder: LocalizableString.shared.get(with: .search)
-    ) { _ in }
+    ) { filtered in
+      filteredItems = filtered
+    }
   }
 }
 
