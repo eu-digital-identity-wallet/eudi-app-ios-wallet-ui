@@ -474,6 +474,17 @@
         }
       }
     },
+    "data_shared" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data shared"
+          }
+        }
+      }
+    },
     "data_sharing_request" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -613,6 +624,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Documents"
+          }
+        }
+      }
+    },
+    "done_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
           }
         }
       }
@@ -1870,6 +1892,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Success"
+          }
+        }
+      }
+    },
+    "successfully_shared_following_information" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You successfully shared the following information with"
           }
         }
       }

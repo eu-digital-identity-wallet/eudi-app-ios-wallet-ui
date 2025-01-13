@@ -83,6 +83,8 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "share_data_review_title")
       case .success:
         bundle.localizedString(forKey: "success")
+      case .successfullySharedFollowingInformation:
+        bundle.localizedString(forKey: "successfully_shared_following_information")
       case .requestDataShareSuccess(let args):
         bundle.localizedStringWithArguments(forKey: "request_data_share_sucess_title", arguments: args)
       case .requestDataShareButton:
@@ -317,6 +319,10 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "details")
       case .dataSharingRequest:
         bundle.localizedString(forKey: "data_sharing_request")
+      case .dataShared:
+        bundle.localizedString(forKey: "data_shared")
+      case .doneButton:
+        bundle.localizedString(forKey: "done_button")
       case .dataSharingTitle:
         bundle.localizedString(forKey: "data_sharing_title")
       case .close:
@@ -408,6 +414,7 @@ public extension LocalizableString {
     case okButton
     case shareDataReview
     case success
+    case successfullySharedFollowingInformation
     case requestDataShareSuccess([String])
     case requestDataShareButton
     case incompleteRequestDataSelection
@@ -533,6 +540,8 @@ public extension LocalizableString {
     case addDocumentsToWallet
     case details
     case dataSharingRequest
+    case dataShared
+    case doneButton
     case dataSharingTitle
     case close
     case trustedRelyingParty
