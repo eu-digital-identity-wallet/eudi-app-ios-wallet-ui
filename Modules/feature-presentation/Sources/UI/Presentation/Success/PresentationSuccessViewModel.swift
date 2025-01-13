@@ -1,0 +1,67 @@
+/*
+ * Copyright (c) 2023 European Commission
+ *
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
+ *
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
+ */
+@_exported import logic_ui
+@_exported import logic_resources
+@_exported import logic_business
+@_exported import feature_common
+
+@Copyable
+public struct PresentationSuccessState: ViewState {
+  let config: PresentationSuccessUIConfig
+  let issuerData: IssuerDataUIModel
+}
+
+open class PresentationSuccessViewModel<Router: RouterHost>: ViewModel<Router, PresentationSuccessState> {
+
+  private let deepLinkController: DeepLinkController
+
+  public init(
+    router: Router,
+    config: any UIConfigType,
+    deepLinkController: DeepLinkController
+  ) {
+
+    guard let config = config as? PresentationSuccessUIConfig else {
+      fatalError("ExternalLoginViewModel:: Invalid configuraton")
+    }
+
+    self.deepLinkController = deepLinkController
+
+    super.init(
+      router: router,
+      initialState: .init(
+        config: config,
+        issuerData: .init(
+          icon: Image(systemName: ""),
+          title: config.relyingParty,
+          isVerified: true
+        )
+      )
+    )
+  }
+
+  func onDone() {
+    switch viewState.config.successNavigation {
+    case .pop(let screen, let inclusive):
+      router.popTo(with: screen, inclusive: inclusive)
+    case .deepLink(let url, let popToScreen):
+      deepLinkController.cacheDeepLinkURL(url: url)
+      router.popTo(with: popToScreen)
+    case .push(let screen):
+      router.push(with: screen)
+    }
+  }
+}

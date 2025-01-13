@@ -23,7 +23,21 @@ public struct IssuerDataUIModel: Sendable, Equatable {
   public let caption: String
   public let isVerified: Bool
 
-  static func mock() -> IssuerDataUIModel {
+  public init(
+    icon: Image,
+    title: String,
+    subtitle: String = "",
+    caption: String = "",
+    isVerified: Bool
+  ) {
+    self.icon = icon
+    self.title = title
+    self.subtitle = subtitle
+    self.caption = caption
+    self.isVerified = isVerified
+  }
+
+  public static func mock() -> IssuerDataUIModel {
     IssuerDataUIModel(
       icon: Theme.shared.image.issuerCardImagePlaceholder,
       title: "",
