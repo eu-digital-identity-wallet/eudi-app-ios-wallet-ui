@@ -116,12 +116,11 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
         return .dynamicIssuance(session)
       } else if documents.count == docOffers.count {
         return .success(
-          retrieveSuccessRoute(
-            caption: .credentialOfferSuccessCaption([issuerName]),
-            successNavigation: successNavigation,
-            title: .init(value: .success),
-            buttonTitle: .credentialOfferSuccessButton,
-            visualKind: .defaultIcon
+          .featureIssuanceModule(
+            .issuanceSuccess(
+              config: IssuanceFlowUiConfig(flow: .extraDocument),
+              documentIdentifier: documents.map { $0.id }.first ?? ""
+            )
           )
         )
       } else {

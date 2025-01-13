@@ -120,8 +120,8 @@ private func document(
     if let document = viewState.document {
       ExpandableCardView(
         backgroundColor: Theme.shared.color.tertiary,
-        title: "Issued document",
-        subtitle: "View details",
+        title: document.documentName,
+        subtitle: LocalizableString.shared.get(with: .viewDocumentDetails),
         listItems: document.documentFields.map({ field in
           switch field.value {
           case .string(let value):
