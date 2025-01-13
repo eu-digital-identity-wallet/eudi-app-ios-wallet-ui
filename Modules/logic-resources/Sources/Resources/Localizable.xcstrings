@@ -1852,6 +1852,17 @@
         }
       }
     },
+    "succesfully_added_following_to_wallet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have successfully added the following to your wallet"
+          }
+        }
+      }
+    },
     "success" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1958,6 +1969,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verifier"
+          }
+        }
+      }
+    },
+    "valid_until" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valid until %@"
           }
         }
       }

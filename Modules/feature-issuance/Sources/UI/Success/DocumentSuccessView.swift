@@ -74,9 +74,9 @@ private func content(
       HStack {
         Text(caption)
           .typography(Theme.shared.font.bodyMedium)
+          .multilineTextAlignment(.center)
           .foregroundColor(Theme.shared.color.onSurfaceVariant)
           .frame(maxWidth: .infinity, alignment: .center)
-        Spacer()
       }
     }
 
@@ -117,7 +117,7 @@ private func document(
 ) -> some View {
   VStack(spacing: SPACING_MEDIUM) {
 
-    if let document = viewState.document {
+    ForEach(viewState.documents) { document in
       ExpandableCardView(
         backgroundColor: Theme.shared.color.tertiary,
         title: document.documentName,
@@ -151,8 +151,8 @@ private func document(
     ),
     holderName: "Name",
     config: IssuanceFlowUiConfig(flow: .noDocument),
-    documentIdentifier: "id",
-    document: DocumentDetailsUIModel.mock(),
+    documentIdentifiers: ["id"],
+    documents: [DocumentDetailsUIModel.mock()],
     issuerData: IssuerDataUIModel.mock(),
     isLoading: false,
     error: nil

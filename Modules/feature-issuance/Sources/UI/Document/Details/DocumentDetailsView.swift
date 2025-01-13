@@ -213,7 +213,7 @@ private func content(
     issuerData: IssuerDataUIModel.mock(),
     isLoading: false,
     error: nil,
-    config: IssuanceDetailUiConfig(flow: .extraDocument("documentId")),
+    config: IssuanceDetailUiConfig(flow: .extraDocument(["documentId"])),
     hasDeleteAction: true,
     documentFieldsCount: DocumentDetailsUIModel.mock().documentFields.count
   )

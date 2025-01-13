@@ -351,6 +351,8 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "delete_button")
       case .savedToFavorites:
         bundle.localizedString(forKey: "saved_to_favorites")
+      case .succesfullyAddedFollowingToWallet:
+        bundle.localizedString(forKey: "succesfully_added_following_to_wallet")
       case .removedFromFavorites:
         bundle.localizedString(forKey: "removed_from_favorites")
       case .savedToFavoritesMessage:
@@ -546,6 +548,7 @@ public extension LocalizableString {
     case autodashboardAuthenticateDialogMessage
     case deleteButton
     case savedToFavorites
+    case succesfullyAddedFollowingToWallet
     case removedFromFavorites
     case savedToFavoritesMessage
     case removedFromFavoritesMessages

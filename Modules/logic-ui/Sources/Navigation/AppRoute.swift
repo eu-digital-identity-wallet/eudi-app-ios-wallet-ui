@@ -122,7 +122,7 @@ public enum FeatureIssuanceRouteModule: AppRouteModule {
 
   case issuanceAddDocument(config: any UIConfigType)
   case issuanceDocumentDetails(config: any UIConfigType)
-  case issuanceSuccess(config: any UIConfigType, documentIdentifier: String)
+  case issuanceSuccess(config: any UIConfigType, documentIdentifiers: [String])
   case credentialOfferRequest(config: any UIConfigType)
   case issuanceCode(config: any UIConfigType)
   case issuanceAddDocumentOptions(config: any UIConfigType)
@@ -135,8 +135,8 @@ public enum FeatureIssuanceRouteModule: AppRouteModule {
       (key: "IssuanceAddDocument", arguments: ["config": config.log])
     case .issuanceDocumentDetails(let config):
       (key: "IssuanceDocumentDetails", arguments: ["config": config.log])
-    case .issuanceSuccess(let config, let id):
-      (key: "IssuanceSuccess", arguments: ["id": id, "config": config.log])
+    case .issuanceSuccess(let config, let ids):
+      (key: "IssuanceSuccess", arguments: ["id": ids.joined(separator: ", "), "config": config.log])
     case .issuanceCode(let config):
       (key: "IssuanceCode", arguments: ["config": config.log])
     case .credentialOfferRequest(let config):

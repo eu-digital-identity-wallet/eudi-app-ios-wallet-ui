@@ -42,6 +42,7 @@ public protocol WalletKitController: Sendable {
   func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [DocClaimsDecodable]
   func fetchMainPidDocument() -> DocClaimsDecodable?
   func fetchDocument(with id: String) -> DocClaimsDecodable?
+  func fetchDocuments(with ids: [String]) -> [DocClaimsDecodable]
   func clearAllDocuments() async
   func clearDocuments(status: DocumentStatus) async throws
   func deleteDocument(with id: String, status: DocumentStatus) async throws
@@ -188,6 +189,10 @@ final class WalletKitControllerImpl: WalletKitController {
 
   func fetchDocument(with id: String) -> DocClaimsDecodable? {
     wallet.storage.getDocumentModel(id: id)
+  }
+
+  func fetchDocuments(with ids: [String]) -> [DocClaimsDecodable] {
+    fetchIssuedDocuments().filter { ids.contains($0.id) }
   }
 
   func issueDocument(identifier: String) async throws -> WalletStorage.Document {

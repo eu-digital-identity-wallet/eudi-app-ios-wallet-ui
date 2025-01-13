@@ -23,8 +23,8 @@ struct DocumentSuccessState: ViewState {
   let caption: LocalizableString.Key?
   let holderName: String?
   let config: IssuanceFlowUiConfig
-  let documentIdentifier: String
-  let document: DocumentDetailsUIModel?
+  let documentIdentifiers: [String]
+  let documents: [DocumentDetailsUIModel]
   let issuerData: IssuerDataUIModel
   let isLoading: Bool
   let error: ContentErrorView.Config?
@@ -40,7 +40,7 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
     interactor: DocumentSuccessInteractor,
     detailsInteractor: DocumentDetailsInteractor,
     config: any UIConfigType,
-    documentIdentifier: String
+    documentIdentifiers: [String]
   ) {
 
     guard let config = config as? IssuanceFlowUiConfig else {
@@ -57,8 +57,8 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
         caption: nil,
         holderName: nil,
         config: config,
-        documentIdentifier: documentIdentifier,
-        document: DocumentDetailsUIModel.mock(),
+        documentIdentifiers: documentIdentifiers,
+        documents: [DocumentDetailsUIModel.mock()],
         issuerData: IssuerDataUIModel.mock(),
         isLoading: true,
         error: nil
@@ -70,22 +70,27 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
     await fetchDocumentDetails()
     await fetchIssuerData()
 
-    setState {
-      $0.copy(
-        caption: interactor.getDocumentSuccessCaption(for: viewState.documentIdentifier),
-        holderName: interactor.getHoldersName(for: viewState.documentIdentifier)
-      )
+    if let first = viewState.documentIdentifiers.first {
+      setState {
+        $0.copy(
+          caption: .succesfullyAddedFollowingToWallet,
+          holderName: interactor.getHoldersName(
+            for: first
+          )
+        )
+      }
     }
   }
 
   func onIssue() {
 
+    let documentIdentifiers = viewState.documentIdentifiers
     var flow: IssuanceDetailUiConfig.Flow {
       switch viewState.config.flow {
       case .noDocument:
-        return .noDocument(viewState.documentIdentifier)
+        return .noDocument(documentIdentifiers)
       case .extraDocument:
-        return .extraDocument(viewState.documentIdentifier)
+        return .extraDocument(documentIdentifiers)
       }
     }
 
@@ -102,41 +107,38 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
   func fetchDocumentDetails() async {
 
-    let documentId = viewState.documentIdentifier
-
+    let documentIdentifiers = viewState.documentIdentifiers
     let state = await Task.detached { () -> DocumentDetailsPartialState in
-      return await self.detailsInteractor.fetchStoredDocument(documentId: documentId)
+      return await self.detailsInteractor.fetchStoredDocuments(
+        documentIds: documentIdentifiers
+      )
     }.value
 
     switch state {
-
-    case .success(let document):
+    case .success(let documents):
       switch viewState.config.flow {
       case .extraDocument:
         self.setState {
-          $0
-            .copy(
-              document: document,
-              isLoading: false
-            )
+          $0.copy(
+            documents: documents,
+            isLoading: false
+          )
         }
       default:
         self.setState {
-          $0
-            .copy(
-              document: nil,
-              isLoading: false
-            )
+          $0.copy(
+            documents: nil,
+            isLoading: false
+          )
         }
       }
 
     case .failure:
       self.setState {
-        $0
-          .copy(
-            document: nil,
-            isLoading: false
-          )
+        $0.copy(
+          documents: nil,
+          isLoading: false
+        )
       }
     }
   }

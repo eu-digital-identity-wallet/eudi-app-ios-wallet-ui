@@ -119,7 +119,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
           .featureIssuanceModule(
             .issuanceSuccess(
               config: IssuanceFlowUiConfig(flow: .extraDocument),
-              documentIdentifier: documents.map { $0.id }.first ?? ""
+              documentIdentifiers: documents.compactMap { $0.id }
             )
           )
         )

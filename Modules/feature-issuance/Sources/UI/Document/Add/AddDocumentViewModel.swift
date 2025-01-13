@@ -113,7 +113,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
         with: .featureIssuanceModule(
           .issuanceSuccess(
             config: viewState.config,
-            documentIdentifier: docId
+            documentIdentifiers: [docId]
           )
         )
       )
@@ -158,7 +158,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
           with: .featureIssuanceModule(
             .issuanceSuccess(
               config: viewState.config,
-              documentIdentifier: docId
+              documentIdentifiers: [docId]
             )
           )
         )

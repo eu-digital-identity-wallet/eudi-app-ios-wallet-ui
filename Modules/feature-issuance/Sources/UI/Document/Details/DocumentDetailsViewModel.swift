@@ -78,7 +78,18 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
   func fetchDocumentDetails() async {
 
-    let documentId = viewState.config.documentId
+    guard let documentId = viewState.config.documentIds.first else {
+      self.setState {
+        $0.copy(
+          isLoading: true,
+          error: .init(
+            description: .itemNotFoundInStorage,
+            cancelAction: self.pop()
+          )
+        )
+      }
+      return
+    }
 
     let state = await Task.detached { () -> DocumentDetailsPartialState in
       return await self.interactor.fetchStoredDocument(documentId: documentId)
@@ -86,7 +97,19 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
     switch state {
 
-    case .success(let document):
+    case .success(let documents):
+      guard let document = documents.first else {
+        self.setState {
+          $0.copy(
+            isLoading: true,
+            error: .init(
+              description: .itemNotFoundInStorage,
+              cancelAction: self.pop()
+            )
+          )
+        }
+        return
+      }
 
       switch viewState.config.flow {
       case .extraDocument:
@@ -160,8 +183,20 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   }
 
   func bookmarked() async {
+    guard let documentId = viewState.config.documentIds.first else {
+      self.setState {
+        $0.copy(
+          isLoading: true,
+          error: .init(
+            description: .itemNotFoundInStorage,
+            cancelAction: self.pop()
+          )
+        )
+      }
+      return
+    }
+
     do {
-      let documentId = viewState.config.documentId
       _ = try await interactor.fetchBookmarks(documentId)
       isBookmarked = true
     } catch {
