@@ -52,12 +52,12 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
     }
   }
 
-  override func getTitle() -> LocalizableString.Key {
-    .requestDataTitle([relyingParty])
+  override func getTitle() -> String {
+    LocalizableString.shared.get(with: .requestDataTitle([relyingParty]))
   }
 
   override func getCaption() -> LocalizableString.Key {
-    .pleaseWait
+    .requestsTheFollowing
   }
 
   private func getOnSuccessRoute(with url: URL?) -> AppRoute {

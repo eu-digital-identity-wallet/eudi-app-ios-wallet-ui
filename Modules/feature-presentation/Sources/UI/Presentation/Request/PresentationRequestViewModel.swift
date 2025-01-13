@@ -53,7 +53,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   override func onShare() {
     Task {
 
-      let items = self.viewState.items
+      let items = self.viewState.items.toModels()
 
       let result = await Task.detached { () -> Result<RequestItemConvertible, Error> in
         return await self.interactor.onResponsePrepare(requestItems: items)
@@ -110,7 +110,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   override func getCaption() -> LocalizableString.Key {
-    .requestDataCaption
+    .requestsTheFollowing
   }
 
   override func getDataRequestInfo() -> LocalizableString.Key {
