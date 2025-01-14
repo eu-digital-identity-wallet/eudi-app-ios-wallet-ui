@@ -72,22 +72,17 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
         interactor.storeDynamicIssuancePendingUrl(with: url)
         return .pop(screen: getOriginator())
       }
-      return .deepLink(link: url, popToScreen: .featureDashboardModule(.dashboard))
+      return .deepLink(
+        link: url,
+        popToScreen: .featureDashboardModule(.dashboard)
+      )
     }
 
-    return .featureCommonModule(
-      .success(
-        config: UIConfig.Success(
-          title: .init(value: .success),
-          subtitle: .requestDataShareSuccess([relyingParty]),
-          buttons: [
-            .init(
-              title: .requestDataShareButton,
-              style: .primary,
-              navigationType: navigationType
-            )
-          ],
-          visualKind: .defaultIcon
+    return .featurePresentationModule(
+      .presentationSuccess(
+        config: PresentationSuccessUIConfig(
+          successNavigation: navigationType,
+          relyingParty: relyingParty
         )
       )
     )
