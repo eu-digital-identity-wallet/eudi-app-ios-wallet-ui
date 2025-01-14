@@ -54,7 +54,7 @@ public struct HomeView: View {
 
         HomeCardView(
           text: LocalizableString.Key.authenticateAuthoriseTransactions,
-          buttonText: LocalizableString.Key.addDocumentTitle,
+          buttonText: LocalizableString.Key.authenticate,
           illustration: Theme.shared.image.homeIdentity,
           learnMoreText: LocalizableString.Key.learnMore,
           learnMoreAction: {

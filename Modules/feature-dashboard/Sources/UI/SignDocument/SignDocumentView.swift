@@ -61,7 +61,7 @@ private func content(
 
   VStack(spacing: SPACING_LARGE) {
     HStack {
-      Text(LocalizableString.shared.get(with: .signDocumentSubtitle))
+      Text(.signDocumentSubtitle)
         .typography(Theme.shared.font.bodyMedium)
         .foregroundColor(Theme.shared.color.onSurfaceVariant)
     }

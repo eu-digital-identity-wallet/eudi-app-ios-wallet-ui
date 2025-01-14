@@ -66,13 +66,13 @@ struct DashboardView<Router: RouterHost>: View {
     ) {
       Button(LocalizableString.shared.get(with: .cancelButton), role: .cancel) {}
       Button(LocalizableString.shared.get(with: .inPerson)) {
-        viewModel.onShowScanner()
-      }
-      Button(LocalizableString.shared.get(with: .online)) {
         viewModel.onShare()
       }
+      Button(LocalizableString.shared.get(with: .online)) {
+        viewModel.onShowScanner()
+      }
     } message: {
-      Text(LocalizableString.shared.get(with: .autodashboardAuthenticateDialogMessage))
+      Text(.authenticateAuthoriseTransactions)
     }
     .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {
       SheetContentView {

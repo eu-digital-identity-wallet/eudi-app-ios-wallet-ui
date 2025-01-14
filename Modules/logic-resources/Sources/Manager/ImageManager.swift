@@ -78,6 +78,7 @@ public protocol ImageManagerProtocol: Sendable {
   var homeIdentity: Image { get }
   var issuerCardImagePlaceholder: Image { get }
   var govLogo: Image { get }
+  var nfcImage: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -144,6 +145,7 @@ final class ImageManager: ImageManagerProtocol {
     case homeIdentity = "home-identity"
     case issuerCardImagePlaceholder = "issuer-card-image-placeholder"
     case govLogo = "gov-logo"
+    case nfcImage = "nfc-image"
   }
 
   // MARK: - Properties
@@ -337,5 +339,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var govLogo: Image {
     Image(ImageEnum.govLogo.rawValue, bundle: bundle)
+  }
+  var nfcImage: Image {
+    Image(ImageEnum.nfcImage.rawValue, bundle: bundle)
   }
 }
