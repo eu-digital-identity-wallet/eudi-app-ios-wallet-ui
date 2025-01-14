@@ -1687,6 +1687,17 @@
         }
       }
     },
+    "requests_the_following" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "requests the following"
+          }
+        }
+      }
+    },
     "saved_to_favorites" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2018,6 +2029,17 @@
       }
     },
     "view_document_details" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View details"
+          }
+        }
+      }
+    },
+    "view_details" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {

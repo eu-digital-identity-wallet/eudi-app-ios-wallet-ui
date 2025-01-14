@@ -16,28 +16,28 @@
 import SwiftUI
 import logic_resources
 
-public struct ExpandableCardView: View {
+public struct ExpandableCardView<Content: View>: View {
   private let title: String
   private let subtitle: String
-  private let listItems: [ListItemData]
   private let backgroundColor: Color
   private let mainTextVerticalPadding: CGFloat?
   private let isLoading: Bool
+  private let content: () -> Content
 
   public init(
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
     title: String,
     subtitle: String,
-    listItems: [ListItemData],
     mainTextVerticalPadding: CGFloat? = nil,
-    isLoading: Bool = false
+    isLoading: Bool = false,
+    @ViewBuilder content: @escaping () -> Content
   ) {
     self.title = title
     self.subtitle = subtitle
-    self.listItems = listItems
     self.backgroundColor = backgroundColor
     self.mainTextVerticalPadding = mainTextVerticalPadding
     self.isLoading = isLoading
+    self.content = content
   }
 
   @State private var isExpanded: Bool = false
@@ -65,32 +65,11 @@ public struct ExpandableCardView: View {
           }
 
           if isExpanded {
-            WrapListItemsView(
-              listItems: listItems,
-              mainTextVerticalPadding: mainTextVerticalPadding
-            )
+            content()
           }
         }
       }
       .shimmer(isLoading: isLoading)
     }
   }
-}
-
-#Preview {
-  ExpandableCardView(
-    title: "Digital ID",
-    subtitle: "View details",
-    listItems: [
-      .init(mainText: "Family name", supportingText: "Doe"),
-      .init(mainText: "Given names", supportingText: "John"),
-      .init(mainText: "Date of birth", supportingText: "21 Oct 1994"),
-      .init(mainText: "Age over 18", supportingText: "Yes"),
-      .init(mainText: "Date of issue", supportingText: "21 Oct 2023"),
-      .init(mainText: "Date of expiry", supportingText: "21 Oct 2040"),
-      .init(mainText: "Issuing authority", supportingText: "GR"),
-      .init(mainText: "Issuing country", supportingText: "GR")
-    ]
-  )
-  .padding()
 }

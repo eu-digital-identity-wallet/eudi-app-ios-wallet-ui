@@ -122,21 +122,25 @@ private func document(
         backgroundColor: Theme.shared.color.tertiary,
         title: document.documentName,
         subtitle: LocalizableString.shared.get(with: .viewDocumentDetails),
-        listItems: document.documentFields.map({ field in
-          switch field.value {
-          case .string(let value):
-              .init(
-                mainText: value,
-                overlineText: field.title
-              )
-          case .image(let image):
-              .init(
-                mainText: field.title,
-                leadingIcon: image
-              )
-          }
-        }),
-        isLoading: viewState.isLoading
+        isLoading: viewState.isLoading,
+        content: {
+          WrapListItemsView(
+            listItems: document.documentFields.map({ field in
+              switch field.value {
+              case .string(let value):
+                  .init(
+                    mainText: value,
+                    overlineText: field.title
+                  )
+              case .image(let image):
+                  .init(
+                    mainText: field.title,
+                    leadingIcon: image
+                  )
+              }
+            })
+          )
+        }
       )
     }
   }

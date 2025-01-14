@@ -379,6 +379,10 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "quick_pin_confirm_pin")
       case .biometryConfirmRequest:
         bundle.localizedString(forKey: "biometry_confirm_request")
+      case .viewDetails:
+        bundle.localizedString(forKey: "view_details")
+      case .requestsTheFollowing:
+        bundle.localizedString(forKey: "requests_the_following")
     }
   }
 
@@ -561,6 +565,8 @@ public extension LocalizableString {
     case removedFromFavorites
     case savedToFavoritesMessage
     case removedFromFavoritesMessages
+    case viewDetails
+    case requestsTheFollowing
   }
 }
 

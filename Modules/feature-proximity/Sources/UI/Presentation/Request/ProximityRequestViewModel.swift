@@ -72,7 +72,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   override func onShare() {
     Task {
 
-      let items = self.viewState.items
+      let items = self.viewState.items.toModels()
 
       let response = await Task.detached { () -> ProximityResponsePreparationPartialState in
         return await self.interactor.onResponsePrepare(requestItems: items)
@@ -131,7 +131,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   }
 
   override func getCaption() -> LocalizableString.Key {
-    .requestDataCaption
+    .requestsTheFollowing
   }
 
   override func getDataRequestInfo() -> LocalizableString.Key {

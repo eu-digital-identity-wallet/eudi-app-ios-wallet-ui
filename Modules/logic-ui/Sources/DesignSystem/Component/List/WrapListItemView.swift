@@ -40,7 +40,7 @@ public struct WrapListItemView: View {
         leadingIcon
           .resizable()
           .scaledToFit()
-          .frame(width: 40, height: 40)
+          .frame(width: 50, height: 50)
       }
 
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
@@ -81,11 +81,11 @@ public struct WrapListItemView: View {
             .frame(width: 20, height: 20)
             .foregroundColor(Color.accentColor)
 
-        case .checkbox(let isChecked, let onToggle):
+        case .checkbox(let enabled, let isChecked, let onToggle):
           WrapCheckbox(
             checkboxData: CheckboxData(
               isChecked: isChecked,
-              enabled: true,
+              enabled: enabled,
               onCheckedChange: { _ in
                 onToggle(!isChecked)
               }))
@@ -159,7 +159,7 @@ public struct WrapListItemView: View {
           overlineText: "Overline Text",
           supportingText: "Valid until: 22 March 2030",
           leadingIcon: Image(systemName: "star"),
-          trailingContent: .checkbox(true) { _ in }
+          trailingContent: .checkbox(true, true) { _ in }
         ),
         action: {}
       )

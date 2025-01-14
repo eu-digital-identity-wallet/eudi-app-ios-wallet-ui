@@ -97,12 +97,16 @@ private func content(
         backgroundColor: Theme.shared.color.tertiary,
         title: "document.documentName",
         subtitle: LocalizableString.shared.get(with: .viewDocumentDetails),
-        listItems: [
-          .init(
-            mainText: "mainText One"
+        isLoading: false,
+        content: {
+          WrapListItemsView(
+            listItems: [
+              .init(
+                mainText: "mainText One"
+              )
+            ]
           )
-        ],
-        isLoading: false
+        }
       )
     }
 

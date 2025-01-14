@@ -23,7 +23,8 @@ public struct RequestViewState: ViewState {
   public let error: ContentErrorView.Config?
   public let isContentVisible: Bool
   public let itemsAreAllSelected: Bool
-  public let items: [RequestDataUIModel]
+  public let showMissingCrredentials: Bool
+  public let items: [RequestDataUI]
   public let title: LocalizableString.Key
   public let trustedRelyingPartyInfo: LocalizableString.Key
   public let relyingParty: String
@@ -38,6 +39,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   @Published var isCancelModalShowing: Bool = false
   @Published var isRequestInfoModalShowing: Bool = false
   @Published var isVerifiedEntityModalShowing: Bool = false
+  @Published var itmesChanged: Bool = false
 
   public init(router: Router, originator: AppRoute) {
     super.init(
@@ -47,8 +49,9 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         error: nil,
         isContentVisible: false,
         itemsAreAllSelected: true,
-        items: RequestDataUiModel.mock(),
-        title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
+        showMissingCrredentials: true,
+        items: RequestDataUiModel.mockData(),
+        title: .unknownVerifier,
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
         relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
         isTrusted: false,
@@ -143,11 +146,11 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       $0
         .copy(
           isLoading: false,
-          items: items,
+          items: RequestDataUI.from(models: items),
           title: title,
           relyingParty: relyingParty,
           isTrusted: isTrusted,
-          allowShare: canShare(with: items),
+          allowShare: canShare(with: RequestDataUI.from(models: items)),
           initialized: true
         )
         .copy(error: nil)
@@ -161,7 +164,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
           error: nil,
           isContentVisible: false,
           itemsAreAllSelected: true,
-          items: RequestDataUiModel.mock(),
+          showMissingCrredentials: true,
+          items: RequestDataUiModel.mockData(),
           title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
           trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
           relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
@@ -199,78 +203,46 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     setState {
       $0.copy(
         isContentVisible: !viewState.isContentVisible,
-        items: viewState.items.map {
-          if var row = $0.isDataRow {
-            row.setVisible(!viewState.isContentVisible)
-            return .requestDataRow(row)
-          }
-          if var row = $0.isDataVerification {
-            let items = row.items.map({
-              var item = $0
-              item.isVisible = !viewState.isContentVisible
-              return item
-            }
-            )
-            row.setItems(with: items)
-            return .requestDataVerification(row)
-          }
-          return $0
+        items: viewState.items.map { item in
+          var updatedItem = item
+          updatedItem.toggleContentVisibility(isVisible: !viewState.isContentVisible)
+          return updatedItem
         }
       )
     }
   }
 
   func onSelectionChanged(id: String) {
-    let items = viewState.items.map {
-      if var row = $0.isDataRow, row.id == id {
-        row.setSelected(!row.isSelected)
-        return RequestDataUIModel.requestDataRow(row)
-      }
-      return $0
-    }
+    if viewState.showMissingCrredentials {
+      itmesChanged = true
 
-    let allSelected = items.map {
-      if $0.isDataRow?.isEnabled == false {
-        return true
+      setState {
+        $0.copy(
+          showMissingCrredentials: false
+        )
       }
-      return $0.isDataRow?.isSelected ?? true
-    }
-      .filter { !$0 }
-      .isEmpty
+    } else {
+      let items = viewState.items.map { item in
+        var updatedItem = item
+        updatedItem.toggleSelection(id: id)
+        return updatedItem
+      }
 
-    setState {
-      $0.copy(
-        itemsAreAllSelected: allSelected,
-        items: items,
-        allowShare: canShare(with: items)
-      )
+      let allSelected = viewState.items.areAllItemsSelected()
+
+      setState {
+        $0.copy(
+          itemsAreAllSelected: allSelected,
+          showMissingCrredentials: false,
+          items: items,
+          allowShare: canShare(with: items)
+        )
+      }
     }
   }
 
-  private func canShare(with items: [RequestDataUIModel]) -> Bool {
-
-    let hasVerificationItems = !items.compactMap {
-      $0.isDataVerification?.items.first(where: { $0.isSelected })
-    }.isEmpty
-
-    let onlyDataRowItems: [RequestDataUIModel] = items
-      .compactMap {
-        if $0.isDataSection == nil && $0.isDataRow?.isEnabled == true {
-          return $0
-        }
-        return nil
-      }
-
-    let canShare = !onlyDataRowItems.map {
-      if let row = $0.isDataRow {
-        return row.isSelected
-      }
-      return false
-    }
-      .filter { $0 }
-      .isEmpty
-
-    return canShare || hasVerificationItems
+  private func canShare(with items: [RequestDataUI]) -> Bool {
+    items.canShare()
   }
 
   private func onErrorAction() {

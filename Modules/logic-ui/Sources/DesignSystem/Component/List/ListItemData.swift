@@ -57,5 +57,5 @@ public struct ListItemData: Identifiable {
 
 public enum TrailingContent {
   case icon(Image)
-  case checkbox(Bool, (Bool) -> Void)
+  case checkbox(Bool, Bool, (Bool) -> Void)
 }

@@ -36,8 +36,8 @@ open class BaseLoadingViewModel<Router: RouterHost>: ViewModel<Router, BaseLoadi
     }
   }
 
-  open func getTitle() -> LocalizableString.Key {
-    return .custom("")
+  open func getTitle() -> String {
+    return ""
   }
 
   open func getCaption() -> LocalizableString.Key {
