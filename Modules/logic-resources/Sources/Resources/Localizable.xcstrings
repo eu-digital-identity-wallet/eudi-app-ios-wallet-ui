@@ -1352,7 +1352,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You successfully set the quick pin"
+            "value" : "To activate your wallet, connect to your National System to add your Digital ID."
           }
         }
       }
@@ -1363,7 +1363,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CONTINUE"
+            "value" : "Add my Digital ID"
           }
         }
       }
@@ -1462,7 +1462,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "BACK TO HOME"
+            "value" : "Go to my EUDI Wallet"
           }
         }
       }
@@ -2028,6 +2028,17 @@
         }
       }
     },
+    "view_details" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View details"
+          }
+        }
+      }
+    },
     "view_document_details" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2039,13 +2050,13 @@
         }
       }
     },
-    "view_details" : {
+    "wallet_is_secured" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "View details"
+            "value" : "Your wallet is secured!"
           }
         }
       }

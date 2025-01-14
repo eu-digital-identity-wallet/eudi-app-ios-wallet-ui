@@ -77,6 +77,9 @@ public protocol ImageManagerProtocol: Sendable {
   var homeContract: Image { get }
   var homeIdentity: Image { get }
   var issuerCardImagePlaceholder: Image { get }
+  var successSecuredWallet: Image { get }
+  var digitalIdIssuance: Image { get }
+  var documentSuccessPending: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -142,6 +145,9 @@ final class ImageManager: ImageManagerProtocol {
     case homeContract = "home-contract"
     case homeIdentity = "home-identity"
     case issuerCardImagePlaceholder = "issuer-card-image-placeholder"
+    case successSecuredWallet = "success-secured-wallet"
+    case digitalIdIssuance = "digital-id-issuance"
+    case documentSuccessPending = "document-success-pending"
   }
 
   // MARK: - Properties
@@ -332,5 +338,14 @@ final class ImageManager: ImageManagerProtocol {
   }
   var issuerCardImagePlaceholder: Image {
     Image(ImageEnum.issuerCardImagePlaceholder.rawValue, bundle: bundle)
+  }
+  var successSecuredWallet: Image {
+    Image(ImageEnum.successSecuredWallet.rawValue, bundle: bundle)
+  }
+  var digitalIdIssuance: Image {
+    Image(ImageEnum.digitalIdIssuance.rawValue, bundle: bundle)
+  }
+  var documentSuccessPending: Image {
+    Image(ImageEnum.documentSuccessPending.rawValue, bundle: bundle)
   }
 }

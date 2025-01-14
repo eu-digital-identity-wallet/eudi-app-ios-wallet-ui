@@ -31,6 +31,7 @@ public struct ContentTitleView: View {
   private let caption: LocalizableString.Key?
   private let titleColor: Color
   private let captionColor: Color
+  private let textAlignment: Alignment
   private let topSpacing: TopSpacing
   private let isLoading: Bool
   private let onTap: TapListener
@@ -42,6 +43,7 @@ public struct ContentTitleView: View {
     decorationColor: Color = Theme.shared.color.primary,
     titleColor: Color = Theme.shared.color.onSurface,
     captionColor: Color = Theme.shared.color.onSurfaceVariant,
+    textAlignment: Alignment = .leading,
     topSpacing: TopSpacing = .withToolbar,
     isLoading: Bool = false,
     onTap: TapListener = nil
@@ -52,6 +54,7 @@ public struct ContentTitleView: View {
     self.decorationColor = decorationColor
     self.titleColor = titleColor
     self.captionColor = captionColor
+    self.textAlignment = textAlignment
     self.topSpacing = topSpacing
     self.isLoading = isLoading
     self.onTap = onTap
@@ -64,6 +67,7 @@ public struct ContentTitleView: View {
     decorationColor: Color = Theme.shared.color.primary,
     titleColor: Color = Theme.shared.color.onSurface,
     captionColor: Color = Theme.shared.color.onSurfaceVariant,
+    textAlignment: Alignment = .leading,
     topSpacing: TopSpacing = .withToolbar,
     isLoading: Bool = false,
     onTap: TapListener = nil
@@ -74,6 +78,7 @@ public struct ContentTitleView: View {
     self.caption = caption
     self.titleColor = titleColor
     self.captionColor = captionColor
+    self.textAlignment = textAlignment
     self.topSpacing = topSpacing
     self.isLoading = isLoading
     self.onTap = onTap
@@ -87,6 +92,7 @@ public struct ContentTitleView: View {
           .typography(Theme.shared.font.headlineSmall)
           .fontWeight(titleWeight)
           .foregroundColor(self.titleColor)
+          .frame(maxWidth: .infinity, alignment: textAlignment)
       case .icon(let decorated, let icon, let text):
         Text(decorated)
           .typography(style: Theme.shared.font.headlineSmall)
@@ -101,7 +107,6 @@ public struct ContentTitleView: View {
           .foregroundColor(self.titleColor)
 
       }
-      Spacer()
     }
   }
 
@@ -123,7 +128,10 @@ public struct ContentTitleView: View {
           Text(caption)
             .typography(Theme.shared.font.bodyMedium)
             .foregroundColor(self.captionColor)
-          Spacer()
+            .if(textAlignment == .center) {
+              $0.multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: .infinity, alignment: textAlignment)
         }
       }
     }

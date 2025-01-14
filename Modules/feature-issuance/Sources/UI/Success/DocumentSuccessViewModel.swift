@@ -53,7 +53,7 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
     super.init(
       router: router,
       initialState: .init(
-        title: .issuanceSuccessTitlePunctuated,
+        title: .successTitlePunctuated,
         caption: nil,
         holderName: nil,
         config: config,

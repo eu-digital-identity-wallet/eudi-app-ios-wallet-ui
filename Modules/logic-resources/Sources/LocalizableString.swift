@@ -179,7 +179,7 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "issuance_external_loading_caption")
       case .issuanceSuccessTitle:
         bundle.localizedString(forKey: "issuance_success_title")
-    case .issuanceSuccessTitlePunctuated:
+    case .successTitlePunctuated:
       bundle.localizedString(forKey: "issuance_success_title_punctuated")
       case .issuanceSuccessCaption(let args):
         bundle.localizedStringWithArguments(forKey: "issuance_success_caption", arguments: args)
@@ -383,6 +383,8 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "view_details")
       case .requestsTheFollowing:
         bundle.localizedString(forKey: "requests_the_following")
+      case .walletIsSecured:
+        bundle.localizedString(forKey: "wallet_is_secured")
     }
   }
 
@@ -468,7 +470,7 @@ public extension LocalizableString {
     case issuanceExternalLoadingTitle([String])
     case issuanceExternalLoadingCaption
     case issuanceSuccessTitle
-    case issuanceSuccessTitlePunctuated
+    case successTitlePunctuated
     case issuanceSuccessCaption([String])
     case issuanceSuccessNextButton
     case issuerWantWalletAddition
@@ -567,6 +569,7 @@ public extension LocalizableString {
     case removedFromFavoritesMessages
     case viewDetails
     case requestsTheFollowing
+    case walletIsSecured
   }
 }
 

@@ -138,11 +138,26 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
 
   private func onSuccess() {
     interactor.setPin(newPin: uiPinInputField)
+
+    let buttonTitle: LocalizableString.Key = viewState.config.isSetFlow ?
+      .walletIsSecured :
+      .successTitlePunctuated
+
+    let visualKind: UIConfig.Success.VisualKind = viewState.config.isSetFlow ?
+      .customIcon(
+        Theme.shared.image.successSecuredWallet,
+        Color.clear
+      ) :
+      .customIcon(
+        Theme.shared.image.digitalIdIssuance,
+        Color.clear
+      )
+
     router.push(
       with: .featureCommonModule(
         .success(
           config: UIConfig.Success(
-            title: .init(value: .success),
+            title: .init(value: buttonTitle),
             subtitle: viewState.success,
             buttons: [
               .init(
@@ -151,7 +166,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
                 navigationType: viewState.successNavigationType
               )
             ],
-            visualKind: .defaultIcon
+            visualKind: visualKind
           )
         )
       )

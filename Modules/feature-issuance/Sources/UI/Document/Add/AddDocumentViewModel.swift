@@ -222,7 +222,10 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
               navigationType: navigationType
             )
           ],
-          visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.warning)
+          visualKind: .customIcon(
+            Theme.shared.image.documentSuccessPending,
+            Color.clear
+          )
         )
       )
     )

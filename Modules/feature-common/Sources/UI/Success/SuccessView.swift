@@ -41,19 +41,34 @@ private func content(
   viewState: SuccessState,
   onButtonClicked: @escaping (UIConfig.Success.Button) -> Void
 ) -> some View {
-  ContentTitleView(
-    title: viewState.config.title.value,
-    caption: viewState.config.subtitle,
-    titleColor: viewState.config.title.color,
-    topSpacing: .withoutToolbar
+
+  ContentHeader(
+    config: ContentHeaderConfig(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    )
   )
 
+  VSpacer.jumbo()
+
   VStack {
-    Spacer()
 
     ZStack(alignment: .center) {
       getCenteredIcon(config: viewState.config)
     }
+
+    VSpacer.large()
+
+    ContentTitleView(
+      title: viewState.config.title.value,
+      caption: viewState.config.subtitle,
+      titleColor: viewState.config.title.color,
+      textAlignment: .center,
+      topSpacing: .withoutToolbar
+    )
+
     Spacer()
 
     VStack {
