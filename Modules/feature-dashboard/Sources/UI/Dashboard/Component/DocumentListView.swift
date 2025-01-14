@@ -35,24 +35,45 @@ struct DocumentListView: View {
     }
 
   var body: some View {
-    List {
-      ForEach(filteredItems.isEmpty ? items : filteredItems) { item in
-        WrapCardView {
-          WrapListItemView(
-            listItem: .init(
-              mainText: item.value.title,
-              supportingText: item.expiry,
-              trailingContent: .icon(Theme.shared.image.chevronRight)
-            )
-          ) {
-            action(item)
+    VStack {
+      if filteredItems.isEmpty && !searchText.isEmpty {
+        VStack(spacing: SPACING_SMALL) {
+          Text(.noResults)
+            .typography(Theme.shared.font.titleLarge)
+            .fontWeight(.bold)
+
+          Text(.noResultsDescription)
+            .typography(Theme.shared.font.bodyLarge)
+            .foregroundStyle(Theme.shared.color.onSurface)
+            .multilineTextAlignment(.center)
+
+          Spacer()
+        }
+        .padding(.top, SPACING_LARGE_MEDIUM)
+        .padding(.horizontal, SPACING_MEDIUM)
+      } else {
+        List {
+          ForEach(filteredItems.isEmpty ? items : filteredItems) { item in
+            WrapCardView {
+              WrapListItemView(
+                listItem: ListItemData(
+                  mainText: item.value.title,
+                  overlineText: "(Placeholder) Hellenic Government",
+                  supportingText: item.expiry,
+                  leadingIcon: Theme.shared.image.govLogo,
+                  trailingContent: .icon(Theme.shared.image.chevronRight)
+                )
+              ) {
+                action(item)
+              }
+            }
+            .listRowSeparator(.hidden)
           }
         }
-        .listRowSeparator(.hidden)
+        .listStyle(.plain)
+        .clipped()
       }
     }
-    .listStyle(.plain)
-    .clipped()
     .background(Theme.shared.color.background)
     .searchable(
       searchText: $searchText,

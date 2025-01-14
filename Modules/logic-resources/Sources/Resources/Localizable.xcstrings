@@ -1170,6 +1170,28 @@
     "no" : {
       "extractionState" : "manual"
     },
+    "no_results" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No results"
+          }
+        }
+      }
+    },
+    "no_results_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No documents match your search. Try changing your search query or filters."
+          }
+        }
+      }
+    },
     "ok_button" : {
       "extractionState" : "manual",
       "localizations" : {

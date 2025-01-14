@@ -106,7 +106,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   override func getTitle() -> LocalizableString.Key {
-    viewState.title
+    .dataSharingRequest
   }
 
   override func getCaption() -> LocalizableString.Key {

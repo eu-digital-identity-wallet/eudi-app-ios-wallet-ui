@@ -77,6 +77,7 @@ public protocol ImageManagerProtocol: Sendable {
   var homeContract: Image { get }
   var homeIdentity: Image { get }
   var issuerCardImagePlaceholder: Image { get }
+  var govLogo: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -142,6 +143,7 @@ final class ImageManager: ImageManagerProtocol {
     case homeContract = "home-contract"
     case homeIdentity = "home-identity"
     case issuerCardImagePlaceholder = "issuer-card-image-placeholder"
+    case govLogo = "gov-logo"
   }
 
   // MARK: - Properties
@@ -332,5 +334,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var issuerCardImagePlaceholder: Image {
     Image(ImageEnum.issuerCardImagePlaceholder.rawValue, bundle: bundle)
+  }
+  var govLogo: Image {
+    Image(ImageEnum.govLogo.rawValue, bundle: bundle)
   }
 }

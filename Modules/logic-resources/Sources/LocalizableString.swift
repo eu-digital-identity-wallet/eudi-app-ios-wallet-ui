@@ -383,6 +383,10 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "view_details")
       case .requestsTheFollowing:
         bundle.localizedString(forKey: "requests_the_following")
+      case .noResults:
+        bundle.localizedString(forKey: "no_results")
+      case .noResultsDescription:
+        bundle.localizedString(forKey: "no_results_description")
     }
   }
 
@@ -567,6 +571,8 @@ public extension LocalizableString {
     case removedFromFavoritesMessages
     case viewDetails
     case requestsTheFollowing
+    case noResults
+    case noResultsDescription
   }
 }
 

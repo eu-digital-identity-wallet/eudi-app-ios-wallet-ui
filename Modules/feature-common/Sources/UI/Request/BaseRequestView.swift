@@ -32,7 +32,7 @@ public struct BaseRequestView<Router: RouterHost>: View {
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(
-            title: LocalizableString.shared.get(with: .shareButton).lowercased(),
+            title: LocalizableString.shared.get(with: .shareButton).capitalizedFirst(),
             disabled: !viewModel.viewState.allowShare
           ) {
             viewModel.onShare()
@@ -40,7 +40,7 @@ public struct BaseRequestView<Router: RouterHost>: View {
         ],
         leadingActions: [
           Action(
-            title: LocalizableString.shared.get(with: .cancelButton).lowercased()) {
+            title: LocalizableString.shared.get(with: .cancelButton).capitalizedFirst()) {
               viewModel.onShowCancelModal()
             }
         ]
@@ -50,10 +50,8 @@ public struct BaseRequestView<Router: RouterHost>: View {
         viewState: viewModel.viewState,
         getScreenRect: getScreenRect(),
         getRelyingParty: viewModel.getRelyingParty(),
-        getTitleCaption: viewModel.getTitleCaption(),
         getTitle: viewModel.getTitle(),
         getCaption: viewModel.getCaption(),
-        getDataRequestInfo: viewModel.getDataRequestInfo(),
         onShowRequestInfoModal: viewModel.onShowRequestInfoModal,
         onVerifiedEntityModal: viewModel.onVerifiedEntityModal,
         onContentVisibilityChange: viewModel.onContentVisibilityChange,
@@ -122,10 +120,8 @@ private func content(
   viewState: RequestViewState,
   getScreenRect: CGRect,
   getRelyingParty: String,
-  getTitleCaption: String,
   getTitle: LocalizableString.Key,
   getCaption: LocalizableString.Key,
-  getDataRequestInfo: LocalizableString.Key,
   onShowRequestInfoModal: @escaping () -> Void,
   onVerifiedEntityModal: @escaping () -> Void,
   onContentVisibilityChange: @escaping () -> Void,
@@ -142,7 +138,7 @@ private func content(
             appText: ThemeManager.shared.image.euditext
           ),
           description: LocalizableString.shared.get(with: .dataSharingTitle),
-          mainText: LocalizableString.shared.get(with: getTitle),
+          mainText: LocalizableString.shared.get(with: getTitle).capitalized,
           relyingPartyData: RelyingPartyData(
             isVerified: viewState.isTrusted,
             name: getRelyingParty,
@@ -304,10 +300,8 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
       viewState: viewState,
       getScreenRect: UIScreen.main.bounds,
       getRelyingParty: "",
-      getTitleCaption: "",
       getTitle: viewState.title,
       getCaption: .requestDataCaption,
-      getDataRequestInfo: .requestDataVerifiedEntityMessage,
       onShowRequestInfoModal: {},
       onVerifiedEntityModal: {},
       onContentVisibilityChange: {},
