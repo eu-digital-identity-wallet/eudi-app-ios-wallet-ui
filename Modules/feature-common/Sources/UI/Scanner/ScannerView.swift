@@ -34,6 +34,7 @@ struct ScannerView<Router: RouterHost>: View {
   var body: some View {
 
     ContentScreenView(
+      padding: SPACING_NONE,
       allowBackGesture: true,
       navigationTitle: LocalizableString.shared.get(
         with: viewModel.viewState.title
@@ -59,78 +60,59 @@ private func content(
   onErrorClick: @escaping () -> Void,
   onResult: @escaping (_ scanResult: String) -> Void
 ) -> some View {
-
-  ContentCaptionView(
-    caption: viewState.caption
-  )
-
-  Spacer()
-
-  ZStack {
-
-    CodeScannerView(
-      codeTypes: [.qr],
-      scanMode: .continuous,
-      scanInterval: 1.0,
-      shouldVibrateOnSuccess: false
-    ) { response in
-      switch response {
-      case .success(let result):
-        onResult(result.string)
-      case .failure:
-        onError()
-      }
-    }
-    .roundedCorner(Theme.shared.shape.xxxxLarge, corners: .allCorners)
-    .padding(
-      EdgeInsets(
-        top: .zero,
-        leading: .zero,
-        bottom: 2,
-        trailing: 2
-      )
+  VStack(spacing: SPACING_LARGE_MEDIUM) {
+    ContentCaptionView(
+      caption: viewState.caption
     )
+    .padding(.horizontal, Theme.shared.dimension.padding)
 
-    Theme.shared.image.viewFinder
-      .resizable()
-      .font(.system(size: SPACING_MEDIUM, weight: .ultraLight))
-      .foregroundColor(Theme.shared.color.primary)
+    ZStack {
+      CodeScannerView(
+        codeTypes: [.qr],
+        scanMode: .continuous,
+        scanInterval: 1.0,
+        showViewfinder: true,
+        shouldVibrateOnSuccess: false
+      ) { response in
+        switch response {
+        case .success(let result):
+          onResult(result.string)
+        case .failure:
+          onError()
+        }
+      }
 
-    if let error = viewState.error {
-      ContentEmptyView(
-        title: error,
-        iconColor: Theme.shared.color.white,
-        textColor: Theme.shared.color.white,
-        onClick: { onErrorClick() }
-      )
+      if let error = viewState.error {
+        ContentEmptyView(
+          title: error,
+          iconColor: Theme.shared.color.white,
+          textColor: Theme.shared.color.white,
+          onClick: { onErrorClick() }
+        )
+      }
+
+      VStack {
+        Spacer()
+        HStack(spacing: SPACING_MEDIUM) {
+
+          Theme.shared.image.errorIndicator
+            .renderingMode(.template)
+            .foregroundStyle(Theme.shared.color.white)
+
+          Text(viewState.informativeTest)
+            .typography(Theme.shared.font.bodyMedium)
+            .foregroundStyle(Theme.shared.color.white)
+            .multilineTextAlignment(.center)
+
+        }
+      }
+      .padding(.horizontal)
+      .padding(.bottom, SPACING_LARGE)
+      .frame(maxWidth: .infinity)
     }
+    .animation(.easeInOut, value: viewState.showInformativeText)
   }
-  .frame(maxWidth: .infinity, maxHeight: cameraSurfaceSize)
-
-  VSpacer.large()
-
-  ZStack {
-    HStack(spacing: SPACING_MEDIUM) {
-
-      Theme.shared.image.errorIndicator
-        .renderingMode(.template)
-        .foregroundStyle(Theme.shared.color.onSurface)
-
-      Text(viewState.informativeTest)
-        .typography(Theme.shared.font.bodyMedium)
-        .foregroundStyle(Theme.shared.color.onSurface)
-        .multilineTextAlignment(.center)
-
-    }
-    .padding()
-    .frame(maxWidth: .infinity)
-    .background(Theme.shared.color.background)
-    .clipShape(Theme.shared.shape.highCornerRadiusShape)
-    .opacity(viewState.showInformativeText ? 1.0 : 0.0)
-  }
-  .animation(.easeInOut, value: viewState.showInformativeText)
-
-  Spacer()
+  .ignoresSafeArea(.all, edges: .bottom)
 }
 
 #Preview {
