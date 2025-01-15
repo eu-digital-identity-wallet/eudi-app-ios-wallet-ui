@@ -24,4 +24,8 @@ public struct DeferrredDocument: DocClaimsDecodable {
   public var docClaims: [MdocDataModel18013.DocClaim]
   public var docDataFormat: MdocDataModel18013.DocDataFormat
   public var ageOverXX: [Int: Bool]
+  public var display: [MdocDataModel18013.DisplayMetadata]?
+  public var issuerDisplay: [MdocDataModel18013.DisplayMetadata]?
+  public var credentialIssuerIdentifier: String?
+  public var configurationIdentifier: String?
 }

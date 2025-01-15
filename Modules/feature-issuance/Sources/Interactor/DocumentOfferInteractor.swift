@@ -150,7 +150,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       }
 
     } catch {
-      return .failure(WalletCoreError.unableToIssueAndStore)
+      return .failure(error)
     }
   }
 
