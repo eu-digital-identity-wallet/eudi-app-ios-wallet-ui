@@ -1236,6 +1236,17 @@
         }
       }
     },
+    "or_share_via_nfc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or share via NFC"
+          }
+        }
+      }
+    },
     "pending" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1254,6 +1265,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Please wait..."
+          }
+        }
+      }
+    },
+    "proximity_connection_nfc_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold your phone near object to scan."
           }
         }
       }
@@ -2062,17 +2084,6 @@
       }
     },
     "view_document_details" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "View details"
-          }
-        }
-      }
-    },
-    "wallet_is_secured" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {

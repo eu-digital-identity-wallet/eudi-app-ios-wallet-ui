@@ -389,6 +389,10 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "no_results")
       case .noResultsDescription:
         bundle.localizedString(forKey: "no_results_description")
+      case .proximityConnectionNfcDescription:
+        bundle.localizedString(forKey: "proximity_connection_nfc_description")
+      case .orShareViaNfc:
+        bundle.localizedString(forKey: "or_share_via_nfc")
     }
   }
 
@@ -576,6 +580,8 @@ public extension LocalizableString {
     case walletIsSecured
     case noResults
     case noResultsDescription
+    case proximityConnectionNfcDescription
+    case orShareViaNfc
   }
 }
 

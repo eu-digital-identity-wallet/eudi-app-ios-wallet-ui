@@ -81,6 +81,7 @@ public protocol ImageManagerProtocol: Sendable {
   var digitalIdIssuance: Image { get }
   var documentSuccessPending: Image { get }
   var govLogo: Image { get }
+  var nfcImage: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -150,6 +151,7 @@ final class ImageManager: ImageManagerProtocol {
     case digitalIdIssuance = "digital-id-issuance"
     case documentSuccessPending = "document-success-pending"
     case govLogo = "gov-logo"
+    case nfcImage = "nfc-image"
   }
 
   // MARK: - Properties
@@ -352,5 +354,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var govLogo: Image {
     Image(ImageEnum.govLogo.rawValue, bundle: bundle)
+  }
+  var nfcImage: Image {
+    Image(ImageEnum.nfcImage.rawValue, bundle: bundle)
   }
 }

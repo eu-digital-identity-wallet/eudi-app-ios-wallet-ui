@@ -169,7 +169,7 @@ private func content(
         }
       }
 
-      Text(LocalizableString.shared.get(with: .unknownIssuer))
+      Text(.unknownIssuer)
         .font(Theme.shared.font.labelSmall.font)
         .foregroundStyle(Theme.shared.color.onSurfaceVariant)
         .frame(maxWidth: .infinity, alignment: .leading)
