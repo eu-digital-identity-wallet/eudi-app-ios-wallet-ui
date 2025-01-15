@@ -20,17 +20,31 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
 
   private let interactor: PresentationInteractor
   private let relyingParty: String
+  private let requestItems: [RequestDataUI]
   private var publisherTask: Task<Void, Error>?
 
   init(
     router: Router,
     interactor: PresentationInteractor,
     relyingParty: String,
-    originator: AppRoute
+    originator: AppRoute,
+    requestItems: [any UIModel]
   ) {
+    guard
+      let requestItems = requestItems as? [RequestDataUI]
+    else {
+      fatalError("PresentationLoadingViewModel:: Invalid configuraton")
+    }
+
     self.interactor = interactor
     self.relyingParty = relyingParty
-    super.init(router: router, originator: originator, cancellationTimeout: 5)
+    self.requestItems = requestItems
+
+    super.init(
+      router: router,
+      originator: originator,
+      cancellationTimeout: 5
+    )
   }
 
   func subscribeToCoordinatorPublisher() async {
@@ -83,7 +97,8 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
         config: PresentationSuccessUIConfig(
           successNavigation: navigationType,
           relyingParty: relyingParty
-        )
+        ),
+        requestItems
       )
     )
   }

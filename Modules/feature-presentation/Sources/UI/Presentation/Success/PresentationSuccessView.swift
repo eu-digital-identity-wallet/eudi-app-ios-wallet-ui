@@ -92,24 +92,74 @@ private func content(
 
     VSpacer.large()
 
-    ForEach(0..<5) { _ in
-      ExpandableCardView(
-        backgroundColor: Theme.shared.color.tertiary,
-        title: "document.documentName",
-        subtitle: LocalizableString.shared.get(with: .viewDocumentDetails),
-        isLoading: false,
-        content: {
-          WrapListItemsView(
-            listItems: [
-              .init(
-                mainText: "mainText One"
-              )
-            ]
-          )
-        }
-      )
-    }
+    documents(
+      viewState: viewState
+    )
 
     Spacer()
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func documents(viewState: PresentationSuccessState) -> some View {
+  if !viewState.items.isEmpty {
+    VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+      ForEach(viewState.items, id: \.id) { section in
+        ExpandableCardView(
+          backgroundColor: Theme.shared.color.tertiary,
+          title: section.requestDataSection.title,
+          subtitle: LocalizableString.shared.get(with: .viewDetails)
+        ) {
+          ForEach(section.requestDataRow ?? [], id: \.id) { item in
+            if item.isSelected {
+              switch item.value {
+              case .string(let value):
+                WrapListItemView(
+                  listItem: ListItemData(
+                    mainText: value,
+                    overlineText: item.title
+                  )
+                )
+              case .image(let image):
+                WrapListItemView(
+                  listItem: ListItemData(
+                    mainText: item.title,
+                    leadingIcon: image
+                  )
+                )
+              }
+              Divider()
+                .padding(.horizontal, SPACING_MEDIUM)
+                .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
+            }
+          }
+
+          ForEach(section.requestDataVerification ?? [], id: \.id) { item in
+            if item.isSelected {
+              switch item.value {
+              case .string(let value):
+                WrapListItemView(
+                  listItem: ListItemData(
+                    mainText: value,
+                    overlineText: item.title
+                  )
+                )
+              case .image(let image):
+                WrapListItemView(
+                  listItem: ListItemData(
+                    mainText: item.title,
+                    leadingIcon: image
+                  )
+                )
+              }
+              Divider()
+                .padding(.horizontal, SPACING_MEDIUM)
+                .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
+            }
+          }
+        }
+      }
+    }
   }
 }

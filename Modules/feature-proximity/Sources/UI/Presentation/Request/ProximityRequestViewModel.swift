@@ -127,7 +127,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   }
 
   override func getTitle() -> LocalizableString.Key {
-    viewState.title
+    .dataSharingRequest
   }
 
   override func getCaption() -> LocalizableString.Key {

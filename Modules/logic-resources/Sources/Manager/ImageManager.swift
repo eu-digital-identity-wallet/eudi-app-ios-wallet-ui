@@ -80,6 +80,7 @@ public protocol ImageManagerProtocol: Sendable {
   var successSecuredWallet: Image { get }
   var digitalIdIssuance: Image { get }
   var documentSuccessPending: Image { get }
+  var govLogo: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -148,6 +149,7 @@ final class ImageManager: ImageManagerProtocol {
     case successSecuredWallet = "success-secured-wallet"
     case digitalIdIssuance = "digital-id-issuance"
     case documentSuccessPending = "document-success-pending"
+    case govLogo = "gov-logo"
   }
 
   // MARK: - Properties
@@ -347,5 +349,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var documentSuccessPending: Image {
     Image(ImageEnum.documentSuccessPending.rawValue, bundle: bundle)
+  }
+  var govLogo: Image {
+    Image(ImageEnum.govLogo.rawValue, bundle: bundle)
   }
 }

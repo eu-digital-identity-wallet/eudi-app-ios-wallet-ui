@@ -73,23 +73,25 @@ public indirect enum FeaturePresentationRouteModule: AppRouteModule {
   case presentationLoader(
     String,
     presentationCoordinator: RemoteSessionCoordinator,
-    originator: AppRoute
+    originator: AppRoute,
+    [any UIModel]
   )
   case presentationRequest(
     presentationCoordinator: RemoteSessionCoordinator,
     originator: AppRoute
   )
   case presentationSuccess(
-    config: any UIConfigType
+    config: any UIConfigType,
+    [any UIModel]
   )
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
-    case .presentationLoader(let id, _, let originator):
+    case .presentationLoader(let id, _, let originator, _):
       (key: "PresentationLoader", arguments: ["id": id, "originator": originator.info.key])
     case .presentationRequest(_, let originator):
       (key: "PresentationRequest", arguments: ["originator": originator.info.key])
-    case .presentationSuccess(let config):
+    case .presentationSuccess(let config, _):
       (key: "PresentationSuccess", arguments: ["config": config.log])
     }
   }

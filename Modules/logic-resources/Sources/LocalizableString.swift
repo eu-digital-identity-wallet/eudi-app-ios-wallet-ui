@@ -385,6 +385,10 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "requests_the_following")
       case .walletIsSecured:
         bundle.localizedString(forKey: "wallet_is_secured")
+      case .noResults:
+        bundle.localizedString(forKey: "no_results")
+      case .noResultsDescription:
+        bundle.localizedString(forKey: "no_results_description")
     }
   }
 
@@ -570,6 +574,8 @@ public extension LocalizableString {
     case viewDetails
     case requestsTheFollowing
     case walletIsSecured
+    case noResults
+    case noResultsDescription
   }
 }
 

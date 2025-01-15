@@ -17,8 +17,9 @@ import Foundation
 import SwiftUI
 import logic_business
 import logic_core
+import logic_ui
 
-public struct RequestDataUI: Identifiable, Equatable, Sendable {
+public struct RequestDataUI: Identifiable, Equatable, Sendable, UIModel {
   public let id: String
   public var requestDataRow: [RequestDataRow]?
   public var requestDataSection: RequestDataSection

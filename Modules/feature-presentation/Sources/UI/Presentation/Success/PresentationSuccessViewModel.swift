@@ -22,6 +22,7 @@
 public struct PresentationSuccessState: ViewState {
   let config: PresentationSuccessUIConfig
   let issuerData: IssuerDataUIModel
+  let items: [RequestDataUI]
 }
 
 open class PresentationSuccessViewModel<Router: RouterHost>: ViewModel<Router, PresentationSuccessState> {
@@ -31,10 +32,15 @@ open class PresentationSuccessViewModel<Router: RouterHost>: ViewModel<Router, P
   public init(
     router: Router,
     config: any UIConfigType,
-    deepLinkController: DeepLinkController
+    deepLinkController: DeepLinkController,
+    requestItems: [any UIModel]
   ) {
 
     guard let config = config as? PresentationSuccessUIConfig else {
+      fatalError("ExternalLoginViewModel:: Invalid configuraton")
+    }
+
+    guard let requestItems = requestItems as? [RequestDataUI] else {
       fatalError("ExternalLoginViewModel:: Invalid configuraton")
     }
 
@@ -48,7 +54,8 @@ open class PresentationSuccessViewModel<Router: RouterHost>: ViewModel<Router, P
           icon: Image(systemName: ""),
           title: config.relyingParty,
           isVerified: true
-        )
+        ),
+        items: requestItems
       )
     )
   }

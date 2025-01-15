@@ -64,7 +64,7 @@ public struct RelyingParty: View {
           color: Theme.shared.color.onSurface,
           textAlign: .center,
           maxLines: 1,
-          fontWeight: nil
+          fontWeight: .bold
         )
       )
       .if(relyingPartyData.isVerified) {

@@ -40,7 +40,7 @@ public struct WrapListItemView: View {
         leadingIcon
           .resizable()
           .scaledToFit()
-          .frame(width: 50, height: 50)
+          .frame(width: 40, height: 40)
       }
 
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {

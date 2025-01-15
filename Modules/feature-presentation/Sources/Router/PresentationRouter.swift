@@ -25,7 +25,8 @@ public final class PresentationRouter {
     case .presentationLoader(
       let relyingParty,
       presentationCoordinator: let presentationCoordinator,
-      originator: let originator
+      originator: let originator,
+      let uiModels
     ):
       PresentationLoadingView(
         with: .init(
@@ -35,7 +36,8 @@ public final class PresentationRouter {
             argument: presentationCoordinator as RemoteSessionCoordinator
           ),
           relyingParty: relyingParty,
-          originator: originator
+          originator: originator,
+          requestItems: uiModels
         )
       ).eraseToAnyView()
     case .presentationRequest(
@@ -53,7 +55,8 @@ public final class PresentationRouter {
         )
       ).eraseToAnyView()
     case .presentationSuccess(
-      let config
+      let config,
+      let uiModels
     ):
       PresentationSuccessView(
         with: .init(
@@ -61,7 +64,8 @@ public final class PresentationRouter {
           config: config,
           deepLinkController: DIGraph.resolver.force(
             DeepLinkController.self
-          )
+          ),
+          requestItems: uiModels
         )
       ).eraseToAnyView()
     }

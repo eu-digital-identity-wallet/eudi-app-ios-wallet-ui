@@ -64,7 +64,9 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
         if let route = self.getSuccessRoute() {
           self.router.push(with: route)
         } else {
-          self.router.popTo(with: self.getPopRoute() ?? .featureDashboardModule(.dashboard))
+          self.router.popTo(
+            with: self.getPopRoute() ?? .featureDashboardModule(.dashboard)
+          )
         }
       case .failure(let error):
         self.onError(with: error)
@@ -87,7 +89,8 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
                   .presentationLoader(
                     getRelyingParty(),
                     presentationCoordinator: remoteSessionCoordinator,
-                    originator: getOriginator()
+                    originator: getOriginator(),
+                    viewState.items.filterSelectedRows()
                   )
                 )
               ),
@@ -106,7 +109,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   override func getTitle() -> LocalizableString.Key {
-    viewState.title
+    .dataSharingRequest
   }
 
   override func getCaption() -> LocalizableString.Key {
@@ -140,5 +143,15 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     resetState()
     interactor.updatePresentationCoordinator(with: session)
     Task { await doWork() }
+  }
+}
+
+extension Array where Element == RequestDataUI {
+  func filterSelectedRows() -> [RequestDataUI] {
+    self.map { ui in
+      var filteredUI = ui
+      filteredUI.requestDataRow = ui.requestDataRow?.filter { $0.isSelected }
+      return filteredUI
+    }
   }
 }
