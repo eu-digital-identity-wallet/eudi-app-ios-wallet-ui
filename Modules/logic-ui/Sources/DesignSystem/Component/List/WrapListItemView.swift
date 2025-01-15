@@ -35,7 +35,7 @@ public struct WrapListItemView: View {
   }
 
   public var body: some View {
-    HStack(alignment: .center, spacing: SPACING_SMALL) {
+    HStack(alignment: .center, spacing: SPACING_MEDIUM) {
       if let leadingIcon = listItem.leadingIcon {
         leadingIcon
           .resizable()
@@ -65,7 +65,7 @@ public struct WrapListItemView: View {
         if let supportingText = listItem.supportingText {
           Text(supportingText)
             .font(Theme.shared.font.bodyMedium.font)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .foregroundStyle(listItem.supportingTextColor)
             .lineLimit(1)
             .truncationMode(.tail)
         }

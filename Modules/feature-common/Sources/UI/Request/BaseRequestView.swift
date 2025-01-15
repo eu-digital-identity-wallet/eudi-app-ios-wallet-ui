@@ -138,7 +138,7 @@ private func content(
             appText: ThemeManager.shared.image.euditext
           ),
           description: LocalizableString.shared.get(with: .dataSharingTitle),
-          mainText: LocalizableString.shared.get(with: getTitle).capitalized,
+          mainText: LocalizableString.shared.get(with: getTitle).uppercased(),
           relyingPartyData: RelyingPartyData(
             isVerified: viewState.isTrusted,
             name: getRelyingParty,

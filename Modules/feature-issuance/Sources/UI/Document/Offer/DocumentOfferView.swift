@@ -140,8 +140,6 @@ private func content(
         CardViewWithLogo(
           icon: viewState.issuerData.icon,
           title: viewState.issuerData.title,
-          subtitle: viewState.issuerData.subtitle,
-          footer: viewState.issuerData.caption,
           isVerified: viewState.issuerData.isVerified,
           isLoading: viewState.isLoading
         )

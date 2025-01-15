@@ -59,9 +59,10 @@ struct DocumentListView: View {
                 listItem: ListItemData(
                   mainText: item.value.title,
                   overlineText: "(Placeholder) Hellenic Government",
-                  supportingText: item.expiry,
+                  supportingText: item.supportingText(),
+                  supportingTextColor: item.supportingColor(),
                   leadingIcon: Theme.shared.image.govLogo,
-                  trailingContent: .icon(Theme.shared.image.chevronRight)
+                  trailingContent: .icon(item.indicatorImage())
                 )
               ) {
                 action(item)
@@ -70,6 +71,7 @@ struct DocumentListView: View {
             .listRowSeparator(.hidden)
           }
         }
+        .shimmer(isLoading: isLoading)
         .listStyle(.plain)
         .clipped()
       }
@@ -86,6 +88,38 @@ struct DocumentListView: View {
 }
 
 private extension DocumentUIModel {
+  func supportingText() -> String {
+    switch value.state {
+      case .issued:
+        return expiry.orEmpty
+      case .pending:
+        return LocalizableString.shared.get(with: .pending)
+      case .failed:
+        return LocalizableString.shared.get(with: .pending)
+    }
+  }
+
+  func supportingColor() -> Color {
+    switch value.state {
+      case .issued:
+        return Theme.shared.color.onSurfaceVariant
+      case .pending:
+        return Theme.shared.color.warning
+      case .failed:
+        return Theme.shared.color.error
+    }
+  }
+
+  func indicatorImage() -> Image {
+    switch value.state {
+      case .issued:
+        return Theme.shared.image.chevronRight
+      case .pending:
+        return Theme.shared.image.clockIndicator
+      case .failed:
+        return Theme.shared.image.errorIndicator
+    }
+  }
 
   var expiry: String? {
     guard let expiresAt = value.expiresAt else {
