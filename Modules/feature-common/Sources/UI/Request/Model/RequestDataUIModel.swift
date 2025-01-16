@@ -25,28 +25,28 @@ public enum RequestDataUIModel: Equatable, Sendable {
 
   public var isDataRow: RequestDataRow? {
     switch self {
-    case .requestDataRow(let row):
-      return row
-    default:
-      return nil
+      case .requestDataRow(let row):
+        return row
+      default:
+        return nil
     }
   }
 
   public var isDataSection: RequestDataSection? {
     switch self {
-    case .requestDataSection(let section):
-      return section
-    default:
-      return nil
+      case .requestDataSection(let section):
+        return section
+      default:
+        return nil
     }
   }
 
   public var isDataVerification: RequestDataVerification? {
     switch self {
-    case .requestDataVerification(let verification):
-      return verification
-    default:
-      return nil
+      case .requestDataVerification(let verification):
+        return verification
+      default:
+        return nil
     }
   }
 }
@@ -59,19 +59,19 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
 
     public var string: String? {
       switch self {
-      case .string(let string):
-        string
-      default:
-        nil
+        case .string(let string):
+          string
+        default:
+          nil
       }
     }
 
     public var image: Image? {
       switch self {
-      case .image(let image):
-        image
-      default:
-        nil
+        case .image(let image):
+          image
+        default:
+          nil
       }
     }
   }
@@ -110,16 +110,16 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
     self.isVisible = isVisible
     self.title = title
     switch value {
-    case .string(let string):
-      self.value = .string(string)
-      self.isEnabled = true
-    case .unavailable(let string):
-      self.value = .string(string)
-      self.isEnabled = false
-      self.isSelected = false
-    case .image(let image):
-      self.value = .image(image)
-      self.isEnabled = true
+      case .string(let string):
+        self.value = .string(string)
+        self.isEnabled = true
+      case .unavailable(let string):
+        self.value = .string(string)
+        self.isEnabled = false
+        self.isSelected = false
+      case .image(let image):
+        self.value = .image(image)
+        self.isEnabled = true
     }
     self.elementKey = elementKey
     self.namespace = namespace
@@ -298,6 +298,26 @@ extension RequestDataUiModel {
 }
 
 public struct RequestDataUiModel {
+  public static func mockData() -> [RequestDataUI] {
+    [
+      RequestDataUI(
+        requestDataRow: [
+          RequestDataRow(isSelected: true, isVisible: false, title: "Family Name", value: .string("Tzouvaras")),
+          RequestDataRow(isSelected: true, isVisible: false, title: "First Name", value: .string("Stilianos")),
+          RequestDataRow(isSelected: true, isVisible: false, title: "Date of Birth", value: .string("21-09-1985")),
+          RequestDataRow(isSelected: true, isVisible: false, title: "Resident Country", value: .string("Greece"))
+        ],
+        requestDataSection: RequestDataSection(title: "MDL"),
+        requestDataVerification: [
+          RequestDataRow(isSelected: true, isVisible: false, title: "Family Name", value: .string("Tzouvaras")),
+          RequestDataRow(isSelected: true, isVisible: false, title: "First Name", value: .string("Stilianos")),
+          RequestDataRow(isSelected: true, isVisible: false, title: "Date of Birth", value: .string("21-09-1985")),
+          RequestDataRow(isSelected: true, isVisible: false, title: "Resident Country", value: .string("Greece"))
+        ]
+      )
+    ]
+  }
+
   public static func mock() -> [RequestDataUIModel] {
     [
       .requestDataSection(.init(title: "Digital ID")),

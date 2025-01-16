@@ -29,21 +29,6 @@ public enum FeatureStartupRouteModule: AppRouteModule {
   }
 }
 
-public enum FeatureLoginRouteModule: AppRouteModule {
-
-  case welcome
-  case faqs
-
-  public var info: (key: String, arguments: [String: String]) {
-    return switch self {
-    case .welcome:
-      (key: "Welcome", arguments: [:])
-    case .faqs:
-      (key: "FAQ", arguments: [:])
-    }
-  }
-}
-
 public enum FeatureCommonRouteModule: AppRouteModule {
 
   case quickPin(config: any UIConfigType)
@@ -72,6 +57,7 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
 
   case dashboard
   case signDocument
+  case sideMenu
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -79,6 +65,8 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
       (key: "Dashboard", arguments: [:])
     case .signDocument:
       (key: "SignDocument", arguments: [:])
+    case .sideMenu:
+      (key: "SideMenu", arguments: [:])
     }
   }
 }
@@ -88,19 +76,26 @@ public indirect enum FeaturePresentationRouteModule: AppRouteModule {
   case presentationLoader(
     String,
     presentationCoordinator: RemoteSessionCoordinator,
-    originator: AppRoute
+    originator: AppRoute,
+    [any UIModel]
   )
   case presentationRequest(
     presentationCoordinator: RemoteSessionCoordinator,
     originator: AppRoute
   )
+  case presentationSuccess(
+    config: any UIConfigType,
+    [any UIModel]
+  )
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
-    case .presentationLoader(let id, _, let originator):
+    case .presentationLoader(let id, _, let originator, _):
       (key: "PresentationLoader", arguments: ["id": id, "originator": originator.info.key])
     case .presentationRequest(_, let originator):
       (key: "PresentationRequest", arguments: ["originator": originator.info.key])
+    case .presentationSuccess(let config, _):
+      (key: "PresentationSuccess", arguments: ["config": config.log])
     }
   }
 }
@@ -137,7 +132,7 @@ public enum FeatureIssuanceRouteModule: AppRouteModule {
 
   case issuanceAddDocument(config: any UIConfigType)
   case issuanceDocumentDetails(config: any UIConfigType)
-  case issuanceSuccess(config: any UIConfigType, documentIdentifier: String)
+  case issuanceSuccess(config: any UIConfigType, documentIdentifiers: [String])
   case credentialOfferRequest(config: any UIConfigType)
   case issuanceCode(config: any UIConfigType)
 
@@ -147,8 +142,8 @@ public enum FeatureIssuanceRouteModule: AppRouteModule {
       (key: "IssuanceAddDocument", arguments: ["config": config.log])
     case .issuanceDocumentDetails(let config):
       (key: "IssuanceDocumentDetails", arguments: ["config": config.log])
-    case .issuanceSuccess(let config, let id):
-      (key: "IssuanceSuccess", arguments: ["id": id, "config": config.log])
+    case .issuanceSuccess(let config, let ids):
+      (key: "IssuanceSuccess", arguments: ["id": ids.joined(separator: ", "), "config": config.log])
     case .issuanceCode(let config):
       (key: "IssuanceCode", arguments: ["config": config.log])
     case .credentialOfferRequest(let config):
@@ -160,7 +155,6 @@ public enum FeatureIssuanceRouteModule: AppRouteModule {
 public enum AppRoute: AppRouteModule {
 
   case featureStartupModule(FeatureStartupRouteModule)
-  case featureLoginModule(FeatureLoginRouteModule)
   case featureDashboardModule(FeatureDashboardRouteModule)
   case featureCommonModule(FeatureCommonRouteModule)
   case featureIssuanceModule(FeatureIssuanceRouteModule)
@@ -170,8 +164,6 @@ public enum AppRoute: AppRouteModule {
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
     case .featureStartupModule(let module):
-      module.info
-    case .featureLoginModule(let module):
       module.info
     case .featureDashboardModule(let module):
       module.info

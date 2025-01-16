@@ -19,6 +19,7 @@ import logic_ui
 
 struct DocumentListView: View {
   @State private var searchText = ""
+  @State private var filteredItems: [DocumentUIModel] = []
 
   let items: [DocumentUIModel]
   let action: (DocumentUIModel) -> Void
@@ -34,30 +35,97 @@ struct DocumentListView: View {
     }
 
   var body: some View {
-    List {
-      ForEach(items) { item in
-        WrapCardView {
-          WrapListItemView(
-            listItem: ListItemData(
-              mainText: item.value.title,
-              supportingText: LocalizableString.shared.get(with: .validUntil([item.value.expiresAt ?? ""])),
-              trailingContent: .icon(Theme.shared.image.chevronRight)
-            )
-          ) {
-            action(item)
+    VStack {
+      if filteredItems.isEmpty && !searchText.isEmpty {
+        VStack(spacing: SPACING_SMALL) {
+          Text(.noResults)
+            .typography(Theme.shared.font.titleLarge)
+            .fontWeight(.bold)
+
+          Text(.noResultsDescription)
+            .typography(Theme.shared.font.bodyLarge)
+            .foregroundStyle(Theme.shared.color.onSurface)
+            .multilineTextAlignment(.center)
+
+          Spacer()
+        }
+        .padding(.top, SPACING_LARGE_MEDIUM)
+        .padding(.horizontal, SPACING_MEDIUM)
+      } else {
+        List {
+          ForEach(filteredItems.isEmpty ? items : filteredItems) { item in
+            WrapCardView {
+              WrapListItemView(
+                listItem: ListItemData(
+                  mainText: item.value.title,
+                  overlineText: "(Placeholder) Hellenic Government",
+                  supportingText: item.supportingText(),
+                  supportingTextColor: item.supportingColor(),
+                  leadingIcon: Theme.shared.image.govLogo,
+                  trailingContent: .icon(item.indicatorImage())
+                )
+              ) {
+                action(item)
+              }
+            }
+            .listRowSeparator(.hidden)
           }
         }
-        .listRowSeparator(.hidden)
+        .shimmer(isLoading: isLoading)
+        .listStyle(.plain)
+        .clipped()
       }
     }
-    .listStyle(.plain)
-    .clipped()
     .background(Theme.shared.color.background)
     .searchable(
       searchText: $searchText,
       items: items,
       placeholder: LocalizableString.shared.get(with: .search)
-    ) { _ in }
+    ) { filtered in
+      filteredItems = filtered
+    }
+  }
+}
+
+private extension DocumentUIModel {
+  func supportingText() -> String {
+    switch value.state {
+      case .issued:
+        return expiry.orEmpty
+      case .pending:
+        return LocalizableString.shared.get(with: .pending)
+      case .failed:
+        return LocalizableString.shared.get(with: .pending)
+    }
+  }
+
+  func supportingColor() -> Color {
+    switch value.state {
+      case .issued:
+        return Theme.shared.color.onSurfaceVariant
+      case .pending:
+        return Theme.shared.color.warning
+      case .failed:
+        return Theme.shared.color.error
+    }
+  }
+
+  func indicatorImage() -> Image {
+    switch value.state {
+      case .issued:
+        return Theme.shared.image.chevronRight
+      case .pending:
+        return Theme.shared.image.clockIndicator
+      case .failed:
+        return Theme.shared.image.errorIndicator
+    }
+  }
+
+  var expiry: String? {
+    guard let expiresAt = value.expiresAt else {
+      return nil
+    }
+    return LocalizableString.shared.get(with: .validUntil([expiresAt])).replacingOccurrences(of: "\n", with: "")
   }
 }
 

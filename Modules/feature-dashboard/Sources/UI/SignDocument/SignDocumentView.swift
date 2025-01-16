@@ -25,13 +25,13 @@ struct SignDocumentView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    ContentScreenView {
-
-      ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
-        viewModel.pop()
-      }
-
-      content(viewState: viewModel.viewState) {
+    ContentScreenView(
+      allowBackGesture: true,
+      navigationTitle: LocalizableString.shared.get(with: .signDocument)
+    ) {
+      content(
+        viewState: viewModel.viewState
+      ) {
         viewModel.onShowFilePicker()
       }
       .fileImporter(
@@ -39,10 +39,10 @@ struct SignDocumentView<Router: RouterHost>: View {
         allowedContentTypes: [.pdf],
         onCompletion: { result in
           switch result {
-          case .success(let url):
-            viewModel.onFileSelection(with: url)
-          case .failure:
-            break
+            case .success(let url):
+              viewModel.onFileSelection(with: url)
+            case .failure:
+              break
           }
         }
       )
@@ -60,15 +60,16 @@ private func content(
 ) -> some View {
 
   VStack(spacing: SPACING_LARGE) {
-
-    ContentTitleView(
-      title: .signDocument,
-      caption: .signDocumentSubtitle
-    )
+    HStack {
+      Text(.signDocumentSubtitle)
+        .typography(Theme.shared.font.bodyMedium)
+        .foregroundColor(Theme.shared.color.onSurfaceVariant)
+    }
+    .frame(maxWidth: .infinity, alignment: .leading)
 
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: LocalizableString.shared.get(with: .selectDocument),
           trailingContent: .icon(Theme.shared.image.plus)
         )

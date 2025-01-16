@@ -16,10 +16,18 @@
 import logic_resources
 
 public struct ListItemData: Identifiable {
+
+  public enum MainStyle {
+    case plain
+    case bold
+  }
+
   public var id: String
   public let mainText: String
+  public let mainStyle: MainStyle
   public let overlineText: String?
   public let supportingText: String?
+  public let supportingTextColor: Color
   public let overlineTextColor: Color
   public let leadingIcon: Image?
   public let isBlur: Bool
@@ -28,8 +36,10 @@ public struct ListItemData: Identifiable {
   public init(
     id: String = UUID().uuidString,
     mainText: String,
+    mainStyle: MainStyle = .plain,
     overlineText: String? = nil,
     supportingText: String? = nil,
+    supportingTextColor: Color = Theme.shared.color.onSurfaceVariant,
     overlineTextColor: Color = Theme.shared.color.onSurfaceVariant,
     leadingIcon: Image? = nil,
     isBlur: Bool = false,
@@ -37,8 +47,10 @@ public struct ListItemData: Identifiable {
   ) {
     self.id = id
     self.mainText = mainText
+    self.mainStyle = mainStyle
     self.overlineText = overlineText
     self.supportingText = supportingText
+    self.supportingTextColor = supportingTextColor
     self.overlineTextColor = overlineTextColor
     self.leadingIcon = leadingIcon
     self.trailingContent = trailingContent
@@ -48,5 +60,5 @@ public struct ListItemData: Identifiable {
 
 public enum TrailingContent {
   case icon(Image)
-  case checkbox(Bool, (Bool) -> Void)
+  case checkbox(Bool, Bool, (Bool) -> Void)
 }

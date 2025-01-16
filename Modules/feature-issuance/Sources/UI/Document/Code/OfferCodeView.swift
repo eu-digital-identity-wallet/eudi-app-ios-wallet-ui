@@ -27,12 +27,23 @@ struct OfferCodeView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    ContentScreenView(errorConfig: viewModel.viewState.error) {
+    ContentScreenView(
+      allowBackGesture: false,
+      errorConfig: viewModel.viewState.error,
+      navigationTitle: "",
+      toolbarContent: ToolBarContent(
+        trailingActions: [],
+        leadingActions: [
+          Action(image: Theme.shared.image.chevronLeft) {
+            viewModel.onPop()
+          }
+        ]
+      )
+    ) {
       content(
         viewState: viewModel.viewState,
         codeInput: $viewModel.codeInput,
-        codeIsFocused: $viewModel.codeIsFocused,
-        onPop: viewModel.onPop
+        codeIsFocused: $viewModel.codeIsFocused
       )
     }
     .task {
@@ -77,12 +88,17 @@ private func pinView(
 private func content(
   viewState: OfferCodeViewState,
   codeInput: Binding<String>,
-  codeIsFocused: Binding<Bool>,
-  onPop: @escaping () -> Void
+  codeIsFocused: Binding<Bool>
 ) -> some View {
-  ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
-    onPop()
-  }
+
+  ContentHeader(
+    config: ContentHeaderConfig(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    )
+  )
 
   ContentTitleView(
     title: viewState.title,
@@ -90,12 +106,6 @@ private func content(
   )
 
   VSpacer.large()
-
-  HStack {
-    Theme.shared.image.message
-      .foregroundColor(Theme.shared.color.primary)
-    Spacer()
-  }
 
   if viewState.isLoading {
     loader()
@@ -118,7 +128,11 @@ private func content(
       issuerName: "Issuer Name",
       txCodeLength: 6,
       docOffers: [],
-      successNavigation: .popTo(.featureLoginModule(.welcome)),
+      successNavigation: .popTo(
+        .featureIssuanceModule(
+          .credentialOfferRequest(config: NoConfig())
+        )
+      ),
       navigationCancelType: .pop
     ),
     title: LocalizableString.Key.addDocumentTitle,
@@ -129,8 +143,7 @@ private func content(
     content(
       viewState: state,
       codeInput: .constant("inout"),
-      codeIsFocused: .constant(false),
-      onPop: {}
+      codeIsFocused: .constant(false)
     )
   }
 }

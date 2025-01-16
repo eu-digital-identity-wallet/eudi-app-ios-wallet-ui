@@ -17,18 +17,28 @@ import Foundation
 import logic_ui
 import logic_resources
 import logic_core
+import logic_storage
 
 public protocol DocumentDetailsInteractor: Sendable {
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
+  func fetchStoredDocuments(documentIds: [String]) async -> DocumentDetailsPartialState
   func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState
+  func fetchBookmarks(_ identifier: String) async throws -> Bookmark
+  func save(_ identifier: String) async throws
+  func delete(_ identifier: String) async throws
 }
 
 final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 
   private let walletController: WalletKitController
+  private let bookmarkStorageController: any BookmarkStorageController
 
-  public init(walletController: WalletKitController) {
+  public init(
+    walletController: WalletKitController,
+    bookmarkStorageController: any BookmarkStorageController
+  ) {
     self.walletController = walletController
+    self.bookmarkStorageController = bookmarkStorageController
   }
 
   public func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
@@ -36,7 +46,19 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     guard let documentDetails = document?.transformToDocumentDetailsUi() else {
       return .failure(WalletCoreError.unableFetchDocument)
     }
-    return .success(documentDetails)
+    return .success([documentDetails])
+  }
+
+  func fetchStoredDocuments(documentIds: [String]) async -> DocumentDetailsPartialState {
+    let documents = walletController.fetchDocuments(with: documentIds)
+    let documentsDetails = documents.compactMap {
+      $0.transformToDocumentDetailsUi()
+    }
+
+    if documentsDetails.isEmpty {
+      return .failure(WalletCoreError.unableFetchDocument)
+    }
+    return .success(documentsDetails)
   }
 
   public func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
@@ -75,10 +97,23 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     }
     return successState
   }
+
+  func fetchBookmarks(_ identifier: String) async throws -> Bookmark {
+    try bookmarkStorageController.retrieve(identifier)
+  }
+
+  func save(_ identifier: String) async throws {
+    let bookmark = Bookmark(identifier: identifier)
+    try bookmarkStorageController.store(bookmark)
+  }
+
+  func delete(_ identifier: String) async throws {
+    try bookmarkStorageController.delete(identifier)
+  }
 }
 
 public enum DocumentDetailsPartialState: Sendable {
-  case success(DocumentDetailsUIModel)
+  case success([DocumentDetailsUIModel])
   case failure(Error)
 }
 

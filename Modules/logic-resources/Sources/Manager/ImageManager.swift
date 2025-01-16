@@ -28,6 +28,7 @@ public protocol ImageManagerProtocol: Sendable {
   var chevronUp: Image { get }
   var chevronDown: Image { get }
   var chevronRight: Image { get }
+  var chevronLeft: Image { get }
   var xmark: Image { get }
   var exclamationmarkCircle: Image { get }
   var circle: Image { get }
@@ -60,6 +61,7 @@ public protocol ImageManagerProtocol: Sendable {
   var menuIcon: Image { get }
   var filterMenuIcon: Image { get }
   var bookmarkIcon: Image { get }
+  var bookmarkIconFill: Image { get }
   var gearshape: Image { get }
   var checkmark: Image { get }
   var hourglassImage: Image { get }
@@ -75,6 +77,11 @@ public protocol ImageManagerProtocol: Sendable {
   var homeContract: Image { get }
   var homeIdentity: Image { get }
   var issuerCardImagePlaceholder: Image { get }
+  var successSecuredWallet: Image { get }
+  var digitalIdIssuance: Image { get }
+  var documentSuccessPending: Image { get }
+  var govLogo: Image { get }
+  var nfcImage: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -91,6 +98,7 @@ final class ImageManager: ImageManagerProtocol {
     case chevronUp = "chevron.up"
     case chevronDown = "chevron.down"
     case chevronRight = "chevron.right"
+    case chevronLeft = "chevron.left"
     case xmark = "xmark"
     case exclamationmarkCircle = "exclamationmark.circle"
     case circle = "circle.fill"
@@ -122,7 +130,8 @@ final class ImageManager: ImageManagerProtocol {
     case bell
     case menuIcon = "menu-icon"
     case filterMenuIcon = "filter-menu-icon"
-    case bookmarkIcon = "bookmark-icon"
+    case bookmarkIcon = "bookmark"
+    case bookmarkIconFill = "bookmark.fill"
     case gearshape
     case checkmark
     case hourglassImage
@@ -138,6 +147,11 @@ final class ImageManager: ImageManagerProtocol {
     case homeContract = "home-contract"
     case homeIdentity = "home-identity"
     case issuerCardImagePlaceholder = "issuer-card-image-placeholder"
+    case successSecuredWallet = "success-secured-wallet"
+    case digitalIdIssuance = "digital-id-issuance"
+    case documentSuccessPending = "document-success-pending"
+    case govLogo = "gov-logo"
+    case nfcImage = "nfc-image"
   }
 
   // MARK: - Properties
@@ -181,6 +195,9 @@ final class ImageManager: ImageManagerProtocol {
   }
   var chevronRight: Image {
     Image(systemName: ImageEnum.chevronRight.rawValue)
+  }
+  var chevronLeft: Image {
+    Image(systemName: ImageEnum.chevronLeft.rawValue)
   }
   var xmark: Image {
     Image(systemName: ImageEnum.xmark.rawValue)
@@ -276,7 +293,10 @@ final class ImageManager: ImageManagerProtocol {
     Image(ImageEnum.filterMenuIcon.rawValue, bundle: bundle)
   }
   var bookmarkIcon: Image {
-    Image(ImageEnum.bookmarkIcon.rawValue, bundle: bundle)
+    Image(systemName: ImageEnum.bookmarkIcon.rawValue)
+  }
+  var bookmarkIconFill: Image {
+    Image(systemName: ImageEnum.bookmarkIconFill.rawValue)
   }
   var gearshape: Image {
     Image(systemName: ImageEnum.gearshape.rawValue)
@@ -322,5 +342,20 @@ final class ImageManager: ImageManagerProtocol {
   }
   var issuerCardImagePlaceholder: Image {
     Image(ImageEnum.issuerCardImagePlaceholder.rawValue, bundle: bundle)
+  }
+  var successSecuredWallet: Image {
+    Image(ImageEnum.successSecuredWallet.rawValue, bundle: bundle)
+  }
+  var digitalIdIssuance: Image {
+    Image(ImageEnum.digitalIdIssuance.rawValue, bundle: bundle)
+  }
+  var documentSuccessPending: Image {
+    Image(ImageEnum.documentSuccessPending.rawValue, bundle: bundle)
+  }
+  var govLogo: Image {
+    Image(ImageEnum.govLogo.rawValue, bundle: bundle)
+  }
+  var nfcImage: Image {
+    Image(ImageEnum.nfcImage.rawValue, bundle: bundle)
   }
 }

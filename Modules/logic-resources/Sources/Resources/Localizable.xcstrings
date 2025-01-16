@@ -12,6 +12,17 @@
         }
       }
     },
+    "add_document_request" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add document request"
+          }
+        }
+      }
+    },
     "add_document_subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -177,6 +188,61 @@
         }
       }
     },
+    "alert_access_online_services" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access online services"
+          }
+        }
+      }
+    },
+    "alert_access_online_services_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identify yourself to a wide range of public and private online services while protecting your privacy. Prove who you are with just a few taps — no need to manage countless passwords."
+          }
+        }
+      }
+    },
+    "alert_sign_documents_safely" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign documents safely"
+          }
+        }
+      }
+    },
+    "alert_sign_documents_safely_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign documents with just your wallet. Providing a legally binding e-signature will be faster and easier than ever, enabling you to conduct business wherever you are."
+          }
+        }
+      }
+    },
+    "authenticate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authenticate"
+          }
+        }
+      }
+    },
     "authenticate_authorise_transactions" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -184,6 +250,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Authenticate, authorise transactions and share your digital documents in person or online."
+          }
+        }
+      }
+    },
+    "biometry_confirm_request" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm request"
           }
         }
       }
@@ -397,6 +474,17 @@
         }
       }
     },
+    "data_shared" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data shared"
+          }
+        }
+      }
+    },
     "data_sharing_request" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -463,6 +551,17 @@
         }
       }
     },
+    "delete_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
     "delete_document" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -496,6 +595,17 @@
         }
       }
     },
+    "document_added" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Document"
+          }
+        }
+      }
+    },
     "document_number" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -514,6 +624,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Documents"
+          }
+        }
+      }
+    },
+    "done_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
           }
         }
       }
@@ -606,6 +727,17 @@
         }
       }
     },
+    "from_device" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From device"
+          }
+        }
+      }
+    },
     "generic_error_description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -690,6 +822,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Home"
+          }
+        }
+      }
+    },
+    "in_person" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In person"
           }
         }
       }
@@ -870,6 +1013,17 @@
         }
       }
     },
+    "issuance_success_title_punctuated" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Success!"
+          }
+        }
+      }
+    },
     "issue_button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -877,6 +1031,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ISSUE"
+          }
+        }
+      }
+    },
+    "issuer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuer"
+          }
+        }
+      }
+    },
+    "issuer_want_wallet_addition" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wants to add the following to your wallet:"
           }
         }
       }
@@ -994,6 +1170,28 @@
     "no" : {
       "extractionState" : "manual"
     },
+    "no_results" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No results"
+          }
+        }
+      }
+    },
+    "no_results_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No documents match your search. Try changing your search query or filters."
+          }
+        }
+      }
+    },
     "ok_button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1016,6 +1214,17 @@
         }
       }
     },
+    "online" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Online"
+          }
+        }
+      }
+    },
     "or" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1023,6 +1232,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Or"
+          }
+        }
+      }
+    },
+    "or_share_via_nfc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or share via NFC"
           }
         }
       }
@@ -1045,6 +1265,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Please wait..."
+          }
+        }
+      }
+    },
+    "proximity_connection_nfc_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold your phone near object to scan."
           }
         }
       }
@@ -1093,6 +1324,17 @@
         }
       }
     },
+    "quick_pin_confirm_pin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm PIN"
+          }
+        }
+      }
+    },
     "quick_pin_dont_match" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1104,13 +1346,24 @@
         }
       }
     },
+    "quick_pin_enter_a_pin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a PIN"
+          }
+        }
+      }
+    },
     "quick_pin_next_button" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "NEXT"
+            "value" : "PROCEED"
           }
         }
       }
@@ -1121,7 +1374,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Set a quick pin for future logins"
+            "value" : "Secure your wallet with a PIN code and connect to your National System."
           }
         }
       }
@@ -1143,7 +1396,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You successfully set the quick pin"
+            "value" : "To activate your wallet, connect to your National System to add your Digital ID."
           }
         }
       }
@@ -1154,7 +1407,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CONTINUE"
+            "value" : "Add my Digital ID"
           }
         }
       }
@@ -1165,7 +1418,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Welcome to the EUDI Wallet"
+            "value" : "Welcome to your wallet"
           }
         }
       }
@@ -1253,7 +1506,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "BACK TO HOME"
+            "value" : "Go to my EUDI Wallet"
           }
         }
       }
@@ -1287,6 +1540,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Registration ID"
+          }
+        }
+      }
+    },
+    "removed_from_favorites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removed from favorites"
+          }
+        }
+      }
+    },
+    "removed_from_favorites_messages" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The document was successfully removed from your favorite list"
           }
         }
       }
@@ -1456,6 +1731,39 @@
         }
       }
     },
+    "requests_the_following" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "requests the following"
+          }
+        }
+      }
+    },
+    "saved_to_favorites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved to favorites"
+          }
+        }
+      }
+    },
+    "saved_to_favorites_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The document was successfully added from your favorite list"
+          }
+        }
+      }
+    },
     "scan_qr_code" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1467,24 +1775,46 @@
         }
       }
     },
-    "scanner_qr_caption" : {
+    "scanner_qr_caption_issuing" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Place the QR code within the frame to start scanning"
+            "value" : "Scan a QR code provided from an issuer to add a digital document to your wallet."
           }
         }
       }
     },
-    "scanner_qr_title" : {
+    "scanner_qr_caption_presentation" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Scan QR"
+            "value" : "Scan a QR code provided from a Relying Party to present a digital document online."
+          }
+        }
+      }
+    },
+    "scanner_qr_title_issuing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan QR to add"
+          }
+        }
+      }
+    },
+    "scanner_qr_title_presentation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Present a document"
           }
         }
       }
@@ -1599,13 +1929,13 @@
         }
       }
     },
-    "sort_by_issued_date" : {
+    "succesfully_added_following_to_wallet" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sort by issued date"
+            "value" : "You have successfully added the following to your wallet"
           }
         }
       }
@@ -1621,13 +1951,13 @@
         }
       }
     },
-    "totalFiltersCounter" : {
+    "successfully_shared_following_information" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show (%@) results"
+            "value" : "You successfully shared the following information with"
           }
         }
       }
@@ -1737,7 +2067,29 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Valid until\n%@"
+            "value" : "Valid until %@"
+          }
+        }
+      }
+    },
+    "view_details" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View details"
+          }
+        }
+      }
+    },
+    "view_document_details" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your wallet is secured!"
           }
         }
       }

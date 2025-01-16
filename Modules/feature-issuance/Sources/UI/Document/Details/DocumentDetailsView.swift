@@ -35,14 +35,18 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       navigationTitle: LocalizableString.shared.get(with: .details),
       toolbarContent: ToolBarContent(
         trailingActions: [
-          Action(image: Theme.shared.image.bookmarkIcon) {},
+          Action(image: viewModel.isBookmarked ? Theme.shared.image.bookmarkIconFill : Theme.shared.image.bookmarkIcon) {
+            viewModel.saveBookmark(viewModel.viewState.document.id)
+            viewModel.alertType = .bookmark
+            viewModel.showAlert = true
+          },
           Action(
             image: viewModel.isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye) {
               viewModel.isVisible.toggle()
             }
         ],
         leadingActions: [
-          Action(image: Theme.shared.image.xmark) {
+          Action(image: Theme.shared.image.chevronLeft) {
             viewModel.pop()
           }
         ]
@@ -53,6 +57,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
         viewState: viewModel.viewState,
         isVisible: viewModel.isVisible
       ) {
+        viewModel.alertType = .issuer
         viewModel.showAlert = true
       } onContinue: {
         viewModel.onContinue()
@@ -63,8 +68,8 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     .confirmationDialog(
       title: LocalizableString.shared.get(with: .issuanceDetailsDeletionTitle([viewModel.viewState.document.documentName])),
       message: LocalizableString.shared.get(with: .issuanceDetailsDeletionCaption([viewModel.viewState.document.documentName])),
-      destructiveText: "Delete",
-      baseText: "Cancel",
+      destructiveText: LocalizableString.shared.get(with: .deleteButton),
+      baseText: LocalizableString.shared.get(with: .cancelButton),
       isPresented: $viewModel.isDeletionModalShowing,
       destructiveAction: {
         viewModel.onDeleteDocument()
@@ -75,8 +80,8 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     )
     .alertView(
       isPresented: $viewModel.showAlert,
-      title: LocalizableString.shared.get(with: .trustedRelyingParty),
-      message: LocalizableString.shared.get(with: .trustedRelyingPartyDescription),
+      title: alertTitle(),
+      message: alertMessage(),
       buttonText: LocalizableString.shared.get(with: .close),
       onDismiss: {
         viewModel.showAlert = false
@@ -85,6 +90,31 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     .task {
       await self.viewModel.fetchDocumentDetails()
       await self.viewModel.fetchIssuerData()
+      await viewModel.bookmarked()
+    }
+  }
+
+  private func alertTitle() -> String {
+    if viewModel.alertType == .issuer {
+      return LocalizableString.shared.get(with: .trustedRelyingParty)
+    } else {
+      if viewModel.isBookmarked {
+        return LocalizableString.shared.get(with: .savedToFavorites)
+      } else {
+        return LocalizableString.shared.get(with: .removedFromFavorites)
+      }
+    }
+  }
+
+  private func alertMessage() -> String {
+    if viewModel.alertType == .issuer {
+      return LocalizableString.shared.get(with: .trustedRelyingPartyDescription)
+    } else {
+      if viewModel.isBookmarked {
+        return LocalizableString.shared.get(with: .savedToFavoritesMessage)
+      } else {
+        return LocalizableString.shared.get(with: .removedFromFavoritesMessages)
+      }
     }
   }
 }
@@ -112,7 +142,7 @@ private func content(
               switch documentFieldContent.value {
               case .string(let value):
                 WrapListItemView(
-                  listItem: ListItemData(
+                  listItem: .init(
                     mainText: value,
                     overlineText: documentFieldContent.title,
                     isBlur: isVisible
@@ -121,7 +151,7 @@ private func content(
                 )
               case .image(let image):
                 WrapListItemView(
-                  listItem: ListItemData(
+                  listItem: .init(
                     mainText: documentFieldContent.title,
                     leadingIcon: image,
                     isBlur: isVisible
@@ -139,7 +169,7 @@ private func content(
         }
       }
 
-      Text(LocalizableString.shared.get(with: .unknownIssuer))
+      Text(.unknownIssuer)
         .font(Theme.shared.font.labelSmall.font)
         .foregroundStyle(Theme.shared.color.onSurfaceVariant)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -147,8 +177,6 @@ private func content(
       CardViewWithLogo(
         icon: viewState.issuerData.icon,
         title: viewState.issuerData.title,
-        subtitle: viewState.issuerData.subtitle,
-        footer: viewState.issuerData.caption,
         isVerified: viewState.issuerData.isVerified
       ) {
         showAlert()
@@ -183,7 +211,7 @@ private func content(
     issuerData: IssuerDataUIModel.mock(),
     isLoading: false,
     error: nil,
-    config: IssuanceDetailUiConfig(flow: .extraDocument("documentId")),
+    config: IssuanceDetailUiConfig(flow: .extraDocument(["documentId"])),
     hasDeleteAction: true,
     documentFieldsCount: DocumentDetailsUIModel.mock().documentFields.count
   )

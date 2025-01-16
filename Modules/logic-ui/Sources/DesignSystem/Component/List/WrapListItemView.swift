@@ -35,7 +35,7 @@ public struct WrapListItemView: View {
   }
 
   public var body: some View {
-    HStack(alignment: .center, spacing: SPACING_SMALL) {
+    HStack(alignment: .center, spacing: SPACING_MEDIUM) {
       if let leadingIcon = listItem.leadingIcon {
         leadingIcon
           .resizable()
@@ -55,7 +55,7 @@ public struct WrapListItemView: View {
         Text(listItem.mainText)
           .font(Theme.shared.font.bodyLarge.font)
           .foregroundStyle(Theme.shared.color.onSurface)
-          .fontWeight(.medium)
+          .fontWeight(listItem.mainStyle == .plain ? .medium : .bold)
           .lineLimit(1)
           .truncationMode(.tail)
           .if(listItem.isBlur) {
@@ -65,7 +65,7 @@ public struct WrapListItemView: View {
         if let supportingText = listItem.supportingText {
           Text(supportingText)
             .font(Theme.shared.font.bodyMedium.font)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .foregroundStyle(listItem.supportingTextColor)
             .lineLimit(1)
             .truncationMode(.tail)
         }
@@ -81,11 +81,11 @@ public struct WrapListItemView: View {
             .frame(width: 20, height: 20)
             .foregroundColor(Color.accentColor)
 
-        case .checkbox(let isChecked, let onToggle):
+        case .checkbox(let enabled, let isChecked, let onToggle):
           WrapCheckbox(
             checkboxData: CheckboxData(
               isChecked: isChecked,
-              enabled: true,
+              enabled: enabled,
               onCheckedChange: { _ in
                 onToggle(!isChecked)
               }))
@@ -107,7 +107,7 @@ public struct WrapListItemView: View {
   VStack(spacing: 16) {
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: "Main Text",
           overlineText: "Overline Text",
           supportingText: "Valid until: 22 March 2030",
@@ -120,7 +120,7 @@ public struct WrapListItemView: View {
 
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: "Another Item",
           overlineText: nil,
           supportingText: "Additional Info",
@@ -131,7 +131,7 @@ public struct WrapListItemView: View {
 
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: "Another Item",
           overlineText: nil,
           supportingText: "Additional Info",
@@ -142,7 +142,7 @@ public struct WrapListItemView: View {
 
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: "Another Item",
           overlineText: "Overline Texr",
           supportingText: "Additional Info",
@@ -154,12 +154,12 @@ public struct WrapListItemView: View {
 
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: "Main Text",
           overlineText: "Overline Text",
           supportingText: "Valid until: 22 March 2030",
           leadingIcon: Image(systemName: "star"),
-          trailingContent: .checkbox(true) { _ in }
+          trailingContent: .checkbox(true, true) { _ in }
         ),
         action: {}
       )
@@ -167,7 +167,7 @@ public struct WrapListItemView: View {
 
     WrapCardView {
       WrapListItemView(
-        listItem: ListItemData(
+        listItem: .init(
           mainText: "Another Item",
           trailingContent: .icon(Image(systemName: "plus"))
         )

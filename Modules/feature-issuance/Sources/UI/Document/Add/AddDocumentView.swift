@@ -37,14 +37,7 @@ struct AddDocumentView<Router: RouterHost>: View {
       allowBackGesture: true,
       errorConfig: viewModel.viewState.error,
       navigationTitle: LocalizableString.shared.get(with: .chooseFromList),
-      isLoading: viewModel.viewState.isLoading,
-      toolbarContent: ToolBarContent(
-        trailingActions: [
-          Action(title: LocalizableString.shared.get(with: .cancelButton).lowercased()) {
-            viewModel.pop()
-          }
-        ]
-      )
+      isLoading: viewModel.viewState.isLoading
     ) {
 
       content(viewState: viewModel.viewState) { type in
@@ -74,7 +67,7 @@ private func content(
         ForEach(viewState.addDocumentCellModels) { cell in
           WrapCardView {
             WrapListItemView(
-              listItem: ListItemData(
+              listItem: .init(
                 mainText: LocalizableString.shared.get(with: cell.documentName),
                 trailingContent: .icon(Theme.shared.image.plus)
               ),
@@ -86,6 +79,7 @@ private func content(
       .shimmer(isLoading: viewState.isLoading)
     }
     .padding(.horizontal, Theme.shared.dimension.padding)
+    .padding(.bottom)
   }
 }
 

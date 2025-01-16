@@ -26,7 +26,17 @@ struct QuickPinView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    ContentScreenView {
+    ContentScreenView(
+      allowBackGesture: false,
+      navigationTitle: LocalizableString.shared.get(
+        with: viewModel.viewState.navigationTitle
+      ),
+      toolbarContent: toolBarContent(
+        viewState: viewModel.viewState,
+        onProceed: viewModel.onButtonClick,
+        onShowCancellationModal: viewModel.onShowCancellationModal
+      )
+    ) {
       content(
         viewState: viewModel.viewState,
         uiPinInputField: $viewModel.uiPinInputField,
@@ -51,6 +61,35 @@ struct QuickPinView<Router: RouterHost>: View {
 }
 
 @MainActor
+private func toolBarContent(
+  viewState: QuickPinState,
+  onProceed: @escaping () -> Void,
+  onShowCancellationModal: @escaping () -> Void
+) -> ToolBarContent? {
+  var leadingActions: [Action] = []
+  if viewState.isCancellable {
+    leadingActions.append(
+      Action(
+        image: Theme.shared.image.chevronLeft
+      ) {
+        onShowCancellationModal()
+    })
+  }
+
+  return ToolBarContent(
+    trailingActions: [Action(
+      title: LocalizableString.shared.get(
+        with: viewState.button
+      ).capitalizedFirst(),
+      disabled: !viewState.isButtonActive
+    ) {
+      onProceed()
+    }],
+    leadingActions: leadingActions
+  )
+}
+
+@MainActor
 @ViewBuilder
 private func content(
   viewState: QuickPinState,
@@ -58,17 +97,19 @@ private func content(
   onShowCancellationModal: @escaping () -> Void,
   onButtonClick: @escaping () -> Void
 ) -> some View {
-  if viewState.isCancellable {
-    ContentHeaderView(
-      dismissIcon: Theme.shared.image.xmark,
-      onBack: { onShowCancellationModal() }
+
+  ContentHeader(
+    config: ContentHeaderConfig(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
     )
-  }
+  )
 
   ContentTitleView(
     title: viewState.title,
-    caption: viewState.caption,
-    topSpacing: viewState.isCancellable ? .withToolbar : .withoutToolbar
+    caption: viewState.caption
   )
 
   VSpacer.large()
@@ -80,14 +121,6 @@ private func content(
   )
 
   Spacer()
-
-  WrapButtonView(
-    style: .primary,
-    title: viewState.button,
-    isLoading: false,
-    isEnabled: viewState.isButtonActive,
-    onAction: onButtonClick()
-  )
 }
 
 @MainActor
@@ -124,6 +157,7 @@ private func pinView(
 #Preview {
   let viewState = QuickPinState(
     config: QuickPinUiConfig(flow: .set),
+    navigationTitle: .quickPinEnterPin,
     title: .quickPinSetTitle,
     caption: .quickPinSetCaptionOne,
     button: .quickPinNextButton,

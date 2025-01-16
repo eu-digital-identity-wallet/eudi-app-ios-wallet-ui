@@ -16,25 +16,28 @@
 import SwiftUI
 import logic_resources
 
-public struct ExpandableCardView: View {
+public struct ExpandableCardView<Content: View>: View {
   private let title: String
   private let subtitle: String
-  private let listItems: [ListItemData]
   private let backgroundColor: Color
   private let mainTextVerticalPadding: CGFloat?
+  private let isLoading: Bool
+  private let content: () -> Content
 
   public init(
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
     title: String,
     subtitle: String,
-    listItems: [ListItemData],
-    mainTextVerticalPadding: CGFloat? = nil
+    mainTextVerticalPadding: CGFloat? = nil,
+    isLoading: Bool = false,
+    @ViewBuilder content: @escaping () -> Content
   ) {
     self.title = title
     self.subtitle = subtitle
-    self.listItems = listItems
     self.backgroundColor = backgroundColor
     self.mainTextVerticalPadding = mainTextVerticalPadding
+    self.isLoading = isLoading
+    self.content = content
   }
 
   @State private var isExpanded: Bool = false
@@ -46,44 +49,27 @@ public struct ExpandableCardView: View {
       ) {
         VStack(spacing: .zero) {
           WrapListItemView(
-            listItem: ListItemData(
+            listItem: .init(
               mainText: title,
-              supportingText: subtitle,
+              mainStyle: .bold,
+              supportingText: !isExpanded ? subtitle : nil,
               trailingContent: .icon(isExpanded ? Theme.shared.image.chevronUp : Theme.shared.image.chevronDown)
             ),
             mainTextVerticalPadding: mainTextVerticalPadding
           ) {
-            withAnimation {
-              isExpanded.toggle()
+            if !isLoading {
+              withAnimation {
+                isExpanded.toggle()
+              }
             }
           }
 
           if isExpanded {
-            WrapListItemsView(
-              listItems: listItems,
-              mainTextVerticalPadding: mainTextVerticalPadding
-            )
+            content()
           }
         }
       }
+      .shimmer(isLoading: isLoading)
     }
   }
-}
-
-#Preview {
-  ExpandableCardView(
-    title: "Digital ID",
-    subtitle: "View details",
-    listItems: [
-      ListItemData(mainText: "Family name", supportingText: "Doe"),
-      ListItemData(mainText: "Given names", supportingText: "John"),
-      ListItemData(mainText: "Date of birth", supportingText: "21 Oct 1994"),
-      ListItemData(mainText: "Age over 18", supportingText: "Yes"),
-      ListItemData(mainText: "Date of issue", supportingText: "21 Oct 2023"),
-      ListItemData(mainText: "Date of expiry", supportingText: "21 Oct 2040"),
-      ListItemData(mainText: "Issuing authority", supportingText: "GR"),
-      ListItemData(mainText: "Issuing country", supportingText: "GR")
-    ]
-  )
-  .padding()
 }

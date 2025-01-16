@@ -72,7 +72,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   override func onShare() {
     Task {
 
-      let items = self.viewState.items
+      let items = self.viewState.items.toModels()
 
       let response = await Task.detached { () -> ProximityResponsePreparationPartialState in
         return await self.interactor.onResponsePrepare(requestItems: items)
@@ -98,6 +98,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
         .featureCommonModule(
           .biometry(
             config: UIConfig.Biometry(
+              navigationTitle: .biometryConfirmRequest,
               title: getTitle(),
               caption: .requestDataShareBiometryCaption,
               quickPinOnlyCaption: .requestDataShareQuickPinCaption,
@@ -126,11 +127,11 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   }
 
   override func getTitle() -> LocalizableString.Key {
-    viewState.title
+    .dataSharingRequest
   }
 
   override func getCaption() -> LocalizableString.Key {
-    .requestDataCaption
+    .requestsTheFollowing
   }
 
   override func getDataRequestInfo() -> LocalizableString.Key {

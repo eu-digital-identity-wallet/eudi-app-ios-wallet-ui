@@ -17,8 +17,10 @@ import Foundation
 
 public protocol DimensionManagerProtocol: Sendable {
   var padding: CGFloat { get }
+  var smallImageHeight: CGFloat { get }
 }
 
 final class DimensionManager: DimensionManagerProtocol {
-  let padding: CGFloat = 16
+  let padding: CGFloat = 16.0
+  let smallImageHeight: CGFloat = 50.0
 }

@@ -71,6 +71,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "cancel_share_sheet_title")
     case .cancelShareSheetCaption:
       bundle.localizedString(forKey: "cancel_share_sheet_caption")
+    case .documentAdded:
+      bundle.localizedString(forKey: "document_added")
     case .cancelShareSheetContinue:
       bundle.localizedString(forKey: "cancel_share_sheet_continue")
     case .requestDataSheetCaption:
@@ -81,6 +83,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "share_data_review_title")
     case .success:
       bundle.localizedString(forKey: "success")
+    case .successfullySharedFollowingInformation:
+      bundle.localizedString(forKey: "successfully_shared_following_information")
     case .requestDataShareSuccess(let args):
       bundle.localizedStringWithArguments(forKey: "request_data_share_sucess_title", arguments: args)
     case .requestDataShareButton:
@@ -89,20 +93,12 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "incomplete_request_data_selecting")
     case .addDoc:
       bundle.localizedString(forKey: "add_doc")
-    case .filters:
-      bundle.localizedString(forKey: "filters")
-    case .sortByIssuedDateSectionTitle:
-      bundle.localizedString(forKey: "sort_by_issued_date")
-    case .categorySectionTitle:
-      bundle.localizedString(forKey: "category")
-    case .issuerSectionTitle:
-      bundle.localizedString(forKey: "issuer")
-    case .totalFiltersCounter(let args):
-      bundle.localizedStringWithArguments(forKey: "totalFiltersCounter", arguments: args)
     case .showQRTap:
       bundle.localizedString(forKey: "show_qr_tap")
     case .welcomeBack:
       bundle.localizedString(forKey: "welcome_back")
+    case .viewDocumentDetails:
+      bundle.localizedString(forKey: "view_document_details")
     case .pleaseWait:
       bundle.localizedString(forKey: "please_wait")
     case .requestDataShareQuickPinCaption:
@@ -115,6 +111,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "login_button")
     case .addDocumentTitle:
       bundle.localizedString(forKey: "add_document_title")
+    case .addDocumentRequest:
+      bundle.localizedString(forKey: "add_document_request")
     case .addDocumentSubtitle:
       bundle.localizedString(forKey: "add_document_subtitle")
     case .proximityConnectivityTitle:
@@ -181,6 +179,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "issuance_external_loading_caption")
     case .issuanceSuccessTitle:
       bundle.localizedString(forKey: "issuance_success_title")
+    case .successTitlePunctuated:
+      bundle.localizedString(forKey: "issuance_success_title_punctuated")
     case .issuanceSuccessCaption(let args):
       bundle.localizedStringWithArguments(forKey: "issuance_success_caption", arguments: args)
     case .issuanceSuccessNextButton:
@@ -319,22 +319,98 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "details")
     case .dataSharingRequest:
       bundle.localizedString(forKey: "data_sharing_request")
+    case .dataShared:
+      bundle.localizedString(forKey: "data_shared")
+    case .doneButton:
+      bundle.localizedString(forKey: "done_button")
     case .dataSharingTitle:
       bundle.localizedString(forKey: "data_sharing_title")
     case .close:
       bundle.localizedString(forKey: "close")
-    case .all:
-      bundle.localizedString(forKey: "all")
-    case .reset:
-      bundle.localizedString(forKey: "reset")
-    case .ascending:
-      bundle.localizedString(forKey: "ascending")
-    case .descending:
-      bundle.localizedString(forKey: "descending")
     case .trustedRelyingParty:
       bundle.localizedString(forKey: "trusted_relying_party")
     case .trustedRelyingPartyDescription:
       bundle.localizedString(forKey: "trusted_relying_party_description")
+    case .issuerWantWalletAddition:
+      bundle.localizedString(forKey: "issuer_want_wallet_addition")
+    case .issuer:
+      bundle.localizedString(forKey: "issuer")
+    case .alertAccessOnlineServices:
+      bundle.localizedString(forKey: "alert_access_online_services")
+    case .alertAccessOnlineServicesMessage:
+      bundle.localizedString(forKey: "alert_access_online_services_message")
+    case .alertSignDocumentsSafely:
+      bundle.localizedString(forKey: "alert_sign_documents_safely")
+    case .alertSignDocumentsSafelyMessage:
+      bundle.localizedString(forKey: "alert_sign_documents_safely_message")
+    case .authenticate:
+      bundle.localizedString(forKey: "authenticate")
+    case .inPerson:
+      bundle.localizedString(forKey: "in_person")
+    case .online:
+      bundle.localizedString(forKey: "Online")
+    case .fromDevice:
+      bundle.localizedString(forKey: "from_device")
+    case .autodashboardAuthenticateDialogMessage:
+      bundle.localizedString(forKey: "autodashboard_authenticate_dialog_message")
+    case .deleteButton:
+      bundle.localizedString(forKey: "delete_button")
+    case .savedToFavorites:
+      bundle.localizedString(forKey: "saved_to_favorites")
+    case .succesfullyAddedFollowingToWallet:
+      bundle.localizedString(forKey: "succesfully_added_following_to_wallet")
+    case .removedFromFavorites:
+      bundle.localizedString(forKey: "removed_from_favorites")
+    case .savedToFavoritesMessage:
+      bundle.localizedString(forKey: "saved_to_favorites_message")
+    case .removedFromFavoritesMessages:
+      bundle.localizedString(forKey: "removed_from_favorites_messages")
+    case .scannerQrTitleIssuing:
+      bundle.localizedString(forKey: "scanner_qr_title_issuing")
+    case .scannerQrTitlePresentation:
+      bundle.localizedString(forKey: "scanner_qr_title_presentation")
+    case .scannerQrCaptionIssuing:
+      bundle.localizedString(forKey: "scanner_qr_caption_issuing")
+    case .scannerQrCaptionPresentation:
+      bundle.localizedString(forKey: "scanner_qr_caption_presentation")
+    case .quickPinEnterPin:
+      bundle.localizedString(forKey: "quick_pin_enter_a_pin")
+    case .quickPinConfirmPin:
+      bundle.localizedString(forKey: "quick_pin_confirm_pin")
+    case .biometryConfirmRequest:
+      bundle.localizedString(forKey: "biometry_confirm_request")
+    case .viewDetails:
+      bundle.localizedString(forKey: "view_details")
+    case .requestsTheFollowing:
+      bundle.localizedString(forKey: "requests_the_following")
+    case .walletIsSecured:
+      bundle.localizedString(forKey: "wallet_is_secured")
+    case .noResults:
+      bundle.localizedString(forKey: "no_results")
+    case .noResultsDescription:
+      bundle.localizedString(forKey: "no_results_description")
+    case .proximityConnectionNfcDescription:
+      bundle.localizedString(forKey: "proximity_connection_nfc_description")
+    case .orShareViaNfc:
+      bundle.localizedString(forKey: "or_share_via_nfc")
+    case .filters:
+      bundle.localizedString(forKey: "")
+    case .sortByIssuedDateSectionTitle:
+      bundle.localizedString(forKey: "")
+    case .categorySectionTitle:
+      bundle.localizedString(forKey: "")
+    case .issuerSectionTitle:
+      bundle.localizedString(forKey: "")
+    case .totalFiltersCounter:
+      bundle.localizedString(forKey: "")
+    case .reset:
+      bundle.localizedString(forKey: "")
+    case .all:
+      bundle.localizedString(forKey: "")
+    case .descending:
+      bundle.localizedString(forKey: "")
+    case .ascending:
+      bundle.localizedString(forKey: "")
     }
   }
 
@@ -354,6 +430,7 @@ public extension LocalizableString {
     case genericErrorTitle
     case genericErrorDesc
     case biometryOpenSettings
+    case biometryConfirmRequest
     case invalidQuickPin
     case tryAgain
     case shareButton
@@ -363,11 +440,13 @@ public extension LocalizableString {
     case requestDataTitle([String])
     case cancelShareSheetTitle
     case cancelShareSheetCaption
+    case documentAdded
     case cancelShareSheetContinue
     case requestDataSheetCaption
     case okButton
     case shareDataReview
     case success
+    case successfullySharedFollowingInformation
     case requestDataShareSuccess([String])
     case requestDataShareButton
     case incompleteRequestDataSelection
@@ -379,6 +458,7 @@ public extension LocalizableString {
     case totalFiltersCounter([String])
     case showQRTap
     case welcomeBack
+    case viewDocumentDetails
     case pleaseWait
     case requestDataShareQuickPinCaption
     case requestDataShareBiometryCaption
@@ -386,6 +466,7 @@ public extension LocalizableString {
     case loginButton
     case addDocumentTitle
     case addDocumentSubtitle
+    case addDocumentRequest
     case proximityConnectivityTitle
     case proximityConnectivityCaption
     case verification
@@ -395,6 +476,8 @@ public extension LocalizableString {
     case moreOptions
     case changeQuickPinOption
     case quickPinSetTitle
+    case quickPinEnterPin
+    case quickPinConfirmPin
     case quickPinSetCaptionOne
     case quickPinSetCaptionTwo
     case quickPinNextButton
@@ -418,10 +501,13 @@ public extension LocalizableString {
     case issuanceExternalLoadingTitle([String])
     case issuanceExternalLoadingCaption
     case issuanceSuccessTitle
+    case successTitlePunctuated
     case issuanceSuccessCaption([String])
     case issuanceSuccessNextButton
+    case issuerWantWalletAddition
     case unknownVerifier
     case unknownIssuer
+    case issuer
     case yes
     case no
     case scanQrCode
@@ -446,6 +532,10 @@ public extension LocalizableString {
     case onExpired([String])
     case or
     case issuanceScanQr
+    case scannerQrTitleIssuing
+    case scannerQrTitlePresentation
+    case scannerQrCaptionIssuing
+    case scannerQrCaptionPresentation
     case scannerQrTitle
     case scannerQrCaption
     case cameraError
@@ -487,6 +577,8 @@ public extension LocalizableString {
     case addDocumentsToWallet
     case details
     case dataSharingRequest
+    case dataShared
+    case doneButton
     case dataSharingTitle
     case close
     case reset
@@ -495,6 +587,28 @@ public extension LocalizableString {
     case ascending
     case trustedRelyingParty
     case trustedRelyingPartyDescription
+    case alertAccessOnlineServices
+    case alertAccessOnlineServicesMessage
+    case alertSignDocumentsSafely
+    case alertSignDocumentsSafelyMessage
+    case authenticate
+    case inPerson
+    case online
+    case fromDevice
+    case autodashboardAuthenticateDialogMessage
+    case deleteButton
+    case savedToFavorites
+    case succesfullyAddedFollowingToWallet
+    case removedFromFavorites
+    case savedToFavoritesMessage
+    case removedFromFavoritesMessages
+    case viewDetails
+    case requestsTheFollowing
+    case walletIsSecured
+    case noResults
+    case noResultsDescription
+    case proximityConnectionNfcDescription
+    case orShareViaNfc
   }
 }
 

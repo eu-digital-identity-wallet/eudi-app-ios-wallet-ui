@@ -28,12 +28,27 @@ struct DocumentSuccessView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    ContentScreenView {
-      content(viewState: viewModel.viewState) {
-        viewModel.onIssue()
-      }
+    ContentScreenView(
+      allowBackGesture: false,
+      navigationTitle: LocalizableString.shared.get(
+        with: .documentAdded
+      ),
+      toolbarContent: .init(
+        trailingActions: [
+          Action(
+            title: LocalizableString.shared.get(
+              with: .issuanceSuccessNextButton
+            ).capitalizedFirst()
+          ) {
+            viewModel.onIssue()
+          }
+        ])
+    ) {
+      content(
+        viewState: viewModel.viewState
+      )
     }
-    .task {
+    .viewDidLoadAsync {
       await viewModel.initialize()
     }
   }
@@ -42,24 +57,45 @@ struct DocumentSuccessView<Router: RouterHost>: View {
 @MainActor
 @ViewBuilder
 private func content(
-  viewState: DocumentSuccessState,
-  onIssue: @escaping () -> Void
+  viewState: DocumentSuccessState
 ) -> some View {
-  ContentTitleView(
-    title: viewState.title,
-    caption: viewState.caption,
-    titleColor: Theme.shared.color.success,
-    topSpacing: .withoutToolbar
-  )
+  ScrollView {
 
-  VSpacer.large()
+    ContentHeader(
+      config: ContentHeaderConfig(
+        appIconAndTextData: AppIconAndTextData(
+          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+          appText: ThemeManager.shared.image.euditext
+        )
+      )
+    )
 
-  document(holderName: viewState.holderName)
+    if let caption = viewState.caption {
+      HStack {
+        Text(caption)
+          .typography(Theme.shared.font.bodyMedium)
+          .multilineTextAlignment(.center)
+          .foregroundColor(Theme.shared.color.onSurfaceVariant)
+          .frame(maxWidth: .infinity, alignment: .center)
+      }
+    }
 
-  Spacer()
+    VSpacer.medium()
 
-  footer {
-    onIssue()
+    PlainWithLogoView(
+      icon: viewState.issuerData.icon,
+      title: viewState.issuerData.title,
+      isVerified: viewState.issuerData.isVerified
+    )
+
+    VSpacer.largeMedium()
+
+    document(
+      holderName: viewState.holderName,
+      viewState: viewState
+    )
+
+    Spacer()
   }
 }
 
@@ -75,35 +111,40 @@ private func footer(action: @escaping () -> Void) -> some View {
 
 @MainActor
 @ViewBuilder
-private func document(holderName: String?) -> some View {
+private func document(
+  holderName: String?,
+  viewState: DocumentSuccessState
+) -> some View {
   VStack(spacing: SPACING_MEDIUM) {
 
-    HStack {
-
-      Theme.shared.image.user
-        .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
-
-      Theme.shared.image.idStroke
-        .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
-        .padding(.leading, -40)
-
-      Spacer()
-    }
-
-    HStack {
-      if let holderName {
-        Text(holderName)
-          .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.black)
-      }
-
-      Spacer()
+    ForEach(viewState.documents) { document in
+      ExpandableCardView(
+        backgroundColor: Theme.shared.color.tertiary,
+        title: document.documentName,
+        subtitle: LocalizableString.shared.get(with: .viewDocumentDetails),
+        isLoading: viewState.isLoading,
+        content: {
+          WrapListItemsView(
+            listItems: document.documentFields.map({ field in
+              switch field.value {
+              case .string(let value):
+                  .init(
+                    mainText: value,
+                    overlineText: field.title
+                  )
+              case .image(let image):
+                  .init(
+                    mainText: field.title,
+                    leadingIcon: image
+                  )
+              }
+            })
+          )
+        }
+      )
     }
   }
-  .padding(SPACING_MEDIUM_LARGE)
   .frame(maxWidth: .infinity)
-  .background(Theme.shared.color.secondary)
-  .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
 }
 
 #Preview {
@@ -114,10 +155,14 @@ private func document(holderName: String?) -> some View {
     ),
     holderName: "Name",
     config: IssuanceFlowUiConfig(flow: .noDocument),
-    documentIdentifier: "id"
+    documentIdentifiers: ["id"],
+    documents: [DocumentDetailsUIModel.mock()],
+    issuerData: IssuerDataUIModel.mock(),
+    isLoading: false,
+    error: nil
   )
 
   ContentScreenView {
-    content(viewState: viewState) {}
+    content(viewState: viewState)
   }
 }

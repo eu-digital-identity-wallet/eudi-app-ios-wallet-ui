@@ -98,7 +98,7 @@ public struct ContentHeader: View {
             color: Theme.shared.color.onSurface,
             textAlign: .center,
             maxLines: 2,
-            fontWeight: .semibold
+            fontWeight: .bold
           )
         )
         .padding(.vertical, SPACING_MEDIUM_SMALL)

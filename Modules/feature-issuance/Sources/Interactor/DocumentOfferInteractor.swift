@@ -63,7 +63,9 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       let hasPidInOffer = offer.docModels.first(
         where: { offer in
           let identifier = DocumentTypeIdentifier(rawValue: offer.docType.ifNilOrEmpty { offer.credentialConfigurationIdentifier })
-          return identifier == .mDocPid || identifier == .sdJwtPid
+          // MARK: - TODO Re-activate once SD-JWT PID Rule book is in place in ARF.
+          // return identifier == .mDocPid || identifier == .sdJwtPid
+          return identifier == .mDocPid
         }
       ) != nil
 
@@ -114,12 +116,11 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
         return .dynamicIssuance(session)
       } else if documents.count == docOffers.count {
         return .success(
-          retrieveSuccessRoute(
-            caption: .credentialOfferSuccessCaption([issuerName]),
-            successNavigation: successNavigation,
-            title: .init(value: .success),
-            buttonTitle: .credentialOfferSuccessButton,
-            visualKind: .defaultIcon
+          .featureIssuanceModule(
+            .issuanceSuccess(
+              config: IssuanceFlowUiConfig(flow: .extraDocument),
+              documentIdentifiers: documents.compactMap { $0.id }
+            )
           )
         )
       } else {
@@ -148,7 +149,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       }
 
     } catch {
-      return .failure(WalletCoreError.unableToIssueAndStore)
+      return .failure(error)
     }
   }
 

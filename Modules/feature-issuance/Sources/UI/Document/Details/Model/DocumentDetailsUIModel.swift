@@ -18,7 +18,7 @@ import logic_resources
 import logic_business
 import logic_core
 
-public struct DocumentDetailsUIModel: Sendable, Equatable {
+public struct DocumentDetailsUIModel: Sendable, Equatable, Identifiable {
 
   public let id: String
   public let type: DocumentTypeIdentifier

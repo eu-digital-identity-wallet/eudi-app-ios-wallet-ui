@@ -54,6 +54,7 @@ final class StartupInteractorImpl: StartupInteractor {
       return .featureCommonModule(
         .biometry(
           config: UIConfig.Biometry(
+            navigationTitle: .custom(""),
             title: .loginTitle,
             caption: .loginCaption,
             quickPinOnlyCaption: .loginCaptionQuickPinOnly,

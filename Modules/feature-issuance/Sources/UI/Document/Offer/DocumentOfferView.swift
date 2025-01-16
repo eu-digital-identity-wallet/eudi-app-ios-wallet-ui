@@ -16,6 +16,7 @@
 import SwiftUI
 import logic_ui
 import logic_resources
+import feature_common
 
 struct DocumentOfferView<Router: RouterHost>: View {
 
@@ -26,13 +27,35 @@ struct DocumentOfferView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    ContentScreenView(errorConfig: viewModel.viewState.error) {
-
+    ContentScreenView(
+      errorConfig: viewModel.viewState.error,
+      navigationTitle: LocalizableString.shared.get(
+        with: .addDocumentRequest
+      ),
+      toolbarContent: ToolBarContent(
+        trailingActions: [
+          Action(
+            title: LocalizableString.shared.get(
+              with: .cancelButton
+            ).capitalizedFirst()
+          ) {
+            viewModel.onShowCancelModal()
+          }
+        ],
+        leadingActions: [
+          Action(
+            title: LocalizableString.shared.get(
+              with: .issueButton
+            ).capitalizedFirst()
+          ) {
+            viewModel.onIssueDocuments()
+          }
+        ]
+      )
+    ) {
       content(
         viewState: viewModel.viewState,
-        imageSize: getScreenRect().width / 4,
-        onIssueDocuments: viewModel.onIssueDocuments,
-        onShowCancelModal: viewModel.onShowCancelModal
+        imageSize: getScreenRect().width / 4
       )
     }
     .confirmationDialog(
@@ -62,18 +85,25 @@ struct DocumentOfferView<Router: RouterHost>: View {
 
 @MainActor
 @ViewBuilder
+private func title(viewState: DocumentOfferViewState) -> some View {
+  Text(viewState.documentOfferUiModel.issuerName)
+    .typography(Theme.shared.font.bodyMedium)
+    .fontWeight(.medium) +
+  Text(" ") +
+  Text(LocalizableString.shared.get(
+    with: .issuerWantWalletAddition
+  ))
+  .typography(Theme.shared.font.bodyMedium)
+}
+
+@MainActor
+@ViewBuilder
 private func content(
   viewState: DocumentOfferViewState,
-  imageSize: CGFloat,
-  onIssueDocuments: @escaping () -> Void,
-  onShowCancelModal: @escaping () -> Void
+  imageSize: CGFloat
 ) -> some View {
-  ContentTitleView(
-    title: viewState.title,
-    caption: .requestCredentialOfferCaption,
-    topSpacing: .withoutToolbar,
-    isLoading: viewState.isLoading
-  )
+
+  title(viewState: viewState)
 
   VSpacer.small()
 
@@ -82,13 +112,34 @@ private func content(
   } else {
     ScrollView {
       VStack(spacing: SPACING_SMALL) {
-
         ForEach(viewState.documentOfferUiModel.uiOffers) { cell in
-          DocumentOfferCellView(
-            cellModel: cell,
-            isLoading: viewState.isLoading
-          )
+          WrapCardView {
+            DocumentOfferCellView(
+              cellModel: cell,
+              isLoading: viewState.isLoading
+            )
+          }
         }
+
+        VSpacer.small()
+
+        Text(
+          LocalizableString.shared.get(
+            with: .issuer
+          ).localizedUppercase
+        )
+        .typography(Theme.shared.font.bodySmall)
+        .fontWeight(.medium)
+        .foregroundStyle(Theme.shared.color.onSurface)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .shimmer(isLoading: viewState.isLoading)
+
+        CardViewWithLogo(
+          icon: viewState.issuerData.icon,
+          title: viewState.issuerData.title,
+          isVerified: viewState.issuerData.isVerified,
+          isLoading: viewState.isLoading
+        )
       }
       .padding(.top)
     }
@@ -96,21 +147,6 @@ private func content(
   }
 
   Spacer()
-
-  VStack(spacing: SPACING_MEDIUM) {
-    WrapButtonView(
-      style: .primary,
-      title: .issueButton,
-      isLoading: viewState.isLoading,
-      isEnabled: viewState.allowIssue && !viewState.isLoading,
-      onAction: onIssueDocuments()
-    )
-    WrapButtonView(
-      style: .secondary,
-      title: .cancelButton,
-      onAction: onShowCancelModal()
-    )
-  }
 }
 
 @MainActor
@@ -142,6 +178,7 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
   let viewState = DocumentOfferViewState(
     isLoading: false,
     documentOfferUiModel: DocumentOfferUIModel.mock(),
+    issuerData: IssuerDataUIModel.mock(),
     error: nil,
     config: UIConfig.Generic(
       arguments: ["uri": "uri"],
@@ -156,9 +193,7 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
   ContentScreenView {
     content(
       viewState: viewState,
-      imageSize: UIScreen.main.bounds.width / 4,
-      onIssueDocuments: {},
-      onShowCancelModal: {}
+      imageSize: UIScreen.main.bounds.width / 4
     )
   }
 }
@@ -172,6 +207,7 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
       uiOffers: [],
       docOffers: []
     ),
+    issuerData: IssuerDataUIModel.mock(),
     error: nil,
     config: UIConfig.Generic(
       arguments: ["uri": "uri"],
@@ -186,9 +222,7 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
   ContentScreenView {
     content(
       viewState: viewState,
-      imageSize: UIScreen.main.bounds.width / 4,
-      onIssueDocuments: {},
-      onShowCancelModal: {}
+      imageSize: UIScreen.main.bounds.width / 4
     )
   }
 }

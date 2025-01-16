@@ -37,10 +37,18 @@ struct DashboardView<Router: RouterHost>: View {
       padding: .zero,
       canScroll: false,
       navigationTitle: getNavigationTitle(selectedTab: viewModel.selectedTab),
-      toolbarContent: getToolbar(selectedTab: viewModel.selectedTab)
+      toolbarContent: .init(
+        trailingActions: trailingActions(selectedTab: viewModel.selectedTab),
+        leadingActions: [
+          Action(image: Theme.shared.image.menuIcon) {
+            viewModel.onMyWallet()
+          }
+        ]
+      )
     ) {
       content(
         viewState: viewModel.viewState,
+        addDocument: $viewModel.addDocument,
         selectedTab: $viewModel.selectedTab,
         onMore: viewModel.onMore,
         onDocumentDetails: { id in
@@ -50,7 +58,8 @@ struct DashboardView<Router: RouterHost>: View {
           viewModel.onDeleteDeferredDocument(with: doc)
         },
         onAdd: viewModel.onAdd,
-        onShare: viewModel.onShare
+        onShare: viewModel.onShare,
+        signDocument: { viewModel.openSignDocument() }
       )
     }
     .sheet(isPresented: $viewModel.isFilterModalShowing) {
@@ -59,6 +68,109 @@ struct DashboardView<Router: RouterHost>: View {
         sortAscending: $sortAscending,
         sections: viewModel.documentSections
       )
+      .confirmationDialog(
+        LocalizableString.shared.get(with: .authenticate),
+        isPresented: $viewModel.addDocument,
+        titleVisibility: .visible
+      ) {
+        Button(LocalizableString.shared.get(with: .cancelButton), role: .cancel) {}
+        Button(LocalizableString.shared.get(with: .inPerson)) {
+          viewModel.onShare()
+        }
+        Button(LocalizableString.shared.get(with: .online)) {
+          viewModel.onShowScanner()
+        }
+      } message: {
+        Text(.authenticateAuthoriseTransactions)
+      }
+    }
+    .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {
+      SheetContentView {
+        VStack(spacing: .zero) {
+
+          ContentTitleView(
+            title: .moreOptions
+          )
+
+          VSpacer.medium()
+
+          ForEach(viewModel.viewState.moreOptions, id: \.id) { option in
+
+            switch option {
+              case .changeQuickPin:
+                WrapButtonView(
+                  title: .changeQuickPinOption,
+                  backgroundColor: .clear,
+                  icon: Theme.shared.image.pencil,
+                  gravity: .start,
+                  onAction: viewModel.onUpdatePin()
+                )
+              case .scanQrCode:
+                WrapButtonView(
+                  title: .scanQrCode,
+                  backgroundColor: .clear,
+                  icon: Theme.shared.image.qrScan,
+                  gravity: .start,
+                  onAction: viewModel.onShowScanner()
+                )
+              case .signDocument:
+                WrapButtonView(
+                  title: .signDocument,
+                  backgroundColor: .clear,
+                  icon: Theme.shared.image.signDocument,
+                  gravity: .start,
+                  onAction: viewModel.openSignDocument()
+                )
+              case .retrieveLogs(let url):
+                shareLogs(with: url)
+            }
+          }
+
+          HStack {
+            Spacer()
+            Text(viewModel.viewState.appVersion)
+              .typography(Theme.shared.font.bodyMedium)
+              .foregroundColor(Theme.shared.color.onSurface)
+            Spacer()
+          }
+        }
+      }
+    }
+    .sheetDialog(isPresented: $viewModel.isBleModalShowing) {
+      SheetContentView {
+        VStack(spacing: SPACING_MEDIUM) {
+
+          ContentTitleView(
+            title: .bleDisabledModalTitle,
+            caption: .bleDisabledModalCaption
+          )
+
+          WrapButtonView(style: .primary, title: .bleDisabledModalButton, onAction: viewModel.onBleSettings())
+          WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.toggleBleModal())
+        }
+      }
+    }
+    .sheetDialog(isPresented: $viewModel.isDeleteDeferredModalShowing) {
+      SheetContentView {
+        VStack(spacing: SPACING_MEDIUM) {
+
+          ContentTitleView(
+            title: .issuanceDetailsDeletionTitle([viewModel.viewState.pendingDocumentTitle]),
+            caption: .issuanceDetailsDeletionCaption([viewModel.viewState.pendingDocumentTitle])
+          )
+
+          WrapButtonView(
+            style: .primary,
+            title: .yes,
+            onAction: viewModel.deleteDeferredDocument()
+          )
+          WrapButtonView(
+            style: .secondary,
+            title: .no,
+            onAction: viewModel.toggleDeleteDeferredModal()
+          )
+        }
+      }
     }
     .confirmationDialog(
       title: LocalizableString.shared.get(with: .bleDisabledModalTitle),
@@ -112,49 +224,30 @@ struct DashboardView<Router: RouterHost>: View {
 
   func getNavigationTitle(selectedTab: SelectedTab) -> String {
     switch selectedTab {
-    case .documents:
-      return LocalizableString.shared.get(with: .documents)
-    case .home:
-      return LocalizableString.shared.get(with: .home)
-    case .transactions:
-      return LocalizableString.shared.get(with: .transactions)
+      case .documents:
+        return LocalizableString.shared.get(with: .documents)
+      case .home:
+        return LocalizableString.shared.get(with: .home)
+      case .transactions:
+        return LocalizableString.shared.get(with: .transactions)
     }
   }
 
-  func getToolbar(selectedTab: SelectedTab) -> ToolBarContent {
+  func trailingActions(selectedTab: SelectedTab) -> [Action]? {
     switch selectedTab {
-    case .documents:
-      return ToolBarContent(
-        trailingActions: [
+      case .documents:
+        return [
           Action(image: Theme.shared.image.plus) {
             viewModel.onAdd()
           },
           Action(image: Theme.shared.image.filterMenuIcon) {
             viewModel.showFilters()
           }
-        ],
-        leadingActions: [
-          Action(image: Theme.shared.image.menuIcon) {}
         ]
-      )
-    case .home:
-      return ToolBarContent(
-        trailingActions: [
-          Action(image: Theme.shared.image.bell) {}
-        ],
-        leadingActions: [
-          Action(image: Theme.shared.image.menuIcon) {}
-        ]
-      )
-    case .transactions:
-      return ToolBarContent(
-        trailingActions: [
-          Action(image: Theme.shared.image.bell) {}
-        ],
-        leadingActions: [
-          Action(image: Theme.shared.image.menuIcon) {}
-        ]
-      )
+      case .home:
+        return nil
+      case .transactions:
+        return nil
     }
   }
 
@@ -214,22 +307,31 @@ struct DashboardView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: DashboardState,
+  addDocument: Binding<Bool>,
   selectedTab: Binding<SelectedTab>,
   onMore: @escaping () -> Void,
   onDocumentDetails: @escaping (String) -> Void,
   onDeleteDeferredDocument: @escaping (DocumentUIModel) -> Void,
   onAdd: @escaping () -> Void,
-  onShare: @escaping () -> Void
+  onShare: @escaping () -> Void,
+  signDocument: @escaping () -> Void
 ) -> some View {
   TabView(selection: selectedTab) {
-    HomeView(bearer: viewState.bearer)
-      .tabItem {
-        Label(
-          LocalizableString.shared.get(with: .home),
-          systemImage: "house.fill"
-        )
-      }
-      .tag(SelectedTab.home)
+    HomeView(
+      bearer: viewState.bearer,
+      addDocument: {
+        addDocument.wrappedValue.toggle()
+      },
+      signDocument: {
+        signDocument()
+      })
+    .tabItem {
+      Label(
+        LocalizableString.shared.get(with: .home),
+        systemImage: "house.fill"
+      )
+    }
+    .tag(SelectedTab.home)
 
     VStack(spacing: .zero) {
       DocumentListView(
@@ -237,10 +339,10 @@ private func content(
         isLoading: viewState.isLoading
       ) { document in
         switch document.value.state {
-        case .issued:
-          onDocumentDetails(document.value.id)
-        case .pending, .failed:
-          onDeleteDeferredDocument(document)
+          case .issued:
+            onDocumentDetails(document.value.id)
+          case .pending, .failed:
+            onDeleteDeferredDocument(document)
         }
       }
       .background(Theme.shared.color.surface)
@@ -259,7 +361,6 @@ private func content(
           systemImage: "arrow.left.arrow.right"
         )
       }
-      .tag(SelectedTab.transactions)
   }
 }
 
@@ -285,12 +386,14 @@ private func content(
   ) {
     content(
       viewState: viewState,
+      addDocument: .constant(false),
       selectedTab: .constant(.home),
       onMore: {},
       onDocumentDetails: { _ in },
       onDeleteDeferredDocument: { _ in },
       onAdd: {},
-      onShare: {}
+      onShare: {},
+      signDocument: {}
     )
   }
 }

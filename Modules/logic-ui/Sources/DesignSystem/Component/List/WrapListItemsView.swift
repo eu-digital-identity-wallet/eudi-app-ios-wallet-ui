@@ -52,14 +52,14 @@ public struct WrapListItemsView: View {
 #Preview {
   WrapListItemsView(
     listItems: [
-      ListItemData(mainText: "Family name", supportingText: "Doe"),
-      ListItemData(mainText: "Given names", supportingText: "John"),
-      ListItemData(mainText: "Date of birth", supportingText: "21 Oct 1994"),
-      ListItemData(mainText: "Age over 18", supportingText: "Yes"),
-      ListItemData(mainText: "Date of issue", supportingText: "21 Oct 2023"),
-      ListItemData(mainText: "Date of expiry", supportingText: "21 Oct 2040"),
-      ListItemData(mainText: "Issuing authority", supportingText: "GR"),
-      ListItemData(mainText: "Issuing country", supportingText: "GR")
+      .init(mainText: "Family name", supportingText: "Doe"),
+      .init(mainText: "Given names", supportingText: "John"),
+      .init(mainText: "Date of birth", supportingText: "21 Oct 1994"),
+      .init(mainText: "Age over 18", supportingText: "Yes"),
+      .init(mainText: "Date of issue", supportingText: "21 Oct 2023"),
+      .init(mainText: "Date of expiry", supportingText: "21 Oct 2040"),
+      .init(mainText: "Issuing authority", supportingText: "GR"),
+      .init(mainText: "Issuing country", supportingText: "GR")
     ]
   )
   .padding()

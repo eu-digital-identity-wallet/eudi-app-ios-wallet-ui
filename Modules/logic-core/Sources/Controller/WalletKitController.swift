@@ -42,6 +42,7 @@ public protocol WalletKitController: Sendable {
   func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [DocClaimsDecodable]
   func fetchMainPidDocument() -> DocClaimsDecodable?
   func fetchDocument(with id: String) -> DocClaimsDecodable?
+  func fetchDocuments(with ids: [String]) -> [DocClaimsDecodable]
   func clearAllDocuments() async
   func clearDocuments(status: DocumentStatus) async throws
   func deleteDocument(with id: String, status: DocumentStatus) async throws
@@ -190,6 +191,10 @@ final class WalletKitControllerImpl: WalletKitController {
     wallet.storage.getDocumentModel(id: id)
   }
 
+  func fetchDocuments(with ids: [String]) -> [DocClaimsDecodable] {
+    fetchIssuedDocuments().filter { ids.contains($0.id) }
+  }
+
   func issueDocument(identifier: String) async throws -> WalletStorage.Document {
     return try await wallet.issueDocument(docType: nil, scope: nil, identifier: identifier)
   }
@@ -255,14 +260,16 @@ final class WalletKitControllerImpl: WalletKitController {
           configId: credential.key.value,
           isPid: DocumentTypeIdentifier(rawValue: config.docType) == .mDocPid
         )
+        // MARK: - TODO Re-activate isPid Check once SD-JWT PID Rule book is in place in ARF.
       case .sdJwtVc(let config):
-        guard let vct = config.vct else {
-          return nil
-        }
+        //        guard let vct = config.vct else {
+        //          return nil
+        //        }
         return ScopedDocument(
           name: config.display.getName(fallback: credential.key.value),
           configId: credential.key.value,
-          isPid: DocumentTypeIdentifier(rawValue: vct) == .sdJwtPid
+          //isPid: DocumentTypeIdentifier(rawValue: vct) == .sdJwtPid
+          isPid: false
         )
       default: return nil
       }

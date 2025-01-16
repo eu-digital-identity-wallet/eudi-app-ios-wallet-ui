@@ -23,18 +23,24 @@ struct DocumentSuccessState: ViewState {
   let caption: LocalizableString.Key?
   let holderName: String?
   let config: IssuanceFlowUiConfig
-  let documentIdentifier: String
+  let documentIdentifiers: [String]
+  let documents: [DocumentDetailsUIModel]
+  let issuerData: IssuerDataUIModel
+  let isLoading: Bool
+  let error: ContentErrorView.Config?
 }
 
 final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, DocumentSuccessState> {
 
   private let interactor: DocumentSuccessInteractor
+  private let detailsInteractor: DocumentDetailsInteractor
 
   public init(
     router: Router,
     interactor: DocumentSuccessInteractor,
+    detailsInteractor: DocumentDetailsInteractor,
     config: any UIConfigType,
-    documentIdentifier: String
+    documentIdentifiers: [String]
   ) {
 
     guard let config = config as? IssuanceFlowUiConfig else {
@@ -42,47 +48,98 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
     }
 
     self.interactor = interactor
+    self.detailsInteractor = detailsInteractor
 
     super.init(
       router: router,
       initialState: .init(
-        title: .issuanceSuccessTitle,
+        title: .successTitlePunctuated,
         caption: nil,
         holderName: nil,
         config: config,
-        documentIdentifier: documentIdentifier
+        documentIdentifiers: documentIdentifiers,
+        documents: [DocumentDetailsUIModel.mock()],
+        issuerData: IssuerDataUIModel.mock(),
+        isLoading: true,
+        error: nil
       )
     )
   }
 
   func initialize() async {
-    setState {
-      $0.copy(
-        caption: interactor.getDocumentSuccessCaption(for: viewState.documentIdentifier),
-        holderName: interactor.getHoldersName(for: viewState.documentIdentifier)
-      )
+    await fetchDocumentDetails()
+    await fetchIssuerData()
+
+    if let first = viewState.documentIdentifiers.first {
+      setState {
+        $0.copy(
+          caption: .succesfullyAddedFollowingToWallet,
+          holderName: interactor.getHoldersName(
+            for: first
+          )
+        )
+      }
     }
   }
 
   func onIssue() {
-
-    var flow: IssuanceDetailUiConfig.Flow {
-      switch viewState.config.flow {
-      case .noDocument:
-        return .noDocument(viewState.documentIdentifier)
-      case .extraDocument:
-        return .extraDocument(viewState.documentIdentifier)
-      }
-    }
-
     router.push(
-      with: .featureIssuanceModule(
-        .issuanceDocumentDetails(
-          config: IssuanceDetailUiConfig(
-            flow: flow
-          )
-        )
+      with: .featureDashboardModule(
+        .dashboard
       )
     )
+  }
+
+  func fetchDocumentDetails() async {
+
+    let documentIdentifiers = viewState.documentIdentifiers
+    let state = await Task.detached { () -> DocumentDetailsPartialState in
+      return await self.detailsInteractor.fetchStoredDocuments(
+        documentIds: documentIdentifiers
+      )
+    }.value
+
+    switch state {
+    case .success(let documents):
+      switch viewState.config.flow {
+      case .extraDocument:
+        self.setState {
+          $0.copy(
+            documents: documents,
+            isLoading: false
+          )
+        }
+      default:
+        self.setState {
+          $0.copy(
+            documents: nil,
+            isLoading: false
+          )
+        }
+      }
+
+    case .failure:
+      self.setState {
+        $0.copy(
+          documents: nil,
+          isLoading: false
+        )
+      }
+    }
+  }
+
+  func fetchIssuerData() async {
+    let issuer = IssuerDataUIModel(
+      icon: Theme.shared.image.issuerCardImagePlaceholder,
+      title: "Another Organization",
+      subtitle: "Non-Government agency",
+      caption: "Athens - Greece",
+      isVerified: true
+    )
+    self.setState {
+      $0.copy(
+        issuerData: issuer
+      )
+    }
   }
 }

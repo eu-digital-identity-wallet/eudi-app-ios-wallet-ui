@@ -22,8 +22,20 @@ import logic_business
 public struct HomeView: View {
   private let bearer: BearerUIModel
 
-  public init(bearer: BearerUIModel) {
+  private let addDocument: () -> Void
+  private let signDocument: () -> Void
+
+  @State private var addDocumentAlert: Bool = false
+  @State private var signDocumentAlert: Bool = false
+
+  public init(
+    bearer: BearerUIModel,
+    addDocument: @escaping () -> Void,
+    signDocument: @escaping () -> Void
+  ) {
     self.bearer = bearer
+    self.addDocument = addDocument
+    self.signDocument = signDocument
   }
 
   public var body: some View {
@@ -44,11 +56,24 @@ public struct HomeView: View {
 
         HomeCardView(
           text: LocalizableString.Key.authenticateAuthoriseTransactions,
-          buttonText: LocalizableString.Key.addDocumentTitle,
+          buttonText: LocalizableString.Key.authenticate,
           illustration: Theme.shared.image.homeIdentity,
           learnMoreText: LocalizableString.Key.learnMore,
-          learnMoreAction: {},
-          action: {}
+          learnMoreAction: {
+            addDocumentAlert = true
+          },
+          action: {
+            addDocument()
+          }
+        )
+        .alertView(
+          isPresented: $addDocumentAlert,
+          title: LocalizableString.shared.get(with: .alertAccessOnlineServices),
+          message: LocalizableString.shared.get(with: .alertAccessOnlineServicesMessage),
+          buttonText: LocalizableString.shared.get(with: .okButton),
+          onDismiss: {
+            addDocumentAlert = false
+          }
         )
 
         HomeCardView(
@@ -56,8 +81,21 @@ public struct HomeView: View {
           buttonText: LocalizableString.Key.signDocument,
           illustration: Theme.shared.image.homeContract,
           learnMoreText: LocalizableString.Key.learnMore,
-          learnMoreAction: {},
-          action: {}
+          learnMoreAction: {
+            signDocumentAlert = true
+          },
+          action: {
+            signDocument()
+          }
+        )
+        .alertView(
+          isPresented: $signDocumentAlert,
+          title: LocalizableString.shared.get(with: .alertSignDocumentsSafely),
+          message: LocalizableString.shared.get(with: .alertSignDocumentsSafelyMessage),
+          buttonText: LocalizableString.shared.get(with: .okButton),
+          onDismiss: {
+            signDocumentAlert = false
+          }
         )
       }
       .padding(.horizontal, SPACING_MEDIUM)
@@ -67,5 +105,6 @@ public struct HomeView: View {
 }
 
 #Preview {
-  HomeView(bearer: BearerUIModel.mock())
+  HomeView(bearer: BearerUIModel.mock()) {} signDocument: {}
+
 }

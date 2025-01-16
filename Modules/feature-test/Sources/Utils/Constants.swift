@@ -48,6 +48,11 @@ extension Constants {
     createdAt: documentCreatedAt,
     docType: dr.documents!.first!.issuerSigned.issuerAuth.mso.docType,
     displayName: isoMdlName,
+    display: nil,
+    issuerDisplay: nil,
+    credentialIssuerIdentifier: nil,
+    configurationIdentifier: nil,
+    modifiedAt: nil,
     docClaims: [
       .init(
         name: DocumentJsonKeys.EXPIRY_DATE,
@@ -64,7 +69,9 @@ extension Constants {
         dataValue: .string(claimLastName),
         stringValue: claimLastName
       )
-    ]
+    ],
+    docDataFormat: .cbor,
+    hashingAlg: nil
   )
   
   static let euPidModel = GenericMdocModel(
@@ -72,6 +79,11 @@ extension Constants {
     createdAt: documentCreatedAt,
     docType: dr.documents!.last!.issuerSigned.issuerAuth.mso.docType,
     displayName: euPidName,
+    display: nil,
+    issuerDisplay: nil,
+    credentialIssuerIdentifier: nil,
+    configurationIdentifier: nil,
+    modifiedAt: nil,
     docClaims: [
       .init(
         name: DocumentJsonKeys.EXPIRY_DATE,
@@ -88,7 +100,9 @@ extension Constants {
         dataValue: .string(claimLastName),
         stringValue: claimLastName
       )
-    ]
+    ],
+    docDataFormat: .cbor,
+    hashingAlg: nil
   )
 }
 

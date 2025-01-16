@@ -226,8 +226,6 @@ The released software is an initial development release version:
 
 *feature-common*: Code that is common to all features.
 
-*feature-login*: Login feature.
-
 *feature-dashboard*: The application's main screen.
 
 *feature-startup*: The initial screen of the app.
@@ -249,7 +247,6 @@ graph TD;
 
   feature-common --> logic-assembly
   feature-startup --> logic-assembly
-  feature-login --> logic-assembly
   feature-dashboard --> logic-assembly
   feature-presentation --> logic-assembly
   feature-issuance --> logic-assembly
@@ -268,8 +265,6 @@ graph TD;
   feature-common --> feature-presentation
 
   feature-common --> feature-dashboard
-
-  feature-common --> feature-login
 
   logic-storage --> feature-common
   logic-core --> feature-common

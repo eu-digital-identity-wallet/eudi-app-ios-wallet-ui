@@ -46,6 +46,12 @@ public final class DashboardRouter {
           )
         )
       ).eraseToAnyView()
+    case .sideMenu:
+      SideMenuView(
+        with: .init(
+          router: host
+        )
+      ).eraseToAnyView()
     }
   }
 }

@@ -26,13 +26,17 @@ public struct BaseLoadingView<Router: RouterHost>: View {
   }
 
   public var body: some View {
-    ContentScreenView(errorConfig: viewModel.viewState.error) {
-      content(
-        isCancellable: viewModel.viewState.isCancellable,
-        title: viewModel.getTitle(),
-        caption: viewModel.getCaption(),
-        onNavigate: { viewModel.onNavigate(type: .pop) }
+    ContentScreenView(
+      errorConfig: viewModel.viewState.error,
+      toolbarContent: .init(
+        leadingActions: [
+          Action(image: Theme.shared.image.xmark) {
+            viewModel.viewState.isCancellable ? viewModel.onNavigate(type: .pop) : nil
+          }
+        ]
       )
+    ) {
+      content()
     }
     .task {
       await viewModel.doWork()
@@ -42,38 +46,27 @@ public struct BaseLoadingView<Router: RouterHost>: View {
 
 @MainActor
 @ViewBuilder
-private func content(
-  isCancellable: Bool,
-  title: LocalizableString.Key,
-  caption: LocalizableString.Key,
-  onNavigate: @escaping () -> Void
-) -> some View {
-  ContentHeaderView(
-    dismissIcon: Theme.shared.image.xmark,
-    onBack: isCancellable
-    ? onNavigate
-    : nil
-  )
+private func content() -> some View {
+  VStack(alignment: .center, spacing: SPACING_LARGE_MEDIUM) {
+    ContentHeader(
+      config: ContentHeaderConfig(
+        appIconAndTextData: AppIconAndTextData(
+          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+          appText: ThemeManager.shared.image.euditext
+        ),
+        description: LocalizableString.shared.get(with: .pleaseWait)
+      )
+    )
+    Spacer()
 
-  ContentTitleView(
-    title: title,
-    caption: caption
-  )
+    ContentLoaderView(showLoader: .constant(true))
 
-  Spacer()
-
-  ContentLoaderView(showLoader: .constant(true))
-
-  Spacer()
+    Spacer()
+  }
 }
 
 #Preview {
   ContentScreenView {
-    content(
-      isCancellable: true,
-      title: .requestDataTitle([""]),
-      caption: .requestDataCaption,
-      onNavigate: {}
-    )
+    content()
   }
 }

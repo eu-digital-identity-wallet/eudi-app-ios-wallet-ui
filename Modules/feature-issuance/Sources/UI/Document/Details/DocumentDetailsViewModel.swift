@@ -41,8 +41,15 @@ struct DocumentDetailsViewState: ViewState {
 final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, DocumentDetailsViewState> {
 
   @Published var isDeletionModalShowing: Bool = false
-  @Published var isVisible = false
+  @Published var isVisible = true
   @Published var showAlert = false
+  @Published var isBookmarked = true
+  @Published var alertType: AlertType?
+
+  enum AlertType {
+    case bookmark
+    case issuer
+  }
 
   private let interactor: DocumentDetailsInteractor
 
@@ -71,7 +78,18 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
   func fetchDocumentDetails() async {
 
-    let documentId = viewState.config.documentId
+    guard let documentId = viewState.config.documentIds.first else {
+      self.setState {
+        $0.copy(
+          isLoading: true,
+          error: .init(
+            description: .itemNotFoundInStorage,
+            cancelAction: self.pop()
+          )
+        )
+      }
+      return
+    }
 
     let state = await Task.detached { () -> DocumentDetailsPartialState in
       return await self.interactor.fetchStoredDocument(documentId: documentId)
@@ -79,7 +97,19 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
     switch state {
 
-    case .success(let document):
+    case .success(let documents):
+      guard let document = documents.first else {
+        self.setState {
+          $0.copy(
+            isLoading: true,
+            error: .init(
+              description: .itemNotFoundInStorage,
+              cancelAction: self.pop()
+            )
+          )
+        }
+        return
+      }
 
       switch viewState.config.flow {
       case .extraDocument:
@@ -150,6 +180,42 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
   func onShowDeleteModal() {
     isDeletionModalShowing = !isDeletionModalShowing
+  }
+
+  func bookmarked() async {
+    guard let documentId = viewState.config.documentIds.first else {
+      self.setState {
+        $0.copy(
+          isLoading: true,
+          error: .init(
+            description: .itemNotFoundInStorage,
+            cancelAction: self.pop()
+          )
+        )
+      }
+      return
+    }
+
+    do {
+      _ = try await interactor.fetchBookmarks(documentId)
+      isBookmarked = true
+    } catch {
+      isBookmarked = false
+    }
+  }
+
+  func saveBookmark(_ identifier: String) {
+    Task {
+      do {
+        if isBookmarked {
+          try await interactor.delete(identifier)
+          isBookmarked = false
+        } else {
+          try await interactor.save(identifier)
+          isBookmarked = true
+        }
+      } catch {}
+    }
   }
 
   private func onDocumentDelete(with type: DocumentTypeIdentifier, and id: String) {

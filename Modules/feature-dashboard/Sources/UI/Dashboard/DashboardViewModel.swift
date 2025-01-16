@@ -79,6 +79,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   @Published var isDeleteDeferredModalShowing: Bool = false
   @Published var isSuccededDocumentsModalShowing: Bool = false
   @Published var selectedTab: SelectedTab = .home
+  @Published var addDocument: Bool = false
 
   private var deferredTask: Task<DashboardDeferredPartialState, Error>?
 
@@ -186,7 +187,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     router.push(
       with: .featureIssuanceModule(
         .issuanceDocumentDetails(
-          config: IssuanceDetailUiConfig(flow: .extraDocument(documentId))
+          config: IssuanceDetailUiConfig(flow: .extraDocument([documentId]))
         )
       )
     )
@@ -274,6 +275,14 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
   func showFilters() {
     isFilterModalShowing = true
+  }
+
+  func onMyWallet() {
+    router.push(
+      with: .featureDashboardModule(
+        .sideMenu
+      )
+    )
   }
 
   func onMore() {

@@ -62,9 +62,18 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
   }
 
   func initialize() async {
-    switch await self.interactor.fetchScopedDocuments(with: viewState.config.flow) {
+    switch await self.interactor.fetchScopedDocuments(
+      with: viewState.config.flow
+    ) {
     case .success(let documents):
-      setState { $0.copy(addDocumentCellModels: documents).copy(error: nil) }
+      setState {
+        $0.copy(
+          addDocumentCellModels: documents.sorted(by: {
+            $0.configId < $1.configId
+          })
+        )
+        .copy(error: nil)
+      }
       if let link = hasDeepLink() {
         handleDeepLink(with: link)
       } else {
@@ -113,7 +122,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
         with: .featureIssuanceModule(
           .issuanceSuccess(
             config: viewState.config,
-            documentIdentifier: docId
+            documentIdentifiers: [docId]
           )
         )
       )
@@ -158,7 +167,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
           with: .featureIssuanceModule(
             .issuanceSuccess(
               config: viewState.config,
-              documentIdentifier: docId
+              documentIdentifiers: [docId]
             )
           )
         )
@@ -213,7 +222,10 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
               navigationType: navigationType
             )
           ],
-          visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.warning)
+          visualKind: .customIcon(
+            Theme.shared.image.documentSuccessPending,
+            Color.clear
+          )
         )
       )
     )

@@ -25,10 +25,18 @@ public struct BaseLoadingState: ViewState {
 
 open class BaseLoadingViewModel<Router: RouterHost>: ViewModel<Router, BaseLoadingState> {
 
-  public init(router: Router, originator: AppRoute, cancellationTimeout: Double = 0.0) {
+  public init(
+    router: Router,
+    originator: AppRoute,
+    cancellationTimeout: Double = 0.0
+  ) {
     super.init(
       router: router,
-      initialState: .init(error: nil, originator: originator, isCancellable: cancellationTimeout <= 0)
+      initialState: .init(
+        error: nil,
+        originator: originator,
+        isCancellable: cancellationTimeout <= 0
+      )
     )
 
     if cancellationTimeout > 0 {
@@ -36,8 +44,8 @@ open class BaseLoadingViewModel<Router: RouterHost>: ViewModel<Router, BaseLoadi
     }
   }
 
-  open func getTitle() -> LocalizableString.Key {
-    return .custom("")
+  open func getTitle() -> String {
+    return ""
   }
 
   open func getCaption() -> LocalizableString.Key {
