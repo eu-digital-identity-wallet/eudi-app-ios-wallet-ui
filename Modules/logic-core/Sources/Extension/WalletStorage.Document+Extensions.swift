@@ -25,13 +25,18 @@ extension Array where Element == WalletStorage.Document {
 
 extension WalletStorage.Document {
   func transformToDocDecodable() -> DocClaimsDecodable {
+    let metadata = DocMetadata(from: self.metadata)
     return DeferrredDocument(
       id: self.id,
       createdAt: self.createdAt,
-      displayName: self.getDisplayName(Locale.current.systemLanguageCode),
+      displayName: metadata?.getDisplayName(Locale.current.systemLanguageCode),
       docClaims: [],
       docDataFormat: self.docDataFormat,
-      ageOverXX: [:]
+      ageOverXX: [:],
+      display: metadata?.display,
+      issuerDisplay: metadata?.issuerDisplay,
+      credentialIssuerIdentifier: metadata?.credentialIssuerIdentifier,
+      configurationIdentifier: metadata?.configurationIdentifier
     )
   }
 }
