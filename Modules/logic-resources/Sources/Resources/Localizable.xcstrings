@@ -1885,6 +1885,17 @@
         }
       }
     },
+    "show_filters" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show (%@) results"
+          }
+        }
+      }
+    },
     "show_qr_tap" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1925,6 +1936,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select a document from your device to sign electronically."
+          }
+        }
+      }
+    },
+    "sort_by_issued_date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SORT BY ISSUED DATE"
           }
         }
       }

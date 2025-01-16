@@ -394,23 +394,23 @@ public final class LocalizableString: LocalizableStringType {
     case .orShareViaNfc:
       bundle.localizedString(forKey: "or_share_via_nfc")
     case .filters:
-      bundle.localizedString(forKey: "")
+      bundle.localizedString(forKey: "Filters")
     case .sortByIssuedDateSectionTitle:
-      bundle.localizedString(forKey: "")
+      bundle.localizedString(forKey: "sort_by_issued_date")
     case .categorySectionTitle:
-      bundle.localizedString(forKey: "")
+      bundle.localizedString(forKey: "category")
     case .issuerSectionTitle:
-      bundle.localizedString(forKey: "")
-    case .totalFiltersCounter:
-      bundle.localizedString(forKey: "")
+      bundle.localizedString(forKey: "issuer")
+    case .showFilters(let args):
+      bundle.localizedStringWithArguments(forKey: "show_filters", arguments: args)
     case .reset:
-      bundle.localizedString(forKey: "")
+      bundle.localizedString(forKey: "reset")
     case .all:
-      bundle.localizedString(forKey: "")
+      bundle.localizedString(forKey: "all")
     case .descending:
-      bundle.localizedString(forKey: "")
+      bundle.localizedString(forKey: "descending")
     case .ascending:
-      bundle.localizedString(forKey: "")
+      bundle.localizedString(forKey: "ascending")
     }
   }
 
@@ -455,7 +455,7 @@ public extension LocalizableString {
     case sortByIssuedDateSectionTitle
     case categorySectionTitle
     case issuerSectionTitle
-    case totalFiltersCounter([String])
+    case showFilters([String])
     case showQRTap
     case welcomeBack
     case viewDocumentDetails

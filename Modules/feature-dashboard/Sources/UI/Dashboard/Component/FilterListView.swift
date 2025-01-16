@@ -59,7 +59,7 @@ struct FilterListView: View {
       }
       .overlay(alignment: .bottom) {
         if showCounterRectangle {
-          Text(LocalizableString.shared.get(with: .totalFiltersCounter([String(filterCounter)])).capitalized)
+          Text(LocalizableString.shared.get(with: .showFilters([String(filterCounter)])).capitalized)
             .font(.body.bold())
             .foregroundStyle(ThemeManager.shared.color.white)
             .frame(maxWidth: .infinity)
