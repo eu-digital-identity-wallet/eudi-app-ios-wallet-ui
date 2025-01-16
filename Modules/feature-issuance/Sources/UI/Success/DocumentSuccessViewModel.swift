@@ -83,24 +83,9 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
   }
 
   func onIssue() {
-
-    let documentIdentifiers = viewState.documentIdentifiers
-    var flow: IssuanceDetailUiConfig.Flow {
-      switch viewState.config.flow {
-      case .noDocument:
-        return .noDocument(documentIdentifiers)
-      case .extraDocument:
-        return .extraDocument(documentIdentifiers)
-      }
-    }
-
     router.push(
-      with: .featureIssuanceModule(
-        .issuanceDocumentDetails(
-          config: IssuanceDetailUiConfig(
-            flow: flow
-          )
-        )
+      with: .featureDashboardModule(
+        .dashboard
       )
     )
   }
