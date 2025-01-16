@@ -58,10 +58,13 @@ struct DocumentListView: View {
               WrapListItemView(
                 listItem: ListItemData(
                   mainText: item.value.title,
-                  overlineText: "(Placeholder) Hellenic Government",
+                  overlineText: item.value.heading,
                   supportingText: item.supportingText(),
                   supportingTextColor: item.supportingColor(),
-                  leadingIcon: Theme.shared.image.govLogo,
+                  leadingIcon: (
+                    item.value.image?.url,
+                    item.value.image?.placeholder
+                  ),
                   trailingContent: .icon(item.indicatorImage())
                 )
               ) {

@@ -153,7 +153,7 @@ private func content(
                 WrapListItemView(
                   listItem: .init(
                     mainText: documentFieldContent.title,
-                    leadingIcon: image,
+                    leadingIcon: (nil, image),
                     isBlur: isVisible
                   ),
                   minHeight: false
@@ -168,6 +168,7 @@ private func content(
           }
         }
       }
+      .shimmer(isLoading: viewState.isLoading)
 
       Text(.unknownIssuer)
         .font(Theme.shared.font.labelSmall.font)

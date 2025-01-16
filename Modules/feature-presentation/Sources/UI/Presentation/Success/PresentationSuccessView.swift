@@ -125,7 +125,7 @@ private func documents(viewState: PresentationSuccessState) -> some View {
                 WrapListItemView(
                   listItem: ListItemData(
                     mainText: item.title,
-                    leadingIcon: image
+                    leadingIcon: (nil, image)
                   )
                 )
               }
@@ -149,7 +149,7 @@ private func documents(viewState: PresentationSuccessState) -> some View {
                 WrapListItemView(
                   listItem: ListItemData(
                     mainText: item.title,
-                    leadingIcon: image
+                    leadingIcon: (nil, image)
                   )
                 )
               }
