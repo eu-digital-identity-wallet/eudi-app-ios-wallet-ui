@@ -21,8 +21,6 @@ public struct CardViewWithLogo: View {
   private let backgroundColor: Color
   private let icon: Image
   private let title: String
-  private let subtitle: String
-  private let footer: String
   private let isVerified: Bool
   private let isLoading: Bool
   private let action: (() -> Void)?
@@ -32,8 +30,6 @@ public struct CardViewWithLogo: View {
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
     icon: Image,
     title: String,
-    subtitle: String,
-    footer: String,
     isVerified: Bool = false,
     isLoading: Bool = false,
     action: (() -> Void)? = nil
@@ -42,8 +38,6 @@ public struct CardViewWithLogo: View {
     self.backgroundColor = backgroundColor
     self.icon = icon
     self.title = title
-    self.subtitle = subtitle
-    self.footer = footer
     self.isVerified = isVerified
     self.isLoading = isLoading
     self.action = action
@@ -68,15 +62,6 @@ public struct CardViewWithLogo: View {
           .if(isVerified) {
             $0.leftImage(image: Theme.shared.image.relyingPartyVerified)
           }
-
-        VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
-          Text(title)
-            .typography(Theme.shared.font.bodyMedium)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-          Text(footer)
-            .typography(Theme.shared.font.bodyMedium)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-        }
       }
       .padding(.all, SPACING_MEDIUM)
     }
@@ -93,24 +78,18 @@ public struct CardViewWithLogo: View {
     CardViewWithLogo(
       icon: Image(systemName: "building.2.crop.circle.fill")
         .renderingMode(.original),
-      title: "Hellenic Government",
-      subtitle: "Government agency",
-      footer: "Athens - Greece"
+      title: "Hellenic Government"
     )
 
     CardViewWithLogo(
       icon: Image(systemName: "building.2.crop.circle.fill"),
-      title: "Another Organization",
-      subtitle: "Non-Government agency",
-      footer: "Athens - Greece"
+      title: "Another Organization"
     )
 
     CardViewWithLogo(
       backgroundColor: Theme.shared.color.tertiary,
       icon: Image(systemName: "building.2.crop.circle.fill"),
       title: "Another Organization",
-      subtitle: "Non-Government agency",
-      footer: "Athens - Greece",
       isVerified: true
     )
   }

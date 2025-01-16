@@ -27,6 +27,7 @@ public struct ListItemData: Identifiable {
   public let mainStyle: MainStyle
   public let overlineText: String?
   public let supportingText: String?
+  public let supportingTextColor: Color
   public let overlineTextColor: Color
   public let leadingIcon: Image?
   public let isBlur: Bool
@@ -38,6 +39,7 @@ public struct ListItemData: Identifiable {
     mainStyle: MainStyle = .plain,
     overlineText: String? = nil,
     supportingText: String? = nil,
+    supportingTextColor: Color = Theme.shared.color.onSurfaceVariant,
     overlineTextColor: Color = Theme.shared.color.onSurfaceVariant,
     leadingIcon: Image? = nil,
     isBlur: Bool = false,
@@ -48,6 +50,7 @@ public struct ListItemData: Identifiable {
     self.mainStyle = mainStyle
     self.overlineText = overlineText
     self.supportingText = supportingText
+    self.supportingTextColor = supportingTextColor
     self.overlineTextColor = overlineTextColor
     self.leadingIcon = leadingIcon
     self.trailingContent = trailingContent

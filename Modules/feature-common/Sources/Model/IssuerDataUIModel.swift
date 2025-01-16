@@ -19,8 +19,6 @@ import logic_resources
 public struct IssuerDataUIModel: Sendable, Equatable {
   public let icon: Image
   public let title: String
-  public let subtitle: String
-  public let caption: String
   public let isVerified: Bool
 
   public init(
@@ -32,8 +30,6 @@ public struct IssuerDataUIModel: Sendable, Equatable {
   ) {
     self.icon = icon
     self.title = title
-    self.subtitle = subtitle
-    self.caption = caption
     self.isVerified = isVerified
   }
 
@@ -41,8 +37,6 @@ public struct IssuerDataUIModel: Sendable, Equatable {
     IssuerDataUIModel(
       icon: Theme.shared.image.issuerCardImagePlaceholder,
       title: "",
-      subtitle: "",
-      caption: "",
       isVerified: true
     )
   }
