@@ -103,7 +103,7 @@ struct CustomSearchBar: UIViewRepresentable {
     searchBar.autocapitalizationType = .none
 
     searchBar.backgroundImage = UIImage()
-    searchBar.searchTextField.backgroundColor = .white
+    searchBar.searchTextField.backgroundColor = UIColor(Theme.shared.color.background)
 
     return searchBar
   }

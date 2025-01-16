@@ -69,6 +69,7 @@ public struct ContentScreenView<Content: View>: View {
         }
       }
     }
+    .navigationBarHidden(errorConfig == nil ? false : true)
     .if(navigationTitle != nil) {
       $0.navigationTitle(navigationTitle ?? "")
     }
