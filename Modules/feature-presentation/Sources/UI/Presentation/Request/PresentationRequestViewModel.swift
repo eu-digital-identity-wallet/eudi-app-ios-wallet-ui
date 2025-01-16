@@ -145,13 +145,3 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     Task { await doWork() }
   }
 }
-
-extension Array where Element == RequestDataUI {
-  func filterSelectedRows() -> [RequestDataUI] {
-    self.map { ui in
-      var filteredUI = ui
-      filteredUI.requestDataRow = ui.requestDataRow?.filter { $0.isSelected }
-      return filteredUI
-    }
-  }
-}
