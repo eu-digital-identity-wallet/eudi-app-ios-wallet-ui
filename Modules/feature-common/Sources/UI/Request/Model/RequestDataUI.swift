@@ -169,6 +169,15 @@ public extension Array where Element == RequestDataUI {
 }
 
 public extension Array where Element == RequestDataUI {
+
+  func filterSelectedRows() -> [RequestDataUI] {
+    self.map { ui in
+      var filteredUI = ui
+      filteredUI.requestDataRow = ui.requestDataRow?.filter { $0.isSelected }
+      return filteredUI
+    }
+  }
+
   func toModels() -> [RequestDataUIModel] {
     var result = [RequestDataUIModel]()
 

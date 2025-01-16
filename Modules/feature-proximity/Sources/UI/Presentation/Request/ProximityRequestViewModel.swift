@@ -107,7 +107,8 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
                   .proximityLoader(
                     getRelyingParty(),
                     presentationCoordinator: proximitySessionCoordinator,
-                    originator: getOriginator()
+                    originator: getOriginator(),
+                    viewState.items.filterSelectedRows()
                   )
                 )
               ),

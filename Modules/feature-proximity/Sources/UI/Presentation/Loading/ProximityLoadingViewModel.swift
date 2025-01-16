@@ -21,15 +21,24 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   private let interactor: ProximityInteractor
   private let relyingParty: String
   private var publisherTask: Task<Void, Error>?
+  private let requestItems: [RequestDataUI]
 
   init(
     router: Router,
     interactor: ProximityInteractor,
     relyingParty: String,
-    originator: AppRoute
+    originator: AppRoute,
+    requestItems: [any UIModel]
   ) {
+    guard
+      let requestItems = requestItems as? [RequestDataUI]
+    else {
+      fatalError("ProximityLoadingViewModel:: Invalid configuraton")
+    }
+
     self.interactor = interactor
     self.relyingParty = relyingParty
+    self.requestItems = requestItems
     super.init(router: router, originator: originator, cancellationTimeout: 5)
   }
 
@@ -62,20 +71,13 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
 
   private func getOnSuccessRoute() -> AppRoute {
     publisherTask?.cancel()
-    return .featureCommonModule(
-      .success(
-        config: UIConfig.Success(
-          title: .init(value: .success),
-          subtitle: .requestDataShareSuccess([relyingParty]),
-          buttons: [
-            .init(
-              title: .okButton,
-              style: .primary,
-              navigationType: .pop(screen: getOriginator())
-            )
-          ],
-          visualKind: .defaultIcon
-        )
+    return .featurePresentationModule(
+      .presentationSuccess(
+        config: PresentationSuccessUIConfig(
+          successNavigation: .pop(screen: getOriginator()),
+          relyingParty: relyingParty
+        ),
+        requestItems
       )
     )
   }
