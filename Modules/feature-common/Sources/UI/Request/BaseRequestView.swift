@@ -188,7 +188,7 @@ private func content(
                   WrapListItemView(
                     listItem: ListItemData(
                       mainText: item.title,
-                      leadingIcon: image,
+                      leadingIcon: (nil, image),
                       isBlur: item.isVisible,
                       trailingContent: .checkbox(
                         item.isEnabled,
@@ -223,7 +223,7 @@ private func content(
                   WrapListItemView(
                     listItem: ListItemData(
                       mainText: item.title,
-                      leadingIcon: image,
+                      leadingIcon: (nil, image),
                       isBlur: item.isVisible,
                       trailingContent: .checkbox(
                         false,

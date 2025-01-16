@@ -37,10 +37,23 @@ public struct WrapListItemView: View {
   public var body: some View {
     HStack(alignment: .center, spacing: SPACING_MEDIUM) {
       if let leadingIcon = listItem.leadingIcon {
-        leadingIcon
-          .resizable()
-          .scaledToFit()
-          .frame(width: 40, height: 40)
+
+        AsyncImage(
+          url: listItem.leadingIcon?.0
+        ) { image in
+         image
+            .resizable()
+            .scaledToFit()
+        } placeholder: {
+          if let leadingIconPlaceholder = leadingIcon.1 {
+            leadingIconPlaceholder
+              .resizable()
+              .scaledToFit()
+              .frame(width: 40, height: 40)
+          }
+        }
+        .frame(width: 40, height: 40)
+        .clipShape(Circle())
       }
 
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
@@ -111,7 +124,7 @@ public struct WrapListItemView: View {
           mainText: "Main Text",
           overlineText: "Overline Text",
           supportingText: "Valid until: 22 March 2030",
-          leadingIcon: Image(systemName: "star"),
+          leadingIcon: (nil, Image(systemName: "star")),
           trailingContent: .icon(Image(systemName: "chevron.right"))
         ),
         action: {}
@@ -135,7 +148,7 @@ public struct WrapListItemView: View {
           mainText: "Another Item",
           overlineText: nil,
           supportingText: "Additional Info",
-          leadingIcon: Image(systemName: "heart")
+          leadingIcon: (nil, Image(systemName: "heart"))
         )
       )
     }
@@ -147,7 +160,7 @@ public struct WrapListItemView: View {
           overlineText: "Overline Texr",
           supportingText: "Additional Info",
           overlineTextColor: Theme.shared.color.error,
-          leadingIcon: Image(systemName: "heart")
+          leadingIcon: (nil, Image(systemName: "heart"))
         )
       )
     }
@@ -158,7 +171,7 @@ public struct WrapListItemView: View {
           mainText: "Main Text",
           overlineText: "Overline Text",
           supportingText: "Valid until: 22 March 2030",
-          leadingIcon: Image(systemName: "star"),
+          leadingIcon: (nil, Image(systemName: "star")),
           trailingContent: .checkbox(true, true) { _ in }
         ),
         action: {}

@@ -135,7 +135,7 @@ private func document(
               case .image(let image):
                   .init(
                     mainText: field.title,
-                    leadingIcon: image
+                    leadingIcon: (nil, image)
                   )
               }
             })

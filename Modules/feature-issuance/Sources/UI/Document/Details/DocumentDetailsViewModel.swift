@@ -114,25 +114,21 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
       switch viewState.config.flow {
       case .extraDocument:
         self.setState {
-          $0
-            .copy(
-              document: document,
-              isLoading: false,
-              hasDeleteAction: true,
-              documentFieldsCount: document.documentFields.count
-            )
-            .copy(error: nil)
+          $0.copy(
+            document: document,
+            isLoading: false,
+            hasDeleteAction: true,
+            documentFieldsCount: document.documentFields.count
+          ).copy(error: nil)
         }
       case .noDocument:
         self.setState {
-          $0
-            .copy(
-              document: document,
-              isLoading: false,
-              hasDeleteAction: false,
-              documentFieldsCount: document.documentFields.count
-            )
-            .copy(error: nil)
+          $0.copy(
+            document: document,
+            isLoading: false,
+            hasDeleteAction: false,
+            documentFieldsCount: document.documentFields.count
+          ).copy(error: nil)
         }
       }
 

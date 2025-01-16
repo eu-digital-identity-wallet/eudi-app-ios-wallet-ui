@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import SwiftUI
 import logic_core
 import logic_resources
 import logic_business
@@ -35,14 +36,21 @@ public extension DocumentUIModel {
 
   struct Value: Equatable, Sendable {
 
+    public struct RemoteImage: Equatable, Sendable {
+      public let url: URL?
+      public let placeholder: Image?
+    }
+
     @EquatableNoop
     public var id: String
 
+    public let heading: String
     public let title: String
     public var createdAt: Date
     public let expiresAt: String?
     public let hasExpired: Bool
     public let state: State
+    public let image: RemoteImage?
   }
 
   static func mocks() -> [DocumentUIModel] {
@@ -51,110 +59,160 @@ public extension DocumentUIModel {
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          heading: "Issuer Name",
           title: "Digital ID",
           createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: URL(string: "https://www.example.com"),
+            placeholder: Theme.shared.image.logo
+          )
         )
       ),
       .init(
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          heading: "Issuer Name",
           title: "EUDI Conference",
           createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: URL(string: "https://www.example.com"),
+            placeholder: Theme.shared.image.logo
+          )
         )
       ),
       .init(
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          heading: "Issuer Name",
           title: "Passport",
           createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: URL(string: "https://www.example.com"),
+            placeholder: Theme.shared.image.logo
+          )
         )
       ),
       .init(
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          heading: "Issuer Name",
           title: "Document 1",
           createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: URL(string: "https://www.example.com"),
+            placeholder: Theme.shared.image.logo
+          )
         )
       ),
       .init(
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          heading: "Issuer Name",
           title: "Document 2",
           createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: URL(string: "https://www.example.com"),
+            placeholder: Theme.shared.image.logo
+          )
         )
       ),
       .init(
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          heading: "Issuer Name",
           title: "Document 3",
           createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: URL(string: "https://www.example.com"),
+            placeholder: Theme.shared.image.logo
+          )
         )
       ),
       .init(
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          heading: "Issuer Name",
           title: "Document 4",
           createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: URL(string: "https://www.example.com"),
+            placeholder: Theme.shared.image.logo
+          )
         )
       ),
       .init(
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          heading: "Issuer Name",
           title: "Document 5",
           createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: URL(string: "https://www.example.com"),
+            placeholder: Theme.shared.image.logo
+          )
         )
       ),
       .init(
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          heading: "Issuer Name",
           title: "Document 6",
           createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: URL(string: "https://www.example.com"),
+            placeholder: Theme.shared.image.logo
+          )
         )
       ),
       .init(
         id: UUID().uuidString,
         value: .init(
           id: UUID().uuidString,
+          heading: "Issuer Name",
           title: "Passport",
           createdAt: Date(),
           expiresAt: "22/01/2025",
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: URL(string: "https://www.example.com"),
+            placeholder: Theme.shared.image.logo
+          )
         )
       )
     ]
@@ -183,6 +241,7 @@ extension DocClaimsDecodable {
       id: UUID().uuidString,
       value: .init(
         id: self.id,
+        heading: issuerDisplay?.first?.name.orEmpty ?? "",
         title: self.displayName.orEmpty,
         createdAt: self.createdAt,
         expiresAt: self.getExpiryDate(
@@ -196,9 +255,13 @@ extension DocClaimsDecodable {
         hasExpired: self.hasExpired(
           parser: { Locale.current.parseDate(date: $0) }
         ),
-        state: failedDocuments.contains(where: { $0 == self.id })
-        ? .failed
-        : (self is DeferrredDocument) ? .pending : .issued
+        state: failedDocuments.contains(
+          where: { $0 == self.id }
+        ) ? .failed : (self is DeferrredDocument) ? .pending : .issued,
+        image: .init(
+          url: self.issuerDisplay?.first?.logo?.uri,
+          placeholder: Theme.shared.image.logo
+        )
       )
     )
   }
