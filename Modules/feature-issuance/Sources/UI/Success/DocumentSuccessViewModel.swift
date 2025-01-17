@@ -25,7 +25,6 @@ struct DocumentSuccessState: ViewState {
   let config: IssuanceFlowUiConfig
   let documentIdentifiers: [String]
   let documents: [DocumentDetailsUIModel]
-  let issuerData: IssuerDataUIModel
   let isLoading: Bool
   let error: ContentErrorView.Config?
 }
@@ -59,7 +58,6 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
         config: config,
         documentIdentifiers: documentIdentifiers,
         documents: [DocumentDetailsUIModel.mock()],
-        issuerData: IssuerDataUIModel.mock(),
         isLoading: true,
         error: nil
       )
@@ -68,7 +66,6 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
   func initialize() async {
     await fetchDocumentDetails()
-    await fetchIssuerData()
 
     if let first = viewState.documentIdentifiers.first {
       setState {
@@ -125,21 +122,6 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
           isLoading: false
         )
       }
-    }
-  }
-
-  func fetchIssuerData() async {
-    let issuer = IssuerDataUIModel(
-      icon: Theme.shared.image.issuerCardImagePlaceholder,
-      title: "Another Organization",
-      subtitle: "Non-Government agency",
-      caption: "Athens - Greece",
-      isVerified: true
-    )
-    self.setState {
-      $0.copy(
-        issuerData: issuer
-      )
     }
   }
 }

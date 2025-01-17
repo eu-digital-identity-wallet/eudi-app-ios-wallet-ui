@@ -17,14 +17,14 @@ import SwiftUI
 import logic_resources
 
 public struct PlainWithLogoView: View {
-  private let icon: Image
+  private let icon: RemoteImageView.ImageContentOption
   private let title: String
   private let isVerified: Bool
   private let isLoading: Bool
   private let action: (() -> Void)?
 
   public init(
-    icon: Image,
+    icon: RemoteImageView.ImageContentOption,
     title: String,
     isVerified: Bool = false,
     isLoading: Bool = false,
@@ -40,11 +40,25 @@ public struct PlainWithLogoView: View {
   public var body: some View {
     VStack(alignment: .leading, spacing: SPACING_SMALL) {
 
-      icon
-        .resizable()
-        .aspectRatio(contentMode: .fit)
-        .frame(height: Theme.shared.dimension.smallImageHeight)
+      switch self.icon {
+      case .none: EmptyView()
+      case .remoteImage(let url, let image):
+        RemoteImageView(
+          url: url,
+          icon: image,
+          size: .init(
+            width: Theme.shared.dimension.remoteImageIconSize,
+            height: Theme.shared.dimension.remoteImageIconSize
+          )
+        )
         .frame(maxWidth: .infinity, alignment: .center)
+      case .image(let image):
+        image
+          .resizable()
+          .aspectRatio(contentMode: .fit)
+          .frame(height: Theme.shared.dimension.smallImageHeight)
+          .frame(maxWidth: .infinity, alignment: .center)
+      }
 
       VStack(alignment: .center, spacing: SPACING_SMALL) {
         Text(title)
@@ -67,18 +81,32 @@ public struct PlainWithLogoView: View {
 #Preview {
   VStack(spacing: 16) {
     PlainWithLogoView(
-      icon: Image(systemName: "building.2.crop.circle.fill")
-        .renderingMode(.original),
+      icon: .image(
+        Image(
+          systemName: "building.2.crop.circle.fill"
+        )
+        .renderingMode(.original)
+      ),
       title: "Hellenic Government"
     )
 
     PlainWithLogoView(
-      icon: Image(systemName: "building.2.crop.circle.fill"),
+      icon: .image(
+        Image(
+          systemName: "building.2.crop.circle.fill"
+        )
+        .renderingMode(.original)
+      ),
       title: "Another Organization"
     )
 
     PlainWithLogoView(
-      icon: Image(systemName: "building.2.crop.circle.fill"),
+      icon: .image(
+        Image(
+          systemName: "building.2.crop.circle.fill"
+        )
+        .renderingMode(.original)
+      ),
       title: "Another Organization",
       isVerified: true
     )

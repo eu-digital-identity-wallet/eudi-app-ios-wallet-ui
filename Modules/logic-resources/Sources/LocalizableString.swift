@@ -189,6 +189,8 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "unknown_verifier")
       case .unknownIssuer:
         bundle.localizedString(forKey: "unknown_issuer")
+      case .genericIssuer:
+        bundle.localizedString(forKey: "generic_issuer")
       case .yes:
         bundle.localizedString(forKey: "yes")
       case .no:
@@ -484,6 +486,7 @@ public extension LocalizableString {
     case issuerWantWalletAddition
     case unknownVerifier
     case unknownIssuer
+    case genericIssuer
     case issuer
     case yes
     case no

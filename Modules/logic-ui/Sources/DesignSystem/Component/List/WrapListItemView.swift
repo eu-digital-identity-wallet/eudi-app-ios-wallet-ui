@@ -36,24 +36,25 @@ public struct WrapListItemView: View {
 
   public var body: some View {
     HStack(alignment: .center, spacing: SPACING_MEDIUM) {
-      if let leadingIcon = listItem.leadingIcon {
 
-        AsyncImage(
-          url: listItem.leadingIcon?.0
-        ) { image in
-         image
+      if let url = listItem.leadingIcon?.url {
+        RemoteImageView(
+          url: url,
+          icon: listItem.leadingIcon?.icon,
+          size: .init(
+            width: Theme.shared.dimension.remoteImageIconSize,
+            height: Theme.shared.dimension.remoteImageIconSize
+          )
+        )
+      } else if let icon = listItem.leadingIcon?.icon {
+        HStack {
+          icon
             .resizable()
-            .scaledToFit()
-        } placeholder: {
-          if let leadingIconPlaceholder = leadingIcon.1 {
-            leadingIconPlaceholder
-              .resizable()
-              .scaledToFit()
-              .frame(width: 40, height: 40)
-          }
+            .aspectRatio(contentMode: .fit)
+            .frame(height: Theme.shared.dimension.remoteImageIconSize)
+          Spacer()
         }
-        .frame(width: 40, height: 40)
-        .clipShape(Circle())
+        .frame(maxWidth: .infinity, alignment: .leading)
       }
 
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {

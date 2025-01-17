@@ -89,7 +89,6 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     )
     .task {
       await self.viewModel.fetchDocumentDetails()
-      await self.viewModel.fetchIssuerData()
       await viewModel.bookmarked()
     }
   }
@@ -170,17 +169,24 @@ private func content(
       }
       .shimmer(isLoading: viewState.isLoading)
 
-      Text(.unknownIssuer)
-        .font(Theme.shared.font.labelSmall.font)
-        .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-        .frame(maxWidth: .infinity, alignment: .leading)
+      if let issuer = viewState.document.issuer {
+        Group {
+          Text(.genericIssuer)
+            .font(Theme.shared.font.labelSmall.font)
+            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-      CardViewWithLogo(
-        icon: viewState.issuerData.icon,
-        title: viewState.issuerData.title,
-        isVerified: viewState.issuerData.isVerified
-      ) {
-        showAlert()
+          CardViewWithLogo(
+            title: issuer.name,
+            isVerified: issuer.isVerified
+          ) {
+            showAlert()
+          }
+          .if(isVisible) {
+            $0.blur(radius: 4, opaque: false)
+          }
+        }
+        .shimmer(isLoading: viewState.isLoading)
       }
 
       if viewState.hasDeleteAction {
@@ -209,7 +215,6 @@ private func content(
 #Preview {
   let viewState = DocumentDetailsViewState(
     document: DocumentDetailsUIModel.mock(),
-    issuerData: IssuerDataUIModel.mock(),
     isLoading: false,
     error: nil,
     config: IssuanceDetailUiConfig(flow: .extraDocument(["documentId"])),

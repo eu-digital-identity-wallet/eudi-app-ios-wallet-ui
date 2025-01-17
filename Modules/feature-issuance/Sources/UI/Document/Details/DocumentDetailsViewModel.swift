@@ -22,7 +22,6 @@ import logic_core
 @Copyable
 struct DocumentDetailsViewState: ViewState {
   let document: DocumentDetailsUIModel
-  let issuerData: IssuerDataUIModel
   let isLoading: Bool
   let error: ContentErrorView.Config?
   let config: IssuanceDetailUiConfig
@@ -66,7 +65,6 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
       router: router,
       initialState: .init(
         document: DocumentDetailsUIModel.mock(),
-        issuerData: IssuerDataUIModel.mock(),
         isLoading: true,
         error: nil,
         config: config,
@@ -142,21 +140,6 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
           )
         )
       }
-    }
-  }
-
-  func fetchIssuerData() async {
-    let issuer = IssuerDataUIModel(
-      icon: Theme.shared.image.issuerCardImagePlaceholder,
-      title: "Another Organization",
-      subtitle: "Non-Government agency",
-      caption: "Athens - Greece",
-      isVerified: true
-    )
-    self.setState {
-      $0.copy(
-        issuerData: issuer
-      )
     }
   }
 
