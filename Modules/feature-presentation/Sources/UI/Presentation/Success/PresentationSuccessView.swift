@@ -93,7 +93,8 @@ private func content(
     VSpacer.large()
 
     documents(
-      viewState: viewState
+      viewState: viewState,
+      onSelectionChanged: { _ in }
     )
 
     Spacer()
@@ -102,63 +103,90 @@ private func content(
 
 @MainActor
 @ViewBuilder
-private func documents(viewState: PresentationSuccessState) -> some View {
+private func documents(
+  viewState: PresentationSuccessState,
+  ignoreTrainingContent: Bool = true,
+  onSelectionChanged: @escaping (String) -> Void
+) -> some View {
   if !viewState.items.isEmpty {
     VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
       ForEach(viewState.items, id: \.id) { section in
         ExpandableCardView(
-          backgroundColor: Theme.shared.color.tertiary,
           title: section.requestDataSection.title,
           subtitle: LocalizableString.shared.get(with: .viewDetails)
         ) {
           ForEach(section.requestDataRow ?? [], id: \.id) { item in
-            if item.isSelected {
-              switch item.value {
-              case .string(let value):
-                WrapListItemView(
-                  listItem: ListItemData(
-                    mainText: value,
-                    overlineText: item.title
-                  )
+            switch item.value {
+            case .string(let value):
+              WrapListItemView(
+                listItem: ListItemData(
+                  mainText: value,
+                  overlineText: item.title,
+                  isBlur: item.isVisible,
+                  trailingContent: ignoreTrainingContent ? .none : .checkbox(
+                    item.isEnabled,
+                    item.isSelected
+                  ) { _ in
+                    onSelectionChanged(item.id)
+                  }
                 )
-              case .image(let image):
-                WrapListItemView(
-                  listItem: ListItemData(
-                    mainText: item.title,
-                    leadingIcon: image
-                  )
+              )
+            case .image(let image):
+              WrapListItemView(
+                listItem: ListItemData(
+                  mainText: item.title,
+                  leadingIcon: (nil, image),
+                  isBlur: item.isVisible,
+                  trailingContent: ignoreTrainingContent ? .none : .checkbox(
+                    item.isEnabled,
+                    item.isSelected
+                  ) { _ in
+                    onSelectionChanged(item.id)
+                  }
                 )
-              }
-              Divider()
-                .padding(.horizontal, SPACING_MEDIUM)
-                .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
+              )
             }
+            Divider()
+              .padding(.horizontal, SPACING_MEDIUM)
+              .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
           }
-
           ForEach(section.requestDataVerification ?? [], id: \.id) { item in
-            if item.isSelected {
-              switch item.value {
-              case .string(let value):
-                WrapListItemView(
-                  listItem: ListItemData(
-                    mainText: value,
-                    overlineText: item.title
-                  )
+            switch item.value {
+            case .string(let value):
+              WrapListItemView(
+                listItem: ListItemData(
+                  mainText: value,
+                  overlineText: item.title,
+                  isBlur: item.isVisible,
+                  trailingContent: ignoreTrainingContent ? .none : .checkbox(
+                    false,
+                    item.isSelected
+                  ) { _ in
+                    onSelectionChanged(item.id)
+                  }
                 )
-              case .image(let image):
-                WrapListItemView(
-                  listItem: ListItemData(
-                    mainText: item.title,
-                    leadingIcon: image
-                  )
+              )
+            case .image(let image):
+              WrapListItemView(
+                listItem: ListItemData(
+                  mainText: item.title,
+                  leadingIcon: (nil, image),
+                  isBlur: item.isVisible,
+                  trailingContent: .checkbox(
+                    false,
+                    item.isSelected
+                  ) { _ in
+                    onSelectionChanged(item.id)
+                  }
                 )
-              }
-              Divider()
-                .padding(.horizontal, SPACING_MEDIUM)
-                .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
+              )
             }
+            Divider()
+              .padding(.horizontal, SPACING_MEDIUM)
+              .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
           }
         }
+        .shimmer(isLoading: viewState.isLoading)
       }
     }
   }

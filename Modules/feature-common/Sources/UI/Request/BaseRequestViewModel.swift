@@ -137,7 +137,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   }
 
   public func onReceivedItems(
-    with items: [RequestDataUIModel],
+    with items: [RequestDataUI],
     title: LocalizableString.Key,
     relyingParty: String,
     isTrusted: Bool
@@ -146,11 +146,11 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       $0
         .copy(
           isLoading: false,
-          items: RequestDataUI.from(models: items),
+          items: items,
           title: title,
           relyingParty: relyingParty,
           isTrusted: isTrusted,
-          allowShare: canShare(with: RequestDataUI.from(models: items)),
+          allowShare: canShare(with: items),
           initialized: true
         )
         .copy(error: nil)

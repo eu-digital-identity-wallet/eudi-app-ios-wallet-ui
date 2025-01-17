@@ -113,7 +113,8 @@ public indirect enum FeatureProximityRouteModule: AppRouteModule {
   case proximityLoader(
     String,
     presentationCoordinator: ProximitySessionCoordinator,
-    originator: AppRoute
+    originator: AppRoute,
+    [any UIModel]
   )
 
   public var info: (key: String, arguments: [String: String]) {
@@ -122,7 +123,7 @@ public indirect enum FeatureProximityRouteModule: AppRouteModule {
       (key: "ProximityConnection", arguments: ["originator": originator.info.key])
     case .proximityRequest(_, let originator):
       (key: "ProximityRequest", arguments: ["originator": originator.info.key])
-    case .proximityLoader(let id, _, let originator):
+    case .proximityLoader(let id, _, let originator, _):
       (key: "ProximityLoader", arguments: ["id": id, "originator": originator.info.key])
     }
   }
