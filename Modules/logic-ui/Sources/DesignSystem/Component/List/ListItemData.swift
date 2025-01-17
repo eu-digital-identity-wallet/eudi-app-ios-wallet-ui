@@ -29,7 +29,7 @@ public struct ListItemData: Identifiable {
   public let supportingText: String?
   public let supportingTextColor: Color
   public let overlineTextColor: Color
-  public let leadingIcon: (url: URL?, icon: Image?)?
+  public let leadingIcon: (imageUrl: URL?, image: Image?)?
   public let isBlur: Bool
   public let trailingContent: TrailingContent?
 
@@ -41,7 +41,7 @@ public struct ListItemData: Identifiable {
     supportingText: String? = nil,
     supportingTextColor: Color = Theme.shared.color.onSurfaceVariant,
     overlineTextColor: Color = Theme.shared.color.onSurfaceVariant,
-    leadingIcon: (url: URL?, icon: Image?)? = nil,
+    leadingIcon: (imageUrl: URL?, image: Image?)? = nil,
     isBlur: Bool = false,
     trailingContent: TrailingContent? = nil
   ) {
@@ -59,7 +59,7 @@ public struct ListItemData: Identifiable {
 }
 
 public enum TrailingContent {
-  case icon(Image)
+  case icon(Image, Color = Color.accentColor)
   case checkbox(Bool, Bool, (Bool) -> Void)
   case empty
 }

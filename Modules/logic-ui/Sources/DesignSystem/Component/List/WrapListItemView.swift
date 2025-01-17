@@ -37,16 +37,16 @@ public struct WrapListItemView: View {
   public var body: some View {
     HStack(alignment: .center, spacing: SPACING_MEDIUM) {
 
-      if let url = listItem.leadingIcon?.url {
+      if let url = listItem.leadingIcon?.imageUrl {
         RemoteImageView(
           url: url,
-          icon: listItem.leadingIcon?.icon,
+          icon: listItem.leadingIcon?.image,
           size: .init(
             width: Theme.shared.dimension.remoteImageIconSize,
             height: Theme.shared.dimension.remoteImageIconSize
           )
         )
-      } else if let icon = listItem.leadingIcon?.icon {
+      } else if let icon = listItem.leadingIcon?.image {
         HStack {
           icon
             .resizable()
@@ -58,7 +58,7 @@ public struct WrapListItemView: View {
       }
 
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
-        if let overlineText = listItem.overlineText {
+        if let overlineText = listItem.overlineText, !overlineText.isEmpty {
           Text(overlineText)
             .font(Theme.shared.font.labelMedium.font)
             .foregroundStyle(listItem.overlineTextColor)
@@ -70,13 +70,14 @@ public struct WrapListItemView: View {
           .font(Theme.shared.font.bodyLarge.font)
           .foregroundStyle(Theme.shared.color.onSurface)
           .fontWeight(listItem.mainStyle == .plain ? .medium : .bold)
-          .lineLimit(1)
+          .lineLimit(nil)
+          .multilineTextAlignment(.leading)
           .truncationMode(.tail)
           .if(listItem.isBlur) {
             $0.blur(radius: 4, opaque: false)
           }
 
-        if let supportingText = listItem.supportingText {
+        if let supportingText = listItem.supportingText, !supportingText.isEmpty {
           Text(supportingText)
             .font(Theme.shared.font.bodyMedium.font)
             .foregroundStyle(listItem.supportingTextColor)
@@ -88,12 +89,13 @@ public struct WrapListItemView: View {
 
       if let trailingContent = listItem.trailingContent {
         switch trailingContent {
-        case .icon(let image):
+        case .icon(let image, let color):
           image
+            .renderingMode(.template)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: 20, height: 20)
-            .foregroundColor(Color.accentColor)
+            .foregroundColor(color)
 
         case .checkbox(let enabled, let isChecked, let onToggle):
           WrapCheckbox(

@@ -13,7 +13,6 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import SwiftUI
 import logic_business
 import logic_core
@@ -39,73 +38,23 @@ public struct RequestDataUI: Identifiable, Equatable, Sendable, UIModel {
 }
 
 extension RequestDataUI {
-  public static func from(models: [RequestDataUIModel]) -> [RequestDataUI] {
-    var result = [RequestDataUI]()
-
-    var currentSection: RequestDataSection?
-    var currentRows = [RequestDataRow]()
-    var currentVerificationRows = [RequestDataRow]()
-
-    for model in models {
-      if let section = model.isDataSection {
-        // If we encounter a new section, save the current data and reset
-        if let previousSection = currentSection, !currentRows.isEmpty {
-          result.append(
-            RequestDataUI(
-              id: previousSection.id,
-              requestDataRow: currentRows,
-              requestDataSection: previousSection
-            )
-          )
-        }
-        currentSection = section
-        currentRows = []
-        currentVerificationRows = []
-      } else if let row = model.isDataRow {
-        currentRows.append(row)
-      } else if let row = model.isDataVerification {
-        currentVerificationRows = row.items
-      }
-    }
-
-    // Append the last section if it exists
-    if let lastSection = currentSection, !currentRows.isEmpty {
-      result.append(
-        RequestDataUI(
-          id: lastSection.id,
-          requestDataRow: currentRows,
-          requestDataSection: lastSection,
-          requestDataVerification: currentVerificationRows
-        )
-      )
-    }
-
-    return result
-  }
-}
-
-extension RequestDataUI {
   mutating func toggleContentVisibility(isVisible: Bool) {
-    // Update visibility for `requestDataRow`
     if var rows = requestDataRow {
       for index in rows.indices {
         rows[index].setVisible(isVisible)
       }
       self = RequestDataUI(
-//        id: id,
         requestDataRow: rows,
         requestDataSection: requestDataSection,
         requestDataVerification: requestDataVerification
       )
     }
 
-    // Update visibility for `requestDataVerification`
     if var verificationRows = requestDataVerification {
       for index in verificationRows.indices {
         verificationRows[index].setVisible(isVisible)
       }
       self = RequestDataUI(
-//        id: id,
         requestDataRow: requestDataRow,
         requestDataSection: requestDataSection,
         requestDataVerification: verificationRows
@@ -114,7 +63,6 @@ extension RequestDataUI {
   }
 
   mutating func toggleSelection(id: String) {
-    // Update visibility for `requestDataRow`
     if var rows = requestDataRow {
       for index in rows.indices {
         if rows[index].id == id {
@@ -129,7 +77,6 @@ extension RequestDataUI {
       )
     }
 
-    // Update visibility for `requestDataVerification`
     if var verificationRows = requestDataVerification {
       for index in verificationRows.indices {
         if verificationRows[index].id == id {
@@ -151,17 +98,17 @@ public extension Array where Element == RequestDataUI {
     return self.allSatisfy { requestDataUI in
       let allRowsSelected = requestDataUI.requestDataRow?.allSatisfy { row in
         if !row.isEnabled {
-          return true // Disabled rows are considered selected
+          return true
         }
         return row.isSelected
-      } ?? true // Default to true if `requestDataRow` is nil
+      } ?? true
 
       let allVerificationRowsSelected = requestDataUI.requestDataVerification?.allSatisfy { row in
         if !row.isEnabled {
-          return true // Disabled rows are considered selected
+          return true
         }
         return row.isSelected
-      } ?? true // Default to true if `requestDataVerification` is nil
+      } ?? true
 
       return allRowsSelected && allVerificationRowsSelected
     }
@@ -178,40 +125,19 @@ public extension Array where Element == RequestDataUI {
     }
   }
 
-  func toModels() -> [RequestDataUIModel] {
-    var result = [RequestDataUIModel]()
-
-    for data in self {
-      result.append(.requestDataSection(data.requestDataSection))
-      if let rows = data.requestDataRow {
-        result.append(contentsOf: rows.map { .requestDataRow($0) })
-      }
-      if let verificationRows = data.requestDataVerification {
-        let verificationModel = RequestDataVerification(title: "", items: verificationRows)
-        result.append(.requestDataVerification(verificationModel))
-      }
-    }
-
-    return result
-  }
-
   func canShare() -> Bool {
-    // Check if there are any selected verification items
     let hasVerificationItems = !self.compactMap { ui in
       ui.requestDataVerification?.first(where: { $0.isSelected })
     }.isEmpty
 
-    // Filter only data row items that are enabled
     let onlyDataRowItems: [RequestDataRow] = self.compactMap { ui in
       ui.requestDataRow?.filter { $0.isEnabled }
     }.flatMap { $0 } // Flatten to get a single array of rows
 
-    // Check if any of the data row items are selected
     let canShareDataRows = !onlyDataRowItems.map { $0.isSelected }
       .filter { $0 }
       .isEmpty
 
-    // Combine the conditions
     return hasVerificationItems || canShareDataRows
   }
 }
