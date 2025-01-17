@@ -23,6 +23,7 @@ public struct PresentationSuccessState: ViewState {
   let config: PresentationSuccessUIConfig
   let issuerData: IssuerDataUIModel
   let items: [RequestDataUI]
+  let isLoading: Bool
 }
 
 open class PresentationSuccessViewModel<Router: RouterHost>: ViewModel<Router, PresentationSuccessState> {
@@ -55,7 +56,8 @@ open class PresentationSuccessViewModel<Router: RouterHost>: ViewModel<Router, P
           title: config.relyingParty,
           isVerified: true
         ),
-        items: requestItems
+        items: requestItems,
+        isLoading: false
       )
     )
   }
