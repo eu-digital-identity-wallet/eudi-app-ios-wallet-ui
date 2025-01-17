@@ -20,6 +20,7 @@ struct SearchableModifier<Item: Identifiable>: ViewModifier {
   @Binding var searchText: String
   let items: [Item]
   let placeholder: String
+  let backgroundColor: Color?
   let onFilteredItems: ([Item]) -> Void
 
   func body(content: Content) -> some View {
@@ -29,6 +30,7 @@ struct SearchableModifier<Item: Identifiable>: ViewModifier {
         placeholder: placeholder
       )
       .padding(.horizontal)
+      .background(backgroundColor)
 
       content
         .onChange(of: searchText) { _ in
@@ -53,6 +55,7 @@ public extension View {
     searchText: Binding<String>,
     items: [Item],
     placeholder: String = "Search",
+    backgroundColor: Color? = nil,
     onFilteredItems: @escaping ([Item]) -> Void
   ) -> some View {
     modifier(
@@ -60,6 +63,7 @@ public extension View {
         searchText: searchText,
         items: items,
         placeholder: placeholder,
+        backgroundColor: backgroundColor,
         onFilteredItems: onFilteredItems
       )
     )
@@ -103,7 +107,7 @@ struct CustomSearchBar: UIViewRepresentable {
     searchBar.autocapitalizationType = .none
 
     searchBar.backgroundImage = UIImage()
-    searchBar.searchTextField.backgroundColor = UIColor(Theme.shared.color.background)
+    searchBar.searchTextField.backgroundColor = UIColor(Theme.shared.color.surfaceContainer)
 
     return searchBar
   }

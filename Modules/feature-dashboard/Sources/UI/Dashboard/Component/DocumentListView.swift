@@ -79,14 +79,15 @@ struct DocumentListView: View {
         .clipped()
       }
     }
-    .background(Theme.shared.color.background)
     .searchable(
       searchText: $searchText,
       items: items,
-      placeholder: LocalizableString.shared.get(with: .search)
+      placeholder: LocalizableString.shared.get(with: .search),
+      backgroundColor: Theme.shared.color.background
     ) { filtered in
       filteredItems = filtered
     }
+    .background(Theme.shared.color.background)
   }
 }
 
