@@ -46,15 +46,17 @@ public struct WrapListItemView: View {
             height: Theme.shared.dimension.remoteImageIconSize
           )
         )
-      } else if let icon = listItem.leadingIcon?.image {
-        HStack {
-          icon
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(height: Theme.shared.dimension.remoteImageIconSize)
-          Spacer()
+        .if(listItem.isBlur) {
+          $0.blur(radius: 4, opaque: false)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+      } else if let icon = listItem.leadingIcon?.image {
+        icon
+          .resizable()
+          .aspectRatio(contentMode: .fit)
+          .frame(height: Theme.shared.dimension.remoteImageIconSize)
+          .if(listItem.isBlur) {
+            $0.blur(radius: 4, opaque: false)
+          }
       }
 
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
