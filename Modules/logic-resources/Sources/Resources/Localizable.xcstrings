@@ -2111,6 +2111,17 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "View details"
+          }
+        }
+      }
+    },
+    "wallet_is_secured" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Your wallet is secured!"
           }
         }

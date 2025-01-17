@@ -53,7 +53,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   override func onShare() {
     Task {
 
-      let items = self.viewState.items.toModels()
+      let items = self.viewState.items
 
       let result = await Task.detached { () -> Result<RequestItemConvertible, Error> in
         return await self.interactor.onResponsePrepare(requestItems: items)
@@ -143,15 +143,5 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     resetState()
     interactor.updatePresentationCoordinator(with: session)
     Task { await doWork() }
-  }
-}
-
-extension Array where Element == RequestDataUI {
-  func filterSelectedRows() -> [RequestDataUI] {
-    self.map { ui in
-      var filteredUI = ui
-      filteredUI.requestDataRow = ui.requestDataRow?.filter { $0.isSelected }
-      return filteredUI
-    }
   }
 }

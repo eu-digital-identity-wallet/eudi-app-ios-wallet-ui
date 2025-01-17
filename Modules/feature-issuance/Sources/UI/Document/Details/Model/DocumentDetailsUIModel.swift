@@ -24,7 +24,6 @@ public struct DocumentDetailsUIModel: Sendable, Equatable, Identifiable {
   public let type: DocumentTypeIdentifier
   public let documentName: String
   public let holdersName: String
-  public let holdersImage: Image
   public let createdAt: Date
   public let hasExpired: Bool
   public let documentFields: [DocumentField]
@@ -50,7 +49,6 @@ public extension DocumentDetailsUIModel {
       type: DocumentTypeIdentifier.mDocPid,
       documentName: "Digital ID",
       holdersName: "Jane Doe",
-      holdersImage: Theme.shared.image.user,
       createdAt: Date(),
       hasExpired: false,
       documentFields:
@@ -118,7 +116,6 @@ extension DocClaimsDecodable {
       type: identifier,
       documentName: displayName.orEmpty,
       holdersName: bearerName,
-      holdersImage: getPortrait() ?? Theme.shared.image.user,
       createdAt: createdAt,
       hasExpired: hasExpired(
         parser: {
@@ -138,17 +135,6 @@ extension DocClaimsDecodable {
       let title = docClaim.displayName.ifNilOrEmpty { docClaim.name }
 
       if let uiImage = docClaim.dataValue.image {
-
-        guard docClaim.name != DocumentJsonKeys.PORTRAIT else {
-          partialResult.append(
-            .init(
-              id: uuid,
-              title: title,
-              value: .string(LocalizableString.shared.get(with: .shownAbove))
-            )
-          )
-          return
-        }
 
         partialResult.append(
           .init(

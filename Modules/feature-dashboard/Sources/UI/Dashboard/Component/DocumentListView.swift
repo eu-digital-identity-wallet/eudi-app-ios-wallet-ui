@@ -58,10 +58,13 @@ struct DocumentListView: View {
               WrapListItemView(
                 listItem: ListItemData(
                   mainText: item.value.title,
-                  overlineText: "(Placeholder) Hellenic Government",
+                  overlineText: item.value.heading,
                   supportingText: item.supportingText(),
                   supportingTextColor: item.supportingColor(),
-                  leadingIcon: Theme.shared.image.govLogo,
+                  leadingIcon: (
+                    item.value.image?.url,
+                    item.value.image?.placeholder
+                  ),
                   trailingContent: .icon(item.indicatorImage())
                 )
               ) {
@@ -76,14 +79,15 @@ struct DocumentListView: View {
         .clipped()
       }
     }
-    .background(Theme.shared.color.background)
     .searchable(
       searchText: $searchText,
       items: items,
-      placeholder: LocalizableString.shared.get(with: .search)
+      placeholder: LocalizableString.shared.get(with: .search),
+      backgroundColor: Theme.shared.color.background
     ) { filtered in
       filteredItems = filtered
     }
+    .background(Theme.shared.color.background)
   }
 }
 

@@ -37,14 +37,26 @@ public struct WrapListItemView: View {
   public var body: some View {
     HStack(alignment: .center, spacing: SPACING_MEDIUM) {
       if let leadingIcon = listItem.leadingIcon {
-        leadingIcon
-          .resizable()
-          .scaledToFit()
-          .frame(width: 40, height: 40)
+
+        AsyncImage(
+          url: listItem.leadingIcon?.imageUrl
+        ) { image in
+          image
+            .resizable()
+            .scaledToFit()
+        } placeholder: {
+          if let leadingIconPlaceholder = leadingIcon.image {
+            leadingIconPlaceholder
+              .resizable()
+              .scaledToFit()
+              .frame(width: 40, height: 40)
+          }
+        }
+        .frame(width: 40, height: 40)
       }
 
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
-        if let overlineText = listItem.overlineText {
+        if let overlineText = listItem.overlineText, !overlineText.isEmpty {
           Text(overlineText)
             .font(Theme.shared.font.labelMedium.font)
             .foregroundStyle(listItem.overlineTextColor)
@@ -56,13 +68,14 @@ public struct WrapListItemView: View {
           .font(Theme.shared.font.bodyLarge.font)
           .foregroundStyle(Theme.shared.color.onSurface)
           .fontWeight(listItem.mainStyle == .plain ? .medium : .bold)
-          .lineLimit(1)
+          .lineLimit(nil)
+          .multilineTextAlignment(.leading)
           .truncationMode(.tail)
           .if(listItem.isBlur) {
             $0.blur(radius: 4, opaque: false)
           }
 
-        if let supportingText = listItem.supportingText {
+        if let supportingText = listItem.supportingText, !supportingText.isEmpty {
           Text(supportingText)
             .font(Theme.shared.font.bodyMedium.font)
             .foregroundStyle(listItem.supportingTextColor)
@@ -89,6 +102,8 @@ public struct WrapListItemView: View {
               onCheckedChange: { _ in
                 onToggle(!isChecked)
               }))
+        case .empty:
+          EmptyView()
         }
       }
     }
@@ -111,7 +126,7 @@ public struct WrapListItemView: View {
           mainText: "Main Text",
           overlineText: "Overline Text",
           supportingText: "Valid until: 22 March 2030",
-          leadingIcon: Image(systemName: "star"),
+          leadingIcon: (nil, Image(systemName: "star")),
           trailingContent: .icon(Image(systemName: "chevron.right"))
         ),
         action: {}
@@ -135,7 +150,7 @@ public struct WrapListItemView: View {
           mainText: "Another Item",
           overlineText: nil,
           supportingText: "Additional Info",
-          leadingIcon: Image(systemName: "heart")
+          leadingIcon: (nil, Image(systemName: "heart"))
         )
       )
     }
@@ -147,7 +162,7 @@ public struct WrapListItemView: View {
           overlineText: "Overline Texr",
           supportingText: "Additional Info",
           overlineTextColor: Theme.shared.color.error,
-          leadingIcon: Image(systemName: "heart")
+          leadingIcon: (nil, Image(systemName: "heart"))
         )
       )
     }
@@ -158,7 +173,7 @@ public struct WrapListItemView: View {
           mainText: "Main Text",
           overlineText: "Overline Text",
           supportingText: "Valid until: 22 March 2030",
-          leadingIcon: Image(systemName: "star"),
+          leadingIcon: (nil, Image(systemName: "star")),
           trailingContent: .checkbox(true, true) { _ in }
         ),
         action: {}

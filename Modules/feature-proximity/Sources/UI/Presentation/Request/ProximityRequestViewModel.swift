@@ -72,7 +72,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   override func onShare() {
     Task {
 
-      let items = self.viewState.items.toModels()
+      let items = self.viewState.items
 
       let response = await Task.detached { () -> ProximityResponsePreparationPartialState in
         return await self.interactor.onResponsePrepare(requestItems: items)
@@ -107,7 +107,8 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
                   .proximityLoader(
                     getRelyingParty(),
                     presentationCoordinator: proximitySessionCoordinator,
-                    originator: getOriginator()
+                    originator: getOriginator(),
+                    viewState.items.filterSelectedRows()
                   )
                 )
               ),
