@@ -102,6 +102,8 @@ public struct WrapListItemView: View {
               onCheckedChange: { _ in
                 onToggle(!isChecked)
               }))
+        case .empty:
+          EmptyView()
         }
       }
     }
