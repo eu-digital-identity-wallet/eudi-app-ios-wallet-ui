@@ -87,12 +87,13 @@ public struct WrapListItemView: View {
 
       if let trailingContent = listItem.trailingContent {
         switch trailingContent {
-        case .icon(let image):
+        case .icon(let image, let color):
           image
+            .renderingMode(.template)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: 20, height: 20)
-            .foregroundColor(Color.accentColor)
+            .foregroundColor(color)
 
         case .checkbox(let enabled, let isChecked, let onToggle):
           WrapCheckbox(

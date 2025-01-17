@@ -213,7 +213,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     return .featureCommonModule(
       .success(
         config: UIConfig.Success(
-          title: .init(value: .inProgress, color: Theme.shared.color.warning),
+          title: .init(value: .inProgress, color: Theme.shared.color.pending),
           subtitle: .scopedIssuanceSuccessDeferredCaption,
           buttons: [
             .init(
