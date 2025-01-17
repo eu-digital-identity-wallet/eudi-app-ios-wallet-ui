@@ -35,7 +35,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       navigationTitle: LocalizableString.shared.get(with: .details),
       toolbarContent: ToolBarContent(
         trailingActions: [
-          Action(image: viewModel.isBookmarked ? Theme.shared.image.bookmarkIconFill : Theme.shared.image.bookmarkIcon) {
+          Action(image: viewModel.viewState.isBookmarked ? Theme.shared.image.bookmarkIconFill : Theme.shared.image.bookmarkIcon) {
             viewModel.saveBookmark(viewModel.viewState.document.id)
             viewModel.alertType = .bookmark
             viewModel.showAlert = true
@@ -98,7 +98,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     if viewModel.alertType == .issuer {
       return LocalizableString.shared.get(with: .trustedRelyingParty)
     } else {
-      if viewModel.isBookmarked {
+      if viewModel.viewState.isBookmarked {
         return LocalizableString.shared.get(with: .savedToFavorites)
       } else {
         return LocalizableString.shared.get(with: .removedFromFavorites)
@@ -110,7 +110,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     if viewModel.alertType == .issuer {
       return LocalizableString.shared.get(with: .trustedRelyingPartyDescription)
     } else {
-      if viewModel.isBookmarked {
+      if viewModel.viewState.isBookmarked {
         return LocalizableString.shared.get(with: .savedToFavoritesMessage)
       } else {
         return LocalizableString.shared.get(with: .removedFromFavoritesMessages)
@@ -214,7 +214,8 @@ private func content(
     error: nil,
     config: IssuanceDetailUiConfig(flow: .extraDocument(["documentId"])),
     hasDeleteAction: true,
-    documentFieldsCount: DocumentDetailsUIModel.mock().documentFields.count
+    documentFieldsCount: DocumentDetailsUIModel.mock().documentFields.count,
+    isBookmarked: true
   )
 
   ContentScreenView(

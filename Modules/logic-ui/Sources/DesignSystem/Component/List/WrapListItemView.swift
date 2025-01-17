@@ -39,13 +39,13 @@ public struct WrapListItemView: View {
       if let leadingIcon = listItem.leadingIcon {
 
         AsyncImage(
-          url: listItem.leadingIcon?.0
+          url: listItem.leadingIcon?.imageUrl
         ) { image in
-         image
+          image
             .resizable()
             .scaledToFit()
         } placeholder: {
-          if let leadingIconPlaceholder = leadingIcon.1 {
+          if let leadingIconPlaceholder = leadingIcon.image {
             leadingIconPlaceholder
               .resizable()
               .scaledToFit()
@@ -53,11 +53,10 @@ public struct WrapListItemView: View {
           }
         }
         .frame(width: 40, height: 40)
-        .clipShape(Circle())
       }
 
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
-        if let overlineText = listItem.overlineText {
+        if let overlineText = listItem.overlineText, !overlineText.isEmpty {
           Text(overlineText)
             .font(Theme.shared.font.labelMedium.font)
             .foregroundStyle(listItem.overlineTextColor)
@@ -69,13 +68,14 @@ public struct WrapListItemView: View {
           .font(Theme.shared.font.bodyLarge.font)
           .foregroundStyle(Theme.shared.color.onSurface)
           .fontWeight(listItem.mainStyle == .plain ? .medium : .bold)
-          .lineLimit(1)
+          .lineLimit(nil)
+          .multilineTextAlignment(.leading)
           .truncationMode(.tail)
           .if(listItem.isBlur) {
             $0.blur(radius: 4, opaque: false)
           }
 
-        if let supportingText = listItem.supportingText {
+        if let supportingText = listItem.supportingText, !supportingText.isEmpty {
           Text(supportingText)
             .font(Theme.shared.font.bodyMedium.font)
             .foregroundStyle(listItem.supportingTextColor)

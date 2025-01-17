@@ -28,6 +28,7 @@ struct DocumentDetailsViewState: ViewState {
   let config: IssuanceDetailUiConfig
   let hasDeleteAction: Bool
   let documentFieldsCount: Int
+  let isBookmarked: Bool
 
   var isCancellable: Bool {
     return config.isExtraDocument
@@ -43,7 +44,6 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   @Published var isDeletionModalShowing: Bool = false
   @Published var isVisible = true
   @Published var showAlert = false
-  @Published var isBookmarked = true
   @Published var alertType: AlertType?
 
   enum AlertType {
@@ -71,7 +71,8 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         error: nil,
         config: config,
         hasDeleteAction: false,
-        documentFieldsCount: 0
+        documentFieldsCount: 0,
+        isBookmarked: false
       )
     )
   }
@@ -194,21 +195,37 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
     do {
       _ = try await interactor.fetchBookmarks(documentId)
-      isBookmarked = true
+      self.setState {
+        $0.copy(
+          isBookmarked: true
+        )
+      }
     } catch {
-      isBookmarked = false
+      self.setState {
+        $0.copy(
+          isBookmarked: false
+        )
+      }
     }
   }
 
   func saveBookmark(_ identifier: String) {
     Task {
       do {
-        if isBookmarked {
+        if viewState.isBookmarked {
           try await interactor.delete(identifier)
-          isBookmarked = false
+          self.setState {
+            $0.copy(
+              isBookmarked: false
+            )
+          }
         } else {
           try await interactor.save(identifier)
-          isBookmarked = true
+          self.setState {
+            $0.copy(
+              isBookmarked: true
+            )
+          }
         }
       } catch {}
     }

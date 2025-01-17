@@ -29,7 +29,7 @@ public struct ListItemData: Identifiable {
   public let supportingText: String?
   public let supportingTextColor: Color
   public let overlineTextColor: Color
-  public let leadingIcon: (URL?, Image?)?
+  public let leadingIcon: (imageUrl: URL?, image: Image?)?
   public let isBlur: Bool
   public let trailingContent: TrailingContent?
 
