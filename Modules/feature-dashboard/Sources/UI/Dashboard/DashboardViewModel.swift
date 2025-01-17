@@ -80,6 +80,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   @Published var isSuccededDocumentsModalShowing: Bool = false
   @Published var selectedTab: SelectedTab = .home
   @Published var addDocument: Bool = false
+  @Published var showFiltersIndicator: Bool = false
 
   private var deferredTask: Task<DashboardDeferredPartialState, Error>?
 

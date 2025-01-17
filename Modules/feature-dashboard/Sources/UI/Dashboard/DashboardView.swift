@@ -64,8 +64,7 @@ struct DashboardView<Router: RouterHost>: View {
     }
     .sheet(isPresented: $viewModel.isFilterModalShowing) {
       FilterListView(
-        selectedOptions: $selectedOptions,
-        sortAscending: $sortAscending,
+        sortAscending: $sortAscending, selectedOptions: $selectedOptions,
         sections: viewModel.documentSections
       )
       .confirmationDialog(
@@ -240,7 +239,7 @@ struct DashboardView<Router: RouterHost>: View {
           Action(image: Theme.shared.image.plus) {
             viewModel.onAdd()
           },
-          Action(image: Theme.shared.image.filterMenuIcon) {
+          Action(image: Theme.shared.image.filterMenuIcon, hasIndicator: viewModel.showFiltersIndicator) {
             viewModel.showFilters()
           }
         ]
