@@ -29,6 +29,7 @@ struct DocumentSuccessView<Router: RouterHost>: View {
 
   var body: some View {
     ContentScreenView(
+      padding: .zero,
       allowBackGesture: false,
       navigationTitle: LocalizableString.shared.get(
         with: .documentAdded
@@ -61,44 +62,47 @@ private func content(
 ) -> some View {
   ScrollView {
 
-    ContentHeader(
-      config: ContentHeaderConfig(
-        appIconAndTextData: AppIconAndTextData(
-          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-          appText: ThemeManager.shared.image.euditext
+    VStack(spacing: .zero) {
+      ContentHeader(
+        config: ContentHeaderConfig(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          )
         )
       )
-    )
 
-    if let caption = viewState.caption {
-      HStack {
-        Text(caption)
-          .typography(Theme.shared.font.bodyMedium)
-          .multilineTextAlignment(.center)
-          .foregroundColor(Theme.shared.color.onSurfaceVariant)
-          .frame(maxWidth: .infinity, alignment: .center)
+      if let caption = viewState.caption {
+        HStack {
+          Text(caption)
+            .typography(Theme.shared.font.bodyMedium)
+            .multilineTextAlignment(.center)
+            .foregroundColor(Theme.shared.color.onSurfaceVariant)
+            .frame(maxWidth: .infinity, alignment: .center)
+        }
       }
-    }
 
-    VSpacer.medium()
+      VSpacer.medium()
 
-    if let document = viewState.documents.first,
-       let issuer = document.issuer {
-      PlainWithLogoView(
-        icon: .remoteImage(issuer.logoUrl, Theme.shared.image.logo),
-        title: issuer.name,
-        isVerified: viewState.documents.first?.issuer?.isVerified ?? false
+      if let document = viewState.documents.first,
+         let issuer = document.issuer {
+        PlainWithLogoView(
+          icon: .remoteImage(issuer.logoUrl, Theme.shared.image.logo),
+          title: issuer.name,
+          isVerified: viewState.documents.first?.issuer?.isVerified ?? false
+        )
+
+        VSpacer.largeMedium()
+      }
+
+      document(
+        holderName: viewState.holderName,
+        viewState: viewState
       )
 
-      VSpacer.largeMedium()
+      Spacer()
     }
-
-    document(
-      holderName: viewState.holderName,
-      viewState: viewState
-    )
-
-    Spacer()
+    .padding(.horizontal, Theme.shared.dimension.padding)
   }
 }
 
