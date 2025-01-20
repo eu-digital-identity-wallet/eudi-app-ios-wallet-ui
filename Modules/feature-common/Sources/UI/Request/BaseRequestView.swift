@@ -27,6 +27,7 @@ public struct BaseRequestView<Router: RouterHost>: View {
 
   public var body: some View {
     ContentScreenView(
+      canScroll: true,
       errorConfig: viewModel.viewState.error,
       navigationTitle: LocalizableString.shared.get(with: .dataSharingRequest),
       toolbarContent: ToolBarContent(
@@ -246,6 +247,7 @@ private func content(
           .typography(Theme.shared.font.bodySmall)
           .foregroundColor(Theme.shared.color.onSurface)
           .multilineTextAlignment(.leading)
+        VSpacer.medium()
       }
     }
   }
