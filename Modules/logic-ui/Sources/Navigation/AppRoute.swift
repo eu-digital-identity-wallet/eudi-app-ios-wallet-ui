@@ -113,6 +113,10 @@ public indirect enum FeatureProximityRouteModule: AppRouteModule {
     originator: AppRoute,
     [any UIModel]
   )
+  case proximitySuccess(
+    config: any UIConfigType,
+    [any UIModel]
+  )
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -122,6 +126,8 @@ public indirect enum FeatureProximityRouteModule: AppRouteModule {
       (key: "ProximityRequest", arguments: ["originator": originator.info.key])
     case .proximityLoader(let id, _, let originator, _):
       (key: "ProximityLoader", arguments: ["id": id, "originator": originator.info.key])
+    case .proximitySuccess:
+      (key: "ProximitySuccess", arguments: [:])
     }
   }
 }
