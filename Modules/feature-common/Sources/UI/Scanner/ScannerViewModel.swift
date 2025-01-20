@@ -140,11 +140,7 @@ final class ScannerViewModel<Router: RouterHost>: ViewModel<Router, ScannerState
             config: UIConfig.Generic(
               arguments: ["uri": scanResult],
               navigationSuccessType: successNavType,
-              navigationCancelType: .popTo(
-                .featureIssuanceModule(
-                  .issuanceAddDocument(config: config)
-                )
-              )
+              navigationCancelType: .pop
             )
           )
         )
