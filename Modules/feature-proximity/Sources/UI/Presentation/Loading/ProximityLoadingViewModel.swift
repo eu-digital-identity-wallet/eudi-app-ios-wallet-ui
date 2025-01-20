@@ -51,7 +51,11 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
           self.onError(with: error)
         case .responseSent:
           self.interactor.stopPresentation()
-          self.onNavigate(type: .push(getOnSuccessRoute()))
+          self.onNavigate(
+            type: .push(
+              getOnSuccessRoute()
+            )
+          )
         default:
           ()
         }
@@ -71,8 +75,8 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
 
   private func getOnSuccessRoute() -> AppRoute {
     publisherTask?.cancel()
-    return .featurePresentationModule(
-      .presentationSuccess(
+    return .featureProximityModule(
+      .proximitySuccess(
         config: PresentationSuccessUIConfig(
           successNavigation: .pop(screen: getOriginator()),
           relyingParty: relyingParty
