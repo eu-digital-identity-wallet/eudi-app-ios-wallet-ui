@@ -64,7 +64,10 @@ public struct PlainWithLogoView: View {
         Text(title)
           .typography(Theme.shared.font.bodyMedium)
           .if(isVerified) {
-            $0.leftImage(image: Theme.shared.image.relyingPartyVerified)
+            $0.leftImage(
+              image: Theme.shared.image.relyingPartyVerified,
+              spacing: Theme.shared.dimension.verifiedBadgeSpacing
+            )
           }
           .foregroundStyle(Theme.shared.color.onSurfaceVariant)
           .frame(maxWidth: .infinity, alignment: .center)
