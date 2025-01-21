@@ -20,13 +20,13 @@ import logic_resources
 struct FilterListView: View {
   @Environment(\.dismiss) var dismiss
 
-  @State private var showCounterRectangle: Bool = false
   @State private var filterCounter: Int = 0
-
-  @Binding var selectedOptions: Set<String>
-  @Binding var sortAscending: Bool
-
+  @State private var showCounterRectangle: Bool = false
   @State private var togglesState: [String: Bool] = [:]
+
+  @Binding var sortAscending: Bool
+  @Binding var showFilterIndicator: Bool
+  @Binding var selectedOptions: Set<String>
 
   let sections: [FilterSections]
 
@@ -52,6 +52,7 @@ struct FilterListView: View {
         }
         ToolbarItem(placement: .navigationBarTrailing) {
           Button(LocalizableString.shared.get(with: .reset).capitalized) {
+            showFilterIndicator = false
             resetFilters()
           }
           .disabled(selectedOptions.isEmpty && sortAscending)
@@ -61,13 +62,14 @@ struct FilterListView: View {
         if showCounterRectangle {
           Text(LocalizableString.shared.get(with: .showFilters([String(filterCounter)])).capitalized)
             .font(.body.bold())
-            .foregroundStyle(ThemeManager.shared.color.white)
+            .foregroundStyle(Theme.shared.color.white)
             .frame(maxWidth: .infinity)
             .padding(SPACING_MEDIUM_SMALL)
             .background(RoundedRectangle(cornerRadius: 8))
-            .foregroundStyle(ThemeManager.shared.color.primary)
+            .foregroundStyle(Theme.shared.color.primary)
             .padding(.horizontal, SPACING_MEDIUM)
             .onTapGesture {
+              showFilterIndicator = true
               dismiss()
             }
         }
@@ -78,6 +80,9 @@ struct FilterListView: View {
     }
     .onAppear {
       updateSelectedCount()
+    }
+    .onDisappear {
+      print("Calling onResume...")
     }
   }
 
@@ -146,6 +151,7 @@ struct FilterListView: View {
     filterCounter = selectedOptions.count
     withAnimation {
       if filterCounter == 0 {
+        showFilterIndicator = false
         showCounterRectangle = false
       } else {
         showCounterRectangle = true

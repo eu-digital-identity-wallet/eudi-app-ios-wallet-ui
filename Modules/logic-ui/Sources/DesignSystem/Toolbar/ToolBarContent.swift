@@ -14,22 +14,26 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import logic_resources
 
 public struct Action: Identifiable {
   public let id = UUID()
   public let title: String?
   public let image: Image?
+  public let hasIndicator: Bool?
   public let disabled: Bool
   public let callback: (() -> Void)?
 
   public init(
     title: String? = nil,
     image: Image? = nil,
+    hasIndicator: Bool? = nil,
     disabled: Bool = false,
     callback: (() -> Void)? = nil
   ) {
     self.title = title
     self.image = image
+    self.hasIndicator = hasIndicator
     self.disabled = disabled
     self.callback = callback
   }
@@ -88,6 +92,14 @@ private struct ActionView: View {
           content
         }
         .disabled(disabled)
+        .overlay(alignment: .topTrailing) {
+          if let hasIndicator = action.hasIndicator, hasIndicator {
+            Circle()
+              .foregroundStyle(Theme.shared.color.primary)
+              .frame(width: 10)
+              .offset(x: 2, y: 2)
+          }
+        }
       } else {
         content
       }

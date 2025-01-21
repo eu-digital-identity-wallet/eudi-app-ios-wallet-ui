@@ -26,6 +26,7 @@ struct DashboardView<Router: RouterHost>: View {
   @Environment(\.scenePhase) var scenePhase
 
   @State private var selectedOptions: Set<String> = []
+  @State private var showFilterIndicator: Bool = false
   @State private var sortAscending: Bool = true
 
   public init(with viewModel: DashboardViewModel<Router>) {
@@ -64,9 +65,10 @@ struct DashboardView<Router: RouterHost>: View {
     }
     .sheet(isPresented: $viewModel.isFilterModalShowing) {
       FilterListView(
-        selectedOptions: $selectedOptions,
         sortAscending: $sortAscending,
-        sections: viewModel.documentSections
+        showFilterIndicator: $showFilterIndicator,
+        selectedOptions: $selectedOptions,
+        sections: viewModel.viewState.documentSections
       )
       .confirmationDialog(
         LocalizableString.shared.get(with: .authenticate),
@@ -240,7 +242,7 @@ struct DashboardView<Router: RouterHost>: View {
           Action(image: Theme.shared.image.plus) {
             viewModel.onAdd()
           },
-          Action(image: Theme.shared.image.filterMenuIcon) {
+          Action(image: Theme.shared.image.filterMenuIcon, hasIndicator: showFilterIndicator) {
             viewModel.showFilters()
           }
         ]
