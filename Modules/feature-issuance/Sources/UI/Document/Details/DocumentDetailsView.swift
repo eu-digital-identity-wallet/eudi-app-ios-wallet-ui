@@ -217,7 +217,9 @@ private func content(
     document: DocumentDetailsUIModel.mock(),
     isLoading: false,
     error: nil,
-    config: IssuanceDetailUiConfig(flow: .extraDocument(["documentId"])),
+    config: IssuanceDetailUiConfig(
+      flow: .extraDocument("documentId")
+    ),
     hasDeleteAction: true,
     documentFieldsCount: DocumentDetailsUIModel.mock().documentFields.count,
     isBookmarked: true

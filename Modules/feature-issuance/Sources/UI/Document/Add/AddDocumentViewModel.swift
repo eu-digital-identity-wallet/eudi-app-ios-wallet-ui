@@ -199,7 +199,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
       case .deferredSuccess:
         let metaData = try await interactor.getScopedDocument(
           configId: configId
-        ) ?? ScopedDocument.empty()
+        )
 
         router.push(
           with: onDeferredSuccess(

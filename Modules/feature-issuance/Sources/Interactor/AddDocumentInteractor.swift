@@ -24,7 +24,7 @@ public protocol AddDocumentInteractor: Sendable {
   func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState
   func issueDocument(configId: String) async -> IssueDocumentPartialState
   func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState
-  func getScopedDocument(configId: String) async throws -> ScopedDocument?
+  func getScopedDocument(configId: String) async throws -> ScopedDocument
 }
 
 final class AddDocumentInteractorImpl: AddDocumentInteractor {
@@ -103,8 +103,10 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     }
   }
 
-  func getScopedDocument(configId: String) async throws -> ScopedDocument? {
-    try await walletController.getScopedDocuments().first { $0.configId == configId }
+  func getScopedDocument(configId: String) async throws -> ScopedDocument {
+    try await walletController.getScopedDocuments().first {
+      $0.configId == configId
+    } ?? ScopedDocument.empty()
   }
 }
 
