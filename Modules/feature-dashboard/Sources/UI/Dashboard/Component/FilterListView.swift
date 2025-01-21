@@ -123,6 +123,7 @@ struct FilterListView: View {
           isSelected: (option == LocalizableString.shared.get(with: .ascending).capitalized && sortAscending) || (option == LocalizableString.shared.get(with: .descending).capitalized && !sortAscending)
         ) {
           sortAscending = (option == LocalizableString.shared.get(with: .ascending).capitalized)
+          showFilterIndicator = sortAscending
           updateSelectedCount()
         }
       }

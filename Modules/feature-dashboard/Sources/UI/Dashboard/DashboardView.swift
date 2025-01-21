@@ -60,7 +60,10 @@ struct DashboardView<Router: RouterHost>: View {
         },
         onAdd: viewModel.onAdd,
         onShare: viewModel.onShare,
-        signDocument: { viewModel.openSignDocument() }
+        signDocument: { viewModel.openSignDocument() },
+        filteredDocsCallback: { filterDocs in
+          viewModel.updateFilteredDocuments(filteredDocuments: filterDocs)
+        }
       )
     }
     .sheet(isPresented: $viewModel.isFilterModalShowing) {
@@ -219,6 +222,11 @@ struct DashboardView<Router: RouterHost>: View {
     .onChange(of: scenePhase) { phase in
       self.viewModel.setPhase(with: phase)
     }
+    .onChange(of: showFilterIndicator, perform: { _ in
+      if showFilterIndicator {
+        viewModel.applyFilters(sortAscending: sortAscending)
+      }
+    })
     .onDisappear {
       self.viewModel.onPause()
     }
@@ -316,7 +324,8 @@ private func content(
   onDeleteDeferredDocument: @escaping (DocumentUIModel) -> Void,
   onAdd: @escaping () -> Void,
   onShare: @escaping () -> Void,
-  signDocument: @escaping () -> Void
+  signDocument: @escaping () -> Void,
+  filteredDocsCallback: @escaping (String) -> Void
 ) -> some View {
   TabView(selection: selectedTab) {
     HomeView(
@@ -337,15 +346,18 @@ private func content(
 
     VStack(spacing: .zero) {
       DocumentListView(
-        items: viewState.documents,
+        filteredItems: viewState.filteredDocuments,
         isLoading: viewState.isLoading
       ) { document in
         switch document.value.state {
-          case .issued:
-            onDocumentDetails(document.value.id)
-          case .pending, .failed:
-            onDeleteDeferredDocument(document)
+        case .issued:
+          onDocumentDetails(document.value.id)
+        case .pending, .failed:
+          onDeleteDeferredDocument(document)
         }
+      }
+      filteredDocsCallback: { filteredDocs in
+        filteredDocsCallback(filteredDocs)
       }
       .background(Theme.shared.color.surface)
     }
@@ -370,6 +382,7 @@ private func content(
   let viewState = DashboardState(
     isLoading: false,
     documents: DocumentUIModel.mocks(),
+    filteredDocuments: DocumentUIModel.mocks(),
     bearer: BearerUIModel.mock(),
     phase: .active,
     pendingBleModalAction: false,
@@ -395,7 +408,8 @@ private func content(
       onDeleteDeferredDocument: { _ in },
       onAdd: {},
       onShare: {},
-      signDocument: {}
+      signDocument: {},
+      filteredDocsCallback: { _ in }
     )
   }
 }

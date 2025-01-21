@@ -394,7 +394,23 @@ public final class LocalizableString: LocalizableStringType {
       case .proximityConnectionNfcDescription:
         bundle.localizedString(forKey: "proximity_connection_nfc_description")
       case .orShareViaNfc:
-        bundle.localizedString(forKey: "or_share_via_nfc")
+        bundle.localizedString(forKey: "")
+      case .filters:
+        bundle.localizedString(forKey: "filters")
+      case .sortByIssuedDateSectionTitle:
+        bundle.localizedString(forKey: "sort_by_issued_date")
+      case .issuerSectionTitle:
+        bundle.localizedString(forKey: "issuer")
+      case .showFilters(let args):
+          bundle.localizedStringWithArguments(forKey: "show_filters", arguments: args)
+      case .reset:
+        bundle.localizedString(forKey: "reset")
+      case .all:
+        bundle.localizedString(forKey: "all")
+      case .descending:
+        bundle.localizedString(forKey: "desceding")
+      case .ascending:
+        bundle.localizedString(forKey: "asceding")
     }
   }
 
@@ -437,7 +453,6 @@ public extension LocalizableString {
     case addDoc
     case filters
     case sortByIssuedDateSectionTitle
-    case categorySectionTitle
     case issuerSectionTitle
     case showFilters([String])
     case showQRTap

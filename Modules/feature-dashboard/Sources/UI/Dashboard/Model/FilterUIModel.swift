@@ -19,15 +19,12 @@ import logic_resources
 enum FilterSections {
   // MARK: - DOCUMENT FILTER SECTIONS
   case issuedSortingDate
-  case category(options: [String])
   case issuer(options: [String])
 
   var sectionTitle: String {
     switch self {
     case .issuedSortingDate:
       return LocalizableString.shared.get(with: .sortByIssuedDateSectionTitle)
-    case .category:
-      return LocalizableString.shared.get(with: .categorySectionTitle)
     case .issuer:
       return LocalizableString.shared.get(with: .issuerSectionTitle)
     }
@@ -40,8 +37,6 @@ enum FilterSections {
         LocalizableString.shared.get(with: .ascending).capitalized,
         LocalizableString.shared.get(with: .descending).capitalized
       ]
-    case .category:
-      return []
     case .issuer:
       return []
     }
@@ -51,8 +46,6 @@ enum FilterSections {
     switch self {
     case .issuedSortingDate:
       return []
-    case .category(let options):
-      return options
     case .issuer(let options):
       return options
     }
@@ -62,8 +55,6 @@ enum FilterSections {
     switch self {
     case .issuedSortingDate:
       return false
-    case .category:
-      return true
     case .issuer:
       return true
     }
