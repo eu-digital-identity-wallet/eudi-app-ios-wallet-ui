@@ -35,6 +35,7 @@ public protocol WalletKitController: Sendable {
   func startSameDevicePresentation(deepLink: URLComponents) async -> RemoteSessionCoordinator
   func startCrossDevicePresentation(urlString: String) async -> RemoteSessionCoordinator
   func stopPresentation()
+
   func fetchAllDocuments() -> [DocClaimsDecodable]
   func fetchDeferredDocuments() -> [WalletStorage.Document]
   func fetchIssuedDocuments() -> [DocClaimsDecodable]
@@ -43,10 +44,12 @@ public protocol WalletKitController: Sendable {
   func fetchMainPidDocument() -> DocClaimsDecodable?
   func fetchDocument(with id: String) -> DocClaimsDecodable?
   func fetchDocuments(with ids: [String]) -> [DocClaimsDecodable]
+
   func clearAllDocuments() async
   func clearDocuments(status: DocumentStatus) async throws
   func deleteDocument(with id: String, status: DocumentStatus) async throws
   func loadDocuments() async throws
+
   func issueDocument(identifier: String) async throws -> WalletStorage.Document
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable
   func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssuanceModel
@@ -257,6 +260,7 @@ final class WalletKitControllerImpl: WalletKitController {
       case .msoMdoc(let config):
         return ScopedDocument(
           name: config.display.getName(fallback: credential.key.value),
+          issuer: metadata.display.getName(fallback: ""),
           configId: credential.key.value,
           isPid: DocumentTypeIdentifier(rawValue: config.docType) == .mDocPid
         )
@@ -267,6 +271,7 @@ final class WalletKitControllerImpl: WalletKitController {
         //        }
         return ScopedDocument(
           name: config.display.getName(fallback: credential.key.value),
+          issuer: metadata.display.getName(fallback: ""),
           configId: credential.key.value,
           //isPid: DocumentTypeIdentifier(rawValue: vct) == .sdJwtPid
           isPid: false
