@@ -82,13 +82,16 @@ private func content(
 
     VSpacer.medium()
 
-    PlainWithLogoView(
-      icon: viewState.issuerData.icon,
-      title: viewState.issuerData.title,
-      isVerified: viewState.issuerData.isVerified
-    )
+    if let document = viewState.documents.first,
+       let issuer = document.issuer {
+      PlainWithLogoView(
+        icon: .remoteImage(issuer.logoUrl, Theme.shared.image.logo),
+        title: issuer.name,
+        isVerified: viewState.documents.first?.issuer?.isVerified ?? false
+      )
 
-    VSpacer.largeMedium()
+      VSpacer.largeMedium()
+    }
 
     document(
       holderName: viewState.holderName,
@@ -157,7 +160,6 @@ private func document(
     config: IssuanceFlowUiConfig(flow: .noDocument),
     documentIdentifiers: ["id"],
     documents: [DocumentDetailsUIModel.mock()],
-    issuerData: IssuerDataUIModel.mock(),
     isLoading: false,
     error: nil
   )

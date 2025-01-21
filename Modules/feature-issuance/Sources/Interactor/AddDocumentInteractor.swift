@@ -91,7 +91,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
 
       if doc.status == .deferred {
         return .deferredSuccess
-      } else if doc.status != .issued {
+      } else if doc.status == .issued {
         return .success(doc.id)
       } else {
         return .failure(WalletCoreError.unableToIssueAndStore)

@@ -69,8 +69,9 @@ public protocol ColorManagerProtocol: Sendable {
   var scrim: Color { get }
   var shadow: Color { get }
 
-  var warning: Color { get }
+  var pending: Color { get }
   var success: Color { get }
+  var warning: Color { get }
 }
 
 final class ColorManager: ColorManagerProtocol {
@@ -131,6 +132,7 @@ final class ColorManager: ColorManagerProtocol {
     case grey
     case darkGrey
     case success
+    case pending
     case warning
   }
 
@@ -155,10 +157,12 @@ final class ColorManager: ColorManagerProtocol {
   public var success: Color {
     Color(BaseColors.success.rawValue, bundle: bundle)
   }
-  var warning: Color {
+  public var pending: Color {
+    Color(BaseColors.pending.rawValue, bundle: bundle)
+  }
+  public var warning: Color {
     Color(BaseColors.warning.rawValue, bundle: bundle)
   }
-
   public var primary: Color {
     Color(MaterialColors.primary.rawValue, bundle: bundle)
   }

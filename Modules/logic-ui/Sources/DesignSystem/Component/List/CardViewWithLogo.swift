@@ -19,7 +19,7 @@ import logic_resources
 public struct CardViewWithLogo: View {
   private let cornerRadius: CGFloat
   private let backgroundColor: Color
-  private let icon: Image
+  private let icon: RemoteImageView.ImageContentOption
   private let title: String
   private let isVerified: Bool
   private let isLoading: Bool
@@ -28,7 +28,7 @@ public struct CardViewWithLogo: View {
   public init(
     cornerRadius: CGFloat = 13,
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
-    icon: Image,
+    icon: RemoteImageView.ImageContentOption = .none,
     title: String,
     isVerified: Bool = false,
     isLoading: Bool = false,
@@ -47,20 +47,40 @@ public struct CardViewWithLogo: View {
     WrapCardView(backgroundColor: backgroundColor) {
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
-        HStack {
-          icon
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(height: 50)
-          Spacer()
+        switch icon {
+        case .none: EmptyView()
+        case .remoteImage(let url, let image):
+          RemoteImageView(
+            url: url,
+            icon: image,
+            size: .init(
+              width: Theme.shared.dimension.remoteImageIconSize,
+              height: Theme.shared.dimension.remoteImageIconSize
+            )
+          )
+          .frame(maxWidth: .infinity, alignment: .center)
+        case .image(let image):
+          HStack {
+            image
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(height: Theme.shared.dimension.remoteImageIconSize)
+            Spacer()
+          }
+          .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
 
         Text(title)
           .typography(Theme.shared.font.bodyLarge)
           .foregroundStyle(Theme.shared.color.onSurface)
           .if(isVerified) {
-            $0.leftImage(image: Theme.shared.image.relyingPartyVerified)
+            $0.leftImage(
+              image: Theme.shared.image.relyingPartyVerified,
+              spacing: Theme.shared.dimension.verifiedBadgeSpacing
+            )
+          }
+          .if(icon.isNone) {
+            $0.frame(maxWidth: .infinity, alignment: .leading)
           }
       }
       .padding(.all, SPACING_MEDIUM)
@@ -76,19 +96,33 @@ public struct CardViewWithLogo: View {
 #Preview {
   VStack(spacing: 16) {
     CardViewWithLogo(
-      icon: Image(systemName: "building.2.crop.circle.fill")
-        .renderingMode(.original),
+      icon: .image(
+        Image(
+          systemName: "building.2.crop.circle.fill"
+        )
+        .renderingMode(.original)
+      ),
       title: "Hellenic Government"
     )
 
     CardViewWithLogo(
-      icon: Image(systemName: "building.2.crop.circle.fill"),
+      icon: .image(
+        Image(
+          systemName: "building.2.crop.circle.fill"
+        )
+        .renderingMode(.original)
+      ),
       title: "Another Organization"
     )
 
     CardViewWithLogo(
       backgroundColor: Theme.shared.color.tertiary,
-      icon: Image(systemName: "building.2.crop.circle.fill"),
+      icon: .image(
+        Image(
+          systemName: "building.2.crop.circle.fill"
+        )
+        .renderingMode(.original)
+      ),
       title: "Another Organization",
       isVerified: true
     )

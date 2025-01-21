@@ -93,34 +93,29 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
     switch state {
     case .success(let uiModel):
       setState {
-        $0
-          .copy(
-            isLoading: false,
-            documentOfferUiModel: uiModel,
-            issuerData: .init(
-              icon: Theme.shared.image.issuerCardImagePlaceholder,
-              title: uiModel.issuerName,
-              subtitle: "Issuing authority",
-              caption: "",
-              isVerified: true
-            ),
-            allowIssue: !uiModel.uiOffers.isEmpty,
-            initialized: true
-          )
-          .copy(error: nil)
+        $0.copy(
+          isLoading: false,
+          documentOfferUiModel: uiModel,
+          issuerData: .init(
+            icon: Theme.shared.image.logo,
+            title: uiModel.issuerName,
+            isVerified: true
+          ),
+          allowIssue: !uiModel.uiOffers.isEmpty,
+          initialized: true
+        ).copy(error: nil)
       }
     case .failure(let error):
       setState {
-        $0
-          .copy(
-            isLoading: false,
-            error: ContentErrorView.Config(
-              description: .custom(error.localizedDescription),
-              cancelAction: self.onPop()
-            ),
-            allowIssue: false,
-            initialized: true
-          )
+        $0.copy(
+          isLoading: false,
+          error: ContentErrorView.Config(
+            description: .custom(error.localizedDescription),
+            cancelAction: self.onPop()
+          ),
+          allowIssue: false,
+          initialized: true
+        )
       }
     }
   }

@@ -101,9 +101,9 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
           retrieveSuccessRoute(
             caption: .issuanceSuccessDeferredCaption([issuerName]),
             successNavigation: successNavigation,
-            title: .init(value: .inProgress, color: Theme.shared.color.warning),
+            title: .init(value: .inProgress, color: Theme.shared.color.pending),
             buttonTitle: .okButton,
-            visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.warning)
+            visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.pending)
           )
         )
       } else if let authorizePresentationUrl = documents.first?.authorizePresentationUrl {
@@ -184,9 +184,9 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
           retrieveSuccessRoute(
             caption: .issuanceSuccessDeferredCaption([issuerName]),
             successNavigation: successNavigation,
-            title: .init(value: .inProgress, color: Theme.shared.color.warning),
+            title: .init(value: .inProgress, color: Theme.shared.color.pending),
             buttonTitle: .okButton,
-            visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.warning)
+            visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.pending)
           )
         )
       } else {

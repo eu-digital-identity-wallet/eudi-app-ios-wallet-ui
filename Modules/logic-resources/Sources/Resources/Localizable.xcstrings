@@ -760,6 +760,17 @@
         }
       }
     },
+    "generic_issuer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuer"
+          }
+        }
+      }
+    },
     "given_name" : {
       "extractionState" : "manual",
       "localizations" : {

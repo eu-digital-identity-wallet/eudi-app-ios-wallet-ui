@@ -135,7 +135,7 @@ private func content(
         .shimmer(isLoading: viewState.isLoading)
 
         CardViewWithLogo(
-          icon: viewState.issuerData.icon,
+          icon: .image(viewState.issuerData.icon),
           title: viewState.issuerData.title,
           isVerified: viewState.issuerData.isVerified,
           isLoading: viewState.isLoading

@@ -41,7 +41,7 @@ public struct ListItemData: Identifiable {
     supportingText: String? = nil,
     supportingTextColor: Color = Theme.shared.color.onSurfaceVariant,
     overlineTextColor: Color = Theme.shared.color.onSurfaceVariant,
-    leadingIcon: (URL?, Image?)? = nil,
+    leadingIcon: (imageUrl: URL?, image: Image?)? = nil,
     isBlur: Bool = false,
     trailingContent: TrailingContent? = nil
   ) {
@@ -59,7 +59,7 @@ public struct ListItemData: Identifiable {
 }
 
 public enum TrailingContent {
-  case icon(Image)
+  case icon(Image, Color = Color.accentColor)
   case checkbox(Bool, Bool, (Bool) -> Void)
   case empty
 }

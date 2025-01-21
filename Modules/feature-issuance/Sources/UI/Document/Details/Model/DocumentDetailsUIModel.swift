@@ -23,6 +23,7 @@ public struct DocumentDetailsUIModel: Sendable, Equatable, Identifiable {
   public let id: String
   public let type: DocumentTypeIdentifier
   public let documentName: String
+  public let issuer: IssuerField?
   public let holdersName: String
   public let createdAt: Date
   public let hasExpired: Bool
@@ -30,6 +31,25 @@ public struct DocumentDetailsUIModel: Sendable, Equatable, Identifiable {
 }
 
 public extension DocumentDetailsUIModel {
+
+  struct IssuerField: Identifiable, Sendable, Equatable {
+    public let id: String
+    public let name: String
+    public let logoUrl: URL?
+    public let isVerified: Bool
+
+    public init(
+      id: String = UUID().uuidString,
+      issuersName: String,
+      logoUrl: URL?,
+      isVerified: Bool
+    ) {
+      self.id = id
+      self.name = issuersName
+      self.logoUrl = logoUrl
+      self.isVerified = isVerified
+    }
+  }
 
   struct DocumentField: Identifiable, Sendable, Equatable {
 
@@ -48,6 +68,12 @@ public extension DocumentDetailsUIModel {
       id: UUID().uuidString,
       type: DocumentTypeIdentifier.mDocPid,
       documentName: "Digital ID",
+      issuer: .init(
+        id: UUID().uuidString,
+        issuersName: "Digital Credential Service",
+        logoUrl: URL(string: "https://www.example.com")!,
+        isVerified: true
+      ),
       holdersName: "Jane Doe",
       createdAt: Date(),
       hasExpired: false,
@@ -86,6 +112,18 @@ public extension DocumentDetailsUIModel {
 extension DocClaimsDecodable {
   func transformToDocumentDetailsUi() -> DocumentDetailsUIModel {
 
+    var issuer: DocumentDetailsUIModel.IssuerField? {
+      guard let name = self.issuerDisplay?.first?.name else {
+        return nil
+      }
+      let logo = self.issuerDisplay?.first?.logo?.uri
+      return .init(
+        issuersName: name,
+        logoUrl: logo,
+        isVerified: true
+      )
+    }
+
     let documentFields: [DocumentDetailsUIModel.DocumentField] =
     flattenValues(
       input: docClaims
@@ -115,6 +153,7 @@ extension DocClaimsDecodable {
       id: id,
       type: identifier,
       documentName: displayName.orEmpty,
+      issuer: issuer,
       holdersName: bearerName,
       createdAt: createdAt,
       hasExpired: hasExpired(

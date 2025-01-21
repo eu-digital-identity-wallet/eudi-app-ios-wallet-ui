@@ -36,23 +36,27 @@ public struct WrapListItemView: View {
 
   public var body: some View {
     HStack(alignment: .center, spacing: SPACING_MEDIUM) {
-      if let leadingIcon = listItem.leadingIcon {
 
-        AsyncImage(
-          url: listItem.leadingIcon?.imageUrl
-        ) { image in
-          image
-            .resizable()
-            .scaledToFit()
-        } placeholder: {
-          if let leadingIconPlaceholder = leadingIcon.image {
-            leadingIconPlaceholder
-              .resizable()
-              .scaledToFit()
-              .frame(width: 40, height: 40)
-          }
+      if let url = listItem.leadingIcon?.imageUrl {
+        RemoteImageView(
+          url: url,
+          icon: listItem.leadingIcon?.image,
+          size: .init(
+            width: Theme.shared.dimension.remoteImageIconSize,
+            height: Theme.shared.dimension.remoteImageIconSize
+          )
+        )
+        .if(listItem.isBlur) {
+          $0.blur(radius: 4, opaque: false)
         }
-        .frame(width: 40, height: 40)
+      } else if let icon = listItem.leadingIcon?.image {
+        icon
+          .resizable()
+          .aspectRatio(contentMode: .fit)
+          .frame(height: Theme.shared.dimension.remoteImageIconSize)
+          .if(listItem.isBlur) {
+            $0.blur(radius: 4, opaque: false)
+          }
       }
 
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
@@ -87,12 +91,13 @@ public struct WrapListItemView: View {
 
       if let trailingContent = listItem.trailingContent {
         switch trailingContent {
-        case .icon(let image):
+        case .icon(let image, let color):
           image
+            .renderingMode(.template)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: 20, height: 20)
-            .foregroundColor(Color.accentColor)
+            .foregroundColor(color)
 
         case .checkbox(let enabled, let isChecked, let onToggle):
           WrapCheckbox(

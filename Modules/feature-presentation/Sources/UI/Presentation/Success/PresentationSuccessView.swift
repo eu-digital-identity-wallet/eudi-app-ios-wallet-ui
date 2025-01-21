@@ -106,12 +106,14 @@ private func content(
 private func documents(
   viewState: PresentationSuccessState,
   ignoreTrainingContent: Bool = true,
+  backgroundColor: Color = Theme.shared.color.tertiary,
   onSelectionChanged: @escaping (String) -> Void
 ) -> some View {
   if !viewState.items.isEmpty {
     VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
       ForEach(viewState.items, id: \.id) { section in
         ExpandableCardView(
+          backgroundColor: backgroundColor,
           title: section.requestDataSection.title,
           subtitle: LocalizableString.shared.get(with: .viewDetails)
         ) {

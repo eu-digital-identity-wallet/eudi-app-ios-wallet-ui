@@ -115,7 +115,7 @@ private func getCenteredIcon(
           navigationType: UIConfig.DeepLinkNavigationType.push(screen: .featureDashboardModule(.dashboard))
         )
       ],
-      visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.warning)
+      visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.pending)
     )
   )
 

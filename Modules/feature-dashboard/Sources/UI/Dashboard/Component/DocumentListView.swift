@@ -65,7 +65,7 @@ struct DocumentListView: View {
                     item.value.image?.url,
                     item.value.image?.placeholder
                   ),
-                  trailingContent: .icon(item.indicatorImage())
+                  trailingContent: .icon(item.indicatorImage(), item.supportingColor())
                 )
               ) {
                 action(item)
@@ -99,7 +99,7 @@ private extension DocumentUIModel {
       case .pending:
         return LocalizableString.shared.get(with: .pending)
       case .failed:
-        return LocalizableString.shared.get(with: .pending)
+        return LocalizableString.shared.get(with: .issuanceFailed)
     }
   }
 
