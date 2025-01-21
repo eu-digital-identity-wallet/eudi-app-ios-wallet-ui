@@ -19,20 +19,23 @@ import logic_ui
 
 struct DocumentListView: View {
   @State private var searchText = ""
-  @State private var filteredItems: [DocumentUIModel] = []
 
-  let items: [DocumentUIModel]
+  let filteredItems: [DocumentUIModel]
   let action: (DocumentUIModel) -> Void
   let isLoading: Bool
+  let filteredDocsCallback: (String) -> Void
 
   init(
-    items: [DocumentUIModel],
+    filteredItems: [DocumentUIModel],
     isLoading: Bool,
-    action: @escaping (DocumentUIModel) -> Void) {
-      self.items = items
-      self.action = action
-      self.isLoading = isLoading
-    }
+    action: @escaping (DocumentUIModel) -> Void,
+    filteredDocsCallback: @escaping (String) -> Void
+  ) {
+    self.filteredItems = filteredItems
+    self.action = action
+    self.isLoading = isLoading
+    self.filteredDocsCallback = filteredDocsCallback
+  }
 
   var body: some View {
     VStack {
@@ -53,7 +56,7 @@ struct DocumentListView: View {
         .padding(.horizontal, SPACING_MEDIUM)
       } else {
         List {
-          ForEach(filteredItems.isEmpty ? items : filteredItems) { item in
+          ForEach(filteredItems) { item in
             WrapCardView {
               WrapListItemView(
                 listItem: ListItemData(
@@ -81,11 +84,10 @@ struct DocumentListView: View {
     }
     .searchable(
       searchText: $searchText,
-      items: items,
       placeholder: LocalizableString.shared.get(with: .search),
       backgroundColor: Theme.shared.color.background
-    ) { filtered in
-      filteredItems = filtered
+    ) { searchText in
+      filteredDocsCallback(searchText)
     }
     .background(Theme.shared.color.background)
   }
@@ -135,7 +137,10 @@ private extension DocumentUIModel {
 
 #Preview {
   DocumentListView(
-    items: DocumentUIModel.mocks(),
-    isLoading: false
+    filteredItems: DocumentUIModel.mocks(),
+    isLoading: false,
+    action: { filteredDocs in
+      print("Filtered documents updated: \(filteredDocs)")
+    }
   ) { _ in }
 }

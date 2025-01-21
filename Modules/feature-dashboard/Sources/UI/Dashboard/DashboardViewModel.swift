@@ -23,6 +23,7 @@ import feature_common
 struct DashboardState: ViewState {
   let isLoading: Bool
   let documents: [DocumentUIModel]
+  var filteredDocuments: [DocumentUIModel]
   let bearer: BearerUIModel
   let phase: ScenePhase
   let pendingBleModalAction: Bool
@@ -38,15 +39,7 @@ struct DashboardState: ViewState {
   }
 
   var documentSections: [FilterSections] {
-    return [
-      .issuedSortingDate,
-      .category(options: [
-        "Government"
-      ]),
-      .issuer(options: [
-        "National Bank of Greece"
-      ])
-    ]
+    return [ .issuedSortingDate ]
   }
 }
 
@@ -92,6 +85,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   @Published var isSuccededDocumentsModalShowing: Bool = false
   @Published var selectedTab: SelectedTab = .home
   @Published var addDocument: Bool = false
+  @Published var showFilterIndicator: Bool = false
 
   private var deferredTask: Task<DashboardDeferredPartialState, Error>?
 
@@ -113,6 +107,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       initialState: .init(
         isLoading: true,
         documents: DocumentUIModel.mocks(),
+        filteredDocuments: DocumentUIModel.mocks(),
         bearer: BearerUIModel.mock(),
         phase: .active,
         pendingBleModalAction: false,
@@ -142,6 +137,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         $0.copy(
           isLoading: false,
           documents: documents,
+          filteredDocuments: documents,
           bearer: bearer,
           allowUserInteraction: hasIssuedDocuments
         )
@@ -268,9 +264,36 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     )
   }
 
+  // MARK: - FILTERS
+
   func showFilters() {
     onPause()
     isFilterModalShowing = true
+  }
+
+  func updateFilteredDocuments(filteredDocuments: String) {
+
+    let newDocuments = viewState.filteredDocuments.filter {
+      $0.value.title.localizedCaseInsensitiveContains(filteredDocuments)
+    }
+
+    if filteredDocuments.isEmpty {
+      setState { $0.copy(filteredDocuments: viewState.documents) }
+    } else {
+      setState { $0.copy(filteredDocuments: newDocuments) }
+    }
+  }
+
+  func applyFilters(sortAscending: Bool) {
+    let sortedDocuments: [DocumentUIModel]
+
+    if sortAscending {
+      sortedDocuments = viewState.filteredDocuments.sorted { $0.value.title < $1.value.title }
+    } else {
+      sortedDocuments = viewState.filteredDocuments.sorted { $0.value.title > $1.value.title }
+    }
+
+    setState { $0.copy(filteredDocuments: sortedDocuments) }
   }
 
   func onMyWallet() {

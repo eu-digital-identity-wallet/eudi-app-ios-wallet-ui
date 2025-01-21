@@ -16,12 +16,11 @@
 import SwiftUI
 import logic_resources
 
-struct SearchableModifier<Item: Identifiable>: ViewModifier {
+struct SearchableModifier: ViewModifier {
   @Binding var searchText: String
-  let items: [Item]
   let placeholder: String
   let backgroundColor: Color?
-  let onFilteredItems: ([Item]) -> Void
+  let onSearchTextChange: (String) -> Void
 
   func body(content: Content) -> some View {
     VStack {
@@ -33,38 +32,27 @@ struct SearchableModifier<Item: Identifiable>: ViewModifier {
       .background(backgroundColor)
 
       content
-        .onChange(of: searchText) { _ in
-          filterItems()
+        .onChange(of: searchText) { newValue in
+          onSearchTextChange(newValue)
         }
     }
-  }
-
-  private func filterItems() {
-    guard !searchText.isEmpty else {
-      onFilteredItems(items)
-      return
-    }
-    let filtered = items.filter { "\($0)".localizedCaseInsensitiveContains(searchText) }
-    onFilteredItems(filtered)
   }
 }
 
 // MARK: - Custom View Extension
 public extension View {
-  func searchable<Item: Identifiable>(
+  func searchable(
     searchText: Binding<String>,
-    items: [Item],
     placeholder: String = "Search",
     backgroundColor: Color? = nil,
-    onFilteredItems: @escaping ([Item]) -> Void
+    onSearchTextChange: @escaping (String) -> Void
   ) -> some View {
     modifier(
       SearchableModifier(
         searchText: searchText,
-        items: items,
         placeholder: placeholder,
         backgroundColor: backgroundColor,
-        onFilteredItems: onFilteredItems
+        onSearchTextChange: onSearchTextChange
       )
     )
   }
@@ -160,10 +148,7 @@ struct CustomSearchBar: UIViewRepresentable {
     )
     .searchable(
       searchText: .constant(""),
-      items: todayTransactions,
       placeholder: "Search"
-    ) { filtered in
-      todayTransactions = filtered
-    }
+    ) { _ in }
   }
 }
