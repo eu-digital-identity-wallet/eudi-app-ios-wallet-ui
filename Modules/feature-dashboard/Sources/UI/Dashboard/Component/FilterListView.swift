@@ -25,6 +25,7 @@ struct FilterListView: View {
   @State private var togglesState: [String: Bool] = [:]
 
   @Binding var sortAscending: Bool
+  @Binding var showFilterIndicator: Bool
   @Binding var selectedOptions: Set<String>
 
   let sections: [FilterSections]
@@ -51,6 +52,7 @@ struct FilterListView: View {
         }
         ToolbarItem(placement: .navigationBarTrailing) {
           Button(LocalizableString.shared.get(with: .reset).capitalized) {
+            showFilterIndicator = false
             resetFilters()
           }
           .disabled(selectedOptions.isEmpty && sortAscending)
@@ -67,6 +69,7 @@ struct FilterListView: View {
             .foregroundStyle(Theme.shared.color.primary)
             .padding(.horizontal, SPACING_MEDIUM)
             .onTapGesture {
+              showFilterIndicator = true
               dismiss()
             }
         }
@@ -77,6 +80,9 @@ struct FilterListView: View {
     }
     .onAppear {
       updateSelectedCount()
+    }
+    .onDisappear {
+      print("Calling onResume...")
     }
   }
 
@@ -145,6 +151,7 @@ struct FilterListView: View {
     filterCounter = selectedOptions.count
     withAnimation {
       if filterCounter == 0 {
+        showFilterIndicator = false
         showCounterRectangle = false
       } else {
         showCounterRectangle = true

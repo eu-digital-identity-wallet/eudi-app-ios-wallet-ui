@@ -36,6 +36,18 @@ struct DashboardState: ViewState {
   var pendingDocumentTitle: String {
     pendingDeletionDocument?.value.title ?? ""
   }
+
+  var documentSections: [FilterSections] {
+    return [
+      .issuedSortingDate,
+      .category(options: [
+        "Government"
+      ]),
+      .issuer(options: [
+        "National Bank of Greece"
+      ])
+    ]
+  }
 }
 
 extension DashboardState {
@@ -80,30 +92,11 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   @Published var isSuccededDocumentsModalShowing: Bool = false
   @Published var selectedTab: SelectedTab = .home
   @Published var addDocument: Bool = false
-  @Published var showFiltersIndicator: Bool = false
 
   private var deferredTask: Task<DashboardDeferredPartialState, Error>?
 
   var bearerName: String {
     viewState.bearer.value.name
-  }
-
-  var documentSections: [FilterSections] {
-    return [
-      .issuedSortingDate,
-      .category(options: [
-        "Government",
-        "Payment cards",
-        "Travel"
-      ]),
-      .issuer(options: [
-        "National Bank of Greece",
-        "Thon Hotel",
-        "Hellenic Goverment",
-        "AEGEAN Airlines",
-        "AADE"
-      ])
-    ]
   }
 
   init(
@@ -275,6 +268,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   }
 
   func showFilters() {
+    onPause()
     isFilterModalShowing = true
   }
 
