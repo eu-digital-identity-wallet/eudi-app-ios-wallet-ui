@@ -42,11 +42,11 @@ struct DocumentListView: View {
       if filteredItems.isEmpty && !searchText.isEmpty {
         VStack(spacing: SPACING_SMALL) {
           Text(.noResults)
-            .typography(Theme.shared.font.titleLarge)
+            .typography(Theme.shared.font.titleMedium)
             .fontWeight(.bold)
 
           Text(.noResultsDescription)
-            .typography(Theme.shared.font.bodyLarge)
+            .typography(Theme.shared.font.headlineSmall)
             .foregroundStyle(Theme.shared.color.onSurface)
             .multilineTextAlignment(.center)
 

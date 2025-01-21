@@ -100,7 +100,7 @@ private func content(
             .foregroundStyle(Theme.shared.color.white)
 
           Text(viewState.informativeTest)
-            .typography(Theme.shared.font.bodyMedium)
+            .typography(Theme.shared.font.bodyLarge)
             .foregroundStyle(Theme.shared.color.white)
             .multilineTextAlignment(.center)
 

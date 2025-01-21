@@ -238,7 +238,7 @@ private func content(
           }
 
           Text(.shareDataReview)
-            .typography(Theme.shared.font.bodySmall)
+            .typography(Theme.shared.font.bodyMedium)
             .foregroundColor(Theme.shared.color.onSurface)
             .multilineTextAlignment(.leading)
           VSpacer.medium()
@@ -267,7 +267,7 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
         .frame(width: imageSize, height: imageSize)
 
       Text(.requestDataNoDocument)
-        .typography(Theme.shared.font.bodyMedium)
+        .typography(Theme.shared.font.bodyLarge)
         .foregroundColor(Theme.shared.color.secondaryFixed)
         .multilineTextAlignment(.center)
     }

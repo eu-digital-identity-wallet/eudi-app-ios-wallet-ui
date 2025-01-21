@@ -31,13 +31,13 @@ public struct TappableCellView: View {
     VStack(spacing: 0) {
       HStack {
         Text(title)
-          .typography(Theme.shared.font.bodyMedium)
+          .typography(Theme.shared.font.bodyLarge)
           .foregroundColor(Theme.shared.color.onSurface)
           .lineLimit(1)
           .minimumScaleFactor(0.8)
         Spacer()
         Text(subtitle)
-          .typography(Theme.shared.font.bodyMedium)
+          .typography(Theme.shared.font.bodyLarge)
           .foregroundColor(Theme.shared.color.onSurface)
           .lineLimit(1)
           .minimumScaleFactor(0.8)

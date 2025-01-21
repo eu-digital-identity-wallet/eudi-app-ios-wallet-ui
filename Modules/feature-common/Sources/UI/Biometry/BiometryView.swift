@@ -94,6 +94,7 @@ private func content(
 
   ContentTitleView(
     title: viewState.config.title,
+    titleWeight: .bold,
     caption: viewState.areBiometricsEnabled
     ? viewState.config.caption
     : viewState.config.quickPinOnlyCaption,

@@ -26,6 +26,7 @@ public struct ContentTitleView: View {
   }
 
   private let titleWeight: Font.Weight
+  private let titleFont: TypographyStyle
   private let titleDecoration: TitleDecoration
   private let decorationColor: Color
   private let caption: LocalizableString.Key?
@@ -38,6 +39,7 @@ public struct ContentTitleView: View {
 
   public init(
     title: LocalizableString.Key,
+    titleFont: TypographyStyle = Theme.shared.font.titleLarge,
     titleWeight: Font.Weight = .regular,
     caption: LocalizableString.Key? = nil,
     decorationColor: Color = Theme.shared.color.primary,
@@ -48,6 +50,7 @@ public struct ContentTitleView: View {
     isLoading: Bool = false,
     onTap: TapListener = nil
   ) {
+    self.titleFont = titleFont
     self.titleWeight = titleWeight
     self.titleDecoration = .plain(title)
     self.caption = caption
@@ -62,6 +65,7 @@ public struct ContentTitleView: View {
 
   public init(
     titleDecoration: TitleDecoration,
+    titleFont: TypographyStyle = Theme.shared.font.titleLarge,
     titleWeight: Font.Weight = .regular,
     caption: LocalizableString.Key? = nil,
     decorationColor: Color = Theme.shared.color.primary,
@@ -72,6 +76,7 @@ public struct ContentTitleView: View {
     isLoading: Bool = false,
     onTap: TapListener = nil
   ) {
+    self.titleFont = titleFont
     self.titleWeight = titleWeight
     self.titleDecoration = titleDecoration
     self.decorationColor = decorationColor
@@ -89,7 +94,7 @@ public struct ContentTitleView: View {
       switch titleDecoration {
       case .plain(let key):
         Text(key)
-          .typography(Theme.shared.font.headlineSmall)
+          .typography(titleFont)
           .fontWeight(titleWeight)
           .foregroundColor(self.titleColor)
           .frame(maxWidth: .infinity, alignment: textAlignment)
@@ -126,7 +131,7 @@ public struct ContentTitleView: View {
       if let caption = self.caption {
         HStack {
           Text(caption)
-            .typography(Theme.shared.font.bodyMedium)
+            .typography(Theme.shared.font.bodyLarge)
             .foregroundColor(self.captionColor)
             .if(textAlignment == .center) {
               $0.multilineTextAlignment(.center)

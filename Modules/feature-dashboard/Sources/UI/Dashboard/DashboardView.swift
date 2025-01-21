@@ -134,7 +134,7 @@ struct DashboardView<Router: RouterHost>: View {
           HStack {
             Spacer()
             Text(viewModel.viewState.appVersion)
-              .typography(Theme.shared.font.bodyMedium)
+              .typography(Theme.shared.font.bodyLarge)
               .foregroundColor(Theme.shared.color.onSurface)
             Spacer()
           }
@@ -268,7 +268,7 @@ struct DashboardView<Router: RouterHost>: View {
 
         HStack {
           Text(.custom(item.value.title))
-            .typography(Theme.shared.font.bodyMedium)
+            .typography(Theme.shared.font.bodyLarge)
             .foregroundColor(Theme.shared.color.onSurface)
 
           Spacer()

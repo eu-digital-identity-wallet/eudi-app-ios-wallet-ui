@@ -51,7 +51,7 @@ public struct HomeView: View {
         )
 
         Text("\(LocalizableString.shared.get(with: .welcomeBack)), \(bearer.value.name)")
-          .font(Theme.shared.font.headlineMedium.font)
+          .font(Theme.shared.font.titleMedium.font)
           .foregroundStyle(Theme.shared.color.onSurface)
 
         HomeCardView(

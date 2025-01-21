@@ -62,7 +62,7 @@ private func content(
   VStack(spacing: SPACING_LARGE) {
     HStack {
       Text(.signDocumentSubtitle)
-        .typography(Theme.shared.font.bodyMedium)
+        .typography(Theme.shared.font.bodyLarge)
         .foregroundColor(Theme.shared.color.onSurfaceVariant)
     }
     .frame(maxWidth: .infinity, alignment: .leading)

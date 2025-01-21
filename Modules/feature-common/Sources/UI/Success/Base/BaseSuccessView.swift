@@ -66,34 +66,16 @@ private func content(
           appIconAndTextData: AppIconAndTextData(
             appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
             appText: ThemeManager.shared.image.euditext
+          ),
+          description: LocalizableString.shared.get(
+            with: .successfullySharedFollowingInformation
+          ),
+          relyingPartyData: RelyingPartyData(
+            isVerified: viewState.issuerData.isVerified,
+            name: viewState.issuerData.title
           )
         )
       )
-
-      HStack {
-        Text(LocalizableString.shared.get(
-          with: .successfullySharedFollowingInformation
-        ))
-        .typography(Theme.shared.font.bodyMedium)
-        .multilineTextAlignment(.center)
-        .foregroundColor(Theme.shared.color.onSurfaceVariant)
-        .frame(maxWidth: .infinity, alignment: .center)
-      }
-
-      VSpacer.large()
-
-      VStack(alignment: .center, spacing: SPACING_SMALL) {
-        Text(viewState.issuerData.title)
-          .typography(Theme.shared.font.bodyMedium)
-          .if(viewState.issuerData.isVerified) {
-            $0.leftImage(
-              image: Theme.shared.image.relyingPartyVerified,
-              spacing: Theme.shared.dimension.verifiedBadgeSpacing
-            )
-          }
-          .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-          .frame(maxWidth: .infinity, alignment: .center)
-      }
 
       VSpacer.large()
 

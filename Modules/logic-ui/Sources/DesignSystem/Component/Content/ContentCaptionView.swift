@@ -37,7 +37,7 @@ public struct ContentCaptionView: View {
 
       HStack {
         Text(caption)
-          .typography(Theme.shared.font.bodyMedium)
+          .typography(Theme.shared.font.bodyLarge)
           .foregroundColor(self.captionColor)
         Spacer()
       }

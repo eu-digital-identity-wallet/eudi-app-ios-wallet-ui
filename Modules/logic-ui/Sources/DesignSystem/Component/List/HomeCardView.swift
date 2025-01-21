@@ -48,7 +48,7 @@ public struct HomeCardView: View {
       HStack(alignment: .top) {
         VStack(alignment: .leading, spacing: SPACING_MEDIUM_LARGE) {
           Text(text)
-            .typography(Theme.shared.font.bodyMedium)
+            .typography(Theme.shared.font.headlineSmall)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .lineLimit(nil)
         }
@@ -76,7 +76,8 @@ public struct HomeCardView: View {
             Theme.shared.image.infoCircle
 
             Text(learnMoreText)
-              .typography(Theme.shared.font.labelLarge)
+              .typography(Theme.shared.font.bodyLarge)
+              .fontWeight(.semibold)
           }
           .foregroundStyle(Theme.shared.color.primary)
         }
