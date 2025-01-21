@@ -1841,6 +1841,28 @@
         }
       }
     },
+    "scoped_issuance_success_deferred_caption_docname" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your document %@ has been requested. You will be notified when it has been issued to your wallet."
+          }
+        }
+      }
+    },
+    "scoped_issuance_success_deferred_caption_docname_and_issuer_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your document %@ from %@ has been requested. You will be notified when it has been issued to your wallet."
+          }
+        }
+      }
+    },
     "screen_recording_security_warning" : {
       "extractionState" : "manual",
       "localizations" : {

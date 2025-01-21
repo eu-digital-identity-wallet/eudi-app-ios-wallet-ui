@@ -14,10 +14,21 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import logic_resources
 import logic_business
-import logic_core
+import logic_ui
+import feature_common
 
-public struct PresentationDataUIModel: Sendable, Equatable, Identifiable {
-  public let id: String
+struct ProximitySuccessView<Router: RouterHost>: View {
+
+  @ObservedObject private var viewModel: ProximitySuccessViewModel<Router>
+
+  init(
+    with viewModel: ProximitySuccessViewModel<Router>
+  ) {
+    self.viewModel = viewModel
+  }
+
+  var body: some View {
+    BaseSuccessView(with: viewModel)
+  }
 }

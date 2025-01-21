@@ -13,16 +13,25 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+@_exported import logic_ui
+@_exported import logic_resources
+@_exported import logic_business
+@_exported import feature_common
 
-public struct ScopedDocument: Equatable, Sendable {
-  public let name: String
-  public let issuer: String
-  public let configId: String
-  public let isPid: Bool
-}
+open class ProximitySuccessViewModel<Router: RouterHost>: BaseSuccessViewModel<Router> {
 
-public extension ScopedDocument {
-  static func empty() -> ScopedDocument {
-    .init(name: "", issuer: "", configId: "", isPid: false)
+  public override init(
+    router: Router,
+    config: any UIConfigType,
+    deepLinkController: DeepLinkController,
+    requestItems: [any UIModel]
+  ) {
+
+    super.init(
+      router: router,
+      config: config,
+      deepLinkController: deepLinkController,
+      requestItems: requestItems
+    )
   }
 }

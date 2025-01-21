@@ -68,6 +68,20 @@ public final class ProximityRouter {
           requestItems: uiModels
         )
       ).eraseToAnyView()
+    case .proximitySuccess(
+      let config,
+      let uiModels
+    ):
+      ProximitySuccessView(
+        with: .init(
+          router: host,
+          config: config,
+          deepLinkController: DIGraph.resolver.force(
+            DeepLinkController.self
+          ),
+          requestItems: uiModels
+        )
+      ).eraseToAnyView()
     }
   }
 }

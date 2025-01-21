@@ -27,6 +27,8 @@ public struct BaseRequestView<Router: RouterHost>: View {
 
   public var body: some View {
     ContentScreenView(
+      padding: .zero,
+      canScroll: true,
       errorConfig: viewModel.viewState.error,
       navigationTitle: LocalizableString.shared.get(with: .dataSharingRequest),
       toolbarContent: ToolBarContent(
@@ -122,46 +124,47 @@ private func content(
   onSelectionChanged: @escaping (String) -> Void
 ) -> some View {
   ScrollView {
-    if viewState.isTrusted {
-      ContentHeader(
-        config: ContentHeaderConfig(
-          appIconAndTextData: AppIconAndTextData(
-            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-            appText: ThemeManager.shared.image.euditext
-          ),
-          description: LocalizableString.shared.get(with: .dataSharingTitle),
-          mainText: LocalizableString.shared.get(with: getTitle).uppercased(),
-          relyingPartyData: RelyingPartyData(
-            isVerified: viewState.isTrusted,
-            name: getRelyingParty,
-            description: LocalizableString.shared.get(with: getCaption)
+    VStack(spacing: .zero) {
+      if viewState.isTrusted {
+        ContentHeader(
+          config: ContentHeaderConfig(
+            appIconAndTextData: AppIconAndTextData(
+              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+              appText: ThemeManager.shared.image.euditext
+            ),
+            description: LocalizableString.shared.get(with: .dataSharingTitle),
+            mainText: LocalizableString.shared.get(with: getTitle).uppercased(),
+            relyingPartyData: RelyingPartyData(
+              isVerified: viewState.isTrusted,
+              name: getRelyingParty,
+              description: LocalizableString.shared.get(with: getCaption)
+            )
           )
         )
-      )
-    } else {
-      ContentHeader(
-        config: ContentHeaderConfig(
-          appIconAndTextData: AppIconAndTextData(
-            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-            appText: ThemeManager.shared.image.euditext
-          ),
-          description: LocalizableString.shared.get(with: viewState.title)
+      } else {
+        ContentHeader(
+          config: ContentHeaderConfig(
+            appIconAndTextData: AppIconAndTextData(
+              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+              appText: ThemeManager.shared.image.euditext
+            ),
+            description: LocalizableString.shared.get(with: viewState.title)
+          )
         )
-      )
-    }
+      }
 
-    if viewState.items.isEmpty {
-      noDocumentsFound(getScreenRect: getScreenRect)
-    } else {
+      if viewState.items.isEmpty {
+        noDocumentsFound(getScreenRect: getScreenRect)
+      } else {
 
-      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-        ForEach(viewState.items, id: \.id) { section in
-          ExpandableCardView(
-            title: section.requestDataSection.title,
-            subtitle: LocalizableString.shared.get(with: .viewDetails)
-          ) {
-            ForEach(section.requestDataRow ?? [], id: \.id) { item in
-              switch item.value {
+        VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+          ForEach(viewState.items, id: \.id) { section in
+            ExpandableCardView(
+              title: section.requestDataSection.title,
+              subtitle: LocalizableString.shared.get(with: .viewDetails)
+            ) {
+              ForEach(section.requestDataRow ?? [], id: \.id) { item in
+                switch item.value {
                 case .string(let value):
                   WrapListItemView(
                     listItem: ListItemData(
@@ -190,13 +193,13 @@ private func content(
                       }
                     )
                   )
+                }
+                Divider()
+                  .padding(.horizontal, SPACING_MEDIUM)
+                  .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
               }
-              Divider()
-                .padding(.horizontal, SPACING_MEDIUM)
-                .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
-            }
-            ForEach(section.requestDataVerification ?? [], id: \.id) { item in
-              switch item.value {
+              ForEach(section.requestDataVerification ?? [], id: \.id) { item in
+                switch item.value {
                 case .string(let value):
                   WrapListItemView(
                     listItem: ListItemData(
@@ -225,21 +228,24 @@ private func content(
                       }
                     )
                   )
+                }
+                Divider()
+                  .padding(.horizontal, SPACING_MEDIUM)
+                  .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
               }
-              Divider()
-                .padding(.horizontal, SPACING_MEDIUM)
-                .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
             }
+            .shimmer(isLoading: viewState.isLoading)
           }
-          .shimmer(isLoading: viewState.isLoading)
-        }
 
-        Text(.shareDataReview)
-          .typography(Theme.shared.font.bodySmall)
-          .foregroundColor(Theme.shared.color.onSurface)
-          .multilineTextAlignment(.leading)
+          Text(.shareDataReview)
+            .typography(Theme.shared.font.bodySmall)
+            .foregroundColor(Theme.shared.color.onSurface)
+            .multilineTextAlignment(.leading)
+          VSpacer.medium()
+        }
       }
     }
+    .padding(Theme.shared.dimension.padding)
   }
 }
 

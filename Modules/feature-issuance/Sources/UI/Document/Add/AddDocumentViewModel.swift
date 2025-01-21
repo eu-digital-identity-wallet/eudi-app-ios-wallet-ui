@@ -127,7 +127,9 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
         )
       )
     case .deferredSuccess:
-      router.push(with: onDeferredSuccess())
+      router.push(
+        with: onDeferredSuccess()
+      )
     case .noPending:
       setState {
         $0.copy(
@@ -150,11 +152,10 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
   private func issueDocument(configId: String) {
     Task {
       setState {
-        $0
-          .copy(
-            addDocumentCellModels: transformCellLoadingState(with: true)
-          )
-          .copy(error: nil)
+        $0.copy(
+          addDocumentCellModels: transformCellLoadingState(with: true)
+        )
+        .copy(error: nil)
       }
 
       let state = await Task.detached { () -> IssueDocumentPartialState in
@@ -196,12 +197,24 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
           )
         }
       case .deferredSuccess:
-        router.push(with: onDeferredSuccess())
+        let metaData = try await interactor.getScopedDocument(
+          configId: configId
+        )
+
+        router.push(
+          with: onDeferredSuccess(
+            issuerName: metaData.issuer,
+            documentName: metaData.name
+          )
+        )
       }
     }
   }
 
-  private func onDeferredSuccess() -> AppRoute {
+  private func onDeferredSuccess(
+    issuerName: String = "",
+    documentName: String = ""
+  ) -> AppRoute {
     var navigationType: UIConfig.DeepLinkNavigationType {
       return switch viewState.config.flow {
       case .noDocument:
@@ -210,11 +223,25 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
           .pop(screen: .featureDashboardModule(.dashboard))
       }
     }
+
+    var subTitle: LocalizableString.Key {
+      if documentName.isEmpty {
+        return .scopedIssuanceSuccessDeferredCaptionDocName([documentName])
+      } else if !documentName.isEmpty, !issuerName.isEmpty {
+        return .scopedIssuanceSuccessDeferredCaptionDocNameAndIssuer([documentName, issuerName])
+      } else {
+        return .scopedIssuanceSuccessDeferredCaption
+      }
+    }
+
     return .featureCommonModule(
       .success(
         config: UIConfig.Success(
-          title: .init(value: .inProgress, color: Theme.shared.color.pending),
-          subtitle: .scopedIssuanceSuccessDeferredCaption,
+          title: .init(
+            value: .inProgress,
+            color: Theme.shared.color.pending
+          ),
+          subtitle: subTitle,
           buttons: [
             .init(
               title: .okButton,

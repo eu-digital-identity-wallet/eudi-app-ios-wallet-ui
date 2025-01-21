@@ -90,7 +90,7 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
   func fetchDocumentDetails() async {
 
     let documentIdentifiers = viewState.documentIdentifiers
-    let state = await Task.detached { () -> DocumentDetailsPartialState in
+    let state = await Task.detached { () -> DocumentsPartialState in
       return await self.detailsInteractor.fetchStoredDocuments(
         documentIds: documentIdentifiers
       )

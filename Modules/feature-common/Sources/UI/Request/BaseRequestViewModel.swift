@@ -130,9 +130,11 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
 
   public func onEmptyDocuments() {
     setState {
-      $0
-        .copy(isLoading: false, items: [], initialized: true)
-        .copy(error: nil)
+      $0.copy(
+        isLoading: false,
+        items: [],
+        initialized: true
+      ).copy(error: nil)
     }
   }
 
@@ -143,37 +145,36 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     isTrusted: Bool
   ) {
     setState {
-      $0
-        .copy(
-          isLoading: false,
-          items: items,
-          title: title,
-          relyingParty: relyingParty,
-          isTrusted: isTrusted,
-          allowShare: canShare(with: items),
-          initialized: true
-        )
-        .copy(error: nil)
+      $0.copy(
+        isLoading: false,
+        items: items,
+        title: title,
+        relyingParty: relyingParty,
+        isTrusted: isTrusted,
+        allowShare: canShare(with: items),
+        initialized: true
+      )
+      .copy(error: nil)
     }
   }
 
   public func resetState() {
     setState { previous in
-        .init(
-          isLoading: true,
-          error: nil,
-          isContentVisible: false,
-          itemsAreAllSelected: true,
-          showMissingCrredentials: true,
-          items: RequestDataUiModel.mockData(),
-          title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
-          trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
-          relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
-          isTrusted: false,
-          allowShare: false,
-          originator: previous.originator,
-          initialized: false
-        )
+      .init(
+        isLoading: true,
+        error: nil,
+        isContentVisible: false,
+        itemsAreAllSelected: true,
+        showMissingCrredentials: true,
+        items: RequestDataUiModel.mockData(),
+        title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
+        trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
+        relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
+        isTrusted: false,
+        allowShare: false,
+        originator: previous.originator,
+        initialized: false
+      )
     }
   }
 

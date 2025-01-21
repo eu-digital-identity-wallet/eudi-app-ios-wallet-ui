@@ -28,12 +28,12 @@ public struct IssuanceDetailUiConfig: UIConfigType, Equatable {
     self.flow = flow
   }
 
-  public var documentIds: [String] {
+  public var documentId: String {
     switch self.flow {
-    case .noDocument(let ids):
-      return ids
-    case .extraDocument(let ids):
-      return ids
+    case .noDocument(let id):
+      return id
+    case .extraDocument(let id):
+      return id
     }
   }
 
@@ -50,15 +50,15 @@ public struct IssuanceDetailUiConfig: UIConfigType, Equatable {
 public extension IssuanceDetailUiConfig {
   enum Flow: Equatable, Sendable {
 
-    case noDocument([String])
-    case extraDocument([String])
+    case noDocument(String)
+    case extraDocument(String)
 
     var key: String {
       return switch self {
-      case .noDocument(let ids):
-        "Type: noDocument Id: \(ids)"
-      case .extraDocument(let ids):
-        "Type: extraDocument Ids: \(ids)"
+      case .noDocument(let id):
+        "Type: noDocument Id: \(id)"
+      case .extraDocument(let id):
+        "Type: extraDocument Ids: \(id)"
       }
     }
   }

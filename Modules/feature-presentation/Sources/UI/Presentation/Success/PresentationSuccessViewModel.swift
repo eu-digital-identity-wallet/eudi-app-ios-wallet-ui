@@ -18,59 +18,20 @@
 @_exported import logic_business
 @_exported import feature_common
 
-@Copyable
-public struct PresentationSuccessState: ViewState {
-  let config: PresentationSuccessUIConfig
-  let issuerData: IssuerDataUIModel
-  let items: [RequestDataUI]
-  let isLoading: Bool
-}
+open class PresentationSuccessViewModel<Router: RouterHost>: BaseSuccessViewModel<Router> {
 
-open class PresentationSuccessViewModel<Router: RouterHost>: ViewModel<Router, PresentationSuccessState> {
-
-  private let deepLinkController: DeepLinkController
-
-  public init(
+  public override init(
     router: Router,
     config: any UIConfigType,
     deepLinkController: DeepLinkController,
     requestItems: [any UIModel]
   ) {
 
-    guard let config = config as? PresentationSuccessUIConfig else {
-      fatalError("ExternalLoginViewModel:: Invalid configuraton")
-    }
-
-    guard let requestItems = requestItems as? [RequestDataUI] else {
-      fatalError("ExternalLoginViewModel:: Invalid configuraton")
-    }
-
-    self.deepLinkController = deepLinkController
-
     super.init(
       router: router,
-      initialState: .init(
-        config: config,
-        issuerData: .init(
-          icon: Image(systemName: ""),
-          title: config.relyingParty,
-          isVerified: true
-        ),
-        items: requestItems,
-        isLoading: false
-      )
+      config: config,
+      deepLinkController: deepLinkController,
+      requestItems: requestItems
     )
-  }
-
-  func onDone() {
-    switch viewState.config.successNavigation {
-    case .pop(let screen, let inclusive):
-      router.popTo(with: screen, inclusive: inclusive)
-    case .deepLink(let url, let popToScreen):
-      deepLinkController.cacheDeepLinkURL(url: url)
-      router.popTo(with: popToScreen)
-    case .push(let screen):
-      router.push(with: screen)
-    }
   }
 }

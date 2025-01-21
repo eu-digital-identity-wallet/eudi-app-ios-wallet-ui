@@ -21,7 +21,7 @@ import logic_storage
 
 public protocol DocumentDetailsInteractor: Sendable {
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
-  func fetchStoredDocuments(documentIds: [String]) async -> DocumentDetailsPartialState
+  func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState
   func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState
   func fetchBookmarks(_ identifier: String) async throws -> Bookmark
   func save(_ identifier: String) async throws
@@ -46,10 +46,10 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     guard let documentDetails = document?.transformToDocumentDetailsUi() else {
       return .failure(WalletCoreError.unableFetchDocument)
     }
-    return .success([documentDetails])
+    return .success(documentDetails)
   }
 
-  func fetchStoredDocuments(documentIds: [String]) async -> DocumentDetailsPartialState {
+  func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState {
     let documents = walletController.fetchDocuments(with: documentIds)
     let documentsDetails = documents.compactMap {
       $0.transformToDocumentDetailsUi()
@@ -113,6 +113,11 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 }
 
 public enum DocumentDetailsPartialState: Sendable {
+  case success(DocumentDetailsUIModel)
+  case failure(Error)
+}
+
+public enum DocumentsPartialState: Sendable {
   case success([DocumentDetailsUIModel])
   case failure(Error)
 }

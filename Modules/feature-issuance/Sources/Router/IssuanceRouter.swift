@@ -58,7 +58,7 @@ public final class IssuanceRouter {
           documentIdentifiers: documentIdentifiers
         )
       ).eraseToAnyView()
-    case .credentialOfferRequest(config: let config):
+    case .credentialOfferRequest(let config):
       DocumentOfferView(
         with: .init(
           router: host,

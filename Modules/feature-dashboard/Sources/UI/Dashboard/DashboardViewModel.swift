@@ -181,7 +181,8 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     router.push(
       with: .featureIssuanceModule(
         .issuanceDocumentDetails(
-          config: IssuanceDetailUiConfig(flow: .extraDocument([documentId]))
+          config: IssuanceDetailUiConfig(flow: .extraDocument(documentId)
+          )
         )
       )
     )
