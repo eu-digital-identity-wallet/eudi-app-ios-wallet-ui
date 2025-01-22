@@ -40,46 +40,38 @@ struct DocumentListView: View {
   var body: some View {
     VStack {
       if filteredItems.isEmpty && !searchText.isEmpty {
-        VStack(spacing: SPACING_SMALL) {
-          Text(.noResults)
-            .typography(Theme.shared.font.titleLarge)
-            .fontWeight(.bold)
-
-          Text(.noResultsDescription)
-            .typography(Theme.shared.font.bodyLarge)
-            .foregroundStyle(Theme.shared.color.onSurface)
-            .multilineTextAlignment(.center)
-
-          Spacer()
-        }
-        .padding(.top, SPACING_LARGE_MEDIUM)
-        .padding(.horizontal, SPACING_MEDIUM)
+        contentUnavailableView()
       } else {
-        List {
-          ForEach(filteredItems) { item in
-            WrapCardView {
-              WrapListItemView(
-                listItem: ListItemData(
-                  mainText: item.value.title,
-                  overlineText: item.value.heading,
-                  supportingText: item.supportingText(),
-                  supportingTextColor: item.supportingColor(),
-                  leadingIcon: (
-                    item.value.image?.url,
-                    item.value.image?.placeholder
-                  ),
-                  trailingContent: .icon(item.indicatorImage(), item.supportingColor())
-                )
-              ) {
-                action(item)
+        if !filteredItems.isEmpty {
+          List {
+            ForEach(filteredItems) { item in
+              WrapCardView {
+                WrapListItemView(
+                  listItem: ListItemData(
+                    mainText: item.value.title,
+                    overlineText: item.value.heading,
+                    supportingText: item.supportingText(),
+                    supportingTextColor: item.supportingColor(),
+                    leadingIcon: (
+                      item.value.image?.url,
+                      item.value.image?.placeholder
+                    ),
+                    trailingContent: .icon(item.indicatorImage(), item.supportingColor())
+                  )
+                ) {
+                  action(item)
+                }
               }
+              .listRowSeparator(.hidden)
             }
-            .listRowSeparator(.hidden)
           }
+          .shimmer(isLoading: isLoading)
+          .listStyle(.plain)
+          .clipped()
+        } else {
+          contentUnavailableView()
         }
-        .shimmer(isLoading: isLoading)
-        .listStyle(.plain)
-        .clipped()
+
       }
     }
     .searchable(
@@ -91,39 +83,56 @@ struct DocumentListView: View {
     }
     .background(Theme.shared.color.background)
   }
+
+  @ViewBuilder
+  func contentUnavailableView() -> some View {
+    VStack(spacing: SPACING_SMALL) {
+      Text(.noResults)
+        .typography(Theme.shared.font.titleLarge)
+        .fontWeight(.bold)
+
+      Text(.noResultsDescription)
+        .typography(Theme.shared.font.bodyLarge)
+        .foregroundStyle(Theme.shared.color.onSurface)
+        .multilineTextAlignment(.center)
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    .padding(.top, SPACING_LARGE_MEDIUM)
+    .padding(.horizontal, SPACING_MEDIUM)
+  }
 }
 
 private extension DocumentUIModel {
   func supportingText() -> String {
     switch value.state {
-      case .issued:
-        return expiry.orEmpty
-      case .pending:
-        return LocalizableString.shared.get(with: .pending)
-      case .failed:
-        return LocalizableString.shared.get(with: .issuanceFailed)
+    case .issued:
+      return expiry.orEmpty
+    case .pending:
+      return LocalizableString.shared.get(with: .pending)
+    case .failed:
+      return LocalizableString.shared.get(with: .issuanceFailed)
     }
   }
 
   func supportingColor() -> Color {
     switch value.state {
-      case .issued:
-        return Theme.shared.color.onSurfaceVariant
-      case .pending:
-        return Theme.shared.color.warning
-      case .failed:
-        return Theme.shared.color.error
+    case .issued:
+      return Theme.shared.color.onSurfaceVariant
+    case .pending:
+      return Theme.shared.color.warning
+    case .failed:
+      return Theme.shared.color.error
     }
   }
 
   func indicatorImage() -> Image {
     switch value.state {
-      case .issued:
-        return Theme.shared.image.chevronRight
-      case .pending:
-        return Theme.shared.image.clockIndicator
-      case .failed:
-        return Theme.shared.image.errorIndicator
+    case .issued:
+      return Theme.shared.image.chevronRight
+    case .pending:
+      return Theme.shared.image.clockIndicator
+    case .failed:
+      return Theme.shared.image.errorIndicator
     }
   }
 
@@ -139,8 +148,6 @@ private extension DocumentUIModel {
   DocumentListView(
     filteredItems: DocumentUIModel.mocks(),
     isLoading: false,
-    action: { filteredDocs in
-      print("Filtered documents updated: \(filteredDocs)")
-    }
+    action: { _ in }
   ) { _ in }
 }

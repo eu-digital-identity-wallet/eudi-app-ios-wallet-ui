@@ -26,6 +26,9 @@ struct DashboardView<Router: RouterHost>: View {
   @Environment(\.scenePhase) var scenePhase
 
   @State private var selectedOptions: Set<String> = []
+  @State private var selectedExpiryOption: String = ""
+  @State private var selectedStateOption: String = ""
+  @State private var initialSorting: String = "Default"
   @State private var showFilterIndicator: Bool = false
   @State private var sortAscending: Bool = true
 
@@ -62,7 +65,7 @@ struct DashboardView<Router: RouterHost>: View {
         onShare: viewModel.onShare,
         signDocument: { viewModel.openSignDocument() },
         filteredDocsCallback: { filterDocs in
-          viewModel.updateFilteredDocuments(filteredDocuments: filterDocs)
+          viewModel.updateFilteredDocuments(filteredDocuments: filterDocs, listIsFiltered: showFilterIndicator)
         }
       )
     }
@@ -71,6 +74,21 @@ struct DashboardView<Router: RouterHost>: View {
         sortAscending: $sortAscending,
         showFilterIndicator: $showFilterIndicator,
         selectedOptions: $selectedOptions,
+        selectedExpiryOption: $selectedExpiryOption,
+        selectesSorting: $initialSorting,
+        stateOption: $selectedStateOption,
+        applyFiltersCallback: {
+          viewModel.applyFilters(
+            section: viewModel.viewState.documentSections,
+            sortAscending: sortAscending,
+            initialSorting: initialSorting,
+            selectedExpiryOption: selectedExpiryOption,
+            selectedStateOption: selectedStateOption
+          )
+        },
+        resetFiltersCallback: {
+          viewModel.resetDocumentList()
+        },
         sections: viewModel.viewState.documentSections
       )
       .confirmationDialog(
@@ -223,9 +241,13 @@ struct DashboardView<Router: RouterHost>: View {
       self.viewModel.setPhase(with: phase)
     }
     .onChange(of: showFilterIndicator, perform: { _ in
-      if showFilterIndicator {
-        viewModel.applyFilters(sortAscending: sortAscending)
-      }
+      viewModel.applyFilters(
+        section: viewModel.viewState.documentSections,
+        sortAscending: sortAscending,
+        initialSorting: initialSorting,
+        selectedExpiryOption: selectedExpiryOption,
+        selectedStateOption: selectedStateOption
+      )
     })
     .onDisappear {
       self.viewModel.onPause()
@@ -347,18 +369,17 @@ private func content(
     VStack(spacing: .zero) {
       DocumentListView(
         filteredItems: viewState.filteredDocuments,
-        isLoading: viewState.isLoading
-      ) { document in
-        switch document.value.state {
-        case .issued:
-          onDocumentDetails(document.value.id)
-        case .pending, .failed:
-          onDeleteDeferredDocument(document)
-        }
-      }
-      filteredDocsCallback: { filteredDocs in
-        filteredDocsCallback(filteredDocs)
-      }
+        isLoading: viewState.isLoading,
+        action: { document in
+          switch document.value.state {
+          case .issued:
+            onDocumentDetails(document.value.id)
+          case .pending, .failed:
+            onDeleteDeferredDocument(document)
+          }
+        },
+        filteredDocsCallback: filteredDocsCallback
+      )
       .background(Theme.shared.color.surface)
     }
     .tabItem {
@@ -391,7 +412,8 @@ private func content(
     pendingDeletionDocument: nil,
     succededIssuedDocuments: [],
     failedDocuments: [],
-    moreOptions: [.changeQuickPin, .scanQrCode]
+    moreOptions: [.changeQuickPin, .scanQrCode],
+    documentSections: [.issuedSortingDate]
   )
 
   ContentScreenView(

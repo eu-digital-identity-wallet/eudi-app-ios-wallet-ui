@@ -45,6 +45,14 @@ public protocol DashboardInteractor: Sendable {
   func deleteDeferredDocument(with id: String) async -> DashboardDeleteDeferredPartialState
   func requestDeferredIssuance() async -> DashboardDeferredPartialState
   func retrieveLogFileUrl() -> URL?
+  func applyFiltersWithSorting(
+    section: [FilterSections],
+    sortAscending: Bool,
+    initialSorting: String,
+    selectedExpiryOption: String?,
+    selectedStateOption: String,
+    documents: [DocumentUIModel]
+  ) -> [DocumentUIModel]
 }
 
 final class DashboardInteractorImpl: DashboardInteractor {
@@ -138,6 +146,88 @@ final class DashboardInteractorImpl: DashboardInteractor {
 
   func retrieveLogFileUrl() -> URL? {
     return walletController.retrieveLogFileUrl()
+  }
+
+  func applyFiltersWithSorting(
+    section: [FilterSections],
+    sortAscending: Bool,
+    initialSorting: String,
+    selectedExpiryOption: String?,
+    selectedStateOption: String,
+    documents: [DocumentUIModel]
+  ) -> [DocumentUIModel] {
+
+    let selectedIssuers = section
+      .compactMap { filterSection -> [String]? in
+        if case let .issuer(options: issuers) = filterSection {
+          return issuers
+        }
+        return nil
+      }
+      .flatMap { $0 }
+
+    var filteredDocuments: [DocumentUIModel] = documents
+
+    if !selectedIssuers.isEmpty {
+      filteredDocuments = filteredDocuments.filter { selectedIssuers.contains($0.value.heading) }
+    }
+
+    guard let selectedExpiryPeriod = selectedExpiryOption else {
+      return filteredDocuments
+    }
+
+    filteredDocuments = filteredDocuments.filter { document in
+      return isDocumentWithinExpiryPeriod(document, expiryPeriod: selectedExpiryPeriod)
+    }
+
+    if selectedStateOption == "Valid" {
+      filteredDocuments = filteredDocuments.filter { !$0.value.hasExpired && $0.value.state == .issued }
+    } else if selectedStateOption == "Expired" {
+      filteredDocuments = filteredDocuments.filter { $0.value.hasExpired }
+    } else if selectedStateOption == "Revoke" {
+      filteredDocuments = filteredDocuments.filter { $0.value.state == .failed }
+    }
+
+    switch initialSorting {
+    case "Date Issued":
+      filteredDocuments = sortAscending
+      ? filteredDocuments.sorted { $0.value.createdAt < $1.value.createdAt }
+      : filteredDocuments.sorted { $0.value.createdAt > $1.value.createdAt }
+    case "Expiry Date":
+      filteredDocuments = sortAscending
+      ? filteredDocuments.sorted { ($0.value.expiresAt ?? "") < ($1.value.expiresAt ?? "") }
+      : filteredDocuments.sorted { ($0.value.expiresAt ?? "") > ($1.value.expiresAt ?? "") }
+    default:
+      filteredDocuments = sortAscending
+      ? filteredDocuments.sorted { $0.value.title < $1.value.title }
+      : filteredDocuments.sorted { $0.value.title > $1.value.title }
+    }
+
+    return filteredDocuments
+  }
+
+  private func isDocumentWithinExpiryPeriod(_ document: DocumentUIModel, expiryPeriod: String) -> Bool {
+    guard let expiresAtString = document.value.expiresAt else { return false }
+
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "dd/MM/yyyy"
+    guard let expiryDate = dateFormatter.date(from: expiresAtString) else { return false }
+
+    let currentDate = Date()
+    let calendar = Calendar.current
+
+    switch expiryPeriod {
+    case "Next 7 days":
+      return calendar.date(byAdding: .day, value: 7, to: currentDate)! >= expiryDate
+    case "Next 30 days":
+      return calendar.date(byAdding: .day, value: 30, to: currentDate)! >= expiryDate
+    case "Beyond 30 days":
+      return expiryDate > calendar.date(byAdding: .day, value: 30, to: currentDate)!
+    case "Before today":
+      return expiryDate < currentDate
+    default:
+      return true
+    }
   }
 
   private func fetchBearer() -> BearerUIModel {

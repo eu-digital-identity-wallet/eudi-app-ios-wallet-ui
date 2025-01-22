@@ -27,6 +27,12 @@ struct FilterListView: View {
   @Binding var sortAscending: Bool
   @Binding var showFilterIndicator: Bool
   @Binding var selectedOptions: Set<String>
+  @Binding var selectedExpiryOption: String
+  @Binding var selectesSorting: String
+  @Binding var stateOption: String
+
+  var applyFiltersCallback: () -> Void
+  var resetFiltersCallback: () -> Void
 
   let sections: [FilterSections]
 
@@ -34,10 +40,17 @@ struct FilterListView: View {
     NavigationView {
       List {
         ForEach(sections, id: \.sectionTitle) { section in
-          if section.sorting.isEmpty {
-            categorySection(section: section)
-          } else {
+          switch section {
+          case .issuedSortingDate:
             sortSection(section: section)
+          case .sortBy:
+            sortBySection(section: section)
+          case .issuer:
+            categorySection(section: section)
+          case .expiryPeriod:
+            expiryPeriodSection(section: section)
+          case .state:
+            stateSection(section: section)
           }
         }
       }
@@ -53,14 +66,15 @@ struct FilterListView: View {
         ToolbarItem(placement: .navigationBarTrailing) {
           Button(LocalizableString.shared.get(with: .reset).capitalized) {
             showFilterIndicator = false
+            resetFiltersCallback()
             resetFilters()
           }
-          .disabled(selectedOptions.isEmpty && sortAscending)
+          .disabled(selectedOptions.isEmpty && sortAscending && selectesSorting == "Default")
         }
       }
       .overlay(alignment: .bottom) {
         if showCounterRectangle {
-          Text(LocalizableString.shared.get(with: .showFilters([String(filterCounter)])).capitalized)
+          Text(LocalizableString.shared.get(with: .showResults).capitalized)
             .font(.body.bold())
             .foregroundStyle(Theme.shared.color.white)
             .frame(maxWidth: .infinity)
@@ -69,7 +83,7 @@ struct FilterListView: View {
             .foregroundStyle(Theme.shared.color.primary)
             .padding(.horizontal, SPACING_MEDIUM)
             .onTapGesture {
-              showFilterIndicator = true
+              applyFiltersCallback()
               dismiss()
             }
         }
@@ -78,11 +92,66 @@ struct FilterListView: View {
     .onChange(of: selectedOptions) { _ in
       updateSelectedCount()
     }
-    .onAppear {
+    .onChange(of: selectedExpiryOption) { _ in
       updateSelectedCount()
     }
+    .onAppear {
+      if selectesSorting.isEmpty {
+        selectesSorting = "Default"
+      }
+      updateSelectedCount()
+    }
+    .onChange(of: sortAscending, perform: {  _ in
+      showFilterIndicator.toggle()
+    })
     .onDisappear {
-      print("Calling onResume...")
+      if sortAscending && selectesSorting == "Default" {
+        showFilterIndicator = false
+      }
+
+      if selectedExpiryOption != "" {
+        showFilterIndicator = true
+      }
+    }
+  }
+
+  private func expiryPeriodSection(section: FilterSections) -> some View {
+    Section(header: Text(section.sectionTitle)) {
+      ForEach(section.options, id: \.self) { expiry in
+        ChoosableRow(
+          text: expiry,
+          isSelected: selectedExpiryOption == expiry
+        ) {
+          if selectedExpiryOption == expiry {
+            selectedExpiryOption = ""
+            selectedOptions.remove(expiry)
+          } else {
+            selectedExpiryOption = expiry
+            selectedOptions.insert(expiry)
+          }
+          updateSelectedCount()
+        }
+      }
+    }
+  }
+
+  private func stateSection(section: FilterSections) -> some View {
+    Section(header: Text(section.sectionTitle)) {
+      ForEach(section.options, id: \.self) { state in
+        ChoosableRow(
+          text: state,
+          isSelected: stateOption == state
+        ) {
+          if stateOption == state {
+            stateOption = ""
+            selectedOptions.remove(state)
+          } else {
+            stateOption = state
+            selectedOptions.insert(state)
+          }
+          updateSelectedCount()
+        }
+      }
     }
   }
 
@@ -123,7 +192,26 @@ struct FilterListView: View {
           isSelected: (option == LocalizableString.shared.get(with: .ascending).capitalized && sortAscending) || (option == LocalizableString.shared.get(with: .descending).capitalized && !sortAscending)
         ) {
           sortAscending = (option == LocalizableString.shared.get(with: .ascending).capitalized)
-          showFilterIndicator = sortAscending
+          updateSelectedCount()
+        }
+      }
+    }
+  }
+
+  private func sortBySection(section: FilterSections) -> some View {
+    Section(header: Text(section.sectionTitle)) {
+      ForEach(section.options, id: \.self) { sortBy in
+        ChoosableRow(
+          text: sortBy,
+          isSelected: selectesSorting == sortBy
+        ) {
+          if selectesSorting == sortBy {
+            selectesSorting = ""
+            selectedOptions.remove(sortBy)
+          } else {
+            selectesSorting = sortBy
+            selectedOptions.insert(sortBy)
+          }
           updateSelectedCount()
         }
       }
@@ -144,7 +232,10 @@ struct FilterListView: View {
   private func resetFilters() {
     selectedOptions.removeAll()
     togglesState.removeAll()
+    selectedExpiryOption = ""
+    stateOption = ""
     sortAscending = true
+    selectesSorting = "Default"
     updateSelectedCount()
   }
 

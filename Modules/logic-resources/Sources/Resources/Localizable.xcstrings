@@ -705,6 +705,17 @@
         }
       }
     },
+    "expiration_period" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "expiry"
+          }
+        }
+      }
+    },
     "expired" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -712,6 +723,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Expired"
+          }
+        }
+      }
+    },
+    "expiry_period" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expiry Period"
           }
         }
       }
@@ -1918,17 +1940,6 @@
         }
       }
     },
-    "show_filters" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show (%@) results"
-          }
-        }
-      }
-    },
     "show_qr_tap" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1936,6 +1947,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SHOW QR"
+          }
+        }
+      }
+    },
+    "show_results" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Results"
           }
         }
       }
@@ -1969,6 +1991,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select a document from your device to sign electronically."
+          }
+        }
+      }
+    },
+    "sort_by" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SORT BY"
           }
         }
       }

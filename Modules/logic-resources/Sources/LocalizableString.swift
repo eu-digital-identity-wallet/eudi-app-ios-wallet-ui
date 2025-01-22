@@ -405,8 +405,8 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "sort_by_issued_date")
       case .issuerSectionTitle:
         bundle.localizedString(forKey: "issuer")
-      case .showFilters(let args):
-          bundle.localizedStringWithArguments(forKey: "show_filters", arguments: args)
+      case .showResults:
+        bundle.localizedString(forKey: "show_results")
       case .reset:
         bundle.localizedString(forKey: "reset")
       case .all:
@@ -415,6 +415,14 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "desceding")
       case .ascending:
         bundle.localizedString(forKey: "asceding")
+      case .expiryPeriodSectionTitle:
+        bundle.localizedString(forKey: "expiry")
+      case .selectExpiryPeriod:
+        bundle.localizedString(forKey: "expiry_period")
+      case .state:
+        bundle.localizedString(forKey: "state")
+      case .sortBy:
+          bundle.localizedString(forKey: "sort_by")
     }
   }
 
@@ -458,7 +466,7 @@ public extension LocalizableString {
     case filters
     case sortByIssuedDateSectionTitle
     case issuerSectionTitle
-    case showFilters([String])
+    case showResults
     case showQRTap
     case welcomeBack
     case viewDocumentDetails
@@ -615,6 +623,10 @@ public extension LocalizableString {
     case noResultsDescription
     case proximityConnectionNfcDescription
     case orShareViaNfc
+    case expiryPeriodSectionTitle
+    case selectExpiryPeriod
+    case state
+    case sortBy
   }
 }
 

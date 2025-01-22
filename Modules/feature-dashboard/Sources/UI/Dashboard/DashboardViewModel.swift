@@ -38,9 +38,7 @@ struct DashboardState: ViewState {
     pendingDeletionDocument?.value.title ?? ""
   }
 
-  var documentSections: [FilterSections] {
-    return [ .issuedSortingDate ]
-  }
+  var documentSections: [FilterSections]
 }
 
 extension DashboardState {
@@ -116,7 +114,8 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         pendingDeletionDocument: nil,
         succededIssuedDocuments: [],
         failedDocuments: [],
-        moreOptions: [.changeQuickPin, .scanQrCode]
+        moreOptions: [.changeQuickPin, .scanQrCode],
+        documentSections: [.issuedSortingDate]
       )
     )
 
@@ -133,13 +132,21 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
     switch state {
     case .success(let bearer, let documents, let hasIssuedDocuments):
+      let issuers = Array(Set(documents.map { $0.value.heading })).sorted()
       setState {
         $0.copy(
           isLoading: false,
           documents: documents,
           filteredDocuments: documents,
           bearer: bearer,
-          allowUserInteraction: hasIssuedDocuments
+          allowUserInteraction: hasIssuedDocuments,
+          documentSections: [
+            .issuedSortingDate,
+            .sortBy,
+            .issuer(options: issuers),
+            .expiryPeriod,
+            .state
+          ]
         )
       }
       onDocumentsRetrievedPostActions()
@@ -264,36 +271,53 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     )
   }
 
-  // MARK: - FILTERS
-
   func showFilters() {
     onPause()
     isFilterModalShowing = true
   }
 
-  func updateFilteredDocuments(filteredDocuments: String) {
-
-    let newDocuments = viewState.filteredDocuments.filter {
-      $0.value.title.localizedCaseInsensitiveContains(filteredDocuments)
-    }
-
-    if filteredDocuments.isEmpty {
-      setState { $0.copy(filteredDocuments: viewState.documents) }
+  func updateFilteredDocuments(filteredDocuments: String, listIsFiltered: Bool) {
+    let trimmedSearchQuery = filteredDocuments.trimmingCharacters(in: .whitespacesAndNewlines)
+    
+    if trimmedSearchQuery.isEmpty {
+      let documentsToReturn = listIsFiltered ? viewState.filteredDocuments : viewState.documents
+      setState { $0.copy(filteredDocuments: documentsToReturn) }
     } else {
+      let documentsToSearch = listIsFiltered ? viewState.filteredDocuments : viewState.documents
+      
+      let newDocuments = documentsToSearch.filter {
+        $0.value.title.localizedCaseInsensitiveContains(trimmedSearchQuery) ||
+        $0.id.localizedCaseInsensitiveContains(trimmedSearchQuery)
+      }
+      
       setState { $0.copy(filteredDocuments: newDocuments) }
     }
   }
 
-  func applyFilters(sortAscending: Bool) {
-    let sortedDocuments: [DocumentUIModel]
+  func applyFilters(
+    section: [FilterSections],
+    sortAscending: Bool,
+    initialSorting: String,
+    selectedExpiryOption: String?,
+    selectedStateOption: String
+  ) {
 
-    if sortAscending {
-      sortedDocuments = viewState.filteredDocuments.sorted { $0.value.title < $1.value.title }
-    } else {
-      sortedDocuments = viewState.filteredDocuments.sorted { $0.value.title > $1.value.title }
-    }
+    setState { $0.copy(filteredDocuments: viewState.documents) }
+
+    let sortedDocuments = interactor.applyFiltersWithSorting(
+      section: section,
+      sortAscending: sortAscending,
+      initialSorting: initialSorting,
+      selectedExpiryOption: selectedExpiryOption,
+      selectedStateOption: selectedStateOption,
+      documents: viewState.filteredDocuments
+    )
 
     setState { $0.copy(filteredDocuments: sortedDocuments) }
+  }
+
+  func resetDocumentList() {
+    setState { $0.copy(filteredDocuments: viewState.documents) }
   }
 
   func onMyWallet() {

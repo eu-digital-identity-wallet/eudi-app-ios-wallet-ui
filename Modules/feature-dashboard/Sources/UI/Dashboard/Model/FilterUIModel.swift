@@ -16,17 +16,25 @@
 import Foundation
 import logic_resources
 
-enum FilterSections {
-  // MARK: - DOCUMENT FILTER SECTIONS
+public enum FilterSections {
   case issuedSortingDate
+  case sortBy
   case issuer(options: [String])
+  case expiryPeriod
+  case state
 
   var sectionTitle: String {
     switch self {
     case .issuedSortingDate:
       return LocalizableString.shared.get(with: .sortByIssuedDateSectionTitle)
+    case .sortBy:
+      return LocalizableString.shared.get(with: .sortBy)
     case .issuer:
       return LocalizableString.shared.get(with: .issuerSectionTitle)
+    case .expiryPeriod:
+      return LocalizableString.shared.get(with: .expiryPeriodSectionTitle)
+    case .state:
+      return LocalizableString.shared.get(with: .state)
     }
   }
 
@@ -37,7 +45,13 @@ enum FilterSections {
         LocalizableString.shared.get(with: .ascending).capitalized,
         LocalizableString.shared.get(with: .descending).capitalized
       ]
+    case .sortBy:
+      return []
     case .issuer:
+      return []
+    case .expiryPeriod:
+      return []
+    case .state:
       return []
     }
   }
@@ -46,8 +60,27 @@ enum FilterSections {
     switch self {
     case .issuedSortingDate:
       return []
+    case .sortBy:
+      return [
+        "Default",
+        "Date Issued",
+        "Expiry Date"
+      ]
     case .issuer(let options):
       return options
+    case .expiryPeriod:
+      return [
+        "Next 7 days",
+        "Next 30 days",
+        "Beyond 30 days",
+        "Before today"
+      ]
+    case .state:
+      return [
+        "Valid",
+        "Expired",
+        "Revoke"
+      ]
     }
   }
 
@@ -55,8 +88,14 @@ enum FilterSections {
     switch self {
     case .issuedSortingDate:
       return false
+    case .sortBy:
+      return false
     case .issuer:
       return true
+    case .expiryPeriod:
+      return false
+    case .state:
+      return false
     }
   }
 }
