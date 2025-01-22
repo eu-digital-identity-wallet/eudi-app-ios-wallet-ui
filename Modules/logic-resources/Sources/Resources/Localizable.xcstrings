@@ -1002,6 +1002,17 @@
         }
       }
     },
+    "issuance_success_header_description_when_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have successfully added the document(s) to your wallet"
+          }
+        }
+      }
+    },
     "issuance_success_next_button" : {
       "extractionState" : "manual",
       "localizations" : {

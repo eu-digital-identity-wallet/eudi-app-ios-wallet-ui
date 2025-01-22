@@ -415,6 +415,8 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "desceding")
       case .ascending:
         bundle.localizedString(forKey: "asceding")
+      case .issuanceSuccessHeaderDescriptionWhenError:
+        bundle.localizedString(forKey: "issuance_success_header_description_when_error")
     }
   }
 
@@ -591,6 +593,7 @@ public extension LocalizableString {
     case all
     case descending
     case ascending
+    case issuanceSuccessHeaderDescriptionWhenError
     case trustedRelyingParty
     case trustedRelyingPartyDescription
     case alertAccessOnlineServices

@@ -92,6 +92,17 @@ private func content(
   onBiometry: @escaping () -> Void
 ) -> some View {
 
+  if viewState.config.displayLogo {
+    ContentHeader(
+      config: ContentHeaderConfig(
+        appIconAndTextData: AppIconAndTextData(
+          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+          appText: ThemeManager.shared.image.euditext
+        )
+      )
+    )
+  }
+
   ContentTitleView(
     title: viewState.config.title,
     titleWeight: .bold,

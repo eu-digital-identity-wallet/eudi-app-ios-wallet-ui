@@ -109,7 +109,8 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
       default:
         self.setState {
           $0.copy(
-            documents: nil,
+            title: .issuanceSuccessHeaderDescriptionWhenError,
+            documents: [],
             isLoading: false
           )
         }
@@ -118,7 +119,8 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
     case .failure:
       self.setState {
         $0.copy(
-          documents: nil,
+          title: .issuanceSuccessHeaderDescriptionWhenError,
+          documents: [],
           isLoading: false
         )
       }
