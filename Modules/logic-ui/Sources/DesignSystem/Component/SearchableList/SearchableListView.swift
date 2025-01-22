@@ -58,7 +58,6 @@ public extension View {
   }
 }
 
-// MARK: - Custom Search Bar for iOS 16
 struct CustomSearchBar: UIViewRepresentable {
   @Binding var text: String
   let placeholder: String
@@ -82,6 +81,10 @@ struct CustomSearchBar: UIViewRepresentable {
       text = ""
       searchBar.resignFirstResponder()
     }
+
+    @objc func dismissKeyboard() {
+      UIApplication.shared.hideKeyboard()
+    }
   }
 
   func makeCoordinator() -> Coordinator {
@@ -93,6 +96,19 @@ struct CustomSearchBar: UIViewRepresentable {
     searchBar.placeholder = placeholder
     searchBar.delegate = context.coordinator
     searchBar.autocapitalizationType = .none
+
+    let toolbar = UIToolbar()
+    toolbar.sizeToFit()
+
+    let doneButton = UIBarButtonItem(
+      title: LocalizableString.shared.get(with: .doneButton),
+      style: .done,
+      target: context.coordinator,
+      action: #selector(context.coordinator.dismissKeyboard)
+    )
+    toolbar.items = [doneButton]
+
+    searchBar.inputAccessoryView = toolbar
 
     searchBar.backgroundImage = UIImage()
     searchBar.searchTextField.backgroundColor = UIColor(Theme.shared.color.surfaceContainer)
