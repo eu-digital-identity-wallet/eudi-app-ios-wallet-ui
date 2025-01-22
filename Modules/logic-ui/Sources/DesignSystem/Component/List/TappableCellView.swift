@@ -19,12 +19,19 @@ import logic_resources
 public struct TappableCellView: View {
   public let title: String
   public let subtitle: String
+  public let showDivider: Bool
   public let action: () -> Void
 
-  public init(title: String, subtitle: String, action: @escaping () -> Void) {
+  public init(
+    title: String,
+    subtitle: String,
+    showDivider: Bool,
+    action: @escaping () -> Void
+  ) {
     self.title = title
     self.subtitle = subtitle
     self.action = action
+    self.showDivider = showDivider
   }
 
   public var body: some View {
@@ -44,9 +51,11 @@ public struct TappableCellView: View {
         Theme.shared.image.chevronRight
       }
       .padding(Theme.shared.dimension.padding)
-      Divider()
-        .background(Theme.shared.color.onSurface)
-        .padding(.horizontal, Theme.shared.dimension.padding)
+      if showDivider {
+        Divider()
+          .background(Theme.shared.color.onSurface)
+          .padding(.horizontal, Theme.shared.dimension.padding)
+      }
     }
     .contentShape(Rectangle())
     .onTapGesture {
