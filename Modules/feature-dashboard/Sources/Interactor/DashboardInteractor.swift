@@ -20,7 +20,7 @@ import logic_resources
 import Combine
 
 public enum DashboardPartialState: Sendable {
-  case success(BearerUIModel, [DocumentUIModel], Bool)
+  case success(String, [DocumentUIModel], Bool)
   case failure(Error)
 }
 
@@ -80,13 +80,13 @@ final class DashboardInteractorImpl: DashboardInteractor {
   public func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState {
 
     let documents: [DocumentUIModel]? = fetchDocuments(failedDocuments: failedDocuments)
-    let bearer: BearerUIModel = fetchBearer()
+    let username = fetchUsername()
 
     guard let documents = documents else {
       return .failure(WalletCoreError.unableFetchDocuments)
     }
 
-    return .success(bearer, documents, hasIssuedDocuments())
+    return .success(username, documents, hasIssuedDocuments())
   }
 
   public func getBleAvailability() async -> Reachability.BleAvailibity {
@@ -140,10 +140,9 @@ final class DashboardInteractorImpl: DashboardInteractor {
     return walletController.retrieveLogFileUrl()
   }
 
-  private func fetchBearer() -> BearerUIModel {
-    return BearerUIModel.transformToBearerUi(
-      walletKitController: self.walletController
-    )
+  private func fetchUsername() -> String {
+    let name = walletController.fetchMainPidDocument()?.getBearersName()?.first
+    return name.orEmpty
   }
 
   private func fetchDocuments(failedDocuments: [String]) -> [DocumentUIModel]? {
