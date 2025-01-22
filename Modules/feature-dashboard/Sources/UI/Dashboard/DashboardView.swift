@@ -66,6 +66,21 @@ struct DashboardView<Router: RouterHost>: View {
         }
       )
     }
+    .confirmationDialog(
+      LocalizableString.shared.get(with: .authenticate),
+      isPresented: $viewModel.addDocument,
+      titleVisibility: .visible
+    ) {
+      Button(LocalizableString.shared.get(with: .cancelButton), role: .cancel) {}
+      Button(LocalizableString.shared.get(with: .inPerson)) {
+        viewModel.onShare()
+      }
+      Button(LocalizableString.shared.get(with: .online)) {
+        viewModel.onShowScanner()
+      }
+    } message: {
+      Text(.authenticateAuthoriseTransactions)
+    }
     .sheet(isPresented: $viewModel.isFilterModalShowing) {
       FilterListView(
         sortAscending: $sortAscending,
@@ -73,21 +88,6 @@ struct DashboardView<Router: RouterHost>: View {
         selectedOptions: $selectedOptions,
         sections: viewModel.viewState.documentSections
       )
-      .confirmationDialog(
-        LocalizableString.shared.get(with: .authenticate),
-        isPresented: $viewModel.addDocument,
-        titleVisibility: .visible
-      ) {
-        Button(LocalizableString.shared.get(with: .cancelButton), role: .cancel) {}
-        Button(LocalizableString.shared.get(with: .inPerson)) {
-          viewModel.onShare()
-        }
-        Button(LocalizableString.shared.get(with: .online)) {
-          viewModel.onShowScanner()
-        }
-      } message: {
-        Text(.authenticateAuthoriseTransactions)
-      }
     }
     .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {
       SheetContentView {
