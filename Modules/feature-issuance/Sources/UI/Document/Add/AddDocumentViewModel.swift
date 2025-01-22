@@ -68,9 +68,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     case .success(let documents):
       setState {
         $0.copy(
-          addDocumentCellModels: documents.sorted(by: {
-            $0.configId < $1.configId
-          })
+          addDocumentCellModels: documents
         )
         .copy(error: nil)
       }
