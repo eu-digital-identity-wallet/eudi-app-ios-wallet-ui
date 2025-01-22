@@ -19,11 +19,8 @@ import SwiftUI
 public protocol ImageManagerProtocol: Sendable {
   var logo: Image { get }
   var faceId: Image { get }
-  var id: Image { get }
-  var idStroke: Image { get }
   var nfc: Image { get }
   var touchId: Image { get }
-  var user: Image { get }
   var arrowLeft: Image { get }
   var chevronUp: Image { get }
   var chevronDown: Image { get }
@@ -37,26 +34,21 @@ public protocol ImageManagerProtocol: Sendable {
   var checkmarkCircleFill: Image { get }
   var checkmarkSquareFill: Image { get }
   var square: Image { get }
-  var exclamationmarkOctagon: Image { get }
   var plus: Image { get }
   var share: Image { get }
-  var warning: Image { get }
   var checkMarkSealFill: Image { get }
   var more: Image { get }
   var pencil: Image { get }
   var qrScan: Image { get }
   var photo: Image { get }
   var trash: Image { get }
-  var bluetoothConnect: Image { get }
   var viewFinder: Image { get }
-  var message: Image { get }
   var clock: Image { get }
   var clockIndicator: Image { get }
   var errorIndicator: Image { get }
   var signDocument: Image { get }
   var euditext: Image { get }
   var walletVerified: Image { get }
-  var congradulationsDocument: Image { get }
   var bell: Image { get }
   var menuIcon: Image { get }
   var filterMenuIcon: Image { get }
@@ -65,14 +57,11 @@ public protocol ImageManagerProtocol: Sendable {
   var gearshape: Image { get }
   var checkmark: Image { get }
   var hourglassImage: Image { get }
-  var boltIcon: Image { get }
   var chooseDocumentImage: Image { get }
   var scanDocumentImage: Image { get }
   var infoCircle: Image { get }
   var relyingPartyVerified: Image { get }
-  var houseFill: Image { get }
   var docFill: Image { get }
-  var arrowLeftArrowRight: Image { get }
   var logoEuDigitalIndentityWallet: Image { get }
   var homeContract: Image { get }
   var homeIdentity: Image { get }
@@ -87,11 +76,8 @@ final class ImageManager: ImageManagerProtocol {
 
   enum ImageEnum: String {
     case faceId = "face-id"
-    case id = "id"
-    case idStroke = "id-stroke"
     case nfc = "nfc"
     case touchId = "touch-id"
-    case user = "user"
     case logo = "logo"
     case arrowLeft = "arrow.left"
     case chevronUp = "chevron.up"
@@ -106,26 +92,21 @@ final class ImageManager: ImageManagerProtocol {
     case checkmarkCircleFill = "checkmark.circle.fill"
     case checkmarkSquareFill = "checkmark.square.fill"
     case square = "square"
-    case exclamationmarkOctagon = "exclamationmark.octagon"
     case plus = "plus"
     case share = "square.and.arrow.up"
-    case warning = "ic-warning"
     case checkMarkSealFill = "checkmark.seal.fill"
     case more = "ic-more"
     case pencil = "ic-edit"
     case qrScan = "ic-qr-scanner"
     case photo = "photo.fill"
     case trash = "trash"
-    case bluetoothConnect = "bluetooth-connect"
     case viewFinder = "viewfinder"
-    case message = "ic-message"
     case clock = "ic-clock"
     case clockIndicator = "clock.fill"
     case errorIndicator = "exclamationmark.circle.fill"
     case signDocument = "doc"
     case euditext = "EUDI-text"
     case walletVerified = "wallet-verified"
-    case congradulationsDocument = "congradulations-document"
     case bell
     case menuIcon = "menu-icon"
     case filterMenuIcon = "filter-menu-icon"
@@ -134,14 +115,11 @@ final class ImageManager: ImageManagerProtocol {
     case gearshape
     case checkmark
     case hourglassImage
-    case boltIcon = "bolt-icon"
     case chooseDocumentImage = "choose-document-image"
     case scanDocumentImage = "scan-document-image"
     case infoCircle = "info.circle"
     case relyingPartyVerified = "relying-party-verified"
-    case houseFill = "house.fill"
     case docFill = "doc.fill"
-    case arrowLeftArrowRight = "arrow.left.arrow.right"
     case logoEuDigitalIndentityWallet = "logo-eu-digital-indentity-wallet"
     case homeContract = "home-contract"
     case homeIdentity = "home-identity"
@@ -164,20 +142,11 @@ final class ImageManager: ImageManagerProtocol {
   var faceId: Image {
     Image(ImageEnum.faceId.rawValue, bundle: bundle)
   }
-  var id: Image {
-    Image(ImageEnum.id.rawValue, bundle: bundle)
-  }
-  var idStroke: Image {
-    Image(ImageEnum.idStroke.rawValue, bundle: bundle)
-  }
   var nfc: Image {
     Image(ImageEnum.nfc.rawValue, bundle: bundle)
   }
   var touchId: Image {
     Image(ImageEnum.touchId.rawValue, bundle: bundle)
-  }
-  var user: Image {
-    Image(ImageEnum.user.rawValue, bundle: bundle)
   }
   var logo: Image {
     Image(ImageEnum.logo.rawValue, bundle: bundle)
@@ -221,17 +190,11 @@ final class ImageManager: ImageManagerProtocol {
   var square: Image {
     Image(systemName: ImageEnum.square.rawValue)
   }
-  var exclamationmarkOctagon: Image {
-    Image(systemName: ImageEnum.exclamationmarkOctagon.rawValue)
-  }
   var plus: Image {
     Image(ImageEnum.plus.rawValue, bundle: bundle)
   }
   var share: Image {
     Image(systemName: ImageEnum.share.rawValue)
-  }
-  var warning: Image {
-    Image(ImageEnum.warning.rawValue, bundle: bundle)
   }
   var checkMarkSealFill: Image {
     Image(systemName: ImageEnum.checkMarkSealFill.rawValue)
@@ -251,14 +214,8 @@ final class ImageManager: ImageManagerProtocol {
   var trash: Image {
     Image(systemName: ImageEnum.trash.rawValue)
   }
-  var bluetoothConnect: Image {
-    Image(ImageEnum.bluetoothConnect.rawValue, bundle: bundle)
-  }
   var viewFinder: Image {
     Image(systemName: ImageEnum.viewFinder.rawValue)
-  }
-  var message: Image {
-    Image(ImageEnum.message.rawValue, bundle: bundle)
   }
   var clock: Image {
     Image(ImageEnum.clock.rawValue, bundle: bundle)
@@ -277,9 +234,6 @@ final class ImageManager: ImageManagerProtocol {
   }
   var walletVerified: Image {
     Image(ImageEnum.walletVerified.rawValue, bundle: bundle)
-  }
-  var congradulationsDocument: Image {
-    Image(ImageEnum.congradulationsDocument.rawValue, bundle: bundle)
   }
   var bell: Image {
     Image(systemName: ImageEnum.bell.rawValue)
@@ -305,9 +259,6 @@ final class ImageManager: ImageManagerProtocol {
   var hourglassImage: Image {
     Image(ImageEnum.hourglassImage.rawValue, bundle: bundle)
   }
-  var boltIcon: Image {
-    Image(ImageEnum.boltIcon.rawValue, bundle: bundle)
-  }
   var chooseDocumentImage: Image {
     Image(ImageEnum.chooseDocumentImage.rawValue, bundle: bundle)
   }
@@ -320,14 +271,8 @@ final class ImageManager: ImageManagerProtocol {
   var relyingPartyVerified: Image {
     Image(ImageEnum.relyingPartyVerified.rawValue, bundle: bundle)
   }
-  var houseFill: Image {
-    Image(systemName: ImageEnum.houseFill.rawValue)
-  }
   var docFill: Image {
     Image(systemName: ImageEnum.docFill.rawValue)
-  }
-  var arrowLeftArrowRight: Image {
-    Image(systemName: ImageEnum.arrowLeftArrowRight.rawValue)
   }
   var logoEuDigitalIndentityWallet: Image {
     Image(ImageEnum.logoEuDigitalIndentityWallet.rawValue, bundle: bundle)
