@@ -52,8 +52,10 @@ public struct ExpandableCardView<Content: View>: View {
             listItem: .init(
               mainText: title,
               mainStyle: .bold,
-              supportingText: !isExpanded ? subtitle : nil,
-              trailingContent: .icon(isExpanded ? Theme.shared.image.chevronUp : Theme.shared.image.chevronDown)
+              supportingText: subtitle,
+              trailingContent: .icon(
+                isExpanded ? Theme.shared.image.chevronUp : Theme.shared.image.chevronDown
+              )
             ),
             mainTextVerticalPadding: mainTextVerticalPadding
           ) {
