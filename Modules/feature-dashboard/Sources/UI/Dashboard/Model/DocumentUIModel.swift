@@ -37,6 +37,9 @@ public extension DocumentUIModel {
   struct Value: Equatable, Sendable {
 
     public struct RemoteImage: Equatable, Sendable {
+      public static func == (lhs: RemoteImage, rhs: RemoteImage) -> Bool {
+        return lhs.url == rhs.url
+      }
       public let url: URL?
       public let placeholder: Image?
     }

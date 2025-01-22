@@ -63,6 +63,7 @@ private func content(
 
     ContentTitleView(
       title: viewState.config.title.value,
+      titleFont: Theme.shared.font.displayLarge,
       caption: viewState.config.subtitle,
       titleColor: viewState.config.title.color,
       textAlignment: .center,

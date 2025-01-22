@@ -20,7 +20,7 @@ import feature_common
 import logic_business
 
 public struct HomeView: View {
-  private let bearer: BearerUIModel
+  private let username: String
 
   private let addDocument: () -> Void
   private let signDocument: () -> Void
@@ -29,11 +29,11 @@ public struct HomeView: View {
   @State private var signDocumentAlert: Bool = false
 
   public init(
-    bearer: BearerUIModel,
+    username: String,
     addDocument: @escaping () -> Void,
     signDocument: @escaping () -> Void
   ) {
-    self.bearer = bearer
+    self.username = username
     self.addDocument = addDocument
     self.signDocument = signDocument
   }
@@ -50,8 +50,8 @@ public struct HomeView: View {
           )
         )
 
-        Text("\(LocalizableString.shared.get(with: .welcomeBack)), \(bearer.value.name)")
-          .font(Theme.shared.font.headlineMedium.font)
+        Text("\(LocalizableString.shared.get(with: .welcomeBack)), \(username)")
+          .font(Theme.shared.font.titleMedium.font)
           .foregroundStyle(Theme.shared.color.onSurface)
 
         HomeCardView(
@@ -105,6 +105,6 @@ public struct HomeView: View {
 }
 
 #Preview {
-  HomeView(bearer: BearerUIModel.mock()) {} signDocument: {}
+  HomeView(username: "First name") {} signDocument: {}
 
 }

@@ -60,7 +60,7 @@ private func content(
     VStack(spacing: SPACING_LARGE_MEDIUM) {
 
       Text(.chooseFromListTitle)
-        .typography(Theme.shared.font.bodyMedium)
+        .typography(Theme.shared.font.bodyLarge)
         .foregroundStyle(Theme.shared.color.onSurface)
 
       VStack(spacing: SPACING_MEDIUM_SMALL) {

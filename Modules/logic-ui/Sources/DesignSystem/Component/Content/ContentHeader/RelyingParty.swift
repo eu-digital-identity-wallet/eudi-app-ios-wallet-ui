@@ -60,17 +60,17 @@ public struct RelyingParty: View {
       WrapText(
         text: relyingPartyData.name,
         textConfig: relyingPartyData.nameTextConfig ?? TextConfig(
-          font: Theme.shared.font.bodyMedium.font,
+          font: Theme.shared.font.bodyLarge.font,
           color: Theme.shared.color.onSurface,
           textAlign: .center,
           maxLines: 1,
-          fontWeight: .bold
+          fontWeight: .semibold
         )
       )
       .if(relyingPartyData.isVerified) {
         $0.leftImage(
           image: Theme.shared.image.relyingPartyVerified,
-          spacing: SPACING_EXTRA_SMALL,
+          spacing: Theme.shared.dimension.verifiedBadgeSpacing,
           size: 20
         )
       }
@@ -79,7 +79,7 @@ public struct RelyingParty: View {
         WrapText(
           text: description,
           textConfig: relyingPartyData.descriptionTextConfig ?? TextConfig(
-            font: Theme.shared.font.bodySmall.font,
+            font: Theme.shared.font.bodyMedium.font,
             color: Theme.shared.color.onSurface,
             textAlign: .center,
             maxLines: 2,

@@ -55,7 +55,7 @@ private func content(
   VStack(spacing: SPACING_LARGE_MEDIUM) {
     HStack {
       Text(.proximityConnectivityCaption)
-        .typography(Theme.shared.font.bodyMedium)
+        .typography(Theme.shared.font.bodyLarge)
         .foregroundStyle(Theme.shared.color.onSurface)
       Spacer()
     }

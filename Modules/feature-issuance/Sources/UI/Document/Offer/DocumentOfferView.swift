@@ -87,13 +87,13 @@ struct DocumentOfferView<Router: RouterHost>: View {
 @ViewBuilder
 private func title(viewState: DocumentOfferViewState) -> some View {
   Text(viewState.documentOfferUiModel.issuerName)
-    .typography(Theme.shared.font.bodyMedium)
+    .typography(Theme.shared.font.bodyLarge)
     .fontWeight(.medium) +
   Text(" ") +
   Text(LocalizableString.shared.get(
     with: .issuerWantWalletAddition
   ))
-  .typography(Theme.shared.font.bodyMedium)
+  .typography(Theme.shared.font.bodyLarge)
 }
 
 @MainActor

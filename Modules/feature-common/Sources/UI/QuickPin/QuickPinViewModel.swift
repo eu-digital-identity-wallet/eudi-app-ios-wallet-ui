@@ -149,8 +149,8 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
         Color.clear
       ) :
       .customIcon(
-        Theme.shared.image.digitalIdIssuance,
-        Color.clear
+        Theme.shared.image.checkmarkCircleFill,
+        Theme.shared.color.success
       )
 
     router.push(

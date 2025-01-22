@@ -3,6 +3,16 @@
     {
       "filename" : "EUDI-text.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "image.png",
+      "idiom" : "universal"
     }
   ],
   "info" : {

@@ -62,14 +62,14 @@ public struct WrapListItemView: View {
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
         if let overlineText = listItem.overlineText, !overlineText.isEmpty {
           Text(overlineText)
-            .font(Theme.shared.font.labelMedium.font)
+            .typography(Theme.shared.font.bodySmall)
             .foregroundStyle(listItem.overlineTextColor)
             .lineLimit(1)
             .truncationMode(.tail)
         }
 
         Text(listItem.mainText)
-          .font(Theme.shared.font.bodyLarge.font)
+          .typography(Theme.shared.font.headlineMedium)
           .foregroundStyle(Theme.shared.color.onSurface)
           .fontWeight(listItem.mainStyle == .plain ? .medium : .bold)
           .lineLimit(nil)
@@ -81,6 +81,7 @@ public struct WrapListItemView: View {
 
         if let supportingText = listItem.supportingText, !supportingText.isEmpty {
           Text(supportingText)
+            .typography(Theme.shared.font.headlineSmall)
             .font(Theme.shared.font.bodyMedium.font)
             .foregroundStyle(listItem.supportingTextColor)
             .lineLimit(1)

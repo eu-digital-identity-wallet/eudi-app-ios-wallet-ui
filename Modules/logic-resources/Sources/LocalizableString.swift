@@ -423,6 +423,10 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "state")
       case .sortBy:
           bundle.localizedString(forKey: "sort_by")
+      case .issuanceSuccessHeaderDescriptionWhenError:
+        bundle.localizedString(forKey: "issuance_success_header_description_when_error")
+      case .deleteDocumentConfirmDialog:
+        bundle.localizedString(forKey: "delete_document_confirm_dialog")
     }
   }
 
@@ -599,6 +603,7 @@ public extension LocalizableString {
     case all
     case descending
     case ascending
+    case issuanceSuccessHeaderDescriptionWhenError
     case trustedRelyingParty
     case trustedRelyingPartyDescription
     case alertAccessOnlineServices
@@ -627,6 +632,7 @@ public extension LocalizableString {
     case selectExpiryPeriod
     case state
     case sortBy
+    case deleteDocumentConfirmDialog
   }
 }
 

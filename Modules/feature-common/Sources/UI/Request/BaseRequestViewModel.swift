@@ -36,7 +36,6 @@ public struct RequestViewState: ViewState {
 
 open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestViewState> {
 
-  @Published var isCancelModalShowing: Bool = false
   @Published var isRequestInfoModalShowing: Bool = false
   @Published var isVerifiedEntityModalShowing: Bool = false
   @Published var itmesChanged: Bool = false
@@ -180,16 +179,11 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
 
   func onPop() {
     isRequestInfoModalShowing = false
-    isCancelModalShowing = false
     if let route = getPopRoute() {
       router.popTo(with: route)
     } else {
       router.pop()
     }
-  }
-
-  func onShowCancelModal() {
-    isCancelModalShowing = !isCancelModalShowing
   }
 
   func onShowRequestInfoModal() {

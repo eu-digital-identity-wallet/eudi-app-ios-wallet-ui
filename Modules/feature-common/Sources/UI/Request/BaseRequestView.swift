@@ -42,8 +42,8 @@ public struct BaseRequestView<Router: RouterHost>: View {
         ],
         leadingActions: [
           Action(
-            title: LocalizableString.shared.get(with: .cancelButton).capitalizedFirst()) {
-              viewModel.onShowCancelModal()
+            image: Theme.shared.image.chevronLeft) {
+              viewModel.onPop()
             }
         ]
       )
@@ -58,25 +58,11 @@ public struct BaseRequestView<Router: RouterHost>: View {
         onVerifiedEntityModal: viewModel.onVerifiedEntityModal,
         onContentVisibilityChange: viewModel.onContentVisibilityChange,
         onShare: viewModel.onShare,
-        onShowCancelModal: viewModel.onShowCancelModal,
         onSelectionChanged: { id in
           viewModel.onSelectionChanged(id: id)
         }
       )
     }
-    .confirmationDialog(
-      title: LocalizableString.shared.get(with: .cancelShareSheetTitle),
-      message: LocalizableString.shared.get(with: .cancelShareSheetCaption),
-      destructiveText: LocalizableString.shared.get(with: .cancelButton),
-      baseText: LocalizableString.shared.get(with: .cancelShareSheetContinue),
-      isPresented: $viewModel.isCancelModalShowing,
-      destructiveAction: {
-        viewModel.onPop()
-      },
-      baseAction: {
-        viewModel.onShowCancelModal()
-      }
-    )
     .confirmationDialog(
       title: LocalizableString.shared.get(with: .requestDataInfoNotice),
       message: LocalizableString.shared.get(with: .requestDataSheetCaption),
@@ -120,7 +106,6 @@ private func content(
   onVerifiedEntityModal: @escaping () -> Void,
   onContentVisibilityChange: @escaping () -> Void,
   onShare: @escaping () -> Void,
-  onShowCancelModal: @escaping () -> Void,
   onSelectionChanged: @escaping (String) -> Void
 ) -> some View {
   ScrollView {
@@ -147,8 +132,7 @@ private func content(
             appIconAndTextData: AppIconAndTextData(
               appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
               appText: ThemeManager.shared.image.euditext
-            ),
-            description: LocalizableString.shared.get(with: viewState.title)
+            )
           )
         )
       }
@@ -238,7 +222,7 @@ private func content(
           }
 
           Text(.shareDataReview)
-            .typography(Theme.shared.font.bodySmall)
+            .typography(Theme.shared.font.bodyMedium)
             .foregroundColor(Theme.shared.color.onSurface)
             .multilineTextAlignment(.leading)
           VSpacer.medium()
@@ -267,7 +251,7 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
         .frame(width: imageSize, height: imageSize)
 
       Text(.requestDataNoDocument)
-        .typography(Theme.shared.font.bodyMedium)
+        .typography(Theme.shared.font.bodyLarge)
         .foregroundColor(Theme.shared.color.secondaryFixed)
         .multilineTextAlignment(.center)
     }
@@ -284,7 +268,7 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
     itemsAreAllSelected: true,
     showMissingCrredentials: false,
     items: RequestDataUiModel.mockData(),
-    title: LocalizableString.Key.addDocumentTitle,
+    title: LocalizableString.Key.requestDataVerifiedEntity,
     trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
     relyingParty: "relying party",
     isTrusted: true,
@@ -304,7 +288,6 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
       onVerifiedEntityModal: {},
       onContentVisibilityChange: {},
       onShare: {},
-      onShowCancelModal: {},
       onSelectionChanged: { _ in }
     )
   }

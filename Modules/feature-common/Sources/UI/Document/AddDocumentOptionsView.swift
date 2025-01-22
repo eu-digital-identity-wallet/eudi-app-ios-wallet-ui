@@ -47,7 +47,7 @@ private func content(
 ) -> some View {
   VStack(spacing: SPACING_LARGE_MEDIUM) {
     Text(.addDocumentsToWallet)
-      .typography(Theme.shared.font.bodyMedium)
+      .typography(Theme.shared.font.bodyLarge)
       .foregroundStyle(Theme.shared.color.onSurface)
 
     VStack(spacing: SPACING_MEDIUM_SMALL) {

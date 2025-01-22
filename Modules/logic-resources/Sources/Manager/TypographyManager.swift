@@ -96,43 +96,63 @@ final class TypographyManager: TypographyManagerProtocol {
     TypographyStyle(font: labelSmallFont, spacing: labelSmallSpacing)
   }
 
-    private let displayLargeFont = Font.system(size: 57, weight: .medium)
-    private let displayMediumFont = Font.system(size: 45, weight: .regular)
-    private let displaySmallFont = Font.system(size: 36, weight: .regular)
+  private let displayLargeFont = Font.largeTitle
+  private let displayMediumFont = Font.title
+  private let displaySmallFont = Font.title2
 
-    private let headlineLargeFont = Font.system(size: 32, weight: .regular)
-    private let headlineMediumFont = Font.system(size: 28, weight: .regular)
-    private let headlineSmallFont = Font.system(size: 24, weight: .regular)
+  private let headlineLargeFont = Font.title3
+  private let headlineMediumFont = Font.headline
+  private let headlineSmallFont = Font.subheadline
 
-    private let titleLargeFont = Font.system(size: 22, weight: .regular)
-    private let titleMediumFont = Font.system(size: 16, weight: .medium)
-    private let titleSmallFont = Font.system(size: 14, weight: .medium)
+  private let titleLargeFont = Font.title
+  private let titleMediumFont = Font.title2
+  private let titleSmallFont = Font.title3
 
-    private let bodyLargeFont = Font.system(size: 17, weight: .regular)
-    private let bodyMediumFont = Font.system(size: 16, weight: .regular)
-    private let bodySmallFont = Font.system(size: 15, weight: .regular)
+  private let bodyLargeFont = Font.body
+  private let bodyMediumFont = Font.callout
+  private let bodySmallFont = Font.footnote
 
-    private let labelLargeFont = Font.system(size: 17, weight: .medium)
-    private let labelMediumFont = Font.system(size: 12, weight: .medium)
-    private let labelSmallFont = Font.system(size: 13, weight: .medium)
+  private let labelLargeFont = Font.headline
+  private let labelMediumFont = Font.caption
+  private let labelSmallFont = Font.caption2
 
-    private let displayLargeSpacing: CGFloat = 0
-    private let displayMediumSpacing: CGFloat = 0
-    private let displaySmallSpacing: CGFloat = 0
+  private let displayLargeSpacing: CGFloat = 0
+  private let displayMediumSpacing: CGFloat = 0
+  private let displaySmallSpacing: CGFloat = 0
 
-    private let headlineLargeSpacing: CGFloat = 0
-    private let headlineMediumSpacing: CGFloat = 0
-    private let headlineSmallSpacing: CGFloat = 0
+  private let headlineLargeSpacing: CGFloat = 0
+  private let headlineMediumSpacing: CGFloat = 0
+  private let headlineSmallSpacing: CGFloat = 0
 
-    private let titleLargeSpacing: CGFloat = 0
-    private let titleMediumSpacing: CGFloat = 0
-    private let titleSmallSpacing: CGFloat = 0
+  private let titleLargeSpacing: CGFloat = 0
+  private let titleMediumSpacing: CGFloat = 0
+  private let titleSmallSpacing: CGFloat = 0
 
-    private let bodyLargeSpacing: CGFloat = 0
-    private let bodyMediumSpacing: CGFloat =  0
-    private let bodySmallSpacing: CGFloat =  0
+  private let bodyLargeSpacing: CGFloat = 0
+  private let bodyMediumSpacing: CGFloat =  0
+  private let bodySmallSpacing: CGFloat =  0
 
-    private let labelLargeSpacing: CGFloat = 0
-    private let labelMediumSpacing: CGFloat = 0
-    private let labelSmallSpacing: CGFloat = 0
+  private let labelLargeSpacing: CGFloat = 0
+  private let labelMediumSpacing: CGFloat = 0
+  private let labelSmallSpacing: CGFloat = 0
+}
+
+extension Font.TextStyle {
+  var defaultSize: CGFloat {
+    switch self {
+      case .largeTitle: return 34
+      case .title: return 28
+      case .title2: return 22
+      case .title3: return 20
+      case .headline: return 17
+      case .subheadline: return 15
+      case .body: return 17
+      case .callout: return 16
+      case .caption: return 12
+      case .caption2: return 11
+      case .footnote: return 13
+      @unknown default:
+        return 17
+    }
+  }
 }

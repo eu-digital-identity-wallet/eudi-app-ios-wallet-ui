@@ -80,7 +80,7 @@ public struct ContentHeader: View {
         WrapText(
           text: description,
           textConfig: config.descriptionTextConfig ?? TextConfig(
-            font: Theme.shared.font.bodyMedium.font,
+            font: Theme.shared.font.bodyLarge.font,
             color: Theme.shared.color.onSurface,
             textAlign: .center,
             maxLines: 2,
@@ -94,11 +94,11 @@ public struct ContentHeader: View {
         WrapText(
           text: mainText,
           textConfig: config.mainTextConfig ?? TextConfig(
-            font: Theme.shared.font.bodyMedium.font,
+            font: Theme.shared.font.headlineMedium.font,
             color: Theme.shared.color.onSurface,
             textAlign: .center,
             maxLines: 2,
-            fontWeight: .bold
+            fontWeight: .semibold
           )
         )
         .padding(.vertical, SPACING_MEDIUM_SMALL)

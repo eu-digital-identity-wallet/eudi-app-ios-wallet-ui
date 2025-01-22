@@ -36,10 +36,12 @@ struct SideMenuView<Router: RouterHost>: View {
 private func content(viewState: SideMenuViewState) -> some View {
   ScrollView {
     VStack(spacing: SPACING_SMALL) {
-      ForEach(viewState.items) { item in
+      ForEach(viewState.items.indices, id: \.self) { index in
+        let item = viewState.items[index]
         TappableCellView(
           title: item.title,
           subtitle: item.subTitle,
+          showDivider: index < viewState.items.count - 1,
           action: item.action
         )
       }

@@ -260,6 +260,7 @@ struct ChoosableRow: View {
   var body: some View {
     HStack {
       Text(text)
+        .typography(Theme.shared.font.bodyLarge)
         .frame(maxWidth: .infinity, alignment: .leading)
       if isSelected {
         ThemeManager.shared.image.checkmark

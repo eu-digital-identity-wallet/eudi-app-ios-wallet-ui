@@ -51,7 +51,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add documents to your wallet by choosing from a list or by scanning a provided QR code."
+            "value" : "Add documents to your wallet by choosing from the list below."
           }
         }
       }
@@ -425,7 +425,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose a digital document from the list below to add to your wallet. You may add more documents by scanning the QR code provided to you by an authorised issuing service."
+            "value" : "Choose a digital document from the list below to add to your wallet."
           }
         }
       }
@@ -569,6 +569,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete document"
+          }
+        }
+      }
+    },
+    "delete_document_confirm_dialog" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This document will be permanently deleted from your wallet and may affect access to services."
           }
         }
       }
@@ -1020,6 +1031,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your documents from %@ have been requested. You will be notified when they have been issued to your wallet."
+          }
+        }
+      }
+    },
+    "issuance_success_header_description_when_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have successfully added the document(s) to your wallet"
           }
         }
       }
@@ -1539,7 +1561,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Go to my EUDI Wallet"
+            "value" : "Back to home"
           }
         }
       }
@@ -1935,7 +1957,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Please review carefully before sharing your data"
+            "value" : "Please review carefully before sharing your data."
           }
         }
       }
