@@ -155,22 +155,32 @@ final class TestDashboardInteractor: EudiTest {
         id: Constants.randomIdentifier,
         value: .init(
           id: Constants.euPidModelId,
+          heading: "",
           title: Constants.euPidName,
           createdAt: Constants.documentCreatedAt,
           expiresAt: Constants.claimExpiredAt.formatted(),
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: nil,
+            placeholder: nil
+          )
         )
       ),
       .init(
         id: Constants.randomIdentifier,
         value: .init(
           id: Constants.isoMdlModelId,
+          heading: "",
           title: Constants.isoMdlName,
           createdAt: Constants.documentCreatedAt,
           expiresAt: Constants.claimExpiredAt.formatted(),
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: nil,
+            placeholder: nil
+          )
         )
       )
     ]

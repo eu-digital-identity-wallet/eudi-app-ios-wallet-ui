@@ -232,19 +232,6 @@ public class AnalyticsControllerStub:AnalyticsController, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-analytics/Sources/Demo/AppCenterProvider.swift'
-
-import Cuckoo
-import AppCenter
-import AppCenterCrashes
-import AppCenterAnalytics
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_authentication
-
-
-
 // MARK: - Mocks generated from file: '../Modules/logic-analytics/Sources/Provider/AnalyticsProvider.swift'
 
 import Cuckoo
@@ -2855,6 +2842,16 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
+    public func fetchDocuments(with p0: [String]) -> [DocClaimsDecodable] {
+        return cuckoo_manager.call(
+            "fetchDocuments(with p0: [String]) -> [DocClaimsDecodable]",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.fetchDocuments(with: p0)
+        )
+    }
+    
     public func clearAllDocuments() async {
         return await cuckoo_manager.call(
             "clearAllDocuments() async",
@@ -3104,6 +3101,14 @@ return cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "fetchDocument(with p0: String) -> DocClaimsDecodable?",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func fetchDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<([String]), [DocClaimsDecodable]> where M1.MatchedType == [String] {
+            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "fetchDocuments(with p0: [String]) -> [DocClaimsDecodable]",
                 parameterMatchers: matchers
             ))
         }
@@ -3378,6 +3383,18 @@ return cuckoo_manager.call(
         
         
         @discardableResult
+        func fetchDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<([String]), [DocClaimsDecodable]> where M1.MatchedType == [String] {
+            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "fetchDocuments(with p0: [String]) -> [DocClaimsDecodable]",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
         func clearAllDocuments() -> Cuckoo.__DoNotUse<(), Void> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
@@ -3610,6 +3627,10 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
     
     public func fetchDocument(with p0: String) -> DocClaimsDecodable? {
         return DefaultValueRegistry.defaultValue(for: (DocClaimsDecodable?).self)
+    }
+    
+    public func fetchDocuments(with p0: [String]) -> [DocClaimsDecodable] {
+        return DefaultValueRegistry.defaultValue(for: ([DocClaimsDecodable]).self)
     }
     
     public func clearAllDocuments() async {
