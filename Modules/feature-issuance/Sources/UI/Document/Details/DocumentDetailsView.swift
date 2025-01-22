@@ -176,6 +176,11 @@ private func content(
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .frame(maxWidth: .infinity, alignment: .leading)
 
+          RemoteImageView(
+            url: issuer.logoUrl,
+            icon: nil
+          )
+
           CardViewWithLogo(
             title: issuer.name,
             isVerified: issuer.isVerified

@@ -87,9 +87,8 @@ private func content(
       if let document = viewState.documents.first,
          let issuer = document.issuer {
         PlainWithLogoView(
-          icon: .remoteImage(issuer.logoUrl, Theme.shared.image.logo),
-          title: issuer.name,
-          isVerified: viewState.documents.first?.issuer?.isVerified ?? false
+          icon: .remoteImage(issuer.logoUrl, nil),
+          title: issuer.name
         )
 
         VSpacer.largeMedium()
