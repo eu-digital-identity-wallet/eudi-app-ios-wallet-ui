@@ -51,7 +51,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add documents to your wallet by choosing from a list or by scanning a provided QR code."
+            "value" : "Add documents to your wallet by choosing from the list below."
           }
         }
       }
@@ -425,7 +425,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose a digital document from the list below to add to your wallet. You may add more documents by scanning the QR code provided to you by an authorised issuing service."
+            "value" : "Choose a digital document from the list below to add to your wallet."
           }
         }
       }
@@ -569,6 +569,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete document"
+          }
+        }
+      }
+    },
+    "delete_document_confirm_dialog" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This document will be permanently deleted from your wallet and may affect access to services."
           }
         }
       }

@@ -66,8 +66,8 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       }
     }
     .confirmationDialog(
-      title: LocalizableString.shared.get(with: .issuanceDetailsDeletionTitle([viewModel.viewState.document.documentName])),
-      message: LocalizableString.shared.get(with: .issuanceDetailsDeletionCaption([viewModel.viewState.document.documentName])),
+      title: "",
+      message: LocalizableString.shared.get(with: .deleteDocumentConfirmDialog),
       destructiveText: LocalizableString.shared.get(with: .deleteButton),
       baseText: LocalizableString.shared.get(with: .cancelButton),
       isPresented: $viewModel.isDeletionModalShowing,
@@ -177,13 +177,9 @@ private func content(
             .frame(maxWidth: .infinity, alignment: .leading)
 
           CardViewWithLogo(
-            title: issuer.name,
-            isVerified: issuer.isVerified
+            title: issuer.name
           ) {
             showAlert()
-          }
-          .if(isVisible) {
-            $0.blur(radius: 4, opaque: false)
           }
         }
         .shimmer(isLoading: viewState.isLoading)

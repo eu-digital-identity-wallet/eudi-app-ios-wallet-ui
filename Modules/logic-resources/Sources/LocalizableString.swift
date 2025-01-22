@@ -415,6 +415,8 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "desceding")
       case .ascending:
         bundle.localizedString(forKey: "asceding")
+      case .deleteDocumentConfirmDialog:
+        bundle.localizedString(forKey: "delete_document_confirm_dialog")
     }
   }
 
@@ -615,6 +617,7 @@ public extension LocalizableString {
     case noResultsDescription
     case proximityConnectionNfcDescription
     case orShareViaNfc
+    case deleteDocumentConfirmDialog
   }
 }
 
