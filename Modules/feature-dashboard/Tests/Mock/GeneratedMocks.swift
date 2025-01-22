@@ -1605,41 +1605,7 @@ public class DocumentSignInteractorStub:DocumentSignInteractor, @unchecked Senda
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Dashboard/Cell/BearerCellView.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
 // MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Dashboard/Cell/DocumentCellView.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
-// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Dashboard/Component/BearerHeaderView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -1728,24 +1694,6 @@ import Foundation
 import Cuckoo
 import SwiftUI
 import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
-// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Dashboard/Model/BearerUIModel.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
-import UIKit
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

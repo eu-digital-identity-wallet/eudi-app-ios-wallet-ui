@@ -329,7 +329,7 @@ private func content(
 ) -> some View {
   TabView(selection: selectedTab) {
     HomeView(
-      bearer: viewState.bearer,
+      username: viewState.username,
       addDocument: {
         addDocument.wrappedValue.toggle()
       },
@@ -383,7 +383,7 @@ private func content(
     isLoading: false,
     documents: DocumentUIModel.mocks(),
     filteredDocuments: DocumentUIModel.mocks(),
-    bearer: BearerUIModel.mock(),
+    username: "First name",
     phase: .active,
     pendingBleModalAction: false,
     appVersion: "App version",

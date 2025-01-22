@@ -417,6 +417,8 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "asceding")
       case .issuanceSuccessHeaderDescriptionWhenError:
         bundle.localizedString(forKey: "issuance_success_header_description_when_error")
+      case .deleteDocumentConfirmDialog:
+        bundle.localizedString(forKey: "delete_document_confirm_dialog")
     }
   }
 
@@ -618,6 +620,7 @@ public extension LocalizableString {
     case noResultsDescription
     case proximityConnectionNfcDescription
     case orShareViaNfc
+    case deleteDocumentConfirmDialog
   }
 }
 

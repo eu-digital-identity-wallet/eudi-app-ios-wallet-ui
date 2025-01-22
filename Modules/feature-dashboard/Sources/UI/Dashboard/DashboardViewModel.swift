@@ -24,7 +24,7 @@ struct DashboardState: ViewState {
   let isLoading: Bool
   let documents: [DocumentUIModel]
   var filteredDocuments: [DocumentUIModel]
-  let bearer: BearerUIModel
+  let username: String
   let phase: ScenePhase
   let pendingBleModalAction: Bool
   let appVersion: String
@@ -90,7 +90,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   private var deferredTask: Task<DashboardDeferredPartialState, Error>?
 
   var bearerName: String {
-    viewState.bearer.value.name
+    "viewState.bearer.value.name"
   }
 
   init(
@@ -108,7 +108,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         isLoading: true,
         documents: DocumentUIModel.mocks(),
         filteredDocuments: DocumentUIModel.mocks(),
-        bearer: BearerUIModel.mock(),
+        username: "",
         phase: .active,
         pendingBleModalAction: false,
         appVersion: interactor.getAppVersion(),
@@ -132,13 +132,13 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     }.value
 
     switch state {
-    case .success(let bearer, let documents, let hasIssuedDocuments):
+    case .success(let username, let documents, let hasIssuedDocuments):
       setState {
         $0.copy(
           isLoading: false,
           documents: documents,
           filteredDocuments: documents,
-          bearer: bearer,
+          username: username,
           allowUserInteraction: hasIssuedDocuments
         )
       }
