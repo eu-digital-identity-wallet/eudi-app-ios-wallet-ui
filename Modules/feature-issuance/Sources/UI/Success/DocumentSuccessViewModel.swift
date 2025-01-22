@@ -109,8 +109,7 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
       default:
         self.setState {
           $0.copy(
-            title: .issuanceSuccessHeaderDescriptionWhenError,
-            documents: [],
+            documents: documents,
             isLoading: false
           )
         }
