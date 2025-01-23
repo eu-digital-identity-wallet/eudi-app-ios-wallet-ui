@@ -41,9 +41,10 @@ struct DocumentDetailsView<Router: RouterHost>: View {
             viewModel.showAlert = true
           },
           Action(
-            image: viewModel.isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye) {
-              viewModel.isVisible.toggle()
-            }
+            image: viewModel.isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye
+          ) {
+            viewModel.isVisible.toggle()
+          }
         ],
         leadingActions: [
           Action(image: Theme.shared.image.chevronLeft) {
@@ -170,9 +171,10 @@ private func content(
       .shimmer(isLoading: viewState.isLoading)
 
       if let issuer = viewState.document.issuer {
-        Group {
+        VStack(spacing: SPACING_SMALL) {
           Text(.genericIssuer)
-            .font(Theme.shared.font.labelSmall.font)
+            .typography(Theme.shared.font.bodySmall)
+            .fontWeight(.semibold)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .frame(maxWidth: .infinity, alignment: .leading)
 

@@ -113,9 +113,6 @@ public extension Array where Element == RequestDataUI {
       return allRowsSelected && allVerificationRowsSelected
     }
   }
-}
-
-public extension Array where Element == RequestDataUI {
 
   func filterSelectedRows() -> [RequestDataUI] {
     self.map { ui in
