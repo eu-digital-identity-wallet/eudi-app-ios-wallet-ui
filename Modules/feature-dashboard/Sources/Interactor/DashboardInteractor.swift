@@ -180,11 +180,11 @@ final class DashboardInteractorImpl: DashboardInteractor {
       return isDocumentWithinExpiryPeriod(document, expiryPeriod: selectedExpiryPeriod)
     }
 
-    if selectedStateOption == "Valid" {
+    if selectedStateOption == LocalizableString.shared.get(with: .valid).capitalized {
       filteredDocuments = filteredDocuments.filter { !$0.value.hasExpired && $0.value.state == .issued }
-    } else if selectedStateOption == "Expired" {
+    } else if selectedStateOption == LocalizableString.shared.get(with: .expired).capitalized {
       filteredDocuments = filteredDocuments.filter { $0.value.hasExpired }
-    } else if selectedStateOption == "Revoke" {
+    } else if selectedStateOption == LocalizableString.shared.get(with: .revoke).capitalized {
       filteredDocuments = filteredDocuments.filter { $0.value.state == .failed }
     }
 

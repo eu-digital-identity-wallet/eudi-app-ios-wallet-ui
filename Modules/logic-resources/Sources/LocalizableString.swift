@@ -427,6 +427,12 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "issuance_success_header_description_when_error")
       case .deleteDocumentConfirmDialog:
         bundle.localizedString(forKey: "delete_document_confirm_dialog")
+      case .defaultLabel:
+        bundle.localizedString(forKey: "default")
+      case .valid:
+        bundle.localizedString(forKey: "valid")
+      case .revoke:
+        bundle.localizedString(forKey: "revoke")
     }
   }
 
@@ -633,6 +639,9 @@ public extension LocalizableString {
     case state
     case sortBy
     case deleteDocumentConfirmDialog
+    case defaultLabel
+    case valid
+    case revoke
   }
 }
 
