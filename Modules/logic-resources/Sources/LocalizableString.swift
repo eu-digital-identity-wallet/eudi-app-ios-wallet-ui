@@ -41,8 +41,6 @@ public final class LocalizableString: LocalizableStringType {
       literal
     case .space:
       " "
-    case .screenCaptureSecurityWarning:
-      bundle.localizedString(forKey: "screen_recording_security_warning")
     case .faqs:
       bundle.localizedString(forKey: "faq_title")
     case .search:
@@ -67,14 +65,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "request_data_info_notice")
     case .requestDataTitle(let args):
       bundle.localizedStringWithArguments(forKey: "request_data_share_title", arguments: args)
-    case .cancelShareSheetTitle:
-      bundle.localizedString(forKey: "cancel_share_sheet_title")
-    case .cancelShareSheetCaption:
-      bundle.localizedString(forKey: "cancel_share_sheet_caption")
     case .documentAdded:
       bundle.localizedString(forKey: "document_added")
-    case .cancelShareSheetContinue:
-      bundle.localizedString(forKey: "cancel_share_sheet_continue")
     case .requestDataSheetCaption:
       bundle.localizedString(forKey: "request_data_sheet_caption")
     case .okButton:
@@ -85,10 +77,6 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "success")
     case .successfullySharedFollowingInformation:
       bundle.localizedString(forKey: "successfully_shared_following_information")
-    case .requestDataShareSuccess(let args):
-      bundle.localizedStringWithArguments(forKey: "request_data_share_sucess_title", arguments: args)
-    case .requestDataShareButton:
-      bundle.localizedString(forKey: "request_data_share_button")
     case .incompleteRequestDataSelection:
       bundle.localizedString(forKey: "incomplete_request_data_selecting")
     case .addDoc:
@@ -107,20 +95,14 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "request_data_share_biometry_caption")
     case .readFaqButton:
       bundle.localizedString(forKey: "read_faqs_button")
-    case .loginButton:
-      bundle.localizedString(forKey: "login_button")
     case .addDocumentTitle:
       bundle.localizedString(forKey: "add_document_title")
     case .addDocumentRequest:
       bundle.localizedString(forKey: "add_document_request")
     case .addDocumentSubtitle:
       bundle.localizedString(forKey: "add_document_subtitle")
-    case .proximityConnectivityTitle:
-      bundle.localizedString(forKey: "proximity_connectivity_title")
     case .proximityConnectivityCaption:
       bundle.localizedString(forKey: "proxmity_connectivity_caption")
-    case .verification:
-      bundle.localizedString(forKey: "request_data_verification")
     case .unavailableField:
       bundle.localizedString(forKey: "unavailable_field")
     case .requestDataVerifiedEntity:
@@ -173,12 +155,6 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "quick_pin_update_cancellation_continue")
     case .issuanceDetailsContinueButton:
       bundle.localizedString(forKey: "issuance_details_continue_button")
-    case .issuanceExternalLoadingTitle(let args):
-      bundle.localizedStringWithArguments(forKey: "issuance_external_loading_title", arguments: args)
-    case .issuanceExternalLoadingCaption:
-      bundle.localizedString(forKey: "issuance_external_loading_caption")
-    case .issuanceSuccessTitle:
-      bundle.localizedString(forKey: "issuance_success_title")
     case .successTitlePunctuated:
       bundle.localizedString(forKey: "issuance_success_title_punctuated")
       case .issuanceSuccessCaption(let args):
@@ -199,20 +175,12 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "scan_qr_code")
       case .validUntil(let args):
         bundle.localizedStringWithArguments(forKey: "valid_until", arguments: args)
-      case .vehicleCategory:
-        bundle.localizedString(forKey: "vehicle_category_code")
-      case .dateOfIssue:
-        bundle.localizedString(forKey: "date_of_issue")
-      case .dateOfExpiry:
-        bundle.localizedString(forKey: "date_of_expiry")
       case .bleDisabledModalTitle:
         bundle.localizedString(forKey: "ble_disabled_modal_title")
       case .bleDisabledModalCaption:
         bundle.localizedString(forKey: "ble_disabled_modal_content")
       case .bleDisabledModalButton:
         bundle.localizedString(forKey: "ble_disabled_modal_button")
-      case .shownAbove:
-        bundle.localizedString(forKey: "shown_above")
       case .requestDataNoDocument:
         bundle.localizedString(forKey: "request_data_no_document")
       case .issuanceDetailsDeletionTitle(let args):
@@ -225,14 +193,6 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "error_unable_fetch_documents")
       case .errorUnableFetchDocument:
         bundle.localizedString(forKey: "error_unable_fetch_document")
-      case .expired:
-        bundle.localizedString(forKey: "expired")
-      case .onExpired(let args):
-        bundle.localizedStringWithArguments(forKey: "on_expired", arguments: args)
-      case .or:
-        bundle.localizedString(forKey: "or")
-      case .issuanceScanQr:
-        bundle.localizedString(forKey: "issuance_scan_qr")
       case .scannerQrTitle:
         bundle.localizedString(forKey: "scanner_qr_title")
       case .scannerQrCaption:
@@ -440,7 +400,6 @@ public extension LocalizableString {
     case dynamic(key: String)
     case custom(String)
     case space
-    case screenCaptureSecurityWarning
     case faqs
     case search
     case genericErrorTitle
@@ -454,17 +413,12 @@ public extension LocalizableString {
     case requestDataCaption
     case requestDataInfoNotice
     case requestDataTitle([String])
-    case cancelShareSheetTitle
-    case cancelShareSheetCaption
     case documentAdded
-    case cancelShareSheetContinue
     case requestDataSheetCaption
     case okButton
     case shareDataReview
     case success
     case successfullySharedFollowingInformation
-    case requestDataShareSuccess([String])
-    case requestDataShareButton
     case incompleteRequestDataSelection
     case addDoc
     case filters
@@ -478,13 +432,10 @@ public extension LocalizableString {
     case requestDataShareQuickPinCaption
     case requestDataShareBiometryCaption
     case readFaqButton
-    case loginButton
     case addDocumentTitle
     case addDocumentSubtitle
     case addDocumentRequest
-    case proximityConnectivityTitle
     case proximityConnectivityCaption
-    case verification
     case unavailableField
     case requestDataVerifiedEntity
     case requestDataVerifiedEntityMessage
@@ -513,9 +464,6 @@ public extension LocalizableString {
     case quickPinUpdateCancellationCaption
     case quickPinUpdateCancellationContinue
     case issuanceDetailsContinueButton
-    case issuanceExternalLoadingTitle([String])
-    case issuanceExternalLoadingCaption
-    case issuanceSuccessTitle
     case successTitlePunctuated
     case issuanceSuccessCaption([String])
     case issuanceSuccessNextButton
@@ -531,23 +479,15 @@ public extension LocalizableString {
     case signDocumentSubtitle
     case selectDocument
     case validUntil([String])
-    case vehicleCategory
-    case dateOfIssue
-    case dateOfExpiry
     case bleDisabledModalTitle
     case bleDisabledModalCaption
     case bleDisabledModalButton
-    case shownAbove
     case requestDataNoDocument
     case issuanceDetailsDeletionTitle([String])
     case deleteDocument
     case issuanceDetailsDeletionCaption([String])
     case errorUnableFetchDocuments
     case errorUnableFetchDocument
-    case expired
-    case onExpired([String])
-    case or
-    case issuanceScanQr
     case scannerQrTitleIssuing
     case scannerQrTitlePresentation
     case scannerQrCaptionIssuing

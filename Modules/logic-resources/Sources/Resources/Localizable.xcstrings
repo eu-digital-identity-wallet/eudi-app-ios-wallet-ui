@@ -364,39 +364,6 @@
         }
       }
     },
-    "cancel_share_sheet_caption" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel will redirect you back to the dashboard without sharing any information"
-          }
-        }
-      }
-    },
-    "cancel_share_sheet_continue" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CONTINUE SHARING"
-          }
-        }
-      }
-    },
-    "cancel_share_sheet_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel information sharing?"
-          }
-        }
-      }
-    },
     "change_quick_pin_option" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -503,28 +470,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The following transaction requires your permission and authentication."
-          }
-        }
-      }
-    },
-    "date_of_expiry" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Date of expiry"
-          }
-        }
-      }
-    },
-    "date_of_issue" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Date of issue"
           }
         }
       }
@@ -723,17 +668,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "expiry"
-          }
-        }
-      }
-    },
-    "expired" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Expired"
           }
         }
       }
@@ -969,28 +903,6 @@
         }
       }
     },
-    "issuance_external_loading_caption" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use your “National System” credentials to add the document in your EUDI Wallet"
-          }
-        }
-      }
-    },
-    "issuance_external_loading_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add %@"
-          }
-        }
-      }
-    },
     "issuance_failed" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -998,17 +910,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Issuance failed"
-          }
-        }
-      }
-    },
-    "issuance_scan_qr" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "SCAN QR"
           }
         }
       }
@@ -1053,17 +954,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "NEXT"
-          }
-        }
-      }
-    },
-    "issuance_success_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Success"
           }
         }
       }
@@ -1152,17 +1042,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Load Sample Data"
-          }
-        }
-      }
-    },
-    "login_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "LOGIN"
           }
         }
       }
@@ -1258,17 +1137,6 @@
         }
       }
     },
-    "on_expired" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "on\n%@"
-          }
-        }
-      }
-    },
     "online" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1331,17 +1199,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hold your phone near object to scan."
-          }
-        }
-      }
-    },
-    "proximity_connectivity_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show QR"
           }
         }
       }
@@ -1687,17 +1544,6 @@
         }
       }
     },
-    "request_data_share_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CONTINUE"
-          }
-        }
-      }
-    },
     "request_data_share_caption" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1720,17 +1566,6 @@
         }
       }
     },
-    "request_data_share_sucess_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You successfully shared information with %@"
-          }
-        }
-      }
-    },
     "request_data_share_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1749,17 +1584,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "It allows us to verify your identity with the requesting party"
-          }
-        }
-      }
-    },
-    "request_data_verification" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verification Data"
           }
         }
       }
@@ -1907,17 +1731,6 @@
         }
       }
     },
-    "screen_recording_security_warning" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The screen is hidden to protect your personal information"
-          }
-        }
-      }
-    },
     "search" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1980,17 +1793,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show Results"
-          }
-        }
-      }
-    },
-    "shown_above" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shown Above"
           }
         }
       }
