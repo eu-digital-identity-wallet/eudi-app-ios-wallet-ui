@@ -407,6 +407,8 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "beyond_thirty_days")
       case .beforeToday:
         bundle.localizedString(forKey: "before_today")
+      case .issuanceRequest:
+        bundle.localizedString(forKey: "issuance_request")
     }
   }
 
@@ -603,6 +605,7 @@ public extension LocalizableString {
     case nextThirtyDays
     case beyondThiryDays
     case beforeToday
+    case issuanceRequest
   }
 }
 

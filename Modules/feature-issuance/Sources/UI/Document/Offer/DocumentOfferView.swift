@@ -102,51 +102,47 @@ private func content(
   viewState: DocumentOfferViewState,
   imageSize: CGFloat
 ) -> some View {
-
-  title(viewState: viewState)
-
-  VSpacer.small()
-
-  if viewState.documentOfferUiModel.uiOffers.isEmpty {
-    noDocumentsFound(imageSize: imageSize)
-  } else {
-    ScrollView {
-      VStack(spacing: SPACING_SMALL) {
-        ForEach(viewState.documentOfferUiModel.uiOffers) { cell in
-          WrapCardView {
-            DocumentOfferCellView(
-              cellModel: cell,
-              isLoading: viewState.isLoading
-            )
-          }
-        }
-
-        VSpacer.small()
-
-        Text(
-          LocalizableString.shared.get(
-            with: .issuer
-          ).localizedUppercase
-        )
-        .typography(Theme.shared.font.bodySmall)
-        .fontWeight(.medium)
-        .foregroundStyle(Theme.shared.color.onSurface)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .shimmer(isLoading: viewState.isLoading)
-
-        CardViewWithLogo(
+  ScrollView {
+    VStack(spacing: .zero) {
+      ContentHeader(
+        config: ContentHeaderConfig(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          ),
+          description: LocalizableString.shared.get(with: .dataSharingTitle),
+          mainText: LocalizableString.shared.get(with: .issuanceRequest).uppercased(),
           icon: .image(viewState.issuerData.icon),
-          title: viewState.issuerData.title,
-          isVerified: viewState.issuerData.isVerified,
-          isLoading: viewState.isLoading
+          relyingPartyData: RelyingPartyData(
+            isVerified: false,
+            name: viewState.issuerData.title,
+            description: LocalizableString.shared.get(with: .issuerWantWalletAddition)
+          )
         )
-      }
-      .padding(.top)
-    }
-    .bottomFade()
-  }
+      )
 
-  Spacer()
+      if viewState.documentOfferUiModel.uiOffers.isEmpty {
+        noDocumentsFound(imageSize: imageSize)
+      } else {
+        VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+          ForEach(viewState.documentOfferUiModel.uiOffers) { cell in
+            WrapCardView {
+              DocumentOfferCellView(
+                cellModel: cell,
+                isLoading: viewState.isLoading
+              )
+            }
+          }
+
+          Text(.shareDataReview)
+            .typography(Theme.shared.font.bodyMedium)
+            .foregroundColor(Theme.shared.color.onSurface)
+            .multilineTextAlignment(.leading)
+          VSpacer.medium()
+        }
+      }
+    }
+  }
 }
 
 @MainActor

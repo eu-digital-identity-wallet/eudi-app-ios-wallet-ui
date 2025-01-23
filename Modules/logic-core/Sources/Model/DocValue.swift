@@ -19,25 +19,36 @@ import SwiftUI
 public enum DocValue {
   case string(String)
   case unavailable(String)
+  case mandatory(Any)
   case image(Image)
 
   public var string: String? {
     switch self {
     case .string(let string):
-      string
+      return string
     case .unavailable(let string):
-      string
+      return string
+    case .mandatory(let item):
+      guard let item = item as? String else {
+        return nil
+      }
+      return item
     default:
-      nil
+      return nil
     }
   }
 
   public var image: Image? {
     switch self {
     case .image(let image):
-      image
+      return image
+    case .mandatory(let item):
+      guard let item = item as? Image else {
+        return nil
+      }
+      return item
     default:
-      nil
+      return nil
     }
   }
 }

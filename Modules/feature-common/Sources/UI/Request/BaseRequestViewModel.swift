@@ -21,8 +21,6 @@
 public struct RequestViewState: ViewState {
   public let isLoading: Bool
   public let error: ContentErrorView.Config?
-  public let isContentVisible: Bool
-  public let itemsAreAllSelected: Bool
   public let showMissingCrredentials: Bool
   public let items: [RequestDataUI]
   public let title: LocalizableString.Key
@@ -46,8 +44,6 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       initialState: .init(
         isLoading: true,
         error: nil,
-        isContentVisible: false,
-        itemsAreAllSelected: true,
         showMissingCrredentials: true,
         items: RequestDataUiModel.mockData(),
         title: .unknownVerifier,
@@ -162,8 +158,6 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       .init(
         isLoading: true,
         error: nil,
-        isContentVisible: false,
-        itemsAreAllSelected: true,
         showMissingCrredentials: true,
         items: RequestDataUiModel.mockData(),
         title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
@@ -194,19 +188,6 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     isVerifiedEntityModalShowing = !isVerifiedEntityModalShowing
   }
 
-  func onContentVisibilityChange() {
-    setState {
-      $0.copy(
-        isContentVisible: !viewState.isContentVisible,
-        items: viewState.items.map { item in
-          var updatedItem = item
-          updatedItem.toggleContentVisibility(isVisible: !viewState.isContentVisible)
-          return updatedItem
-        }
-      )
-    }
-  }
-
   func onSelectionChanged(id: String) {
     if viewState.showMissingCrredentials {
       itmesChanged = true
@@ -223,11 +204,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         return updatedItem
       }
 
-      let allSelected = viewState.items.areAllItemsSelected()
-
       setState {
         $0.copy(
-          itemsAreAllSelected: allSelected,
           showMissingCrredentials: false,
           items: items,
           allowShare: canShare(with: items)

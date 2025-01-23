@@ -37,7 +37,6 @@ struct DocumentDetailsView<Router: RouterHost>: View {
         trailingActions: [
           Action(image: viewModel.viewState.isBookmarked ? Theme.shared.image.bookmarkIconFill : Theme.shared.image.bookmarkIcon) {
             viewModel.saveBookmark(viewModel.viewState.document.id)
-            viewModel.alertType = .bookmark
             viewModel.showAlert = true
           },
           Action(
@@ -58,7 +57,6 @@ struct DocumentDetailsView<Router: RouterHost>: View {
         viewState: viewModel.viewState,
         isVisible: viewModel.isVisible
       ) {
-        viewModel.alertType = .issuer
         viewModel.showAlert = true
       } onContinue: {
         viewModel.onContinue()
@@ -81,8 +79,8 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     )
     .alertView(
       isPresented: $viewModel.showAlert,
-      title: alertTitle(),
-      message: alertMessage(),
+      title: viewModel.alertTitle(),
+      message: viewModel.alertMessage(),
       buttonText: LocalizableString.shared.get(with: .close),
       onDismiss: {
         viewModel.showAlert = false
@@ -91,30 +89,6 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     .task {
       await self.viewModel.fetchDocumentDetails()
       await viewModel.bookmarked()
-    }
-  }
-
-  private func alertTitle() -> String {
-    if viewModel.alertType == .issuer {
-      return LocalizableString.shared.get(with: .trustedRelyingParty)
-    } else {
-      if viewModel.viewState.isBookmarked {
-        return LocalizableString.shared.get(with: .savedToFavorites)
-      } else {
-        return LocalizableString.shared.get(with: .removedFromFavorites)
-      }
-    }
-  }
-
-  private func alertMessage() -> String {
-    if viewModel.alertType == .issuer {
-      return LocalizableString.shared.get(with: .trustedRelyingPartyDescription)
-    } else {
-      if viewModel.viewState.isBookmarked {
-        return LocalizableString.shared.get(with: .savedToFavoritesMessage)
-      } else {
-        return LocalizableString.shared.get(with: .removedFromFavoritesMessages)
-      }
     }
   }
 }
@@ -181,9 +155,7 @@ private func content(
           CardViewWithLogo(
             icon: .remoteImage(issuer.logoUrl, Theme.shared.image.logo),
             title: issuer.name
-          ) {
-            showAlert()
-          }
+          )
         }
         .shimmer(isLoading: viewState.isLoading)
       }

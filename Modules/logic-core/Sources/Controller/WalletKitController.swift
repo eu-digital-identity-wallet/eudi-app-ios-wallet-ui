@@ -61,6 +61,7 @@ public protocol WalletKitController: Sendable {
   func valueForElementIdentifier(
     with documentId: String,
     elementIdentifier: String,
+    isMandatory: Bool,
     parser: (String) -> String
   ) -> DocValue
   func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String]
@@ -339,6 +340,7 @@ extension WalletKitController {
   public func valueForElementIdentifier(
     with documentId: String,
     elementIdentifier: String,
+    isMandatory: Bool,
     parser: (String) -> String
   ) -> DocValue {
 
@@ -362,13 +364,25 @@ extension WalletKitController {
     }
 
     if let image = element.dataValue.image {
-      return .image(Image(uiImage: image))
+      if isMandatory {
+        return .mandatory(Image(uiImage: image))
+      } else {
+        return .image(Image(uiImage: image))
+      }
     }
 
-    if let nested = element.children {
-      return .string(element.flattenNested(nested: nested).stringValue)
+    var stringValue: String {
+      if let nested = element.children {
+        return element.flattenNested(nested: nested).stringValue
+      } else {
+        return element.stringValue
+      }
     }
 
-    return .string(element.stringValue)
+    if isMandatory {
+      return .mandatory(stringValue)
+    } else {
+      return .string(stringValue)
+    }
   }
 }

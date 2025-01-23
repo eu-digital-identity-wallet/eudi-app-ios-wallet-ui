@@ -52,7 +52,7 @@ struct DashboardView<Router: RouterHost>: View {
     ) {
       content(
         viewState: viewModel.viewState,
-        addDocument: $viewModel.addDocument,
+        isAuthenticateAlertShowing: $viewModel.isAuthenticateAlertShowing,
         selectedTab: $viewModel.selectedTab,
         onMore: viewModel.onMore,
         onDocumentDetails: { id in
@@ -71,7 +71,7 @@ struct DashboardView<Router: RouterHost>: View {
     }
     .confirmationDialog(
       LocalizableString.shared.get(with: .authenticate),
-      isPresented: $viewModel.addDocument,
+      isPresented: $viewModel.isAuthenticateAlertShowing,
       titleVisibility: .visible
     ) {
       Button(LocalizableString.shared.get(with: .cancelButton), role: .cancel) {}
@@ -340,7 +340,7 @@ struct DashboardView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: DashboardState,
-  addDocument: Binding<Bool>,
+  isAuthenticateAlertShowing: Binding<Bool>,
   selectedTab: Binding<SelectedTab>,
   onMore: @escaping () -> Void,
   onDocumentDetails: @escaping (String) -> Void,
@@ -354,7 +354,7 @@ private func content(
     HomeView(
       username: viewState.username,
       addDocument: {
-        addDocument.wrappedValue.toggle()
+        isAuthenticateAlertShowing.wrappedValue.toggle()
       },
       signDocument: {
         signDocument()
@@ -425,7 +425,7 @@ private func content(
   ) {
     content(
       viewState: viewState,
-      addDocument: .constant(false),
+      isAuthenticateAlertShowing: .constant(false),
       selectedTab: .constant(.home),
       onMore: {},
       onDocumentDetails: { _ in },

@@ -969,6 +969,17 @@
         }
       }
     },
+    "issuance_request" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuance request"
+          }
+        }
+      }
+    },
     "issuance_success_caption" : {
       "extractionState" : "manual",
       "localizations" : {

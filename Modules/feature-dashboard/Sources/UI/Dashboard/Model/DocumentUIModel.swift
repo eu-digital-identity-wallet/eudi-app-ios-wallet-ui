@@ -263,7 +263,7 @@ extension DocClaimsDecodable {
         ) ? .failed : (self is DeferrredDocument) ? .pending : .issued,
         image: .init(
           url: self.issuerDisplay?.first?.logo?.uri,
-          placeholder: Theme.shared.image.logo
+          placeholder: Theme.shared.image.id
         )
       )
     )

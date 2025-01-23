@@ -43,12 +43,6 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   @Published var isDeletionModalShowing: Bool = false
   @Published var isVisible = true
   @Published var showAlert = false
-  @Published var alertType: AlertType?
-
-  enum AlertType {
-    case bookmark
-    case issuer
-  }
 
   private let interactor: DocumentDetailsInteractor
 
@@ -177,6 +171,22 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
           }
         }
       } catch {}
+    }
+  }
+
+  func alertTitle() -> String {
+    if viewState.isBookmarked {
+      return LocalizableString.shared.get(with: .savedToFavorites)
+    } else {
+      return LocalizableString.shared.get(with: .removedFromFavorites)
+    }
+  }
+
+  func alertMessage() -> String {
+    if viewState.isBookmarked {
+      return LocalizableString.shared.get(with: .savedToFavoritesMessage)
+    } else {
+      return LocalizableString.shared.get(with: .removedFromFavoritesMessages)
     }
   }
 

@@ -122,7 +122,7 @@ struct CustomSearchBar: UIViewRepresentable {
 }
 
 #Preview {
-  var todayTransactions: [ListItemData] = [
+  let todayTransactions: [ListItemData] = [
     .init(
       mainText: "TravelBook",
       overlineText: "5 minutes ago",

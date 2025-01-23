@@ -56,7 +56,6 @@ public struct BaseRequestView<Router: RouterHost>: View {
         getCaption: viewModel.getCaption(),
         onShowRequestInfoModal: viewModel.onShowRequestInfoModal,
         onVerifiedEntityModal: viewModel.onVerifiedEntityModal,
-        onContentVisibilityChange: viewModel.onContentVisibilityChange,
         onShare: viewModel.onShare,
         onSelectionChanged: { id in
           viewModel.onSelectionChanged(id: id)
@@ -104,7 +103,6 @@ private func content(
   getCaption: LocalizableString.Key,
   onShowRequestInfoModal: @escaping () -> Void,
   onVerifiedEntityModal: @escaping () -> Void,
-  onContentVisibilityChange: @escaping () -> Void,
   onShare: @escaping () -> Void,
   onSelectionChanged: @escaping (String) -> Void
 ) -> some View {
@@ -147,14 +145,13 @@ private func content(
               title: section.requestDataSection.title,
               subtitle: LocalizableString.shared.get(with: .viewDetails)
             ) {
-              ForEach(section.requestDataRow ?? [], id: \.id) { item in
+              ForEach(section.requestDataRow, id: \.id) { item in
                 switch item.value {
                 case .string(let value):
                   WrapListItemView(
                     listItem: ListItemData(
                       mainText: value,
                       overlineText: item.title,
-                      isBlur: item.isVisible,
                       trailingContent: .checkbox(
                         item.isEnabled,
                         item.isSelected
@@ -168,44 +165,8 @@ private func content(
                     listItem: ListItemData(
                       mainText: item.title,
                       leadingIcon: (nil, image),
-                      isBlur: item.isVisible,
                       trailingContent: .checkbox(
                         item.isEnabled,
-                        item.isSelected
-                      ) { _ in
-                        onSelectionChanged(item.id)
-                      }
-                    )
-                  )
-                }
-                Divider()
-                  .padding(.horizontal, SPACING_MEDIUM)
-                  .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
-              }
-              ForEach(section.requestDataVerification ?? [], id: \.id) { item in
-                switch item.value {
-                case .string(let value):
-                  WrapListItemView(
-                    listItem: ListItemData(
-                      mainText: value,
-                      overlineText: item.title,
-                      isBlur: item.isVisible,
-                      trailingContent: .checkbox(
-                        false,
-                        item.isSelected
-                      ) { _ in
-                        onSelectionChanged(item.id)
-                      }
-                    )
-                  )
-                case .image(let image):
-                  WrapListItemView(
-                    listItem: ListItemData(
-                      mainText: item.title,
-                      leadingIcon: (nil, image),
-                      isBlur: item.isVisible,
-                      trailingContent: .checkbox(
-                        false,
                         item.isSelected
                       ) { _ in
                         onSelectionChanged(item.id)
@@ -264,8 +225,6 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
   let viewState = RequestViewState(
     isLoading: false,
     error: nil,
-    isContentVisible: true,
-    itemsAreAllSelected: true,
     showMissingCrredentials: false,
     items: RequestDataUiModel.mockData(),
     title: LocalizableString.Key.requestDataVerifiedEntity,
@@ -286,7 +245,6 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
       getCaption: .requestDataCaption,
       onShowRequestInfoModal: {},
       onVerifiedEntityModal: {},
-      onContentVisibilityChange: {},
       onShare: {},
       onSelectionChanged: { _ in }
     )

@@ -127,13 +127,8 @@ final class ProximityInteractorImpl: ProximityInteractor {
   public func onResponsePrepare(requestItems: [RequestDataUI]) async -> ProximityResponsePreparationPartialState {
     let requestConvertible = requestItems
       .reduce(into: [RequestDataRow]()) { partialResult, cell in
-        if let items = cell.requestDataRow?.filter({$0.isSelected}) {
-          partialResult.append(contentsOf: items)
-        }
-
-        if let verificationItems = cell.requestDataVerification?.filter({$0.isSelected}) {
-          partialResult.append(contentsOf: verificationItems)
-        }
+        let items = cell.requestDataRow.filter({$0.isSelected})
+        partialResult.append(contentsOf: items)
       }
       .reduce(into: RequestItemsWrapper()) { partialResult, row in
         let requestItem: RequestItem = .init(elementIdentifier: row.elementKey)

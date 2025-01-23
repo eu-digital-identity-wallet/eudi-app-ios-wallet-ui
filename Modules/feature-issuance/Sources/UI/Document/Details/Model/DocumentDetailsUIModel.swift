@@ -128,7 +128,6 @@ extension DocClaimsDecodable {
     flattenValues(
       input: docClaims
         .compactMap({$0})
-        .sorted(by: {$0.order < $1.order})
         .parseDates(
           parser: {
             Locale.current.localizedDateTime(
@@ -139,6 +138,7 @@ extension DocClaimsDecodable {
         )
         .parseUserPseudonym()
     )
+    .sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
 
     var bearerName: String {
       guard let fullName = getBearersName() else {

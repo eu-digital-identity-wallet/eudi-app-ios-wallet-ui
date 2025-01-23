@@ -2424,17 +2424,17 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, parser p2: (String) -> String) -> DocValue {
+    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue {
         
-				return withoutActuallyEscaping(p2, do: { (p2: @escaping (String) -> String) -> DocValue in
+					return withoutActuallyEscaping(p3, do: { (p3: @escaping (String) -> String) -> DocValue in
 return cuckoo_manager.call(
-            "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, parser p2: (String) -> String) -> DocValue",
-            parameters: (p0, p1, p2),
-            escapingParameters: (p0, p1, { _ in fatalError("This is a stub! It's not supposed to be called!") }),
+            "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue",
+            parameters: (p0, p1, p2, p3),
+            escapingParameters: (p0, p1, p2, { _ in fatalError("This is a stub! It's not supposed to be called!") }),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.valueForElementIdentifier(with: p0, elementIdentifier: p1, parser: p2)
+            defaultCall: __defaultImplStub!.valueForElementIdentifier(with: p0, elementIdentifier: p1, isMandatory: p2, parser: p3)
         )
-				})
+					})
 
     }
     
@@ -2669,10 +2669,10 @@ return cuckoo_manager.call(
             ))
         }
         
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, parser p2: M3) -> Cuckoo.ProtocolStubFunction<(String, String, (String) -> String), DocValue> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, isMandatory p2: M3, parser p3: M4) -> Cuckoo.ProtocolStubFunction<(String, String, Bool, (String) -> String), DocValue> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == Bool, M4.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, String, Bool, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, parser p2: (String) -> String) -> DocValue",
+                method: "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue",
                 parameterMatchers: matchers
             ))
         }
@@ -2983,10 +2983,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, parser p2: M3) -> Cuckoo.__DoNotUse<(String, String, (String) -> String), DocValue> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, isMandatory p2: M3, parser p3: M4) -> Cuckoo.__DoNotUse<(String, String, Bool, (String) -> String), DocValue> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == Bool, M4.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, String, Bool, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
             return cuckoo_manager.verify(
-                "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, parser p2: (String) -> String) -> DocValue",
+                "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -3157,7 +3157,7 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: ([WalletStorage.Document]).self)
     }
     
-    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, parser p2: (String) -> String) -> DocValue {
+    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue {
         return DefaultValueRegistry.defaultValue(for: (DocValue).self)
     }
     
@@ -5797,62 +5797,6 @@ import Shimmer
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/Model/UIModel.swift'
-
-import Cuckoo
-import Foundation
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-
-public class MockUIModel: Routable, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = Routable
-    public typealias Stubbing = __StubbingProxy_UIModel
-    public typealias Verification = __VerificationProxy_UIModel
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any Routable)?
-
-    public func enableDefaultImplementation(_ stub: any Routable) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-
-    public struct __StubbingProxy_UIModel: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-    }
-
-    public struct __VerificationProxy_UIModel: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    }
-}
-
-public class UIModelStub:Routable, @unchecked Sendable {
-
-
-}
-
-
-
-
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/Navigation/AppRoute.swift'
 
 import Cuckoo
@@ -5959,6 +5903,60 @@ public class AppRouteModuleStub:AppRouteModule, @unchecked Sendable {
             return DefaultValueRegistry.defaultValue(for: (String).self)
         }
     }
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/Navigation/Routable.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+
+public class MockRoutable: Routable, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = Routable
+    public typealias Stubbing = __StubbingProxy_Routable
+    public typealias Verification = __VerificationProxy_Routable
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any Routable)?
+
+    public func enableDefaultImplementation(_ stub: any Routable) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public struct __StubbingProxy_Routable: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    public struct __VerificationProxy_Routable: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+public class RoutableStub:Routable, @unchecked Sendable {
 
 
 }

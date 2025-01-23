@@ -85,7 +85,7 @@ struct DocumentListView: View {
   }
 
   @ViewBuilder
-  func contentUnavailableView() -> some View {
+  private func contentUnavailableView() -> some View {
     VStack(spacing: SPACING_SMALL) {
       Text(.noResults)
         .typography(Theme.shared.font.titleLarge)

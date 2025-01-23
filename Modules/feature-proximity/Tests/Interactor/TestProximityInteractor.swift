@@ -238,6 +238,7 @@ final class TestProximityInteractor: EudiTest {
         mock.valueForElementIdentifier(
           with: any(),
           elementIdentifier: any(),
+          isMandatory: false,
           parser: any()
         )
       ).thenReturn(.string("elementIdentifier"))
@@ -417,7 +418,6 @@ private extension TestProximityInteractor {
         RequestDataRow(
           id: Constants.randomIdentifier,
           isSelected: true,
-          isVisible: false,
           title: "displayName",
           value: .string("elementIdentifier"),
           elementKey: "elementIdentifier",

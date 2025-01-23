@@ -106,14 +106,13 @@ private func documents(
           title: section.requestDataSection.title,
           subtitle: LocalizableString.shared.get(with: .viewDetails)
         ) {
-          ForEach(section.requestDataRow ?? [], id: \.id) { item in
+          ForEach(section.requestDataRow, id: \.id) { item in
             switch item.value {
             case .string(let value):
               WrapListItemView(
                 listItem: ListItemData(
                   mainText: value,
                   overlineText: item.title,
-                  isBlur: item.isVisible,
                   trailingContent: ignoreTrainingContent ? .none : .checkbox(
                     item.isEnabled,
                     item.isSelected
@@ -127,44 +126,8 @@ private func documents(
                 listItem: ListItemData(
                   mainText: item.title,
                   leadingIcon: (nil, image),
-                  isBlur: item.isVisible,
                   trailingContent: ignoreTrainingContent ? .none : .checkbox(
                     item.isEnabled,
-                    item.isSelected
-                  ) { _ in
-                    onSelectionChanged(item.id)
-                  }
-                )
-              )
-            }
-            Divider()
-              .padding(.horizontal, SPACING_MEDIUM)
-              .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
-          }
-          ForEach(section.requestDataVerification ?? [], id: \.id) { item in
-            switch item.value {
-            case .string(let value):
-              WrapListItemView(
-                listItem: ListItemData(
-                  mainText: value,
-                  overlineText: item.title,
-                  isBlur: item.isVisible,
-                  trailingContent: ignoreTrainingContent ? .none : .checkbox(
-                    false,
-                    item.isSelected
-                  ) { _ in
-                    onSelectionChanged(item.id)
-                  }
-                )
-              )
-            case .image(let image):
-              WrapListItemView(
-                listItem: ListItemData(
-                  mainText: item.title,
-                  leadingIcon: (nil, image),
-                  isBlur: item.isVisible,
-                  trailingContent: .checkbox(
-                    false,
                     item.isSelected
                   ) { _ in
                     onSelectionChanged(item.id)

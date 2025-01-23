@@ -50,7 +50,6 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
   public let value: Value
 
   public var isSelected: Bool
-  public var isVisible: Bool
   public var isEnabled: Bool
 
   public var elementKey: String
@@ -66,7 +65,6 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
   public init(
     id: String = UUID().uuidString,
     isSelected: Bool,
-    isVisible: Bool,
     title: String,
     value: DocValue,
     elementKey: String = "namespaced_key",
@@ -74,7 +72,6 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
   ) {
     self.id = id
     self.isSelected = isSelected
-    self.isVisible = isVisible
     self.title = title
     switch value {
       case .string(let string):
@@ -87,6 +84,17 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
       case .image(let image):
         self.value = .image(image)
         self.isEnabled = true
+      case .mandatory(let item):
+        switch item {
+        case let item as String:
+          self.value = .string(item)
+        case let item as Image:
+          self.value = .image(item)
+        default:
+          fatalError("Mandatory DocValue can only be image or string")
+        }
+        self.isEnabled = false
+        self.isSelected = true
     }
     self.elementKey = elementKey
     self.namespace = namespace
@@ -94,10 +102,6 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
 
   public mutating func setSelected(_ isSelected: Bool) {
     self.isSelected = isSelected
-  }
-
-  public mutating func setVisible(_ isVisible: Bool) {
-    self.isVisible = isVisible
   }
 }
 
@@ -160,6 +164,8 @@ extension RequestDataUiModel {
         walletKitController: walletKitController
       )
 
+      let dataRows = (dataFields + (verificationFields ?? [])).sorted { $0.title.lowercased() < $1.title.lowercased() }
+
       guard !dataFields.isEmpty || verificationFields != nil else {
         continue
       }
@@ -170,9 +176,8 @@ extension RequestDataUiModel {
       )
       let data = RequestDataUI(
         id: section.id,
-        requestDataRow: dataFields,
-        requestDataSection: section,
-        requestDataVerification: verificationFields
+        requestDataRow: dataRows,
+        requestDataSection: section
       )
 
       requestDataCell.append(data)
@@ -195,11 +200,11 @@ extension RequestDataUiModel {
         RequestDataRow(
           id: "\(element.id)_\(docElement.id)",
           isSelected: true,
-          isVisible: false,
           title: element.displayName.ifNil { element.elementIdentifier },
           value: walletKitController.valueForElementIdentifier(
             with: docElement.id,
             elementIdentifier: element.elementIdentifier,
+            isMandatory: false,
             parser: {
               Locale.current.localizedDateTime(
                 date: $0,
@@ -227,11 +232,11 @@ extension RequestDataUiModel {
         RequestDataRow(
           id: "\(element.id)_\(docElement.id)",
           isSelected: true,
-          isVisible: false,
           title: element.displayName.ifNil { element.elementIdentifier },
           value: walletKitController.valueForElementIdentifier(
             with: docElement.id,
             elementIdentifier: element.elementIdentifier,
+            isMandatory: true,
             parser: {
               Locale.current.localizedDateTime(
                 date: $0,
@@ -257,18 +262,12 @@ public struct RequestDataUiModel {
     [
       RequestDataUI(
         requestDataRow: [
-          RequestDataRow(isSelected: true, isVisible: false, title: "Family Name", value: .string("Tzouvaras")),
-          RequestDataRow(isSelected: true, isVisible: false, title: "First Name", value: .string("Stilianos")),
-          RequestDataRow(isSelected: true, isVisible: false, title: "Date of Birth", value: .string("21-09-1985")),
-          RequestDataRow(isSelected: true, isVisible: false, title: "Resident Country", value: .string("Greece"))
+          RequestDataRow(isSelected: true, title: "Family Name", value: .string("Tzouvaras")),
+          RequestDataRow(isSelected: true, title: "First Name", value: .string("Stilianos")),
+          RequestDataRow(isSelected: true, title: "Date of Birth", value: .string("21-09-1985")),
+          RequestDataRow(isSelected: true, title: "Resident Country", value: .string("Greece"))
         ],
-        requestDataSection: RequestDataSection(title: "MDL"),
-        requestDataVerification: [
-          RequestDataRow(isSelected: true, isVisible: false, title: "Family Name", value: .string("Tzouvaras")),
-          RequestDataRow(isSelected: true, isVisible: false, title: "First Name", value: .string("Stilianos")),
-          RequestDataRow(isSelected: true, isVisible: false, title: "Date of Birth", value: .string("21-09-1985")),
-          RequestDataRow(isSelected: true, isVisible: false, title: "Resident Country", value: .string("Greece"))
-        ]
+        requestDataSection: RequestDataSection(title: "MDL")
       )
     ]
   }

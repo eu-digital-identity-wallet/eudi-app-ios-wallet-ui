@@ -21,6 +21,7 @@ public struct ContentHeaderConfig {
   public let description: String?
   public let descriptionTextConfig: TextConfig?
   public let mainText: String?
+  public let icon: RemoteImageView.ImageContentOption
   public let mainTextConfig: TextConfig?
   public let relyingPartyData: RelyingPartyData?
 
@@ -29,6 +30,7 @@ public struct ContentHeaderConfig {
     description: String? = nil,
     descriptionTextConfig: TextConfig? = nil,
     mainText: String? = nil,
+    icon: RemoteImageView.ImageContentOption = .none,
     mainTextConfig: TextConfig? = nil,
     relyingPartyData: RelyingPartyData? = nil
   ) {
@@ -38,6 +40,7 @@ public struct ContentHeaderConfig {
     self.mainText = mainText
     self.mainTextConfig = mainTextConfig
     self.relyingPartyData = relyingPartyData
+    self.icon = icon
   }
 }
 
@@ -102,6 +105,24 @@ public struct ContentHeader: View {
           )
         )
         .padding(.vertical, SPACING_MEDIUM_SMALL)
+      }
+
+      switch config.icon {
+        case .none: EmptyView()
+        case .remoteImage(let url, let image):
+          RemoteImageView(
+            url: url,
+            icon: image,
+            size: .init(
+              width: Theme.shared.dimension.remoteImageIconSize,
+              height: Theme.shared.dimension.remoteImageIconSize
+            )
+          )
+        case .image(let image):
+          image
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(height: Theme.shared.dimension.remoteImageIconSize)
       }
 
       if let relyingPartyData = config.relyingPartyData {
