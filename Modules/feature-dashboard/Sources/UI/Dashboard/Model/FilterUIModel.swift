@@ -62,7 +62,7 @@ public enum FilterSections {
       return []
     case .sortBy:
       return [
-        "Default",
+        LocalizableString.shared.get(with: .defaultLabel).capitalized,
         "Date Issued",
         "Expiry Date"
       ]
@@ -77,9 +77,9 @@ public enum FilterSections {
       ]
     case .state:
       return [
-        "Valid",
-        "Expired",
-        "Revoke"
+        LocalizableString.shared.get(with: .valid).capitalized,
+        LocalizableString.shared.get(with: .expired).capitalized,
+        LocalizableString.shared.get(with: .revoke).capitalized
       ]
     }
   }

@@ -69,7 +69,7 @@ struct FilterListView: View {
             resetFiltersCallback()
             resetFilters()
           }
-          .disabled(selectedOptions.isEmpty && sortAscending && selectesSorting == "Default")
+          .disabled(selectedOptions.isEmpty && sortAscending && selectesSorting == LocalizableString.shared.get(with: .defaultLabel).capitalized)
         }
       }
       .overlay(alignment: .bottom) {
@@ -97,7 +97,7 @@ struct FilterListView: View {
     }
     .onAppear {
       if selectesSorting.isEmpty {
-        selectesSorting = "Default"
+        selectesSorting = LocalizableString.shared.get(with: .defaultLabel).capitalized
       }
       updateSelectedCount()
     }
@@ -105,13 +105,7 @@ struct FilterListView: View {
       showFilterIndicator.toggle()
     })
     .onDisappear {
-      if sortAscending && selectesSorting == "Default" {
-        showFilterIndicator = false
-      }
-
-      if selectedExpiryOption != "" {
-        showFilterIndicator = true
-      }
+      updateSelectedCount()
     }
   }
 
@@ -205,12 +199,14 @@ struct FilterListView: View {
           text: sortBy,
           isSelected: selectesSorting == sortBy
         ) {
-          if selectesSorting == sortBy {
-            selectesSorting = ""
-            selectedOptions.remove(sortBy)
+          if sortBy == LocalizableString.shared.get(with: .defaultLabel).capitalized {
+            selectesSorting = LocalizableString.shared.get(with: .defaultLabel).capitalized
+            selectedOptions = selectedOptions.filter { !section.options.contains($0) }
+            showCounterRectangle = false
           } else {
             selectesSorting = sortBy
             selectedOptions.insert(sortBy)
+            showCounterRectangle = true
           }
           updateSelectedCount()
         }
@@ -235,18 +231,19 @@ struct FilterListView: View {
     selectedExpiryOption = ""
     stateOption = ""
     sortAscending = true
-    selectesSorting = "Default"
+    selectesSorting = LocalizableString.shared.get(with: .defaultLabel).capitalized
     updateSelectedCount()
   }
 
   private func updateSelectedCount() {
-    filterCounter = selectedOptions.count
+    filterCounter = selectedOptions.filter { $0 != LocalizableString.shared.get(with: .defaultLabel).capitalized }.count
     withAnimation {
-      if filterCounter == 0 {
-        showFilterIndicator = false
+      if filterCounter == 0 && selectesSorting == LocalizableString.shared.get(with: .defaultLabel).capitalized {
         showCounterRectangle = false
+        showFilterIndicator = false
       } else {
         showCounterRectangle = true
+        showFilterIndicator = true
       }
     }
   }
