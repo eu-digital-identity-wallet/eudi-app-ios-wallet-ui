@@ -51,9 +51,6 @@ public final class IssuanceRouter {
           interactor: DIGraph.resolver.force(
             DocumentSuccessInteractor.self
           ),
-          detailsInteractor: DIGraph.resolver.force(
-            DocumentDetailsInteractor.self
-          ),
           config: config,
           documentIdentifiers: documentIdentifiers
         )
