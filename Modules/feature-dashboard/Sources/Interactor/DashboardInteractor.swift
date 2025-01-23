@@ -46,11 +46,7 @@ public protocol DashboardInteractor: Sendable {
   func requestDeferredIssuance() async -> DashboardDeferredPartialState
   func retrieveLogFileUrl() -> URL?
   func applyFiltersWithSorting(
-    section: [FilterSections],
-    sortAscending: Bool,
-    initialSorting: String,
-    selectedExpiryOption: String?,
-    selectedStateOption: String,
+    filterModel: FilterModel?,
     documents: [DocumentUIModel]
   ) -> [DocumentUIModel]
 }
@@ -149,15 +145,15 @@ final class DashboardInteractorImpl: DashboardInteractor {
   }
 
   func applyFiltersWithSorting(
-    section: [FilterSections],
-    sortAscending: Bool,
-    initialSorting: String,
-    selectedExpiryOption: String?,
-    selectedStateOption: String,
+    filterModel: FilterModel?,
     documents: [DocumentUIModel]
   ) -> [DocumentUIModel] {
 
-    let selectedIssuers = section
+    guard let filterModel = filterModel else {
+      return documents
+    }
+
+    let selectedIssuers = filterModel.sections
       .compactMap { filterSection -> [String]? in
         if case let .issuer(options: issuers) = filterSection {
           return issuers
@@ -172,7 +168,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
       filteredDocuments = filteredDocuments.filter { selectedIssuers.contains($0.value.heading) }
     }
 
-    guard let selectedExpiryPeriod = selectedExpiryOption else {
+    guard let selectedExpiryPeriod = filterModel.selectedExpiryOption else {
       return filteredDocuments
     }
 
@@ -180,25 +176,25 @@ final class DashboardInteractorImpl: DashboardInteractor {
       return isDocumentWithinExpiryPeriod(document, expiryPeriod: selectedExpiryPeriod)
     }
 
-    if selectedStateOption == LocalizableString.shared.get(with: .valid).capitalized {
+    if filterModel.selectedStateOption == LocalizableString.shared.get(with: .valid).capitalized {
       filteredDocuments = filteredDocuments.filter { !$0.value.hasExpired && $0.value.state == .issued }
-    } else if selectedStateOption == LocalizableString.shared.get(with: .expired).capitalized {
+    } else if filterModel.selectedStateOption == LocalizableString.shared.get(with: .expired).capitalized {
       filteredDocuments = filteredDocuments.filter { $0.value.hasExpired }
-    } else if selectedStateOption == LocalizableString.shared.get(with: .revoke).capitalized {
+    } else if filterModel.selectedStateOption == LocalizableString.shared.get(with: .revoke).capitalized {
       filteredDocuments = filteredDocuments.filter { $0.value.state == .failed }
     }
 
-    switch initialSorting {
+    switch filterModel.initialSorting {
     case "Date Issued":
-      filteredDocuments = sortAscending
+      filteredDocuments = filterModel.sortAscending
       ? filteredDocuments.sorted { $0.value.createdAt < $1.value.createdAt }
       : filteredDocuments.sorted { $0.value.createdAt > $1.value.createdAt }
     case "Expiry Date":
-      filteredDocuments = sortAscending
+      filteredDocuments = filterModel.sortAscending
       ? filteredDocuments.sorted { ($0.value.expiresAt ?? "") < ($1.value.expiresAt ?? "") }
       : filteredDocuments.sorted { ($0.value.expiresAt ?? "") > ($1.value.expiresAt ?? "") }
     default:
-      filteredDocuments = sortAscending
+      filteredDocuments = filterModel.sortAscending
       ? filteredDocuments.sorted { $0.value.title < $1.value.title }
       : filteredDocuments.sorted { $0.value.title > $1.value.title }
     }

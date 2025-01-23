@@ -60,6 +60,12 @@ struct FilterListView: View {
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
           Button(LocalizableString.shared.get(with: .cancelButton).capitalized) {
+            if filterCounter > 0 {
+              showFilterIndicator = false
+              resetFiltersCallback()
+              resetFilters()
+            }
+
             dismiss()
           }
         }
@@ -106,6 +112,10 @@ struct FilterListView: View {
     })
     .onDisappear {
       updateSelectedCount()
+
+      if !sortAscending {
+        showFilterIndicator = true
+      }
     }
   }
 

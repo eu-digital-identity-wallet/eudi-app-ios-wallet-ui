@@ -24,6 +24,7 @@ struct DashboardState: ViewState {
   let isLoading: Bool
   let documents: [DocumentUIModel]
   var filteredDocuments: [DocumentUIModel]
+  var filterModel: FilterModel?
   let username: String
   let phase: ScenePhase
   let pendingBleModalAction: Bool
@@ -106,6 +107,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         isLoading: true,
         documents: DocumentUIModel.mocks(),
         filteredDocuments: DocumentUIModel.mocks(),
+        filterModel: nil,
         username: "",
         phase: .active,
         pendingBleModalAction: false,
@@ -278,20 +280,20 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
   func updateFilteredDocuments(filteredDocuments: String, listIsFiltered: Bool) {
     let trimmedSearchQuery = filteredDocuments.trimmingCharacters(in: .whitespacesAndNewlines)
+    let sortedDocuments = interactor.applyFiltersWithSorting(
+      filterModel: viewState.filterModel,
+      documents: viewState.documents
+    )
 
-    if trimmedSearchQuery.isEmpty {
-      let documentsToReturn = listIsFiltered ? viewState.filteredDocuments : viewState.documents
-      setState { $0.copy(filteredDocuments: documentsToReturn) }
-    } else {
-      let documentsToSearch = listIsFiltered ? viewState.filteredDocuments : viewState.documents
-
-      let newDocuments = documentsToSearch.filter {
-        $0.value.title.localizedCaseInsensitiveContains(trimmedSearchQuery) ||
-        $0.id.localizedCaseInsensitiveContains(trimmedSearchQuery)
+    let newDocuments = sortedDocuments.filter {
+      if trimmedSearchQuery.isEmpty {
+        return true
+      } else {
+        return $0.value.title.localizedCaseInsensitiveContains(trimmedSearchQuery) || $0.id.localizedCaseInsensitiveContains(trimmedSearchQuery)
       }
-
-      setState { $0.copy(filteredDocuments: newDocuments) }
     }
+
+    setState { $0.copy(filteredDocuments: newDocuments) }
   }
 
   func applyFilters(
@@ -301,16 +303,19 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     selectedExpiryOption: String?,
     selectedStateOption: String
   ) {
-
     setState { $0.copy(filteredDocuments: viewState.documents) }
 
-    let sortedDocuments = interactor.applyFiltersWithSorting(
-      section: section,
+    setState { $0.copy(filterModel: .init(
+      sections: section,
       sortAscending: sortAscending,
       initialSorting: initialSorting,
       selectedExpiryOption: selectedExpiryOption,
-      selectedStateOption: selectedStateOption,
-      documents: viewState.filteredDocuments
+      selectedStateOption: selectedStateOption))
+    }
+
+    let sortedDocuments = interactor.applyFiltersWithSorting(
+      filterModel: viewState.filterModel,
+      documents: viewState.documents
     )
 
     setState { $0.copy(filteredDocuments: sortedDocuments) }

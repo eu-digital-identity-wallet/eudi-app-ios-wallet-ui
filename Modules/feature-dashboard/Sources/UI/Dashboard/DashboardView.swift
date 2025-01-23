@@ -404,6 +404,7 @@ private func content(
     isLoading: false,
     documents: DocumentUIModel.mocks(),
     filteredDocuments: DocumentUIModel.mocks(),
+    filterModel: .init(sections: [], sortAscending: true, initialSorting: "", selectedStateOption: ""),
     username: "First name",
     phase: .active,
     pendingBleModalAction: false,
