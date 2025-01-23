@@ -178,10 +178,13 @@ private func content(
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .frame(maxWidth: .infinity, alignment: .leading)
 
-          RemoteImageView(
-            url: issuer.logoUrl,
-            icon: nil
-          )
+          HStack {
+            RemoteImageView(
+              url: issuer.logoUrl,
+              icon: Theme.shared.image.logo
+            )
+            Spacer()
+          }
 
           CardViewWithLogo(
             title: issuer.name
