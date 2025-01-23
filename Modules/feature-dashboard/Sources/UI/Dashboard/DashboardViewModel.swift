@@ -379,7 +379,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       }.store(in: &cancellables)
   }
 
-  private func onDocumentsRetrievedPostActions() {
+  func onDocumentsRetrievedPostActions() {
     if let deepLink = deepLinkController.getPendingDeepLinkAction() {
       Task {
         deepLinkController.handleDeepLinkAction(

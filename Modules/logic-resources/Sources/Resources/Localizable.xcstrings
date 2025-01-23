@@ -254,6 +254,28 @@
         }
       }
     },
+    "before_today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before today"
+          }
+        }
+      }
+    },
+    "beyond_thirty_days" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beyond 30 days"
+          }
+        }
+      }
+    },
     "biometry_confirm_request" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -474,6 +496,17 @@
         }
       }
     },
+    "date_issued" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date Issued"
+          }
+        }
+      }
+    },
     "deferred_document_issued_modal_caption" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -679,6 +712,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "expired"
+          }
+        }
+      }
+    },
+    "expiry_date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expiry Date"
           }
         }
       }
@@ -1108,6 +1152,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "More options"
+          }
+        }
+      }
+    },
+    "next_seven_days" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next 7 days"
+          }
+        }
+      }
+    },
+    "next_thirty_days" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next 30 days"
           }
         }
       }
