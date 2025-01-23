@@ -393,6 +393,8 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "valid")
       case .revoke:
         bundle.localizedString(forKey: "revoke")
+      case .expired:
+        bundle.localizedString(forKey: "expired")
     }
   }
 
@@ -582,6 +584,7 @@ public extension LocalizableString {
     case defaultLabel
     case valid
     case revoke
+    case expired
   }
 }
 
