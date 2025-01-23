@@ -106,6 +106,10 @@ struct FilterListView: View {
     })
     .onDisappear {
       updateSelectedCount()
+
+      if !sortAscending {
+        showFilterIndicator = true
+      }
     }
   }
 

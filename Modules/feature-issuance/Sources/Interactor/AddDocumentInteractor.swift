@@ -56,7 +56,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     }
 
     func compare(_ first: AddDocumentUIModel, _ second: AddDocumentUIModel) -> Bool {
-      return LocalizableString.shared.get(with: first.documentName) < LocalizableString.shared.get(with: second.documentName)
+      return LocalizableString.shared.get(with: first.documentName).lowercased() < LocalizableString.shared.get(with: second.documentName).lowercased()
     }
   }
 
