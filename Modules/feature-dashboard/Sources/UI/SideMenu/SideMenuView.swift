@@ -39,6 +39,7 @@ func shareLogs(with fileUrl: URL) -> some View {
     TappableCellView(
       title: .retrieveLogs,
       showDivider: false,
+      useOverlay: false,
       action: {}
     )
   }

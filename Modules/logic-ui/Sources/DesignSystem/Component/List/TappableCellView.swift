@@ -19,20 +19,23 @@ import logic_resources
 public struct TappableCellView: View {
   public let title: LocalizableString.Key
   public let showDivider: Bool
+  public let useOverlay: Bool
   public let action: () -> Void
 
   public init(
     title: LocalizableString.Key,
     showDivider: Bool,
+    useOverlay: Bool = true,
     action: @escaping () -> Void
   ) {
     self.title = title
+    self.useOverlay = useOverlay
     self.action = action
     self.showDivider = showDivider
   }
 
   public var body: some View {
-    VStack(spacing: 0) {
+    VStack(spacing: .zero) {
       HStack {
         Text(title)
           .typography(Theme.shared.font.bodyLarge)
@@ -50,9 +53,13 @@ public struct TappableCellView: View {
           .padding(.horizontal, Theme.shared.dimension.padding)
       }
     }
-    .contentShape(Rectangle())
-    .onTapGesture {
-      action()
+    .if(useOverlay) {
+      $0.contentShape(Rectangle())
+    }
+    .if(useOverlay) {
+      $0.onTapGesture {
+        action()
+      }
     }
   }
 }
