@@ -68,7 +68,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     case .success(let documents):
       setState {
         $0.copy(
-          addDocumentCellModels: documents
+          addDocumentCellModels: (try? documents.sorted(by: compare)) ?? documents
         )
         .copy(error: nil)
       }
@@ -87,6 +87,10 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
           )
         )
       }
+    }
+
+    func compare(_ first: AddDocumentUIModel, _ second: AddDocumentUIModel) -> Bool {
+      return LocalizableString.shared.get(with: first.documentName) < LocalizableString.shared.get(with: second.documentName)
     }
   }
 
