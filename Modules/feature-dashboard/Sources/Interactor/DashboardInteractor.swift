@@ -185,11 +185,11 @@ final class DashboardInteractorImpl: DashboardInteractor {
     }
 
     switch filterModel.initialSorting {
-    case "Date Issued":
+    case LocalizableString.shared.get(with: .dateIssued).capitalized:
       filteredDocuments = filterModel.sortAscending
       ? filteredDocuments.sorted { $0.value.createdAt < $1.value.createdAt }
       : filteredDocuments.sorted { $0.value.createdAt > $1.value.createdAt }
-    case "Expiry Date":
+    case LocalizableString.shared.get(with: .expiryDate).capitalized:
       filteredDocuments = filterModel.sortAscending
       ? filteredDocuments.sorted { ($0.value.expiresAt ?? "") < ($1.value.expiresAt ?? "") }
       : filteredDocuments.sorted { ($0.value.expiresAt ?? "") > ($1.value.expiresAt ?? "") }
@@ -213,13 +213,13 @@ final class DashboardInteractorImpl: DashboardInteractor {
     let calendar = Calendar.current
 
     switch expiryPeriod {
-    case "Next 7 days":
+    case LocalizableString.shared.get(with: .nextSevenDays).capitalized:
       return calendar.date(byAdding: .day, value: 7, to: currentDate)! >= expiryDate
-    case "Next 30 days":
+    case LocalizableString.shared.get(with: .nextThirtyDays).capitalized:
       return calendar.date(byAdding: .day, value: 30, to: currentDate)! >= expiryDate
-    case "Beyond 30 days":
+    case LocalizableString.shared.get(with: .beyondThiryDays).capitalized:
       return expiryDate > calendar.date(byAdding: .day, value: 30, to: currentDate)!
-    case "Before today":
+    case LocalizableString.shared.get(with: .beforeToday).capitalized:
       return expiryDate < currentDate
     default:
       return true

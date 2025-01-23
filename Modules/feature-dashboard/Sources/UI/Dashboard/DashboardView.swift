@@ -104,7 +104,8 @@ struct DashboardView<Router: RouterHost>: View {
         resetFiltersCallback: {
           viewModel.resetDocumentList()
         },
-        sections: viewModel.viewState.documentSections
+        sections: viewModel.viewState.documentSections,
+        onResume: viewModel.onDocumentsRetrievedPostActions
       )
     }
     .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {

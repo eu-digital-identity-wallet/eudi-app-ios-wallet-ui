@@ -63,17 +63,17 @@ public enum FilterSections {
     case .sortBy:
       return [
         LocalizableString.shared.get(with: .defaultLabel).capitalized,
-        "Date Issued",
-        "Expiry Date"
+        LocalizableString.shared.get(with: .dateIssued).capitalized,
+        LocalizableString.shared.get(with: .expiryDate).capitalized
       ]
     case .issuer(let options):
       return options
     case .expiryPeriod:
       return [
-        "Next 7 days",
-        "Next 30 days",
-        "Beyond 30 days",
-        "Before today"
+        LocalizableString.shared.get(with: .nextSevenDays).capitalized,
+        LocalizableString.shared.get(with: .nextThirtyDays).capitalized,
+        LocalizableString.shared.get(with: .beyondThiryDays).capitalized,
+        LocalizableString.shared.get(with: .beforeToday).capitalized
       ]
     case .state:
       return [

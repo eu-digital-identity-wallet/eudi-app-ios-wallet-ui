@@ -36,6 +36,8 @@ struct FilterListView: View {
 
   let sections: [FilterSections]
 
+  var onResume: () -> Void
+
   var body: some View {
     NavigationView {
       List {
@@ -116,6 +118,8 @@ struct FilterListView: View {
       if !sortAscending {
         showFilterIndicator = true
       }
+
+      onResume()
     }
   }
 

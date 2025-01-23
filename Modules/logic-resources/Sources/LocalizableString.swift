@@ -395,6 +395,18 @@ public final class LocalizableString: LocalizableStringType {
         bundle.localizedString(forKey: "revoke")
       case .expired:
         bundle.localizedString(forKey: "expired")
+      case .dateIssued:
+        bundle.localizedString(forKey: "date_issued")
+      case .expiryDate:
+        bundle.localizedString(forKey: "expiry_date")
+      case .nextSevenDays:
+        bundle.localizedString(forKey: "next_seven_days")
+      case .nextThirtyDays:
+        bundle.localizedString(forKey: "next_thirty_days")
+      case .beyondThiryDays:
+        bundle.localizedString(forKey: "beyond_thirty_days")
+      case .beforeToday:
+        bundle.localizedString(forKey: "before_today")
     }
   }
 
@@ -585,6 +597,12 @@ public extension LocalizableString {
     case valid
     case revoke
     case expired
+    case dateIssued
+    case expiryDate
+    case nextSevenDays
+    case nextThirtyDays
+    case beyondThiryDays
+    case beforeToday
   }
 }
 
