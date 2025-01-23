@@ -49,7 +49,13 @@ public final class DashboardRouter {
     case .sideMenu:
       SideMenuView(
         with: .init(
-          router: host
+          router: host,
+          interactor: DIGraph.resolver.force(
+            SideMenuInteractor.self
+          ),
+          walletKit: DIGraph.resolver.force(
+            WalletKitController.self
+          )
         )
       ).eraseToAnyView()
     }

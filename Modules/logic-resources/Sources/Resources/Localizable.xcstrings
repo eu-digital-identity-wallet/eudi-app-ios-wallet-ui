@@ -623,7 +623,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Electronically sign digital documents with your wallet by choosing a file from your device or by scanning a QR code."
+            "value" : "Electronically sign digital documents with your wallet by choosing a file from your device."
           }
         }
       }
@@ -1628,6 +1628,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "requests the following"
+          }
+        }
+      }
+    },
+    "retrieve_logs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retrieve logs"
           }
         }
       }

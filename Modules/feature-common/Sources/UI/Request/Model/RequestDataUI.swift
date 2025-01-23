@@ -18,7 +18,7 @@ import logic_business
 import logic_core
 import logic_ui
 
-public struct RequestDataUI: Identifiable, Equatable, Sendable, UIModel {
+public struct RequestDataUI: Identifiable, Equatable, Sendable, Routable {
   public let id: String
   public var requestDataRow: [RequestDataRow]?
   public var requestDataSection: RequestDataSection

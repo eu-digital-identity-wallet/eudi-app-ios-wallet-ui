@@ -24,7 +24,7 @@ open class ProximitySuccessViewModel<Router: RouterHost>: BaseSuccessViewModel<R
     router: Router,
     config: any UIConfigType,
     deepLinkController: DeepLinkController,
-    requestItems: [any UIModel]
+    requestItems: [any Routable]
   ) {
 
     super.init(

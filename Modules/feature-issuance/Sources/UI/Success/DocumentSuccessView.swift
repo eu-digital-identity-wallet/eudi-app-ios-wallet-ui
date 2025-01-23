@@ -87,7 +87,10 @@ private func content(
       if let document = viewState.documents.first,
          let issuer = document.issuer {
         PlainWithLogoView(
-          icon: .remoteImage(issuer.logoUrl, nil),
+          icon: .remoteImage(
+            issuer.logoUrl,
+            Theme.shared.image.logo
+          ),
           title: issuer.name
         )
 

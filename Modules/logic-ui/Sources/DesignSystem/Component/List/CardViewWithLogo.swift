@@ -50,15 +50,17 @@ public struct CardViewWithLogo: View {
         switch icon {
         case .none: EmptyView()
         case .remoteImage(let url, let image):
-          RemoteImageView(
-            url: url,
-            icon: image,
-            size: .init(
-              width: Theme.shared.dimension.remoteImageIconSize,
-              height: Theme.shared.dimension.remoteImageIconSize
+          HStack {
+            RemoteImageView(
+              url: url,
+              icon: image,
+              size: .init(
+                width: Theme.shared.dimension.remoteImageIconSize,
+                height: Theme.shared.dimension.remoteImageIconSize
+              )
             )
-          )
-          .frame(maxWidth: .infinity, alignment: .center)
+            Spacer()
+          }
         case .image(let image):
           HStack {
             image

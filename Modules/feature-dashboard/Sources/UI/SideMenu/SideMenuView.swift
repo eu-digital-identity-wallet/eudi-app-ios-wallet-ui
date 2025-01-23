@@ -26,39 +26,61 @@ struct SideMenuView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    content(viewState: viewModel.viewState)
-      .navigationTitle("My EU Wallet")
+    content(
+      viewState: viewModel.viewState
+    ).navigationTitle("My EU Wallet")
+  }
+}
+
+@MainActor
+@ViewBuilder
+func shareLogs(with fileUrl: URL) -> some View {
+  ShareLink(item: fileUrl) {
+    TappableCellView(
+      title: .retrieveLogs,
+      showDivider: false,
+      action: {}
+    )
   }
 }
 
 @MainActor
 @ViewBuilder
 private func content(viewState: SideMenuViewState) -> some View {
-  ScrollView {
-    VStack(spacing: SPACING_SMALL) {
-      ForEach(viewState.items.indices, id: \.self) { index in
-        let item = viewState.items[index]
-        TappableCellView(
-          title: item.title,
-          subtitle: item.subTitle,
-          showDivider: index < viewState.items.count - 1,
-          action: item.action
-        )
-      }
+  VStack(spacing: SPACING_SMALL) {
+    ForEach(viewState.items) { item in
+      TappableCellView(
+        title: item.title,
+        showDivider: true,
+        action: item.action
+      )
     }
-    .padding(.top)
+
+    if let logsUrl = viewState.logsUrl {
+      shareLogs(with: logsUrl)
+    }
+
+    Spacer()
+
+    Text(viewState.appVersion)
+      .typography(Theme.shared.font.bodyMedium)
+      .frame(maxWidth: .infinity, alignment: .center)
+
   }
+  .padding(.top)
 }
 
 #Preview {
   let viewSate = SideMenuViewState(
     items: [
       .init(
-        title: "Change PIN",
+        title: .changeQuickPinOption,
         action: {
         }
       )
-    ]
+    ],
+    appVersion: "",
+    logsUrl: URL(string: "https://www.example.com")
   )
   ContentScreenView(
     padding: .zero,

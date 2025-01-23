@@ -13,25 +13,35 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-@_exported import logic_ui
-@_exported import logic_resources
-@_exported import logic_business
-@_exported import feature_common
+import Foundation
+import logic_core
+import logic_business
+import logic_resources
+import Combine
 
-open class PresentationSuccessViewModel<Router: RouterHost>: BaseSuccessViewModel<Router> {
+public protocol SideMenuInteractor: Sendable {
+  func getAppVersion() -> String
+  func retrieveLogFileUrl() -> URL?
+}
 
-  public override init(
-    router: Router,
-    config: any UIConfigType,
-    deepLinkController: DeepLinkController,
-    requestItems: [any Routable]
+final class SideMenuInteractorImpl: SideMenuInteractor {
+
+  private let walletController: WalletKitController
+  private let configLogic: ConfigLogic
+
+  init(
+    walletController: WalletKitController,
+    configLogic: ConfigLogic
   ) {
+    self.walletController = walletController
+    self.configLogic = configLogic
+  }
 
-    super.init(
-      router: router,
-      config: config,
-      deepLinkController: deepLinkController,
-      requestItems: requestItems
-    )
+  public func getAppVersion() -> String {
+    return configLogic.appVersion
+  }
+
+  func retrieveLogFileUrl() -> URL? {
+    return walletController.retrieveLogFileUrl()
   }
 }

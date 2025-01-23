@@ -14,8 +14,5 @@
  * governing permissions and limitations under the Licence.
  */
 
-import Foundation
-import logic_resources
-
-public protocol UIModel: Sendable {
+public protocol Routable: Sendable {
 }

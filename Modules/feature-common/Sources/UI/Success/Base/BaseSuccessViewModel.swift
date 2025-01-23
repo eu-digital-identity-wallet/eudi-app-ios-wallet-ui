@@ -33,7 +33,7 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
     router: Router,
     config: any UIConfigType,
     deepLinkController: DeepLinkController,
-    requestItems: [any UIModel]
+    requestItems: [any Routable]
   ) {
 
     guard let config = config as? PresentationSuccessUIConfig else {

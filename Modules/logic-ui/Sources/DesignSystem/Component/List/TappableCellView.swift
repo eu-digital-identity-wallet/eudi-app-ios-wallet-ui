@@ -17,19 +17,16 @@ import SwiftUI
 import logic_resources
 
 public struct TappableCellView: View {
-  public let title: String
-  public let subtitle: String
+  public let title: LocalizableString.Key
   public let showDivider: Bool
   public let action: () -> Void
 
   public init(
-    title: String,
-    subtitle: String,
+    title: LocalizableString.Key,
     showDivider: Bool,
     action: @escaping () -> Void
   ) {
     self.title = title
-    self.subtitle = subtitle
     self.action = action
     self.showDivider = showDivider
   }
@@ -43,12 +40,8 @@ public struct TappableCellView: View {
           .lineLimit(1)
           .minimumScaleFactor(0.8)
         Spacer()
-        Text(subtitle)
-          .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.onSurface)
-          .lineLimit(1)
-          .minimumScaleFactor(0.8)
         Theme.shared.image.chevronRight
+          .foregroundColor(Theme.shared.color.onSurface)
       }
       .padding(Theme.shared.dimension.padding)
       if showDivider {

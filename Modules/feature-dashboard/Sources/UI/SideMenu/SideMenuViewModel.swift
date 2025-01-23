@@ -15,26 +15,40 @@
  */
 import Foundation
 import logic_ui
+import logic_core
 import feature_common
 
 @Copyable
 struct SideMenuViewState: ViewState {
   let items: [SideMenuItemUIModel]
+  let appVersion: String
+  let logsUrl: URL?
 }
 
 final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuViewState> {
 
-  init(router: Router) {
+  private let interactor: SideMenuInteractor
+  private let walletKitController: WalletKitController
+
+  init(
+    router: Router,
+    interactor: SideMenuInteractor,
+    walletKit: WalletKitController
+  ) {
+    self.interactor = interactor
+    self.walletKitController = walletKit
     super.init(
       router: router,
       initialState: .init(
-        items: []
+        items: [],
+        appVersion: interactor.getAppVersion(),
+        logsUrl: interactor.retrieveLogFileUrl()
       )
     )
 
     setState {
       $0.copy(items: [
-        .init(title: "Change PIN", action: {
+        .init(title: .changeQuickPinOption, action: {
           self.updatePin()
         })
       ])
