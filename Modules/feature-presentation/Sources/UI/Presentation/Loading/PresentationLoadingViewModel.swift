@@ -28,7 +28,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
     interactor: PresentationInteractor,
     relyingParty: String,
     originator: AppRoute,
-    requestItems: [any UIModel]
+    requestItems: [any Routable]
   ) {
     guard
       let requestItems = requestItems as? [RequestDataUI]

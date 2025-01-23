@@ -77,7 +77,7 @@ public indirect enum FeaturePresentationRouteModule: AppRouteModule {
     String,
     presentationCoordinator: RemoteSessionCoordinator,
     originator: AppRoute,
-    [any UIModel]
+    [any Routable]
   )
   case presentationRequest(
     presentationCoordinator: RemoteSessionCoordinator,
@@ -85,7 +85,7 @@ public indirect enum FeaturePresentationRouteModule: AppRouteModule {
   )
   case presentationSuccess(
     config: any UIConfigType,
-    [any UIModel]
+    [any Routable]
   )
 
   public var info: (key: String, arguments: [String: String]) {
@@ -114,11 +114,11 @@ public indirect enum FeatureProximityRouteModule: AppRouteModule {
     String,
     presentationCoordinator: ProximitySessionCoordinator,
     originator: AppRoute,
-    [any UIModel]
+    [any Routable]
   )
   case proximitySuccess(
     config: any UIConfigType,
-    [any UIModel]
+    [any Routable]
   )
 
   public var info: (key: String, arguments: [String: String]) {

@@ -15,23 +15,21 @@
  */
 import Foundation
 import logic_business
+import logic_resources
 
 public struct SideMenuItemUIModel: Identifiable {
 
   public var id: String
-  public let title: String
-  public let subTitle: String
+  public let title: LocalizableString.Key
   public let action: (() -> Void)
 
   public init(
     id: String = UUID().uuidString,
-    title: String,
-    subTitle: String = "",
+    title: LocalizableString.Key,
     action: @escaping (() -> Void)
   ) {
     self.id = id
     self.title = title
-    self.subTitle = subTitle
     self.action = action
   }
 }

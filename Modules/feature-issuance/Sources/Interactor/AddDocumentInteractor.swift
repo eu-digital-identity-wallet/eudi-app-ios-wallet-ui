@@ -49,10 +49,14 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
         } else {
           return nil
         }
-      }
+      }.sorted(by: compare)
       return .success(documents)
     } catch {
       return .failure(error)
+    }
+
+    func compare(_ first: AddDocumentUIModel, _ second: AddDocumentUIModel) -> Bool {
+      return LocalizableString.shared.get(with: first.documentName).lowercased() < LocalizableString.shared.get(with: second.documentName).lowercased()
     }
   }
 

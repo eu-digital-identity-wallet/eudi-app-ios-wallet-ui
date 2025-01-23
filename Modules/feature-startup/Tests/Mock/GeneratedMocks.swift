@@ -9716,8 +9716,8 @@ import logic_resources
 @testable import feature_common
 @testable import feature_startup
 
-public class MockUIModel: UIModel, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = UIModel
+public class MockUIModel: Routable, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = Routable
     public typealias Stubbing = __StubbingProxy_UIModel
     public typealias Verification = __VerificationProxy_UIModel
 
@@ -9725,9 +9725,9 @@ public class MockUIModel: UIModel, Cuckoo.ProtocolMock, @unchecked Sendable {
 
     public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
-    private var __defaultImplStub: (any UIModel)?
+    private var __defaultImplStub: (any Routable)?
 
-    public func enableDefaultImplementation(_ stub: any UIModel) {
+    public func enableDefaultImplementation(_ stub: any Routable) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
@@ -9754,7 +9754,7 @@ public class MockUIModel: UIModel, Cuckoo.ProtocolMock, @unchecked Sendable {
     }
 }
 
-public class UIModelStub:UIModel, @unchecked Sendable {
+public class UIModelStub:Routable, @unchecked Sendable {
 
 
 }

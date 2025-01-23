@@ -178,12 +178,8 @@ private func content(
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .frame(maxWidth: .infinity, alignment: .leading)
 
-          RemoteImageView(
-            url: issuer.logoUrl,
-            icon: nil
-          )
-
           CardViewWithLogo(
+            icon: .remoteImage(issuer.logoUrl, Theme.shared.image.logo),
             title: issuer.name
           ) {
             showAlert()

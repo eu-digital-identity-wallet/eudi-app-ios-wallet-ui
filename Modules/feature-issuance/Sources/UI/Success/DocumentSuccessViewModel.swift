@@ -32,12 +32,10 @@ struct DocumentSuccessState: ViewState {
 final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, DocumentSuccessState> {
 
   private let interactor: DocumentSuccessInteractor
-  private let detailsInteractor: DocumentDetailsInteractor
 
   public init(
     router: Router,
     interactor: DocumentSuccessInteractor,
-    detailsInteractor: DocumentDetailsInteractor,
     config: any UIConfigType,
     documentIdentifiers: [String]
   ) {
@@ -47,7 +45,6 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
     }
 
     self.interactor = interactor
-    self.detailsInteractor = detailsInteractor
 
     super.init(
       router: router,
@@ -91,7 +88,7 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
     let documentIdentifiers = viewState.documentIdentifiers
     let state = await Task.detached { () -> DocumentsPartialState in
-      return await self.detailsInteractor.fetchStoredDocuments(
+      return await self.interactor.fetchStoredDocuments(
         documentIds: documentIdentifiers
       )
     }.value

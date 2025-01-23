@@ -20,6 +20,7 @@ import logic_resources
 public protocol DocumentSuccessInteractor: Sendable {
   func getHoldersName(for documentIdentifier: String) -> String?
   func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key?
+  func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState
 }
 
 final class DocumentSuccessInteractorImpl: DocumentSuccessInteractor {
@@ -48,4 +49,15 @@ final class DocumentSuccessInteractorImpl: DocumentSuccessInteractor {
     return .issuanceSuccessCaption([document.displayName.orEmpty])
   }
 
+  func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState {
+    let documents = walletController.fetchDocuments(with: documentIds)
+    let documentsDetails = documents.compactMap {
+      $0.transformToDocumentDetailsUi()
+    }
+
+    if documentsDetails.isEmpty {
+      return .failure(WalletCoreError.unableFetchDocument)
+    }
+    return .success(documentsDetails)
+  }
 }

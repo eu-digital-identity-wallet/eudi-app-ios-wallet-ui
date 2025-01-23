@@ -41,7 +41,10 @@ public struct RemoteImageView: View {
      image
         .resizable()
         .scaledToFit()
-        .frame(height: icon == nil ? .zero : size.height)
+        .frame(
+          width: icon == nil ? .zero : size.width,
+          height: icon == nil ? .zero : size.height
+        )
     } placeholder: {
       if let placeholder = icon {
         placeholder

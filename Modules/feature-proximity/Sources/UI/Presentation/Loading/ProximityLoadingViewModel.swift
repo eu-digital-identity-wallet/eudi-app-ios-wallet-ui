@@ -28,7 +28,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
     interactor: ProximityInteractor,
     relyingParty: String,
     originator: AppRoute,
-    requestItems: [any UIModel]
+    requestItems: [any Routable]
   ) {
     guard
       let requestItems = requestItems as? [RequestDataUI]
