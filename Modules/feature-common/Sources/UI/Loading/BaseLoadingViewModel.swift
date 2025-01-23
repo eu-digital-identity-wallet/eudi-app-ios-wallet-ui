@@ -21,6 +21,7 @@ public struct BaseLoadingState: ViewState {
   let error: ContentErrorView.Config?
   let originator: AppRoute
   let isCancellable: Bool
+  let contentHeaderConfig: ContentHeaderConfig
 }
 
 open class BaseLoadingViewModel<Router: RouterHost>: ViewModel<Router, BaseLoadingState> {
@@ -35,7 +36,14 @@ open class BaseLoadingViewModel<Router: RouterHost>: ViewModel<Router, BaseLoadi
       initialState: .init(
         error: nil,
         originator: originator,
-        isCancellable: cancellationTimeout <= 0
+        isCancellable: cancellationTimeout <= 0,
+        contentHeaderConfig: .init(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          ),
+          description: LocalizableString.shared.get(with: .pleaseWait)
+        )
       )
     )
 

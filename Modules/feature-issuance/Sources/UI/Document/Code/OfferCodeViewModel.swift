@@ -27,6 +27,7 @@ struct OfferCodeViewState: ViewState {
   let config: IssuanceCodeUiConfig
   let title: LocalizableString.Key
   let caption: LocalizableString.Key
+  let contentHeaderConfig: ContentHeaderConfig
 }
 
 final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeViewState> {
@@ -55,7 +56,13 @@ final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeV
         error: nil,
         config: config,
         title: .issuanceCodeTitle([config.issuerName]),
-        caption: .issuanceCodeCaption([config.txCodeLength.string])
+        caption: .issuanceCodeCaption([config.txCodeLength.string]),
+        contentHeaderConfig: .init(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          )
+        )
       )
     )
 

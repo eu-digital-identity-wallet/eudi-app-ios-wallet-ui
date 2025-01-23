@@ -55,12 +55,7 @@ private func content(
 
     VStack(spacing: .zero) {
       ContentHeader(
-        config: ContentHeaderConfig(
-          appIconAndTextData: AppIconAndTextData(
-            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-            appText: ThemeManager.shared.image.euditext
-          )
-        )
+        config: viewState.contentHeaderConfig
       )
 
       if let caption = viewState.caption {
@@ -158,6 +153,12 @@ private func document(
     documentIdentifiers: ["id"],
     documents: [DocumentDetailsUIModel.mock()],
     isLoading: false,
+    contentHeaderConfig: .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    ),
     error: nil
   )
 

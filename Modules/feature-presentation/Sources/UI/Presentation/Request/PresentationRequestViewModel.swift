@@ -47,6 +47,23 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
         relyingParty: authenticationRequest.relyingParty,
         isTrusted: authenticationRequest.isTrusted
       )
+      setState {
+        $0.copy(
+          contentHeaderConfig: .init(
+            appIconAndTextData: AppIconAndTextData(
+              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+              appText: ThemeManager.shared.image.euditext
+            ),
+            description: LocalizableString.shared.get(with: .dataSharingTitle),
+            mainText: LocalizableString.shared.get(with: getTitle()).uppercased(),
+            relyingPartyData: RelyingPartyData(
+              isVerified: viewState.isTrusted,
+              name: getRelyingParty(),
+              description: LocalizableString.shared.get(with: getCaption())
+            )
+          )
+        )
+      }
     case .failure:
       self.onEmptyDocuments()
     }

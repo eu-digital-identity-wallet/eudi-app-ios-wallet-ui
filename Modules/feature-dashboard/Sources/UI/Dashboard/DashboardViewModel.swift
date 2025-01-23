@@ -34,6 +34,7 @@ struct DashboardState: ViewState {
   let succededIssuedDocuments: [DocumentUIModel]
   let failedDocuments: [String]
   let moreOptions: [MoreModalOption]
+  let contentHeaderConfig: ContentHeaderConfig
 
   var pendingDocumentTitle: String {
     pendingDeletionDocument?.value.title ?? ""
@@ -77,7 +78,6 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   private let deepLinkController: DeepLinkController
   private let walletKitController: WalletKitController
 
-  @Published var isMoreModalShowing: Bool = false
   @Published var isBleModalShowing: Bool = false
   @Published var isFilterModalShowing: Bool = false
   @Published var isDeleteDeferredModalShowing: Bool = false
@@ -117,6 +117,12 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         succededIssuedDocuments: [],
         failedDocuments: [],
         moreOptions: [.changeQuickPin, .scanQrCode],
+        contentHeaderConfig: .init(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          )
+        ),
         documentSections: [.issuedSortingDate]
       )
     )
@@ -333,38 +339,12 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     )
   }
 
-  func onMore() {
-    setState {
-      $0.copy(
-        moreOptions: buildArray {
-          DashboardState.MoreModalOption.changeQuickPin
-          DashboardState.MoreModalOption.scanQrCode
-          DashboardState.MoreModalOption.signDocument
-          if let url = interactor.retrieveLogFileUrl() {
-            DashboardState.MoreModalOption.retrieveLogs(url)
-          }
-        }
-      )
-    }
-    isMoreModalShowing = !isMoreModalShowing
-  }
-
   func openSignDocument() {
     router.push(with: .featureDashboardModule(.signDocument))
   }
 
-  func onUpdatePin() {
-    onHideMore()
-    router.push(with: .featureCommonModule(.quickPin(config: QuickPinUiConfig(flow: .update))))
-  }
-
   func onShowScanner() {
-    onHideMore()
     router.push(with: .featureCommonModule(.qrScanner(config: ScannerUiConfig(flow: .presentation))))
-  }
-
-  private func onHideMore() {
-    isMoreModalShowing = false
   }
 
   private func listenForSuccededIssuedModalChanges() {
@@ -424,7 +404,6 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     else {
       return
     }
-    onHideMore()
     isBleModalShowing = false
     isDeleteDeferredModalShowing = false
     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {

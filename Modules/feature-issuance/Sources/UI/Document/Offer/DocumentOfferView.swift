@@ -66,19 +66,6 @@ struct DocumentOfferView<Router: RouterHost>: View {
 
 @MainActor
 @ViewBuilder
-private func title(viewState: DocumentOfferViewState) -> some View {
-  Text(viewState.documentOfferUiModel.issuerName)
-    .typography(Theme.shared.font.bodyLarge)
-    .fontWeight(.medium) +
-  Text(" ") +
-  Text(LocalizableString.shared.get(
-    with: .issuerWantWalletAddition
-  ))
-  .typography(Theme.shared.font.bodyLarge)
-}
-
-@MainActor
-@ViewBuilder
 private func content(
   viewState: DocumentOfferViewState,
   imageSize: CGFloat
@@ -86,20 +73,7 @@ private func content(
   ScrollView {
     VStack(spacing: .zero) {
       ContentHeader(
-        config: ContentHeaderConfig(
-          appIconAndTextData: AppIconAndTextData(
-            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-            appText: ThemeManager.shared.image.euditext
-          ),
-          description: LocalizableString.shared.get(with: .dataSharingTitle),
-          mainText: LocalizableString.shared.get(with: .issuanceRequest).uppercased(),
-          icon: .image(viewState.issuerData.icon),
-          relyingPartyData: RelyingPartyData(
-            isVerified: false,
-            name: viewState.issuerData.title,
-            description: LocalizableString.shared.get(with: .issuerWantWalletAddition)
-          )
-        )
+        config: viewState.contentHeaderConfig
       )
 
       if viewState.documentOfferUiModel.uiOffers.isEmpty {
@@ -164,7 +138,13 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
     ),
     offerUri: "offer uri",
     allowIssue: true,
-    initialized: true
+    initialized: true,
+    contentHeaderConfig: .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    )
   )
 
   ContentScreenView {
@@ -193,7 +173,13 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
     ),
     offerUri: "offer uri",
     allowIssue: true,
-    initialized: true
+    initialized: true,
+    contentHeaderConfig: .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    )
   )
 
   ContentScreenView {

@@ -30,7 +30,9 @@ public struct BaseLoadingView<Router: RouterHost>: View {
       errorConfig: viewModel.viewState.error,
       toolbarContent: viewModel.toolbarContent()
     ) {
-      content()
+      content(
+        contentHeaderConfig: viewModel.viewState.contentHeaderConfig
+      )
     }
     .task {
       await viewModel.doWork()
@@ -40,16 +42,12 @@ public struct BaseLoadingView<Router: RouterHost>: View {
 
 @MainActor
 @ViewBuilder
-private func content() -> some View {
+private func content(
+  contentHeaderConfig: ContentHeaderConfig
+) -> some View {
   VStack(alignment: .center, spacing: SPACING_LARGE_MEDIUM) {
     ContentHeader(
-      config: ContentHeaderConfig(
-        appIconAndTextData: AppIconAndTextData(
-          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-          appText: ThemeManager.shared.image.euditext
-        ),
-        description: LocalizableString.shared.get(with: .pleaseWait)
-      )
+      config: contentHeaderConfig
     )
     Spacer()
 
@@ -61,6 +59,13 @@ private func content() -> some View {
 
 #Preview {
   ContentScreenView {
-    content()
+    content(
+      contentHeaderConfig: .init(
+        appIconAndTextData: AppIconAndTextData(
+          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+          appText: ThemeManager.shared.image.euditext
+        )
+      )
+    )
   }
 }

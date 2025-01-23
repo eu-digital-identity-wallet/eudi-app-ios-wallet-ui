@@ -26,6 +26,7 @@ struct DocumentSuccessState: ViewState {
   let documentIdentifiers: [String]
   let documents: [DocumentDetailsUIModel]
   let isLoading: Bool
+  let contentHeaderConfig: ContentHeaderConfig
   let error: ContentErrorView.Config?
 }
 
@@ -56,6 +57,12 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
         documentIdentifiers: documentIdentifiers,
         documents: [DocumentDetailsUIModel.mock()],
         isLoading: true,
+        contentHeaderConfig: .init(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          )
+        ),
         error: nil
       )
     )

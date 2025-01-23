@@ -47,7 +47,6 @@ struct DashboardView<Router: RouterHost>: View {
         viewState: viewModel.viewState,
         isAuthenticateAlertShowing: $viewModel.isAuthenticateAlertShowing,
         selectedTab: $viewModel.selectedTab,
-        onMore: viewModel.onMore,
         onDocumentDetails: { id in
           viewModel.onDocumentDetails(documentId: id)
         },
@@ -100,58 +99,6 @@ struct DashboardView<Router: RouterHost>: View {
         sections: viewModel.viewState.documentSections,
         onResume: viewModel.onDocumentsRetrievedPostActions
       )
-    }
-    .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {
-      SheetContentView {
-        VStack(spacing: .zero) {
-
-          ContentTitleView(
-            title: .moreOptions
-          )
-
-          VSpacer.medium()
-
-          ForEach(viewModel.viewState.moreOptions, id: \.id) { option in
-
-            switch option {
-              case .changeQuickPin:
-                WrapButtonView(
-                  title: .changeQuickPinOption,
-                  backgroundColor: .clear,
-                  icon: Theme.shared.image.pencil,
-                  gravity: .start,
-                  onAction: viewModel.onUpdatePin()
-                )
-              case .scanQrCode:
-                WrapButtonView(
-                  title: .scanQrCode,
-                  backgroundColor: .clear,
-                  icon: Theme.shared.image.qrScan,
-                  gravity: .start,
-                  onAction: viewModel.onShowScanner()
-                )
-              case .signDocument:
-                WrapButtonView(
-                  title: .signDocument,
-                  backgroundColor: .clear,
-                  icon: Theme.shared.image.signDocument,
-                  gravity: .start,
-                  onAction: viewModel.openSignDocument()
-                )
-              case .retrieveLogs(let url):
-                shareLogs(with: url)
-            }
-          }
-
-          HStack {
-            Spacer()
-            Text(viewModel.viewState.appVersion)
-              .typography(Theme.shared.font.bodyLarge)
-              .foregroundColor(Theme.shared.color.onSurface)
-            Spacer()
-          }
-        }
-      }
     }
     .sheetDialog(isPresented: $viewModel.isBleModalShowing) {
       SheetContentView {
@@ -306,7 +253,6 @@ private func content(
   viewState: DashboardState,
   isAuthenticateAlertShowing: Binding<Bool>,
   selectedTab: Binding<SelectedTab>,
-  onMore: @escaping () -> Void,
   onDocumentDetails: @escaping (String) -> Void,
   onDeleteDeferredDocument: @escaping (DocumentUIModel) -> Void,
   onAdd: @escaping () -> Void,
@@ -317,6 +263,7 @@ private func content(
   TabView(selection: selectedTab) {
     HomeView(
       username: viewState.username,
+      contentHeaderConfig: viewState.contentHeaderConfig,
       addDocument: {
         isAuthenticateAlertShowing.wrappedValue.toggle()
       },
@@ -379,6 +326,12 @@ private func content(
     succededIssuedDocuments: [],
     failedDocuments: [],
     moreOptions: [.changeQuickPin, .scanQrCode],
+    contentHeaderConfig: .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    ),
     documentSections: [.issuedSortingDate]
   )
 
@@ -391,7 +344,6 @@ private func content(
       viewState: viewState,
       isAuthenticateAlertShowing: .constant(false),
       selectedTab: .constant(.home),
-      onMore: {},
       onDocumentDetails: { _ in },
       onDeleteDeferredDocument: { _ in },
       onAdd: {},

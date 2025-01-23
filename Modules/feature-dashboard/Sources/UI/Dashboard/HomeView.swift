@@ -21,6 +21,7 @@ import logic_business
 
 public struct HomeView: View {
   private let username: String
+  private let contentHeaderConfig: ContentHeaderConfig
 
   private let addDocument: () -> Void
   private let signDocument: () -> Void
@@ -30,10 +31,12 @@ public struct HomeView: View {
 
   public init(
     username: String,
+    contentHeaderConfig: ContentHeaderConfig,
     addDocument: @escaping () -> Void,
     signDocument: @escaping () -> Void
   ) {
     self.username = username
+    self.contentHeaderConfig = contentHeaderConfig
     self.addDocument = addDocument
     self.signDocument = signDocument
   }
@@ -42,12 +45,7 @@ public struct HomeView: View {
     ScrollView {
       VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
         ContentHeader(
-          config: ContentHeaderConfig(
-            appIconAndTextData: AppIconAndTextData(
-              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-              appText: ThemeManager.shared.image.euditext
-            )
-          )
+          config: contentHeaderConfig
         )
 
         Text("\(LocalizableString.shared.get(with: .welcomeBack)), \(username)")
@@ -105,6 +103,15 @@ public struct HomeView: View {
 }
 
 #Preview {
-  HomeView(username: "First name") {} signDocument: {}
+  HomeView(
+    username: "First name",
+    contentHeaderConfig: .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    )
+  ) {}
+  signDocument: {}
 
 }

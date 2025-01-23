@@ -85,12 +85,7 @@ private func content(
 ) -> some View {
 
   ContentHeader(
-    config: ContentHeaderConfig(
-      appIconAndTextData: AppIconAndTextData(
-        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-        appText: ThemeManager.shared.image.euditext
-      )
-    )
+    config: viewState.contentHeaderConfig
   )
 
   ContentTitleView(
@@ -129,7 +124,13 @@ private func content(
       navigationCancelType: .pop
     ),
     title: LocalizableString.Key.addDocumentTitle,
-    caption: LocalizableString.Key.addDocumentSubtitle
+    caption: LocalizableString.Key.addDocumentSubtitle,
+    contentHeaderConfig: .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    )
   )
 
   ContentScreenView {

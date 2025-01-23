@@ -69,12 +69,7 @@ private func content(
 
   if viewState.config.displayLogo {
     ContentHeader(
-      config: ContentHeaderConfig(
-        appIconAndTextData: AppIconAndTextData(
-          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-          appText: ThemeManager.shared.image.euditext
-        )
-      )
+      config: viewState.contentHeaderConfig
     )
   }
 
@@ -162,7 +157,13 @@ private func pinView(
     autoBiometryInitiated: true,
     biometryImage: Theme.shared.image.faceId,
     isCancellable: true,
-    quickPinSize: 6
+    quickPinSize: 6,
+    contentHeaderConfig: .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    )
   )
 
   ContentScreenView {

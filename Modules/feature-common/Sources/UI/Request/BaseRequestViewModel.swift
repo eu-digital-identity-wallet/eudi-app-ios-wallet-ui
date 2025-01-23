@@ -30,6 +30,7 @@ public struct RequestViewState: ViewState {
   public let allowShare: Bool
   public let originator: AppRoute
   public let initialized: Bool
+  public let contentHeaderConfig: ContentHeaderConfig
 }
 
 open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestViewState> {
@@ -52,7 +53,14 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         isTrusted: false,
         allowShare: false,
         originator: originator,
-        initialized: false
+        initialized: false,
+        contentHeaderConfig: .init(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          ),
+          description: LocalizableString.shared.get(with: .dataSharingTitle)
+        )
       )
     )
   }
@@ -166,7 +174,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         isTrusted: false,
         allowShare: false,
         originator: previous.originator,
-        initialized: false
+        initialized: false,
+        contentHeaderConfig: initialHeaderConfig()
       )
     }
   }
@@ -231,6 +240,16 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         )
       }
     }
+  }
+
+  private func initialHeaderConfig() -> ContentHeaderConfig {
+    .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      ),
+      description: LocalizableString.shared.get(with: .dataSharingTitle)
+    )
   }
 
   private func canShare(with items: [RequestDataUI]) -> Bool {

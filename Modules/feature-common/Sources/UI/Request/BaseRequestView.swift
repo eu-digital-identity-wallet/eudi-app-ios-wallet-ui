@@ -36,9 +36,6 @@ public struct BaseRequestView<Router: RouterHost>: View {
       content(
         viewState: viewModel.viewState,
         getScreenRect: getScreenRect(),
-        getRelyingParty: viewModel.getRelyingParty(),
-        getTitle: viewModel.getTitle(),
-        getCaption: viewModel.getCaption(),
         onShowRequestInfoModal: viewModel.onShowRequestInfoModal,
         onVerifiedEntityModal: viewModel.onVerifiedEntityModal,
         onShare: viewModel.onShare,
@@ -83,9 +80,6 @@ public struct BaseRequestView<Router: RouterHost>: View {
 private func content(
   viewState: RequestViewState,
   getScreenRect: CGRect,
-  getRelyingParty: String,
-  getTitle: LocalizableString.Key,
-  getCaption: LocalizableString.Key,
   onShowRequestInfoModal: @escaping () -> Void,
   onVerifiedEntityModal: @escaping () -> Void,
   onShare: @escaping () -> Void,
@@ -93,32 +87,9 @@ private func content(
 ) -> some View {
   ScrollView {
     VStack(spacing: .zero) {
-      if viewState.isTrusted {
-        ContentHeader(
-          config: ContentHeaderConfig(
-            appIconAndTextData: AppIconAndTextData(
-              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-              appText: ThemeManager.shared.image.euditext
-            ),
-            description: LocalizableString.shared.get(with: .dataSharingTitle),
-            mainText: LocalizableString.shared.get(with: getTitle).uppercased(),
-            relyingPartyData: RelyingPartyData(
-              isVerified: viewState.isTrusted,
-              name: getRelyingParty,
-              description: LocalizableString.shared.get(with: getCaption)
-            )
-          )
-        )
-      } else {
-        ContentHeader(
-          config: ContentHeaderConfig(
-            appIconAndTextData: AppIconAndTextData(
-              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-              appText: ThemeManager.shared.image.euditext
-            )
-          )
-        )
-      }
+      ContentHeader(
+        config: viewState.contentHeaderConfig
+      )
 
       if viewState.items.isEmpty {
         noDocumentsFound(getScreenRect: getScreenRect)
@@ -218,16 +189,19 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
     isTrusted: true,
     allowShare: true,
     originator: .featureDashboardModule(.dashboard),
-    initialized: true
+    initialized: true,
+    contentHeaderConfig: .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    )
   )
 
   ContentScreenView {
     content(
       viewState: viewState,
       getScreenRect: UIScreen.main.bounds,
-      getRelyingParty: "",
-      getTitle: viewState.title,
-      getCaption: .requestDataCaption,
       onShowRequestInfoModal: {},
       onVerifiedEntityModal: {},
       onShare: {},

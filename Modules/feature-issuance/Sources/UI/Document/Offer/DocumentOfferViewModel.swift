@@ -30,6 +30,7 @@ struct DocumentOfferViewState: ViewState {
   let offerUri: String
   let allowIssue: Bool
   let initialized: Bool
+  let contentHeaderConfig: ContentHeaderConfig
 
   var title: LocalizableString.Key {
     return .requestCredentialOfferTitle([documentOfferUiModel.issuerName])
@@ -72,7 +73,13 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
         config: config,
         offerUri: offerUri,
         allowIssue: false,
-        initialized: false
+        initialized: false,
+        contentHeaderConfig: .init(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          )
+        )
       )
     )
   }
@@ -102,7 +109,21 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
             isVerified: true
           ),
           allowIssue: !uiModel.uiOffers.isEmpty,
-          initialized: true
+          initialized: true,
+          contentHeaderConfig: .init(
+            appIconAndTextData: AppIconAndTextData(
+              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+              appText: ThemeManager.shared.image.euditext
+            ),
+            description: LocalizableString.shared.get(with: .dataSharingTitle),
+            mainText: LocalizableString.shared.get(with: .issuanceRequest).uppercased(),
+            icon: .image(viewState.issuerData.icon),
+            relyingPartyData: RelyingPartyData(
+              isVerified: false,
+              name: viewState.issuerData.title,
+              description: LocalizableString.shared.get(with: .issuerWantWalletAddition)
+            )
+          )
         ).copy(error: nil)
       }
     case .failure(let error):
