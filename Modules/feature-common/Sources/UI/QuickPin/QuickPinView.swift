@@ -31,11 +31,7 @@ struct QuickPinView<Router: RouterHost>: View {
       navigationTitle: LocalizableString.shared.get(
         with: viewModel.viewState.navigationTitle
       ),
-      toolbarContent: toolBarContent(
-        viewState: viewModel.viewState,
-        onProceed: viewModel.onButtonClick,
-        onShowCancellationModal: viewModel.onShowCancellationModal
-      )
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState,
@@ -58,35 +54,6 @@ struct QuickPinView<Router: RouterHost>: View {
       }
     )
   }
-}
-
-@MainActor
-private func toolBarContent(
-  viewState: QuickPinState,
-  onProceed: @escaping () -> Void,
-  onShowCancellationModal: @escaping () -> Void
-) -> ToolBarContent? {
-  var leadingActions: [Action] = []
-  if viewState.isCancellable {
-    leadingActions.append(
-      Action(
-        image: Theme.shared.image.chevronLeft
-      ) {
-        onShowCancellationModal()
-    })
-  }
-
-  return ToolBarContent(
-    trailingActions: [Action(
-      title: LocalizableString.shared.get(
-        with: viewState.button
-      ).capitalizedFirst(),
-      disabled: !viewState.isButtonActive
-    ) {
-      onProceed()
-    }],
-    leadingActions: leadingActions
-  )
 }
 
 @MainActor

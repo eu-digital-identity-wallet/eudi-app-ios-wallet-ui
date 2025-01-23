@@ -116,6 +116,30 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
     router.pop()
   }
 
+  func toolbarContent() -> ToolBarContent? {
+    var leadingActions: [Action] = []
+    if viewState.isCancellable {
+      leadingActions.append(
+        Action(
+          image: Theme.shared.image.chevronLeft
+        ) {
+          self.onShowCancellationModal()
+      })
+    }
+
+    return .init(
+      trailingActions: [Action(
+        title: LocalizableString.shared.get(
+          with: viewState.button
+        ).capitalizedFirst(),
+        disabled: !viewState.isButtonActive
+      ) {
+        self.onButtonClick()
+      }],
+      leadingActions: leadingActions
+    )
+  }
+
   private func onValidate() {
     switch interactor.isPinValid(pin: uiPinInputField) {
     case .success:

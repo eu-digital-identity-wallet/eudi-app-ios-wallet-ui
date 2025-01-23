@@ -171,6 +171,25 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     }
   }
 
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [
+        Action(
+          title: LocalizableString.shared.get(with: .shareButton).capitalizedFirst(),
+          disabled: !viewState.allowShare
+        ) {
+          self.onShare()
+        }
+      ],
+      leadingActions: [
+        Action(
+          image: Theme.shared.image.chevronLeft) {
+            self.onPop()
+          }
+      ]
+    )
+  }
+
   func onPop() {
     isRequestInfoModalShowing = false
     if let route = getPopRoute() {

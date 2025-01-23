@@ -264,4 +264,27 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
       }
     }
   }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [
+        Action(
+          title: LocalizableString.shared.get(
+            with: .cancelButton
+          ).capitalizedFirst()
+        ) {
+          self.onShowCancelModal()
+        }
+      ],
+      leadingActions: [
+        Action(
+          title: LocalizableString.shared.get(
+            with: .issueButton
+          ).capitalizedFirst()
+        ) {
+          self.onIssueDocuments()
+        }
+      ]
+    )
+  }
 }

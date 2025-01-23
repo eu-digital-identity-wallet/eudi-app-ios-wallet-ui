@@ -35,16 +35,7 @@ public struct BaseSuccessView<Router: RouterHost>: View {
       navigationTitle: LocalizableString.shared.get(
         with: .dataShared
       ),
-      toolbarContent: .init(
-        trailingActions: [
-          Action(
-            title: LocalizableString.shared.get(
-              with: .doneButton
-            ).capitalizedFirst()
-          ) {
-            viewModel.onDone()
-          }
-        ])
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState

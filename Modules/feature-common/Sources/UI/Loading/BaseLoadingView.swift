@@ -28,13 +28,7 @@ public struct BaseLoadingView<Router: RouterHost>: View {
   public var body: some View {
     ContentScreenView(
       errorConfig: viewModel.viewState.error,
-      toolbarContent: .init(
-        leadingActions: [
-          Action(image: Theme.shared.image.xmark) {
-            viewModel.viewState.isCancellable ? viewModel.onNavigate(type: .pop) : nil
-          }
-        ]
-      )
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content()
     }

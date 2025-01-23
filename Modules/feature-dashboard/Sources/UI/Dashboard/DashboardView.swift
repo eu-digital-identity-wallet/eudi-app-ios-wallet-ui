@@ -40,15 +40,8 @@ struct DashboardView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: false,
-      navigationTitle: getNavigationTitle(selectedTab: viewModel.selectedTab),
-      toolbarContent: .init(
-        trailingActions: trailingActions(selectedTab: viewModel.selectedTab),
-        leadingActions: [
-          Action(image: Theme.shared.image.menuIcon) {
-            viewModel.onMyWallet()
-          }
-        ]
-      )
+      navigationTitle: viewModel.getNavigationTitle(),
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState,
@@ -252,35 +245,6 @@ struct DashboardView<Router: RouterHost>: View {
     })
     .onDisappear {
       self.viewModel.onPause()
-    }
-  }
-
-  func getNavigationTitle(selectedTab: SelectedTab) -> String {
-    switch selectedTab {
-      case .documents:
-        return LocalizableString.shared.get(with: .documents)
-      case .home:
-        return LocalizableString.shared.get(with: .home)
-      case .transactions:
-        return LocalizableString.shared.get(with: .transactions)
-    }
-  }
-
-  func trailingActions(selectedTab: SelectedTab) -> [Action]? {
-    switch selectedTab {
-      case .documents:
-        return [
-          Action(image: Theme.shared.image.plus) {
-            viewModel.onAdd()
-          },
-          Action(image: Theme.shared.image.filterMenuIcon, hasIndicator: showFilterIndicator) {
-            viewModel.showFilters()
-          }
-        ]
-      case .home:
-        return nil
-      case .transactions:
-        return nil
     }
   }
 

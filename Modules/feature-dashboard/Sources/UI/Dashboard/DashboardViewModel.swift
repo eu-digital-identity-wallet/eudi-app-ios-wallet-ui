@@ -431,4 +431,48 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       self.isSuccededDocumentsModalShowing = true
     }
   }
+
+  func getNavigationTitle() -> String {
+    switch selectedTab {
+      case .documents:
+        return LocalizableString.shared.get(with: .documents)
+      case .home:
+        return LocalizableString.shared.get(with: .home)
+      case .transactions:
+        return LocalizableString.shared.get(with: .transactions)
+    }
+  }
+
+  private func trailingActions() -> [Action]? {
+    switch selectedTab {
+      case .documents:
+        return [
+          Action(image: Theme.shared.image.plus) {
+            self.onAdd()
+          },
+          Action(image: Theme.shared.image.filterMenuIcon, hasIndicator: showFilterIndicator) {
+            self.showFilters()
+          }
+        ]
+      case .home:
+        return nil
+      case .transactions:
+        return nil
+    }
+  }
+
+  private func leadingActions() -> [Action]? {
+    [
+      Action(image: Theme.shared.image.menuIcon) {
+        self.onMyWallet()
+      }
+    ]
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: trailingActions(),
+      leadingActions: leadingActions()
+    )
+  }
 }

@@ -122,4 +122,18 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
       }
     }
   }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [
+        Action(
+          title: LocalizableString.shared.get(
+            with: .issuanceSuccessNextButton
+          ).capitalizedFirst()
+        ) {
+          self.onIssue()
+        }
+      ]
+    )
+  }
 }

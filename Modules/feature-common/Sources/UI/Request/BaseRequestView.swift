@@ -31,22 +31,7 @@ public struct BaseRequestView<Router: RouterHost>: View {
       canScroll: true,
       errorConfig: viewModel.viewState.error,
       navigationTitle: LocalizableString.shared.get(with: .dataSharingRequest),
-      toolbarContent: ToolBarContent(
-        trailingActions: [
-          Action(
-            title: LocalizableString.shared.get(with: .shareButton).capitalizedFirst(),
-            disabled: !viewModel.viewState.allowShare
-          ) {
-            viewModel.onShare()
-          }
-        ],
-        leadingActions: [
-          Action(
-            image: Theme.shared.image.chevronLeft) {
-              viewModel.onPop()
-            }
-        ]
-      )
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState,

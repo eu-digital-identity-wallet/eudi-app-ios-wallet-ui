@@ -190,6 +190,29 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     }
   }
 
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [
+        Action(
+          image: viewState.isBookmarked ? Theme.shared.image.bookmarkIconFill : Theme.shared.image.bookmarkIcon
+        ) {
+          self.saveBookmark(self.viewState.document.id)
+          self.showAlert = true
+        },
+        Action(
+          image: isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye
+        ) {
+          self.isVisible.toggle()
+        }
+      ],
+      leadingActions: [
+        Action(image: Theme.shared.image.chevronLeft) {
+          self.pop()
+        }
+      ]
+    )
+  }
+
   private func onDocumentDelete(with type: DocumentTypeIdentifier, and id: String) {
     Task {
 

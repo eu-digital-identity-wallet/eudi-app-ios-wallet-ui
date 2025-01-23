@@ -33,24 +33,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       allowBackGesture: false,
       errorConfig: viewModel.viewState.error,
       navigationTitle: LocalizableString.shared.get(with: .details),
-      toolbarContent: ToolBarContent(
-        trailingActions: [
-          Action(image: viewModel.viewState.isBookmarked ? Theme.shared.image.bookmarkIconFill : Theme.shared.image.bookmarkIcon) {
-            viewModel.saveBookmark(viewModel.viewState.document.id)
-            viewModel.showAlert = true
-          },
-          Action(
-            image: viewModel.isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye
-          ) {
-            viewModel.isVisible.toggle()
-          }
-        ],
-        leadingActions: [
-          Action(image: Theme.shared.image.chevronLeft) {
-            viewModel.pop()
-          }
-        ]
-      )
+      toolbarContent: viewModel.toolbarContent()
     ) {
 
       content(

@@ -101,6 +101,17 @@ final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeV
     }
   }
 
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        Action(image: Theme.shared.image.chevronLeft) {
+          self.onPop()
+        }
+      ]
+    )
+  }
+
   private func onIssueDocuments() {
     Task {
 

@@ -32,26 +32,7 @@ struct DocumentOfferView<Router: RouterHost>: View {
       navigationTitle: LocalizableString.shared.get(
         with: .addDocumentRequest
       ),
-      toolbarContent: ToolBarContent(
-        trailingActions: [
-          Action(
-            title: LocalizableString.shared.get(
-              with: .cancelButton
-            ).capitalizedFirst()
-          ) {
-            viewModel.onShowCancelModal()
-          }
-        ],
-        leadingActions: [
-          Action(
-            title: LocalizableString.shared.get(
-              with: .issueButton
-            ).capitalizedFirst()
-          ) {
-            viewModel.onIssueDocuments()
-          }
-        ]
-      )
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState,

@@ -31,14 +31,7 @@ struct OfferCodeView<Router: RouterHost>: View {
       allowBackGesture: false,
       errorConfig: viewModel.viewState.error,
       navigationTitle: "",
-      toolbarContent: ToolBarContent(
-        trailingActions: [],
-        leadingActions: [
-          Action(image: Theme.shared.image.chevronLeft) {
-            viewModel.onPop()
-          }
-        ]
-      )
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState,

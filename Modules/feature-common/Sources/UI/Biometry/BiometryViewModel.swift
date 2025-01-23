@@ -167,4 +167,22 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
       router.pop()
     }
   }
+
+  func toolbarContent() -> ToolBarContent? {
+    var leadingActions: [Action] = []
+    if viewState.isCancellable {
+      leadingActions.append(
+        Action(
+          image: Theme.shared.image.chevronLeft
+        ) {
+          self.onPop()
+      })
+
+      return .init(
+        leadingActions: leadingActions
+      )
+    }
+
+    return nil
+  }
 }

@@ -32,10 +32,7 @@ struct BiometryView<Router: RouterHost>: View {
       navigationTitle: LocalizableString.shared.get(
         with: viewModel.viewState.config.navigationTitle
       ),
-      toolbarContent: toolBarContent(
-        viewState: viewModel.viewState,
-        onPop: viewModel.onPop
-      )
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState,
@@ -60,28 +57,6 @@ struct BiometryView<Router: RouterHost>: View {
       self.viewModel.onAppearBiometry()
     }
   }
-}
-
-@MainActor
-private func toolBarContent(
-  viewState: BiometryState,
-  onPop: @escaping () -> Void
-) -> ToolBarContent? {
-  var leadingActions: [Action] = []
-  if viewState.isCancellable {
-    leadingActions.append(
-      Action(
-        image: Theme.shared.image.chevronLeft
-      ) {
-        onPop()
-    })
-
-    return ToolBarContent(
-      leadingActions: leadingActions
-    )
-  }
-
-  return nil
 }
 
 @MainActor

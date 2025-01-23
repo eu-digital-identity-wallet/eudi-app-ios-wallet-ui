@@ -74,4 +74,16 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
       router.push(with: screen)
     }
   }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [
+        Action(
+          title: LocalizableString.shared.get(with: .doneButton).capitalizedFirst()
+        ) {
+          self.onDone()
+        }
+      ]
+    )
+  }
 }

@@ -87,6 +87,16 @@ open class BaseLoadingViewModel<Router: RouterHost>: ViewModel<Router, BaseLoadi
     }
   }
 
+  public func toolbarContent() -> ToolBarContent {
+    .init(
+      leadingActions: [
+        Action(image: Theme.shared.image.xmark) {
+          self.viewState.isCancellable ? self.onNavigate(type: .pop) : nil
+        }
+      ]
+    )
+  }
+
   private func setCancellationWithTimeout(_ timeout: Double) {
     setState { $0.copy(isCancellable: false) }
     Task { [weak self] in

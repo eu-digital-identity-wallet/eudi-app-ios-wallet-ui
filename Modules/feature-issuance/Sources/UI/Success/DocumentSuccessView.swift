@@ -34,16 +34,7 @@ struct DocumentSuccessView<Router: RouterHost>: View {
       navigationTitle: LocalizableString.shared.get(
         with: .documentAdded
       ),
-      toolbarContent: .init(
-        trailingActions: [
-          Action(
-            title: LocalizableString.shared.get(
-              with: .issuanceSuccessNextButton
-            ).capitalizedFirst()
-          ) {
-            viewModel.onIssue()
-          }
-        ])
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState
