@@ -26,8 +26,8 @@ struct SignDocumentView<Router: RouterHost>: View {
 
   var body: some View {
     ContentScreenView(
-      allowBackGesture: true,
-      navigationTitle: LocalizableString.shared.get(with: .signDocument)
+      navigationTitle: LocalizableString.shared.get(with: .signDocument),
+      toolbarContent: toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState
@@ -49,6 +49,17 @@ struct SignDocumentView<Router: RouterHost>: View {
 
       Spacer()
     }
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        Action(image: Theme.shared.image.chevronLeft) {
+          viewModel.pop()
+        }
+      ]
+    )
   }
 }
 

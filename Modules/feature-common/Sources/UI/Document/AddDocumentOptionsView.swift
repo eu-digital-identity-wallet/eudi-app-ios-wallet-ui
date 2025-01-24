@@ -28,14 +28,25 @@ public struct AddDocumentOptionsView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: true,
-      allowBackGesture: true,
-      navigationTitle: LocalizableString.shared.get(with: .addDocumentTitle)
+      navigationTitle: LocalizableString.shared.get(with: .addDocumentTitle),
+      toolbarContent: toolbarContent()
     ) {
       content(
         onAddDocumentClick: { viewModel.onAddDocumentClick() },
         onScanClick: { viewModel.onScanClick() }
       )
     }
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        Action(image: Theme.shared.image.chevronLeft) {
+          viewModel.pop()
+        }
+      ]
+    )
   }
 }
 
@@ -76,7 +87,6 @@ private func content(
   ContentScreenView(
     padding: .zero,
     canScroll: true,
-    allowBackGesture: true,
     navigationTitle: LocalizableString.shared.get(with: .addDocumentTitle)
   ) {
     content(onAddDocumentClick: {}, onScanClick: {})

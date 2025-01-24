@@ -64,4 +64,8 @@ open class AddDocumentOptionsViewModel<Router: RouterHost>: ViewModel<Router, Ad
       )
     )
   }
+
+  func pop() {
+    router.pop()
+  }
 }

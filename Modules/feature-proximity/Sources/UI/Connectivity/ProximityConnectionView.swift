@@ -31,9 +31,9 @@ struct ProximityConnectionView<Router: RouterHost>: View {
   var body: some View {
     ContentScreenView(
       padding: .zero,
-      allowBackGesture: true,
       errorConfig: viewModel.viewState.error,
-      navigationTitle: LocalizableString.shared.get(with: .authenticate)
+      navigationTitle: LocalizableString.shared.get(with: .authenticate),
+      toolbarContent: toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState,
@@ -43,6 +43,17 @@ struct ProximityConnectionView<Router: RouterHost>: View {
     .task {
       await viewModel.initialize()
     }
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        Action(image: Theme.shared.image.chevronLeft) {
+          viewModel.pop()
+        }
+      ]
+    )
   }
 }
 

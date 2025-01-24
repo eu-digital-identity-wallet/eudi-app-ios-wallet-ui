@@ -29,7 +29,6 @@ struct SideMenuView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: true,
-      allowBackGesture: false,
       navigationTitle: LocalizableString.shared.get(with: .myEuWallet),
       toolbarContent: toolbarContent()
     ) {

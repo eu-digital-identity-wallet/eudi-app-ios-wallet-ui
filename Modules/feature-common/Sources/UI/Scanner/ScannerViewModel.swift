@@ -147,4 +147,8 @@ final class ScannerViewModel<Router: RouterHost>: ViewModel<Router, ScannerState
       )
     }
   }
+
+  func pop() {
+    router.pop()
+  }
 }
