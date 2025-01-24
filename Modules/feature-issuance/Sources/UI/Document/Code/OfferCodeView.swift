@@ -28,7 +28,6 @@ struct OfferCodeView<Router: RouterHost>: View {
 
   var body: some View {
     ContentScreenView(
-      allowBackGesture: false,
       errorConfig: viewModel.viewState.error,
       navigationTitle: "",
       toolbarContent: viewModel.toolbarContent()

@@ -27,7 +27,6 @@ struct QuickPinView<Router: RouterHost>: View {
 
   var body: some View {
     ContentScreenView(
-      allowBackGesture: false,
       navigationTitle: LocalizableString.shared.get(
         with: viewModel.viewState.navigationTitle
       ),

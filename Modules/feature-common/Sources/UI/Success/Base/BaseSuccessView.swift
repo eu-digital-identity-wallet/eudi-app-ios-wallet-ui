@@ -31,7 +31,6 @@ public struct BaseSuccessView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: true,
-      allowBackGesture: false,
       navigationTitle: LocalizableString.shared.get(
         with: .dataShared
       ),

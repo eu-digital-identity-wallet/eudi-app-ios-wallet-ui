@@ -56,7 +56,7 @@ public struct WrapListItemsView: View {
       .init(mainText: .custom("Given names"), supportingText: .custom("John")),
       .init(mainText: .custom("Date of birth"), supportingText: .custom("21 Oct 1994")),
       .init(mainText: .custom("Age over 18"), supportingText: .custom("21 Oct 1994")),
-      .init(mainText: .custom("Date of issue"), supportingText: .custom("21 Oct 1994")),
+      .init(mainText: .custom("Date of issue"), supportingText: .custom("21 Oct 1994"))
     ]
   )
   .padding()
