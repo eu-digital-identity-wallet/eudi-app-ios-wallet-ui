@@ -70,9 +70,9 @@ public struct FloatingTextFieldView<Content: View>: View {
     if showError {
       return Theme.shared.color.primary.opacity(0.12)
     } else if isNotFocused {
-      return Theme.shared.color.dividerDark
+      return Theme.shared.color.surface
     } else {
-      return Theme.shared.color.textPrimaryDark
+      return Theme.shared.color.onSurface
     }
   }
 
@@ -80,7 +80,7 @@ public struct FloatingTextFieldView<Content: View>: View {
     if showError {
       return Theme.shared.color.primary
     } else if isNotFocused {
-      return Theme.shared.color.dividerDark
+      return Theme.shared.color.surface
     } else {
       return Theme.shared.color.primary
     }
@@ -99,10 +99,10 @@ public struct FloatingTextFieldView<Content: View>: View {
             .foregroundColor(
               userHasCommitedChange
               ? labelColor
-              : Theme.shared.color.textSecondaryDark
+              : Theme.shared.color.secondary
             )
             .padding(2)
-            .background(Theme.shared.color.backgroundPaper)
+            .background(Theme.shared.color.surface)
             .padding(.leading, 15)
             .offset(x: 0, y: isNotFocused ? 0 : -(30 + (1-placeholderScaleFactor) * 30))
             .scaleEffect(isNotFocused ? 1 : placeholderScaleFactor, anchor: .topLeading)
@@ -111,7 +111,7 @@ public struct FloatingTextFieldView<Content: View>: View {
             userHasCommitedChange = changed
           })
           .typography(Theme.shared.font.bodyMedium)
-          .foregroundColor(Theme.shared.color.textPrimaryDark)
+          .foregroundColor(Theme.shared.color.onSurface)
           .autocapitalization(.none)
           .disableAutocorrection(true)
           .padding(.leading, 15)
@@ -146,7 +146,7 @@ public struct FloatingTextFieldView<Content: View>: View {
         .stroke(
           userHasCommitedChange ?
           Theme.shared.color.primary :
-            Theme.shared.color.dividerDark,
+            Theme.shared.color.surface,
           lineWidth: 1.5)
       )
     }

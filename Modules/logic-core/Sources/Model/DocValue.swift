@@ -19,25 +19,43 @@ import SwiftUI
 public enum DocValue {
   case string(String)
   case unavailable(String)
+  case mandatory(MandatoryValue)
   case image(Image)
 
   public var string: String? {
     switch self {
     case .string(let string):
-      string
+      return string
     case .unavailable(let string):
-      string
+      return string
+    case .mandatory(let value):
+      if case .string(let string) = value {
+        return string
+      }
+      return nil
     default:
-      nil
+      return nil
     }
   }
 
   public var image: Image? {
     switch self {
     case .image(let image):
-      image
+      return image
+    case .mandatory(let value):
+      if case .image(let image) = value {
+        return image
+      }
+      return nil
     default:
-      nil
+      return nil
     }
+  }
+}
+
+extension DocValue {
+  public enum MandatoryValue {
+    case string(String)
+    case image(Image)
   }
 }

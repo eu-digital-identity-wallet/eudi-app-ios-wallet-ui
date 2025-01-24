@@ -27,12 +27,15 @@ struct OfferCodeView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    ContentScreenView(errorConfig: viewModel.viewState.error) {
+    ContentScreenView(
+      errorConfig: viewModel.viewState.error,
+      navigationTitle: "",
+      toolbarContent: viewModel.toolbarContent()
+    ) {
       content(
         viewState: viewModel.viewState,
         codeInput: $viewModel.codeInput,
-        codeIsFocused: $viewModel.codeIsFocused,
-        onPop: viewModel.onPop
+        codeIsFocused: $viewModel.codeIsFocused
       )
     }
     .task {
@@ -77,12 +80,12 @@ private func pinView(
 private func content(
   viewState: OfferCodeViewState,
   codeInput: Binding<String>,
-  codeIsFocused: Binding<Bool>,
-  onPop: @escaping () -> Void
+  codeIsFocused: Binding<Bool>
 ) -> some View {
-  ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
-    onPop()
-  }
+
+  ContentHeader(
+    config: viewState.contentHeaderConfig
+  )
 
   ContentTitleView(
     title: viewState.title,
@@ -90,12 +93,6 @@ private func content(
   )
 
   VSpacer.large()
-
-  HStack {
-    Theme.shared.image.message
-      .foregroundColor(Theme.shared.color.primary)
-    Spacer()
-  }
 
   if viewState.isLoading {
     loader()
@@ -126,15 +123,20 @@ private func content(
       navigationCancelType: .pop
     ),
     title: LocalizableString.Key.addDocumentTitle,
-    caption: LocalizableString.Key.addDocumentSubtitle
+    caption: LocalizableString.Key.addDocumentSubtitle,
+    contentHeaderConfig: .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    )
   )
 
   ContentScreenView {
     content(
       viewState: state,
       codeInput: .constant("inout"),
-      codeIsFocused: .constant(false),
-      onPop: {}
+      codeIsFocused: .constant(false)
     )
   }
 }

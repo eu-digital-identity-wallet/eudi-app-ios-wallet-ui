@@ -23,7 +23,11 @@ struct DocumentSuccessState: ViewState {
   let caption: LocalizableString.Key?
   let holderName: String?
   let config: IssuanceFlowUiConfig
-  let documentIdentifier: String
+  let documentIdentifiers: [String]
+  let documents: [DocumentDetailsUIModel]
+  let isLoading: Bool
+  let contentHeaderConfig: ContentHeaderConfig
+  let error: ContentErrorView.Config?
 }
 
 final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, DocumentSuccessState> {
@@ -34,7 +38,7 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
     router: Router,
     interactor: DocumentSuccessInteractor,
     config: any UIConfigType,
-    documentIdentifier: String
+    documentIdentifiers: [String]
   ) {
 
     guard let config = config as? IssuanceFlowUiConfig else {
@@ -46,43 +50,97 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
     super.init(
       router: router,
       initialState: .init(
-        title: .issuanceSuccessTitle,
+        title: .successTitlePunctuated,
         caption: nil,
         holderName: nil,
         config: config,
-        documentIdentifier: documentIdentifier
+        documentIdentifiers: documentIdentifiers,
+        documents: [DocumentDetailsUIModel.mock()],
+        isLoading: true,
+        contentHeaderConfig: .init(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          )
+        ),
+        error: nil
       )
     )
   }
 
   func initialize() async {
-    setState {
-      $0.copy(
-        caption: interactor.getDocumentSuccessCaption(for: viewState.documentIdentifier),
-        holderName: interactor.getHoldersName(for: viewState.documentIdentifier)
-      )
+    await fetchDocumentDetails()
+
+    if let first = viewState.documentIdentifiers.first {
+      setState {
+        $0.copy(
+          caption: .succesfullyAddedFollowingToWallet,
+          holderName: interactor.getHoldersName(
+            for: first
+          )
+        )
+      }
     }
   }
 
   func onIssue() {
+    router.push(
+      with: .featureDashboardModule(
+        .dashboard
+      )
+    )
+  }
 
-    var flow: IssuanceDetailUiConfig.Flow {
+  func fetchDocumentDetails() async {
+
+    let documentIdentifiers = viewState.documentIdentifiers
+    let state = await Task.detached { () -> DocumentsPartialState in
+      return await self.interactor.fetchStoredDocuments(
+        documentIds: documentIdentifiers
+      )
+    }.value
+
+    switch state {
+    case .success(let documents):
       switch viewState.config.flow {
-      case .noDocument:
-        return .noDocument(viewState.documentIdentifier)
       case .extraDocument:
-        return .extraDocument(viewState.documentIdentifier)
+        self.setState {
+          $0.copy(
+            documents: documents,
+            isLoading: false
+          )
+        }
+      default:
+        self.setState {
+          $0.copy(
+            documents: documents,
+            isLoading: false
+          )
+        }
+      }
+
+    case .failure:
+      self.setState {
+        $0.copy(
+          title: .issuanceSuccessHeaderDescriptionWhenError,
+          documents: [],
+          isLoading: false
+        )
       }
     }
+  }
 
-    router.push(
-      with: .featureIssuanceModule(
-        .issuanceDocumentDetails(
-          config: IssuanceDetailUiConfig(
-            flow: flow
-          )
-        )
-      )
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [
+        Action(
+          title: LocalizableString.shared.get(
+            with: .issuanceSuccessNextButton
+          ).capitalizedFirst()
+        ) {
+          self.onIssue()
+        }
+      ]
     )
   }
 }

@@ -101,9 +101,15 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
           retrieveSuccessRoute(
             caption: .issuanceSuccessDeferredCaption([issuerName]),
             successNavigation: successNavigation,
-            title: .init(value: .inProgress, color: Theme.shared.color.warning),
+            title: .init(
+              value: .inProgress,
+              color: Theme.shared.color.pending
+            ),
             buttonTitle: .okButton,
-            visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.warning)
+            visualKind: .customIcon(
+              Theme.shared.image.documentSuccessPending,
+              Color.clear
+            )
           )
         )
       } else if let authorizePresentationUrl = documents.first?.authorizePresentationUrl {
@@ -116,12 +122,11 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
         return .dynamicIssuance(session)
       } else if documents.count == docOffers.count {
         return .success(
-          retrieveSuccessRoute(
-            caption: .credentialOfferSuccessCaption([issuerName]),
-            successNavigation: successNavigation,
-            title: .init(value: .success),
-            buttonTitle: .credentialOfferSuccessButton,
-            visualKind: .defaultIcon
+          .featureIssuanceModule(
+            .issuanceSuccess(
+              config: IssuanceFlowUiConfig(flow: .extraDocument),
+              documentIdentifiers: documents.compactMap { $0.id }
+            )
           )
         )
       } else {
@@ -185,9 +190,15 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
           retrieveSuccessRoute(
             caption: .issuanceSuccessDeferredCaption([issuerName]),
             successNavigation: successNavigation,
-            title: .init(value: .inProgress, color: Theme.shared.color.warning),
+            title: .init(
+              value: .inProgress,
+              color: Theme.shared.color.pending
+            ),
             buttonTitle: .okButton,
-            visualKind: .customIcon(Theme.shared.image.clock, Theme.shared.color.warning)
+            visualKind: .customIcon(
+              Theme.shared.image.documentSuccessPending,
+              Color.clear
+            )
           )
         )
       } else {

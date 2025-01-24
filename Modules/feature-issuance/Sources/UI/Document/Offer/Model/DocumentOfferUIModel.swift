@@ -17,6 +17,7 @@ import Foundation
 import logic_core
 import logic_business
 import logic_resources
+import logic_ui
 
 public struct DocumentOfferUIModel: Sendable {
 
@@ -43,15 +44,17 @@ public extension DocumentOfferUIModel {
 
     @EquatableNoop
     public var id: String
-
+    public let listItem: ListItemData
     public let documentName: String
 
     public init(
       id: String = UUID().uuidString,
+      listItem: ListItemData,
       documentName: String
     ) {
       self.id = id
       self.documentName = documentName
+      self.listItem = listItem
     }
   }
 }
@@ -77,22 +80,27 @@ public extension DocumentOfferUIModel {
       uiOffers: [
         .init(
           id: UUID().uuidString,
+          listItem: .init(mainText: .custom("Document Name")),
           documentName: "Document Name"
         ),
         .init(
           id: UUID().uuidString,
+          listItem: .init(mainText: .custom("Document Name")),
           documentName: "Document Name"
         ),
         .init(
           id: UUID().uuidString,
+          listItem: .init(mainText: .custom("Document Name")),
           documentName: "Document Name"
         ),
         .init(
           id: UUID().uuidString,
+          listItem: .init(mainText: .custom("Document Name")),
           documentName: "Document Name"
         ),
         .init(
           id: UUID().uuidString,
+          listItem: .init(mainText: .custom("Document Name")),
           documentName: "Document Name"
         )
       ],
@@ -123,6 +131,7 @@ private extension Array where Element == OfferedDocModel {
     self.forEach { doc in
       offers.append(
         .init(
+          listItem: .init(mainText: .custom(doc.displayName)),
           documentName: doc.displayName
         )
       )

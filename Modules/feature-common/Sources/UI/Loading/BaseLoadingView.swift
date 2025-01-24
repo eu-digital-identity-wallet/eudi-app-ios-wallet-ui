@@ -26,12 +26,12 @@ public struct BaseLoadingView<Router: RouterHost>: View {
   }
 
   public var body: some View {
-    ContentScreenView(errorConfig: viewModel.viewState.error) {
+    ContentScreenView(
+      errorConfig: viewModel.viewState.error,
+      toolbarContent: viewModel.toolbarContent()
+    ) {
       content(
-        isCancellable: viewModel.viewState.isCancellable,
-        title: viewModel.getTitle(),
-        caption: viewModel.getCaption(),
-        onNavigate: { viewModel.onNavigate(type: .pop) }
+        contentHeaderConfig: viewModel.viewState.contentHeaderConfig
       )
     }
     .task {
@@ -43,37 +43,29 @@ public struct BaseLoadingView<Router: RouterHost>: View {
 @MainActor
 @ViewBuilder
 private func content(
-  isCancellable: Bool,
-  title: LocalizableString.Key,
-  caption: LocalizableString.Key,
-  onNavigate: @escaping () -> Void
+  contentHeaderConfig: ContentHeaderConfig
 ) -> some View {
-  ContentHeaderView(
-    dismissIcon: Theme.shared.image.xmark,
-    onBack: isCancellable
-    ? onNavigate
-    : nil
-  )
+  VStack(alignment: .center, spacing: SPACING_LARGE_MEDIUM) {
+    ContentHeader(
+      config: contentHeaderConfig
+    )
+    Spacer()
 
-  ContentTitleView(
-    title: title,
-    caption: caption
-  )
+    ContentLoaderView(showLoader: .constant(true))
 
-  Spacer()
-
-  ContentLoaderView(showLoader: .constant(true))
-
-  Spacer()
+    Spacer()
+  }
 }
 
 #Preview {
   ContentScreenView {
     content(
-      isCancellable: true,
-      title: .requestDataTitle([""]),
-      caption: .requestDataCaption,
-      onNavigate: {}
+      contentHeaderConfig: .init(
+        appIconAndTextData: AppIconAndTextData(
+          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+          appText: ThemeManager.shared.image.euditext
+        )
+      )
     )
   }
 }

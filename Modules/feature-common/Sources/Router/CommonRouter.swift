@@ -21,7 +21,7 @@ public final class CommonRouter {
 
   public static func resolve(module: FeatureCommonRouteModule, host: some RouterHost) -> AnyView {
     return switch module {
-    case .quickPin(config: let config):
+    case .quickPin(let config):
       QuickPinView(
         with: .init(
           router: host,
@@ -50,7 +50,7 @@ public final class CommonRouter {
           ), config: config
         )
       ).eraseToAnyView()
-    case .success(config: let config):
+    case .success(let config):
       SuccessView(
         with: .init(
           config: config,
@@ -58,6 +58,13 @@ public final class CommonRouter {
           deepLinkController: DIGraph.resolver.force(
             DeepLinkController.self
           )
+        )
+      ).eraseToAnyView()
+    case .issuanceAddDocumentOptions(config: let config):
+      AddDocumentOptionsView(
+        with: .init(
+          router: host,
+          config: config
         )
       ).eraseToAnyView()
     }

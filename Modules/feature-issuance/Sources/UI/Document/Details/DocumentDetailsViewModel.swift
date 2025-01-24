@@ -25,7 +25,9 @@ struct DocumentDetailsViewState: ViewState {
   let isLoading: Bool
   let error: ContentErrorView.Config?
   let config: IssuanceDetailUiConfig
-  let toolBarActions: [ContentHeaderView.Action]?
+  let hasDeleteAction: Bool
+  let documentFieldsCount: Int
+  let isBookmarked: Bool
 
   var isCancellable: Bool {
     return config.isExtraDocument
@@ -39,6 +41,8 @@ struct DocumentDetailsViewState: ViewState {
 final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, DocumentDetailsViewState> {
 
   @Published var isDeletionModalShowing: Bool = false
+  @Published var isVisible = true
+  @Published var showAlert = false
 
   private let interactor: DocumentDetailsInteractor
 
@@ -58,7 +62,9 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         isLoading: true,
         error: nil,
         config: config,
-        toolBarActions: nil
+        hasDeleteAction: false,
+        documentFieldsCount: 0,
+        isBookmarked: false
       )
     )
   }
@@ -66,37 +72,34 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   func fetchDocumentDetails() async {
 
     let documentId = viewState.config.documentId
-
     let state = await Task.detached { () -> DocumentDetailsPartialState in
-      return await self.interactor.fetchStoredDocument(documentId: documentId)
+      return await self.interactor.fetchStoredDocument(
+        documentId: documentId
+      )
     }.value
 
     switch state {
 
     case .success(let document):
-
-      var actions: [ContentHeaderView.Action]? {
-        switch viewState.config.flow {
-        case .extraDocument:
-          return [
-            .init(
-              image: Theme.shared.image.trash,
-              callback: self.onShowDeleteModal()
-            )
-          ]
-        case .noDocument:
-          return nil
-        }
-      }
-
-      self.setState {
-        $0
-          .copy(
+      switch viewState.config.flow {
+      case .extraDocument:
+        self.setState {
+          $0.copy(
             document: document,
             isLoading: false,
-            toolBarActions: actions
-          )
-          .copy(error: nil)
+            hasDeleteAction: true,
+            documentFieldsCount: document.documentFields.count
+          ).copy(error: nil)
+        }
+      case .noDocument:
+        self.setState {
+          $0.copy(
+            document: document,
+            isLoading: false,
+            hasDeleteAction: false,
+            documentFieldsCount: document.documentFields.count
+          ).copy(error: nil)
+        }
       }
 
     case .failure(let error):
@@ -128,6 +131,86 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
   func onShowDeleteModal() {
     isDeletionModalShowing = !isDeletionModalShowing
+  }
+
+  func bookmarked() async {
+
+    let documentId = viewState.config.documentId
+    do {
+      _ = try await interactor.fetchBookmarks(documentId)
+      self.setState {
+        $0.copy(
+          isBookmarked: true
+        )
+      }
+    } catch {
+      self.setState {
+        $0.copy(
+          isBookmarked: false
+        )
+      }
+    }
+  }
+
+  func saveBookmark(_ identifier: String) {
+    Task {
+      do {
+        if viewState.isBookmarked {
+          try await interactor.delete(identifier)
+          self.setState {
+            $0.copy(
+              isBookmarked: false
+            )
+          }
+        } else {
+          try await interactor.save(identifier)
+          self.setState {
+            $0.copy(
+              isBookmarked: true
+            )
+          }
+        }
+      } catch {}
+    }
+  }
+
+  func alertTitle() -> String {
+    if viewState.isBookmarked {
+      return LocalizableString.shared.get(with: .savedToFavorites)
+    } else {
+      return LocalizableString.shared.get(with: .removedFromFavorites)
+    }
+  }
+
+  func alertMessage() -> String {
+    if viewState.isBookmarked {
+      return LocalizableString.shared.get(with: .savedToFavoritesMessage)
+    } else {
+      return LocalizableString.shared.get(with: .removedFromFavoritesMessages)
+    }
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [
+        Action(
+          image: viewState.isBookmarked ? Theme.shared.image.bookmarkIconFill : Theme.shared.image.bookmarkIcon
+        ) {
+          self.saveBookmark(self.viewState.document.id)
+          self.showAlert = true
+        },
+        Action(
+          image: isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye
+        ) {
+          self.isVisible.toggle()
+        }
+      ],
+      leadingActions: [
+        Action(image: Theme.shared.image.chevronLeft) {
+          self.pop()
+        }
+      ]
+    )
   }
 
   private func onDocumentDelete(with type: DocumentTypeIdentifier, and id: String) {

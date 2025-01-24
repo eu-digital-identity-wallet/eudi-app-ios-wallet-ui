@@ -32,28 +32,9 @@ struct DocumentOfferCellView: View {
 
   var body: some View {
     HStack {
-      HStack(spacing: .zero) {
-
-        HStack(spacing: SPACING_SMALL) {
-
-          Theme.shared.image.id
-            .resizable()
-            .scaledToFit()
-            .frame(width: 45)
-
-          Text(cellModel.documentName)
-            .typography(Theme.shared.font.titleMedium)
-            .foregroundStyle(Theme.shared.color.black)
-
-        }
-        .padding([.horizontal, .vertical], SPACING_SMALL)
-        .background(Theme.shared.color.secondary)
-        .roundedCorner(Theme.shared.shape.small, corners: .allCorners)
-
-        Spacer()
-      }
-      .frame(maxWidth: .infinity, maxHeight: 50)
-      .padding(.bottom)
+      WrapListItemView(
+        listItem: cellModel.listItem
+      )
       .disabled(isLoading)
       .shimmer(isLoading: isLoading)
     }
@@ -63,6 +44,7 @@ struct DocumentOfferCellView: View {
 #Preview {
   DocumentOfferCellView(
     cellModel: DocumentOfferUIModel.UIOffer(
+      listItem: .init(mainText: .custom("Name")),
       documentName: "Name"
     ),
     isLoading: false

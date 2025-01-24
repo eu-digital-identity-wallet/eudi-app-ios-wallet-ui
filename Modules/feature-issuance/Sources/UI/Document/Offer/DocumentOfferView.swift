@@ -16,6 +16,7 @@
 import SwiftUI
 import logic_ui
 import logic_resources
+import feature_common
 
 struct DocumentOfferView<Router: RouterHost>: View {
 
@@ -26,29 +27,31 @@ struct DocumentOfferView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    ContentScreenView(errorConfig: viewModel.viewState.error) {
-
+    ContentScreenView(
+      errorConfig: viewModel.viewState.error,
+      navigationTitle: LocalizableString.shared.get(
+        with: .addDocumentRequest
+      ),
+      toolbarContent: viewModel.toolbarContent()
+    ) {
       content(
         viewState: viewModel.viewState,
-        imageSize: getScreenRect().width / 4,
-        onIssueDocuments: viewModel.onIssueDocuments,
-        onShowCancelModal: viewModel.onShowCancelModal
+        imageSize: getScreenRect().width / 4
       )
     }
-    .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
-
-          ContentTitleView(
-            title: .cancelIssueSheetTitle,
-            caption: .cancelIssueSheetCaption
-          )
-
-          WrapButtonView(style: .primary, title: .cancelIssueSheetContinue, onAction: viewModel.onShowCancelModal())
-          WrapButtonView(style: .secondary, title: .cancelButton, onAction: viewModel.onPop())
-        }
+    .confirmationDialog(
+      title: LocalizableString.shared.get(with: .cancelIssueSheetTitle),
+      message: LocalizableString.shared.get(with: .cancelIssueSheetCaption),
+      destructiveText: LocalizableString.shared.get(with: .cancelButton),
+      baseText: LocalizableString.shared.get(with: .cancelIssueSheetContinue),
+      isPresented: $viewModel.isCancelModalShowing,
+      destructiveAction: {
+        viewModel.onPop()
+      },
+      baseAction: {
+        viewModel.onShowCancelModal()
       }
-    }
+    )
     .task {
       await viewModel.initialize()
     }
@@ -65,52 +68,35 @@ struct DocumentOfferView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: DocumentOfferViewState,
-  imageSize: CGFloat,
-  onIssueDocuments: @escaping () -> Void,
-  onShowCancelModal: @escaping () -> Void
+  imageSize: CGFloat
 ) -> some View {
-  ContentTitleView(
-    title: viewState.title,
-    caption: .requestCredentialOfferCaption,
-    topSpacing: .withoutToolbar,
-    isLoading: viewState.isLoading
-  )
+  ScrollView {
+    VStack(spacing: .zero) {
+      ContentHeader(
+        config: viewState.contentHeaderConfig
+      )
 
-  VSpacer.small()
+      if viewState.documentOfferUiModel.uiOffers.isEmpty {
+        noDocumentsFound(imageSize: imageSize)
+      } else {
+        VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+          ForEach(viewState.documentOfferUiModel.uiOffers) { cell in
+            WrapCardView {
+              DocumentOfferCellView(
+                cellModel: cell,
+                isLoading: viewState.isLoading
+              )
+            }
+          }
 
-  if viewState.documentOfferUiModel.uiOffers.isEmpty {
-    noDocumentsFound(imageSize: imageSize)
-  } else {
-    ScrollView {
-      VStack(spacing: SPACING_SMALL) {
-
-        ForEach(viewState.documentOfferUiModel.uiOffers) { cell in
-          DocumentOfferCellView(
-            cellModel: cell,
-            isLoading: viewState.isLoading
-          )
+          Text(.shareDataReview)
+            .typography(Theme.shared.font.bodyMedium)
+            .foregroundColor(Theme.shared.color.onSurface)
+            .multilineTextAlignment(.leading)
+          VSpacer.medium()
         }
       }
-      .padding(.top)
     }
-    .bottomFade()
-  }
-
-  Spacer()
-
-  VStack(spacing: SPACING_MEDIUM) {
-    WrapButtonView(
-      style: .primary,
-      title: .issueButton,
-      isLoading: viewState.isLoading,
-      isEnabled: viewState.allowIssue && !viewState.isLoading,
-      onAction: onIssueDocuments()
-    )
-    WrapButtonView(
-      style: .secondary,
-      title: .cancelButton,
-      onAction: onShowCancelModal()
-    )
   }
 }
 
@@ -126,12 +112,12 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
       Theme.shared.image.exclamationmarkCircle
         .renderingMode(.template)
         .resizable()
-        .foregroundStyle(Theme.shared.color.textSecondaryDark)
+        .foregroundStyle(Theme.shared.color.onSurface)
         .frame(width: imageSize, height: imageSize)
 
       Text(.requestCredentialOfferNoDocument)
         .typography(Theme.shared.font.bodyMedium)
-        .foregroundColor(Theme.shared.color.textSecondaryDark)
+        .foregroundColor(Theme.shared.color.onSurface)
         .multilineTextAlignment(.center)
     }
 
@@ -143,6 +129,7 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
   let viewState = DocumentOfferViewState(
     isLoading: false,
     documentOfferUiModel: DocumentOfferUIModel.mock(),
+    issuerData: IssuerDataUIModel.mock(),
     error: nil,
     config: UIConfig.Generic(
       arguments: ["uri": "uri"],
@@ -151,15 +138,19 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
     ),
     offerUri: "offer uri",
     allowIssue: true,
-    initialized: true
+    initialized: true,
+    contentHeaderConfig: .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    )
   )
 
   ContentScreenView {
     content(
       viewState: viewState,
-      imageSize: UIScreen.main.bounds.width / 4,
-      onIssueDocuments: {},
-      onShowCancelModal: {}
+      imageSize: UIScreen.main.bounds.width / 4
     )
   }
 }
@@ -173,6 +164,7 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
       uiOffers: [],
       docOffers: []
     ),
+    issuerData: IssuerDataUIModel.mock(),
     error: nil,
     config: UIConfig.Generic(
       arguments: ["uri": "uri"],
@@ -181,15 +173,19 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
     ),
     offerUri: "offer uri",
     allowIssue: true,
-    initialized: true
+    initialized: true,
+    contentHeaderConfig: .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    )
   )
 
   ContentScreenView {
     content(
       viewState: viewState,
-      imageSize: UIScreen.main.bounds.width / 4,
-      onIssueDocuments: {},
-      onShowCancelModal: {}
+      imageSize: UIScreen.main.bounds.width / 4
     )
   }
 }

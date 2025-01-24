@@ -34,24 +34,13 @@ struct AddDocumentView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: true,
-      errorConfig: viewModel.viewState.error
+      errorConfig: viewModel.viewState.error,
+      navigationTitle: LocalizableString.shared.get(with: .chooseFromList),
+      isLoading: viewModel.viewState.isLoading,
+      toolbarContent: viewModel.toolbarContent()
     ) {
-
-      if viewModel.viewState.isFlowCancellable {
-        ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
-          viewModel.pop()
-        }
-        .padding([.top, .horizontal], Theme.shared.dimension.padding)
-      }
-
-      content(viewState: viewModel.viewState) { id in
-        viewModel.onClick(for: id)
-      }
-
-      VSpacer.extraSmall()
-
-      scanFooter(viewState: viewModel.viewState, contentSize: contentSize) {
-        self.viewModel.onScanClick()
+      content(viewState: viewModel.viewState) { type in
+        viewModel.onClick(for: type)
       }
     }
     .task {
@@ -67,84 +56,27 @@ private func content(
   action: @escaping (String) -> Void
 ) -> some View {
   ScrollView {
-    VStack(spacing: .zero) {
+    VStack(spacing: SPACING_LARGE_MEDIUM) {
 
-      ContentTitleView(
-        title: .addDocumentTitle,
-        caption: .addDocumentSubtitle,
-        titleColor: Theme.shared.color.textPrimaryDark,
-        topSpacing: viewState.isFlowCancellable ? .withToolbar : .withoutToolbar
-      )
+      Text(.chooseFromListTitle)
+        .typography(Theme.shared.font.bodyLarge)
+        .foregroundStyle(Theme.shared.color.onSurface)
 
-      VSpacer.large()
-
-      ForEach(viewState.addDocumentCellModels) { cell in
-        AddNewDocumentCellView(
-          isEnabled: cell.isEnabled,
-          icon: cell.image,
-          title: cell.documentName,
-          isLoading: cell.isLoading,
-          action: action(cell.configId)
-        )
-        .padding(.bottom, Theme.shared.shape.small)
-      }
-    }
-    .padding(.horizontal, Theme.shared.dimension.padding)
-  }
-}
-
-@MainActor
-@ViewBuilder
-private func scanFooter(
-  viewState: AddDocumentViewState,
-  contentSize: CGFloat,
-  action: @escaping () -> Void
-) -> some View {
-  VStack(spacing: SPACING_MEDIUM) {
-
-    Spacer()
-
-    Text(.or)
-      .typography(Theme.shared.font.bodyMedium)
-      .foregroundColor(Theme.shared.color.textSecondaryDark )
-      .shimmer(isLoading: viewState.isLoading)
-
-    Button(
-      action: { action() },
-      label: {
-        HStack {
-          Spacer()
-
-          VStack(alignment: .center) {
-
-            Theme.shared.image.qrScan
-              .resizable()
-              .renderingMode(.template)
-              .scaledToFit()
-              .foregroundStyle(Theme.shared.color.primary)
-              .frame(height: contentSize / 6)
-
-            Text(.issuanceScanQr)
-              .typography(Theme.shared.font.titleSmall)
-              .foregroundColor(Theme.shared.color.textPrimaryDark )
+      VStack(spacing: SPACING_MEDIUM_SMALL) {
+        ForEach(viewState.addDocumentCellModels) { cell in
+          WrapCardView {
+            WrapListItemView(
+              listItem: cell.listItem,
+              action: { action(cell.configId) }
+            )
           }
-          .padding(.vertical)
-
-          Spacer()
         }
       }
-    )
-    .background(Theme.shared.color.backgroundDefault)
-    .roundedCorner(SPACING_MEDIUM_SMALL, corners: .allCorners)
-    .padding(.horizontal)
-    .disabled(viewState.isLoading)
-    .shimmer(isLoading: viewState.isLoading)
-
-    Spacer()
+      .shimmer(isLoading: viewState.isLoading)
+    }
+    .padding(.horizontal, Theme.shared.dimension.padding)
+    .padding(.bottom)
   }
-  .frame(maxWidth: .infinity, maxHeight: contentSize)
-  .background(Theme.shared.color.backgroundDefault.opacity(0.8))
-  .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
 }
 
 #Preview {
@@ -154,15 +86,5 @@ private func scanFooter(
     config: IssuanceFlowUiConfig(flow: .noDocument)
   )
 
-  ContentScreenView(
-    padding: .zero,
-    canScroll: true
-  ) {
-    ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {}
-      .padding([.top, .horizontal], Theme.shared.dimension.padding)
-
-    content(viewState: viewState) { _ in }
-
-    scanFooter(viewState: viewState, contentSize: 300) {}
-  }
+  content(viewState: viewState) { _ in }
 }

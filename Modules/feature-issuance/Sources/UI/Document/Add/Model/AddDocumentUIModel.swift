@@ -17,27 +17,25 @@
 import SwiftUI
 import logic_resources
 import logic_core
+import logic_ui
 
 public struct AddDocumentUIModel: Identifiable, Sendable {
 
   public let id: String
-  public let documentName: LocalizableString.Key
-  public let image: Image?
+  public let listItem: ListItemData
   public let configId: String
   public var isEnabled: Bool
   public var isLoading: Bool
 
   public init(
+    listItem: ListItemData,
     isEnabled: Bool,
-    documentName: LocalizableString.Key,
-    image: Image? = nil,
     isLoading: Bool = false,
     configId: String
   ) {
     self.id = UUID().uuidString
     self.isEnabled = isEnabled
-    self.documentName = documentName
-    self.image = image
+    self.listItem = listItem
     self.isLoading = isLoading
     self.configId = configId
   }
@@ -47,26 +45,26 @@ public extension AddDocumentUIModel {
   static var mocks: [AddDocumentUIModel] {
     [
       .init(
+        listItem: .init(mainText: .custom("Document name 1")),
         isEnabled: true,
-        documentName: .custom("Document name 1"),
         isLoading: true,
         configId: "id"
       ),
       .init(
+        listItem: .init(mainText: .custom("Document name 2")),
         isEnabled: true,
-        documentName: .custom("Document name 2"),
         isLoading: true,
         configId: "id"
       ),
       .init(
+        listItem: .init(mainText: .custom("Document name 3")),
         isEnabled: true,
-        documentName: .custom("Document name 3"),
         isLoading: true,
         configId: "id"
       ),
       .init(
+        listItem: .init(mainText: .custom("Document name 4")),
         isEnabled: true,
-        documentName: .custom("Document name 4"),
         isLoading: true,
         configId: "id"
       )

@@ -27,11 +27,15 @@ struct BiometryView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    ContentScreenView {
+    ContentScreenView(
+      navigationTitle: LocalizableString.shared.get(
+        with: viewModel.viewState.config.navigationTitle
+      ),
+      toolbarContent: viewModel.toolbarContent()
+    ) {
       content(
         viewState: viewModel.viewState,
         uiPinInputField: $viewModel.uiPinInputField,
-        onPop: viewModel.onPop,
         onBiometry: viewModel.onBiometry
       )
       .alert(item: $viewModel.biometryError) { error in
@@ -59,22 +63,22 @@ struct BiometryView<Router: RouterHost>: View {
 private func content(
   viewState: BiometryState,
   uiPinInputField: Binding<String>,
-  onPop: @escaping () -> Void,
   onBiometry: @escaping () -> Void
 ) -> some View {
-  if viewState.isCancellable {
-    ContentHeaderView(
-      dismissIcon: Theme.shared.image.xmark,
-      onBack: { onPop() }
+
+  if viewState.config.displayLogo {
+    ContentHeader(
+      config: viewState.contentHeaderConfig
     )
   }
 
   ContentTitleView(
     title: viewState.config.title,
+    titleWeight: .bold,
     caption: viewState.areBiometricsEnabled
     ? viewState.config.caption
     : viewState.config.quickPinOnlyCaption,
-    titleColor: Theme.shared.color.textPrimaryDark,
+    titleColor: Theme.shared.color.onSurface,
     topSpacing: viewState.isCancellable ? .withToolbar : .withoutToolbar
   )
 
@@ -135,6 +139,7 @@ private func pinView(
 #Preview {
   let viewState = BiometryState(
     config: UIConfig.Biometry(
+      navigationTitle: .custom("Navigation Title"),
       title: .quickPinSetTitle,
       caption: .loginCaptionQuickPinOnly,
       quickPinOnlyCaption: .requestDataShareQuickPinCaption,
@@ -151,14 +156,19 @@ private func pinView(
     autoBiometryInitiated: true,
     biometryImage: Theme.shared.image.faceId,
     isCancellable: true,
-    quickPinSize: 6
+    quickPinSize: 6,
+    contentHeaderConfig: .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    )
   )
 
   ContentScreenView {
     content(
       viewState: viewState,
       uiPinInputField: .constant("uiPinInputField"),
-      onPop: {},
       onBiometry: {})
   }
 }

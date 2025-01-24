@@ -35,6 +35,7 @@ public enum FeatureCommonRouteModule: AppRouteModule {
   case qrScanner(config: any UIConfigType)
   case biometry(config: any UIConfigType)
   case success(config: any UIConfigType)
+  case issuanceAddDocumentOptions(config: any UIConfigType)
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -46,6 +47,8 @@ public enum FeatureCommonRouteModule: AppRouteModule {
       (key: "QuickPin", arguments: ["config": config.log])
     case .qrScanner(config: let config):
       (key: "QRScanner", arguments: ["config": config.log])
+    case .issuanceAddDocumentOptions(let config):
+      (key: "issuanceAddDocumentOptions", arguments: ["config": config.log])
     }
   }
 }
@@ -54,6 +57,7 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
 
   case dashboard
   case signDocument
+  case sideMenu
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -61,6 +65,8 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
       (key: "Dashboard", arguments: [:])
     case .signDocument:
       (key: "SignDocument", arguments: [:])
+    case .sideMenu:
+      (key: "SideMenu", arguments: [:])
     }
   }
 }
@@ -70,19 +76,26 @@ public indirect enum FeaturePresentationRouteModule: AppRouteModule {
   case presentationLoader(
     String,
     presentationCoordinator: RemoteSessionCoordinator,
-    originator: AppRoute
+    originator: AppRoute,
+    [any Routable]
   )
   case presentationRequest(
     presentationCoordinator: RemoteSessionCoordinator,
     originator: AppRoute
   )
+  case presentationSuccess(
+    config: any UIConfigType,
+    [any Routable]
+  )
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
-    case .presentationLoader(let id, _, let originator):
+    case .presentationLoader(let id, _, let originator, _):
       (key: "PresentationLoader", arguments: ["id": id, "originator": originator.info.key])
     case .presentationRequest(_, let originator):
       (key: "PresentationRequest", arguments: ["originator": originator.info.key])
+    case .presentationSuccess(let config, _):
+      (key: "PresentationSuccess", arguments: ["config": config.log])
     }
   }
 }
@@ -100,7 +113,12 @@ public indirect enum FeatureProximityRouteModule: AppRouteModule {
   case proximityLoader(
     String,
     presentationCoordinator: ProximitySessionCoordinator,
-    originator: AppRoute
+    originator: AppRoute,
+    [any Routable]
+  )
+  case proximitySuccess(
+    config: any UIConfigType,
+    [any Routable]
   )
 
   public var info: (key: String, arguments: [String: String]) {
@@ -109,8 +127,10 @@ public indirect enum FeatureProximityRouteModule: AppRouteModule {
       (key: "ProximityConnection", arguments: ["originator": originator.info.key])
     case .proximityRequest(_, let originator):
       (key: "ProximityRequest", arguments: ["originator": originator.info.key])
-    case .proximityLoader(let id, _, let originator):
+    case .proximityLoader(let id, _, let originator, _):
       (key: "ProximityLoader", arguments: ["id": id, "originator": originator.info.key])
+    case .proximitySuccess:
+      (key: "ProximitySuccess", arguments: [:])
     }
   }
 }
@@ -119,7 +139,7 @@ public enum FeatureIssuanceRouteModule: AppRouteModule {
 
   case issuanceAddDocument(config: any UIConfigType)
   case issuanceDocumentDetails(config: any UIConfigType)
-  case issuanceSuccess(config: any UIConfigType, documentIdentifier: String)
+  case issuanceSuccess(config: any UIConfigType, documentIdentifiers: [String])
   case credentialOfferRequest(config: any UIConfigType)
   case issuanceCode(config: any UIConfigType)
 
@@ -129,8 +149,8 @@ public enum FeatureIssuanceRouteModule: AppRouteModule {
       (key: "IssuanceAddDocument", arguments: ["config": config.log])
     case .issuanceDocumentDetails(let config):
       (key: "IssuanceDocumentDetails", arguments: ["config": config.log])
-    case .issuanceSuccess(let config, let id):
-      (key: "IssuanceSuccess", arguments: ["id": id, "config": config.log])
+    case .issuanceSuccess(let config, let ids):
+      (key: "IssuanceSuccess", arguments: ["id": ids.joined(separator: ", "), "config": config.log])
     case .issuanceCode(let config):
       (key: "IssuanceCode", arguments: ["config": config.log])
     case .credentialOfferRequest(let config):

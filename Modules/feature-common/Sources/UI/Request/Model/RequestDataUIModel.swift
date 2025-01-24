@@ -18,39 +18,6 @@ import SwiftUI
 import logic_business
 import logic_core
 
-public enum RequestDataUIModel: Equatable, Sendable {
-  case requestDataRow(RequestDataRow)
-  case requestDataSection(RequestDataSection)
-  case requestDataVerification(RequestDataVerification)
-
-  public var isDataRow: RequestDataRow? {
-    switch self {
-    case .requestDataRow(let row):
-      return row
-    default:
-      return nil
-    }
-  }
-
-  public var isDataSection: RequestDataSection? {
-    switch self {
-    case .requestDataSection(let section):
-      return section
-    default:
-      return nil
-    }
-  }
-
-  public var isDataVerification: RequestDataVerification? {
-    switch self {
-    case .requestDataVerification(let verification):
-      return verification
-    default:
-      return nil
-    }
-  }
-}
-
 public struct RequestDataRow: Identifiable, Equatable, Sendable {
 
   public enum Value: Equatable, Sendable {
@@ -59,19 +26,19 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
 
     public var string: String? {
       switch self {
-      case .string(let string):
-        string
-      default:
-        nil
+        case .string(let string):
+          string
+        default:
+          nil
       }
     }
 
     public var image: Image? {
       switch self {
-      case .image(let image):
-        image
-      default:
-        nil
+        case .image(let image):
+          image
+        default:
+          nil
       }
     }
   }
@@ -83,7 +50,6 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
   public let value: Value
 
   public var isSelected: Bool
-  public var isVisible: Bool
   public var isEnabled: Bool
 
   public var elementKey: String
@@ -99,7 +65,6 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
   public init(
     id: String = UUID().uuidString,
     isSelected: Bool,
-    isVisible: Bool,
     title: String,
     value: DocValue,
     elementKey: String = "namespaced_key",
@@ -107,19 +72,27 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
   ) {
     self.id = id
     self.isSelected = isSelected
-    self.isVisible = isVisible
     self.title = title
     switch value {
-    case .string(let string):
-      self.value = .string(string)
-      self.isEnabled = true
-    case .unavailable(let string):
-      self.value = .string(string)
-      self.isEnabled = false
-      self.isSelected = false
-    case .image(let image):
-      self.value = .image(image)
-      self.isEnabled = true
+      case .string(let string):
+        self.value = .string(string)
+        self.isEnabled = true
+      case .unavailable(let string):
+        self.value = .string(string)
+        self.isEnabled = false
+        self.isSelected = false
+      case .image(let image):
+        self.value = .image(image)
+        self.isEnabled = true
+      case .mandatory(let item):
+        switch item {
+        case .string(let string):
+          self.value = .string(string)
+        case .image(let image):
+          self.value = .image(image)
+        }
+        self.isEnabled = false
+        self.isSelected = true
     }
     self.elementKey = elementKey
     self.namespace = namespace
@@ -127,10 +100,6 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
 
   public mutating func setSelected(_ isSelected: Bool) {
     self.isSelected = isSelected
-  }
-
-  public mutating func setVisible(_ isVisible: Bool) {
-    self.isVisible = isVisible
   }
 }
 
@@ -174,8 +143,8 @@ extension RequestDataUiModel {
   public static func items(
     for docElements: [DocElementsViewModel],
     walletKitController: WalletKitController
-  ) -> [RequestDataUIModel] {
-    var requestDataCell = [RequestDataUIModel]()
+  ) -> [RequestDataUI] {
+    var requestDataCell = [RequestDataUI]()
 
     for docElement in docElements {
 
@@ -193,64 +162,56 @@ extension RequestDataUiModel {
         walletKitController: walletKitController
       )
 
+      let dataRows = (dataFields + (verificationFields ?? [])).sorted { $0.title.lowercased() < $1.title.lowercased() }
+
       guard !dataFields.isEmpty || verificationFields != nil else {
         continue
       }
 
-      // Section Header
-      requestDataCell.append(documentSectionHeader(for: docElement))
-
-      if !dataFields.isEmpty {
-        requestDataCell.append(contentsOf: dataFields)
-      }
-
-      if let verificationFields {
-        requestDataCell.append(verificationFields)
-      }
-    }
-
-    return requestDataCell
-  }
-
-  fileprivate static func documentSectionHeader(for docElement: DocElementsViewModel) -> RequestDataUIModel {
-    return .requestDataSection(
-      .init(
+      let section = RequestDataSection(
         id: docElement.id,
         title: docElement.displayName.orEmpty
       )
-    )
+      let data = RequestDataUI(
+        id: section.id,
+        requestDataRow: dataRows,
+        requestDataSection: section
+      )
+
+      requestDataCell.append(data)
+    }
+
+    return requestDataCell
   }
 
   fileprivate static func documentSelectiveDisclosableFields(
     for docElements: [ElementViewModel],
     with docElement: DocElementsViewModel,
     walletKitController: WalletKitController
-  ) -> [RequestDataUIModel] {
+  ) -> [RequestDataRow] {
     docElements
       .filter { element in
         let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: docElement.docType))
         return !mandatoryKeys.contains(element.elementIdentifier)
       }
       .map { element in
-        RequestDataUIModel.requestDataRow(
-          RequestDataRow(
-            id: "\(element.id)_\(docElement.id)",
-            isSelected: true,
-            isVisible: false,
-            title: element.displayName.ifNil { element.elementIdentifier },
-            value: walletKitController.valueForElementIdentifier(
-              with: docElement.id,
-              elementIdentifier: element.elementIdentifier,
-              parser: {
-                Locale.current.localizedDateTime(
-                  date: $0,
-                  uiFormatter: "dd MMM yyyy"
-                )
-              }
-            ),
-            elementKey: element.elementIdentifier,
-            namespace: element.nameSpace
-          )
+        RequestDataRow(
+          id: "\(element.id)_\(docElement.id)",
+          isSelected: true,
+          title: element.displayName.ifNil { element.elementIdentifier },
+          value: walletKitController.valueForElementIdentifier(
+            with: docElement.id,
+            elementIdentifier: element.elementIdentifier,
+            isMandatory: false,
+            parser: {
+              Locale.current.localizedDateTime(
+                date: $0,
+                uiFormatter: "dd MMM yyyy"
+              )
+            }
+          ),
+          elementKey: element.elementIdentifier,
+          namespace: element.nameSpace
         )
       }
   }
@@ -259,7 +220,7 @@ extension RequestDataUiModel {
     for docElements: [ElementViewModel],
     with docElement: DocElementsViewModel,
     walletKitController: WalletKitController
-  ) -> RequestDataUIModel? {
+  ) -> [RequestDataRow]? {
     let mandatoryFields = docElements
       .filter { element in
         let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: docElement.docType))
@@ -269,11 +230,11 @@ extension RequestDataUiModel {
         RequestDataRow(
           id: "\(element.id)_\(docElement.id)",
           isSelected: true,
-          isVisible: false,
           title: element.displayName.ifNil { element.elementIdentifier },
           value: walletKitController.valueForElementIdentifier(
             with: docElement.id,
             elementIdentifier: element.elementIdentifier,
+            isMandatory: true,
             parser: {
               Locale.current.localizedDateTime(
                 date: $0,
@@ -290,43 +251,21 @@ extension RequestDataUiModel {
       return nil
     }
 
-    return .requestDataVerification(
-      .init(title: LocalizableString.shared.get(with: .verification),
-            items: mandatoryFields)
-    )
+    return mandatoryFields
   }
 }
 
 public struct RequestDataUiModel {
-  public static func mock() -> [RequestDataUIModel] {
+  public static func mockData() -> [RequestDataUI] {
     [
-      .requestDataSection(.init(title: "Digital ID")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: .string("Tzouvaras"))),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: .string("Stilianos"))),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Date of Birth", value: .string("21-09-1985"))),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Resident Country", value: .string("Greece"))),
-      .requestDataVerification(
-        .init(
-          title: "Verification data",
-          items: [
-            .init(isSelected: true, isVisible: false, title: "Family Name", value: .string("Tzouvaras")),
-            .init(isSelected: true, isVisible: false, title: "First Name", value: .string("Stilianos")),
-            .init(isSelected: true, isVisible: false, title: "Date of Birth", value: .string("21-09-1985")),
-            .init(isSelected: true, isVisible: false, title: "Resident Country", value: .string("Greece"))
-          ]
-        )
-      ),
-      .requestDataSection(.init(title: "MDL")),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "Family Name", value: .string("Tzouvaras"))),
-      .requestDataRow(.init(isSelected: true, isVisible: false, title: "First Name", value: .string("Stilianos"))),
-      .requestDataVerification(
-        .init(
-          title: "Verification data",
-          items: [
-            .init(isSelected: true, isVisible: false, title: "Date of Birth", value: .string("21-09-1985")),
-            .init(isSelected: true, isVisible: false, title: "Resident Country", value: .string("Greece"))
-          ]
-        )
+      RequestDataUI(
+        requestDataRow: [
+          RequestDataRow(isSelected: true, title: "Family Name", value: .string("Tzouvaras")),
+          RequestDataRow(isSelected: true, title: "First Name", value: .string("Stilianos")),
+          RequestDataRow(isSelected: true, title: "Date of Birth", value: .string("21-09-1985")),
+          RequestDataRow(isSelected: true, title: "Resident Country", value: .string("Greece"))
+        ],
+        requestDataSection: RequestDataSection(title: "MDL")
       )
     ]
   }

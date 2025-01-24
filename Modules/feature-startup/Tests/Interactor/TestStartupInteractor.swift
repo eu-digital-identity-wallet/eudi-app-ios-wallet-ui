@@ -172,6 +172,7 @@ private extension TestStartupInteractor {
   
   func biometryConfig(with hasDocuments: Bool) -> UIConfig.Biometry {
     return UIConfig.Biometry(
+      navigationTitle: .custom(""),
       title: .loginTitle,
       caption: .loginCaption,
       quickPinOnlyCaption: .loginCaptionQuickPinOnly,

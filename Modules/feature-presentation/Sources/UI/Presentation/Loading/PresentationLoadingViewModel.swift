@@ -20,17 +20,31 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
 
   private let interactor: PresentationInteractor
   private let relyingParty: String
+  private let requestItems: [RequestDataUI]
   private var publisherTask: Task<Void, Error>?
 
   init(
     router: Router,
     interactor: PresentationInteractor,
     relyingParty: String,
-    originator: AppRoute
+    originator: AppRoute,
+    requestItems: [any Routable]
   ) {
+    guard
+      let requestItems = requestItems as? [RequestDataUI]
+    else {
+      fatalError("PresentationLoadingViewModel:: Invalid configuraton")
+    }
+
     self.interactor = interactor
     self.relyingParty = relyingParty
-    super.init(router: router, originator: originator, cancellationTimeout: 5)
+    self.requestItems = requestItems
+
+    super.init(
+      router: router,
+      originator: originator,
+      cancellationTimeout: 5
+    )
   }
 
   func subscribeToCoordinatorPublisher() async {
@@ -52,12 +66,12 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
     }
   }
 
-  override func getTitle() -> LocalizableString.Key {
-    .requestDataTitle([relyingParty])
+  override func getTitle() -> String {
+    LocalizableString.shared.get(with: .requestDataTitle([relyingParty]))
   }
 
   override func getCaption() -> LocalizableString.Key {
-    .pleaseWait
+    .requestsTheFollowing
   }
 
   private func getOnSuccessRoute(with url: URL?) -> AppRoute {
@@ -72,23 +86,19 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
         interactor.storeDynamicIssuancePendingUrl(with: url)
         return .pop(screen: getOriginator())
       }
-      return .deepLink(link: url, popToScreen: .featureDashboardModule(.dashboard))
+      return .deepLink(
+        link: url,
+        popToScreen: .featureDashboardModule(.dashboard)
+      )
     }
 
-    return .featureCommonModule(
-      .success(
-        config: UIConfig.Success(
-          title: .init(value: .success),
-          subtitle: .requestDataShareSuccess([relyingParty]),
-          buttons: [
-            .init(
-              title: .requestDataShareButton,
-              style: .primary,
-              navigationType: navigationType
-            )
-          ],
-          visualKind: .defaultIcon
-        )
+    return .featurePresentationModule(
+      .presentationSuccess(
+        config: PresentationSuccessUIConfig(
+          successNavigation: navigationType,
+          relyingParty: relyingParty
+        ),
+        requestItems
       )
     )
   }

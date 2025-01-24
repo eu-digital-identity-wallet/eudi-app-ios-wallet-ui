@@ -21,14 +21,30 @@ public struct BaseLoadingState: ViewState {
   let error: ContentErrorView.Config?
   let originator: AppRoute
   let isCancellable: Bool
+  let contentHeaderConfig: ContentHeaderConfig
 }
 
 open class BaseLoadingViewModel<Router: RouterHost>: ViewModel<Router, BaseLoadingState> {
 
-  public init(router: Router, originator: AppRoute, cancellationTimeout: Double = 0.0) {
+  public init(
+    router: Router,
+    originator: AppRoute,
+    cancellationTimeout: Double = 0.0
+  ) {
     super.init(
       router: router,
-      initialState: .init(error: nil, originator: originator, isCancellable: cancellationTimeout <= 0)
+      initialState: .init(
+        error: nil,
+        originator: originator,
+        isCancellable: cancellationTimeout <= 0,
+        contentHeaderConfig: .init(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          ),
+          description: LocalizableString.shared.get(with: .pleaseWait)
+        )
+      )
     )
 
     if cancellationTimeout > 0 {
@@ -36,8 +52,8 @@ open class BaseLoadingViewModel<Router: RouterHost>: ViewModel<Router, BaseLoadi
     }
   }
 
-  open func getTitle() -> LocalizableString.Key {
-    return .custom("")
+  open func getTitle() -> String {
+    return ""
   }
 
   open func getCaption() -> LocalizableString.Key {
@@ -77,6 +93,16 @@ open class BaseLoadingViewModel<Router: RouterHost>: ViewModel<Router, BaseLoadi
         )
       )
     }
+  }
+
+  public func toolbarContent() -> ToolBarContent {
+    .init(
+      leadingActions: [
+        Action(image: Theme.shared.image.xmark) {
+          self.viewState.isCancellable ? self.onNavigate(type: .pop) : nil
+        }
+      ]
+    )
   }
 
   private func setCancellationWithTimeout(_ timeout: Double) {

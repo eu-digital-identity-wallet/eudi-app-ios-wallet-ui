@@ -58,21 +58,21 @@ public struct AddNewDocumentCellView: View {
         action: !isLoading ? action : {},
         label: {
           iconStyle
-            .foregroundColor(isEnabled ? Theme.shared.color.primary : Theme.shared.color.textDisabledDark)
+            .foregroundColor(isEnabled ? Theme.shared.color.primary : Theme.shared.color.onSurface)
             .frame(maxWidth: 32)
           Text(title)
             .typography(Theme.shared.font.bodyLarge)
-            .foregroundColor(isEnabled ? Theme.shared.color.textPrimaryDark : Theme.shared.color.textDisabledDark)
+            .foregroundColor(isEnabled ? Theme.shared.color.onSurface : Theme.shared.color.onSurface)
           Spacer()
           Theme.shared.image.plus
             .font(.body.bold())
-            .foregroundColor(isEnabled ? Theme.shared.color.primary : Theme.shared.color.textDisabledDark)
+            .foregroundColor(isEnabled ? Theme.shared.color.primary : Theme.shared.color.onSurface)
         }
       )
       .disabled(!isEnabled)
       .padding(SPACING_MEDIUM_LARGE)
-      .background(Theme.shared.color.backgroundDefault)
-      .tint(isEnabled ? nil : Theme.shared.color.textDisabledDark)
+      .background(Theme.shared.color.background)
+      .tint(isEnabled ? nil : Theme.shared.color.onSurface)
       .clipShape(.rect(cornerRadius: Theme.shared.shape.small))
       .shimmer(isLoading: isLoading)
     }

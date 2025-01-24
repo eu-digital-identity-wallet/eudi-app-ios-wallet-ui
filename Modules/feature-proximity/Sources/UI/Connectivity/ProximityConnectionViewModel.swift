@@ -113,4 +113,8 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
       )
     }
   }
+
+  func pop() {
+    router.pop()
+  }
 }

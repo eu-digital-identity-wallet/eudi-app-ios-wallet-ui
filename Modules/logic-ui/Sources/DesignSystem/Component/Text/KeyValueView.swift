@@ -62,7 +62,7 @@ public struct KeyValueView: View {
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
 
         Text(title)
-          .foregroundColor(Theme.shared.color.textSecondaryDark)
+          .foregroundColor(Theme.shared.color.secondary)
           .typography(Theme.shared.font.bodyMedium)
           .if(isLoading) { view in
             view
@@ -87,7 +87,7 @@ public struct KeyValueView: View {
     switch value {
     case .string(let key):
       Text(key)
-        .foregroundColor(Theme.shared.color.textPrimaryDark)
+        .foregroundColor(Theme.shared.color.onSurface)
         .typography(Theme.shared.font.bodyLarge)
         .if(isLoading) { view in
           view

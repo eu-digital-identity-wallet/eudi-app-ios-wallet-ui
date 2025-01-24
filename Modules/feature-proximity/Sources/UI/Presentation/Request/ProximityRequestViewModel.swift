@@ -64,6 +64,23 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
         relyingParty: relyingParty,
         isTrusted: isTrusted
       )
+      setState {
+        $0.copy(
+          contentHeaderConfig: .init(
+            appIconAndTextData: AppIconAndTextData(
+              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+              appText: ThemeManager.shared.image.euditext
+            ),
+            description: LocalizableString.shared.get(with: .dataSharingTitle),
+            mainText: LocalizableString.shared.get(with: getTitle()).uppercased(),
+            relyingPartyData: RelyingPartyData(
+              isVerified: viewState.isTrusted,
+              name: getRelyingParty(),
+              description: LocalizableString.shared.get(with: getCaption())
+            )
+          )
+        )
+      }
     case .failure:
       self.onEmptyDocuments()
     }
@@ -98,6 +115,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
         .featureCommonModule(
           .biometry(
             config: UIConfig.Biometry(
+              navigationTitle: .biometryConfirmRequest,
               title: getTitle(),
               caption: .requestDataShareBiometryCaption,
               quickPinOnlyCaption: .requestDataShareQuickPinCaption,
@@ -106,7 +124,8 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
                   .proximityLoader(
                     getRelyingParty(),
                     presentationCoordinator: proximitySessionCoordinator,
-                    originator: getOriginator()
+                    originator: getOriginator(),
+                    viewState.items.filterSelectedRows()
                   )
                 )
               ),
@@ -126,11 +145,11 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   }
 
   override func getTitle() -> LocalizableString.Key {
-    viewState.title
+    .dataSharingRequest
   }
 
   override func getCaption() -> LocalizableString.Key {
-    .requestDataCaption
+    .requestsTheFollowing
   }
 
   override func getDataRequestInfo() -> LocalizableString.Key {

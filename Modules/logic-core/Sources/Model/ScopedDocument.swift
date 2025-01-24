@@ -14,8 +14,15 @@
  * governing permissions and limitations under the Licence.
  */
 
-public struct ScopedDocument: Equatable {
+public struct ScopedDocument: Equatable, Sendable {
   public let name: String
+  public let issuer: String
   public let configId: String
   public let isPid: Bool
+}
+
+public extension ScopedDocument {
+  static func empty() -> ScopedDocument {
+    .init(name: "", issuer: "", configId: "", isPid: false)
+  }
 }

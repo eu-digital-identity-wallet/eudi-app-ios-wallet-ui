@@ -17,8 +17,14 @@ import Foundation
 
 public protocol DimensionManagerProtocol: Sendable {
   var padding: CGFloat { get }
+  var smallImageHeight: CGFloat { get }
+  var verifiedBadgeSpacing: CGFloat { get }
+  var remoteImageIconSize: CGFloat { get }
 }
 
 final class DimensionManager: DimensionManagerProtocol {
-  let padding: CGFloat = 16
+  let padding: CGFloat = 16.0
+  let smallImageHeight: CGFloat = 50.0
+  let verifiedBadgeSpacing: CGFloat = 5.0
+  let remoteImageIconSize: CGFloat = 50.0
 }

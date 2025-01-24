@@ -31,18 +31,29 @@ struct ProximityConnectionView<Router: RouterHost>: View {
   var body: some View {
     ContentScreenView(
       padding: .zero,
-      canScroll: true,
-      errorConfig: viewModel.viewState.error
+      errorConfig: viewModel.viewState.error,
+      navigationTitle: LocalizableString.shared.get(with: .authenticate),
+      toolbarContent: toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState,
-        contentSize: contentSize,
-        goBack: viewModel.goBack
+        contentSize: contentSize
       )
     }
     .task {
       await viewModel.initialize()
     }
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        Action(image: Theme.shared.image.chevronLeft) {
+          viewModel.pop()
+        }
+      ]
+    )
   }
 }
 
@@ -50,54 +61,57 @@ struct ProximityConnectionView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: ProxmityConnectivityState,
-  contentSize: CGFloat,
-  goBack: @escaping () -> Void
+  contentSize: CGFloat
 ) -> some View {
-  ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
-    goBack()
-  }
-  .padding([.top, .horizontal], Theme.shared.dimension.padding)
-
-  ContentTitleView(
-    title: .proximityConnectivityTitle,
-    caption: .proximityConnectivityCaption,
-    titleColor: Theme.shared.color.textPrimaryDark
-  )
-  .padding(.horizontal, Theme.shared.dimension.padding)
-
-  Spacer()
-
-  VStack {
-    if let image = viewState.qrImage {
-      Image(uiImage: image)
-        .resizable()
-        .transition(.opacity)
-    } else {
-      ContentLoaderView(showLoader: .constant(true))
+  VStack(spacing: SPACING_LARGE_MEDIUM) {
+    HStack {
+      Text(.proximityConnectivityCaption)
+        .typography(Theme.shared.font.bodyLarge)
+        .foregroundStyle(Theme.shared.color.onSurface)
+      Spacer()
     }
+    .frame(maxWidth: .infinity, alignment: .leading)
+
+    Spacer()
+
+    VStack(alignment: .center) {
+      if let image = viewState.qrImage {
+        Image(uiImage: image)
+          .resizable()
+          .transition(.opacity)
+      } else {
+        ContentLoaderView(showLoader: .constant(true))
+      }
+    }
+    .frame(width: contentSize, height: contentSize)
+
+    Spacer()
+
+    Divider()
+
+    nfcFooter(contentSize: contentSize)
   }
-  .frame(width: contentSize, height: contentSize)
-
-  Spacer()
-
-  nfcFooter(contentSize: contentSize)
+  .padding(.top, SPACING_LARGE_MEDIUM)
+  .padding(.horizontal, Theme.shared.dimension.padding)
 }
 
 @MainActor
 @ViewBuilder
 private func nfcFooter(contentSize: CGFloat) -> some View {
-  VStack(alignment: .center, spacing: SPACING_MEDIUM) {
-    Theme.shared.image.bluetoothConnect
+  VStack(alignment: .center, spacing: SPACING_SMALL) {
+    Text(.orShareViaNfc)
+      .typography(Theme.shared.font.bodyLarge)
+      .foregroundStyle(Theme.shared.color.onSurface)
+
+    Theme.shared.image.nfcImage
       .resizable()
-      .renderingMode(.template)
       .scaledToFit()
-      .foregroundStyle(Theme.shared.color.primary)
-      .frame(height: contentSize / 3)
+      .frame(width: 36, height: 36)
+
+    Text(.proximityConnectionNfcDescription)
+      .typography(Theme.shared.font.bodyMedium)
+      .foregroundStyle(Theme.shared.color.onSurface)
   }
-  .padding(.vertical, SPACING_EXTRA_LARGE)
-  .frame(maxWidth: .infinity, maxHeight: contentSize)
-  .background(Theme.shared.color.backgroundDefault.opacity(0.8))
-  .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
 }
 
 #Preview("Loading") {
@@ -113,8 +127,7 @@ private func nfcFooter(contentSize: CGFloat) -> some View {
   ) {
     content(
       viewState: viewState,
-      contentSize: 0.0,
-      goBack: {}
+      contentSize: 0.0
     )
   }
 }
@@ -132,8 +145,7 @@ private func nfcFooter(contentSize: CGFloat) -> some View {
   ) {
     content(
       viewState: viewState,
-      contentSize: 0.0,
-      goBack: {}
+      contentSize: 0.0
     )
   }
 }

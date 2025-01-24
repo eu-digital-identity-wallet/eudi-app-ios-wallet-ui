@@ -21,9 +21,16 @@ import feature_common
 import logic_core
 
 struct DashboardView<Router: RouterHost>: View {
-
   @ObservedObject private var viewModel: DashboardViewModel<Router>
+
   @Environment(\.scenePhase) var scenePhase
+
+  @State private var selectedOptions: Set<String> = []
+  @State private var selectedExpiryOption: String = ""
+  @State private var selectedStateOption: String = ""
+  @State private var initialSorting: String = "Default"
+  @State private var showFilterIndicator: Bool = false
+  @State private var sortAscending: Bool = true
 
   public init(with viewModel: DashboardViewModel<Router>) {
     self.viewModel = viewModel
@@ -33,11 +40,13 @@ struct DashboardView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: false,
-      background: Theme.shared.color.secondary
+      navigationTitle: viewModel.getNavigationTitle(),
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState,
-        onMore: viewModel.onMore,
+        isAuthenticateAlertShowing: $viewModel.isAuthenticateAlertShowing,
+        selectedTab: $viewModel.selectedTab,
         onDocumentDetails: { id in
           viewModel.onDocumentDetails(documentId: id)
         },
@@ -45,61 +54,51 @@ struct DashboardView<Router: RouterHost>: View {
           viewModel.onDeleteDeferredDocument(with: doc)
         },
         onAdd: viewModel.onAdd,
-        onShare: viewModel.onShare
+        onShare: viewModel.onShare,
+        signDocument: { viewModel.openSignDocument() },
+        filteredDocsCallback: { filterDocs in
+          viewModel.updateFilteredDocuments(filteredDocuments: filterDocs, listIsFiltered: showFilterIndicator)
+        }
       )
     }
-    .sheetDialog(isPresented: $viewModel.isMoreModalShowing) {
-      SheetContentView {
-        VStack(spacing: .zero) {
-
-          ContentTitleView(
-            title: .moreOptions
-          )
-
-          VSpacer.medium()
-
-          ForEach(viewModel.viewState.moreOptions, id: \.id) { option in
-
-            switch option {
-            case .changeQuickPin:
-              WrapButtonView(
-                title: .changeQuickPinOption,
-                backgroundColor: .clear,
-                icon: Theme.shared.image.pencil,
-                gravity: .start,
-                onAction: viewModel.onUpdatePin()
-              )
-            case .scanQrCode:
-              WrapButtonView(
-                title: .scanQrCode,
-                backgroundColor: .clear,
-                icon: Theme.shared.image.qrScan,
-                gravity: .start,
-                onAction: viewModel.onShowScanner()
-              )
-            case .signDocument:
-              WrapButtonView(
-                title: .signDocument,
-                backgroundColor: .clear,
-                icon: Theme.shared.image.signDocument,
-                gravity: .start,
-                onAction: viewModel.openSignDocument()
-              )
-            case .retrieveLogs(let url):
-              shareLogs(with: url)
-            }
-
-          }
-
-          HStack {
-            Spacer()
-            Text(viewModel.viewState.appVersion)
-              .typography(Theme.shared.font.bodyMedium)
-              .foregroundColor(Theme.shared.color.textSecondaryDark)
-            Spacer()
-          }
-        }
+    .confirmationDialog(
+      LocalizableString.shared.get(with: .authenticate),
+      isPresented: $viewModel.isAuthenticateAlertShowing,
+      titleVisibility: .visible
+    ) {
+      Button(LocalizableString.shared.get(with: .cancelButton), role: .cancel) {}
+      Button(LocalizableString.shared.get(with: .inPerson)) {
+        viewModel.onShare()
       }
+      Button(LocalizableString.shared.get(with: .online)) {
+        viewModel.onShowScanner()
+      }
+    } message: {
+      Text(.authenticateAuthoriseTransactions)
+    }
+    .sheet(isPresented: $viewModel.isFilterModalShowing) {
+      FilterListView(
+        sortAscending: $sortAscending,
+        showFilterIndicator: $showFilterIndicator,
+        selectedOptions: $selectedOptions,
+        selectedExpiryOption: $selectedExpiryOption,
+        selectesSorting: $initialSorting,
+        stateOption: $selectedStateOption,
+        applyFiltersCallback: {
+          viewModel.applyFilters(
+            section: viewModel.viewState.documentSections,
+            sortAscending: sortAscending,
+            initialSorting: initialSorting,
+            selectedExpiryOption: selectedExpiryOption,
+            selectedStateOption: selectedStateOption
+          )
+        },
+        resetFiltersCallback: {
+          viewModel.resetDocumentList()
+        },
+        sections: viewModel.viewState.documentSections,
+        onResume: viewModel.onDocumentsRetrievedPostActions
+      )
     }
     .sheetDialog(isPresented: $viewModel.isBleModalShowing) {
       SheetContentView {
@@ -137,6 +136,32 @@ struct DashboardView<Router: RouterHost>: View {
         }
       }
     }
+    .confirmationDialog(
+      title: LocalizableString.shared.get(with: .bleDisabledModalTitle),
+      message: LocalizableString.shared.get(with: .bleDisabledModalCaption),
+      destructiveText: LocalizableString.shared.get(with: .cancelButton).capitalized,
+      baseText: LocalizableString.shared.get(with: .bleDisabledModalButton).capitalized,
+      isPresented: $viewModel.isBleModalShowing,
+      destructiveAction: {
+        viewModel.toggleBleModal()
+      },
+      baseAction: {
+        viewModel.onBleSettings()
+      }
+    )
+    .confirmationDialog(
+      title: LocalizableString.shared.get(with: .issuanceDetailsDeletionTitle([viewModel.viewState.pendingDocumentTitle])),
+      message: LocalizableString.shared.get(with: .issuanceDetailsDeletionCaption([viewModel.viewState.pendingDocumentTitle])),
+      destructiveText: LocalizableString.shared.get(with: .no),
+      baseText: LocalizableString.shared.get(with: .yes),
+      isPresented: $viewModel.isDeleteDeferredModalShowing,
+      destructiveAction: {
+        viewModel.toggleDeleteDeferredModal()
+      },
+      baseAction: {
+        viewModel.deleteDeferredDocument()
+      }
+    )
     .sheetDialog(isPresented: $viewModel.isSuccededDocumentsModalShowing) {
       SheetContentView {
         VStack(spacing: SPACING_MEDIUM) {
@@ -156,6 +181,17 @@ struct DashboardView<Router: RouterHost>: View {
     .onChange(of: scenePhase) { phase in
       self.viewModel.setPhase(with: phase)
     }
+    .onChange(of: showFilterIndicator, perform: { _ in
+      viewModel.applyFilters(
+        section: viewModel.viewState.documentSections,
+        sortAscending: sortAscending,
+        initialSorting: initialSorting,
+        selectedExpiryOption: selectedExpiryOption,
+        selectedStateOption: selectedStateOption
+      )
+
+      viewModel.enableFilterIndicator(showFilterIndicator: showFilterIndicator)
+    })
     .onDisappear {
       self.viewModel.onPause()
     }
@@ -168,8 +204,8 @@ struct DashboardView<Router: RouterHost>: View {
 
         HStack {
           Text(.custom(item.value.title))
-            .typography(Theme.shared.font.bodyMedium)
-            .foregroundColor(Theme.shared.color.textPrimaryDark)
+            .typography(Theme.shared.font.bodyLarge)
+            .foregroundColor(Theme.shared.color.onSurface)
 
           Spacer()
 
@@ -178,7 +214,7 @@ struct DashboardView<Router: RouterHost>: View {
             .foregroundStyle(Theme.shared.color.primary)
         }
         .padding()
-        .background(Theme.shared.color.backgroundDefault)
+        .background(Theme.shared.color.background)
         .clipShape(.rect(cornerRadius: 8))
         .onTapGesture {
           viewModel.onDocumentDetails(documentId: item.value.id)
@@ -188,105 +224,112 @@ struct DashboardView<Router: RouterHost>: View {
     }
     .padding(.vertical)
   }
-
-  @ViewBuilder
-  func shareLogs(with fileUrl: URL) -> some View {
-    ShareLink(item: fileUrl) {
-      HStack {
-
-        Theme.shared.image.share
-          .resizable()
-          .scaledToFit()
-          .frame(width: 25, height: 25)
-          .foregroundColor(Theme.shared.color.primary)
-
-        HSpacer.medium()
-
-        Text(.retrieveLogs)
-          .typography(Theme.shared.font.labelLarge)
-          .foregroundColor(Theme.shared.color.textPrimaryDark)
-
-        Spacer()
-      }
-      .padding()
-    }
-  }
 }
 
 @MainActor
 @ViewBuilder
 private func content(
   viewState: DashboardState,
-  onMore: @escaping () -> Void,
+  isAuthenticateAlertShowing: Binding<Bool>,
+  selectedTab: Binding<SelectedTab>,
   onDocumentDetails: @escaping (String) -> Void,
   onDeleteDeferredDocument: @escaping (DocumentUIModel) -> Void,
   onAdd: @escaping () -> Void,
-  onShare: @escaping () -> Void
+  onShare: @escaping () -> Void,
+  signDocument: @escaping () -> Void,
+  filteredDocsCallback: @escaping (String) -> Void
 ) -> some View {
-  BearerHeaderView(
-    item: viewState.bearer,
-    isLoading: viewState.isLoading,
-    isMoreOptionsEnabled: viewState.allowUserInteraction,
-    onMoreClicked: onMore()
-  )
-
-  VStack(spacing: .zero) {
-
-    DocumentListView(
-      items: viewState.documents,
-      isLoading: viewState.isLoading
-    ) { document in
-      switch document.value.state {
-      case .issued:
-        onDocumentDetails(document.value.id)
-      case .pending, .failed:
-        onDeleteDeferredDocument(document)
-      }
-    }
-    .bottomFade()
-
-    if viewState.allowUserInteraction {
-
-      FloatingActionButtonBarView(
-        isLoading: viewState.isLoading,
-        addAction: onAdd(),
-        shareAction: onShare()
+  TabView(selection: selectedTab) {
+    HomeView(
+      username: viewState.username,
+      contentHeaderConfig: viewState.contentHeaderConfig,
+      addDocument: {
+        isAuthenticateAlertShowing.wrappedValue.toggle()
+      },
+      signDocument: {
+        signDocument()
+      })
+    .tabItem {
+      Label(
+        LocalizableString.shared.get(with: .home),
+        systemImage: "house.fill"
       )
-
-      VSpacer.small()
-
     }
+    .tag(SelectedTab.home)
+
+    VStack(spacing: .zero) {
+      DocumentListView(
+        filteredItems: viewState.filteredDocuments,
+        isLoading: viewState.isLoading,
+        action: { document in
+          switch document.value.state {
+          case .issued:
+            onDocumentDetails(document.value.id)
+          case .pending, .failed:
+            onDeleteDeferredDocument(document)
+          }
+        },
+        filteredDocsCallback: filteredDocsCallback
+      )
+      .background(Theme.shared.color.surface)
+    }
+    .tabItem {
+      Label(
+        LocalizableString.shared.get(with: .documents),
+        systemImage: "doc.fill")
+    }
+    .tag(SelectedTab.documents)
+
+    TransactionsView()
+      .tabItem {
+        Label(
+          LocalizableString.shared.get(with: .transactions),
+          systemImage: "arrow.left.arrow.right"
+        )
+      }
   }
-  .background(Theme.shared.color.backgroundPaper)
 }
 
 #Preview {
   let viewState = DashboardState(
     isLoading: false,
     documents: DocumentUIModel.mocks(),
-    bearer: BearerUIModel.mock(),
+    filteredDocuments: DocumentUIModel.mocks(),
+    filterModel: .init(sections: [], sortAscending: true, initialSorting: "", selectedStateOption: ""),
+    username: "First name",
     phase: .active,
     pendingBleModalAction: false,
+    showFilterIndicator: false,
     appVersion: "App version",
     allowUserInteraction: true,
     pendingDeletionDocument: nil,
     succededIssuedDocuments: [],
     failedDocuments: [],
-    moreOptions: [.changeQuickPin, .scanQrCode]
+    moreOptions: [.changeQuickPin, .scanQrCode],
+    contentHeaderConfig: .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
+    ),
+    documentSections: [.issuedSortingDate]
   )
 
   ContentScreenView(
     padding: .zero,
     canScroll: false,
-    background: Theme.shared.color.secondary
+    background: Theme.shared.color.surface
   ) {
     content(
       viewState: viewState,
-      onMore: {},
+      isAuthenticateAlertShowing: .constant(false),
+      selectedTab: .constant(.home),
       onDocumentDetails: { _ in },
       onDeleteDeferredDocument: { _ in },
       onAdd: {},
-      onShare: {}
+      onShare: {},
+      signDocument: {},
+      filteredDocsCallback: { _ in }
     )
   }
 }

@@ -33,7 +33,7 @@ public struct WrapButtonView: View {
 
   public init(
     title: LocalizableString.Key,
-    textColor: Color = Theme.shared.color.textPrimaryDark,
+    textColor: Color = Theme.shared.color.onSurface,
     backgroundColor: Color = Theme.shared.color.primary,
     iconColor: Color = Theme.shared.color.primary,
     icon: Image? = nil,
@@ -67,7 +67,7 @@ public struct WrapButtonView: View {
     gravity: Gravity = .center,
     isLoading: Bool = false,
     isEnabled: Bool = true,
-    cornerRadius: CGFloat = Theme.shared.shape.small,
+    cornerRadius: CGFloat = Theme.shared.shape.extraSmall,
     onAction: @autoclosure @escaping () -> Void
   ) {
     self.title = title
@@ -89,7 +89,6 @@ public struct WrapButtonView: View {
       action: { onAction() },
       label: {
         HStack {
-
           if gravity == .center || gravity == .end {
             Spacer()
           }
@@ -106,7 +105,8 @@ public struct WrapButtonView: View {
           }
 
           Text(title)
-            .typography(Theme.shared.font.labelLarge)
+            .typography(Theme.shared.font.bodyLarge)
+            .fontWeight(.semibold)
             .foregroundColor(textColor)
             .buttonStyle(OutlinePressedButtonStyle())
 
@@ -180,6 +180,20 @@ public extension WrapButtonView {
       gravity: .center,
       isEnabled: false,
       cornerRadius: 10,
+      onAction: {}()
+    )
+    WrapButtonView(
+      style: .error,
+      title: LocalizableString.Key.addDoc,
+      gravity: .center,
+      onAction: {}()
+    )
+
+    WrapButtonView(
+      style: .success,
+      title: LocalizableString.Key.addDoc,
+      icon: Image(systemName: "checkmark"),
+      gravity: .center,
       onAction: {}()
     )
   }

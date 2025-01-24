@@ -35,6 +35,7 @@ public protocol WalletKitController: Sendable {
   func startSameDevicePresentation(deepLink: URLComponents) async -> RemoteSessionCoordinator
   func startCrossDevicePresentation(urlString: String) async -> RemoteSessionCoordinator
   func stopPresentation()
+
   func fetchAllDocuments() -> [DocClaimsDecodable]
   func fetchDeferredDocuments() -> [WalletStorage.Document]
   func fetchIssuedDocuments() -> [DocClaimsDecodable]
@@ -42,10 +43,13 @@ public protocol WalletKitController: Sendable {
   func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [DocClaimsDecodable]
   func fetchMainPidDocument() -> DocClaimsDecodable?
   func fetchDocument(with id: String) -> DocClaimsDecodable?
+  func fetchDocuments(with ids: [String]) -> [DocClaimsDecodable]
+
   func clearAllDocuments() async
   func clearDocuments(status: DocumentStatus) async throws
   func deleteDocument(with id: String, status: DocumentStatus) async throws
   func loadDocuments() async throws
+
   func issueDocument(identifier: String) async throws -> WalletStorage.Document
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable
   func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssuanceModel
@@ -57,6 +61,7 @@ public protocol WalletKitController: Sendable {
   func valueForElementIdentifier(
     with documentId: String,
     elementIdentifier: String,
+    isMandatory: Bool,
     parser: (String) -> String
   ) -> DocValue
   func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String]
@@ -190,6 +195,10 @@ final class WalletKitControllerImpl: WalletKitController {
     wallet.storage.getDocumentModel(id: id)
   }
 
+  func fetchDocuments(with ids: [String]) -> [DocClaimsDecodable] {
+    fetchIssuedDocuments().filter { ids.contains($0.id) }
+  }
+
   func issueDocument(identifier: String) async throws -> WalletStorage.Document {
     return try await wallet.issueDocument(docType: nil, scope: nil, identifier: identifier)
   }
@@ -252,6 +261,7 @@ final class WalletKitControllerImpl: WalletKitController {
       case .msoMdoc(let config):
         return ScopedDocument(
           name: config.display.getName(fallback: credential.key.value),
+          issuer: metadata.display.getName(fallback: ""),
           configId: credential.key.value,
           isPid: DocumentTypeIdentifier(rawValue: config.docType) == .mDocPid
         )
@@ -262,6 +272,7 @@ final class WalletKitControllerImpl: WalletKitController {
         //        }
         return ScopedDocument(
           name: config.display.getName(fallback: credential.key.value),
+          issuer: metadata.display.getName(fallback: ""),
           configId: credential.key.value,
           //isPid: DocumentTypeIdentifier(rawValue: vct) == .sdJwtPid
           isPid: false
@@ -329,6 +340,7 @@ extension WalletKitController {
   public func valueForElementIdentifier(
     with documentId: String,
     elementIdentifier: String,
+    isMandatory: Bool,
     parser: (String) -> String
   ) -> DocValue {
 
@@ -352,13 +364,25 @@ extension WalletKitController {
     }
 
     if let image = element.dataValue.image {
-      return .image(Image(uiImage: image))
+      if isMandatory {
+        return .mandatory(.image(Image(uiImage: image)))
+      } else {
+        return .image(Image(uiImage: image))
+      }
     }
 
-    if let nested = element.children {
-      return .string(element.flattenNested(nested: nested).stringValue)
+    var stringValue: String {
+      if let nested = element.children {
+        return element.flattenNested(nested: nested).stringValue
+      } else {
+        return element.stringValue
+      }
     }
 
-    return .string(element.stringValue)
+    if isMandatory {
+      return .mandatory(.string(stringValue))
+    } else {
+      return .string(stringValue)
+    }
   }
 }

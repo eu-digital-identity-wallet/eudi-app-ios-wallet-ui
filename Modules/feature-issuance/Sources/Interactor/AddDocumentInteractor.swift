@@ -24,6 +24,7 @@ public protocol AddDocumentInteractor: Sendable {
   func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState
   func issueDocument(configId: String) async -> IssueDocumentPartialState
   func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState
+  func getScopedDocument(configId: String) async throws -> ScopedDocument
 }
 
 final class AddDocumentInteractorImpl: AddDocumentInteractor {
@@ -41,17 +42,24 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
       let documents: [AddDocumentUIModel] = try await walletController.getScopedDocuments().compactMap { doc in
         if flow == .extraDocument || doc.isPid {
           return .init(
+            listItem: .init(
+              mainText: .custom(doc.name),
+              trailingContent: .icon(Theme.shared.image.plus)
+            ),
             isEnabled: true,
-            documentName: .custom(doc.name),
             configId: doc.configId
           )
         } else {
           return nil
         }
-      }
+      }.sorted(by: compare)
       return .success(documents)
     } catch {
       return .failure(error)
+    }
+
+    func compare(_ first: AddDocumentUIModel, _ second: AddDocumentUIModel) -> Bool {
+      return LocalizableString.shared.get(with: first.listItem.mainText).lowercased() < LocalizableString.shared.get(with: second.listItem.mainText).lowercased()
     }
   }
 
@@ -91,7 +99,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
 
       if doc.status == .deferred {
         return .deferredSuccess
-      } else if doc.status != .issued {
+      } else if doc.status == .issued {
         return .success(doc.id)
       } else {
         return .failure(WalletCoreError.unableToIssueAndStore)
@@ -100,6 +108,12 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     } catch {
       return .failure(WalletCoreError.unableToIssueAndStore)
     }
+  }
+
+  func getScopedDocument(configId: String) async throws -> ScopedDocument {
+    try await walletController.getScopedDocuments().first {
+      $0.configId == configId
+    } ?? ScopedDocument.empty()
   }
 }
 

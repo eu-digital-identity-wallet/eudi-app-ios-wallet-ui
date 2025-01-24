@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2023 European Commission
+ *
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
+ *
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
+ */
+import SwiftUI
+import logic_resources
+
+public struct ContentCaptionView: View {
+
+  private let caption: LocalizableString.Key
+  private let captionColor: Color
+  private let isLoading: Bool
+
+  public init(
+    caption: LocalizableString.Key,
+    captionColor: Color = Theme.shared.color.onSurfaceVariant,
+    isLoading: Bool = false
+  ) {
+    self.caption = caption
+    self.captionColor = captionColor
+    self.isLoading = isLoading
+  }
+
+  public var body: some View {
+    VStack(spacing: .zero) {
+
+      HStack {
+        Text(caption)
+          .typography(Theme.shared.font.bodyLarge)
+          .foregroundColor(self.captionColor)
+        Spacer()
+      }
+    }
+    .shimmer(isLoading: self.isLoading)
+  }
+}
+
+#Preview {
+  Group {
+    ContentCaptionView(
+      caption: LocalizableString.Key.tryAgain
+    )
+    .lightModePreview()
+
+    ContentCaptionView(
+      caption: LocalizableString.Key.tryAgain
+    )
+    .darkModePreview()
+  }
+}

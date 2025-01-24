@@ -20,6 +20,8 @@ import Foundation
 public extension UIConfig {
   struct Biometry: UIConfigType, Equatable {
 
+    public let navigationTitle: LocalizableString.Key
+    public let displayLogo: Bool
     public let title: LocalizableString.Key
     public let caption: LocalizableString.Key
     public let quickPinOnlyCaption: LocalizableString.Key
@@ -29,7 +31,9 @@ public extension UIConfig {
     public let shouldInitializeBiometricOnCreate: Bool
 
     public var log: String {
-      return "title: \(LocalizableString.shared.get(with: title))" +
+      return "navigationTitle: \(LocalizableString.shared.get(with: navigationTitle))" +
+      "displayLogo: \(displayLogo)" +
+      "title: \(LocalizableString.shared.get(with: title))" +
       " onSuccessNav: \(navigationSuccessType.key)" +
       " onBackNav: \(navigationBackType?.key ?? "none")" +
       " isPreAuthorization: \(isPreAuthorization)" +
@@ -37,6 +41,8 @@ public extension UIConfig {
     }
 
     public init(
+      navigationTitle: LocalizableString.Key,
+      displayLogo: Bool = true,
       title: LocalizableString.Key,
       caption: LocalizableString.Key,
       quickPinOnlyCaption: LocalizableString.Key,
@@ -45,6 +51,8 @@ public extension UIConfig {
       isPreAuthorization: Bool,
       shouldInitializeBiometricOnCreate: Bool
     ) {
+      self.navigationTitle = navigationTitle
+      self.displayLogo = displayLogo
       self.title = title
       self.caption = caption
       self.quickPinOnlyCaption = quickPinOnlyCaption

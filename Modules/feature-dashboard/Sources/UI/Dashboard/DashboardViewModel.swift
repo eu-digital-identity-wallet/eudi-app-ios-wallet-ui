@@ -23,19 +23,25 @@ import feature_common
 struct DashboardState: ViewState {
   let isLoading: Bool
   let documents: [DocumentUIModel]
-  let bearer: BearerUIModel
+  var filteredDocuments: [DocumentUIModel]
+  var filterModel: FilterModel?
+  let username: String
   let phase: ScenePhase
   let pendingBleModalAction: Bool
+  let showFilterIndicator: Bool
   let appVersion: String
   let allowUserInteraction: Bool
   let pendingDeletionDocument: DocumentUIModel?
   let succededIssuedDocuments: [DocumentUIModel]
   let failedDocuments: [String]
   let moreOptions: [MoreModalOption]
+  let contentHeaderConfig: ContentHeaderConfig
 
   var pendingDocumentTitle: String {
     pendingDeletionDocument?.value.title ?? ""
   }
+
+  var documentSections: [FilterSections]
 }
 
 extension DashboardState {
@@ -61,21 +67,29 @@ extension DashboardState {
   }
 }
 
+public enum SelectedTab {
+  case home
+  case documents
+  case transactions
+}
+
 final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardState> {
 
   private let interactor: DashboardInteractor
   private let deepLinkController: DeepLinkController
   private let walletKitController: WalletKitController
 
-  @Published var isMoreModalShowing: Bool = false
   @Published var isBleModalShowing: Bool = false
+  @Published var isFilterModalShowing: Bool = false
   @Published var isDeleteDeferredModalShowing: Bool = false
   @Published var isSuccededDocumentsModalShowing: Bool = false
+  @Published var selectedTab: SelectedTab = .home
+  @Published var isAuthenticateAlertShowing: Bool = false
 
   private var deferredTask: Task<DashboardDeferredPartialState, Error>?
 
   var bearerName: String {
-    viewState.bearer.value.name
+    "viewState.bearer.value.name"
   }
 
   init(
@@ -92,15 +106,25 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       initialState: .init(
         isLoading: true,
         documents: DocumentUIModel.mocks(),
-        bearer: BearerUIModel.mock(),
+        filteredDocuments: DocumentUIModel.mocks(),
+        filterModel: nil,
+        username: "",
         phase: .active,
         pendingBleModalAction: false,
+        showFilterIndicator: false,
         appVersion: interactor.getAppVersion(),
         allowUserInteraction: interactor.hasIssuedDocuments(),
         pendingDeletionDocument: nil,
         succededIssuedDocuments: [],
         failedDocuments: [],
-        moreOptions: [.changeQuickPin, .scanQrCode]
+        moreOptions: [.changeQuickPin, .scanQrCode],
+        contentHeaderConfig: .init(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          )
+        ),
+        documentSections: [.issuedSortingDate]
       )
     )
 
@@ -116,13 +140,22 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     }.value
 
     switch state {
-    case .success(let bearer, let documents, let hasIssuedDocuments):
+    case .success(let username, let documents, let hasIssuedDocuments):
+      let issuers = Array(Set(documents.map { $0.value.heading })).sorted()
       setState {
         $0.copy(
           isLoading: false,
           documents: documents,
-          bearer: bearer,
-          allowUserInteraction: hasIssuedDocuments
+          filteredDocuments: documents,
+          username: username,
+          allowUserInteraction: hasIssuedDocuments,
+          documentSections: [
+            .issuedSortingDate,
+            .sortBy,
+            .issuer(options: issuers),
+            .expiryPeriod,
+            .state
+          ]
         )
       }
       onDocumentsRetrievedPostActions()
@@ -160,7 +193,8 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     router.push(
       with: .featureIssuanceModule(
         .issuanceDocumentDetails(
-          config: IssuanceDetailUiConfig(flow: .extraDocument(documentId))
+          config: IssuanceDetailUiConfig(flow: .extraDocument(documentId)
+          )
         )
       )
     )
@@ -238,46 +272,80 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
   func onAdd() {
     router.push(
-      with: .featureIssuanceModule(
-        .issuanceAddDocument(
+      with: .featureCommonModule(
+        .issuanceAddDocumentOptions(
           config: IssuanceFlowUiConfig(flow: .extraDocument)
         )
       )
     )
   }
 
-  func onMore() {
-    setState {
-      $0.copy(
-        moreOptions: buildArray {
-          DashboardState.MoreModalOption.changeQuickPin
-          DashboardState.MoreModalOption.scanQrCode
-          DashboardState.MoreModalOption.signDocument
-          if let url = interactor.retrieveLogFileUrl() {
-            DashboardState.MoreModalOption.retrieveLogs(url)
-          }
-        }
-      )
+  func showFilters() {
+    onPause()
+    isFilterModalShowing = true
+  }
+
+  func updateFilteredDocuments(filteredDocuments: String, listIsFiltered: Bool) {
+    let trimmedSearchQuery = filteredDocuments.trimmingCharacters(in: .whitespacesAndNewlines)
+    let sortedDocuments = interactor.applyFiltersWithSorting(
+      filterModel: viewState.filterModel,
+      documents: viewState.documents
+    )
+
+    let newDocuments = sortedDocuments.filter {
+      if trimmedSearchQuery.isEmpty {
+        return true
+      } else {
+        return $0.value.title.localizedCaseInsensitiveContains(trimmedSearchQuery) || $0.id.localizedCaseInsensitiveContains(trimmedSearchQuery)
+      }
     }
-    isMoreModalShowing = !isMoreModalShowing
+
+    setState { $0.copy(filteredDocuments: newDocuments) }
+  }
+
+  func applyFilters(
+    section: [FilterSections],
+    sortAscending: Bool,
+    initialSorting: String,
+    selectedExpiryOption: String?,
+    selectedStateOption: String
+  ) {
+    setState { $0.copy(filteredDocuments: viewState.documents) }
+
+    setState { $0.copy(filterModel: .init(
+      sections: section,
+      sortAscending: sortAscending,
+      initialSorting: initialSorting,
+      selectedExpiryOption: selectedExpiryOption,
+      selectedStateOption: selectedStateOption))
+    }
+
+    let sortedDocuments = interactor.applyFiltersWithSorting(
+      filterModel: viewState.filterModel,
+      documents: viewState.documents
+    )
+
+    setState { $0.copy(filteredDocuments: sortedDocuments) }
+  }
+
+  func resetDocumentList() {
+    setState { $0.copy(filteredDocuments: viewState.documents) }
+  }
+
+  func onMyWallet() {
+    router.push(
+      with: .featureDashboardModule(
+        .sideMenu
+      )
+    )
   }
 
   func openSignDocument() {
     router.push(with: .featureDashboardModule(.signDocument))
   }
 
-  func onUpdatePin() {
-    onHideMore()
-    router.push(with: .featureCommonModule(.quickPin(config: QuickPinUiConfig(flow: .update))))
-  }
-
   func onShowScanner() {
-    onHideMore()
     router.push(with: .featureCommonModule(.qrScanner(config: ScannerUiConfig(flow: .presentation))))
-  }
-
-  private func onHideMore() {
-    isMoreModalShowing = false
   }
 
   private func listenForSuccededIssuedModalChanges() {
@@ -292,7 +360,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       }.store(in: &cancellables)
   }
 
-  private func onDocumentsRetrievedPostActions() {
+  func onDocumentsRetrievedPostActions() {
     if let deepLink = deepLinkController.getPendingDeepLinkAction() {
       Task {
         deepLinkController.handleDeepLinkAction(
@@ -337,11 +405,60 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     else {
       return
     }
-    onHideMore()
     isBleModalShowing = false
     isDeleteDeferredModalShowing = false
     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
       self.isSuccededDocumentsModalShowing = true
     }
+  }
+
+  func getNavigationTitle() -> String {
+    switch selectedTab {
+      case .documents:
+        return LocalizableString.shared.get(with: .documents)
+      case .home:
+        return LocalizableString.shared.get(with: .home)
+      case .transactions:
+        return LocalizableString.shared.get(with: .transactions)
+    }
+  }
+
+  func enableFilterIndicator(showFilterIndicator: Bool) {
+    setState {
+      $0.copy(showFilterIndicator: showFilterIndicator)
+    }
+  }
+
+  private func trailingActions() -> [Action]? {
+    switch selectedTab {
+      case .documents:
+        return [
+          Action(image: Theme.shared.image.plus) {
+            self.onAdd()
+          },
+          Action(image: Theme.shared.image.filterMenuIcon, hasIndicator: viewState.showFilterIndicator) {
+            self.showFilters()
+          }
+        ]
+      case .home:
+        return nil
+      case .transactions:
+        return nil
+    }
+  }
+
+  private func leadingActions() -> [Action]? {
+    [
+      Action(image: Theme.shared.image.menuIcon) {
+        self.onMyWallet()
+      }
+    ]
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: trailingActions(),
+      leadingActions: leadingActions()
+    )
   }
 }

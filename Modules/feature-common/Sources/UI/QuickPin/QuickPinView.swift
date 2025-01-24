@@ -26,7 +26,12 @@ struct QuickPinView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    ContentScreenView {
+    ContentScreenView(
+      navigationTitle: LocalizableString.shared.get(
+        with: viewModel.viewState.navigationTitle
+      ),
+      toolbarContent: viewModel.toolbarContent()
+    ) {
       content(
         viewState: viewModel.viewState,
         uiPinInputField: $viewModel.uiPinInputField,
@@ -34,29 +39,19 @@ struct QuickPinView<Router: RouterHost>: View {
         onButtonClick: { viewModel.onButtonClick() }
       )
     }
-    .sheetDialog(isPresented: $viewModel.isCancelModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
-
-          ContentTitleView(
-            title: .quickPinUpdateCancellationTitle,
-            caption: .quickPinUpdateCancellationCaption
-          )
-
-          WrapButtonView(
-            style: .primary,
-            title: .quickPinUpdateCancellationContinue,
-            onAction:
-              viewModel.onShowCancellationModal()
-          )
-          WrapButtonView(
-            style: .secondary,
-            title: .cancelButton,
-            onAction: viewModel.onPop()
-          )
-        }
+    .confirmationDialog(
+      title: LocalizableString.shared.get(with: .quickPinUpdateCancellationTitle),
+      message: LocalizableString.shared.get(with: .quickPinUpdateCancellationCaption),
+      destructiveText: LocalizableString.shared.get(with: .cancelButton),
+      baseText: LocalizableString.shared.get(with: .quickPinUpdateCancellationContinue),
+      isPresented: $viewModel.isCancelModalShowing,
+      destructiveAction: {
+        viewModel.onPop()
+      },
+      baseAction: {
+        viewModel.onShowCancellationModal()
       }
-    }
+    )
   }
 }
 
@@ -68,17 +63,19 @@ private func content(
   onShowCancellationModal: @escaping () -> Void,
   onButtonClick: @escaping () -> Void
 ) -> some View {
-  if viewState.isCancellable {
-    ContentHeaderView(
-      dismissIcon: Theme.shared.image.xmark,
-      onBack: { onShowCancellationModal() }
+
+  ContentHeader(
+    config: ContentHeaderConfig(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      )
     )
-  }
+  )
 
   ContentTitleView(
     title: viewState.title,
-    caption: viewState.caption,
-    topSpacing: viewState.isCancellable ? .withToolbar : .withoutToolbar
+    caption: viewState.caption
   )
 
   VSpacer.large()
@@ -90,14 +87,6 @@ private func content(
   )
 
   Spacer()
-
-  WrapButtonView(
-    style: .primary,
-    title: viewState.button,
-    isLoading: false,
-    isEnabled: viewState.isButtonActive,
-    onAction: onButtonClick()
-  )
 }
 
 @MainActor
@@ -134,6 +123,7 @@ private func pinView(
 #Preview {
   let viewState = QuickPinState(
     config: QuickPinUiConfig(flow: .set),
+    navigationTitle: .quickPinEnterPin,
     title: .quickPinSetTitle,
     caption: .quickPinSetCaptionOne,
     button: .quickPinNextButton,

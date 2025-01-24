@@ -25,6 +25,7 @@ public let SPACING_MEDIUM_LARGE: CGFloat = 20
 public let SPACING_LARGE_MEDIUM: CGFloat = 24
 public let SPACING_LARGE: CGFloat = 32
 public let SPACING_EXTRA_LARGE: CGFloat = 48
+public let SPACING_JUMBO: CGFloat = 96
 
 @MainActor
 public struct VSpacer {
@@ -63,6 +64,10 @@ public struct VSpacer {
 
   public static func extraLarge() -> some View {
     return Spacer().frame(height: SPACING_EXTRA_LARGE)
+  }
+
+  public static func jumbo() -> some View {
+    return Spacer().frame(height: SPACING_JUMBO)
   }
 }
 

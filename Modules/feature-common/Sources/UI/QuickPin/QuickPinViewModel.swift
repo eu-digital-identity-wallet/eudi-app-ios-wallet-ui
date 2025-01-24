@@ -26,6 +26,7 @@ enum QuickPinStep {
 @Copyable
 struct QuickPinState: ViewState {
   let config: QuickPinUiConfig
+  let navigationTitle: LocalizableString.Key
   let title: LocalizableString.Key
   let caption: LocalizableString.Key
   let button: LocalizableString.Key
@@ -59,6 +60,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       router: router,
       initialState: .init(
         config: config,
+        navigationTitle: config.isSetFlow ? .quickPinEnterPin : .quickPinConfirmPin,
         title: config.isSetFlow ? .quickPinSetTitle : .quickPinUpdateTitle,
         caption: config.isSetFlow ? .quickPinSetCaptionOne : .quickPinUpdateCaptionOne,
         button: .quickPinNextButton,
@@ -86,6 +88,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       setState {
         $0
           .copy(
+            navigationTitle: .quickPinConfirmPin,
             caption: viewState.config.isSetFlow ? .quickPinSetCaptionTwo : .quickPinUpdateCaptionThree,
             button: .quickPinConfirmButton,
             step: .retryInput(uiPinInputField)
@@ -113,6 +116,30 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
     router.pop()
   }
 
+  func toolbarContent() -> ToolBarContent? {
+    var leadingActions: [Action] = []
+    if viewState.isCancellable {
+      leadingActions.append(
+        Action(
+          image: Theme.shared.image.chevronLeft
+        ) {
+          self.onShowCancellationModal()
+      })
+    }
+
+    return .init(
+      trailingActions: [Action(
+        title: LocalizableString.shared.get(
+          with: viewState.button
+        ).capitalizedFirst(),
+        disabled: !viewState.isButtonActive
+      ) {
+        self.onButtonClick()
+      }],
+      leadingActions: leadingActions
+    )
+  }
+
   private func onValidate() {
     switch interactor.isPinValid(pin: uiPinInputField) {
     case .success:
@@ -135,11 +162,26 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
 
   private func onSuccess() {
     interactor.setPin(newPin: uiPinInputField)
+
+    let buttonTitle: LocalizableString.Key = viewState.config.isSetFlow ?
+      .walletIsSecured :
+      .successTitlePunctuated
+
+    let visualKind: UIConfig.Success.VisualKind = viewState.config.isSetFlow ?
+      .customIcon(
+        Theme.shared.image.successSecuredWallet,
+        Color.clear
+      ) :
+      .customIcon(
+        Theme.shared.image.checkmarkCircleFill,
+        Theme.shared.color.success
+      )
+
     router.push(
       with: .featureCommonModule(
         .success(
           config: UIConfig.Success(
-            title: .init(value: .success),
+            title: .init(value: buttonTitle),
             subtitle: viewState.success,
             buttons: [
               .init(
@@ -148,7 +190,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
                 navigationType: viewState.successNavigationType
               )
             ],
-            visualKind: .defaultIcon
+            visualKind: visualKind
           )
         )
       )

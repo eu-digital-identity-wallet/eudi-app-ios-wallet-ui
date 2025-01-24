@@ -27,7 +27,7 @@ public struct SplashBackgroundView: View {
   public var body: some View {
     ZStack {
       Rectangle()
-        .fill(Theme.shared.color.backgroundPaper)
+        .fill(Theme.shared.color.background)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea()
 
@@ -43,7 +43,12 @@ public struct SplashBackgroundView: View {
 
 #Preview {
   Group {
-    SplashBackgroundView()
+    SplashBackgroundView(isAnimating: true)
+  }
+}
+
+#Preview("Dark Mode") {
+  Group {
     SplashBackgroundView(isAnimating: true)
   }
 }

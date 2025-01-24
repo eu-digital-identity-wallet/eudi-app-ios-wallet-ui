@@ -19,13 +19,19 @@ import logic_resources
 public enum ButtonViewStyle {
   case primary
   case secondary
+  case error
+  case success
 
   var textColor: Color {
     switch self {
     case .primary:
-      Theme.shared.color.white
+      Theme.shared.color.onPrimary
     case .secondary:
-      Theme.shared.color.textPrimaryDark
+      Theme.shared.color.primary
+    case .error:
+      Theme.shared.color.error
+    case .success:
+      Theme.shared.color.surfaceContainerLowest
     }
   }
   var backgroundColor: Color {
@@ -33,23 +39,29 @@ public enum ButtonViewStyle {
     case .primary:
       Theme.shared.color.primary
     case .secondary:
-      Theme.shared.color.backgroundPaper
+        .clear
+    case .error:
+      Theme.shared.color.background
+    case .success:
+      Theme.shared.color.success
     }
   }
   var borderWidth: CGFloat {
     switch self {
     case .primary:
       0
-    case .secondary:
+    case .secondary, .success, .error:
       1
     }
   }
   var borderColor: Color {
     switch self {
-    case .primary:
+    case .primary, .success:
         .clear
     case .secondary:
-      Theme.shared.color.dividerDark
+      Theme.shared.color.primary
+    case .error:
+      Theme.shared.color.error
     }
   }
 }

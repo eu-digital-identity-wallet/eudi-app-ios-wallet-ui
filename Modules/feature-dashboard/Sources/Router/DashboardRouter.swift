@@ -46,6 +46,18 @@ public final class DashboardRouter {
           )
         )
       ).eraseToAnyView()
+    case .sideMenu:
+      SideMenuView(
+        with: .init(
+          router: host,
+          interactor: DIGraph.resolver.force(
+            SideMenuInteractor.self
+          ),
+          walletKit: DIGraph.resolver.force(
+            WalletKitController.self
+          )
+        )
+      ).eraseToAnyView()
     }
   }
 }

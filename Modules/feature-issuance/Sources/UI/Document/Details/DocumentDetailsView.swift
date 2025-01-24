@@ -30,39 +30,47 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: !viewModel.viewState.hasContinueButton,
-      errorConfig: viewModel.viewState.error
+      errorConfig: viewModel.viewState.error,
+      navigationTitle: LocalizableString.shared.get(with: .details),
+      toolbarContent: viewModel.toolbarContent()
     ) {
 
-      content(viewState: viewModel.viewState) {
+      content(
+        viewState: viewModel.viewState,
+        isVisible: viewModel.isVisible
+      ) {
+        viewModel.showAlert = true
+      } onContinue: {
         viewModel.onContinue()
-      } pop: {
-        viewModel.pop()
+      } onShowDeleteModal: {
+        viewModel.onShowDeleteModal()
       }
     }
-    .sheetDialog(isPresented: $viewModel.isDeletionModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
-
-          ContentTitleView(
-            title: .issuanceDetailsDeletionTitle([viewModel.viewState.document.documentName]),
-            caption: .issuanceDetailsDeletionCaption([viewModel.viewState.document.documentName])
-          )
-
-          WrapButtonView(
-            style: .primary,
-            title: .yes,
-            onAction: viewModel.onDeleteDocument()
-          )
-          WrapButtonView(
-            style: .secondary,
-            title: .no,
-            onAction: viewModel.onShowDeleteModal()
-          )
-        }
+    .confirmationDialog(
+      title: "",
+      message: LocalizableString.shared.get(with: .deleteDocumentConfirmDialog),
+      destructiveText: LocalizableString.shared.get(with: .deleteButton),
+      baseText: LocalizableString.shared.get(with: .cancelButton),
+      isPresented: $viewModel.isDeletionModalShowing,
+      destructiveAction: {
+        viewModel.onDeleteDocument()
+      },
+      baseAction: {
+        viewModel.onShowDeleteModal()
       }
-    }
+    )
+    .alertView(
+      isPresented: $viewModel.showAlert,
+      title: viewModel.alertTitle(),
+      message: viewModel.alertMessage(),
+      buttonText: LocalizableString.shared.get(with: .close),
+      onDismiss: {
+        viewModel.showAlert = false
+      }
+    )
     .task {
       await self.viewModel.fetchDocumentDetails()
+      await viewModel.bookmarked()
     }
   }
 }
@@ -71,69 +79,89 @@ struct DocumentDetailsView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: DocumentDetailsViewState,
+  isVisible: Bool,
+  showAlert: @escaping () -> Void,
   onContinue: @escaping () -> Void,
-  pop: @escaping () -> Void
-) -> some View {
-  DocumentDetailsHeaderView(
-    documentName: viewState.document.documentName,
-    holdersName: viewState.document.holdersName,
-    userIcon: viewState.document.holdersImage,
-    hasDocumentExpired: viewState.document.hasExpired,
-    isLoading: viewState.isLoading,
-    actions: viewState.toolBarActions,
-    onBack: viewState.isCancellable ? { pop() } : nil
-  )
-
-  details(viewState: viewState) {
-    onContinue()
-  }
-}
-
-@MainActor
-@ViewBuilder
-private func details(
-  viewState: DocumentDetailsViewState,
-  onContinue: @escaping () -> Void
+  onShowDeleteModal: @escaping () -> Void
 ) -> some View {
   ScrollView {
-    VStack(spacing: .zero) {
+    VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+      Text(viewState.document.documentName)
+        .font(.largeTitle)
+        .bold()
+        .frame(maxWidth: .infinity, alignment: .leading)
 
-      VSpacer.medium()
+      VStack(spacing: .zero) {
+        WrapCardView {
+          VStack(spacing: .zero) {
+            ForEach(viewState.document.documentFields) { documentFieldContent in
+              switch documentFieldContent.value {
+              case .string(let value):
+                WrapListItemView(
+                  listItem: .init(
+                    mainText: .custom(value),
+                    overlineText: .custom(documentFieldContent.title),
+                    isBlur: isVisible
+                  ),
+                  minHeight: false
+                )
+              case .image(let image):
+                WrapListItemView(
+                  listItem: .init(
+                    mainText: .custom(documentFieldContent.title),
+                    leadingIcon: (nil, image),
+                    isBlur: isVisible
+                  ),
+                  minHeight: false
+                )
+              }
+              if documentFieldContent != viewState.document.documentFields.last {
+                Divider()
+                  .padding(.horizontal, SPACING_MEDIUM)
+                  .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
+              }
+            }
+          }
+        }
+      }
+      .shimmer(isLoading: viewState.isLoading)
 
-      ForEach(viewState.document.documentFields) { documentFieldContent in
+      if let issuer = viewState.document.issuer {
+        VStack(spacing: SPACING_SMALL) {
+          Text(.genericIssuer)
+            .typography(Theme.shared.font.bodySmall)
+            .fontWeight(.semibold)
+            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-        switch documentFieldContent.value {
-        case .string(let value):
-          KeyValueView(
-            title: .custom(documentFieldContent.title),
-            subTitle: .custom(value),
-            isLoading: viewState.isLoading
-          )
-        case .image(let image):
-          KeyValueView(
-            title: .custom(documentFieldContent.title),
-            image: image,
-            isLoading: viewState.isLoading
+          CardViewWithLogo(
+            icon: .remoteImage(issuer.logoUrl, Theme.shared.image.logo),
+            title: .custom(issuer.name)
           )
         }
+        .shimmer(isLoading: viewState.isLoading)
+      }
 
-        VSpacer.medium()
+      if viewState.hasDeleteAction {
+        WrapButtonView(
+          style: .error,
+          title: .deleteDocument,
+          isLoading: viewState.isLoading,
+          onAction: onShowDeleteModal()
+        )
+      }
+
+      if viewState.hasContinueButton {
+        WrapButtonView(
+          style: .primary,
+          title: .issuanceDetailsContinueButton,
+          isLoading: viewState.isLoading,
+          onAction: onContinue()
+        )
       }
     }
-    .padding(.horizontal, Theme.shared.dimension.padding)
-  }
-  .if(viewState.hasContinueButton) {
-    $0.bottomFade()
-  }
-
-  if viewState.hasContinueButton {
-    WrapButtonView(
-      style: .primary,
-      title: .issuanceDetailsContinueButton,
-      isLoading: viewState.isLoading,
-      onAction: onContinue()
-    )
-    .padding([.horizontal, .bottom])
+    .padding(Theme.shared.dimension.padding)
+    .padding(.bottom)
   }
 }
 
@@ -142,13 +170,12 @@ private func details(
     document: DocumentDetailsUIModel.mock(),
     isLoading: false,
     error: nil,
-    config: IssuanceDetailUiConfig(flow: .extraDocument("documentId")),
-    toolBarActions: [
-      .init(
-        image: Theme.shared.image.trash,
-        callback: {}()
-      )
-    ]
+    config: IssuanceDetailUiConfig(
+      flow: .extraDocument("documentId")
+    ),
+    hasDeleteAction: true,
+    documentFieldsCount: DocumentDetailsUIModel.mock().documentFields.count,
+    isBookmarked: true
   )
 
   ContentScreenView(
@@ -157,8 +184,10 @@ private func details(
   ) {
     content(
       viewState: viewState,
+      isVisible: true,
+      showAlert: {},
       onContinue: {},
-      pop: {}
+      onShowDeleteModal: {}
     )
   }
 }

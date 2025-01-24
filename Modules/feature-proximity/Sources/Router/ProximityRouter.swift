@@ -53,7 +53,8 @@ public final class ProximityRouter {
     case .proximityLoader(
       let relyingParty,
       presentationCoordinator: let presentationCoordinator,
-      originator: let originator
+      originator: let originator,
+      let uiModels
     ):
       ProximityLoadingView(
         with: .init(
@@ -63,7 +64,22 @@ public final class ProximityRouter {
             argument: presentationCoordinator as ProximitySessionCoordinator
           ),
           relyingParty: relyingParty,
-          originator: originator
+          originator: originator,
+          requestItems: uiModels
+        )
+      ).eraseToAnyView()
+    case .proximitySuccess(
+      let config,
+      let uiModels
+    ):
+      ProximitySuccessView(
+        with: .init(
+          router: host,
+          config: config,
+          deepLinkController: DIGraph.resolver.force(
+            DeepLinkController.self
+          ),
+          requestItems: uiModels
         )
       ).eraseToAnyView()
     }

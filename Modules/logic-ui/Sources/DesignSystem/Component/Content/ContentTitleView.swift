@@ -25,30 +25,39 @@ public struct ContentTitleView: View {
     case icon(decorated: String, icon: Image, text: String?)
   }
 
+  private let titleWeight: Font.Weight
+  private let titleFont: TypographyStyle
   private let titleDecoration: TitleDecoration
   private let decorationColor: Color
   private let caption: LocalizableString.Key?
   private let titleColor: Color
   private let captionColor: Color
+  private let textAlignment: Alignment
   private let topSpacing: TopSpacing
   private let isLoading: Bool
   private let onTap: TapListener
 
   public init(
     title: LocalizableString.Key,
+    titleFont: TypographyStyle = Theme.shared.font.titleLarge,
+    titleWeight: Font.Weight = .regular,
     caption: LocalizableString.Key? = nil,
     decorationColor: Color = Theme.shared.color.primary,
-    titleColor: Color = Theme.shared.color.textPrimaryDark,
-    captionColor: Color = Theme.shared.color.textSecondaryDark,
+    titleColor: Color = Theme.shared.color.onSurface,
+    captionColor: Color = Theme.shared.color.onSurfaceVariant,
+    textAlignment: Alignment = .leading,
     topSpacing: TopSpacing = .withToolbar,
     isLoading: Bool = false,
     onTap: TapListener = nil
   ) {
+    self.titleFont = titleFont
+    self.titleWeight = titleWeight
     self.titleDecoration = .plain(title)
     self.caption = caption
     self.decorationColor = decorationColor
     self.titleColor = titleColor
     self.captionColor = captionColor
+    self.textAlignment = textAlignment
     self.topSpacing = topSpacing
     self.isLoading = isLoading
     self.onTap = onTap
@@ -56,19 +65,25 @@ public struct ContentTitleView: View {
 
   public init(
     titleDecoration: TitleDecoration,
+    titleFont: TypographyStyle = Theme.shared.font.titleLarge,
+    titleWeight: Font.Weight = .regular,
     caption: LocalizableString.Key? = nil,
     decorationColor: Color = Theme.shared.color.primary,
-    titleColor: Color = Theme.shared.color.textPrimaryDark,
-    captionColor: Color = Theme.shared.color.textSecondaryDark,
+    titleColor: Color = Theme.shared.color.onSurface,
+    captionColor: Color = Theme.shared.color.onSurfaceVariant,
+    textAlignment: Alignment = .leading,
     topSpacing: TopSpacing = .withToolbar,
     isLoading: Bool = false,
     onTap: TapListener = nil
   ) {
+    self.titleFont = titleFont
+    self.titleWeight = titleWeight
     self.titleDecoration = titleDecoration
     self.decorationColor = decorationColor
     self.caption = caption
     self.titleColor = titleColor
     self.captionColor = captionColor
+    self.textAlignment = textAlignment
     self.topSpacing = topSpacing
     self.isLoading = isLoading
     self.onTap = onTap
@@ -79,8 +94,10 @@ public struct ContentTitleView: View {
       switch titleDecoration {
       case .plain(let key):
         Text(key)
-          .typography(Theme.shared.font.headlineSmall)
+          .typography(titleFont)
+          .fontWeight(titleWeight)
           .foregroundColor(self.titleColor)
+          .frame(maxWidth: .infinity, alignment: textAlignment)
       case .icon(let decorated, let icon, let text):
         Text(decorated)
           .typography(style: Theme.shared.font.headlineSmall)
@@ -95,7 +112,6 @@ public struct ContentTitleView: View {
           .foregroundColor(self.titleColor)
 
       }
-      Spacer()
     }
   }
 
@@ -115,9 +131,12 @@ public struct ContentTitleView: View {
       if let caption = self.caption {
         HStack {
           Text(caption)
-            .typography(Theme.shared.font.bodyMedium)
+            .typography(Theme.shared.font.bodyLarge)
             .foregroundColor(self.captionColor)
-          Spacer()
+            .if(textAlignment == .center) {
+              $0.multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: .infinity, alignment: textAlignment)
         }
       }
     }

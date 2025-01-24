@@ -18,13 +18,13 @@ import logic_resources
 import logic_business
 import logic_core
 
-public struct DocumentDetailsUIModel: Sendable {
+public struct DocumentDetailsUIModel: Sendable, Equatable, Identifiable {
 
   public let id: String
   public let type: DocumentTypeIdentifier
   public let documentName: String
+  public let issuer: IssuerField?
   public let holdersName: String
-  public let holdersImage: Image
   public let createdAt: Date
   public let hasExpired: Bool
   public let documentFields: [DocumentField]
@@ -32,9 +32,28 @@ public struct DocumentDetailsUIModel: Sendable {
 
 public extension DocumentDetailsUIModel {
 
-  struct DocumentField: Identifiable, Sendable {
+  struct IssuerField: Identifiable, Sendable, Equatable {
+    public let id: String
+    public let name: String
+    public let logoUrl: URL?
+    public let isVerified: Bool
 
-    public indirect enum Value: Sendable {
+    public init(
+      id: String = UUID().uuidString,
+      issuersName: String,
+      logoUrl: URL?,
+      isVerified: Bool
+    ) {
+      self.id = id
+      self.name = issuersName
+      self.logoUrl = logoUrl
+      self.isVerified = isVerified
+    }
+  }
+
+  struct DocumentField: Identifiable, Sendable, Equatable {
+
+    public indirect enum Value: Sendable, Equatable {
       case string(String)
       case image(Image)
     }
@@ -49,8 +68,13 @@ public extension DocumentDetailsUIModel {
       id: UUID().uuidString,
       type: DocumentTypeIdentifier.mDocPid,
       documentName: "Digital ID",
+      issuer: .init(
+        id: UUID().uuidString,
+        issuersName: "Digital Credential Service",
+        logoUrl: URL(string: "https://www.example.com")!,
+        isVerified: true
+      ),
       holdersName: "Jane Doe",
-      holdersImage: Theme.shared.image.user,
       createdAt: Date(),
       hasExpired: false,
       documentFields:
@@ -88,11 +112,22 @@ public extension DocumentDetailsUIModel {
 extension DocClaimsDecodable {
   func transformToDocumentDetailsUi() -> DocumentDetailsUIModel {
 
+    var issuer: DocumentDetailsUIModel.IssuerField? {
+      guard let name = self.issuerDisplay?.first?.name else {
+        return nil
+      }
+      let logo = self.issuerDisplay?.first?.logo?.uri
+      return .init(
+        issuersName: name,
+        logoUrl: logo,
+        isVerified: true
+      )
+    }
+
     let documentFields: [DocumentDetailsUIModel.DocumentField] =
     flattenValues(
       input: docClaims
         .compactMap({$0})
-        .sorted(by: {$0.order < $1.order})
         .parseDates(
           parser: {
             Locale.current.localizedDateTime(
@@ -103,6 +138,7 @@ extension DocClaimsDecodable {
         )
         .parseUserPseudonym()
     )
+    .sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
 
     var bearerName: String {
       guard let fullName = getBearersName() else {
@@ -117,8 +153,8 @@ extension DocClaimsDecodable {
       id: id,
       type: identifier,
       documentName: displayName.orEmpty,
+      issuer: issuer,
       holdersName: bearerName,
-      holdersImage: getPortrait() ?? Theme.shared.image.user,
       createdAt: createdAt,
       hasExpired: hasExpired(
         parser: {
@@ -138,17 +174,6 @@ extension DocClaimsDecodable {
       let title = docClaim.displayName.ifNilOrEmpty { docClaim.name }
 
       if let uiImage = docClaim.dataValue.image {
-
-        guard docClaim.name != DocumentJsonKeys.PORTRAIT else {
-          partialResult.append(
-            .init(
-              id: uuid,
-              title: title,
-              value: .string(LocalizableString.shared.get(with: .shownAbove))
-            )
-          )
-          return
-        }
 
         partialResult.append(
           .init(

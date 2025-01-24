@@ -15,6 +15,7 @@
  */
 public struct DocumentJsonKeys {
   public static let PORTRAIT = "portrait"
+  public static let SIGNATURE = "signature_usual_mark"
   public static let FIRST_NAME = "given_name"
   public static let LAST_NAME = "family_name"
   public static let USER_PSEUDONYM = "user_pseudonym"

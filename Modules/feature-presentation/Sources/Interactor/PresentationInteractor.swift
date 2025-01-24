@@ -19,7 +19,7 @@ import logic_business
 import feature_common
 
 public struct OnlineAuthenticationRequestSuccessModel: Sendable {
-  var requestDataCells: [RequestDataUIModel]
+  var requestDataCells: [RequestDataUI]
   var relyingParty: String
   var dataRequestInfo: String
   var isTrusted: Bool
@@ -44,7 +44,7 @@ public protocol PresentationInteractor: Sendable {
   func getSessionStatePublisher() -> RemotePublisherPartialState
   func getCoordinator() -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
-  func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error>
+  func onResponsePrepare(requestItems: [RequestDataUI]) async -> Result<RequestItemConvertible, Error>
   func onSendResponse() async -> RemoteSentResponsePartialState
   func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator)
   func storeDynamicIssuancePendingUrl(with url: URL)
@@ -110,16 +110,11 @@ final class PresentationInteractorImpl: PresentationInteractor {
     }
   }
 
-  public func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> Result<RequestItemConvertible, Error> {
+  public func onResponsePrepare(requestItems: [RequestDataUI]) async -> Result<RequestItemConvertible, Error> {
     let requestConvertible = requestItems
       .reduce(into: [RequestDataRow]()) { partialResult, cell in
-        if let item = cell.isDataRow, item.isSelected {
-          partialResult.append(item)
-        }
-
-        if let items = cell.isDataVerification?.items.filter({$0.isSelected}) {
-          partialResult.append(contentsOf: items)
-        }
+        let items = cell.requestDataRow.filter({$0.isSelected})
+        partialResult.append(contentsOf: items)
       }
       .reduce(into: RequestItemsWrapper()) {  partialResult, row in
         let requestItem: RequestItem = .init(elementIdentifier: row.elementKey)

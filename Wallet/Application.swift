@@ -24,7 +24,7 @@ struct Application: App {
   @Environment(\.scenePhase) var scenePhase
 
   @State var blurType: BlurType = .none
-  @State var toolbarConfig: UIConfig.ToolBar = .init(Theme.shared.color.backgroundPaper)
+  @State var toolbarConfig: UIConfig.ToolBar = .init(Theme.shared.color.surface)
 
   private let routerHost: RouterHost
   private let configUiLogic: ConfigUiLogic

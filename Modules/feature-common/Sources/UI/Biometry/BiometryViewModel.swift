@@ -29,6 +29,7 @@ struct BiometryState: ViewState {
   let biometryImage: Image?
   let isCancellable: Bool
   let quickPinSize: Int
+  let contentHeaderConfig: ContentHeaderConfig
 }
 
 final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometryState> {
@@ -63,7 +64,13 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
         autoBiometryInitiated: false,
         biometryImage: interactor.biometricsImage,
         isCancellable: config.navigationBackType != nil,
-        quickPinSize: 6
+        quickPinSize: 6,
+        contentHeaderConfig: .init(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          )
+        )
       )
     )
 
@@ -166,5 +173,23 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
     case .pop:
       router.pop()
     }
+  }
+
+  func toolbarContent() -> ToolBarContent? {
+    var leadingActions: [Action] = []
+    if viewState.isCancellable {
+      leadingActions.append(
+        Action(
+          image: Theme.shared.image.chevronLeft
+        ) {
+          self.onPop()
+      })
+
+      return .init(
+        leadingActions: leadingActions
+      )
+    }
+
+    return nil
   }
 }

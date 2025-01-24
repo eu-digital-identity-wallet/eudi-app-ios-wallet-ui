@@ -120,7 +120,7 @@ public struct PinTextFieldView: View {
         .foregroundColor(
           hasError
           ? Theme.shared.color.error
-          : Theme.shared.color.textPrimaryDark
+          : Theme.shared.color.onSurface
         )
     } else {
       Text(input)
@@ -136,7 +136,7 @@ public struct PinTextFieldView: View {
     HStack {
       Divider()
         .frame(width: 1, height: height)
-        .background(Theme.shared.color.dividerDark)
+        .background(Theme.shared.color.onSurface)
     }
     .opacity(toggleLine ? 1 : 0)
     .onReceive(timer) { _ in
@@ -231,7 +231,7 @@ extension PinTextFieldView {
     var color: Color {
       return switch self {
       case .inactive:
-        Theme.shared.color.dividerDark
+        Theme.shared.color.outlineVariant
       case .active:
         Theme.shared.color.primary
       }

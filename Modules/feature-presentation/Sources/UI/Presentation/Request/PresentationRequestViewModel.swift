@@ -41,10 +41,29 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     case .success(let authenticationRequest):
       self.onReceivedItems(
         with: authenticationRequest.requestDataCells,
-        title: .requestDataTitle([authenticationRequest.relyingParty]),
+        title: .requestDataTitle(
+          [authenticationRequest.relyingParty]
+        ),
         relyingParty: authenticationRequest.relyingParty,
         isTrusted: authenticationRequest.isTrusted
       )
+      setState {
+        $0.copy(
+          contentHeaderConfig: .init(
+            appIconAndTextData: AppIconAndTextData(
+              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+              appText: ThemeManager.shared.image.euditext
+            ),
+            description: LocalizableString.shared.get(with: .dataSharingTitle),
+            mainText: LocalizableString.shared.get(with: getTitle()).uppercased(),
+            relyingPartyData: RelyingPartyData(
+              isVerified: viewState.isTrusted,
+              name: getRelyingParty(),
+              description: LocalizableString.shared.get(with: getCaption())
+            )
+          )
+        )
+      }
     case .failure:
       self.onEmptyDocuments()
     }
@@ -64,7 +83,9 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
         if let route = self.getSuccessRoute() {
           self.router.push(with: route)
         } else {
-          self.router.popTo(with: self.getPopRoute() ?? .featureDashboardModule(.dashboard))
+          self.router.popTo(
+            with: self.getPopRoute() ?? .featureDashboardModule(.dashboard)
+          )
         }
       case .failure(let error):
         self.onError(with: error)
@@ -78,6 +99,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
         .featureCommonModule(
           .biometry(
             config: UIConfig.Biometry(
+              navigationTitle: .biometryConfirmRequest,
               title: getTitle(),
               caption: .requestDataShareBiometryCaption,
               quickPinOnlyCaption: .requestDataShareQuickPinCaption,
@@ -86,7 +108,8 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
                   .presentationLoader(
                     getRelyingParty(),
                     presentationCoordinator: remoteSessionCoordinator,
-                    originator: getOriginator()
+                    originator: getOriginator(),
+                    viewState.items.filterSelectedRows()
                   )
                 )
               ),
@@ -105,11 +128,11 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   override func getTitle() -> LocalizableString.Key {
-    viewState.title
+    .dataSharingRequest
   }
 
   override func getCaption() -> LocalizableString.Key {
-    .requestDataCaption
+    .requestsTheFollowing
   }
 
   override func getDataRequestInfo() -> LocalizableString.Key {

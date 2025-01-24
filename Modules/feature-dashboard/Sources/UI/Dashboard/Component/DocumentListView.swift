@@ -18,72 +18,85 @@ import logic_resources
 import logic_ui
 
 struct DocumentListView: View {
+  @State private var searchText = ""
 
-  let items: [DocumentUIModel]
+  let filteredItems: [DocumentUIModel]
   let action: (DocumentUIModel) -> Void
   let isLoading: Bool
+  let filteredDocsCallback: (String) -> Void
 
   init(
-    items: [DocumentUIModel],
+    filteredItems: [DocumentUIModel],
     isLoading: Bool,
-    action: @escaping (DocumentUIModel) -> Void) {
-      self.items = items
-      self.action = action
-      self.isLoading = isLoading
-    }
+    action: @escaping (DocumentUIModel) -> Void,
+    filteredDocsCallback: @escaping (String) -> Void
+  ) {
+    self.filteredItems = filteredItems
+    self.action = action
+    self.isLoading = isLoading
+    self.filteredDocsCallback = filteredDocsCallback
+  }
 
   var body: some View {
-    ScrollView {
-      LazyVGrid(
-        columns: [GridItem(alignment: .top), GridItem(alignment: .top)],
-        spacing: SPACING_SMALL
-      ) {
-        ForEach(items) { item in
-          switch item.value.state {
-          case .issued:
-            DocumentCellView(
-              item: item,
-              isLoading: isLoading,
-              action: { item in
-                action(item)
+    VStack {
+      if filteredItems.isEmpty && !searchText.isEmpty {
+        contentUnavailableView()
+      } else {
+        if !filteredItems.isEmpty {
+          List {
+            ForEach(filteredItems) { item in
+              WrapCardView {
+                WrapListItemView(
+                  listItem: item.listItem
+                ) {
+                  action(item)
+                }
               }
-            )
-            .disabled(isLoading)
-          case .pending:
-            DocumentDeferredCellView(
-              item: item,
-              isLoading: isLoading,
-              color: Theme.shared.color.warning,
-              icon: Theme.shared.image.clockIndicator,
-              status: .pending,
-              action: { item in
-                action(item)
-              }
-            )
-            .disabled(isLoading)
-          case .failed:
-            DocumentDeferredCellView(
-              item: item,
-              isLoading: isLoading,
-              color: Theme.shared.color.error,
-              icon: Theme.shared.image.errorIndicator,
-              status: .issuanceFailed,
-              action: { item in
-                action(item)
-              }
-            )
-            .disabled(isLoading)
+              .listRowSeparator(.hidden)
+            }
           }
+          .shimmer(isLoading: isLoading)
+          .listStyle(.plain)
+          .clipped()
+        } else {
+          contentUnavailableView()
         }
+
       }
-      .padding(SPACING_LARGE)
     }
+    .searchable(
+      searchText: $searchText,
+      placeholder: LocalizableString.shared.get(with: .search),
+      backgroundColor: Theme.shared.color.background
+    ) { searchText in
+      filteredDocsCallback(searchText)
+    }
+    .background(Theme.shared.color.background)
+  }
+
+  @ViewBuilder
+  private func contentUnavailableView() -> some View {
+    VStack(spacing: SPACING_SMALL) {
+      Text(.noResults)
+        .typography(Theme.shared.font.titleLarge)
+        .fontWeight(.bold)
+
+      Text(.noResultsDescription)
+        .typography(Theme.shared.font.bodyLarge)
+        .foregroundStyle(Theme.shared.color.onSurface)
+        .multilineTextAlignment(.center)
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    .padding(.top, SPACING_LARGE_MEDIUM)
+    .padding(.horizontal, SPACING_MEDIUM)
   }
 }
 
 #Preview {
   DocumentListView(
-    items: DocumentUIModel.mocks(),
-    isLoading: false
-  ) { _ in }
+    filteredItems: DocumentUIModel.mocks(),
+    isLoading: false,
+    action: { _ in },
+    filteredDocsCallback: { _ in }
+  )
 }

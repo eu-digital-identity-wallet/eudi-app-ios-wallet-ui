@@ -155,32 +155,37 @@ final class TestDashboardInteractor: EudiTest {
         id: Constants.randomIdentifier,
         value: .init(
           id: Constants.euPidModelId,
+          heading: "",
           title: Constants.euPidName,
           createdAt: Constants.documentCreatedAt,
           expiresAt: Constants.claimExpiredAt.formatted(),
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: nil,
+            placeholder: nil
+          )
         )
       ),
       .init(
         id: Constants.randomIdentifier,
         value: .init(
           id: Constants.isoMdlModelId,
+          heading: "",
           title: Constants.isoMdlName,
           createdAt: Constants.documentCreatedAt,
           expiresAt: Constants.claimExpiredAt.formatted(),
           hasExpired: false,
-          state: .issued
+          state: .issued,
+          image: .init(
+            url: nil,
+            placeholder: nil
+          )
         )
       )
     ]
-    let expectedBearer: BearerUIModel = .init(
-      id: Constants.randomIdentifier,
-      value: .init(
-        name: Constants.claimFirstName,
-        image: Theme.shared.image.user
-      )
-    )
+    let expectedUsername = Constants.claimFirstName
+
     stubFetchDocuments(
       with: [
         Constants.euPidModel,
@@ -199,9 +204,9 @@ final class TestDashboardInteractor: EudiTest {
     let state = await interactor.fetchDashboard(failedDocuments: [])
     // Then
     switch state {
-    case .success(let bearer, let documents, let hasIssuedDocuments):
+    case .success(let username, let documents, let hasIssuedDocuments):
       XCTAssertEqual(expectedDocuments, documents)
-      XCTAssertEqual(expectedBearer, bearer)
+      XCTAssertEqual(expectedUsername, username)
       XCTAssertTrue(hasIssuedDocuments)
     default:
       XCTFail("Wrong state \(state)")

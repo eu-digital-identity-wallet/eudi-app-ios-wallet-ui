@@ -29,7 +29,7 @@ public enum ProximityResponsePreparationPartialState: Sendable {
 }
 
 public enum ProximityRequestPartialState: Sendable {
-  case success([RequestDataUIModel], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
+  case success([RequestDataUI], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
   case failure(Error)
 }
 
@@ -56,7 +56,7 @@ public protocol ProximityInteractor: Sendable {
   func onDeviceEngagement() async
   func onQRGeneration() async -> ProximityQrCodePartialState
   func onRequestReceived() async -> ProximityRequestPartialState
-  func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> ProximityResponsePreparationPartialState
+  func onResponsePrepare(requestItems: [RequestDataUI]) async -> ProximityResponsePreparationPartialState
   func onSendResponse() async -> ProximityResponsePartialState
   func stopPresentation()
 
@@ -124,16 +124,11 @@ final class ProximityInteractorImpl: ProximityInteractor {
     }
   }
 
-  public func onResponsePrepare(requestItems: [RequestDataUIModel]) async -> ProximityResponsePreparationPartialState {
+  public func onResponsePrepare(requestItems: [RequestDataUI]) async -> ProximityResponsePreparationPartialState {
     let requestConvertible = requestItems
       .reduce(into: [RequestDataRow]()) { partialResult, cell in
-        if let item = cell.isDataRow, item.isSelected {
-          partialResult.append(item)
-        }
-
-        if let items = cell.isDataVerification?.items.filter({$0.isSelected}) {
-          partialResult.append(contentsOf: items)
-        }
+        let items = cell.requestDataRow.filter({$0.isSelected})
+        partialResult.append(contentsOf: items)
       }
       .reduce(into: RequestItemsWrapper()) { partialResult, row in
         let requestItem: RequestItem = .init(elementIdentifier: row.elementKey)

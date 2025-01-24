@@ -21,23 +21,22 @@
 public struct RequestViewState: ViewState {
   public let isLoading: Bool
   public let error: ContentErrorView.Config?
-  public let isContentVisible: Bool
-  public let itemsAreAllSelected: Bool
-  public let items: [RequestDataUIModel]
-  public let title: LocalizableString.Key
+  public let showMissingCrredentials: Bool
+  public let items: [RequestDataUI]
   public let trustedRelyingPartyInfo: LocalizableString.Key
   public let relyingParty: String
   public let isTrusted: Bool
   public let allowShare: Bool
   public let originator: AppRoute
   public let initialized: Bool
+  public let contentHeaderConfig: ContentHeaderConfig
 }
 
 open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestViewState> {
 
-  @Published var isCancelModalShowing: Bool = false
   @Published var isRequestInfoModalShowing: Bool = false
   @Published var isVerifiedEntityModalShowing: Bool = false
+  @Published var itmesChanged: Bool = false
 
   public init(router: Router, originator: AppRoute) {
     super.init(
@@ -45,16 +44,21 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       initialState: .init(
         isLoading: true,
         error: nil,
-        isContentVisible: false,
-        itemsAreAllSelected: true,
-        items: RequestDataUiModel.mock(),
-        title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
+        showMissingCrredentials: true,
+        items: RequestDataUiModel.mockData(),
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
         relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
         isTrusted: false,
         allowShare: false,
         originator: originator,
-        initialized: false
+        initialized: false,
+        contentHeaderConfig: .init(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          ),
+          description: LocalizableString.shared.get(with: .dataSharingTitle)
+        )
       )
     )
   }
@@ -127,64 +131,77 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
 
   public func onEmptyDocuments() {
     setState {
-      $0
-        .copy(isLoading: false, items: [], initialized: true)
-        .copy(error: nil)
+      $0.copy(
+        isLoading: false,
+        items: [],
+        initialized: true
+      ).copy(error: nil)
     }
   }
 
   public func onReceivedItems(
-    with items: [RequestDataUIModel],
+    with items: [RequestDataUI],
     title: LocalizableString.Key,
     relyingParty: String,
     isTrusted: Bool
   ) {
     setState {
-      $0
-        .copy(
-          isLoading: false,
-          items: items,
-          title: title,
-          relyingParty: relyingParty,
-          isTrusted: isTrusted,
-          allowShare: canShare(with: items),
-          initialized: true
-        )
-        .copy(error: nil)
+      $0.copy(
+        isLoading: false,
+        items: items,
+        relyingParty: relyingParty,
+        isTrusted: isTrusted,
+        allowShare: canShare(with: items),
+        initialized: true
+      )
+      .copy(error: nil)
     }
   }
 
   public func resetState() {
     setState { previous in
-        .init(
-          isLoading: true,
-          error: nil,
-          isContentVisible: false,
-          itemsAreAllSelected: true,
-          items: RequestDataUiModel.mock(),
-          title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
-          trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
-          relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
-          isTrusted: false,
-          allowShare: false,
-          originator: previous.originator,
-          initialized: false
-        )
+      .init(
+        isLoading: true,
+        error: nil,
+        showMissingCrredentials: true,
+        items: RequestDataUiModel.mockData(),
+        trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
+        relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
+        isTrusted: false,
+        allowShare: false,
+        originator: previous.originator,
+        initialized: false,
+        contentHeaderConfig: initialHeaderConfig()
+      )
     }
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [
+        Action(
+          title: LocalizableString.shared.get(with: .shareButton).capitalizedFirst(),
+          disabled: !viewState.allowShare
+        ) {
+          self.onShare()
+        }
+      ],
+      leadingActions: [
+        Action(
+          image: Theme.shared.image.chevronLeft) {
+            self.onPop()
+          }
+      ]
+    )
   }
 
   func onPop() {
     isRequestInfoModalShowing = false
-    isCancelModalShowing = false
     if let route = getPopRoute() {
       router.popTo(with: route)
     } else {
       router.pop()
     }
-  }
-
-  func onShowCancelModal() {
-    isCancelModalShowing = !isCancelModalShowing
   }
 
   func onShowRequestInfoModal() {
@@ -195,82 +212,44 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     isVerifiedEntityModalShowing = !isVerifiedEntityModalShowing
   }
 
-  func onContentVisibilityChange() {
-    setState {
-      $0.copy(
-        isContentVisible: !viewState.isContentVisible,
-        items: viewState.items.map {
-          if var row = $0.isDataRow {
-            row.setVisible(!viewState.isContentVisible)
-            return .requestDataRow(row)
-          }
-          if var row = $0.isDataVerification {
-            let items = row.items.map({
-              var item = $0
-              item.isVisible = !viewState.isContentVisible
-              return item
-            }
-            )
-            row.setItems(with: items)
-            return .requestDataVerification(row)
-          }
-          return $0
-        }
-      )
+  func onSelectionChanged(id: String) async {
+    if viewState.showMissingCrredentials {
+      itmesChanged = true
+
+      setState {
+        $0.copy(
+          showMissingCrredentials: false
+        )
+      }
+    } else {
+      let items = viewState.items.map { item in
+        var updatedItem = item
+        updatedItem.toggleSelection(id: id)
+        return updatedItem
+      }
+
+      setState {
+        $0.copy(
+          showMissingCrredentials: false,
+          items: items,
+          allowShare: canShare(with: items)
+        )
+      }
     }
   }
 
-  func onSelectionChanged(id: String) {
-    let items = viewState.items.map {
-      if var row = $0.isDataRow, row.id == id {
-        row.setSelected(!row.isSelected)
-        return RequestDataUIModel.requestDataRow(row)
-      }
-      return $0
-    }
-
-    let allSelected = items.map {
-      if $0.isDataRow?.isEnabled == false {
-        return true
-      }
-      return $0.isDataRow?.isSelected ?? true
-    }
-      .filter { !$0 }
-      .isEmpty
-
-    setState {
-      $0.copy(
-        itemsAreAllSelected: allSelected,
-        items: items,
-        allowShare: canShare(with: items)
-      )
-    }
+  private func initialHeaderConfig() -> ContentHeaderConfig {
+    .init(
+      appIconAndTextData: AppIconAndTextData(
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+        appText: ThemeManager.shared.image.euditext
+      ),
+      description: LocalizableString.shared.get(with: .dataSharingTitle)
+    )
   }
 
-  private func canShare(with items: [RequestDataUIModel]) -> Bool {
-
-    let hasVerificationItems = !items.compactMap {
-      $0.isDataVerification?.items.first(where: { $0.isSelected })
-    }.isEmpty
-
-    let onlyDataRowItems: [RequestDataUIModel] = items
-      .compactMap {
-        if $0.isDataSection == nil && $0.isDataRow?.isEnabled == true {
-          return $0
-        }
-        return nil
-      }
-
-    let canShare = !onlyDataRowItems.map {
-      if let row = $0.isDataRow {
-        return row.isSelected
-      }
-      return false
-    }
-      .filter { $0 }
-      .isEmpty
-
-    return canShare || hasVerificationItems
+  private func canShare(with items: [RequestDataUI]) -> Bool {
+    items.canShare()
   }
 
   private func onErrorAction() {

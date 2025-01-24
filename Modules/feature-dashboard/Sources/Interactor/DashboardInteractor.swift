@@ -20,7 +20,7 @@ import logic_resources
 import Combine
 
 public enum DashboardPartialState: Sendable {
-  case success(BearerUIModel, [DocumentUIModel], Bool)
+  case success(String, [DocumentUIModel], Bool)
   case failure(Error)
 }
 
@@ -45,6 +45,10 @@ public protocol DashboardInteractor: Sendable {
   func deleteDeferredDocument(with id: String) async -> DashboardDeleteDeferredPartialState
   func requestDeferredIssuance() async -> DashboardDeferredPartialState
   func retrieveLogFileUrl() -> URL?
+  func applyFiltersWithSorting(
+    filterModel: FilterModel?,
+    documents: [DocumentUIModel]
+  ) -> [DocumentUIModel]
 }
 
 final class DashboardInteractorImpl: DashboardInteractor {
@@ -80,13 +84,13 @@ final class DashboardInteractorImpl: DashboardInteractor {
   public func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState {
 
     let documents: [DocumentUIModel]? = fetchDocuments(failedDocuments: failedDocuments)
-    let bearer: BearerUIModel = fetchBearer()
+    let username = fetchUsername()
 
     guard let documents = documents else {
       return .failure(WalletCoreError.unableFetchDocuments)
     }
 
-    return .success(bearer, documents, hasIssuedDocuments())
+    return .success(username, documents, hasIssuedDocuments())
   }
 
   public func getBleAvailability() async -> Reachability.BleAvailibity {
@@ -140,10 +144,89 @@ final class DashboardInteractorImpl: DashboardInteractor {
     return walletController.retrieveLogFileUrl()
   }
 
-  private func fetchBearer() -> BearerUIModel {
-    return BearerUIModel.transformToBearerUi(
-      walletKitController: self.walletController
-    )
+  func applyFiltersWithSorting(
+    filterModel: FilterModel?,
+    documents: [DocumentUIModel]
+  ) -> [DocumentUIModel] {
+
+    guard let filterModel = filterModel else {
+      return documents
+    }
+
+    let selectedIssuers = filterModel.sections
+      .compactMap { filterSection -> [String]? in
+        if case let .issuer(options: issuers) = filterSection {
+          return issuers
+        }
+        return nil
+      }
+      .flatMap { $0 }
+
+    var filteredDocuments: [DocumentUIModel] = documents
+
+    if !selectedIssuers.isEmpty {
+      filteredDocuments = filteredDocuments.filter { selectedIssuers.contains($0.value.heading) }
+    }
+
+    guard let selectedExpiryPeriod = filterModel.selectedExpiryOption else {
+      return filteredDocuments
+    }
+
+    filteredDocuments = filteredDocuments.filter { document in
+      return isDocumentWithinExpiryPeriod(document, expiryPeriod: selectedExpiryPeriod)
+    }
+
+    if filterModel.selectedStateOption == LocalizableString.shared.get(with: .valid).capitalized {
+      filteredDocuments = filteredDocuments.filter { !$0.value.hasExpired && $0.value.state == .issued }
+    } else if filterModel.selectedStateOption == LocalizableString.shared.get(with: .expired).capitalized {
+      filteredDocuments = filteredDocuments.filter { $0.value.hasExpired }
+    }
+
+    switch filterModel.initialSorting {
+    case LocalizableString.shared.get(with: .dateIssued).capitalized:
+      filteredDocuments = filterModel.sortAscending
+      ? filteredDocuments.sorted { $0.value.createdAt < $1.value.createdAt }
+      : filteredDocuments.sorted { $0.value.createdAt > $1.value.createdAt }
+    case LocalizableString.shared.get(with: .expiryDate).capitalized:
+      filteredDocuments = filterModel.sortAscending
+      ? filteredDocuments.sorted { ($0.value.expiresAt ?? "") < ($1.value.expiresAt ?? "") }
+      : filteredDocuments.sorted { ($0.value.expiresAt ?? "") > ($1.value.expiresAt ?? "") }
+    default:
+      filteredDocuments = filterModel.sortAscending
+      ? filteredDocuments.sorted { $0.value.title < $1.value.title }
+      : filteredDocuments.sorted { $0.value.title > $1.value.title }
+    }
+
+    return filteredDocuments
+  }
+
+  private func isDocumentWithinExpiryPeriod(_ document: DocumentUIModel, expiryPeriod: String) -> Bool {
+    guard let expiresAtString = document.value.expiresAt else { return false }
+
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "dd/MM/yyyy"
+    guard let expiryDate = dateFormatter.date(from: expiresAtString) else { return false }
+
+    let currentDate = Date()
+    let calendar = Calendar.current
+
+    switch expiryPeriod {
+    case LocalizableString.shared.get(with: .nextSevenDays).capitalized:
+      return calendar.date(byAdding: .day, value: 7, to: currentDate)! >= expiryDate
+    case LocalizableString.shared.get(with: .nextThirtyDays).capitalized:
+      return calendar.date(byAdding: .day, value: 30, to: currentDate)! >= expiryDate
+    case LocalizableString.shared.get(with: .beyondThiryDays).capitalized:
+      return expiryDate > calendar.date(byAdding: .day, value: 30, to: currentDate)!
+    case LocalizableString.shared.get(with: .beforeToday).capitalized:
+      return expiryDate < currentDate
+    default:
+      return true
+    }
+  }
+
+  private func fetchUsername() -> String {
+    let name = walletController.fetchMainPidDocument()?.getBearersName()?.first
+    return name.orEmpty
   }
 
   private func fetchDocuments(failedDocuments: [String]) -> [DocumentUIModel]? {

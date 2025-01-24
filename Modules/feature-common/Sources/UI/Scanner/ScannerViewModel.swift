@@ -106,10 +106,6 @@ final class ScannerViewModel<Router: RouterHost>: ViewModel<Router, ScannerState
     }
   }
 
-  func onDismiss() {
-    router.pop()
-  }
-
   func onError() {
     setState {
       $0.copy(error: .cameraError)
@@ -144,15 +140,15 @@ final class ScannerViewModel<Router: RouterHost>: ViewModel<Router, ScannerState
             config: UIConfig.Generic(
               arguments: ["uri": scanResult],
               navigationSuccessType: successNavType,
-              navigationCancelType: .popTo(
-                .featureIssuanceModule(
-                  .issuanceAddDocument(config: config)
-                )
-              )
+              navigationCancelType: .pop
             )
           )
         )
       )
     }
+  }
+
+  func pop() {
+    router.pop()
   }
 }

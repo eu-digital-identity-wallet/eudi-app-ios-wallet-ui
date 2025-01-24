@@ -99,11 +99,11 @@ final class RouterHostImpl: RouterHost {
 
   public func getToolbarConfig() -> UIConfig.ToolBar {
     guard let screenKey = self.getCurrentScreen()?.info.key else {
-      return .init(Theme.shared.color.backgroundPaper)
+      return .init(Theme.shared.color.onSurface)
     }
 
     return uiConfigLogic.backgroundColorForScreenDictionary[screenKey]
-    ?? .init(Theme.shared.color.backgroundPaper)
+    ?? .init(Theme.shared.color.background)
   }
 
   public func userIsLoggedInWithDocuments() -> Bool {

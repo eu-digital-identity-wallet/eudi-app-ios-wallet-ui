@@ -24,11 +24,13 @@ import logic_core
 struct DocumentOfferViewState: ViewState {
   let isLoading: Bool
   let documentOfferUiModel: DocumentOfferUIModel
+  let issuerData: IssuerDataUIModel
   let error: ContentErrorView.Config?
   let config: UIConfig.Generic
   let offerUri: String
   let allowIssue: Bool
   let initialized: Bool
+  let contentHeaderConfig: ContentHeaderConfig
 
   var title: LocalizableString.Key {
     return .requestCredentialOfferTitle([documentOfferUiModel.issuerName])
@@ -66,11 +68,18 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
       initialState: .init(
         isLoading: true,
         documentOfferUiModel: DocumentOfferUIModel.mock(),
+        issuerData: IssuerDataUIModel.mock(),
         error: nil,
         config: config,
         offerUri: offerUri,
         allowIssue: false,
-        initialized: false
+        initialized: false,
+        contentHeaderConfig: .init(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+            appText: ThemeManager.shared.image.euditext
+          )
+        )
       )
     )
   }
@@ -91,27 +100,43 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
     switch state {
     case .success(let uiModel):
       setState {
-        $0
-          .copy(
-            isLoading: false,
-            documentOfferUiModel: uiModel,
-            allowIssue: !uiModel.uiOffers.isEmpty,
-            initialized: true
+        $0.copy(
+          isLoading: false,
+          documentOfferUiModel: uiModel,
+          issuerData: .init(
+            icon: Theme.shared.image.logo,
+            title: uiModel.issuerName,
+            isVerified: true
+          ),
+          allowIssue: !uiModel.uiOffers.isEmpty,
+          initialized: true,
+          contentHeaderConfig: .init(
+            appIconAndTextData: AppIconAndTextData(
+              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
+              appText: ThemeManager.shared.image.euditext
+            ),
+            description: LocalizableString.shared.get(with: .dataSharingTitle),
+            mainText: LocalizableString.shared.get(with: .issuanceRequest).uppercased(),
+            icon: .image(viewState.issuerData.icon),
+            relyingPartyData: RelyingPartyData(
+              isVerified: false,
+              name: uiModel.issuerName,
+              description: LocalizableString.shared.get(with: .issuerWantWalletAddition)
+            )
           )
-          .copy(error: nil)
+        ).copy(error: nil)
       }
     case .failure(let error):
       setState {
-        $0
-          .copy(
-            isLoading: false,
-            error: ContentErrorView.Config(
-              description: .custom(error.localizedDescription),
-              cancelAction: self.onPop()
-            ),
-            allowIssue: false,
-            initialized: true
-          )
+        $0.copy(
+          isLoading: false,
+          error: ContentErrorView.Config(
+            description: .custom(error.localizedDescription),
+            cancelAction: self.onPop()
+          ),
+          allowIssue: false,
+          initialized: true
+        )
       }
     }
   }
@@ -259,5 +284,28 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
         )
       }
     }
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [
+        Action(
+          title: LocalizableString.shared.get(
+            with: .issueButton
+          ).capitalizedFirst()
+        ) {
+          self.onIssueDocuments()
+        }
+      ],
+      leadingActions: [
+        Action(
+          title: LocalizableString.shared.get(
+            with: .cancelButton
+          ).capitalizedFirst()
+        ) {
+          self.onShowCancelModal()
+        }
+      ]
+    )
   }
 }

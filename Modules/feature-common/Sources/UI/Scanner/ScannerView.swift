@@ -22,27 +22,43 @@ import CodeScanner
 
 struct ScannerView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewmodel: ScannerViewModel<Router>
+  @ObservedObject private var viewModel: ScannerViewModel<Router>
 
   private var cameraSurfaceSize: CGFloat = .zero
 
-  init(with viewmodel: ScannerViewModel<Router>) {
-    self.viewmodel = viewmodel
+  init(with viewModel: ScannerViewModel<Router>) {
+    self.viewModel = viewModel
     self.cameraSurfaceSize = getScreenRect().width - (Theme.shared.dimension.padding * 2)
   }
 
   var body: some View {
 
-    ContentScreenView {
+    ContentScreenView(
+      padding: SPACING_NONE,
+      navigationTitle: LocalizableString.shared.get(
+        with: viewModel.viewState.title
+      ),
+      toolbarContent: toolbarContent()
+    ) {
       content(
-        viewState: viewmodel.viewState,
+        viewState: viewModel.viewState,
         cameraSurfaceSize: cameraSurfaceSize,
-        onDismiss: viewmodel.onDismiss,
-        onError: viewmodel.onError,
-        onErrorClick: viewmodel.onErrorClick) { scanResult in
-          viewmodel.onResult(scanResult: scanResult)
+        onError: viewModel.onError,
+        onErrorClick: viewModel.onErrorClick) { scanResult in
+          viewModel.onResult(scanResult: scanResult)
         }
     }
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        Action(image: Theme.shared.image.chevronLeft) {
+          viewModel.pop()
+        }
+      ]
+    )
   }
 }
 
@@ -51,88 +67,63 @@ struct ScannerView<Router: RouterHost>: View {
 private func content(
   viewState: ScannerState,
   cameraSurfaceSize: CGFloat,
-  onDismiss: @escaping () -> Void,
   onError: @escaping () -> Void,
   onErrorClick: @escaping () -> Void,
   onResult: @escaping (_ scanResult: String) -> Void
 ) -> some View {
-  ContentHeaderView(
-    dismissIcon: Theme.shared.image.xmark,
-    onBack: { onDismiss() }
-  )
-
-  ContentTitleView(
-    title: viewState.title,
-    caption: viewState.caption
-  )
-
-  Spacer()
-
-  ZStack {
-
-    CodeScannerView(
-      codeTypes: [.qr],
-      scanMode: .continuous,
-      scanInterval: 1.0,
-      shouldVibrateOnSuccess: false
-    ) { response in
-      switch response {
-      case .success(let result):
-        onResult(result.string)
-      case .failure:
-        onError()
-      }
-    }
-    .roundedCorner(Theme.shared.shape.xxxxLarge, corners: .allCorners)
-    .padding(
-      EdgeInsets(
-        top: .zero,
-        leading: .zero,
-        bottom: 2,
-        trailing: 2
-      )
+  VStack(spacing: SPACING_LARGE_MEDIUM) {
+    ContentCaptionView(
+      caption: viewState.caption
     )
+    .padding(.horizontal, Theme.shared.dimension.padding)
 
-    Theme.shared.image.viewFinder
-      .resizable()
-      .font(.system(size: SPACING_MEDIUM, weight: .ultraLight))
-      .foregroundColor(Theme.shared.color.primary)
+    ZStack {
+      CodeScannerView(
+        codeTypes: [.qr],
+        scanMode: .continuous,
+        scanInterval: 1.0,
+        showViewfinder: true,
+        shouldVibrateOnSuccess: false
+      ) { response in
+        switch response {
+        case .success(let result):
+          onResult(result.string)
+        case .failure:
+          onError()
+        }
+      }
 
-    if let error = viewState.error {
-      ContentEmptyView(
-        title: error,
-        iconColor: Theme.shared.color.white,
-        textColor: Theme.shared.color.white,
-        onClick: { onErrorClick() }
-      )
+      if let error = viewState.error {
+        ContentEmptyView(
+          title: error,
+          iconColor: Theme.shared.color.white,
+          textColor: Theme.shared.color.white,
+          onClick: { onErrorClick() }
+        )
+      }
+
+      VStack {
+        Spacer()
+        HStack(spacing: SPACING_MEDIUM) {
+
+          Theme.shared.image.errorIndicator
+            .renderingMode(.template)
+            .foregroundStyle(Theme.shared.color.white)
+
+          Text(viewState.informativeTest)
+            .typography(Theme.shared.font.bodyLarge)
+            .foregroundStyle(Theme.shared.color.white)
+            .multilineTextAlignment(.center)
+
+        }
+      }
+      .padding(.horizontal)
+      .padding(.bottom, SPACING_LARGE)
+      .frame(maxWidth: .infinity)
     }
+    .animation(.easeInOut, value: viewState.showInformativeText)
   }
-  .frame(maxWidth: .infinity, maxHeight: cameraSurfaceSize)
-
-  VSpacer.large()
-
-  ZStack {
-    HStack(spacing: SPACING_MEDIUM) {
-
-      Theme.shared.image.errorIndicator
-        .renderingMode(.template)
-        .foregroundStyle(Theme.shared.color.textPrimaryDark)
-
-      Text(viewState.informativeTest)
-        .typography(Theme.shared.font.bodyMedium)
-        .foregroundStyle(Theme.shared.color.textPrimaryDark)
-        .multilineTextAlignment(.center)
-
-    }
-    .padding()
-    .frame(maxWidth: .infinity)
-    .background(Theme.shared.color.backgroundDefault)
-    .clipShape(Theme.shared.shape.highCornerRadiusShape)
-    .opacity(viewState.showInformativeText ? 1.0 : 0.0)
-  }
-  .animation(.easeInOut, value: viewState.showInformativeText)
-
-  Spacer()
+  .ignoresSafeArea(.all, edges: .bottom)
 }
 
 #Preview {
@@ -154,7 +145,6 @@ private func content(
     content(
       viewState: viewState,
       cameraSurfaceSize: .zero,
-      onDismiss: {},
       onError: {},
       onErrorClick: {},
       onResult: { _ in }

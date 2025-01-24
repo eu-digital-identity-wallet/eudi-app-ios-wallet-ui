@@ -53,7 +53,7 @@ public struct ExpandableTextView: View {
         HStack {
           Text(title)
             .typography(Theme.shared.font.titleSmall)
-            .foregroundColor(Theme.shared.color.textPrimaryDark)
+            .foregroundColor(Theme.shared.color.onSurface)
           Spacer()
           chevron
         }
@@ -63,7 +63,7 @@ public struct ExpandableTextView: View {
           HStack {
             Text(content)
               .typography(Theme.shared.font.bodyMedium)
-              .foregroundColor(Theme.shared.color.textSecondaryDark)
+              .foregroundColor(Theme.shared.color.secondary)
             Spacer()
           }
           .padding([.horizontal, .bottom])
@@ -71,7 +71,7 @@ public struct ExpandableTextView: View {
       }
     }
     .padding()
-    .background(Theme.shared.color.backgroundDefault)
+    .background(Theme.shared.color.background)
     .cornerRadius(10)
     .onTapGesture {
       withAnimation {

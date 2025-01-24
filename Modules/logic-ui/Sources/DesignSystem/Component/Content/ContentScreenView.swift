@@ -20,13 +20,16 @@ import UIPilot
 
 public struct ContentScreenView<Content: View>: View {
 
-  let content: Content
-  let padding: CGFloat
-  let canScroll: Bool
-  let spacing: CGFloat
-  let allowBackGesture: Bool
-  let errorConfig: ContentErrorView.Config?
-  let background: Color
+  private let content: Content
+  private let padding: CGFloat
+  private let canScroll: Bool
+  private let spacing: CGFloat
+  private let allowBackGesture: Bool
+  private let errorConfig: ContentErrorView.Config?
+  private let background: Color
+  private let navigationTitle: String?
+  private let isLoading: Bool
+  private let toolbarContent: ToolBarContent?
 
   public init(
     padding: CGFloat = Theme.shared.dimension.padding,
@@ -34,7 +37,10 @@ public struct ContentScreenView<Content: View>: View {
     spacing: CGFloat = .zero,
     allowBackGesture: Bool = false,
     errorConfig: ContentErrorView.Config? = nil,
-    background: Color = Theme.shared.color.backgroundPaper,
+    background: Color = Theme.shared.color.background,
+    navigationTitle: String? = nil,
+    isLoading: Bool = false,
+    toolbarContent: ToolBarContent? = nil,
     @ViewBuilder content: () -> Content
   ) {
     self.content = content()
@@ -44,6 +50,9 @@ public struct ContentScreenView<Content: View>: View {
     self.spacing = spacing
     self.errorConfig = errorConfig
     self.background = background
+    self.navigationTitle = navigationTitle
+    self.isLoading = isLoading
+    self.toolbarContent = toolbarContent
   }
 
   public var body: some View {
@@ -60,8 +69,18 @@ public struct ContentScreenView<Content: View>: View {
         }
       }
     }
+    .navigationBarHidden(errorConfig == nil ? false : true)
+    .if(navigationTitle != nil) {
+      $0.navigationTitle(navigationTitle ?? "")
+    }
+    .navigationBarTitleDisplayMode(.inline)
+    .if(toolbarContent != nil) {
+      $0.toolbar {
+        toolbarContent
+      }
+      .disabled(isLoading)
+    }
     .background(background)
-    .uipNavigationBarHidden(true)
     .if(allowBackGesture == false) {
       $0.navigationBarBackButtonHidden()
     }
