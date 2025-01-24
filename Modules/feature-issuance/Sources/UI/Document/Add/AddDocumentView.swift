@@ -37,7 +37,7 @@ struct AddDocumentView<Router: RouterHost>: View {
       errorConfig: viewModel.viewState.error,
       navigationTitle: LocalizableString.shared.get(with: .chooseFromList),
       isLoading: viewModel.viewState.isLoading,
-      toolbarContent: toolbarContent()
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(viewState: viewModel.viewState) { type in
         viewModel.onClick(for: type)
@@ -46,17 +46,6 @@ struct AddDocumentView<Router: RouterHost>: View {
     .task {
       await self.viewModel.initialize()
     }
-  }
-
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: [],
-      leadingActions: [
-        Action(image: Theme.shared.image.chevronLeft) {
-          viewModel.pop()
-        }
-      ]
-    )
   }
 }
 

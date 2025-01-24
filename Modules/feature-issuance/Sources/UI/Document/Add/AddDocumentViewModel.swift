@@ -102,6 +102,22 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     router.popTo(with: .featureDashboardModule(.dashboard))
   }
 
+  func toolbarContent() -> ToolBarContent? {
+    return switch viewState.config.flow {
+    case .noDocument:
+      nil
+    case .extraDocument:
+      .init(
+        trailingActions: [],
+        leadingActions: [
+          Action(image: Theme.shared.image.chevronLeft) {
+            self.pop()
+          }
+        ]
+      )
+    }
+  }
+
   private func handleResumeIssuance() async {
 
     setState {
