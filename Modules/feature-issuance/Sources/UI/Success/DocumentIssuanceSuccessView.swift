@@ -19,7 +19,7 @@ import logic_resources
 import feature_common
 import logic_core
 
-struct DocumentSuccessView<Router: RouterHost>: View {
+struct DocumentIssuanceSuccessView<Router: RouterHost>: View {
 
   @ObservedObject var viewModel: DocumentSuccessViewModel<Router>
 

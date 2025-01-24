@@ -45,7 +45,7 @@ public final class IssuanceRouter {
         )
       ).eraseToAnyView()
     case .issuanceSuccess(config: let config, documentIdentifiers: let documentIdentifiers):
-      DocumentSuccessView(
+      DocumentIssuanceSuccessView(
         with: .init(
           router: host,
           interactor: DIGraph.resolver.force(
