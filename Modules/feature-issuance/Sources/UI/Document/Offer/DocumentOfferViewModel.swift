@@ -120,7 +120,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
             icon: .image(viewState.issuerData.icon),
             relyingPartyData: RelyingPartyData(
               isVerified: false,
-              name: viewState.issuerData.title,
+              name: uiModel.issuerName,
               description: LocalizableString.shared.get(with: .issuerWantWalletAddition)
             )
           )
