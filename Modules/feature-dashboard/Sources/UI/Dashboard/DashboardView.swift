@@ -224,29 +224,6 @@ struct DashboardView<Router: RouterHost>: View {
     }
     .padding(.vertical)
   }
-
-  @ViewBuilder
-  func shareLogs(with fileUrl: URL) -> some View {
-    ShareLink(item: fileUrl) {
-      HStack {
-
-        Theme.shared.image.share
-          .resizable()
-          .scaledToFit()
-          .frame(width: 25, height: 25)
-          .foregroundColor(Theme.shared.color.primary)
-
-        HSpacer.medium()
-
-        Text(.retrieveLogs)
-          .typography(Theme.shared.font.labelLarge)
-          .foregroundColor(Theme.shared.color.onSurface)
-
-        Spacer()
-      }
-      .padding()
-    }
-  }
 }
 
 @MainActor

@@ -33,7 +33,7 @@ struct DocumentOfferCellView: View {
   var body: some View {
     HStack {
       WrapListItemView(
-        listItem: .init(mainText: cellModel.documentName)
+        listItem: cellModel.listitem
       )
       .disabled(isLoading)
       .shimmer(isLoading: isLoading)

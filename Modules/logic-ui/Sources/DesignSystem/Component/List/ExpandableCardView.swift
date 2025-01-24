@@ -17,8 +17,8 @@ import SwiftUI
 import logic_resources
 
 public struct ExpandableCardView<Content: View>: View {
-  private let title: String
-  private let subtitle: String
+  private let title: LocalizableString.Key
+  private let subtitle: LocalizableString.Key
   private let backgroundColor: Color
   private let mainTextVerticalPadding: CGFloat?
   private let isLoading: Bool
@@ -26,8 +26,8 @@ public struct ExpandableCardView<Content: View>: View {
 
   public init(
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
-    title: String,
-    subtitle: String,
+    title: LocalizableString.Key,
+    subtitle: LocalizableString.Key,
     mainTextVerticalPadding: CGFloat? = nil,
     isLoading: Bool = false,
     @ViewBuilder content: @escaping () -> Content

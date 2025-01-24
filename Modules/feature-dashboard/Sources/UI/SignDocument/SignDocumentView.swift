@@ -69,10 +69,7 @@ private func content(
 
     WrapCardView {
       WrapListItemView(
-        listItem: .init(
-          mainText: LocalizableString.shared.get(with: .selectDocument),
-          trailingContent: .icon(Theme.shared.image.plus)
-        )
+        listItem: viewState.listItem
       ) {
         action()
       }
@@ -82,6 +79,12 @@ private func content(
 
 #Preview {
   ContentScreenView {
-    content(viewState: .init(), action: {})
+    content(viewState: .init(
+      listItem: .init(
+        mainText: .selectDocument,
+        trailingContent: .icon(Theme.shared.image.plus)
+      )
+    ), action: {}
+    )
   }
 }

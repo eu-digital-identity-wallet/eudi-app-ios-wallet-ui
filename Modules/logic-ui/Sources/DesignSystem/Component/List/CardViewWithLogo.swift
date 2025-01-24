@@ -20,7 +20,7 @@ public struct CardViewWithLogo: View {
   private let cornerRadius: CGFloat
   private let backgroundColor: Color
   private let icon: RemoteImageView.ImageContentOption
-  private let title: String
+  private let title: LocalizableString.Key
   private let isVerified: Bool
   private let isLoading: Bool
   private let action: (() -> Void)?
@@ -29,7 +29,7 @@ public struct CardViewWithLogo: View {
     cornerRadius: CGFloat = 13,
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
     icon: RemoteImageView.ImageContentOption = .none,
-    title: String,
+    title: LocalizableString.Key,
     isVerified: Bool = false,
     isLoading: Bool = false,
     action: (() -> Void)? = nil
@@ -104,7 +104,7 @@ public struct CardViewWithLogo: View {
         )
         .renderingMode(.original)
       ),
-      title: "Hellenic Government"
+      title: .custom("Hellenic Government")
     )
 
     CardViewWithLogo(
@@ -114,7 +114,7 @@ public struct CardViewWithLogo: View {
         )
         .renderingMode(.original)
       ),
-      title: "Another Organization"
+      title: .custom("Another Organization")
     )
 
     CardViewWithLogo(
@@ -125,7 +125,7 @@ public struct CardViewWithLogo: View {
         )
         .renderingMode(.original)
       ),
-      title: "Another Organization",
+      title: .custom("Another Organization"),
       isVerified: true
     )
   }

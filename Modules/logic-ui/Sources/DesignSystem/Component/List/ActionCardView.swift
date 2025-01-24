@@ -18,12 +18,12 @@ import logic_resources
 
 public struct ActionCard: View {
   private let icon: Image
-  private let title: String
+  private let title: LocalizableString.Key
   private let action: () -> Void
 
   public init(
     icon: Image,
-    title: String,
+    title: LocalizableString.Key,
     action: @escaping () -> Void
   ) {
     self.icon = icon
@@ -56,13 +56,13 @@ public struct ActionCard: View {
   VStack(spacing: 20) {
     ActionCard(
       icon: Image(systemName: "doc.text"),
-      title: "Choose from list",
+      title: .custom("Choose from list"),
       action: {}
     )
 
     ActionCard(
       icon: Image(systemName: "qrcode"),
-      title: "Scan a QR",
+      title: .custom("Scan a QR"),
       action: {}
     )
   }

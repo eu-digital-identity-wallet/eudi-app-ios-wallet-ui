@@ -18,6 +18,7 @@ import SwiftUI
 import logic_core
 import logic_resources
 import logic_business
+import logic_ui
 
 public struct DocumentUIModel: Identifiable, Equatable, Sendable {
 
@@ -29,6 +30,61 @@ public struct DocumentUIModel: Identifiable, Equatable, Sendable {
   public init(id: String, value: Value) {
     self.id = id
     self.value = value
+  }
+
+  public var listItem: ListItemData {
+    .init(
+      mainText: .custom(value.title),
+      overlineText: .custom(value.heading),
+      supportingText: .custom(supportingText()),
+      supportingTextColor: supportingColor(),
+      leadingIcon: (
+        value.image?.url,
+        value.image?.placeholder
+      ),
+      trailingContent: .icon(indicatorImage(), supportingColor())
+    )
+  }
+}
+private extension DocumentUIModel {
+  func supportingText() -> String {
+    switch value.state {
+    case .issued:
+      return expiry.orEmpty
+    case .pending:
+      return LocalizableString.shared.get(with: .pending)
+    case .failed:
+      return LocalizableString.shared.get(with: .issuanceFailed)
+    }
+  }
+
+  func supportingColor() -> Color {
+    switch value.state {
+    case .issued:
+      return Theme.shared.color.onSurfaceVariant
+    case .pending:
+      return Theme.shared.color.warning
+    case .failed:
+      return Theme.shared.color.error
+    }
+  }
+
+  func indicatorImage() -> Image {
+    switch value.state {
+    case .issued:
+      return Theme.shared.image.chevronRight
+    case .pending:
+      return Theme.shared.image.clockIndicator
+    case .failed:
+      return Theme.shared.image.errorIndicator
+    }
+  }
+
+  var expiry: String? {
+    guard let expiresAt = value.expiresAt else {
+      return nil
+    }
+    return LocalizableString.shared.get(with: .validUntil([expiresAt])).replacingOccurrences(of: "\n", with: "")
   }
 }
 

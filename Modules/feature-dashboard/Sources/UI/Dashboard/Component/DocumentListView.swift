@@ -47,17 +47,7 @@ struct DocumentListView: View {
             ForEach(filteredItems) { item in
               WrapCardView {
                 WrapListItemView(
-                  listItem: ListItemData(
-                    mainText: item.value.title,
-                    overlineText: item.value.heading,
-                    supportingText: item.supportingText(),
-                    supportingTextColor: item.supportingColor(),
-                    leadingIcon: (
-                      item.value.image?.url,
-                      item.value.image?.placeholder
-                    ),
-                    trailingContent: .icon(item.indicatorImage(), item.supportingColor())
-                  )
+                  listItem: item.listItem
                 ) {
                   action(item)
                 }
@@ -99,48 +89,6 @@ struct DocumentListView: View {
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     .padding(.top, SPACING_LARGE_MEDIUM)
     .padding(.horizontal, SPACING_MEDIUM)
-  }
-}
-
-private extension DocumentUIModel {
-  func supportingText() -> String {
-    switch value.state {
-    case .issued:
-      return expiry.orEmpty
-    case .pending:
-      return LocalizableString.shared.get(with: .pending)
-    case .failed:
-      return LocalizableString.shared.get(with: .issuanceFailed)
-    }
-  }
-
-  func supportingColor() -> Color {
-    switch value.state {
-    case .issued:
-      return Theme.shared.color.onSurfaceVariant
-    case .pending:
-      return Theme.shared.color.warning
-    case .failed:
-      return Theme.shared.color.error
-    }
-  }
-
-  func indicatorImage() -> Image {
-    switch value.state {
-    case .issued:
-      return Theme.shared.image.chevronRight
-    case .pending:
-      return Theme.shared.image.clockIndicator
-    case .failed:
-      return Theme.shared.image.errorIndicator
-    }
-  }
-
-  var expiry: String? {
-    guard let expiresAt = value.expiresAt else {
-      return nil
-    }
-    return LocalizableString.shared.get(with: .validUntil([expiresAt])).replacingOccurrences(of: "\n", with: "")
   }
 }
 

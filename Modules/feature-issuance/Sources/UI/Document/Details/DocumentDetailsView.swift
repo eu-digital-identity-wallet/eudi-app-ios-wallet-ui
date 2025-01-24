@@ -100,8 +100,8 @@ private func content(
               case .string(let value):
                 WrapListItemView(
                   listItem: .init(
-                    mainText: value,
-                    overlineText: documentFieldContent.title,
+                    mainText: .custom(value),
+                    overlineText: .custom(documentFieldContent.title),
                     isBlur: isVisible
                   ),
                   minHeight: false
@@ -109,7 +109,7 @@ private func content(
               case .image(let image):
                 WrapListItemView(
                   listItem: .init(
-                    mainText: documentFieldContent.title,
+                    mainText: .custom(documentFieldContent.title),
                     leadingIcon: (nil, image),
                     isBlur: isVisible
                   ),
@@ -137,7 +137,7 @@ private func content(
 
           CardViewWithLogo(
             icon: .remoteImage(issuer.logoUrl, Theme.shared.image.logo),
-            title: issuer.name
+            title: .custom(issuer.name)
           )
         }
         .shimmer(isLoading: viewState.isLoading)

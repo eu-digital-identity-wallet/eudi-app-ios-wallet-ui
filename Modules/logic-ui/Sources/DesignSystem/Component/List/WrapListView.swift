@@ -89,23 +89,23 @@ public struct WrapListView<Item: Identifiable, Content: View, ListStyleType: Lis
 private struct TransactionHistoryView: View {
   let todayTransactions: [ListItemData] = [
     .init(
-      mainText: "TravelBook",
-      overlineText: "5 minutes ago",
-      supportingText: "Completed",
+      mainText: .transactions,
+      overlineText: .expired,
+      supportingText: .expiryDate,
       overlineTextColor: .green,
       trailingContent: .icon(Image(systemName: "chevron.right"))
     ),
     .init(
-      mainText: "AirBNB",
-      overlineText: "11:05 AM",
-      supportingText: "Completed",
+      mainText: .transactions,
+      overlineText: .expired,
+      supportingText: .expiryDate,
       overlineTextColor: .green,
       trailingContent: .icon(Image(systemName: "chevron.right"))
     ),
     .init(
-      mainText: "Natural Bank VISA",
-      overlineText: "11:05 AM",
-      supportingText: "Failed",
+      mainText: .transactions,
+      overlineText: .expired,
+      supportingText: .expiryDate,
       overlineTextColor: .red,
       trailingContent: .icon(Image(systemName: "chevron.right"))
     )
@@ -131,23 +131,23 @@ private struct TransactionHistoryView: View {
 private struct DashboardDocumentsView: View {
   let todayTransactions: [ListItemData] = [
     .init(
-      mainText: "TravelBook",
-      overlineText: "5 minutes ago",
-      supportingText: "Completed",
+      mainText: .custom("TravelBook"),
+      overlineText: .custom("5 minutes ago"),
+      supportingText: .custom("Completed"),
       overlineTextColor: .green,
       trailingContent: .icon(Image(systemName: "chevron.right"))
     ),
     .init(
-      mainText: "AirBNB",
-      overlineText: "11:05 AM",
-      supportingText: "Completed",
+      mainText: .custom("AirBNB"),
+      overlineText: .custom("11:05 AM"),
+      supportingText: .custom("Completed"),
       overlineTextColor: .green,
       trailingContent: .icon(Image(systemName: "chevron.right"))
     ),
     .init(
-      mainText: "Natural Bank VISA",
-      overlineText: "11:05 AM",
-      supportingText: "Failed",
+      mainText: .custom("Natural Bank VISA"),
+      overlineText: .custom("11:05 AM"),
+      supportingText: .custom("Failed"),
       overlineTextColor: .red,
       trailingContent: .icon(Image(systemName: "chevron.right"))
     )

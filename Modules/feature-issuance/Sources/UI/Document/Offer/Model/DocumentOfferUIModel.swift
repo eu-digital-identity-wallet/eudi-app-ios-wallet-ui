@@ -17,6 +17,7 @@ import Foundation
 import logic_core
 import logic_business
 import logic_resources
+import logic_ui
 
 public struct DocumentOfferUIModel: Sendable {
 
@@ -52,6 +53,10 @@ public extension DocumentOfferUIModel {
     ) {
       self.id = id
       self.documentName = documentName
+    }
+
+    public var listitem: ListItemData {
+      .init(mainText: .custom(documentName))
     }
   }
 }

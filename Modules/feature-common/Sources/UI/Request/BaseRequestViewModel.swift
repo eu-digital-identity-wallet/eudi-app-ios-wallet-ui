@@ -23,7 +23,6 @@ public struct RequestViewState: ViewState {
   public let error: ContentErrorView.Config?
   public let showMissingCrredentials: Bool
   public let items: [RequestDataUI]
-  public let title: LocalizableString.Key
   public let trustedRelyingPartyInfo: LocalizableString.Key
   public let relyingParty: String
   public let isTrusted: Bool
@@ -47,7 +46,6 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         error: nil,
         showMissingCrredentials: true,
         items: RequestDataUiModel.mockData(),
-        title: .unknownVerifier,
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
         relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
         isTrusted: false,
@@ -151,7 +149,6 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       $0.copy(
         isLoading: false,
         items: items,
-        title: title,
         relyingParty: relyingParty,
         isTrusted: isTrusted,
         allowShare: canShare(with: items),
@@ -168,7 +165,6 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         error: nil,
         showMissingCrredentials: true,
         items: RequestDataUiModel.mockData(),
-        title: .requestDataTitle([LocalizableString.shared.get(with: .unknownVerifier)]),
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
         relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
         isTrusted: false,

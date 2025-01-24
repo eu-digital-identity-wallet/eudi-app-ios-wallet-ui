@@ -17,6 +17,7 @@
 import SwiftUI
 import logic_resources
 import logic_core
+import logic_ui
 
 public struct AddDocumentUIModel: Identifiable, Sendable {
 
@@ -40,6 +41,13 @@ public struct AddDocumentUIModel: Identifiable, Sendable {
     self.image = image
     self.isLoading = isLoading
     self.configId = configId
+  }
+
+  public var listItem: ListItemData {
+    .init(
+      mainText: documentName,
+      trailingContent: .icon(Theme.shared.image.plus)
+    )
   }
 }
 

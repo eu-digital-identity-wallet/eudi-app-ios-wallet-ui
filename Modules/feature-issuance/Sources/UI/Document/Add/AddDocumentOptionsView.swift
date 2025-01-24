@@ -53,7 +53,7 @@ private func content(
     VStack(spacing: SPACING_MEDIUM_SMALL) {
       ActionCard(
         icon: Theme.shared.image.chooseDocumentImage,
-        title: LocalizableString.shared.get(with: .chooseFromList),
+        title: .chooseFromList,
         action: {
           onAddDocumentClick()
         }
@@ -61,7 +61,7 @@ private func content(
 
       ActionCard(
         icon: Theme.shared.image.scanDocumentImage,
-        title: LocalizableString.shared.get(with: .scanQrCode),
+        title: .scanQrCode,
         action: {
           onScanClick()
         }

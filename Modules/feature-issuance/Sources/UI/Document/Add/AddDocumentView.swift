@@ -67,10 +67,7 @@ private func content(
         ForEach(viewState.addDocumentCellModels) { cell in
           WrapCardView {
             WrapListItemView(
-              listItem: .init(
-                mainText: LocalizableString.shared.get(with: cell.documentName),
-                trailingContent: .icon(Theme.shared.image.plus)
-              ),
+              listItem: cell.listItem,
               action: { action(cell.configId) }
             )
           }

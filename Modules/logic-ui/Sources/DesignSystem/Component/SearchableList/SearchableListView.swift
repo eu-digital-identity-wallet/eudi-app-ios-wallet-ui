@@ -124,23 +124,23 @@ struct CustomSearchBar: UIViewRepresentable {
 #Preview {
   let todayTransactions: [ListItemData] = [
     .init(
-      mainText: "TravelBook",
-      overlineText: "5 minutes ago",
-      supportingText: "Completed",
+      mainText: .transactions,
+      overlineText: .expired,
+      supportingText: .expiryDate,
       overlineTextColor: .green,
       trailingContent: .icon(Image(systemName: "chevron.right"))
     ),
     .init(
-      mainText: "AirBNB",
-      overlineText: "11:05 AM",
-      supportingText: "Completed",
+      mainText: .transactions,
+      overlineText: .expired,
+      supportingText: .expiryDate,
       overlineTextColor: .green,
       trailingContent: .icon(Image(systemName: "chevron.right"))
     ),
     .init(
-      mainText: "Natural Bank VISA",
-      overlineText: "11:05 AM",
-      supportingText: "Failed",
+      mainText: .transactions,
+      overlineText: .expired,
+      supportingText: .expiryDate,
       overlineTextColor: .red,
       trailingContent: .icon(Image(systemName: "chevron.right"))
     )

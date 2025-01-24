@@ -15,9 +15,12 @@
  */
 import Foundation
 import logic_ui
+import logic_resources
 
 @Copyable
-struct SignDocumentState: ViewState {}
+struct SignDocumentState: ViewState {
+  let listItem: ListItemData
+}
 
 final class SignDocumentViewModel<Router: RouterHost>: ViewModel<Router, SignDocumentState> {
 
@@ -32,7 +35,12 @@ final class SignDocumentViewModel<Router: RouterHost>: ViewModel<Router, SignDoc
     self.interactor = interactor
     super.init(
       router: router,
-      initialState: .init()
+      initialState: .init(
+        listItem: .init(
+          mainText: .selectDocument,
+          trailingContent: .icon(Theme.shared.image.plus)
+        )
+      )
     )
   }
 
