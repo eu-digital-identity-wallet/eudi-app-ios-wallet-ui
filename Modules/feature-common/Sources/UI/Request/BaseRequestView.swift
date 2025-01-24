@@ -135,7 +135,6 @@ private func content(
                   .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
               }
             }
-            .shimmer(isLoading: viewState.isLoading)
           }
 
           Text(.shareDataReview)
@@ -144,6 +143,7 @@ private func content(
             .multilineTextAlignment(.leading)
           VSpacer.medium()
         }
+        .shimmer(isLoading: viewState.isLoading)
       }
     }
     .padding(Theme.shared.dimension.padding)

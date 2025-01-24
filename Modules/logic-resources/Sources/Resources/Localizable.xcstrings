@@ -1167,6 +1167,17 @@
         }
       }
     },
+    "my_eu_wallet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My EU Wallet"
+          }
+        }
+      }
+    },
     "next_seven_days" : {
       "extractionState" : "manual",
       "localizations" : {

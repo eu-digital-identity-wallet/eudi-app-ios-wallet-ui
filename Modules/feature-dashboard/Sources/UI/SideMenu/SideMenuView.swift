@@ -28,7 +28,7 @@ struct SideMenuView<Router: RouterHost>: View {
   var body: some View {
     content(
       viewState: viewModel.viewState
-    ).navigationTitle("My EU Wallet")
+    ).navigationTitle(LocalizableString.shared.get(with: .myEuWallet))
   }
 }
 
