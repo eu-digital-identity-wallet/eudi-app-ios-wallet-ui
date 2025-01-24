@@ -78,8 +78,7 @@ public enum FilterSections {
     case .state:
       return [
         LocalizableString.shared.get(with: .valid).capitalized,
-        LocalizableString.shared.get(with: .expired).capitalized,
-        LocalizableString.shared.get(with: .revoke).capitalized
+        LocalizableString.shared.get(with: .expired).capitalized
       ]
     }
   }

@@ -26,7 +26,8 @@ struct FilterListView: View {
   @State private var pendingSortAscending: Bool = true
   @State private var hasSortChanged: Bool = false
   @State private var hasChangesInSort: Bool = false
-  @State private var hasChangesInCategory: Bool = false
+  @State private var hasChangesInIssuer: Bool = false
+  @State private var listHasFiltered: Bool = false
   @State private var hasChangesInExpiry: Bool = false
 
   @Binding var sortAscending: Bool
@@ -53,7 +54,7 @@ struct FilterListView: View {
           case .sortBy:
             sortBySection(section: section)
           case .issuer:
-            categorySection(section: section)
+            issuerSection(section: section)
           case .expiryPeriod:
             expiryPeriodSection(section: section)
           case .state:
@@ -67,12 +68,6 @@ struct FilterListView: View {
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
           Button(LocalizableString.shared.get(with: .cancelButton).capitalized) {
-            if filterCounter > 0 {
-              showFilterIndicator = false
-              resetFiltersCallback()
-              resetFilters()
-            }
-
             dismiss()
           }
         }
@@ -96,6 +91,7 @@ struct FilterListView: View {
             .foregroundStyle(Theme.shared.color.primary)
             .padding(.horizontal, SPACING_MEDIUM)
             .onTapGesture {
+              listHasFiltered = true
               sortAscending = pendingSortAscending
               applyFiltersCallback()
               dismiss()
@@ -123,13 +119,6 @@ struct FilterListView: View {
       updateSelectedCount()
       updateResetButtonState()
     }
-    .onAppear {
-      print("onAppear called")
-      print("sortAscending: \(sortAscending)")
-      print("selectedOptions: \(selectedOptions)")
-      print("showFilterIndicator: \(showFilterIndicator)")
-      print("isDefaultState: \(isDefaultState())")
-    }
     .onChange(of: sortAscending, perform: {  _ in
       showFilterIndicator.toggle()
     })
@@ -138,10 +127,6 @@ struct FilterListView: View {
 
       if isDefaultState() {
         showFilterIndicator = false
-      }
-
-      if !sortAscending {
-        showFilterIndicator = true
       }
 
       onResume()
@@ -189,7 +174,7 @@ struct FilterListView: View {
     }
   }
 
-  private func categorySection(section: FilterSections) -> some View {
+  private func issuerSection(section: FilterSections) -> some View {
     Section(header: Text(section.sectionTitle)) {
       if section.hasToggle {
         Toggle(LocalizableString.shared.get(with: .all).capitalized, isOn: Binding(
@@ -202,20 +187,20 @@ struct FilterListView: View {
             } else {
               selectedOptions.subtract(section.options)
             }
-            hasChangesInCategory = true
+            hasChangesInIssuer = true
             showFilterIndicator = true
             updateSelectedCount()
           }
         ))
       }
 
-      ForEach(section.options, id: \.self) { category in
+      ForEach(section.options, id: \.self) { issuer in
         ChoosableRow(
-          text: category,
-          isSelected: selectedOptions.contains(category)
+          text: issuer,
+          isSelected: selectedOptions.contains(issuer)
         ) {
-          toggleCategorySelection(for: category, section: section)
-          hasChangesInCategory = true
+          toggleIssuerSelection(for: issuer, section: section)
+          hasChangesInIssuer = true
           showFilterIndicator = true
         }
       }
@@ -262,11 +247,11 @@ struct FilterListView: View {
     }
   }
 
-  private func toggleCategorySelection(for category: String, section: FilterSections) {
-    if selectedOptions.contains(category) {
-      selectedOptions.remove(category)
+  private func toggleIssuerSelection(for issuer: String, section: FilterSections) {
+    if selectedOptions.contains(issuer) {
+      selectedOptions.remove(issuer)
     } else {
-      selectedOptions.insert(category)
+      selectedOptions.insert(issuer)
     }
 
     togglesState[section.sectionTitle] = selectedOptions.count == section.options.count
@@ -298,7 +283,7 @@ struct FilterListView: View {
     }
 
     hasSortChanged = false
-    hasChangesInCategory = false
+    hasChangesInIssuer = false
     hasChangesInExpiry = false
 
     updateSelectedCount()
