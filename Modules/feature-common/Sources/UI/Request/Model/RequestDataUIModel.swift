@@ -86,12 +86,10 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
         self.isEnabled = true
       case .mandatory(let item):
         switch item {
-        case let item as String:
-          self.value = .string(item)
-        case let item as Image:
-          self.value = .image(item)
-        default:
-          fatalError("Mandatory DocValue can only be image or string")
+        case .string(let string):
+          self.value = .string(string)
+        case .image(let image):
+          self.value = .image(image)
         }
         self.isEnabled = false
         self.isSelected = true

@@ -19,7 +19,7 @@ import SwiftUI
 public enum DocValue {
   case string(String)
   case unavailable(String)
-  case mandatory(Any)
+  case mandatory(MandatoryValue)
   case image(Image)
 
   public var string: String? {
@@ -28,11 +28,11 @@ public enum DocValue {
       return string
     case .unavailable(let string):
       return string
-    case .mandatory(let item):
-      guard let item = item as? String else {
-        return nil
+    case .mandatory(let value):
+      if case .string(let string) = value {
+        return string
       }
-      return item
+      return nil
     default:
       return nil
     }
@@ -42,13 +42,20 @@ public enum DocValue {
     switch self {
     case .image(let image):
       return image
-    case .mandatory(let item):
-      guard let item = item as? Image else {
-        return nil
+    case .mandatory(let value):
+      if case .image(let image) = value {
+        return image
       }
-      return item
+      return nil
     default:
       return nil
     }
+  }
+}
+
+extension DocValue {
+  public enum MandatoryValue {
+    case string(String)
+    case image(Image)
   }
 }

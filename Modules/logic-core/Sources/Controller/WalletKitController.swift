@@ -365,7 +365,7 @@ extension WalletKitController {
 
     if let image = element.dataValue.image {
       if isMandatory {
-        return .mandatory(Image(uiImage: image))
+        return .mandatory(.image(Image(uiImage: image)))
       } else {
         return .image(Image(uiImage: image))
       }
@@ -380,7 +380,7 @@ extension WalletKitController {
     }
 
     if isMandatory {
-      return .mandatory(stringValue)
+      return .mandatory(.string(stringValue))
     } else {
       return .string(stringValue)
     }
