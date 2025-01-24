@@ -291,19 +291,19 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
       trailingActions: [
         Action(
           title: LocalizableString.shared.get(
-            with: .cancelButton
+            with: .issueButton
           ).capitalizedFirst()
         ) {
-          self.onShowCancelModal()
+          self.onIssueDocuments()
         }
       ],
       leadingActions: [
         Action(
           title: LocalizableString.shared.get(
-            with: .issueButton
+            with: .cancelButton
           ).capitalizedFirst()
         ) {
-          self.onIssueDocuments()
+          self.onShowCancelModal()
         }
       ]
     )
