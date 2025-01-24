@@ -66,4 +66,8 @@ final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuVie
       )
     )
   }
+
+  func onPop() {
+    router.pop()
+  }
 }
