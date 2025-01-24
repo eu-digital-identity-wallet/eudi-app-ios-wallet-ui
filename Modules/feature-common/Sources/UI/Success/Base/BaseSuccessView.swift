@@ -86,7 +86,7 @@ private func documents(
   viewState: BaseSuccessState,
   ignoreTrainingContent: Bool = true,
   backgroundColor: Color = Theme.shared.color.tertiary,
-  onSelectionChanged: @escaping (String) -> Void
+  onSelectionChanged: @escaping @Sendable (String) -> Void
 ) -> some View {
   if !viewState.items.isEmpty {
     VStack(alignment: .leading, spacing: SPACING_MEDIUM) {

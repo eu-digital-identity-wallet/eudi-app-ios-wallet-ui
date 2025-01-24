@@ -33,7 +33,7 @@ struct DocumentOfferCellView: View {
   var body: some View {
     HStack {
       WrapListItemView(
-        listItem: cellModel.listitem
+        listItem: cellModel.listItem
       )
       .disabled(isLoading)
       .shimmer(isLoading: isLoading)
@@ -44,6 +44,7 @@ struct DocumentOfferCellView: View {
 #Preview {
   DocumentOfferCellView(
     cellModel: DocumentOfferUIModel.UIOffer(
+      listItem: .init(mainText: .custom("Name")),
       documentName: "Name"
     ),
     isLoading: false

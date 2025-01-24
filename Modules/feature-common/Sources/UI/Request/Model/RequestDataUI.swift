@@ -38,10 +38,8 @@ extension RequestDataUI {
   mutating func toggleSelection(id: String) {
     var rows = requestDataRow
 
-    for index in requestDataRow.indices {
-      if rows[index].id == id {
-        rows[index].setSelected(!rows[index].isSelected)
-      }
+    for index in rows.indices where rows[index].id == id {
+      rows[index].setSelected(!rows[index].isSelected)
     }
     self = RequestDataUI(
       id: self.requestDataSection.id,

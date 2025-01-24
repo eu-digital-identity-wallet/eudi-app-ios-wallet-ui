@@ -212,7 +212,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     isVerifiedEntityModalShowing = !isVerifiedEntityModalShowing
   }
 
-  func onSelectionChanged(id: String) {
+  func onSelectionChanged(id: String) async {
     if viewState.showMissingCrredentials {
       itmesChanged = true
 

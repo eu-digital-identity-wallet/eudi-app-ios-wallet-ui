@@ -15,9 +15,9 @@
  */
 import logic_resources
 
-public struct ListItemData: Identifiable {
+public struct ListItemData: Identifiable, Sendable {
 
-  public enum MainStyle {
+  public enum MainStyle: Sendable {
     case plain
     case bold
   }
@@ -58,8 +58,8 @@ public struct ListItemData: Identifiable {
   }
 }
 
-public enum TrailingContent {
+public enum TrailingContent: Sendable {
   case icon(Image, Color = Color.accentColor)
-  case checkbox(Bool, Bool, (Bool) -> Void)
+  case checkbox(Bool, Bool, @Sendable (Bool) -> Void)
   case empty
 }

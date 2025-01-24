@@ -42,8 +42,11 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
       let documents: [AddDocumentUIModel] = try await walletController.getScopedDocuments().compactMap { doc in
         if flow == .extraDocument || doc.isPid {
           return .init(
+            listItem: .init(
+              mainText: .custom(doc.name),
+              trailingContent: .icon(Theme.shared.image.plus)
+            ),
             isEnabled: true,
-            documentName: .custom(doc.name),
             configId: doc.configId
           )
         } else {
@@ -56,7 +59,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     }
 
     func compare(_ first: AddDocumentUIModel, _ second: AddDocumentUIModel) -> Bool {
-      return LocalizableString.shared.get(with: first.documentName).lowercased() < LocalizableString.shared.get(with: second.documentName).lowercased()
+      return LocalizableString.shared.get(with: first.listItem.mainText).lowercased() < LocalizableString.shared.get(with: second.listItem.mainText).lowercased()
     }
   }
 

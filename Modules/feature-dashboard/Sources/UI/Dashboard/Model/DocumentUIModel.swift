@@ -48,24 +48,32 @@ public struct DocumentUIModel: Identifiable, Equatable, Sendable {
 }
 private extension DocumentUIModel {
   func supportingText() -> String {
-    switch value.state {
-    case .issued:
-      return expiry.orEmpty
-    case .pending:
-      return LocalizableString.shared.get(with: .pending)
-    case .failed:
-      return LocalizableString.shared.get(with: .issuanceFailed)
+    if value.hasExpired {
+      return LocalizableString.shared.get(with: .expired)
+    } else {
+      switch value.state {
+      case .issued:
+        return expiry.orEmpty
+      case .pending:
+        return LocalizableString.shared.get(with: .pending)
+      case .failed:
+        return LocalizableString.shared.get(with: .issuanceFailed)
+      }
     }
   }
 
   func supportingColor() -> Color {
-    switch value.state {
-    case .issued:
-      return Theme.shared.color.onSurfaceVariant
-    case .pending:
-      return Theme.shared.color.warning
-    case .failed:
+    if value.hasExpired {
       return Theme.shared.color.error
+    } else {
+      switch value.state {
+      case .issued:
+        return Theme.shared.color.onSurfaceVariant
+      case .pending:
+        return Theme.shared.color.warning
+      case .failed:
+        return Theme.shared.color.error
+      }
     }
   }
 

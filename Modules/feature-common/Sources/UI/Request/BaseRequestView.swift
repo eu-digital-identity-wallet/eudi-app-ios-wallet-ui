@@ -38,7 +38,9 @@ public struct BaseRequestView<Router: RouterHost>: View {
         getScreenRect: getScreenRect(),
         onShare: viewModel.onShare,
         onSelectionChanged: { id in
-          viewModel.onSelectionChanged(id: id)
+          Task {
+            await viewModel.onSelectionChanged(id: id)
+          }
         }
       )
     }
@@ -79,7 +81,7 @@ private func content(
   viewState: RequestViewState,
   getScreenRect: CGRect,
   onShare: @escaping () -> Void,
-  onSelectionChanged: @escaping (String) -> Void
+  onSelectionChanged: @escaping @Sendable (String) -> Void
 ) -> some View {
   ScrollView {
     VStack(spacing: .zero) {

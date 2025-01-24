@@ -96,6 +96,7 @@ struct DocumentListView: View {
   DocumentListView(
     filteredItems: DocumentUIModel.mocks(),
     isLoading: false,
-    action: { _ in }
-  ) { _ in }
+    action: { _ in },
+    filteredDocsCallback: { _ in }
+  )
 }
