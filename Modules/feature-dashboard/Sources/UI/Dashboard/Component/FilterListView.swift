@@ -23,6 +23,11 @@ struct FilterListView: View {
   @State private var filterCounter: Int = 0
   @State private var showCounterRectangle: Bool = false
   @State private var togglesState: [String: Bool] = [:]
+  @State private var pendingSortAscending: Bool = true
+  @State private var hasSortChanged: Bool = false
+  @State private var hasChangesInSort: Bool = false
+  @State private var hasChangesInCategory: Bool = false
+  @State private var hasChangesInExpiry: Bool = false
 
   @Binding var sortAscending: Bool
   @Binding var showFilterIndicator: Bool
@@ -77,7 +82,7 @@ struct FilterListView: View {
             resetFiltersCallback()
             resetFilters()
           }
-          .disabled(selectedOptions.isEmpty && sortAscending && selectesSorting == LocalizableString.shared.get(with: .defaultLabel).capitalized)
+          .disabled(!showFilterIndicator)
         }
       }
       .overlay(alignment: .bottom) {
@@ -91,6 +96,7 @@ struct FilterListView: View {
             .foregroundStyle(Theme.shared.color.primary)
             .padding(.horizontal, SPACING_MEDIUM)
             .onTapGesture {
+              sortAscending = pendingSortAscending
               applyFiltersCallback()
               dismiss()
             }
@@ -104,16 +110,35 @@ struct FilterListView: View {
       updateSelectedCount()
     }
     .onAppear {
+      pendingSortAscending = sortAscending
+
       if selectesSorting.isEmpty {
         selectesSorting = LocalizableString.shared.get(with: .defaultLabel).capitalized
       }
+
+      for section in sections {
+        selectedOptions.formUnion(section.options)
+      }
+
       updateSelectedCount()
+      updateResetButtonState()
+    }
+    .onAppear {
+      print("onAppear called")
+      print("sortAscending: \(sortAscending)")
+      print("selectedOptions: \(selectedOptions)")
+      print("showFilterIndicator: \(showFilterIndicator)")
+      print("isDefaultState: \(isDefaultState())")
     }
     .onChange(of: sortAscending, perform: {  _ in
       showFilterIndicator.toggle()
     })
     .onDisappear {
       updateSelectedCount()
+
+      if isDefaultState() {
+        showFilterIndicator = false
+      }
 
       if !sortAscending {
         showFilterIndicator = true
@@ -137,6 +162,7 @@ struct FilterListView: View {
             selectedExpiryOption = expiry
             selectedOptions.insert(expiry)
           }
+          hasChangesInExpiry = true
           updateSelectedCount()
         }
       }
@@ -168,7 +194,7 @@ struct FilterListView: View {
       if section.hasToggle {
         Toggle(LocalizableString.shared.get(with: .all).capitalized, isOn: Binding(
           get: {
-            return section.options.allSatisfy { selectedOptions.contains($0) }
+            section.options.allSatisfy { selectedOptions.contains($0) }
           },
           set: { newValue in
             if newValue {
@@ -176,6 +202,8 @@ struct FilterListView: View {
             } else {
               selectedOptions.subtract(section.options)
             }
+            hasChangesInCategory = true
+            showFilterIndicator = true
             updateSelectedCount()
           }
         ))
@@ -187,6 +215,8 @@ struct FilterListView: View {
           isSelected: selectedOptions.contains(category)
         ) {
           toggleCategorySelection(for: category, section: section)
+          hasChangesInCategory = true
+          showFilterIndicator = true
         }
       }
     }
@@ -197,10 +227,13 @@ struct FilterListView: View {
       ForEach(section.sorting, id: \.self) { option in
         ChoosableRow(
           text: option,
-          isSelected: (option == LocalizableString.shared.get(with: .ascending).capitalized && sortAscending) || (option == LocalizableString.shared.get(with: .descending).capitalized && !sortAscending)
+          isSelected: (option == LocalizableString.shared.get(with: .ascending).capitalized && pendingSortAscending) ||
+          (option == LocalizableString.shared.get(with: .descending).capitalized && !pendingSortAscending)
         ) {
-          sortAscending = (option == LocalizableString.shared.get(with: .ascending).capitalized)
-          updateSelectedCount()
+          pendingSortAscending = (option == LocalizableString.shared.get(with: .ascending).capitalized)
+          hasSortChanged = true
+          showFilterIndicator = true
+          showCounterRectangle = true
         }
       }
     }
@@ -222,6 +255,7 @@ struct FilterListView: View {
             selectedOptions.insert(sortBy)
             showCounterRectangle = true
           }
+          hasChangesInSort = true
           updateSelectedCount()
         }
       }
@@ -239,20 +273,63 @@ struct FilterListView: View {
     updateSelectedCount()
   }
 
+  private func isDefaultState() -> Bool {
+    let allOptions = sections.flatMap { $0.options }
+    let isAllOptionsSelected = allOptions.allSatisfy { selectedOptions.contains($0) }
+    let isSortAscendingDefault = sortAscending == true
+    let isSelectedSortingDefault = selectesSorting == LocalizableString.shared.get(with: .defaultLabel).capitalized
+    let isExpiryOptionDefault = selectedExpiryOption.isEmpty
+    let isStateOptionDefault = stateOption.isEmpty
+
+    return isAllOptionsSelected && isSortAscendingDefault && isSelectedSortingDefault && isExpiryOptionDefault && isStateOptionDefault
+  }
+
   private func resetFilters() {
     selectedOptions.removeAll()
     togglesState.removeAll()
     selectedExpiryOption = ""
     stateOption = ""
     sortAscending = true
+    pendingSortAscending = sortAscending
     selectesSorting = LocalizableString.shared.get(with: .defaultLabel).capitalized
+
+    for section in sections {
+      selectedOptions.formUnion(section.options)
+    }
+
+    hasSortChanged = false
+    hasChangesInCategory = false
+    hasChangesInExpiry = false
+
     updateSelectedCount()
+
+    DispatchQueue.main.async {
+      self.updateResetButtonState()
+    }
+  }
+
+  private func updateResetButtonState() {
+    showFilterIndicator = shouldEnableResetButton()
   }
 
   private func updateSelectedCount() {
-    filterCounter = selectedOptions.filter { $0 != LocalizableString.shared.get(with: .defaultLabel).capitalized }.count
+    let allOptions = sections.flatMap { $0.options }
+
+    let filteredOptions = selectedOptions.filter { !allOptions.contains($0) }
+
+    filterCounter = filteredOptions.count
+
+    let hasExpirySelected = !selectedExpiryOption.isEmpty
+    let hasStateSelected = !stateOption.isEmpty
+
+    let isToggleInactive = !allOptions.allSatisfy { selectedOptions.contains($0) }
+
     withAnimation {
-      if filterCounter == 0 && selectesSorting == LocalizableString.shared.get(with: .defaultLabel).capitalized {
+      if filterCounter == 0 &&
+          selectesSorting == LocalizableString.shared.get(with: .defaultLabel).capitalized &&
+          !hasExpirySelected &&
+          !hasStateSelected &&
+          !isToggleInactive {
         showCounterRectangle = false
         showFilterIndicator = false
       } else {
@@ -261,24 +338,17 @@ struct FilterListView: View {
       }
     }
   }
-}
 
-struct ChoosableRow: View {
-  let text: String
-  let isSelected: Bool
-  let onTap: () -> Void
-
-  var body: some View {
-    HStack {
-      Text(text)
-        .typography(Theme.shared.font.bodyLarge)
-        .frame(maxWidth: .infinity, alignment: .leading)
-      if isSelected {
-        ThemeManager.shared.image.checkmark
-          .foregroundColor(.blue)
-      }
+  private func shouldEnableResetButton() -> Bool {
+    let isSortingNotAscending = !sortAscending
+    let isSortingNotDefault = selectesSorting != LocalizableString.shared.get(with: .defaultLabel).capitalized
+    let isToggleInactive = !sections.allSatisfy { section in
+      section.options.allSatisfy { selectedOptions.contains($0) }
     }
-    .contentShape(Rectangle())
-    .onTapGesture(perform: onTap)
+    let isCategoriesNotAllSelected = !sections.allSatisfy { section in
+      section.options.count == selectedOptions.filter { section.options.contains($0) }.count
+    }
+
+    return isSortingNotAscending || isSortingNotDefault || isToggleInactive || isCategoriesNotAllSelected
   }
 }
