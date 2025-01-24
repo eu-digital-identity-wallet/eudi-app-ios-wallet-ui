@@ -180,8 +180,6 @@ final class DashboardInteractorImpl: DashboardInteractor {
       filteredDocuments = filteredDocuments.filter { !$0.value.hasExpired && $0.value.state == .issued }
     } else if filterModel.selectedStateOption == LocalizableString.shared.get(with: .expired).capitalized {
       filteredDocuments = filteredDocuments.filter { $0.value.hasExpired }
-    } else if filterModel.selectedStateOption == LocalizableString.shared.get(with: .revoke).capitalized {
-      filteredDocuments = filteredDocuments.filter { $0.value.state == .failed }
     }
 
     switch filterModel.initialSorting {

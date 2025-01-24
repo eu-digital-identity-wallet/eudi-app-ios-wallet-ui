@@ -28,6 +28,7 @@ struct DashboardState: ViewState {
   let username: String
   let phase: ScenePhase
   let pendingBleModalAction: Bool
+  let showFilterIndicator: Bool
   let appVersion: String
   let allowUserInteraction: Bool
   let pendingDeletionDocument: DocumentUIModel?
@@ -84,7 +85,6 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   @Published var isSuccededDocumentsModalShowing: Bool = false
   @Published var selectedTab: SelectedTab = .home
   @Published var isAuthenticateAlertShowing: Bool = false
-  @Published var showFilterIndicator: Bool = false
 
   private var deferredTask: Task<DashboardDeferredPartialState, Error>?
 
@@ -111,6 +111,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         username: "",
         phase: .active,
         pendingBleModalAction: false,
+        showFilterIndicator: false,
         appVersion: interactor.getAppVersion(),
         allowUserInteraction: interactor.hasIssuedDocuments(),
         pendingDeletionDocument: nil,
@@ -422,6 +423,12 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     }
   }
 
+  func enableFilterIndicator(showFilterIndicator: Bool) {
+    setState {
+      $0.copy(showFilterIndicator: showFilterIndicator)
+    }
+  }
+
   private func trailingActions() -> [Action]? {
     switch selectedTab {
       case .documents:
@@ -429,7 +436,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
           Action(image: Theme.shared.image.plus) {
             self.onAdd()
           },
-          Action(image: Theme.shared.image.filterMenuIcon, hasIndicator: showFilterIndicator) {
+          Action(image: Theme.shared.image.filterMenuIcon, hasIndicator: viewState.showFilterIndicator) {
             self.showFilters()
           }
         ]

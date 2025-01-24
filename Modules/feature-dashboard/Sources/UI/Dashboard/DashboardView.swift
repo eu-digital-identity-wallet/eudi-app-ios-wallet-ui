@@ -189,6 +189,8 @@ struct DashboardView<Router: RouterHost>: View {
         selectedExpiryOption: selectedExpiryOption,
         selectedStateOption: selectedStateOption
       )
+
+      viewModel.enableFilterIndicator(showFilterIndicator: showFilterIndicator)
     })
     .onDisappear {
       self.viewModel.onPause()
@@ -320,6 +322,7 @@ private func content(
     username: "First name",
     phase: .active,
     pendingBleModalAction: false,
+    showFilterIndicator: false,
     appVersion: "App version",
     allowUserInteraction: true,
     pendingDeletionDocument: nil,
