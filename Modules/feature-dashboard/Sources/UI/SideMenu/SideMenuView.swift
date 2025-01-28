@@ -27,7 +27,6 @@ struct SideMenuView<Router: RouterHost>: View {
 
   var body: some View {
     ContentScreenView(
-      padding: .zero,
       canScroll: true,
       navigationTitle: .myEuWallet,
       toolbarContent: toolbarContent()
@@ -86,7 +85,7 @@ private func content(viewState: SideMenuViewState) -> some View {
       .frame(maxWidth: .infinity, alignment: .center)
 
   }
-  .padding(.top)
+  .padding(.bottom, Theme.shared.dimension.padding)
 }
 
 #Preview {

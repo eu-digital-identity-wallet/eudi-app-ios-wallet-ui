@@ -49,7 +49,7 @@ public struct DocumentUIModel: Identifiable, Equatable, Sendable, FilterableItem
 private extension DocumentUIModel {
   func supportingText() -> String {
     if value.hasExpired {
-      return LocalizableString.shared.get(with: .expired)
+      return LocalizableString.shared.get(with: .expired).capitalizedFirst()
     } else {
       switch value.state {
       case .issued:
