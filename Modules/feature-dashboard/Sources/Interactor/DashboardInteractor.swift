@@ -49,11 +49,13 @@ public protocol DashboardInteractor: Sendable {
     filterModel: FilterModel?,
     documents: [DocumentUIModel]
   ) -> [DocumentUIModel]
+  func fetchFilteredDocuments(failedDocuments: [String]) -> FilterableList?
 }
 
 final class DashboardInteractorImpl: DashboardInteractor {
 
   private let walletController: WalletKitController
+  private let filtersController: FiltersController
   private let reachabilityController: ReachabilityController
   private let configLogic: ConfigLogic
 
@@ -61,10 +63,12 @@ final class DashboardInteractorImpl: DashboardInteractor {
 
   init(
     walletController: WalletKitController,
+    filtersController: FiltersController,
     reachabilityController: ReachabilityController,
     configLogic: ConfigLogic
   ) {
     self.walletController = walletController
+    self.filtersController = filtersController
     self.reachabilityController = reachabilityController
     self.configLogic = configLogic
   }
@@ -91,6 +95,25 @@ final class DashboardInteractorImpl: DashboardInteractor {
     }
 
     return .success(username, documents, hasIssuedDocuments())
+  }
+
+  public func fetchFilteredDocuments(failedDocuments: [String]) -> FilterableList? {
+    let documents = self.walletController.fetchAllDocuments()
+
+    guard !documents.isEmpty else {
+      return nil
+    }
+
+    let documentUIModels = documents.transformToDocumentUi(with: failedDocuments)
+
+    let filterableItems = documentUIModels.map { document in
+      FilterableItem(
+        data: document,
+        attributes: DocumentFilterableAttributes(document: document)
+      )
+    }
+
+    return FilterableList(items: filterableItems)
   }
 
   public func getBleAvailability() async -> Reachability.BleAvailibity {

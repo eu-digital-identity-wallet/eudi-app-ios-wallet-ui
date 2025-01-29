@@ -45,5 +45,10 @@ public final class LogicBusinessAssembly: Assembly {
       ReachabilityControllerImpl()
     }
     .inObjectScope(ObjectScope.transient)
+
+    container.register(FiltersController.self) { _ in
+      FiltersControllerImpl()
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }
