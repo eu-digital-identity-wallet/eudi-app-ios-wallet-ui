@@ -118,7 +118,7 @@ private func content(
                   WrapListItemView(
                     listItem: ListItemData(
                       mainText: .custom(item.title),
-                      leadingIcon: (nil, image),
+                      leadingIcon: .init(image: image),
                       trailingContent: .checkbox(
                         item.isEnabled,
                         item.isSelected

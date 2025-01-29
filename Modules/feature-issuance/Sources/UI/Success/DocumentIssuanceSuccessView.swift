@@ -117,20 +117,7 @@ private func document(
         isLoading: viewState.isLoading,
         content: {
           WrapListItemsView(
-            listItems: document.documentFields.map({ field in
-              switch field.value {
-              case .string(let value):
-                  .init(
-                    mainText: .custom(value),
-                    overlineText: .custom(field.title)
-                  )
-              case .image(let image):
-                  .init(
-                    mainText: .custom(field.title),
-                    leadingIcon: (nil, image)
-                  )
-              }
-            })
+            listItems: document.documentFields
           )
         }
       )

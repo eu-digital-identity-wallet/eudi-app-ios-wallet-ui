@@ -94,33 +94,9 @@ private func content(
       VStack(spacing: .zero) {
         WrapCardView {
           VStack(spacing: .zero) {
-            ForEach(viewState.document.documentFields) { documentFieldContent in
-              switch documentFieldContent.value {
-              case .string(let value):
-                WrapListItemView(
-                  listItem: .init(
-                    mainText: .custom(value),
-                    overlineText: .custom(documentFieldContent.title),
-                    isBlur: isVisible
-                  ),
-                  minHeight: false
-                )
-              case .image(let image):
-                WrapListItemView(
-                  listItem: .init(
-                    mainText: .custom(documentFieldContent.title),
-                    leadingIcon: (nil, image),
-                    isBlur: isVisible
-                  ),
-                  minHeight: false
-                )
-              }
-              if documentFieldContent != viewState.document.documentFields.last {
-                Divider()
-                  .padding(.horizontal, SPACING_MEDIUM)
-                  .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
-              }
-            }
+            WrapListItemsView(
+              listItems: viewState.document.documentFields
+            )
           }
         }
       }
