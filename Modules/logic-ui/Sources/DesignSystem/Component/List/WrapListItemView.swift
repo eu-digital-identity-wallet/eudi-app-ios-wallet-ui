@@ -130,7 +130,7 @@ public struct WrapListItemView: View {
           mainText: .custom("Main Text"),
           overlineText: .custom("Overline Text"),
           supportingText: .custom("Valid until: 22 March 2030"),
-          leadingIcon: (nil, Image(systemName: "star")),
+          leadingIcon: LeadingIcon(image: Image(systemName: "star")),
           trailingContent: .icon(Image(systemName: "chevron.right"))
         ),
         action: {}
@@ -154,7 +154,7 @@ public struct WrapListItemView: View {
           mainText: .custom("Another Item"),
           overlineText: nil,
           supportingText: .custom("Additional Info"),
-          leadingIcon: (nil, Image(systemName: "heart"))
+          leadingIcon: LeadingIcon(image: Image(systemName: "heart"))
         )
       )
     }
@@ -166,7 +166,7 @@ public struct WrapListItemView: View {
           overlineText: .custom("Overline Texr"),
           supportingText: .custom("Additional Info"),
           overlineTextColor: Theme.shared.color.error,
-          leadingIcon: (nil, Image(systemName: "heart"))
+          leadingIcon: LeadingIcon(image: Image(systemName: "heart"))
         )
       )
     }
@@ -177,7 +177,7 @@ public struct WrapListItemView: View {
           mainText: .custom("Main Text"),
           overlineText: .custom("Overline Text"),
           supportingText: .custom("Valid until: 22 March 2030"),
-          leadingIcon: (nil, Image(systemName: "star")),
+          leadingIcon: LeadingIcon(image: Image(systemName: "star")),
           trailingContent: .checkbox(true, true) { _ in }
         ),
         action: {}

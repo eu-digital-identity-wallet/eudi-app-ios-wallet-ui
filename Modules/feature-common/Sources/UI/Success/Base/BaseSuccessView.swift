@@ -115,7 +115,7 @@ private func documents(
               WrapListItemView(
                 listItem: ListItemData(
                   mainText: .custom(item.title),
-                  leadingIcon: (nil, image),
+                  leadingIcon: .init(image: image),
                   trailingContent: ignoreTrainingContent ? .none : .checkbox(
                     item.isEnabled,
                     item.isSelected

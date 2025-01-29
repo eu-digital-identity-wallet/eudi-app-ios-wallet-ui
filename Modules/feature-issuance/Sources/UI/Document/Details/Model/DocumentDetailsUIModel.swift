@@ -17,6 +17,7 @@ import SwiftUI
 import logic_resources
 import logic_business
 import logic_core
+import logic_ui
 
 public struct DocumentDetailsUIModel: Sendable, Equatable, Identifiable {
 
@@ -27,7 +28,7 @@ public struct DocumentDetailsUIModel: Sendable, Equatable, Identifiable {
   public let holdersName: String
   public let createdAt: Date
   public let hasExpired: Bool
-  public let documentFields: [DocumentField]
+  public let documentFields: [ListItemData]
 }
 
 public extension DocumentDetailsUIModel {
@@ -51,18 +52,6 @@ public extension DocumentDetailsUIModel {
     }
   }
 
-  struct DocumentField: Identifiable, Sendable, Equatable {
-
-    public indirect enum Value: Sendable, Equatable {
-      case string(String)
-      case image(Image)
-    }
-
-    public let id: String
-    public let title: String
-    public let value: Value
-  }
-
   static func mock() -> DocumentDetailsUIModel {
     DocumentDetailsUIModel(
       id: UUID().uuidString,
@@ -80,29 +69,28 @@ public extension DocumentDetailsUIModel {
       documentFields:
         [
           .init(
-            id: UUID().uuidString,
-            title: "ID no",
-            value: .string("AB12356")),
+            mainText: .custom("AB12356"),
+            overlineText: .custom("ID no")
+          ),
           .init(
-            id: UUID().uuidString,
-            title: "Nationality",
-            value: .string("Hellenic")),
+            mainText: .custom("Hellenic"),
+            overlineText: .custom("Nationality")
+          ),
           .init(
-            id: UUID().uuidString,
-            title: "Place of birth",
-            value: .string("21 Oct 1994")),
+            mainText: .custom("21 Oct 1994"),
+            overlineText: .custom("Place of birth")
+          ),
           .init(
-            id: UUID().uuidString,
-            title: "Height",
-            value: .string("1,82"))
+            mainText: .custom("1,82"),
+            overlineText: .custom("Height")
+          )
         ]
       +
       Array(
         count: 6,
-        createElement: DocumentField(
-          id: UUID().uuidString,
-          title: "Placeholder Field Title".padded(padLength: 5),
-          value: .string("Placeholder Field Value".padded(padLength: 10))
+        createElement: .init(
+          mainText: .custom("Placeholder Field Value".padded(padLength: 10)),
+          overlineText: .custom("Placeholder Field Title".padded(padLength: 5))
         )
       )
     )
@@ -124,7 +112,7 @@ extension DocClaimsDecodable {
       )
     }
 
-    let documentFields: [DocumentDetailsUIModel.DocumentField] =
+    let documentFields: [ListItemData] =
     flattenValues(
       input: docClaims
         .compactMap({$0})
@@ -138,7 +126,10 @@ extension DocClaimsDecodable {
         )
         .parseUserPseudonym()
     )
-    .sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
+    .sorted(by: {
+      LocalizableString.shared.get(with: $0.mainText)
+              .localizedCompare(LocalizableString.shared.get(with: $1.mainText)) == .orderedAscending
+    })
 
     var bearerName: String {
       guard let fullName = getBearersName() else {
@@ -167,7 +158,7 @@ extension DocClaimsDecodable {
     )
   }
 
-  private func flattenValues(input: [DocClaim]) -> [DocumentDetailsUIModel.DocumentField] {
+  private func flattenValues(input: [DocClaim]) -> [ListItemData] {
     input.reduce(into: []) { partialResult, docClaim in
 
       let uuid = UUID().uuidString
@@ -178,8 +169,8 @@ extension DocClaimsDecodable {
         partialResult.append(
           .init(
             id: uuid,
-            title: title,
-            value: .image(Image(uiImage: uiImage))
+            mainText: .custom(title),
+            leadingIcon: .init(image: Image(uiImage: uiImage))
           )
         )
 
@@ -187,16 +178,16 @@ extension DocClaimsDecodable {
         partialResult.append(
           .init(
             id: uuid,
-            title: title,
-            value: .string(docClaim.flattenNested(nested: nested).stringValue)
+            mainText: .custom(docClaim.flattenNested(nested: nested).stringValue),
+            overlineText: .custom(title)
           )
         )
       } else {
         partialResult.append(
           .init(
             id: uuid,
-            title: title,
-            value: .string(docClaim.stringValue)
+            mainText: .custom(docClaim.stringValue),
+            overlineText: .custom(title)
           )
         )
       }

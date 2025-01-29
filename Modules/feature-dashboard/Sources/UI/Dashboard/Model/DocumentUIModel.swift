@@ -38,9 +38,9 @@ public struct DocumentUIModel: Identifiable, Equatable, Sendable {
       overlineText: .custom(value.heading),
       supportingText: .custom(supportingText()),
       supportingTextColor: supportingColor(),
-      leadingIcon: (
-        value.image?.url,
-        value.image?.placeholder
+      leadingIcon: .init(
+        imageUrl: value.image?.url,
+        image: value.image?.placeholder
       ),
       trailingContent: .icon(indicatorImage(), supportingColor())
     )
