@@ -165,7 +165,7 @@ final class WalletKitControllerImpl: WalletKitController {
   }
 
   func fetchAllDocuments() -> [DocClaimsDecodable] {
-    return fetchIssuedDocuments() + fetchDeferredDocuments().transformToDocsDecodable()
+    return fetchIssuedDocuments() + fetchDeferredDocuments().transformToDeferredDecodables()
   }
 
   func fetchDeferredDocuments() -> [WalletStorage.Document] {
@@ -206,7 +206,7 @@ final class WalletKitControllerImpl: WalletKitController {
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable {
     let result = try await wallet.requestDeferredIssuance(deferredDoc: doc)
     if result.isDeferred {
-      return result.transformToDocDecodable()
+      return result.transformToDeferredDecodable()
     } else if let doc = fetchDocument(with: result.id) {
       return doc
     } else {

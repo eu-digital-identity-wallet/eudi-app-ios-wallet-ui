@@ -28,4 +28,6 @@ public struct DeferrredDocument: DocClaimsDecodable {
   public var issuerDisplay: [MdocDataModel18013.DisplayMetadata]?
   public var credentialIssuerIdentifier: String?
   public var configurationIdentifier: String?
+  public var validFrom: Date?
+  public var validUntil: Date?
 }

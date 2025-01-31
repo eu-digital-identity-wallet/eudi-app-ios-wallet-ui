@@ -35,7 +35,7 @@ public struct IssuerDataUIModel: Sendable, Equatable {
 
   public static func mock() -> IssuerDataUIModel {
     IssuerDataUIModel(
-      icon: Theme.shared.image.issuerCardImagePlaceholder,
+      icon: Theme.shared.image.id,
       title: "",
       isVerified: true
     )
