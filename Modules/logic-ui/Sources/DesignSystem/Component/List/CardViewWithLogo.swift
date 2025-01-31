@@ -54,10 +54,8 @@ public struct CardViewWithLogo: View {
             RemoteImageView(
               url: url,
               icon: image,
-              size: .init(
-                width: Theme.shared.dimension.remoteImageIconSize,
-                height: Theme.shared.dimension.remoteImageIconSize
-              )
+              width: getScreenRect().width / 2.5,
+              height: nil
             )
             Spacer()
           }

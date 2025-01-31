@@ -103,7 +103,7 @@ private func nfcFooter(contentSize: CGFloat) -> some View {
       .typography(Theme.shared.font.bodyLarge)
       .foregroundStyle(Theme.shared.color.onSurface)
 
-    Theme.shared.image.nfcImage
+    Theme.shared.image.nfc
       .resizable()
       .scaledToFit()
       .frame(width: 36, height: 36)

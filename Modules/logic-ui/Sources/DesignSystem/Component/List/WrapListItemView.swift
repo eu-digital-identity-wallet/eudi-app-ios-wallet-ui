@@ -41,10 +41,8 @@ public struct WrapListItemView: View {
         RemoteImageView(
           url: url,
           icon: listItem.leadingIcon?.image,
-          size: .init(
-            width: Theme.shared.dimension.remoteImageIconSize,
-            height: Theme.shared.dimension.remoteImageIconSize
-          )
+          width: Theme.shared.dimension.remoteImageIconSize,
+          height: Theme.shared.dimension.remoteImageIconSize
         )
         .if(listItem.isBlur) {
           $0.blur(radius: 4, opaque: false)

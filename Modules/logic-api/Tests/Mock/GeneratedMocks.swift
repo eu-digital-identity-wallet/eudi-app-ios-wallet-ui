@@ -232,6 +232,19 @@ public class AnalyticsControllerStub:AnalyticsController, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-analytics/Sources/Demo/AppCenterProvider.swift'
+
+import Cuckoo
+import AppCenter
+import AppCenterCrashes
+import AppCenterAnalytics
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_api
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-analytics/Sources/Provider/AnalyticsProvider.swift'
 
 import Cuckoo
@@ -4691,6 +4704,7 @@ import Foundation
 
 import Cuckoo
 import Foundation
+import EudiWalletKit
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

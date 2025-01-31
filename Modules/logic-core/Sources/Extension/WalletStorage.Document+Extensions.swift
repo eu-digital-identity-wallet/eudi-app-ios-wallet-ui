@@ -14,17 +14,18 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import EudiWalletKit
 
 extension Array where Element == WalletStorage.Document {
-  func transformToDocsDecodable() -> [DocClaimsDecodable] {
+  func transformToDeferredDecodables() -> [DocClaimsDecodable] {
     return self.compactMap { document in
-      return document.transformToDocDecodable()
+      return document.transformToDeferredDecodable()
     }
   }
 }
 
 extension WalletStorage.Document {
-  func transformToDocDecodable() -> DocClaimsDecodable {
+  func transformToDeferredDecodable() -> DeferrredDocument {
     let metadata = DocMetadata(from: self.metadata)
     return DeferrredDocument(
       id: self.id,
@@ -36,7 +37,9 @@ extension WalletStorage.Document {
       display: metadata?.display,
       issuerDisplay: metadata?.issuerDisplay,
       credentialIssuerIdentifier: metadata?.credentialIssuerIdentifier,
-      configurationIdentifier: metadata?.configurationIdentifier
+      configurationIdentifier: metadata?.configurationIdentifier,
+      validFrom: nil,
+      validUntil: nil
     )
   }
 }
