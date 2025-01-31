@@ -15,18 +15,21 @@
  */
 import Foundation
 import Combine
+import logic_resources
+import Copyable
 
 public protocol FiltersController: Sendable {
 
   var filterResultPublisher: AnyPublisher<FilterResult, Never> { get }
 
+  func initializeFilters(filters: Filters, filterableList: FilterableList)
   func updateLists(filterableList: FilterableList)
   func applyFilters()
   func applySearch(query: String)
   func resetFilters()
   func revertFilters()
   func updateFilter(filterGroupId: String, filterId: String)
-  func updateSortOrder(sortOrder: SortOrder)
+  func updateSortOrder(sortOrder: SortOrderType)
 }
 
 final class FiltersControllerImpl: FiltersController {
@@ -35,13 +38,13 @@ final class FiltersControllerImpl: FiltersController {
     return filterResultSubject.eraseToAnyPublisher()
   }
 
-  private let appliedFilters: Filters
-  private let defaultFilters: Filters
-  private let searchQuery: String = ""
-  private let initialList: FilterableList
-  private let filteredList: FilterableList
-  private let filterableList: FilterableList
-  private let snapshotFilters: Filters = Filters.emptyFilters()
+  nonisolated(unsafe) private var appliedFilters: Filters
+  nonisolated(unsafe) private var defaultFilters: Filters
+  nonisolated(unsafe) private var searchQuery: String = ""
+  nonisolated(unsafe) private var initialList: FilterableList
+  nonisolated(unsafe) private var filteredList: FilterableList
+  nonisolated(unsafe) private var filterableList: FilterableList
+  nonisolated(unsafe) private var snapshotFilters: Filters = Filters.emptyFilters()
 
   nonisolated(unsafe) private let filterResultSubject = PassthroughSubject<FilterResult, Never>()
 
@@ -57,6 +60,17 @@ final class FiltersControllerImpl: FiltersController {
     self.initialList = initialList ?? FilterableList(items: [])
     self.filterableList = filterableList ?? FilterableList(items: [])
     self.filteredList = filteredList ?? FilterableList(items: [])
+  }
+
+  func initializeFilters (
+    filters: Filters,
+    filterableList: FilterableList
+  ) {
+      self.appliedFilters = filters
+      self.defaultFilters = filters
+      self.initialList = filterableList
+      self.filterableList = filterableList
+      self.filteredList = filterableList
   }
 
   func updateLists(filterableList: FilterableList) {
@@ -96,8 +110,8 @@ final class FiltersControllerImpl: FiltersController {
 
     self.filterResultSubject.send(
       FilterResult(
-      filteredList: FilterableList(items: filteredItems),
-      updatedFilters: self.appliedFilters
+        filteredList: FilterableList(items: filteredItems),
+        updatedFilters: self.appliedFilters
       )
     )
   }
@@ -112,15 +126,44 @@ final class FiltersControllerImpl: FiltersController {
   }
 
   func revertFilters() {
+    let revertFilters = Filters.emptyFilters()
     self.filterResultSubject.send(
       FilterResult(
         filteredList: self.filteredList,
-        updatedFilters: self.appliedFilters
+        updatedFilters: revertFilters
       )
     )
   }
 
-  func updateFilter(filterGroupId: String, filterId: String) { }
+  func updateFilter(filterGroupId: String, filterId: String) {
+    let updatedFilterGroups = appliedFilters.filterGroups.map { group in
+      if group.id == filterGroupId {
+        if let targetFilter = group.filters.first(where: { $0.id == filterId }) {
+          return group.copy(filters: group.filters.map { filter in
+            filter.copy(selected: filter.id == targetFilter.id)
+          })
+        }
+      }
+      return group
+    }
 
-  func updateSortOrder(sortOrder: SortOrder) { }
+    let updatedFilters = Filters(filterGroups: updatedFilterGroups, sortOrder: appliedFilters.sortOrder)
+
+    self.filterResultSubject.send(
+      FilterResult(
+        filteredList: filteredList,
+        updatedFilters: updatedFilters
+      ))
+  }
+
+  func updateSortOrder(sortOrder: SortOrderType) {
+    let updatedFilters = appliedFilters.copy(sortOrder: sortOrder)
+
+    self.filterResultSubject.send(
+      FilterResult(
+        filteredList: filteredList,
+        updatedFilters: updatedFilters
+      )
+    )
+  }
 }

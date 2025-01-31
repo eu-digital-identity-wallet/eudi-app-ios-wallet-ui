@@ -15,38 +15,93 @@
  */
 import Foundation
 
-struct Filters: Sendable {
-  let filterGroups: [FilterGroup]
-  let sortOrder: SortOrderType
+public struct Filters: Sendable {
+  public let filterGroups: [FilterGroup]
+  public let sortOrder: SortOrderType
 
-  var isEmpty: Bool {
+  public init(
+    filterGroups: [FilterGroup],
+    sortOrder: SortOrderType
+  ) {
+    self.filterGroups = filterGroups
+    self.sortOrder = sortOrder
+  }
+
+  public var isEmpty: Bool {
     return filterGroups.isEmpty
   }
 
-  static func emptyFilters() -> Filters {
+  public static func emptyFilters() -> Filters {
     return Filters(filterGroups: [], sortOrder: .ascending)
+  }
+
+  public func copy(sortOrder: SortOrderType) -> Filters {
+    return Filters(filterGroups: self.filterGroups, sortOrder: sortOrder)
   }
 }
 
-struct FilterGroup {
-    var id: String
-    var name: String
-    var filters: [FilterItem]
+public struct FilterGroup: Sendable {
+  public var id: String
+  public var name: String
+  public var filters: [FilterItem]
+
+  public init(
+    id: String? = nil,
+    name: String,
+    filters: [FilterItem]
+  ) {
+    self.id = id ?? UUID().uuidString
+    self.name = name
+    self.filters = filters
+  }
+
+  func copy(filters: [FilterItem]) -> FilterGroup {
+      return FilterGroup(id: self.id, name: self.name, filters: filters)
+  }
 }
 
-struct FilterItem: Sendable {
-  let id: String
-  let name: String
-  let selected: Bool
-  let filterableAction: FilterAction
+public struct FilterItem: Sendable {
+  public let id: String
+  public let name: String
+  public let selected: Bool
+  public let filterableAction: FilterAction
+
+  public init(
+    id: String? = nil,
+    name: String,
+    selected: Bool,
+    filterableAction: FilterAction
+  ) {
+    self.id = id ?? UUID().uuidString
+    self.name = name
+    self.selected = selected
+    self.filterableAction = filterableAction
+  }
+
+  func copy(selected: Bool) -> FilterItem {
+    return FilterItem(
+      id: self.id,
+      name: self.name,
+      selected: selected,
+      filterableAction: self.filterableAction
+    )
+  }
 }
 
 public struct FilterResult: Sendable {
-  var filteredList: FilterableList
-  var updatedFilters: Filters
+  public var filteredList: FilterableList
+  public var updatedFilters: Filters
+
+  public init(
+    filteredList: FilterableList,
+    updatedFilters: Filters
+  ) {
+    self.filteredList = filteredList
+    self.updatedFilters = updatedFilters
+  }
 }
 
-enum SortOrderType {
+public enum SortOrderType: Sendable {
   case ascending
   case descending
 }

@@ -16,6 +16,18 @@
 import Foundation
 import logic_resources
 
+public struct FilterUISection: Sendable {
+  let id: String
+  let filters: [FilterUIItem]
+  let sectionTitle: String
+}
+
+struct FilterUIItem {
+  let id: String
+  let title: String
+  let selected: Bool
+}
+
 public enum FilterSections {
   case issuedSortingDate
   case sortBy

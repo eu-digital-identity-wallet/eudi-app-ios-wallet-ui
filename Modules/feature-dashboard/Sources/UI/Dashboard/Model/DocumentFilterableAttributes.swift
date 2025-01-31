@@ -18,10 +18,12 @@ import logic_business
 
 struct DocumentFilterableAttributes: FilterableAttributes {
   let searchText: String
+  let heading: String?
 
   init(
     document: DocumentUIModel
   ) {
     self.searchText = "\(document.value.heading) \(document.value.title)"
+    self.heading = document.value.heading
   }
 }

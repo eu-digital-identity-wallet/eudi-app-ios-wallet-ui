@@ -15,7 +15,7 @@
  */
 import Foundation
 
-protocol FilterAction: Sendable {
+public protocol FilterAction: Sendable {
   func applyFilter(
     sortOrder: SortOrderType,
     filterableItems: FilterableList,
@@ -23,10 +23,16 @@ protocol FilterAction: Sendable {
   ) -> FilterableList
 }
 
-struct Filter<T: FilterableAttributes>: FilterAction {
-  var predicate: @Sendable (T, FilterItem) -> Bool
+public struct Filter<T: FilterableAttributes>: FilterAction {
+  public var predicate: @Sendable (T, FilterItem) -> Bool
 
-  func applyFilter(
+  public init(
+    predicate: @Sendable @escaping (FilterableAttributes, FilterItem) -> Bool
+  ) {
+    self.predicate = predicate
+  }
+
+  public func applyFilter(
     sortOrder: SortOrderType,
     filterableItems: FilterableList,
     filter: FilterItem
@@ -39,10 +45,16 @@ struct Filter<T: FilterableAttributes>: FilterAction {
   }
 }
 
-struct Sort<T: FilterableAttributes, R: Comparable>: FilterAction {
-  var selector: @Sendable (T) -> R?
+public struct Sort<T: FilterableAttributes, R: Comparable>: FilterAction {
+  public var selector: @Sendable (T) -> R?
 
-  func applyFilter(
+  public init(
+    selector: @Sendable @escaping (T) -> R?
+  ) {
+    self.selector = selector
+  }
+
+  public func applyFilter(
     sortOrder: SortOrderType,
     filterableItems: FilterableList,
     filter: FilterItem

@@ -15,34 +15,26 @@
  */
 import Foundation
 
-public struct FilterableList: Sendable {
-  public let items: [FilterableItem]
+extension Date {
 
-  public init(items: [FilterableItem]) {
-    self.items = items
+  func isWithinNextDays(_ days: Int) -> Bool {
+    let calendar = Calendar.current
+    guard let futureDate = calendar.date(byAdding: .day, value: days, to: self) else {
+      return false
+    }
+    return self >= futureDate
   }
-}
 
-public struct FilterableItem: Sendable {
-  public let data: any Sendable
-  public let attributes: FilterableAttributes
-
-  public init(
-    data: any Sendable,
-    attributes: FilterableAttributes
-  ) {
-    self.data = data
-    self.attributes = attributes
+  func isBeyondNextDays(_ days: Int) -> Bool {
+    let calendar = Calendar.current
+    guard let futureDate = calendar.date(byAdding: .day, value: days, to: self) else {
+      return false
+    }
+    return self > futureDate
   }
-}
 
-public protocol FilterableAttributes: Sendable {
-  var searchText: String { get }
-  var heading: String? { get }
-}
-
-extension FilterableList {
-  func copy() -> FilterableList {
-    return FilterableList(items: self.items)
+  func isBeforeToday() -> Bool {
+    return self < Date()
   }
+
 }

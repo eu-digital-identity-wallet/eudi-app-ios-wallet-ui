@@ -20,7 +20,7 @@ import logic_resources
 import Combine
 
 public enum DashboardPartialState: Sendable {
-  case success(String, [DocumentUIModel], Bool)
+  case success(String, FilterableList, Bool)
   case failure(Error)
 }
 
@@ -28,6 +28,10 @@ public enum DashboardDeleteDeferredPartialState: Sendable {
   case success
   case noDocuments
   case failure(Error)
+}
+
+public enum FiltersPartialState: Sendable {
+  case filterResult([DocumentUIModel], [FilterUISection])
 }
 
 public enum DashboardDeferredPartialState: Sendable {
@@ -49,7 +53,11 @@ public protocol DashboardInteractor: Sendable {
     filterModel: FilterModel?,
     documents: [DocumentUIModel]
   ) -> [DocumentUIModel]
+  // MARK: - FILTER
   func fetchFilteredDocuments(failedDocuments: [String]) -> FilterableList?
+  func onFilterChangeState() -> AnyPublisher<FiltersPartialState, Never>
+  func initializeFilters(filters: Filters, filterableList: FilterableList)
+  func applyFilters()
 }
 
 final class DashboardInteractorImpl: DashboardInteractor {
@@ -85,9 +93,41 @@ final class DashboardInteractorImpl: DashboardInteractor {
     return !walletController.fetchDeferredDocuments().isEmpty
   }
 
-  public func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState {
+  public func onFilterChangeState() -> AnyPublisher<FiltersPartialState, Never> {
+    return filtersController.filterResultPublisher
+      .map { filterResult in
+        let documentsUI = filterResult.filteredList.items.compactMap { filterableItem in
+          return filterableItem.data as? DocumentUIModel
+        }
 
-    let documents: [DocumentUIModel]? = fetchDocuments(failedDocuments: failedDocuments)
+        let filterSections = filterResult.updatedFilters.filterGroups.map { filteredGroup in
+          FilterUISection(
+            id: filteredGroup.id,
+            filters: filteredGroup.filters.map { filter in
+              FilterUIItem(
+                id: filter.id,
+                title: filter.name,
+                selected: filter.selected
+              )
+            },
+            sectionTitle: filteredGroup.name)
+        }
+
+        return .filterResult(documentsUI, filterSections)
+      }
+      .eraseToAnyPublisher()
+  }
+
+  func initializeFilters(filters: Filters, filterableList: FilterableList) {
+    filtersController.initializeFilters(filters: filters, filterableList: filterableList)
+  }
+
+  func applyFilters() {
+    filtersController.applyFilters()
+  }
+
+  public func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState {
+    let documents: FilterableList? = fetchFilteredDocuments(failedDocuments: failedDocuments)
     let username = fetchUsername()
 
     guard let documents = documents else {

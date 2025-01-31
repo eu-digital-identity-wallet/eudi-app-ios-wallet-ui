@@ -25,6 +25,7 @@ struct DashboardState: ViewState {
   let documents: [DocumentUIModel]
   var filteredDocuments: [DocumentUIModel]
   var filterModel: FilterModel?
+  let filterUIModel: [FilterUISection]
   let username: String
   let phase: ScenePhase
   let pendingBleModalAction: Bool
@@ -36,6 +37,9 @@ struct DashboardState: ViewState {
   let failedDocuments: [String]
   let moreOptions: [MoreModalOption]
   let contentHeaderConfig: ContentHeaderConfig
+  let isInitialFetch: Bool
+
+  let filters: Filters
 
   var pendingDocumentTitle: String {
     pendingDeletionDocument?.value.title ?? ""
@@ -73,6 +77,18 @@ public enum SelectedTab {
   case transactions
 }
 
+struct DocumentAttributes: FilterableAttributes {
+  let searchText: String
+  let heading: String?
+  let test: String
+
+  public init(searchText: String, heading: String?, test: String) {
+    self.searchText = searchText
+    self.heading = heading
+    self.test = test
+  }
+}
+
 final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardState> {
 
   private let interactor: DashboardInteractor
@@ -105,9 +121,10 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       router: router,
       initialState: .init(
         isLoading: true,
-        documents: DocumentUIModel.mocks(),
-        filteredDocuments: DocumentUIModel.mocks(),
+        documents: [],
+        filteredDocuments: [],
         filterModel: nil,
+        filterUIModel: [],
         username: "",
         phase: .active,
         pendingBleModalAction: false,
@@ -124,11 +141,62 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
             appText: ThemeManager.shared.image.euditext
           )
         ),
+        isInitialFetch: true,
+        filters: Filters(
+          filterGroups: [
+            // MARK: - EXPIRY
+            FilterGroup(
+              name: LocalizableString.shared.get(with: .expiryPeriodSectionTitle),
+              filters: [
+                FilterItem(
+                  name: LocalizableString.shared.get(with: .nextSevenDays).capitalized,
+                  selected: false,
+                  filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
+                    Date().isWithinNextDays(7)
+                  })),
+                FilterItem(
+                  name: LocalizableString.shared.get(with: .nextThirtyDays).capitalized,
+                  selected: false,
+                  filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
+                    Date().isWithinNextDays(30)
+                  })),
+                FilterItem(
+                  name: LocalizableString.shared.get(with: .beyondThiryDays).capitalized,
+                  selected: false,
+                  filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
+                    Date().isBeyondNextDays(30)
+                  })),
+                FilterItem(
+                  name: LocalizableString.shared.get(with: .beforeToday).capitalized,
+                  selected: false,
+                  filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
+                    Date().isBeforeToday()
+                  }))
+              ]
+            )
+          ],
+          sortOrder: SortOrderType.ascending
+        ),
         documentSections: [.issuedSortingDate]
       )
     )
 
     listenForSuccededIssuedModalChanges()
+  }
+
+  func onFiltersChangeState() async {
+    interactor.onFilterChangeState()
+      .sink { _ in } receiveValue: { [weak self] (state) in
+        guard let self = self else { return }
+
+        switch state {
+        case .filterResult(let documentsUI, let filterSections):
+          setState {
+            $0.copy(documents: documentsUI, filterUIModel: filterSections)
+          }
+        }
+      }
+      .store(in: &cancellables)
   }
 
   func fetch() async {
@@ -141,21 +209,22 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
     switch state {
     case .success(let username, let documents, let hasIssuedDocuments):
-      let issuers = Array(Set(documents.map { $0.value.heading })).sorted()
+//      let issuers = Array(Set(documents.items.compactMap { $0.attributes.heading })).sorted()
+
+      if viewState.isInitialFetch {
+        interactor.initializeFilters(filters: viewState.filters, filterableList: documents)
+      } else {
+        //UPDATE FILTES
+      }
+
+      interactor.applyFilters()
+
       setState {
         $0.copy(
           isLoading: false,
-          documents: documents,
-          filteredDocuments: documents,
           username: username,
           allowUserInteraction: hasIssuedDocuments,
-          documentSections: [
-            .issuedSortingDate,
-            .sortBy,
-            .issuer(options: issuers),
-            .expiryPeriod,
-            .state
-          ]
+          isInitialFetch: false
         )
       }
       onDocumentsRetrievedPostActions()
@@ -292,15 +361,15 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       documents: viewState.documents
     )
 
-    let newDocuments = sortedDocuments.filter {
-      if trimmedSearchQuery.isEmpty {
-        return true
-      } else {
-        return $0.value.title.localizedCaseInsensitiveContains(trimmedSearchQuery) || $0.id.localizedCaseInsensitiveContains(trimmedSearchQuery)
-      }
-    }
+//    let newDocuments = sortedDocuments.filter {
+//      if trimmedSearchQuery.isEmpty {
+//        return true
+//      } else {
+//        return $0.value.title.localizedCaseInsensitiveContains(trimmedSearchQuery) || $0.id.localizedCaseInsensitiveContains(trimmedSearchQuery)
+//      }
+//    }
 
-    setState { $0.copy(filteredDocuments: newDocuments) }
+//    setState { $0.copy(filteredDocuments: newDocuments) }
   }
 
   func applyFilters(
