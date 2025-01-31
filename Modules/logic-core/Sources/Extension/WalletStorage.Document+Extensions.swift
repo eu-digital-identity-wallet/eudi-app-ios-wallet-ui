@@ -15,7 +15,6 @@
  */
 import Foundation
 import EudiWalletKit
-import OpenID4VCI
 
 extension Array where Element == WalletStorage.Document {
   func transformToDeferredDecodables() -> [DocClaimsDecodable] {

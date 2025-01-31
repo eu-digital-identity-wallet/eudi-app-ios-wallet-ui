@@ -14,49 +14,62 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import CachedAsyncImage
+import logic_resources
 
 public struct RemoteImageView: View {
 
   let url: URL?
   let icon: Image?
-  let size: CGSize
+  let width: Double?
+  let height: Double?
+
+  private var getWidth: Double {
+    guard let width = self.width else { return .infinity }
+    return width
+  }
+
+  private var getHeight: Double {
+    guard let height = self.height else { return .infinity }
+    return height
+  }
 
   public init(
     url: URL?,
     icon: Image?,
-    size: CGSize = .init(
-      width: 50.0,
-      height: 50.0
-    )
+    width: Double?,
+    height: Double?
   ) {
     self.url = url
     self.icon = icon
-    self.size = size
+    self.width = width
+    self.height = height
   }
 
   public var body: some View {
-    AsyncImage(
-      url: url
-    ) { image in
-     image
-        .resizable()
-        .scaledToFit()
-        .frame(
-          width: icon == nil ? .zero : size.width,
-          height: icon == nil ? .zero : size.height
-        )
-    } placeholder: {
-      if let placeholder = icon {
-        placeholder
+    CachedAsyncImage(url: url) { phase in
+      switch phase {
+      case .success(let image):
+        image
           .resizable()
           .scaledToFit()
-          .frame(
-            width: icon == nil ? .zero : size.width,
-            height: icon == nil ? .zero : size.height
-          )
+      case .failure:
+        if let placeholder = icon {
+          placeholder
+            .resizable()
+            .scaledToFit()
+        }
+      default:
+        ProgressView()
+          .tint(Theme.shared.color.primary)
       }
     }
-    .frame(height: icon == nil ? .zero : size.height)
+    .if(url != nil || icon != nil) { view in
+      view.frame(
+        maxWidth: self.getWidth,
+        maxHeight: self.getHeight
+      )
+    }
   }
 }
 

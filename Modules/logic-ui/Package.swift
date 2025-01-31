@@ -53,6 +53,10 @@ let package = Package(
       url: "https://github.com/AndreaMiotto/PartialSheet.git",
       from: "3.1.1"
     ),
+    .package(
+      url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git",
+      from: "2.1.1"
+    ),
     .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
@@ -83,6 +87,10 @@ let package = Package(
         .product(
           name: "Shimmer",
           package: "SwiftUI-Shimmer"
+        ),
+        .product(
+          name: "CachedAsyncImage",
+          package: "swiftui-cached-async-image"
         )
       ],
       path: "./Sources"

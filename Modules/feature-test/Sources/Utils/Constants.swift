@@ -52,6 +52,8 @@ extension Constants {
     issuerDisplay: nil,
     credentialIssuerIdentifier: nil,
     configurationIdentifier: nil,
+    validFrom: nil,
+    validUntil: nil,
     modifiedAt: nil,
     docClaims: [
       .init(
@@ -83,6 +85,8 @@ extension Constants {
     issuerDisplay: nil,
     credentialIssuerIdentifier: nil,
     configurationIdentifier: nil,
+    validFrom: nil,
+    validUntil: nil,
     modifiedAt: nil,
     docClaims: [
       .init(
