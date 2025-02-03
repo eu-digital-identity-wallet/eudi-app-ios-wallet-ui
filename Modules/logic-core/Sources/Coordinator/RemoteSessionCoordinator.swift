@@ -95,12 +95,12 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
   }
 
   public func getStream() -> AsyncStream<PresentationState> {
-    self.sendableCurrentValueSubject.getSubject().toAsyncStream()
+    self.sendableCurrentValueSubject.getAsyncStream()
   }
 
   public func stopPresentation() {
-    self.sendableCurrentValueSubject.getSubject().send(completion: .finished)
-    sendableAnyCancellable.cancel()
+    self.sendableCurrentValueSubject.complete()
+    self.sendableAnyCancellable.cancel()
   }
 
   private func createRequest() -> PresentationRequest {

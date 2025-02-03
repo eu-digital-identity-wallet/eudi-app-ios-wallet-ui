@@ -15,10 +15,10 @@
  */
 import Foundation
 
-public struct FilterModel {
-  var sections: [FilterSections]
-  var sortAscending: Bool
-  var initialSorting: String
-  var selectedExpiryOption: String?
-  var selectedStateOption: String
+public struct FilterModel: Sendable {
+  public let sections: [FilterUISection.Element]
+  public let sortAscending: Bool
+  public let initialSorting: String
+  public let selectedExpiryOption: String?
+  public let selectedStateOption: String
 }

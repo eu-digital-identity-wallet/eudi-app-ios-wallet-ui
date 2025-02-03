@@ -40,12 +40,12 @@ public struct Filters: Sendable {
 
 @Copyable
 public struct FilterGroup: Sendable {
-  public var id: UUID
-  public var name: String
-  public var filters: [FilterItem]
+  public let id: UUID
+  public let name: String
+  public let filters: [FilterItem]
 
   public init(
-    id: UUID,
+    id: UUID = UUID(),
     name: String,
     filters: [FilterItem]
   ) {
@@ -63,7 +63,7 @@ public struct FilterItem: Sendable {
   public let filterableAction: FilterAction
 
   public init(
-    id: UUID,
+    id: UUID = UUID(),
     name: String,
     selected: Bool,
     filterableAction: FilterAction

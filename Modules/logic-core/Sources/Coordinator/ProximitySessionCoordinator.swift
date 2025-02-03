@@ -113,12 +113,12 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
   }
 
   func getStream() -> AsyncStream<PresentationState> {
-    return sendableCurrentValueSubject.getSubject().toAsyncStream()
+    return sendableCurrentValueSubject.getAsyncStream()
   }
 
   public func stopPresentation() {
-    self.sendableCurrentValueSubject.getSubject().send(completion: .finished)
-    sendableAnyCancellable.cancel()
+    self.sendableCurrentValueSubject.complete()
+    self.sendableAnyCancellable.cancel()
   }
 
   private func createRequest() -> PresentationRequest {

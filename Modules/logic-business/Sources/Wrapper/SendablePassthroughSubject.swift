@@ -13,17 +13,33 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_business
+import Combine
 
-struct DocumentFilterableAttributes: FilterableAttributes {
-  let searchText: String
-  let heading: String?
+public final class SendablePassthroughSubject<T: Sendable>: @unchecked Sendable {
 
-  init(
-    document: DocumentUIModel
-  ) {
-    self.searchText = "\(document.value.heading) \(document.value.title)"
-    self.heading = document.value.heading
+  private let subject: PassthroughSubject<T, Never>
+
+  public init() {
+    subject = .init()
+  }
+
+  public func getSubject() -> PassthroughSubject<T, Never> {
+    subject
+  }
+
+  public func getPublisher() -> AnyPublisher<T, Never> {
+    subject.eraseToAnyPublisher()
+  }
+
+  public func getAsyncStream() -> AsyncStream<T> {
+    subject.toAsyncStream()
+  }
+
+  public func send(_ value: T) {
+    subject.send(value)
+  }
+
+  public func complete() {
+    subject.send(completion: .finished)
   }
 }

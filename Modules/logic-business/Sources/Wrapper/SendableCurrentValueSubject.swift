@@ -27,11 +27,27 @@ public final class SendableCurrentValueSubject<T: Sendable>: @unchecked Sendable
     subject
   }
 
+  public func getPublisher() -> AnyPublisher<T, Never> {
+    subject.eraseToAnyPublisher()
+  }
+
+  public func getAsyncStream() -> AsyncStream<T> {
+    subject.toAsyncStream()
+  }
+
+  public func send(_ value: T) {
+    subject.send(value)
+  }
+
   public func setValue(_ value: T) {
     subject.value = value
   }
 
   public func getValue() -> T {
     subject.value
+  }
+
+  public func complete() {
+    subject.send(completion: .finished)
   }
 }

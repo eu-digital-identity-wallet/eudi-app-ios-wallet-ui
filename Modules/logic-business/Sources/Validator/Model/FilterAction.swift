@@ -24,7 +24,8 @@ public protocol FilterAction: Sendable {
 }
 
 public struct Filter<T: FilterableAttributes>: FilterAction {
-  public var predicate: @Sendable (T, FilterItem) -> Bool
+
+  public let predicate: @Sendable (T, FilterItem) -> Bool
 
   public init(
     predicate: @Sendable @escaping (T, FilterItem) -> Bool
@@ -46,7 +47,8 @@ public struct Filter<T: FilterableAttributes>: FilterAction {
 }
 
 public struct Sort<T: FilterableAttributes, R: Comparable>: FilterAction {
-  public var selector: @Sendable (T) -> R?
+
+  public let selector: @Sendable (T) -> R?
 
   public init(
     selector: @Sendable @escaping (T) -> R?

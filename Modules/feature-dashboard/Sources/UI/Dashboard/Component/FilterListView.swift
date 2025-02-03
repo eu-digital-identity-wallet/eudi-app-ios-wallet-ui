@@ -37,12 +37,11 @@ struct FilterListView: View {
   @Binding var selectesSorting: String
   @Binding var stateOption: String
 
-  var applyFiltersCallback: () -> Void
-  var resetFiltersCallback: () -> Void
+  let applyFiltersCallback: () -> Void
+  let resetFiltersCallback: () -> Void
+  let onResume: () -> Void
 
-  let sections: [FilterSections]
-
-  var onResume: () -> Void
+  let sections: [FilterUISection.Element]
 
   var body: some View {
     NavigationView {
@@ -133,7 +132,7 @@ struct FilterListView: View {
     }
   }
 
-  private func expiryPeriodSection(section: FilterSections) -> some View {
+  private func expiryPeriodSection(section: FilterUISection.Element) -> some View {
     Section(header: Text(section.sectionTitle)) {
       ForEach(section.options, id: \.self) { expiry in
         ChoosableRow(
@@ -154,7 +153,7 @@ struct FilterListView: View {
     }
   }
 
-  private func stateSection(section: FilterSections) -> some View {
+  private func stateSection(section: FilterUISection.Element) -> some View {
     Section(header: Text(section.sectionTitle)) {
       ForEach(section.options, id: \.self) { state in
         ChoosableRow(
@@ -174,7 +173,7 @@ struct FilterListView: View {
     }
   }
 
-  private func issuerSection(section: FilterSections) -> some View {
+  private func issuerSection(section: FilterUISection.Element) -> some View {
     Section(header: Text(section.sectionTitle)) {
       if section.hasToggle {
         Toggle(LocalizableString.shared.get(with: .all).capitalized, isOn: Binding(
@@ -207,7 +206,7 @@ struct FilterListView: View {
     }
   }
 
-  private func sortSection(section: FilterSections) -> some View {
+  private func sortSection(section: FilterUISection.Element) -> some View {
     Section(header: Text(section.sectionTitle)) {
       ForEach(section.sorting, id: \.self) { option in
         ChoosableRow(
@@ -224,7 +223,7 @@ struct FilterListView: View {
     }
   }
 
-  private func sortBySection(section: FilterSections) -> some View {
+  private func sortBySection(section: FilterUISection.Element) -> some View {
     Section(header: Text(section.sectionTitle)) {
       ForEach(section.options, id: \.self) { sortBy in
         ChoosableRow(
@@ -247,7 +246,7 @@ struct FilterListView: View {
     }
   }
 
-  private func toggleIssuerSelection(for issuer: String, section: FilterSections) {
+  private func toggleIssuerSelection(for issuer: String, section: FilterUISection.Element) {
     if selectedOptions.contains(issuer) {
       selectedOptions.remove(issuer)
     } else {

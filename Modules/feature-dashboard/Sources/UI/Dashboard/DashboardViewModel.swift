@@ -38,14 +38,12 @@ struct DashboardState: ViewState {
   let moreOptions: [MoreModalOption]
   let contentHeaderConfig: ContentHeaderConfig
   let isInitialFetch: Bool
-
   let filters: Filters
+  let filterSections: [FilterUISection.Element]
 
   var pendingDocumentTitle: String {
     pendingDeletionDocument?.value.title ?? ""
   }
-
-  var documentSections: [FilterSections]
 }
 
 extension DashboardState {
@@ -148,32 +146,27 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
           filterGroups: [
             // MARK: - EXPIRY
             FilterGroup(
-              id: UUID(),
               name: LocalizableString.shared.get(with: .expiryPeriodSectionTitle),
               filters: [
                 FilterItem(
-                  id: UUID(),
                   name: LocalizableString.shared.get(with: .nextSevenDays).capitalized,
                   selected: false,
                   filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
                     Date().isWithinNextDays(7)
                   })),
                 FilterItem(
-                  id: UUID(),
                   name: LocalizableString.shared.get(with: .nextThirtyDays).capitalized,
                   selected: false,
                   filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
                     Date().isWithinNextDays(30)
                   })),
                 FilterItem(
-                  id: UUID(),
                   name: LocalizableString.shared.get(with: .beyondThiryDays).capitalized,
                   selected: false,
                   filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
                     Date().isBeyondNextDays(30)
                   })),
                 FilterItem(
-                  id: UUID(),
                   name: LocalizableString.shared.get(with: .beforeToday).capitalized,
                   selected: false,
                   filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
@@ -184,7 +177,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
           ],
           sortOrder: SortOrderType.ascending
         ),
-        documentSections: [.issuedSortingDate]
+        filterSections: [.issuedSortingDate]
       )
     )
 
@@ -192,19 +185,9 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     subscribeToSearch()
   }
 
-  func onFiltersChangeState() async {
-    interactor.onFilterChangeState()
-      .sink { _ in } receiveValue: { [weak self] (state) in
-        guard let self = self else { return }
-
-        switch state {
-        case .filterResult(let documentsUI, let filterSections):
-          setState {
-            $0.copy(documents: documentsUI, filterUIModel: filterSections)
-          }
-        }
-      }
-      .store(in: &cancellables)
+  func onCreate() async {
+    await onFiltersChangeState()
+    await fetch()
   }
 
   func fetch() async {
@@ -219,12 +202,12 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     case .success(let username, let documents, let hasIssuedDocuments):
 
       if viewState.isInitialFetch {
-        interactor.initializeFilters(filters: viewState.filters, filterableList: documents)
+        await interactor.initializeFilters(filters: viewState.filters, filterableList: documents)
       } else {
         //interactor.updateList()
       }
 
-      interactor.applyFilters()
+      await interactor.applyFilters()
 
       setState {
         $0.copy(
@@ -243,11 +226,15 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   }
 
   func resetFilters() {
-    interactor.resetFilters()
+    Task {
+      await interactor.resetFilters()
+    }
   }
 
   func updateFilters(sectionID: String, filterID: String) {
-    interactor.updateFilters(sectionID: sectionID, filterID: filterID)
+    Task {
+      await interactor.updateFilters(sectionID: sectionID, filterID: filterID)
+    }
   }
 
   func setPhase(with phase: ScenePhase) {
@@ -278,7 +265,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       with: .featureIssuanceModule(
         .issuanceDocumentDetails(
           config: IssuanceDetailUiConfig(flow: .extraDocument(documentId)
-          )
+                                        )
         )
       )
     )
@@ -370,12 +357,12 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   }
 
   func applyFilters(
-    section: [FilterSections],
+    section: [FilterUISection.Element],
     sortAscending: Bool,
     initialSorting: String,
     selectedExpiryOption: String?,
     selectedStateOption: String
-  ) {
+  ) async {
     setState { $0.copy(filteredDocuments: viewState.documents) }
 
     setState { $0.copy(filterModel: .init(
@@ -386,7 +373,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       selectedStateOption: selectedStateOption))
     }
 
-    let sortedDocuments = interactor.applyFiltersWithSorting(
+    let sortedDocuments = await interactor.applyFiltersWithSorting(
       filterModel: viewState.filterModel,
       documents: viewState.documents
     )
@@ -414,6 +401,24 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     router.push(with: .featureCommonModule(.qrScanner(config: ScannerUiConfig(flow: .presentation))))
   }
 
+  func getNavigationTitle() -> String {
+    switch selectedTab {
+    case .documents:
+      return LocalizableString.shared.get(with: .documents)
+    case .home:
+      return LocalizableString.shared.get(with: .home)
+    case .transactions:
+      return LocalizableString.shared.get(with: .transactions)
+    }
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: trailingActions(),
+      leadingActions: leadingActions()
+    )
+  }
+
   private func listenForSuccededIssuedModalChanges() {
     $isSuccededDocumentsModalShowing
       .dropFirst()
@@ -426,7 +431,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       }.store(in: &cancellables)
   }
 
-  func onDocumentsRetrievedPostActions() {
+  private func onDocumentsRetrievedPostActions() {
     if let deepLink = deepLinkController.getPendingDeepLinkAction() {
       Task {
         deepLinkController.handleDeepLinkAction(
@@ -478,18 +483,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     }
   }
 
-  func getNavigationTitle() -> String {
-    switch selectedTab {
-      case .documents:
-        return LocalizableString.shared.get(with: .documents)
-      case .home:
-        return LocalizableString.shared.get(with: .home)
-      case .transactions:
-        return LocalizableString.shared.get(with: .transactions)
-    }
-  }
-
-  func enableFilterIndicator(showFilterIndicator: Bool) {
+  private func enableFilterIndicator(showFilterIndicator: Bool) {
     setState {
       $0.copy(showFilterIndicator: showFilterIndicator)
     }
@@ -497,19 +491,19 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
   private func trailingActions() -> [Action]? {
     switch selectedTab {
-      case .documents:
-        return [
-          Action(image: Theme.shared.image.plus) {
-            self.onAdd()
-          },
-          Action(image: Theme.shared.image.filterMenuIcon, hasIndicator: viewState.showFilterIndicator) {
-            self.showFilters()
-          }
-        ]
-      case .home:
-        return nil
-      case .transactions:
-        return nil
+    case .documents:
+      return [
+        Action(image: Theme.shared.image.plus) {
+          self.onAdd()
+        },
+        Action(image: Theme.shared.image.filterMenuIcon, hasIndicator: viewState.showFilterIndicator) {
+          self.showFilters()
+        }
+      ]
+    case .home:
+      return nil
+    case .transactions:
+      return nil
     }
   }
 
@@ -521,13 +515,6 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     ]
   }
 
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: trailingActions(),
-      leadingActions: leadingActions()
-    )
-  }
-
   private func subscribeToSearch() {
     $searchQuery
       .dropFirst()
@@ -537,5 +524,19 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         guard let self = self else { return }
         //TODO: SEARCH
       }.store(in: &cancellables)
+  }
+
+  private func onFiltersChangeState() async {
+    for await state in interactor.onFilterChangeState() {
+      switch state {
+      case .filterResult(let documentsUI, let filterSections):
+        setState {
+          $0.copy(
+            documents: documentsUI,
+            filterUIModel: filterSections
+          )
+        }
+      }
+    }
   }
 }

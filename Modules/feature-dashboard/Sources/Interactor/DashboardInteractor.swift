@@ -52,14 +52,14 @@ public protocol DashboardInteractor: Sendable {
   func applyFiltersWithSorting(
     filterModel: FilterModel?,
     documents: [DocumentUIModel]
-  ) -> [DocumentUIModel]
+  ) async -> [DocumentUIModel]
   // MARK: - FILTER
-  func fetchFilteredDocuments(failedDocuments: [String]) -> FilterableList?
-  func onFilterChangeState() -> AnyPublisher<FiltersPartialState, Never>
-  func initializeFilters(filters: Filters, filterableList: FilterableList)
-  func applyFilters()
-  func resetFilters()
-  func updateFilters(sectionID: String, filterID: String)
+  func fetchFilteredDocuments(failedDocuments: [String]) async -> FilterableList?
+  @MainActor func onFilterChangeState() -> AsyncStream<FiltersPartialState>
+  func initializeFilters(filters: Filters, filterableList: FilterableList) async
+  func applyFilters() async
+  func resetFilters() async
+  func updateFilters(sectionID: String, filterID: String) async
 }
 
 final class DashboardInteractorImpl: DashboardInteractor {
@@ -70,6 +70,9 @@ final class DashboardInteractorImpl: DashboardInteractor {
   private let configLogic: ConfigLogic
 
   private let sendableAnyCancellable: SendableAnyCancellable = .init()
+
+  @MainActor
+  private var filtersStateAsync: AsyncStream<FiltersPartialState>.Continuation?
 
   init(
     walletController: WalletKitController,
@@ -85,6 +88,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
 
   deinit {
     sendableAnyCancellable.cancel()
+    filtersStateAsync?.finish()
   }
 
   func hasIssuedDocuments() -> Bool {
@@ -95,46 +99,56 @@ final class DashboardInteractorImpl: DashboardInteractor {
     return !walletController.fetchDeferredDocuments().isEmpty
   }
 
-  public func onFilterChangeState() -> AnyPublisher<FiltersPartialState, Never> {
-    return filterValidator.filterResultPublisher
-      .map { filterResult in
-        let documentsUI = filterResult.filteredList.items.compactMap { filterableItem in
-          return filterableItem.data as? DocumentUIModel
-        }
+  func onFilterChangeState() -> AsyncStream<FiltersPartialState> {
+    return AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
+      self.filtersStateAsync = continuation
+      Task {
+        for try await state in filterValidator.getFilterResultStream() {
+          switch state {
+          case .success(let filterResult):
 
-        let filterSections = filterResult.updatedFilters.filterGroups.map { filteredGroup in
-          FilterUISection(
-            id: filteredGroup.id,
-            filters: filteredGroup.filters.map { filter in
-              FilterUIItem(
-                id: filter.id,
-                title: filter.name,
-                selected: filter.selected,
-                filterAction: filter.filterableAction
+            let documentsUI = filterResult.filteredList.items.compactMap { filterableItem in
+              filterableItem.data as? DocumentUIModel
+            }
+
+            let filterSections = filterResult.updatedFilters.filterGroups.map { filteredGroup in
+              FilterUISection(
+                id: filteredGroup.id,
+                filters: filteredGroup.filters.map { filter in
+                  FilterUIItem(
+                    id: filter.id,
+                    title: filter.name,
+                    selected: filter.selected,
+                    filterAction: filter.filterableAction
+                  )
+                },
+                sectionTitle: filteredGroup.name
               )
-            },
-            sectionTitle: filteredGroup.name)
+            }
+
+            continuation.yield(.filterResult(documentsUI, filterSections))
+          case .completion:
+            continuation.finish()
+          }
         }
-
-        return .filterResult(documentsUI, filterSections)
       }
-      .eraseToAnyPublisher()
+    }
   }
 
-  func initializeFilters(filters: Filters, filterableList: FilterableList) {
-    filterValidator.initializeFilters(filters: filters, filterableList: filterableList)
+  func initializeFilters(filters: Filters, filterableList: FilterableList) async {
+    await filterValidator.initializeFilters(filters: filters, filterableList: filterableList)
   }
 
-  func applyFilters() {
-    filterValidator.applyFilters()
+  func applyFilters() async {
+    await filterValidator.applyFilters()
   }
 
-  func resetFilters() {
-    filterValidator.resetFilters()
+  func resetFilters() async {
+    await filterValidator.resetFilters()
   }
 
-  func updateFilters(sectionID: String, filterID: String) {
-    filterValidator.updateFilter(filterGroupId: sectionID, filterId: filterID)
+  func updateFilters(sectionID: String, filterID: String)  async {
+    await filterValidator.updateFilter(filterGroupId: sectionID, filterId: filterID)
   }
 
   public func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState {

@@ -113,7 +113,7 @@ public extension DocumentUIModel {
 
     public let heading: String
     public let title: String
-    public var createdAt: Date
+    public let createdAt: Date
     public let expiresAt: String?
     public let hasExpired: Bool
     public let state: State

@@ -155,8 +155,7 @@ struct DashboardView<Router: RouterHost>: View {
       }
     }
     .task {
-      await viewModel.onFiltersChangeState()
-      await viewModel.fetch()
+      await viewModel.onCreate()
     }
     .onChange(of: scenePhase) { phase in
       self.viewModel.setPhase(with: phase)
@@ -266,7 +265,13 @@ private func content(
     isLoading: false,
     documents: DocumentUIModel.mocks(),
     filteredDocuments: DocumentUIModel.mocks(),
-    filterModel: .init(sections: [], sortAscending: true, initialSorting: "", selectedStateOption: ""),
+    filterModel: .init(
+      sections: [],
+      sortAscending: true,
+      initialSorting: "",
+      selectedExpiryOption: "",
+      selectedStateOption: ""
+    ),
     filterUIModel: [],
     username: "First name",
     phase: .active,
@@ -289,7 +294,7 @@ private func content(
       filterGroups: [],
       sortOrder: .ascending
     ),
-    documentSections: [.issuedSortingDate]
+    filterSections: [.issuedSortingDate]
   )
 
   ContentScreenView(

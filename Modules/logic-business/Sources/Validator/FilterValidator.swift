@@ -17,35 +17,34 @@ import Combine
 import Foundation
 import logic_resources
 
-public protocol FilterValidator: Sendable {
-
-  var filterResultPublisher: AnyPublisher<FilterResult, Never> { get }
-
-  func initializeFilters(filters: Filters, filterableList: FilterableList)
-  func updateLists(filterableList: FilterableList)
-  func applyFilters()
-  func applySearch(query: String)
-  func resetFilters()
-  func revertFilters()
-  func updateFilter(filterGroupId: String, filterId: String)
-  func updateSortOrder(sortOrder: SortOrderType)
+public enum FilterResultPartialState: Sendable {
+  case success(FilterResult)
+  case completion
 }
 
-final class FilterValidatorImpl: FilterValidator {
+public protocol FilterValidator: Sendable {
+  func initializeFilters(filters: Filters, filterableList: FilterableList) async
+  func updateLists(filterableList: FilterableList) async
+  func applyFilters() async
+  func applySearch(query: String) async
+  func resetFilters() async
+  func revertFilters() async
+  func updateFilter(filterGroupId: String, filterId: String) async
+  func updateSortOrder(sortOrder: SortOrderType) async
+  func getFilterResultStream() -> AsyncStream<FilterResultPartialState>
+}
 
-  var filterResultPublisher: AnyPublisher<FilterResult, Never> {
-    return filterResultSubject.eraseToAnyPublisher()
-  }
+actor FilterValidatorImpl: FilterValidator {
 
-  nonisolated(unsafe) private var appliedFilters: Filters
-  nonisolated(unsafe) private var defaultFilters: Filters
-  nonisolated(unsafe) private var searchQuery: String = ""
-  nonisolated(unsafe) private var initialList: FilterableList
-  nonisolated(unsafe) private var filteredList: FilterableList
-  nonisolated(unsafe) private var filterableList: FilterableList
-  nonisolated(unsafe) private var snapshotFilters: Filters = Filters.emptyFilters()
+  private var appliedFilters: Filters
+  private var defaultFilters: Filters
+  private var searchQuery: String = ""
+  private var initialList: FilterableList
+  private var filteredList: FilterableList
+  private var filterableList: FilterableList
+  private var snapshotFilters: Filters = Filters.emptyFilters()
 
-  nonisolated(unsafe) private let filterResultSubject = PassthroughSubject<FilterResult, Never>()
+  private let filterResultSubject: SendablePassthroughSubject<FilterResultPartialState> = .init()
 
   init(
     filters: Filters? = nil,
@@ -61,18 +60,27 @@ final class FilterValidatorImpl: FilterValidator {
     self.filteredList = filteredList ?? FilterableList(items: [])
   }
 
+  deinit {
+    filterResultSubject.send(.completion)
+    filterResultSubject.complete()
+  }
+
+  nonisolated func getFilterResultStream() -> AsyncStream<FilterResultPartialState> {
+    return filterResultSubject.getAsyncStream()
+  }
+
   func initializeFilters (
     filters: Filters,
     filterableList: FilterableList
-  ) {
-      self.appliedFilters = filters
-      self.defaultFilters = filters
-      self.initialList = filterableList
-      self.filterableList = filterableList
-      self.filteredList = filterableList
+  ) async {
+    self.appliedFilters = filters
+    self.defaultFilters = filters
+    self.initialList = filterableList
+    self.filterableList = filterableList
+    self.filteredList = filterableList
   }
 
-  func applyFilters() {
+  func applyFilters() async {
 
     if !snapshotFilters.isEmpty {
       appliedFilters = snapshotFilters.copy()
@@ -97,20 +105,22 @@ final class FilterValidatorImpl: FilterValidator {
       }
 
     self.filterResultSubject.send(
-      FilterResult(
-        filteredList: FilterableList(items: newList.items),
-        updatedFilters: self.appliedFilters
+      .success(
+        FilterResult(
+          filteredList: FilterableList(items: newList.items),
+          updatedFilters: self.appliedFilters
+        )
       )
     )
   }
 
-  func resetFilters() {
+  func resetFilters() async {
     appliedFilters = defaultFilters
     snapshotFilters = Filters.emptyFilters()
-    applyFilters()
+    await applyFilters()
   }
 
-  func updateFilter(filterGroupId: String, filterId: String) {
+  func updateFilter(filterGroupId: String, filterId: String) async {
     let updatedFilterGroups = appliedFilters.filterGroups.map { group in
       if group.id.uuidString == filterGroupId {
         if let targetFilter = group.filters.first(where: { $0.id.uuidString == filterId }) {
@@ -127,18 +137,21 @@ final class FilterValidatorImpl: FilterValidator {
     snapshotFilters = updatedFilters
 
     self.filterResultSubject.send(
-      FilterResult(
-        filteredList: filteredList,
-        updatedFilters: updatedFilters
-      ))
+      .success(
+        FilterResult(
+          filteredList: filteredList,
+          updatedFilters: updatedFilters
+        )
+      )
+    )
   }
 
-  func revertFilters() { }
+  func revertFilters() async { }
 
-  func applySearch(query: String) { }
+  func applySearch(query: String) async { }
 
-  func updateSortOrder(sortOrder: SortOrderType) { }
+  func updateSortOrder(sortOrder: SortOrderType) async { }
 
-  func updateLists(filterableList: FilterableList) { }
+  func updateLists(filterableList: FilterableList) async { }
 
 }
