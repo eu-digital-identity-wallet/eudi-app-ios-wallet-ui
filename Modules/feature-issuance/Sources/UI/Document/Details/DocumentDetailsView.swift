@@ -69,7 +69,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       }
     )
     .task {
-      await self.viewModel.fetchDocumentDetails()
+      await viewModel.fetchDocumentDetails()
       await viewModel.bookmarked()
     }
   }

@@ -37,7 +37,9 @@ public struct WrapListItemsView: View {
         listItem: item,
         mainTextVerticalPadding: mainTextVerticalPadding,
         action: {
-          action?(item)
+          if item.isEnable {
+            action?(item)
+          }
         }
       )
       if index < listItems.count - 1 {

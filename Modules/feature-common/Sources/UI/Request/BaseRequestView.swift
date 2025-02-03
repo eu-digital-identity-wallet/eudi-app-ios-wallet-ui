@@ -99,39 +99,10 @@ private func content(
               title: .custom(section.requestDataSection.title),
               subtitle: .viewDetails
             ) {
-              ForEach(section.requestDataRow, id: \.id) { item in
-                switch item.value {
-                case .string(let value):
-                  WrapListItemView(
-                    listItem: ListItemData(
-                      mainText: .custom(value),
-                      overlineText: .custom(item.title),
-                      trailingContent: .checkbox(
-                        item.isEnabled,
-                        item.isSelected
-                      ) { _ in
-                        onSelectionChanged(item.id)
-                      }
-                    )
-                  )
-                case .image(let image):
-                  WrapListItemView(
-                    listItem: ListItemData(
-                      mainText: .custom(item.title),
-                      leadingIcon: .init(image: image),
-                      trailingContent: .checkbox(
-                        item.isEnabled,
-                        item.isSelected
-                      ) { _ in
-                        onSelectionChanged(item.id)
-                      }
-                    )
-                  )
+              WrapListItemsView(
+                listItems: section.listItems) { item in
+                  onSelectionChanged(item.id)
                 }
-                Divider()
-                  .padding(.horizontal, SPACING_MEDIUM)
-                  .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
-              }
             }
           }
 

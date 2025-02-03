@@ -31,6 +31,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
   public let overlineTextColor: Color
   public let leadingIcon: LeadingIcon?
   public let isBlur: Bool
+  public let isEnable: Bool
   public let trailingContent: TrailingContent?
 
   public init(
@@ -43,6 +44,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
     overlineTextColor: Color = Theme.shared.color.onSurfaceVariant,
     leadingIcon: LeadingIcon? = nil,
     isBlur: Bool = false,
+    isEnable: Bool = true,
     trailingContent: TrailingContent? = nil
   ) {
     self.id = id
@@ -55,6 +57,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
     self.leadingIcon = leadingIcon
     self.trailingContent = trailingContent
     self.isBlur = isBlur
+    self.isEnable = isEnable
   }
 }
 
