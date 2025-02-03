@@ -167,7 +167,8 @@ extension DocClaimsDecodable {
           .init(
             id: uuid,
             mainText: .custom(title),
-            leadingIcon: .init(image: Image(uiImage: uiImage))
+            leadingIcon: .init(image: Image(uiImage: uiImage)),
+            isBlur: true
           )
         )
 
@@ -176,7 +177,8 @@ extension DocClaimsDecodable {
           .init(
             id: uuid,
             mainText: .custom(docClaim.flattenNested(nested: nested).stringValue),
-            overlineText: .custom(title)
+            overlineText: .custom(title),
+            isBlur: true
           )
         )
       } else {
@@ -184,7 +186,8 @@ extension DocClaimsDecodable {
           .init(
             id: uuid,
             mainText: .custom(docClaim.stringValue),
-            overlineText: .custom(title)
+            overlineText: .custom(title),
+            isBlur: true
           )
         )
       }
