@@ -20,7 +20,7 @@ import logic_resources
 import logic_business
 import logic_ui
 
-public struct DocumentUIModel: Identifiable, Equatable, Sendable {
+public struct DocumentUIModel: Identifiable, Equatable, Sendable, FilterableItemPayload {
 
   @EquatableNoop
   public var id: String

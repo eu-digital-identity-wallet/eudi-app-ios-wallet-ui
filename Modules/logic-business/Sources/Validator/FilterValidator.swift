@@ -13,12 +13,11 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import Combine
+import Foundation
 import logic_resources
-import Copyable
 
-public protocol FiltersController: Sendable {
+public protocol FilterValidator: Sendable {
 
   var filterResultPublisher: AnyPublisher<FilterResult, Never> { get }
 
@@ -32,7 +31,7 @@ public protocol FiltersController: Sendable {
   func updateSortOrder(sortOrder: SortOrderType)
 }
 
-final class FiltersControllerImpl: FiltersController {
+final class FilterValidatorImpl: FilterValidator {
 
   var filterResultPublisher: AnyPublisher<FilterResult, Never> {
     return filterResultSubject.eraseToAnyPublisher()
@@ -73,72 +72,48 @@ final class FiltersControllerImpl: FiltersController {
       self.filteredList = filterableList
   }
 
-  func updateLists(filterableList: FilterableList) {
-    self.filterResultSubject.send(
-      FilterResult(
-        filteredList: filterableList,
-        updatedFilters: self.appliedFilters
-      )
-    )
-  }
-
   func applyFilters() {
-    var filteredItems = self.filterableList.items
 
-    for filterGroup in appliedFilters.filterGroups {
-      for filterItem in filterGroup.filters where filterItem.selected {
-        filteredItems = filterItem.filterableAction.applyFilter(
+    if !snapshotFilters.isEmpty {
+      appliedFilters = snapshotFilters.copy()
+      snapshotFilters = Filters.emptyFilters()
+    }
+
+    let newList = appliedFilters.filterGroups
+      .flatMap { $0.filters }
+      .filter { $0.selected }
+      .reduce(initialList) { partialResult, filter in
+        let filteredResult = filter.filterableAction.applyFilter(
           sortOrder: appliedFilters.sortOrder,
-          filterableItems: FilterableList(items: filteredItems),
-          filter: filterItem
-        ).items
+          filterableItems: partialResult,
+          filter: filter
+        )
+
+        return filteredResult.copy(
+          items: partialResult.items.filter({ item in
+            item.attributes.searchText.contains(searchQuery)
+          })
+        )
       }
-    }
 
     self.filterResultSubject.send(
       FilterResult(
-        filteredList: FilterableList(items: filteredItems),
-        updatedFilters: self.appliedFilters
-      )
-    )
-  }
-
-  func applySearch(query: String) {
-    let filteredItems = self.filterableList.items.filter { item in
-      return item.attributes.searchText.contains(query)
-    }
-
-    self.filterResultSubject.send(
-      FilterResult(
-        filteredList: FilterableList(items: filteredItems),
+        filteredList: FilterableList(items: newList.items),
         updatedFilters: self.appliedFilters
       )
     )
   }
 
   func resetFilters() {
-    self.filterResultSubject.send(
-      FilterResult(
-        filteredList: self.initialList,
-        updatedFilters: self.defaultFilters
-      )
-    )
-  }
-
-  func revertFilters() {
-    let revertFilters = Filters.emptyFilters()
-    self.filterResultSubject.send(
-      FilterResult(
-        filteredList: self.filteredList,
-        updatedFilters: revertFilters
-      )
-    )
+    appliedFilters = defaultFilters
+    snapshotFilters = Filters.emptyFilters()
+    applyFilters()
   }
 
   func updateFilter(filterGroupId: String, filterId: String) {
     let updatedFilterGroups = appliedFilters.filterGroups.map { group in
-      if group.id == filterGroupId {
-        if let targetFilter = group.filters.first(where: { $0.id == filterId }) {
+      if group.id.uuidString == filterGroupId {
+        if let targetFilter = group.filters.first(where: { $0.id.uuidString == filterId }) {
           return group.copy(filters: group.filters.map { filter in
             filter.copy(selected: filter.id == targetFilter.id)
           })
@@ -149,6 +124,8 @@ final class FiltersControllerImpl: FiltersController {
 
     let updatedFilters = Filters(filterGroups: updatedFilterGroups, sortOrder: appliedFilters.sortOrder)
 
+    snapshotFilters = updatedFilters
+
     self.filterResultSubject.send(
       FilterResult(
         filteredList: filteredList,
@@ -156,14 +133,12 @@ final class FiltersControllerImpl: FiltersController {
       ))
   }
 
-  func updateSortOrder(sortOrder: SortOrderType) {
-    let updatedFilters = appliedFilters.copy(sortOrder: sortOrder)
+  func revertFilters() { }
 
-    self.filterResultSubject.send(
-      FilterResult(
-        filteredList: filteredList,
-        updatedFilters: updatedFilters
-      )
-    )
-  }
+  func applySearch(query: String) { }
+
+  func updateSortOrder(sortOrder: SortOrderType) { }
+
+  func updateLists(filterableList: FilterableList) { }
+
 }

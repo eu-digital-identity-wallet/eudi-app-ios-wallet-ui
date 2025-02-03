@@ -15,17 +15,31 @@
  */
 import Foundation
 import logic_resources
+import logic_business
 
-public struct FilterUISection: Sendable {
-  let id: String
-  let filters: [FilterUIItem]
-  let sectionTitle: String
+public struct FilterUISection: Sendable, Identifiable {
+  public let id: UUID
+  public var filters: [FilterUIItem]
+  public let sectionTitle: String
 }
 
-struct FilterUIItem {
-  let id: String
-  let title: String
-  let selected: Bool
+public struct FilterUIItem: Sendable, Identifiable {
+  public let id: UUID
+  public let title: String
+  public var selected: Bool
+  public let filterAction: FilterAction
+
+  public init(
+    id: UUID,
+    title: String,
+    selected: Bool,
+    filterAction: FilterAction
+  ) {
+    self.id = id
+    self.title = title
+    self.selected = selected
+    self.filterAction = filterAction
+  }
 }
 
 public enum FilterSections {

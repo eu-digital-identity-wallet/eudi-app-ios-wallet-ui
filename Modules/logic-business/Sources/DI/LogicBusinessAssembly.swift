@@ -46,8 +46,8 @@ public final class LogicBusinessAssembly: Assembly {
     }
     .inObjectScope(ObjectScope.transient)
 
-    container.register(FiltersController.self) { _ in
-      FiltersControllerImpl()
+    container.register(FilterValidator.self) { _ in
+      FilterValidatorImpl()
     }
     .inObjectScope(ObjectScope.transient)
   }

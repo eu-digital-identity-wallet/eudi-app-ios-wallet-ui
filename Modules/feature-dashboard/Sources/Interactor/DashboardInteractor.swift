@@ -58,12 +58,14 @@ public protocol DashboardInteractor: Sendable {
   func onFilterChangeState() -> AnyPublisher<FiltersPartialState, Never>
   func initializeFilters(filters: Filters, filterableList: FilterableList)
   func applyFilters()
+  func resetFilters()
+  func updateFilters(sectionID: String, filterID: String)
 }
 
 final class DashboardInteractorImpl: DashboardInteractor {
 
   private let walletController: WalletKitController
-  private let filtersController: FiltersController
+  private let filterValidator: FilterValidator
   private let reachabilityController: ReachabilityController
   private let configLogic: ConfigLogic
 
@@ -71,12 +73,12 @@ final class DashboardInteractorImpl: DashboardInteractor {
 
   init(
     walletController: WalletKitController,
-    filtersController: FiltersController,
+    filterValidator: FilterValidator,
     reachabilityController: ReachabilityController,
     configLogic: ConfigLogic
   ) {
     self.walletController = walletController
-    self.filtersController = filtersController
+    self.filterValidator = filterValidator
     self.reachabilityController = reachabilityController
     self.configLogic = configLogic
   }
@@ -94,7 +96,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
   }
 
   public func onFilterChangeState() -> AnyPublisher<FiltersPartialState, Never> {
-    return filtersController.filterResultPublisher
+    return filterValidator.filterResultPublisher
       .map { filterResult in
         let documentsUI = filterResult.filteredList.items.compactMap { filterableItem in
           return filterableItem.data as? DocumentUIModel
@@ -107,7 +109,8 @@ final class DashboardInteractorImpl: DashboardInteractor {
               FilterUIItem(
                 id: filter.id,
                 title: filter.name,
-                selected: filter.selected
+                selected: filter.selected,
+                filterAction: filter.filterableAction
               )
             },
             sectionTitle: filteredGroup.name)
@@ -119,11 +122,19 @@ final class DashboardInteractorImpl: DashboardInteractor {
   }
 
   func initializeFilters(filters: Filters, filterableList: FilterableList) {
-    filtersController.initializeFilters(filters: filters, filterableList: filterableList)
+    filterValidator.initializeFilters(filters: filters, filterableList: filterableList)
   }
 
   func applyFilters() {
-    filtersController.applyFilters()
+    filterValidator.applyFilters()
+  }
+
+  func resetFilters() {
+    filterValidator.resetFilters()
+  }
+
+  func updateFilters(sectionID: String, filterID: String) {
+    filterValidator.updateFilter(filterGroupId: sectionID, filterId: filterID)
   }
 
   public func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState {

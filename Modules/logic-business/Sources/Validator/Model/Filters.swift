@@ -14,7 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import Copyable
 
+@Copyable
 public struct Filters: Sendable {
   public let filterGroups: [FilterGroup]
   public let sortOrder: SortOrderType
@@ -34,57 +36,42 @@ public struct Filters: Sendable {
   public static func emptyFilters() -> Filters {
     return Filters(filterGroups: [], sortOrder: .ascending)
   }
-
-  public func copy(sortOrder: SortOrderType) -> Filters {
-    return Filters(filterGroups: self.filterGroups, sortOrder: sortOrder)
-  }
 }
 
+@Copyable
 public struct FilterGroup: Sendable {
-  public var id: String
+  public var id: UUID
   public var name: String
   public var filters: [FilterItem]
 
   public init(
-    id: String? = nil,
+    id: UUID,
     name: String,
     filters: [FilterItem]
   ) {
-    self.id = id ?? UUID().uuidString
+    self.id = id
     self.name = name
     self.filters = filters
   }
-
-  func copy(filters: [FilterItem]) -> FilterGroup {
-      return FilterGroup(id: self.id, name: self.name, filters: filters)
-  }
 }
 
+@Copyable
 public struct FilterItem: Sendable {
-  public let id: String
+  public let id: UUID
   public let name: String
   public let selected: Bool
   public let filterableAction: FilterAction
 
   public init(
-    id: String? = nil,
+    id: UUID,
     name: String,
     selected: Bool,
     filterableAction: FilterAction
   ) {
-    self.id = id ?? UUID().uuidString
+    self.id = id
     self.name = name
     self.selected = selected
     self.filterableAction = filterableAction
-  }
-
-  func copy(selected: Bool) -> FilterItem {
-    return FilterItem(
-      id: self.id,
-      name: self.name,
-      selected: selected,
-      filterableAction: self.filterableAction
-    )
   }
 }
 

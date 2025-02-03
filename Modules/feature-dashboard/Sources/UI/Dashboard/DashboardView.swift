@@ -25,13 +25,6 @@ struct DashboardView<Router: RouterHost>: View {
 
   @Environment(\.scenePhase) var scenePhase
 
-  @State private var selectedOptions: Set<String> = []
-  @State private var selectedExpiryOption: String = ""
-  @State private var selectedStateOption: String = ""
-  @State private var initialSorting: String = "Default"
-  @State private var showFilterIndicator: Bool = false
-  @State private var sortAscending: Bool = true
-
   public init(with viewModel: DashboardViewModel<Router>) {
     self.viewModel = viewModel
   }
@@ -47,6 +40,7 @@ struct DashboardView<Router: RouterHost>: View {
         viewState: viewModel.viewState,
         isAuthenticateAlertShowing: $viewModel.isAuthenticateAlertShowing,
         selectedTab: $viewModel.selectedTab,
+        searchQuery: $viewModel.searchQuery,
         onDocumentDetails: { id in
           viewModel.onDocumentDetails(documentId: id)
         },
@@ -56,9 +50,7 @@ struct DashboardView<Router: RouterHost>: View {
         onAdd: viewModel.onAdd,
         onShare: viewModel.onShare,
         signDocument: { viewModel.openSignDocument() },
-        filteredDocsCallback: { filterDocs in
-          viewModel.updateFilteredDocuments(filteredDocuments: filterDocs, listIsFiltered: showFilterIndicator)
-        }
+        filteredDocsCallback: { _ in }
       )
     }
     .confirmationDialog(
@@ -77,28 +69,15 @@ struct DashboardView<Router: RouterHost>: View {
       Text(.authenticateAuthoriseTransactions)
     }
     .sheet(isPresented: $viewModel.isFilterModalShowing) {
-      FilterListView(
-        sortAscending: $sortAscending,
-        showFilterIndicator: $showFilterIndicator,
-        selectedOptions: $selectedOptions,
-        selectedExpiryOption: $selectedExpiryOption,
-        selectesSorting: $initialSorting,
-        stateOption: $selectedStateOption,
-        applyFiltersCallback: {
-          viewModel.applyFilters(
-            section: viewModel.viewState.documentSections,
-            sortAscending: sortAscending,
-            initialSorting: initialSorting,
-            selectedExpiryOption: selectedExpiryOption,
-            selectedStateOption: selectedStateOption
-          )
-        },
-        resetFiltersCallback: {
-          viewModel.resetDocumentList()
-        },
-        sections: viewModel.viewState.documentSections,
-        onResume: viewModel.onDocumentsRetrievedPostActions
-      )
+      FiltersListView(sections: viewModel.viewState.filterUIModel) {
+        viewModel.resetFilters()
+      } applyFiltersAction: {
+        Task {
+          await viewModel.fetch()
+        }
+      } updateFiltersCallback: { sectionID, filterID in
+        viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
+      }
     }
     .sheetDialog(isPresented: $viewModel.isBleModalShowing) {
       SheetContentView {
@@ -182,17 +161,6 @@ struct DashboardView<Router: RouterHost>: View {
     .onChange(of: scenePhase) { phase in
       self.viewModel.setPhase(with: phase)
     }
-    .onChange(of: showFilterIndicator, perform: { _ in
-      viewModel.applyFilters(
-        section: viewModel.viewState.documentSections,
-        sortAscending: sortAscending,
-        initialSorting: initialSorting,
-        selectedExpiryOption: selectedExpiryOption,
-        selectedStateOption: selectedStateOption
-      )
-
-      viewModel.enableFilterIndicator(showFilterIndicator: showFilterIndicator)
-    })
     .onDisappear {
       self.viewModel.onPause()
     }
@@ -233,6 +201,7 @@ private func content(
   viewState: DashboardState,
   isAuthenticateAlertShowing: Binding<Bool>,
   selectedTab: Binding<SelectedTab>,
+  searchQuery: Binding<String>,
   onDocumentDetails: @escaping (String) -> Void,
   onDeleteDeferredDocument: @escaping (DocumentUIModel) -> Void,
   onAdd: @escaping () -> Void,
@@ -260,6 +229,7 @@ private func content(
 
     VStack(spacing: .zero) {
       DocumentListView(
+        searchQuery: searchQuery,
         filteredItems: viewState.documents,
         isLoading: viewState.isLoading,
         action: { document in
@@ -316,39 +286,8 @@ private func content(
     ),
     isInitialFetch: true,
     filters: Filters(
-      filterGroups: [
-        // MARK: - EXPIRY
-        FilterGroup(
-          name: LocalizableString.shared.get(with: .expiryPeriodSectionTitle),
-          filters: [
-            FilterItem(
-              name: LocalizableString.shared.get(with: .nextSevenDays).capitalized,
-              selected: false,
-              filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
-                Date().isWithinNextDays(7)
-              })),
-            FilterItem(
-              name: LocalizableString.shared.get(with: .nextThirtyDays).capitalized,
-              selected: false,
-              filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
-                Date().isWithinNextDays(30)
-              })),
-            FilterItem(
-              name: LocalizableString.shared.get(with: .beyondThiryDays).capitalized,
-              selected: false,
-              filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
-                Date().isBeyondNextDays(30)
-              })),
-            FilterItem(
-              name: LocalizableString.shared.get(with: .beforeToday).capitalized,
-              selected: false,
-              filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
-                Date().isBeforeToday()
-              }))
-          ]
-        )
-      ],
-      sortOrder: SortOrderType.ascending
+      filterGroups: [],
+      sortOrder: .ascending
     ),
     documentSections: [.issuedSortingDate]
   )
@@ -362,6 +301,7 @@ private func content(
       viewState: viewState,
       isAuthenticateAlertShowing: .constant(false),
       selectedTab: .constant(.home),
+      searchQuery: .constant(""),
       onDocumentDetails: { _ in },
       onDeleteDeferredDocument: { _ in },
       onAdd: {},

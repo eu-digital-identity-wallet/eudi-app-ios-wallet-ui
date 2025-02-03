@@ -94,6 +94,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   private let interactor: DashboardInteractor
   private let deepLinkController: DeepLinkController
   private let walletKitController: WalletKitController
+  private let SEARCH_INPUT_DEBOUNCE = 250
 
   @Published var isBleModalShowing: Bool = false
   @Published var isFilterModalShowing: Bool = false
@@ -101,6 +102,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   @Published var isSuccededDocumentsModalShowing: Bool = false
   @Published var selectedTab: SelectedTab = .home
   @Published var isAuthenticateAlertShowing: Bool = false
+  @Published var searchQuery: String = ""
 
   private var deferredTask: Task<DashboardDeferredPartialState, Error>?
 
@@ -146,27 +148,32 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
           filterGroups: [
             // MARK: - EXPIRY
             FilterGroup(
+              id: UUID(),
               name: LocalizableString.shared.get(with: .expiryPeriodSectionTitle),
               filters: [
                 FilterItem(
+                  id: UUID(),
                   name: LocalizableString.shared.get(with: .nextSevenDays).capitalized,
                   selected: false,
                   filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
                     Date().isWithinNextDays(7)
                   })),
                 FilterItem(
+                  id: UUID(),
                   name: LocalizableString.shared.get(with: .nextThirtyDays).capitalized,
                   selected: false,
                   filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
                     Date().isWithinNextDays(30)
                   })),
                 FilterItem(
+                  id: UUID(),
                   name: LocalizableString.shared.get(with: .beyondThiryDays).capitalized,
                   selected: false,
                   filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
                     Date().isBeyondNextDays(30)
                   })),
                 FilterItem(
+                  id: UUID(),
                   name: LocalizableString.shared.get(with: .beforeToday).capitalized,
                   selected: false,
                   filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
@@ -182,6 +189,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     )
 
     listenForSuccededIssuedModalChanges()
+    subscribeToSearch()
   }
 
   func onFiltersChangeState() async {
@@ -209,12 +217,11 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
     switch state {
     case .success(let username, let documents, let hasIssuedDocuments):
-//      let issuers = Array(Set(documents.items.compactMap { $0.attributes.heading })).sorted()
 
       if viewState.isInitialFetch {
         interactor.initializeFilters(filters: viewState.filters, filterableList: documents)
       } else {
-        //UPDATE FILTES
+        //interactor.updateList()
       }
 
       interactor.applyFilters()
@@ -233,6 +240,14 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         $0.copy(isLoading: false, documents: [])
       }
     }
+  }
+
+  func resetFilters() {
+    interactor.resetFilters()
+  }
+
+  func updateFilters(sectionID: String, filterID: String) {
+    interactor.updateFilters(sectionID: sectionID, filterID: filterID)
   }
 
   func setPhase(with phase: ScenePhase) {
@@ -352,24 +367,6 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   func showFilters() {
     onPause()
     isFilterModalShowing = true
-  }
-
-  func updateFilteredDocuments(filteredDocuments: String, listIsFiltered: Bool) {
-    let trimmedSearchQuery = filteredDocuments.trimmingCharacters(in: .whitespacesAndNewlines)
-    let sortedDocuments = interactor.applyFiltersWithSorting(
-      filterModel: viewState.filterModel,
-      documents: viewState.documents
-    )
-
-//    let newDocuments = sortedDocuments.filter {
-//      if trimmedSearchQuery.isEmpty {
-//        return true
-//      } else {
-//        return $0.value.title.localizedCaseInsensitiveContains(trimmedSearchQuery) || $0.id.localizedCaseInsensitiveContains(trimmedSearchQuery)
-//      }
-//    }
-
-//    setState { $0.copy(filteredDocuments: newDocuments) }
   }
 
   func applyFilters(
@@ -529,5 +526,16 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       trailingActions: trailingActions(),
       leadingActions: leadingActions()
     )
+  }
+
+  private func subscribeToSearch() {
+    $searchQuery
+      .dropFirst()
+      .debounce(for: .milliseconds(SEARCH_INPUT_DEBOUNCE), scheduler: RunLoop.main)
+      .removeDuplicates()
+      .sink { [weak self] _ in
+        guard let self = self else { return }
+        //TODO: SEARCH
+      }.store(in: &cancellables)
   }
 }

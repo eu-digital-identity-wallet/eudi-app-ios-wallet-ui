@@ -14,7 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import Copyable
 
+public protocol FilterableItemPayload: Sendable { }
+
+@Copyable
 public struct FilterableList: Sendable {
   public let items: [FilterableItem]
 
@@ -24,11 +28,11 @@ public struct FilterableList: Sendable {
 }
 
 public struct FilterableItem: Sendable {
-  public let data: any Sendable
+  public let data: FilterableItemPayload
   public let attributes: FilterableAttributes
 
   public init(
-    data: any Sendable,
+    data: FilterableItemPayload,
     attributes: FilterableAttributes
   ) {
     self.data = data
@@ -39,10 +43,4 @@ public struct FilterableItem: Sendable {
 public protocol FilterableAttributes: Sendable {
   var searchText: String { get }
   var heading: String? { get }
-}
-
-extension FilterableList {
-  func copy() -> FilterableList {
-    return FilterableList(items: self.items)
-  }
 }

@@ -27,7 +27,7 @@ public struct Filter<T: FilterableAttributes>: FilterAction {
   public var predicate: @Sendable (T, FilterItem) -> Bool
 
   public init(
-    predicate: @Sendable @escaping (FilterableAttributes, FilterItem) -> Bool
+    predicate: @Sendable @escaping (T, FilterItem) -> Bool
   ) {
     self.predicate = predicate
   }
