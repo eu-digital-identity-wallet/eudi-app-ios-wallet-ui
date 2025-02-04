@@ -15,12 +15,12 @@
  */
 import SwiftUI
 
-public struct TransactionsView: View {
+public struct TransactionTabView: View {
   public var body: some View {
     Text("Transactions")
   }
 }
 
 #Preview {
-  TransactionsView()
+  TransactionTabView()
 }

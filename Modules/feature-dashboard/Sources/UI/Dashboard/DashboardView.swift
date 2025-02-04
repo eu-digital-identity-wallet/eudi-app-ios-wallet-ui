@@ -72,9 +72,7 @@ struct DashboardView<Router: RouterHost>: View {
       FiltersListView(sections: viewModel.viewState.filterUIModel) {
         viewModel.resetFilters()
       } applyFiltersAction: {
-        Task {
-          await viewModel.fetch()
-        }
+        viewModel.fetch()
       } updateFiltersCallback: { sectionID, filterID in
         viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
       }
@@ -154,8 +152,8 @@ struct DashboardView<Router: RouterHost>: View {
         }
       }
     }
-    .task {
-      await viewModel.onCreate()
+    .onAppear {
+      viewModel.fetch()
     }
     .onChange(of: scenePhase) { phase in
       self.viewModel.setPhase(with: phase)
@@ -209,7 +207,7 @@ private func content(
   filteredDocsCallback: @escaping (String) -> Void
 ) -> some View {
   TabView(selection: selectedTab) {
-    HomeView(
+    HomeTabView(
       username: viewState.username,
       contentHeaderConfig: viewState.contentHeaderConfig,
       addDocument: {
@@ -227,7 +225,7 @@ private func content(
     .tag(SelectedTab.home)
 
     VStack(spacing: .zero) {
-      DocumentListView(
+      DocumentTabView(
         searchQuery: searchQuery,
         filteredItems: viewState.documents,
         isLoading: viewState.isLoading,
@@ -250,7 +248,7 @@ private func content(
     }
     .tag(SelectedTab.documents)
 
-    TransactionsView()
+    TransactionTabView()
       .tabItem {
         Label(
           LocalizableString.shared.get(with: .transactions),

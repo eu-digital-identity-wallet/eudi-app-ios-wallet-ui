@@ -183,44 +183,43 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
     listenForSuccededIssuedModalChanges()
     subscribeToSearch()
+    onFiltersChangeState()
+
   }
 
-  func onCreate() async {
-    await onFiltersChangeState()
-    await fetch()
-  }
+  func fetch() {
+    Task {
 
-  func fetch() async {
+      let failedDocuments = viewState.failedDocuments
 
-    let failedDocuments = viewState.failedDocuments
+      let state = await Task.detached { () -> DashboardPartialState in
+        return await self.interactor.fetchDashboard(failedDocuments: failedDocuments)
+      }.value
 
-    let state = await Task.detached { () -> DashboardPartialState in
-      return await self.interactor.fetchDashboard(failedDocuments: failedDocuments)
-    }.value
+      switch state {
+      case .success(let username, let documents, let hasIssuedDocuments):
 
-    switch state {
-    case .success(let username, let documents, let hasIssuedDocuments):
+        if viewState.isInitialFetch {
+          await interactor.initializeFilters(filters: viewState.filters, filterableList: documents)
+        } else {
+          //interactor.updateList()
+        }
 
-      if viewState.isInitialFetch {
-        await interactor.initializeFilters(filters: viewState.filters, filterableList: documents)
-      } else {
-        //interactor.updateList()
-      }
+        await interactor.applyFilters()
 
-      await interactor.applyFilters()
-
-      setState {
-        $0.copy(
-          isLoading: false,
-          username: username,
-          allowUserInteraction: hasIssuedDocuments,
-          isInitialFetch: false
-        )
-      }
-      onDocumentsRetrievedPostActions()
-    case .failure:
-      setState {
-        $0.copy(isLoading: false, documents: [])
+        setState {
+          $0.copy(
+            isLoading: false,
+            username: username,
+            allowUserInteraction: hasIssuedDocuments,
+            isInitialFetch: false
+          )
+        }
+        onDocumentsRetrievedPostActions()
+      case .failure:
+        setState {
+          $0.copy(isLoading: false, documents: [])
+        }
       }
     }
   }
@@ -319,7 +318,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
       switch state {
       case .success:
-        await fetch()
+        fetch()
       case .noDocuments:
         router.popTo(with: .featureStartupModule(.startup))
       case .failure:
@@ -461,7 +460,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
               failedDocuments: failed
             )
           }
-          await fetch()
+          fetch()
         case .cancelled, .none: break
         }
       }
@@ -526,15 +525,18 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       }.store(in: &cancellables)
   }
 
-  private func onFiltersChangeState() async {
-    for await state in interactor.onFilterChangeState() {
-      switch state {
-      case .filterResult(let documentsUI, let filterSections):
-        setState {
-          $0.copy(
-            documents: documentsUI,
-            filterUIModel: filterSections
-          )
+  private func onFiltersChangeState() {
+    Task {
+      for await state in interactor.onFilterChangeState() {
+        switch state {
+        case .filterResult(let documentsUI, let filterSections):
+          setState {
+            $0.copy(
+              documents: documentsUI,
+              filterUIModel: filterSections
+            )
+          }
+        case .cancelled: break
         }
       }
     }

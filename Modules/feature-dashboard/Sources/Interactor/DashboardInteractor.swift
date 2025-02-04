@@ -32,6 +32,7 @@ public enum DashboardDeleteDeferredPartialState: Sendable {
 
 public enum FiltersPartialState: Sendable {
   case filterResult([DocumentUIModel], [FilterUISection])
+  case cancelled
 }
 
 public enum DashboardDeferredPartialState: Sendable {
@@ -128,6 +129,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
 
             continuation.yield(.filterResult(documentsUI, filterSections))
           case .completion:
+            continuation.yield(.cancelled)
             continuation.finish()
           }
         }

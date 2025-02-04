@@ -19,7 +19,7 @@ import logic_resources
 import feature_common
 import logic_business
 
-public struct HomeView: View {
+public struct HomeTabView: View {
   private let username: String
   private let contentHeaderConfig: ContentHeaderConfig
 
@@ -103,15 +103,15 @@ public struct HomeView: View {
 }
 
 #Preview {
-  HomeView(
+  HomeTabView(
     username: "First name",
     contentHeaderConfig: .init(
       appIconAndTextData: AppIconAndTextData(
         appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
         appText: ThemeManager.shared.image.euditext
       )
-    )
-  ) {}
-  signDocument: {}
-
+    ),
+    addDocument: {},
+    signDocument: {}
+  )
 }

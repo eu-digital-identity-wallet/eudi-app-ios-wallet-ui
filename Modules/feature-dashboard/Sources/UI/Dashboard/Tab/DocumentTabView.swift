@@ -17,7 +17,7 @@ import SwiftUI
 import logic_resources
 import logic_ui
 
-struct DocumentListView: View {
+struct DocumentTabView: View {
   let filteredItems: [DocumentUIModel]
   let action: (DocumentUIModel) -> Void
   let isLoading: Bool
@@ -94,7 +94,7 @@ struct DocumentListView: View {
 }
 
 #Preview {
-  DocumentListView(
+  DocumentTabView(
     searchQuery: .constant(""),
     filteredItems: DocumentUIModel.mocks(),
     isLoading: false,
