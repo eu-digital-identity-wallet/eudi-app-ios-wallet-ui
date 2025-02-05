@@ -18,6 +18,24 @@ import logic_resources
 
 public extension DocClaimsDecodable {
 
+  var issuerName: String {
+    issuerDisplay?.first(
+      where: {
+        $0.localeIdentifier == Locale.current.systemLanguageCode
+      }
+    )?.name
+    ?? issuerDisplay?.first?.name
+    ?? ""
+  }
+
+  var issuerLogo: URL? {
+    issuerDisplay?.first?.logo?.uri
+  }
+
+  var documentTypeIdentifier: DocumentTypeIdentifier {
+    DocumentTypeIdentifier(rawValue: docType ?? credentialIssuerIdentifier ?? "")
+  }
+
   func getExpiryDate(parser: (String) -> String) -> String? {
     if let expiryDate = expiryDateValue {
       return parser(expiryDate)

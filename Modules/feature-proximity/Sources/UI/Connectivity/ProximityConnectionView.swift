@@ -32,7 +32,7 @@ struct ProximityConnectionView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       errorConfig: viewModel.viewState.error,
-      navigationTitle: LocalizableString.shared.get(with: .authenticate),
+      navigationTitle: .authenticate,
       toolbarContent: toolbarContent()
     ) {
       content(

@@ -30,9 +30,7 @@ struct DocumentIssuanceSuccessView<Router: RouterHost>: View {
   var body: some View {
     ContentScreenView(
       padding: .zero,
-      navigationTitle: LocalizableString.shared.get(
-        with: .documentAdded
-      ),
+      navigationTitle: .documentAdded,
       toolbarContent: viewModel.toolbarContent()
     ) {
       content(

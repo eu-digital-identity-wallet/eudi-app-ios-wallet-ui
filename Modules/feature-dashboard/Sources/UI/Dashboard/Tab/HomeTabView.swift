@@ -48,7 +48,7 @@ public struct HomeTabView: View {
           config: contentHeaderConfig
         )
 
-        Text("\(LocalizableString.shared.get(with: .welcomeBack)), \(username)")
+        Text(.welcomeBack([username]))
           .font(Theme.shared.font.titleMedium.font)
           .foregroundStyle(Theme.shared.color.onSurface)
 
@@ -66,9 +66,9 @@ public struct HomeTabView: View {
         )
         .alertView(
           isPresented: $addDocumentAlert,
-          title: LocalizableString.shared.get(with: .alertAccessOnlineServices),
-          message: LocalizableString.shared.get(with: .alertAccessOnlineServicesMessage),
-          buttonText: LocalizableString.shared.get(with: .okButton),
+          title: .alertAccessOnlineServices,
+          message: .alertAccessOnlineServicesMessage,
+          buttonText: .okButton,
           onDismiss: {
             addDocumentAlert = false
           }
@@ -88,9 +88,9 @@ public struct HomeTabView: View {
         )
         .alertView(
           isPresented: $signDocumentAlert,
-          title: LocalizableString.shared.get(with: .alertSignDocumentsSafely),
-          message: LocalizableString.shared.get(with: .alertSignDocumentsSafelyMessage),
-          buttonText: LocalizableString.shared.get(with: .okButton),
+          title: .alertSignDocumentsSafely,
+          message: .alertSignDocumentsSafelyMessage,
+          buttonText: .okButton,
           onDismiss: {
             signDocumentAlert = false
           }

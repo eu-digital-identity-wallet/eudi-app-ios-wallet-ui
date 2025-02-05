@@ -27,7 +27,7 @@ public struct ContentScreenView<Content: View>: View {
   private let allowBackGesture: Bool
   private let errorConfig: ContentErrorView.Config?
   private let background: Color
-  private let navigationTitle: String?
+  private let navigationTitle: LocalizableString.Key?
   private let isLoading: Bool
   private let toolbarContent: ToolBarContent?
 
@@ -38,7 +38,7 @@ public struct ContentScreenView<Content: View>: View {
     allowBackGesture: Bool = false,
     errorConfig: ContentErrorView.Config? = nil,
     background: Color = Theme.shared.color.background,
-    navigationTitle: String? = nil,
+    navigationTitle: LocalizableString.Key? = nil,
     isLoading: Bool = false,
     toolbarContent: ToolBarContent? = nil,
     @ViewBuilder content: () -> Content
@@ -71,7 +71,7 @@ public struct ContentScreenView<Content: View>: View {
     }
     .navigationBarHidden(errorConfig == nil ? false : true)
     .if(navigationTitle != nil) {
-      $0.navigationTitle(navigationTitle ?? "")
+      $0.navigationTitle(navigationTitle!)
     }
     .navigationBarTitleDisplayMode(.inline)
     .if(toolbarContent != nil) {

@@ -149,25 +149,25 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
               name: LocalizableString.shared.get(with: .expiryPeriodSectionTitle),
               filters: [
                 FilterItem(
-                  name: LocalizableString.shared.get(with: .nextSevenDays).capitalized,
+                  name: LocalizableString.shared.get(with: .nextSevenDays),
                   selected: false,
                   filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
                     Date().isWithinNextDays(7)
                   })),
                 FilterItem(
-                  name: LocalizableString.shared.get(with: .nextThirtyDays).capitalized,
+                  name: LocalizableString.shared.get(with: .nextThirtyDays),
                   selected: false,
                   filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
                     Date().isWithinNextDays(30)
                   })),
                 FilterItem(
-                  name: LocalizableString.shared.get(with: .beyondThiryDays).capitalized,
+                  name: LocalizableString.shared.get(with: .beyondThiryDays),
                   selected: false,
                   filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
                     Date().isBeyondNextDays(30)
                   })),
                 FilterItem(
-                  name: LocalizableString.shared.get(with: .beforeToday).capitalized,
+                  name: LocalizableString.shared.get(with: .beforeToday),
                   selected: false,
                   filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
                     Date().isBeforeToday()
@@ -263,8 +263,9 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     router.push(
       with: .featureIssuanceModule(
         .issuanceDocumentDetails(
-          config: IssuanceDetailUiConfig(flow: .extraDocument(documentId)
-                                        )
+          config: IssuanceDetailUiConfig(
+            flow: .extraDocument(documentId)
+          )
         )
       )
     )
@@ -362,6 +363,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     selectedExpiryOption: String?,
     selectedStateOption: String
   ) async {
+    // MARK: - TODO Multiple recompositions... WHY ?
     setState { $0.copy(filteredDocuments: viewState.documents) }
 
     setState { $0.copy(filterModel: .init(
@@ -400,14 +402,14 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     router.push(with: .featureCommonModule(.qrScanner(config: ScannerUiConfig(flow: .presentation))))
   }
 
-  func getNavigationTitle() -> String {
+  func getNavigationTitle() -> LocalizableString.Key {
     switch selectedTab {
     case .documents:
-      return LocalizableString.shared.get(with: .documents)
+      return .documents
     case .home:
-      return LocalizableString.shared.get(with: .home)
+      return .home
     case .transactions:
-      return LocalizableString.shared.get(with: .transactions)
+      return .transactions
     }
   }
 

@@ -62,16 +62,16 @@ struct FilterListView: View {
         }
       }
       .listStyle(.grouped)
-      .navigationTitle(LocalizableString.shared.get(with: .filters).capitalized)
+      .navigationTitle(LocalizableString.shared.get(with: .filters))
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
-          Button(LocalizableString.shared.get(with: .cancelButton).capitalized) {
+          Button(.cancelButton) {
             dismiss()
           }
         }
         ToolbarItem(placement: .navigationBarTrailing) {
-          Button(LocalizableString.shared.get(with: .reset).capitalized) {
+          Button(.reset) {
             showFilterIndicator = false
             resetFiltersCallback()
             resetFilters()
@@ -81,7 +81,7 @@ struct FilterListView: View {
       }
       .overlay(alignment: .bottom) {
         if showCounterRectangle {
-          Text(LocalizableString.shared.get(with: .showResults).capitalized)
+          Text(.showResults)
             .font(.body.bold())
             .foregroundStyle(Theme.shared.color.white)
             .frame(maxWidth: .infinity)
@@ -108,7 +108,7 @@ struct FilterListView: View {
       pendingSortAscending = sortAscending
 
       if selectesSorting.isEmpty {
-        selectesSorting = LocalizableString.shared.get(with: .defaultLabel).capitalized
+        selectesSorting = LocalizableString.shared.get(with: .defaultLabel)
       }
 
       for section in sections {
@@ -176,7 +176,7 @@ struct FilterListView: View {
   private func issuerSection(section: FilterUISection.Element) -> some View {
     Section(header: Text(section.sectionTitle)) {
       if section.hasToggle {
-        Toggle(LocalizableString.shared.get(with: .all).capitalized, isOn: Binding(
+        Toggle(LocalizableString.shared.get(with: .all), isOn: Binding(
           get: {
             section.options.allSatisfy { selectedOptions.contains($0) }
           },
@@ -211,10 +211,10 @@ struct FilterListView: View {
       ForEach(section.sorting, id: \.self) { option in
         ChoosableRow(
           text: option,
-          isSelected: (option == LocalizableString.shared.get(with: .ascending).capitalized && pendingSortAscending) ||
-          (option == LocalizableString.shared.get(with: .descending).capitalized && !pendingSortAscending)
+          isSelected: (option == LocalizableString.shared.get(with: .ascending) && pendingSortAscending) ||
+          (option == LocalizableString.shared.get(with: .descending) && !pendingSortAscending)
         ) {
-          pendingSortAscending = (option == LocalizableString.shared.get(with: .ascending).capitalized)
+          pendingSortAscending = (option == LocalizableString.shared.get(with: .ascending))
           hasSortChanged = true
           showFilterIndicator = true
           showCounterRectangle = true
@@ -230,8 +230,8 @@ struct FilterListView: View {
           text: sortBy,
           isSelected: selectesSorting == sortBy
         ) {
-          if sortBy == LocalizableString.shared.get(with: .defaultLabel).capitalized {
-            selectesSorting = LocalizableString.shared.get(with: .defaultLabel).capitalized
+          if sortBy == LocalizableString.shared.get(with: .defaultLabel) {
+            selectesSorting = LocalizableString.shared.get(with: .defaultLabel)
             selectedOptions = selectedOptions.filter { !section.options.contains($0) }
             showCounterRectangle = false
           } else {
@@ -261,7 +261,7 @@ struct FilterListView: View {
     let allOptions = sections.flatMap { $0.options }
     let isAllOptionsSelected = allOptions.allSatisfy { selectedOptions.contains($0) }
     let isSortAscendingDefault = sortAscending == true
-    let isSelectedSortingDefault = selectesSorting == LocalizableString.shared.get(with: .defaultLabel).capitalized
+    let isSelectedSortingDefault = selectesSorting == LocalizableString.shared.get(with: .defaultLabel)
     let isExpiryOptionDefault = selectedExpiryOption.isEmpty
     let isStateOptionDefault = stateOption.isEmpty
 
@@ -275,7 +275,7 @@ struct FilterListView: View {
     stateOption = ""
     sortAscending = true
     pendingSortAscending = sortAscending
-    selectesSorting = LocalizableString.shared.get(with: .defaultLabel).capitalized
+    selectesSorting = LocalizableString.shared.get(with: .defaultLabel)
 
     for section in sections {
       selectedOptions.formUnion(section.options)
@@ -310,7 +310,7 @@ struct FilterListView: View {
 
     withAnimation {
       if filterCounter == 0 &&
-          selectesSorting == LocalizableString.shared.get(with: .defaultLabel).capitalized &&
+          selectesSorting == LocalizableString.shared.get(with: .defaultLabel) &&
           !hasExpirySelected &&
           !hasStateSelected &&
           !isToggleInactive {
@@ -325,7 +325,7 @@ struct FilterListView: View {
 
   private func shouldEnableResetButton() -> Bool {
     let isSortingNotAscending = !sortAscending
-    let isSortingNotDefault = selectesSorting != LocalizableString.shared.get(with: .defaultLabel).capitalized
+    let isSortingNotDefault = selectesSorting != LocalizableString.shared.get(with: .defaultLabel)
     let isToggleInactive = !sections.allSatisfy { section in
       section.options.allSatisfy { selectedOptions.contains($0) }
     }

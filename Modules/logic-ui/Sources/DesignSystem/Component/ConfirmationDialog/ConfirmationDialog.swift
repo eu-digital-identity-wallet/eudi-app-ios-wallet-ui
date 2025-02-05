@@ -14,13 +14,14 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import logic_resources
 
 public extension View {
   func confirmationDialog(
-    title: String,
-    message: String,
-    destructiveText: String? = nil,
-    baseText: String,
+    title: LocalizableString.Key,
+    message: LocalizableString.Key,
+    destructiveText: LocalizableString.Key? = nil,
+    baseText: LocalizableString.Key,
     isPresented: Binding<Bool>,
     destructiveAction: (() -> Void)? = nil,
     baseAction: @escaping () -> Void
@@ -40,10 +41,10 @@ public extension View {
 }
 
 struct ConfirmationDialogModifier: ViewModifier {
-  let title: String
-  let message: String
-  let destructiveText: String?
-  let baseText: String
+  let title: LocalizableString.Key
+  let message: LocalizableString.Key
+  let destructiveText: LocalizableString.Key?
+  let baseText: LocalizableString.Key
   let isPresented: Binding<Bool>
   let destructiveAction: (() -> Void)?
   let baseAction: () -> Void

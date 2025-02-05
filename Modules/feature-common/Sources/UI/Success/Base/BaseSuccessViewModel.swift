@@ -79,7 +79,7 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
     .init(
       trailingActions: [
         Action(
-          title: LocalizableString.shared.get(with: .doneButton).capitalizedFirst()
+          title: .doneButton
         ) {
           self.onDone()
         }

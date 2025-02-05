@@ -180,7 +180,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     .init(
       trailingActions: [
         Action(
-          title: LocalizableString.shared.get(with: .shareButton).capitalizedFirst(),
+          title: .shareButton,
           disabled: !viewState.allowShare
         ) {
           self.onShare()

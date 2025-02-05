@@ -27,9 +27,7 @@ struct QuickPinView<Router: RouterHost>: View {
 
   var body: some View {
     ContentScreenView(
-      navigationTitle: LocalizableString.shared.get(
-        with: viewModel.viewState.navigationTitle
-      ),
+      navigationTitle: viewModel.viewState.navigationTitle,
       toolbarContent: viewModel.toolbarContent()
     ) {
       content(
@@ -40,10 +38,10 @@ struct QuickPinView<Router: RouterHost>: View {
       )
     }
     .confirmationDialog(
-      title: LocalizableString.shared.get(with: .quickPinUpdateCancellationTitle),
-      message: LocalizableString.shared.get(with: .quickPinUpdateCancellationCaption),
-      destructiveText: LocalizableString.shared.get(with: .cancelButton),
-      baseText: LocalizableString.shared.get(with: .quickPinUpdateCancellationContinue),
+      title: .quickPinUpdateCancellationTitle,
+      message: .quickPinUpdateCancellationCaption,
+      destructiveText: .cancelButton,
+      baseText: .quickPinUpdateCancellationContinue,
       isPresented: $viewModel.isCancelModalShowing,
       destructiveAction: {
         viewModel.onPop()

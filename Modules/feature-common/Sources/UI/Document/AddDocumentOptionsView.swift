@@ -28,7 +28,7 @@ public struct AddDocumentOptionsView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: true,
-      navigationTitle: LocalizableString.shared.get(with: .addDocumentTitle),
+      navigationTitle: .addDocumentTitle,
       toolbarContent: toolbarContent()
     ) {
       content(
@@ -87,7 +87,7 @@ private func content(
   ContentScreenView(
     padding: .zero,
     canScroll: true,
-    navigationTitle: LocalizableString.shared.get(with: .addDocumentTitle)
+    navigationTitle: .addDocumentTitle
   ) {
     content(onAddDocumentClick: {}, onScanClick: {})
   }

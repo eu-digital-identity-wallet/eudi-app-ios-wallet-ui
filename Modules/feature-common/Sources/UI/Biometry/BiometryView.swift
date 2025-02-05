@@ -28,9 +28,7 @@ struct BiometryView<Router: RouterHost>: View {
 
   var body: some View {
     ContentScreenView(
-      navigationTitle: LocalizableString.shared.get(
-        with: viewModel.viewState.config.navigationTitle
-      ),
+      navigationTitle: viewModel.viewState.config.navigationTitle,
       toolbarContent: viewModel.toolbarContent()
     ) {
       content(

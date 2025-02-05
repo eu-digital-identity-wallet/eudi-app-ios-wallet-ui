@@ -118,6 +118,7 @@ public extension DocumentUIModel {
     public let hasExpired: Bool
     public let state: State
     public let image: RemoteImage?
+    public let DocumentCategory: DocumentCategory
   }
 
   static func mocks() -> [DocumentUIModel] {
@@ -135,7 +136,8 @@ public extension DocumentUIModel {
           image: .init(
             url: URL(string: "https://www.example.com"),
             placeholder: Theme.shared.image.logo
-          )
+          ),
+          DocumentCategory: .Other
         )
       ),
       .init(
@@ -151,7 +153,8 @@ public extension DocumentUIModel {
           image: .init(
             url: URL(string: "https://www.example.com"),
             placeholder: Theme.shared.image.logo
-          )
+          ),
+          DocumentCategory: .Other
         )
       ),
       .init(
@@ -167,7 +170,8 @@ public extension DocumentUIModel {
           image: .init(
             url: URL(string: "https://www.example.com"),
             placeholder: Theme.shared.image.logo
-          )
+          ),
+          DocumentCategory: .Other
         )
       ),
       .init(
@@ -183,7 +187,8 @@ public extension DocumentUIModel {
           image: .init(
             url: URL(string: "https://www.example.com"),
             placeholder: Theme.shared.image.logo
-          )
+          ),
+          DocumentCategory: .Other
         )
       ),
       .init(
@@ -199,7 +204,8 @@ public extension DocumentUIModel {
           image: .init(
             url: URL(string: "https://www.example.com"),
             placeholder: Theme.shared.image.logo
-          )
+          ),
+          DocumentCategory: .Other
         )
       ),
       .init(
@@ -215,7 +221,8 @@ public extension DocumentUIModel {
           image: .init(
             url: URL(string: "https://www.example.com"),
             placeholder: Theme.shared.image.logo
-          )
+          ),
+          DocumentCategory: .Other
         )
       ),
       .init(
@@ -231,7 +238,8 @@ public extension DocumentUIModel {
           image: .init(
             url: URL(string: "https://www.example.com"),
             placeholder: Theme.shared.image.logo
-          )
+          ),
+          DocumentCategory: .Other
         )
       ),
       .init(
@@ -247,7 +255,8 @@ public extension DocumentUIModel {
           image: .init(
             url: URL(string: "https://www.example.com"),
             placeholder: Theme.shared.image.logo
-          )
+          ),
+          DocumentCategory: .Other
         )
       ),
       .init(
@@ -263,7 +272,8 @@ public extension DocumentUIModel {
           image: .init(
             url: URL(string: "https://www.example.com"),
             placeholder: Theme.shared.image.logo
-          )
+          ),
+          DocumentCategory: .Other
         )
       ),
       .init(
@@ -279,7 +289,8 @@ public extension DocumentUIModel {
           image: .init(
             url: URL(string: "https://www.example.com"),
             placeholder: Theme.shared.image.logo
-          )
+          ),
+          DocumentCategory: .Other
         )
       )
     ]
@@ -295,20 +306,26 @@ public extension DocumentUIModel.Value {
 }
 
 extension Array where Element == DocClaimsDecodable {
-  func transformToDocumentUi(with failedDocuments: [String] = []) -> [DocumentUIModel] {
+  func transformToDocumentUi(
+    with failedDocuments: [String] = [],
+    categories: DocumentCategories
+  ) -> [DocumentUIModel] {
     self.map { item in
-      item.transformToDocumentUi(with: failedDocuments)
+      item.transformToDocumentUi(with: failedDocuments, categories: categories)
     }
   }
 }
 
 extension DocClaimsDecodable {
-  func transformToDocumentUi(with failedDocuments: [String] = []) -> DocumentUIModel {
+  func transformToDocumentUi(
+    with failedDocuments: [String] = [],
+    categories: DocumentCategories
+  ) -> DocumentUIModel {
     return .init(
       id: UUID().uuidString,
       value: .init(
         id: self.id,
-        heading: issuerDisplay?.first?.name.orEmpty ?? "",
+        heading: self.issuerName,
         title: self.displayName.orEmpty,
         createdAt: self.createdAt,
         expiresAt: self.getExpiryDate(
@@ -326,9 +343,10 @@ extension DocClaimsDecodable {
           where: { $0 == self.id }
         ) ? .failed : (self is DeferrredDocument) ? .pending : .issued,
         image: .init(
-          url: self.issuerDisplay?.first?.logo?.uri,
+          url: self.issuerLogo,
           placeholder: Theme.shared.image.id
-        )
+        ),
+        DocumentCategory: categories.first(where: { $1.contains(self.documentTypeIdentifier) })?.key ?? .Other
       )
     )
   }

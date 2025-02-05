@@ -55,7 +55,6 @@ public protocol DashboardInteractor: Sendable {
     documents: [DocumentUIModel]
   ) async -> [DocumentUIModel]
   // MARK: - FILTER
-  func fetchFilteredDocuments(failedDocuments: [String]) async -> FilterableList?
   @MainActor func onFilterChangeState() -> AsyncStream<FiltersPartialState>
   func initializeFilters(filters: Filters, filterableList: FilterableList) async
   func applyFilters() async
@@ -153,8 +152,9 @@ final class DashboardInteractorImpl: DashboardInteractor {
     await filterValidator.updateFilter(filterGroupId: sectionID, filterId: filterID)
   }
 
-  public func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState {
-    let documents: FilterableList? = fetchFilteredDocuments(failedDocuments: failedDocuments)
+  func fetchDashboard(failedDocuments: [String]) async -> DashboardPartialState {
+
+    let documents: FilterableList? = await fetchFilteredDocuments(failedDocuments: failedDocuments)
     let username = fetchUsername()
 
     guard let documents = documents else {
@@ -164,26 +164,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
     return .success(username, documents, hasIssuedDocuments())
   }
 
-  public func fetchFilteredDocuments(failedDocuments: [String]) -> FilterableList? {
-    let documents = self.walletController.fetchAllDocuments()
-
-    guard !documents.isEmpty else {
-      return nil
-    }
-
-    let documentUIModels = documents.transformToDocumentUi(with: failedDocuments)
-
-    let filterableItems = documentUIModels.map { document in
-      FilterableItem(
-        data: document,
-        attributes: DocumentFilterableAttributes(document: document)
-      )
-    }
-
-    return FilterableList(items: filterableItems)
-  }
-
-  public func getBleAvailability() async -> Reachability.BleAvailibity {
+  func getBleAvailability() async -> Reachability.BleAvailibity {
     return await withCheckedContinuation { cont in
       reachabilityController.getBleAvailibity()
         .sink { cont.resume(returning: $0)}
@@ -191,11 +172,11 @@ final class DashboardInteractorImpl: DashboardInteractor {
     }
   }
 
-  public func openBleSettings() {
+  func openBleSettings() {
     reachabilityController.openBleSettings()
   }
 
-  public func getAppVersion() -> String {
+  func getAppVersion() -> String {
     return configLogic.appVersion
   }
 
@@ -213,6 +194,8 @@ final class DashboardInteractorImpl: DashboardInteractor {
     var issued: [DocumentUIModel] = []
     var failed: [String] = []
 
+    let categories = self.walletController.getDocumentCategories()
+
     for deferred in walletController.fetchDeferredDocuments() {
 
       if Task.isCancelled { return .cancelled }
@@ -220,7 +203,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
       do {
         let document = try await walletController.requestDeferredIssuance(with: deferred)
         if (document is DeferrredDocument) == false {
-          issued.append(document.transformToDocumentUi())
+          issued.append(document.transformToDocumentUi(categories: categories))
         }
       } catch {
         failed.append(deferred.id)
@@ -266,18 +249,18 @@ final class DashboardInteractorImpl: DashboardInteractor {
       return isDocumentWithinExpiryPeriod(document, expiryPeriod: selectedExpiryPeriod)
     }
 
-    if filterModel.selectedStateOption == LocalizableString.shared.get(with: .valid).capitalized {
+    if filterModel.selectedStateOption == LocalizableString.shared.get(with: .valid) {
       filteredDocuments = filteredDocuments.filter { !$0.value.hasExpired && $0.value.state == .issued }
-    } else if filterModel.selectedStateOption == LocalizableString.shared.get(with: .expired).capitalized {
+    } else if filterModel.selectedStateOption == LocalizableString.shared.get(with: .expired) {
       filteredDocuments = filteredDocuments.filter { $0.value.hasExpired }
     }
 
     switch filterModel.initialSorting {
-    case LocalizableString.shared.get(with: .dateIssued).capitalized:
+    case LocalizableString.shared.get(with: .dateIssued):
       filteredDocuments = filterModel.sortAscending
       ? filteredDocuments.sorted { $0.value.createdAt < $1.value.createdAt }
       : filteredDocuments.sorted { $0.value.createdAt > $1.value.createdAt }
-    case LocalizableString.shared.get(with: .expiryDate).capitalized:
+    case LocalizableString.shared.get(with: .expiryDate):
       filteredDocuments = filterModel.sortAscending
       ? filteredDocuments.sorted { ($0.value.expiresAt ?? "") < ($1.value.expiresAt ?? "") }
       : filteredDocuments.sorted { ($0.value.expiresAt ?? "") > ($1.value.expiresAt ?? "") }
@@ -288,6 +271,26 @@ final class DashboardInteractorImpl: DashboardInteractor {
     }
 
     return filteredDocuments
+  }
+
+  private func fetchFilteredDocuments(failedDocuments: [String]) async -> FilterableList? {
+    let documents = self.walletController.fetchAllDocuments()
+    let categories = self.walletController.getDocumentCategories()
+
+    guard !documents.isEmpty else {
+      return nil
+    }
+
+    let documentUIModels = documents.transformToDocumentUi(with: failedDocuments, categories: categories)
+
+    let filterableItems = documentUIModels.map { document in
+      FilterableItem(
+        data: document,
+        attributes: DocumentFilterableAttributes(document: document)
+      )
+    }
+
+    return FilterableList(items: filterableItems)
   }
 
   private func isDocumentWithinExpiryPeriod(_ document: DocumentUIModel, expiryPeriod: String) -> Bool {
@@ -301,13 +304,13 @@ final class DashboardInteractorImpl: DashboardInteractor {
     let calendar = Calendar.current
 
     switch expiryPeriod {
-    case LocalizableString.shared.get(with: .nextSevenDays).capitalized:
+    case LocalizableString.shared.get(with: .nextSevenDays):
       return calendar.date(byAdding: .day, value: 7, to: currentDate)! >= expiryDate
-    case LocalizableString.shared.get(with: .nextThirtyDays).capitalized:
+    case LocalizableString.shared.get(with: .nextThirtyDays):
       return calendar.date(byAdding: .day, value: 30, to: currentDate)! >= expiryDate
-    case LocalizableString.shared.get(with: .beyondThiryDays).capitalized:
+    case LocalizableString.shared.get(with: .beyondThiryDays):
       return expiryDate > calendar.date(byAdding: .day, value: 30, to: currentDate)!
-    case LocalizableString.shared.get(with: .beforeToday).capitalized:
+    case LocalizableString.shared.get(with: .beforeToday):
       return expiryDate < currentDate
     default:
       return true
@@ -317,13 +320,5 @@ final class DashboardInteractorImpl: DashboardInteractor {
   private func fetchUsername() -> String {
     let name = walletController.fetchMainPidDocument()?.getBearersName()?.first
     return name.orEmpty
-  }
-
-  private func fetchDocuments(failedDocuments: [String]) -> [DocumentUIModel]? {
-    let documents = self.walletController.fetchAllDocuments()
-    guard !documents.isEmpty else {
-      return nil
-    }
-    return documents.transformToDocumentUi(with: failedDocuments)
   }
 }

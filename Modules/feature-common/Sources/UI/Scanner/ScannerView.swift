@@ -35,9 +35,7 @@ struct ScannerView<Router: RouterHost>: View {
 
     ContentScreenView(
       padding: SPACING_NONE,
-      navigationTitle: LocalizableString.shared.get(
-        with: viewModel.viewState.title
-      ),
+      navigationTitle: viewModel.viewState.title,
       toolbarContent: toolbarContent()
     ) {
       content(

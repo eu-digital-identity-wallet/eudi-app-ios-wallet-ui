@@ -18,14 +18,14 @@ import logic_resources
 
 public struct Action: Identifiable {
   public let id = UUID()
-  public let title: String?
+  public let title: LocalizableString.Key?
   public let image: Image?
   public let hasIndicator: Bool?
   public let disabled: Bool
   public let callback: (() -> Void)?
 
   public init(
-    title: String? = nil,
+    title: LocalizableString.Key? = nil,
     image: Image? = nil,
     hasIndicator: Bool? = nil,
     disabled: Bool = false,
@@ -124,12 +124,12 @@ private struct ActionView: View {
         ToolBarContent(
           trailingActions: [
             Action(
-              title: "State",
+              title: .custom("State"),
               disabled: false,
               callback: {}
             ),
             Action(
-              title: "Proceed",
+              title: .custom("Proceed"),
               disabled: false,
               callback: {}
             )

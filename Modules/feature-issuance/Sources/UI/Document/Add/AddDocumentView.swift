@@ -35,7 +35,7 @@ struct AddDocumentView<Router: RouterHost>: View {
       padding: .zero,
       canScroll: true,
       errorConfig: viewModel.viewState.error,
-      navigationTitle: LocalizableString.shared.get(with: .chooseFromList),
+      navigationTitle: .chooseFromList,
       isLoading: viewModel.viewState.isLoading,
       toolbarContent: viewModel.toolbarContent()
     ) {

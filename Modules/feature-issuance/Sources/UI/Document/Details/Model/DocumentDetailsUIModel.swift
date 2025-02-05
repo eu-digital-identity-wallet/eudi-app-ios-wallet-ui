@@ -113,13 +113,12 @@ extension DocClaimsDecodable {
   func transformToDocumentDetailsUi() -> DocumentDetailsUIModel {
 
     var issuer: DocumentDetailsUIModel.IssuerField? {
-      guard let name = self.issuerDisplay?.first?.name else {
+      guard !self.issuerName.isEmpty else {
         return nil
       }
-      let logo = self.issuerDisplay?.first?.logo?.uri
       return .init(
-        issuersName: name,
-        logoUrl: logo,
+        issuersName: self.issuerName,
+        logoUrl: self.issuerLogo,
         isVerified: true
       )
     }
@@ -147,11 +146,9 @@ extension DocClaimsDecodable {
       return "\(fullName.first) \(fullName.last)"
     }
 
-    let identifier = DocumentTypeIdentifier(rawValue: docType.orEmpty)
-
     return .init(
       id: id,
-      type: identifier,
+      type: documentTypeIdentifier,
       documentName: displayName.orEmpty,
       issuer: issuer,
       holdersName: bearerName,

@@ -54,15 +54,15 @@ struct DashboardView<Router: RouterHost>: View {
       )
     }
     .confirmationDialog(
-      LocalizableString.shared.get(with: .authenticate),
+      .authenticate,
       isPresented: $viewModel.isAuthenticateAlertShowing,
       titleVisibility: .visible
     ) {
-      Button(LocalizableString.shared.get(with: .cancelButton), role: .cancel) {}
-      Button(LocalizableString.shared.get(with: .inPerson)) {
+      Button(.cancelButton, role: .cancel) {}
+      Button(.inPerson) {
         viewModel.onShare()
       }
-      Button(LocalizableString.shared.get(with: .online)) {
+      Button(.online) {
         viewModel.onShowScanner()
       }
     } message: {
@@ -114,10 +114,10 @@ struct DashboardView<Router: RouterHost>: View {
       }
     }
     .confirmationDialog(
-      title: LocalizableString.shared.get(with: .bleDisabledModalTitle),
-      message: LocalizableString.shared.get(with: .bleDisabledModalCaption),
-      destructiveText: LocalizableString.shared.get(with: .cancelButton).capitalized,
-      baseText: LocalizableString.shared.get(with: .bleDisabledModalButton).capitalized,
+      title: .bleDisabledModalTitle,
+      message: .bleDisabledModalCaption,
+      destructiveText: .cancelButton,
+      baseText: .bleDisabledModalButton,
       isPresented: $viewModel.isBleModalShowing,
       destructiveAction: {
         viewModel.toggleBleModal()
@@ -127,10 +127,10 @@ struct DashboardView<Router: RouterHost>: View {
       }
     )
     .confirmationDialog(
-      title: LocalizableString.shared.get(with: .issuanceDetailsDeletionTitle([viewModel.viewState.pendingDocumentTitle])),
-      message: LocalizableString.shared.get(with: .issuanceDetailsDeletionCaption([viewModel.viewState.pendingDocumentTitle])),
-      destructiveText: LocalizableString.shared.get(with: .no),
-      baseText: LocalizableString.shared.get(with: .yes),
+      title: .issuanceDetailsDeletionTitle([viewModel.viewState.pendingDocumentTitle]),
+      message: .issuanceDetailsDeletionCaption([viewModel.viewState.pendingDocumentTitle]),
+      destructiveText: .no,
+      baseText: .yes,
       isPresented: $viewModel.isDeleteDeferredModalShowing,
       destructiveAction: {
         viewModel.toggleDeleteDeferredModal()

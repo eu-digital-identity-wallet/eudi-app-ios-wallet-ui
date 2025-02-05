@@ -174,19 +174,19 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     }
   }
 
-  func alertTitle() -> String {
+  func alertTitle() -> LocalizableString.Key {
     if viewState.isBookmarked {
-      return LocalizableString.shared.get(with: .savedToFavorites)
+      return .savedToFavorites
     } else {
-      return LocalizableString.shared.get(with: .removedFromFavorites)
+      return .removedFromFavorites
     }
   }
 
-  func alertMessage() -> String {
+  func alertMessage() -> LocalizableString.Key {
     if viewState.isBookmarked {
-      return LocalizableString.shared.get(with: .savedToFavoritesMessage)
+      return .savedToFavoritesMessage
     } else {
-      return LocalizableString.shared.get(with: .removedFromFavoritesMessages)
+      return .removedFromFavoritesMessages
     }
   }
 

@@ -52,22 +52,22 @@ struct FiltersListView: View {
         }
       }
       .listStyle(.grouped)
-      .navigationTitle(LocalizableString.shared.get(with: .filters).capitalized)
+      .navigationTitle(LocalizableString.shared.get(with: .filters))
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
-          Button(LocalizableString.shared.get(with: .cancelButton).capitalized) {
+          Button(.cancelButton) {
             dismiss()
           }
         }
         ToolbarItem(placement: .navigationBarTrailing) {
-          Button(LocalizableString.shared.get(with: .reset).capitalized) { }
+          Button(.reset) { }
           .disabled(true)
         }
       }
       .overlay {
         withAnimation {
-          Text(LocalizableString.shared.get(with: .showResults).capitalized)
+          Text(.showResults)
             .font(.body.bold())
             .foregroundStyle(Theme.shared.color.white)
             .frame(maxWidth: .infinity)
@@ -92,7 +92,7 @@ struct FiltersListView: View {
           Text(filters[index].title)
             .frame(maxWidth: .infinity, alignment: .topLeading)
           if filters[index].selected {
-            Image(systemName: "checkmark")
+            Theme.shared.image.checkmark
               .foregroundColor(ThemeManager.shared.color.primary)
           }
         }

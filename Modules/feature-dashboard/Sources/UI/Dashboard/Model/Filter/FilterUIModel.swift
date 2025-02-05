@@ -57,8 +57,8 @@ public extension FilterUISection {
       switch self {
       case .issuedSortingDate:
         return [
-          LocalizableString.shared.get(with: .ascending).capitalized,
-          LocalizableString.shared.get(with: .descending).capitalized
+          LocalizableString.shared.get(with: .ascending),
+          LocalizableString.shared.get(with: .descending)
         ]
       case .sortBy:
         return []
@@ -77,23 +77,23 @@ public extension FilterUISection {
         return []
       case .sortBy:
         return [
-          LocalizableString.shared.get(with: .defaultLabel).capitalized,
-          LocalizableString.shared.get(with: .dateIssued).capitalized,
-          LocalizableString.shared.get(with: .expiryDate).capitalized
+          LocalizableString.shared.get(with: .defaultLabel),
+          LocalizableString.shared.get(with: .dateIssued),
+          LocalizableString.shared.get(with: .expiryDate)
         ]
       case .issuer(let options):
         return options
       case .expiryPeriod:
         return [
-          LocalizableString.shared.get(with: .nextSevenDays).capitalized,
-          LocalizableString.shared.get(with: .nextThirtyDays).capitalized,
-          LocalizableString.shared.get(with: .beyondThiryDays).capitalized,
-          LocalizableString.shared.get(with: .beforeToday).capitalized
+          LocalizableString.shared.get(with: .nextSevenDays),
+          LocalizableString.shared.get(with: .nextThirtyDays),
+          LocalizableString.shared.get(with: .beyondThiryDays),
+          LocalizableString.shared.get(with: .beforeToday)
         ]
       case .state:
         return [
-          LocalizableString.shared.get(with: .valid).capitalized,
-          LocalizableString.shared.get(with: .expired).capitalized
+          LocalizableString.shared.get(with: .valid),
+          LocalizableString.shared.get(with: .expired)
         ]
       }
     }

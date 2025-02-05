@@ -70,6 +70,7 @@ public protocol WalletKitController: Sendable {
   func storeDynamicIssuancePendingUrl(with url: URL)
   func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData?
   func getScopedDocuments() async throws -> [ScopedDocument]
+  func getDocumentCategories() -> DocumentCategories
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -280,6 +281,10 @@ final class WalletKitControllerImpl: WalletKitController {
       default: return nil
       }
     }
+  }
+
+  func getDocumentCategories() -> DocumentCategories {
+    return configLogic.documentsCategories
   }
 }
 

@@ -29,9 +29,7 @@ struct DocumentOfferView<Router: RouterHost>: View {
   var body: some View {
     ContentScreenView(
       errorConfig: viewModel.viewState.error,
-      navigationTitle: LocalizableString.shared.get(
-        with: .addDocumentRequest
-      ),
+      navigationTitle: .addDocumentRequest,
       toolbarContent: viewModel.toolbarContent()
     ) {
       content(
@@ -40,10 +38,10 @@ struct DocumentOfferView<Router: RouterHost>: View {
       )
     }
     .confirmationDialog(
-      title: LocalizableString.shared.get(with: .cancelIssueSheetTitle),
-      message: LocalizableString.shared.get(with: .cancelIssueSheetCaption),
-      destructiveText: LocalizableString.shared.get(with: .cancelButton),
-      baseText: LocalizableString.shared.get(with: .cancelIssueSheetContinue),
+      title: .cancelIssueSheetTitle,
+      message: .cancelIssueSheetCaption,
+      destructiveText: .cancelButton,
+      baseText: .cancelIssueSheetContinue,
       isPresented: $viewModel.isCancelModalShowing,
       destructiveAction: {
         viewModel.onPop()

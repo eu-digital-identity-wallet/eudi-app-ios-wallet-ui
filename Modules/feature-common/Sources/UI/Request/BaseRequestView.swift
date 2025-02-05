@@ -30,7 +30,7 @@ public struct BaseRequestView<Router: RouterHost>: View {
       padding: .zero,
       canScroll: true,
       errorConfig: viewModel.viewState.error,
-      navigationTitle: LocalizableString.shared.get(with: .dataSharingRequest),
+      navigationTitle: .dataSharingRequest,
       toolbarContent: viewModel.toolbarContent()
     ) {
       content(
@@ -45,18 +45,18 @@ public struct BaseRequestView<Router: RouterHost>: View {
       )
     }
     .confirmationDialog(
-      title: LocalizableString.shared.get(with: .requestDataInfoNotice),
-      message: LocalizableString.shared.get(with: .requestDataSheetCaption),
-      baseText: LocalizableString.shared.get(with: .okButton).capitalized,
+      title: .requestDataInfoNotice,
+      message: .requestDataSheetCaption,
+      baseText: .okButton,
       isPresented: $viewModel.isRequestInfoModalShowing,
       baseAction: {
         viewModel.onShowRequestInfoModal()
       }
     )
     .confirmationDialog(
-      title: LocalizableString.shared.get(with: viewModel.getTrustedRelyingParty()),
-      message: LocalizableString.shared.get(with: viewModel.getTrustedRelyingPartyInfo()),
-      baseText: LocalizableString.shared.get(with: .okButton).capitalized,
+      title: viewModel.getTrustedRelyingParty(),
+      message: viewModel.getTrustedRelyingPartyInfo(),
+      baseText: .okButton,
       isPresented: $viewModel.isVerifiedEntityModalShowing,
       baseAction: {
         viewModel.onVerifiedEntityModal()
@@ -69,8 +69,8 @@ public struct BaseRequestView<Router: RouterHost>: View {
     }
     .alertView(
       isPresented: $viewModel.itmesChanged,
-      title: "",
-      message: LocalizableString.shared.get(with: .incompleteRequestDataSelection)
+      title: .custom(""),
+      message: .incompleteRequestDataSelection
     )
   }
 }

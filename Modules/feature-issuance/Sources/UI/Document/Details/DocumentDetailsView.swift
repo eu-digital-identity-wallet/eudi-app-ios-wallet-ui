@@ -31,7 +31,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       padding: .zero,
       canScroll: !viewModel.viewState.hasContinueButton,
       errorConfig: viewModel.viewState.error,
-      navigationTitle: LocalizableString.shared.get(with: .details),
+      navigationTitle: .details,
       toolbarContent: viewModel.toolbarContent()
     ) {
 
@@ -47,10 +47,10 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       }
     }
     .confirmationDialog(
-      title: "",
-      message: LocalizableString.shared.get(with: .deleteDocumentConfirmDialog),
-      destructiveText: LocalizableString.shared.get(with: .deleteButton),
-      baseText: LocalizableString.shared.get(with: .cancelButton),
+      title: .custom(""),
+      message: .deleteDocumentConfirmDialog,
+      destructiveText: .deleteButton,
+      baseText: .cancelButton,
       isPresented: $viewModel.isDeletionModalShowing,
       destructiveAction: {
         viewModel.onDeleteDocument()
@@ -63,7 +63,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       isPresented: $viewModel.showAlert,
       title: viewModel.alertTitle(),
       message: viewModel.alertMessage(),
-      buttonText: LocalizableString.shared.get(with: .close),
+      buttonText: .close,
       onDismiss: {
         viewModel.showAlert = false
       }

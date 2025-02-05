@@ -134,9 +134,7 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
     .init(
       trailingActions: [
         Action(
-          title: LocalizableString.shared.get(
-            with: .issuanceSuccessNextButton
-          ).capitalizedFirst()
+          title: .issuanceSuccessNextButton
         ) {
           self.onIssue()
         }

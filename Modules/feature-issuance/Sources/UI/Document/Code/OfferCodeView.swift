@@ -29,7 +29,7 @@ struct OfferCodeView<Router: RouterHost>: View {
   var body: some View {
     ContentScreenView(
       errorConfig: viewModel.viewState.error,
-      navigationTitle: "",
+      navigationTitle: .custom(""),
       toolbarContent: viewModel.toolbarContent()
     ) {
       content(
