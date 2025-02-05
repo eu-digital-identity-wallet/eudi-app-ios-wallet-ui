@@ -20,8 +20,9 @@
 @Copyable
 public struct BaseSuccessState: ViewState {
   let config: PresentationSuccessUIConfig
-  let issuerData: IssuerDataUIModel
+  let relyingParty: RelyingPartyData
   let items: [ListItemSection]
+  let navigationTitle: String
   let isLoading: Bool
 }
 
@@ -40,7 +41,7 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
       fatalError("ExternalLoginViewModel:: Invalid configuraton")
     }
 
-    guard let requestItems = requestItems as? [RequestDataUI] else {
+    guard let requestItems = requestItems as? [ListItemSection] else {
       fatalError("ExternalLoginViewModel:: Invalid configuraton")
     }
 
@@ -50,15 +51,15 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
       router: router,
       initialState: .init(
         config: config,
-        issuerData: .init(
-          icon: Image(systemName: ""),
-          title: config.relyingParty,
-          isVerified: true
+        relyingParty: RelyingPartyData(
+          logo: config.issuerLogoUrl == nil ? nil : .remoteImage(config.issuerLogoUrl, nil),
+          isVerified: !config.documentSuccess,
+          name: config.relyingParty
         ),
         items: requestItems.map { item in
           ListItemSection(
-            id: item.requestDataSection.id,
-            title: item.requestDataSection.title,
+            id: item.id,
+            title: item.title,
             listItems: item.listItems.map { listItem in
               ListItemData(
                 mainText: listItem.mainText,
@@ -69,6 +70,7 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
             }
           )
         },
+        navigationTitle: config.documentSuccess ? LocalizableString.shared.get(with: .documentAdded) : LocalizableString.shared.get(with: .dataShared),
         isLoading: false
       )
     )
@@ -85,18 +87,40 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
       router.popTo(with: popToScreen)
     case .push(let screen):
       router.push(with: screen)
+    case .none:
+      break
     }
   }
 
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: [
-        Action(
-          title: .doneButton
-        ) {
-          self.onDone()
-        }
-      ]
+  func onIssue() {
+    router.push(
+      with: .featureDashboardModule(
+        .dashboard
+      )
     )
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    if viewState.config.documentSuccess {
+      .init(
+        trailingActions: [
+          Action(
+            title: .issuanceSuccessNextButton
+          ) {
+            self.onIssue()
+          }
+        ]
+      )
+    } else {
+      .init(
+        trailingActions: [
+          Action(
+            title: .doneButton
+          ) {
+            self.onDone()
+          }
+        ]
+      )
+    }
   }
 }

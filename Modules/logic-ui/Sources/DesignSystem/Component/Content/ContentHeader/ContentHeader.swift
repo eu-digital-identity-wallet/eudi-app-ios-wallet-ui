@@ -144,7 +144,7 @@ public struct ContentHeader: View {
       mainText: "Main Text",
       mainTextConfig: nil,
       relyingPartyData: RelyingPartyData(
-        logo: Image(systemName: "person.crop.circle"),
+        logo: .image(Image(systemName: "person.crop.circle")),
         isVerified: true,
         name: "Relying Party Name",
         nameTextConfig: nil,

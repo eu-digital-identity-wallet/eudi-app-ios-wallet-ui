@@ -58,10 +58,7 @@ private func content(
           description: LocalizableString.shared.get(
             with: .successfullySharedFollowingInformation
           ),
-          relyingPartyData: RelyingPartyData(
-            isVerified: viewState.issuerData.isVerified,
-            name: viewState.issuerData.title
-          )
+          relyingPartyData: viewState.relyingParty
         )
       )
 

@@ -25,6 +25,10 @@ public protocol AddDocumentInteractor: Sendable {
   func issueDocument(configId: String) async -> IssueDocumentPartialState
   func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState
   func getScopedDocument(configId: String) async throws -> ScopedDocument
+
+  func getHoldersName(for documentIdentifier: String) -> String?
+  func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key?
+  func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState
 }
 
 final class AddDocumentInteractorImpl: AddDocumentInteractor {
@@ -114,6 +118,36 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     try await walletController.getScopedDocuments().first {
       $0.configId == configId
     } ?? ScopedDocument.empty()
+  }
+
+  public func getHoldersName(for documentIdentifier: String) -> String? {
+    guard
+      let bearerName = walletController.fetchDocument(with: documentIdentifier)?.getBearersName()
+    else {
+      return nil
+    }
+    return  "\(bearerName.first) \(bearerName.last)"
+  }
+
+  public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key? {
+    guard
+      let document = walletController.fetchDocument(with: documentIdentifier)
+    else {
+      return nil
+    }
+    return .issuanceSuccessCaption([document.displayName.orEmpty])
+  }
+
+  func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState {
+    let documents = walletController.fetchDocuments(with: documentIds)
+    let documentsDetails = documents.compactMap {
+      $0.transformToDocumentDetailsUi(isSensitive: false)
+    }
+
+    if documentsDetails.isEmpty {
+      return .failure(WalletCoreError.unableFetchDocument)
+    }
+    return .success(documentsDetails)
   }
 }
 
