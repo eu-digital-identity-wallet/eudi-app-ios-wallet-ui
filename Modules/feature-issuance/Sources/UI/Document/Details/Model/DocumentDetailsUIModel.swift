@@ -98,7 +98,9 @@ public extension DocumentDetailsUIModel {
 }
 
 extension DocClaimsDecodable {
-  func transformToDocumentDetailsUi() -> DocumentDetailsUIModel {
+  func transformToDocumentDetailsUi(
+    isSensitive: Bool = true
+  ) -> DocumentDetailsUIModel {
 
     var issuer: DocumentDetailsUIModel.IssuerField? {
       guard let name = self.issuerDisplay?.first?.name else {
@@ -114,6 +116,7 @@ extension DocClaimsDecodable {
 
     let documentFields: [ListItemData] =
     flattenValues(
+      isSensitive: isSensitive,
       input: docClaims
         .compactMap({$0})
         .parseDates(
@@ -128,7 +131,7 @@ extension DocClaimsDecodable {
     )
     .sorted(by: {
       LocalizableString.shared.get(with: $0.mainText)
-              .localizedCompare(LocalizableString.shared.get(with: $1.mainText)) == .orderedAscending
+        .localizedCompare(LocalizableString.shared.get(with: $1.mainText)) == .orderedAscending
     })
 
     var bearerName: String {
@@ -158,7 +161,10 @@ extension DocClaimsDecodable {
     )
   }
 
-  private func flattenValues(input: [DocClaim]) -> [ListItemData] {
+  private func flattenValues(
+    isSensitive: Bool = true,
+    input: [DocClaim]
+  ) -> [ListItemData] {
     input.reduce(into: []) { partialResult, docClaim in
 
       let uuid = UUID().uuidString
@@ -171,7 +177,7 @@ extension DocClaimsDecodable {
             id: uuid,
             mainText: .custom(title),
             leadingIcon: .init(image: Image(uiImage: uiImage)),
-            isBlur: true
+            isBlur: isSensitive
           )
         )
 
@@ -181,7 +187,7 @@ extension DocClaimsDecodable {
             id: uuid,
             mainText: .custom(docClaim.flattenNested(nested: nested).stringValue),
             overlineText: .custom(title),
-            isBlur: true
+            isBlur: isSensitive
           )
         )
       } else {
@@ -190,7 +196,7 @@ extension DocClaimsDecodable {
             id: uuid,
             mainText: .custom(docClaim.stringValue),
             overlineText: .custom(title),
-            isBlur: true
+            isBlur: isSensitive
           )
         )
       }

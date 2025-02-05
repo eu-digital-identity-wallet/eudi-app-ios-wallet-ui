@@ -21,7 +21,7 @@
 public struct BaseSuccessState: ViewState {
   let config: PresentationSuccessUIConfig
   let issuerData: IssuerDataUIModel
-  let items: [RequestDataUI]
+  let items: [ListItemSection]
   let isLoading: Bool
 }
 
@@ -55,7 +55,20 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
           title: config.relyingParty,
           isVerified: true
         ),
-        items: requestItems,
+        items: requestItems.map { item in
+          ListItemSection(
+            id: item.requestDataSection.id,
+            title: item.requestDataSection.title,
+            listItems: item.listItems.map { listItem in
+              ListItemData(
+                mainText: listItem.mainText,
+                overlineText: listItem.overlineText,
+                supportingText: listItem.supportingText,
+                leadingIcon: listItem.leadingIcon
+              )
+            }
+          )
+        },
         isLoading: false
       )
     )

@@ -19,12 +19,13 @@ import feature_common
 
 @Copyable
 struct DocumentSuccessState: ViewState {
-  let title: LocalizableString.Key
+//  let title: LocalizableString.Key
   let caption: LocalizableString.Key?
   let holderName: String?
   let config: IssuanceFlowUiConfig
   let documentIdentifiers: [String]
   let documents: [DocumentDetailsUIModel]
+//  let documents: [SectionHeader]
   let isLoading: Bool
   let contentHeaderConfig: ContentHeaderConfig
   let error: ContentErrorView.Config?
@@ -50,12 +51,13 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
     super.init(
       router: router,
       initialState: .init(
-        title: .successTitlePunctuated,
+//        title: .successTitlePunctuated,
         caption: nil,
         holderName: nil,
         config: config,
         documentIdentifiers: documentIdentifiers,
-        documents: [DocumentDetailsUIModel.mock()],
+//        documents: [DocumentDetailsUIModel.mock()],
+        documents: [],
         isLoading: true,
         contentHeaderConfig: .init(
           appIconAndTextData: AppIconAndTextData(
@@ -122,7 +124,7 @@ final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, Docu
     case .failure:
       self.setState {
         $0.copy(
-          title: .issuanceSuccessHeaderDescriptionWhenError,
+//          title: .issuanceSuccessHeaderDescriptionWhenError,
           documents: [],
           isLoading: false
         )
