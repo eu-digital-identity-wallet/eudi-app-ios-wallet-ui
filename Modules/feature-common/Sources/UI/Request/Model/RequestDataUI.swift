@@ -58,6 +58,7 @@ public extension Array where Element == RequestDataUI {
     self.map { ui in
       var filteredUI = ui
       filteredUI.requestDataRow = ui.requestDataRow.filter { $0.isSelected }
+      filteredUI.listItems = filteredUI.requestDataRow.map { $0.mapToListItem() }
       return filteredUI
     }
   }

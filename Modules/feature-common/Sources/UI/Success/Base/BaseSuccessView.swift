@@ -91,42 +91,12 @@ private func documents(
       ForEach(viewState.items, id: \.id) { section in
         ExpandableCardView(
           backgroundColor: backgroundColor,
-          title: .custom(section.requestDataSection.title),
+          title: .custom(section.title),
           subtitle: .viewDetails
         ) {
-          ForEach(section.requestDataRow, id: \.id) { item in
-            switch item.value {
-            case .string(let value):
-              WrapListItemView(
-                listItem: ListItemData(
-                  mainText: .custom(value),
-                  overlineText: .custom(item.title),
-                  trailingContent: ignoreTrainingContent ? .none : .checkbox(
-                    item.isEnabled,
-                    item.isSelected
-                  ) { _ in
-                    onSelectionChanged(item.id)
-                  }
-                )
-              )
-            case .image(let image):
-              WrapListItemView(
-                listItem: ListItemData(
-                  mainText: .custom(item.title),
-                  leadingIcon: .init(image: image),
-                  trailingContent: ignoreTrainingContent ? .none : .checkbox(
-                    item.isEnabled,
-                    item.isSelected
-                  ) { _ in
-                    onSelectionChanged(item.id)
-                  }
-                )
-              )
-            }
-            Divider()
-              .padding(.horizontal, SPACING_MEDIUM)
-              .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
-          }
+          WrapListItemsView(
+            listItems: section.listItems
+          )
         }
         .shimmer(isLoading: viewState.isLoading)
       }

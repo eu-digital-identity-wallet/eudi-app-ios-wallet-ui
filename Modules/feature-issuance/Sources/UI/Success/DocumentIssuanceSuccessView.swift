@@ -128,7 +128,7 @@ private func document(
 
 #Preview {
   let viewState = DocumentSuccessState(
-    title: .success,
+//    title: .success,
     caption: .issuanceSuccessCaption(
       ["DocumentTitle"]
     ),
