@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_resources
+import logic_business
 
 public struct ListItemData: Identifiable, Sendable, Equatable {
 
@@ -22,7 +23,8 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
     case bold
   }
 
-  public let id: String
+  @EquatableNoop
+  public var id: String
   public let mainText: LocalizableString.Key
   public let mainStyle: MainStyle
   public let overlineText: LocalizableString.Key?

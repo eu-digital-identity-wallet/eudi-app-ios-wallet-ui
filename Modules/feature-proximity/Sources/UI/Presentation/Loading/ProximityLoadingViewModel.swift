@@ -81,7 +81,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
           successNavigation: .pop(screen: getOriginator()),
           relyingParty: relyingParty
         ),
-        requestItems
+        requestItems.map { $0.matToListItemSection() }
       )
     )
   }

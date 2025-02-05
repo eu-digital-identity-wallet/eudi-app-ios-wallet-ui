@@ -33,6 +33,10 @@ public protocol DocumentOfferInteractor: Sendable {
     issuerName: String,
     successNavigation: UIConfig.TwoWayNavigationType
   ) async -> OfferDynamicIssuancePartialState
+
+  func getHoldersName(for documentIdentifier: String) -> String?
+  func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key?
+  func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState
 }
 
 final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
@@ -121,14 +125,43 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
         let session = await walletController.startSameDevicePresentation(deepLink: presentationComponents)
         return .dynamicIssuance(session)
       } else if documents.count == docOffers.count {
-        return .success(
-          .featureIssuanceModule(
-            .issuanceSuccess(
-              config: IssuanceFlowUiConfig(flow: .extraDocument),
-              documentIdentifiers: documents.compactMap { $0.id }
-            )
+
+        let documentIdentifiers = documents.compactMap { $0.id }
+        let state = await Task.detached { () -> DocumentsPartialState in
+          return await self.fetchStoredDocuments(
+            documentIds: documentIdentifiers
           )
-        )
+        }.value
+
+        var relyingParty = ""
+        if let first = documentIdentifiers.first {
+          relyingParty = getHoldersName(for: first).orEmpty
+        }
+
+        switch state {
+        case .success(let documents):
+            return .success(
+              .featureIssuanceModule(
+                .issuanceSuccess(
+                  config: PresentationSuccessUIConfig(
+                    successNavigation: .none,
+                    relyingParty: relyingParty,
+                    issuerLogoUrl: documents.first?.issuer?.logoUrl,
+                    documentSuccess: true
+                  ),
+                  requestItems: documents.map { item in
+                    ListItemSection(
+                      id: item.id,
+                      title: item.documentName,
+                      listItems: item.documentFields
+                    )
+                  }
+                )
+              )
+            )
+        case .failure:
+            return .failure(WalletCoreError.unableToIssueAndStore)
+        }
       } else {
 
         let notIssued = docOffers.filter { offer in
@@ -208,6 +241,36 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
     } catch {
       return .failure(WalletCoreError.unableToIssueAndStore)
     }
+  }
+
+  public func getHoldersName(for documentIdentifier: String) -> String? {
+    guard
+      let bearerName = walletController.fetchDocument(with: documentIdentifier)?.getBearersName()
+    else {
+      return nil
+    }
+    return  "\(bearerName.first) \(bearerName.last)"
+  }
+
+  public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key? {
+    guard
+      let document = walletController.fetchDocument(with: documentIdentifier)
+    else {
+      return nil
+    }
+    return .issuanceSuccessCaption([document.displayName.orEmpty])
+  }
+
+  func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState {
+    let documents = walletController.fetchDocuments(with: documentIds)
+    let documentsDetails = documents.compactMap {
+      $0.transformToDocumentDetailsUi(isSensitive: false)
+    }
+
+    if documentsDetails.isEmpty {
+      return .failure(WalletCoreError.unableFetchDocument)
+    }
+    return .success(documentsDetails)
   }
 
   private func retrieveSuccessRoute(

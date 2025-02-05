@@ -31,9 +31,7 @@ public struct BaseSuccessView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: true,
-      navigationTitle: LocalizableString.shared.get(
-        with: .dataShared
-      ),
+      navigationTitle: viewModel.viewState.navigationTitle,
       toolbarContent: viewModel.toolbarContent()
     ) {
       content(
@@ -60,10 +58,7 @@ private func content(
           description: LocalizableString.shared.get(
             with: .successfullySharedFollowingInformation
           ),
-          relyingPartyData: RelyingPartyData(
-            isVerified: viewState.issuerData.isVerified,
-            name: viewState.issuerData.title
-          )
+          relyingPartyData: viewState.relyingParty
         )
       )
 

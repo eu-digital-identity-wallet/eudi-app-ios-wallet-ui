@@ -19,7 +19,7 @@ import logic_business
 import logic_core
 import logic_ui
 
-public struct DocumentDetailsUIModel: Sendable, Equatable, Identifiable {
+public struct DocumentDetailsUIModel: Equatable, Identifiable, Routable {
 
   public let id: String
   public let type: DocumentTypeIdentifier

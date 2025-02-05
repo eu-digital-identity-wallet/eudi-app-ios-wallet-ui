@@ -21,6 +21,8 @@ public struct PresentationSuccessUIConfig: UIConfigType, Equatable {
 
   public let successNavigation: UIConfig.DeepLinkNavigationType
   public let relyingParty: String
+  public let issuerLogoUrl: URL?
+  public let documentSuccess: Bool
 
   public var log: String {
     return "onSuccessNav: \(successNavigation.type)" +
@@ -29,9 +31,13 @@ public struct PresentationSuccessUIConfig: UIConfigType, Equatable {
 
   public init(
     successNavigation: UIConfig.DeepLinkNavigationType,
-    relyingParty: String
+    relyingParty: String,
+    issuerLogoUrl: URL? = nil,
+    documentSuccess: Bool = false
   ) {
     self.successNavigation = successNavigation
     self.relyingParty = relyingParty
+    self.documentSuccess = documentSuccess
+    self.issuerLogoUrl = issuerLogoUrl
   }
 }

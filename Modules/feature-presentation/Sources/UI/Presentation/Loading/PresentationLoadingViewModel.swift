@@ -98,7 +98,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
           successNavigation: navigationType,
           relyingParty: relyingParty
         ),
-        requestItems
+        requestItems.map { $0.matToListItemSection() }
       )
     )
   }

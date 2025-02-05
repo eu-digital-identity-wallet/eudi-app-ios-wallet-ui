@@ -17,7 +17,7 @@ import SwiftUI
 import logic_resources
 
 public struct RelyingPartyData {
-  public let logo: Image?
+  public let logo: RemoteImageView.ImageContentOption?
   public let isVerified: Bool
   public let name: String
   public let nameTextConfig: TextConfig?
@@ -25,7 +25,7 @@ public struct RelyingPartyData {
   public let descriptionTextConfig: TextConfig?
 
   public init(
-    logo: Image? = nil,
+    logo: RemoteImageView.ImageContentOption? = nil,
     isVerified: Bool,
     name: String,
     nameTextConfig: TextConfig? = nil,
@@ -51,10 +51,22 @@ public struct RelyingParty: View {
   public var body: some View {
     VStack(alignment: .center, spacing: SPACING_SMALL) {
       if let logo = relyingPartyData.logo {
-        logo
-          .resizable()
-          .scaledToFit()
-          .frame(width: 40, height: 40)
+        switch logo {
+          case .none: EmptyView()
+          case .remoteImage(let url, let image):
+            RemoteImageView(
+              url: url,
+              icon: image,
+              width: getScreenRect().width / 2.5,
+              height: nil
+            )
+            .frame(maxWidth: .infinity, alignment: .center)
+          case .image(let image):
+            image
+              .resizable()
+              .scaledToFit()
+              .frame(width: 40, height: 40)
+        }
       }
 
       WrapText(

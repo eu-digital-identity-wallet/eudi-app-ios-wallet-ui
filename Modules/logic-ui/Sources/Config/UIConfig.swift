@@ -81,6 +81,7 @@ public extension UIConfig {
     case pop(screen: AppRoute, inclusive: Bool = false)
     case push(screen: AppRoute)
     case deepLink(link: URL, popToScreen: AppRoute)
+    case none
 
     public var type: String {
       return switch self {
@@ -90,6 +91,8 @@ public extension UIConfig {
         "push to \(screen)"
       case .deepLink(let link, _):
         "open \(link)"
+      case .none:
+        "none"
       }
     }
   }

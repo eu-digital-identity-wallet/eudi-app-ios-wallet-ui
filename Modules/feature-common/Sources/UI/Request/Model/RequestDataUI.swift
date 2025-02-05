@@ -37,6 +37,16 @@ public struct RequestDataUI: Identifiable, Equatable, Sendable, Routable {
   }
 }
 
+public extension RequestDataUI {
+  func matToListItemSection() -> ListItemSection {
+    ListItemSection(
+      id: requestDataSection.id,
+      title: requestDataSection.title,
+      listItems: listItems
+    )
+  }
+}
+
 extension RequestDataUI {
   mutating func toggleSelection(id: String) {
     var rows = requestDataRow

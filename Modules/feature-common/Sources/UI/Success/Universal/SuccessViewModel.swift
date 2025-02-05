@@ -45,6 +45,8 @@ final class SuccessViewModel<Router: RouterHost>: ViewModel<Router, SuccessState
       router.popTo(with: popToScreen)
     case .push(let screen):
       router.push(with: screen)
+    case .none:
+      break
     }
   }
 }
