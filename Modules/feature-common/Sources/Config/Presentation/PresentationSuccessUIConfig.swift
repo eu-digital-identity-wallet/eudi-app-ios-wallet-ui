@@ -20,18 +20,18 @@ import logic_core
 public struct PresentationSuccessUIConfig: UIConfigType, Equatable {
 
   public let successNavigation: UIConfig.DeepLinkNavigationType
-  public let relyingParty: String
+  public let relyingParty: String?
   public let issuerLogoUrl: URL?
   public let documentSuccess: Bool
 
   public var log: String {
     return "onSuccessNav: \(successNavigation.type)" +
-    " relyingParty: \(relyingParty)"
+    " relyingParty: \(relyingParty ?? "")"
   }
 
   public init(
     successNavigation: UIConfig.DeepLinkNavigationType,
-    relyingParty: String,
+    relyingParty: String? = nil,
     issuerLogoUrl: URL? = nil,
     documentSuccess: Bool = false
   ) {

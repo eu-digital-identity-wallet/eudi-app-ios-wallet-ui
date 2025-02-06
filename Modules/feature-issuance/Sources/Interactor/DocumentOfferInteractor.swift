@@ -133,11 +133,6 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
           )
         }.value
 
-        var relyingParty = ""
-        if let first = documentIdentifiers.first {
-          relyingParty = getHoldersName(for: first).orEmpty
-        }
-
         switch state {
         case .success(let documents):
           return .success(
@@ -145,7 +140,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
               .issuanceSuccess(
                 config: PresentationSuccessUIConfig(
                   successNavigation: .none,
-                  relyingParty: relyingParty,
+                  relyingParty: documents.first?.issuer?.name,
                   issuerLogoUrl: documents.first?.issuer?.logoUrl,
                   documentSuccess: true
                 ),

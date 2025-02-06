@@ -19,7 +19,7 @@ import logic_resources
 public struct RelyingPartyData {
   public let logo: RemoteImageView.ImageContentOption?
   public let isVerified: Bool
-  public let name: String
+  public let name: String?
   public let nameTextConfig: TextConfig?
   public let description: String?
   public let descriptionTextConfig: TextConfig?
@@ -27,7 +27,7 @@ public struct RelyingPartyData {
   public init(
     logo: RemoteImageView.ImageContentOption? = nil,
     isVerified: Bool,
-    name: String,
+    name: String? = nil,
     nameTextConfig: TextConfig? = nil,
     description: String? = nil,
     descriptionTextConfig: TextConfig? = nil
@@ -69,22 +69,24 @@ public struct RelyingParty: View {
         }
       }
 
-      WrapText(
-        text: relyingPartyData.name,
-        textConfig: relyingPartyData.nameTextConfig ?? TextConfig(
-          font: Theme.shared.font.bodyLarge.font,
-          color: Theme.shared.color.onSurface,
-          textAlign: .center,
-          maxLines: 1,
-          fontWeight: .semibold
+      if let name = relyingPartyData.name {
+        WrapText(
+          text: name,
+          textConfig: relyingPartyData.nameTextConfig ?? TextConfig(
+            font: Theme.shared.font.bodyLarge.font,
+            color: Theme.shared.color.onSurface,
+            textAlign: .center,
+            maxLines: 1,
+            fontWeight: .semibold
+          )
         )
-      )
-      .if(relyingPartyData.isVerified) {
-        $0.leftImage(
-          image: Theme.shared.image.relyingPartyVerified,
-          spacing: Theme.shared.dimension.verifiedBadgeSpacing,
-          size: 20
-        )
+        .if(relyingPartyData.isVerified) {
+          $0.leftImage(
+            image: Theme.shared.image.relyingPartyVerified,
+            spacing: Theme.shared.dimension.verifiedBadgeSpacing,
+            size: 20
+          )
+        }
       }
 
       if let description = relyingPartyData.description {

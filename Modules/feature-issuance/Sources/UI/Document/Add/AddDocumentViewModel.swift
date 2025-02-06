@@ -296,8 +296,6 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
       )
     }.value
 
-    let relyingParty = interactor.getHoldersName(for: docId).orEmpty
-
     switch state {
     case .success(let documents):
       router.push(
@@ -305,7 +303,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
           .issuanceSuccess(
             config: PresentationSuccessUIConfig(
               successNavigation: .none,
-              relyingParty: relyingParty,
+              relyingParty: documents.first?.issuer?.name,
               issuerLogoUrl: documents.first?.issuer?.logoUrl,
               documentSuccess: true
             ),
