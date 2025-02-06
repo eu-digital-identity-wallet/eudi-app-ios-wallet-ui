@@ -15,6 +15,7 @@
  */
 import Foundation
 import Copyable
+import logic_resources
 
 @Copyable
 public struct Filters: Sendable {
@@ -41,12 +42,12 @@ public struct Filters: Sendable {
 @Copyable
 public struct FilterGroup: Sendable {
   public let id: UUID
-  public let name: String
+  public let name: LocalizableString.Key
   public let filters: [FilterItem]
 
   public init(
     id: UUID = UUID(),
-    name: String,
+    name: LocalizableString.Key,
     filters: [FilterItem]
   ) {
     self.id = id
@@ -58,13 +59,13 @@ public struct FilterGroup: Sendable {
 @Copyable
 public struct FilterItem: Sendable {
   public let id: UUID
-  public let name: String
+  public let name: LocalizableString.Key
   public let selected: Bool
   public let filterableAction: FilterAction
 
   public init(
     id: UUID = UUID(),
-    name: String,
+    name: LocalizableString.Key,
     selected: Bool,
     filterableAction: FilterAction
   ) {

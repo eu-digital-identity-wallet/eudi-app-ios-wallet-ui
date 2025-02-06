@@ -24,7 +24,7 @@ public enum FilterResultPartialState: Sendable {
 
 public protocol FilterValidator: Sendable {
   func initializeFilters(filters: Filters, filterableList: FilterableList) async
-  func updateLists(filterableList: FilterableList) async
+  func updateFilterList(filterableList: FilterableList, filters: Filters) async
   func applyFilters() async
   func applySearch(query: String) async
   func resetFilters() async
@@ -75,9 +75,14 @@ actor FilterValidatorImpl: FilterValidator {
   ) async {
     self.appliedFilters = filters
     self.defaultFilters = filters
-    self.initialList = filterableList
-    self.filterableList = filterableList
-    self.filteredList = filterableList
+    self.initialList = filterableList.copy(items: filterableList.items.sorted(by: { item1, item2 in
+        switch filters.sortOrder {
+        case .ascending:
+          return item1.attributes.searchText < item2.attributes.searchText
+        case .descending:
+          return item1.attributes.searchText > item2.attributes.searchText
+        }
+      }))
   }
 
   func applyFilters() async {
@@ -97,18 +102,20 @@ actor FilterValidatorImpl: FilterValidator {
           filter: filter
         )
 
-        return filteredResult.copy(
-          items: partialResult.items.filter({ item in
-            item.attributes.searchText.contains(searchQuery)
-          })
-        )
+        return filteredResult
+//        let copiedResult = filteredResult.copy(
+//          items: filteredResult.items.filter { item in
+//            item.attributes.searchText.contains(searchQuery)
+//          }
+//        )
+//        return copiedResult
       }
 
     self.filterResultSubject.send(
       .success(
         FilterResult(
-          filteredList: FilterableList(items: newList.items),
-          updatedFilters: self.appliedFilters
+          filteredList: newList,
+          updatedFilters: appliedFilters
         )
       )
     )
@@ -121,6 +128,8 @@ actor FilterValidatorImpl: FilterValidator {
   }
 
   func updateFilter(filterGroupId: String, filterId: String) async {
+    let filtersUpdate = snapshotFilters.isEmpty ? appliedFilters : snapshotFilters
+
     let updatedFilterGroups = appliedFilters.filterGroups.map { group in
       if group.id.uuidString == filterGroupId {
         if let targetFilter = group.filters.first(where: { $0.id.uuidString == filterId }) {
@@ -132,7 +141,7 @@ actor FilterValidatorImpl: FilterValidator {
       return group
     }
 
-    let updatedFilters = Filters(filterGroups: updatedFilterGroups, sortOrder: appliedFilters.sortOrder)
+    let updatedFilters = filtersUpdate.copy(filterGroups: updatedFilterGroups)
 
     snapshotFilters = updatedFilters
 
@@ -140,18 +149,33 @@ actor FilterValidatorImpl: FilterValidator {
       .success(
         FilterResult(
           filteredList: filteredList,
-          updatedFilters: updatedFilters
+          updatedFilters: snapshotFilters
         )
       )
     )
   }
 
-  func revertFilters() async { }
+  func revertFilters() async {
+    snapshotFilters = Filters.emptyFilters()
+    self.filterResultSubject.send(
+      .success(
+        FilterResult(
+          filteredList: filteredList,
+          updatedFilters: appliedFilters
+        )
+      )
+    )
+  }
 
-  func applySearch(query: String) async { }
+  func applySearch(query: String) async {
+    searchQuery = query
+    await applyFilters()
+  }
 
   func updateSortOrder(sortOrder: SortOrderType) async { }
 
-  func updateLists(filterableList: FilterableList) async { }
-
+  func updateFilterList(filterableList: FilterableList, filters: Filters) async {
+    self.initialList = filterableList
+    self.defaultFilters = filters
+  }
 }

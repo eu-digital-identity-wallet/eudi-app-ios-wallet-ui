@@ -17,12 +17,26 @@ import Foundation
 import logic_business
 
 struct DocumentFilterableAttributes: FilterableAttributes {
-
   let searchText: String
-  let heading: String?
+  let issuedDate: Date?
+  let expiryDate: Date?
+  let issuer: String?
+  let name: String?
+  let category: String?
 
-  init(document: DocumentUIModel) {
-    self.searchText = "\(document.value.heading) \(document.value.title)"
-    self.heading = document.value.heading
+  init(
+    searchText: String,
+    issuedDate: Date? = nil,
+    expiryDate: Date? = nil,
+    issuer: String? = nil,
+    name: String? = nil,
+    category: String? = nil
+  ) {
+    self.searchText = searchText
+    self.issuedDate = issuedDate
+    self.expiryDate = expiryDate
+    self.issuer = issuer
+    self.name = name
+    self.category = category
   }
 }

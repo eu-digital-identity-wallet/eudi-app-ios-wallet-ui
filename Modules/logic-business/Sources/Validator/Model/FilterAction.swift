@@ -39,33 +39,14 @@ public struct Filter<T: FilterableAttributes>: FilterAction {
     filter: FilterItem
   ) -> FilterableList {
     let filteredItems = filterableItems.items.filter {
-      guard let attributes = $0.attributes as? T else { return false }
-      return predicate(attributes, filter)
+      if let attributes = $0.attributes as? T {
+        let result = predicate(attributes, filter)
+        return result
+      } else {
+        return false
+      }
     }
-    return FilterableList(items: filteredItems)
-  }
-}
 
-public struct Sort<T: FilterableAttributes, R: Comparable>: FilterAction {
-
-  public let selector: @Sendable (T) -> R?
-
-  public init(
-    selector: @Sendable @escaping (T) -> R?
-  ) {
-    self.selector = selector
-  }
-
-  public func applyFilter(
-    sortOrder: SortOrderType,
-    filterableItems: FilterableList,
-    filter: FilterItem
-  ) -> FilterableList {
-    let sortedItems = filterableItems.items.sorted {
-      guard let lhs = $0.attributes as? T, let rhs = $1.attributes as? T else { return false }
-      guard let lhsValue = selector(lhs), let rhsValue = selector(rhs) else { return false }
-      return sortOrder == .ascending ? lhsValue < rhsValue : lhsValue > rhsValue
-    }
-    return FilterableList(items: sortedItems)
+    return filterableItems.copy(items: filteredItems)
   }
 }

@@ -23,8 +23,6 @@ import feature_common
 struct DashboardState: ViewState {
   let isLoading: Bool
   let documents: [DocumentUIModel]
-  var filteredDocuments: [DocumentUIModel]
-  var filterModel: FilterModel?
   let filterUIModel: [FilterUISection]
   let username: String
   let phase: ScenePhase
@@ -122,8 +120,6 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       initialState: .init(
         isLoading: true,
         documents: [],
-        filteredDocuments: [],
-        filterModel: nil,
         filterUIModel: [],
         username: "",
         phase: .active,
@@ -146,32 +142,40 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
           filterGroups: [
             // MARK: - EXPIRY
             FilterGroup(
-              name: LocalizableString.shared.get(with: .expiryPeriodSectionTitle),
+              name: .expiryPeriodSectionTitle,
               filters: [
                 FilterItem(
-                  name: LocalizableString.shared.get(with: .nextSevenDays),
+                  name: .nextSevenDays,
                   selected: false,
-                  filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
-                    Date().isWithinNextDays(7)
-                  })),
+                  filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
+                    guard let date = attributes.expiryDate else { return false }
+                    return date.isWithinNextDays(7)
+                  })
+                ),
                 FilterItem(
-                  name: LocalizableString.shared.get(with: .nextThirtyDays),
+                  name: .nextThirtyDays,
                   selected: false,
-                  filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
-                    Date().isWithinNextDays(30)
-                  })),
+                  filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
+                    guard let date = attributes.expiryDate else { return false }
+                    return date.isWithinNextDays(30)
+                  })
+                ),
                 FilterItem(
-                  name: LocalizableString.shared.get(with: .beyondThiryDays),
+                  name: .beyondThiryDays,
                   selected: false,
-                  filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
-                    Date().isBeyondNextDays(30)
-                  })),
+                  filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
+                    guard let date = attributes.expiryDate else { return false }
+                    return date.isBeyondNextDays(30)
+                  })
+                ),
                 FilterItem(
-                  name: LocalizableString.shared.get(with: .beforeToday),
+                  name: .beforeToday,
                   selected: false,
-                  filterableAction: Filter<DocumentAttributes>(predicate: { _, _ in
-                    Date().isBeforeToday()
-                  }))
+                  filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
+                    guard let date = attributes.expiryDate else { return false }
+                    return date.isBeforeToday()
+                  })
+                )
               ]
             )
           ],
@@ -184,7 +188,6 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     listenForSuccededIssuedModalChanges()
     subscribeToSearch()
     onFiltersChangeState()
-
   }
 
   func fetch() {
@@ -202,7 +205,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         if viewState.isInitialFetch {
           await interactor.initializeFilters(filters: viewState.filters, filterableList: documents)
         } else {
-          //interactor.updateList()
+          await interactor.updateFilterList(filterableList: documents, filters: viewState.filters)
         }
 
         await interactor.applyFilters()
@@ -354,36 +357,6 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   func showFilters() {
     onPause()
     isFilterModalShowing = true
-  }
-
-  func applyFilters(
-    section: [FilterUISection.Element],
-    sortAscending: Bool,
-    initialSorting: String,
-    selectedExpiryOption: String?,
-    selectedStateOption: String
-  ) async {
-    // MARK: - TODO Multiple recompositions... WHY ?
-    setState { $0.copy(filteredDocuments: viewState.documents) }
-
-    setState { $0.copy(filterModel: .init(
-      sections: section,
-      sortAscending: sortAscending,
-      initialSorting: initialSorting,
-      selectedExpiryOption: selectedExpiryOption,
-      selectedStateOption: selectedStateOption))
-    }
-
-    let sortedDocuments = await interactor.applyFiltersWithSorting(
-      filterModel: viewState.filterModel,
-      documents: viewState.documents
-    )
-
-    setState { $0.copy(filteredDocuments: sortedDocuments) }
-  }
-
-  func resetDocumentList() {
-    setState { $0.copy(filteredDocuments: viewState.documents) }
   }
 
   func onMyWallet() {

@@ -61,8 +61,9 @@ struct FiltersListView: View {
           }
         }
         ToolbarItem(placement: .navigationBarTrailing) {
-          Button(.reset) { }
-          .disabled(true)
+          Button(.reset) {
+            resetFiltersAction()
+          }
         }
       }
       .overlay {
@@ -85,7 +86,7 @@ struct FiltersListView: View {
   }
 
   @ViewBuilder
-  func FilterSection(sectionTitle: String, sectionID: String, filters: [FilterUIItem]) -> some View {
+  func FilterSection(sectionTitle: LocalizableString.Key, sectionID: String, filters: [FilterUIItem]) -> some View {
     Section(header: Text(sectionTitle)) {
       ForEach(filters.indices, id: \.self) { index in
         HStack {

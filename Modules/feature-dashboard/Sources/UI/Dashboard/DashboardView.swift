@@ -262,14 +262,6 @@ private func content(
   let viewState = DashboardState(
     isLoading: false,
     documents: DocumentUIModel.mocks(),
-    filteredDocuments: DocumentUIModel.mocks(),
-    filterModel: .init(
-      sections: [],
-      sortAscending: true,
-      initialSorting: "",
-      selectedExpiryOption: "",
-      selectedStateOption: ""
-    ),
     filterUIModel: [],
     username: "First name",
     phase: .active,

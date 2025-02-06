@@ -20,12 +20,12 @@ import logic_business
 public struct FilterUISection: Sendable, Identifiable {
   public let id: UUID
   public let filters: [FilterUIItem]
-  public let sectionTitle: String
+  public let sectionTitle: LocalizableString.Key
 }
 
 public struct FilterUIItem: Sendable, Identifiable {
   public let id: UUID
-  public let title: String
+  public let title: LocalizableString.Key
   public let selected: Bool
   public let filterAction: FilterAction
 }
@@ -38,18 +38,18 @@ public extension FilterUISection {
     case expiryPeriod
     case state
 
-    var sectionTitle: String {
+    var sectionTitle: LocalizableString.Key {
       switch self {
       case .issuedSortingDate:
-        return LocalizableString.shared.get(with: .sortByIssuedDateSectionTitle)
+        return .sortByIssuedDateSectionTitle
       case .sortBy:
-        return LocalizableString.shared.get(with: .sortBy)
+        return .sortBy
       case .issuer:
-        return LocalizableString.shared.get(with: .issuerSectionTitle)
+        return .issuerSectionTitle
       case .expiryPeriod:
-        return LocalizableString.shared.get(with: .expiryPeriodSectionTitle)
+        return .expiryPeriodSectionTitle
       case .state:
-        return LocalizableString.shared.get(with: .state)
+        return .state
       }
     }
 

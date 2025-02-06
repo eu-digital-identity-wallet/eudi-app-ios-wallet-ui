@@ -19,22 +19,26 @@ extension Date {
 
   func isWithinNextDays(_ days: Int) -> Bool {
     let calendar = Calendar.current
-    guard let futureDate = calendar.date(byAdding: .day, value: days, to: self) else {
+
+    guard let futureDate = calendar.date(byAdding: .day, value: days, to: Date()) else {
       return false
     }
-    return self >= futureDate
+
+    return self >= Date() && self <= futureDate
   }
 
   func isBeyondNextDays(_ days: Int) -> Bool {
     let calendar = Calendar.current
-    guard let futureDate = calendar.date(byAdding: .day, value: days, to: self) else {
+
+    guard let futureDate = calendar.date(byAdding: .day, value: days, to: Date()) else {
       return false
     }
+
     return self > futureDate
   }
 
   func isBeforeToday() -> Bool {
-    return self < Date()
+    let calendar = Calendar.current
+    return calendar.compare(self, to: Date(), toGranularity: .day) == .orderedAscending
   }
-
 }
