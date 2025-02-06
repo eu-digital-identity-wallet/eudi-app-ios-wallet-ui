@@ -22,6 +22,7 @@ import Combine
 public protocol SideMenuInteractor: Sendable {
   func getAppVersion() -> String
   func retrieveLogFileUrl() -> URL?
+  func retrieveChangeLogUrl() -> URL?
 }
 
 final class SideMenuInteractorImpl: SideMenuInteractor {
@@ -43,5 +44,9 @@ final class SideMenuInteractorImpl: SideMenuInteractor {
 
   func retrieveLogFileUrl() -> URL? {
     return walletController.retrieveLogFileUrl()
+  }
+
+  func retrieveChangeLogUrl() -> URL? {
+    return configLogic.changelogUrl
   }
 }

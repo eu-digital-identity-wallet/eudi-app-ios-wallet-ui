@@ -353,6 +353,17 @@
         }
       }
     },
+    "changelog" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changelog"
+          }
+        }
+      }
+    },
     "choose_from_list" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -876,7 +887,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "NEXT"
+            "value" : "Next"
           }
         }
       }
@@ -1231,7 +1242,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "PROCEED"
+            "value" : "Proceed"
           }
         }
       }

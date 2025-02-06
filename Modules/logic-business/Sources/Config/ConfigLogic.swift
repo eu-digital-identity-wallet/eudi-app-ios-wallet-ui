@@ -50,6 +50,11 @@ public protocol ConfigLogic: Sendable {
    * RQES Config
    */
   var rqesConfig: EudiRQESUiConfig { get }
+
+  /**
+   * Changelog URL
+   */
+  var changelogUrl: URL? { get }
 }
 
 struct ConfigLogicImpl: ConfigLogic {
@@ -72,5 +77,20 @@ struct ConfigLogicImpl: ConfigLogic {
 
   public var rqesConfig: EudiRQESUiConfig {
     RQESConfig(buildVariant: appBuildVariant, buildType: appBuildType)
+  }
+
+  public var changelogUrl: URL? {
+    switch appBuildVariant {
+      case .DEMO:
+        guard
+          let value = getBundleNullableValue(key: "Changelog Url"),
+          let url = URL(string: value)
+        else {
+          return nil
+        }
+        return url
+      case .DEV:
+        return nil
+    }
   }
 }
