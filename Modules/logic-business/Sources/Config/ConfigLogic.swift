@@ -80,17 +80,12 @@ struct ConfigLogicImpl: ConfigLogic {
   }
 
   public var changelogUrl: URL? {
-    switch appBuildVariant {
-      case .DEMO:
-        guard
-          let value = getBundleNullableValue(key: "Changelog Url"),
-          let url = URL(string: value)
-        else {
-          return nil
-        }
-        return url
-      case .DEV:
-        return nil
+    guard
+      let value = getBundleNullableValue(key: "Changelog Url"),
+      let url = URL(string: value)
+    else {
+      return nil
     }
+    return url
   }
 }
