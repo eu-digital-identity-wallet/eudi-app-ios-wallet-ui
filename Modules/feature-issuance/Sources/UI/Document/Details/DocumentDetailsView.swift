@@ -49,7 +49,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     .confirmationDialog(
       title: .custom(""),
       message: .deleteDocumentConfirmDialog,
-      destructiveText: .deleteButton,
+      destructiveText: .deleteDocument,
       baseText: .cancelButton,
       isPresented: $viewModel.isDeletionModalShowing,
       destructiveAction: {

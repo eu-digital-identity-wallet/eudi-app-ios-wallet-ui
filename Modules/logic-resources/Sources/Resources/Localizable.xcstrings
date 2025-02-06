@@ -7,7 +7,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ADD DOC"
+            "value" : "Add doc"
           }
         }
       }
@@ -172,7 +172,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ENABLE"
+            "value" : "Enable"
           }
         }
       }
@@ -216,7 +216,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CANCEL"
+            "value" : "Cancel"
           }
         }
       }
@@ -238,7 +238,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CONTINUE ISSUANCE"
+            "value" : "Continue issuance"
           }
         }
       }
@@ -414,7 +414,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CONTINUE"
+            "value" : "Continue"
           }
         }
       }
@@ -799,7 +799,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CONTINUE"
+            "value" : "Continue"
           }
         }
       }
@@ -909,7 +909,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ISSUE"
+            "value" : "Issue"
           }
         }
       }
@@ -1198,7 +1198,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CONFIRM"
+            "value" : "Confirm"
           }
         }
       }
@@ -1319,7 +1319,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CONTINUE"
+            "value" : "Continue"
           }
         }
       }
@@ -1715,7 +1715,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SHARE"
+            "value" : "Share"
           }
         }
       }
