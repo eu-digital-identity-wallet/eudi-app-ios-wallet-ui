@@ -14,10 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_resources
+import OrderedCollections
 
-public typealias DocumentCategories = [DocumentCategory: [DocumentTypeIdentifier]]
+public typealias DocumentCategories = OrderedDictionary<DocumentCategory, [DocumentTypeIdentifier]>
 
-public enum DocumentCategory: Sendable {
+public enum DocumentCategory: Sendable, Equatable {
   case Government
   case Travel
   case Finance

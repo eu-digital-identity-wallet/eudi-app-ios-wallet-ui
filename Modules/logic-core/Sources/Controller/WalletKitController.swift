@@ -284,7 +284,8 @@ final class WalletKitControllerImpl: WalletKitController {
   }
 
   func getDocumentCategories() -> DocumentCategories {
-    return configLogic.documentsCategories
+    let sorted = configLogic.documentsCategories.sorted { $0.key.order < $1.key.order }
+    return DocumentCategories(uniqueKeysWithValues: sorted)
   }
 }
 
