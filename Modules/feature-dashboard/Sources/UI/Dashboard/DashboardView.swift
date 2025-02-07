@@ -73,7 +73,10 @@ struct DashboardView<Router: RouterHost>: View {
         viewModel.resetFilters()
       } applyFiltersAction: {
         viewModel.fetch()
-      } updateFiltersCallback: { sectionID, filterID in
+      } revertFilters: {
+        viewModel.revertFilters()
+      }
+      updateFiltersCallback: { sectionID, filterID in
         viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
       }
     }

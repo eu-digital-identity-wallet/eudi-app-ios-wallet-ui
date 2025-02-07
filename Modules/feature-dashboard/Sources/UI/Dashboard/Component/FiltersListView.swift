@@ -25,6 +25,7 @@ struct FiltersListView: View {
   var resetFiltersAction: () -> Void
   var applyFiltersAction: () -> Void
   var updateFiltersCallback: ((String, String) -> Void)?
+  var revertFilters: () -> Void
 
   let sections: [FilterUISection]
 
@@ -32,12 +33,14 @@ struct FiltersListView: View {
     sections: [FilterUISection],
     resetFiltersAction: @escaping () -> Void,
     applyFiltersAction: @escaping () -> Void,
+    revertFilters: @escaping () -> Void,
     updateFiltersCallback: ((String, String) -> Void)?
   ) {
     self.sections = sections
     self.resetFiltersAction = resetFiltersAction
     self.applyFiltersAction = applyFiltersAction
     self.updateFiltersCallback = updateFiltersCallback
+    self.revertFilters = revertFilters
   }
 
   var body: some View {
@@ -75,6 +78,9 @@ struct FiltersListView: View {
             resetFiltersAction()
           }
         }
+      }
+      .onDisappear {
+        revertFilters()
       }
     }
   }

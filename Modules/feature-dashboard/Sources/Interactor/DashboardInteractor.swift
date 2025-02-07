@@ -54,6 +54,7 @@ public protocol DashboardInteractor: Sendable {
   func initializeFilters(filters: Filters, filterableList: FilterableList) async
   func applyFilters() async
   func resetFilters() async
+  func revertFilters() async
   func updateFilters(sectionID: String, filterID: String) async
   func fetchFilteredDocuments(failedDocuments: [String]) -> FilterableList?
   func updateFilterList(filterableList: FilterableList, filters: Filters) async
@@ -318,6 +319,10 @@ final class DashboardInteractorImpl: DashboardInteractor {
 
   func resetFilters() async {
     await filterValidator.resetFilters()
+  }
+
+  func revertFilters() async {
+    await filterValidator.revertFilters()
   }
 
   func updateFilters(sectionID: String, filterID: String)  async {

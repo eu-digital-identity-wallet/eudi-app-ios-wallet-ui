@@ -209,6 +209,12 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     }
   }
 
+  func revertFilters() {
+    Task {
+      await interactor.revertFilters()
+    }
+  }
+
   func updateFilters(sectionID: String, filterID: String) {
     Task {
       await interactor.updateFilters(sectionID: sectionID, filterID: filterID)

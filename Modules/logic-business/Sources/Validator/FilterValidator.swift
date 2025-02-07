@@ -160,7 +160,7 @@ actor FilterValidatorImpl: FilterValidator {
     self.filterResultSubject.send(
       .success(
         FilterResult(
-          filteredList: filteredList,
+          filteredList: initialList,
           updatedFilters: appliedFilters
         )
       )
