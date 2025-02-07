@@ -23,6 +23,30 @@ public protocol FilterAction: Sendable {
   ) -> FilterableList
 }
 
+public struct Sort<T: FilterableAttributes, R: Comparable>: FilterAction {
+
+  public let predicate: @Sendable (T) -> R?
+
+  public init(
+    predicate: @Sendable @escaping (T) -> R?
+  ) {
+    self.predicate = predicate
+  }
+
+  public func applyFilter(
+    sortOrder: SortOrderType,
+    filterableItems: FilterableList,
+    filter: FilterItem
+  ) -> FilterableList {
+    let sortedItems = filterableItems.items.sorted {
+      guard let lhs = $0.attributes as? T, let rhs = $1.attributes as? T else { return false }
+      guard let lhsValue = predicate(lhs), let rhsValue = predicate(rhs) else { return false }
+      return sortOrder == .ascending ? lhsValue < rhsValue : lhsValue > rhsValue
+    }
+    return FilterableList(items: sortedItems)
+  }
+}
+
 public struct Filter<T: FilterableAttributes>: FilterAction {
 
   public let predicate: @Sendable (T, FilterItem) -> Bool

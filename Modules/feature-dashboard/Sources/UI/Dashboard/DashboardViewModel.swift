@@ -139,46 +139,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         ),
         isInitialFetch: true,
         filters: Filters(
-          filterGroups: [
-            // MARK: - EXPIRY
-            FilterGroup(
-              name: .expiryPeriodSectionTitle,
-              filters: [
-                FilterItem(
-                  name: .nextSevenDays,
-                  selected: false,
-                  filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
-                    guard let date = attributes.expiryDate else { return false }
-                    return date.isWithinNextDays(7)
-                  })
-                ),
-                FilterItem(
-                  name: .nextThirtyDays,
-                  selected: false,
-                  filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
-                    guard let date = attributes.expiryDate else { return false }
-                    return date.isWithinNextDays(30)
-                  })
-                ),
-                FilterItem(
-                  name: .beyondThiryDays,
-                  selected: false,
-                  filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
-                    guard let date = attributes.expiryDate else { return false }
-                    return date.isBeyondNextDays(30)
-                  })
-                ),
-                FilterItem(
-                  name: .beforeToday,
-                  selected: false,
-                  filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
-                    guard let date = attributes.expiryDate else { return false }
-                    return date.isBeforeToday()
-                  })
-                )
-              ]
-            )
-          ],
+          filterGroups: [],
           sortOrder: SortOrderType.ascending
         ),
         filterSections: [.issuedSortingDate]
@@ -188,6 +149,14 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     listenForSuccededIssuedModalChanges()
     subscribeToSearch()
     onFiltersChangeState()
+  }
+
+  func createFilters() {
+    setState {
+      $0.copy(
+        filters: interactor.createFiltersGroup()
+      )
+    }
   }
 
   func fetch() {
@@ -203,6 +172,13 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       case .success(let username, let documents, let hasIssuedDocuments):
 
         if viewState.isInitialFetch {
+          let newFilters = await interactor.addDynamicFilters(documents: documents, filters: viewState.filters)
+          setState {
+            $0.copy(
+              filters: newFilters
+            )
+          }
+
           await interactor.initializeFilters(filters: viewState.filters, filterableList: documents)
         } else {
           await interactor.updateFilterList(filterableList: documents, filters: viewState.filters)

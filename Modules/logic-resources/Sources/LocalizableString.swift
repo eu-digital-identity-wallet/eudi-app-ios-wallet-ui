@@ -368,9 +368,9 @@ public final class LocalizableString: LocalizableStringType {
     case .all:
       bundle.localizedString(forKey: "all")
     case .descending:
-      bundle.localizedString(forKey: "desceding")
+      bundle.localizedString(forKey: "descending")
     case .ascending:
-      bundle.localizedString(forKey: "asceding")
+      bundle.localizedString(forKey: "ascending")
     case .expiryPeriodSectionTitle:
       bundle.localizedString(forKey: "expiry")
     case .selectExpiryPeriod:

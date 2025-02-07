@@ -42,16 +42,26 @@ struct FiltersListView: View {
 
   var body: some View {
     NavigationView {
-      List {
-        ForEach(sections) { section in
-          FilterSection(
-            sectionTitle: section.sectionTitle,
-            sectionID: section.id.uuidString,
-            filters: section.filters
-          )
+      ZStack(alignment: .bottom) {
+        List {
+          ForEach(sections) { section in
+            FilterSection(
+              sectionTitle: section.sectionTitle,
+              sectionID: section.id.uuidString,
+              filters: section.filters
+            )
+          }
         }
+        .listStyle(.grouped)
+        .padding(.bottom, 30)
+
+        WrapButtonView(
+          style: .primary,
+          title: .showResults,
+          onAction: applyFilters()
+        )
+        .padding(.horizontal, SPACING_MEDIUM)
       }
-      .listStyle(.grouped)
       .navigationTitle(LocalizableString.shared.get(with: .filters))
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
@@ -66,27 +76,15 @@ struct FiltersListView: View {
           }
         }
       }
-      .overlay {
-        withAnimation {
-          Text(.showResults)
-            .font(.body.bold())
-            .foregroundStyle(Theme.shared.color.white)
-            .frame(maxWidth: .infinity)
-            .padding(SPACING_MEDIUM_SMALL)
-            .background(RoundedRectangle(cornerRadius: 8))
-            .foregroundStyle(Theme.shared.color.primary)
-            .padding(.horizontal, SPACING_MEDIUM)
-            .onTapGesture {
-              applyFiltersAction()
-              dismiss()
-            }
-        }
-      }
     }
   }
 
   @ViewBuilder
-  func FilterSection(sectionTitle: LocalizableString.Key, sectionID: String, filters: [FilterUIItem]) -> some View {
+  func FilterSection(
+    sectionTitle: String,
+    sectionID: String,
+    filters: [FilterUIItem]
+  ) -> some View {
     Section(header: Text(sectionTitle)) {
       ForEach(filters.indices, id: \.self) { index in
         HStack {
@@ -104,5 +102,10 @@ struct FiltersListView: View {
         }
       }
     }
+  }
+
+  private func applyFilters() {
+    applyFiltersAction()
+    dismiss()
   }
 }

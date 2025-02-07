@@ -172,7 +172,19 @@ actor FilterValidatorImpl: FilterValidator {
     await applyFilters()
   }
 
-  func updateSortOrder(sortOrder: SortOrderType) async { }
+  func updateSortOrder(sortOrder: SortOrderType) async {
+    let filterToUpdateOrderChange = snapshotFilters.isEmpty ? appliedFilters : snapshotFilters
+    snapshotFilters = filterToUpdateOrderChange.copy(sortOrder: sortOrder)
+
+    self.filterResultSubject.send(
+      .success(
+        FilterResult(
+          filteredList: filteredList,
+          updatedFilters: snapshotFilters
+        )
+      )
+    )
+  }
 
   func updateFilterList(filterableList: FilterableList, filters: Filters) async {
     self.initialList = filterableList

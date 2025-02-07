@@ -20,12 +20,12 @@ import logic_business
 public struct FilterUISection: Sendable, Identifiable {
   public let id: UUID
   public let filters: [FilterUIItem]
-  public let sectionTitle: LocalizableString.Key
+  public let sectionTitle: String
 }
 
 public struct FilterUIItem: Sendable, Identifiable {
   public let id: UUID
-  public let title: LocalizableString.Key
+  public let title: String
   public let selected: Bool
   public let filterAction: FilterAction
 }

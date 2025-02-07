@@ -153,6 +153,7 @@ struct DashboardView<Router: RouterHost>: View {
       }
     }
     .onAppear {
+      viewModel.createFilters()
       viewModel.fetch()
     }
     .onChange(of: scenePhase) { phase in

@@ -17,6 +17,12 @@ import Foundation
 import Copyable
 import logic_resources
 
+public enum FilterGroupType: Sendable {
+  case issuer
+  case documentCategory
+  case other
+}
+
 @Copyable
 public struct Filters: Sendable {
   public let filterGroups: [FilterGroup]
@@ -42,30 +48,33 @@ public struct Filters: Sendable {
 @Copyable
 public struct FilterGroup: Sendable {
   public let id: UUID
-  public let name: LocalizableString.Key
+  public let name: String
   public let filters: [FilterItem]
+  public let filterType: FilterGroupType
 
   public init(
     id: UUID = UUID(),
-    name: LocalizableString.Key,
-    filters: [FilterItem]
+    name: String,
+    filters: [FilterItem],
+    filterType: FilterGroupType
   ) {
     self.id = id
     self.name = name
     self.filters = filters
+    self.filterType = filterType
   }
 }
 
 @Copyable
 public struct FilterItem: Sendable {
   public let id: UUID
-  public let name: LocalizableString.Key
+  public let name: String
   public let selected: Bool
   public let filterableAction: FilterAction
 
   public init(
     id: UUID = UUID(),
-    name: LocalizableString.Key,
+    name: String,
     selected: Bool,
     filterableAction: FilterAction
   ) {
