@@ -22,7 +22,7 @@ import feature_common
 @Copyable
 struct DashboardState: ViewState {
   let isLoading: Bool
-  let documents: [DocumentUIModel]
+  let documents: [DocumentCategory: [DocumentUIModel]]
   let filterUIModel: [FilterUISection]
   let username: String
   let phase: ScenePhase
@@ -119,7 +119,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       router: router,
       initialState: .init(
         isLoading: true,
-        documents: [],
+        documents: [:],
         filterUIModel: [],
         username: "",
         phase: .active,
@@ -197,7 +197,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         onDocumentsRetrievedPostActions()
       case .failure:
         setState {
-          $0.copy(isLoading: false, documents: [])
+          $0.copy(isLoading: false, documents: [:])
         }
       }
     }
@@ -487,9 +487,11 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       for await state in interactor.onFilterChangeState() {
         switch state {
         case .filterResult(let documentsUI, let filterSections):
+          let documents = Dictionary(grouping: documentsUI, by: { $0.value.documentCategory })
+
           setState {
             $0.copy(
-              documents: documentsUI,
+              documents: documents,
               filterUIModel: filterSections
             )
           }

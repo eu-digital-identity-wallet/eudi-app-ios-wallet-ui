@@ -118,181 +118,184 @@ public extension DocumentUIModel {
     public let hasExpired: Bool
     public let state: State
     public let image: RemoteImage?
-    public let DocumentCategory: DocumentCategory
+    public let documentCategory: DocumentCategory
   }
 
-  static func mocks() -> [DocumentUIModel] {
+  static func mocks() -> [DocumentCategory: [DocumentUIModel]] {
     [
-      .init(
-        id: UUID().uuidString,
-        value: .init(
-          id: UUID().uuidString,
-          heading: "Issuer Name",
-          title: "Digital ID",
-          createdAt: Date(),
-          expiresAt: "22/01/2025",
-          hasExpired: false,
-          state: .issued,
-          image: .init(
-            url: URL(string: "https://www.example.com"),
-            placeholder: Theme.shared.image.logo
+      DocumentCategory.Other:
+        [
+          .init(
+            id: UUID().uuidString,
+            value: .init(
+              id: UUID().uuidString,
+              heading: "Issuer Name",
+              title: "Digital ID",
+              createdAt: Date(),
+              expiresAt: "22/01/2025",
+              hasExpired: false,
+              state: .issued,
+              image: .init(
+                url: URL(string: "https://www.example.com"),
+                placeholder: Theme.shared.image.logo
+              ),
+              documentCategory: .Other
+            )
           ),
-          DocumentCategory: .Other
-        )
-      ),
-      .init(
-        id: UUID().uuidString,
-        value: .init(
-          id: UUID().uuidString,
-          heading: "Issuer Name",
-          title: "EUDI Conference",
-          createdAt: Date(),
-          expiresAt: "22/01/2025",
-          hasExpired: false,
-          state: .issued,
-          image: .init(
-            url: URL(string: "https://www.example.com"),
-            placeholder: Theme.shared.image.logo
+          .init(
+            id: UUID().uuidString,
+            value: .init(
+              id: UUID().uuidString,
+              heading: "Issuer Name",
+              title: "EUDI Conference",
+              createdAt: Date(),
+              expiresAt: "22/01/2025",
+              hasExpired: false,
+              state: .issued,
+              image: .init(
+                url: URL(string: "https://www.example.com"),
+                placeholder: Theme.shared.image.logo
+              ),
+              documentCategory: .Other
+            )
           ),
-          DocumentCategory: .Other
-        )
-      ),
-      .init(
-        id: UUID().uuidString,
-        value: .init(
-          id: UUID().uuidString,
-          heading: "Issuer Name",
-          title: "Passport",
-          createdAt: Date(),
-          expiresAt: "22/01/2025",
-          hasExpired: false,
-          state: .issued,
-          image: .init(
-            url: URL(string: "https://www.example.com"),
-            placeholder: Theme.shared.image.logo
+          .init(
+            id: UUID().uuidString,
+            value: .init(
+              id: UUID().uuidString,
+              heading: "Issuer Name",
+              title: "Passport",
+              createdAt: Date(),
+              expiresAt: "22/01/2025",
+              hasExpired: false,
+              state: .issued,
+              image: .init(
+                url: URL(string: "https://www.example.com"),
+                placeholder: Theme.shared.image.logo
+              ),
+              documentCategory: .Other
+            )
           ),
-          DocumentCategory: .Other
-        )
-      ),
-      .init(
-        id: UUID().uuidString,
-        value: .init(
-          id: UUID().uuidString,
-          heading: "Issuer Name",
-          title: "Document 1",
-          createdAt: Date(),
-          expiresAt: "22/01/2025",
-          hasExpired: false,
-          state: .issued,
-          image: .init(
-            url: URL(string: "https://www.example.com"),
-            placeholder: Theme.shared.image.logo
+          .init(
+            id: UUID().uuidString,
+            value: .init(
+              id: UUID().uuidString,
+              heading: "Issuer Name",
+              title: "Document 1",
+              createdAt: Date(),
+              expiresAt: "22/01/2025",
+              hasExpired: false,
+              state: .issued,
+              image: .init(
+                url: URL(string: "https://www.example.com"),
+                placeholder: Theme.shared.image.logo
+              ),
+              documentCategory: .Other
+            )
           ),
-          DocumentCategory: .Other
-        )
-      ),
-      .init(
-        id: UUID().uuidString,
-        value: .init(
-          id: UUID().uuidString,
-          heading: "Issuer Name",
-          title: "Document 2",
-          createdAt: Date(),
-          expiresAt: "22/01/2025",
-          hasExpired: false,
-          state: .issued,
-          image: .init(
-            url: URL(string: "https://www.example.com"),
-            placeholder: Theme.shared.image.logo
+          .init(
+            id: UUID().uuidString,
+            value: .init(
+              id: UUID().uuidString,
+              heading: "Issuer Name",
+              title: "Document 2",
+              createdAt: Date(),
+              expiresAt: "22/01/2025",
+              hasExpired: false,
+              state: .issued,
+              image: .init(
+                url: URL(string: "https://www.example.com"),
+                placeholder: Theme.shared.image.logo
+              ),
+              documentCategory: .Other
+            )
           ),
-          DocumentCategory: .Other
-        )
-      ),
-      .init(
-        id: UUID().uuidString,
-        value: .init(
-          id: UUID().uuidString,
-          heading: "Issuer Name",
-          title: "Document 3",
-          createdAt: Date(),
-          expiresAt: "22/01/2025",
-          hasExpired: false,
-          state: .issued,
-          image: .init(
-            url: URL(string: "https://www.example.com"),
-            placeholder: Theme.shared.image.logo
+          .init(
+            id: UUID().uuidString,
+            value: .init(
+              id: UUID().uuidString,
+              heading: "Issuer Name",
+              title: "Document 3",
+              createdAt: Date(),
+              expiresAt: "22/01/2025",
+              hasExpired: false,
+              state: .issued,
+              image: .init(
+                url: URL(string: "https://www.example.com"),
+                placeholder: Theme.shared.image.logo
+              ),
+              documentCategory: .Other
+            )
           ),
-          DocumentCategory: .Other
-        )
-      ),
-      .init(
-        id: UUID().uuidString,
-        value: .init(
-          id: UUID().uuidString,
-          heading: "Issuer Name",
-          title: "Document 4",
-          createdAt: Date(),
-          expiresAt: "22/01/2025",
-          hasExpired: false,
-          state: .issued,
-          image: .init(
-            url: URL(string: "https://www.example.com"),
-            placeholder: Theme.shared.image.logo
+          .init(
+            id: UUID().uuidString,
+            value: .init(
+              id: UUID().uuidString,
+              heading: "Issuer Name",
+              title: "Document 4",
+              createdAt: Date(),
+              expiresAt: "22/01/2025",
+              hasExpired: false,
+              state: .issued,
+              image: .init(
+                url: URL(string: "https://www.example.com"),
+                placeholder: Theme.shared.image.logo
+              ),
+              documentCategory: .Other
+            )
           ),
-          DocumentCategory: .Other
-        )
-      ),
-      .init(
-        id: UUID().uuidString,
-        value: .init(
-          id: UUID().uuidString,
-          heading: "Issuer Name",
-          title: "Document 5",
-          createdAt: Date(),
-          expiresAt: "22/01/2025",
-          hasExpired: false,
-          state: .issued,
-          image: .init(
-            url: URL(string: "https://www.example.com"),
-            placeholder: Theme.shared.image.logo
+          .init(
+            id: UUID().uuidString,
+            value: .init(
+              id: UUID().uuidString,
+              heading: "Issuer Name",
+              title: "Document 5",
+              createdAt: Date(),
+              expiresAt: "22/01/2025",
+              hasExpired: false,
+              state: .issued,
+              image: .init(
+                url: URL(string: "https://www.example.com"),
+                placeholder: Theme.shared.image.logo
+              ),
+              documentCategory: .Other
+            )
           ),
-          DocumentCategory: .Other
-        )
-      ),
-      .init(
-        id: UUID().uuidString,
-        value: .init(
-          id: UUID().uuidString,
-          heading: "Issuer Name",
-          title: "Document 6",
-          createdAt: Date(),
-          expiresAt: "22/01/2025",
-          hasExpired: false,
-          state: .issued,
-          image: .init(
-            url: URL(string: "https://www.example.com"),
-            placeholder: Theme.shared.image.logo
+          .init(
+            id: UUID().uuidString,
+            value: .init(
+              id: UUID().uuidString,
+              heading: "Issuer Name",
+              title: "Document 6",
+              createdAt: Date(),
+              expiresAt: "22/01/2025",
+              hasExpired: false,
+              state: .issued,
+              image: .init(
+                url: URL(string: "https://www.example.com"),
+                placeholder: Theme.shared.image.logo
+              ),
+              documentCategory: .Other
+            )
           ),
-          DocumentCategory: .Other
-        )
-      ),
-      .init(
-        id: UUID().uuidString,
-        value: .init(
-          id: UUID().uuidString,
-          heading: "Issuer Name",
-          title: "Passport",
-          createdAt: Date(),
-          expiresAt: "22/01/2025",
-          hasExpired: false,
-          state: .issued,
-          image: .init(
-            url: URL(string: "https://www.example.com"),
-            placeholder: Theme.shared.image.logo
-          ),
-          DocumentCategory: .Other
-        )
-      )
+          .init(
+            id: UUID().uuidString,
+            value: .init(
+              id: UUID().uuidString,
+              heading: "Issuer Name",
+              title: "Passport",
+              createdAt: Date(),
+              expiresAt: "22/01/2025",
+              hasExpired: false,
+              state: .issued,
+              image: .init(
+                url: URL(string: "https://www.example.com"),
+                placeholder: Theme.shared.image.logo
+              ),
+              documentCategory: .Other
+            )
+          )
+        ]
     ]
   }
 }
@@ -346,7 +349,7 @@ extension DocClaimsDecodable {
           url: self.issuerLogo,
           placeholder: Theme.shared.image.id
         ),
-        DocumentCategory: categories.first(where: { $1.contains(self.documentTypeIdentifier) })?.key ?? .Other
+        documentCategory: categories.first(where: { $1.contains(self.documentTypeIdentifier) })?.key ?? .Other
       )
     )
   }

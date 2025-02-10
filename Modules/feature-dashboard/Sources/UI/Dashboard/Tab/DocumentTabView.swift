@@ -16,9 +16,10 @@
 import SwiftUI
 import logic_resources
 import logic_ui
+import logic_core
 
 struct DocumentTabView: View {
-  let filteredItems: [DocumentUIModel]
+  let filteredItems: [DocumentCategory: [DocumentUIModel]]
   let action: (DocumentUIModel) -> Void
   let isLoading: Bool
   let filteredDocsCallback: (String) -> Void
@@ -27,7 +28,7 @@ struct DocumentTabView: View {
 
   init(
     searchQuery: Binding<String>,
-    filteredItems: [DocumentUIModel],
+    filteredItems: [DocumentCategory: [DocumentUIModel]],
     isLoading: Bool,
     action: @escaping (DocumentUIModel) -> Void,
     filteredDocsCallback: @escaping (String) -> Void
@@ -46,15 +47,25 @@ struct DocumentTabView: View {
       } else {
         if !filteredItems.isEmpty {
           List {
-            ForEach(filteredItems) { item in
-              WrapCardView {
-                WrapListItemView(
-                  listItem: item.listItem
-                ) {
-                  action(item)
+            ForEach(filteredItems.keys.sorted(by: { $0.order < $1.order }), id: \.self) { category in
+              Section(header: Text(category.title)) {
+                ForEach(filteredItems[category] ?? []) { item in
+                  WrapCardView {
+                    WrapListItemView(
+                      listItem: item.listItem
+                    ) {
+                      action(item)
+                    }
+                  }
+                  .listRowSeparator(.hidden)
                 }
+                .listRowInsets(.init(
+                  top: .zero,
+                  leading: SPACING_MEDIUM,
+                  bottom: SPACING_SMALL,
+                  trailing: SPACING_MEDIUM)
+                )
               }
-              .listRowSeparator(.hidden)
             }
           }
           .shimmer(isLoading: isLoading)
