@@ -18,13 +18,13 @@ import logic_resources
 import logic_business
 
 public struct FilterUISection: Sendable, Identifiable {
-  public let id: UUID
+  public let id: String
   public let filters: [FilterUIItem]
   public let sectionTitle: String
 }
 
 public struct FilterUIItem: Sendable, Identifiable {
-  public let id: UUID
+  public let id: String
   public let title: String
   public let selected: Bool
   public let filterAction: FilterAction

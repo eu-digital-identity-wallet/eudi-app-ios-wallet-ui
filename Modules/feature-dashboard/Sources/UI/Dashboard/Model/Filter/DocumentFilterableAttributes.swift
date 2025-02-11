@@ -17,6 +17,8 @@ import Foundation
 import logic_business
 
 struct DocumentFilterableAttributes: FilterableAttributes {
+  let sortingKey: String
+  let searchTags: [String]
   let searchText: String
   let issuedDate: Date?
   let expiryDate: Date?
@@ -25,6 +27,8 @@ struct DocumentFilterableAttributes: FilterableAttributes {
   let category: String?
 
   init(
+    sortingKey: String,
+    searchTags: [String],
     searchText: String,
     issuedDate: Date? = nil,
     expiryDate: Date? = nil,
@@ -32,6 +36,8 @@ struct DocumentFilterableAttributes: FilterableAttributes {
     name: String? = nil,
     category: String? = nil
   ) {
+    self.sortingKey = sortingKey
+    self.searchTags = searchTags
     self.searchText = searchText
     self.issuedDate = issuedDate
     self.expiryDate = expiryDate

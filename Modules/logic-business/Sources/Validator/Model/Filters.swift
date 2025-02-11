@@ -21,6 +21,7 @@ public enum FilterGroupType: Sendable {
   case issuer
   case documentCategory
   case other
+  case orderBy
 }
 
 @Copyable
@@ -40,20 +41,31 @@ public struct Filters: Sendable {
     return filterGroups.isEmpty
   }
 
+  public var isNotEmpty: Bool {
+    !filterGroups.isEmpty
+  }
+
   public static func emptyFilters() -> Filters {
     return Filters(filterGroups: [], sortOrder: .ascending)
   }
 }
 
+public protocol FilterGroup: Sendable {
+  var id: String { get }
+  var name: String { get }
+  var filters: [FilterItem] { get }
+  var filterType: FilterGroupType { get }
+}
+
 @Copyable
-public struct FilterGroup: Sendable {
-  public let id: UUID
-  public let name: String
-  public let filters: [FilterItem]
-  public let filterType: FilterGroupType
+public struct SingleSelectionFilterGroup: FilterGroup {
+  public var id: String
+  public var name: String
+  public var filters: [FilterItem]
+  public var filterType: FilterGroupType
 
   public init(
-    id: UUID = UUID(),
+    id: String = UUID().uuidString,
     name: String,
     filters: [FilterItem],
     filterType: FilterGroupType
@@ -66,22 +78,115 @@ public struct FilterGroup: Sendable {
 }
 
 @Copyable
+public struct MultipleSelectionFilterGroup: FilterGroup {
+  public var id: String
+  public var name: String
+  public var filters: [FilterItem]
+  public var filterableAction: FilterAction
+  public var filterType: FilterGroupType
+
+  public init(
+    id: String = UUID().uuidString,
+    name: String,
+    filters: [FilterItem],
+    filterableAction: FilterAction,
+    filterType: FilterGroupType
+  ) {
+    self.id = id
+    self.name = name
+    self.filters = filters
+    self.filterableAction = filterableAction
+    self.filterType = filterType
+  }
+}
+
+//@Copyable
+//public struct FilterGroup: Sendable {
+//  public let id: UUID
+//  public let name: String
+//  public let filters: [FilterItem]
+//  public let filterType: FilterGroupType
+//
+//  public init(
+//    id: UUID = UUID(),
+//    name: String,
+//    filters: [FilterItem],
+//    filterType: FilterGroupType
+//  ) {
+//    self.id = id
+//    self.name = name
+//    self.filters = filters
+//    self.filterType = filterType
+//  }
+//}
+
+@Copyable
 public struct FilterItem: Sendable {
-  public let id: UUID
+  public let id: String
   public let name: String
   public let selected: Bool
   public let filterableAction: FilterAction
 
   public init(
-    id: UUID = UUID(),
+    id: String = UUID().uuidString,
     name: String,
     selected: Bool,
-    filterableAction: FilterAction
+    filterableAction: FilterAction = DefaultFilterAction()
   ) {
     self.id = id
     self.name = name
     self.selected = selected
     self.filterableAction = filterableAction
+  }
+}
+
+public struct DefaultFilterAction: FilterAction {
+  public func applyFilterGroup(filterableItems: FilterableList, filterGroup: any FilterGroup) -> FilterableList {
+    filterableItems
+  }
+
+  public init() {}
+  public func applyFilter(
+    sortOrder: SortOrderType,
+    filterableItems: FilterableList,
+    filter: FilterItem
+  ) -> FilterableList {
+    return filterableItems
+  }
+}
+
+public struct FilterMultipleAction<T: FilterableAttributes>: FilterAction {
+  public func applyFilter(sortOrder: SortOrderType, filterableItems: FilterableList, filter: FilterItem) -> FilterableList {
+    filterableItems
+  }
+
+  public let predicate: @Sendable (T, FilterItem) -> Bool
+
+  public init(
+    predicate: @Sendable @escaping (T, FilterItem) -> Bool
+  ) {
+    self.predicate = predicate
+  }
+
+  public func applyFilterGroup(
+    filterableItems: FilterableList,
+    filterGroup: FilterGroup
+  ) -> FilterableList {
+    let selectedFilters = filterGroup.filters.filter { $0.selected }
+
+    guard !selectedFilters.isEmpty else { return filterableItems }
+
+    var matchingItems = [FilterableItem]()
+
+    for filter in selectedFilters {
+      for item in filterableItems.items {
+        if let attributes = item.attributes as? T, predicate(attributes, filter) {
+          matchingItems.insert(item, at: 0)
+        }
+      }
+    }
+
+    return FilterableList(items: Array(matchingItems))
   }
 }
 
@@ -101,4 +206,23 @@ public struct FilterResult: Sendable {
 public enum SortOrderType: Sendable {
   case ascending
   case descending
+}
+
+public struct SortFilterItem {
+  public let id: UUID
+  public let name: LocalizableString.Key
+  public let selected: Bool
+  public let filterableAction: () -> Void
+
+  public init(
+    id: UUID = UUID(),
+    name: LocalizableString.Key,
+    selected: Bool,
+    filterableAction: @escaping () -> Void
+  ) {
+    self.id = id
+    self.name = name
+    self.selected = selected
+    self.filterableAction = filterableAction
+  }
 }

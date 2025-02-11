@@ -21,9 +21,17 @@ public protocol FilterAction: Sendable {
     filterableItems: FilterableList,
     filter: FilterItem
   ) -> FilterableList
+
+  func applyFilterGroup(
+    filterableItems: FilterableList,
+    filterGroup: FilterGroup
+  ) -> FilterableList
 }
 
 public struct Sort<T: FilterableAttributes, R: Comparable>: FilterAction {
+  public func applyFilterGroup(filterableItems: FilterableList, filterGroup: any FilterGroup) -> FilterableList {
+    filterableItems
+  }
 
   public let predicate: @Sendable (T) -> R?
 
@@ -43,6 +51,35 @@ public struct Sort<T: FilterableAttributes, R: Comparable>: FilterAction {
       guard let lhsValue = predicate(lhs), let rhsValue = predicate(rhs) else { return false }
       return sortOrder == .ascending ? lhsValue < rhsValue : lhsValue > rhsValue
     }
+    return FilterableList(items: sortedItems)
+  }
+}
+
+public struct SortBy<T: FilterableAttributes, R: Comparable>: FilterAction {
+  public func applyFilterGroup(filterableItems: FilterableList, filterGroup: any FilterGroup) -> FilterableList {
+    filterableItems
+  }
+
+  public let predicate: @Sendable (T) -> R?
+
+  public init(
+    predicate: @Sendable @escaping (T) -> R?
+  ) {
+    self.predicate = predicate
+  }
+
+  public func applyFilter(
+    sortOrder: SortOrderType,
+    filterableItems: FilterableList,
+    filter: FilterItem
+  ) -> FilterableList {
+    let sortedItems = filterableItems.items.sorted(by: {
+      guard let first = $0.attributes as? T, let second = $1.attributes as? T else { return false }
+      guard let first = predicate(first), let second = predicate(second) else {
+          return false
+      }
+      return sortOrder == .ascending ? first < second : first > second
+    })
     return FilterableList(items: sortedItems)
   }
 }
@@ -72,5 +109,9 @@ public struct Filter<T: FilterableAttributes>: FilterAction {
     }
 
     return filterableItems.copy(items: filteredItems)
+  }
+
+  public func applyFilterGroup(filterableItems: FilterableList, filterGroup: any FilterGroup) -> FilterableList {
+    filterableItems
   }
 }

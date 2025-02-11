@@ -41,4 +41,12 @@ extension Date {
     let calendar = Calendar.current
     return calendar.compare(self, to: Date(), toGranularity: .day) == .orderedAscending
   }
+
+  func isValid() -> Bool {
+    return self > Date()
+  }
+
+  func isExpired() -> Bool {
+    return self < Date()
+  }
 }

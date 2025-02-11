@@ -45,26 +45,17 @@ struct FiltersListView: View {
 
   var body: some View {
     NavigationView {
-      ZStack(alignment: .bottom) {
-        List {
-          ForEach(sections) { section in
-            FilterSection(
-              sectionTitle: section.sectionTitle,
-              sectionID: section.id.uuidString,
-              filters: section.filters
-            )
-          }
+      List {
+        ForEach(sections) { section in
+          FilterSection(
+            sectionTitle: section.sectionTitle,
+            sectionID: section.id,
+            filters: section.filters
+          )
         }
-        .listStyle(.grouped)
-        .padding(.bottom, 30)
-
-        WrapButtonView(
-          style: .primary,
-          title: .showResults,
-          onAction: applyFilters()
-        )
-        .padding(.horizontal, SPACING_MEDIUM)
       }
+      .listStyle(.grouped)
+      .scrollIndicators(.hidden)
       .navigationTitle(LocalizableString.shared.get(with: .filters))
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
@@ -79,8 +70,13 @@ struct FiltersListView: View {
           }
         }
       }
-      .onDisappear {
-        revertFilters()
+      .safeAreaInset(edge: .bottom) {
+        WrapButtonView(
+          style: .primary,
+          title: .showResults,
+          onAction: applyFilters()
+        )
+        .padding(.horizontal, SPACING_MEDIUM)
       }
     }
   }
@@ -104,7 +100,7 @@ struct FiltersListView: View {
         .contentShape(Rectangle())
         .frame(maxWidth: .infinity)
         .onTapGesture {
-          updateFiltersCallback?(sectionID, filters[index].id.uuidString)
+          updateFiltersCallback?(sectionID, filters[index].id)
         }
       }
     }

@@ -265,6 +265,17 @@
         }
       }
     },
+    "category" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Category"
+          }
+        }
+      }
+    },
     "category_education" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -359,7 +370,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Change quick pin"
+            "value" : "Change pin"
           }
         }
       }
@@ -481,6 +492,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Date Issued"
+          }
+        }
+      }
+    },
+    "default" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default"
           }
         }
       }
@@ -690,6 +712,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Expiry Period"
+          }
+        }
+      }
+    },
+    "filters" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filters"
           }
         }
       }
@@ -1159,6 +1192,17 @@
         }
       }
     },
+    "order_by" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ORDER BY"
+          }
+        }
+      }
+    },
     "pending" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1418,7 +1462,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Change quick pin"
+            "value" : "Change pin"
           }
         }
       }
@@ -1584,6 +1628,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "requests the following"
+          }
+        }
+      }
+    },
+    "reset" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset"
           }
         }
       }

@@ -46,4 +46,6 @@ public struct FilterableItem: Sendable {
 
 public protocol FilterableAttributes: Sendable {
   var searchText: String { get }
+  var sortingKey: String { get }
+  var searchTags: [String] { get }
 }

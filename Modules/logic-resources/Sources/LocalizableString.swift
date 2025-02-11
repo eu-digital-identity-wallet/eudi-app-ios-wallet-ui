@@ -425,6 +425,10 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "category_travel")
     case .changelog:
       bundle.localizedString(forKey: "changelog")
+    case .orderBy:
+      bundle.localizedString(forKey: "order_by")
+    case .category:
+      bundle.localizedString(forKey: "category")
     }
   }
 
@@ -630,6 +634,8 @@ public extension LocalizableString {
     case categorySocialSecurity
     case categoryTravel
     case changelog
+    case orderBy
+    case category
   }
 }
 

@@ -55,6 +55,7 @@ public protocol DashboardInteractor: Sendable {
   func applyFilters() async
   func resetFilters() async
   func revertFilters() async
+  func applySearch(query: String) async
   func updateFilters(sectionID: String, filterID: String) async
   func fetchFilteredDocuments(failedDocuments: [String]) -> FilterableList?
   func updateFilterList(filterableList: FilterableList, filters: Filters) async
@@ -139,56 +140,65 @@ final class DashboardInteractorImpl: DashboardInteractor {
   func createFiltersGroup() -> Filters {
     return Filters(
       filterGroups: [
-        FilterGroup(
-          name: LocalizableString.shared.get(with: .sortByIssuedDateSectionTitle),
+        SingleSelectionFilterGroup(
+          name: LocalizableString.shared.get(with: .orderBy),
           filters: [
             FilterItem(
+              id: FilterIds.ORDER_BY_ASCENDING,
               name: LocalizableString.shared.get(with: .ascending),
-              selected: false,
+              selected: true,
               filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
-                return attribute.name
+                attribute.name
               })
             ),
             FilterItem(
+              id: FilterIds.ORDER_BY_DESCENDING,
               name: LocalizableString.shared.get(with: .descending),
               selected: false,
               filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
-                return attribute.name
+                attribute.name
               })
             )
           ],
-          filterType: .other
+          filterType: .orderBy
         ),
-        FilterGroup(
+        SingleSelectionFilterGroup(
           name: LocalizableString.shared.get(with: .sortBy),
           filters: [
             FilterItem(
               name: LocalizableString.shared.get(with: .defaultLabel),
-              selected: false,
-              filterableAction: Filter<DocumentFilterableAttributes>(predicate: { _, _ in
-                return false
+              selected: true,
+              filterableAction: SortBy<DocumentFilterableAttributes, String>(predicate: { attribute in
+                attribute.name
               })
             ),
             FilterItem(
               name: LocalizableString.shared.get(with: .dateIssued),
               selected: false,
-              filterableAction: Filter<DocumentFilterableAttributes>(predicate: { _, _ in
-                return false
+              filterableAction: SortBy<DocumentFilterableAttributes, Date>(predicate: { attribute in
+                attribute.issuedDate
               })
             ),
             FilterItem(
               name: LocalizableString.shared.get(with: .expiryDate),
               selected: false,
-              filterableAction: Filter<DocumentFilterableAttributes>(predicate: { _, _ in
-                return false
+              filterableAction: SortBy<DocumentFilterableAttributes, Date>(predicate: { attribute in
+                attribute.expiryDate
               })
             )
           ],
           filterType: .other
         ),
-        FilterGroup(
+        SingleSelectionFilterGroup(
           name: LocalizableString.shared.get(with: .expiryPeriodSectionTitle),
           filters: [
+            FilterItem(
+              name: LocalizableString.shared.get(with: .defaultLabel),
+              selected: true,
+              filterableAction: Filter<DocumentFilterableAttributes>(predicate: { _, _ in
+                return true
+              })
+            ),
             FilterItem(
               name: LocalizableString.shared.get(with: .nextSevenDays),
               selected: false,
@@ -224,37 +234,47 @@ final class DashboardInteractorImpl: DashboardInteractor {
           ],
           filterType: .other
         ),
-        FilterGroup(
+        MultipleSelectionFilterGroup(
+          name: LocalizableString.shared.get(with: .issuer),
+          filters: [],
+          filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attribute, filter in
+            attribute.name == filter.name
+          }),
+          filterType: .issuer
+        ),
+        MultipleSelectionFilterGroup(
+          name: LocalizableString.shared.get(with: .category),
+          filters: [],
+          filterableAction: FilterMultipleAction<DocumentFilterableAttributes>(predicate: { attribute, filter in
+            attribute.category == filter.id
+          }),
+          filterType: .documentCategory
+        ),
+        MultipleSelectionFilterGroup(
           name: LocalizableString.shared.get(with: .state),
           filters: [
             FilterItem(
-              name: LocalizableString.shared.get(with: .defaultLabel),
-              selected: true,
-              filterableAction: Filter<DocumentFilterableAttributes>(predicate: { _, _ in
-                true
-              })
-            ),
-            FilterItem(
+              id: FilterIds.FILTER_BY_STATE_VALID,
               name: LocalizableString.shared.get(with: .valid),
-              selected: false,
-              filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
-                attributes.expiryDate?.isBeforeToday() == false
-              })
+              selected: true
             ),
             FilterItem(
+              id: FilterIds.FILTER_BY_STATE_EXPIRED,
               name: LocalizableString.shared.get(with: .expired),
-              selected: false,
-              filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
-                attributes.expiryDate?.isBeforeToday() == true
-              })
+              selected: true
             )
           ],
+          filterableAction: FilterMultipleAction<DocumentFilterableAttributes>(predicate: { attribute, filter in
+            switch filter.id {
+            case FilterIds.FILTER_BY_STATE_VALID:
+              attribute.expiryDate?.isValid() == true || attribute.expiryDate == nil
+            case FilterIds.FILTER_BY_STATE_EXPIRED:
+              attribute.expiryDate?.isExpired() == true
+            default:
+              true
+            }
+          }),
           filterType: .other
-        ),
-        FilterGroup(
-          name: LocalizableString.shared.get(with: .issuer),
-          filters: [],
-          filterType: .issuer
         )
       ],
       sortOrder: SortOrderType.ascending
@@ -262,18 +282,51 @@ final class DashboardInteractorImpl: DashboardInteractor {
   }
 
   func addDynamicFilters(documents: FilterableList, filters: Filters) async -> Filters {
-    let newFilterGroups = filters.filterGroups.map { filterGroup in
-      switch filterGroup.filterType {
-        case .issuer:
-          return filterGroup.copy(
-            filters: addIssuerFilter(documents: documents)
-          )
-        default:
-          return filterGroup
+    let newFilterGroups: [FilterGroup] = filters.filterGroups.map { filterGroup in
+      if let multipleGroup = filterGroup as? MultipleSelectionFilterGroup {
+          switch multipleGroup.filterType {
+          case .issuer:
+              return multipleGroup.copy(filters: addIssuerFilter(documents: documents)) as any FilterGroup
+          case .documentCategory:
+              return multipleGroup.copy(filters: addCategoriesFilter(documents: documents)) as any FilterGroup
+          default:
+              return multipleGroup as any FilterGroup
+          }
       }
+
+      return filterGroup
     }
 
     return filters.copy(filterGroups: newFilterGroups)
+  }
+
+  private func addCategoriesFilter(documents: FilterableList) -> [FilterItem] {
+    let distinctCategories = documents.items.compactMap {
+      ($0.attributes as? DocumentFilterableAttributes)?.category
+    }.reduce(into: [String]()) { unique, element in
+      if !unique.contains(element) {
+        unique.append(element)
+      }
+    }
+
+    let filterItems = distinctCategories.map { category in
+      return FilterItem(
+        id: UUID().uuidString,
+        name: category,
+        selected: true
+      )
+    }
+
+//    filterItems.insert(
+//      FilterItem(
+//        id: UUID().uuidString,
+//        name: "All",
+//        selected: true
+//      ),
+//      at: 0
+//    )
+
+    return filterItems
   }
 
   private func addIssuerFilter(documents: FilterableList) -> [FilterItem] {
@@ -285,26 +338,25 @@ final class DashboardInteractorImpl: DashboardInteractor {
       }
     }
 
-    var filterItems = distinctIssuers.map { issuer in
+    let filterItems = distinctIssuers.map { issuer in
       return FilterItem(
-        id: UUID(),
+        id: UUID().uuidString,
         name: issuer,
-        selected: false,
+        selected: true,
         filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, filter in
-          attributes.name == filter.name
+          attributes.issuer == filter.name
         })
       )
     }
 
-    filterItems.insert(
-      FilterItem(
-        id: UUID(),
-        name: "All",
-        selected: true,
-        filterableAction: Filter<DocumentFilterableAttributes>(predicate: { _, _ in true })
-      ),
-      at: 0
-    )
+//    filterItems.insert(
+//      FilterItem(
+//        id: UUID().uuidString,
+//        name: "All",
+//        selected: true
+//      ),
+//      at: 0
+//    )
 
     return filterItems
   }
@@ -315,6 +367,10 @@ final class DashboardInteractorImpl: DashboardInteractor {
 
   func applyFilters() async {
     await filterValidator.applyFilters()
+  }
+
+  func applySearch(query: String) async {
+    await filterValidator.applySearch(query: query)
   }
 
   func resetFilters() async {
@@ -412,14 +468,19 @@ final class DashboardInteractorImpl: DashboardInteractor {
     }
 
     let filterableItems = documents.map { document in
-      FilterableItem(
-        payload: document.transformToDocumentUi(categories: self.walletController.getDocumentCategories()),
+
+      let documentPayload = document.transformToDocumentUi(categories: self.walletController.getDocumentCategories())
+      return FilterableItem(
+        payload: documentPayload,
         attributes: DocumentFilterableAttributes(
+          sortingKey: document.displayName?.lowercased() ?? "",
+          searchTags: [],
           searchText: document.displayName ?? "",
           issuedDate: document.createdAt,
           expiryDate: document.validUntil,
           issuer: document.issuerName,
-          name: document.displayName
+          name: document.displayName,
+          category: documentPayload.value.documentCategory.filterAttribute.capitalizedFirst()
         )
       )
     }

@@ -37,6 +37,7 @@ struct DashboardState: ViewState {
   let contentHeaderConfig: ContentHeaderConfig
   let isInitialFetch: Bool
   let filters: Filters
+  let orderByFilters: [SortFilterItem]
   let filterSections: [FilterUISection.Element]
 
   var pendingDocumentTitle: String {
@@ -73,16 +74,9 @@ public enum SelectedTab {
   case transactions
 }
 
-struct DocumentAttributes: FilterableAttributes {
-  let searchText: String
-  let heading: String?
-  let test: String
-
-  public init(searchText: String, heading: String?, test: String) {
-    self.searchText = searchText
-    self.heading = heading
-    self.test = test
-  }
+public enum SheetAction {
+  case updated
+  case nothing
 }
 
 final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardState> {
@@ -142,6 +136,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
           filterGroups: [],
           sortOrder: SortOrderType.ascending
         ),
+        orderByFilters: [],
         filterSections: [.issuedSortingDate]
       )
     )
@@ -149,9 +144,10 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     listenForSuccededIssuedModalChanges()
     subscribeToSearch()
     onFiltersChangeState()
+    createFilters()
   }
 
-  func createFilters() {
+  private func createFilters() {
     setState {
       $0.copy(
         filters: interactor.createFiltersGroup()
@@ -439,7 +435,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     }
   }
 
-  private func enableFilterIndicator(showFilterIndicator: Bool) {
+  public func enableFilterIndicator(showFilterIndicator: Bool) {
     setState {
       $0.copy(showFilterIndicator: showFilterIndicator)
     }
@@ -476,9 +472,11 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       .dropFirst()
       .debounce(for: .milliseconds(SEARCH_INPUT_DEBOUNCE), scheduler: RunLoop.main)
       .removeDuplicates()
-      .sink { [weak self] _ in
+      .sink { [weak self] query in
         guard let self = self else { return }
-        //TODO: SEARCH
+        Task {
+          await self.interactor.applySearch(query: query)
+        }
       }.store(in: &cancellables)
   }
 

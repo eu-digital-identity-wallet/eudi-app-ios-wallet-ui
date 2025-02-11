@@ -102,7 +102,7 @@ final class ImageManager: ImageManagerProtocol {
     case euditext = "EUDI-text"
     case walletVerified = "wallet-verified"
     case bell
-    case menuIcon = "menu-icon"
+    case menuIcon = "line.3.horizontal"
     case filterMenuIcon = "filter-menu-icon"
     case bookmarkIcon = "bookmark"
     case bookmarkIconFill = "bookmark.fill"
@@ -225,7 +225,7 @@ final class ImageManager: ImageManagerProtocol {
     Image(systemName: ImageEnum.bell.rawValue)
   }
   var menuIcon: Image {
-    Image(ImageEnum.menuIcon.rawValue, bundle: bundle)
+    Image(systemName: ImageEnum.menuIcon.rawValue)
   }
   var filterMenuIcon: Image {
     Image(ImageEnum.filterMenuIcon.rawValue, bundle: bundle)

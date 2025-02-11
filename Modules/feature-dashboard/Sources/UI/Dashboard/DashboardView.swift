@@ -71,10 +71,13 @@ struct DashboardView<Router: RouterHost>: View {
     .sheet(isPresented: $viewModel.isFilterModalShowing) {
       FiltersListView(sections: viewModel.viewState.filterUIModel) {
         viewModel.resetFilters()
+        viewModel.enableFilterIndicator(showFilterIndicator: false)
       } applyFiltersAction: {
         viewModel.fetch()
+        viewModel.enableFilterIndicator(showFilterIndicator: true)
       } revertFilters: {
         viewModel.revertFilters()
+        viewModel.enableFilterIndicator(showFilterIndicator: false)
       }
       updateFiltersCallback: { sectionID, filterID in
         viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
@@ -156,7 +159,6 @@ struct DashboardView<Router: RouterHost>: View {
       }
     }
     .onAppear {
-      viewModel.createFilters()
       viewModel.fetch()
     }
     .onChange(of: scenePhase) { phase in
@@ -288,6 +290,7 @@ private func content(
       filterGroups: [],
       sortOrder: .ascending
     ),
+    orderByFilters: [],
     filterSections: [.issuedSortingDate]
   )
 

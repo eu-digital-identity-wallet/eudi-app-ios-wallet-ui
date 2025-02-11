@@ -22,7 +22,20 @@ public enum FilterResultPartialState: Sendable {
   case completion
 }
 
+//protocol FilterValidator {
+//    func onFilterStateChange() -> AnyPublisher<FilterValidatorPartialState, Never>
+//    func initializeValidator(filters: Filters, filterableList: FilterableList)
+//    func updateLists(sortOrder: SortOrder, filterableList: FilterableList)
+//    func applyFilters()
+//    func applySearch(query: String)
+//    func resetFilters()
+//    func revertFilters()
+//    func updateFilter(filterGroupId: String, filterId: String)
+//    func updateSortOrder(sortOrder: SortOrder)
+//}
+
 public protocol FilterValidator: Sendable {
+  func getFilterResultStream() -> AsyncStream<FilterResultPartialState>
   func initializeFilters(filters: Filters, filterableList: FilterableList) async
   func updateFilterList(filterableList: FilterableList, filters: Filters) async
   func applyFilters() async
@@ -31,7 +44,6 @@ public protocol FilterValidator: Sendable {
   func revertFilters() async
   func updateFilter(filterGroupId: String, filterId: String) async
   func updateSortOrder(sortOrder: SortOrderType) async
-  func getFilterResultStream() -> AsyncStream<FilterResultPartialState>
 }
 
 actor FilterValidatorImpl: FilterValidator {
@@ -76,13 +88,13 @@ actor FilterValidatorImpl: FilterValidator {
     self.appliedFilters = filters
     self.defaultFilters = filters
     self.initialList = filterableList.copy(items: filterableList.items.sorted(by: { item1, item2 in
-        switch filters.sortOrder {
+      switch filters.sortOrder {
         case .ascending:
-          return item1.attributes.searchText < item2.attributes.searchText
+          return item1.attributes.sortingKey < item2.attributes.sortingKey
         case .descending:
-          return item1.attributes.searchText > item2.attributes.searchText
-        }
-      }))
+          return item1.attributes.sortingKey > item2.attributes.sortingKey
+      }
+    }))
   }
 
   func applyFilters() async {
@@ -102,13 +114,16 @@ actor FilterValidatorImpl: FilterValidator {
           filter: filter
         )
 
+        if !searchQuery.isEmpty {
+          let copiedResult = filteredResult.copy(
+            items: filteredResult.items.filter { item in
+              item.attributes.searchText.lowercased().contains(searchQuery.lowercased())
+            }
+          )
+          return copiedResult
+        }
+
         return filteredResult
-//        let copiedResult = filteredResult.copy(
-//          items: filteredResult.items.filter { item in
-//            item.attributes.searchText.contains(searchQuery)
-//          }
-//        )
-//        return copiedResult
       }
 
     self.filterResultSubject.send(
@@ -130,18 +145,21 @@ actor FilterValidatorImpl: FilterValidator {
   func updateFilter(filterGroupId: String, filterId: String) async {
     let filtersUpdate = snapshotFilters.isEmpty ? appliedFilters : snapshotFilters
 
-    let updatedFilterGroups = appliedFilters.filterGroups.map { group in
-      if group.id.uuidString == filterGroupId {
-        if let targetFilter = group.filters.first(where: { $0.id.uuidString == filterId }) {
-          return group.copy(filters: group.filters.map { filter in
-            filter.copy(selected: filter.id == targetFilter.id)
-          })
-        }
-      }
-      return group
+    let updatedFilterGroups = filtersUpdate.filterGroups.map { group in
+      return group.id == filterGroupId ? updateFilterInGroup(group: group, filterId: filterId) : group
     }
 
-    let updatedFilters = filtersUpdate.copy(filterGroups: updatedFilterGroups)
+    let sortOrder = updatedFilterGroups
+      .filter { $0.filterType == .orderBy }
+      .flatMap { $0.filters }
+      .first { $0.selected }?.id == FilterIds.ORDER_BY_ASCENDING
+    ? SortOrderType.ascending
+    : SortOrderType.descending
+
+    let updatedFilters = filtersUpdate.copy(
+      filterGroups: updatedFilterGroups,
+      sortOrder: sortOrder
+    )
 
     snapshotFilters = updatedFilters
 
@@ -153,6 +171,30 @@ actor FilterValidatorImpl: FilterValidator {
         )
       )
     )
+  }
+
+  private func updateFilterInGroup(group: FilterGroup, filterId: String) -> FilterGroup {
+    if var multipleGroup = group as? MultipleSelectionFilterGroup {
+      multipleGroup.filters = multipleGroup.filters.map { filter in
+        let updatedFilter = filter
+        if filter.id == filterId {
+          return updatedFilter.copy(selected: !filter.selected)
+        }
+        return updatedFilter
+      }
+
+      return multipleGroup
+    }
+
+    if var singleGroup = group as? SingleSelectionFilterGroup {
+      singleGroup.filters = singleGroup.filters.map { filter in
+        let updatedFilter = filter
+        return updatedFilter.copy(selected: (filter.id == filterId))
+      }
+      return singleGroup
+    }
+
+    return group
   }
 
   func revertFilters() async {

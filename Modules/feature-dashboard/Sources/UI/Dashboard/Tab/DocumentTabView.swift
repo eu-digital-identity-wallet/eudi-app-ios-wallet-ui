@@ -60,9 +60,9 @@ struct DocumentTabView: View {
                   .listRowSeparator(.hidden)
                 }
                 .listRowInsets(.init(
-                  top: .zero,
+                  top: SPACING_SMALL,
                   leading: SPACING_MEDIUM,
-                  bottom: SPACING_SMALL,
+                  bottom: .zero,
                   trailing: SPACING_MEDIUM)
                 )
               }
@@ -70,6 +70,7 @@ struct DocumentTabView: View {
           }
           .shimmer(isLoading: isLoading)
           .listStyle(.plain)
+          .scrollIndicators(.hidden)
           .clipped()
         } else {
           contentUnavailableView()
