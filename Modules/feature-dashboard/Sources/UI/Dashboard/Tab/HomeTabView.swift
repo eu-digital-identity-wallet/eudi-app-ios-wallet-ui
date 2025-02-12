@@ -43,7 +43,7 @@ public struct HomeTabView: View {
 
   public var body: some View {
     ScrollView {
-      VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
+      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
         ContentHeader(
           config: contentHeaderConfig
         )

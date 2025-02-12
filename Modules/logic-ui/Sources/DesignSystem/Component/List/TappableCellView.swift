@@ -35,22 +35,20 @@ public struct TappableCellView: View {
   }
 
   public var body: some View {
-    VStack(spacing: .zero) {
+    VStack(spacing: SPACING_MEDIUM_SMALL) {
       HStack {
         Text(title)
           .typography(Theme.shared.font.bodyLarge)
           .foregroundColor(Theme.shared.color.onSurface)
           .lineLimit(1)
           .minimumScaleFactor(0.8)
-        Spacer()
+
         Theme.shared.image.chevronRight
+          .frame(maxWidth: .infinity, alignment: .topTrailing)
           .foregroundColor(Theme.shared.color.onSurface)
       }
-      .padding(Theme.shared.dimension.padding)
       if showDivider {
         Divider()
-          .background(Theme.shared.color.onSurface)
-          .padding(.horizontal, Theme.shared.dimension.padding)
       }
     }
     .if(useOverlay) {

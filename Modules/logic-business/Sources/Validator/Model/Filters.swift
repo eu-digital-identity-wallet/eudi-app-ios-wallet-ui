@@ -100,26 +100,6 @@ public struct MultipleSelectionFilterGroup: FilterGroup {
   }
 }
 
-//@Copyable
-//public struct FilterGroup: Sendable {
-//  public let id: UUID
-//  public let name: String
-//  public let filters: [FilterItem]
-//  public let filterType: FilterGroupType
-//
-//  public init(
-//    id: UUID = UUID(),
-//    name: String,
-//    filters: [FilterItem],
-//    filterType: FilterGroupType
-//  ) {
-//    self.id = id
-//    self.name = name
-//    self.filters = filters
-//    self.filterType = filterType
-//  }
-//}
-
 @Copyable
 public struct FilterItem: Sendable {
   public let id: String
@@ -190,39 +170,12 @@ public struct FilterMultipleAction<T: FilterableAttributes>: FilterAction {
   }
 }
 
-public struct FilterResult: Sendable {
-  public var filteredList: FilterableList
-  public var updatedFilters: Filters
-
-  public init(
-    filteredList: FilterableList,
-    updatedFilters: Filters
-  ) {
-    self.filteredList = filteredList
-    self.updatedFilters = updatedFilters
-  }
+public enum FilterResult: Sendable {
+  case filterApplyResult(filteredList: FilterableList, updatedFilters: Filters)
+  case filterUpdateResult(updatedFilters: Filters)
 }
 
 public enum SortOrderType: Sendable {
   case ascending
   case descending
-}
-
-public struct SortFilterItem {
-  public let id: UUID
-  public let name: LocalizableString.Key
-  public let selected: Bool
-  public let filterableAction: () -> Void
-
-  public init(
-    id: UUID = UUID(),
-    name: LocalizableString.Key,
-    selected: Bool,
-    filterableAction: @escaping () -> Void
-  ) {
-    self.id = id
-    self.name = name
-    self.selected = selected
-    self.filterableAction = filterableAction
-  }
 }

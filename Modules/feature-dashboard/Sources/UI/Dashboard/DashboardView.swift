@@ -77,7 +77,7 @@ struct DashboardView<Router: RouterHost>: View {
         viewModel.enableFilterIndicator(showFilterIndicator: true)
       } revertFilters: {
         viewModel.revertFilters()
-        viewModel.enableFilterIndicator(showFilterIndicator: false)
+        viewModel.enableFilterIndicator(showFilterIndicator: true)
       }
       updateFiltersCallback: { sectionID, filterID in
         viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
@@ -285,13 +285,7 @@ private func content(
         appText: ThemeManager.shared.image.euditext
       )
     ),
-    isInitialFetch: true,
-    filters: Filters(
-      filterGroups: [],
-      sortOrder: .ascending
-    ),
-    orderByFilters: [],
-    filterSections: [.issuedSortingDate]
+    isFromOnPause: true
   )
 
   ContentScreenView(

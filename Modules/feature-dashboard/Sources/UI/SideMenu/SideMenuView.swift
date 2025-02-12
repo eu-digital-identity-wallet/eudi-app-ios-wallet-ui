@@ -52,7 +52,7 @@ struct SideMenuView<Router: RouterHost>: View {
 @MainActor
 @ViewBuilder
 private func content(viewState: SideMenuViewState) -> some View {
-  VStack(spacing: SPACING_SMALL) {
+  VStack(spacing: SPACING_MEDIUM_SMALL) {
     ForEach(viewState.items) { item in
       if item.isShareLink {
         if let fileUrl = viewState.logsUrl {

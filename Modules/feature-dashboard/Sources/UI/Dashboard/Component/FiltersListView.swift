@@ -61,12 +61,14 @@ struct FiltersListView: View {
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
           Button(.cancelButton) {
+            revertFilters()
             dismiss()
           }
         }
         ToolbarItem(placement: .navigationBarTrailing) {
           Button(.reset) {
             resetFiltersAction()
+            dismiss()
           }
         }
       }

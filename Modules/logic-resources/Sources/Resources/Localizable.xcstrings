@@ -689,7 +689,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "expired"
+            "value" : "Expired"
           }
         }
       }
@@ -1143,7 +1143,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No documents match your search. Try changing your search query or filters."
+            "value" : "No documents match your search. Try changing your search or filters."
           }
         }
       }
@@ -2002,6 +2002,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verifier"
+          }
+        }
+      }
+    },
+    "valid" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valid"
           }
         }
       }

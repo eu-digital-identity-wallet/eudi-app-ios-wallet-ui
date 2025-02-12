@@ -31,7 +31,8 @@ public enum DashboardDeleteDeferredPartialState: Sendable {
 }
 
 public enum FiltersPartialState: Sendable {
-  case filterResult([DocumentUIModel], [FilterUISection])
+  case filterApplyResult([DocumentCategory: [DocumentUIModel]], [FilterUISection])
+  case filterUpdateResult([FilterUISection])
   case cancelled
 }
 
@@ -51,14 +52,14 @@ public protocol DashboardInteractor: Sendable {
   func requestDeferredIssuance() async -> DashboardDeferredPartialState
   func retrieveLogFileUrl() -> URL?
   @MainActor func onFilterChangeState() -> AsyncStream<FiltersPartialState>
-  func initializeFilters(filters: Filters, filterableList: FilterableList) async
+  func initializeFilters(filterableList: FilterableList) async
   func applyFilters() async
   func resetFilters() async
   func revertFilters() async
   func applySearch(query: String) async
   func updateFilters(sectionID: String, filterID: String) async
   func fetchFilteredDocuments(failedDocuments: [String]) -> FilterableList?
-  func updateFilterList(filterableList: FilterableList, filters: Filters) async
+  func updateLists(filterableList: FilterableList) async
   func updateSortOrder(sortOrder: SortOrderType)
   func createFiltersGroup() -> Filters
   func addDynamicFilters(documents: FilterableList, filters: Filters) async -> Filters
@@ -108,26 +109,45 @@ final class DashboardInteractorImpl: DashboardInteractor {
         for try await state in filterValidator.getFilterResultStream() {
           switch state {
           case .success(let filterResult):
-            let documentsUI = filterResult.filteredList.items.compactMap { filterableItem in
-              return filterableItem.payload as? DocumentUIModel
-            }
+            switch filterResult {
+            case .filterApplyResult(let filteredList, let updatedFilters):
+              let documentsUI = filteredList.items.compactMap { filterableItem in
+                return filterableItem.payload as? DocumentUIModel
+              }
+              let documents = Dictionary(grouping: documentsUI, by: { $0.value.documentCategory })
 
-            let filterSections = filterResult.updatedFilters.filterGroups.map { filteredGroup in
-              FilterUISection(
-                id: filteredGroup.id,
-                filters: filteredGroup.filters.map { filter in
-                  FilterUIItem(
-                    id: filter.id,
-                    title: filter.name,
-                    selected: filter.selected,
-                    filterAction: filter.filterableAction
-                  )
-                },
-                sectionTitle: filteredGroup.name
-              )
+              let filterSections = updatedFilters.filterGroups.map { filteredGroup in
+                FilterUISection(
+                  id: filteredGroup.id,
+                  filters: filteredGroup.filters.map { filter in
+                    FilterUIItem(
+                      id: filter.id,
+                      title: filter.name,
+                      selected: filter.selected,
+                      filterAction: filter.filterableAction
+                    )
+                  },
+                  sectionTitle: filteredGroup.name
+                )
+              }
+              continuation.yield(.filterApplyResult(documents, filterSections))
+            case .filterUpdateResult(let updatedFilters):
+              let filterSections = updatedFilters.filterGroups.map { filteredGroup in
+                FilterUISection(
+                  id: filteredGroup.id,
+                  filters: filteredGroup.filters.map { filter in
+                    FilterUIItem(
+                      id: filter.id,
+                      title: filter.name,
+                      selected: filter.selected,
+                      filterAction: filter.filterableAction
+                    )
+                  },
+                  sectionTitle: filteredGroup.name
+                )
+              }
+              continuation.yield(.filterUpdateResult(filterSections))
             }
-
-            continuation.yield(.filterResult(documentsUI, filterSections))
           case .completion:
             continuation.yield(.cancelled)
             continuation.finish()
@@ -148,7 +168,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
               name: LocalizableString.shared.get(with: .ascending),
               selected: true,
               filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
-                attribute.name
+                attribute.sortingKey
               })
             ),
             FilterItem(
@@ -156,7 +176,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
               name: LocalizableString.shared.get(with: .descending),
               selected: false,
               filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
-                attribute.name
+                attribute.sortingKey
               })
             )
           ],
@@ -168,21 +188,21 @@ final class DashboardInteractorImpl: DashboardInteractor {
             FilterItem(
               name: LocalizableString.shared.get(with: .defaultLabel),
               selected: true,
-              filterableAction: SortBy<DocumentFilterableAttributes, String>(predicate: { attribute in
-                attribute.name
+              filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
+                attribute.sortingKey
               })
             ),
             FilterItem(
               name: LocalizableString.shared.get(with: .dateIssued),
               selected: false,
-              filterableAction: SortBy<DocumentFilterableAttributes, Date>(predicate: { attribute in
+              filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
                 attribute.issuedDate
               })
             ),
             FilterItem(
               name: LocalizableString.shared.get(with: .expiryDate),
               selected: false,
-              filterableAction: SortBy<DocumentFilterableAttributes, Date>(predicate: { attribute in
+              filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
                 attribute.expiryDate
               })
             )
@@ -246,7 +266,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
           name: LocalizableString.shared.get(with: .category),
           filters: [],
           filterableAction: FilterMultipleAction<DocumentFilterableAttributes>(predicate: { attribute, filter in
-            attribute.category == filter.id
+            attribute.category == filter.name
           }),
           filterType: .documentCategory
         ),
@@ -261,7 +281,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
             FilterItem(
               id: FilterIds.FILTER_BY_STATE_EXPIRED,
               name: LocalizableString.shared.get(with: .expired),
-              selected: true
+              selected: false
             )
           ],
           filterableAction: FilterMultipleAction<DocumentFilterableAttributes>(predicate: { attribute, filter in
@@ -317,15 +337,6 @@ final class DashboardInteractorImpl: DashboardInteractor {
       )
     }
 
-//    filterItems.insert(
-//      FilterItem(
-//        id: UUID().uuidString,
-//        name: "All",
-//        selected: true
-//      ),
-//      at: 0
-//    )
-
     return filterItems
   }
 
@@ -349,20 +360,13 @@ final class DashboardInteractorImpl: DashboardInteractor {
       )
     }
 
-//    filterItems.insert(
-//      FilterItem(
-//        id: UUID().uuidString,
-//        name: "All",
-//        selected: true
-//      ),
-//      at: 0
-//    )
-
     return filterItems
   }
 
-  func initializeFilters(filters: Filters, filterableList: FilterableList) async {
-    await filterValidator.initializeFilters(filters: filters, filterableList: filterableList)
+  func initializeFilters(filterableList: FilterableList) async {
+    let filtersGroup = createFiltersGroup()
+    let filters = await addDynamicFilters(documents: filterableList, filters: filtersGroup)
+    await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
   }
 
   func applyFilters() async {
@@ -385,8 +389,9 @@ final class DashboardInteractorImpl: DashboardInteractor {
     await filterValidator.updateFilter(filterGroupId: sectionID, filterId: filterID)
   }
 
-  func updateFilterList(filterableList: FilterableList, filters: Filters) async {
-    await filterValidator.updateFilterList(filterableList: filterableList, filters: filters)
+  func updateLists(filterableList: FilterableList) async {
+    let sortOrder = createFiltersGroup().sortOrder
+    await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
   }
 
   func updateSortOrder(sortOrder: SortOrderType) {
@@ -470,12 +475,21 @@ final class DashboardInteractorImpl: DashboardInteractor {
     let filterableItems = documents.map { document in
 
       let documentPayload = document.transformToDocumentUi(categories: self.walletController.getDocumentCategories())
+
+      let documentSearchTags: [String] = {
+        var tags = [document.displayName ?? ""]
+        let issuerName = document.issuerName.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !issuerName.isEmpty {
+          tags.append(issuerName)
+        }
+          return tags
+      }()
+
       return FilterableItem(
         payload: documentPayload,
         attributes: DocumentFilterableAttributes(
           sortingKey: document.displayName?.lowercased() ?? "",
-          searchTags: [],
-          searchText: document.displayName ?? "",
+          searchTags: documentSearchTags,
           issuedDate: document.createdAt,
           expiryDate: document.validUntil,
           issuer: document.issuerName,

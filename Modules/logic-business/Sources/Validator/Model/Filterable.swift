@@ -31,6 +31,22 @@ public struct FilterableList: Sendable {
   }
 }
 
+extension FilterableList {
+  func sortedByOrder(
+    sortOrder: SortOrderType,
+    selector: (FilterableItem) -> String
+  ) -> FilterableList {
+    let sortedItems: [FilterableItem]
+    switch sortOrder {
+    case .ascending:
+      sortedItems = self.items.sorted { selector($0) < selector($1) }
+    case .descending:
+      sortedItems = self.items.sorted { selector($0) > selector($1) }
+    }
+    return FilterableList(items: sortedItems)
+  }
+}
+
 public struct FilterableItem: Sendable {
   public let payload: FilterableItemPayload
   public let attributes: FilterableAttributes
@@ -45,7 +61,6 @@ public struct FilterableItem: Sendable {
 }
 
 public protocol FilterableAttributes: Sendable {
-  var searchText: String { get }
   var sortingKey: String { get }
   var searchTags: [String] { get }
 }

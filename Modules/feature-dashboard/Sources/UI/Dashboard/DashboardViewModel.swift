@@ -35,10 +35,7 @@ struct DashboardState: ViewState {
   let failedDocuments: [String]
   let moreOptions: [MoreModalOption]
   let contentHeaderConfig: ContentHeaderConfig
-  let isInitialFetch: Bool
-  let filters: Filters
-  let orderByFilters: [SortFilterItem]
-  let filterSections: [FilterUISection.Element]
+  let isFromOnPause: Bool
 
   var pendingDocumentTitle: String {
     pendingDeletionDocument?.value.title ?? ""
@@ -131,28 +128,13 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
             appText: ThemeManager.shared.image.euditext
           )
         ),
-        isInitialFetch: true,
-        filters: Filters(
-          filterGroups: [],
-          sortOrder: SortOrderType.ascending
-        ),
-        orderByFilters: [],
-        filterSections: [.issuedSortingDate]
+        isFromOnPause: true
       )
     )
 
     listenForSuccededIssuedModalChanges()
     subscribeToSearch()
     onFiltersChangeState()
-    createFilters()
-  }
-
-  private func createFilters() {
-    setState {
-      $0.copy(
-        filters: interactor.createFiltersGroup()
-      )
-    }
   }
 
   func fetch() {
@@ -167,17 +149,10 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       switch state {
       case .success(let username, let documents, let hasIssuedDocuments):
 
-        if viewState.isInitialFetch {
-          let newFilters = await interactor.addDynamicFilters(documents: documents, filters: viewState.filters)
-          setState {
-            $0.copy(
-              filters: newFilters
-            )
-          }
-
-          await interactor.initializeFilters(filters: viewState.filters, filterableList: documents)
+        if viewState.isFromOnPause {
+          await interactor.initializeFilters(filterableList: documents)
         } else {
-          await interactor.updateFilterList(filterableList: documents, filters: viewState.filters)
+          await interactor.updateLists(filterableList: documents)
         }
 
         await interactor.applyFilters()
@@ -187,7 +162,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
             isLoading: false,
             username: username,
             allowUserInteraction: hasIssuedDocuments,
-            isInitialFetch: false
+            isFromOnPause: false
           )
         }
         onDocumentsRetrievedPostActions()
@@ -235,6 +210,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
   func onPause() {
     self.deferredTask?.cancel()
+    setState { $0.copy(isFromOnPause: true) }
   }
 
   func onDocumentDetails(documentId: String) {
@@ -484,12 +460,16 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     Task {
       for await state in interactor.onFilterChangeState() {
         switch state {
-        case .filterResult(let documentsUI, let filterSections):
-          let documents = Dictionary(grouping: documentsUI, by: { $0.value.documentCategory })
-
+        case .filterApplyResult(let documents, let filterSections):
           setState {
             $0.copy(
               documents: documents,
+              filterUIModel: filterSections
+            )
+          }
+        case .filterUpdateResult(let filterSections):
+          setState {
+            $0.copy(
               filterUIModel: filterSections
             )
           }

@@ -112,6 +112,7 @@ private func content(
             .multilineTextAlignment(.leading)
           VSpacer.medium()
         }
+        .padding(.top, Theme.shared.dimension.padding)
         .shimmer(isLoading: viewState.isLoading)
       }
     }

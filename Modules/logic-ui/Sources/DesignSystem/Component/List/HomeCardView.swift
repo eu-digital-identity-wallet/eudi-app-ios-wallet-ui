@@ -44,7 +44,7 @@ public struct HomeCardView: View {
   }
 
   public var body: some View {
-    VStack(alignment: .center, spacing: .zero) {
+    VStack(alignment: .center, spacing: SPACING_NONE) {
       HStack(alignment: .top) {
         VStack(alignment: .leading, spacing: SPACING_MEDIUM_LARGE) {
           Text(text)
@@ -53,12 +53,12 @@ public struct HomeCardView: View {
             .lineLimit(nil)
         }
 
-        Spacer()
         if let illustration {
           illustration
             .resizable()
             .scaledToFit()
             .frame(width: 100, height: 100)
+            .frame(maxWidth: .infinity, alignment: .topTrailing)
         }
       }
 
@@ -68,21 +68,22 @@ public struct HomeCardView: View {
         gravity: .center,
         onAction: action()
       )
-      .padding(.top, SPACING_LARGE)
+      .padding(.top, SPACING_MEDIUM)
 
       if let learnMoreAction, let learnMoreText {
         Button(action: learnMoreAction) {
-          HStack(spacing: SPACING_EXTRA_SMALL) {
-            Theme.shared.image.infoCircle
-
+          Label {
             Text(learnMoreText)
               .typography(Theme.shared.font.bodyLarge)
               .fontWeight(.semibold)
+          } icon: {
+            Theme.shared.image.infoCircle
           }
           .foregroundStyle(Theme.shared.color.primary)
+          .padding(SPACING_SMALL)
         }
         .buttonStyle(PlainButtonStyle())
-        .padding(.top, SPACING_LARGE_MEDIUM)
+        .padding(.top, SPACING_MEDIUM)
       }
     }
     .padding(SPACING_MEDIUM)
