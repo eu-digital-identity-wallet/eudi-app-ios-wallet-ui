@@ -115,37 +115,11 @@ final class DashboardInteractorImpl: DashboardInteractor {
                 return filterableItem.payload as? DocumentUIModel
               }
               let documents = Dictionary(grouping: documentsUI, by: { $0.value.documentCategory })
+              let filterSections = filterUISection(filters: updatedFilters)
 
-              let filterSections = updatedFilters.filterGroups.map { filteredGroup in
-                FilterUISection(
-                  id: filteredGroup.id,
-                  filters: filteredGroup.filters.map { filter in
-                    FilterUIItem(
-                      id: filter.id,
-                      title: filter.name,
-                      selected: filter.selected,
-                      filterAction: filter.filterableAction
-                    )
-                  },
-                  sectionTitle: filteredGroup.name
-                )
-              }
               continuation.yield(.filterApplyResult(documents, filterSections))
             case .filterUpdateResult(let updatedFilters):
-              let filterSections = updatedFilters.filterGroups.map { filteredGroup in
-                FilterUISection(
-                  id: filteredGroup.id,
-                  filters: filteredGroup.filters.map { filter in
-                    FilterUIItem(
-                      id: filter.id,
-                      title: filter.name,
-                      selected: filter.selected,
-                      filterAction: filter.filterableAction
-                    )
-                  },
-                  sectionTitle: filteredGroup.name
-                )
-              }
+              let filterSections = filterUISection(filters: updatedFilters)
               continuation.yield(.filterUpdateResult(filterSections))
             }
           case .completion:
@@ -161,6 +135,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
     return Filters(
       filterGroups: [
         SingleSelectionFilterGroup(
+          id: FilterIds.ASCENDING_DESCENDING_GROUP,
           name: LocalizableString.shared.get(with: .orderBy),
           filters: [
             FilterItem(
@@ -183,9 +158,11 @@ final class DashboardInteractorImpl: DashboardInteractor {
           filterType: .orderBy
         ),
         SingleSelectionFilterGroup(
+          id: FilterIds.FILTER_SORT_GROUP_ID,
           name: LocalizableString.shared.get(with: .sortBy),
           filters: [
             FilterItem(
+              id: FilterIds.FILTER_SORT_DEFAULT,
               name: LocalizableString.shared.get(with: .defaultLabel),
               selected: true,
               filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
@@ -193,6 +170,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
               })
             ),
             FilterItem(
+              id: FilterIds.FILTER_SORT_DATE_ISSUED,
               name: LocalizableString.shared.get(with: .dateIssued),
               selected: false,
               filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
@@ -200,6 +178,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
               })
             ),
             FilterItem(
+              id: FilterIds.FILTER_SORT_EXPIRY_DATE,
               name: LocalizableString.shared.get(with: .expiryDate),
               selected: false,
               filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
@@ -210,9 +189,11 @@ final class DashboardInteractorImpl: DashboardInteractor {
           filterType: .other
         ),
         SingleSelectionFilterGroup(
+          id: FilterIds.FILTER_BY_PERIOD_GROUP_ID,
           name: LocalizableString.shared.get(with: .expiryPeriodSectionTitle),
           filters: [
             FilterItem(
+              id: FilterIds.FILTER_BY_PERIOD_DEFAULT,
               name: LocalizableString.shared.get(with: .defaultLabel),
               selected: true,
               filterableAction: Filter<DocumentFilterableAttributes>(predicate: { _, _ in
@@ -220,6 +201,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
               })
             ),
             FilterItem(
+              id: FilterIds.FILTER_BY_PERIOD_NEXT_7,
               name: LocalizableString.shared.get(with: .nextSevenDays),
               selected: false,
               filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
@@ -228,6 +210,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
               })
             ),
             FilterItem(
+              id: FilterIds.FILTER_BY_PERIOD_NEXT_30,
               name: LocalizableString.shared.get(with: .nextThirtyDays),
               selected: false,
               filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
@@ -236,6 +219,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
               })
             ),
             FilterItem(
+              id: FilterIds.FILTER_BY_PERIOD_BEYOND_30,
               name: LocalizableString.shared.get(with: .beyondThiryDays),
               selected: false,
               filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
@@ -244,6 +228,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
               })
             ),
             FilterItem(
+              id: FilterIds.FILTER_BY_PERIOD_EXPIRED,
               name: LocalizableString.shared.get(with: .beforeToday),
               selected: false,
               filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
@@ -255,6 +240,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
           filterType: .other
         ),
         MultipleSelectionFilterGroup(
+          id: FilterIds.FILTER_BY_ISSUER_GROUP_ID,
           name: LocalizableString.shared.get(with: .issuer),
           filters: [],
           filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attribute, filter in
@@ -263,6 +249,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
           filterType: .issuer
         ),
         MultipleSelectionFilterGroup(
+          id: FilterIds.FILTER_BY_DOCUMENT_CATEGORY_GROUP_ID,
           name: LocalizableString.shared.get(with: .category),
           filters: [],
           filterableAction: FilterMultipleAction<DocumentFilterableAttributes>(predicate: { attribute, filter in
@@ -271,6 +258,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
           filterType: .documentCategory
         ),
         MultipleSelectionFilterGroup(
+          id: FilterIds.FILTER_BY_STATE_GROUP_ID,
           name: LocalizableString.shared.get(with: .state),
           filters: [
             FilterItem(
@@ -318,49 +306,6 @@ final class DashboardInteractorImpl: DashboardInteractor {
     }
 
     return filters.copy(filterGroups: newFilterGroups)
-  }
-
-  private func addCategoriesFilter(documents: FilterableList) -> [FilterItem] {
-    let distinctCategories = documents.items.compactMap {
-      ($0.attributes as? DocumentFilterableAttributes)?.category
-    }.reduce(into: [String]()) { unique, element in
-      if !unique.contains(element) {
-        unique.append(element)
-      }
-    }
-
-    let filterItems = distinctCategories.map { category in
-      return FilterItem(
-        id: UUID().uuidString,
-        name: category,
-        selected: true
-      )
-    }
-
-    return filterItems
-  }
-
-  private func addIssuerFilter(documents: FilterableList) -> [FilterItem] {
-    let distinctIssuers = documents.items.compactMap {
-      ($0.attributes as? DocumentFilterableAttributes)?.issuer
-    }.reduce(into: [String]()) { unique, element in
-      if !unique.contains(element) {
-        unique.append(element)
-      }
-    }
-
-    let filterItems = distinctIssuers.map { issuer in
-      return FilterItem(
-        id: UUID().uuidString,
-        name: issuer,
-        selected: true,
-        filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, filter in
-          attributes.issuer == filter.name
-        })
-      )
-    }
-
-    return filterItems
   }
 
   func initializeFilters(filterableList: FilterableList) async {
@@ -500,6 +445,66 @@ final class DashboardInteractorImpl: DashboardInteractor {
     }
 
     return FilterableList(items: filterableItems)
+  }
+
+  private func filterUISection(filters: Filters) -> [FilterUISection] {
+    filters.filterGroups.map { filteredGroup in
+      FilterUISection(
+        id: filteredGroup.id,
+        filters: filteredGroup.filters.map { filter in
+          FilterUIItem(
+            id: filter.id,
+            title: filter.name,
+            selected: filter.selected,
+            filterAction: filter.filterableAction
+          )
+        },
+        sectionTitle: filteredGroup.name
+      )
+    }
+  }
+
+  private func addCategoriesFilter(documents: FilterableList) -> [FilterItem] {
+    let distinctCategories = documents.items.compactMap {
+      ($0.attributes as? DocumentFilterableAttributes)?.category
+    }.reduce(into: [String]()) { unique, element in
+      if !unique.contains(element) {
+        unique.append(element)
+      }
+    }
+
+    let filterItems = distinctCategories.map { category in
+      return FilterItem(
+        id: UUID().uuidString,
+        name: category,
+        selected: true
+      )
+    }
+
+    return filterItems
+  }
+
+  private func addIssuerFilter(documents: FilterableList) -> [FilterItem] {
+    let distinctIssuers = documents.items.compactMap {
+      ($0.attributes as? DocumentFilterableAttributes)?.issuer
+    }.reduce(into: [String]()) { unique, element in
+      if !unique.contains(element) {
+        unique.append(element)
+      }
+    }
+
+    let filterItems = distinctIssuers.map { issuer in
+      return FilterItem(
+        id: UUID().uuidString,
+        name: issuer,
+        selected: true,
+        filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, filter in
+          attributes.issuer == filter.name
+        })
+      )
+    }
+
+    return filterItems
   }
 
   private func fetchUsername() -> String {

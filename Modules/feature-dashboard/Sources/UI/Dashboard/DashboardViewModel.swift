@@ -210,7 +210,9 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
 
   func onPause() {
     self.deferredTask?.cancel()
-    setState { $0.copy(isFromOnPause: true) }
+    if !isFilterModalShowing {
+      setState { $0.copy(isFromOnPause: true) }
+    }
   }
 
   func onDocumentDetails(documentId: String) {
@@ -309,8 +311,8 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   }
 
   func showFilters() {
-    onPause()
     isFilterModalShowing = true
+    onPause()
   }
 
   func onMyWallet() {

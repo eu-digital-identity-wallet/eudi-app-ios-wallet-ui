@@ -98,12 +98,12 @@ actor FilterValidatorImpl: FilterValidator {
 
     var filteredList = appliedFilters.filterGroups.reduce(initialList) { currentList, group in
       switch group {
-        case let multipleGroup as MultipleSelectionFilterGroup:
-          return applyMultipleSelectionFilter(currentList, multipleGroup)
-        case let singleGroup as SingleSelectionFilterGroup:
-          return applySingleSelectionFilter(currentList, singleGroup)
-        default:
-          return currentList
+      case let multipleGroup as MultipleSelectionFilterGroup:
+        return applyMultipleSelectionFilter(currentList, multipleGroup)
+      case let singleGroup as SingleSelectionFilterGroup:
+        return applySingleSelectionFilter(currentList, singleGroup)
+      default:
+        return currentList
       }
     }
 
@@ -125,6 +125,78 @@ actor FilterValidatorImpl: FilterValidator {
         )
       )
     )
+  }
+
+  func resetFilters() async {
+    appliedFilters = defaultFilters
+    snapshotFilters = Filters.emptyFilters()
+    await applyFilters()
+  }
+
+  func updateFilter(filterGroupId: String, filterId: String) async {
+    let filtersUpdate = snapshotFilters.isEmpty ? appliedFilters : snapshotFilters
+
+    let updatedFilterGroups = filtersUpdate.filterGroups.map { group in
+      return group.id == filterGroupId ? updateFilterInGroup(group: group, filterId: filterId) : group
+    }
+
+    let sortOrder = updatedFilterGroups
+      .filter { $0.filterType == .orderBy }
+      .flatMap { $0.filters }
+      .first { $0.selected }?.id == FilterIds.ORDER_BY_ASCENDING
+    ? SortOrderType.ascending
+    : SortOrderType.descending
+
+    let updatedFilters = filtersUpdate.copy(
+      filterGroups: updatedFilterGroups,
+      sortOrder: sortOrder
+    )
+
+    snapshotFilters = updatedFilters
+
+    self.filterResultSubject.send(
+      .success(
+        .filterUpdateResult(
+          updatedFilters: snapshotFilters
+        )
+      )
+    )
+  }
+
+  func revertFilters() async {
+    snapshotFilters = Filters.emptyFilters()
+    self.filterResultSubject.send(
+      .success(
+        .filterUpdateResult(
+          updatedFilters: appliedFilters
+        )
+      )
+    )
+  }
+
+  func applySearch(query: String) async {
+    searchQuery = query
+    await applyFilters()
+  }
+
+  func updateSortOrder(sortOrder: SortOrderType) async {
+    let filterToUpdateOrderChange = snapshotFilters.isEmpty ? appliedFilters : snapshotFilters
+    snapshotFilters = filterToUpdateOrderChange.copy(sortOrder: sortOrder)
+
+    self.filterResultSubject.send(
+      .success(
+        .filterApplyResult(
+          filteredList: filteredList,
+          updatedFilters: snapshotFilters
+        )
+      )
+    )
+  }
+
+  func updateLists(sortOrder: SortOrderType, filterableList: FilterableList) async {
+    self.initialList = filterableList.sortedByOrder(sortOrder: sortOrder) {
+      $0.attributes.sortingKey
+    }
   }
 
   private func applyMultipleSelectionFilter(
@@ -173,42 +245,6 @@ actor FilterValidatorImpl: FilterValidator {
     }
   }
 
-  func resetFilters() async {
-    appliedFilters = defaultFilters
-    snapshotFilters = Filters.emptyFilters()
-    await applyFilters()
-  }
-
-  func updateFilter(filterGroupId: String, filterId: String) async {
-    let filtersUpdate = snapshotFilters.isEmpty ? appliedFilters : snapshotFilters
-
-    let updatedFilterGroups = filtersUpdate.filterGroups.map { group in
-      return group.id == filterGroupId ? updateFilterInGroup(group: group, filterId: filterId) : group
-    }
-
-    let sortOrder = updatedFilterGroups
-      .filter { $0.filterType == .orderBy }
-      .flatMap { $0.filters }
-      .first { $0.selected }?.id == FilterIds.ORDER_BY_ASCENDING
-    ? SortOrderType.ascending
-    : SortOrderType.descending
-
-    let updatedFilters = filtersUpdate.copy(
-      filterGroups: updatedFilterGroups,
-      sortOrder: sortOrder
-    )
-
-    snapshotFilters = updatedFilters
-
-    self.filterResultSubject.send(
-      .success(
-        .filterUpdateResult(
-          updatedFilters: snapshotFilters
-        )
-      )
-    )
-  }
-
   private func updateFilterInGroup(group: FilterGroup, filterId: String) -> FilterGroup {
     if var multipleGroup = group as? MultipleSelectionFilterGroup {
       multipleGroup.filters = multipleGroup.filters.map { filter in
@@ -231,41 +267,5 @@ actor FilterValidatorImpl: FilterValidator {
     }
 
     return group
-  }
-
-  func revertFilters() async {
-    snapshotFilters = Filters.emptyFilters()
-    self.filterResultSubject.send(
-      .success(
-        .filterUpdateResult(
-          updatedFilters: appliedFilters
-        )
-      )
-    )
-  }
-
-  func applySearch(query: String) async {
-    searchQuery = query
-    await applyFilters()
-  }
-
-  func updateSortOrder(sortOrder: SortOrderType) async {
-    let filterToUpdateOrderChange = snapshotFilters.isEmpty ? appliedFilters : snapshotFilters
-    snapshotFilters = filterToUpdateOrderChange.copy(sortOrder: sortOrder)
-
-    self.filterResultSubject.send(
-      .success(
-        .filterApplyResult(
-          filteredList: filteredList,
-          updatedFilters: snapshotFilters
-        )
-      )
-    )
-  }
-
-  func updateLists(sortOrder: SortOrderType, filterableList: FilterableList) async {
-    self.initialList = filterableList.sortedByOrder(sortOrder: sortOrder) {
-      $0.attributes.sortingKey
-    }
   }
 }

@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 public struct FilterIds {
+  public static let ASCENDING_DESCENDING_GROUP = "ascending_descending_group"
   public static let ORDER_BY_ASCENDING = "order_by_ascending"
   public static let ORDER_BY_DESCENDING = "order_by_descending"
   public static let FILTER_BY_STATE_GROUP_ID = "state_group_id"
