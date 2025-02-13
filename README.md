@@ -184,10 +184,10 @@ To delete a document, navigate to the 'Documents' tab within the 'Dashboard' scr
 6. The Verifier scans the presented QR code.
 7. The app's "Request" screen will load. Here, you can select or deselect which attributes to share with the Verifier. You must select at least one attribute to proceed.
 8. Tap "Share".
-10. Enter the PIN you set up during the initial steps.
-11. Upon successful authentication, tap "Close".
-12. The Verifier will receive the data you chose to share.
-13. You will return to the "Home" tab of the "Dashboard" screen. The flow is now complete.
+9. Enter the PIN you set up during the initial steps.
+10. Upon successful authentication, tap "Close".
+11. The Verifier will receive the data you chose to share.
+12. You will return to the "Home" tab of the "Dashboard" screen. The flow is now complete.
 
 ## How to build - Quick start guide
 
