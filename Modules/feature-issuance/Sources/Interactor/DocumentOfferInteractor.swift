@@ -92,17 +92,17 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
   ) async -> IssueOfferDocumentsPartialState {
     do {
 
-      let documents = try await walletController.issueDocumentsByOfferUrl(
+      let issuedDocuments = try await walletController.issueDocumentsByOfferUrl(
         offerUri: uri,
         docTypes: docOffers,
         txCodeValue: txCodeValue
       )
 
-      if documents.isEmpty {
+      if issuedDocuments.isEmpty {
         return .failure(WalletCoreError.unableToIssueAndStore)
-      } else if documents.first(where: { $0.isDeferred }) != nil {
+      } else if issuedDocuments.first(where: { $0.isDeferred }) != nil {
         return .deferredSuccess(
-          retrieveSuccessRoute(
+          retrieveDeferredRoute(
             caption: .issuanceSuccessDeferredCaption([issuerName]),
             successNavigation: successNavigation,
             title: .init(
@@ -116,7 +116,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
             )
           )
         )
-      } else if let authorizePresentationUrl = documents.first?.authorizePresentationUrl {
+      } else if let authorizePresentationUrl = issuedDocuments.first?.authorizePresentationUrl {
         guard
           let presentationUrl = authorizePresentationUrl.toCompatibleUrl(),
           let presentationComponents = URLComponents(url: presentationUrl, resolvingAgainstBaseURL: true) else {
@@ -124,61 +124,19 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
         }
         let session = await walletController.startSameDevicePresentation(deepLink: presentationComponents)
         return .dynamicIssuance(session)
-      } else if documents.count == docOffers.count {
-
-        let documentIdentifiers = documents.compactMap { $0.id }
-        let state = await Task.detached { () -> DocumentsPartialState in
-          return await self.fetchStoredDocuments(
-            documentIds: documentIdentifiers
-          )
-        }.value
-
-        switch state {
-        case .success(let documents):
-          return .success(
-            .featureIssuanceModule(
-              .issuanceSuccess(
-                config: PresentationSuccessUIConfig(
-                  successNavigation: .none,
-                  relyingParty: documents.first?.issuer?.name,
-                  issuerLogoUrl: documents.first?.issuer?.logoUrl,
-                  documentSuccess: true
-                ),
-                requestItems: documents.map { item in
-                  ListItemSection(
-                    id: item.id,
-                    title: item.documentName,
-                    listItems: item.documentFields
-                  )
-                }
-              )
-            )
-          )
-        case .failure:
-          return .failure(WalletCoreError.unableToIssueAndStore)
-        }
+      } else if issuedDocuments.count == docOffers.count {
+        let documentIdentifiers = issuedDocuments.compactMap { $0.id }
+        return await fetchAndHandleDocuments(
+          successNavigation: successNavigation,
+          documentIdentifiers: documentIdentifiers
+        )
       } else {
 
-        let notIssued = docOffers.filter { offer in
-          documents.first(
-            where: { $0.docType == offer.docType }
-          ) == nil
-        }.map {
-          return $0.displayName
-        }
-
-        return .partialSuccess(
-          retrieveSuccessRoute(
-            caption: .credentialOfferPartialSuccessCaption(
-              [
-                issuerName, notIssued.joined(separator: ", ")
-              ]
-            ),
-            successNavigation: successNavigation,
-            title: .init(value: .success),
-            buttonTitle: .credentialOfferSuccessButton,
-            visualKind: .defaultIcon
-          )
+        let documentIdentifiers = issuedDocuments.compactMap { $0.id }
+        return await fetchAndHandleDocuments(
+          successNavigation: successNavigation,
+          documentIdentifiers: documentIdentifiers,
+          isPartialState: true
         )
       }
 
@@ -197,25 +155,31 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
     }
 
     do {
-
       let doc = try await walletController.resumePendingIssuance(
         pendingDoc: pendingData.pendingDoc,
         webUrl: pendingData.url
       )
 
       if doc.status == .issued {
-        return .success(
-          retrieveSuccessRoute(
-            caption: .credentialOfferSuccessCaption([issuerName]),
-            successNavigation: successNavigation,
-            title: .init(value: .success),
-            buttonTitle: .credentialOfferSuccessButton,
-            visualKind: .defaultIcon
+        let state = await Task.detached { () -> DocumentsPartialState in
+          return await self.fetchStoredDocuments(
+            documentIds: [doc.id]
           )
-        )
+        }.value
+        switch state {
+        case .success(let documents):
+            return .success(
+              retrieveDocumentSuccessRoute(
+                successNavigation: successNavigation,
+                documents: documents
+              )
+            )
+        case .failure:
+          return .failure(WalletCoreError.unableToIssueAndStore)
+        }
       } else if doc.status == .deferred {
         return .success(
-          retrieveSuccessRoute(
+          retrieveDeferredRoute(
             caption: .issuanceSuccessDeferredCaption([issuerName]),
             successNavigation: successNavigation,
             title: .init(
@@ -268,14 +232,45 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
     return .success(documentsDetails)
   }
 
-  private func retrieveSuccessRoute(
+  private func fetchAndHandleDocuments(
+    successNavigation: UIConfig.TwoWayNavigationType,
+    documentIdentifiers: [String],
+    isPartialState: Bool = false
+  ) async -> IssueOfferDocumentsPartialState {
+    let state = await Task.detached { () -> DocumentsPartialState in
+      return await self.fetchStoredDocuments(
+        documentIds: documentIdentifiers
+      )
+    }.value
+    switch state {
+    case .success(let documents):
+        if isPartialState {
+          return .partialSuccess(
+            retrieveDocumentSuccessRoute(
+              successNavigation: successNavigation,
+              documents: documents
+            )
+          )
+        } else {
+          return .success(
+            retrieveDocumentSuccessRoute(
+              successNavigation: successNavigation,
+              documents: documents
+            )
+          )
+        }
+    case .failure:
+      return .failure(WalletCoreError.unableToIssueAndStore)
+    }
+  }
+
+  private func retrieveDeferredRoute(
     caption: LocalizableString.Key,
     successNavigation: UIConfig.TwoWayNavigationType,
     title: UIConfig.Success.Title,
     buttonTitle: LocalizableString.Key,
     visualKind: UIConfig.Success.VisualKind
   ) -> AppRoute {
-
     var navigationType: UIConfig.DeepLinkNavigationType {
       return switch successNavigation {
       case .popTo(let route): .pop(screen: route)
@@ -297,6 +292,36 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
           ],
           visualKind: visualKind
         )
+      )
+    )
+  }
+
+  private func retrieveDocumentSuccessRoute(
+    successNavigation: UIConfig.TwoWayNavigationType,
+    documents: [DocumentDetailsUIModel]
+  ) -> AppRoute {
+    var navigationType: UIConfig.DeepLinkNavigationType {
+      return switch successNavigation {
+      case .popTo(let route): .pop(screen: route)
+      case .push(let route): .push(screen: route)
+      }
+    }
+
+    return .featureIssuanceModule(
+      .issuanceSuccess(
+        config: DocumentSuccessUIConfig(
+          successNavigation: navigationType,
+          relyingParty: documents.first?.issuer?.name,
+          issuerLogoUrl: documents.first?.issuer?.logoUrl,
+          relyingPartyIsTrusted: false
+        ),
+        requestItems: documents.map { item in
+          ListItemSection(
+            id: item.id,
+            title: item.documentName,
+            listItems: item.documentFields
+          )
+        }
       )
     )
   }

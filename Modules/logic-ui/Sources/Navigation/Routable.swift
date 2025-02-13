@@ -15,4 +15,5 @@
  */
 
 public protocol Routable: Sendable {
+  var log: String { get }
 }

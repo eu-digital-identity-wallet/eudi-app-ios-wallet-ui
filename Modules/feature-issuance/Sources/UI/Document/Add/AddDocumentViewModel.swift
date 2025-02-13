@@ -296,16 +296,23 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
       )
     }.value
 
+    let onSuccesNavigation = switch viewState.config.flow {
+    case .noDocument:
+        UIConfig.DeepLinkNavigationType.push(screen: .featureDashboardModule(.dashboard))
+    case .extraDocument:
+        UIConfig.DeepLinkNavigationType.pop(screen: .featureDashboardModule(.dashboard))
+    }
+
     switch state {
     case .success(let documents):
       router.push(
         with: .featureIssuanceModule(
           .issuanceSuccess(
-            config: PresentationSuccessUIConfig(
-              successNavigation: .none,
+            config: DocumentSuccessUIConfig(
+              successNavigation: onSuccesNavigation,
               relyingParty: documents.first?.issuer?.name,
               issuerLogoUrl: documents.first?.issuer?.logoUrl,
-              documentSuccess: true
+              relyingPartyIsTrusted: false
             ),
             requestItems: documents.map { item in
               ListItemSection(

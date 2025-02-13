@@ -265,17 +265,6 @@
         }
       }
     },
-    "category" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Category"
-          }
-        }
-      }
-    },
     "category_education" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -711,7 +700,40 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Expiry Period"
+            "value" : "Filter by Expiry Period"
+          }
+        }
+      }
+    },
+    "filter_by_category" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter by Category"
+          }
+        }
+      }
+    },
+    "filter_by_issuer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter by Issuer"
+          }
+        }
+      }
+    },
+    "filter_by_state" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter by State"
           }
         }
       }
@@ -965,17 +987,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Issue"
-          }
-        }
-      }
-    },
-    "issuer" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Issuer"
           }
         }
       }
@@ -1771,6 +1782,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search"
+          }
+        }
+      }
+    },
+    "search_documents" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search Documents"
           }
         }
       }

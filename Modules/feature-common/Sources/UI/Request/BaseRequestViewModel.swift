@@ -73,6 +73,10 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     return ""
   }
 
+  open func getRelyingPartyIsTrusted() -> Bool {
+    return false
+  }
+
   open func getCaption() -> LocalizableString.Key {
     return .custom("")
   }

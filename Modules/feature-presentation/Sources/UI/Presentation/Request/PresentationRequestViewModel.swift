@@ -106,10 +106,11 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
               navigationSuccessType: .push(
                 .featurePresentationModule(
                   .presentationLoader(
-                    getRelyingParty(),
+                    relyingParty: getRelyingParty(),
+                    relyingPartyisTrusted: getRelyingPartyIsTrusted(),
                     presentationCoordinator: remoteSessionCoordinator,
                     originator: getOriginator(),
-                    viewState.items.filterSelectedRows()
+                    items: viewState.items.filterSelectedRows()
                   )
                 )
               ),
@@ -141,6 +142,10 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
   override func getRelyingParty() -> String {
     viewState.relyingParty
+  }
+
+  override func getRelyingPartyIsTrusted() -> Bool {
+    viewState.isTrusted
   }
 
   override func getTitleCaption() -> String {

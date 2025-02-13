@@ -52,6 +52,7 @@ public final class ProximityRouter {
       ).eraseToAnyView()
     case .proximityLoader(
       let relyingParty,
+      let relyingPartyIsTrusted,
       presentationCoordinator: let presentationCoordinator,
       originator: let originator,
       let uiModels
@@ -64,6 +65,7 @@ public final class ProximityRouter {
             argument: presentationCoordinator as ProximitySessionCoordinator
           ),
           relyingParty: relyingParty,
+          relyingPartyIsTrusted: relyingPartyIsTrusted,
           originator: originator,
           requestItems: uiModels
         )

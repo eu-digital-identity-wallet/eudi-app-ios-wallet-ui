@@ -239,7 +239,6 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
           type: viewState.document.type,
           documentName: viewState.document.documentName,
           issuer: viewState.document.issuer,
-          holdersName: viewState.document.holdersName,
           createdAt: viewState.document.createdAt,
           hasExpired: viewState.document.hasExpired,
           documentFields: documentFields)

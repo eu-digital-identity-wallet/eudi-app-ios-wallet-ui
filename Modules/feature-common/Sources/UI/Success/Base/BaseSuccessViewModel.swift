@@ -19,7 +19,7 @@
 
 @Copyable
 public struct BaseSuccessState: ViewState {
-  let config: PresentationSuccessUIConfig
+  let config: DocumentSuccessUIConfig
   let relyingParty: RelyingPartyData
   let items: [ListItemSection]
   let navigationTitle: String
@@ -37,7 +37,7 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
     requestItems: [any Routable]
   ) {
 
-    guard let config = config as? PresentationSuccessUIConfig else {
+    guard let config = config as? DocumentSuccessUIConfig else {
       fatalError("ExternalLoginViewModel:: Invalid configuraton")
     }
 
@@ -53,7 +53,7 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
         config: config,
         relyingParty: RelyingPartyData(
           logo: config.issuerLogoUrl == nil ? nil : .remoteImage(config.issuerLogoUrl, nil),
-          isVerified: !config.documentSuccess,
+          isVerified: config.relyingPartyIsTrusted,
           name: config.relyingParty
         ),
         items: requestItems.map { item in
@@ -70,7 +70,7 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
             }
           )
         },
-        navigationTitle: config.documentSuccess ? LocalizableString.shared.get(with: .documentAdded) : LocalizableString.shared.get(with: .dataShared),
+        navigationTitle: config.relyingPartyIsTrusted ? LocalizableString.shared.get(with: .documentAdded) : LocalizableString.shared.get(with: .dataShared),
         isLoading: false
       )
     )
@@ -92,35 +92,15 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
     }
   }
 
-  func onIssue() {
-    router.push(
-      with: .featureDashboardModule(
-        .dashboard
-      )
-    )
-  }
-
   func toolbarContent() -> ToolBarContent {
-    if viewState.config.documentSuccess {
-      .init(
-        trailingActions: [
-          Action(
-            title: .issuanceSuccessNextButton
-          ) {
-            self.onIssue()
-          }
-        ]
-      )
-    } else {
-      .init(
-        trailingActions: [
-          Action(
-            title: .doneButton
-          ) {
-            self.onDone()
-          }
-        ]
-      )
-    }
+    .init(
+      trailingActions: [
+        Action(
+          title: .doneButton
+        ) {
+          self.onDone()
+        }
+      ]
+    )
   }
 }

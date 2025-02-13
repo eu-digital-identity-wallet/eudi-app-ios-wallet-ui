@@ -74,10 +74,11 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
 public indirect enum FeaturePresentationRouteModule: AppRouteModule {
 
   case presentationLoader(
-    String,
+    relyingParty: String,
+    relyingPartyisTrusted: Bool,
     presentationCoordinator: RemoteSessionCoordinator,
     originator: AppRoute,
-    [any Routable]
+    items: [any Routable]
   )
   case presentationRequest(
     presentationCoordinator: RemoteSessionCoordinator,
@@ -90,8 +91,15 @@ public indirect enum FeaturePresentationRouteModule: AppRouteModule {
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
-    case .presentationLoader(let id, _, let originator, _):
-      (key: "PresentationLoader", arguments: ["id": id, "originator": originator.info.key])
+    case .presentationLoader(let relyingParty, _, _, let originator, let items):
+      (
+        key: "PresentationLoader",
+        arguments: [
+          "relyingParty": relyingParty,
+          "originator": originator.info.key,
+          "items": items.map { $0.log }.joined(separator: "|")
+        ]
+      )
     case .presentationRequest(_, let originator):
       (key: "PresentationRequest", arguments: ["originator": originator.info.key])
     case .presentationSuccess(let config, _):
@@ -111,10 +119,11 @@ public indirect enum FeatureProximityRouteModule: AppRouteModule {
     originator: AppRoute
   )
   case proximityLoader(
-    String,
+    relyingParty: String,
+    relyingPartyisTrusted: Bool,
     presentationCoordinator: ProximitySessionCoordinator,
     originator: AppRoute,
-    [any Routable]
+    items: [any Routable]
   )
   case proximitySuccess(
     config: any UIConfigType,
@@ -127,8 +136,15 @@ public indirect enum FeatureProximityRouteModule: AppRouteModule {
       (key: "ProximityConnection", arguments: ["originator": originator.info.key])
     case .proximityRequest(_, let originator):
       (key: "ProximityRequest", arguments: ["originator": originator.info.key])
-    case .proximityLoader(let id, _, let originator, _):
-      (key: "ProximityLoader", arguments: ["id": id, "originator": originator.info.key])
+    case .proximityLoader(let relyingParty, _, _, let originator, let items):
+      (
+        key: "ProximityLoader",
+        arguments: [
+          "relyingParty": relyingParty,
+          "originator": originator.info.key,
+          "items": items.map { $0.log }.joined(separator: "|")
+        ]
+      )
     case .proximitySuccess:
       (key: "ProximitySuccess", arguments: [:])
     }

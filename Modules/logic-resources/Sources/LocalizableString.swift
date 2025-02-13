@@ -295,8 +295,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "trusted_relying_party_description")
     case .issuerWantWalletAddition:
       bundle.localizedString(forKey: "issuer_want_wallet_addition")
-    case .issuer:
-      bundle.localizedString(forKey: "issuer")
+    case .filterByIssuer:
+      bundle.localizedString(forKey: "filter_by_issuer")
     case .alertAccessOnlineServices:
       bundle.localizedString(forKey: "alert_access_online_services")
     case .alertAccessOnlineServicesMessage:
@@ -360,7 +360,7 @@ public final class LocalizableString: LocalizableStringType {
     case .sortByIssuedDateSectionTitle:
       bundle.localizedString(forKey: "sort_by_issued_date")
     case .issuerSectionTitle:
-      bundle.localizedString(forKey: "issuer")
+      bundle.localizedString(forKey: "filter_by_issuer")
     case .showResults:
       bundle.localizedString(forKey: "show_results")
     case .reset:
@@ -375,8 +375,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "expiry")
     case .selectExpiryPeriod:
       bundle.localizedString(forKey: "expiry_period")
-    case .state:
-      bundle.localizedString(forKey: "state")
+    case .filterByState:
+      bundle.localizedString(forKey: "filter_by_state")
     case .sortBy:
       bundle.localizedString(forKey: "sort_by")
     case .issuanceSuccessHeaderDescriptionWhenError:
@@ -427,8 +427,10 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "changelog")
     case .orderBy:
       bundle.localizedString(forKey: "order_by")
-    case .category:
-      bundle.localizedString(forKey: "category")
+    case .filterByCategory:
+      bundle.localizedString(forKey: "filter_by_category")
+    case .searchDocuments:
+      bundle.localizedString(forKey: "search_documents")
     }
   }
 
@@ -511,7 +513,7 @@ public extension LocalizableString {
     case unknownVerifier
     case unknownIssuer
     case genericIssuer
-    case issuer
+    case filterByIssuer
     case yes
     case no
     case scanQrCode
@@ -610,7 +612,7 @@ public extension LocalizableString {
     case orShareViaNfc
     case expiryPeriodSectionTitle
     case selectExpiryPeriod
-    case state
+    case filterByState
     case sortBy
     case deleteDocumentConfirmDialog
     case defaultLabel
@@ -635,7 +637,8 @@ public extension LocalizableString {
     case categoryTravel
     case changelog
     case orderBy
-    case category
+    case filterByCategory
+    case searchDocuments
   }
 }
 

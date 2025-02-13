@@ -45,11 +45,11 @@ public extension FilterUISection {
       case .sortBy:
         return .sortBy
       case .issuer:
-        return .issuerSectionTitle
+          return .filterByIssuer
       case .expiryPeriod:
-        return .expiryPeriodSectionTitle
+        return .selectExpiryPeriod
       case .state:
-        return .state
+          return .filterByState
       }
     }
 

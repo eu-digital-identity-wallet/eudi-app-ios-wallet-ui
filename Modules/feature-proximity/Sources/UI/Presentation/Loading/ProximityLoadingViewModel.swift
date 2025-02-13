@@ -20,6 +20,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
 
   private let interactor: ProximityInteractor
   private let relyingParty: String
+  private let relyingPartyIsTrusted: Bool
   private var publisherTask: Task<Void, Error>?
   private let requestItems: [RequestDataUI]
 
@@ -27,6 +28,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
     router: Router,
     interactor: ProximityInteractor,
     relyingParty: String,
+    relyingPartyIsTrusted: Bool,
     originator: AppRoute,
     requestItems: [any Routable]
   ) {
@@ -38,6 +40,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
 
     self.interactor = interactor
     self.relyingParty = relyingParty
+    self.relyingPartyIsTrusted = relyingPartyIsTrusted
     self.requestItems = requestItems
     super.init(router: router, originator: originator, cancellationTimeout: 5)
   }
@@ -77,9 +80,10 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
     publisherTask?.cancel()
     return .featureProximityModule(
       .proximitySuccess(
-        config: PresentationSuccessUIConfig(
+        config: DocumentSuccessUIConfig(
           successNavigation: .pop(screen: getOriginator()),
-          relyingParty: relyingParty
+          relyingParty: relyingParty,
+          relyingPartyIsTrusted: relyingPartyIsTrusted
         ),
         requestItems.map { $0.matToListItemSection() }
       )

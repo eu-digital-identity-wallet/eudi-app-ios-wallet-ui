@@ -18,6 +18,10 @@ public struct ListItemSection: Identifiable, Equatable, Routable {
   public let title: String
   public let listItems: [ListItemData]
 
+  public var log: String {
+    "id: \(id), title: \(title)"
+  }
+
   public init(id: String, title: String, listItems: [ListItemData]) {
     self.id = id
     self.title = title

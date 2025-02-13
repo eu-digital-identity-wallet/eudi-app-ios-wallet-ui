@@ -122,10 +122,11 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
               navigationSuccessType: .push(
                 .featureProximityModule(
                   .proximityLoader(
-                    getRelyingParty(),
+                    relyingParty: getRelyingParty(),
+                    relyingPartyisTrusted: getRelyingPartyIsTrusted(),
                     presentationCoordinator: proximitySessionCoordinator,
                     originator: getOriginator(),
-                    viewState.items.filterSelectedRows()
+                    items: viewState.items.filterSelectedRows()
                   )
                 )
               ),

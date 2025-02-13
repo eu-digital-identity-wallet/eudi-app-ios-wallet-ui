@@ -43,7 +43,7 @@ struct SearchableModifier: ViewModifier {
 public extension View {
   func searchable(
     searchText: Binding<String>,
-    placeholder: String = "Search",
+    placeholder: String = LocalizableString.shared.get(with: .searchDocuments),
     backgroundColor: Color? = nil,
     onSearchTextChange: @escaping (String) -> Void
   ) -> some View {

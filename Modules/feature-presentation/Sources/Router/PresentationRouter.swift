@@ -24,6 +24,7 @@ public final class PresentationRouter {
     switch module {
     case .presentationLoader(
       let relyingParty,
+      let relyingPartyIsTrusted,
       presentationCoordinator: let presentationCoordinator,
       originator: let originator,
       let uiModels
@@ -36,6 +37,7 @@ public final class PresentationRouter {
             argument: presentationCoordinator as RemoteSessionCoordinator
           ),
           relyingParty: relyingParty,
+          relyingPartyIsTrusted: relyingPartyIsTrusted,
           originator: originator,
           requestItems: uiModels
         )

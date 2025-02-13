@@ -25,10 +25,13 @@ public struct DocumentDetailsUIModel: Equatable, Identifiable, Routable {
   public let type: DocumentTypeIdentifier
   public let documentName: String
   public let issuer: IssuerField?
-  public let holdersName: String
   public let createdAt: Date
   public let hasExpired: Bool
   public let documentFields: [ListItemData]
+
+  public var log: String {
+    "id: \(id), type: \(type.rawValue), name: \(documentName)"
+  }
 }
 
 public extension DocumentDetailsUIModel {
@@ -63,7 +66,6 @@ public extension DocumentDetailsUIModel {
         logoUrl: URL(string: "https://www.example.com")!,
         isVerified: true
       ),
-      holdersName: "Jane Doe",
       createdAt: Date(),
       hasExpired: false,
       documentFields:
@@ -145,7 +147,6 @@ extension DocClaimsDecodable {
       type: documentTypeIdentifier,
       documentName: displayName.orEmpty,
       issuer: issuer,
-      holdersName: bearerName,
       createdAt: createdAt,
       hasExpired: hasExpired(
         parser: {

@@ -190,7 +190,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
         ),
         SingleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_PERIOD_GROUP_ID,
-          name: LocalizableString.shared.get(with: .expiryPeriodSectionTitle),
+          name: LocalizableString.shared.get(with: .selectExpiryPeriod),
           filters: [
             FilterItem(
               id: FilterIds.FILTER_BY_PERIOD_DEFAULT,
@@ -241,7 +241,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
         ),
         MultipleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_ISSUER_GROUP_ID,
-          name: LocalizableString.shared.get(with: .issuer),
+          name: LocalizableString.shared.get(with: .filterByIssuer),
           filters: [],
           filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attribute, filter in
             attribute.name == filter.name
@@ -250,7 +250,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
         ),
         MultipleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_DOCUMENT_CATEGORY_GROUP_ID,
-          name: LocalizableString.shared.get(with: .category),
+          name: LocalizableString.shared.get(with: .filterByCategory),
           filters: [],
           filterableAction: FilterMultipleAction<DocumentFilterableAttributes>(predicate: { attribute, filter in
             attribute.category == filter.name
@@ -259,7 +259,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
         ),
         MultipleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_STATE_GROUP_ID,
-          name: LocalizableString.shared.get(with: .state),
+          name: LocalizableString.shared.get(with: .filterByState),
           filters: [
             FilterItem(
               id: FilterIds.FILTER_BY_STATE_VALID,

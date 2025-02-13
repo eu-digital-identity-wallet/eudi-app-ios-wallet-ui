@@ -22,6 +22,8 @@ struct FiltersListView: View {
 
   @Environment(\.dismiss) var dismiss
 
+  @State private var isApplied: Bool = false
+
   var resetFiltersAction: () -> Void
   var applyFiltersAction: () -> Void
   var updateFiltersCallback: ((String, String) -> Void)?
@@ -61,12 +63,14 @@ struct FiltersListView: View {
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
           Button(.cancelButton) {
+            isApplied = true
             revertFilters()
             dismiss()
           }
         }
         ToolbarItem(placement: .navigationBarTrailing) {
           Button(.reset) {
+            isApplied = true
             resetFiltersAction()
             dismiss()
           }
@@ -79,6 +83,11 @@ struct FiltersListView: View {
           onAction: applyFilters()
         )
         .padding(.horizontal, SPACING_MEDIUM)
+      }
+      .onDisappear {
+        if !isApplied {
+          revertFilters()
+        }
       }
     }
   }
@@ -109,6 +118,7 @@ struct FiltersListView: View {
   }
 
   private func applyFilters() {
+    isApplied = true
     applyFiltersAction()
     dismiss()
   }

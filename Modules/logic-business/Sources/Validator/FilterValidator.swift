@@ -185,8 +185,7 @@ actor FilterValidatorImpl: FilterValidator {
 
     self.filterResultSubject.send(
       .success(
-        .filterApplyResult(
-          filteredList: filteredList,
+        .filterUpdateResult(
           updatedFilters: snapshotFilters
         )
       )

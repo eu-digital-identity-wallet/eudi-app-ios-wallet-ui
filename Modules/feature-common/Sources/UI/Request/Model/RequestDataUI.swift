@@ -24,6 +24,10 @@ public struct RequestDataUI: Identifiable, Equatable, Sendable, Routable {
   public var requestDataSection: RequestDataSection
   public var listItems: [ListItemData]
 
+  public var log: String {
+    "id: \(id), title: \(requestDataSection.title)"
+  }
+
   public init(
     id: String = UUID().uuidString,
     requestDataRow: [RequestDataRow],

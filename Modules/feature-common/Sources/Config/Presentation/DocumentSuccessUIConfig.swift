@@ -17,12 +17,12 @@ import Foundation
 import logic_ui
 import logic_core
 
-public struct PresentationSuccessUIConfig: UIConfigType, Equatable {
+public struct DocumentSuccessUIConfig: UIConfigType, Equatable {
 
   public let successNavigation: UIConfig.DeepLinkNavigationType
   public let relyingParty: String?
   public let issuerLogoUrl: URL?
-  public let documentSuccess: Bool
+  public let relyingPartyIsTrusted: Bool
 
   public var log: String {
     return "onSuccessNav: \(successNavigation.type)" +
@@ -33,11 +33,11 @@ public struct PresentationSuccessUIConfig: UIConfigType, Equatable {
     successNavigation: UIConfig.DeepLinkNavigationType,
     relyingParty: String? = nil,
     issuerLogoUrl: URL? = nil,
-    documentSuccess: Bool = false
+    relyingPartyIsTrusted: Bool
   ) {
     self.successNavigation = successNavigation
     self.relyingParty = relyingParty
-    self.documentSuccess = documentSuccess
+    self.relyingPartyIsTrusted = relyingPartyIsTrusted
     self.issuerLogoUrl = issuerLogoUrl
   }
 }
