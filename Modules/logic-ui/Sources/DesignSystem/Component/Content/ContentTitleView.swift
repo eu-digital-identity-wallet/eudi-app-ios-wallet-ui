@@ -126,7 +126,7 @@ public struct ContentTitleView: View {
         }
       )
 
-      VSpacer.extraSmall()
+      VSpacer.large()
 
       if let caption = self.caption {
         HStack {
