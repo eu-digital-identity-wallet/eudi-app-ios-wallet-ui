@@ -223,7 +223,7 @@ final class TestProximityInteractor: EudiTest {
     // Given
     let request = Self.mockPresentationRequest
 
-    let expectedUiModels = Self.mockUiModels
+    let expectedUiModels = Self.mockUiModels()
 
     stub(presentationSessionCoordinator) { mock in
       when(mock.requestReceived()).thenReturn(request)
@@ -291,7 +291,7 @@ final class TestProximityInteractor: EudiTest {
     }
 
     // When
-    let state = await interactor.onResponsePrepare(requestItems: Self.mockUiModels)
+    let state = await interactor.onResponsePrepare(requestItems: Self.mockUiModels())
 
     // Then
     switch state {
@@ -309,7 +309,7 @@ final class TestProximityInteractor: EudiTest {
     let expectedError = PresentationSessionError.conversionToRequestItemModel
 
     // When
-    let state = await interactor.onResponsePrepare(requestItems: Self.mockUiModels.dropLast())
+    let state = await interactor.onResponsePrepare(requestItems: Self.mockUiModels().dropLast())
 
     // Then
     switch state {
@@ -411,25 +411,31 @@ private extension TestProximityInteractor {
 
   static let mockPresentationRequest = Constants.mockPresentationRequest
 
-  static let mockUiModels: [RequestDataUI] = [
-    RequestDataUI(
-      id: Constants.isoMdlModelId,
-      requestDataRow: [
-        RequestDataRow(
-          id: Constants.randomIdentifier,
-          isSelected: true,
-          title: "displayName",
-          value: .string("elementIdentifier"),
-          elementKey: "elementIdentifier",
-          namespace: "nameSpace"
-        )
-      ],
-      requestDataSection: RequestDataSection(
-        id: Constants.isoMdlModelId,
-        title: Constants.isoMdlName
-      )
+  static func mockUiModels() -> [RequestDataUI] {
+    let dataRow = RequestDataRow(
+      id: Constants.randomIdentifier,
+      isSelected: true,
+      title: "displayName",
+      value: .string("elementIdentifier"),
+      elementKey: "elementIdentifier",
+      namespace: "nameSpace"
     )
-  ]
+    let listItem = dataRow.mapToListItem()
+    return [
+      RequestDataUI(
+        id: Constants.isoMdlModelId,
+        requestDataRow: [
+          dataRow
+        ],
+        requestDataSection: RequestDataSection(
+          id: Constants.isoMdlModelId,
+          title: Constants.isoMdlName
+        ), listItems: [
+          listItem
+        ]
+      )
+    ]
+  }
 
   static let mockRequestItems = [
     Constants.randomIdentifier : [

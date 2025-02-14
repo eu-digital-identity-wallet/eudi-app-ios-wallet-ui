@@ -41,8 +41,6 @@ public final class LocalizableString: LocalizableStringType {
       literal
     case .space:
       " "
-    case .faqs:
-      bundle.localizedString(forKey: "faq_title")
     case .search:
       bundle.localizedString(forKey: "search")
     case .genericErrorTitle:
@@ -83,8 +81,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "add_doc")
     case .showQRTap:
       bundle.localizedString(forKey: "show_qr_tap")
-    case .welcomeBack:
-      bundle.localizedString(forKey: "welcome_back")
+    case .welcomeBack(let args):
+      bundle.localizedStringWithArguments(forKey: "welcome_back", arguments: args)
     case .viewDocumentDetails:
       bundle.localizedString(forKey: "view_document_details")
     case .pleaseWait:
@@ -93,8 +91,6 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "request_data_share_quick_pin_caption")
     case .requestDataShareBiometryCaption:
       bundle.localizedString(forKey: "request_data_share_biometry_caption")
-    case .readFaqButton:
-      bundle.localizedString(forKey: "read_faqs_button")
     case .addDocumentTitle:
       bundle.localizedString(forKey: "add_document_title")
     case .addDocumentRequest:
@@ -299,8 +295,8 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "trusted_relying_party_description")
     case .issuerWantWalletAddition:
       bundle.localizedString(forKey: "issuer_want_wallet_addition")
-    case .issuer:
-      bundle.localizedString(forKey: "issuer")
+    case .filterByIssuer:
+      bundle.localizedString(forKey: "filter_by_issuer")
     case .alertAccessOnlineServices:
       bundle.localizedString(forKey: "alert_access_online_services")
     case .alertAccessOnlineServicesMessage:
@@ -364,7 +360,7 @@ public final class LocalizableString: LocalizableStringType {
     case .sortByIssuedDateSectionTitle:
       bundle.localizedString(forKey: "sort_by_issued_date")
     case .issuerSectionTitle:
-      bundle.localizedString(forKey: "issuer")
+      bundle.localizedString(forKey: "filter_by_issuer")
     case .showResults:
       bundle.localizedString(forKey: "show_results")
     case .reset:
@@ -372,17 +368,17 @@ public final class LocalizableString: LocalizableStringType {
     case .all:
       bundle.localizedString(forKey: "all")
     case .descending:
-      bundle.localizedString(forKey: "desceding")
+      bundle.localizedString(forKey: "descending")
     case .ascending:
-      bundle.localizedString(forKey: "asceding")
+      bundle.localizedString(forKey: "ascending")
     case .expiryPeriodSectionTitle:
       bundle.localizedString(forKey: "expiry")
     case .selectExpiryPeriod:
       bundle.localizedString(forKey: "expiry_period")
-    case .state:
-      bundle.localizedString(forKey: "state")
+    case .filterByState:
+      bundle.localizedString(forKey: "filter_by_state")
     case .sortBy:
-        bundle.localizedString(forKey: "sort_by")
+      bundle.localizedString(forKey: "sort_by")
     case .issuanceSuccessHeaderDescriptionWhenError:
       bundle.localizedString(forKey: "issuance_success_header_description_when_error")
     case .deleteDocumentConfirmDialog:
@@ -411,6 +407,30 @@ public final class LocalizableString: LocalizableStringType {
       bundle.localizedString(forKey: "issuance_request")
     case .myEuWallet:
       bundle.localizedString(forKey: "My EU Wallet")
+    case .categoryGovernment:
+      bundle.localizedString(forKey: "category_government")
+    case .categoryHealth:
+      bundle.localizedString(forKey: "category_health")
+    case .categoryEducation:
+      bundle.localizedString(forKey: "category_education")
+    case .categoryFinance:
+      bundle.localizedString(forKey: "category_finance")
+    case .categoryRetail:
+      bundle.localizedString(forKey: "category_retail")
+    case .categoryOther:
+      bundle.localizedString(forKey: "category_other")
+    case .categorySocialSecurity:
+      bundle.localizedString(forKey: "category_social_security")
+    case .categoryTravel:
+      bundle.localizedString(forKey: "category_travel")
+    case .changelog:
+      bundle.localizedString(forKey: "changelog")
+    case .orderBy:
+      bundle.localizedString(forKey: "order_by")
+    case .filterByCategory:
+      bundle.localizedString(forKey: "filter_by_category")
+    case .searchDocuments:
+      bundle.localizedString(forKey: "search_documents")
     }
   }
 
@@ -424,7 +444,6 @@ public extension LocalizableString {
     case dynamic(key: String)
     case custom(String)
     case space
-    case faqs
     case search
     case genericErrorTitle
     case genericErrorDesc
@@ -450,12 +469,11 @@ public extension LocalizableString {
     case issuerSectionTitle
     case showResults
     case showQRTap
-    case welcomeBack
+    case welcomeBack([String])
     case viewDocumentDetails
     case pleaseWait
     case requestDataShareQuickPinCaption
     case requestDataShareBiometryCaption
-    case readFaqButton
     case addDocumentTitle
     case addDocumentSubtitle
     case addDocumentRequest
@@ -495,7 +513,7 @@ public extension LocalizableString {
     case unknownVerifier
     case unknownIssuer
     case genericIssuer
-    case issuer
+    case filterByIssuer
     case yes
     case no
     case scanQrCode
@@ -594,7 +612,7 @@ public extension LocalizableString {
     case orShareViaNfc
     case expiryPeriodSectionTitle
     case selectExpiryPeriod
-    case state
+    case filterByState
     case sortBy
     case deleteDocumentConfirmDialog
     case defaultLabel
@@ -609,6 +627,18 @@ public extension LocalizableString {
     case beforeToday
     case issuanceRequest
     case myEuWallet
+    case categoryGovernment
+    case categoryHealth
+    case categoryEducation
+    case categoryFinance
+    case categoryRetail
+    case categoryOther
+    case categorySocialSecurity
+    case categoryTravel
+    case changelog
+    case orderBy
+    case filterByCategory
+    case searchDocuments
   }
 }
 

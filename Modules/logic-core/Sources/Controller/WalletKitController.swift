@@ -70,6 +70,7 @@ public protocol WalletKitController: Sendable {
   func storeDynamicIssuancePendingUrl(with url: URL)
   func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData?
   func getScopedDocuments() async throws -> [ScopedDocument]
+  func getDocumentCategories() -> DocumentCategories
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -281,6 +282,11 @@ final class WalletKitControllerImpl: WalletKitController {
       }
     }
   }
+
+  func getDocumentCategories() -> DocumentCategories {
+    let sorted = configLogic.documentsCategories.sorted { $0.key.order < $1.key.order }
+    return DocumentCategories(uniqueKeysWithValues: sorted)
+  }
 }
 
 private extension WalletKitControllerImpl {
@@ -317,6 +323,7 @@ extension WalletKitController {
       return [
         "issuance_date",
         DocumentJsonKeys.EXPIRY_DATE,
+        "exp",
         "issuing_authority",
         "document_number",
         "administrative_number",

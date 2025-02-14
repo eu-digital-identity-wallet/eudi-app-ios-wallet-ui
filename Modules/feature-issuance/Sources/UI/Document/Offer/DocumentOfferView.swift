@@ -29,9 +29,7 @@ struct DocumentOfferView<Router: RouterHost>: View {
   var body: some View {
     ContentScreenView(
       errorConfig: viewModel.viewState.error,
-      navigationTitle: LocalizableString.shared.get(
-        with: .addDocumentRequest
-      ),
+      navigationTitle: .addDocumentRequest,
       toolbarContent: viewModel.toolbarContent()
     ) {
       content(
@@ -39,19 +37,6 @@ struct DocumentOfferView<Router: RouterHost>: View {
         imageSize: getScreenRect().width / 4
       )
     }
-    .confirmationDialog(
-      title: LocalizableString.shared.get(with: .cancelIssueSheetTitle),
-      message: LocalizableString.shared.get(with: .cancelIssueSheetCaption),
-      destructiveText: LocalizableString.shared.get(with: .cancelButton),
-      baseText: LocalizableString.shared.get(with: .cancelIssueSheetContinue),
-      isPresented: $viewModel.isCancelModalShowing,
-      destructiveAction: {
-        viewModel.onPop()
-      },
-      baseAction: {
-        viewModel.onShowCancelModal()
-      }
-    )
     .task {
       await viewModel.initialize()
     }
@@ -129,7 +114,6 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
   let viewState = DocumentOfferViewState(
     isLoading: false,
     documentOfferUiModel: DocumentOfferUIModel.mock(),
-    issuerData: IssuerDataUIModel.mock(),
     error: nil,
     config: UIConfig.Generic(
       arguments: ["uri": "uri"],
@@ -164,7 +148,6 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
       uiOffers: [],
       docOffers: []
     ),
-    issuerData: IssuerDataUIModel.mock(),
     error: nil,
     config: UIConfig.Generic(
       arguments: ["uri": "uri"],

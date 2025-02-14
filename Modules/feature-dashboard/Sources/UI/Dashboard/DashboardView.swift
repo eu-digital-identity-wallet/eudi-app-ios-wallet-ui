@@ -25,13 +25,6 @@ struct DashboardView<Router: RouterHost>: View {
 
   @Environment(\.scenePhase) var scenePhase
 
-  @State private var selectedOptions: Set<String> = []
-  @State private var selectedExpiryOption: String = ""
-  @State private var selectedStateOption: String = ""
-  @State private var initialSorting: String = "Default"
-  @State private var showFilterIndicator: Bool = false
-  @State private var sortAscending: Bool = true
-
   public init(with viewModel: DashboardViewModel<Router>) {
     self.viewModel = viewModel
   }
@@ -47,6 +40,7 @@ struct DashboardView<Router: RouterHost>: View {
         viewState: viewModel.viewState,
         isAuthenticateAlertShowing: $viewModel.isAuthenticateAlertShowing,
         selectedTab: $viewModel.selectedTab,
+        searchQuery: $viewModel.searchQuery,
         onDocumentDetails: { id in
           viewModel.onDocumentDetails(documentId: id)
         },
@@ -56,49 +50,38 @@ struct DashboardView<Router: RouterHost>: View {
         onAdd: viewModel.onAdd,
         onShare: viewModel.onShare,
         signDocument: { viewModel.openSignDocument() },
-        filteredDocsCallback: { filterDocs in
-          viewModel.updateFilteredDocuments(filteredDocuments: filterDocs, listIsFiltered: showFilterIndicator)
-        }
+        filteredDocsCallback: { _ in }
       )
     }
     .confirmationDialog(
-      LocalizableString.shared.get(with: .authenticate),
+      .authenticate,
       isPresented: $viewModel.isAuthenticateAlertShowing,
       titleVisibility: .visible
     ) {
-      Button(LocalizableString.shared.get(with: .cancelButton), role: .cancel) {}
-      Button(LocalizableString.shared.get(with: .inPerson)) {
+      Button(.cancelButton, role: .cancel) {}
+      Button(.inPerson) {
         viewModel.onShare()
       }
-      Button(LocalizableString.shared.get(with: .online)) {
+      Button(.online) {
         viewModel.onShowScanner()
       }
     } message: {
       Text(.authenticateAuthoriseTransactions)
     }
     .sheet(isPresented: $viewModel.isFilterModalShowing) {
-      FilterListView(
-        sortAscending: $sortAscending,
-        showFilterIndicator: $showFilterIndicator,
-        selectedOptions: $selectedOptions,
-        selectedExpiryOption: $selectedExpiryOption,
-        selectesSorting: $initialSorting,
-        stateOption: $selectedStateOption,
-        applyFiltersCallback: {
-          viewModel.applyFilters(
-            section: viewModel.viewState.documentSections,
-            sortAscending: sortAscending,
-            initialSorting: initialSorting,
-            selectedExpiryOption: selectedExpiryOption,
-            selectedStateOption: selectedStateOption
-          )
-        },
-        resetFiltersCallback: {
-          viewModel.resetDocumentList()
-        },
-        sections: viewModel.viewState.documentSections,
-        onResume: viewModel.onDocumentsRetrievedPostActions
-      )
+      FiltersListView(sections: viewModel.viewState.filterUIModel) {
+        viewModel.resetFilters()
+        viewModel.enableFilterIndicator(showFilterIndicator: false)
+      } applyFiltersAction: {
+        viewModel.fetch()
+        viewModel.enableFilterIndicator(showFilterIndicator: true)
+      } revertFilters: {
+        viewModel.revertFilters()
+        viewModel.enableFilterIndicator(showFilterIndicator: true)
+      }
+      updateFiltersCallback: { sectionID, filterID in
+        viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
+      }
     }
     .sheetDialog(isPresented: $viewModel.isBleModalShowing) {
       SheetContentView {
@@ -137,10 +120,10 @@ struct DashboardView<Router: RouterHost>: View {
       }
     }
     .confirmationDialog(
-      title: LocalizableString.shared.get(with: .bleDisabledModalTitle),
-      message: LocalizableString.shared.get(with: .bleDisabledModalCaption),
-      destructiveText: LocalizableString.shared.get(with: .cancelButton).capitalized,
-      baseText: LocalizableString.shared.get(with: .bleDisabledModalButton).capitalized,
+      title: .bleDisabledModalTitle,
+      message: .bleDisabledModalCaption,
+      destructiveText: .cancelButton,
+      baseText: .bleDisabledModalButton,
       isPresented: $viewModel.isBleModalShowing,
       destructiveAction: {
         viewModel.toggleBleModal()
@@ -150,10 +133,10 @@ struct DashboardView<Router: RouterHost>: View {
       }
     )
     .confirmationDialog(
-      title: LocalizableString.shared.get(with: .issuanceDetailsDeletionTitle([viewModel.viewState.pendingDocumentTitle])),
-      message: LocalizableString.shared.get(with: .issuanceDetailsDeletionCaption([viewModel.viewState.pendingDocumentTitle])),
-      destructiveText: LocalizableString.shared.get(with: .no),
-      baseText: LocalizableString.shared.get(with: .yes),
+      title: .issuanceDetailsDeletionTitle([viewModel.viewState.pendingDocumentTitle]),
+      message: .issuanceDetailsDeletionCaption([viewModel.viewState.pendingDocumentTitle]),
+      destructiveText: .no,
+      baseText: .yes,
       isPresented: $viewModel.isDeleteDeferredModalShowing,
       destructiveAction: {
         viewModel.toggleDeleteDeferredModal()
@@ -175,23 +158,12 @@ struct DashboardView<Router: RouterHost>: View {
         }
       }
     }
-    .task {
-      await viewModel.fetch()
+    .onAppear {
+      viewModel.fetch()
     }
     .onChange(of: scenePhase) { phase in
       self.viewModel.setPhase(with: phase)
     }
-    .onChange(of: showFilterIndicator, perform: { _ in
-      viewModel.applyFilters(
-        section: viewModel.viewState.documentSections,
-        sortAscending: sortAscending,
-        initialSorting: initialSorting,
-        selectedExpiryOption: selectedExpiryOption,
-        selectedStateOption: selectedStateOption
-      )
-
-      viewModel.enableFilterIndicator(showFilterIndicator: showFilterIndicator)
-    })
     .onDisappear {
       self.viewModel.onPause()
     }
@@ -232,6 +204,7 @@ private func content(
   viewState: DashboardState,
   isAuthenticateAlertShowing: Binding<Bool>,
   selectedTab: Binding<SelectedTab>,
+  searchQuery: Binding<String>,
   onDocumentDetails: @escaping (String) -> Void,
   onDeleteDeferredDocument: @escaping (DocumentUIModel) -> Void,
   onAdd: @escaping () -> Void,
@@ -240,7 +213,7 @@ private func content(
   filteredDocsCallback: @escaping (String) -> Void
 ) -> some View {
   TabView(selection: selectedTab) {
-    HomeView(
+    HomeTabView(
       username: viewState.username,
       contentHeaderConfig: viewState.contentHeaderConfig,
       addDocument: {
@@ -258,8 +231,9 @@ private func content(
     .tag(SelectedTab.home)
 
     VStack(spacing: .zero) {
-      DocumentListView(
-        filteredItems: viewState.filteredDocuments,
+      DocumentTabView(
+        searchQuery: searchQuery,
+        filteredItems: viewState.documents,
         isLoading: viewState.isLoading,
         action: { document in
           switch document.value.state {
@@ -280,7 +254,7 @@ private func content(
     }
     .tag(SelectedTab.documents)
 
-    TransactionsView()
+    TransactionTabView()
       .tabItem {
         Label(
           LocalizableString.shared.get(with: .transactions),
@@ -294,8 +268,7 @@ private func content(
   let viewState = DashboardState(
     isLoading: false,
     documents: DocumentUIModel.mocks(),
-    filteredDocuments: DocumentUIModel.mocks(),
-    filterModel: .init(sections: [], sortAscending: true, initialSorting: "", selectedStateOption: ""),
+    filterUIModel: [],
     username: "First name",
     phase: .active,
     pendingBleModalAction: false,
@@ -312,7 +285,8 @@ private func content(
         appText: ThemeManager.shared.image.euditext
       )
     ),
-    documentSections: [.issuedSortingDate]
+    isFromOnPause: true,
+    hasDefaultFilters: false
   )
 
   ContentScreenView(
@@ -324,6 +298,7 @@ private func content(
       viewState: viewState,
       isAuthenticateAlertShowing: .constant(false),
       selectedTab: .constant(.home),
+      searchQuery: .constant(""),
       onDocumentDetails: { _ in },
       onDeleteDeferredDocument: { _ in },
       onAdd: {},

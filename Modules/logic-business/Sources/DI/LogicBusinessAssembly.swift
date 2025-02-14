@@ -45,5 +45,10 @@ public final class LogicBusinessAssembly: Assembly {
       ReachabilityControllerImpl()
     }
     .inObjectScope(ObjectScope.transient)
+
+    container.register(FilterValidator.self) { _ in
+      FilterValidatorImpl()
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

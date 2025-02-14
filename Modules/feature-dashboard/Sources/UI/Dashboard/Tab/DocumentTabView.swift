@@ -16,21 +16,24 @@
 import SwiftUI
 import logic_resources
 import logic_ui
+import logic_core
 
-struct DocumentListView: View {
-  @State private var searchText = ""
-
-  let filteredItems: [DocumentUIModel]
+struct DocumentTabView: View {
+  let filteredItems: [DocumentCategory: [DocumentUIModel]]
   let action: (DocumentUIModel) -> Void
   let isLoading: Bool
   let filteredDocsCallback: (String) -> Void
 
+  @Binding var searchQuery: String
+
   init(
-    filteredItems: [DocumentUIModel],
+    searchQuery: Binding<String>,
+    filteredItems: [DocumentCategory: [DocumentUIModel]],
     isLoading: Bool,
     action: @escaping (DocumentUIModel) -> Void,
     filteredDocsCallback: @escaping (String) -> Void
   ) {
+    self._searchQuery = searchQuery
     self.filteredItems = filteredItems
     self.action = action
     self.isLoading = isLoading
@@ -39,24 +42,35 @@ struct DocumentListView: View {
 
   var body: some View {
     VStack {
-      if filteredItems.isEmpty && !searchText.isEmpty {
+      if filteredItems.isEmpty && !searchQuery.isEmpty {
         contentUnavailableView()
       } else {
         if !filteredItems.isEmpty {
           List {
-            ForEach(filteredItems) { item in
-              WrapCardView {
-                WrapListItemView(
-                  listItem: item.listItem
-                ) {
-                  action(item)
+            ForEach(filteredItems.keys.sorted(by: { $0.order < $1.order }), id: \.self) { category in
+              Section(header: Text(category.title)) {
+                ForEach(filteredItems[category] ?? []) { item in
+                  WrapCardView {
+                    WrapListItemView(
+                      listItem: item.listItem
+                    ) {
+                      action(item)
+                    }
+                  }
+                  .listRowSeparator(.hidden)
                 }
+                .listRowInsets(.init(
+                  top: SPACING_SMALL,
+                  leading: SPACING_MEDIUM,
+                  bottom: .zero,
+                  trailing: SPACING_MEDIUM)
+                )
               }
-              .listRowSeparator(.hidden)
             }
           }
           .shimmer(isLoading: isLoading)
           .listStyle(.plain)
+          .scrollIndicators(.hidden)
           .clipped()
         } else {
           contentUnavailableView()
@@ -65,12 +79,10 @@ struct DocumentListView: View {
       }
     }
     .searchable(
-      searchText: $searchText,
-      placeholder: LocalizableString.shared.get(with: .search),
-      backgroundColor: Theme.shared.color.background
-    ) { searchText in
-      filteredDocsCallback(searchText)
-    }
+      searchText: $searchQuery,
+      backgroundColor: Theme.shared.color.background,
+      onSearchTextChange: { _ in }
+    )
     .background(Theme.shared.color.background)
   }
 
@@ -93,7 +105,8 @@ struct DocumentListView: View {
 }
 
 #Preview {
-  DocumentListView(
+  DocumentTabView(
+    searchQuery: .constant(""),
     filteredItems: DocumentUIModel.mocks(),
     isLoading: false,
     action: { _ in },

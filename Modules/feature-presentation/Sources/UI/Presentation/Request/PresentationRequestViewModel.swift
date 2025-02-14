@@ -44,7 +44,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
         title: .requestDataTitle(
           [authenticationRequest.relyingParty]
         ),
-        relyingParty: authenticationRequest.relyingParty,
+        relyingParty: .custom(authenticationRequest.relyingParty),
         isTrusted: authenticationRequest.isTrusted
       )
       setState {
@@ -54,12 +54,12 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
               appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
               appText: ThemeManager.shared.image.euditext
             ),
-            description: LocalizableString.shared.get(with: .dataSharingTitle),
-            mainText: LocalizableString.shared.get(with: getTitle()).uppercased(),
+            description: .dataSharingTitle,
+            mainText: getTitle(),
             relyingPartyData: RelyingPartyData(
               isVerified: viewState.isTrusted,
               name: getRelyingParty(),
-              description: LocalizableString.shared.get(with: getCaption())
+              description: getCaption()
             )
           )
         )
@@ -106,10 +106,11 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
               navigationSuccessType: .push(
                 .featurePresentationModule(
                   .presentationLoader(
-                    getRelyingParty(),
+                    relyingParty: LocalizableString.shared.get(with: getRelyingParty()),
+                    relyingPartyisTrusted: getRelyingPartyIsTrusted(),
                     presentationCoordinator: remoteSessionCoordinator,
                     originator: getOriginator(),
-                    viewState.items.filterSelectedRows()
+                    items: viewState.items.filterSelectedRows()
                   )
                 )
               ),
@@ -139,8 +140,12 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     .requestDataInfoNotice
   }
 
-  override func getRelyingParty() -> String {
+  override func getRelyingParty() -> LocalizableString.Key {
     viewState.relyingParty
+  }
+
+  override func getRelyingPartyIsTrusted() -> Bool {
+    viewState.isTrusted
   }
 
   override func getTitleCaption() -> String {

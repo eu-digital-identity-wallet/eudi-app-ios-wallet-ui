@@ -14,23 +14,26 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_resources
+import logic_business
 
-public struct ListItemData: Identifiable, Sendable {
+public struct ListItemData: Identifiable, Sendable, Equatable {
 
-  public enum MainStyle: Sendable {
+  public enum MainStyle: Sendable, Equatable {
     case plain
     case bold
   }
 
-  public let id: String
+  @EquatableNoop
+  public var id: String
   public let mainText: LocalizableString.Key
   public let mainStyle: MainStyle
   public let overlineText: LocalizableString.Key?
   public let supportingText: LocalizableString.Key?
   public let supportingTextColor: Color
   public let overlineTextColor: Color
-  public let leadingIcon: (imageUrl: URL?, image: Image?)?
+  public let leadingIcon: LeadingIcon?
   public let isBlur: Bool
+  public let isEnable: Bool
   public let trailingContent: TrailingContent?
 
   public init(
@@ -41,8 +44,9 @@ public struct ListItemData: Identifiable, Sendable {
     supportingText: LocalizableString.Key? = nil,
     supportingTextColor: Color = Theme.shared.color.onSurfaceVariant,
     overlineTextColor: Color = Theme.shared.color.onSurfaceVariant,
-    leadingIcon: (imageUrl: URL?, image: Image?)? = nil,
+    leadingIcon: LeadingIcon? = nil,
     isBlur: Bool = false,
+    isEnable: Bool = true,
     trailingContent: TrailingContent? = nil
   ) {
     self.id = id
@@ -55,11 +59,38 @@ public struct ListItemData: Identifiable, Sendable {
     self.leadingIcon = leadingIcon
     self.trailingContent = trailingContent
     self.isBlur = isBlur
+    self.isEnable = isEnable
   }
 }
 
-public enum TrailingContent: Sendable {
+public struct LeadingIcon: Sendable, Equatable {
+  public let imageUrl: URL?
+  public let image: Image?
+
+  public init(
+    imageUrl: URL? = nil,
+    image: Image? = nil
+  ) {
+    self.imageUrl = imageUrl
+    self.image = image
+  }
+}
+
+public enum TrailingContent: Sendable, Equatable {
   case icon(Image, Color = Color.accentColor)
   case checkbox(Bool, Bool, @Sendable (Bool) -> Void)
   case empty
+
+  public static func == (lhs: TrailingContent, rhs: TrailingContent) -> Bool {
+    switch (lhs, rhs) {
+    case let (.icon(lImage, lColor), .icon(rImage, rColor)):
+      return lImage == rImage && lColor == rColor
+    case let (.checkbox(lValue, lIsEnabled, _), .checkbox(rValue, rIsEnabled, _)):
+      return lValue == rValue && lIsEnabled == rIsEnabled
+    case (.empty, .empty):
+      return true
+    default:
+      return false
+    }
+  }
 }

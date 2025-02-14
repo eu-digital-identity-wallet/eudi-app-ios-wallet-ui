@@ -44,15 +44,18 @@ public final class IssuanceRouter {
           config: config
         )
       ).eraseToAnyView()
-    case .issuanceSuccess(config: let config, documentIdentifiers: let documentIdentifiers):
+    case .issuanceSuccess(
+      let config,
+      let uiModels
+    ):
       DocumentIssuanceSuccessView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
-            DocumentSuccessInteractor.self
-          ),
           config: config,
-          documentIdentifiers: documentIdentifiers
+          deepLinkController: DIGraph.resolver.force(
+            DeepLinkController.self
+          ),
+          requestItems: uiModels
         )
       ).eraseToAnyView()
     case .credentialOfferRequest(let config):

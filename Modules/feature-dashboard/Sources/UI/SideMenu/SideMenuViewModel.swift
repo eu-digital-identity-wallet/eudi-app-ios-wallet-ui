@@ -23,6 +23,7 @@ struct SideMenuViewState: ViewState {
   let items: [SideMenuItemUIModel]
   let appVersion: String
   let logsUrl: URL?
+  let changelogUrl: URL?
 }
 
 final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuViewState> {
@@ -42,16 +43,51 @@ final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuVie
       initialState: .init(
         items: [],
         appVersion: interactor.getAppVersion(),
-        logsUrl: interactor.retrieveLogFileUrl()
+        logsUrl: interactor.retrieveLogFileUrl(),
+        changelogUrl: interactor.retrieveChangeLogUrl()
       )
     )
 
-    setState {
-      $0.copy(items: [
-        .init(title: .changeQuickPinOption, action: {
-          self.updatePin()
-        })
-      ])
+    if let changelogUrl = interactor.retrieveChangeLogUrl() {
+      setState {
+        $0.copy(items: [
+          .init(
+            title: .changeQuickPinOption,
+            action: {
+              self.updatePin()
+            }
+          ),
+          .init(
+            title: .retrieveLogs,
+            isShareLink: true,
+            action: {}
+          ),
+          .init(
+            title: .changelog,
+            showDivider: false,
+            action: {
+              changelogUrl.open()
+            }
+          )
+        ])
+      }
+    } else {
+      setState {
+        $0.copy(items: [
+          .init(
+            title: .changeQuickPinOption,
+            action: {
+              self.updatePin()
+            }
+          ),
+          .init(
+            title: .retrieveLogs,
+            showDivider: false,
+            isShareLink: true,
+            action: {}
+          )
+        ])
+      }
     }
   }
 

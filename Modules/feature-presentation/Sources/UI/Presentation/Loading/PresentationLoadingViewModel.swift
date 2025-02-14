@@ -20,6 +20,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
 
   private let interactor: PresentationInteractor
   private let relyingParty: String
+  private let relyingPartyIsTrusted: Bool
   private let requestItems: [RequestDataUI]
   private var publisherTask: Task<Void, Error>?
 
@@ -27,6 +28,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
     router: Router,
     interactor: PresentationInteractor,
     relyingParty: String,
+    relyingPartyIsTrusted: Bool,
     originator: AppRoute,
     requestItems: [any Routable]
   ) {
@@ -38,6 +40,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
 
     self.interactor = interactor
     self.relyingParty = relyingParty
+    self.relyingPartyIsTrusted = relyingPartyIsTrusted
     self.requestItems = requestItems
 
     super.init(
@@ -66,8 +69,8 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
     }
   }
 
-  override func getTitle() -> String {
-    LocalizableString.shared.get(with: .requestDataTitle([relyingParty]))
+  override func getTitle() -> LocalizableString.Key {
+    .requestDataTitle([relyingParty])
   }
 
   override func getCaption() -> LocalizableString.Key {
@@ -94,11 +97,12 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
 
     return .featurePresentationModule(
       .presentationSuccess(
-        config: PresentationSuccessUIConfig(
+        config: DocumentSuccessUIConfig(
           successNavigation: navigationType,
-          relyingParty: relyingParty
+          relyingParty: relyingParty,
+          relyingPartyIsTrusted: relyingPartyIsTrusted
         ),
-        requestItems
+        requestItems.map { $0.matToListItemSection() }
       )
     )
   }

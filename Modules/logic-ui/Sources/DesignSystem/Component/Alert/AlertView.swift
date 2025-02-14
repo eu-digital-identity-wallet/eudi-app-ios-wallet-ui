@@ -18,9 +18,9 @@ import logic_resources
 
 struct AlertAlertViewModifier: ViewModifier {
   @Binding var isPresented: Bool
-  let title: String
-  let message: String
-  let buttonText: String
+  let title: LocalizableString.Key
+  let message: LocalizableString.Key
+  let buttonText: LocalizableString.Key
   let onDismiss: (() -> Void)?
 
   func body(content: Content) -> some View {
@@ -29,9 +29,12 @@ struct AlertAlertViewModifier: ViewModifier {
         Alert(
           title: Text(title),
           message: Text(message),
-          dismissButton: .default(Text(buttonText), action: {
-            onDismiss?()
-          })
+          dismissButton: .default(
+            Text(buttonText),
+            action: {
+              onDismiss?()
+            }
+          )
         )
       }
   }
@@ -40,9 +43,9 @@ struct AlertAlertViewModifier: ViewModifier {
 public extension View {
   func alertView(
     isPresented: Binding<Bool>,
-    title: String,
-    message: String,
-    buttonText: String = "Close",
+    title: LocalizableString.Key,
+    message: LocalizableString.Key,
+    buttonText: LocalizableString.Key = .close,
     onDismiss: (() -> Void)? = nil
   ) -> some View {
     self.modifier(
@@ -69,9 +72,9 @@ struct PreviewView: View {
     }
     .alertView(
       isPresented: $showAlert,
-      title: "Trusted Relying Party",
-      message: "A Relying Party is considered trusted when it meets predefined criteria for security, data protection, compliance, and responsible data handling. Trust is reinforced through assessments, audits, and certifications.",
-      buttonText: "Close",
+      title: .trustedRelyingParty,
+      message: .trustedRelyingPartyDescription,
+      buttonText: .close,
       onDismiss: {
         print("Alert dismissed")
       }

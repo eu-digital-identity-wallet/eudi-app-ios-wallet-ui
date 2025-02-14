@@ -19,7 +19,7 @@ import logic_resources
 import feature_common
 import logic_business
 
-public struct HomeView: View {
+public struct HomeTabView: View {
   private let username: String
   private let contentHeaderConfig: ContentHeaderConfig
 
@@ -43,12 +43,12 @@ public struct HomeView: View {
 
   public var body: some View {
     ScrollView {
-      VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
+      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
         ContentHeader(
           config: contentHeaderConfig
         )
 
-        Text("\(LocalizableString.shared.get(with: .welcomeBack)), \(username)")
+        Text(.welcomeBack([username]))
           .font(Theme.shared.font.titleMedium.font)
           .foregroundStyle(Theme.shared.color.onSurface)
 
@@ -66,9 +66,9 @@ public struct HomeView: View {
         )
         .alertView(
           isPresented: $addDocumentAlert,
-          title: LocalizableString.shared.get(with: .alertAccessOnlineServices),
-          message: LocalizableString.shared.get(with: .alertAccessOnlineServicesMessage),
-          buttonText: LocalizableString.shared.get(with: .okButton),
+          title: .alertAccessOnlineServices,
+          message: .alertAccessOnlineServicesMessage,
+          buttonText: .okButton,
           onDismiss: {
             addDocumentAlert = false
           }
@@ -88,9 +88,9 @@ public struct HomeView: View {
         )
         .alertView(
           isPresented: $signDocumentAlert,
-          title: LocalizableString.shared.get(with: .alertSignDocumentsSafely),
-          message: LocalizableString.shared.get(with: .alertSignDocumentsSafelyMessage),
-          buttonText: LocalizableString.shared.get(with: .okButton),
+          title: .alertSignDocumentsSafely,
+          message: .alertSignDocumentsSafelyMessage,
+          buttonText: .okButton,
           onDismiss: {
             signDocumentAlert = false
           }
@@ -103,15 +103,15 @@ public struct HomeView: View {
 }
 
 #Preview {
-  HomeView(
+  HomeTabView(
     username: "First name",
     contentHeaderConfig: .init(
       appIconAndTextData: AppIconAndTextData(
         appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
         appText: ThemeManager.shared.image.euditext
       )
-    )
-  ) {}
-  signDocument: {}
-
+    ),
+    addDocument: {},
+    signDocument: {}
+  )
 }

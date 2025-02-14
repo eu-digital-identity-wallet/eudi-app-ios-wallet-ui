@@ -18,7 +18,25 @@ import logic_resources
 
 public extension DocClaimsDecodable {
 
-  func getExpiryDate(parser: (String) -> String) -> String? {
+  var issuerName: String {
+    issuerDisplay?.first(
+      where: {
+        $0.localeIdentifier == Locale.current.systemLanguageCode
+      }
+    )?.name
+    ?? issuerDisplay?.first?.name
+    ?? ""
+  }
+
+  var issuerLogo: URL? {
+    issuerDisplay?.first?.logo?.uri
+  }
+
+  var documentTypeIdentifier: DocumentTypeIdentifier {
+    DocumentTypeIdentifier(rawValue: docType ?? credentialIssuerIdentifier ?? "")
+  }
+
+  func getExpiryDate(parser: (Date) -> String) -> String? {
     if let expiryDate = expiryDateValue {
       return parser(expiryDate)
     } else {
@@ -26,11 +44,11 @@ public extension DocClaimsDecodable {
     }
   }
 
-  func hasExpired(parser: (String) -> Date?) -> Bool {
-    guard let value = expiryDateValue, let expiryDate = parser(value) else {
+  var hasExpired: Bool {
+    guard let value = expiryDateValue else {
       return false
     }
-    let order = Calendar.current.compare(expiryDate, to: Date.now, toGranularity: .day)
+    let order = Calendar.current.compare(value, to: Date.now, toGranularity: .day)
     switch order {
     case .orderedAscending:
       return true
@@ -64,7 +82,7 @@ public extension DocClaimsDecodable {
     return image
   }
 
-  private var expiryDateValue: String? {
-    return self.docClaims.first(where: { $0.name == DocumentJsonKeys.EXPIRY_DATE })?.stringValue
+  private var expiryDateValue: Date? {
+    self.validUntil
   }
 }

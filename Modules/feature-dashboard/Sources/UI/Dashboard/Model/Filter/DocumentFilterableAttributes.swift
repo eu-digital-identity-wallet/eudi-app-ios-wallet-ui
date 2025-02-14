@@ -14,11 +14,32 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import logic_business
 
-public struct FilterModel {
-  var sections: [FilterSections]
-  var sortAscending: Bool
-  var initialSorting: String
-  var selectedExpiryOption: String?
-  var selectedStateOption: String
+struct DocumentFilterableAttributes: FilterableAttributes {
+  let sortingKey: String
+  let searchTags: [String]
+  let issuedDate: Date?
+  let expiryDate: Date?
+  let issuer: String?
+  let name: String?
+  let category: String?
+
+  init(
+    sortingKey: String,
+    searchTags: [String],
+    issuedDate: Date? = nil,
+    expiryDate: Date? = nil,
+    issuer: String? = nil,
+    name: String? = nil,
+    category: String? = nil
+  ) {
+    self.sortingKey = sortingKey
+    self.searchTags = searchTags
+    self.issuedDate = issuedDate
+    self.expiryDate = expiryDate
+    self.issuer = issuer
+    self.name = name
+    self.category = category
+  }
 }

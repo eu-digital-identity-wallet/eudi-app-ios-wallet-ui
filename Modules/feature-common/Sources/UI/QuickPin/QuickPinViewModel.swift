@@ -129,9 +129,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
 
     return .init(
       trailingActions: [Action(
-        title: LocalizableString.shared.get(
-          with: viewState.button
-        ).capitalizedFirst(),
+        title: viewState.button,
         disabled: !viewState.isButtonActive
       ) {
         self.onButtonClick()

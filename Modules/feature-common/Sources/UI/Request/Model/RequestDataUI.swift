@@ -22,15 +22,32 @@ public struct RequestDataUI: Identifiable, Equatable, Sendable, Routable {
   public let id: String
   public var requestDataRow: [RequestDataRow]
   public var requestDataSection: RequestDataSection
+  public var listItems: [ListItemData]
+
+  public var log: String {
+    "id: \(id), title: \(requestDataSection.title)"
+  }
 
   public init(
     id: String = UUID().uuidString,
     requestDataRow: [RequestDataRow],
-    requestDataSection: RequestDataSection
+    requestDataSection: RequestDataSection,
+    listItems: [ListItemData]
   ) {
     self.id = id
     self.requestDataRow = requestDataRow
     self.requestDataSection = requestDataSection
+    self.listItems = listItems
+  }
+}
+
+public extension RequestDataUI {
+  func matToListItemSection() -> ListItemSection {
+    ListItemSection(
+      id: requestDataSection.id,
+      title: requestDataSection.title,
+      listItems: listItems
+    )
   }
 }
 
@@ -44,7 +61,8 @@ extension RequestDataUI {
     self = RequestDataUI(
       id: self.requestDataSection.id,
       requestDataRow: rows,
-      requestDataSection: requestDataSection
+      requestDataSection: requestDataSection,
+      listItems: rows.map { $0.mapToListItem() }
     )
   }
 }
@@ -54,6 +72,7 @@ public extension Array where Element == RequestDataUI {
     self.map { ui in
       var filteredUI = ui
       filteredUI.requestDataRow = ui.requestDataRow.filter { $0.isSelected }
+      filteredUI.listItems = filteredUI.requestDataRow.map { $0.mapToListItem() }
       return filteredUI
     }
   }

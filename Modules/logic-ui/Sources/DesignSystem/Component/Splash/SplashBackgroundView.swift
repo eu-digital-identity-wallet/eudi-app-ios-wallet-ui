@@ -27,7 +27,7 @@ public struct SplashBackgroundView: View {
   public var body: some View {
     ZStack {
       Rectangle()
-        .fill(Theme.shared.color.background)
+        .fill(Theme.shared.color.surface)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea()
 

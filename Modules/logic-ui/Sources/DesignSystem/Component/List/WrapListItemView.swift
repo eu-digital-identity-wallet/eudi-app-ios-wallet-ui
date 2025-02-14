@@ -17,20 +17,28 @@ import SwiftUI
 import logic_resources
 
 public struct WrapListItemView: View {
+  public enum ClickableArea {
+    case entireRow
+    case trailingContent
+  }
+
   private let listItem: ListItemData
   private let action: (() -> Void)?
   private let mainTextVerticalPadding: CGFloat?
   private let minHeight: Bool
+  private let clickableArea: ClickableArea
 
   public init(
     listItem: ListItemData,
     mainTextVerticalPadding: CGFloat? = nil,
     minHeight: Bool = true,
+    clickableArea: ClickableArea = .entireRow,
     action: (() -> Void)? = nil
   ) {
     self.listItem = listItem
     self.mainTextVerticalPadding = mainTextVerticalPadding
     self.minHeight = minHeight
+    self.clickableArea = clickableArea
     self.action = action
   }
 
@@ -104,7 +112,11 @@ public struct WrapListItemView: View {
               isChecked: isChecked,
               enabled: enabled,
               onCheckedChange: { _ in
-                onToggle(!isChecked)
+                if clickableArea == .trailingContent {
+                  onToggle(!isChecked)
+                } else {
+                  action?()
+                }
               }))
         case .empty:
           EmptyView()
@@ -113,7 +125,9 @@ public struct WrapListItemView: View {
     }
     .contentShape(Rectangle())
     .onTapGesture {
-      action?()
+      if clickableArea == .entireRow {
+        action?()
+      }
     }
     .padding(.all, mainTextVerticalPadding != nil ? mainTextVerticalPadding : SPACING_MEDIUM)
     .if(minHeight) {
@@ -130,7 +144,7 @@ public struct WrapListItemView: View {
           mainText: .custom("Main Text"),
           overlineText: .custom("Overline Text"),
           supportingText: .custom("Valid until: 22 March 2030"),
-          leadingIcon: (nil, Image(systemName: "star")),
+          leadingIcon: LeadingIcon(image: Image(systemName: "star")),
           trailingContent: .icon(Image(systemName: "chevron.right"))
         ),
         action: {}
@@ -154,7 +168,7 @@ public struct WrapListItemView: View {
           mainText: .custom("Another Item"),
           overlineText: nil,
           supportingText: .custom("Additional Info"),
-          leadingIcon: (nil, Image(systemName: "heart"))
+          leadingIcon: LeadingIcon(image: Image(systemName: "heart"))
         )
       )
     }
@@ -166,7 +180,7 @@ public struct WrapListItemView: View {
           overlineText: .custom("Overline Texr"),
           supportingText: .custom("Additional Info"),
           overlineTextColor: Theme.shared.color.error,
-          leadingIcon: (nil, Image(systemName: "heart"))
+          leadingIcon: LeadingIcon(image: Image(systemName: "heart"))
         )
       )
     }
@@ -177,10 +191,10 @@ public struct WrapListItemView: View {
           mainText: .custom("Main Text"),
           overlineText: .custom("Overline Text"),
           supportingText: .custom("Valid until: 22 March 2030"),
-          leadingIcon: (nil, Image(systemName: "star")),
+          leadingIcon: LeadingIcon(image: Image(systemName: "star")),
           trailingContent: .checkbox(true, true) { _ in }
         ),
-        action: {}
+        action: { }
       )
     }
 

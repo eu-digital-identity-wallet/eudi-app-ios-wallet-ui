@@ -15,12 +15,23 @@
  */
 import SwiftUI
 
-public struct TransactionsView: View {
-  public var body: some View {
-    Text("Transactions")
+public extension View {
+  func navigationTitle(_ key: LocalizableString.Key) -> some View {
+    return self.navigationTitle(LocalizableString.shared.get(with: key))
   }
-}
-
-#Preview {
-  TransactionsView()
+  func confirmationDialog<A, M>(
+    _ key: LocalizableString.Key,
+    isPresented: Binding<Bool>,
+    titleVisibility: Visibility = .automatic,
+    @ViewBuilder actions: () -> A,
+    @ViewBuilder message: () -> M
+  ) -> some View where A: View, M: View {
+    return self.confirmationDialog(
+      LocalizableString.shared.get(with: key),
+      isPresented: isPresented,
+      titleVisibility: titleVisibility,
+      actions: actions,
+      message: message
+    )
+  }
 }

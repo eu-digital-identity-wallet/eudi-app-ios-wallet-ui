@@ -132,14 +132,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
 
     switch state {
     case .success(let docId):
-      router.push(
-        with: .featureIssuanceModule(
-          .issuanceSuccess(
-            config: viewState.config,
-            documentIdentifiers: [docId]
-          )
-        )
-      )
+      await fetchStoredDocuments(docId: docId)
     case .deferredSuccess:
       router.push(
         with: onDeferredSuccess()
@@ -178,14 +171,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
 
       switch state {
       case .success(let docId):
-        router.push(
-          with: .featureIssuanceModule(
-            .issuanceSuccess(
-              config: viewState.config,
-              documentIdentifiers: [docId]
-            )
-          )
-        )
+        await fetchStoredDocuments(docId: docId)
       case .dynamicIssuance(let session):
         setState {
           $0.copy(
@@ -301,5 +287,53 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
         )
       )
     )
+  }
+
+  private func fetchStoredDocuments(docId: String) async {
+    let state = await Task.detached { () -> DocumentsPartialState in
+      return await self.interactor.fetchStoredDocuments(
+        documentIds: [docId]
+      )
+    }.value
+
+    let onSuccesNavigation = switch viewState.config.flow {
+    case .noDocument:
+        UIConfig.DeepLinkNavigationType.push(screen: .featureDashboardModule(.dashboard))
+    case .extraDocument:
+        UIConfig.DeepLinkNavigationType.pop(screen: .featureDashboardModule(.dashboard))
+    }
+
+    switch state {
+    case .success(let documents):
+      router.push(
+        with: .featureIssuanceModule(
+          .issuanceSuccess(
+            config: DocumentSuccessUIConfig(
+              successNavigation: onSuccesNavigation,
+              relyingParty: documents.first?.issuer?.name,
+              issuerLogoUrl: documents.first?.issuer?.logoUrl,
+              relyingPartyIsTrusted: false
+            ),
+            requestItems: documents.map { item in
+              ListItemSection(
+                id: item.id,
+                title: item.documentName,
+                listItems: item.documentFields
+              )
+            }
+          )
+        )
+      )
+    case .failure(let error):
+      setState {
+        $0.copy(
+          addDocumentCellModels: transformCellLoadingState(with: false),
+          error: .init(
+            description: .custom(error.localizedDescription),
+            cancelAction: self.setState { $0.copy(error: nil) }
+          )
+        )
+      }
+    }
   }
 }

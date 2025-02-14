@@ -17,10 +17,10 @@ import SwiftUI
 import logic_resources
 
 public struct WrapText: View {
-  private let text: String
+  private let text: LocalizableString.Key
   private let textConfig: TextConfig
 
-  public init(text: String, textConfig: TextConfig) {
+  public init(text: LocalizableString.Key, textConfig: TextConfig) {
     self.text = text
     self.textConfig = textConfig
   }

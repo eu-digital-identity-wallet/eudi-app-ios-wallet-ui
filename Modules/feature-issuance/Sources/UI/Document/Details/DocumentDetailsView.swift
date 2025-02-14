@@ -31,7 +31,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       padding: .zero,
       canScroll: !viewModel.viewState.hasContinueButton,
       errorConfig: viewModel.viewState.error,
-      navigationTitle: LocalizableString.shared.get(with: .details),
+      navigationTitle: .details,
       toolbarContent: viewModel.toolbarContent()
     ) {
 
@@ -47,10 +47,10 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       }
     }
     .confirmationDialog(
-      title: "",
-      message: LocalizableString.shared.get(with: .deleteDocumentConfirmDialog),
-      destructiveText: LocalizableString.shared.get(with: .deleteButton),
-      baseText: LocalizableString.shared.get(with: .cancelButton),
+      title: .custom(""),
+      message: .deleteDocumentConfirmDialog,
+      destructiveText: .deleteDocument,
+      baseText: .cancelButton,
       isPresented: $viewModel.isDeletionModalShowing,
       destructiveAction: {
         viewModel.onDeleteDocument()
@@ -63,13 +63,13 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       isPresented: $viewModel.showAlert,
       title: viewModel.alertTitle(),
       message: viewModel.alertMessage(),
-      buttonText: LocalizableString.shared.get(with: .close),
+      buttonText: .close,
       onDismiss: {
         viewModel.showAlert = false
       }
     )
     .task {
-      await self.viewModel.fetchDocumentDetails()
+      await viewModel.fetchDocumentDetails()
       await viewModel.bookmarked()
     }
   }
@@ -94,33 +94,9 @@ private func content(
       VStack(spacing: .zero) {
         WrapCardView {
           VStack(spacing: .zero) {
-            ForEach(viewState.document.documentFields) { documentFieldContent in
-              switch documentFieldContent.value {
-              case .string(let value):
-                WrapListItemView(
-                  listItem: .init(
-                    mainText: .custom(value),
-                    overlineText: .custom(documentFieldContent.title),
-                    isBlur: isVisible
-                  ),
-                  minHeight: false
-                )
-              case .image(let image):
-                WrapListItemView(
-                  listItem: .init(
-                    mainText: .custom(documentFieldContent.title),
-                    leadingIcon: (nil, image),
-                    isBlur: isVisible
-                  ),
-                  minHeight: false
-                )
-              }
-              if documentFieldContent != viewState.document.documentFields.last {
-                Divider()
-                  .padding(.horizontal, SPACING_MEDIUM)
-                  .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
-              }
-            }
+            WrapListItemsView(
+              listItems: viewState.document.documentFields
+            )
           }
         }
       }

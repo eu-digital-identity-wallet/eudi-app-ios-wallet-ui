@@ -25,6 +25,7 @@ public final class FeatureDashboardAssembly: Assembly {
     container.register(DashboardInteractor.self) { r in
       DashboardInteractorImpl(
         walletController: r.force(WalletKitController.self),
+        filterValidator: r.force(FilterValidator.self),
         reachabilityController: r.force(ReachabilityController.self),
         configLogic: r.force(ConfigLogic.self)
       )

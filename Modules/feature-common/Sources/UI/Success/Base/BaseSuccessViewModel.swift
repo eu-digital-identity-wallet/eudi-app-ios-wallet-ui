@@ -19,9 +19,10 @@
 
 @Copyable
 public struct BaseSuccessState: ViewState {
-  let config: PresentationSuccessUIConfig
-  let issuerData: IssuerDataUIModel
-  let items: [RequestDataUI]
+  let config: DocumentSuccessUIConfig
+  let relyingParty: RelyingPartyData
+  let items: [ListItemSection]
+  let navigationTitle: String
   let isLoading: Bool
 }
 
@@ -36,11 +37,11 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
     requestItems: [any Routable]
   ) {
 
-    guard let config = config as? PresentationSuccessUIConfig else {
+    guard let config = config as? DocumentSuccessUIConfig else {
       fatalError("ExternalLoginViewModel:: Invalid configuraton")
     }
 
-    guard let requestItems = requestItems as? [RequestDataUI] else {
+    guard let requestItems = requestItems as? [ListItemSection] else {
       fatalError("ExternalLoginViewModel:: Invalid configuraton")
     }
 
@@ -50,12 +51,26 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
       router: router,
       initialState: .init(
         config: config,
-        issuerData: .init(
-          icon: Image(systemName: ""),
-          title: config.relyingParty,
-          isVerified: true
+        relyingParty: RelyingPartyData(
+          logo: config.issuerLogoUrl == nil ? nil : .remoteImage(config.issuerLogoUrl, nil),
+          isVerified: config.relyingPartyIsTrusted,
+          name: .custom(config.relyingParty ?? "")
         ),
-        items: requestItems,
+        items: requestItems.map { item in
+          ListItemSection(
+            id: item.id,
+            title: item.title,
+            listItems: item.listItems.map { listItem in
+              ListItemData(
+                mainText: listItem.mainText,
+                overlineText: listItem.overlineText,
+                supportingText: listItem.supportingText,
+                leadingIcon: listItem.leadingIcon
+              )
+            }
+          )
+        },
+        navigationTitle: config.relyingPartyIsTrusted ? LocalizableString.shared.get(with: .documentAdded) : LocalizableString.shared.get(with: .dataShared),
         isLoading: false
       )
     )
@@ -72,6 +87,8 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
       router.popTo(with: popToScreen)
     case .push(let screen):
       router.push(with: screen)
+    case .none:
+      break
     }
   }
 
@@ -79,7 +96,7 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
     .init(
       trailingActions: [
         Action(
-          title: LocalizableString.shared.get(with: .doneButton).capitalizedFirst()
+          title: .doneButton
         ) {
           self.onDone()
         }

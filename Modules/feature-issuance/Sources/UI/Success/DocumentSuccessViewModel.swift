@@ -17,130 +17,20 @@ import logic_ui
 import logic_resources
 import feature_common
 
-@Copyable
-struct DocumentSuccessState: ViewState {
-  let title: LocalizableString.Key
-  let caption: LocalizableString.Key?
-  let holderName: String?
-  let config: IssuanceFlowUiConfig
-  let documentIdentifiers: [String]
-  let documents: [DocumentDetailsUIModel]
-  let isLoading: Bool
-  let contentHeaderConfig: ContentHeaderConfig
-  let error: ContentErrorView.Config?
-}
+open class DocumentSuccessViewModel<Router: RouterHost>: BaseSuccessViewModel<Router> {
 
-final class DocumentSuccessViewModel<Router: RouterHost>: ViewModel<Router, DocumentSuccessState> {
-
-  private let interactor: DocumentSuccessInteractor
-
-  public init(
+  public override init(
     router: Router,
-    interactor: DocumentSuccessInteractor,
     config: any UIConfigType,
-    documentIdentifiers: [String]
+    deepLinkController: DeepLinkController,
+    requestItems: [any Routable]
   ) {
-
-    guard let config = config as? IssuanceFlowUiConfig else {
-      fatalError("ExternalLoginViewModel:: Invalid configuraton")
-    }
-
-    self.interactor = interactor
 
     super.init(
       router: router,
-      initialState: .init(
-        title: .successTitlePunctuated,
-        caption: nil,
-        holderName: nil,
-        config: config,
-        documentIdentifiers: documentIdentifiers,
-        documents: [DocumentDetailsUIModel.mock()],
-        isLoading: true,
-        contentHeaderConfig: .init(
-          appIconAndTextData: AppIconAndTextData(
-            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-            appText: ThemeManager.shared.image.euditext
-          )
-        ),
-        error: nil
-      )
-    )
-  }
-
-  func initialize() async {
-    await fetchDocumentDetails()
-
-    if let first = viewState.documentIdentifiers.first {
-      setState {
-        $0.copy(
-          caption: .succesfullyAddedFollowingToWallet,
-          holderName: interactor.getHoldersName(
-            for: first
-          )
-        )
-      }
-    }
-  }
-
-  func onIssue() {
-    router.push(
-      with: .featureDashboardModule(
-        .dashboard
-      )
-    )
-  }
-
-  func fetchDocumentDetails() async {
-
-    let documentIdentifiers = viewState.documentIdentifiers
-    let state = await Task.detached { () -> DocumentsPartialState in
-      return await self.interactor.fetchStoredDocuments(
-        documentIds: documentIdentifiers
-      )
-    }.value
-
-    switch state {
-    case .success(let documents):
-      switch viewState.config.flow {
-      case .extraDocument:
-        self.setState {
-          $0.copy(
-            documents: documents,
-            isLoading: false
-          )
-        }
-      default:
-        self.setState {
-          $0.copy(
-            documents: documents,
-            isLoading: false
-          )
-        }
-      }
-
-    case .failure:
-      self.setState {
-        $0.copy(
-          title: .issuanceSuccessHeaderDescriptionWhenError,
-          documents: [],
-          isLoading: false
-        )
-      }
-    }
-  }
-
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: [
-        Action(
-          title: LocalizableString.shared.get(
-            with: .issuanceSuccessNextButton
-          ).capitalizedFirst()
-        ) {
-          self.onIssue()
-        }
-      ]
+      config: config,
+      deepLinkController: deepLinkController,
+      requestItems: requestItems
     )
   }
 }

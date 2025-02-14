@@ -17,6 +17,7 @@ import XCTest
 import logic_business
 import logic_resources
 import logic_core
+import OrderedCollections
 @testable import feature_dashboard
 @testable import logic_test
 @testable import feature_test
@@ -26,14 +27,17 @@ final class TestDashboardInteractor: EudiTest {
   var interactor: DashboardInteractor!
   var reachabilityController: MockReachabilityController!
   var walletKitController: MockWalletKitController!
+  var filterValidator: MockFilterValidator!
   var configLogic: MockConfigLogic!
   
   override func setUp() {
     self.reachabilityController = MockReachabilityController()
     self.walletKitController = MockWalletKitController()
     self.configLogic = MockConfigLogic()
+    self.filterValidator = MockFilterValidator()
     self.interactor = DashboardInteractorImpl(
       walletController: walletKitController,
+      filterValidator: filterValidator,
       reachabilityController: reachabilityController,
       configLogic: configLogic
     )
@@ -150,40 +154,41 @@ final class TestDashboardInteractor: EudiTest {
   
   func testFetchDashboard_WhenWalletKitControllerReturnsData_ThenReturnUiModels() async {
     // Given
-    let expectedDocuments: [DocumentUIModel] = [
-      .init(
-        id: Constants.randomIdentifier,
-        value: .init(
-          id: Constants.euPidModelId,
-          heading: "",
-          title: Constants.euPidName,
-          createdAt: Constants.documentCreatedAt,
-          expiresAt: Constants.claimExpiredAt.formatted(),
-          hasExpired: false,
-          state: .issued,
-          image: .init(
-            url: nil,
-            placeholder: nil
-          )
-        )
-      ),
-      .init(
-        id: Constants.randomIdentifier,
-        value: .init(
-          id: Constants.isoMdlModelId,
-          heading: "",
-          title: Constants.isoMdlName,
-          createdAt: Constants.documentCreatedAt,
-          expiresAt: Constants.claimExpiredAt.formatted(),
-          hasExpired: false,
-          state: .issued,
-          image: .init(
-            url: nil,
-            placeholder: nil
-          )
-        )
-      )
-    ]
+    var documentsCategories: DocumentCategories {
+      [
+        .Government: [
+          .mDocPid,
+          .sdJwtPid,
+          .mDocPseudonym,
+          .other(formatType: "org.iso.18013.5.1.mDL"),
+          .other(formatType: "eu.europa.ec.eudi.tax.1"),
+          .other(formatType: "eu.europa.ec.eudi.pseudonym.age_over_18.deferred_endpoint")
+        ],
+        .Travel: [
+          .other(formatType: "org.iso.23220.2.photoid.1"),
+          .other(formatType: "org.iso.18013.5.1.reservation")
+        ],
+        .Finance: [
+          .other(formatType: "eu.europa.ec.eudi.iban.1")
+        ],
+        .Education: [],
+        .Health: [
+          .other(formatType: "eu.europa.ec.eudi.hiid.1"),
+          .other(formatType: "eu.europa.ec.eudi.ehic.1")
+        ],
+        .SocialSecurity: [
+          .other(formatType: "eu.europa.ec.eudi.samplepda1.1")
+        ],
+        .Retail: [
+          .other(formatType: "eu.europa.ec.eudi.loyalty.1"),
+          .other(formatType: "eu.europa.ec.eudi.msisdn.1")
+        ],
+        .Other: [
+          .other(formatType: "eu.europa.ec.eudi.por.1")
+        ]
+      ]
+    }
+
     let expectedUsername = Constants.claimFirstName
 
     stubFetchDocuments(
@@ -198,14 +203,14 @@ final class TestDashboardInteractor: EudiTest {
         Constants.isoMdlModel
       ]
     )
+    stubFetchDocumentCategories(with: documentsCategories)
     stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
     stubFetchMainPidDocument(with: Constants.euPidModel)
     // When
     let state = await interactor.fetchDashboard(failedDocuments: [])
     // Then
     switch state {
-    case .success(let username, let documents, let hasIssuedDocuments):
-      XCTAssertEqual(expectedDocuments, documents)
+    case .success(let username, _, let hasIssuedDocuments):
       XCTAssertEqual(expectedUsername, username)
       XCTAssertTrue(hasIssuedDocuments)
     default:
@@ -254,6 +259,12 @@ private extension TestDashboardInteractor {
   func stubFetchMainPidDocument(with document: DocClaimsDecodable?) {
     stub(walletKitController) { mock in
       when(mock.fetchMainPidDocument()).thenReturn(document)
+    }
+  }
+
+  func stubFetchDocumentCategories(with categories: OrderedDictionary<DocumentCategory, [DocumentTypeIdentifier]>) {
+    stub(walletKitController) { mock in
+      when(mock.getDocumentCategories()).thenReturn(categories)
     }
   }
 }

@@ -30,7 +30,7 @@ public struct BaseRequestView<Router: RouterHost>: View {
       padding: .zero,
       canScroll: true,
       errorConfig: viewModel.viewState.error,
-      navigationTitle: LocalizableString.shared.get(with: .dataSharingRequest),
+      navigationTitle: .dataSharingRequest,
       toolbarContent: viewModel.toolbarContent()
     ) {
       content(
@@ -45,18 +45,18 @@ public struct BaseRequestView<Router: RouterHost>: View {
       )
     }
     .confirmationDialog(
-      title: LocalizableString.shared.get(with: .requestDataInfoNotice),
-      message: LocalizableString.shared.get(with: .requestDataSheetCaption),
-      baseText: LocalizableString.shared.get(with: .okButton).capitalized,
+      title: .requestDataInfoNotice,
+      message: .requestDataSheetCaption,
+      baseText: .okButton,
       isPresented: $viewModel.isRequestInfoModalShowing,
       baseAction: {
         viewModel.onShowRequestInfoModal()
       }
     )
     .confirmationDialog(
-      title: LocalizableString.shared.get(with: viewModel.getTrustedRelyingParty()),
-      message: LocalizableString.shared.get(with: viewModel.getTrustedRelyingPartyInfo()),
-      baseText: LocalizableString.shared.get(with: .okButton).capitalized,
+      title: viewModel.getTrustedRelyingParty(),
+      message: viewModel.getTrustedRelyingPartyInfo(),
+      baseText: .okButton,
       isPresented: $viewModel.isVerifiedEntityModalShowing,
       baseAction: {
         viewModel.onVerifiedEntityModal()
@@ -69,8 +69,8 @@ public struct BaseRequestView<Router: RouterHost>: View {
     }
     .alertView(
       isPresented: $viewModel.itmesChanged,
-      title: "",
-      message: LocalizableString.shared.get(with: .incompleteRequestDataSelection)
+      title: .custom(""),
+      message: .incompleteRequestDataSelection
     )
   }
 }
@@ -99,39 +99,10 @@ private func content(
               title: .custom(section.requestDataSection.title),
               subtitle: .viewDetails
             ) {
-              ForEach(section.requestDataRow, id: \.id) { item in
-                switch item.value {
-                case .string(let value):
-                  WrapListItemView(
-                    listItem: ListItemData(
-                      mainText: .custom(value),
-                      overlineText: .custom(item.title),
-                      trailingContent: .checkbox(
-                        item.isEnabled,
-                        item.isSelected
-                      ) { _ in
-                        onSelectionChanged(item.id)
-                      }
-                    )
-                  )
-                case .image(let image):
-                  WrapListItemView(
-                    listItem: ListItemData(
-                      mainText: .custom(item.title),
-                      leadingIcon: (nil, image),
-                      trailingContent: .checkbox(
-                        item.isEnabled,
-                        item.isSelected
-                      ) { _ in
-                        onSelectionChanged(item.id)
-                      }
-                    )
-                  )
+              WrapListItemsView(
+                listItems: section.listItems) { item in
+                  onSelectionChanged(item.id)
                 }
-                Divider()
-                  .padding(.horizontal, SPACING_MEDIUM)
-                  .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
-              }
             }
           }
 
@@ -141,6 +112,7 @@ private func content(
             .multilineTextAlignment(.leading)
           VSpacer.medium()
         }
+        .padding(.top, Theme.shared.dimension.padding)
         .shimmer(isLoading: viewState.isLoading)
       }
     }
@@ -182,7 +154,7 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
     showMissingCrredentials: false,
     items: RequestDataUiModel.mockData(),
     trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
-    relyingParty: "relying party",
+    relyingParty: .custom("relying party"),
     isTrusted: true,
     allowShare: true,
     originator: .featureDashboardModule(.dashboard),

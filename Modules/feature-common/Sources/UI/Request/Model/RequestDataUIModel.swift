@@ -103,6 +103,38 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
   }
 }
 
+public extension RequestDataRow {
+  func mapToListItem() -> ListItemData {
+    let item = self
+    switch item.value {
+    case .string(let value):
+      return .init(
+        id: item.id,
+        mainText: .custom(value),
+        overlineText: .custom(item.title),
+        isEnable: item.isEnabled,
+        trailingContent: .checkbox(
+          item.isEnabled,
+          item.isSelected,
+          { _ in }
+        )
+      )
+
+    case .image(let image):
+        return .init(
+        id: item.id,
+        mainText: .custom(item.title),
+        leadingIcon: .init(image: image),
+        isEnable: item.isEnabled,
+        trailingContent: .checkbox(
+          item.isEnabled,
+          item.isSelected
+        ) { _ in }
+      )
+    }
+  }
+}
+
 public struct RequestDataSection: Identifiable, Equatable, Sendable {
 
   public var id: String
@@ -175,7 +207,33 @@ extension RequestDataUiModel {
       let data = RequestDataUI(
         id: section.id,
         requestDataRow: dataRows,
-        requestDataSection: section
+        requestDataSection: section,
+        listItems: dataRows.map { item in
+          switch item.value {
+            case .string(let value):
+              ListItemData(
+                id: item.id,
+                mainText: .custom(value),
+                overlineText: .custom(item.title),
+                trailingContent: .checkbox(
+                  item.isEnabled,
+                  item.isSelected,
+                  { _ in }
+                )
+              )
+
+            case .image(let image):
+              ListItemData(
+                id: item.id,
+                mainText: .custom(item.title),
+                leadingIcon: .init(image: image),
+                trailingContent: .checkbox(
+                  item.isEnabled,
+                  item.isSelected
+                ) { _ in }
+              )
+          }
+        }
       )
 
       requestDataCell.append(data)
@@ -265,7 +323,25 @@ public struct RequestDataUiModel {
           RequestDataRow(isSelected: true, title: "Date of Birth", value: .string("21-09-1985")),
           RequestDataRow(isSelected: true, title: "Resident Country", value: .string("Greece"))
         ],
-        requestDataSection: RequestDataSection(title: "MDL")
+        requestDataSection: RequestDataSection(title: "MDL"),
+        listItems: [
+          ListItemData(
+            mainText: .custom("Tzouvaras"),
+            overlineText: .custom("Family Name")
+          ),
+          ListItemData(
+            mainText: .custom("Stilianos"),
+            overlineText: .custom("First Name")
+          ),
+          ListItemData(
+            mainText: .custom("21-09-1985"),
+            overlineText: .custom("Date of Birth")
+          ),
+          ListItemData(
+            mainText: .custom("Greece"),
+            overlineText: .custom("Resident")
+          )
+        ]
       )
     ]
   }

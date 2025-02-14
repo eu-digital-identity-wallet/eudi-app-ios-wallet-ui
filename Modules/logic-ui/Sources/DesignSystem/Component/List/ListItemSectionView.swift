@@ -13,25 +13,18 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_ui
-import logic_core
-
-public struct PresentationSuccessUIConfig: UIConfigType, Equatable {
-
-  public let successNavigation: UIConfig.DeepLinkNavigationType
-  public let relyingParty: String
+public struct ListItemSection: Identifiable, Equatable, Routable {
+  public let id: String
+  public let title: String
+  public let listItems: [ListItemData]
 
   public var log: String {
-    return "onSuccessNav: \(successNavigation.type)" +
-    " relyingParty: \(relyingParty)"
+    "id: \(id), title: \(title)"
   }
 
-  public init(
-    successNavigation: UIConfig.DeepLinkNavigationType,
-    relyingParty: String
-  ) {
-    self.successNavigation = successNavigation
-    self.relyingParty = relyingParty
+  public init(id: String, title: String, listItems: [ListItemData]) {
+    self.id = id
+    self.title = title
+    self.listItems = listItems
   }
 }

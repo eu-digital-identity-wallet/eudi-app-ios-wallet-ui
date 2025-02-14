@@ -31,9 +31,7 @@ public struct BaseSuccessView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: true,
-      navigationTitle: LocalizableString.shared.get(
-        with: .dataShared
-      ),
+      navigationTitle: .dataShared,
       toolbarContent: viewModel.toolbarContent()
     ) {
       content(
@@ -57,13 +55,8 @@ private func content(
             appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
             appText: ThemeManager.shared.image.euditext
           ),
-          description: LocalizableString.shared.get(
-            with: .successfullySharedFollowingInformation
-          ),
-          relyingPartyData: RelyingPartyData(
-            isVerified: viewState.issuerData.isVerified,
-            name: viewState.issuerData.title
-          )
+          description: .successfullySharedFollowingInformation,
+          relyingPartyData: viewState.relyingParty
         )
       )
 
@@ -93,42 +86,12 @@ private func documents(
       ForEach(viewState.items, id: \.id) { section in
         ExpandableCardView(
           backgroundColor: backgroundColor,
-          title: .custom(section.requestDataSection.title),
+          title: .custom(section.title),
           subtitle: .viewDetails
         ) {
-          ForEach(section.requestDataRow, id: \.id) { item in
-            switch item.value {
-            case .string(let value):
-              WrapListItemView(
-                listItem: ListItemData(
-                  mainText: .custom(value),
-                  overlineText: .custom(item.title),
-                  trailingContent: ignoreTrainingContent ? .none : .checkbox(
-                    item.isEnabled,
-                    item.isSelected
-                  ) { _ in
-                    onSelectionChanged(item.id)
-                  }
-                )
-              )
-            case .image(let image):
-              WrapListItemView(
-                listItem: ListItemData(
-                  mainText: .custom(item.title),
-                  leadingIcon: (nil, image),
-                  trailingContent: ignoreTrainingContent ? .none : .checkbox(
-                    item.isEnabled,
-                    item.isSelected
-                  ) { _ in
-                    onSelectionChanged(item.id)
-                  }
-                )
-              )
-            }
-            Divider()
-              .padding(.horizontal, SPACING_MEDIUM)
-              .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
-          }
+          WrapListItemsView(
+            listItems: section.listItems
+          )
         }
         .shimmer(isLoading: viewState.isLoading)
       }

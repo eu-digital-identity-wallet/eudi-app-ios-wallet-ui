@@ -1,5 +1,5 @@
 {
-  "originHash" : "b80cb1b65fa04a653026258a06b061e08228a83b850eb19bc4fd210b67e6d3e1",
+  "originHash" : "3ab912d21a7dd53f85eabe5f8259ce342b25d43932a91b167c05c66a9fcffe0e",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -35,15 +35,6 @@
       "state" : {
         "revision" : "b39252eacd159904afd7d718bba0afabb87f2f2f",
         "version" : "1.3.9"
-      }
-    },
-    {
-      "identity" : "appcenter-sdk-apple",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/microsoft/appcenter-sdk-apple.git",
-      "state" : {
-        "revision" : "9308921a2f6ef828cf9fae898ea4f080a81cdf11",
-        "version" : "5.0.6"
       }
     },
     {
@@ -105,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
       "state" : {
-        "revision" : "305e7a1f55816f5b6410a69c9b031ee7bf602486",
-        "version" : "2.0.10"
+        "revision" : "4379da27d87754aca5121ac906ecb4c640ba82d0",
+        "version" : "2.0.14"
       }
     },
     {
@@ -308,15 +299,6 @@
       }
     },
     {
-      "identity" : "plcrashreporter",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/microsoft/PLCrashReporter.git",
-      "state" : {
-        "revision" : "6752f71de206f6a53fa6a758c3660fd9a7fe7527",
-        "version" : "1.11.2"
-      }
-    },
-    {
       "identity" : "rainbow",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Rainbow",
@@ -438,8 +420,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
       "state" : {
-        "revision" : "ff0f781cf7c6a22d52957e50b104f5768b50c779",
-        "version" : "3.10.0"
+        "revision" : "b828ba476ab068f0b00d6b41f92f364961b0f323",
+        "version" : "3.10.2"
       }
     },
     {

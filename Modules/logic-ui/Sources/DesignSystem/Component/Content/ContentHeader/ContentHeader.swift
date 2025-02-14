@@ -18,18 +18,18 @@ import logic_resources
 
 public struct ContentHeaderConfig {
   public let appIconAndTextData: AppIconAndTextData
-  public let description: String?
+  public let description: LocalizableString.Key?
   public let descriptionTextConfig: TextConfig?
-  public let mainText: String?
+  public let mainText: LocalizableString.Key?
   public let icon: RemoteImageView.ImageContentOption
   public let mainTextConfig: TextConfig?
   public let relyingPartyData: RelyingPartyData?
 
   public init(
     appIconAndTextData: AppIconAndTextData,
-    description: String? = nil,
+    description: LocalizableString.Key? = nil,
     descriptionTextConfig: TextConfig? = nil,
-    mainText: String? = nil,
+    mainText: LocalizableString.Key? = nil,
     icon: RemoteImageView.ImageContentOption = .none,
     mainTextConfig: TextConfig? = nil,
     relyingPartyData: RelyingPartyData? = nil
@@ -139,16 +139,16 @@ public struct ContentHeader: View {
         appIcon: Image(systemName: "app"),
         appText: Image(systemName: "app")
       ),
-      description: "This is a description",
+      description: .custom("This is a description"),
       descriptionTextConfig: nil,
-      mainText: "Main Text",
+      mainText: .custom("Main Text"),
       mainTextConfig: nil,
       relyingPartyData: RelyingPartyData(
-        logo: Image(systemName: "person.crop.circle"),
+        logo: .image(Image(systemName: "person.crop.circle")),
         isVerified: true,
-        name: "Relying Party Name",
+        name: .custom("Relying Party Name"),
         nameTextConfig: nil,
-        description: "Relying party description",
+        description: .custom("Relying party description"),
         descriptionTextConfig: nil
       )
     )

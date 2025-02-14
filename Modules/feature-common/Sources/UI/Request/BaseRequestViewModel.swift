@@ -24,7 +24,7 @@ public struct RequestViewState: ViewState {
   public let showMissingCrredentials: Bool
   public let items: [RequestDataUI]
   public let trustedRelyingPartyInfo: LocalizableString.Key
-  public let relyingParty: String
+  public let relyingParty: LocalizableString.Key
   public let isTrusted: Bool
   public let allowShare: Bool
   public let originator: AppRoute
@@ -47,7 +47,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         showMissingCrredentials: true,
         items: RequestDataUiModel.mockData(),
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
-        relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
+        relyingParty: .unknownVerifier,
         isTrusted: false,
         allowShare: false,
         originator: originator,
@@ -57,7 +57,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
             appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
             appText: ThemeManager.shared.image.euditext
           ),
-          description: LocalizableString.shared.get(with: .dataSharingTitle)
+          description: .dataSharingTitle
         )
       )
     )
@@ -69,8 +69,12 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     return .custom("")
   }
 
-  open func getRelyingParty() -> String {
-    return ""
+  open func getRelyingParty() -> LocalizableString.Key {
+    return .custom("")
+  }
+
+  open func getRelyingPartyIsTrusted() -> Bool {
+    return false
   }
 
   open func getCaption() -> LocalizableString.Key {
@@ -142,7 +146,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   public func onReceivedItems(
     with items: [RequestDataUI],
     title: LocalizableString.Key,
-    relyingParty: String,
+    relyingParty: LocalizableString.Key,
     isTrusted: Bool
   ) {
     setState {
@@ -166,7 +170,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         showMissingCrredentials: true,
         items: RequestDataUiModel.mockData(),
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
-        relyingParty: LocalizableString.shared.get(with: .unknownVerifier),
+        relyingParty: .unknownVerifier,
         isTrusted: false,
         allowShare: false,
         originator: previous.originator,
@@ -180,7 +184,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     .init(
       trailingActions: [
         Action(
-          title: LocalizableString.shared.get(with: .shareButton).capitalizedFirst(),
+          title: .shareButton,
           disabled: !viewState.allowShare
         ) {
           self.onShare()
@@ -244,7 +248,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
         appText: ThemeManager.shared.image.euditext
       ),
-      description: LocalizableString.shared.get(with: .dataSharingTitle)
+      description: .dataSharingTitle
     )
   }
 

@@ -7,7 +7,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ADD DOC"
+            "value" : "Add doc"
           }
         }
       }
@@ -56,138 +56,6 @@
         }
       }
     },
-    "administrative_number" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Administrative number"
-          }
-        }
-      }
-    },
-    "age_birth_year" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In what year were you born?"
-          }
-        }
-      }
-    },
-    "age_in_years" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "How old are you (in years)?"
-          }
-        }
-      }
-    },
-    "age_over_13" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 13?"
-          }
-        }
-      }
-    },
-    "age_over_15" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 15?"
-          }
-        }
-      }
-    },
-    "age_over_16" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 16?"
-          }
-        }
-      }
-    },
-    "age_over_18" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 18?"
-          }
-        }
-      }
-    },
-    "age_over_21" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 21?"
-          }
-        }
-      }
-    },
-    "age_over_60" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 60?"
-          }
-        }
-      }
-    },
-    "age_over_65" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 65?"
-          }
-        }
-      }
-    },
-    "age_over_68" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age over 68?"
-          }
-        }
-      }
-    },
-    "age_verification" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Age Verification"
-          }
-        }
-      }
-    },
     "alert_access_online_services" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -228,6 +96,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sign documents with just your wallet. Providing a legally binding e-signature will be faster and easier than ever, enabling you to conduct business wherever you are."
+          }
+        }
+      }
+    },
+    "ascending" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ascending"
           }
         }
       }
@@ -304,7 +183,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ENABLE"
+            "value" : "Enable"
           }
         }
       }
@@ -348,7 +227,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CANCEL"
+            "value" : "Cancel"
           }
         }
       }
@@ -370,7 +249,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CONTINUE ISSUANCE"
+            "value" : "Continue issuance"
           }
         }
       }
@@ -386,13 +265,112 @@
         }
       }
     },
+    "category_education" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EDUCATION"
+          }
+        }
+      }
+    },
+    "category_finance" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FINANCE"
+          }
+        }
+      }
+    },
+    "category_government" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GOVERNMENT"
+          }
+        }
+      }
+    },
+    "category_health" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HEALTH"
+          }
+        }
+      }
+    },
+    "category_other" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OTHER"
+          }
+        }
+      }
+    },
+    "category_retail" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RETAIL"
+          }
+        }
+      }
+    },
+    "category_social_security" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SOCIAL SECURITY"
+          }
+        }
+      }
+    },
+    "category_travel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TRAVEL"
+          }
+        }
+      }
+    },
     "change_quick_pin_option" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Change quick pin"
+            "value" : "Change pin"
+          }
+        }
+      }
+    },
+    "changelog" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changelog"
           }
         }
       }
@@ -447,7 +425,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CONTINUE"
+            "value" : "Continue"
           }
         }
       }
@@ -480,7 +458,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Data sharing request"
+            "value" : "DATA SHARING REQUEST"
           }
         }
       }
@@ -503,6 +481,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Date Issued"
+          }
+        }
+      }
+    },
+    "default" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default"
           }
         }
       }
@@ -562,6 +551,17 @@
         }
       }
     },
+    "descending" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descending"
+          }
+        }
+      }
+    },
     "details" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -569,17 +569,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Details"
-          }
-        }
-      }
-    },
-    "DHS_compliance" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "DHS Compliance"
           }
         }
       }
@@ -624,28 +613,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Done"
-          }
-        }
-      }
-    },
-    "driving_privileges" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Categories of vehicles"
-          }
-        }
-      }
-    },
-    "EDL_credential" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EDL Credential"
           }
         }
       }
@@ -711,7 +678,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "expired"
+            "value" : "Expired"
           }
         }
       }
@@ -733,18 +700,51 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Expiry Period"
+            "value" : "Filter by Expiry Period"
           }
         }
       }
     },
-    "faq_title" : {
+    "filter_by_category" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "FAQ"
+            "value" : "Filter by Category"
+          }
+        }
+      }
+    },
+    "filter_by_issuer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter by Issuer"
+          }
+        }
+      }
+    },
+    "filter_by_state" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter by State"
+          }
+        }
+      }
+    },
+    "filters" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filters"
           }
         }
       }
@@ -789,61 +789,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Issuer"
-          }
-        }
-      }
-    },
-    "given_name" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Given Name"
-          }
-        }
-      }
-    },
-    "given_name_birth" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Given Name at Birth"
-          }
-        }
-      }
-    },
-    "given_name_national_character" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Given name in national characters"
-          }
-        }
-      }
-    },
-    "hair_colour" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hair colour"
-          }
-        }
-      }
-    },
-    "height" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Height (cm)"
           }
         }
       }
@@ -931,7 +876,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CONTINUE"
+            "value" : "Continue"
           }
         }
       }
@@ -975,7 +920,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Issuance request"
+            "value" : "ISSUANCE REQUEST"
           }
         }
       }
@@ -1019,7 +964,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "NEXT"
+            "value" : "Next"
           }
         }
       }
@@ -1041,18 +986,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ISSUE"
-          }
-        }
-      }
-    },
-    "issuer" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Issuer"
+            "value" : "Issue"
           }
         }
       }
@@ -1220,7 +1154,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No documents match your search. Try changing your search query or filters."
+            "value" : "No documents match your search. Try changing your search or filters."
           }
         }
       }
@@ -1265,6 +1199,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Or share via NFC"
+          }
+        }
+      }
+    },
+    "order_by" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ORDER BY"
           }
         }
       }
@@ -1330,7 +1275,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CONFIRM"
+            "value" : "Confirm"
           }
         }
       }
@@ -1374,7 +1319,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "PROCEED"
+            "value" : "Proceed"
           }
         }
       }
@@ -1451,7 +1396,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CONTINUE"
+            "value" : "Continue"
           }
         }
       }
@@ -1528,29 +1473,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Change quick pin"
-          }
-        }
-      }
-    },
-    "read_faqs_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "READ FAQS"
-          }
-        }
-      }
-    },
-    "registration_id" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Registration ID"
+            "value" : "Change pin"
           }
         }
       }
@@ -1720,6 +1643,17 @@
         }
       }
     },
+    "reset" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset"
+          }
+        }
+      }
+    },
     "retrieve_logs" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1759,7 +1693,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Scan a QR code"
+            "value" : "Scan a QR"
           }
         }
       }
@@ -1852,6 +1786,17 @@
         }
       }
     },
+    "search_documents" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search Documents"
+          }
+        }
+      }
+    },
     "select_document" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1869,7 +1814,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SHARE"
+            "value" : "Share"
           }
         }
       }
@@ -2083,6 +2028,17 @@
         }
       }
     },
+    "valid" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valid"
+          }
+        }
+      }
+    },
     "valid_until" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2133,7 +2089,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Welcome back"
+            "value" : "Welcome back, %@"
           }
         }
       }

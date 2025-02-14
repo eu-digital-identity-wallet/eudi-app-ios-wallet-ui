@@ -17,19 +17,19 @@ import SwiftUI
 import logic_resources
 
 public struct RelyingPartyData {
-  public let logo: Image?
+  public let logo: RemoteImageView.ImageContentOption?
   public let isVerified: Bool
-  public let name: String
+  public let name: LocalizableString.Key?
   public let nameTextConfig: TextConfig?
-  public let description: String?
+  public let description: LocalizableString.Key?
   public let descriptionTextConfig: TextConfig?
 
   public init(
-    logo: Image? = nil,
+    logo: RemoteImageView.ImageContentOption? = nil,
     isVerified: Bool,
-    name: String,
+    name: LocalizableString.Key? = nil,
     nameTextConfig: TextConfig? = nil,
-    description: String? = nil,
+    description: LocalizableString.Key? = nil,
     descriptionTextConfig: TextConfig? = nil
   ) {
     self.logo = logo
@@ -51,28 +51,42 @@ public struct RelyingParty: View {
   public var body: some View {
     VStack(alignment: .center, spacing: SPACING_SMALL) {
       if let logo = relyingPartyData.logo {
-        logo
-          .resizable()
-          .scaledToFit()
-          .frame(width: 40, height: 40)
+        switch logo {
+          case .none: EmptyView()
+          case .remoteImage(let url, let image):
+            RemoteImageView(
+              url: url,
+              icon: image,
+              width: getScreenRect().width / 2.5,
+              height: nil
+            )
+            .frame(maxWidth: .infinity, alignment: .center)
+          case .image(let image):
+            image
+              .resizable()
+              .scaledToFit()
+              .frame(width: 40, height: 40)
+        }
       }
 
-      WrapText(
-        text: relyingPartyData.name,
-        textConfig: relyingPartyData.nameTextConfig ?? TextConfig(
-          font: Theme.shared.font.bodyLarge.font,
-          color: Theme.shared.color.onSurface,
-          textAlign: .center,
-          maxLines: 1,
-          fontWeight: .semibold
+      if let name = relyingPartyData.name {
+        WrapText(
+          text: name,
+          textConfig: relyingPartyData.nameTextConfig ?? TextConfig(
+            font: Theme.shared.font.bodyLarge.font,
+            color: Theme.shared.color.onSurface,
+            textAlign: .center,
+            maxLines: 1,
+            fontWeight: .semibold
+          )
         )
-      )
-      .if(relyingPartyData.isVerified) {
-        $0.leftImage(
-          image: Theme.shared.image.relyingPartyVerified,
-          spacing: Theme.shared.dimension.verifiedBadgeSpacing,
-          size: 20
-        )
+        .if(relyingPartyData.isVerified) {
+          $0.leftImage(
+            image: Theme.shared.image.relyingPartyVerified,
+            spacing: Theme.shared.dimension.verifiedBadgeSpacing,
+            size: 20
+          )
+        }
       }
 
       if let description = relyingPartyData.description {

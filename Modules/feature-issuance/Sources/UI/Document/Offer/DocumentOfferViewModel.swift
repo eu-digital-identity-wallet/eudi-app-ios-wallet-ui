@@ -24,7 +24,6 @@ import logic_core
 struct DocumentOfferViewState: ViewState {
   let isLoading: Bool
   let documentOfferUiModel: DocumentOfferUIModel
-  let issuerData: IssuerDataUIModel
   let error: ContentErrorView.Config?
   let config: UIConfig.Generic
   let offerUri: String
@@ -49,8 +48,6 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
 
   private let interactor: DocumentOfferInteractor
 
-  @Published var isCancelModalShowing: Bool = false
-
   init(
     router: Router,
     interactor: DocumentOfferInteractor,
@@ -68,7 +65,6 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
       initialState: .init(
         isLoading: true,
         documentOfferUiModel: DocumentOfferUIModel.mock(),
-        issuerData: IssuerDataUIModel.mock(),
         error: nil,
         config: config,
         offerUri: offerUri,
@@ -103,11 +99,6 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
         $0.copy(
           isLoading: false,
           documentOfferUiModel: uiModel,
-          issuerData: .init(
-            icon: Theme.shared.image.logo,
-            title: uiModel.issuerName,
-            isVerified: true
-          ),
           allowIssue: !uiModel.uiOffers.isEmpty,
           initialized: true,
           contentHeaderConfig: .init(
@@ -115,13 +106,13 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
               appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
               appText: ThemeManager.shared.image.euditext
             ),
-            description: LocalizableString.shared.get(with: .dataSharingTitle),
-            mainText: LocalizableString.shared.get(with: .issuanceRequest).uppercased(),
-            icon: .image(viewState.issuerData.icon),
+            description: .dataSharingTitle,
+            mainText: .issuanceRequest,
+            icon: .none, // MARK: - TODO should be return from kit
             relyingPartyData: RelyingPartyData(
               isVerified: false,
-              name: uiModel.issuerName,
-              description: LocalizableString.shared.get(with: .issuerWantWalletAddition)
+              name: .custom(uiModel.issuerName),
+              description: .issuerWantWalletAddition
             )
           )
         ).copy(error: nil)
@@ -214,12 +205,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
     }
   }
 
-  func onShowCancelModal() {
-    isCancelModalShowing = !isCancelModalShowing
-  }
-
   func onPop() {
-    isCancelModalShowing = false
     switch viewState.cancelNavigation {
     case .popTo(let route):
       router.popTo(with: route)
@@ -290,20 +276,16 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
     .init(
       trailingActions: [
         Action(
-          title: LocalizableString.shared.get(
-            with: .issueButton
-          ).capitalizedFirst()
+          title: .issueButton
         ) {
           self.onIssueDocuments()
         }
       ],
       leadingActions: [
         Action(
-          title: LocalizableString.shared.get(
-            with: .cancelButton
-          ).capitalizedFirst()
+          title: .cancelButton
         ) {
-          self.onShowCancelModal()
+          self.onPop()
         }
       ]
     )

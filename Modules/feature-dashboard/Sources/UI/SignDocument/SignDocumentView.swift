@@ -26,7 +26,7 @@ struct SignDocumentView<Router: RouterHost>: View {
 
   var body: some View {
     ContentScreenView(
-      navigationTitle: LocalizableString.shared.get(with: .signDocument),
+      navigationTitle: .signDocument,
       toolbarContent: toolbarContent()
     ) {
       content(

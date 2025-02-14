@@ -33,7 +33,7 @@ public struct ActionCard: View {
 
   public var body: some View {
     Button(action: action) {
-      VStack(spacing: SPACING_MEDIUM_SMALL) {
+      VStack(spacing: SPACING_MEDIUM) {
         icon
           .resizable()
           .scaledToFit()

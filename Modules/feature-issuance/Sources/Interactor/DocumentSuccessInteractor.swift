@@ -52,7 +52,7 @@ final class DocumentSuccessInteractorImpl: DocumentSuccessInteractor {
   func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState {
     let documents = walletController.fetchDocuments(with: documentIds)
     let documentsDetails = documents.compactMap {
-      $0.transformToDocumentDetailsUi()
+      $0.transformToDocumentDetailsUi(isSensitive: false)
     }
 
     if documentsDetails.isEmpty {

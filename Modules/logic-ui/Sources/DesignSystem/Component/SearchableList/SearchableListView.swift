@@ -23,12 +23,12 @@ struct SearchableModifier: ViewModifier {
   let onSearchTextChange: (String) -> Void
 
   func body(content: Content) -> some View {
-    VStack {
+    VStack(spacing: .zero) {
       CustomSearchBar(
         text: $searchText,
         placeholder: placeholder
       )
-      .padding(.horizontal)
+      .padding(.horizontal, SPACING_SMALL)
       .background(backgroundColor)
 
       content
@@ -43,7 +43,7 @@ struct SearchableModifier: ViewModifier {
 public extension View {
   func searchable(
     searchText: Binding<String>,
-    placeholder: String = "Search",
+    placeholder: String = LocalizableString.shared.get(with: .searchDocuments),
     backgroundColor: Color? = nil,
     onSearchTextChange: @escaping (String) -> Void
   ) -> some View {
