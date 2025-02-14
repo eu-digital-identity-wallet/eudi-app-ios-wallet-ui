@@ -105,17 +105,20 @@ public struct FilterItem: Sendable {
   public let id: String
   public let name: String
   public let selected: Bool
+  public let isDefault: Bool
   public let filterableAction: FilterAction
 
   public init(
     id: String = UUID().uuidString,
     name: String,
     selected: Bool,
+    isDefault: Bool = false,
     filterableAction: FilterAction = DefaultFilterAction()
   ) {
     self.id = id
     self.name = name
     self.selected = selected
+    self.isDefault = isDefault
     self.filterableAction = filterableAction
   }
 }

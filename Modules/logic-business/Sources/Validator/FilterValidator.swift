@@ -107,7 +107,7 @@ actor FilterValidatorImpl: FilterValidator {
       }
     }
 
-    hasDefaultFilters = onlyDefaultSelected(groups: appliedFilters.filterGroups)
+    hasDefaultFilters = checkIfDefaultFiltersApplied(groups: appliedFilters.filterGroups)
 
     if !searchQuery.isEmpty {
       filteredList = filteredList.copy(
@@ -271,36 +271,13 @@ actor FilterValidatorImpl: FilterValidator {
     return group
   }
 
-  private func onlyDefaultSelected(groups: [FilterGroup]) -> Bool {
-    let ascendingSelected = groups
-      .first { $0.id == FilterIds.ASCENDING_DESCENDING_GROUP }?
-      .filters.first { $0.id == FilterIds.ORDER_BY_ASCENDING }?.selected == true
+  func checkIfDefaultFiltersApplied(groups: [FilterGroup]) -> Bool {
+    let allFilters = groups.flatMap { $0.filters }
 
-    let sortGroupDefaultSelected = groups
-      .first { $0.id == FilterIds.FILTER_SORT_GROUP_ID }?
-      .filters.first { $0.id == FilterIds.FILTER_SORT_DEFAULT }?.selected == true
+    let allSelectedAreDefault = allFilters.filter { $0.selected }.allSatisfy { $0.isDefault }
 
-    let periodGroupDefaultSelected = groups
-      .first { $0.id == FilterIds.FILTER_BY_PERIOD_GROUP_ID }?
-      .filters.first { $0.id == FilterIds.FILTER_BY_PERIOD_DEFAULT }?.selected == true
+    let allUnselectedAreNotDefault = allFilters.filter { !$0.selected }.allSatisfy { !$0.isDefault }
 
-    let issuerGroupAllSelected = groups
-      .first { $0.id == FilterIds.FILTER_BY_ISSUER_GROUP_ID }?
-      .filters.allSatisfy { $0.selected } == true
-
-    let documentCategoryAllSelected = groups
-      .first { $0.id == FilterIds.FILTER_BY_DOCUMENT_CATEGORY_GROUP_ID }?
-      .filters.allSatisfy { $0.selected } == true
-
-    let stateGroupValidSelected = groups
-      .first { $0.id == FilterIds.FILTER_BY_STATE_GROUP_ID }?
-      .filters.first { $0.id == FilterIds.FILTER_BY_STATE_VALID }?.selected == true
-
-    return ascendingSelected &&
-        sortGroupDefaultSelected &&
-        periodGroupDefaultSelected &&
-        issuerGroupAllSelected &&
-        documentCategoryAllSelected &&
-        stateGroupValidSelected
+    return allSelectedAreDefault && allUnselectedAreNotDefault
   }
 }

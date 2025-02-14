@@ -142,6 +142,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
               id: FilterIds.ORDER_BY_ASCENDING,
               name: LocalizableString.shared.get(with: .ascending),
               selected: true,
+              isDefault: true,
               filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
                 attribute.sortingKey
               })
@@ -165,6 +166,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
               id: FilterIds.FILTER_SORT_DEFAULT,
               name: LocalizableString.shared.get(with: .defaultLabel),
               selected: true,
+              isDefault: true,
               filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
                 attribute.sortingKey
               })
@@ -196,6 +198,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
               id: FilterIds.FILTER_BY_PERIOD_DEFAULT,
               name: LocalizableString.shared.get(with: .defaultLabel),
               selected: true,
+              isDefault: true,
               filterableAction: Filter<DocumentFilterableAttributes>(predicate: { _, _ in
                 return true
               })
@@ -264,12 +267,14 @@ final class DashboardInteractorImpl: DashboardInteractor {
             FilterItem(
               id: FilterIds.FILTER_BY_STATE_VALID,
               name: LocalizableString.shared.get(with: .valid),
-              selected: true
+              selected: true,
+              isDefault: true
             ),
             FilterItem(
               id: FilterIds.FILTER_BY_STATE_EXPIRED,
               name: LocalizableString.shared.get(with: .expired),
-              selected: false
+              selected: false,
+              isDefault: false
             )
           ],
           filterableAction: FilterMultipleAction<DocumentFilterableAttributes>(predicate: { attribute, filter in
@@ -477,7 +482,8 @@ final class DashboardInteractorImpl: DashboardInteractor {
       return FilterItem(
         id: UUID().uuidString,
         name: category,
-        selected: true
+        selected: true,
+        isDefault: true
       )
     }
 
@@ -498,6 +504,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
         id: UUID().uuidString,
         name: issuer,
         selected: true,
+        isDefault: true,
         filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, filter in
           attributes.issuer == filter.name
         })
