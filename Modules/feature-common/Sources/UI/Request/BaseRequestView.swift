@@ -154,7 +154,7 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
     showMissingCrredentials: false,
     items: RequestDataUiModel.mockData(),
     trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
-    relyingParty: "relying party",
+    relyingParty: .custom("relying party"),
     isTrusted: true,
     allowShare: true,
     originator: .featureDashboardModule(.dashboard),

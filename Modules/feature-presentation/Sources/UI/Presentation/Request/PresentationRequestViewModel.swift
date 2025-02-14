@@ -44,7 +44,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
         title: .requestDataTitle(
           [authenticationRequest.relyingParty]
         ),
-        relyingParty: authenticationRequest.relyingParty,
+        relyingParty: .custom(authenticationRequest.relyingParty),
         isTrusted: authenticationRequest.isTrusted
       )
       setState {
@@ -54,12 +54,12 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
               appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
               appText: ThemeManager.shared.image.euditext
             ),
-            description: LocalizableString.shared.get(with: .dataSharingTitle),
-            mainText: LocalizableString.shared.get(with: getTitle()),
+            description: .dataSharingTitle,
+            mainText: getTitle(),
             relyingPartyData: RelyingPartyData(
               isVerified: viewState.isTrusted,
               name: getRelyingParty(),
-              description: LocalizableString.shared.get(with: getCaption())
+              description: getCaption()
             )
           )
         )
@@ -106,7 +106,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
               navigationSuccessType: .push(
                 .featurePresentationModule(
                   .presentationLoader(
-                    relyingParty: getRelyingParty(),
+                    relyingParty: LocalizableString.shared.get(with: getRelyingParty()),
                     relyingPartyisTrusted: getRelyingPartyIsTrusted(),
                     presentationCoordinator: remoteSessionCoordinator,
                     originator: getOriginator(),
@@ -140,7 +140,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     .requestDataInfoNotice
   }
 
-  override func getRelyingParty() -> String {
+  override func getRelyingParty() -> LocalizableString.Key {
     viewState.relyingParty
   }
 

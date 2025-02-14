@@ -106,13 +106,13 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
               appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
               appText: ThemeManager.shared.image.euditext
             ),
-            description: LocalizableString.shared.get(with: .dataSharingTitle),
-            mainText: LocalizableString.shared.get(with: .issuanceRequest),
-            icon: .remoteImage(nil, nil), // MARK: - TODO should be return from kit
+            description: .dataSharingTitle,
+            mainText: .issuanceRequest,
+            icon: .none, // MARK: - TODO should be return from kit
             relyingPartyData: RelyingPartyData(
               isVerified: false,
-              name: uiModel.issuerName,
-              description: LocalizableString.shared.get(with: .issuerWantWalletAddition)
+              name: .custom(uiModel.issuerName),
+              description: .issuerWantWalletAddition
             )
           )
         ).copy(error: nil)

@@ -42,7 +42,7 @@ open class BaseLoadingViewModel<Router: RouterHost>: ViewModel<Router, BaseLoadi
             appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
             appText: ThemeManager.shared.image.euditext
           ),
-          description: LocalizableString.shared.get(with: .pleaseWait)
+          description: .pleaseWait
         )
       )
     )
@@ -52,8 +52,8 @@ open class BaseLoadingViewModel<Router: RouterHost>: ViewModel<Router, BaseLoadi
     }
   }
 
-  open func getTitle() -> String {
-    return ""
+  open func getTitle() -> LocalizableString.Key {
+    return .custom("")
   }
 
   open func getCaption() -> LocalizableString.Key {

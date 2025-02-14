@@ -54,7 +54,7 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
         relyingParty: RelyingPartyData(
           logo: config.issuerLogoUrl == nil ? nil : .remoteImage(config.issuerLogoUrl, nil),
           isVerified: config.relyingPartyIsTrusted,
-          name: config.relyingParty
+          name: .custom(config.relyingParty ?? "")
         ),
         items: requestItems.map { item in
           ListItemSection(

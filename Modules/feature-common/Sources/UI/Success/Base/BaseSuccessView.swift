@@ -55,9 +55,7 @@ private func content(
             appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
             appText: ThemeManager.shared.image.euditext
           ),
-          description: LocalizableString.shared.get(
-            with: .successfullySharedFollowingInformation
-          ),
+          description: .successfullySharedFollowingInformation,
           relyingPartyData: viewState.relyingParty
         )
       )

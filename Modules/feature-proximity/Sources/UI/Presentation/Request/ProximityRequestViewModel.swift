@@ -61,7 +61,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
       self.onReceivedItems(
         with: items,
         title: .requestDataTitle([relyingParty]),
-        relyingParty: relyingParty,
+        relyingParty: .custom(relyingParty),
         isTrusted: isTrusted
       )
       setState {
@@ -71,12 +71,12 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
               appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
               appText: ThemeManager.shared.image.euditext
             ),
-            description: LocalizableString.shared.get(with: .dataSharingTitle),
-            mainText: LocalizableString.shared.get(with: getTitle()),
+            description: .dataSharingTitle,
+            mainText: getTitle(),
             relyingPartyData: RelyingPartyData(
               isVerified: viewState.isTrusted,
               name: getRelyingParty(),
-              description: LocalizableString.shared.get(with: getCaption())
+              description: getCaption()
             )
           )
         )
@@ -122,7 +122,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
               navigationSuccessType: .push(
                 .featureProximityModule(
                   .proximityLoader(
-                    relyingParty: getRelyingParty(),
+                    relyingParty: LocalizableString.shared.get(with: getRelyingParty()),
                     relyingPartyisTrusted: getRelyingPartyIsTrusted(),
                     presentationCoordinator: proximitySessionCoordinator,
                     originator: getOriginator(),
@@ -157,7 +157,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
     .requestDataInfoNotice
   }
 
-  override func getRelyingParty() -> String {
+  override func getRelyingParty() -> LocalizableString.Key {
     viewState.relyingParty
   }
 

@@ -16,6 +16,7 @@
 import SwiftUI
 import logic_business
 import logic_core
+import logic_resources
 
 public enum FeatureStartupRouteModule: AppRouteModule {
 
