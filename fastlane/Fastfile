@@ -94,7 +94,7 @@ platform :ios do
       },
     )
 
-    upload_upstore(
+    upload_appstore(
       connectApi: connect_api,
       binaryName: ENV["APP_IPA_PATH"],
       bundleId: ENV["APP_BUNDLE_ID"],
@@ -136,7 +136,7 @@ platform :ios do
   end
 
   desc "Reset version and build number to default"
-  lane :upload_upstore do |values|
+  lane :upload_appstore do |values|
     connectApi = values[:connectApi]
     binaryName = values[:binaryName]
     bundleId = values[:bundleId]
