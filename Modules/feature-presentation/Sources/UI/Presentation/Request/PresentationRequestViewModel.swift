@@ -55,7 +55,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
               appText: ThemeManager.shared.image.euditext
             ),
             description: LocalizableString.shared.get(with: .dataSharingTitle),
-            mainText: LocalizableString.shared.get(with: getTitle()).uppercased(),
+            mainText: LocalizableString.shared.get(with: getTitle()),
             relyingPartyData: RelyingPartyData(
               isVerified: viewState.isTrusted,
               name: getRelyingParty(),

@@ -285,7 +285,8 @@ private func content(
         appText: ThemeManager.shared.image.euditext
       )
     ),
-    isFromOnPause: true
+    isFromOnPause: true,
+    hasDefaultFilters: false
   )
 
   ContentScreenView(

@@ -49,7 +49,7 @@ public struct DocumentUIModel: Identifiable, Equatable, FilterableItemPayload {
 private extension DocumentUIModel {
   func supportingText() -> String {
     if value.hasExpired {
-      return LocalizableString.shared.get(with: .expired).capitalizedFirst()
+      return LocalizableString.shared.get(with: .expired)
     } else {
       switch value.state {
       case .issued:
@@ -339,9 +339,7 @@ extension DocClaimsDecodable {
             )
           }
         ),
-        hasExpired: self.hasExpired(
-          parser: { Locale.current.parseDate(date: $0) }
-        ),
+        hasExpired: self.hasExpired,
         state: failedDocuments.contains(
           where: { $0 == self.id }
         ) ? .failed : (self is DeferrredDocument) ? .pending : .issued,

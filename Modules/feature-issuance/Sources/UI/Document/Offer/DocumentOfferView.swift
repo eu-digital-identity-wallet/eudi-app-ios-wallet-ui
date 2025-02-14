@@ -37,19 +37,6 @@ struct DocumentOfferView<Router: RouterHost>: View {
         imageSize: getScreenRect().width / 4
       )
     }
-    .confirmationDialog(
-      title: .cancelIssueSheetTitle,
-      message: .cancelIssueSheetCaption,
-      destructiveText: .cancelButton,
-      baseText: .cancelIssueSheetContinue,
-      isPresented: $viewModel.isCancelModalShowing,
-      destructiveAction: {
-        viewModel.onPop()
-      },
-      baseAction: {
-        viewModel.onShowCancelModal()
-      }
-    )
     .task {
       await viewModel.initialize()
     }
@@ -127,7 +114,6 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
   let viewState = DocumentOfferViewState(
     isLoading: false,
     documentOfferUiModel: DocumentOfferUIModel.mock(),
-    issuerData: IssuerDataUIModel.mock(),
     error: nil,
     config: UIConfig.Generic(
       arguments: ["uri": "uri"],
@@ -162,7 +148,6 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
       uiOffers: [],
       docOffers: []
     ),
-    issuerData: IssuerDataUIModel.mock(),
     error: nil,
     config: UIConfig.Generic(
       arguments: ["uri": "uri"],

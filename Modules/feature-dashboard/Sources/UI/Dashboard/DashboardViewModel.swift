@@ -36,6 +36,7 @@ struct DashboardState: ViewState {
   let moreOptions: [MoreModalOption]
   let contentHeaderConfig: ContentHeaderConfig
   let isFromOnPause: Bool
+  let hasDefaultFilters: Bool
 
   var pendingDocumentTitle: String {
     pendingDeletionDocument?.value.title ?? ""
@@ -128,7 +129,8 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
             appText: ThemeManager.shared.image.euditext
           )
         ),
-        isFromOnPause: true
+        isFromOnPause: true,
+        hasDefaultFilters: false
       )
     )
 
@@ -426,7 +428,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         Action(image: Theme.shared.image.plus) {
           self.onAdd()
         },
-        Action(image: Theme.shared.image.filterMenuIcon, hasIndicator: viewState.showFilterIndicator) {
+        Action(image: Theme.shared.image.filterMenuIcon, hasIndicator: viewState.showFilterIndicator && !viewState.hasDefaultFilters) {
           self.showFilters()
         }
       ]
@@ -462,11 +464,12 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     Task {
       for await state in interactor.onFilterChangeState() {
         switch state {
-        case .filterApplyResult(let documents, let filterSections):
+        case .filterApplyResult(let documents, let filterSections, let hasDefaultFilters):
           setState {
             $0.copy(
               documents: documents,
-              filterUIModel: filterSections
+              filterUIModel: filterSections,
+              hasDefaultFilters: hasDefaultFilters
             )
           }
         case .filterUpdateResult(let filterSections):

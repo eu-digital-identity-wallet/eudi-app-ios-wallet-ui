@@ -31,7 +31,7 @@ public enum DashboardDeleteDeferredPartialState: Sendable {
 }
 
 public enum FiltersPartialState: Sendable {
-  case filterApplyResult([DocumentCategory: [DocumentUIModel]], [FilterUISection])
+  case filterApplyResult([DocumentCategory: [DocumentUIModel]], [FilterUISection], Bool)
   case filterUpdateResult([FilterUISection])
   case cancelled
 }
@@ -110,14 +110,14 @@ final class DashboardInteractorImpl: DashboardInteractor {
           switch state {
           case .success(let filterResult):
             switch filterResult {
-            case .filterApplyResult(let filteredList, let updatedFilters):
+            case .filterApplyResult(let filteredList, let updatedFilters, let hasDefaultFilters):
               let documentsUI = filteredList.items.compactMap { filterableItem in
                 return filterableItem.payload as? DocumentUIModel
               }
               let documents = Dictionary(grouping: documentsUI, by: { $0.value.documentCategory })
               let filterSections = filterUISection(filters: updatedFilters)
 
-              continuation.yield(.filterApplyResult(documents, filterSections))
+              continuation.yield(.filterApplyResult(documents, filterSections, hasDefaultFilters))
             case .filterUpdateResult(let updatedFilters):
               let filterSections = filterUISection(filters: updatedFilters)
               continuation.yield(.filterUpdateResult(filterSections))

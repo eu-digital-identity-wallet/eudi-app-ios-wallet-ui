@@ -323,6 +323,7 @@ extension WalletKitController {
       return [
         "issuance_date",
         DocumentJsonKeys.EXPIRY_DATE,
+        "exp",
         "issuing_authority",
         "document_number",
         "administrative_number",

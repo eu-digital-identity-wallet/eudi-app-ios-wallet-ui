@@ -171,7 +171,7 @@ public struct FilterMultipleAction<T: FilterableAttributes>: FilterAction {
 }
 
 public enum FilterResult: Sendable {
-  case filterApplyResult(filteredList: FilterableList, updatedFilters: Filters)
+  case filterApplyResult(filteredList: FilterableList, updatedFilters: Filters, hasDefaultFilters: Bool)
   case filterUpdateResult(updatedFilters: Filters)
 }
 

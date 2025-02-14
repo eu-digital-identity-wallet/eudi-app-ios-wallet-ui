@@ -81,7 +81,7 @@ private func content(viewState: SideMenuViewState) -> some View {
       .frame(maxWidth: .infinity, alignment: .center)
 
   }
-  .padding(.bottom, Theme.shared.dimension.padding)
+  .padding(.bottom, SPACING_LARGE_MEDIUM)
 }
 
 #Preview {

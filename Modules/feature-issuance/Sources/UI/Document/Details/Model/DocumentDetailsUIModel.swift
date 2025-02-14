@@ -148,13 +148,7 @@ extension DocClaimsDecodable {
       documentName: displayName.orEmpty,
       issuer: issuer,
       createdAt: createdAt,
-      hasExpired: hasExpired(
-        parser: {
-          Locale.current.parseDate(
-            date: $0
-          )
-        }
-      ),
+      hasExpired: hasExpired,
       documentFields: documentFields
     )
   }

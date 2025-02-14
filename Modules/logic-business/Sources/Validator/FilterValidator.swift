@@ -43,8 +43,8 @@ actor FilterValidatorImpl: FilterValidator {
   private var filteredList: FilterableList
   private var filterableList: FilterableList
   private var snapshotFilters: Filters = Filters.emptyFilters()
-
   private let filterResultSubject: SendablePassthroughSubject<FilterResultPartialState> = .init()
+  private var hasDefaultFilters: Bool = false
 
   init(
     filters: Filters? = nil,
@@ -107,6 +107,8 @@ actor FilterValidatorImpl: FilterValidator {
       }
     }
 
+    hasDefaultFilters = onlyDefaultSelected(groups: appliedFilters.filterGroups)
+
     if !searchQuery.isEmpty {
       filteredList = filteredList.copy(
         items: filteredList.items.filter { item in
@@ -121,7 +123,8 @@ actor FilterValidatorImpl: FilterValidator {
       .success(
         .filterApplyResult(
           filteredList: filteredList,
-          updatedFilters: appliedFilters
+          updatedFilters: appliedFilters,
+          hasDefaultFilters: hasDefaultFilters
         )
       )
     )
@@ -266,5 +269,38 @@ actor FilterValidatorImpl: FilterValidator {
     }
 
     return group
+  }
+
+  private func onlyDefaultSelected(groups: [FilterGroup]) -> Bool {
+    let ascendingSelected = groups
+      .first { $0.id == FilterIds.ASCENDING_DESCENDING_GROUP }?
+      .filters.first { $0.id == FilterIds.ORDER_BY_ASCENDING }?.selected == true
+
+    let sortGroupDefaultSelected = groups
+      .first { $0.id == FilterIds.FILTER_SORT_GROUP_ID }?
+      .filters.first { $0.id == FilterIds.FILTER_SORT_DEFAULT }?.selected == true
+
+    let periodGroupDefaultSelected = groups
+      .first { $0.id == FilterIds.FILTER_BY_PERIOD_GROUP_ID }?
+      .filters.first { $0.id == FilterIds.FILTER_BY_PERIOD_DEFAULT }?.selected == true
+
+    let issuerGroupAllSelected = groups
+      .first { $0.id == FilterIds.FILTER_BY_ISSUER_GROUP_ID }?
+      .filters.allSatisfy { $0.selected } == true
+
+    let documentCategoryAllSelected = groups
+      .first { $0.id == FilterIds.FILTER_BY_DOCUMENT_CATEGORY_GROUP_ID }?
+      .filters.allSatisfy { $0.selected } == true
+
+    let stateGroupValidSelected = groups
+      .first { $0.id == FilterIds.FILTER_BY_STATE_GROUP_ID }?
+      .filters.first { $0.id == FilterIds.FILTER_BY_STATE_VALID }?.selected == true
+
+    return ascendingSelected &&
+        sortGroupDefaultSelected &&
+        periodGroupDefaultSelected &&
+        issuerGroupAllSelected &&
+        documentCategoryAllSelected &&
+        stateGroupValidSelected
   }
 }
