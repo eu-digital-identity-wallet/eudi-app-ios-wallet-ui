@@ -25,13 +25,13 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>Changelog Url</key>
+	<string>$(CHANGELOG_URL)</string>
 	<key>Core User Auth</key>
 	<string>$(CORE_USER_AUTH)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>Wallet Host Url</key>
 	<string>$(WALLET_HOST_URL)</string>
-	<key>Changelog Url</key>
-	<string>$(CHANGELOG_URL)</string>
 </dict>
 </plist>
