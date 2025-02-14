@@ -80,7 +80,6 @@ struct DocumentTabView: View {
     }
     .searchable(
       searchText: $searchQuery,
-      placeholder: LocalizableString.shared.get(with: .search),
       backgroundColor: Theme.shared.color.background,
       onSearchTextChange: { _ in }
     )
