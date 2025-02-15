@@ -224,7 +224,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
       }
     }
 
-    var subTitle: LocalizableString.Key {
+    var subTitle: LocalizableStringKey {
       if documentName.isEmpty {
         return .scopedIssuanceSuccessDeferredCaptionDocName([documentName])
       } else if !documentName.isEmpty, !issuerName.isEmpty {

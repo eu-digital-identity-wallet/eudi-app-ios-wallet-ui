@@ -26,15 +26,15 @@ enum QuickPinStep {
 @Copyable
 struct QuickPinState: ViewState {
   let config: QuickPinUiConfig
-  let navigationTitle: LocalizableString.Key
-  let title: LocalizableString.Key
-  let caption: LocalizableString.Key
-  let button: LocalizableString.Key
-  let success: LocalizableString.Key
-  let successButton: LocalizableString.Key
+  let navigationTitle: LocalizableStringKey
+  let title: LocalizableStringKey
+  let caption: LocalizableStringKey
+  let button: LocalizableStringKey
+  let success: LocalizableStringKey
+  let successButton: LocalizableStringKey
   let successNavigationType: UIConfig.DeepLinkNavigationType
   let isCancellable: Bool
-  let pinError: LocalizableString.Key?
+  let pinError: LocalizableStringKey?
   let isButtonActive: Bool
   let step: QuickPinStep
   let quickPinSize: Int
@@ -161,7 +161,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
   private func onSuccess() {
     interactor.setPin(newPin: uiPinInputField)
 
-    let buttonTitle: LocalizableString.Key = viewState.config.isSetFlow ?
+    let buttonTitle: LocalizableStringKey = viewState.config.isSetFlow ?
       .walletIsSecured :
       .successTitlePunctuated
 

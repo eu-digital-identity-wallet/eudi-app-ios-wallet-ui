@@ -20,14 +20,14 @@ import logic_resources
 public struct SideMenuItemUIModel: Identifiable {
 
   public let id: String
-  public let title: LocalizableString.Key
+  public let title: LocalizableStringKey
   public let showDivider: Bool
   public let isShareLink: Bool
   public let action: (() -> Void)
 
   public init(
     id: String = UUID().uuidString,
-    title: LocalizableString.Key,
+    title: LocalizableStringKey,
     showDivider: Bool = true,
     isShareLink: Bool = false,
     action: @escaping (() -> Void)

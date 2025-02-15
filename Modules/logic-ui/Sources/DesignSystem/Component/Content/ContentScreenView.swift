@@ -27,7 +27,7 @@ public struct ContentScreenView<Content: View>: View {
   private let allowBackGesture: Bool
   private let errorConfig: ContentErrorView.Config?
   private let background: Color
-  private let navigationTitle: LocalizableString.Key?
+  private let navigationTitle: LocalizableStringKey?
   private let isLoading: Bool
   private let toolbarContent: ToolBarContent?
 
@@ -38,7 +38,7 @@ public struct ContentScreenView<Content: View>: View {
     allowBackGesture: Bool = false,
     errorConfig: ContentErrorView.Config? = nil,
     background: Color = Theme.shared.color.background,
-    navigationTitle: LocalizableString.Key? = nil,
+    navigationTitle: LocalizableStringKey? = nil,
     isLoading: Bool = false,
     toolbarContent: ToolBarContent? = nil,
     @ViewBuilder content: () -> Content

@@ -106,7 +106,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
               navigationSuccessType: .push(
                 .featurePresentationModule(
                   .presentationLoader(
-                    relyingParty: LocalizableString.shared.get(with: getRelyingParty()),
+                    relyingParty: getRelyingParty().toString,
                     relyingPartyisTrusted: getRelyingPartyIsTrusted(),
                     presentationCoordinator: remoteSessionCoordinator,
                     originator: getOriginator(),
@@ -128,19 +128,19 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     return getOriginator()
   }
 
-  override func getTitle() -> LocalizableString.Key {
+  override func getTitle() -> LocalizableStringKey {
     .dataSharingRequest
   }
 
-  override func getCaption() -> LocalizableString.Key {
+  override func getCaption() -> LocalizableStringKey {
     .requestsTheFollowing
   }
 
-  override func getDataRequestInfo() -> LocalizableString.Key {
+  override func getDataRequestInfo() -> LocalizableStringKey {
     .requestDataInfoNotice
   }
 
-  override func getRelyingParty() -> LocalizableString.Key {
+  override func getRelyingParty() -> LocalizableStringKey {
     viewState.relyingParty
   }
 
@@ -148,15 +148,15 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     viewState.isTrusted
   }
 
-  override func getTitleCaption() -> String {
-    LocalizableString.shared.get(with: .requestDataTitle([""]))
+  override func getTitleCaption() -> LocalizableStringKey {
+    .requestDataTitle([""])
   }
 
-  override func getTrustedRelyingParty() -> LocalizableString.Key {
+  override func getTrustedRelyingParty() -> LocalizableStringKey {
     .requestDataVerifiedEntity
   }
 
-  override func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
+  override func getTrustedRelyingPartyInfo() -> LocalizableStringKey {
     .requestDataVerifiedEntityMessage
   }
 

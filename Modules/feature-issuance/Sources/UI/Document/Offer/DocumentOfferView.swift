@@ -143,7 +143,7 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
   let viewState = DocumentOfferViewState(
     isLoading: false,
     documentOfferUiModel: .init(
-      issuerName: LocalizableString.shared.get(with: .unknownIssuer),
+      issuerName: LocalizableStringKey.unknownIssuer.toString,
       txCode: nil,
       uiOffers: [],
       docOffers: []

@@ -25,8 +25,8 @@ struct OfferCodeViewState: ViewState {
   let isLoading: Bool
   let error: ContentErrorView.Config?
   let config: IssuanceCodeUiConfig
-  let title: LocalizableString.Key
-  let caption: LocalizableString.Key
+  let title: LocalizableStringKey
+  let caption: LocalizableStringKey
   let contentHeaderConfig: ContentHeaderConfig
 }
 

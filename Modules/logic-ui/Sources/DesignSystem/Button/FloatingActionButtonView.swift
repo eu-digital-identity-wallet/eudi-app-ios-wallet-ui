@@ -18,7 +18,7 @@ import logic_resources
 
 public struct FloatingActionButtonView: View {
 
-  private let title: LocalizableString.Key
+  private let title: LocalizableStringKey
   private let textColor: Color
   private let backgroundColor: Color
   private let icon: Image
@@ -27,7 +27,7 @@ public struct FloatingActionButtonView: View {
   private let action: () -> Void
 
   public init(
-    title: LocalizableString.Key,
+    title: LocalizableStringKey,
     textColor: Color = Theme.shared.color.onSurface,
     backgroundColor: Color = Theme.shared.color.primary,
     icon: Image,
@@ -75,7 +75,7 @@ public struct FloatingActionButtonView: View {
 
 public struct FloatingActionButtonModifier: ViewModifier {
 
-  private let title: LocalizableString.Key
+  private let title: LocalizableStringKey
   private let textColor: Color
   private let backgroundColor: Color
   private let icon: Image
@@ -86,7 +86,7 @@ public struct FloatingActionButtonModifier: ViewModifier {
   private let trailingPadding: CGFloat
 
   public init(
-    title: LocalizableString.Key,
+    title: LocalizableStringKey,
     textColor: Color = Theme.shared.color.onSurface,
     backgroundColor: Color = Theme.shared.color.secondary,
     icon: Image,
@@ -130,14 +130,14 @@ public struct FloatingActionButtonModifier: ViewModifier {
 #Preview {
   Group {
     FloatingActionButtonView(
-      title: LocalizableString.Key.addDocumentSubtitle,
+      title: LocalizableStringKey.addDocumentSubtitle,
       icon: Image(systemName: "calendar"),
       action: {}
     )
     .lightModePreview()
 
     FloatingActionButtonView(
-      title: LocalizableString.Key.addDocumentSubtitle,
+      title: LocalizableStringKey.addDocumentSubtitle,
       icon: Image(systemName: "calendar"),
       action: {}
     )

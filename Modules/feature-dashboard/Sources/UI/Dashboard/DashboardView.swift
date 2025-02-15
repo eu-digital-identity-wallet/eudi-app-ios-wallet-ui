@@ -224,7 +224,7 @@ private func content(
       })
     .tabItem {
       Label(
-        LocalizableString.shared.get(with: .home),
+        LocalizableStringKey.home.toString,
         systemImage: "house.fill"
       )
     }
@@ -249,15 +249,16 @@ private func content(
     }
     .tabItem {
       Label(
-        LocalizableString.shared.get(with: .documents),
-        systemImage: "doc.fill")
+        .documents,
+        systemImage: "doc.fill"
+      )
     }
     .tag(SelectedTab.documents)
 
     TransactionTabView()
       .tabItem {
         Label(
-          LocalizableString.shared.get(with: .transactions),
+          .transactions,
           systemImage: "arrow.left.arrow.right"
         )
       }

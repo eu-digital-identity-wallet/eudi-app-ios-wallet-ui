@@ -122,8 +122,8 @@ private func content(
       ),
       navigationCancelType: .pop
     ),
-    title: LocalizableString.Key.addDocumentTitle,
-    caption: LocalizableString.Key.addDocumentSubtitle,
+    title: LocalizableStringKey.addDocumentTitle,
+    caption: LocalizableStringKey.addDocumentSubtitle,
     contentHeaderConfig: .init(
       appIconAndTextData: AppIconAndTextData(
         appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,

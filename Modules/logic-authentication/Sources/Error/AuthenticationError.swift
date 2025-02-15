@@ -23,7 +23,7 @@ public enum AuthenticationError: LocalizedError {
   public var errorDescription: String? {
     return switch self {
     case .quickPinInvalid:
-      LocalizableString.shared.get(with: .invalidQuickPin)
+      LocalizableStringKey.invalidQuickPin.toString
     }
   }
 }

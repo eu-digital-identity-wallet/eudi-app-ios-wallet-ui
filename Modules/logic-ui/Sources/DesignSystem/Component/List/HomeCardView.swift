@@ -17,20 +17,20 @@ import SwiftUI
 import logic_resources
 
 public struct HomeCardView: View {
-  private let text: LocalizableString.Key
-  private let buttonText: LocalizableString.Key
+  private let text: LocalizableStringKey
+  private let buttonText: LocalizableStringKey
   private let illustration: Image?
   private let buttonViewStyle: ButtonViewStyle
-  private let learnMoreText: LocalizableString.Key?
+  private let learnMoreText: LocalizableStringKey?
   private let learnMoreAction: (() -> Void)?
   private let action: () -> Void
 
   public init(
-    text: LocalizableString.Key,
-    buttonText: LocalizableString.Key,
+    text: LocalizableStringKey,
+    buttonText: LocalizableStringKey,
     illustration: Image? = nil,
     buttonViewStyle: ButtonViewStyle = .primary,
-    learnMoreText: LocalizableString.Key? = nil,
+    learnMoreText: LocalizableStringKey? = nil,
     learnMoreAction: (() -> Void)? = nil,
     action: @escaping () -> Void
   ) {
@@ -96,17 +96,17 @@ public struct HomeCardView: View {
   ScrollView {
     VStack {
       HomeCardView(
-        text: LocalizableString.Key.authenticateAuthoriseTransactions,
-        buttonText: LocalizableString.Key.addDocumentTitle,
+        text: LocalizableStringKey.authenticateAuthoriseTransactions,
+        buttonText: LocalizableStringKey.addDocumentTitle,
         illustration: Image(systemName: "person.fill"),
-        learnMoreText: LocalizableString.Key.learnMore,
+        learnMoreText: LocalizableStringKey.learnMore,
         learnMoreAction: {},
         action: {}
       )
 
       HomeCardView(
-        text: LocalizableString.Key.authenticateAuthoriseTransactions,
-        buttonText: LocalizableString.Key.addDocumentTitle,
+        text: LocalizableStringKey.authenticateAuthoriseTransactions,
+        buttonText: LocalizableStringKey.addDocumentTitle,
         illustration: Image(systemName: "person.fill"),
         buttonViewStyle: .secondary,
         learnMoreAction: {},
@@ -114,15 +114,15 @@ public struct HomeCardView: View {
       )
 
       HomeCardView(
-        text: LocalizableString.Key.authenticateAuthoriseTransactions,
-        buttonText: LocalizableString.Key.addDocumentTitle,
+        text: LocalizableStringKey.authenticateAuthoriseTransactions,
+        buttonText: LocalizableStringKey.addDocumentTitle,
         illustration: Image(systemName: "person.fill"),
         action: {}
       )
 
       HomeCardView(
-        text: LocalizableString.Key.authenticateAuthoriseTransactions,
-        buttonText: LocalizableString.Key.addDocumentTitle,
+        text: LocalizableStringKey.authenticateAuthoriseTransactions,
+        buttonText: LocalizableStringKey.addDocumentTitle,
         action: {}
       )
     }

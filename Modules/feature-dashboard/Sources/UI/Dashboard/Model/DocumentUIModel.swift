@@ -36,7 +36,7 @@ public struct DocumentUIModel: Identifiable, Equatable, FilterableItemPayload {
     .init(
       mainText: .custom(value.title),
       overlineText: .custom(value.heading),
-      supportingText: .custom(supportingText()),
+      supportingText: supportingText(),
       supportingTextColor: supportingColor(),
       leadingIcon: .init(
         imageUrl: value.image?.url,
@@ -47,17 +47,17 @@ public struct DocumentUIModel: Identifiable, Equatable, FilterableItemPayload {
   }
 }
 private extension DocumentUIModel {
-  func supportingText() -> String {
+  func supportingText() -> LocalizableStringKey {
     if value.hasExpired {
-      return LocalizableString.shared.get(with: .expired)
+      return .expired
     } else {
       switch value.state {
       case .issued:
-        return expiry.orEmpty
+        return .custom(expiry.orEmpty)
       case .pending:
-        return LocalizableString.shared.get(with: .pending)
+        return .pending
       case .failed:
-        return LocalizableString.shared.get(with: .issuanceFailed)
+        return .issuanceFailed
       }
     }
   }
@@ -92,7 +92,7 @@ private extension DocumentUIModel {
     guard let expiresAt = value.expiresAt else {
       return nil
     }
-    return LocalizableString.shared.get(with: .validUntil([expiresAt])).replacingOccurrences(of: "\n", with: "")
+    return LocalizableStringKey.validUntil([expiresAt]).toString.replacingOccurrences(of: "\n", with: "")
   }
 }
 

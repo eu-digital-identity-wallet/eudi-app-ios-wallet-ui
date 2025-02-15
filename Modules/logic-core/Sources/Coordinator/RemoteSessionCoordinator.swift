@@ -106,8 +106,8 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
   private func createRequest() -> PresentationRequest {
     PresentationRequest(
       items: session.disclosedDocuments,
-      relyingParty: session.readerCertIssuer ?? LocalizableString.shared.get(with: .unknownVerifier),
-      dataRequestInfo: session.readerCertValidationMessage ?? LocalizableString.shared.get(with: .requestDataInfoNotice),
+      relyingParty: session.readerCertIssuer ?? LocalizableStringKey.unknownVerifier.toString,
+      dataRequestInfo: session.readerCertValidationMessage ?? LocalizableStringKey.requestDataInfoNotice.toString,
       isTrusted: session.readerCertIssuerValid == true
     )
   }

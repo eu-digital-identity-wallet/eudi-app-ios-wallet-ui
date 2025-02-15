@@ -20,20 +20,20 @@ import Foundation
 public extension UIConfig {
   struct Biometry: UIConfigType, Equatable {
 
-    public let navigationTitle: LocalizableString.Key
+    public let navigationTitle: LocalizableStringKey
     public let displayLogo: Bool
-    public let title: LocalizableString.Key
-    public let caption: LocalizableString.Key
-    public let quickPinOnlyCaption: LocalizableString.Key
+    public let title: LocalizableStringKey
+    public let caption: LocalizableStringKey
+    public let quickPinOnlyCaption: LocalizableStringKey
     public let navigationSuccessType: ThreeWayNavigationType
     public let navigationBackType: ThreeWayNavigationType?
     public let isPreAuthorization: Bool
     public let shouldInitializeBiometricOnCreate: Bool
 
     public var log: String {
-      return "navigationTitle: \(LocalizableString.shared.get(with: navigationTitle))" +
+      return "navigationTitle: \(navigationTitle.toString)" +
       "displayLogo: \(displayLogo)" +
-      "title: \(LocalizableString.shared.get(with: title))" +
+      "title: \(title.toString)" +
       " onSuccessNav: \(navigationSuccessType.key)" +
       " onBackNav: \(navigationBackType?.key ?? "none")" +
       " isPreAuthorization: \(isPreAuthorization)" +
@@ -41,11 +41,11 @@ public extension UIConfig {
     }
 
     public init(
-      navigationTitle: LocalizableString.Key,
+      navigationTitle: LocalizableStringKey,
       displayLogo: Bool = true,
-      title: LocalizableString.Key,
-      caption: LocalizableString.Key,
-      quickPinOnlyCaption: LocalizableString.Key,
+      title: LocalizableStringKey,
+      caption: LocalizableStringKey,
+      quickPinOnlyCaption: LocalizableStringKey,
       navigationSuccessType: ThreeWayNavigationType,
       navigationBackType: ThreeWayNavigationType?,
       isPreAuthorization: Bool,

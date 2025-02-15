@@ -51,16 +51,16 @@ public struct ContentErrorView: View {
 public extension ContentErrorView {
   struct Config {
 
-    let title: LocalizableString.Key
-    let description: LocalizableString.Key
-    let button: LocalizableString.Key
+    let title: LocalizableStringKey
+    let description: LocalizableStringKey
+    let button: LocalizableStringKey
     let cancelAction: () -> Void
     let action: (() -> Void)?
 
     public init(
-      title: LocalizableString.Key = .genericErrorTitle,
-      description: LocalizableString.Key = .genericErrorDesc,
-      button: LocalizableString.Key = .tryAgain,
+      title: LocalizableStringKey = .genericErrorTitle,
+      description: LocalizableStringKey = .genericErrorDesc,
+      button: LocalizableStringKey = .tryAgain,
       cancelAction: @escaping @autoclosure () -> Void,
       action: (() -> Void)? = nil
     ) {

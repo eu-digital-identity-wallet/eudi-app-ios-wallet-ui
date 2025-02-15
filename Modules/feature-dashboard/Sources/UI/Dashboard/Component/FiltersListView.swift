@@ -58,7 +58,7 @@ struct FiltersListView: View {
       }
       .listStyle(.grouped)
       .scrollIndicators(.hidden)
-      .navigationTitle(LocalizableString.shared.get(with: .filters))
+      .navigationTitle(.filters)
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {

@@ -21,7 +21,7 @@ public struct ContentTitleView: View {
   public typealias TapListener = (() -> Void)?
 
   public enum TitleDecoration {
-    case plain(LocalizableString.Key)
+    case plain(LocalizableStringKey)
     case icon(decorated: String, icon: Image, text: String?)
   }
 
@@ -29,7 +29,7 @@ public struct ContentTitleView: View {
   private let titleFont: TypographyStyle
   private let titleDecoration: TitleDecoration
   private let decorationColor: Color
-  private let caption: LocalizableString.Key?
+  private let caption: LocalizableStringKey?
   private let titleColor: Color
   private let captionColor: Color
   private let textAlignment: Alignment
@@ -38,10 +38,10 @@ public struct ContentTitleView: View {
   private let onTap: TapListener
 
   public init(
-    title: LocalizableString.Key,
+    title: LocalizableStringKey,
     titleFont: TypographyStyle = Theme.shared.font.titleLarge,
     titleWeight: Font.Weight = .regular,
-    caption: LocalizableString.Key? = nil,
+    caption: LocalizableStringKey? = nil,
     decorationColor: Color = Theme.shared.color.primary,
     titleColor: Color = Theme.shared.color.onSurface,
     captionColor: Color = Theme.shared.color.onSurfaceVariant,
@@ -67,7 +67,7 @@ public struct ContentTitleView: View {
     titleDecoration: TitleDecoration,
     titleFont: TypographyStyle = Theme.shared.font.titleLarge,
     titleWeight: Font.Weight = .regular,
-    caption: LocalizableString.Key? = nil,
+    caption: LocalizableStringKey? = nil,
     decorationColor: Color = Theme.shared.color.primary,
     titleColor: Color = Theme.shared.color.onSurface,
     captionColor: Color = Theme.shared.color.onSurfaceVariant,
@@ -154,14 +154,14 @@ public extension ContentTitleView {
 #Preview {
   Group {
     ContentTitleView(
-      title: LocalizableString.Key.tryAgain,
-      caption: LocalizableString.Key.tryAgain
+      title: LocalizableStringKey.tryAgain,
+      caption: LocalizableStringKey.tryAgain
     )
     .lightModePreview()
 
     ContentTitleView(
-      title: LocalizableString.Key.tryAgain,
-      caption: LocalizableString.Key.tryAgain
+      title: LocalizableStringKey.tryAgain,
+      caption: LocalizableStringKey.tryAgain
     )
     .darkModePreview()
   }

@@ -174,7 +174,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     }
   }
 
-  func alertTitle() -> LocalizableString.Key {
+  func alertTitle() -> LocalizableStringKey {
     if viewState.isBookmarked {
       return .savedToFavorites
     } else {
@@ -182,7 +182,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     }
   }
 
-  func alertMessage() -> LocalizableString.Key {
+  func alertMessage() -> LocalizableStringKey {
     if viewState.isBookmarked {
       return .savedToFavoritesMessage
     } else {

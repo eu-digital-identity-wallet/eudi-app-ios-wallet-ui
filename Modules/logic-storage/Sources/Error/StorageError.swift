@@ -24,9 +24,9 @@ public enum StorageError: LocalizedError {
   public var errorDescription: String? {
     return switch self {
     case .itemNotFound:
-      LocalizableString.shared.get(with: .itemNotFoundInStorage)
+      LocalizableStringKey.itemNotFoundInStorage.toString
     case .itemsNotFound:
-      LocalizableString.shared.get(with: .itemsNotFoundInStorage)
+      LocalizableStringKey.itemsNotFoundInStorage.toString
     }
   }
 }

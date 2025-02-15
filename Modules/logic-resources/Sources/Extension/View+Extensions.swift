@@ -16,18 +16,18 @@
 import SwiftUI
 
 public extension View {
-  func navigationTitle(_ key: LocalizableString.Key) -> some View {
-    return self.navigationTitle(LocalizableString.shared.get(with: key))
+  func navigationTitle(_ key: LocalizableStringKey) -> some View {
+    return self.navigationTitle(key.toString)
   }
   func confirmationDialog<A, M>(
-    _ key: LocalizableString.Key,
+    _ key: LocalizableStringKey,
     isPresented: Binding<Bool>,
     titleVisibility: Visibility = .automatic,
     @ViewBuilder actions: () -> A,
     @ViewBuilder message: () -> M
   ) -> some View where A: View, M: View {
     return self.confirmationDialog(
-      LocalizableString.shared.get(with: key),
+      key.toString,
       isPresented: isPresented,
       titleVisibility: titleVisibility,
       actions: actions,

@@ -98,30 +98,40 @@ private func content(
           textColor: Theme.shared.color.white,
           onClick: { onErrorClick() }
         )
+        .padding()
       }
-
-      VStack {
-        Spacer()
-        HStack(spacing: SPACING_MEDIUM) {
-
-          Theme.shared.image.errorIndicator
-            .renderingMode(.template)
-            .foregroundStyle(Theme.shared.color.white)
-
-          Text(viewState.informativeTest)
-            .typography(Theme.shared.font.bodyLarge)
-            .foregroundStyle(Theme.shared.color.white)
-            .multilineTextAlignment(.center)
-
-        }
-      }
-      .padding(.horizontal)
-      .padding(.bottom, SPACING_LARGE)
-      .frame(maxWidth: .infinity)
+      informativeText(viewState: viewState)
     }
     .animation(.easeInOut, value: viewState.showInformativeText)
   }
   .ignoresSafeArea(.all, edges: .bottom)
+}
+
+@MainActor
+@ViewBuilder
+private func informativeText(viewState: ScannerState) -> some View {
+  ZStack {
+    VStack {
+      HStack(spacing: SPACING_MEDIUM) {
+
+        Theme.shared.image.errorIndicator
+          .renderingMode(.template)
+          .foregroundStyle(Theme.shared.color.onSurface)
+
+        Text(viewState.informativeTest)
+          .typography(Theme.shared.font.bodyLarge)
+          .foregroundStyle(Theme.shared.color.onSurface)
+          .multilineTextAlignment(.center)
+
+      }
+    }
+    .padding()
+    .background(Theme.shared.color.surfaceContainer)
+    .clipShape(Theme.shared.shape.highCornerRadiusShape)
+    .opacity(viewState.showInformativeText ? 1.0 : 0.0)
+  }
+  .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+  .padding(.bottom, SPACING_LARGE)
 }
 
 #Preview {

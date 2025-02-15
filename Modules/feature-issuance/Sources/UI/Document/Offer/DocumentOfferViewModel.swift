@@ -31,7 +31,7 @@ struct DocumentOfferViewState: ViewState {
   let initialized: Bool
   let contentHeaderConfig: ContentHeaderConfig
 
-  var title: LocalizableString.Key {
+  var title: LocalizableStringKey {
     return .requestCredentialOfferTitle([documentOfferUiModel.issuerName])
   }
 

@@ -25,10 +25,10 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
 
   @EquatableNoop
   public var id: String
-  public let mainText: LocalizableString.Key
+  public let mainText: LocalizableStringKey
   public let mainStyle: MainStyle
-  public let overlineText: LocalizableString.Key?
-  public let supportingText: LocalizableString.Key?
+  public let overlineText: LocalizableStringKey?
+  public let supportingText: LocalizableStringKey?
   public let supportingTextColor: Color
   public let overlineTextColor: Color
   public let leadingIcon: LeadingIcon?
@@ -38,10 +38,10 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
 
   public init(
     id: String = UUID().uuidString,
-    mainText: LocalizableString.Key,
+    mainText: LocalizableStringKey,
     mainStyle: MainStyle = .plain,
-    overlineText: LocalizableString.Key? = nil,
-    supportingText: LocalizableString.Key? = nil,
+    overlineText: LocalizableStringKey? = nil,
+    supportingText: LocalizableStringKey? = nil,
     supportingTextColor: Color = Theme.shared.color.onSurfaceVariant,
     overlineTextColor: Color = Theme.shared.color.onSurfaceVariant,
     leadingIcon: LeadingIcon? = nil,

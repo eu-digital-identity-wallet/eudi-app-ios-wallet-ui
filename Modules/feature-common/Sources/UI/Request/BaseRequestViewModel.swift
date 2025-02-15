@@ -23,8 +23,8 @@ public struct RequestViewState: ViewState {
   public let error: ContentErrorView.Config?
   public let showMissingCrredentials: Bool
   public let items: [RequestDataUI]
-  public let trustedRelyingPartyInfo: LocalizableString.Key
-  public let relyingParty: LocalizableString.Key
+  public let trustedRelyingPartyInfo: LocalizableStringKey
+  public let relyingParty: LocalizableStringKey
   public let isTrusted: Bool
   public let allowShare: Bool
   public let originator: AppRoute
@@ -65,11 +65,11 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
 
   open func doWork() async {}
 
-  open func getTitle() -> LocalizableString.Key {
+  open func getTitle() -> LocalizableStringKey {
     return .custom("")
   }
 
-  open func getRelyingParty() -> LocalizableString.Key {
+  open func getRelyingParty() -> LocalizableStringKey {
     return .custom("")
   }
 
@@ -77,11 +77,11 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     return false
   }
 
-  open func getCaption() -> LocalizableString.Key {
+  open func getCaption() -> LocalizableStringKey {
     return .custom("")
   }
 
-  open func getDataRequestInfo() -> LocalizableString.Key {
+  open func getDataRequestInfo() -> LocalizableStringKey {
     return .custom("")
   }
 
@@ -89,15 +89,15 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     return nil
   }
 
-  open func getTitleCaption() -> String {
-    return ""
-  }
-
-  open func getTrustedRelyingParty() -> LocalizableString.Key {
+  open func getTitleCaption() -> LocalizableStringKey {
     return .custom("")
   }
 
-  open func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
+  open func getTrustedRelyingParty() -> LocalizableStringKey {
+    return .custom("")
+  }
+
+  open func getTrustedRelyingPartyInfo() -> LocalizableStringKey {
     return .custom("")
   }
 
@@ -145,8 +145,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
 
   public func onReceivedItems(
     with items: [RequestDataUI],
-    title: LocalizableString.Key,
-    relyingParty: LocalizableString.Key,
+    title: LocalizableStringKey,
+    relyingParty: LocalizableStringKey,
     isTrusted: Bool
   ) {
     setState {

@@ -333,7 +333,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     router.push(with: .featureCommonModule(.qrScanner(config: ScannerUiConfig(flow: .presentation))))
   }
 
-  func getNavigationTitle() -> LocalizableString.Key {
+  func getNavigationTitle() -> LocalizableStringKey {
     switch selectedTab {
     case .documents:
       return .documents

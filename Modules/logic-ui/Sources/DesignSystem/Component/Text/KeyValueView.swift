@@ -19,18 +19,18 @@ import logic_resources
 public struct KeyValueView: View {
 
   enum Value {
-    case string(LocalizableString.Key)
+    case string(LocalizableStringKey)
     case image(Image)
   }
 
-  let title: LocalizableString.Key
+  let title: LocalizableStringKey
   let value: Value
   let alignment: KeyValueView.Alignment
   let isLoading: Bool
 
   public init(
-    title: LocalizableString.Key,
-    subTitle: LocalizableString.Key,
+    title: LocalizableStringKey,
+    subTitle: LocalizableStringKey,
     alignment: KeyValueView.Alignment = .start,
     isLoading: Bool = false
   ) {
@@ -41,7 +41,7 @@ public struct KeyValueView: View {
   }
 
   public init(
-    title: LocalizableString.Key,
+    title: LocalizableStringKey,
     image: Image,
     alignment: KeyValueView.Alignment = .start,
     isLoading: Bool = false

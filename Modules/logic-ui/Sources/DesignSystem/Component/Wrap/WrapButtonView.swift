@@ -18,7 +18,7 @@ import logic_resources
 
 public struct WrapButtonView: View {
 
-  private let title: LocalizableString.Key
+  private let title: LocalizableStringKey
   private let onAction: () -> Void
   private let textColor: Color
   private let backgroundColor: Color
@@ -32,7 +32,7 @@ public struct WrapButtonView: View {
   private let isLoading: Bool
 
   public init(
-    title: LocalizableString.Key,
+    title: LocalizableStringKey,
     textColor: Color = Theme.shared.color.onSurface,
     backgroundColor: Color = Theme.shared.color.primary,
     iconColor: Color = Theme.shared.color.primary,
@@ -61,7 +61,7 @@ public struct WrapButtonView: View {
 
   public init(
     style: ButtonViewStyle,
-    title: LocalizableString.Key,
+    title: LocalizableStringKey,
     iconColor: Color = Theme.shared.color.primary,
     icon: Image? = nil,
     gravity: Gravity = .center,
@@ -142,7 +142,7 @@ public extension WrapButtonView {
   VStack {
     WrapButtonView(
       style: .primary,
-      title: LocalizableString.Key.addDoc,
+      title: LocalizableStringKey.addDoc,
       icon: Image(systemName: "calendar"),
       gravity: .center,
       cornerRadius: 10,
@@ -150,7 +150,7 @@ public extension WrapButtonView {
     )
     WrapButtonView(
       style: .primary,
-      title: LocalizableString.Key.addDoc,
+      title: LocalizableStringKey.addDoc,
       icon: Image(systemName: "calendar"),
       gravity: .start,
       cornerRadius: 10,
@@ -158,7 +158,7 @@ public extension WrapButtonView {
     )
     WrapButtonView(
       style: .secondary,
-      title: LocalizableString.Key.addDoc,
+      title: LocalizableStringKey.addDoc,
       icon: Image(systemName: "calendar"),
       gravity: .end,
       cornerRadius: 10,
@@ -166,7 +166,7 @@ public extension WrapButtonView {
     )
     WrapButtonView(
       style: .primary,
-      title: LocalizableString.Key.addDoc,
+      title: LocalizableStringKey.addDoc,
       icon: Image(systemName: "calendar"),
       gravity: .center,
       isLoading: true,
@@ -175,7 +175,7 @@ public extension WrapButtonView {
     )
     WrapButtonView(
       style: .primary,
-      title: LocalizableString.Key.addDoc,
+      title: LocalizableStringKey.addDoc,
       icon: Image(systemName: "calendar"),
       gravity: .center,
       isEnabled: false,
@@ -184,14 +184,14 @@ public extension WrapButtonView {
     )
     WrapButtonView(
       style: .error,
-      title: LocalizableString.Key.addDoc,
+      title: LocalizableStringKey.addDoc,
       gravity: .center,
       onAction: {}()
     )
 
     WrapButtonView(
       style: .success,
-      title: LocalizableString.Key.addDoc,
+      title: LocalizableStringKey.addDoc,
       icon: Image(systemName: "checkmark"),
       gravity: .center,
       onAction: {}()

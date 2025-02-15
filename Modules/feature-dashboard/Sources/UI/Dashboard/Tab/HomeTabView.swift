@@ -53,10 +53,10 @@ public struct HomeTabView: View {
           .foregroundStyle(Theme.shared.color.onSurface)
 
         HomeCardView(
-          text: LocalizableString.Key.authenticateAuthoriseTransactions,
-          buttonText: LocalizableString.Key.authenticate,
+          text: LocalizableStringKey.authenticateAuthoriseTransactions,
+          buttonText: LocalizableStringKey.authenticate,
           illustration: Theme.shared.image.homeIdentity,
-          learnMoreText: LocalizableString.Key.learnMore,
+          learnMoreText: LocalizableStringKey.learnMore,
           learnMoreAction: {
             addDocumentAlert = true
           },
@@ -75,10 +75,10 @@ public struct HomeTabView: View {
         )
 
         HomeCardView(
-          text: LocalizableString.Key.electronicallySignDigitalDocuments,
-          buttonText: LocalizableString.Key.signDocument,
+          text: LocalizableStringKey.electronicallySignDigitalDocuments,
+          buttonText: LocalizableStringKey.signDocument,
           illustration: Theme.shared.image.homeContract,
-          learnMoreText: LocalizableString.Key.learnMore,
+          learnMoreText: LocalizableStringKey.learnMore,
           learnMoreAction: {
             signDocumentAlert = true
           },

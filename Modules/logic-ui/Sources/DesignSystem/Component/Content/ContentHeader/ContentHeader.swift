@@ -18,18 +18,18 @@ import logic_resources
 
 public struct ContentHeaderConfig {
   public let appIconAndTextData: AppIconAndTextData
-  public let description: LocalizableString.Key?
+  public let description: LocalizableStringKey?
   public let descriptionTextConfig: TextConfig?
-  public let mainText: LocalizableString.Key?
+  public let mainText: LocalizableStringKey?
   public let icon: RemoteImageView.ImageContentOption
   public let mainTextConfig: TextConfig?
   public let relyingPartyData: RelyingPartyData?
 
   public init(
     appIconAndTextData: AppIconAndTextData,
-    description: LocalizableString.Key? = nil,
+    description: LocalizableStringKey? = nil,
     descriptionTextConfig: TextConfig? = nil,
-    mainText: LocalizableString.Key? = nil,
+    mainText: LocalizableStringKey? = nil,
     icon: RemoteImageView.ImageContentOption = .none,
     mainTextConfig: TextConfig? = nil,
     relyingPartyData: RelyingPartyData? = nil

@@ -18,12 +18,12 @@ import logic_resources
 
 public struct ActionCard: View {
   private let icon: Image
-  private let title: LocalizableString.Key
+  private let title: LocalizableStringKey
   private let action: () -> Void
 
   public init(
     icon: Image,
-    title: LocalizableString.Key,
+    title: LocalizableStringKey,
     action: @escaping () -> Void
   ) {
     self.icon = icon

@@ -18,14 +18,14 @@ import logic_resources
 
 public struct ContentEmptyView: View {
 
-  private let title: LocalizableString.Key
+  private let title: LocalizableStringKey
   private let image: Image
   private let iconColor: Color
   private let textColor: Color
   private let onClick: (() -> Void)?
 
   public init(
-    title: LocalizableString.Key,
+    title: LocalizableStringKey,
     image: Image = Theme.shared.image.exclamationmarkCircle,
     iconColor: Color = Theme.shared.color.background,
     textColor: Color = Theme.shared.color.onSurface,
@@ -60,13 +60,13 @@ public struct ContentEmptyView: View {
 #Preview {
   Group {
     ContentEmptyView(
-      title: LocalizableString.Key.tryAgain,
+      title: LocalizableStringKey.tryAgain,
       image: Theme.shared.image.checkmarkCircleFill
     )
     .lightModePreview()
 
     ContentEmptyView(
-      title: LocalizableString.Key.tryAgain,
+      title: LocalizableStringKey.tryAgain,
       image: Theme.shared.image.checkmarkCircleFill
     )
     .darkModePreview()

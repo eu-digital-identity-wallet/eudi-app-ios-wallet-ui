@@ -36,7 +36,7 @@ public extension ScannerUiConfig {
     case presentation
     case issuing(IssuanceFlowUiConfig)
 
-    var title: LocalizableString.Key {
+    var title: LocalizableStringKey {
       return switch self {
       case .presentation:
           .scannerQrTitlePresentation
@@ -45,7 +45,7 @@ public extension ScannerUiConfig {
       }
     }
 
-    var caption: LocalizableString.Key {
+    var caption: LocalizableStringKey {
       return switch self {
       case .presentation:
           .scannerQrCaptionPresentation
@@ -54,7 +54,7 @@ public extension ScannerUiConfig {
       }
     }
 
-    var informativeText: LocalizableString.Key {
+    var informativeText: LocalizableStringKey {
       return .qrScanInformativeText
     }
 

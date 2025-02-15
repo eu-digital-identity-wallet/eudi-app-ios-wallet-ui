@@ -19,17 +19,17 @@ import logic_resources
 public struct RelyingPartyData {
   public let logo: RemoteImageView.ImageContentOption?
   public let isVerified: Bool
-  public let name: LocalizableString.Key?
+  public let name: LocalizableStringKey?
   public let nameTextConfig: TextConfig?
-  public let description: LocalizableString.Key?
+  public let description: LocalizableStringKey?
   public let descriptionTextConfig: TextConfig?
 
   public init(
     logo: RemoteImageView.ImageContentOption? = nil,
     isVerified: Bool,
-    name: LocalizableString.Key? = nil,
+    name: LocalizableStringKey? = nil,
     nameTextConfig: TextConfig? = nil,
-    description: LocalizableString.Key? = nil,
+    description: LocalizableStringKey? = nil,
     descriptionTextConfig: TextConfig? = nil
   ) {
     self.logo = logo
