@@ -16,10 +16,10 @@
 import SwiftUI
 
 public extension Button where Label == Text {
-  init(_ key: LocalizableString.Key, action: @escaping @MainActor () -> Void) {
-    self.init(LocalizableString.shared.get(with: key), action: action)
+  init(_ key: LocalizableStringKey, action: @escaping @MainActor () -> Void) {
+    self.init(key.toString, action: action)
   }
-  init(_ key: LocalizableString.Key, role: ButtonRole?, action: @escaping @MainActor () -> Void) {
-    self.init(LocalizableString.shared.get(with: key), role: role, action: action)
+  init(_ key: LocalizableStringKey, role: ButtonRole?, action: @escaping @MainActor () -> Void) {
+    self.init(key.toString, role: role, action: action)
   }
 }

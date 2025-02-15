@@ -20,14 +20,14 @@ import logic_resources
 
 public struct ExpandableTextView: View {
   @State private var isExpanded = false
-  var title: LocalizableString.Key
-  var content: LocalizableString.Key
+  var title: LocalizableStringKey
+  var content: LocalizableStringKey
   let isloading: Bool
 
   public init(
     isExpanded: Bool = false,
-    title: LocalizableString.Key,
-    content: LocalizableString.Key,
+    title: LocalizableStringKey,
+    content: LocalizableStringKey,
     isloading: Bool
   ) {
     self.isExpanded = isExpanded
@@ -85,14 +85,14 @@ public struct ExpandableTextView: View {
 #Preview {
   VStack {
     ExpandableTextView(
-      title: LocalizableString.Key.addDocumentTitle,
-      content: LocalizableString.Key.addDoc,
+      title: LocalizableStringKey.addDocumentTitle,
+      content: LocalizableStringKey.addDoc,
       isloading: false
     )
 
     ExpandableTextView(
-      title: LocalizableString.Key.addDocumentTitle,
-      content: LocalizableString.Key.addDoc,
+      title: LocalizableStringKey.addDocumentTitle,
+      content: LocalizableStringKey.addDoc,
       isloading: true
     )
   }

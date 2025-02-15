@@ -18,12 +18,12 @@ import logic_resources
 
 public struct ContentCaptionView: View {
 
-  private let caption: LocalizableString.Key
+  private let caption: LocalizableStringKey
   private let captionColor: Color
   private let isLoading: Bool
 
   public init(
-    caption: LocalizableString.Key,
+    caption: LocalizableStringKey,
     captionColor: Color = Theme.shared.color.onSurfaceVariant,
     isLoading: Bool = false
   ) {
@@ -49,12 +49,12 @@ public struct ContentCaptionView: View {
 #Preview {
   Group {
     ContentCaptionView(
-      caption: LocalizableString.Key.tryAgain
+      caption: LocalizableStringKey.tryAgain
     )
     .lightModePreview()
 
     ContentCaptionView(
-      caption: LocalizableString.Key.tryAgain
+      caption: LocalizableStringKey.tryAgain
     )
     .darkModePreview()
   }

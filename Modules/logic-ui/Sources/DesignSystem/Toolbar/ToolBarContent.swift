@@ -18,14 +18,14 @@ import logic_resources
 
 public struct Action: Identifiable {
   public let id = UUID()
-  public let title: LocalizableString.Key?
+  public let title: LocalizableStringKey?
   public let image: Image?
   public let hasIndicator: Bool?
   public let disabled: Bool
   public let callback: (() -> Void)?
 
   public init(
-    title: LocalizableString.Key? = nil,
+    title: LocalizableStringKey? = nil,
     image: Image? = nil,
     hasIndicator: Bool? = nil,
     disabled: Bool = false,

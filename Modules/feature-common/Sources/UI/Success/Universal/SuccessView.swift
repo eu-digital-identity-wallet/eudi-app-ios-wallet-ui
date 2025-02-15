@@ -111,7 +111,7 @@ private func getCenteredIcon(
       subtitle: .issuanceSuccessDeferredCaption(["Name"]),
       buttons: [
         .init(
-          title: LocalizableString.Key.okButton,
+          title: LocalizableStringKey.okButton,
           style: .primary,
           navigationType: UIConfig.DeepLinkNavigationType.push(screen: .featureDashboardModule(.dashboard))
         )

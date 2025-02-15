@@ -28,7 +28,7 @@ public enum DocumentCategory: Sendable, Equatable {
   case Retail
   case Other
 
-  public var title: LocalizableString.Key {
+  public var title: LocalizableStringKey {
     return switch self {
     case .Government:
         .categoryGovernment
@@ -50,24 +50,7 @@ public enum DocumentCategory: Sendable, Equatable {
   }
 
   public var filterAttribute: String {
-    return switch self {
-    case .Government:
-        LocalizableString.shared.get(with: .categoryGovernment)
-    case .Travel:
-        LocalizableString.shared.get(with: .categoryTravel)
-    case .Finance:
-        LocalizableString.shared.get(with: .categoryFinance)
-    case .Education:
-        LocalizableString.shared.get(with: .categoryEducation)
-    case .Health:
-        LocalizableString.shared.get(with: .categoryHealth)
-    case .SocialSecurity:
-        LocalizableString.shared.get(with: .categorySocialSecurity)
-    case .Retail:
-        LocalizableString.shared.get(with: .categoryRetail)
-    case .Other:
-        LocalizableString.shared.get(with: .categoryOther)
-    }
+    return self.title.toString
   }
 
   public var order: Int {

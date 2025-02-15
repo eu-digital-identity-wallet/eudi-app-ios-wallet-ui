@@ -17,13 +17,13 @@ import SwiftUI
 import logic_resources
 
 public struct TappableCellView: View {
-  public let title: LocalizableString.Key
+  public let title: LocalizableStringKey
   public let showDivider: Bool
   public let useOverlay: Bool
   public let action: () -> Void
 
   public init(
-    title: LocalizableString.Key,
+    title: LocalizableStringKey,
     showDivider: Bool,
     useOverlay: Bool = true,
     action: @escaping () -> Void

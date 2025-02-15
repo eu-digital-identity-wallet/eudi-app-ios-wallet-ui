@@ -27,7 +27,7 @@ public protocol AddDocumentInteractor: Sendable {
   func getScopedDocument(configId: String) async throws -> ScopedDocument
 
   func getHoldersName(for documentIdentifier: String) -> String?
-  func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key?
+  func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableStringKey?
   func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState
 }
 
@@ -63,7 +63,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     }
 
     func compare(_ first: AddDocumentUIModel, _ second: AddDocumentUIModel) -> Bool {
-      return LocalizableString.shared.get(with: first.listItem.mainText).lowercased() < LocalizableString.shared.get(with: second.listItem.mainText).lowercased()
+      return first.listItem.mainText.toString.lowercased() < second.listItem.mainText.toString.lowercased()
     }
   }
 
@@ -129,7 +129,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     return  "\(bearerName.first) \(bearerName.last)"
   }
 
-  public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key? {
+  public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableStringKey? {
     guard
       let document = walletController.fetchDocument(with: documentIdentifier)
     else {

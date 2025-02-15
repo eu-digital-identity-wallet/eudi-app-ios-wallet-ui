@@ -30,7 +30,7 @@ public extension Text {
 }
 
 public extension Text {
-  init(_ key: LocalizableString.Key) {
-    self.init(verbatim: LocalizableString.shared.get(with: key))
+  init(_ key: LocalizableStringKey) {
+    self.init(verbatim: key.toString)
   }
 }

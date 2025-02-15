@@ -22,17 +22,17 @@ import logic_business
 struct ScannerState: ViewState {
 
   let config: ScannerUiConfig
-  let error: LocalizableString.Key?
+  let error: LocalizableStringKey?
   let showInformativeText: Bool
-  let informativeTest: LocalizableString.Key
+  let informativeTest: LocalizableStringKey
   let allowScanning: Bool
   let failedScanAttempts: Int
 
-  var title: LocalizableString.Key {
+  var title: LocalizableStringKey {
     return config.flow.title
   }
 
-  var caption: LocalizableString.Key {
+  var caption: LocalizableStringKey {
     return config.flow.caption
   }
 }

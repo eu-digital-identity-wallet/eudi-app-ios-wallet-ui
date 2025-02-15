@@ -20,14 +20,14 @@ public struct AddNewDocumentCellView: View {
 
   let isEnabled: Bool
   let icon: Image?
-  let title: LocalizableString.Key
+  let title: LocalizableStringKey
   let action: () -> Void
   let isLoading: Bool
 
   public init(
     isEnabled: Bool,
     icon: Image? = nil,
-    title: LocalizableString.Key,
+    title: LocalizableStringKey,
     isLoading: Bool,
     action: @autoclosure @escaping () -> Void
   ) {
@@ -83,7 +83,7 @@ public struct AddNewDocumentCellView: View {
   AddNewDocumentCellView(
     isEnabled: true,
     icon: Image(systemName: "person.text.rectangle"),
-    title: LocalizableString.Key.addDocumentTitle,
+    title: LocalizableStringKey.addDocumentTitle,
     isLoading: false,
     action: {}()
   )

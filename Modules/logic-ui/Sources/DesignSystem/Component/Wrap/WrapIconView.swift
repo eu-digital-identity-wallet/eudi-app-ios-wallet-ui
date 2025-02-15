@@ -19,7 +19,7 @@ import logic_resources
 
 public struct WrapIconView: View {
 
-  private let title: LocalizableString.Key?
+  private let title: LocalizableStringKey?
   private let textColor: Color
   private let backgroundColor: Color
   private let systemIcon: String
@@ -28,7 +28,7 @@ public struct WrapIconView: View {
   private let isEnabled: Bool
 
   public init(
-    title: LocalizableString.Key? = nil,
+    title: LocalizableStringKey? = nil,
     textColor: Color = .white,
     backgroundColor: Color = Theme.shared.color.background,
     systemIcon: String,
@@ -83,14 +83,14 @@ public extension WrapIconView {
 #Preview {
   Group {
     WrapIconView(
-      title: LocalizableString.Key.addDoc,
+      title: LocalizableStringKey.addDoc,
       textColor: Theme.shared.color.onSurface,
       systemIcon: "calendar"
     )
     .lightModePreview()
 
     WrapIconView(
-      title: LocalizableString.Key.addDoc,
+      title: LocalizableStringKey.addDoc,
       textColor: Theme.shared.color.onSurface,
       systemIcon: "calendar"
     )

@@ -22,7 +22,7 @@ public struct BaseSuccessState: ViewState {
   let config: DocumentSuccessUIConfig
   let relyingParty: RelyingPartyData
   let items: [ListItemSection]
-  let navigationTitle: String
+  let navigationTitle: LocalizableStringKey
   let isLoading: Bool
 }
 
@@ -70,7 +70,9 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
             }
           )
         },
-        navigationTitle: config.relyingPartyIsTrusted ? LocalizableString.shared.get(with: .documentAdded) : LocalizableString.shared.get(with: .dataShared),
+        navigationTitle: config.relyingPartyIsTrusted
+        ? .documentAdded
+        : .dataShared,
         isLoading: false
       )
     )

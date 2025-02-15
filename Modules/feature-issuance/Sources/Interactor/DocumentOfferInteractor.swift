@@ -35,7 +35,7 @@ public protocol DocumentOfferInteractor: Sendable {
   ) async -> OfferDynamicIssuancePartialState
 
   func getHoldersName(for documentIdentifier: String) -> String?
-  func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key?
+  func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableStringKey?
   func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState
 }
 
@@ -211,7 +211,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
     return  "\(bearerName.first) \(bearerName.last)"
   }
 
-  public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key? {
+  public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableStringKey? {
     guard
       let document = walletController.fetchDocument(with: documentIdentifier)
     else {
@@ -265,10 +265,10 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
   }
 
   private func retrieveDeferredRoute(
-    caption: LocalizableString.Key,
+    caption: LocalizableStringKey,
     successNavigation: UIConfig.TwoWayNavigationType,
     title: UIConfig.Success.Title,
-    buttonTitle: LocalizableString.Key,
+    buttonTitle: LocalizableStringKey,
     visualKind: UIConfig.Success.VisualKind
   ) -> AppRoute {
     var navigationType: UIConfig.DeepLinkNavigationType {

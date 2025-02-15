@@ -68,11 +68,11 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
     }
   }
 
-  override func getTitle() -> LocalizableString.Key {
+  override func getTitle() -> LocalizableStringKey {
     .requestDataTitle([relyingParty])
   }
 
-  override func getCaption() -> LocalizableString.Key {
+  override func getCaption() -> LocalizableStringKey {
     .requestsTheFollowing
   }
 

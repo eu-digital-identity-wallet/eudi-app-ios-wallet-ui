@@ -122,7 +122,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
               navigationSuccessType: .push(
                 .featureProximityModule(
                   .proximityLoader(
-                    relyingParty: LocalizableString.shared.get(with: getRelyingParty()),
+                    relyingParty: getRelyingParty().toString,
                     relyingPartyisTrusted: getRelyingPartyIsTrusted(),
                     presentationCoordinator: proximitySessionCoordinator,
                     originator: getOriginator(),
@@ -145,31 +145,31 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
     return getOriginator()
   }
 
-  override func getTitle() -> LocalizableString.Key {
+  override func getTitle() -> LocalizableStringKey {
     .dataSharingRequest
   }
 
-  override func getCaption() -> LocalizableString.Key {
+  override func getCaption() -> LocalizableStringKey {
     .requestsTheFollowing
   }
 
-  override func getDataRequestInfo() -> LocalizableString.Key {
+  override func getDataRequestInfo() -> LocalizableStringKey {
     .requestDataInfoNotice
   }
 
-  override func getRelyingParty() -> LocalizableString.Key {
+  override func getRelyingParty() -> LocalizableStringKey {
     viewState.relyingParty
   }
 
-  override func getTitleCaption() -> String {
-    LocalizableString.shared.get(with: .requestDataTitle([""]))
+  override func getTitleCaption() -> LocalizableStringKey {
+    .requestDataTitle([""])
   }
 
-  override func getTrustedRelyingParty() -> LocalizableString.Key {
+  override func getTrustedRelyingParty() -> LocalizableStringKey {
     .requestDataVerifiedEntity
   }
 
-  override func getTrustedRelyingPartyInfo() -> LocalizableString.Key {
+  override func getTrustedRelyingPartyInfo() -> LocalizableStringKey {
     .requestDataVerifiedEntityMessage
   }
 

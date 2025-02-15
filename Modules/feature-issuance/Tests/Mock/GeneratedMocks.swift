@@ -1224,9 +1224,9 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
         )
     }
     
-    public func getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key? {
+    public func getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey? {
         return cuckoo_manager.call(
-            "getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key?",
+            "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -1291,10 +1291,10 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
             ))
         }
         
-        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(String), LocalizableString.Key?> where M1.MatchedType == String {
+        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(String), LocalizableStringKey?> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractor.self,
-                method: "getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key?",
+                method: "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
                 parameterMatchers: matchers
             ))
         }
@@ -1381,10 +1381,10 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
         
         
         @discardableResult
-        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(String), LocalizableString.Key?> where M1.MatchedType == String {
+        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(String), LocalizableStringKey?> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key?",
+                "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1429,8 +1429,8 @@ public class AddDocumentInteractorStub:AddDocumentInteractor, @unchecked Sendabl
         return DefaultValueRegistry.defaultValue(for: (String?).self)
     }
     
-    public func getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key? {
-        return DefaultValueRegistry.defaultValue(for: (LocalizableString.Key?).self)
+    public func getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey? {
+        return DefaultValueRegistry.defaultValue(for: (LocalizableStringKey?).self)
     }
     
     public func fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState {
@@ -1744,9 +1744,9 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
         )
     }
     
-    public func getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key? {
+    public func getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey? {
         return cuckoo_manager.call(
-            "getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key?",
+            "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -1803,10 +1803,10 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
             ))
         }
         
-        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(String), LocalizableString.Key?> where M1.MatchedType == String {
+        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(String), LocalizableStringKey?> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentOfferInteractor.self,
-                method: "getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key?",
+                method: "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
                 parameterMatchers: matchers
             ))
         }
@@ -1881,10 +1881,10 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
         
         
         @discardableResult
-        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(String), LocalizableString.Key?> where M1.MatchedType == String {
+        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(String), LocalizableStringKey?> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key?",
+                "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1925,8 +1925,8 @@ public class DocumentOfferInteractorStub:DocumentOfferInteractor, @unchecked Sen
         return DefaultValueRegistry.defaultValue(for: (String?).self)
     }
     
-    public func getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key? {
-        return DefaultValueRegistry.defaultValue(for: (LocalizableString.Key?).self)
+    public func getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey? {
+        return DefaultValueRegistry.defaultValue(for: (LocalizableStringKey?).self)
     }
     
     public func fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState {
@@ -1978,9 +1978,9 @@ public class MockDocumentSuccessInteractor: DocumentSuccessInteractor, Cuckoo.Pr
         )
     }
     
-    public func getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key? {
+    public func getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey? {
         return cuckoo_manager.call(
-            "getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key?",
+            "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -2013,10 +2013,10 @@ public class MockDocumentSuccessInteractor: DocumentSuccessInteractor, Cuckoo.Pr
             ))
         }
         
-        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(String), LocalizableString.Key?> where M1.MatchedType == String {
+        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(String), LocalizableStringKey?> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentSuccessInteractor.self,
-                method: "getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key?",
+                method: "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
                 parameterMatchers: matchers
             ))
         }
@@ -2055,10 +2055,10 @@ public class MockDocumentSuccessInteractor: DocumentSuccessInteractor, Cuckoo.Pr
         
         
         @discardableResult
-        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(String), LocalizableString.Key?> where M1.MatchedType == String {
+        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(String), LocalizableStringKey?> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key?",
+                "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -2087,8 +2087,8 @@ public class DocumentSuccessInteractorStub:DocumentSuccessInteractor, @unchecked
         return DefaultValueRegistry.defaultValue(for: (String?).self)
     }
     
-    public func getDocumentSuccessCaption(for p0: String) -> LocalizableString.Key? {
-        return DefaultValueRegistry.defaultValue(for: (LocalizableString.Key?).self)
+    public func getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey? {
+        return DefaultValueRegistry.defaultValue(for: (LocalizableStringKey?).self)
     }
     
     public func fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState {

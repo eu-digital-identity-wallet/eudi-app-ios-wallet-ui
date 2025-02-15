@@ -22,11 +22,11 @@ public struct ContentExpandableView<Content: View>: View {
 
   @State private var isExpanded = false
 
-  let title: LocalizableString.Key
+  let title: LocalizableStringKey
   let content: Content
 
   public init(
-    title: LocalizableString.Key,
+    title: LocalizableStringKey,
     @ViewBuilder content: () -> Content
   ) {
     self.title = title
@@ -77,7 +77,7 @@ public struct ContentExpandableView<Content: View>: View {
 #Preview {
   Group {
     ContentExpandableView(
-      title: LocalizableString.Key.addDocumentTitle
+      title: LocalizableStringKey.addDocumentTitle
     ) {
       VStack {
         Text("title")
@@ -87,7 +87,7 @@ public struct ContentExpandableView<Content: View>: View {
     .lightModePreview()
 
     ContentExpandableView(
-      title: LocalizableString.Key.addDocumentTitle
+      title: LocalizableStringKey.addDocumentTitle
     ) {
       VStack {
         Text("title")

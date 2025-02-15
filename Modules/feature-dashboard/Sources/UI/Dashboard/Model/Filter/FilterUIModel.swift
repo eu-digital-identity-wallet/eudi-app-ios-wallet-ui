@@ -38,7 +38,7 @@ public extension FilterUISection {
     case expiryPeriod
     case state
 
-    var sectionTitle: LocalizableString.Key {
+    var sectionTitle: LocalizableStringKey {
       switch self {
       case .issuedSortingDate:
         return .sortByIssuedDateSectionTitle
@@ -57,8 +57,8 @@ public extension FilterUISection {
       switch self {
       case .issuedSortingDate:
         return [
-          LocalizableString.shared.get(with: .ascending),
-          LocalizableString.shared.get(with: .descending)
+          LocalizableStringKey.ascending.toString,
+          LocalizableStringKey.descending.toString
         ]
       case .sortBy:
         return []
@@ -77,23 +77,23 @@ public extension FilterUISection {
         return []
       case .sortBy:
         return [
-          LocalizableString.shared.get(with: .defaultLabel),
-          LocalizableString.shared.get(with: .dateIssued),
-          LocalizableString.shared.get(with: .expiryDate)
+          LocalizableStringKey.defaultLabel.toString,
+          LocalizableStringKey.dateIssued.toString,
+          LocalizableStringKey.expiryDate.toString
         ]
       case .issuer(let options):
         return options
       case .expiryPeriod:
         return [
-          LocalizableString.shared.get(with: .nextSevenDays),
-          LocalizableString.shared.get(with: .nextThirtyDays),
-          LocalizableString.shared.get(with: .beyondThiryDays),
-          LocalizableString.shared.get(with: .beforeToday)
+          LocalizableStringKey.nextSevenDays.toString,
+          LocalizableStringKey.nextThirtyDays.toString,
+          LocalizableStringKey.beyondThiryDays.toString,
+          LocalizableStringKey.beforeToday.toString
         ]
       case .state:
         return [
-          LocalizableString.shared.get(with: .valid),
-          LocalizableString.shared.get(with: .expired)
+          LocalizableStringKey.valid.toString,
+          LocalizableStringKey.expired.toString
         ]
       }
     }

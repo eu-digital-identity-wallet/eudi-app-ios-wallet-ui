@@ -131,8 +131,7 @@ extension DocClaimsDecodable {
         .parseUserPseudonym()
     )
     .sorted(by: {
-      LocalizableString.shared.get(with: $0.mainText)
-        .localizedCompare(LocalizableString.shared.get(with: $1.mainText)) == .orderedAscending
+      $0.mainText.toString.localizedCompare($1.mainText.toString) == .orderedAscending
     })
 
     var bearerName: String {

@@ -92,7 +92,7 @@ private func content(
 private func pinView(
   uiPinInputField: Binding<String>,
   quickPinSize: Int,
-  pinError: LocalizableString.Key?
+  pinError: LocalizableStringKey?
 ) -> some View {
   VStack(spacing: .zero) {
 

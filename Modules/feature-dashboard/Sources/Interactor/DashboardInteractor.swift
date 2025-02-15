@@ -136,11 +136,11 @@ final class DashboardInteractorImpl: DashboardInteractor {
       filterGroups: [
         SingleSelectionFilterGroup(
           id: FilterIds.ASCENDING_DESCENDING_GROUP,
-          name: LocalizableString.shared.get(with: .orderBy),
+          name: LocalizableStringKey.orderBy.toString,
           filters: [
             FilterItem(
               id: FilterIds.ORDER_BY_ASCENDING,
-              name: LocalizableString.shared.get(with: .ascending),
+              name: LocalizableStringKey.ascending.toString,
               selected: true,
               isDefault: true,
               filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
@@ -149,7 +149,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
             ),
             FilterItem(
               id: FilterIds.ORDER_BY_DESCENDING,
-              name: LocalizableString.shared.get(with: .descending),
+              name: LocalizableStringKey.descending.toString,
               selected: false,
               filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
                 attribute.sortingKey
@@ -160,11 +160,11 @@ final class DashboardInteractorImpl: DashboardInteractor {
         ),
         SingleSelectionFilterGroup(
           id: FilterIds.FILTER_SORT_GROUP_ID,
-          name: LocalizableString.shared.get(with: .sortBy),
+          name: LocalizableStringKey.sortBy.toString,
           filters: [
             FilterItem(
               id: FilterIds.FILTER_SORT_DEFAULT,
-              name: LocalizableString.shared.get(with: .defaultLabel),
+              name: LocalizableStringKey.defaultLabel.toString,
               selected: true,
               isDefault: true,
               filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
@@ -173,7 +173,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
             ),
             FilterItem(
               id: FilterIds.FILTER_SORT_DATE_ISSUED,
-              name: LocalizableString.shared.get(with: .dateIssued),
+              name: LocalizableStringKey.dateIssued.toString,
               selected: false,
               filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
                 attribute.issuedDate
@@ -181,7 +181,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
             ),
             FilterItem(
               id: FilterIds.FILTER_SORT_EXPIRY_DATE,
-              name: LocalizableString.shared.get(with: .expiryDate),
+              name: LocalizableStringKey.expiryDate.toString,
               selected: false,
               filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
                 attribute.expiryDate
@@ -192,11 +192,11 @@ final class DashboardInteractorImpl: DashboardInteractor {
         ),
         SingleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_PERIOD_GROUP_ID,
-          name: LocalizableString.shared.get(with: .selectExpiryPeriod),
+          name: LocalizableStringKey.selectExpiryPeriod.toString,
           filters: [
             FilterItem(
               id: FilterIds.FILTER_BY_PERIOD_DEFAULT,
-              name: LocalizableString.shared.get(with: .defaultLabel),
+              name: LocalizableStringKey.defaultLabel.toString,
               selected: true,
               isDefault: true,
               filterableAction: Filter<DocumentFilterableAttributes>(predicate: { _, _ in
@@ -205,7 +205,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
             ),
             FilterItem(
               id: FilterIds.FILTER_BY_PERIOD_NEXT_7,
-              name: LocalizableString.shared.get(with: .nextSevenDays),
+              name: LocalizableStringKey.nextSevenDays.toString,
               selected: false,
               filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
                 guard let date = attributes.expiryDate else { return false }
@@ -214,7 +214,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
             ),
             FilterItem(
               id: FilterIds.FILTER_BY_PERIOD_NEXT_30,
-              name: LocalizableString.shared.get(with: .nextThirtyDays),
+              name: LocalizableStringKey.nextThirtyDays.toString,
               selected: false,
               filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
                 guard let date = attributes.expiryDate else { return false }
@@ -223,7 +223,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
             ),
             FilterItem(
               id: FilterIds.FILTER_BY_PERIOD_BEYOND_30,
-              name: LocalizableString.shared.get(with: .beyondThiryDays),
+              name: LocalizableStringKey.beyondThiryDays.toString,
               selected: false,
               filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
                 guard let date = attributes.expiryDate else { return false }
@@ -232,7 +232,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
             ),
             FilterItem(
               id: FilterIds.FILTER_BY_PERIOD_EXPIRED,
-              name: LocalizableString.shared.get(with: .beforeToday),
+              name: LocalizableStringKey.beforeToday.toString,
               selected: false,
               filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attributes, _ in
                 guard let date = attributes.expiryDate else { return false }
@@ -244,7 +244,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
         ),
         MultipleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_ISSUER_GROUP_ID,
-          name: LocalizableString.shared.get(with: .filterByIssuer),
+          name: LocalizableStringKey.filterByIssuer.toString,
           filters: [],
           filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attribute, filter in
             attribute.name == filter.name
@@ -253,7 +253,7 @@ final class DashboardInteractorImpl: DashboardInteractor {
         ),
         MultipleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_DOCUMENT_CATEGORY_GROUP_ID,
-          name: LocalizableString.shared.get(with: .filterByCategory),
+          name: LocalizableStringKey.filterByCategory.toString,
           filters: [],
           filterableAction: FilterMultipleAction<DocumentFilterableAttributes>(predicate: { attribute, filter in
             attribute.category == filter.name
@@ -262,17 +262,17 @@ final class DashboardInteractorImpl: DashboardInteractor {
         ),
         MultipleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_STATE_GROUP_ID,
-          name: LocalizableString.shared.get(with: .filterByState),
+          name: LocalizableStringKey.filterByState.toString,
           filters: [
             FilterItem(
               id: FilterIds.FILTER_BY_STATE_VALID,
-              name: LocalizableString.shared.get(with: .valid),
+              name: LocalizableStringKey.valid.toString,
               selected: true,
               isDefault: true
             ),
             FilterItem(
               id: FilterIds.FILTER_BY_STATE_EXPIRED,
-              name: LocalizableString.shared.get(with: .expired),
+              name: LocalizableStringKey.expired.toString,
               selected: false,
               isDefault: false
             )

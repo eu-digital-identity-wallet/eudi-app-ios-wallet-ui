@@ -18,14 +18,14 @@ import logic_resources
 
 public struct ContentHeaderView: View {
 
-  private let title: LocalizableString.Key?
+  private let title: LocalizableStringKey?
   private let dismissIcon: Image
   private let foregroundColor: Color
   private let actions: [Action]?
   private let onBack: (() -> Void)?
 
   public init(
-    title: LocalizableString.Key? = nil,
+    title: LocalizableStringKey? = nil,
     dismissIcon: Image = Theme.shared.image.arrowLeft,
     foregroundColor: Color = Theme.shared.color.primary,
     actions: [Action]? = nil,
@@ -113,7 +113,7 @@ public extension ContentHeaderView {
 #Preview {
   Group {
     ContentHeaderView(
-      title: LocalizableString.Key.loginTitle,
+      title: LocalizableStringKey.loginTitle,
       actions: [
         ContentHeaderView.Action(
           image: Image(systemName: "person"),
@@ -125,7 +125,7 @@ public extension ContentHeaderView {
     .lightModePreview()
 
     ContentHeaderView(
-      title: LocalizableString.Key.loginTitle,
+      title: LocalizableStringKey.loginTitle,
       actions: [
         ContentHeaderView.Action(
           image: Image(systemName: "person"),

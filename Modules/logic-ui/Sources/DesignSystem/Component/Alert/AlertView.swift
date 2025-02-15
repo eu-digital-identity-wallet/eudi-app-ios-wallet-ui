@@ -18,9 +18,9 @@ import logic_resources
 
 struct AlertAlertViewModifier: ViewModifier {
   @Binding var isPresented: Bool
-  let title: LocalizableString.Key
-  let message: LocalizableString.Key
-  let buttonText: LocalizableString.Key
+  let title: LocalizableStringKey
+  let message: LocalizableStringKey
+  let buttonText: LocalizableStringKey
   let onDismiss: (() -> Void)?
 
   func body(content: Content) -> some View {
@@ -43,9 +43,9 @@ struct AlertAlertViewModifier: ViewModifier {
 public extension View {
   func alertView(
     isPresented: Binding<Bool>,
-    title: LocalizableString.Key,
-    message: LocalizableString.Key,
-    buttonText: LocalizableString.Key = .close,
+    title: LocalizableStringKey,
+    message: LocalizableStringKey,
+    buttonText: LocalizableStringKey = .close,
     onDismiss: (() -> Void)? = nil
   ) -> some View {
     self.modifier(

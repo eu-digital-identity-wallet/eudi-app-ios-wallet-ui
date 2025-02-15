@@ -18,7 +18,7 @@ import logic_resources
 
 struct SearchableModifier: ViewModifier {
   @Binding var searchText: String
-  let placeholder: String
+  let placeholder: LocalizableStringKey
   let backgroundColor: Color?
   let onSearchTextChange: (String) -> Void
 
@@ -43,7 +43,7 @@ struct SearchableModifier: ViewModifier {
 public extension View {
   func searchable(
     searchText: Binding<String>,
-    placeholder: String = LocalizableString.shared.get(with: .searchDocuments),
+    placeholder: LocalizableStringKey = .searchDocuments,
     backgroundColor: Color? = nil,
     onSearchTextChange: @escaping (String) -> Void
   ) -> some View {
@@ -60,7 +60,7 @@ public extension View {
 
 struct CustomSearchBar: UIViewRepresentable {
   @Binding var text: String
-  let placeholder: String
+  let placeholder: LocalizableStringKey
 
   class Coordinator: NSObject, UISearchBarDelegate {
     @Binding var text: String
@@ -93,7 +93,7 @@ struct CustomSearchBar: UIViewRepresentable {
 
   func makeUIView(context: Context) -> UISearchBar {
     let searchBar = UISearchBar()
-    searchBar.placeholder = placeholder
+    searchBar.placeholder = placeholder.toString
     searchBar.delegate = context.coordinator
     searchBar.autocapitalizationType = .none
 
@@ -101,7 +101,7 @@ struct CustomSearchBar: UIViewRepresentable {
     toolbar.sizeToFit()
 
     let doneButton = UIBarButtonItem(
-      title: LocalizableString.shared.get(with: .doneButton),
+      title: LocalizableStringKey.doneButton.toString,
       style: .done,
       target: context.coordinator,
       action: #selector(context.coordinator.dismissKeyboard)
@@ -164,7 +164,7 @@ struct CustomSearchBar: UIViewRepresentable {
     )
     .searchable(
       searchText: .constant(""),
-      placeholder: "Search"
+      placeholder: .search
     ) { _ in }
   }
 }

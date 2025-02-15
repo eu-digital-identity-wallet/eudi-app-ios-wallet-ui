@@ -27,17 +27,17 @@ public enum WalletCoreError: LocalizedError {
   public var errorDescription: String? {
     return switch self {
     case .unableFetchDocuments:
-      LocalizableString.shared.get(with: .errorUnableFetchDocuments)
+      LocalizableStringKey.errorUnableFetchDocuments.toString
     case .unableFetchDocument:
-      LocalizableString.shared.get(with: .errorUnableFetchDocument)
+      LocalizableStringKey.errorUnableFetchDocument.toString
     case .missingPid:
-      LocalizableString.shared.get(with: .missingPid)
+      LocalizableStringKey.missingPid.toString
     case .unableToIssueAndStore:
-      LocalizableString.shared.get(with: .unableToIssueAndStore)
+      LocalizableStringKey.unableToIssueAndStore.toString
     case .transactionCodeFormat(let args):
-      LocalizableString.shared.get(with: .transactionCodeFormatError(args))
+      LocalizableStringKey.transactionCodeFormatError(args).toString
     case .unableToPresentAndShare:
-      LocalizableString.shared.get(with: .unableToPresentAndShare)
+      LocalizableStringKey.unableToPresentAndShare.toString
     }
   }
 }

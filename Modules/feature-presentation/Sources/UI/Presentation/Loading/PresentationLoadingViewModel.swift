@@ -69,11 +69,11 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
     }
   }
 
-  override func getTitle() -> LocalizableString.Key {
+  override func getTitle() -> LocalizableStringKey {
     .requestDataTitle([relyingParty])
   }
 
-  override func getCaption() -> LocalizableString.Key {
+  override func getCaption() -> LocalizableStringKey {
     .requestsTheFollowing
   }
 

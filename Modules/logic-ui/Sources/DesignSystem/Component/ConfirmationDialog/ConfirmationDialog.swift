@@ -18,10 +18,10 @@ import logic_resources
 
 public extension View {
   func confirmationDialog(
-    title: LocalizableString.Key,
-    message: LocalizableString.Key,
-    destructiveText: LocalizableString.Key? = nil,
-    baseText: LocalizableString.Key,
+    title: LocalizableStringKey,
+    message: LocalizableStringKey,
+    destructiveText: LocalizableStringKey? = nil,
+    baseText: LocalizableStringKey,
     isPresented: Binding<Bool>,
     destructiveAction: (() -> Void)? = nil,
     baseAction: @escaping () -> Void
@@ -41,10 +41,10 @@ public extension View {
 }
 
 struct ConfirmationDialogModifier: ViewModifier {
-  let title: LocalizableString.Key
-  let message: LocalizableString.Key
-  let destructiveText: LocalizableString.Key?
-  let baseText: LocalizableString.Key
+  let title: LocalizableStringKey
+  let message: LocalizableStringKey
+  let destructiveText: LocalizableStringKey?
+  let baseText: LocalizableStringKey
   let isPresented: Binding<Bool>
   let destructiveAction: (() -> Void)?
   let baseAction: () -> Void

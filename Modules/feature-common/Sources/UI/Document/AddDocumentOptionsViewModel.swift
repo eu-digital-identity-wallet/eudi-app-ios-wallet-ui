@@ -22,7 +22,7 @@ public struct AddDocumentOptionsViewState: ViewState {
   let isLoading: Bool
   let error: ContentErrorView.Config?
   let config: IssuanceFlowUiConfig
-  let title: LocalizableString.Key
+  let title: LocalizableStringKey
 }
 
 open class AddDocumentOptionsViewModel<Router: RouterHost>: ViewModel<Router, AddDocumentOptionsViewState> {

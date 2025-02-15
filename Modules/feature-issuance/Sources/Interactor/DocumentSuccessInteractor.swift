@@ -19,7 +19,7 @@ import logic_resources
 
 public protocol DocumentSuccessInteractor: Sendable {
   func getHoldersName(for documentIdentifier: String) -> String?
-  func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key?
+  func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableStringKey?
   func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState
 }
 
@@ -40,7 +40,7 @@ final class DocumentSuccessInteractorImpl: DocumentSuccessInteractor {
     return  "\(bearerName.first) \(bearerName.last)"
   }
 
-  public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableString.Key? {
+  public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableStringKey? {
     guard
       let document = walletController.fetchDocument(with: documentIdentifier)
     else {

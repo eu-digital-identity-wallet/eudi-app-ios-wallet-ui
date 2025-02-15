@@ -352,7 +352,7 @@ extension WalletKitController {
   ) -> DocValue {
 
     guard let document = fetchDocument(with: documentId) else {
-      return .unavailable(LocalizableString.shared.get(with: .errorUnableFetchDocument))
+      return .unavailable(LocalizableStringKey.errorUnableFetchDocument.toString)
     }
 
     let claims = document.docClaims
@@ -367,7 +367,7 @@ extension WalletKitController {
       .parseUserPseudonym()
 
     guard let element = claims.first(where: { $0.name == elementIdentifier }) else {
-      return .unavailable(LocalizableString.shared.get(with: .unavailableField))
+      return .unavailable(LocalizableStringKey.unavailableField.toString)
     }
 
     if let image = element.dataValue.image {

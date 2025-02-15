@@ -24,21 +24,21 @@ public extension UIConfig {
   struct Success: UIConfigType, Equatable {
 
     public let title: Title
-    public let subtitle: LocalizableString.Key
+    public let subtitle: LocalizableStringKey
     public let buttons: [Success.Button]
     public let visualKind: VisualKind
 
     public var log: String {
-      return "title: \(LocalizableString.shared.get(with: title.value))" +
+      return "title: \(title.value.toString)" +
       "title color: \(title.color)" +
-      " caption: \(LocalizableString.shared.get(with: subtitle))" +
-      " buttons: \(buttons.map({ LocalizableString.shared.get(with: $0.title) as String }).joined(separator: ","))" +
+      " caption: \(subtitle.toString)" +
+      " buttons: \(buttons.map({ $0.title.toString }).joined(separator: ","))" +
       " actions: \(buttons.map(\.navigationType.type).joined(separator: ","))"
     }
 
     public init(
       title: Title,
-      subtitle: LocalizableString.Key,
+      subtitle: LocalizableStringKey,
       buttons: [Success.Button],
       visualKind: VisualKind
     ) {
@@ -52,11 +52,11 @@ public extension UIConfig {
 
 public extension UIConfig.Success {
   struct Title: Equatable, Sendable {
-    public let value: LocalizableString.Key
+    public let value: LocalizableStringKey
     public let color: Color
 
     public init(
-      value: LocalizableString.Key,
+      value: LocalizableStringKey,
       color: Color = Theme.shared.color.success
     ) {
       self.value = value
@@ -77,7 +77,7 @@ public extension UIConfig.Success {
     @EquatableNoop
     public var id: UUID
 
-    public let title: LocalizableString.Key
+    public let title: LocalizableStringKey
     public let style: Style
     public let navigationType: UIConfig.DeepLinkNavigationType
 
@@ -87,7 +87,7 @@ public extension UIConfig.Success {
     }
 
     public init(
-      title: LocalizableString.Key,
+      title: LocalizableStringKey,
       style: Style,
       navigationType: UIConfig.DeepLinkNavigationType
     ) {
