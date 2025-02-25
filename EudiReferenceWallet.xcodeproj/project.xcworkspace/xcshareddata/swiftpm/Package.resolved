@@ -1,5 +1,5 @@
 {
-  "originHash" : "3ab912d21a7dd53f85eabe5f8259ce342b25d43932a91b167c05c66a9fcffe0e",
+  "originHash" : "8bb6d11cacce74796e9978b741bfcb3551cbefd31dce81103cc5873e3eb444c9",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-presentation-exchange-swift.git",
       "state" : {
-        "revision" : "21e03b18e4ea349edd21c016b9e0b3a2063285bf",
-        "version" : "0.2.1"
+        "revision" : "773d7cccdf3d2df4fc6f7629a6076dfe4b2b680d",
+        "version" : "0.3.0"
       }
     },
     {
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui.git",
       "state" : {
-        "revision" : "69f26808db7cd7d74296a691fdaae2d25facdccf",
-        "version" : "0.1.4"
+        "revision" : "aa98a403f8255ac5e6e4b042deb6d6fae3396c6b",
+        "version" : "0.1.7"
       }
     },
     {
@@ -420,8 +420,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
       "state" : {
-        "revision" : "b828ba476ab068f0b00d6b41f92f364961b0f323",
-        "version" : "3.10.2"
+        "revision" : "45305d32cfb830faebcaa9a7aea66ad342637518",
+        "version" : "3.11.1"
       }
     },
     {
