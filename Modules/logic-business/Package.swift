@@ -43,7 +43,7 @@ let package = Package(
     ),
     .package(
       url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui.git",
-      exact: "0.1.7"
+      exact: "0.1.8"
     ),
     .package(name: "logic-test", path: "./logic-test")
   ],
