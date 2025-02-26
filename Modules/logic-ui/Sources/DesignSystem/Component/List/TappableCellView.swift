@@ -61,3 +61,13 @@ public struct TappableCellView: View {
     }
   }
 }
+
+#Preview {
+  TappableCellView(
+    title: .addDocumentTitle,
+    showDivider: true,
+    useOverlay: true,
+    action: {}
+  )
+  .padding()
+}

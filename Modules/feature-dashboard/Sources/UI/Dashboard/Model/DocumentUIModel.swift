@@ -24,75 +24,17 @@ public struct DocumentUIModel: Identifiable, Equatable, FilterableItemPayload {
 
   @EquatableNoop
   public var id: String
-
   public let value: Value
+  public let listItem: ListItemData
 
-  public init(id: String, value: Value) {
+  public init(
+    id: String,
+    value: Value,
+    listItem: ListItemData
+  ) {
     self.id = id
     self.value = value
-  }
-
-  public var listItem: ListItemData {
-    .init(
-      mainText: .custom(value.title),
-      overlineText: .custom(value.heading),
-      supportingText: supportingText(),
-      supportingTextColor: supportingColor(),
-      leadingIcon: .init(
-        imageUrl: value.image?.url,
-        image: value.image?.placeholder
-      ),
-      trailingContent: .icon(indicatorImage(), supportingColor())
-    )
-  }
-}
-private extension DocumentUIModel {
-  func supportingText() -> LocalizableStringKey {
-    if value.hasExpired {
-      return .expired
-    } else {
-      switch value.state {
-      case .issued:
-        return .custom(expiry.orEmpty)
-      case .pending:
-        return .pending
-      case .failed:
-        return .issuanceFailed
-      }
-    }
-  }
-
-  func supportingColor() -> Color {
-    if value.hasExpired {
-      return Theme.shared.color.error
-    } else {
-      switch value.state {
-      case .issued:
-        return Theme.shared.color.onSurfaceVariant
-      case .pending:
-        return Theme.shared.color.warning
-      case .failed:
-        return Theme.shared.color.error
-      }
-    }
-  }
-
-  func indicatorImage() -> Image {
-    switch value.state {
-    case .issued:
-      return Theme.shared.image.chevronRight
-    case .pending:
-      return Theme.shared.image.clockIndicator
-    case .failed:
-      return Theme.shared.image.errorIndicator
-    }
-  }
-
-  var expiry: String? {
-    guard let expiresAt = value.expiresAt else {
-      return nil
-    }
-    return LocalizableStringKey.validUntil([expiresAt]).toString.replacingOccurrences(of: "\n", with: "")
+    self.listItem = listItem
   }
 }
 
@@ -140,6 +82,10 @@ public extension DocumentUIModel {
                 placeholder: Theme.shared.image.logo
               ),
               documentCategory: .Other
+            ),
+            listItem: ListItemData(
+              mainText: .custom("Digital ID"),
+              overlineText: .custom("Issuer Name")
             )
           ),
           .init(
@@ -157,6 +103,10 @@ public extension DocumentUIModel {
                 placeholder: Theme.shared.image.logo
               ),
               documentCategory: .Other
+            ),
+            listItem: ListItemData(
+              mainText: .custom("EUDI Conference"),
+              overlineText: .custom("Issuer Name")
             )
           ),
           .init(
@@ -174,6 +124,10 @@ public extension DocumentUIModel {
                 placeholder: Theme.shared.image.logo
               ),
               documentCategory: .Other
+            ),
+            listItem: ListItemData(
+              mainText: .custom("Passport"),
+              overlineText: .custom("Issuer Name")
             )
           ),
           .init(
@@ -191,6 +145,10 @@ public extension DocumentUIModel {
                 placeholder: Theme.shared.image.logo
               ),
               documentCategory: .Other
+            ),
+            listItem: ListItemData(
+              mainText: .custom("Document 1"),
+              overlineText: .custom("Issuer Name")
             )
           ),
           .init(
@@ -208,6 +166,10 @@ public extension DocumentUIModel {
                 placeholder: Theme.shared.image.logo
               ),
               documentCategory: .Other
+            ),
+            listItem: ListItemData(
+              mainText: .custom("Document 2"),
+              overlineText: .custom("Issuer Name")
             )
           ),
           .init(
@@ -225,6 +187,10 @@ public extension DocumentUIModel {
                 placeholder: Theme.shared.image.logo
               ),
               documentCategory: .Other
+            ),
+            listItem: ListItemData(
+              mainText: .custom("Document 3"),
+              overlineText: .custom("Issuer Name")
             )
           ),
           .init(
@@ -242,6 +208,10 @@ public extension DocumentUIModel {
                 placeholder: Theme.shared.image.logo
               ),
               documentCategory: .Other
+            ),
+            listItem: ListItemData(
+              mainText: .custom("Document 4"),
+              overlineText: .custom("Issuer Name")
             )
           ),
           .init(
@@ -259,6 +229,10 @@ public extension DocumentUIModel {
                 placeholder: Theme.shared.image.logo
               ),
               documentCategory: .Other
+            ),
+            listItem: ListItemData(
+              mainText: .custom("Document 5"),
+              overlineText: .custom("Issuer Name")
             )
           ),
           .init(
@@ -276,6 +250,10 @@ public extension DocumentUIModel {
                 placeholder: Theme.shared.image.logo
               ),
               documentCategory: .Other
+            ),
+            listItem: ListItemData(
+              mainText: .custom("Document 6"),
+              overlineText: .custom("Issuer Name")
             )
           ),
           .init(
@@ -293,6 +271,10 @@ public extension DocumentUIModel {
                 placeholder: Theme.shared.image.logo
               ),
               documentCategory: .Other
+            ),
+            listItem: ListItemData(
+              mainText: .custom("Passport"),
+              overlineText: .custom("Issuer Name")
             )
           )
         ]
@@ -324,6 +306,18 @@ extension DocClaimsDecodable {
     with failedDocuments: [String] = [],
     categories: DocumentCategories
   ) -> DocumentUIModel {
+    let state: DocumentUIModel.Value.State = failedDocuments.contains(
+      where: { $0 == self.id }
+    ) ? .failed : (self is DeferrredDocument) ? .pending : .issued
+
+    let expiresAt = self.getExpiryDate(
+      parser: {
+        Locale.current.localizedDateTime(
+          date: $0,
+          uiFormatter: "dd MMM yyyy"
+        )
+      }
+    )
     return .init(
       id: UUID().uuidString,
       value: .init(
@@ -331,24 +325,81 @@ extension DocClaimsDecodable {
         heading: self.issuerName,
         title: self.displayName.orEmpty,
         createdAt: self.createdAt,
-        expiresAt: self.getExpiryDate(
-          parser: {
-            Locale.current.localizedDateTime(
-              date: $0,
-              uiFormatter: "dd MMM yyyy"
-            )
-          }
-        ),
+        expiresAt: expiresAt,
         hasExpired: self.hasExpired,
-        state: failedDocuments.contains(
-          where: { $0 == self.id }
-        ) ? .failed : (self is DeferrredDocument) ? .pending : .issued,
+        state: state,
         image: .init(
           url: self.issuerLogo,
           placeholder: Theme.shared.image.id
         ),
         documentCategory: categories.first(where: { $1.contains(self.documentTypeIdentifier) })?.key ?? .Other
+      ),
+      listItem: .init(
+        mainText: .custom(displayName.orEmpty),
+        overlineText: .custom(issuerName),
+        supportingText: supportingText(state, expiresAt),
+        supportingTextColor: supportingColor(state),
+        leadingIcon: .init(
+          imageUrl: issuerLogo,
+          image: Theme.shared.image.id
+        ),
+        trailingContent: .icon(indicatorImage(state), supportingColor(state))
       )
     )
+  }
+
+  func supportingText(
+    _ state: DocumentUIModel.Value.State,
+    _ expiresAt: String?
+  ) -> LocalizableStringKey {
+    if hasExpired {
+      return .expired
+    } else {
+      switch state {
+      case .issued:
+        return .custom(expiry(expiresAt: expiresAt).orEmpty)
+      case .pending:
+        return .pending
+      case .failed:
+        return .issuanceFailed
+      }
+    }
+  }
+
+  func expiry(expiresAt: String?) -> String? {
+    guard let expires = expiresAt else {
+      return nil
+    }
+    return LocalizableStringKey.validUntil([expires]).toString.replacingOccurrences(of: "\n", with: "")
+  }
+
+  func supportingColor(
+    _ state: DocumentUIModel.Value.State
+  ) -> Color {
+    if hasExpired {
+      return Theme.shared.color.error
+    } else {
+      switch state {
+      case .issued:
+        return Theme.shared.color.onSurfaceVariant
+      case .pending:
+        return Theme.shared.color.warning
+      case .failed:
+        return Theme.shared.color.error
+      }
+    }
+  }
+
+  func indicatorImage(
+    _ state: DocumentUIModel.Value.State
+  ) -> Image {
+    switch state {
+    case .issued:
+      return Theme.shared.image.chevronRight
+    case .pending:
+      return Theme.shared.image.clockIndicator
+    case .failed:
+      return Theme.shared.image.errorIndicator
+    }
   }
 }
