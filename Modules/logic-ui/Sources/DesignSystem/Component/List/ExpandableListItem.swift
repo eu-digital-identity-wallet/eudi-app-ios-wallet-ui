@@ -86,7 +86,7 @@ struct WrapExpandableListItem: View {
       VStack(alignment: .leading) {
         ExpandableCardView(
           title: header.mainText,
-          subtitle: header.supportingText ?? .custom("View details nil")
+          subtitle: header.supportingText
         ) {
           ForEach(items, id: \.id) { item in
             switch item {
@@ -115,7 +115,14 @@ struct ParentView: View {
   @State private var expandableItems: [ExpandableListItem] = [
     .single(
       ExpandableListItem.SingleListItemData(
-        collapsed: ListItemData(mainText: .custom("Single 1"))
+        collapsed: ListItemData(
+          mainText: .custom("Single 1"),
+          trailingContent: .checkbox(
+            true,
+            true,
+            { _ in }
+          )
+        )
       )
     ),
     .nested(
