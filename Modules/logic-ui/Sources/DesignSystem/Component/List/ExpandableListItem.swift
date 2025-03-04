@@ -23,10 +23,10 @@ public enum ExpandableListItem: Identifiable, Hashable, Equatable {
 
   public var id: String {
     switch self {
-      case .single(let data):
-        return data.id
-      case .nested(let data):
-        return data.id
+    case .single(let data):
+      return data.id
+    case .nested(let data):
+      return data.id
     }
   }
 
@@ -86,9 +86,10 @@ struct WrapExpandableListItem: View {
       VStack(alignment: .leading) {
         ExpandableCardView(
           title: header.mainText,
-          subtitle: .custom("View details")) {
-            ForEach(items, id: \.id) { item in
-              switch item {
+          subtitle: header.supportingText ?? .custom("View details nil")
+        ) {
+          ForEach(items, id: \.id) { item in
+            switch item {
               case .single(let singleData):
                 WrapListItemView(listItem: singleData.collapsed) {
                   onItemClick?(singleData.collapsed)
@@ -102,9 +103,9 @@ struct WrapExpandableListItem: View {
                   onExpandedChange: { onExpandedChange() },
                   isExpanded: nestedData.isExpanded
                 )
-              }
             }
           }
+        }
       }
     }
   }
@@ -162,7 +163,10 @@ struct ParentView: View {
 
   var body: some View {
     WrapExpandableListItem(
-      header: ListItemData(mainText: .custom("Expandable List")),
+      header: ListItemData(
+        mainText: .custom("Expandable List"),
+        supportingText: .custom("View details")
+      ),
       items: expandableItems,
       onItemClick: { _ in },
       hideSensitiveContent: false,

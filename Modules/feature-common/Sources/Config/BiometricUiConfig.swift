@@ -22,7 +22,7 @@ public extension UIConfig {
 
     public let navigationTitle: LocalizableStringKey
     public let displayLogo: Bool
-    public let title: LocalizableStringKey
+    public let title: LocalizableStringKey?
     public let caption: LocalizableStringKey
     public let quickPinOnlyCaption: LocalizableStringKey
     public let navigationSuccessType: ThreeWayNavigationType
@@ -33,7 +33,7 @@ public extension UIConfig {
     public var log: String {
       return "navigationTitle: \(navigationTitle.toString)" +
       "displayLogo: \(displayLogo)" +
-      "title: \(title.toString)" +
+      "title: \(title?.toString ?? "none")" +
       " onSuccessNav: \(navigationSuccessType.key)" +
       " onBackNav: \(navigationBackType?.key ?? "none")" +
       " isPreAuthorization: \(isPreAuthorization)" +
@@ -43,7 +43,7 @@ public extension UIConfig {
     public init(
       navigationTitle: LocalizableStringKey,
       displayLogo: Bool = true,
-      title: LocalizableStringKey,
+      title: LocalizableStringKey? = nil,
       caption: LocalizableStringKey,
       quickPinOnlyCaption: LocalizableStringKey,
       navigationSuccessType: ThreeWayNavigationType,
