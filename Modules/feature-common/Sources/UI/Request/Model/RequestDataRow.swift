@@ -132,7 +132,7 @@ private extension RequestDataRow.Claim {
               overlineText: .custom(title),
               isEnable: !status.isRequired,
               trailingContent: .checkbox(
-                !status.isRequired,
+                !status.isRequired && status.isAvailable,
                 status.isAvailable,
                 { _ in }
               )
@@ -148,7 +148,7 @@ private extension RequestDataRow.Claim {
               leadingIcon: .init(image: image),
               isEnable: !status.isRequired,
               trailingContent: .checkbox(
-                !status.isRequired,
+                !status.isRequired && status.isAvailable,
                 status.isAvailable,
                 { _ in }
               )
