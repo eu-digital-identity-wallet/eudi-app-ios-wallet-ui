@@ -15,94 +15,50 @@
  */
 import SwiftUI
 import logic_resources
-import logic_business
 
-public enum ExpandableListItem: Identifiable, Hashable, Equatable {
-  case single(SingleListItemData)
-  case nested(NestedListItemData)
+public struct WrapExpandableListView: View {
 
-  public var id: String {
-    switch self {
-    case .single(let data):
-      return data.id
-    case .nested(let data):
-      return data.id
-    }
+  private let header: ListItemData
+  private let items: [ExpandableListItem]
+  private let backgroundColor: Color
+  private let onItemClick: (ListItemData) -> Void
+  private let hideSensitiveContent: Bool
+
+  public init(
+    header: ListItemData,
+    items: [ExpandableListItem],
+    backgroundColor: Color = Theme.shared.color.surfaceContainer,
+    hideSensitiveContent: Bool,
+    onItemClick: @escaping (ListItemData) -> Void
+  ) {
+    self.header = header
+    self.items = items
+    self.backgroundColor = backgroundColor
+    self.hideSensitiveContent = hideSensitiveContent
+    self.onItemClick = onItemClick
   }
 
-  public func hash(into hasher: inout Hasher) {
-    hasher.combine(id)
-  }
-
-  public static func == (lhs: ExpandableListItem, rhs: ExpandableListItem) -> Bool {
-    return lhs.id == rhs.id
-  }
-
-  public struct SingleListItemData: Identifiable, Equatable {
-    @EquatableNoop
-    public var id: String
-    public let collapsed: ListItemData
-
-    public init(
-      id: String = UUID().uuidString,
-      collapsed: ListItemData
-    ) {
-      self.id = id
-      self.collapsed = collapsed
-    }
-  }
-
-  public struct NestedListItemData: Identifiable, Equatable {
-    @EquatableNoop
-    public var id: String
-    public let collapsed: ListItemData
-    public let expanded: [ExpandableListItem]
-    public var isExpanded: Bool
-
-    public init(
-      id: String = UUID().uuidString,
-      collapsed: ListItemData,
-      expanded: [ExpandableListItem],
-      isExpanded: Bool
-    ) {
-      self.id = id
-      self.collapsed = collapsed
-      self.expanded = expanded
-      self.isExpanded = isExpanded
-    }
-  }
-}
-
-struct WrapExpandableListItem: View {
-  let header: ListItemData
-  let items: [ExpandableListItem]
-  let onItemClick: ((ListItemData) -> Void)?
-  let hideSensitiveContent: Bool
-  let onExpandedChange: () -> Void
-  let isExpanded: Bool
-
-  var body: some View {
+  public var body: some View {
     WrapCardView {
       VStack(alignment: .leading) {
         ExpandableCardView(
+          backgroundColor: backgroundColor,
           title: header.mainText,
           subtitle: header.supportingText
         ) {
           ForEach(items, id: \.id) { item in
             switch item {
-              case .single(let singleData):
-                WrapListItemView(listItem: singleData.collapsed) {
-                  onItemClick?(singleData.collapsed)
-                }
-              case .nested(let nestedData):
-                WrapExpandableListItem(
-                  header: nestedData.collapsed,
-                  items: nestedData.expanded,
-                  onItemClick: onItemClick,
-                  hideSensitiveContent: false,
-                  onExpandedChange: { onExpandedChange() },
-                  isExpanded: nestedData.isExpanded
-                )
+            case .single(let singleData):
+              WrapListItemView(listItem: singleData.collapsed) {
+                onItemClick(singleData.collapsed)
+              }
+            case .nested(let nestedData):
+              WrapExpandableListView(
+                header: nestedData.collapsed,
+                items: nestedData.expanded,
+                hideSensitiveContent: hideSensitiveContent,
+                onItemClick: onItemClick
+              )
             }
           }
         }
@@ -169,16 +125,14 @@ struct ParentView: View {
   ]
 
   var body: some View {
-    WrapExpandableListItem(
+    WrapExpandableListView(
       header: ListItemData(
         mainText: .custom("Expandable List"),
         supportingText: .custom("View details")
       ),
       items: expandableItems,
-      onItemClick: { _ in },
       hideSensitiveContent: false,
-      onExpandedChange: { print("Expanded Changed") },
-      isExpanded: false
+      onItemClick: { _ in }
     )
   }
 }

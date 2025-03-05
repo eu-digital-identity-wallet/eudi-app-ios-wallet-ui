@@ -21,14 +21,14 @@ import logic_business
 import logic_core
 
 public protocol AddDocumentInteractor: Sendable {
-  func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState
-  func issueDocument(configId: String) async -> IssueDocumentPartialState
+  func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> ScopedDocumentsPartialState
+  func issueDocument(configId: String) async -> IssueResultPartialState
   func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState
   func getScopedDocument(configId: String) async throws -> ScopedDocument
 
   func getHoldersName(for documentIdentifier: String) -> String?
   func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableStringKey?
-  func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState
+  func fetchStoredDocuments(documentIds: [String]) async -> IssueDocumentsPartialState
 }
 
 final class AddDocumentInteractorImpl: AddDocumentInteractor {
@@ -41,7 +41,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     self.walletController = walletController
   }
 
-  public func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState {
+  public func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> ScopedDocumentsPartialState {
     do {
       let documents: [AddDocumentUIModel] = try await walletController.getScopedDocuments().compactMap { doc in
         if flow == .extraDocument || doc.isPid {
@@ -67,7 +67,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     }
   }
 
-  public func issueDocument(configId: String) async -> IssueDocumentPartialState {
+  public func issueDocument(configId: String) async -> IssueResultPartialState {
     do {
       let doc = try await walletController.issueDocument(identifier: configId)
       if doc.isDeferred {
@@ -138,7 +138,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     return .issuanceSuccessCaption([document.displayName.orEmpty])
   }
 
-  func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState {
+  func fetchStoredDocuments(documentIds: [String]) async -> IssueDocumentsPartialState {
     let documents = walletController.fetchDocuments(with: documentIds)
     let documentsDetails = documents.compactMap {
       $0.transformToDocumentDetailsUi(isSensitive: false)
@@ -151,12 +151,12 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
   }
 }
 
-public enum StoredDocumentsPartialState: Sendable {
+public enum ScopedDocumentsPartialState: Sendable {
   case success([AddDocumentUIModel])
   case failure(Error)
 }
 
-public enum IssueDocumentPartialState: Sendable {
+public enum IssueResultPartialState: Sendable {
   case success(String)
   case deferredSuccess
   case dynamicIssuance(RemoteSessionCoordinator)
@@ -167,5 +167,10 @@ public enum IssueDynamicDocumentPartialState: Sendable {
   case success(String)
   case noPending
   case deferredSuccess
+  case failure(Error)
+}
+
+public enum IssueDocumentsPartialState: Sendable {
+  case success([DocumentDetailsUIModel])
   case failure(Error)
 }

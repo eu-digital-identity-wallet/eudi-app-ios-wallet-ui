@@ -21,10 +21,10 @@ import logic_core
 
 struct DocumentIssuanceSuccessView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewModel: DocumentSuccessViewModel<Router>
+  @ObservedObject private var viewModel: DocumentIssuanceSuccessViewModel<Router>
 
   init(
-    with viewModel: DocumentSuccessViewModel<Router>
+    with viewModel: DocumentIssuanceSuccessViewModel<Router>
   ) {
     self.viewModel = viewModel
   }

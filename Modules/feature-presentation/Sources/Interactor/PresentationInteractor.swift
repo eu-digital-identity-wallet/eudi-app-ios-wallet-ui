@@ -19,7 +19,7 @@ import logic_business
 import feature_common
 
 public struct OnlineAuthenticationRequestSuccessModel: Sendable {
-  var requestDataCells: [RequestDataUI]
+  var requestDataCells: [RequestDataUiModel]
   var relyingParty: String
   var dataRequestInfo: String
   var isTrusted: Bool
@@ -44,7 +44,7 @@ public protocol PresentationInteractor: Sendable {
   func getSessionStatePublisher() -> RemotePublisherPartialState
   func getCoordinator() -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
-  func onResponsePrepare(requestItems: [RequestDataUI]) async -> Result<RequestItemConvertible, Error>
+  func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error>
   func onSendResponse() async -> RemoteSentResponsePartialState
   func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator)
   func storeDynamicIssuancePendingUrl(with url: URL)
@@ -110,30 +110,34 @@ final class PresentationInteractorImpl: PresentationInteractor {
     }
   }
 
-  public func onResponsePrepare(requestItems: [RequestDataUI]) async -> Result<RequestItemConvertible, Error> {
-    let requestConvertible = requestItems
-      .reduce(into: [RequestDataRow]()) { partialResult, cell in
-        let items = cell.requestDataRow.filter({$0.isSelected})
-        partialResult.append(contentsOf: items)
-      }
-      .reduce(into: RequestItemsWrapper()) {  partialResult, row in
-        let requestItem: RequestItem = .init(elementIdentifier: row.elementKey)
-        var nameSpaceDict = partialResult.requestItems[row.documentId, default: [row.namespace: [requestItem]]]
-        nameSpaceDict[row.namespace, default: [requestItem]].appendIfNotExists(requestItem)
-        partialResult.requestItems[row.documentId] = nameSpaceDict
-      }
+  // MARK: - TODO FIX RESPONSE PREPARATION
+  public func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error> {
 
-    guard requestConvertible.requestItems.isEmpty == false else {
-      return .failure(PresentationSessionError.conversionToRequestItemModel)
-    }
+    return .failure(PresentationSessionError.conversionToRequestItemModel)
 
-    do {
-      try self.sessionCoordinatorHolder.getActiveRemoteCoordinator().setState(presentationState: .responseToSend(requestConvertible))
-    } catch {
-      return .failure(error)
-    }
-
-    return .success(requestConvertible.asRequestItems())
+//    let requestConvertible = requestItems
+//      .reduce(into: [RequestDataRow]()) { partialResult, cell in
+//        let items = cell.requestDataRow.filter({$0.isSelected})
+//        partialResult.append(contentsOf: items)
+//      }
+//      .reduce(into: RequestItemsWrapper()) {  partialResult, row in
+//        let requestItem: RequestItem = .init(elementIdentifier: row.elementKey)
+//        var nameSpaceDict = partialResult.requestItems[row.documentId, default: [row.namespace: [requestItem]]]
+//        nameSpaceDict[row.namespace, default: [requestItem]].appendIfNotExists(requestItem)
+//        partialResult.requestItems[row.documentId] = nameSpaceDict
+//      }
+//
+//    guard requestConvertible.requestItems.isEmpty == false else {
+//      return .failure(PresentationSessionError.conversionToRequestItemModel)
+//    }
+//
+//    do {
+//      try self.sessionCoordinatorHolder.getActiveRemoteCoordinator().setState(presentationState: .responseToSend(requestConvertible))
+//    } catch {
+//      return .failure(error)
+//    }
+//
+//    return .success(requestConvertible.asRequestItems())
   }
 
   public func onSendResponse() async -> RemoteSentResponsePartialState {

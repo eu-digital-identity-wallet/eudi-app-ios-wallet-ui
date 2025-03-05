@@ -21,7 +21,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
   private let interactor: PresentationInteractor
   private let relyingParty: String
   private let relyingPartyIsTrusted: Bool
-  private let requestItems: [RequestDataUI]
+  private let requestItems: [RequestDataUiModel]
   private var publisherTask: Task<Void, Error>?
 
   init(
@@ -33,9 +33,9 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
     requestItems: [any Routable]
   ) {
     guard
-      let requestItems = requestItems as? [RequestDataUI]
+      let requestItems = requestItems as? [RequestDataUiModel]
     else {
-      fatalError("PresentationLoadingViewModel:: Invalid configuraton")
+      fatalError("PresentationLoadingViewModel:: Invalid RequestDataUiModel")
     }
 
     self.interactor = interactor
@@ -102,7 +102,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
           relyingParty: relyingParty,
           relyingPartyIsTrusted: relyingPartyIsTrusted
         ),
-        requestItems.map { $0.matToListItemSection() }
+        requestItems.map { $0.requestDataSection }
       )
     )
   }

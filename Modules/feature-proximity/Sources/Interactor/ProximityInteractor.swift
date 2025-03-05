@@ -29,7 +29,7 @@ public enum ProximityResponsePreparationPartialState: Sendable {
 }
 
 public enum ProximityRequestPartialState: Sendable {
-  case success([RequestDataUI], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
+  case success([RequestDataUiModel], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
   case failure(Error)
 }
 
@@ -56,7 +56,7 @@ public protocol ProximityInteractor: Sendable {
   func onDeviceEngagement() async
   func onQRGeneration() async -> ProximityQrCodePartialState
   func onRequestReceived() async -> ProximityRequestPartialState
-  func onResponsePrepare(requestItems: [RequestDataUI]) async -> ProximityResponsePreparationPartialState
+  func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> ProximityResponsePreparationPartialState
   func onSendResponse() async -> ProximityResponsePartialState
   func stopPresentation()
 
@@ -124,30 +124,34 @@ final class ProximityInteractorImpl: ProximityInteractor {
     }
   }
 
-  public func onResponsePrepare(requestItems: [RequestDataUI]) async -> ProximityResponsePreparationPartialState {
-    let requestConvertible = requestItems
-      .reduce(into: [RequestDataRow]()) { partialResult, cell in
-        let items = cell.requestDataRow.filter({$0.isSelected})
-        partialResult.append(contentsOf: items)
-      }
-      .reduce(into: RequestItemsWrapper()) { partialResult, row in
-        let requestItem: RequestItem = .init(elementIdentifier: row.elementKey)
-        var nameSpaceDict = partialResult.requestItems[row.documentId, default: [row.namespace: [requestItem]]]
-        nameSpaceDict[row.namespace, default: [requestItem]].appendIfNotExists(requestItem)
-        partialResult.requestItems[row.documentId] = nameSpaceDict
-      }
+  // MARK: - TODO FIX RESPONSE PREPARATION
+  public func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> ProximityResponsePreparationPartialState {
 
-    guard requestConvertible.requestItems.isEmpty == false else {
-      return .failure(PresentationSessionError.conversionToRequestItemModel)
-    }
+    return .failure(PresentationSessionError.conversionToRequestItemModel)
 
-    do {
-      try self.sessionCoordinatorHolder.getActiveProximityCoordinator().setState(presentationState: .responseToSend(requestConvertible))
-    } catch {
-      return .failure(error)
-    }
-
-    return .success(requestConvertible.asRequestItems())
+//    let requestConvertible = requestItems
+//      .reduce(into: [RequestDataRow]()) { partialResult, cell in
+//        let items = cell.requestDataRow.filter({$0.isSelected})
+//        partialResult.append(contentsOf: items)
+//      }
+//      .reduce(into: RequestItemsWrapper()) { partialResult, row in
+//        let requestItem: RequestItem = .init(elementIdentifier: row.elementKey)
+//        var nameSpaceDict = partialResult.requestItems[row.documentId, default: [row.namespace: [requestItem]]]
+//        nameSpaceDict[row.namespace, default: [requestItem]].appendIfNotExists(requestItem)
+//        partialResult.requestItems[row.documentId] = nameSpaceDict
+//      }
+//
+//    guard requestConvertible.requestItems.isEmpty == false else {
+//      return .failure(PresentationSessionError.conversionToRequestItemModel)
+//    }
+//
+//    do {
+//      try self.sessionCoordinatorHolder.getActiveProximityCoordinator().setState(presentationState: .responseToSend(requestConvertible))
+//    } catch {
+//      return .failure(error)
+//    }
+//
+//    return .success(requestConvertible.asRequestItems())
   }
 
   public func onSendResponse() async -> ProximityResponsePartialState {

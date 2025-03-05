@@ -144,6 +144,7 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
     isLoading: false,
     documentOfferUiModel: .init(
       issuerName: LocalizableStringKey.unknownIssuer.toString,
+      issuerLogo: nil,
       txCode: nil,
       uiOffers: [],
       docOffers: []

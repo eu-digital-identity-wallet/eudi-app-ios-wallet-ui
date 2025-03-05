@@ -27,7 +27,7 @@ public struct DocumentDetailsUIModel: Equatable, Identifiable, Routable {
   public let issuer: IssuerField?
   public let createdAt: Date
   public let hasExpired: Bool
-  public let documentFields: [ListItemData]
+  public let documentFields: [ExpandableListItem]
 
   public var log: String {
     "id: \(id), type: \(type.rawValue), name: \(documentName)"
@@ -70,29 +70,49 @@ public extension DocumentDetailsUIModel {
       hasExpired: false,
       documentFields:
         [
-          .init(
-            mainText: .custom("AB12356"),
-            overlineText: .custom("ID no")
+          .single(
+            .init(
+              collapsed: .init(
+                mainText: .custom("AB12356"),
+                overlineText: .custom("ID no")
+              )
+            )
           ),
-          .init(
-            mainText: .custom("Hellenic"),
-            overlineText: .custom("Nationality")
+          .single(
+            .init(
+              collapsed: .init(
+                mainText: .custom("Hellenic"),
+                overlineText: .custom("Nationality")
+              )
+            )
           ),
-          .init(
-            mainText: .custom("21 Oct 1994"),
-            overlineText: .custom("Place of birth")
+          .single(
+            .init(
+              collapsed: .init(
+                mainText: .custom("21 Oct 1994"),
+                overlineText: .custom("Place of birth")
+              )
+            )
           ),
-          .init(
-            mainText: .custom("1,82"),
-            overlineText: .custom("Height")
+          .single(
+            .init(
+              collapsed: .init(
+                mainText: .custom("1,82"),
+                overlineText: .custom("Height")
+              )
+            )
           )
         ]
       +
       Array(
         count: 6,
-        createElement: .init(
-          mainText: .custom("Placeholder Field Value".padded(padLength: 10)),
-          overlineText: .custom("Placeholder Field Title".padded(padLength: 5))
+        createElement: .single(
+          .init(
+            collapsed: .init(
+              mainText: .custom("Placeholder Field Value".padded(padLength: 10)),
+              overlineText: .custom("Placeholder Field Title".padded(padLength: 5))
+            )
+          )
         )
       )
     )
@@ -115,7 +135,7 @@ extension DocClaimsDecodable {
       )
     }
 
-    let documentFields: [ListItemData] =
+    let documentFields: [ExpandableListItem] =
     flattenValues(
       isSensitive: isSensitive,
       input: docClaims
@@ -131,7 +151,7 @@ extension DocClaimsDecodable {
         .parseUserPseudonym()
     )
     .sorted(by: {
-      $0.mainText.toString.localizedCompare($1.mainText.toString) == .orderedAscending
+      $0.title.localizedCompare($1.title) == .orderedAscending
     })
 
     var bearerName: String {
@@ -152,10 +172,11 @@ extension DocClaimsDecodable {
     )
   }
 
+  // MARK: - TODO SUPPORT NESTED
   private func flattenValues(
     isSensitive: Bool = true,
     input: [DocClaim]
-  ) -> [ListItemData] {
+  ) -> [ExpandableListItem] {
     input.reduce(into: []) { partialResult, docClaim in
 
       let uuid = UUID().uuidString
@@ -164,30 +185,42 @@ extension DocClaimsDecodable {
       if let uiImage = docClaim.dataValue.image {
 
         partialResult.append(
-          .init(
-            id: uuid,
-            mainText: .custom(title),
-            leadingIcon: .init(image: Image(uiImage: uiImage)),
-            isBlur: isSensitive
+          .single(
+            .init(
+              collapsed: .init(
+                id: uuid,
+                mainText: .custom(title),
+                leadingIcon: .init(image: Image(uiImage: uiImage)),
+                isBlur: isSensitive
+              )
+            )
           )
         )
 
       } else if let nested = docClaim.children {
         partialResult.append(
-          .init(
-            id: uuid,
-            mainText: .custom(docClaim.flattenNested(nested: nested).stringValue),
-            overlineText: .custom(title),
-            isBlur: isSensitive
+          .single(
+            .init(
+              collapsed: .init(
+                id: uuid,
+                mainText: .custom(docClaim.flattenNested(nested: nested).stringValue),
+                overlineText: .custom(title),
+                isBlur: isSensitive
+              )
+            )
           )
         )
       } else {
         partialResult.append(
-          .init(
-            id: uuid,
-            mainText: .custom(docClaim.stringValue),
-            overlineText: .custom(title),
-            isBlur: isSensitive
+          .single(
+            .init(
+              collapsed: .init(
+                id: uuid,
+                mainText: .custom(docClaim.stringValue),
+                overlineText: .custom(title),
+                isBlur: isSensitive
+              )
+            )
           )
         )
       }

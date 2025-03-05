@@ -104,11 +104,6 @@ public enum DocumentDetailsPartialState: Sendable {
   case failure(Error)
 }
 
-public enum DocumentsPartialState: Sendable {
-  case success([DocumentDetailsUIModel])
-  case failure(Error)
-}
-
 public enum DocumentDetailsDeletionPartialState: Sendable {
   case success(shouldReboot: Bool)
   case failure(Error)

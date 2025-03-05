@@ -22,7 +22,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   private let relyingParty: String
   private let relyingPartyIsTrusted: Bool
   private var publisherTask: Task<Void, Error>?
-  private let requestItems: [RequestDataUI]
+  private let requestItems: [RequestDataUiModel]
 
   init(
     router: Router,
@@ -33,9 +33,9 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
     requestItems: [any Routable]
   ) {
     guard
-      let requestItems = requestItems as? [RequestDataUI]
+      let requestItems = requestItems as? [RequestDataUiModel]
     else {
-      fatalError("ProximityLoadingViewModel:: Invalid configuraton")
+      fatalError("ProximityLoadingViewModel:: Invalid RequestDataUiModel")
     }
 
     self.interactor = interactor
@@ -85,7 +85,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
           relyingParty: relyingParty,
           relyingPartyIsTrusted: relyingPartyIsTrusted
         ),
-        requestItems.map { $0.matToListItemSection() }
+        requestItems.map { $0.requestDataSection }
       )
     )
   }

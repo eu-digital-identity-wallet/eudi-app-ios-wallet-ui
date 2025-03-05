@@ -82,17 +82,20 @@ private func documents(
   onSelectionChanged: @escaping @Sendable (String) -> Void
 ) -> some View {
   if !viewState.items.isEmpty {
+
+    // MARK: - TODO REWORK
     VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
       ForEach(viewState.items, id: \.id) { section in
-        ExpandableCardView(
+        WrapExpandableListView(
+          header: .init(
+            mainText: .custom(section.title),
+            supportingText: .viewDetails
+          ),
+          items: section.listItems,
           backgroundColor: backgroundColor,
-          title: .custom(section.title),
-          subtitle: .viewDetails
-        ) {
-          WrapListItemsView(
-            listItems: section.listItems
-          )
-        }
+          hideSensitiveContent: false,
+          onItemClick: { onSelectionChanged($0.id) }
+        )
         .shimmer(isLoading: viewState.isLoading)
       }
     }

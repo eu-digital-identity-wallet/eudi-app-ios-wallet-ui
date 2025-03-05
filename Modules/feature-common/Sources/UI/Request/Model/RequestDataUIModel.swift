@@ -13,160 +13,199 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import SwiftUI
 import logic_business
 import logic_core
+import logic_ui
+import Copyable
 
-public struct RequestDataRow: Identifiable, Equatable, Sendable {
+@Copyable
+public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
 
-  public enum Value: Equatable, Sendable {
-    case string(String)
-    case image(Image)
+  public let id: String
+  public let requestDataRow: [RequestDataRow]
+  public let requestDataSection: ListItemSection
 
-    public var string: String? {
-      switch self {
-        case .string(let string):
-          string
-        default:
-          nil
-      }
-    }
-
-    public var image: Image? {
-      switch self {
-        case .image(let image):
-          image
-        default:
-          nil
-      }
-    }
-  }
-
-  @EquatableNoop
-  public var id: String
-
-  public let title: String
-  public let value: Value
-
-  public var isSelected: Bool
-  public var isEnabled: Bool
-
-  public var elementKey: String
-  public var namespace: String
-
-  public var documentId: String {
-    if let lastPart = id.split(separator: "_").last {
-      return String(lastPart)
-    }
-    return id
+  public var log: String {
+    "id: \(id), title: \(requestDataSection.title)"
   }
 
   public init(
     id: String = UUID().uuidString,
-    isSelected: Bool,
-    title: String,
-    value: DocValue,
-    elementKey: String = "namespaced_key",
-    namespace: String = "doc.namespace"
+    requestDataRow: [RequestDataRow],
+    requestDataSection: ListItemSection
   ) {
     self.id = id
-    self.isSelected = isSelected
-    self.title = title
-    switch value {
-      case .string(let string):
-        self.value = .string(string)
-        self.isEnabled = true
-      case .unavailable(let string):
-        self.value = .string(string)
-        self.isEnabled = false
-        self.isSelected = false
-      case .image(let image):
-        self.value = .image(image)
-        self.isEnabled = true
-      case .mandatory(let item):
-        switch item {
-        case .string(let string):
-          self.value = .string(string)
-        case .image(let image):
-          self.value = .image(image)
-        }
-        self.isEnabled = false
-        self.isSelected = true
-    }
-    self.elementKey = elementKey
-    self.namespace = namespace
-  }
-
-  public mutating func setSelected(_ isSelected: Bool) {
-    self.isSelected = isSelected
+    self.requestDataRow = requestDataRow
+    self.requestDataSection = requestDataSection
   }
 }
 
-public extension RequestDataRow {
-  func mapToListItem() -> ListItemData {
-    let item = self
-    switch item.value {
-    case .string(let value):
-      return .init(
-        id: item.id,
-        mainText: .custom(value),
-        overlineText: .custom(item.title),
-        isEnable: item.isEnabled,
-        trailingContent: .checkbox(
-          item.isEnabled,
-          item.isSelected,
-          { _ in }
+extension RequestDataUiModel {
+  mutating func toggleSelection(id: String) {
+
+    var listItems = requestDataSection.listItems
+
+    for index in listItems.indices where listItems[index].id == id {
+      switch listItems[index] {
+      case .single(let item):
+        switch item.collapsed.trailingContent {
+        case .checkbox(let isSelected, let isEnabled, let onClick):
+          listItems[index] = .single(
+            item.copy(
+              collapsed: item.collapsed.copy(
+                trailingContent: .checkbox(!isSelected, isEnabled, onClick)
+              )
+            )
+          )
+        default:
+          break
+        }
+      case .nested(let item):
+        listItems[index] = .nested(item.copy(isExpanded: !item.isExpanded))
+
+      }
+    }
+
+    self = self.copy(
+      requestDataSection: self.requestDataSection.copy(listItems: listItems)
+    )
+  }
+}
+
+public extension Array where Element == RequestDataUiModel {
+
+  // MARK: - TODO Fix for passing the filtered models, only selected items from group or flat.
+  func filterSelectedRows() -> [RequestDataUiModel] {
+    self.map { model in
+      model
+    }
+  }
+
+  func canShare() -> Bool {
+
+    func getAllSingleItems(
+      all: [ExpandableListItem],
+      result: inout [ExpandableListItem.SingleListItemData]
+    ) {
+      all.forEach { item in
+        switch item {
+        case .nested(let item):
+          getAllSingleItems(all: item.expanded, result: &result)
+        case .single(let item):
+          result.append(item)
+        }
+      }
+    }
+
+    var listItems: [ExpandableListItem.SingleListItemData] = []
+    self.forEach {
+      getAllSingleItems(all: $0.requestDataSection.listItems, result: &listItems)
+    }
+
+    let canShareDataRows = listItems
+      .map {
+        $0.collapsed.trailingContent
+      }
+      .flatMap {
+        var selectedItems: [Bool] = []
+        switch $0 {
+        case .checkbox(let isSelected, _, _):
+          selectedItems.append(isSelected)
+        default:
+          break
+        }
+        return selectedItems
+      }
+      .filter { $0 }
+      .isEmpty
+
+    return !canShareDataRows
+  }
+}
+
+public extension RequestDataUiModel {
+  static func mockData() -> [RequestDataUiModel] {
+    [
+      RequestDataUiModel(
+        requestDataRow: [
+          RequestDataRow(
+            claim: .primitive(
+              id: UUID().uuidString,
+              title: "Family Name",
+              path: [],
+              value: .string("Tzouvaras"),
+              status: .available(isRequired: false)
+            )
+          ),
+          RequestDataRow(
+            claim: .primitive(
+              id: UUID().uuidString,
+              title: "First Name",
+              path: [],
+              value: .string("Stilianos"),
+              status: .available(isRequired: false)
+            )
+          ),
+          RequestDataRow(
+            claim: .primitive(
+              id: UUID().uuidString,
+              title: "Date of Birth",
+              path: [],
+              value: .string("20-09-1985"),
+              status: .available(isRequired: false)
+            )
+          ),
+          RequestDataRow(
+            claim: .primitive(
+              id: UUID().uuidString,
+              title: "Resident Country",
+              path: [],
+              value: .string("Greece"),
+              status: .available(isRequired: false)
+            )
+          )
+        ],
+        requestDataSection: .init(
+          id: UUID().uuidString,
+          title: "MDL",
+          listItems: [
+            .single(
+              .init(
+                collapsed: ListItemData(
+                  mainText: .custom("Tzouvaras"),
+                  overlineText: .custom("Family Name")
+                )
+              )
+            ),
+            .single(
+              .init(
+                collapsed: ListItemData(
+                  mainText: .custom("Stilianos"),
+                  overlineText: .custom("First Name")
+                )
+              )
+            ),
+            .single(
+              .init(
+                collapsed: ListItemData(
+                  mainText: .custom("21-09-1985"),
+                  overlineText: .custom("Date of Birth")
+                )
+              )
+            ),
+            .single(
+              .init(
+                collapsed: ListItemData(
+                  mainText: .custom("Greece"),
+                  overlineText: .custom("Resident")
+                )
+              )
+            )
+          ]
         )
       )
-
-    case .image(let image):
-        return .init(
-        id: item.id,
-        mainText: .custom(item.title),
-        leadingIcon: .init(image: image),
-        isEnable: item.isEnabled,
-        trailingContent: .checkbox(
-          item.isEnabled,
-          item.isSelected
-        ) { _ in }
-      )
-    }
-  }
-}
-
-public struct RequestDataSection: Identifiable, Equatable, Sendable {
-
-  public var id: String
-  public let title: String
-
-  public init(
-    id: String = UUID().uuidString,
-    title: String
-  ) {
-    self.id = id
-    self.title = title
-  }
-}
-
-public struct RequestDataVerification: Identifiable, Equatable, Sendable {
-
-  public var id: String
-  public let title: String
-  public var items: [RequestDataRow]
-
-  public init(
-    id: String = UUID().uuidString,
-    title: String,
-    items: [RequestDataRow]
-  ) {
-    self.id = id
-    self.title = title
-    self.items = items
-  }
-
-  mutating func setItems(with items: [RequestDataRow]) {
-    self.items = items
+    ]
   }
 }
 
@@ -175,8 +214,8 @@ extension RequestDataUiModel {
   public static func items(
     for docElements: [DocElementsViewModel],
     walletKitController: WalletKitController
-  ) -> [RequestDataUI] {
-    var requestDataCell = [RequestDataUI]()
+  ) -> [RequestDataUiModel] {
+    var requestDataCell = [RequestDataUiModel]()
 
     for docElement in docElements {
 
@@ -194,46 +233,19 @@ extension RequestDataUiModel {
         walletKitController: walletKitController
       )
 
-      let dataRows = (dataFields + (verificationFields ?? [])).sorted { $0.title.lowercased() < $1.title.lowercased() }
+      let dataRows = (dataFields + (verificationFields ?? [])).sorted { $0.claim.title.lowercased() < $1.claim.title.lowercased() }
 
       guard !dataFields.isEmpty || verificationFields != nil else {
         continue
       }
 
-      let section = RequestDataSection(
-        id: docElement.id,
-        title: docElement.displayName.orEmpty
-      )
-      let data = RequestDataUI(
-        id: section.id,
+      let data = RequestDataUiModel(
         requestDataRow: dataRows,
-        requestDataSection: section,
-        listItems: dataRows.map { item in
-          switch item.value {
-            case .string(let value):
-              ListItemData(
-                id: item.id,
-                mainText: .custom(value),
-                overlineText: .custom(item.title),
-                trailingContent: .checkbox(
-                  item.isEnabled,
-                  item.isSelected,
-                  { _ in }
-                )
-              )
-
-            case .image(let image):
-              ListItemData(
-                id: item.id,
-                mainText: .custom(item.title),
-                leadingIcon: .init(image: image),
-                trailingContent: .checkbox(
-                  item.isEnabled,
-                  item.isSelected
-                ) { _ in }
-              )
-          }
-        }
+        requestDataSection: .init(
+          id: docElement.id,
+          title: docElement.displayName.orEmpty,
+          listItems: dataRows.toListItems()
+        )
       )
 
       requestDataCell.append(data)
@@ -250,16 +262,15 @@ extension RequestDataUiModel {
     docElements
       .filter { element in
         let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: docElement.docType))
-        return !mandatoryKeys.contains(element.elementIdentifier)
+        return !mandatoryKeys.contains(element.elementPath.joined(separator: "."))
       }
       .map { element in
-        RequestDataRow(
-          id: "\(element.id)_\(docElement.id)",
-          isSelected: true,
-          title: element.displayName.ifNil { element.elementIdentifier },
-          value: walletKitController.valueForElementIdentifier(
+        let elementIdentifier = element.elementPath.joined(separator: ".")
+        return RequestDataRow(
+          id: "\(elementIdentifier)_\(docElement.id)",
+          claim: walletKitController.valueForElementIdentifier(
             with: docElement.id,
-            elementIdentifier: element.elementIdentifier,
+            elementIdentifier: elementIdentifier,
             isMandatory: false,
             parser: {
               Locale.current.localizedDateTime(
@@ -267,9 +278,7 @@ extension RequestDataUiModel {
                 uiFormatter: "dd MMM yyyy"
               )
             }
-          ),
-          elementKey: element.elementIdentifier,
-          namespace: element.nameSpace
+          )
         )
       }
   }
@@ -282,16 +291,15 @@ extension RequestDataUiModel {
     let mandatoryFields = docElements
       .filter { element in
         let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: docElement.docType))
-        return mandatoryKeys.contains(element.elementIdentifier)
+        return mandatoryKeys.contains(element.elementPath.joined(separator: "."))
       }
       .map { element in
-        RequestDataRow(
-          id: "\(element.id)_\(docElement.id)",
-          isSelected: true,
-          title: element.displayName.ifNil { element.elementIdentifier },
-          value: walletKitController.valueForElementIdentifier(
+        let elementIdentifier = element.elementPath.joined(separator: ".")
+        return RequestDataRow(
+          id: "\(element.elementPath.joined(separator: "."))_\(docElement.id)",
+          claim: walletKitController.valueForElementIdentifier(
             with: docElement.id,
-            elementIdentifier: element.elementIdentifier,
+            elementIdentifier: elementIdentifier,
             isMandatory: true,
             parser: {
               Locale.current.localizedDateTime(
@@ -299,9 +307,7 @@ extension RequestDataUiModel {
                 uiFormatter: "dd MMM yyyy"
               )
             }
-          ),
-          elementKey: element.elementIdentifier,
-          namespace: element.nameSpace
+          )
         )
       }
 
@@ -310,39 +316,5 @@ extension RequestDataUiModel {
     }
 
     return mandatoryFields
-  }
-}
-
-public struct RequestDataUiModel {
-  public static func mockData() -> [RequestDataUI] {
-    [
-      RequestDataUI(
-        requestDataRow: [
-          RequestDataRow(isSelected: true, title: "Family Name", value: .string("Tzouvaras")),
-          RequestDataRow(isSelected: true, title: "First Name", value: .string("Stilianos")),
-          RequestDataRow(isSelected: true, title: "Date of Birth", value: .string("21-09-1985")),
-          RequestDataRow(isSelected: true, title: "Resident Country", value: .string("Greece"))
-        ],
-        requestDataSection: RequestDataSection(title: "MDL"),
-        listItems: [
-          ListItemData(
-            mainText: .custom("Tzouvaras"),
-            overlineText: .custom("Family Name")
-          ),
-          ListItemData(
-            mainText: .custom("Stilianos"),
-            overlineText: .custom("First Name")
-          ),
-          ListItemData(
-            mainText: .custom("21-09-1985"),
-            overlineText: .custom("Date of Birth")
-          ),
-          ListItemData(
-            mainText: .custom("Greece"),
-            overlineText: .custom("Resident")
-          )
-        ]
-      )
-    ]
   }
 }

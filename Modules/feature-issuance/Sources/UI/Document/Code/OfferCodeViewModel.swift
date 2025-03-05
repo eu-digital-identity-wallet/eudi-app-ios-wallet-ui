@@ -127,7 +127,7 @@ final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeV
 
       let config = viewState.config
 
-      let state = await Task.detached { () -> IssueOfferDocumentsPartialState in
+      let state = await Task.detached { () -> OfferResultPartialState in
         return await self.interactor.issueDocuments(
           with: config.offerUri,
           issuerName: config.issuerName,
