@@ -24,26 +24,26 @@ The EUDI Wallet Reference Implementation is based on a modular architecture comp
 
 The EUDI Wallet Reference Implementation is the application that allows users to:
 
-1. To obtain, store, and, present PID and mDL.
+1. To obtain, store, and present PID and mDL.
 2. Verify presentations.
 3. Share data on proximity scenarios.
 4. Support remote QES and more use cases with the modules included.
 
-The EUDIW project provides through this repository an iOS app. Please refer to the repositories listed in the following sections for more detailed information on how to get started, contribute, and engage with the EUDI Wallet Reference Implementation.
+The EUDIW project provides an iOS app through this repository. Please refer to the repositories listed in the following sections for more detailed information on how to get started, contribute, and engage with the EUDI Wallet Reference Implementation.
  
 # 💡 Specifications Employed
 
-The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit) and a list of available libraries to facilitate remote presentation, proximity, and issuing test/demo functionality following specification of the [ARF](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework) including:
+The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit) and a list of available libraries to facilitate remote presentation, proximity, and issuing test/demo functionality following the specification of the [ARF](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework), including:
  
-- OpenID4VP - draft 19 (remote presentation), presentation exchange v2.0,
+- OpenID4VP - draft 22 (remote presentation), presentation exchange v2.0,
  
 - ISO18013-5 (proximity presentation),
  
-- OpenID4VCI draft 13 (issuing)
+- OpenID4VCI draft 14 (issuing)
  
 - Issuer functionality, to support development and testing, one can access an OID4VCI test/demo service for issuing at:
 
-  - [EUDI Issuer (Draft 13)](https://issuer.eudiw.dev/)
+  - [EUDI Issuer (Draft 14)](https://issuer.eudiw.dev/)
 
   - [OpenID4VCI PID and mDL Issuer (python)](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py)
  
@@ -59,7 +59,7 @@ To support development and testing, one can access a test/demo service for remot
 
   - [Verifier restful backend service source](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt)
  
-To support proximity an Android Proximity Verifier is available as an app that can request PID and mDL with reader authentication available [here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/mdoc-verifier-testing/distribution_groups/eudi%20verifier%20(testing)%20public)
+To support proximity, an Android Proximity Verifier is available as an app that can request PID and mDL with reader authentication available [here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/mdoc-verifier-testing/distribution_groups/eudi%20verifier%20(testing)%20public)
 
 The issuer, verifier service, and verifier app authentication are based on the EUDIW development [IACA](https://github.com/niscy-eudiw/eudi-app-ios-wallet-ui/tree/main/Wallet/Sample)
 
@@ -103,13 +103,13 @@ Minimum device requirements
 
 ### Prerequisites
 
-To complete the flows described below you need to build and run the application with xcode. Alternatively, you can directly download the Android app onto your device.
+To complete the flows described below, you must build and run the application with Xcode. Alternatively, you can directly download the Android app onto your device.
 
 App center download method (Android app)
 
-In addition to building the app from the source, you can also use the Android app which you can download *[here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/eudi-reference-android/distribution_groups/eudi%20wallet%20(demo)%20public)*
+In addition to building the app from the source, you can also use the Android app, which you can download *[here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/eudi-reference-android/distribution_groups/eudi%20wallet%20(demo)%20public)*
 
-Run the app from the source (xcode build)
+Run the app from the source (Xcode build)
 
 Clone this repo and make sure you have access to the dependencies below:
 
@@ -128,6 +128,8 @@ Clone this repo and make sure you have access to the dependencies below:
 [presentation-exchange-swift](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-presentation-exchange-swift.git)
 
 [openid4vci-swift](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift)
+
+[eudi-lib-ios-rqes-ui](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui)
 
 You will also need to download the Android Verifier app. More information can be found [here](wiki/verifier_proximity.md)
 
@@ -201,7 +203,7 @@ You can find instructions on how to configure the application [here](wiki/config
 
 The released software is an initial development release version: 
 -  The initial development release is an early endeavor reflecting the efforts of a short time-boxed period, and by no means can it be considered as the final product.  
--  The initial development release may be changed substantially over time, might introduce new features but also may change or remove existing ones, potentially breaking compatibility with your existing code.
+-  The initial development release may be changed substantially over time and might introduce new features but also may change or remove existing ones, potentially breaking compatibility with your existing code.
 -  The initial development release is limited in functional scope.
 -  The initial development release may contain errors or design flaws and other problems that could cause system or other failures and data loss.
 -  The initial development release has reduced security, privacy, availability, and reliability standards relative to future releases. This could make the software slower, less reliable, or more vulnerable to attacks than mature software.
@@ -216,7 +218,7 @@ The released software is an initial development release version:
 
 *logic-core*: Wallet core logic.
 
-*logic-analytics*: Access to analytics providers. Capabilities for test monitoring analytics (i.e. crashes) can be added here (no functionality right now)
+*logic-analytics*: Access to analytics providers. Capabilities for test monitoring analytics (i.e., crashes) can be added here (no functionality right now)
 
 *logic-business*: App business logic.
 
