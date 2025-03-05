@@ -93,17 +93,18 @@ private func content(
         noDocumentsFound(getScreenRect: getScreenRect)
       } else {
 
+        // MARK: - TODO REWORK
         VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
           ForEach(viewState.items, id: \.id) { section in
-            ExpandableCardView(
-              title: .custom(section.requestDataSection.title),
-              subtitle: .viewDetails
-            ) {
-              WrapListItemsView(
-                listItems: section.listItems) { item in
-                  onSelectionChanged(item.id)
-                }
-            }
+            WrapExpandableListView(
+              header: .init(
+                mainText: .custom(section.requestDataSection.title),
+                supportingText: .viewDetails
+              ),
+              items: section.requestDataSection.listItems,
+              hideSensitiveContent: false,
+              onItemClick: { onSelectionChanged($0.id) }
+            )
           }
 
           Text(.shareDataReview)

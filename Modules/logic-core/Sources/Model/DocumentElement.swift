@@ -16,10 +16,31 @@
 import Foundation
 import SwiftUI
 
-public enum DocValue {
+public enum DocumentElementClaim {
+  case group(
+    id: String,
+    title: String,
+    items: [DocumentElementClaim]
+  )
+  case primitive(
+    id: String,
+    title: String,
+    path: [String],
+    value: DocumentElementValue,
+    status: DocumentElementClaim.Status
+  )
+}
+
+public extension DocumentElementClaim {
+  enum `Status` {
+    case available(isRequired: Bool)
+    case notAvailable
+  }
+}
+
+public enum DocumentElementValue {
   case string(String)
   case unavailable(String)
-  case mandatory(MandatoryValue)
   case image(Image)
 
   public var string: String? {
@@ -28,11 +49,6 @@ public enum DocValue {
       return string
     case .unavailable(let string):
       return string
-    case .mandatory(let value):
-      if case .string(let string) = value {
-        return string
-      }
-      return nil
     default:
       return nil
     }
@@ -42,20 +58,8 @@ public enum DocValue {
     switch self {
     case .image(let image):
       return image
-    case .mandatory(let value):
-      if case .image(let image) = value {
-        return image
-      }
-      return nil
     default:
       return nil
     }
-  }
-}
-
-extension DocValue {
-  public enum MandatoryValue {
-    case string(String)
-    case image(Image)
   }
 }

@@ -13,18 +13,24 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-public struct ListItemSection: Identifiable, Equatable, Routable {
-  public let id: String
-  public let title: String
-  public let listItems: [ListItemData]
+import logic_ui
+import logic_resources
+import feature_common
 
-  public var log: String {
-    "id: \(id), title: \(title)"
-  }
+open class DocumentIssuanceSuccessViewModel<Router: RouterHost>: BaseSuccessViewModel<Router> {
 
-  public init(id: String, title: String, listItems: [ListItemData]) {
-    self.id = id
-    self.title = title
-    self.listItems = listItems
+  public override init(
+    router: Router,
+    config: any UIConfigType,
+    deepLinkController: DeepLinkController,
+    requestItems: [any Routable]
+  ) {
+
+    super.init(
+      router: router,
+      config: config,
+      deepLinkController: deepLinkController,
+      requestItems: requestItems
+    )
   }
 }

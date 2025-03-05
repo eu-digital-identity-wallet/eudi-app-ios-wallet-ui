@@ -217,18 +217,26 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   private func toggleVisibility() {
     let documentFields = viewState.document.documentFields.map {
       if let leadingIcon = $0.leadingIcon {
-        return ListItemData(
-          id: $0.id,
-          mainText: $0.mainText,
-          leadingIcon: leadingIcon,
-          isBlur: isVisible
+        return ExpandableListItem.single(
+          .init(
+            collapsed: ListItemData(
+              id: $0.id,
+              mainText: $0.mainText,
+              leadingIcon: leadingIcon,
+              isBlur: isVisible
+            )
+          )
         )
       } else {
-        return ListItemData(
-          id: $0.id,
-          mainText: $0.mainText,
-          overlineText: $0.overlineText,
-          isBlur: isVisible
+        return ExpandableListItem.single(
+          .init(
+            collapsed: ListItemData(
+              id: $0.id,
+              mainText: $0.mainText,
+              overlineText: $0.overlineText,
+              isBlur: isVisible
+            )
+          )
         )
       }
     }
@@ -241,7 +249,8 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
           issuer: viewState.document.issuer,
           createdAt: viewState.document.createdAt,
           hasExpired: viewState.document.hasExpired,
-          documentFields: documentFields)
+          documentFields: documentFields
+        )
       )
     }
   }

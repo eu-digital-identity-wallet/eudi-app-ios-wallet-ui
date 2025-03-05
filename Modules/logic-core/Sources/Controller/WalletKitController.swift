@@ -63,7 +63,7 @@ public protocol WalletKitController: Sendable {
     elementIdentifier: String,
     isMandatory: Bool,
     parser: (String) -> String
-  ) -> DocValue
+  ) -> DocumentElementClaim
   func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String]
   func retrieveLogFileUrl() -> URL?
   func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document
@@ -99,7 +99,7 @@ final class WalletKitControllerImpl: WalletKitController {
     wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciConfig = .init(
-      clientId: configLogic.vciConfig.clientId,
+      client: .public(id: configLogic.vciConfig.clientId),
       authFlowRedirectionURI: configLogic.vciConfig.redirectUri
     )
     wallet.trustedReaderCertificates = configLogic.readerConfig.trustedCerts
@@ -344,15 +344,22 @@ extension WalletKitController {
     }
   }
 
+  // MARK: - TODO REWORK THIS TO SUPPORT NESTED
   public func valueForElementIdentifier(
     with documentId: String,
     elementIdentifier: String,
     isMandatory: Bool,
     parser: (String) -> String
-  ) -> DocValue {
+  ) -> DocumentElementClaim {
 
     guard let document = fetchDocument(with: documentId) else {
-      return .unavailable(LocalizableStringKey.errorUnableFetchDocument.toString)
+      return .primitive(
+        id: UUID().uuidString,
+        title: "",
+        path: [],
+        value: .unavailable(LocalizableStringKey.errorUnableFetchDocument.toString),
+        status: .notAvailable
+      )
     }
 
     let claims = document.docClaims
@@ -367,29 +374,54 @@ extension WalletKitController {
       .parseUserPseudonym()
 
     guard let element = claims.first(where: { $0.name == elementIdentifier }) else {
-      return .unavailable(LocalizableStringKey.unavailableField.toString)
+      return .primitive(
+        id: UUID().uuidString,
+        title: "",
+        path: [],
+        value: .unavailable(LocalizableStringKey.unavailableField.toString),
+        status: .notAvailable
+      )
     }
 
     if let image = element.dataValue.image {
-      if isMandatory {
-        return .mandatory(.image(Image(uiImage: image)))
-      } else {
-        return .image(Image(uiImage: image))
-      }
+      return .primitive(
+        id: UUID().uuidString,
+        title: element.displayName.ifNilOrEmpty { element.name },
+        path: elementIdentifier.components(separatedBy: "."),
+        value: .image(Image(uiImage: image)),
+        status: .available(isRequired: isMandatory)
+      )
     }
 
-    var stringValue: String {
-      if let nested = element.children {
-        return element.flattenNested(nested: nested).stringValue
-      } else {
-        return element.stringValue
-      }
+    switch element.dataValue {
+    case .string(let value):
+      return .primitive(
+        id: UUID().uuidString,
+        title: element.displayName.ifNilOrEmpty { element.name },
+        path: elementIdentifier.components(separatedBy: "."),
+        value: .string(value),
+        status: .available(isRequired: isMandatory)
+      )
+    default:
+      break
     }
 
-    if isMandatory {
-      return .mandatory(.string(stringValue))
+    if let nested = element.children {
+      return .primitive(
+        id: UUID().uuidString,
+        title: element.displayName.ifNilOrEmpty { element.name },
+        path: elementIdentifier.components(separatedBy: "."),
+        value: .string(element.flattenNested(nested: nested).stringValue),
+        status: .available(isRequired: isMandatory)
+      )
     } else {
-      return .string(stringValue)
+      return .primitive(
+        id: UUID().uuidString,
+        title: element.displayName.ifNilOrEmpty { element.name },
+        path: elementIdentifier.components(separatedBy: "."),
+        value: .string(element.stringValue),
+        status: .available(isRequired: isMandatory)
+      )
     }
   }
 }

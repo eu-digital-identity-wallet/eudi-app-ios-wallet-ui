@@ -16,7 +16,7 @@
 import SwiftUI
 import logic_resources
 
-public struct CardViewWithLogo: View {
+public struct CardViewWithLogoView: View {
   private let cornerRadius: CGFloat
   private let backgroundColor: Color
   private let icon: RemoteImageView.ImageContentOption
@@ -95,7 +95,7 @@ public struct CardViewWithLogo: View {
 
 #Preview {
   VStack(spacing: 16) {
-    CardViewWithLogo(
+    CardViewWithLogoView(
       icon: .image(
         Image(
           systemName: "building.2.crop.circle.fill"
@@ -105,7 +105,7 @@ public struct CardViewWithLogo: View {
       title: .custom("Hellenic Government")
     )
 
-    CardViewWithLogo(
+    CardViewWithLogoView(
       icon: .image(
         Image(
           systemName: "building.2.crop.circle.fill"
@@ -115,7 +115,7 @@ public struct CardViewWithLogo: View {
       title: .custom("Another Organization")
     )
 
-    CardViewWithLogo(
+    CardViewWithLogoView(
       backgroundColor: Theme.shared.color.tertiary,
       icon: .image(
         Image(

@@ -22,7 +22,7 @@ public struct RequestViewState: ViewState {
   public let isLoading: Bool
   public let error: ContentErrorView.Config?
   public let showMissingCrredentials: Bool
-  public let items: [RequestDataUI]
+  public let items: [RequestDataUiModel]
   public let trustedRelyingPartyInfo: LocalizableStringKey
   public let relyingParty: LocalizableStringKey
   public let isTrusted: Bool
@@ -144,7 +144,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   }
 
   public func onReceivedItems(
-    with items: [RequestDataUI],
+    with items: [RequestDataUiModel],
     title: LocalizableStringKey,
     relyingParty: LocalizableStringKey,
     isTrusted: Bool
@@ -252,7 +252,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     )
   }
 
-  private func canShare(with items: [RequestDataUI]) -> Bool {
+  private func canShare(with items: [RequestDataUiModel]) -> Bool {
     items.canShare()
   }
 

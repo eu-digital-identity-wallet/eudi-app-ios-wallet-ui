@@ -86,19 +86,23 @@ private func content(
 ) -> some View {
   ScrollView {
     VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+
       Text(viewState.document.documentName)
         .font(.largeTitle)
         .bold()
         .frame(maxWidth: .infinity, alignment: .leading)
 
+      // MARK: - TODO REWORK WrapListItemsView
       VStack(spacing: .zero) {
-        WrapCardView {
-          VStack(spacing: .zero) {
-            WrapListItemsView(
-              listItems: viewState.document.documentFields
-            )
-          }
-        }
+
+        WrapExpandableListView(
+          header: .init(
+            mainText: .custom("")
+          ),
+          items: viewState.document.documentFields,
+          hideSensitiveContent: false,
+          onItemClick: { _ in }
+        )
       }
       .shimmer(isLoading: viewState.isLoading)
 
@@ -110,8 +114,8 @@ private func content(
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .frame(maxWidth: .infinity, alignment: .leading)
 
-          CardViewWithLogo(
-            icon: .remoteImage(issuer.logoUrl, Theme.shared.image.logo),
+          CardViewWithLogoView(
+            icon: .remoteImage(issuer.logoUrl, nil),
             title: .custom(issuer.name)
           )
         }

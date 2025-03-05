@@ -15,7 +15,9 @@
  */
 import logic_resources
 import logic_business
+import Copyable
 
+@Copyable
 public struct ListItemData: Identifiable, Sendable, Equatable {
 
   public enum MainStyle: Sendable, Equatable {
@@ -91,6 +93,117 @@ public enum TrailingContent: Sendable, Equatable {
       return true
     default:
       return false
+    }
+  }
+}
+
+@Copyable
+public struct ListItemSection: Identifiable, Equatable, Routable {
+  public let id: String
+  public let title: String
+  public let listItems: [ExpandableListItem]
+
+  public var log: String {
+    "id: \(id), title: \(title)"
+  }
+
+  public init(id: String, title: String, listItems: [ExpandableListItem]) {
+    self.id = id
+    self.title = title
+    self.listItems = listItems
+  }
+}
+
+public enum ExpandableListItem: Identifiable, Hashable, Equatable, Sendable {
+  case single(SingleListItemData)
+  case nested(NestedListItemData)
+
+  public var id: String {
+    return switch self {
+    case .single(let data):
+      data.collapsed.id
+    case .nested(let data):
+      data.collapsed.id
+    }
+  }
+
+  public var title: String {
+    return switch self {
+    case .single(let data):
+      data.collapsed.mainText.toString
+    case .nested(let data):
+      data.collapsed.mainText.toString
+    }
+  }
+
+  public var leadingIcon: LeadingIcon? {
+    return switch self {
+    case .single(let data):
+      data.collapsed.leadingIcon
+    case .nested(let data):
+      data.collapsed.leadingIcon
+    }
+  }
+
+  public var mainText: LocalizableStringKey {
+    return switch self {
+    case .single(let data):
+      data.collapsed.mainText
+    case .nested(let data):
+      data.collapsed.mainText
+    }
+  }
+
+  public var overlineText: LocalizableStringKey? {
+    return switch self {
+    case .single(let data):
+      data.collapsed.overlineText
+    case .nested(let data):
+      data.collapsed.overlineText
+    }
+  }
+
+  public func hash(into hasher: inout Hasher) {
+    hasher.combine(id)
+  }
+
+  public static func == (lhs: ExpandableListItem, rhs: ExpandableListItem) -> Bool {
+    return lhs.id == rhs.id
+  }
+
+  @Copyable
+  public struct SingleListItemData: Identifiable, Equatable, Sendable {
+    @EquatableNoop
+    public var id: String
+    public let collapsed: ListItemData
+
+    public init(
+      id: String = UUID().uuidString,
+      collapsed: ListItemData
+    ) {
+      self.id = id
+      self.collapsed = collapsed
+    }
+  }
+
+  @Copyable
+  public struct NestedListItemData: Identifiable, Equatable, Sendable {
+    @EquatableNoop
+    public var id: String
+    public let collapsed: ListItemData
+    public let expanded: [ExpandableListItem]
+    public var isExpanded: Bool
+
+    public init(
+      id: String = UUID().uuidString,
+      collapsed: ListItemData,
+      expanded: [ExpandableListItem],
+      isExpanded: Bool
+    ) {
+      self.id = id
+      self.collapsed = collapsed
+      self.expanded = expanded
+      self.isExpanded = isExpanded
     }
   }
 }
