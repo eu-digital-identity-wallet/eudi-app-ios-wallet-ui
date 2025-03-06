@@ -41,8 +41,8 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
       fatalError("BaseSuccessViewModel:: Invalid configuraton")
     }
 
-    guard let requestItems = requestItems as? [RequestDataUiModel] else {
-      fatalError("BaseSuccessViewModel:: RequestDataUiModel")
+    guard let requestItems = requestItems as? [ListItemSection] else {
+      fatalError("BaseSuccessViewModel:: ListItemSection")
     }
 
     self.deepLinkController = deepLinkController
@@ -56,7 +56,7 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
           isVerified: config.relyingPartyIsTrusted,
           name: .custom(config.relyingParty ?? "")
         ),
-        items: requestItems.map { $0.requestDataSection },
+        items: requestItems,
         navigationTitle: config.relyingPartyIsTrusted
         ? .documentAdded
         : .dataShared,

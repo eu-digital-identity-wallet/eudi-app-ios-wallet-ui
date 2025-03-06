@@ -92,7 +92,7 @@ extension RequestDataUiModel {
 
 public extension Array where Element == RequestDataUiModel {
 
-  func filterSelectedRows() -> [RequestDataUiModel] {
+  func filterSelectedRows() -> [ListItemSection] {
 
     func filterSelection(
       currentList: [ExpandableListItem],
@@ -131,7 +131,7 @@ public extension Array where Element == RequestDataUiModel {
       }
     }
 
-    var models: [RequestDataUiModel] = []
+    var sections: [ListItemSection] = []
 
     self.forEach { model in
 
@@ -140,18 +140,17 @@ public extension Array where Element == RequestDataUiModel {
       filterSelection(currentList: model.requestDataSection.listItems, newList: &expandableList)
 
       if !expandableList.isEmpty {
-        models.append(
-          model.copy(
-            requestDataSection: .init(
-              id: model.requestDataSection.id,
-              title: model.requestDataSection.title,
-              listItems: expandableList)
+        sections.append(
+          .init(
+            id: model.requestDataSection.id,
+            title: model.requestDataSection.title,
+            listItems: expandableList
           )
         )
       }
     }
 
-    return models
+    return sections
   }
 
   func canShare() -> Bool {
