@@ -364,12 +364,7 @@ extension WalletKitController {
 
     let claims = document.docClaims
       .parseDates(
-        parser: {
-          Locale.current.localizedDateTime(
-            date: $0,
-            uiFormatter: "dd MMM yyyy"
-          )
-        }
+        parser: parser
       )
       .parseUserPseudonym()
 
@@ -407,6 +402,79 @@ extension WalletKitController {
     }
 
     if let nested = element.children {
+
+//      let list: [DocumentElementClaim] = nested.map { _ in
+//        .primitive(
+//          id: UUID().uuidString,
+//          title: UUID().uuidString,
+//          path: elementIdentifier.components(separatedBy: "."),
+//          value: .string(element.stringValue),
+//          status: .available(isRequired: isMandatory)
+//        )
+//      }
+//
+//      return .group(
+//        id: UUID().uuidString,
+//        title: element.displayName.ifNilOrEmpty { element.name },
+//        items: [
+//          .primitive(
+//            id: UUID().uuidString,
+//            title: UUID().uuidString,
+//            path: elementIdentifier.components(separatedBy: "."),
+//            value: .string(element.stringValue),
+//            status: .available(isRequired: isMandatory)
+//          ),
+//          .group(id: UUID().uuidString, title: UUID().uuidString, items: list),
+//          .group(
+//            id: UUID().uuidString,
+//            title: UUID().uuidString,
+//            items: [
+//              .group(
+//                id: UUID().uuidString,
+//                title: UUID().uuidString,
+//                items: [
+//                  .primitive(
+//                    id: UUID().uuidString,
+//                    title: UUID().uuidString,
+//                    path: elementIdentifier.components(separatedBy: "."),
+//                    value: .string(element.stringValue),
+//                    status: .available(isRequired: isMandatory)
+//                  ),
+//                  .primitive(
+//                    id: UUID().uuidString,
+//                    title: UUID().uuidString,
+//                    path: elementIdentifier.components(separatedBy: "."),
+//                    value: .string(element.stringValue),
+//                    status: .available(isRequired: isMandatory)
+//                  ),
+//                  .primitive(
+//                    id: UUID().uuidString,
+//                    title: UUID().uuidString,
+//                    path: elementIdentifier.components(separatedBy: "."),
+//                    value: .string(element.stringValue),
+//                    status: .available(isRequired: isMandatory)
+//                  ),
+//                  .primitive(
+//                    id: UUID().uuidString,
+//                    title: UUID().uuidString,
+//                    path: elementIdentifier.components(separatedBy: "."),
+//                    value: .string(element.stringValue),
+//                    status: .available(isRequired: isMandatory)
+//                  )
+//                ]
+//              )
+//            ]
+//          ),
+//          .primitive(
+//            id: UUID().uuidString,
+//            title: UUID().uuidString,
+//            path: elementIdentifier.components(separatedBy: "."),
+//            value: .string(element.stringValue),
+//            status: .available(isRequired: isMandatory)
+//          )
+//        ]
+//      )
+
       return .primitive(
         id: UUID().uuidString,
         title: element.displayName.ifNilOrEmpty { element.name },

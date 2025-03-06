@@ -44,28 +44,45 @@ public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
 extension RequestDataUiModel {
   mutating func toggleSelection(id: String) {
 
-    var listItems = requestDataSection.listItems
+    @discardableResult
+    func findSelection(id: String, listItems: inout [ExpandableListItem]) -> [ExpandableListItem] {
+      for index in listItems.indices {
+        switch listItems[index] {
+        case .single(let item):
 
-    for index in listItems.indices where listItems[index].id == id {
-      switch listItems[index] {
-      case .single(let item):
-        switch item.collapsed.trailingContent {
-        case .checkbox(let isEnabled, let isSelected, let onClick):
-          guard isEnabled else { break }
-          listItems[index] = .single(
-            item.copy(
-              collapsed: item.collapsed.copy(
-                trailingContent: .checkbox(isEnabled, !isSelected, onClick)
+          guard item.collapsed.id == id else {
+            continue
+          }
+
+          switch item.collapsed.trailingContent {
+          case .checkbox(let isEnabled, let isSelected, let onClick):
+            guard isEnabled else { break }
+            listItems[index] = .single(
+              item.copy(
+                collapsed: item.collapsed.copy(
+                  trailingContent: .checkbox(isEnabled, !isSelected, onClick)
+                )
               )
             )
-          )
-        default:
-          break
+          default:
+            break
+          }
+        case .nested(let item):
+          if item.collapsed.id == id {
+            listItems[index] = .nested(item.copy(isExpanded: !item.isExpanded))
+          } else {
+            var children = item.expanded
+            findSelection(id: id, listItems: &children)
+            listItems[index] = .nested(item.copy(expanded: children))
+          }
         }
-      case .nested(let item):
-        listItems[index] = .nested(item.copy(isExpanded: !item.isExpanded))
       }
+      return listItems
     }
+
+    var listItems = requestDataSection.listItems
+
+    findSelection(id: id, listItems: &listItems)
 
     self = self.copy(
       requestDataSection: self.requestDataSection.copy(listItems: listItems)
@@ -75,11 +92,66 @@ extension RequestDataUiModel {
 
 public extension Array where Element == RequestDataUiModel {
 
-  // MARK: - TODO Fix for passing the filtered models, only selected items from group or flat.
   func filterSelectedRows() -> [RequestDataUiModel] {
-    self.map { model in
-      model
+
+    func filterSelection(
+      currentList: [ExpandableListItem],
+      newList: inout [ExpandableListItem]
+    ) {
+      currentList.forEach {
+        switch $0 {
+        case .single(let item):
+          switch item.collapsed.trailingContent {
+          case .checkbox(_, let isSelected, _):
+            if isSelected {
+              newList.append($0)
+            }
+          default:
+            break
+          }
+        case .nested(let item):
+          newList.append($0)
+          let groupPosition = newList.count - 1
+          var children: [ExpandableListItem] = []
+          filterSelection(currentList: item.expanded, newList: &children)
+          let group: ExpandableListItem = .nested(
+            .init(
+              id: item.id,
+              collapsed: item.collapsed,
+              expanded: children,
+              isExpanded: item.isExpanded
+            )
+          )
+          if !children.isEmpty {
+            newList[groupPosition] = group
+          } else {
+            newList.remove(at: groupPosition)
+          }
+        }
+      }
     }
+
+    var models: [RequestDataUiModel] = []
+
+    self.forEach { model in
+
+      var expandableList: [ExpandableListItem] = []
+
+      filterSelection(currentList: model.requestDataSection.listItems, newList: &expandableList)
+
+      if !expandableList.isEmpty {
+        models.append(
+          model.copy(
+            requestDataSection: .init(
+              id: model.requestDataSection.id,
+              title: model.requestDataSection.title,
+              listItems: expandableList)
+          )
+        )
+      }
+    }
+
+    return models
   }
 
   func canShare() -> Bool {
@@ -311,7 +383,7 @@ extension RequestDataUiModel {
         )
       }
 
-    guard mandatoryFields.count > 0 else {
+    guard !mandatoryFields.isEmpty else {
       return nil
     }
 
