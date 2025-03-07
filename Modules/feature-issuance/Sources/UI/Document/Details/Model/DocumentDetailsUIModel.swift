@@ -72,6 +72,9 @@ public extension DocumentDetailsUIModel {
         [
           .single(
             .init(
+              documentId: "",
+              nameSpace: nil,
+              path: [],
               collapsed: .init(
                 mainText: .custom("AB12356"),
                 overlineText: .custom("ID no")
@@ -80,6 +83,9 @@ public extension DocumentDetailsUIModel {
           ),
           .single(
             .init(
+              documentId: "",
+              nameSpace: nil,
+              path: [],
               collapsed: .init(
                 mainText: .custom("Hellenic"),
                 overlineText: .custom("Nationality")
@@ -88,6 +94,9 @@ public extension DocumentDetailsUIModel {
           ),
           .single(
             .init(
+              documentId: "",
+              nameSpace: nil,
+              path: [],
               collapsed: .init(
                 mainText: .custom("21 Oct 1994"),
                 overlineText: .custom("Place of birth")
@@ -96,6 +105,9 @@ public extension DocumentDetailsUIModel {
           ),
           .single(
             .init(
+              documentId: "",
+              nameSpace: nil,
+              path: [],
               collapsed: .init(
                 mainText: .custom("1,82"),
                 overlineText: .custom("Height")
@@ -108,6 +120,9 @@ public extension DocumentDetailsUIModel {
         count: 6,
         createElement: .single(
           .init(
+            documentId: "",
+            nameSpace: nil,
+            path: [],
             collapsed: .init(
               mainText: .custom("Placeholder Field Value".padded(padLength: 10)),
               overlineText: .custom("Placeholder Field Title".padded(padLength: 5))
@@ -137,6 +152,7 @@ extension DocClaimsDecodable {
 
     let documentFields: [ExpandableListItem] =
     flattenValues(
+      documentId: self.id,
       isSensitive: isSensitive,
       input: docClaims
         .compactMap({$0})
@@ -174,6 +190,7 @@ extension DocClaimsDecodable {
 
   // MARK: - TODO SUPPORT NESTED
   private func flattenValues(
+    documentId: String,
     isSensitive: Bool = true,
     input: [DocClaim]
   ) -> [ExpandableListItem] {
@@ -187,6 +204,9 @@ extension DocClaimsDecodable {
         partialResult.append(
           .single(
             .init(
+              documentId: documentId,
+              nameSpace: docClaim.namespace,
+              path: [],
               collapsed: .init(
                 id: uuid,
                 mainText: .custom(title),
@@ -201,6 +221,9 @@ extension DocClaimsDecodable {
         partialResult.append(
           .single(
             .init(
+              documentId: documentId,
+              nameSpace: docClaim.namespace,
+              path: [],
               collapsed: .init(
                 id: uuid,
                 mainText: .custom(docClaim.flattenNested(nested: nested).stringValue),
@@ -214,6 +237,9 @@ extension DocClaimsDecodable {
         partialResult.append(
           .single(
             .init(
+              documentId: documentId,
+              nameSpace: docClaim.namespace,
+              path: [],
               collapsed: .init(
                 id: uuid,
                 mainText: .custom(docClaim.stringValue),

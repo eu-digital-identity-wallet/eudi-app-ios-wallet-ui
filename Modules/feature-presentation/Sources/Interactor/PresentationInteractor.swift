@@ -113,31 +113,28 @@ final class PresentationInteractorImpl: PresentationInteractor {
   // MARK: - TODO FIX RESPONSE PREPARATION
   public func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error> {
 
-    return .failure(PresentationSessionError.conversionToRequestItemModel)
+    let requestConvertible = requestItems.prepareRequest()
+      .reduce(into: [ExpandableListItem]()) { partialResult, document in
+        partialResult.append(contentsOf: document.requestDataSection.listItems)
+      }
+      .reduce(into: RequestItemsWrapper()) {  partialResult, claim in
+        let requestItem: RequestItem = .init(elementPath: claim.path ?? [])
+        var nameSpaceDict = partialResult.requestItems[claim.documentId.orEmpty, default: [claim.nameSpace.orEmpty: [requestItem]]]
+        nameSpaceDict[claim.nameSpace.orEmpty, default: [requestItem]].appendIfNotExists(requestItem)
+        partialResult.requestItems[claim.documentId.orEmpty] = nameSpaceDict
+      }
 
-//    let requestConvertible = requestItems
-//      .reduce(into: [RequestDataRow]()) { partialResult, cell in
-//        let items = cell.requestDataRow.filter({$0.isSelected})
-//        partialResult.append(contentsOf: items)
-//      }
-//      .reduce(into: RequestItemsWrapper()) {  partialResult, row in
-//        let requestItem: RequestItem = .init(elementIdentifier: row.elementKey)
-//        var nameSpaceDict = partialResult.requestItems[row.documentId, default: [row.namespace: [requestItem]]]
-//        nameSpaceDict[row.namespace, default: [requestItem]].appendIfNotExists(requestItem)
-//        partialResult.requestItems[row.documentId] = nameSpaceDict
-//      }
-//
-//    guard requestConvertible.requestItems.isEmpty == false else {
-//      return .failure(PresentationSessionError.conversionToRequestItemModel)
-//    }
-//
-//    do {
-//      try self.sessionCoordinatorHolder.getActiveRemoteCoordinator().setState(presentationState: .responseToSend(requestConvertible))
-//    } catch {
-//      return .failure(error)
-//    }
-//
-//    return .success(requestConvertible.asRequestItems())
+    guard requestConvertible.requestItems.isEmpty == false else {
+      return .failure(PresentationSessionError.conversionToRequestItemModel)
+    }
+
+    do {
+      try self.sessionCoordinatorHolder.getActiveRemoteCoordinator().setState(presentationState: .responseToSend(requestConvertible))
+    } catch {
+      return .failure(error)
+    }
+
+    return .success(requestConvertible.asRequestItems())
   }
 
   public func onSendResponse() async -> RemoteSentResponsePartialState {

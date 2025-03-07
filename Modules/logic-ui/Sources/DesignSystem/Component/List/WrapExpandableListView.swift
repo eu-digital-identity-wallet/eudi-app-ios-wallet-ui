@@ -71,6 +71,9 @@ struct ParentView: View {
   @State private var expandableItems: [ExpandableListItem] = [
     .single(
       ExpandableListItem.SingleListItemData(
+        documentId: "",
+        nameSpace: nil,
+        path: [],
         collapsed: ListItemData(
           mainText: .custom("Single 1"),
           trailingContent: .checkbox(
@@ -87,11 +90,17 @@ struct ParentView: View {
         expanded: [
           .single(
             ExpandableListItem.SingleListItemData(
+              documentId: "",
+              nameSpace: nil,
+              path: [],
               collapsed: ListItemData(mainText: .custom("Item 1"))
             )
           ),
           .single(
             ExpandableListItem.SingleListItemData(
+              documentId: "",
+              nameSpace: nil,
+              path: [],
               collapsed: ListItemData(mainText: .custom("Item 2"))
             )
           )
@@ -101,6 +110,9 @@ struct ParentView: View {
     ),
     .single(
       ExpandableListItem.SingleListItemData(
+        documentId: "",
+        nameSpace: nil,
+        path: [],
         collapsed: ListItemData(mainText: .custom("Single 2"))
       )
     ),
@@ -110,11 +122,17 @@ struct ParentView: View {
         expanded: [
           .single(
             ExpandableListItem.SingleListItemData(
+              documentId: "",
+              nameSpace: nil,
+              path: [],
               collapsed: ListItemData(mainText: .custom("Item 1"))
             )
           ),
           .single(
             ExpandableListItem.SingleListItemData(
+              documentId: "",
+              nameSpace: nil,
+              path: [],
               collapsed: ListItemData(mainText: .custom("Item 2"))
             )
           )

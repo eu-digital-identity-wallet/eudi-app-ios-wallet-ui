@@ -23,7 +23,6 @@ import Copyable
 public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
 
   public let id: String
-  public let requestDataRow: [RequestDataRow]
   public let requestDataSection: ListItemSection
 
   public var log: String {
@@ -32,11 +31,9 @@ public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
 
   public init(
     id: String = UUID().uuidString,
-    requestDataRow: [RequestDataRow],
     requestDataSection: ListItemSection
   ) {
     self.id = id
-    self.requestDataRow = requestDataRow
     self.requestDataSection = requestDataSection
   }
 }
@@ -92,6 +89,55 @@ extension RequestDataUiModel {
 
 public extension Array where Element == RequestDataUiModel {
 
+  func prepareRequest() -> [RequestDataUiModel] {
+
+    func flatSelectedValues(
+      currentList: [ExpandableListItem],
+      newList: inout [ExpandableListItem]
+    ) {
+      currentList.forEach {
+        switch $0 {
+        case .single(let item):
+          switch item.collapsed.trailingContent {
+          case .checkbox(_, let isSelected, _):
+            if isSelected {
+              newList.append($0)
+            }
+          default:
+            break
+          }
+        case .nested(let item):
+          flatSelectedValues(currentList: item.expanded, newList: &newList)
+        }
+      }
+    }
+
+    var models: [RequestDataUiModel] = []
+
+    self.forEach { model in
+
+      var expandableList: [ExpandableListItem] = []
+
+      flatSelectedValues(currentList: model.requestDataSection.listItems, newList: &expandableList)
+
+      if !expandableList.isEmpty {
+        models.append(
+          model.copy(
+            requestDataSection: .init(
+              id: model.requestDataSection.id,
+              title: model.requestDataSection.title,
+              listItems: expandableList.filter {
+                $0.path != nil && $0.documentId != nil && $0.nameSpace != nil
+              }
+            )
+          )
+        )
+      }
+    }
+
+    return models
+  }
+
   func filterSelectedRows() -> [ListItemSection] {
 
     func filterSelection(
@@ -114,16 +160,15 @@ public extension Array where Element == RequestDataUiModel {
           let groupPosition = newList.count - 1
           var children: [ExpandableListItem] = []
           filterSelection(currentList: item.expanded, newList: &children)
-          let group: ExpandableListItem = .nested(
-            .init(
-              id: item.id,
-              collapsed: item.collapsed,
-              expanded: children,
-              isExpanded: item.isExpanded
-            )
-          )
           if !children.isEmpty {
-            newList[groupPosition] = group
+            newList[groupPosition] = .nested(
+              .init(
+                id: item.id,
+                collapsed: item.collapsed,
+                expanded: children,
+                isExpanded: item.isExpanded
+              )
+            )
           } else {
             newList.remove(at: groupPosition)
           }
@@ -199,50 +244,15 @@ public extension RequestDataUiModel {
   static func mockData() -> [RequestDataUiModel] {
     [
       RequestDataUiModel(
-        requestDataRow: [
-          RequestDataRow(
-            claim: .primitive(
-              id: UUID().uuidString,
-              title: "Family Name",
-              path: [],
-              value: .string("Tzouvaras"),
-              status: .available(isRequired: false)
-            )
-          ),
-          RequestDataRow(
-            claim: .primitive(
-              id: UUID().uuidString,
-              title: "First Name",
-              path: [],
-              value: .string("Stilianos"),
-              status: .available(isRequired: false)
-            )
-          ),
-          RequestDataRow(
-            claim: .primitive(
-              id: UUID().uuidString,
-              title: "Date of Birth",
-              path: [],
-              value: .string("20-09-1985"),
-              status: .available(isRequired: false)
-            )
-          ),
-          RequestDataRow(
-            claim: .primitive(
-              id: UUID().uuidString,
-              title: "Resident Country",
-              path: [],
-              value: .string("Greece"),
-              status: .available(isRequired: false)
-            )
-          )
-        ],
         requestDataSection: .init(
           id: UUID().uuidString,
           title: "MDL",
           listItems: [
             .single(
               .init(
+                documentId: "",
+                nameSpace: nil,
+                path: [],
                 collapsed: ListItemData(
                   mainText: .custom("Tzouvaras"),
                   overlineText: .custom("Family Name")
@@ -251,6 +261,9 @@ public extension RequestDataUiModel {
             ),
             .single(
               .init(
+                documentId: "",
+                nameSpace: nil,
+                path: [],
                 collapsed: ListItemData(
                   mainText: .custom("Stilianos"),
                   overlineText: .custom("First Name")
@@ -259,6 +272,9 @@ public extension RequestDataUiModel {
             ),
             .single(
               .init(
+                documentId: "",
+                nameSpace: nil,
+                path: [],
                 collapsed: ListItemData(
                   mainText: .custom("21-09-1985"),
                   overlineText: .custom("Date of Birth")
@@ -267,6 +283,9 @@ public extension RequestDataUiModel {
             ),
             .single(
               .init(
+                documentId: "",
+                nameSpace: nil,
+                path: [],
                 collapsed: ListItemData(
                   mainText: .custom("Greece"),
                   overlineText: .custom("Resident")
@@ -311,7 +330,6 @@ extension RequestDataUiModel {
       }
 
       let data = RequestDataUiModel(
-        requestDataRow: dataRows,
         requestDataSection: .init(
           id: docElement.id,
           title: docElement.displayName.orEmpty,
@@ -329,7 +347,7 @@ extension RequestDataUiModel {
     for docElements: [ElementViewModel],
     with docElement: DocElementsViewModel,
     walletKitController: WalletKitController
-  ) -> [RequestDataRow] {
+  ) -> [RequestDataModel] {
     docElements
       .filter { element in
         let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: docElement.docType))
@@ -337,11 +355,12 @@ extension RequestDataUiModel {
       }
       .map { element in
         let elementIdentifier = element.elementPath.joined(separator: ".")
-        return RequestDataRow(
+        return RequestDataModel(
           id: "\(elementIdentifier)_\(docElement.id)",
           claim: walletKitController.valueForElementIdentifier(
             with: docElement.id,
             elementIdentifier: elementIdentifier,
+            nameSpace: element.nameSpace,
             isMandatory: false,
             parser: {
               Locale.current.localizedDateTime(
@@ -358,7 +377,7 @@ extension RequestDataUiModel {
     for docElements: [ElementViewModel],
     with docElement: DocElementsViewModel,
     walletKitController: WalletKitController
-  ) -> [RequestDataRow]? {
+  ) -> [RequestDataModel]? {
     let mandatoryFields = docElements
       .filter { element in
         let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: docElement.docType))
@@ -366,11 +385,12 @@ extension RequestDataUiModel {
       }
       .map { element in
         let elementIdentifier = element.elementPath.joined(separator: ".")
-        return RequestDataRow(
+        return RequestDataModel(
           id: "\(elementIdentifier)_\(docElement.id)",
           claim: walletKitController.valueForElementIdentifier(
             with: docElement.id,
             elementIdentifier: elementIdentifier,
+            nameSpace: element.nameSpace,
             isMandatory: true,
             parser: {
               Locale.current.localizedDateTime(

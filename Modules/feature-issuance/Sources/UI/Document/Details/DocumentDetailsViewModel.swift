@@ -219,6 +219,9 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
       if let leadingIcon = $0.leadingIcon {
         return ExpandableListItem.single(
           .init(
+            documentId: "",
+            nameSpace: nil,
+            path: [],
             collapsed: ListItemData(
               id: $0.id,
               mainText: $0.mainText,
@@ -230,6 +233,9 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
       } else {
         return ExpandableListItem.single(
           .init(
+            documentId: "",
+            nameSpace: nil,
+            path: [],
             collapsed: ListItemData(
               id: $0.id,
               mainText: $0.mainText,

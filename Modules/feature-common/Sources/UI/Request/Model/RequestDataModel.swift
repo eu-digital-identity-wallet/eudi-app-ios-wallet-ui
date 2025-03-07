@@ -18,7 +18,7 @@ import SwiftUI
 import logic_business
 import logic_core
 
-public struct RequestDataRow: Identifiable, Equatable, Sendable {
+public struct RequestDataModel: Identifiable, Equatable, Sendable {
 
   @EquatableNoop
   public var id: String
@@ -32,10 +32,12 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
     switch claim {
     case .group(let id, let title, let items):
       self.claim = .group(id: id, title: title, items: items.toClaims())
-    case .primitive(let id, let title, let path, let value, let status):
+    case .primitive(let id, let title, let docId, let nameSpace, let path, let value, let status):
       self.claim = .primitive(
         id: id,
         title: title,
+        documentId: docId,
+        nameSpace: nameSpace,
         path: path,
         value: value.toValue(),
         status: status.toStatus()
@@ -44,35 +46,43 @@ public struct RequestDataRow: Identifiable, Equatable, Sendable {
   }
 }
 
-public extension Array where Element == RequestDataRow {
+public extension Array where Element == RequestDataModel {
   func toListItems() -> [ExpandableListItem] {
     self.map { $0.toListItem() }
   }
 }
 
-public extension RequestDataRow {
+public extension RequestDataModel {
   func toListItem() -> ExpandableListItem {
     return self.claim.toExpandableListItem()
   }
 }
 
-public extension RequestDataRow {
+public extension RequestDataModel {
   enum Claim: Equatable, Sendable {
     case group(id: String, title: String, items: [Claim])
-    case primitive(id: String, title: String, path: [String], value: Value, status: Status)
+    case primitive(
+      id: String,
+      title: String,
+      documentId: String,
+      nameSpace: String?,
+      path: [String],
+      value: Value,
+      status: Status
+    )
 
     var title: String {
       return switch self {
       case .group(_, let title, _):
         title
-      case .primitive(_, let title, _, _, _):
+      case .primitive(_, let title, _, _, _, _, _):
         title
       }
     }
   }
 }
 
-public extension RequestDataRow.Claim {
+public extension RequestDataModel.Claim {
   enum `Status`: Sendable, Equatable {
 
     case available(isRequired: Bool)
@@ -99,7 +109,7 @@ public extension RequestDataRow.Claim {
 }
 
 private extension DocumentElementClaim.Status {
-  func toStatus() -> RequestDataRow.Claim.Status {
+  func toStatus() -> RequestDataModel.Claim.Status {
     return switch self {
     case .available(let isRequired):
         .available(isRequired: isRequired)
@@ -109,7 +119,7 @@ private extension DocumentElementClaim.Status {
   }
 }
 
-private extension RequestDataRow.Claim {
+private extension RequestDataModel.Claim {
   func toExpandableListItem() -> ExpandableListItem {
     switch self {
     case .group(let id, let title, let items):
@@ -121,12 +131,15 @@ private extension RequestDataRow.Claim {
           isExpanded: false
         )
       )
-    case .primitive(let id, let title, _, let value, let status):
+    case .primitive(let id, let title, let docId, let nameSpace, let path, let value, let status):
       switch value {
       case .string(let value):
         return .single(
           .init(
             id: id,
+            documentId: docId,
+            nameSpace: nameSpace,
+            path: path,
             collapsed: .init(
               mainText: .custom(value),
               overlineText: .custom(title),
@@ -143,6 +156,9 @@ private extension RequestDataRow.Claim {
         return .single(
           .init(
             id: id,
+            documentId: docId,
+            nameSpace: nameSpace,
+            path: path,
             collapsed: .init(
               mainText: .custom(title),
               leadingIcon: .init(image: image),
@@ -161,19 +177,27 @@ private extension RequestDataRow.Claim {
 }
 
 private extension Array where Element == DocumentElementClaim {
-  func toClaims() -> [RequestDataRow.Claim] {
+  func toClaims() -> [RequestDataModel.Claim] {
     self.map {
       switch $0 {
       case .group(let id, let title, let items):
           .group(id: id, title: title, items: items.toClaims())
-      case .primitive(let id, let title, let path, let value, let status):
-          .primitive(id: id, title: title, path: path, value: value.toValue(), status: status.toStatus())
+      case .primitive(let id, let title, let docId, let nameSpace, let path, let value, let status):
+          .primitive(
+            id: id,
+            title: title,
+            documentId: docId,
+            nameSpace: nameSpace,
+            path: path,
+            value: value.toValue(),
+            status: status.toStatus()
+          )
       }
     }
   }
 }
 
-public extension RequestDataRow {
+public extension RequestDataModel {
   enum Value: Equatable, Sendable {
     case string(String)
     case image(Image)
@@ -199,7 +223,7 @@ public extension RequestDataRow {
 }
 
 private extension DocumentElementValue {
-  func toValue() -> RequestDataRow.Value {
+  func toValue() -> RequestDataModel.Value {
     return switch self {
     case .string(let string):
         .string(string)

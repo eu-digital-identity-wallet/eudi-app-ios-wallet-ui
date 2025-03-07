@@ -61,6 +61,7 @@ public protocol WalletKitController: Sendable {
   func valueForElementIdentifier(
     with documentId: String,
     elementIdentifier: String,
+    nameSpace: String,
     isMandatory: Bool,
     parser: (String) -> String
   ) -> DocumentElementClaim
@@ -348,6 +349,7 @@ extension WalletKitController {
   public func valueForElementIdentifier(
     with documentId: String,
     elementIdentifier: String,
+    nameSpace: String,
     isMandatory: Bool,
     parser: (String) -> String
   ) -> DocumentElementClaim {
@@ -356,6 +358,8 @@ extension WalletKitController {
       return .primitive(
         id: UUID().uuidString,
         title: "",
+        documentId: documentId,
+        nameSpace: nameSpace,
         path: [],
         value: .unavailable(LocalizableStringKey.errorUnableFetchDocument.toString),
         status: .notAvailable
@@ -372,6 +376,8 @@ extension WalletKitController {
       return .primitive(
         id: UUID().uuidString,
         title: "",
+        documentId: documentId,
+        nameSpace: nameSpace,
         path: [],
         value: .unavailable(LocalizableStringKey.unavailableField.toString),
         status: .notAvailable
@@ -382,6 +388,8 @@ extension WalletKitController {
       return .primitive(
         id: UUID().uuidString,
         title: element.displayName.ifNilOrEmpty { element.name },
+        documentId: documentId,
+        nameSpace: nameSpace,
         path: elementIdentifier.components(separatedBy: "."),
         value: .image(Image(uiImage: image)),
         status: .available(isRequired: isMandatory)
@@ -393,6 +401,8 @@ extension WalletKitController {
       return .primitive(
         id: UUID().uuidString,
         title: element.displayName.ifNilOrEmpty { element.name },
+        documentId: documentId,
+        nameSpace: nameSpace,
         path: elementIdentifier.components(separatedBy: "."),
         value: .string(value),
         status: .available(isRequired: isMandatory)
@@ -407,6 +417,8 @@ extension WalletKitController {
 //        .primitive(
 //          id: UUID().uuidString,
 //          title: UUID().uuidString,
+//          documentId: documentId,
+//          nameSpace: nameSpace,
 //          path: elementIdentifier.components(separatedBy: "."),
 //          value: .string(element.stringValue),
 //          status: .available(isRequired: isMandatory)
@@ -420,6 +432,8 @@ extension WalletKitController {
 //          .primitive(
 //            id: UUID().uuidString,
 //            title: UUID().uuidString,
+//            documentId: documentId,
+//            nameSpace: nameSpace,
 //            path: elementIdentifier.components(separatedBy: "."),
 //            value: .string(element.stringValue),
 //            status: .available(isRequired: isMandatory)
@@ -436,6 +450,8 @@ extension WalletKitController {
 //                  .primitive(
 //                    id: UUID().uuidString,
 //                    title: UUID().uuidString,
+//                    documentId: documentId,
+//                    nameSpace: nameSpace,
 //                    path: elementIdentifier.components(separatedBy: "."),
 //                    value: .string(element.stringValue),
 //                    status: .available(isRequired: isMandatory)
@@ -443,6 +459,8 @@ extension WalletKitController {
 //                  .primitive(
 //                    id: UUID().uuidString,
 //                    title: UUID().uuidString,
+//                    documentId: documentId,
+//                    nameSpace: nameSpace,
 //                    path: elementIdentifier.components(separatedBy: "."),
 //                    value: .string(element.stringValue),
 //                    status: .available(isRequired: isMandatory)
@@ -450,6 +468,8 @@ extension WalletKitController {
 //                  .primitive(
 //                    id: UUID().uuidString,
 //                    title: UUID().uuidString,
+//                    documentId: documentId,
+//                    nameSpace: nameSpace,
 //                    path: elementIdentifier.components(separatedBy: "."),
 //                    value: .string(element.stringValue),
 //                    status: .available(isRequired: isMandatory)
@@ -457,6 +477,8 @@ extension WalletKitController {
 //                  .primitive(
 //                    id: UUID().uuidString,
 //                    title: UUID().uuidString,
+//                    documentId: documentId,
+//                    nameSpace: nameSpace,
 //                    path: elementIdentifier.components(separatedBy: "."),
 //                    value: .string(element.stringValue),
 //                    status: .available(isRequired: isMandatory)
@@ -468,6 +490,8 @@ extension WalletKitController {
 //          .primitive(
 //            id: UUID().uuidString,
 //            title: UUID().uuidString,
+//            documentId: documentId,
+//            nameSpace: nameSpace,
 //            path: elementIdentifier.components(separatedBy: "."),
 //            value: .string(element.stringValue),
 //            status: .available(isRequired: isMandatory)
@@ -478,6 +502,8 @@ extension WalletKitController {
       return .primitive(
         id: UUID().uuidString,
         title: element.displayName.ifNilOrEmpty { element.name },
+        documentId: documentId,
+        nameSpace: element.namespace,
         path: elementIdentifier.components(separatedBy: "."),
         value: .string(element.flattenNested(nested: nested).stringValue),
         status: .available(isRequired: isMandatory)
@@ -486,6 +512,8 @@ extension WalletKitController {
       return .primitive(
         id: UUID().uuidString,
         title: element.displayName.ifNilOrEmpty { element.name },
+        documentId: documentId,
+        nameSpace: element.namespace,
         path: elementIdentifier.components(separatedBy: "."),
         value: .string(element.stringValue),
         status: .available(isRequired: isMandatory)

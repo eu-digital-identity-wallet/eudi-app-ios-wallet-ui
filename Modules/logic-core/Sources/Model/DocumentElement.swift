@@ -25,6 +25,8 @@ public enum DocumentElementClaim {
   case primitive(
     id: String,
     title: String,
+    documentId: String,
+    nameSpace: String?,
     path: [String],
     value: DocumentElementValue,
     status: DocumentElementClaim.Status

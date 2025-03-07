@@ -21,7 +21,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
   private let interactor: PresentationInteractor
   private let relyingParty: String
   private let relyingPartyIsTrusted: Bool
-  private let requestItems: [RequestDataUiModel]
+  private let requestItems: [ListItemSection]
   private var publisherTask: Task<Void, Error>?
 
   init(
@@ -33,9 +33,9 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
     requestItems: [any Routable]
   ) {
     guard
-      let requestItems = requestItems as? [RequestDataUiModel]
+      let requestItems = requestItems as? [ListItemSection]
     else {
-      fatalError("PresentationLoadingViewModel:: Invalid RequestDataUiModel")
+      fatalError("PresentationLoadingViewModel:: Invalid ListItemSection")
     }
 
     self.interactor = interactor
@@ -102,7 +102,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
           relyingParty: relyingParty,
           relyingPartyIsTrusted: relyingPartyIsTrusted
         ),
-        requestItems.map { $0.requestDataSection }
+        requestItems.map { $0 }
       )
     )
   }

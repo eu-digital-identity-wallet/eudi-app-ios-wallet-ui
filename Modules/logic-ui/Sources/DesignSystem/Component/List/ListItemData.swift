@@ -163,6 +163,34 @@ public enum ExpandableListItem: Identifiable, Hashable, Equatable, Sendable {
     }
   }
 
+  public var path: [String]? {
+    return switch self {
+    case .single(let data):
+      data.path
+    case .nested:
+      nil
+    }
+  }
+
+  public var documentId: String? {
+    return switch self {
+    case .single(let data):
+      data.documentId
+    case .nested:
+      nil
+    }
+  }
+
+  // MARK: - TODO NEEDS REVISIT TO SEE THE CASE OF SD-JWT
+  public var nameSpace: String? {
+    return switch self {
+    case .single(let data):
+      data.nameSpace.ifNilOrEmpty { data.path.joined(separator: ".") }
+    case .nested:
+      nil
+    }
+  }
+
   public func hash(into hasher: inout Hasher) {
     hasher.combine(id)
   }
@@ -173,15 +201,25 @@ public enum ExpandableListItem: Identifiable, Hashable, Equatable, Sendable {
 
   @Copyable
   public struct SingleListItemData: Identifiable, Equatable, Sendable {
+
     @EquatableNoop
     public var id: String
+    public let documentId: String
+    public let nameSpace: String?
+    public let path: [String]
     public let collapsed: ListItemData
 
     public init(
       id: String = UUID().uuidString,
+      documentId: String,
+      nameSpace: String?,
+      path: [String],
       collapsed: ListItemData
     ) {
       self.id = id
+      self.documentId = documentId
+      self.nameSpace = nameSpace
+      self.path = path
       self.collapsed = collapsed
     }
   }
