@@ -14,11 +14,36 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import logic_ui
+import logic_resources
 
 public struct TransactionTabView: View {
-  public var body: some View {
-    Text("Transactions")
-  }
+    public var body: some View {
+      contentUnavailableView()
+    }
+    
+    @ViewBuilder
+    private func contentUnavailableView() -> some View {
+        VStack(spacing: SPACING_SMALL) {
+            Theme.shared.image.clockIndicator
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 48, height: 48)
+                .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+                .padding(.bottom, SPACING_SMALL)
+            
+            Text(.noTransactions)
+                .typography(Theme.shared.font.titleLarge)
+                .fontWeight(.bold)
+            
+            Text(.noTransactionsDescription)
+                .typography(Theme.shared.font.bodyLarge)
+                .foregroundStyle(Theme.shared.color.onSurface)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        .padding(.horizontal, SPACING_MEDIUM)
+    }
 }
 
 #Preview {

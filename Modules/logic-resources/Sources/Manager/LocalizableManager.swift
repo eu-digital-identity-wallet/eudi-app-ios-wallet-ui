@@ -349,6 +349,10 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "no_results")
     case .noResultsDescription:
       bundle.localizedString(forKey: "no_results_description")
+    case .noTransactions:
+      bundle.localizedString(forKey: "no_transactions")
+    case .noTransactionsDescription:
+      bundle.localizedString(forKey: "no_transactions_description")
     case .proximityConnectionNfcDescription:
       bundle.localizedString(forKey: "proximity_connection_nfc_description")
     case .orShareViaNfc:
