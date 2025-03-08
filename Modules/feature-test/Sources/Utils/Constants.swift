@@ -148,15 +148,15 @@ extension Constants {
   static let mockPresentationRequest = PresentationRequest(
     items: [
       DocElementsViewModel(
-        docId: Constants.isoMdlModelId,
+        docId: isoMdlModelId,
         docType: isoMdlDocType,
         displayName: isoMdlName,
         isEnabled: true,
         elements: [
           ElementViewModel(
             nameSpace: "nameSpace",
-            elementIdentifier: "elementIdentifier",
-            displayName: "displayName",
+            elementPath: ["elementIdentifier"],
+            displayNames: ["localizedName"],
             isOptional: false,
             intentToRetain: true,
             isEnabled: true

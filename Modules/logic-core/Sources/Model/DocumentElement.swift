@@ -19,12 +19,10 @@ import SwiftUI
 public enum DocumentElementClaim: Sendable, Equatable {
 
   case group(
-    id: String,
     title: String,
     items: [DocumentElementClaim]
   )
   case primitive(
-    id: String,
     title: String,
     documentId: String,
     nameSpace: String?,
@@ -35,9 +33,9 @@ public enum DocumentElementClaim: Sendable, Equatable {
 
   public var title: String {
     return switch self {
-    case .group(_, let title, _):
+    case .group(let title, _):
       title
-    case .primitive(_, let title, _, _, _, _, _):
+    case .primitive(let title, _, _, _, _, _):
       title
     }
   }
@@ -46,7 +44,7 @@ public enum DocumentElementClaim: Sendable, Equatable {
     return switch self {
     case .group:
       nil
-    case .primitive(_, _, _, _, let path, _, _):
+    case .primitive(_, _, _, let path, _, _):
       path
     }
   }
@@ -55,7 +53,7 @@ public enum DocumentElementClaim: Sendable, Equatable {
     return switch self {
     case .group:
       nil
-    case .primitive(_, _, let documentId, _, _, _, _):
+    case .primitive(_, let documentId, _, _, _, _):
       documentId
     }
   }
@@ -64,7 +62,7 @@ public enum DocumentElementClaim: Sendable, Equatable {
     return switch self {
     case .group:
       nil
-    case .primitive(_, _, _, let nameSpace, _, _, _):
+    case .primitive(_, _, let nameSpace, _, _, _):
       nameSpace
     }
   }

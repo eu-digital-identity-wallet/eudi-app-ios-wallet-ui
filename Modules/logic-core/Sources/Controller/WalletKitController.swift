@@ -326,7 +326,6 @@ extension WalletKitController {
 
     guard let document = fetchDocument(with: documentId) else {
       return .primitive(
-        id: UUID().uuidString,
         title: "",
         documentId: documentId,
         nameSpace: nameSpace,
@@ -344,7 +343,6 @@ extension WalletKitController {
 
     guard let element = claims.first(where: { $0.name == elementIdentifier }) else {
       return .primitive(
-        id: UUID().uuidString,
         title: "",
         documentId: documentId,
         nameSpace: nameSpace,
@@ -356,7 +354,6 @@ extension WalletKitController {
 
     if let image = element.dataValue.image {
       return .primitive(
-        id: UUID().uuidString,
         title: element.displayName.ifNilOrEmpty { element.name },
         documentId: documentId,
         nameSpace: nameSpace,
@@ -369,7 +366,6 @@ extension WalletKitController {
     switch element.dataValue {
     case .string(let value):
       return .primitive(
-        id: UUID().uuidString,
         title: element.displayName.ifNilOrEmpty { element.name },
         documentId: documentId,
         nameSpace: nameSpace,
@@ -385,7 +381,6 @@ extension WalletKitController {
 
 //      let list: [DocumentElementClaim] = nested.map { _ in
 //        .primitive(
-//          id: UUID().uuidString,
 //          title: UUID().uuidString,
 //          documentId: documentId,
 //          nameSpace: nameSpace,
@@ -396,11 +391,9 @@ extension WalletKitController {
 //      }
 //
 //      return .group(
-//        id: UUID().uuidString,
 //        title: element.displayName.ifNilOrEmpty { element.name },
 //        items: [
 //          .primitive(
-//            id: UUID().uuidString,
 //            title: UUID().uuidString,
 //            documentId: documentId,
 //            nameSpace: nameSpace,
@@ -408,17 +401,17 @@ extension WalletKitController {
 //            value: .string(element.stringValue),
 //            status: .available(isRequired: !element.isOptional)
 //          ),
-//          .group(id: UUID().uuidString, title: UUID().uuidString, items: list),
 //          .group(
-//            id: UUID().uuidString,
+//            title: UUID().uuidString,
+//            items: list
+//          ),
+//          .group(
 //            title: UUID().uuidString,
 //            items: [
 //              .group(
-//                id: UUID().uuidString,
 //                title: UUID().uuidString,
 //                items: [
 //                  .primitive(
-//                    id: UUID().uuidString,
 //                    title: UUID().uuidString,
 //                    documentId: documentId,
 //                    nameSpace: nameSpace,
@@ -427,7 +420,6 @@ extension WalletKitController {
 //                    status: .available(isRequired: !element.isOptional)
 //                  ),
 //                  .primitive(
-//                    id: UUID().uuidString,
 //                    title: UUID().uuidString,
 //                    documentId: documentId,
 //                    nameSpace: nameSpace,
@@ -436,7 +428,6 @@ extension WalletKitController {
 //                    status: .available(isRequired: !element.isOptional)
 //                  ),
 //                  .primitive(
-//                    id: UUID().uuidString,
 //                    title: UUID().uuidString,
 //                    documentId: documentId,
 //                    nameSpace: nameSpace,
@@ -445,7 +436,6 @@ extension WalletKitController {
 //                    status: .available(isRequired: !element.isOptional)
 //                  ),
 //                  .primitive(
-//                    id: UUID().uuidString,
 //                    title: UUID().uuidString,
 //                    documentId: documentId,
 //                    nameSpace: nameSpace,
@@ -458,7 +448,6 @@ extension WalletKitController {
 //            ]
 //          ),
 //          .primitive(
-//            id: UUID().uuidString,
 //            title: UUID().uuidString,
 //            documentId: documentId,
 //            nameSpace: nameSpace,
@@ -470,7 +459,6 @@ extension WalletKitController {
 //      )
 
       return .primitive(
-        id: UUID().uuidString,
         title: element.displayName.ifNilOrEmpty { element.name },
         documentId: documentId,
         nameSpace: element.namespace,
@@ -480,7 +468,6 @@ extension WalletKitController {
       )
     } else {
       return .primitive(
-        id: UUID().uuidString,
         title: element.displayName.ifNilOrEmpty { element.name },
         documentId: documentId,
         nameSpace: element.namespace,

@@ -25,11 +25,13 @@ private typealias PresentationExpandableListItem = ExpandableListItem<DocumentEl
 @Copyable
 public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
 
-  public let id: String
+  @EquatableNoop
+  public var id: String
+
   public let section: PresentationListItemSection
 
   public var log: String {
-    "id: \(id), title: \(section.title)"
+    "id: \(section.id), title: \(section.title)"
   }
 
   public init(
@@ -191,7 +193,6 @@ public extension Array where Element == RequestDataUiModel {
           if !children.isEmpty {
             newList[groupPosition] = .nested(
               .init(
-                id: item.id,
                 collapsed: item.collapsed,
                 expanded: children,
                 isExpanded: item.isExpanded
@@ -384,17 +385,15 @@ private extension DocumentElementClaim {
 private extension DocumentElementClaim {
   func toExpandableListItem() -> PresentationExpandableListItem? {
     switch self {
-    case .group(let id, let title, let items):
+    case .group(let title, let items):
       return .nested(
         .init(
-          id: id,
           collapsed: .init(mainText: .custom(title)),
           expanded: items.compactMap { $0.toExpandableListItem() },
           isExpanded: false
         )
       )
     case .primitive(
-      let id,
       let title,
       _,
       _,
@@ -406,7 +405,6 @@ private extension DocumentElementClaim {
       case .string(let value):
         return .single(
           .init(
-            id: id,
             collapsed: .init(
               mainText: .custom(value),
               overlineText: .custom(title),
@@ -423,7 +421,6 @@ private extension DocumentElementClaim {
       case .image(let image):
         return .single(
           .init(
-            id: id,
             collapsed: .init(
               mainText: .custom(title),
               leadingIcon: .init(image: image),

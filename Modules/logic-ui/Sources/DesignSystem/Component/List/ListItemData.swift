@@ -100,6 +100,7 @@ public enum TrailingContent: Sendable, Equatable {
 
 @Copyable
 public struct ListItemSection<T: Sendable>: Identifiable, Equatable, Routable {
+
   public let id: String
   public let title: String
   public let listItems: [ExpandableListItem<T>]
@@ -117,7 +118,7 @@ public struct ListItemSection<T: Sendable>: Identifiable, Equatable, Routable {
 
 public typealias GenericExpandableItem = ExpandableListItem<Sendable>
 
-public enum ExpandableListItem<T: Sendable>: Identifiable, Hashable, Equatable, Sendable {
+public enum ExpandableListItem<T: Sendable>: Identifiable, Equatable, Sendable {
 
   case single(SingleListItemData)
   case nested(NestedListItemData)
@@ -176,52 +177,37 @@ public enum ExpandableListItem<T: Sendable>: Identifiable, Hashable, Equatable, 
     }
   }
 
-  public func hash(into hasher: inout Hasher) {
-    hasher.combine(id)
-  }
-
-  public static func == (lhs: ExpandableListItem, rhs: ExpandableListItem) -> Bool {
-    return lhs.id == rhs.id
-  }
-
   @Copyable
-  public struct SingleListItemData: Identifiable, Equatable, Sendable {
+  public struct SingleListItemData: Equatable, Sendable {
 
     public static func == (lhs: ExpandableListItem<T>.SingleListItemData, rhs: ExpandableListItem<T>.SingleListItemData) -> Bool {
-      return lhs.id == rhs.id && lhs.collapsed == rhs.collapsed
+      return lhs.collapsed == rhs.collapsed
     }
 
-    @EquatableNoop
-    public var id: String
     public let collapsed: ListItemData
     public let domainModel: T?
 
     public init(
-      id: String = UUID().uuidString,
       collapsed: ListItemData,
       domainModel: T?
     ) {
-      self.id = id
       self.collapsed = collapsed
       self.domainModel = domainModel
     }
   }
 
   @Copyable
-  public struct NestedListItemData: Identifiable, Equatable, Sendable {
-    @EquatableNoop
-    public var id: String
+  public struct NestedListItemData: Equatable, Sendable {
+
     public let collapsed: ListItemData
     public let expanded: [ExpandableListItem]
     public var isExpanded: Bool
 
     public init(
-      id: String = UUID().uuidString,
       collapsed: ListItemData,
       expanded: [ExpandableListItem],
       isExpanded: Bool
     ) {
-      self.id = id
       self.collapsed = collapsed
       self.expanded = expanded
       self.isExpanded = isExpanded

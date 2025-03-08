@@ -1010,27 +1010,11 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Request/Model/RequestDataUI.swift'
-
-import Cuckoo
-import SwiftUI
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Request/Model/RequestDataUIModel.swift'
 
 import Cuckoo
-import Foundation
 import SwiftUI
+import Copyable
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -6904,28 +6888,18 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue {
+    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim {
         
-					return withoutActuallyEscaping(p3, do: { (p3: @escaping (String) -> String) -> DocValue in
+					return withoutActuallyEscaping(p3, do: { (p3: @escaping (String) -> String) -> DocumentElementClaim in
 return cuckoo_manager.call(
-            "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue",
+            "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim",
             parameters: (p0, p1, p2, p3),
             escapingParameters: (p0, p1, p2, { _ in fatalError("This is a stub! It's not supposed to be called!") }),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.valueForElementIdentifier(with: p0, elementIdentifier: p1, isMandatory: p2, parser: p3)
+            defaultCall: __defaultImplStub!.valueForElementIdentifier(with: p0, elementIdentifier: p1, nameSpace: p2, parser: p3)
         )
 					})
 
-    }
-    
-    public func mandatoryFields(for p0: DocumentTypeIdentifier) -> [String] {
-        return cuckoo_manager.call(
-            "mandatoryFields(for p0: DocumentTypeIdentifier) -> [String]",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.mandatoryFields(for: p0)
-        )
     }
     
     public func retrieveLogFileUrl() -> URL? {
@@ -7159,18 +7133,10 @@ return cuckoo_manager.call(
             ))
         }
         
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, isMandatory p2: M3, parser p3: M4) -> Cuckoo.ProtocolStubFunction<(String, String, Bool, (String) -> String), DocValue> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == Bool, M4.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, Bool, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, nameSpace p2: M3, parser p3: M4) -> Cuckoo.ProtocolStubFunction<(String, String, String, (String) -> String), DocumentElementClaim> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == String, M4.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, String, String, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func mandatoryFields<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(DocumentTypeIdentifier), [String]> where M1.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "mandatoryFields(for p0: DocumentTypeIdentifier) -> [String]",
+                method: "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim",
                 parameterMatchers: matchers
             ))
         }
@@ -7481,22 +7447,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, isMandatory p2: M3, parser p3: M4) -> Cuckoo.__DoNotUse<(String, String, Bool, (String) -> String), DocValue> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == Bool, M4.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, Bool, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, nameSpace p2: M3, parser p3: M4) -> Cuckoo.__DoNotUse<(String, String, String, (String) -> String), DocumentElementClaim> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == String, M4.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, String, String, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
             return cuckoo_manager.verify(
-                "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func mandatoryFields<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(DocumentTypeIdentifier), [String]> where M1.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "mandatoryFields(for p0: DocumentTypeIdentifier) -> [String]",
+                "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7667,12 +7621,8 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: ([WalletStorage.Document]).self)
     }
     
-    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue {
-        return DefaultValueRegistry.defaultValue(for: (DocValue).self)
-    }
-    
-    public func mandatoryFields(for p0: DocumentTypeIdentifier) -> [String] {
-        return DefaultValueRegistry.defaultValue(for: ([String]).self)
+    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim {
+        return DefaultValueRegistry.defaultValue(for: (DocumentElementClaim).self)
     }
     
     public func retrieveLogFileUrl() -> URL? {
@@ -8817,11 +8767,11 @@ import Foundation
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DocValue.swift'
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DocumentCategory.swift'
 
 import Cuckoo
-import Foundation
-import SwiftUI
+import logic_resources
+import OrderedCollections
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -8834,11 +8784,11 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DocumentCategory.swift'
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DocumentElement.swift'
 
 import Cuckoo
-import logic_resources
-import OrderedCollections
+import Foundation
+import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -10783,24 +10733,6 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Content/ContentExpandableView.swift'
-
-import Cuckoo
-import Foundation
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Content/ContentHeader/AppIconAndTextData.swift'
 
 import Cuckoo
@@ -10991,7 +10923,7 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/CardViewWithLogo.swift'
+// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/CardViewWithLogoView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -11046,21 +10978,7 @@ import logic_resources
 
 import Cuckoo
 import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/ListItemSectionView.swift'
-
-import Cuckoo
+import Copyable
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -11125,6 +11043,23 @@ import logic_resources
 
 
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/WrapCardView.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_storage
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_dashboard
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/WrapExpandableListView.swift'
 
 import Cuckoo
 import SwiftUI

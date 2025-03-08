@@ -1010,27 +1010,11 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Request/Model/RequestDataUI.swift'
-
-import Cuckoo
-import SwiftUI
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Request/Model/RequestDataUIModel.swift'
 
 import Cuckoo
-import Foundation
 import SwiftUI
+import Copyable
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -1174,9 +1158,9 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
     }
 
     
-    public func fetchScopedDocuments(with p0: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState {
+    public func fetchScopedDocuments(with p0: IssuanceFlowUiConfig.Flow) async -> ScopedDocumentsPartialState {
         return await cuckoo_manager.call(
-            "fetchScopedDocuments(with p0: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState",
+            "fetchScopedDocuments(with p0: IssuanceFlowUiConfig.Flow) async -> ScopedDocumentsPartialState",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -1184,9 +1168,9 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
         )
     }
     
-    public func issueDocument(configId p0: String) async -> IssueDocumentPartialState {
+    public func issueDocument(configId p0: String) async -> IssueResultPartialState {
         return await cuckoo_manager.call(
-            "issueDocument(configId p0: String) async -> IssueDocumentPartialState",
+            "issueDocument(configId p0: String) async -> IssueResultPartialState",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -1234,9 +1218,9 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
         )
     }
     
-    public func fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState {
+    public func fetchStoredDocuments(documentIds p0: [String]) async -> IssueDocumentsPartialState {
         return await cuckoo_manager.call(
-            "fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState",
+            "fetchStoredDocuments(documentIds p0: [String]) async -> IssueDocumentsPartialState",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -1251,18 +1235,18 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
             self.cuckoo_manager = manager
         }
         
-        func fetchScopedDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<(IssuanceFlowUiConfig.Flow), StoredDocumentsPartialState> where M1.MatchedType == IssuanceFlowUiConfig.Flow {
+        func fetchScopedDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<(IssuanceFlowUiConfig.Flow), ScopedDocumentsPartialState> where M1.MatchedType == IssuanceFlowUiConfig.Flow {
             let matchers: [Cuckoo.ParameterMatcher<(IssuanceFlowUiConfig.Flow)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractor.self,
-                method: "fetchScopedDocuments(with p0: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState",
+                method: "fetchScopedDocuments(with p0: IssuanceFlowUiConfig.Flow) async -> ScopedDocumentsPartialState",
                 parameterMatchers: matchers
             ))
         }
         
-        func issueDocument<M1: Cuckoo.Matchable>(configId p0: M1) -> Cuckoo.ProtocolStubFunction<(String), IssueDocumentPartialState> where M1.MatchedType == String {
+        func issueDocument<M1: Cuckoo.Matchable>(configId p0: M1) -> Cuckoo.ProtocolStubFunction<(String), IssueResultPartialState> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractor.self,
-                method: "issueDocument(configId p0: String) async -> IssueDocumentPartialState",
+                method: "issueDocument(configId p0: String) async -> IssueResultPartialState",
                 parameterMatchers: matchers
             ))
         }
@@ -1299,10 +1283,10 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
             ))
         }
         
-        func fetchStoredDocuments<M1: Cuckoo.Matchable>(documentIds p0: M1) -> Cuckoo.ProtocolStubFunction<([String]), DocumentsPartialState> where M1.MatchedType == [String] {
+        func fetchStoredDocuments<M1: Cuckoo.Matchable>(documentIds p0: M1) -> Cuckoo.ProtocolStubFunction<([String]), IssueDocumentsPartialState> where M1.MatchedType == [String] {
             let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractor.self,
-                method: "fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState",
+                method: "fetchStoredDocuments(documentIds p0: [String]) async -> IssueDocumentsPartialState",
                 parameterMatchers: matchers
             ))
         }
@@ -1321,10 +1305,10 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
         
         
         @discardableResult
-        func fetchScopedDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(IssuanceFlowUiConfig.Flow), StoredDocumentsPartialState> where M1.MatchedType == IssuanceFlowUiConfig.Flow {
+        func fetchScopedDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(IssuanceFlowUiConfig.Flow), ScopedDocumentsPartialState> where M1.MatchedType == IssuanceFlowUiConfig.Flow {
             let matchers: [Cuckoo.ParameterMatcher<(IssuanceFlowUiConfig.Flow)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "fetchScopedDocuments(with p0: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState",
+                "fetchScopedDocuments(with p0: IssuanceFlowUiConfig.Flow) async -> ScopedDocumentsPartialState",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1333,10 +1317,10 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
         
         
         @discardableResult
-        func issueDocument<M1: Cuckoo.Matchable>(configId p0: M1) -> Cuckoo.__DoNotUse<(String), IssueDocumentPartialState> where M1.MatchedType == String {
+        func issueDocument<M1: Cuckoo.Matchable>(configId p0: M1) -> Cuckoo.__DoNotUse<(String), IssueResultPartialState> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "issueDocument(configId p0: String) async -> IssueDocumentPartialState",
+                "issueDocument(configId p0: String) async -> IssueResultPartialState",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1393,10 +1377,10 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
         
         
         @discardableResult
-        func fetchStoredDocuments<M1: Cuckoo.Matchable>(documentIds p0: M1) -> Cuckoo.__DoNotUse<([String]), DocumentsPartialState> where M1.MatchedType == [String] {
+        func fetchStoredDocuments<M1: Cuckoo.Matchable>(documentIds p0: M1) -> Cuckoo.__DoNotUse<([String]), IssueDocumentsPartialState> where M1.MatchedType == [String] {
             let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState",
+                "fetchStoredDocuments(documentIds p0: [String]) async -> IssueDocumentsPartialState",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1409,12 +1393,12 @@ public class AddDocumentInteractorStub:AddDocumentInteractor, @unchecked Sendabl
 
 
     
-    public func fetchScopedDocuments(with p0: IssuanceFlowUiConfig.Flow) async -> StoredDocumentsPartialState {
-        return DefaultValueRegistry.defaultValue(for: (StoredDocumentsPartialState).self)
+    public func fetchScopedDocuments(with p0: IssuanceFlowUiConfig.Flow) async -> ScopedDocumentsPartialState {
+        return DefaultValueRegistry.defaultValue(for: (ScopedDocumentsPartialState).self)
     }
     
-    public func issueDocument(configId p0: String) async -> IssueDocumentPartialState {
-        return DefaultValueRegistry.defaultValue(for: (IssueDocumentPartialState).self)
+    public func issueDocument(configId p0: String) async -> IssueResultPartialState {
+        return DefaultValueRegistry.defaultValue(for: (IssueResultPartialState).self)
     }
     
     public func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState {
@@ -1433,8 +1417,8 @@ public class AddDocumentInteractorStub:AddDocumentInteractor, @unchecked Sendabl
         return DefaultValueRegistry.defaultValue(for: (LocalizableStringKey?).self)
     }
     
-    public func fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState {
-        return DefaultValueRegistry.defaultValue(for: (DocumentsPartialState).self)
+    public func fetchStoredDocuments(documentIds p0: [String]) async -> IssueDocumentsPartialState {
+        return DefaultValueRegistry.defaultValue(for: (IssueDocumentsPartialState).self)
     }
 }
 
@@ -1714,9 +1698,9 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
         )
     }
     
-    public func issueDocuments(with p0: String, issuerName p1: String, docOffers p2: [OfferedDocModel], successNavigation p3: UIConfig.TwoWayNavigationType, txCodeValue p4: String?) async -> IssueOfferDocumentsPartialState {
+    public func issueDocuments(with p0: String, issuerName p1: String, docOffers p2: [OfferedDocModel], successNavigation p3: UIConfig.TwoWayNavigationType, txCodeValue p4: String?) async -> OfferResultPartialState {
         return await cuckoo_manager.call(
-            "issueDocuments(with p0: String, issuerName p1: String, docOffers p2: [OfferedDocModel], successNavigation p3: UIConfig.TwoWayNavigationType, txCodeValue p4: String?) async -> IssueOfferDocumentsPartialState",
+            "issueDocuments(with p0: String, issuerName p1: String, docOffers p2: [OfferedDocModel], successNavigation p3: UIConfig.TwoWayNavigationType, txCodeValue p4: String?) async -> OfferResultPartialState",
             parameters: (p0, p1, p2, p3, p4),
             escapingParameters: (p0, p1, p2, p3, p4),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -1754,9 +1738,9 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
         )
     }
     
-    public func fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState {
+    public func fetchStoredDocuments(documentIds p0: [String]) async -> OfferDocumentsPartialState {
         return await cuckoo_manager.call(
-            "fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState",
+            "fetchStoredDocuments(documentIds p0: [String]) async -> OfferDocumentsPartialState",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -1779,10 +1763,10 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
             ))
         }
         
-        func issueDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable, M5: Cuckoo.OptionalMatchable>(with p0: M1, issuerName p1: M2, docOffers p2: M3, successNavigation p3: M4, txCodeValue p4: M5) -> Cuckoo.ProtocolStubFunction<(String, String, [OfferedDocModel], UIConfig.TwoWayNavigationType, String?), IssueOfferDocumentsPartialState> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == [OfferedDocModel], M4.MatchedType == UIConfig.TwoWayNavigationType, M5.OptionalMatchedType == String {
+        func issueDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable, M5: Cuckoo.OptionalMatchable>(with p0: M1, issuerName p1: M2, docOffers p2: M3, successNavigation p3: M4, txCodeValue p4: M5) -> Cuckoo.ProtocolStubFunction<(String, String, [OfferedDocModel], UIConfig.TwoWayNavigationType, String?), OfferResultPartialState> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == [OfferedDocModel], M4.MatchedType == UIConfig.TwoWayNavigationType, M5.OptionalMatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String, String, [OfferedDocModel], UIConfig.TwoWayNavigationType, String?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }, wrap(matchable: p4) { $0.4 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentOfferInteractor.self,
-                method: "issueDocuments(with p0: String, issuerName p1: String, docOffers p2: [OfferedDocModel], successNavigation p3: UIConfig.TwoWayNavigationType, txCodeValue p4: String?) async -> IssueOfferDocumentsPartialState",
+                method: "issueDocuments(with p0: String, issuerName p1: String, docOffers p2: [OfferedDocModel], successNavigation p3: UIConfig.TwoWayNavigationType, txCodeValue p4: String?) async -> OfferResultPartialState",
                 parameterMatchers: matchers
             ))
         }
@@ -1811,10 +1795,10 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
             ))
         }
         
-        func fetchStoredDocuments<M1: Cuckoo.Matchable>(documentIds p0: M1) -> Cuckoo.ProtocolStubFunction<([String]), DocumentsPartialState> where M1.MatchedType == [String] {
+        func fetchStoredDocuments<M1: Cuckoo.Matchable>(documentIds p0: M1) -> Cuckoo.ProtocolStubFunction<([String]), OfferDocumentsPartialState> where M1.MatchedType == [String] {
             let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentOfferInteractor.self,
-                method: "fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState",
+                method: "fetchStoredDocuments(documentIds p0: [String]) async -> OfferDocumentsPartialState",
                 parameterMatchers: matchers
             ))
         }
@@ -1845,10 +1829,10 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
         
         
         @discardableResult
-        func issueDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable, M5: Cuckoo.OptionalMatchable>(with p0: M1, issuerName p1: M2, docOffers p2: M3, successNavigation p3: M4, txCodeValue p4: M5) -> Cuckoo.__DoNotUse<(String, String, [OfferedDocModel], UIConfig.TwoWayNavigationType, String?), IssueOfferDocumentsPartialState> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == [OfferedDocModel], M4.MatchedType == UIConfig.TwoWayNavigationType, M5.OptionalMatchedType == String {
+        func issueDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable, M5: Cuckoo.OptionalMatchable>(with p0: M1, issuerName p1: M2, docOffers p2: M3, successNavigation p3: M4, txCodeValue p4: M5) -> Cuckoo.__DoNotUse<(String, String, [OfferedDocModel], UIConfig.TwoWayNavigationType, String?), OfferResultPartialState> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == [OfferedDocModel], M4.MatchedType == UIConfig.TwoWayNavigationType, M5.OptionalMatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String, String, [OfferedDocModel], UIConfig.TwoWayNavigationType, String?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }, wrap(matchable: p4) { $0.4 }]
             return cuckoo_manager.verify(
-                "issueDocuments(with p0: String, issuerName p1: String, docOffers p2: [OfferedDocModel], successNavigation p3: UIConfig.TwoWayNavigationType, txCodeValue p4: String?) async -> IssueOfferDocumentsPartialState",
+                "issueDocuments(with p0: String, issuerName p1: String, docOffers p2: [OfferedDocModel], successNavigation p3: UIConfig.TwoWayNavigationType, txCodeValue p4: String?) async -> OfferResultPartialState",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1893,10 +1877,10 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
         
         
         @discardableResult
-        func fetchStoredDocuments<M1: Cuckoo.Matchable>(documentIds p0: M1) -> Cuckoo.__DoNotUse<([String]), DocumentsPartialState> where M1.MatchedType == [String] {
+        func fetchStoredDocuments<M1: Cuckoo.Matchable>(documentIds p0: M1) -> Cuckoo.__DoNotUse<([String]), OfferDocumentsPartialState> where M1.MatchedType == [String] {
             let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState",
+                "fetchStoredDocuments(documentIds p0: [String]) async -> OfferDocumentsPartialState",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1913,8 +1897,8 @@ public class DocumentOfferInteractorStub:DocumentOfferInteractor, @unchecked Sen
         return DefaultValueRegistry.defaultValue(for: (OfferRequestPartialState).self)
     }
     
-    public func issueDocuments(with p0: String, issuerName p1: String, docOffers p2: [OfferedDocModel], successNavigation p3: UIConfig.TwoWayNavigationType, txCodeValue p4: String?) async -> IssueOfferDocumentsPartialState {
-        return DefaultValueRegistry.defaultValue(for: (IssueOfferDocumentsPartialState).self)
+    public func issueDocuments(with p0: String, issuerName p1: String, docOffers p2: [OfferedDocModel], successNavigation p3: UIConfig.TwoWayNavigationType, txCodeValue p4: String?) async -> OfferResultPartialState {
+        return DefaultValueRegistry.defaultValue(for: (OfferResultPartialState).self)
     }
     
     public func resumeDynamicIssuance(issuerName p0: String, successNavigation p1: UIConfig.TwoWayNavigationType) async -> OfferDynamicIssuancePartialState {
@@ -1929,170 +1913,8 @@ public class DocumentOfferInteractorStub:DocumentOfferInteractor, @unchecked Sen
         return DefaultValueRegistry.defaultValue(for: (LocalizableStringKey?).self)
     }
     
-    public func fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState {
-        return DefaultValueRegistry.defaultValue(for: (DocumentsPartialState).self)
-    }
-}
-
-
-
-
-// MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/Interactor/DocumentSuccessInteractor.swift'
-
-import Cuckoo
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-public class MockDocumentSuccessInteractor: DocumentSuccessInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = DocumentSuccessInteractor
-    public typealias Stubbing = __StubbingProxy_DocumentSuccessInteractor
-    public typealias Verification = __VerificationProxy_DocumentSuccessInteractor
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any DocumentSuccessInteractor)?
-
-    public func enableDefaultImplementation(_ stub: any DocumentSuccessInteractor) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-    
-    public func getHoldersName(for p0: String) -> String? {
-        return cuckoo_manager.call(
-            "getHoldersName(for p0: String) -> String?",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.getHoldersName(for: p0)
-        )
-    }
-    
-    public func getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey? {
-        return cuckoo_manager.call(
-            "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.getDocumentSuccessCaption(for: p0)
-        )
-    }
-    
-    public func fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState {
-        return await cuckoo_manager.call(
-            "fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.fetchStoredDocuments(documentIds: p0)
-        )
-    }
-
-    public struct __StubbingProxy_DocumentSuccessInteractor: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        func getHoldersName<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(String), String?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentSuccessInteractor.self,
-                method: "getHoldersName(for p0: String) -> String?",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(String), LocalizableStringKey?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentSuccessInteractor.self,
-                method: "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func fetchStoredDocuments<M1: Cuckoo.Matchable>(documentIds p0: M1) -> Cuckoo.ProtocolStubFunction<([String]), DocumentsPartialState> where M1.MatchedType == [String] {
-            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentSuccessInteractor.self,
-                method: "fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState",
-                parameterMatchers: matchers
-            ))
-        }
-    }
-
-    public struct __VerificationProxy_DocumentSuccessInteractor: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        
-        @discardableResult
-        func getHoldersName<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(String), String?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "getHoldersName(for p0: String) -> String?",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(String), LocalizableStringKey?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func fetchStoredDocuments<M1: Cuckoo.Matchable>(documentIds p0: M1) -> Cuckoo.__DoNotUse<([String]), DocumentsPartialState> where M1.MatchedType == [String] {
-            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-    }
-}
-
-public class DocumentSuccessInteractorStub:DocumentSuccessInteractor, @unchecked Sendable {
-
-
-    
-    public func getHoldersName(for p0: String) -> String? {
-        return DefaultValueRegistry.defaultValue(for: (String?).self)
-    }
-    
-    public func getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey? {
-        return DefaultValueRegistry.defaultValue(for: (LocalizableStringKey?).self)
-    }
-    
-    public func fetchStoredDocuments(documentIds p0: [String]) async -> DocumentsPartialState {
-        return DefaultValueRegistry.defaultValue(for: (DocumentsPartialState).self)
+    public func fetchStoredDocuments(documentIds p0: [String]) async -> OfferDocumentsPartialState {
+        return DefaultValueRegistry.defaultValue(for: (OfferDocumentsPartialState).self)
     }
 }
 
@@ -6796,28 +6618,18 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue {
+    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim {
         
-					return withoutActuallyEscaping(p3, do: { (p3: @escaping (String) -> String) -> DocValue in
+					return withoutActuallyEscaping(p3, do: { (p3: @escaping (String) -> String) -> DocumentElementClaim in
 return cuckoo_manager.call(
-            "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue",
+            "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim",
             parameters: (p0, p1, p2, p3),
             escapingParameters: (p0, p1, p2, { _ in fatalError("This is a stub! It's not supposed to be called!") }),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.valueForElementIdentifier(with: p0, elementIdentifier: p1, isMandatory: p2, parser: p3)
+            defaultCall: __defaultImplStub!.valueForElementIdentifier(with: p0, elementIdentifier: p1, nameSpace: p2, parser: p3)
         )
 					})
 
-    }
-    
-    public func mandatoryFields(for p0: DocumentTypeIdentifier) -> [String] {
-        return cuckoo_manager.call(
-            "mandatoryFields(for p0: DocumentTypeIdentifier) -> [String]",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.mandatoryFields(for: p0)
-        )
     }
     
     public func retrieveLogFileUrl() -> URL? {
@@ -7051,18 +6863,10 @@ return cuckoo_manager.call(
             ))
         }
         
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, isMandatory p2: M3, parser p3: M4) -> Cuckoo.ProtocolStubFunction<(String, String, Bool, (String) -> String), DocValue> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == Bool, M4.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, Bool, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, nameSpace p2: M3, parser p3: M4) -> Cuckoo.ProtocolStubFunction<(String, String, String, (String) -> String), DocumentElementClaim> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == String, M4.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, String, String, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func mandatoryFields<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(DocumentTypeIdentifier), [String]> where M1.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "mandatoryFields(for p0: DocumentTypeIdentifier) -> [String]",
+                method: "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim",
                 parameterMatchers: matchers
             ))
         }
@@ -7373,22 +7177,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, isMandatory p2: M3, parser p3: M4) -> Cuckoo.__DoNotUse<(String, String, Bool, (String) -> String), DocValue> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == Bool, M4.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, Bool, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, nameSpace p2: M3, parser p3: M4) -> Cuckoo.__DoNotUse<(String, String, String, (String) -> String), DocumentElementClaim> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == String, M4.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, String, String, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
             return cuckoo_manager.verify(
-                "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func mandatoryFields<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(DocumentTypeIdentifier), [String]> where M1.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "mandatoryFields(for p0: DocumentTypeIdentifier) -> [String]",
+                "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7559,12 +7351,8 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: ([WalletStorage.Document]).self)
     }
     
-    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue {
-        return DefaultValueRegistry.defaultValue(for: (DocValue).self)
-    }
-    
-    public func mandatoryFields(for p0: DocumentTypeIdentifier) -> [String] {
-        return DefaultValueRegistry.defaultValue(for: ([String]).self)
+    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim {
+        return DefaultValueRegistry.defaultValue(for: (DocumentElementClaim).self)
     }
     
     public func retrieveLogFileUrl() -> URL? {
@@ -8709,11 +8497,11 @@ import Foundation
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DocValue.swift'
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DocumentCategory.swift'
 
 import Cuckoo
-import Foundation
-import SwiftUI
+import logic_resources
+import OrderedCollections
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -8726,11 +8514,11 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DocumentCategory.swift'
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DocumentElement.swift'
 
 import Cuckoo
-import logic_resources
-import OrderedCollections
+import Foundation
+import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -10675,24 +10463,6 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Content/ContentExpandableView.swift'
-
-import Cuckoo
-import Foundation
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Content/ContentHeader/AppIconAndTextData.swift'
 
 import Cuckoo
@@ -10883,7 +10653,7 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/CardViewWithLogo.swift'
+// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/CardViewWithLogoView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -10938,21 +10708,7 @@ import logic_resources
 
 import Cuckoo
 import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/ListItemSectionView.swift'
-
-import Cuckoo
+import Copyable
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -11017,6 +10773,23 @@ import logic_resources
 
 
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/WrapCardView.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_storage
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/WrapExpandableListView.swift'
 
 import Cuckoo
 import SwiftUI
