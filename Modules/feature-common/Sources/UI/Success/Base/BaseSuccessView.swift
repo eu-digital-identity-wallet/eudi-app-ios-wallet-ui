@@ -17,12 +17,12 @@ import SwiftUI
 import logic_business
 import logic_ui
 
-public struct BaseSuccessView<Router: RouterHost>: View {
+public struct BaseSuccessView<Router: RouterHost, RequestItem: Sendable>: View {
 
-  @ObservedObject private var viewModel: BaseSuccessViewModel<Router>
+  @ObservedObject private var viewModel: BaseSuccessViewModel<Router, RequestItem>
 
   public init(
-    with viewModel: BaseSuccessViewModel<Router>
+    with viewModel: BaseSuccessViewModel<Router, RequestItem>
   ) {
     self.viewModel = viewModel
   }
@@ -43,8 +43,8 @@ public struct BaseSuccessView<Router: RouterHost>: View {
 
 @MainActor
 @ViewBuilder
-private func content(
-  viewState: BaseSuccessState
+private func content<RequestItem: Sendable>(
+  viewState: BaseSuccessState<RequestItem>
 ) -> some View {
   ScrollView {
 
@@ -75,8 +75,8 @@ private func content(
 
 @MainActor
 @ViewBuilder
-private func documents(
-  viewState: BaseSuccessState,
+private func documents<RequestItem: Sendable>(
+  viewState: BaseSuccessState<RequestItem>,
   ignoreTrainingContent: Bool = true,
   backgroundColor: Color = Theme.shared.color.tertiary,
   onSelectionChanged: @escaping @Sendable (String) -> Void

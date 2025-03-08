@@ -111,9 +111,8 @@ final class ProximityInteractorImpl: ProximityInteractor {
     do {
       let response = try await sessionCoordinatorHolder.getActiveProximityCoordinator().requestReceived()
       return .success(
-        RequestDataUiModel.items(
-          for: response.items,
-          walletKitController: self.walletKitController
+        response.items.toUiModels(
+          with: self.walletKitController
         ),
         relyingParty: response.relyingParty,
         dataRequestInfo: response.dataRequestInfo,
@@ -124,19 +123,9 @@ final class ProximityInteractorImpl: ProximityInteractor {
     }
   }
 
-  // MARK: - TODO FIX RESPONSE PREPARATION
   public func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> ProximityResponsePreparationPartialState {
 
     let requestConvertible = requestItems.prepareRequest()
-      .reduce(into: [ExpandableListItem]()) { partialResult, document in
-        partialResult.append(contentsOf: document.requestDataSection.listItems)
-      }
-      .reduce(into: RequestItemsWrapper()) {  partialResult, claim in
-        let requestItem: RequestItem = .init(elementPath: claim.path ?? [])
-        var nameSpaceDict = partialResult.requestItems[claim.documentId.orEmpty, default: [claim.nameSpace.orEmpty: [requestItem]]]
-        nameSpaceDict[claim.nameSpace.orEmpty, default: [requestItem]].appendIfNotExists(requestItem)
-        partialResult.requestItems[claim.documentId.orEmpty] = nameSpaceDict
-      }
 
     guard requestConvertible.requestItems.isEmpty == false else {
       return .failure(PresentationSessionError.conversionToRequestItemModel)

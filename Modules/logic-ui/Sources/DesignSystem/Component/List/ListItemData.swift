@@ -27,6 +27,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
 
   @EquatableNoop
   public var id: String
+
   public let mainText: LocalizableStringKey
   public let mainStyle: MainStyle
   public let overlineText: LocalizableStringKey?
@@ -98,23 +99,24 @@ public enum TrailingContent: Sendable, Equatable {
 }
 
 @Copyable
-public struct ListItemSection: Identifiable, Equatable, Routable {
+public struct ListItemSection<T: Sendable>: Identifiable, Equatable, Routable {
   public let id: String
   public let title: String
-  public let listItems: [ExpandableListItem]
+  public let listItems: [ExpandableListItem<T>]
 
   public var log: String {
     "id: \(id), title: \(title)"
   }
 
-  public init(id: String, title: String, listItems: [ExpandableListItem]) {
+  public init(id: String, title: String, listItems: [ExpandableListItem<T>]) {
     self.id = id
     self.title = title
     self.listItems = listItems
   }
 }
 
-public enum ExpandableListItem: Identifiable, Hashable, Equatable, Sendable {
+public enum ExpandableListItem<T: Sendable>: Identifiable, Hashable, Equatable, Sendable {
+
   case single(SingleListItemData)
   case nested(NestedListItemData)
 
@@ -163,29 +165,10 @@ public enum ExpandableListItem: Identifiable, Hashable, Equatable, Sendable {
     }
   }
 
-  public var path: [String]? {
+  public var domainModel: T? {
     return switch self {
     case .single(let data):
-      data.path
-    case .nested:
-      nil
-    }
-  }
-
-  public var documentId: String? {
-    return switch self {
-    case .single(let data):
-      data.documentId
-    case .nested:
-      nil
-    }
-  }
-
-  // MARK: - TODO NEEDS REVISIT TO SEE THE CASE OF SD-JWT
-  public var nameSpace: String? {
-    return switch self {
-    case .single(let data):
-      data.nameSpace.ifNilOrEmpty { data.path.joined(separator: ".") }
+      data.domainModel
     case .nested:
       nil
     }
@@ -202,25 +185,23 @@ public enum ExpandableListItem: Identifiable, Hashable, Equatable, Sendable {
   @Copyable
   public struct SingleListItemData: Identifiable, Equatable, Sendable {
 
+    public static func == (lhs: ExpandableListItem<T>.SingleListItemData, rhs: ExpandableListItem<T>.SingleListItemData) -> Bool {
+      return lhs.id == rhs.id && lhs.collapsed == rhs.collapsed
+    }
+
     @EquatableNoop
     public var id: String
-    public let documentId: String
-    public let nameSpace: String?
-    public let path: [String]
     public let collapsed: ListItemData
+    public let domainModel: T?
 
     public init(
       id: String = UUID().uuidString,
-      documentId: String,
-      nameSpace: String?,
-      path: [String],
-      collapsed: ListItemData
+      collapsed: ListItemData,
+      domainModel: T?
     ) {
       self.id = id
-      self.documentId = documentId
-      self.nameSpace = nameSpace
-      self.path = path
       self.collapsed = collapsed
+      self.domainModel = domainModel
     }
   }
 

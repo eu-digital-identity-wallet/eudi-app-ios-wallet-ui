@@ -16,17 +16,17 @@
 import SwiftUI
 import logic_resources
 
-public struct WrapExpandableListView: View {
+public struct WrapExpandableListView<T: Sendable>: View {
 
   private let header: ListItemData
-  private let items: [ExpandableListItem]
+  private let items: [ExpandableListItem<T>]
   private let backgroundColor: Color
   private let onItemClick: (ListItemData) -> Void
   private let hideSensitiveContent: Bool
 
   public init(
     header: ListItemData,
-    items: [ExpandableListItem],
+    items: [ExpandableListItem<T>],
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
     hideSensitiveContent: Bool,
     onItemClick: @escaping (ListItemData) -> Void
@@ -70,10 +70,7 @@ public struct WrapExpandableListView: View {
 struct ParentView: View {
   @State private var expandableItems: [ExpandableListItem] = [
     .single(
-      ExpandableListItem.SingleListItemData(
-        documentId: "",
-        nameSpace: nil,
-        path: [],
+      ExpandableListItem<Sendable>.SingleListItemData(
         collapsed: ListItemData(
           mainText: .custom("Single 1"),
           trailingContent: .checkbox(
@@ -81,27 +78,24 @@ struct ParentView: View {
             true,
             { _ in }
           )
-        )
+        ),
+        domainModel: nil
       )
     ),
     .nested(
-      ExpandableListItem.NestedListItemData(
+      ExpandableListItem<Sendable>.NestedListItemData(
         collapsed: ListItemData(mainText: .custom("Group 1")),
         expanded: [
           .single(
             ExpandableListItem.SingleListItemData(
-              documentId: "",
-              nameSpace: nil,
-              path: [],
-              collapsed: ListItemData(mainText: .custom("Item 1"))
+              collapsed: ListItemData(mainText: .custom("Item 1")),
+              domainModel: nil
             )
           ),
           .single(
-            ExpandableListItem.SingleListItemData(
-              documentId: "",
-              nameSpace: nil,
-              path: [],
-              collapsed: ListItemData(mainText: .custom("Item 2"))
+            ExpandableListItem<Sendable>.SingleListItemData(
+              collapsed: ListItemData(mainText: .custom("Item 2")),
+              domainModel: nil
             )
           )
         ],
@@ -109,11 +103,9 @@ struct ParentView: View {
       )
     ),
     .single(
-      ExpandableListItem.SingleListItemData(
-        documentId: "",
-        nameSpace: nil,
-        path: [],
-        collapsed: ListItemData(mainText: .custom("Single 2"))
+      ExpandableListItem<Sendable>.SingleListItemData(
+        collapsed: ListItemData(mainText: .custom("Single 2")),
+        domainModel: nil
       )
     ),
     .nested(
@@ -122,18 +114,14 @@ struct ParentView: View {
         expanded: [
           .single(
             ExpandableListItem.SingleListItemData(
-              documentId: "",
-              nameSpace: nil,
-              path: [],
-              collapsed: ListItemData(mainText: .custom("Item 1"))
+              collapsed: ListItemData(mainText: .custom("Item 1")),
+              domainModel: nil
             )
           ),
           .single(
             ExpandableListItem.SingleListItemData(
-              documentId: "",
-              nameSpace: nil,
-              path: [],
-              collapsed: ListItemData(mainText: .custom("Item 2"))
+              collapsed: ListItemData(mainText: .custom("Item 2")),
+              domainModel: nil
             )
           )
         ],

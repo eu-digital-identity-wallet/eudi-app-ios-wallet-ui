@@ -16,7 +16,8 @@
 import Foundation
 import SwiftUI
 
-public enum DocumentElementClaim {
+public enum DocumentElementClaim: Sendable, Equatable {
+
   case group(
     id: String,
     title: String,
@@ -31,16 +32,71 @@ public enum DocumentElementClaim {
     value: DocumentElementValue,
     status: DocumentElementClaim.Status
   )
-}
 
-public extension DocumentElementClaim {
-  enum `Status` {
-    case available(isRequired: Bool)
-    case notAvailable
+  public var title: String {
+    return switch self {
+    case .group(_, let title, _):
+      title
+    case .primitive(_, let title, _, _, _, _, _):
+      title
+    }
+  }
+
+  public var path: [String]? {
+    return switch self {
+    case .group:
+      nil
+    case .primitive(_, _, _, _, let path, _, _):
+      path
+    }
+  }
+
+  public var documentId: String? {
+    return switch self {
+    case .group:
+      nil
+    case .primitive(_, _, let documentId, _, _, _, _):
+      documentId
+    }
+  }
+
+  public var nameSpace: String? {
+    return switch self {
+    case .group:
+      nil
+    case .primitive(_, _, _, let nameSpace, _, _, _):
+      nameSpace
+    }
   }
 }
 
-public enum DocumentElementValue {
+public extension DocumentElementClaim {
+
+  enum `Status`: Sendable, Equatable {
+    case available(isRequired: Bool)
+    case notAvailable
+
+    public var isRequired: Bool {
+      return switch self {
+      case .available(let isRequired):
+        isRequired
+      case .notAvailable:
+        false
+      }
+    }
+
+    public var isAvailable: Bool {
+      return switch self {
+      case .available:
+        true
+      case .notAvailable:
+        false
+      }
+    }
+  }
+}
+
+public enum DocumentElementValue: Sendable, Equatable {
   case string(String)
   case unavailable(String)
   case image(Image)

@@ -17,11 +17,11 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct BaseLoadingView<Router: RouterHost>: View {
+public struct BaseLoadingView<Router: RouterHost, RequestItem: Sendable>: View {
 
-  @ObservedObject var viewModel: BaseLoadingViewModel<Router>
+  @ObservedObject var viewModel: BaseLoadingViewModel<Router, RequestItem>
 
-  public init(with router: Router, viewModel: BaseLoadingViewModel<Router>) {
+  public init(with router: Router, viewModel: BaseLoadingViewModel<Router, RequestItem>) {
     self.viewModel = viewModel
   }
 

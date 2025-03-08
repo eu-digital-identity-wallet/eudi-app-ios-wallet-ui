@@ -55,7 +55,7 @@ public final class IssuanceRouter {
           deepLinkController: DIGraph.resolver.force(
             DeepLinkController.self
           ),
-          requestItems: uiModels
+          requestItems: uiModels.compactMap { $0 as? ListItemSection<Sendable> }
         )
       ).eraseToAnyView()
     case .credentialOfferRequest(let config):

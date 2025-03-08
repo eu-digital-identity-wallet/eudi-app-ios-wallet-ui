@@ -67,7 +67,7 @@ public final class ProximityRouter {
           relyingParty: relyingParty,
           relyingPartyIsTrusted: relyingPartyIsTrusted,
           originator: originator,
-          requestItems: uiModels
+          requestItems: uiModels.compactMap { $0 as? ListItemSection<DocumentElementClaim> }
         )
       ).eraseToAnyView()
     case .proximitySuccess(
@@ -81,7 +81,7 @@ public final class ProximityRouter {
           deepLinkController: DIGraph.resolver.force(
             DeepLinkController.self
           ),
-          requestItems: uiModels
+          requestItems: uiModels.compactMap { $0 as? ListItemSection<DocumentElementClaim> }
         )
       ).eraseToAnyView()
     }

@@ -217,31 +217,27 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   private func toggleVisibility() {
     let documentFields = viewState.document.documentFields.map {
       if let leadingIcon = $0.leadingIcon {
-        return ExpandableListItem.single(
+        return ExpandableListItem<Sendable>.single(
           .init(
-            documentId: "",
-            nameSpace: nil,
-            path: [],
             collapsed: ListItemData(
               id: $0.id,
               mainText: $0.mainText,
               leadingIcon: leadingIcon,
               isBlur: isVisible
-            )
+            ),
+            domainModel: nil
           )
         )
       } else {
-        return ExpandableListItem.single(
+        return ExpandableListItem<Sendable>.single(
           .init(
-            documentId: "",
-            nameSpace: nil,
-            path: [],
             collapsed: ListItemData(
               id: $0.id,
               mainText: $0.mainText,
               overlineText: $0.overlineText,
               isBlur: isVisible
-            )
+            ),
+            domainModel: nil
           )
         )
       }

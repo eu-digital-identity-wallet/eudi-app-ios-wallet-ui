@@ -98,10 +98,10 @@ private func content(
           ForEach(viewState.items, id: \.id) { section in
             WrapExpandableListView(
               header: .init(
-                mainText: .custom(section.requestDataSection.title),
+                mainText: .custom(section.section.title),
                 supportingText: .viewDetails
               ),
-              items: section.requestDataSection.listItems,
+              items: section.section.listItems,
               hideSensitiveContent: false,
               onItemClick: { onSelectionChanged($0.id) }
             )

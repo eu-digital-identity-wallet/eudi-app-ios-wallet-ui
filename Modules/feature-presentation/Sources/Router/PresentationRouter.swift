@@ -39,7 +39,7 @@ public final class PresentationRouter {
           relyingParty: relyingParty,
           relyingPartyIsTrusted: relyingPartyIsTrusted,
           originator: originator,
-          requestItems: uiModels
+          requestItems: uiModels.compactMap { $0 as? ListItemSection<DocumentElementClaim> }
         )
       ).eraseToAnyView()
     case .presentationRequest(
@@ -67,7 +67,7 @@ public final class PresentationRouter {
           deepLinkController: DIGraph.resolver.force(
             DeepLinkController.self
           ),
-          requestItems: uiModels
+          requestItems: uiModels.compactMap { $0 as? ListItemSection<DocumentElementClaim> }
         )
       ).eraseToAnyView()
     }

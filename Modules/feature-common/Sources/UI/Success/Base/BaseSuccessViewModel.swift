@@ -18,15 +18,15 @@
 @_exported import logic_business
 
 @Copyable
-public struct BaseSuccessState: ViewState {
+public struct BaseSuccessState<T: Sendable>: ViewState {
   let config: DocumentSuccessUIConfig
   let relyingParty: RelyingPartyData
-  let items: [ListItemSection]
+  let items: [ListItemSection<T>]
   let navigationTitle: LocalizableStringKey
   let isLoading: Bool
 }
 
-open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSuccessState> {
+open class BaseSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: ViewModel<Router, BaseSuccessState<RequestItem>> {
 
   private let deepLinkController: DeepLinkController
 
@@ -41,7 +41,7 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
       fatalError("BaseSuccessViewModel:: Invalid configuraton")
     }
 
-    guard let requestItems = requestItems as? [ListItemSection] else {
+    guard let requestItems = requestItems as? [ListItemSection<RequestItem>] else {
       fatalError("BaseSuccessViewModel:: ListItemSection")
     }
 

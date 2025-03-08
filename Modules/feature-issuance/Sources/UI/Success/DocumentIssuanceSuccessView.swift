@@ -19,12 +19,12 @@ import logic_resources
 import feature_common
 import logic_core
 
-struct DocumentIssuanceSuccessView<Router: RouterHost>: View {
+struct DocumentIssuanceSuccessView<Router: RouterHost, RequestItem: Sendable>: View {
 
-  @ObservedObject private var viewModel: DocumentIssuanceSuccessViewModel<Router>
+  @ObservedObject private var viewModel: DocumentIssuanceSuccessViewModel<Router, RequestItem>
 
   init(
-    with viewModel: DocumentIssuanceSuccessViewModel<Router>
+    with viewModel: DocumentIssuanceSuccessViewModel<Router, RequestItem>
   ) {
     self.viewModel = viewModel
   }

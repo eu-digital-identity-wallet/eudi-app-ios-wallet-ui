@@ -17,13 +17,13 @@ import logic_ui
 import logic_resources
 import feature_common
 
-open class DocumentIssuanceSuccessViewModel<Router: RouterHost>: BaseSuccessViewModel<Router> {
+class DocumentIssuanceSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: BaseSuccessViewModel<Router, RequestItem> {
 
-  public override init(
+  public init(
     router: Router,
     config: any UIConfigType,
     deepLinkController: DeepLinkController,
-    requestItems: [any Routable]
+    requestItems: [ListItemSection<RequestItem>]
   ) {
 
     super.init(

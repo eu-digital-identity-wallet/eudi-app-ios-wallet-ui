@@ -96,9 +96,8 @@ final class PresentationInteractorImpl: PresentationInteractor {
       let response = try await sessionCoordinatorHolder.getActiveRemoteCoordinator().requestReceived()
       return .success(
         .init(
-          requestDataCells: RequestDataUiModel.items(
-            for: response.items,
-            walletKitController: self.walletKitController
+          requestDataCells: response.items.toUiModels(
+            with: self.walletKitController
           ),
           relyingParty: response.relyingParty,
           dataRequestInfo: response.dataRequestInfo,
@@ -110,19 +109,9 @@ final class PresentationInteractorImpl: PresentationInteractor {
     }
   }
 
-  // MARK: - TODO FIX RESPONSE PREPARATION
   public func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error> {
 
     let requestConvertible = requestItems.prepareRequest()
-      .reduce(into: [ExpandableListItem]()) { partialResult, document in
-        partialResult.append(contentsOf: document.requestDataSection.listItems)
-      }
-      .reduce(into: RequestItemsWrapper()) {  partialResult, claim in
-        let requestItem: RequestItem = .init(elementPath: claim.path ?? [])
-        var nameSpaceDict = partialResult.requestItems[claim.documentId.orEmpty, default: [claim.nameSpace.orEmpty: [requestItem]]]
-        nameSpaceDict[claim.nameSpace.orEmpty, default: [requestItem]].appendIfNotExists(requestItem)
-        partialResult.requestItems[claim.documentId.orEmpty] = nameSpaceDict
-      }
 
     guard requestConvertible.requestItems.isEmpty == false else {
       return .failure(PresentationSessionError.conversionToRequestItemModel)

@@ -62,10 +62,8 @@ public protocol WalletKitController: Sendable {
     with documentId: String,
     elementIdentifier: String,
     nameSpace: String,
-    isMandatory: Bool,
     parser: (String) -> String
   ) -> DocumentElementClaim
-  func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String]
   func retrieveLogFileUrl() -> URL?
   func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document
   func storeDynamicIssuancePendingUrl(with url: URL)
@@ -318,39 +316,11 @@ private extension WalletKitControllerImpl {
 
 extension WalletKitController {
 
-  public func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String] {
-    switch documentType {
-    case .mDocPid, .sdJwtPid:
-      return [
-        "issuance_date",
-        DocumentJsonKeys.EXPIRY_DATE,
-        "exp",
-        "issuing_authority",
-        "document_number",
-        "administrative_number",
-        "issuing_country",
-        "issuing_jurisdiction",
-        DocumentJsonKeys.PORTRAIT,
-        "portrait_capture_date"
-      ]
-    case .mDocPseudonym:
-      return [
-        "issuance_date",
-        "expiry_date",
-        "issuing_country",
-        "issuing_authority"
-      ]
-    default:
-      return []
-    }
-  }
-
   // MARK: - TODO REWORK THIS TO SUPPORT NESTED
   public func valueForElementIdentifier(
     with documentId: String,
     elementIdentifier: String,
     nameSpace: String,
-    isMandatory: Bool,
     parser: (String) -> String
   ) -> DocumentElementClaim {
 
@@ -392,7 +362,7 @@ extension WalletKitController {
         nameSpace: nameSpace,
         path: elementIdentifier.components(separatedBy: "."),
         value: .image(Image(uiImage: image)),
-        status: .available(isRequired: isMandatory)
+        status: .available(isRequired: !element.isOptional)
       )
     }
 
@@ -405,7 +375,7 @@ extension WalletKitController {
         nameSpace: nameSpace,
         path: elementIdentifier.components(separatedBy: "."),
         value: .string(value),
-        status: .available(isRequired: isMandatory)
+        status: .available(isRequired: !element.isOptional)
       )
     default:
       break
@@ -421,7 +391,7 @@ extension WalletKitController {
 //          nameSpace: nameSpace,
 //          path: elementIdentifier.components(separatedBy: "."),
 //          value: .string(element.stringValue),
-//          status: .available(isRequired: isMandatory)
+//          status: .available(isRequired: !element.isOptional)
 //        )
 //      }
 //
@@ -436,7 +406,7 @@ extension WalletKitController {
 //            nameSpace: nameSpace,
 //            path: elementIdentifier.components(separatedBy: "."),
 //            value: .string(element.stringValue),
-//            status: .available(isRequired: isMandatory)
+//            status: .available(isRequired: !element.isOptional)
 //          ),
 //          .group(id: UUID().uuidString, title: UUID().uuidString, items: list),
 //          .group(
@@ -454,7 +424,7 @@ extension WalletKitController {
 //                    nameSpace: nameSpace,
 //                    path: elementIdentifier.components(separatedBy: "."),
 //                    value: .string(element.stringValue),
-//                    status: .available(isRequired: isMandatory)
+//                    status: .available(isRequired: !element.isOptional)
 //                  ),
 //                  .primitive(
 //                    id: UUID().uuidString,
@@ -463,7 +433,7 @@ extension WalletKitController {
 //                    nameSpace: nameSpace,
 //                    path: elementIdentifier.components(separatedBy: "."),
 //                    value: .string(element.stringValue),
-//                    status: .available(isRequired: isMandatory)
+//                    status: .available(isRequired: !element.isOptional)
 //                  ),
 //                  .primitive(
 //                    id: UUID().uuidString,
@@ -472,7 +442,7 @@ extension WalletKitController {
 //                    nameSpace: nameSpace,
 //                    path: elementIdentifier.components(separatedBy: "."),
 //                    value: .string(element.stringValue),
-//                    status: .available(isRequired: isMandatory)
+//                    status: .available(isRequired: !element.isOptional)
 //                  ),
 //                  .primitive(
 //                    id: UUID().uuidString,
@@ -481,7 +451,7 @@ extension WalletKitController {
 //                    nameSpace: nameSpace,
 //                    path: elementIdentifier.components(separatedBy: "."),
 //                    value: .string(element.stringValue),
-//                    status: .available(isRequired: isMandatory)
+//                    status: .available(isRequired: !element.isOptional)
 //                  )
 //                ]
 //              )
@@ -494,7 +464,7 @@ extension WalletKitController {
 //            nameSpace: nameSpace,
 //            path: elementIdentifier.components(separatedBy: "."),
 //            value: .string(element.stringValue),
-//            status: .available(isRequired: isMandatory)
+//            status: .available(isRequired: !element.isOptional)
 //          )
 //        ]
 //      )
@@ -506,7 +476,7 @@ extension WalletKitController {
         nameSpace: element.namespace,
         path: elementIdentifier.components(separatedBy: "."),
         value: .string(element.flattenNested(nested: nested).stringValue),
-        status: .available(isRequired: isMandatory)
+        status: .available(isRequired: !element.isOptional)
       )
     } else {
       return .primitive(
@@ -516,7 +486,7 @@ extension WalletKitController {
         nameSpace: element.namespace,
         path: elementIdentifier.components(separatedBy: "."),
         value: .string(element.stringValue),
-        status: .available(isRequired: isMandatory)
+        status: .available(isRequired: !element.isOptional)
       )
     }
   }

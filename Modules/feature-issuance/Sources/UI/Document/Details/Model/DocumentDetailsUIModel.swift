@@ -27,7 +27,7 @@ public struct DocumentDetailsUIModel: Equatable, Identifiable, Routable {
   public let issuer: IssuerField?
   public let createdAt: Date
   public let hasExpired: Bool
-  public let documentFields: [ExpandableListItem]
+  public let documentFields: [ExpandableListItem<Sendable>]
 
   public var log: String {
     "id: \(id), type: \(type.rawValue), name: \(documentName)"
@@ -72,46 +72,38 @@ public extension DocumentDetailsUIModel {
         [
           .single(
             .init(
-              documentId: "",
-              nameSpace: nil,
-              path: [],
               collapsed: .init(
                 mainText: .custom("AB12356"),
                 overlineText: .custom("ID no")
-              )
+              ),
+              domainModel: nil
             )
           ),
           .single(
             .init(
-              documentId: "",
-              nameSpace: nil,
-              path: [],
               collapsed: .init(
                 mainText: .custom("Hellenic"),
                 overlineText: .custom("Nationality")
-              )
+              ),
+              domainModel: nil
             )
           ),
           .single(
             .init(
-              documentId: "",
-              nameSpace: nil,
-              path: [],
               collapsed: .init(
                 mainText: .custom("21 Oct 1994"),
                 overlineText: .custom("Place of birth")
-              )
+              ),
+              domainModel: nil
             )
           ),
           .single(
             .init(
-              documentId: "",
-              nameSpace: nil,
-              path: [],
               collapsed: .init(
                 mainText: .custom("1,82"),
                 overlineText: .custom("Height")
-              )
+              ),
+              domainModel: nil
             )
           )
         ]
@@ -120,13 +112,11 @@ public extension DocumentDetailsUIModel {
         count: 6,
         createElement: .single(
           .init(
-            documentId: "",
-            nameSpace: nil,
-            path: [],
             collapsed: .init(
               mainText: .custom("Placeholder Field Value".padded(padLength: 10)),
               overlineText: .custom("Placeholder Field Title".padded(padLength: 5))
-            )
+            ),
+            domainModel: nil
           )
         )
       )
@@ -150,7 +140,7 @@ extension DocClaimsDecodable {
       )
     }
 
-    let documentFields: [ExpandableListItem] =
+    let documentFields: [ExpandableListItem<Sendable>] =
     flattenValues(
       documentId: self.id,
       isSensitive: isSensitive,
@@ -193,7 +183,7 @@ extension DocClaimsDecodable {
     documentId: String,
     isSensitive: Bool = true,
     input: [DocClaim]
-  ) -> [ExpandableListItem] {
+  ) -> [ExpandableListItem<Sendable>] {
     input.reduce(into: []) { partialResult, docClaim in
 
       let uuid = UUID().uuidString
@@ -204,15 +194,13 @@ extension DocClaimsDecodable {
         partialResult.append(
           .single(
             .init(
-              documentId: documentId,
-              nameSpace: docClaim.namespace,
-              path: [],
               collapsed: .init(
                 id: uuid,
                 mainText: .custom(title),
                 leadingIcon: .init(image: Image(uiImage: uiImage)),
                 isBlur: isSensitive
-              )
+              ),
+              domainModel: nil
             )
           )
         )
@@ -221,15 +209,13 @@ extension DocClaimsDecodable {
         partialResult.append(
           .single(
             .init(
-              documentId: documentId,
-              nameSpace: docClaim.namespace,
-              path: [],
               collapsed: .init(
                 id: uuid,
                 mainText: .custom(docClaim.flattenNested(nested: nested).stringValue),
                 overlineText: .custom(title),
                 isBlur: isSensitive
-              )
+              ),
+              domainModel: nil
             )
           )
         )
@@ -237,15 +223,13 @@ extension DocClaimsDecodable {
         partialResult.append(
           .single(
             .init(
-              documentId: documentId,
-              nameSpace: docClaim.namespace,
-              path: [],
               collapsed: .init(
                 id: uuid,
                 mainText: .custom(docClaim.stringValue),
                 overlineText: .custom(title),
                 isBlur: isSensitive
-              )
+              ),
+              domainModel: nil
             )
           )
         )
