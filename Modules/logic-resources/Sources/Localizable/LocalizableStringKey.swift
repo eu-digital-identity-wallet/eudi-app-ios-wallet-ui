@@ -183,6 +183,8 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case walletIsSecured
   case noResults
   case noResultsDescription
+  case noTransactions
+  case noTransactionsDescription
   case proximityConnectionNfcDescription
   case orShareViaNfc
   case expiryPeriodSectionTitle

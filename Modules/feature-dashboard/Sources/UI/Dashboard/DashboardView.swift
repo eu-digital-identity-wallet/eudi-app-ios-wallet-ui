@@ -262,6 +262,7 @@ private func content(
           systemImage: "arrow.left.arrow.right"
         )
       }
+      .tag(SelectedTab.transactions)
   }
 }
 
