@@ -19,11 +19,14 @@ import logic_core
 import logic_ui
 import Copyable
 
+public typealias PresentationListItemSection = ListItemSection<DocumentElementClaim>
+private typealias PresentationExpandableListItem = ExpandableListItem<DocumentElementClaim>
+
 @Copyable
 public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
 
   public let id: String
-  public let section: ListItemSection<DocumentElementClaim>
+  public let section: PresentationListItemSection
 
   public var log: String {
     "id: \(id), title: \(section.title)"
@@ -31,7 +34,7 @@ public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
 
   public init(
     id: String = UUID().uuidString,
-    section: ListItemSection<DocumentElementClaim>
+    section: PresentationListItemSection
   ) {
     self.id = id
     self.section = section
@@ -42,7 +45,7 @@ extension RequestDataUiModel {
   mutating func toggleSelection(id: String) {
 
     @discardableResult
-    func findSelection(id: String, listItems: inout [ExpandableListItem<DocumentElementClaim>]) -> [ExpandableListItem<DocumentElementClaim>] {
+    func findSelection(id: String, listItems: inout [PresentationExpandableListItem]) -> [PresentationExpandableListItem] {
       for index in listItems.indices {
         switch listItems[index] {
         case .single(let item):
@@ -93,8 +96,8 @@ public extension Array where Element == RequestDataUiModel {
   func prepareRequest() -> RequestItemsWrapper {
 
     func flatSelectedValues(
-      currentList: [ExpandableListItem<DocumentElementClaim>],
-      newList: inout [ExpandableListItem<DocumentElementClaim>]
+      currentList: [PresentationExpandableListItem],
+      newList: inout [PresentationExpandableListItem]
     ) {
       currentList.forEach {
         switch $0 {
@@ -117,7 +120,7 @@ public extension Array where Element == RequestDataUiModel {
 
     self.forEach { model in
 
-      var expandableList: [ExpandableListItem<DocumentElementClaim>] = []
+      var expandableList: [PresentationExpandableListItem] = []
 
       flatSelectedValues(currentList: model.section.listItems, newList: &expandableList)
 
@@ -163,11 +166,11 @@ public extension Array where Element == RequestDataUiModel {
     return requestConvertible
   }
 
-  func filterSelectedRows() -> [ListItemSection<DocumentElementClaim>] {
+  func filterSelectedRows() -> [PresentationListItemSection] {
 
     func filterSelection(
-      currentList: [ExpandableListItem<DocumentElementClaim>],
-      newList: inout [ExpandableListItem<DocumentElementClaim>]
+      currentList: [PresentationExpandableListItem],
+      newList: inout [PresentationExpandableListItem]
     ) {
       currentList.forEach {
         switch $0 {
@@ -183,7 +186,7 @@ public extension Array where Element == RequestDataUiModel {
         case .nested(let item):
           newList.append($0)
           let groupPosition = newList.count - 1
-          var children: [ExpandableListItem<DocumentElementClaim>] = []
+          var children: [PresentationExpandableListItem] = []
           filterSelection(currentList: item.expanded, newList: &children)
           if !children.isEmpty {
             newList[groupPosition] = .nested(
@@ -201,11 +204,11 @@ public extension Array where Element == RequestDataUiModel {
       }
     }
 
-    var sections: [ListItemSection<DocumentElementClaim>] = []
+    var sections: [PresentationListItemSection] = []
 
     self.forEach { model in
 
-      var expandableList: [ExpandableListItem<DocumentElementClaim>] = []
+      var expandableList: [PresentationExpandableListItem] = []
 
       filterSelection(currentList: model.section.listItems, newList: &expandableList)
 
@@ -226,8 +229,8 @@ public extension Array where Element == RequestDataUiModel {
   func canShare() -> Bool {
 
     func getAllSingleItems(
-      all: [ExpandableListItem<DocumentElementClaim>],
-      result: inout [ExpandableListItem<DocumentElementClaim>.SingleListItemData]
+      all: [PresentationExpandableListItem],
+      result: inout [PresentationExpandableListItem.SingleListItemData]
     ) {
       all.forEach { item in
         switch item {
@@ -239,7 +242,7 @@ public extension Array where Element == RequestDataUiModel {
       }
     }
 
-    var listItems: [ExpandableListItem<DocumentElementClaim>.SingleListItemData] = []
+    var listItems: [PresentationExpandableListItem.SingleListItemData] = []
     self.forEach {
       getAllSingleItems(all: $0.section.listItems, result: &listItems)
     }
@@ -367,19 +370,19 @@ public extension Array where Element == DocElementsViewModel {
 }
 
 private extension Array where Element == DocumentElementClaim {
-  func toListItems() -> [ExpandableListItem<DocumentElementClaim>] {
+  func toListItems() -> [PresentationExpandableListItem] {
     self.compactMap { $0.toListItem() }
   }
 }
 
 private extension DocumentElementClaim {
-  func toListItem() -> ExpandableListItem<DocumentElementClaim>? {
+  func toListItem() -> PresentationExpandableListItem? {
     return self.toExpandableListItem()
   }
 }
 
 private extension DocumentElementClaim {
-  func toExpandableListItem() -> ExpandableListItem<DocumentElementClaim>? {
+  func toExpandableListItem() -> PresentationExpandableListItem? {
     switch self {
     case .group(let id, let title, let items):
       return .nested(

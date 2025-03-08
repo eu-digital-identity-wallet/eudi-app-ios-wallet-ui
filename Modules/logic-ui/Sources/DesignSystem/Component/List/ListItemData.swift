@@ -115,6 +115,8 @@ public struct ListItemSection<T: Sendable>: Identifiable, Equatable, Routable {
   }
 }
 
+public typealias GenericExpandableItem = ExpandableListItem<Sendable>
+
 public enum ExpandableListItem<T: Sendable>: Identifiable, Hashable, Equatable, Sendable {
 
   case single(SingleListItemData)

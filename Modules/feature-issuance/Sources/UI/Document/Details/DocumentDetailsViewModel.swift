@@ -217,7 +217,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   private func toggleVisibility() {
     let documentFields = viewState.document.documentFields.map {
       if let leadingIcon = $0.leadingIcon {
-        return ExpandableListItem<Sendable>.single(
+        return GenericExpandableItem.single(
           .init(
             collapsed: ListItemData(
               id: $0.id,
@@ -229,7 +229,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
           )
         )
       } else {
-        return ExpandableListItem<Sendable>.single(
+        return GenericExpandableItem.single(
           .init(
             collapsed: ListItemData(
               id: $0.id,

@@ -70,7 +70,7 @@ public struct WrapExpandableListView<T: Sendable>: View {
 struct ParentView: View {
   @State private var expandableItems: [ExpandableListItem] = [
     .single(
-      ExpandableListItem<Sendable>.SingleListItemData(
+      GenericExpandableItem.SingleListItemData(
         collapsed: ListItemData(
           mainText: .custom("Single 1"),
           trailingContent: .checkbox(
@@ -83,7 +83,7 @@ struct ParentView: View {
       )
     ),
     .nested(
-      ExpandableListItem<Sendable>.NestedListItemData(
+      GenericExpandableItem.NestedListItemData(
         collapsed: ListItemData(mainText: .custom("Group 1")),
         expanded: [
           .single(
@@ -93,7 +93,7 @@ struct ParentView: View {
             )
           ),
           .single(
-            ExpandableListItem<Sendable>.SingleListItemData(
+            GenericExpandableItem.SingleListItemData(
               collapsed: ListItemData(mainText: .custom("Item 2")),
               domainModel: nil
             )
@@ -103,7 +103,7 @@ struct ParentView: View {
       )
     ),
     .single(
-      ExpandableListItem<Sendable>.SingleListItemData(
+      GenericExpandableItem.SingleListItemData(
         collapsed: ListItemData(mainText: .custom("Single 2")),
         domainModel: nil
       )

@@ -27,7 +27,7 @@ public struct DocumentDetailsUIModel: Equatable, Identifiable, Routable {
   public let issuer: IssuerField?
   public let createdAt: Date
   public let hasExpired: Bool
-  public let documentFields: [ExpandableListItem<Sendable>]
+  public let documentFields: [GenericExpandableItem]
 
   public var log: String {
     "id: \(id), type: \(type.rawValue), name: \(documentName)"
@@ -140,7 +140,7 @@ extension DocClaimsDecodable {
       )
     }
 
-    let documentFields: [ExpandableListItem<Sendable>] =
+    let documentFields: [GenericExpandableItem] =
     flattenValues(
       documentId: self.id,
       isSensitive: isSensitive,
@@ -183,7 +183,7 @@ extension DocClaimsDecodable {
     documentId: String,
     isSensitive: Bool = true,
     input: [DocClaim]
-  ) -> [ExpandableListItem<Sendable>] {
+  ) -> [GenericExpandableItem] {
     input.reduce(into: []) { partialResult, docClaim in
 
       let uuid = UUID().uuidString
