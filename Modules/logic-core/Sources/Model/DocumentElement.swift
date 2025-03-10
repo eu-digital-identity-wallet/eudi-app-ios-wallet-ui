@@ -66,6 +66,16 @@ public enum DocumentElementClaim: Sendable, Equatable {
       nameSpace
     }
   }
+
+  public var groupId: String {
+    guard let path = self.path?.joined(separator: ".") else {
+      return ""
+    }
+    guard let nameSpace = self.nameSpace else {
+      return path
+    }
+    return "\(nameSpace)_\(path)"
+  }
 }
 
 public extension DocumentElementClaim {

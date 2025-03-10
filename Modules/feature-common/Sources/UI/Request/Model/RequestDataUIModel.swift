@@ -46,8 +46,7 @@ public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
 extension RequestDataUiModel {
   mutating func toggleSelection(id: String) {
 
-    @discardableResult
-    func findSelection(id: String, listItems: inout [PresentationExpandableListItem]) -> [PresentationExpandableListItem] {
+    func findSelection(id: String, listItems: inout [PresentationExpandableListItem]) {
       for index in listItems.indices {
         switch listItems[index] {
         case .single(let item):
@@ -79,7 +78,6 @@ extension RequestDataUiModel {
           }
         }
       }
-      return listItems
     }
 
     var listItems = section.listItems
@@ -132,9 +130,7 @@ public extension Array where Element == RequestDataUiModel {
             section: .init(
               id: model.section.id,
               title: model.section.title,
-              listItems: expandableList.filter {
-                $0.domainModel != nil
-              }
+              listItems: expandableList
             )
           )
         )
@@ -142,10 +138,27 @@ public extension Array where Element == RequestDataUiModel {
     }
 
     let requestConvertible = models
-      .reduce(into: [ExpandableListItem]()) { partialResult, document in
+      .reduce(into: [PresentationExpandableListItem]()) { partialResult, document in
         partialResult.append(contentsOf: document.section.listItems)
       }
-      .reduce(into: RequestItemsWrapper()) {  partialResult, claim in
+      .reduce(into: [PresentationExpandableListItem]()) { unique, element in
+
+        guard let elementDomain = element.domainModel else {
+          return
+        }
+
+        let duplicate = unique.first {
+          guard let domain = $0.domainModel else {
+            return true
+          }
+          return domain.groupId == elementDomain.groupId
+        } != nil
+
+        if !duplicate {
+          unique.append(element)
+        }
+      }
+      .reduce(into: RequestItemsWrapper()) { partialResult, claim in
 
         var path: [String] {
           claim.domainModel?.path ?? []

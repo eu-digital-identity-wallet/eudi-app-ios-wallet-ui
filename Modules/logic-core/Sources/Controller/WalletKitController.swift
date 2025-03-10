@@ -386,7 +386,7 @@ extension WalletKitController {
 //          nameSpace: nameSpace,
 //          path: elementIdentifier.components(separatedBy: "."),
 //          value: .string(element.stringValue),
-//          status: .available(isRequired: !element.isOptional)
+//          status: .available(isRequired: false)
 //        )
 //      }
 //
@@ -399,7 +399,7 @@ extension WalletKitController {
 //            nameSpace: nameSpace,
 //            path: elementIdentifier.components(separatedBy: "."),
 //            value: .string(element.stringValue),
-//            status: .available(isRequired: !element.isOptional)
+//            status: .available(isRequired: false)
 //          ),
 //          .group(
 //            title: UUID().uuidString,
@@ -417,7 +417,7 @@ extension WalletKitController {
 //                    nameSpace: nameSpace,
 //                    path: elementIdentifier.components(separatedBy: "."),
 //                    value: .string(element.stringValue),
-//                    status: .available(isRequired: !element.isOptional)
+//                    status: .available(isRequired: false)
 //                  ),
 //                  .primitive(
 //                    title: UUID().uuidString,
@@ -425,7 +425,7 @@ extension WalletKitController {
 //                    nameSpace: nameSpace,
 //                    path: elementIdentifier.components(separatedBy: "."),
 //                    value: .string(element.stringValue),
-//                    status: .available(isRequired: !element.isOptional)
+//                    status: .available(isRequired: false)
 //                  ),
 //                  .primitive(
 //                    title: UUID().uuidString,
@@ -433,7 +433,7 @@ extension WalletKitController {
 //                    nameSpace: nameSpace,
 //                    path: elementIdentifier.components(separatedBy: "."),
 //                    value: .string(element.stringValue),
-//                    status: .available(isRequired: !element.isOptional)
+//                    status: .available(isRequired: false)
 //                  ),
 //                  .primitive(
 //                    title: UUID().uuidString,
@@ -441,7 +441,7 @@ extension WalletKitController {
 //                    nameSpace: nameSpace,
 //                    path: elementIdentifier.components(separatedBy: "."),
 //                    value: .string(element.stringValue),
-//                    status: .available(isRequired: !element.isOptional)
+//                    status: .available(isRequired: false)
 //                  )
 //                ]
 //              )
@@ -453,7 +453,7 @@ extension WalletKitController {
 //            nameSpace: nameSpace,
 //            path: elementIdentifier.components(separatedBy: "."),
 //            value: .string(element.stringValue),
-//            status: .available(isRequired: !element.isOptional)
+//            status: .available(isRequired: false)
 //          )
 //        ]
 //      )
