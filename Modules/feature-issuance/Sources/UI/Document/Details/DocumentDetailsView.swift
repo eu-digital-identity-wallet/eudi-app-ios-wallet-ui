@@ -55,9 +55,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       destructiveAction: {
         viewModel.onDeleteDocument()
       },
-      baseAction: {
-        viewModel.onShowDeleteModal()
-      }
+      baseAction: viewModel.onShowDeleteModal()
     )
     .alertView(
       isPresented: $viewModel.showAlert,

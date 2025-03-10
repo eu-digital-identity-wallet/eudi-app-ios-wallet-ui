@@ -13,24 +13,12 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_core
+public protocol TransactionTabInteractor: Sendable {
 
-public protocol DashboardInteractor: Sendable {
-  func getWalletKitController() -> WalletKitController
 }
 
-final class DashboardInteractorImpl: DashboardInteractor {
+final class TransactionTabInteractorImpl: TransactionTabInteractor {
+  init() {
 
-  private let walletKitController: WalletKitController
-
-  init(
-    walletKitController: WalletKitController
-  ) {
-    self.walletKitController = walletKitController
-  }
-
-  func getWalletKitController() -> WalletKitController {
-    self.walletKitController
   }
 }

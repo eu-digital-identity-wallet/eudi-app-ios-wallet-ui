@@ -49,18 +49,14 @@ public struct BaseRequestView<Router: RouterHost>: View {
       message: .requestDataSheetCaption,
       baseText: .okButton,
       isPresented: $viewModel.isRequestInfoModalShowing,
-      baseAction: {
-        viewModel.onShowRequestInfoModal()
-      }
+      baseAction: viewModel.onShowRequestInfoModal()
     )
     .confirmationDialog(
       title: viewModel.getTrustedRelyingParty(),
       message: viewModel.getTrustedRelyingPartyInfo(),
       baseText: .okButton,
       isPresented: $viewModel.isVerifiedEntityModalShowing,
-      baseAction: {
-        viewModel.onVerifiedEntityModal()
-      }
+      baseAction: viewModel.onVerifiedEntityModal()
     )
     .task {
       if !viewModel.viewState.initialized {

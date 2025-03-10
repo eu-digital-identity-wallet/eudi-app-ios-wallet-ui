@@ -24,7 +24,7 @@ public extension View {
     baseText: LocalizableStringKey,
     isPresented: Binding<Bool>,
     destructiveAction: (() -> Void)? = nil,
-    baseAction: @escaping () -> Void
+    baseAction: @autoclosure @escaping () -> Void
   ) -> some View {
     self.modifier(
       ConfirmationDialogModifier(

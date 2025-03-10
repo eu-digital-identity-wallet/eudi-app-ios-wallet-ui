@@ -19,4 +19,7 @@ public extension Label where Title == Text, Icon == Image {
   init(_ titleKey: LocalizableStringKey, systemImage name: String) {
     self.init(titleKey.toLocalizedStringKey, systemImage: name)
   }
+  init(_ titleKey: LocalizableStringKey, image name: String) {
+    self.init(titleKey.toLocalizedStringKey, image: name)
+  }
 }

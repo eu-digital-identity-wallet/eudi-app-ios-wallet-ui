@@ -194,7 +194,7 @@ extension DocClaimsDecodable {
   // MARK: - TODO SUPPORT NESTED
   private func parseClaim(
     documentId: String,
-    isSensitive: Bool = true,
+    isSensitive: Bool,
     input: [DocClaim]
   ) -> [GenericExpandableItem] {
     input
@@ -212,7 +212,11 @@ extension DocClaimsDecodable {
         let title = docClaim.displayName.ifNilOrEmpty { docClaim.name }
 
         if let nested = docClaim.children {
-          let children = parseClaim(documentId: documentId, input: nested)
+          let children = parseClaim(
+            documentId: documentId,
+            isSensitive: isSensitive,
+            input: nested
+          )
           partialResult.append(
             .nested(
               .init(

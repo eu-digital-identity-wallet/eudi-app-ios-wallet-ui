@@ -61,7 +61,7 @@ private func content(viewState: SideMenuViewState) -> some View {
               title: .retrieveLogs,
               showDivider: item.showDivider,
               useOverlay: false,
-              action: {}
+              action: {}()
             )
           }
         }
@@ -69,7 +69,7 @@ private func content(viewState: SideMenuViewState) -> some View {
         TappableCellView(
           title: item.title,
           showDivider: item.showDivider,
-          action: item.action
+          action: item.action()
         )
       }
     }
@@ -89,8 +89,7 @@ private func content(viewState: SideMenuViewState) -> some View {
     items: [
       .init(
         title: .changeQuickPinOption,
-        action: {
-        }
+        action: {}()
       )
     ],
     appVersion: "",

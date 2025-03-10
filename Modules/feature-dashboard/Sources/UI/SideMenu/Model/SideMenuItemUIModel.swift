@@ -23,14 +23,14 @@ public struct SideMenuItemUIModel: Identifiable {
   public let title: LocalizableStringKey
   public let showDivider: Bool
   public let isShareLink: Bool
-  public let action: (() -> Void)
+  public let action: () -> Void
 
   public init(
     id: String = UUID().uuidString,
     title: LocalizableStringKey,
     showDivider: Bool = true,
     isShareLink: Bool = false,
-    action: @escaping (() -> Void)
+    action: @autoclosure @escaping () -> Void
   ) {
     self.id = id
     self.title = title
