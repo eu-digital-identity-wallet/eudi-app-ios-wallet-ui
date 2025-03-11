@@ -15,15 +15,25 @@
  */
 import Foundation
 import logic_ui
+import logic_core
 import logic_resources
 
 @Copyable
-struct TransactionTabState: ViewState {}
+struct TransactionTabState: ViewState {
+  let isLoading: Bool
+  let transactions: [TransactionCategory: [TransactionUIModel]]
+  let filterUIModel: [FilterUISection]
+  let failedTransactions: [String]
+  let isFromOnPause: Bool
+  let hasDefaultFilters: Bool
+}
 
 final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, TransactionTabState> {
 
   private let interactor: TransactionTabInteractor
   private let onUpdateToolbar: (ToolBarContent, LocalizableStringKey) -> Void
+
+  @Published var searchQuery: String = ""
 
   init(
     router: Router,
@@ -34,8 +44,17 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
     self.onUpdateToolbar = onUpdateToolbar
     super.init(
       router: router,
-      initialState: .init()
+      initialState: .init(
+        isLoading: true,
+        transactions: [:],
+        filterUIModel: [],
+        failedTransactions: [],
+        isFromOnPause: true,
+        hasDefaultFilters: false
+      )
     )
+
+    onFiltersChangeState()
   }
 
   func onCreate() {
@@ -50,6 +69,73 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
       ),
       .transactions
     )
+
+    fetch()
+  }
+
+  func fetch() {
+    Task {
+      let failedTrasnactions = viewState.failedTransactions
+
+      let state = await Task.detached { () -> TransactionsPartialState in
+        return await self.interactor.fetchTransactions(failedTransactions: failedTrasnactions)
+      }.value
+
+      switch state {
+      case .success(let transactions):
+        if viewState.isFromOnPause {
+          await interactor.initializeFilters(filterableList: transactions)
+        } else {
+          await interactor.updateLists(filterableList: transactions)
+        }
+
+        await interactor.applyFilters()
+
+        setState {
+          $0.copy(
+            isLoading: false,
+            isFromOnPause: false
+          )
+        }
+      case .failure:
+        setState {
+          $0.copy(
+            isLoading: false,
+            transactions: [:]
+          )
+        }
+      }
+    }
+  }
+
+  private func onFiltersChangeState() {
+    Task {
+      for await state in interactor.onFilterChangeState() {
+        switch state {
+
+        case .filterApplyResult(let transactions, let filterSections, let hasDefaultFilters):
+          setState {
+            $0.copy(
+              transactions: transactions,
+              filterUIModel: filterSections,
+              hasDefaultFilters: hasDefaultFilters
+            )
+          }
+          updateToolBar()
+        case .filterUpdateResult(let filterSections):
+          setState {
+            $0.copy(
+              filterUIModel: filterSections
+            )
+          }
+        case .cancelled: break
+        }
+      }
+    }
+  }
+
+  private func showFilters() {
+
   }
 
   private func onMyWallet() {
@@ -57,6 +143,27 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
       with: .featureDashboardModule(
         .sideMenu
       )
+    )
+  }
+
+  private func updateToolBar() {
+    self.onUpdateToolbar(
+      .init(
+        trailingActions: [
+          Action(
+            image: Theme.shared.image.filterMenuIcon,
+            hasIndicator: !viewState.hasDefaultFilters
+          ) {
+            self.showFilters()
+          }
+        ],
+        leadingActions: [
+          Action(image: Theme.shared.image.menuIcon) {
+            self.onMyWallet()
+          }
+        ]
+      ),
+      .transactions
     )
   }
 }

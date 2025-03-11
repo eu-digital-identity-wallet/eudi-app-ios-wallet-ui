@@ -13,12 +13,157 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import logic_core
+import logic_business
+
+public enum TransactionsPartialState: Sendable {
+  case success(FilterableList)
+  case failure(Error)
+}
+
+public enum TransactionFiltersPartialState: Sendable {
+  case filterApplyResult([TransactionCategory: [TransactionUIModel]], [FilterUISection], Bool)
+  case filterUpdateResult([FilterUISection])
+  case cancelled
+}
+
 public protocol TransactionTabInteractor: Sendable {
+  func fetchTransactions(failedTransactions: [String]) async -> TransactionsPartialState
+  func fetchFilteredTransactions(failedTransactions: [String]) async -> FilterableList?
+  func initializeFilters(filterableList: FilterableList) async
+  func createFiltersGroup() -> Filters
+  func applyFilters() async
+  func updateLists(filterableList: FilterableList) async
+  @MainActor func onFilterChangeState() -> AsyncStream<TransactionFiltersPartialState>
 
 }
 
 final class TransactionTabInteractorImpl: TransactionTabInteractor {
-  init() {
 
+  private let filterValidator: FilterValidator
+
+  @MainActor
+  private var filtersStateAsync: AsyncStream<TransactionFiltersPartialState>.Continuation?
+
+  init(
+    filterValidator: FilterValidator
+  ) {
+    self.filterValidator = filterValidator
+  }
+
+  deinit {
+    filtersStateAsync?.finish()
+  }
+
+  func fetchTransactions(failedTransactions: [String]) async -> TransactionsPartialState {
+
+    let transactions: FilterableList? = fetchFilteredTransactions(failedTransactions: failedTransactions)
+
+    guard let transactions = transactions else {
+      return .failure(WalletCoreError.unableFetchDocuments)
+    }
+
+    return .success(transactions)
+  }
+
+  public func fetchFilteredTransactions(failedTransactions: [String]) -> FilterableList? {
+
+    let transactions = TransactionUIModel.mocks()
+
+    guard !transactions.isEmpty else {
+      return nil
+    }
+
+    let filterableItems = transactions.flatMap { (_, models) in
+      models.map { transaction in
+        let transactionSearchTags: [String] = {
+          var tags = [transaction.name]
+          let transactionName = transaction.name.trimmingCharacters(in: .whitespacesAndNewlines)
+          if !transactionName.isEmpty {
+            tags.append(transactionName)
+          }
+          return tags
+        }()
+
+        return FilterableItem(
+          payload: transaction,
+          attributes: TransactionFilterableAttributes(
+            sortingKey: transaction.transactionDate,
+            searchTags: transactionSearchTags,
+            name: transaction.name
+          )
+        )
+      }
+    }
+
+    return FilterableList(items: filterableItems)
+  }
+
+  func initializeFilters(filterableList: FilterableList) async {
+    let filtersGroup = createFiltersGroup()
+    await filterValidator.initializeValidator(filters: filtersGroup, filterableList: filterableList)
+  }
+
+  func createFiltersGroup() -> Filters {
+    return Filters(
+      filterGroups: [],
+      sortOrder: SortOrderType.descending
+    )
+  }
+
+  func applyFilters() async {
+    await filterValidator.applyFilters()
+  }
+
+  func updateLists(filterableList: FilterableList) async {
+    let sortOrder = createFiltersGroup().sortOrder
+    await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
+  }
+
+  func onFilterChangeState() -> AsyncStream<TransactionFiltersPartialState> {
+    return AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
+      self.filtersStateAsync = continuation
+      Task {
+        for try await state in filterValidator.getFilterResultStream() {
+          switch state {
+          case .success(let filterResult):
+            switch filterResult {
+            case .filterApplyResult(let filteredList, let updatedFilters, let hasDefaultFilters):
+              let transactionsUI = filteredList.items.compactMap { filterableItem in
+                return filterableItem.payload as? TransactionUIModel
+              }
+              let transactions = Dictionary(grouping: transactionsUI, by: { $0.transactionCategory })
+
+              let filterSections = filterUISection(filters: updatedFilters)
+
+              continuation.yield(.filterApplyResult(transactions, filterSections, hasDefaultFilters))
+            case .filterUpdateResult(let updatedFilters):
+              let filterSections = filterUISection(filters: updatedFilters)
+              continuation.yield(.filterUpdateResult(filterSections))
+            }
+          case .completion:
+            continuation.yield(.cancelled)
+            continuation.finish()
+          }
+        }
+      }
+    }
+  }
+
+  private func filterUISection(filters: Filters) -> [FilterUISection] {
+    filters.filterGroups.map { filteredGroup in
+      FilterUISection(
+        id: filteredGroup.id,
+        filters: filteredGroup.filters.map { filter in
+          FilterUIItem(
+            id: filter.id,
+            title: filter.name,
+            selected: filter.selected,
+            filterAction: filter.filterableAction
+          )
+        },
+        sectionTitle: filteredGroup.name
+      )
+    }
   }
 }

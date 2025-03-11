@@ -40,8 +40,10 @@ public final class FeatureDashboardAssembly: Assembly {
       )
     }
 
-    container.register(TransactionTabInteractor.self) { _ in
-      TransactionTabInteractorImpl()
+    container.register(TransactionTabInteractor.self) { r in
+      TransactionTabInteractorImpl(
+        filterValidator: r.force(FilterValidator.self)
+      )
     }
 
     container.register(DocumentTabInteractor.self) { r in

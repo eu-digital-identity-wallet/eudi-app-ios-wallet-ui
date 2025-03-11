@@ -85,13 +85,13 @@ private func content(
     .tag(SelectedTab.documents)
 
     tabView(.transactions)
-      .tabItem {
-        Label(
-          .transactions,
-          systemImage: "arrow.left.arrow.right"
-        )
-      }
-      //.tag(SelectedTab.transactions)
+    .tabItem {
+      Label(
+        .transactions,
+        systemImage: "arrow.left.arrow.right"
+      )
+    }
+    .tag(SelectedTab.transactions)
   }
 }
 

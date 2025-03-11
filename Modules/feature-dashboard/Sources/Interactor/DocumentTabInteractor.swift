@@ -30,7 +30,7 @@ public enum DeleteDeferredPartialState: Sendable {
   case failure(Error)
 }
 
-public enum FiltersPartialState: Sendable {
+public enum DocumentFiltersPartialState: Sendable {
   case filterApplyResult([DocumentCategory: [DocumentUIModel]], [FilterUISection], Bool)
   case filterUpdateResult([FilterUISection])
   case cancelled
@@ -47,7 +47,7 @@ public protocol DocumentTabInteractor: Sendable {
   func deleteDeferredDocument(with id: String) async -> DeleteDeferredPartialState
   func requestDeferredIssuance() async -> DeferredPartialState
   func retrieveLogFileUrl() -> URL?
-  @MainActor func onFilterChangeState() -> AsyncStream<FiltersPartialState>
+  @MainActor func onFilterChangeState() -> AsyncStream<DocumentFiltersPartialState>
   func initializeFilters(filterableList: FilterableList) async
   func applyFilters() async
   func resetFilters() async
@@ -67,7 +67,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
   private let filterValidator: FilterValidator
 
   @MainActor
-  private var filtersStateAsync: AsyncStream<FiltersPartialState>.Continuation?
+  private var filtersStateAsync: AsyncStream<DocumentFiltersPartialState>.Continuation?
 
   init(
     walletKitController: WalletKitController,
@@ -85,7 +85,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     return !walletKitController.fetchDeferredDocuments().isEmpty
   }
 
-  func onFilterChangeState() -> AsyncStream<FiltersPartialState> {
+  func onFilterChangeState() -> AsyncStream<DocumentFiltersPartialState> {
     return AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
       self.filtersStateAsync = continuation
       Task {
