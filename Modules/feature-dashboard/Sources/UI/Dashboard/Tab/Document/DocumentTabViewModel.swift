@@ -73,7 +73,6 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
     listenForSuccededIssuedModalChanges()
     subscribeToSearch()
     onFiltersChangeState()
-    updateToolBar()
   }
 
   func onCreate() {
