@@ -191,7 +191,6 @@ extension DocClaimsDecodable {
     )
   }
 
-  // MARK: - TODO SUPPORT NESTED
   private func parseClaim(
     documentId: String,
     isSensitive: Bool,
