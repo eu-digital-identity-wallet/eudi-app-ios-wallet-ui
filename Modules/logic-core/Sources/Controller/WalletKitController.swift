@@ -58,10 +58,10 @@ public protocol WalletKitController: Sendable {
     docTypes: [OfferedDocModel],
     txCodeValue: String?
   ) async throws -> [WalletStorage.Document]
-  func valueForElementIdentifier(
-    with documentId: String,
-    elementIdentifier: String,
-    nameSpace: String,
+  func parseDocClaim(
+    docId: String,
+    docClaim: DocClaim,
+    type: DocumentElementType,
     parser: (String) -> String
   ) -> DocumentElementClaim
   func retrieveLogFileUrl() -> URL?
@@ -316,165 +316,66 @@ private extension WalletKitControllerImpl {
 
 extension WalletKitController {
 
-  // MARK: - TODO REWORK THIS TO SUPPORT NESTED
-  public func valueForElementIdentifier(
-    with documentId: String,
-    elementIdentifier: String,
-    nameSpace: String,
+  private func parseChildren(
+    docId: String,
+    docClaims: [DocClaim],
+    type: DocumentElementType,
+    parser: (String) -> String,
+    claims: inout [DocumentElementClaim]
+  ) {
+    docClaims.forEach { claim in
+      let docElementClaim = parseDocClaim(
+        docId: docId,
+        docClaim: claim,
+        type: type,
+        parser: parser
+      )
+      claims.append(docElementClaim)
+    }
+  }
+
+  public func parseDocClaim(
+    docId: String,
+    docClaim: DocClaim,
+    type: DocumentElementType,
     parser: (String) -> String
   ) -> DocumentElementClaim {
 
-    guard let document = fetchDocument(with: documentId) else {
-      return .primitive(
-        title: "",
-        documentId: documentId,
-        nameSpace: nameSpace,
-        path: [],
-        value: .unavailable(LocalizableStringKey.errorUnableFetchDocument.toString),
-        status: .notAvailable
-      )
-    }
-
-    let claims = document.docClaims
-      .parseDates(
-        parser: parser
-      )
+    let claim = docClaim
+      .parseDate(parser: parser)
       .parseUserPseudonym()
 
-    guard let element = claims.first(where: { $0.name == elementIdentifier }) else {
-      return .primitive(
-        title: "",
-        documentId: documentId,
-        nameSpace: nameSpace,
-        path: [],
-        value: .unavailable(LocalizableStringKey.unavailableField.toString),
-        status: .notAvailable
+    if let children = claim.children, !children.isEmpty {
+      var childClaims: [DocumentElementClaim] = []
+      parseChildren(
+        docId: docId,
+        docClaims: children,
+        type: type,
+        parser: parser,
+        claims: &childClaims
+      )
+      return .group(
+        title: claim.displayName.ifNilOrEmpty { claim.name },
+        items: childClaims
       )
     }
 
-    if let image = element.dataValue.image {
-      return .primitive(
-        title: element.displayName.ifNilOrEmpty { element.name },
-        documentId: documentId,
-        nameSpace: nameSpace,
-        path: elementIdentifier.components(separatedBy: "."),
-        value: .image(Image(uiImage: image)),
-        status: .available(isRequired: !element.isOptional)
-      )
+    var value: DocumentElementValue {
+      if let image = claim.dataValue.image {
+        .image(Image(uiImage: image))
+      } else {
+        .string(claim.stringValue)
+      }
     }
 
-    switch element.dataValue {
-    case .string(let value):
-      return .primitive(
-        title: element.displayName.ifNilOrEmpty { element.name },
-        documentId: documentId,
-        nameSpace: nameSpace,
-        path: elementIdentifier.components(separatedBy: "."),
-        value: .string(value),
-        status: .available(isRequired: !element.isOptional)
-      )
-    default:
-      break
-    }
-
-    if let nested = element.children {
-
-//      let list: [DocumentElementClaim] = nested.map { _ in
-//        .primitive(
-//          title: UUID().uuidString,
-//          documentId: documentId,
-//          nameSpace: nameSpace,
-//          path: elementIdentifier.components(separatedBy: "."),
-//          value: .string(element.stringValue),
-//          status: .available(isRequired: false)
-//        )
-//      }
-//
-//      return .group(
-//        title: element.displayName.ifNilOrEmpty { element.name },
-//        items: [
-//          .primitive(
-//            title: UUID().uuidString,
-//            documentId: documentId,
-//            nameSpace: nameSpace,
-//            path: elementIdentifier.components(separatedBy: "."),
-//            value: .string(element.stringValue),
-//            status: .available(isRequired: false)
-//          ),
-//          .group(
-//            title: UUID().uuidString,
-//            items: list
-//          ),
-//          .group(
-//            title: UUID().uuidString,
-//            items: [
-//              .group(
-//                title: UUID().uuidString,
-//                items: [
-//                  .primitive(
-//                    title: UUID().uuidString,
-//                    documentId: documentId,
-//                    nameSpace: nameSpace,
-//                    path: elementIdentifier.components(separatedBy: "."),
-//                    value: .string(element.stringValue),
-//                    status: .available(isRequired: false)
-//                  ),
-//                  .primitive(
-//                    title: UUID().uuidString,
-//                    documentId: documentId,
-//                    nameSpace: nameSpace,
-//                    path: elementIdentifier.components(separatedBy: "."),
-//                    value: .string(element.stringValue),
-//                    status: .available(isRequired: false)
-//                  ),
-//                  .primitive(
-//                    title: UUID().uuidString,
-//                    documentId: documentId,
-//                    nameSpace: nameSpace,
-//                    path: elementIdentifier.components(separatedBy: "."),
-//                    value: .string(element.stringValue),
-//                    status: .available(isRequired: false)
-//                  ),
-//                  .primitive(
-//                    title: UUID().uuidString,
-//                    documentId: documentId,
-//                    nameSpace: nameSpace,
-//                    path: elementIdentifier.components(separatedBy: "."),
-//                    value: .string(element.stringValue),
-//                    status: .available(isRequired: false)
-//                  )
-//                ]
-//              )
-//            ]
-//          ),
-//          .primitive(
-//            title: UUID().uuidString,
-//            documentId: documentId,
-//            nameSpace: nameSpace,
-//            path: elementIdentifier.components(separatedBy: "."),
-//            value: .string(element.stringValue),
-//            status: .available(isRequired: false)
-//          )
-//        ]
-//      )
-
-      return .primitive(
-        title: element.displayName.ifNilOrEmpty { element.name },
-        documentId: documentId,
-        nameSpace: element.namespace,
-        path: elementIdentifier.components(separatedBy: "."),
-        value: .string(element.flattenNested(nested: nested).stringValue),
-        status: .available(isRequired: !element.isOptional)
-      )
-    } else {
-      return .primitive(
-        title: element.displayName.ifNilOrEmpty { element.name },
-        documentId: documentId,
-        nameSpace: element.namespace,
-        path: elementIdentifier.components(separatedBy: "."),
-        value: .string(element.stringValue),
-        status: .available(isRequired: !element.isOptional)
-      )
-    }
+    return .primitive(
+      title: claim.displayName.ifNilOrEmpty { claim.name },
+      documentId: docId,
+      nameSpace: claim.namespace,
+      path: claim.path,
+      type: type,
+      value: value,
+      status: .available(isRequired: !claim.isOptional)
+    )
   }
 }

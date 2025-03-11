@@ -3269,15 +3269,15 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim {
+    public func parseDocClaim(docId p0: String, docClaim p1: DocClaim, type p2: DocumentElementType, parser p3: (String) -> String) -> DocumentElementClaim {
         
 					return withoutActuallyEscaping(p3, do: { (p3: @escaping (String) -> String) -> DocumentElementClaim in
 return cuckoo_manager.call(
-            "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim",
+            "parseDocClaim(docId p0: String, docClaim p1: DocClaim, type p2: DocumentElementType, parser p3: (String) -> String) -> DocumentElementClaim",
             parameters: (p0, p1, p2, p3),
             escapingParameters: (p0, p1, p2, { _ in fatalError("This is a stub! It's not supposed to be called!") }),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.valueForElementIdentifier(with: p0, elementIdentifier: p1, nameSpace: p2, parser: p3)
+            defaultCall: __defaultImplStub!.parseDocClaim(docId: p0, docClaim: p1, type: p2, parser: p3)
         )
 					})
 
@@ -3514,10 +3514,10 @@ return cuckoo_manager.call(
             ))
         }
         
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, nameSpace p2: M3, parser p3: M4) -> Cuckoo.ProtocolStubFunction<(String, String, String, (String) -> String), DocumentElementClaim> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == String, M4.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, String, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func parseDocClaim<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(docId p0: M1, docClaim p1: M2, type p2: M3, parser p3: M4) -> Cuckoo.ProtocolStubFunction<(String, DocClaim, DocumentElementType, (String) -> String), DocumentElementClaim> where M1.MatchedType == String, M2.MatchedType == DocClaim, M3.MatchedType == DocumentElementType, M4.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, DocClaim, DocumentElementType, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim",
+                method: "parseDocClaim(docId p0: String, docClaim p1: DocClaim, type p2: DocumentElementType, parser p3: (String) -> String) -> DocumentElementClaim",
                 parameterMatchers: matchers
             ))
         }
@@ -3828,10 +3828,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, nameSpace p2: M3, parser p3: M4) -> Cuckoo.__DoNotUse<(String, String, String, (String) -> String), DocumentElementClaim> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == String, M4.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, String, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func parseDocClaim<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(docId p0: M1, docClaim p1: M2, type p2: M3, parser p3: M4) -> Cuckoo.__DoNotUse<(String, DocClaim, DocumentElementType, (String) -> String), DocumentElementClaim> where M1.MatchedType == String, M2.MatchedType == DocClaim, M3.MatchedType == DocumentElementType, M4.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, DocClaim, DocumentElementType, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
             return cuckoo_manager.verify(
-                "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim",
+                "parseDocClaim(docId p0: String, docClaim p1: DocClaim, type p2: DocumentElementType, parser p3: (String) -> String) -> DocumentElementClaim",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -4002,7 +4002,7 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: ([WalletStorage.Document]).self)
     }
     
-    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, nameSpace p2: String, parser p3: (String) -> String) -> DocumentElementClaim {
+    public func parseDocClaim(docId p0: String, docClaim p1: DocClaim, type p2: DocumentElementType, parser p3: (String) -> String) -> DocumentElementClaim {
         return DefaultValueRegistry.defaultValue(for: (DocumentElementClaim).self)
     }
     

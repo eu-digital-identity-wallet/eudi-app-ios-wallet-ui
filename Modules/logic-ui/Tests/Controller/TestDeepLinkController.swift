@@ -296,7 +296,7 @@ private extension TestDeepLinkController {
     }
     
     func receiveRequest() async throws -> MdocDataTransfer18013.UserRequestInfo {
-      .init(docDataFormats: [DocumentTypeIdentifier.mDocPid.rawValue : .cbor], validItemsRequested: RequestItems())
+      .init(docDataFormats: [DocumentTypeIdentifier.mDocPid.rawValue : .cbor], itemsRequested: RequestItems())
     }
     
     var flow: EudiWalletKit.FlowType
@@ -310,7 +310,7 @@ private extension TestDeepLinkController {
   
   static let mockPresentationSession = PresentationSession(
     presentationService: MockPresentationService(flow: .other),
-    docIdAndTypes: [:],
+    docIdToPresentInfo: [:],
     userAuthenticationRequired: false
   )
 }

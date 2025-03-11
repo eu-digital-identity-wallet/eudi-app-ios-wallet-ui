@@ -102,7 +102,6 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
 
         setState {
           $0.copy(
-            isLoading: false,
             isFromOnPause: false
           )
         }
@@ -247,6 +246,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
         case .filterApplyResult(let documents, let filterSections, let hasDefaultFilters):
           setState {
             $0.copy(
+              isLoading: false,
               documents: documents,
               filterUIModel: filterSections,
               hasDefaultFilters: hasDefaultFilters

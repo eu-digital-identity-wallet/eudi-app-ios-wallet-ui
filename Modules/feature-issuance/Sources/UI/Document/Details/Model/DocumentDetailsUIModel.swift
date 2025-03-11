@@ -205,7 +205,7 @@ extension DocClaimsDecodable {
           )
         }
       )
-      .parseUserPseudonym()
+      .parseUserPseudonyms()
       .reduce(into: []) { partialResult, docClaim in
 
         let title = docClaim.displayName.ifNilOrEmpty { docClaim.name }

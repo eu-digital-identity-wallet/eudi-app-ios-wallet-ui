@@ -133,9 +133,7 @@ private func content(
     } else if !state.isLoading {
       contentUnavailableView()
     } else {
-      Spacer()
-      ContentLoaderView(showLoader: .constant(true))
-      Spacer()
+      loader()
     }
   }
   .searchable(
@@ -144,6 +142,14 @@ private func content(
     onSearchTextChange: { _ in }
   )
   .background(Theme.shared.color.background)
+}
+
+@MainActor
+@ViewBuilder
+private func loader() -> some View {
+  Spacer()
+  ContentLoaderView(showLoader: .constant(true))
+  Spacer()
 }
 
 @MainActor

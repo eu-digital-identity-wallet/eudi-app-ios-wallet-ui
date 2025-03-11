@@ -232,10 +232,10 @@ final class TestProximityInteractor: EudiTest {
     
     stub(walletKitController) { mock in
       when(
-        mock.valueForElementIdentifier(
-          with: any(),
-          elementIdentifier: any(),
-          nameSpace: any(),
+        mock.parseDocClaim(
+          docId: any(),
+          docClaim: any(),
+          type: any(),
           parser: any()
         )
       ).thenReturn(
@@ -244,6 +244,7 @@ final class TestProximityInteractor: EudiTest {
           documentId: Constants.isoMdlModelId,
           nameSpace: "nameSpace",
           path: ["elementIdentifier"],
+          type: .mdoc,
           value: .string("value"),
           status: .available(isRequired: false)
         )
@@ -423,6 +424,7 @@ private extension TestProximityInteractor {
       documentId: Constants.isoMdlModelId,
       nameSpace: "nameSpace",
       path: ["elementIdentifier"],
+      type: .mdoc,
       value: .string("value"),
       status: .available(isRequired: false)
     )

@@ -256,8 +256,8 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
             FilterItem(
               id: FilterIds.FILTER_BY_STATE_EXPIRED,
               name: LocalizableStringKey.expired.toString,
-              selected: true,
-              isDefault: true
+              selected: false,
+              isDefault: false
             )
           ],
           filterableAction: FilterMultipleAction<DocumentFilterableAttributes>(predicate: { attribute, filter in
