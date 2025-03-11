@@ -234,12 +234,14 @@ final class TestProximityInteractor: EudiTest {
       when(
         mock.parseDocClaim(
           docId: any(),
+          groupId: any(),
           docClaim: any(),
           type: any(),
           parser: any()
         )
       ).thenReturn(
         .primitive(
+          id: Constants.randomIdentifier,
           title: "elementIdentifier",
           documentId: Constants.isoMdlModelId,
           nameSpace: "nameSpace",
@@ -420,6 +422,7 @@ private extension TestProximityInteractor {
   
   static func mockUiModels() -> [RequestDataUiModel] {
     let claim = DocumentElementClaim.primitive(
+      id: Constants.randomIdentifier,
       title: "elementIdentifier",
       documentId: Constants.isoMdlModelId,
       nameSpace: "nameSpace",

@@ -60,6 +60,7 @@ public protocol WalletKitController: Sendable {
   ) async throws -> [WalletStorage.Document]
   func parseDocClaim(
     docId: String,
+    groupId: String?,
     docClaim: DocClaim,
     type: DocumentElementType,
     parser: (String) -> String
@@ -318,6 +319,7 @@ extension WalletKitController {
 
   private func parseChildren(
     docId: String,
+    groupId: String?,
     docClaims: [DocClaim],
     type: DocumentElementType,
     parser: (String) -> String,
@@ -326,6 +328,7 @@ extension WalletKitController {
     docClaims.forEach { claim in
       let docElementClaim = parseDocClaim(
         docId: docId,
+        groupId: groupId,
         docClaim: claim,
         type: type,
         parser: parser
@@ -336,6 +339,7 @@ extension WalletKitController {
 
   public func parseDocClaim(
     docId: String,
+    groupId: String?,
     docClaim: DocClaim,
     type: DocumentElementType,
     parser: (String) -> String
@@ -346,15 +350,23 @@ extension WalletKitController {
       .parseUserPseudonym()
 
     if let children = claim.children, !children.isEmpty {
+
+      let id: String? = type == .mdoc
+      ? UUID().uuidString
+      : nil
+
       var childClaims: [DocumentElementClaim] = []
+
       parseChildren(
         docId: docId,
+        groupId: id,
         docClaims: children,
         type: type,
         parser: parser,
         claims: &childClaims
       )
       return .group(
+        id: UUID().uuidString,
         title: claim.displayName.ifNilOrEmpty { claim.name },
         items: childClaims
       )
@@ -369,6 +381,7 @@ extension WalletKitController {
     }
 
     return .primitive(
+      id: groupId ?? UUID().uuidString,
       title: claim.displayName.ifNilOrEmpty { claim.name },
       documentId: docId,
       nameSpace: claim.namespace,

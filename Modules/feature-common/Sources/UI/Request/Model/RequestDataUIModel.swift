@@ -51,7 +51,7 @@ extension RequestDataUiModel {
         switch listItems[index] {
         case .single(let item):
 
-          guard item.collapsed.id == id else {
+          guard item.collapsed.groupId == id else {
             continue
           }
 
@@ -69,7 +69,7 @@ extension RequestDataUiModel {
             break
           }
         case .nested(let item):
-          if item.collapsed.id == id {
+          if item.collapsed.groupId == id {
             listItems[index] = .nested(item.copy(isExpanded: !item.isExpanded))
           } else {
             var children = item.expanded
@@ -403,6 +403,7 @@ private extension Array where Element == DocClaim {
       .map { claim in
         return walletKitController.parseDocClaim(
           docId: id,
+          groupId: nil,
           docClaim: claim,
           type: type,
           parser: {
@@ -431,15 +432,16 @@ private extension DocumentElementClaim {
 private extension DocumentElementClaim {
   func toExpandableListItem() -> PresentationExpandableListItem? {
     switch self {
-    case .group(let title, let items):
+    case .group(let id, let title, let items):
       return .nested(
         .init(
-          collapsed: .init(mainText: .custom(title)),
+          collapsed: .init(groupId: id, mainText: .custom(title)),
           expanded: items.compactMap { $0.toExpandableListItem() },
           isExpanded: false
         )
       )
     case .primitive(
+      let id,
       let title,
       _,
       _,
@@ -453,6 +455,7 @@ private extension DocumentElementClaim {
         return .single(
           .init(
             collapsed: .init(
+              groupId: id,
               mainText: .custom(value),
               overlineText: .custom(title),
               isEnable: !status.isRequired,
@@ -469,6 +472,7 @@ private extension DocumentElementClaim {
         return .single(
           .init(
             collapsed: .init(
+              groupId: id,
               mainText: .custom(title),
               leadingIcon: .init(image: image),
               isEnable: !status.isRequired,

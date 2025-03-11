@@ -94,7 +94,7 @@ private func documents<RequestItem: Sendable>(
           items: section.listItems,
           backgroundColor: backgroundColor,
           hideSensitiveContent: false,
-          onItemClick: { onSelectionChanged($0.id) }
+          onItemClick: { onSelectionChanged($0.groupId) }
         )
         .shimmer(isLoading: viewState.isLoading)
       }

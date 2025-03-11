@@ -28,6 +28,9 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
   @EquatableNoop
   public var id: String
 
+  @EquatableNoop
+  public var groupId: String
+
   public let mainText: LocalizableStringKey
   public let mainStyle: MainStyle
   public let overlineText: LocalizableStringKey?
@@ -41,6 +44,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
 
   public init(
     id: String = UUID().uuidString,
+    groupId: String? = nil,
     mainText: LocalizableStringKey,
     mainStyle: MainStyle = .plain,
     overlineText: LocalizableStringKey? = nil,
@@ -53,6 +57,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
     trailingContent: TrailingContent? = nil
   ) {
     self.id = id
+    self.groupId = groupId ?? id
     self.mainText = mainText
     self.mainStyle = mainStyle
     self.overlineText = overlineText

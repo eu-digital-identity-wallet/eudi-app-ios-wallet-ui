@@ -64,7 +64,7 @@ public struct BaseRequestView<Router: RouterHost>: View {
       }
     }
     .alertView(
-      isPresented: $viewModel.itmesChanged,
+      isPresented: $viewModel.itemsChanged,
       title: .custom(""),
       message: .incompleteRequestDataSelection
     )
@@ -99,7 +99,7 @@ private func content(
               ),
               items: section.section.listItems,
               hideSensitiveContent: false,
-              onItemClick: { onSelectionChanged($0.id) }
+              onItemClick: { onSelectionChanged($0.groupId) }
             )
           }
 
@@ -148,7 +148,7 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
   let viewState = RequestViewState(
     isLoading: false,
     error: nil,
-    showMissingCrredentials: false,
+    showMissingCredentials: false,
     items: RequestDataUiModel.mockData(),
     trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
     relyingParty: .custom("relying party"),

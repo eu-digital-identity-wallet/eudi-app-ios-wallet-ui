@@ -21,7 +21,7 @@
 public struct RequestViewState: ViewState {
   public let isLoading: Bool
   public let error: ContentErrorView.Config?
-  public let showMissingCrredentials: Bool
+  public let showMissingCredentials: Bool
   public let items: [RequestDataUiModel]
   public let trustedRelyingPartyInfo: LocalizableStringKey
   public let relyingParty: LocalizableStringKey
@@ -36,7 +36,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
 
   @Published var isRequestInfoModalShowing: Bool = false
   @Published var isVerifiedEntityModalShowing: Bool = false
-  @Published var itmesChanged: Bool = false
+  @Published var itemsChanged: Bool = false
 
   public init(router: Router, originator: AppRoute) {
     super.init(
@@ -44,7 +44,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       initialState: .init(
         isLoading: true,
         error: nil,
-        showMissingCrredentials: true,
+        showMissingCredentials: true,
         items: RequestDataUiModel.mockData(),
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
         relyingParty: .unknownVerifier,
@@ -167,7 +167,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       .init(
         isLoading: true,
         error: nil,
-        showMissingCrredentials: true,
+        showMissingCredentials: true,
         items: RequestDataUiModel.mockData(),
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
         relyingParty: .unknownVerifier,
@@ -217,12 +217,11 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   }
 
   func onSelectionChanged(id: String) async {
-    if viewState.showMissingCrredentials {
-      itmesChanged = true
-
+    if viewState.showMissingCredentials {
+      itemsChanged = true
       setState {
         $0.copy(
-          showMissingCrredentials: false
+          showMissingCredentials: false
         )
       }
     } else {
@@ -234,7 +233,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
 
       setState {
         $0.copy(
-          showMissingCrredentials: false,
+          showMissingCredentials: false,
           items: items,
           allowShare: canShare(with: items)
         )
