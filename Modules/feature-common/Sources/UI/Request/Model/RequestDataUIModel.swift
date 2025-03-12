@@ -145,22 +145,10 @@ public extension Array where Element == RequestDataUiModel {
         var path: [String] {
           switch claim.domainModel?.type {
           case .mdoc:
-
-            guard let path = claim.domainModel?.path else {
+            guard let path = claim.domainModel?.path, path.count > 1 else {
               return []
             }
-
-            guard
-              let elementIdenfitier = path.reduce(into: [String](), { partialResult, claimPath in
-                if !claimPath.isEmpty {
-                  partialResult.self.append(claimPath)
-                }
-              }).last
-            else {
-              return []
-            }
-
-            return [elementIdenfitier]
+            return [path[1]]
           case .sdjwt:
             return  claim.domainModel?.path ?? []
           default:
