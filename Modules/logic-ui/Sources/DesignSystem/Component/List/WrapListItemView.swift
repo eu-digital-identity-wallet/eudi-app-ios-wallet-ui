@@ -116,7 +116,7 @@ public struct WrapListItemView: View {
             .renderingMode(.template)
             .resizable()
             .aspectRatio(contentMode: .fit)
-            .frame(width: 20, height: 20)
+            .frame(width: 13, height: 13)
             .foregroundColor(color)
 
         case .checkbox(let enabled, let isChecked, let onToggle):

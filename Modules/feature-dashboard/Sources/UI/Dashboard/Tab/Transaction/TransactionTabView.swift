@@ -33,6 +33,18 @@ struct TransactionTabView<Router: RouterHost>: View {
 
       }
     )
+    .sheet(isPresented: $viewModel.isFilterModalShowing) {
+      FiltersListView(sections: viewModel.viewState.filterUIModel) {
+        viewModel.resetFilters()
+      } applyFiltersAction: {
+        viewModel.fetch()
+      } revertFilters: {
+        viewModel.revertFilters()
+      }
+      updateFiltersCallback: { sectionID, filterID in
+        viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
+      }
+    }
     .onAppear {
       viewModel.onCreate()
     }

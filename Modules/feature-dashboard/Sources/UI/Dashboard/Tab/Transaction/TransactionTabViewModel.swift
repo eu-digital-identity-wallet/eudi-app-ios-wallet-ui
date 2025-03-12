@@ -33,6 +33,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
   private let interactor: TransactionTabInteractor
   private let onUpdateToolbar: (ToolBarContent, LocalizableStringKey) -> Void
 
+  @Published var isFilterModalShowing: Bool = false
   @Published var searchQuery: String = ""
 
   init(
@@ -108,35 +109,15 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
     }
   }
 
-  private func onFiltersChangeState() {
-    Task {
-      for await state in interactor.onFilterChangeState() {
-        switch state {
-
-        case .filterApplyResult(let transactions, let filterSections, let hasDefaultFilters):
-          setState {
-            $0.copy(
-              transactions: transactions,
-              filterUIModel: filterSections,
-              hasDefaultFilters: hasDefaultFilters
-            )
-          }
-          updateToolBar()
-        case .filterUpdateResult(let filterSections):
-          setState {
-            $0.copy(
-              filterUIModel: filterSections
-            )
-          }
-        case .cancelled: break
-        }
-      }
-    }
+  func showFilters() {
+    isFilterModalShowing = true
   }
 
-  private func showFilters() {
+  func resetFilters() { }
 
-  }
+  func revertFilters() { }
+
+  func updateFilters(sectionID: String, filterID: String) { }
 
   private func onMyWallet() {
     router.push(
@@ -165,5 +146,31 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
       ),
       .transactions
     )
+  }
+  
+  private func onFiltersChangeState() {
+    Task {
+      for await state in interactor.onFilterChangeState() {
+        switch state {
+
+        case .filterApplyResult(let transactions, let filterSections, let hasDefaultFilters):
+          setState {
+            $0.copy(
+              transactions: transactions,
+              filterUIModel: filterSections,
+              hasDefaultFilters: hasDefaultFilters
+            )
+          }
+          updateToolBar()
+        case .filterUpdateResult(let filterSections):
+          setState {
+            $0.copy(
+              filterUIModel: filterSections
+            )
+          }
+        case .cancelled: break
+        }
+      }
+    }
   }
 }
