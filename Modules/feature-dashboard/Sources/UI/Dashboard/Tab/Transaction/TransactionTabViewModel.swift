@@ -32,6 +32,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
 
   private let interactor: TransactionTabInteractor
   private let onUpdateToolbar: (ToolBarContent, LocalizableStringKey) -> Void
+  private let SEARCH_INPUT_DEBOUNCE = 250
 
   @Published var isFilterModalShowing: Bool = false
   @Published var searchQuery: String = ""
@@ -56,6 +57,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
     )
 
     onFiltersChangeState()
+    subscribeToSearch()
   }
 
   func onCreate() {
@@ -113,11 +115,23 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
     isFilterModalShowing = true
   }
 
-  func resetFilters() { }
+  func resetFilters() {
+    Task {
+      await interactor.resetFilters()
+    }
+  }
 
-  func revertFilters() { }
+  func revertFilters() {
+    Task {
+      await interactor.revertFilters()
+    }
+  }
 
-  func updateFilters(sectionID: String, filterID: String) { }
+  func updateFilters(sectionID: String, filterID: String) {
+    Task {
+      await interactor.updateFilters(sectionID: sectionID, filterID: filterID)
+    }
+  }
 
   private func onMyWallet() {
     router.push(
@@ -125,6 +139,19 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         .sideMenu
       )
     )
+  }
+
+  private func subscribeToSearch() {
+    $searchQuery
+      .dropFirst()
+      .debounce(for: .milliseconds(SEARCH_INPUT_DEBOUNCE), scheduler: RunLoop.main)
+      .removeDuplicates()
+      .sink { [weak self] query in
+        guard let self = self else { return }
+        Task {
+          await self.interactor.applySearch(query: query)
+        }
+      }.store(in: &cancellables)
   }
 
   private func updateToolBar() {
@@ -147,7 +174,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
       .transactions
     )
   }
-  
+
   private func onFiltersChangeState() {
     Task {
       for await state in interactor.onFilterChangeState() {

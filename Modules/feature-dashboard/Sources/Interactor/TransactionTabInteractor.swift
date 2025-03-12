@@ -15,6 +15,7 @@
  */
 import logic_core
 import logic_business
+import logic_resources
 
 public enum TransactionsPartialState: Sendable {
   case success(FilterableList)
@@ -35,7 +36,10 @@ public protocol TransactionTabInteractor: Sendable {
   func applyFilters() async
   func updateLists(filterableList: FilterableList) async
   @MainActor func onFilterChangeState() -> AsyncStream<TransactionFiltersPartialState>
-
+  func resetFilters() async
+  func revertFilters() async
+  func updateFilters(sectionID: String, filterID: String)  async
+  func applySearch(query: String) async
 }
 
 final class TransactionTabInteractorImpl: TransactionTabInteractor {
@@ -106,7 +110,32 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
 
   func createFiltersGroup() -> Filters {
     return Filters(
-      filterGroups: [],
+      filterGroups: [
+        SingleSelectionFilterGroup(
+          id: FilterIds.ASCENDING_DESCENDING_GROUP,
+          name: LocalizableStringKey.orderBy.toString,
+          filters: [
+            FilterItem(
+              id: FilterIds.ORDER_BY_ASCENDING,
+              name: LocalizableStringKey.ascending.toString,
+              selected: false,
+              filterableAction: Sort<TransactionFilterableAttributes, String>(predicate: { attribute in
+                attribute.sortingKey
+              })
+            ),
+            FilterItem(
+              id: FilterIds.ORDER_BY_DESCENDING,
+              name: LocalizableStringKey.descending.toString,
+              selected: true,
+              isDefault: true,
+              filterableAction: Sort<TransactionFilterableAttributes, String>(predicate: { attribute in
+                attribute.sortingKey
+              })
+            )
+          ],
+          filterType: .orderBy
+        )
+      ],
       sortOrder: SortOrderType.descending
     )
   }
@@ -115,9 +144,25 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
     await filterValidator.applyFilters()
   }
 
+  func resetFilters() async {
+    await filterValidator.resetFilters()
+  }
+
+  func revertFilters() async {
+    await filterValidator.revertFilters()
+  }
+
+  func updateFilters(sectionID: String, filterID: String)  async {
+    await filterValidator.updateFilter(filterGroupId: sectionID, filterId: filterID)
+  }
+
   func updateLists(filterableList: FilterableList) async {
     let sortOrder = createFiltersGroup().sortOrder
     await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
+  }
+
+  func applySearch(query: String) async {
+    await filterValidator.applySearch(query: query)
   }
 
   func onFilterChangeState() -> AsyncStream<TransactionFiltersPartialState> {
