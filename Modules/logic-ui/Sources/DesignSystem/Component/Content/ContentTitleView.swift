@@ -21,7 +21,7 @@ public struct ContentTitleView: View {
   public typealias TapListener = (() -> Void)?
 
   public enum TitleDecoration {
-    case plain(LocalizableStringKey)
+    case plain(LocalizableStringKey?)
     case icon(decorated: String, icon: Image, text: String?)
   }
 
@@ -38,7 +38,7 @@ public struct ContentTitleView: View {
   private let onTap: TapListener
 
   public init(
-    title: LocalizableStringKey,
+    title: LocalizableStringKey? = nil,
     titleFont: TypographyStyle = Theme.shared.font.titleLarge,
     titleWeight: Font.Weight = .regular,
     caption: LocalizableStringKey? = nil,
@@ -93,11 +93,13 @@ public struct ContentTitleView: View {
     HStack {
       switch titleDecoration {
       case .plain(let key):
-        Text(key)
-          .typography(titleFont)
-          .fontWeight(titleWeight)
-          .foregroundColor(self.titleColor)
-          .frame(maxWidth: .infinity, alignment: textAlignment)
+        if let key {
+          Text(key)
+            .typography(titleFont)
+            .fontWeight(titleWeight)
+            .foregroundColor(self.titleColor)
+            .frame(maxWidth: .infinity, alignment: textAlignment)
+        }
       case .icon(let decorated, let icon, let text):
         Text(decorated)
           .typography(style: Theme.shared.font.headlineSmall)

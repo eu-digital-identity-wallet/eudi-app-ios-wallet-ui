@@ -215,33 +215,14 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   }
 
   private func toggleVisibility() {
-    let documentFields = viewState.document.documentFields.map {
-      if let leadingIcon = $0.leadingIcon {
-        return ListItemData(
-          id: $0.id,
-          mainText: $0.mainText,
-          leadingIcon: leadingIcon,
-          isBlur: isVisible
-        )
-      } else {
-        return ListItemData(
-          id: $0.id,
-          mainText: $0.mainText,
-          overlineText: $0.overlineText,
-          isBlur: isVisible
-        )
-      }
-    }
+    let documentFields = viewState.document.toggleVisibility(
+      isVisible: isVisible
+    )
     self.setState {
       $0.copy(
-        document: DocumentDetailsUIModel(
-          id: viewState.document.id,
-          type: viewState.document.type,
-          documentName: viewState.document.documentName,
-          issuer: viewState.document.issuer,
-          createdAt: viewState.document.createdAt,
-          hasExpired: viewState.document.hasExpired,
-          documentFields: documentFields)
+        document: viewState.document.copy(
+          documentFields: documentFields
+        )
       )
     }
   }

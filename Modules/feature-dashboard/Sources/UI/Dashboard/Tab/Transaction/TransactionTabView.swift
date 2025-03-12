@@ -14,13 +14,32 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import logic_ui
 
-public struct TransactionTabView: View {
-  public var body: some View {
-    Text("Transactions")
+struct TransactionTabView<Router: RouterHost>: View {
+
+  @ObservedObject private var viewModel: TransactionTabViewModel<Router>
+
+  public init(with viewModel: TransactionTabViewModel<Router>) {
+    self.viewModel = viewModel
+  }
+
+  var body: some View {
+    content()
+      .onAppear {
+        viewModel.onCreate()
+      }
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func content() -> some View {
+  VStack {
+    Text("Under construction")
   }
 }
 
 #Preview {
-  TransactionTabView()
+  content()
 }

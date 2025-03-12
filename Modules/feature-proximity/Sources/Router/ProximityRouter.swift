@@ -15,6 +15,7 @@
  */
 import logic_ui
 import logic_business
+import feature_common
 import logic_core
 
 @MainActor
@@ -67,7 +68,7 @@ public final class ProximityRouter {
           relyingParty: relyingParty,
           relyingPartyIsTrusted: relyingPartyIsTrusted,
           originator: originator,
-          requestItems: uiModels
+          requestItems: uiModels.compactMap { $0 as? PresentationListItemSection }
         )
       ).eraseToAnyView()
     case .proximitySuccess(
@@ -81,7 +82,7 @@ public final class ProximityRouter {
           deepLinkController: DIGraph.resolver.force(
             DeepLinkController.self
           ),
-          requestItems: uiModels
+          requestItems: uiModels.compactMap { $0 as? PresentationListItemSection }
         )
       ).eraseToAnyView()
     }

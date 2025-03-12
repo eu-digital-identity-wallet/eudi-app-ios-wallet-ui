@@ -13,24 +13,12 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_ui
-import logic_resources
-import feature_common
+public protocol TransactionTabInteractor: Sendable {
 
-open class DocumentSuccessViewModel<Router: RouterHost>: BaseSuccessViewModel<Router> {
+}
 
-  public override init(
-    router: Router,
-    config: any UIConfigType,
-    deepLinkController: DeepLinkController,
-    requestItems: [any Routable]
-  ) {
+final class TransactionTabInteractorImpl: TransactionTabInteractor {
+  init() {
 
-    super.init(
-      router: router,
-      config: config,
-      deepLinkController: deepLinkController,
-      requestItems: requestItems
-    )
   }
 }

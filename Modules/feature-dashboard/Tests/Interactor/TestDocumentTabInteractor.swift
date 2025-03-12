@@ -14,8 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import XCTest
-import logic_business
-import logic_resources
 import logic_core
 import OrderedCollections
 @testable import feature_dashboard
@@ -24,53 +22,25 @@ import OrderedCollections
 
 final class TestDashboardInteractor: EudiTest {
   
-  var interactor: DashboardInteractor!
-  var reachabilityController: MockReachabilityController!
+  var interactor: DocumentTabInteractor!
   var walletKitController: MockWalletKitController!
   var filterValidator: MockFilterValidator!
   var configLogic: MockConfigLogic!
   
   override func setUp() {
-    self.reachabilityController = MockReachabilityController()
     self.walletKitController = MockWalletKitController()
     self.configLogic = MockConfigLogic()
     self.filterValidator = MockFilterValidator()
-    self.interactor = DashboardInteractorImpl(
-      walletController: walletKitController,
-      filterValidator: filterValidator,
-      reachabilityController: reachabilityController,
-      configLogic: configLogic
+    self.interactor = DocumentTabInteractorImpl(
+      walletKitController: walletKitController,
+      filterValidator: filterValidator
     )
   }
   
   override func tearDown() {
     self.interactor = nil
-    self.reachabilityController = nil
     self.walletKitController = nil
     self.configLogic = nil
-  }
-  
-  func testHasIssuedDocuments_WhenControllerReturnsValues_ThenReturnTrue() {
-    // Given
-    stubFetchIssuedDocuments(
-      with: [
-        Constants.euPidModel,
-        Constants.isoMdlModel
-      ]
-    )
-    // When
-    let result = interactor.hasIssuedDocuments()
-    // Then
-    XCTAssertTrue(result)
-  }
-  
-  func testHasIssuedDocuments_WhenControllerReturnsNoValues_ThenReturnFalse() {
-    // Given
-    stubFetchIssuedDocuments(with: [])
-    // When
-    let result = interactor.hasIssuedDocuments()
-    // Then
-    XCTAssertFalse(result)
   }
   
   func testHasDeferredDocuments_WhenControllerReturnsValues_ThenReturnTrue() {
@@ -104,45 +74,14 @@ final class TestDashboardInteractor: EudiTest {
     XCTAssertFalse(result)
   }
   
-  func testOpenBleSettings_WhenMethodIsCalled_ThenVerifyAtLeastOnce() async {
-    // Given
-    stub(reachabilityController) { mock in
-      when(mock.openBleSettings()).thenDoNothing()
-    }
-    // When
-    await interactor.openBleSettings()
-    // Then
-    verify(reachabilityController).openBleSettings()
-  }
-  
-  func testGetAppVersion_WhenConfigLogicHasAppVersion_ThenReturnAppVersion() {
-    // Given
-    let appVersion = "2024.2.1-dev"
-    stub(configLogic) { mock in
-      when(mock.appVersion.get).thenReturn(appVersion)
-    }
-    // When
-    let version = interactor.getAppVersion()
-    // Then
-    XCTAssertEqual(version, appVersion)
-  }
-  
-  func testGetBleAvailability_WhenBleIsAvailable_ThenReturnAvailableEnum() async {
-    await checkBle(with: Reachability.BleAvailibity.available)
-  }
-  
-  func testGetBleAvailability_WhenBleIsDisabled_ThenReturnDisabledEnum() async {
-    await checkBle(with: Reachability.BleAvailibity.disabled)
-  }
-  
-  func testFetchDashboard_WhenWalletKitControllerReturnsEmpty_ThenReturnError() async {
+  func testFetchDocuments_WhenWalletKitControllerReturnsEmpty_ThenReturnError() async {
     // Given
     stubFetchDocuments(with: [])
     stubFetchIssuedDocuments(with: [])
     stubFetchDocumentsWithExclusion(with: [])
     stubFetchMainPidDocument(with: nil)
     // When
-    let state = await interactor.fetchDashboard(failedDocuments: [])
+    let state = await interactor.fetchDocuments(failedDocuments: [])
     // Then
     switch state {
     case .failure(let error):
@@ -152,7 +91,7 @@ final class TestDashboardInteractor: EudiTest {
     }
   }
   
-  func testFetchDashboard_WhenWalletKitControllerReturnsData_ThenReturnUiModels() async {
+  func testFetchDocuments_WhenWalletKitControllerReturnsData_ThenReturnUiModels() async {
     // Given
     var documentsCategories: DocumentCategories {
       [
@@ -189,8 +128,6 @@ final class TestDashboardInteractor: EudiTest {
       ]
     }
 
-    let expectedUsername = Constants.claimFirstName
-
     stubFetchDocuments(
       with: [
         Constants.euPidModel,
@@ -207,12 +144,11 @@ final class TestDashboardInteractor: EudiTest {
     stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
     stubFetchMainPidDocument(with: Constants.euPidModel)
     // When
-    let state = await interactor.fetchDashboard(failedDocuments: [])
+    let state = await interactor.fetchDocuments(failedDocuments: [])
     // Then
     switch state {
-    case .success(let username, _, let hasIssuedDocuments):
-      XCTAssertEqual(expectedUsername, username)
-      XCTAssertTrue(hasIssuedDocuments)
+    case .success:
+      XCTAssertTrue(true)
     default:
       XCTFail("Wrong state \(state)")
     }
@@ -220,17 +156,6 @@ final class TestDashboardInteractor: EudiTest {
 }
 
 private extension TestDashboardInteractor {
-  func checkBle(with status: Reachability.BleAvailibity) async {
-    // Given
-    let publisher = Just(status).eraseToAnyPublisher()
-    stub(reachabilityController) { mock in
-      when(mock.getBleAvailibity()).thenReturn(publisher)
-    }
-    // When
-    let bleAvailability = await interactor.getBleAvailability()
-    // Then
-    XCTAssertEqual(bleAvailability, status)
-  }
   
   func stubFetchDocuments(with documents: [DocClaimsDecodable]) {
     stub(walletKitController) { mock in

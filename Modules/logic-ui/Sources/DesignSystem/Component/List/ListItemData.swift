@@ -15,7 +15,9 @@
  */
 import logic_resources
 import logic_business
+import Copyable
 
+@Copyable
 public struct ListItemData: Identifiable, Sendable, Equatable {
 
   public enum MainStyle: Sendable, Equatable {
@@ -25,6 +27,10 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
 
   @EquatableNoop
   public var id: String
+
+  @EquatableNoop
+  public var groupId: String
+
   public let mainText: LocalizableStringKey
   public let mainStyle: MainStyle
   public let overlineText: LocalizableStringKey?
@@ -38,6 +44,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
 
   public init(
     id: String = UUID().uuidString,
+    groupId: String? = nil,
     mainText: LocalizableStringKey,
     mainStyle: MainStyle = .plain,
     overlineText: LocalizableStringKey? = nil,
@@ -50,6 +57,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
     trailingContent: TrailingContent? = nil
   ) {
     self.id = id
+    self.groupId = groupId ?? id
     self.mainText = mainText
     self.mainStyle = mainStyle
     self.overlineText = overlineText
@@ -91,6 +99,173 @@ public enum TrailingContent: Sendable, Equatable {
       return true
     default:
       return false
+    }
+  }
+}
+
+@Copyable
+public struct ListItemSection<T: Sendable>: Identifiable, Equatable, Routable {
+
+  public let id: String
+  public let title: String
+  public let listItems: [ExpandableListItem<T>]
+
+  public var log: String {
+    "id: \(id), title: \(title)"
+  }
+
+  public init(id: String, title: String, listItems: [ExpandableListItem<T>]) {
+    self.id = id
+    self.title = title
+    self.listItems = listItems
+  }
+}
+
+public typealias GenericExpandableItem = ExpandableListItem<Sendable>
+
+public enum ExpandableListItem<T: Sendable>: Identifiable, Equatable, Sendable {
+
+  case single(SingleListItemData)
+  case nested(NestedListItemData)
+
+  public var id: String {
+    return switch self {
+    case .single(let data):
+      data.collapsed.id
+    case .nested(let data):
+      data.collapsed.id
+    }
+  }
+
+  public var title: String {
+    return switch self {
+    case .single(let data):
+      data.collapsed.mainText.toString
+    case .nested(let data):
+      data.collapsed.mainText.toString
+    }
+  }
+
+  public var leadingIcon: LeadingIcon? {
+    return switch self {
+    case .single(let data):
+      data.collapsed.leadingIcon
+    case .nested(let data):
+      data.collapsed.leadingIcon
+    }
+  }
+
+  public var mainText: LocalizableStringKey {
+    return switch self {
+    case .single(let data):
+      data.collapsed.mainText
+    case .nested(let data):
+      data.collapsed.mainText
+    }
+  }
+
+  public var overlineText: LocalizableStringKey? {
+    return switch self {
+    case .single(let data):
+      data.collapsed.overlineText
+    case .nested(let data):
+      data.collapsed.overlineText
+    }
+  }
+
+  public var domainModel: T? {
+    return switch self {
+    case .single(let data):
+      data.domainModel
+    case .nested:
+      nil
+    }
+  }
+
+  @Copyable
+  public struct SingleListItemData: Equatable, Sendable {
+
+    public static func == (lhs: ExpandableListItem<T>.SingleListItemData, rhs: ExpandableListItem<T>.SingleListItemData) -> Bool {
+      return lhs.collapsed == rhs.collapsed
+    }
+
+    public let collapsed: ListItemData
+    public let domainModel: T?
+
+    public init(
+      collapsed: ListItemData,
+      domainModel: T?
+    ) {
+      self.collapsed = collapsed
+      self.domainModel = domainModel
+    }
+  }
+
+  @Copyable
+  public struct NestedListItemData: Equatable, Sendable {
+
+    public let collapsed: ListItemData
+    public let expanded: [ExpandableListItem]
+    public var isExpanded: Bool
+
+    public init(
+      collapsed: ListItemData,
+      expanded: [ExpandableListItem],
+      isExpanded: Bool
+    ) {
+      self.collapsed = collapsed
+      self.expanded = expanded
+      self.isExpanded = isExpanded
+    }
+  }
+}
+
+public extension Array {
+  func removeTrailingContent<T: Sendable>() -> [ListItemSection<T>] where Element == ListItemSection<T> {
+
+    func removeTrailingFromExpandableItems(with items: [ExpandableListItem<T>]) -> [ExpandableListItem<T>] {
+      items.map { item in
+        return switch item {
+        case .single(let item):
+          ExpandableListItem<T>.single(
+            .init(
+              collapsed: item.collapsed.copy(trailingContent: nil),
+              domainModel: item.domainModel
+            )
+          )
+        case .nested(let item):
+          ExpandableListItem<T>.nested(
+            .init(
+              collapsed: item.collapsed,
+              expanded: removeTrailingFromExpandableItems(with: item.expanded),
+              isExpanded: false
+            )
+          )
+        }
+      }
+    }
+
+    return self.map { section in
+      let items = section.listItems.map {
+        switch $0 {
+        case .single(let item):
+          return ExpandableListItem<T>.single(
+            .init(
+              collapsed: item.collapsed.copy(trailingContent: nil),
+              domainModel: item.domainModel
+            )
+          )
+        case .nested(let item):
+          return ExpandableListItem<T>.nested(
+            .init(
+              collapsed: item.collapsed,
+              expanded: removeTrailingFromExpandableItems(with: item.expanded),
+              isExpanded: false
+            )
+          )
+        }
+      }
+      return ListItemSection<T>.init(id: section.id, title: section.title, listItems: items)
     }
   }
 }

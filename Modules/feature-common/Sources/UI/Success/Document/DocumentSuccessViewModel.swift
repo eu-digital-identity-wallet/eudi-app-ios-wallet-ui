@@ -18,15 +18,15 @@
 @_exported import logic_business
 
 @Copyable
-public struct BaseSuccessState: ViewState {
+public struct DocumentSuccessState<T: Sendable>: ViewState {
   let config: DocumentSuccessUIConfig
   let relyingParty: RelyingPartyData
-  let items: [ListItemSection]
+  let items: [ListItemSection<T>]
   let navigationTitle: LocalizableStringKey
   let isLoading: Bool
 }
 
-open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSuccessState> {
+open class DocumentSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: ViewModel<Router, DocumentSuccessState<RequestItem>> {
 
   private let deepLinkController: DeepLinkController
 
@@ -38,11 +38,11 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
   ) {
 
     guard let config = config as? DocumentSuccessUIConfig else {
-      fatalError("ExternalLoginViewModel:: Invalid configuraton")
+      fatalError("BaseSuccessViewModel:: Invalid configuraton")
     }
 
-    guard let requestItems = requestItems as? [ListItemSection] else {
-      fatalError("ExternalLoginViewModel:: Invalid configuraton")
+    guard let requestItems = requestItems as? [ListItemSection<RequestItem>] else {
+      fatalError("BaseSuccessViewModel:: ListItemSection")
     }
 
     self.deepLinkController = deepLinkController
@@ -56,20 +56,7 @@ open class BaseSuccessViewModel<Router: RouterHost>: ViewModel<Router, BaseSucce
           isVerified: config.relyingPartyIsTrusted,
           name: .custom(config.relyingParty ?? "")
         ),
-        items: requestItems.map { item in
-          ListItemSection(
-            id: item.id,
-            title: item.title,
-            listItems: item.listItems.map { listItem in
-              ListItemData(
-                mainText: listItem.mainText,
-                overlineText: listItem.overlineText,
-                supportingText: listItem.supportingText,
-                leadingIcon: listItem.leadingIcon
-              )
-            }
-          )
-        },
+        items: requestItems.removeTrailingContent(),
         navigationTitle: config.relyingPartyIsTrusted
         ? .documentAdded
         : .dataShared,

@@ -108,7 +108,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
             ),
             description: .dataSharingTitle,
             mainText: .issuanceRequest,
-            icon: .none, // MARK: - TODO should be return from kit
+            icon: .remoteImage(uiModel.issuerLogo, nil),
             relyingPartyData: RelyingPartyData(
               isVerified: false,
               name: .custom(uiModel.issuerName),
@@ -160,7 +160,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
       let docOffers = viewState.documentOfferUiModel.docOffers
       let successNavigation = viewState.successNavigation
 
-      let state = await Task.detached { () -> IssueOfferDocumentsPartialState in
+      let state = await Task.detached { () -> OfferResultPartialState in
         return await self.interactor.issueDocuments(
           with: offerUri,
           issuerName: issuerName,

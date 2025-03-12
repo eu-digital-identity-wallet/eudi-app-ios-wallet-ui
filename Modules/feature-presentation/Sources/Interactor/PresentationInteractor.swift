@@ -19,7 +19,7 @@ import logic_business
 import feature_common
 
 public struct OnlineAuthenticationRequestSuccessModel: Sendable {
-  var requestDataCells: [RequestDataUI]
+  var requestDataCells: [RequestDataUiModel]
   var relyingParty: String
   var dataRequestInfo: String
   var isTrusted: Bool
@@ -44,7 +44,7 @@ public protocol PresentationInteractor: Sendable {
   func getSessionStatePublisher() -> RemotePublisherPartialState
   func getCoordinator() -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
-  func onResponsePrepare(requestItems: [RequestDataUI]) async -> Result<RequestItemConvertible, Error>
+  func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error>
   func onSendResponse() async -> RemoteSentResponsePartialState
   func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator)
   func storeDynamicIssuancePendingUrl(with url: URL)
@@ -96,9 +96,8 @@ final class PresentationInteractorImpl: PresentationInteractor {
       let response = try await sessionCoordinatorHolder.getActiveRemoteCoordinator().requestReceived()
       return .success(
         .init(
-          requestDataCells: RequestDataUiModel.items(
-            for: response.items,
-            walletKitController: self.walletKitController
+          requestDataCells: response.items.toUiModels(
+            with: self.walletKitController
           ),
           relyingParty: response.relyingParty,
           dataRequestInfo: response.dataRequestInfo,
@@ -110,18 +109,9 @@ final class PresentationInteractorImpl: PresentationInteractor {
     }
   }
 
-  public func onResponsePrepare(requestItems: [RequestDataUI]) async -> Result<RequestItemConvertible, Error> {
-    let requestConvertible = requestItems
-      .reduce(into: [RequestDataRow]()) { partialResult, cell in
-        let items = cell.requestDataRow.filter({$0.isSelected})
-        partialResult.append(contentsOf: items)
-      }
-      .reduce(into: RequestItemsWrapper()) {  partialResult, row in
-        let requestItem: RequestItem = .init(elementIdentifier: row.elementKey)
-        var nameSpaceDict = partialResult.requestItems[row.documentId, default: [row.namespace: [requestItem]]]
-        nameSpaceDict[row.namespace, default: [requestItem]].appendIfNotExists(requestItem)
-        partialResult.requestItems[row.documentId] = nameSpaceDict
-      }
+  public func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error> {
+
+    let requestConvertible = requestItems.prepareRequest()
 
     guard requestConvertible.requestItems.isEmpty == false else {
       return .failure(PresentationSessionError.conversionToRequestItemModel)

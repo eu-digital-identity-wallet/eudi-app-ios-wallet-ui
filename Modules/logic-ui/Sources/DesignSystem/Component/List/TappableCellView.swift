@@ -26,7 +26,7 @@ public struct TappableCellView: View {
     title: LocalizableStringKey,
     showDivider: Bool,
     useOverlay: Bool = true,
-    action: @escaping () -> Void
+    action: @autoclosure @escaping () -> Void
   ) {
     self.title = title
     self.useOverlay = useOverlay
@@ -60,4 +60,14 @@ public struct TappableCellView: View {
       }
     }
   }
+}
+
+#Preview {
+  TappableCellView(
+    title: .addDocumentTitle,
+    showDivider: true,
+    useOverlay: true,
+    action: {}()
+  )
+  .padding()
 }

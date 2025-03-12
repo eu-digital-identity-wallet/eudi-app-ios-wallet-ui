@@ -17,11 +17,11 @@ import SwiftUI
 import logic_ui
 import feature_common
 
-struct ProximityLoadingView<Router: RouterHost>: View {
+struct ProximityLoadingView<Router: RouterHost, RequestItem: Sendable>: View {
 
-  @ObservedObject private var viewModel: ProximityLoadingViewModel<Router>
+  @ObservedObject private var viewModel: ProximityLoadingViewModel<Router, RequestItem>
 
-  init(with viewModel: ProximityLoadingViewModel<Router>) {
+  init(with viewModel: ProximityLoadingViewModel<Router, RequestItem>) {
     self.viewModel = viewModel
   }
 

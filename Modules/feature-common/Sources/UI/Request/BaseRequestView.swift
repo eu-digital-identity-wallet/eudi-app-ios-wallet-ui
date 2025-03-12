@@ -49,18 +49,14 @@ public struct BaseRequestView<Router: RouterHost>: View {
       message: .requestDataSheetCaption,
       baseText: .okButton,
       isPresented: $viewModel.isRequestInfoModalShowing,
-      baseAction: {
-        viewModel.onShowRequestInfoModal()
-      }
+      baseAction: viewModel.onShowRequestInfoModal()
     )
     .confirmationDialog(
       title: viewModel.getTrustedRelyingParty(),
       message: viewModel.getTrustedRelyingPartyInfo(),
       baseText: .okButton,
       isPresented: $viewModel.isVerifiedEntityModalShowing,
-      baseAction: {
-        viewModel.onVerifiedEntityModal()
-      }
+      baseAction: viewModel.onVerifiedEntityModal()
     )
     .task {
       if !viewModel.viewState.initialized {
@@ -68,7 +64,7 @@ public struct BaseRequestView<Router: RouterHost>: View {
       }
     }
     .alertView(
-      isPresented: $viewModel.itmesChanged,
+      isPresented: $viewModel.itemsChanged,
       title: .custom(""),
       message: .incompleteRequestDataSelection
     )
@@ -92,24 +88,25 @@ private func content(
       if viewState.items.isEmpty {
         noDocumentsFound(getScreenRect: getScreenRect)
       } else {
-
         VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+
           ForEach(viewState.items, id: \.id) { section in
-            ExpandableCardView(
-              title: .custom(section.requestDataSection.title),
-              subtitle: .viewDetails
-            ) {
-              WrapListItemsView(
-                listItems: section.listItems) { item in
-                  onSelectionChanged(item.id)
-                }
-            }
+            WrapExpandableListView(
+              header: .init(
+                mainText: .custom(section.section.title),
+                supportingText: .viewDetails
+              ),
+              items: section.section.listItems,
+              hideSensitiveContent: false,
+              onItemClick: { onSelectionChanged($0.groupId) }
+            )
           }
 
           Text(.shareDataReview)
             .typography(Theme.shared.font.bodyMedium)
             .foregroundColor(Theme.shared.color.onSurface)
             .multilineTextAlignment(.leading)
+
           VSpacer.medium()
         }
         .padding(.top, Theme.shared.dimension.padding)
@@ -151,7 +148,7 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
   let viewState = RequestViewState(
     isLoading: false,
     error: nil,
-    showMissingCrredentials: false,
+    showMissingCredentials: false,
     items: RequestDataUiModel.mockData(),
     trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
     relyingParty: .custom("relying party"),

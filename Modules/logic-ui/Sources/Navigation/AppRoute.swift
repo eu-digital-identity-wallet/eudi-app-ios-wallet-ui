@@ -35,13 +35,13 @@ public enum FeatureCommonRouteModule: AppRouteModule {
   case quickPin(config: any UIConfigType)
   case qrScanner(config: any UIConfigType)
   case biometry(config: any UIConfigType)
-  case success(config: any UIConfigType)
+  case genericSuccess(config: any UIConfigType)
   case issuanceAddDocumentOptions(config: any UIConfigType)
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
-    case .success(let config):
-      (key: "Success", arguments: ["config": config.log])
+    case .genericSuccess(let config):
+      (key: "GenericSuccess", arguments: ["config": config.log])
     case .biometry(let config):
       (key: "Biometry", arguments: ["config": config.log])
     case .quickPin(let config):

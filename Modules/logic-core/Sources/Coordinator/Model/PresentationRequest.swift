@@ -15,7 +15,7 @@
  */
 
 public struct PresentationRequest: Sendable {
-  public let items: [DocElementsViewModel]
+  public let items: [DocElements]
   public let relyingParty: String
   public let dataRequestInfo: String
   public let isTrusted: Bool

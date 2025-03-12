@@ -58,13 +58,13 @@ public protocol WalletKitController: Sendable {
     docTypes: [OfferedDocModel],
     txCodeValue: String?
   ) async throws -> [WalletStorage.Document]
-  func valueForElementIdentifier(
-    with documentId: String,
-    elementIdentifier: String,
-    isMandatory: Bool,
+  func parseDocClaim(
+    docId: String,
+    groupId: String?,
+    docClaim: DocClaim,
+    type: DocumentElementType,
     parser: (String) -> String
-  ) -> DocValue
-  func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String]
+  ) -> DocumentElementClaim
   func retrieveLogFileUrl() -> URL?
   func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document
   func storeDynamicIssuancePendingUrl(with url: URL)
@@ -99,7 +99,7 @@ final class WalletKitControllerImpl: WalletKitController {
     wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciConfig = .init(
-      clientId: configLogic.vciConfig.clientId,
+      client: .public(id: configLogic.vciConfig.clientId),
       authFlowRedirectionURI: configLogic.vciConfig.redirectUri
     )
     wallet.trustedReaderCertificates = configLogic.readerConfig.trustedCerts
@@ -317,79 +317,78 @@ private extension WalletKitControllerImpl {
 
 extension WalletKitController {
 
-  public func mandatoryFields(for documentType: DocumentTypeIdentifier) -> [String] {
-    switch documentType {
-    case .mDocPid, .sdJwtPid:
-      return [
-        "issuance_date",
-        DocumentJsonKeys.EXPIRY_DATE,
-        "exp",
-        "issuing_authority",
-        "document_number",
-        "administrative_number",
-        "issuing_country",
-        "issuing_jurisdiction",
-        DocumentJsonKeys.PORTRAIT,
-        "portrait_capture_date"
-      ]
-    case .mDocPseudonym:
-      return [
-        "issuance_date",
-        "expiry_date",
-        "issuing_country",
-        "issuing_authority"
-      ]
-    default:
-      return []
+  private func parseChildren(
+    docId: String,
+    groupId: String?,
+    docClaims: [DocClaim],
+    type: DocumentElementType,
+    parser: (String) -> String,
+    claims: inout [DocumentElementClaim]
+  ) {
+    docClaims.forEach { claim in
+      let docElementClaim = parseDocClaim(
+        docId: docId,
+        groupId: groupId,
+        docClaim: claim,
+        type: type,
+        parser: parser
+      )
+      claims.append(docElementClaim)
     }
   }
 
-  public func valueForElementIdentifier(
-    with documentId: String,
-    elementIdentifier: String,
-    isMandatory: Bool,
+  public func parseDocClaim(
+    docId: String,
+    groupId: String?,
+    docClaim: DocClaim,
+    type: DocumentElementType,
     parser: (String) -> String
-  ) -> DocValue {
+  ) -> DocumentElementClaim {
 
-    guard let document = fetchDocument(with: documentId) else {
-      return .unavailable(LocalizableStringKey.errorUnableFetchDocument.toString)
-    }
-
-    let claims = document.docClaims
-      .parseDates(
-        parser: {
-          Locale.current.localizedDateTime(
-            date: $0,
-            uiFormatter: "dd MMM yyyy"
-          )
-        }
-      )
+    let claim = docClaim
+      .parseDate(parser: parser)
       .parseUserPseudonym()
 
-    guard let element = claims.first(where: { $0.name == elementIdentifier }) else {
-      return .unavailable(LocalizableStringKey.unavailableField.toString)
+    if let children = claim.children, !children.isEmpty {
+
+      let id: String? = type == .mdoc
+      ? UUID().uuidString
+      : nil
+
+      var childClaims: [DocumentElementClaim] = []
+
+      parseChildren(
+        docId: docId,
+        groupId: id,
+        docClaims: children,
+        type: type,
+        parser: parser,
+        claims: &childClaims
+      )
+      return .group(
+        id: UUID().uuidString,
+        title: claim.displayName.ifNilOrEmpty { claim.name },
+        items: childClaims
+      )
     }
 
-    if let image = element.dataValue.image {
-      if isMandatory {
-        return .mandatory(.image(Image(uiImage: image)))
+    var value: DocumentElementValue {
+      if let image = claim.dataValue.image {
+        .image(Image(uiImage: image))
       } else {
-        return .image(Image(uiImage: image))
+        .string(claim.stringValue)
       }
     }
 
-    var stringValue: String {
-      if let nested = element.children {
-        return element.flattenNested(nested: nested).stringValue
-      } else {
-        return element.stringValue
-      }
-    }
-
-    if isMandatory {
-      return .mandatory(.string(stringValue))
-    } else {
-      return .string(stringValue)
-    }
+    return .primitive(
+      id: groupId ?? UUID().uuidString,
+      title: claim.displayName.ifNilOrEmpty { claim.name },
+      documentId: docId,
+      nameSpace: claim.namespace,
+      path: claim.path,
+      type: type,
+      value: value,
+      status: .available(isRequired: false)
+    )
   }
 }

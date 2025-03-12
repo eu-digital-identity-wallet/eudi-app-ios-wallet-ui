@@ -53,40 +53,36 @@ final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuVie
         $0.copy(items: [
           .init(
             title: .changeQuickPinOption,
-            action: {
-              self.updatePin()
-            }
+            action: self.updatePin()
           ),
           .init(
             title: .retrieveLogs,
             isShareLink: true,
-            action: {}
+            action: {}()
           ),
           .init(
             title: .changelog,
             showDivider: false,
-            action: {
-              changelogUrl.open()
-            }
+            action: changelogUrl.open()
           )
         ])
       }
     } else {
       setState {
-        $0.copy(items: [
-          .init(
-            title: .changeQuickPinOption,
-            action: {
-              self.updatePin()
-            }
-          ),
-          .init(
-            title: .retrieveLogs,
-            showDivider: false,
-            isShareLink: true,
-            action: {}
-          )
-        ])
+        $0.copy(
+          items: [
+            .init(
+              title: .changeQuickPinOption,
+              action: self.updatePin()
+            ),
+            .init(
+              title: .retrieveLogs,
+              showDivider: false,
+              isShareLink: true,
+              action: {}()
+            )
+          ]
+        )
       }
     }
   }

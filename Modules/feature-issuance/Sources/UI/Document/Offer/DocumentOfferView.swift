@@ -65,6 +65,7 @@ private func content(
         noDocumentsFound(imageSize: imageSize)
       } else {
         VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+
           ForEach(viewState.documentOfferUiModel.uiOffers) { cell in
             WrapCardView {
               DocumentOfferCellView(
@@ -78,6 +79,8 @@ private func content(
             .typography(Theme.shared.font.bodyMedium)
             .foregroundColor(Theme.shared.color.onSurface)
             .multilineTextAlignment(.leading)
+            .shimmer(isLoading: viewState.isLoading)
+
           VSpacer.medium()
         }
       }
@@ -144,6 +147,7 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
     isLoading: false,
     documentOfferUiModel: .init(
       issuerName: LocalizableStringKey.unknownIssuer.toString,
+      issuerLogo: nil,
       txCode: nil,
       uiOffers: [],
       docOffers: []

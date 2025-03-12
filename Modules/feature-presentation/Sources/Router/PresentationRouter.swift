@@ -15,6 +15,7 @@
  */
 import logic_ui
 import logic_business
+import feature_common
 import logic_core
 
 @MainActor
@@ -39,7 +40,7 @@ public final class PresentationRouter {
           relyingParty: relyingParty,
           relyingPartyIsTrusted: relyingPartyIsTrusted,
           originator: originator,
-          requestItems: uiModels
+          requestItems: uiModels.compactMap { $0 as? PresentationListItemSection }
         )
       ).eraseToAnyView()
     case .presentationRequest(
@@ -67,7 +68,7 @@ public final class PresentationRouter {
           deepLinkController: DIGraph.resolver.force(
             DeepLinkController.self
           ),
-          requestItems: uiModels
+          requestItems: uiModels.compactMap { $0 as? PresentationListItemSection }
         )
       ).eraseToAnyView()
     }

@@ -18,17 +18,17 @@ import logic_business
 import logic_ui
 import feature_common
 
-struct PresentationSuccessView<Router: RouterHost>: View {
+struct PresentationSuccessView<Router: RouterHost, RequestItem: Sendable>: View {
 
-  @ObservedObject private var viewModel: PresentationSuccessViewModel<Router>
+  @ObservedObject private var viewModel: PresentationSuccessViewModel<Router, RequestItem>
 
   init(
-    with viewModel: PresentationSuccessViewModel<Router>
+    with viewModel: PresentationSuccessViewModel<Router, RequestItem>
   ) {
     self.viewModel = viewModel
   }
 
   var body: some View {
-    BaseSuccessView(with: viewModel)
+    DocumentSuccessView(with: viewModel)
   }
 }

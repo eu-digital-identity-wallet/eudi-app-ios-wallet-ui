@@ -28,6 +28,16 @@ public struct WrapListItemView: View {
   private let minHeight: Bool
   private let clickableArea: ClickableArea
 
+  private var overlineText: LocalizableStringKey? {
+    guard
+      let text = listItem.overlineText,
+        !text.toString.isEmpty
+    else {
+      return nil
+    }
+    return text
+  }
+
   public init(
     listItem: ListItemData,
     mainTextVerticalPadding: CGFloat? = nil,
@@ -66,7 +76,7 @@ public struct WrapListItemView: View {
       }
 
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
-        if let overlineText = listItem.overlineText {
+        if let overlineText = overlineText {
           Text(overlineText)
             .typography(Theme.shared.font.bodySmall)
             .foregroundStyle(listItem.overlineTextColor)

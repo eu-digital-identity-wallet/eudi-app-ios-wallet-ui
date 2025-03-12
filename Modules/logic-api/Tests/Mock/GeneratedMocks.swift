@@ -3751,28 +3751,18 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue {
+    public func parseDocClaim(docId p0: String, groupId p1: String?, docClaim p2: DocClaim, type p3: DocumentElementType, parser p4: (String) -> String) -> DocumentElementClaim {
         
-					return withoutActuallyEscaping(p3, do: { (p3: @escaping (String) -> String) -> DocValue in
+						return withoutActuallyEscaping(p4, do: { (p4: @escaping (String) -> String) -> DocumentElementClaim in
 return cuckoo_manager.call(
-            "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue",
-            parameters: (p0, p1, p2, p3),
-            escapingParameters: (p0, p1, p2, { _ in fatalError("This is a stub! It's not supposed to be called!") }),
+            "parseDocClaim(docId p0: String, groupId p1: String?, docClaim p2: DocClaim, type p3: DocumentElementType, parser p4: (String) -> String) -> DocumentElementClaim",
+            parameters: (p0, p1, p2, p3, p4),
+            escapingParameters: (p0, p1, p2, p3, { _ in fatalError("This is a stub! It's not supposed to be called!") }),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.valueForElementIdentifier(with: p0, elementIdentifier: p1, isMandatory: p2, parser: p3)
+            defaultCall: __defaultImplStub!.parseDocClaim(docId: p0, groupId: p1, docClaim: p2, type: p3, parser: p4)
         )
-					})
+						})
 
-    }
-    
-    public func mandatoryFields(for p0: DocumentTypeIdentifier) -> [String] {
-        return cuckoo_manager.call(
-            "mandatoryFields(for p0: DocumentTypeIdentifier) -> [String]",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.mandatoryFields(for: p0)
-        )
     }
     
     public func retrieveLogFileUrl() -> URL? {
@@ -4006,18 +3996,10 @@ return cuckoo_manager.call(
             ))
         }
         
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, isMandatory p2: M3, parser p3: M4) -> Cuckoo.ProtocolStubFunction<(String, String, Bool, (String) -> String), DocValue> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == Bool, M4.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, Bool, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func parseDocClaim<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable, M5: Cuckoo.Matchable>(docId p0: M1, groupId p1: M2, docClaim p2: M3, type p3: M4, parser p4: M5) -> Cuckoo.ProtocolStubFunction<(String, String?, DocClaim, DocumentElementType, (String) -> String), DocumentElementClaim> where M1.MatchedType == String, M2.OptionalMatchedType == String, M3.MatchedType == DocClaim, M4.MatchedType == DocumentElementType, M5.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, String?, DocClaim, DocumentElementType, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }, wrap(matchable: p4) { $0.4 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func mandatoryFields<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(DocumentTypeIdentifier), [String]> where M1.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "mandatoryFields(for p0: DocumentTypeIdentifier) -> [String]",
+                method: "parseDocClaim(docId p0: String, groupId p1: String?, docClaim p2: DocClaim, type p3: DocumentElementType, parser p4: (String) -> String) -> DocumentElementClaim",
                 parameterMatchers: matchers
             ))
         }
@@ -4328,22 +4310,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func valueForElementIdentifier<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable>(with p0: M1, elementIdentifier p1: M2, isMandatory p2: M3, parser p3: M4) -> Cuckoo.__DoNotUse<(String, String, Bool, (String) -> String), DocValue> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == Bool, M4.MatchedType == (String) -> String {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, Bool, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func parseDocClaim<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable, M3: Cuckoo.Matchable, M4: Cuckoo.Matchable, M5: Cuckoo.Matchable>(docId p0: M1, groupId p1: M2, docClaim p2: M3, type p3: M4, parser p4: M5) -> Cuckoo.__DoNotUse<(String, String?, DocClaim, DocumentElementType, (String) -> String), DocumentElementClaim> where M1.MatchedType == String, M2.OptionalMatchedType == String, M3.MatchedType == DocClaim, M4.MatchedType == DocumentElementType, M5.MatchedType == (String) -> String {
+            let matchers: [Cuckoo.ParameterMatcher<(String, String?, DocClaim, DocumentElementType, (String) -> String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }, wrap(matchable: p4) { $0.4 }]
             return cuckoo_manager.verify(
-                "valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func mandatoryFields<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(DocumentTypeIdentifier), [String]> where M1.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "mandatoryFields(for p0: DocumentTypeIdentifier) -> [String]",
+                "parseDocClaim(docId p0: String, groupId p1: String?, docClaim p2: DocClaim, type p3: DocumentElementType, parser p4: (String) -> String) -> DocumentElementClaim",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -4514,12 +4484,8 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: ([WalletStorage.Document]).self)
     }
     
-    public func valueForElementIdentifier(with p0: String, elementIdentifier p1: String, isMandatory p2: Bool, parser p3: (String) -> String) -> DocValue {
-        return DefaultValueRegistry.defaultValue(for: (DocValue).self)
-    }
-    
-    public func mandatoryFields(for p0: DocumentTypeIdentifier) -> [String] {
-        return DefaultValueRegistry.defaultValue(for: ([String]).self)
+    public func parseDocClaim(docId p0: String, groupId p1: String?, docClaim p2: DocClaim, type p3: DocumentElementType, parser p4: (String) -> String) -> DocumentElementClaim {
+        return DefaultValueRegistry.defaultValue(for: (DocumentElementClaim).self)
     }
     
     public func retrieveLogFileUrl() -> URL? {
@@ -5589,11 +5555,11 @@ import Foundation
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DocValue.swift'
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DocumentCategory.swift'
 
 import Cuckoo
-import Foundation
-import SwiftUI
+import logic_resources
+import OrderedCollections
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -5601,11 +5567,11 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DocumentCategory.swift'
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DocumentElement.swift'
 
 import Cuckoo
-import logic_resources
-import OrderedCollections
+import Foundation
+import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

@@ -17,12 +17,12 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-struct SuccessView<Router: RouterHost>: View {
+struct GenericSuccessView<Router: RouterHost>: View {
 
-  @ObservedObject var viewmodel: SuccessViewModel<Router>
+  @ObservedObject var viewmodel: GenericSuccessViewModel<Router>
 
   init(
-    with viewmodel: SuccessViewModel<Router>) {
+    with viewmodel: GenericSuccessViewModel<Router>) {
       self.viewmodel = viewmodel
     }
 
@@ -38,7 +38,7 @@ struct SuccessView<Router: RouterHost>: View {
 @MainActor
 @ViewBuilder
 private func content(
-  viewState: SuccessState,
+  viewState: GenericSuccessState,
   onButtonClicked: @escaping (UIConfig.Success.Button) -> Void
 ) -> some View {
 
@@ -105,7 +105,7 @@ private func getCenteredIcon(
 }
 
 #Preview {
-  let viewState = SuccessState(
+  let viewState = GenericSuccessState(
     config: UIConfig.Success(
       title: .init(value: .success),
       subtitle: .issuanceSuccessDeferredCaption(["Name"]),

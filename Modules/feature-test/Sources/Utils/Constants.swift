@@ -124,7 +124,7 @@ extension Constants {
     func receiveRequest() async throws -> MdocDataTransfer18013.UserRequestInfo {
       .init(
         docDataFormats: [DocumentTypeIdentifier.mDocPid.rawValue : .cbor],
-        validItemsRequested: RequestItems()
+        itemsRequested: RequestItems()
       )
     }
     
@@ -139,7 +139,7 @@ extension Constants {
   
   static let mockPresentationSession = PresentationSession(
     presentationService: MockPresentationService(flow: .other),
-    docIdAndTypes: [:],
+    docIdToPresentInfo: [:],
     userAuthenticationRequired: false
   )
 }
@@ -147,21 +147,27 @@ extension Constants {
 extension Constants {
   static let mockPresentationRequest = PresentationRequest(
     items: [
-      DocElementsViewModel(
-        docId: Constants.isoMdlModelId,
-        docType: isoMdlDocType,
-        displayName: isoMdlName,
-        isEnabled: true,
-        elements: [
-          ElementViewModel(
-            nameSpace: "nameSpace",
-            elementIdentifier: "elementIdentifier",
-            displayName: "displayName",
-            isOptional: false,
-            intentToRetain: true,
-            isEnabled: true
-          )
-        ]
+      .msoMdoc(
+        .init(
+          docId: isoMdlModelId,
+          docType: isoMdlDocType,
+          displayName: isoMdlName,
+          nameSpacedElements: [
+            .init(
+              nameSpace: "nameSpace",
+              elements: [
+                .init(
+                  elementIdentifier: "elementIdentifier",
+                  displayName: "localizedName",
+                  isOptional: false,
+                  stringValue: "value",
+                  docClaim: .init(name: "elementIdentifier", dataValue: .string("value"), stringValue: "value"),
+                  isValid: true
+                )
+              ]
+            )
+          ]
+        )
       )
     ],
     relyingParty: "Relying Party",

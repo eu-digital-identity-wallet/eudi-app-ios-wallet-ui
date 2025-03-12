@@ -22,17 +22,20 @@ import logic_ui
 public struct DocumentOfferUIModel: Sendable {
 
   public let issuerName: String
+  public let issuerLogo: URL?
   public let txCode: TxCode?
   public let uiOffers: [UIOffer]
   public let docOffers: [OfferedDocModel]
 
   public init(
     issuerName: String,
+    issuerLogo: URL?,
     txCode: TxCode?,
     uiOffers: [UIOffer],
     docOffers: [OfferedDocModel]
   ) {
     self.issuerName = issuerName
+    self.issuerLogo = issuerLogo
     self.txCode = txCode
     self.uiOffers = uiOffers
     self.docOffers = docOffers
@@ -76,6 +79,7 @@ public extension DocumentOfferUIModel {
   static func mock() -> DocumentOfferUIModel {
     return .init(
       issuerName: LocalizableStringKey.unknownIssuer.toString,
+      issuerLogo: nil,
       txCode: nil,
       uiOffers: [
         .init(
@@ -112,7 +116,8 @@ public extension DocumentOfferUIModel {
 extension OfferedIssuanceModel {
   func transformToDocumentOfferUi() -> DocumentOfferUIModel {
     return self.docModels.transformToDocumentOfferUi(
-      with: self.issuerName,
+      issuerName: self.issuerName,
+      issuerLogo: self.issuerLogoUrl,
       codeRequired: self.isTxCodeRequired,
       codeLength: self.txCodeSpec?.length ?? 0
     )
@@ -121,7 +126,8 @@ extension OfferedIssuanceModel {
 
 private extension Array where Element == OfferedDocModel {
   func transformToDocumentOfferUi(
-    with issuerName: String,
+    issuerName: String,
+    issuerLogo: String?,
     codeRequired: Bool,
     codeLength: Int
   ) -> DocumentOfferUIModel {
@@ -137,8 +143,14 @@ private extension Array where Element == OfferedDocModel {
       )
     }
 
+    var issuerRemoteImage: URL? {
+      guard let issuerLogo = issuerLogo else { return nil }
+      return URL(string: issuerLogo)
+    }
+
     return .init(
       issuerName: issuerName,
+      issuerLogo: issuerRemoteImage,
       txCode: codeRequired ? .init(isRequired: codeRequired, codeLenght: codeLength): nil,
       uiOffers: offers,
       docOffers: self

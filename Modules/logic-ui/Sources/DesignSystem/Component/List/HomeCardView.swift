@@ -32,7 +32,7 @@ public struct HomeCardView: View {
     buttonViewStyle: ButtonViewStyle = .primary,
     learnMoreText: LocalizableStringKey? = nil,
     learnMoreAction: (() -> Void)? = nil,
-    action: @escaping () -> Void
+    action: @autoclosure @escaping () -> Void
   ) {
     self.text = text
     self.buttonText = buttonText
@@ -101,7 +101,7 @@ public struct HomeCardView: View {
         illustration: Image(systemName: "person.fill"),
         learnMoreText: LocalizableStringKey.learnMore,
         learnMoreAction: {},
-        action: {}
+        action: {}()
       )
 
       HomeCardView(
@@ -110,20 +110,20 @@ public struct HomeCardView: View {
         illustration: Image(systemName: "person.fill"),
         buttonViewStyle: .secondary,
         learnMoreAction: {},
-        action: {}
+        action: {}()
       )
 
       HomeCardView(
         text: LocalizableStringKey.authenticateAuthoriseTransactions,
         buttonText: LocalizableStringKey.addDocumentTitle,
         illustration: Image(systemName: "person.fill"),
-        action: {}
+        action: {}()
       )
 
       HomeCardView(
         text: LocalizableStringKey.authenticateAuthoriseTransactions,
         buttonText: LocalizableStringKey.addDocumentTitle,
-        action: {}
+        action: {}()
       )
     }
     .padding()

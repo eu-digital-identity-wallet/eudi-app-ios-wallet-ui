@@ -165,7 +165,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
         .copy(error: nil)
       }
 
-      let state = await Task.detached { () -> IssueDocumentPartialState in
+      let state = await Task.detached { () -> IssueResultPartialState in
         return await self.interactor.issueDocument(configId: configId)
       }.value
 
@@ -235,7 +235,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     }
 
     return .featureCommonModule(
-      .success(
+      .genericSuccess(
         config: UIConfig.Success(
           title: .init(
             value: .inProgress,
@@ -290,7 +290,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
   }
 
   private func fetchStoredDocuments(docId: String) async {
-    let state = await Task.detached { () -> DocumentsPartialState in
+    let state = await Task.detached { () -> IssueDocumentsPartialState in
       return await self.interactor.fetchStoredDocuments(
         documentIds: [docId]
       )

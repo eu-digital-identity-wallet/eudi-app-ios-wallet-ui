@@ -17,12 +17,12 @@ import SwiftUI
 import logic_business
 import logic_ui
 
-public struct BaseSuccessView<Router: RouterHost>: View {
+public struct DocumentSuccessView<Router: RouterHost, RequestItem: Sendable>: View {
 
-  @ObservedObject private var viewModel: BaseSuccessViewModel<Router>
+  @ObservedObject private var viewModel: DocumentSuccessViewModel<Router, RequestItem>
 
   public init(
-    with viewModel: BaseSuccessViewModel<Router>
+    with viewModel: DocumentSuccessViewModel<Router, RequestItem>
   ) {
     self.viewModel = viewModel
   }
@@ -43,8 +43,8 @@ public struct BaseSuccessView<Router: RouterHost>: View {
 
 @MainActor
 @ViewBuilder
-private func content(
-  viewState: BaseSuccessState
+private func content<RequestItem: Sendable>(
+  viewState: DocumentSuccessState<RequestItem>
 ) -> some View {
   ScrollView {
 
@@ -75,8 +75,8 @@ private func content(
 
 @MainActor
 @ViewBuilder
-private func documents(
-  viewState: BaseSuccessState,
+private func documents<RequestItem: Sendable>(
+  viewState: DocumentSuccessState<RequestItem>,
   ignoreTrainingContent: Bool = true,
   backgroundColor: Color = Theme.shared.color.tertiary,
   onSelectionChanged: @escaping @Sendable (String) -> Void
@@ -84,15 +84,16 @@ private func documents(
   if !viewState.items.isEmpty {
     VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
       ForEach(viewState.items, id: \.id) { section in
-        ExpandableCardView(
+        WrapExpandableListView(
+          header: .init(
+            mainText: .custom(section.title),
+            supportingText: .viewDetails
+          ),
+          items: section.listItems,
           backgroundColor: backgroundColor,
-          title: .custom(section.title),
-          subtitle: .viewDetails
-        ) {
-          WrapListItemsView(
-            listItems: section.listItems
-          )
-        }
+          hideSensitiveContent: false,
+          onItemClick: { onSelectionChanged($0.groupId) }
+        )
         .shimmer(isLoading: viewState.isLoading)
       }
     }

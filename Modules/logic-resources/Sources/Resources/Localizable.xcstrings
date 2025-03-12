@@ -458,7 +458,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "DATA SHARING REQUEST"
+            "value" : "Data sharing request"
           }
         }
       }
@@ -1583,7 +1583,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Type your quick pin to share information"
+            "value" : "Enter your PIN to share data"
           }
         }
       }

@@ -15,13 +15,11 @@
  */
 
 import feature_common
+import logic_core
 
-final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<Router> {
+final class PresentationLoadingViewModel<Router: RouterHost, RequestItem: Sendable>: BaseLoadingViewModel<Router, RequestItem> {
 
   private let interactor: PresentationInteractor
-  private let relyingParty: String
-  private let relyingPartyIsTrusted: Bool
-  private let requestItems: [RequestDataUI]
   private var publisherTask: Task<Void, Error>?
 
   init(
@@ -30,22 +28,17 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
     relyingParty: String,
     relyingPartyIsTrusted: Bool,
     originator: AppRoute,
-    requestItems: [any Routable]
+    requestItems: [ListItemSection<RequestItem>]
   ) {
-    guard
-      let requestItems = requestItems as? [RequestDataUI]
-    else {
-      fatalError("PresentationLoadingViewModel:: Invalid configuraton")
-    }
 
     self.interactor = interactor
-    self.relyingParty = relyingParty
-    self.relyingPartyIsTrusted = relyingPartyIsTrusted
-    self.requestItems = requestItems
 
     super.init(
       router: router,
       originator: originator,
+      requestItems: requestItems,
+      relyingParty: relyingParty,
+      relyingPartyIsTrusted: relyingPartyIsTrusted,
       cancellationTimeout: 5
     )
   }
@@ -70,7 +63,7 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
   }
 
   override func getTitle() -> LocalizableStringKey {
-    .requestDataTitle([relyingParty])
+    .requestDataTitle([getRelyingParty()])
   }
 
   override func getCaption() -> LocalizableStringKey {
@@ -99,10 +92,10 @@ final class PresentationLoadingViewModel<Router: RouterHost>: BaseLoadingViewMod
       .presentationSuccess(
         config: DocumentSuccessUIConfig(
           successNavigation: navigationType,
-          relyingParty: relyingParty,
-          relyingPartyIsTrusted: relyingPartyIsTrusted
+          relyingParty: getRelyingParty(),
+          relyingPartyIsTrusted: isRelyingPartyIstrusted()
         ),
-        requestItems.map { $0.matToListItemSection() }
+        getRequestItems()
       )
     )
   }

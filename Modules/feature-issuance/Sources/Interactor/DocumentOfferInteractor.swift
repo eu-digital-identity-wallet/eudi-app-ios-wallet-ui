@@ -28,7 +28,7 @@ public protocol DocumentOfferInteractor: Sendable {
     docOffers: [OfferedDocModel],
     successNavigation: UIConfig.TwoWayNavigationType,
     txCodeValue: String?
-  ) async -> IssueOfferDocumentsPartialState
+  ) async -> OfferResultPartialState
   func resumeDynamicIssuance(
     issuerName: String,
     successNavigation: UIConfig.TwoWayNavigationType
@@ -36,7 +36,7 @@ public protocol DocumentOfferInteractor: Sendable {
 
   func getHoldersName(for documentIdentifier: String) -> String?
   func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableStringKey?
-  func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState
+  func fetchStoredDocuments(documentIds: [String]) async -> OfferDocumentsPartialState
 }
 
 final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
@@ -89,7 +89,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
     docOffers: [OfferedDocModel],
     successNavigation: UIConfig.TwoWayNavigationType,
     txCodeValue: String?
-  ) async -> IssueOfferDocumentsPartialState {
+  ) async -> OfferResultPartialState {
     do {
 
       let issuedDocuments = try await walletController.issueDocumentsByOfferUrl(
@@ -161,7 +161,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       )
 
       if doc.status == .issued {
-        let state = await Task.detached { () -> DocumentsPartialState in
+        let state = await Task.detached { () -> OfferDocumentsPartialState in
           return await self.fetchStoredDocuments(
             documentIds: [doc.id]
           )
@@ -220,7 +220,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
     return .issuanceSuccessCaption([document.displayName.orEmpty])
   }
 
-  func fetchStoredDocuments(documentIds: [String]) async -> DocumentsPartialState {
+  func fetchStoredDocuments(documentIds: [String]) async -> OfferDocumentsPartialState {
     let documents = walletController.fetchDocuments(with: documentIds)
     let documentsDetails = documents.compactMap {
       $0.transformToDocumentDetailsUi(isSensitive: false)
@@ -236,8 +236,8 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
     successNavigation: UIConfig.TwoWayNavigationType,
     documentIdentifiers: [String],
     isPartialState: Bool = false
-  ) async -> IssueOfferDocumentsPartialState {
-    let state = await Task.detached { () -> DocumentsPartialState in
+  ) async -> OfferResultPartialState {
+    let state = await Task.detached { () -> OfferDocumentsPartialState in
       return await self.fetchStoredDocuments(
         documentIds: documentIdentifiers
       )
@@ -279,7 +279,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
     }
 
     return .featureCommonModule(
-      .success(
+      .genericSuccess(
         config: UIConfig.Success(
           title: title,
           subtitle: caption,
@@ -332,7 +332,7 @@ public enum OfferRequestPartialState: Sendable {
   case failure(Error)
 }
 
-public enum IssueOfferDocumentsPartialState: Sendable {
+public enum OfferResultPartialState: Sendable {
   case success(AppRoute)
   case partialSuccess(AppRoute)
   case deferredSuccess(AppRoute)
@@ -343,5 +343,10 @@ public enum IssueOfferDocumentsPartialState: Sendable {
 public enum OfferDynamicIssuancePartialState: Sendable {
   case success(AppRoute)
   case noPending
+  case failure(Error)
+}
+
+public enum OfferDocumentsPartialState: Sendable {
+  case success([DocumentDetailsUIModel])
   case failure(Error)
 }

@@ -16,52 +16,52 @@
 import XCTest
 import UIKit
 import logic_resources
-import feature_common
 import logic_business
+import feature_common
 @testable import logic_core
 @testable import feature_proximity
 @testable import logic_test
 @testable import feature_test
 
 final class TestProximityInteractor: EudiTest {
-
+  
   var interactor: ProximityInteractor!
   var walletKitController: MockWalletKitController!
   var presentationSessionCoordinator: MockProximitySessionCoordinator!
   var sessionHolder: MockSessionCoordinatorHolder!
-
+  
   override func setUp() {
     self.walletKitController = MockWalletKitController()
     self.presentationSessionCoordinator = MockProximitySessionCoordinator(
       session: Constants.mockPresentationSession
     )
     self.sessionHolder = MockSessionCoordinatorHolder()
-
+    
     stub(sessionHolder) { mock in
       when(mock.getActiveProximityCoordinator()).thenReturn(presentationSessionCoordinator)
     }
-
+    
     stub(sessionHolder) { mock in
       when(mock.setActiveProximityCoordinator(any())).thenDoNothing()
     }
-
+    
     stub(presentationSessionCoordinator) { mock in
       when(mock.stopPresentation()).thenDoNothing()
     }
-
+    
     self.interactor = ProximityInteractorImpl(
       with: presentationSessionCoordinator,
       and: walletKitController,
       also: sessionHolder
     )
   }
-
+  
   override func tearDown() {
     self.interactor = nil
     self.walletKitController = nil
     self.presentationSessionCoordinator = nil
   }
-
+  
   func testOnDeviceEngagement_WhenInteractorMethodCalled_ThenVerifyCoordinatorInitializedAndState() async {
     // Given
     stub(presentationSessionCoordinator) { mock in
@@ -72,12 +72,12 @@ final class TestProximityInteractor: EudiTest {
     // Then
     verify(presentationSessionCoordinator).initialize()
   }
-
+  
   func testGetSessionStatePublisher_WhenInteractorMethodCalledAndCoordinatorIsValid_ThenVerifyStateSuccess() async {
     // Given
     let sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> = SendableCurrentValueSubject(.loading)
     let stream: AsyncStream<PresentationState> = AsyncStream { completion in }
-
+    
     stub(presentationSessionCoordinator) { mock in
       when(mock.sendableCurrentValueSubject.get).thenReturn(sendableCurrentValueSubject)
     }
@@ -94,7 +94,7 @@ final class TestProximityInteractor: EudiTest {
       XCTFail("Wrong state \(state)")
     }
   }
-
+  
   func testGetSessionStatePublisher_WhenInteractorMethodCalledAndCoordinatorIsNotValid_ThenVerifyStateFailure() async {
     // Given
     let expectedError = RuntimeError.genericError
@@ -111,7 +111,7 @@ final class TestProximityInteractor: EudiTest {
       XCTFail("Wrong state \(state)")
     }
   }
-
+  
   func testGetCoordinator_WhenInteractorMethodCalledAndCoordinatorIsValid_ThenVerifyStateSuccess() async {
     // When
     let state = interactor.getCoordinator()
@@ -123,7 +123,7 @@ final class TestProximityInteractor: EudiTest {
       XCTFail("Wrong state \(state)")
     }
   }
-
+  
   func testGetCoordinator_WhenInteractorMethodCalledAndCoordinatorIsNotValid_ThenVerifyStateSuccess() async {
     // Given
     let expectedError = RuntimeError.genericError
@@ -140,7 +140,7 @@ final class TestProximityInteractor: EudiTest {
       XCTFail("Wrong state \(state)")
     }
   }
-
+  
   func testOnQRGeneration_WhenCoordinatorStartQrEngagementReturnsValidData_ThenVerifySuccessAndImage() async throws {
     // Given
     let expectedImage = try XCTUnwrap(UIImage(systemName: "qrcode"))
@@ -149,7 +149,7 @@ final class TestProximityInteractor: EudiTest {
     }
     // When
     let state = await interactor.onQRGeneration()
-
+    
     // Then
     switch state {
     case .success(let image):
@@ -161,17 +161,17 @@ final class TestProximityInteractor: EudiTest {
     }
     verify(presentationSessionCoordinator).startQrEngagement()
   }
-
+  
   func testOnQRGeneration_WhenCoordinatorStartQrEngagementThrowsError_ThenVerifyFailure() async {
     // Given
     let expectedError = PresentationSessionError.qrGeneration
-
+    
     stub(presentationSessionCoordinator) { mock in
       when(mock.startQrEngagement()).thenThrow(expectedError)
     }
     // When
     let state = await interactor.onQRGeneration()
-
+    
     // Then
     switch state {
     case .failure(let error):
@@ -184,17 +184,17 @@ final class TestProximityInteractor: EudiTest {
     }
     verify(presentationSessionCoordinator).startQrEngagement()
   }
-
+  
   func testOnQRGeneration_WhenCoordinatorStartQrEngagementReturnsInValidData_ThenVerifyFailure() async {
     // Given
     let expectedError = PresentationSessionError.qrGeneration
-
+    
     stub(presentationSessionCoordinator) { mock in
       when(mock.startQrEngagement()).thenThrow(expectedError)
     }
     // When
     let state = await interactor.onQRGeneration()
-
+    
     // Then
     switch state {
     case .failure(let error):
@@ -207,7 +207,7 @@ final class TestProximityInteractor: EudiTest {
     }
     verify(presentationSessionCoordinator).startQrEngagement()
   }
-
+  
   func testStopPresentation_WhenInteractorMethodCalled_ThenVerifyWalletKitControllerStopPresentation() async {
     // Given
     stub(walletKitController) { mock in
@@ -218,35 +218,44 @@ final class TestProximityInteractor: EudiTest {
     // Then
     verify(walletKitController).stopPresentation()
   }
-
+  
   func testOnRequestReceived_WhenCoordinatorRequestReceivedReturnsSuccess_ThenVerifySuccessState() async {
+    
     // Given
     let request = Self.mockPresentationRequest
-
+    
     let expectedUiModels = Self.mockUiModels()
-
+    
     stub(presentationSessionCoordinator) { mock in
       when(mock.requestReceived()).thenReturn(request)
     }
-
-    stub(walletKitController) { mock in
-      when(mock.mandatoryFields(for: any())).thenReturn([])
-    }
-
+    
     stub(walletKitController) { mock in
       when(
-        mock.valueForElementIdentifier(
-          with: any(),
-          elementIdentifier: any(),
-          isMandatory: false,
+        mock.parseDocClaim(
+          docId: any(),
+          groupId: any(),
+          docClaim: any(),
+          type: any(),
           parser: any()
         )
-      ).thenReturn(.string("elementIdentifier"))
+      ).thenReturn(
+        .primitive(
+          id: Constants.randomIdentifier,
+          title: "elementIdentifier",
+          documentId: Constants.isoMdlModelId,
+          nameSpace: "nameSpace",
+          path: ["elementIdentifier"],
+          type: .mdoc,
+          value: .string("value"),
+          status: .available(isRequired: false)
+        )
+      )
     }
-
+    
     // When
     let state = await interactor.onRequestReceived()
-
+    
     // Then
     switch state {
     case .success(let uimodels, let relyingParty, let dataRequestInfo, let isTrusted):
@@ -258,18 +267,18 @@ final class TestProximityInteractor: EudiTest {
       XCTFail("Wrong state \(state)")
     }
   }
-
+  
   func testOnRequestReceived_WhenCoordinatorRequestReceivedThrowsError_ThenVerifyFailureState() async {
     // Given
     let expectedError = PresentationSessionError.conversionToRequestItemModel
-
+    
     stub(presentationSessionCoordinator) { mock in
       when(mock.requestReceived()).thenThrow(expectedError)
     }
-
+    
     // When
     let state = await interactor.onRequestReceived()
-
+    
     // Then
     switch state {
     case .failure(let error):
@@ -281,18 +290,18 @@ final class TestProximityInteractor: EudiTest {
       XCTFail("Wrong state \(state)")
     }
   }
-
+  
   func testOnResponsePrepare_WhenRequestItemsContainDataOrVerificationRows_ThenVerifySuccessStateAndRequestItems() async {
     // Given
     let expectedRequestItems = Self.mockRequestItems
-
+    
     stub(presentationSessionCoordinator) { mock in
       when(mock.setState(presentationState: any())).thenDoNothing()
     }
-
+    
     // When
     let state = await interactor.onResponsePrepare(requestItems: Self.mockUiModels())
-
+    
     // Then
     switch state {
     case .success(let items):
@@ -300,17 +309,17 @@ final class TestProximityInteractor: EudiTest {
     default:
       XCTFail("Wrong state \(state)")
     }
-
+    
     verify(presentationSessionCoordinator).setState(presentationState: any())
   }
-
+  
   func testOnResponsePrepare_WhenRequestItemsDoNotContainDataOrVerificationRows_ThenVerifyFailureState() async {
     // Given
     let expectedError = PresentationSessionError.conversionToRequestItemModel
-
+    
     // When
     let state = await interactor.onResponsePrepare(requestItems: Self.mockUiModels().dropLast())
-
+    
     // Then
     switch state {
     case .failure(let error):
@@ -319,15 +328,15 @@ final class TestProximityInteractor: EudiTest {
       XCTFail("Wrong state \(state)")
     }
   }
-
+  
   func testOnSendResponse_WhenCoordinatorPresentationStateIsResponseToSend_ThenverifySuccessState() async {
     // Given
     let presetationState: PresentationState = .responseToSend(Self.mockRequestItems)
-
+    
     stub(presentationSessionCoordinator) { mock in
       when(mock.getState()).thenReturn(presetationState)
     }
-
+    
     stub(presentationSessionCoordinator) { mock in
       when(
         mock.sendResponse(
@@ -335,10 +344,10 @@ final class TestProximityInteractor: EudiTest {
         )
       ).thenDoNothing()
     }
-
+    
     // When
     let state = await interactor.onSendResponse()
-
+    
     // Then
     switch state {
     case .sent:
@@ -346,25 +355,25 @@ final class TestProximityInteractor: EudiTest {
     default:
       XCTFail("Wrong state \(state)")
     }
-
+    
     verify(presentationSessionCoordinator).getState()
     verify(presentationSessionCoordinator).sendResponse(
       response: any()
     )
   }
-
+  
   func testOnSendResponse_WhenCoordinatorPresentationStateIsNotResponseToSend_ThenVerifyFailureState() async {
     // Given
     let presetationState: PresentationState = .prepareQr
     let expectedError = PresentationSessionError.invalidState
-
+    
     stub(presentationSessionCoordinator) { mock in
       when(mock.getState()).thenReturn(presetationState)
     }
-
+    
     // When
     let state = await interactor.onSendResponse()
-
+    
     // Then
     switch state {
     case .failure(let error):
@@ -372,28 +381,28 @@ final class TestProximityInteractor: EudiTest {
     default:
       XCTFail("Wrong state \(state)")
     }
-
+    
     verify(presentationSessionCoordinator).getState()
   }
-
+  
   func testOnSendResponse_WhenCoordinatorPresentationStateIsResponseToSendAndSendResponseThrowsError_ThenVerifyFailureState() async {
     // Given
     let presetationState: PresentationState = .responseToSend(Self.mockRequestItems)
     let expectedError = RuntimeError.genericError
-
+    
     stub(presentationSessionCoordinator) { mock in
       when(mock.getState()).thenReturn(presetationState)
     }
-
+    
     stub(sessionHolder) { mock in
       when(
         mock.getActiveProximityCoordinator()
       ).thenThrow(expectedError)
     }
-
+    
     // When
     let state = await interactor.onSendResponse()
-
+    
     // Then
     switch state {
     case .failure(let error):
@@ -401,44 +410,56 @@ final class TestProximityInteractor: EudiTest {
     default:
       XCTFail("Wrong state \(state)")
     }
-
+    
     verify(presentationSessionCoordinator, times(0)).getState()
     verify(presentationSessionCoordinator, times(0)).sendResponse(response: any())
   }
 }
 
 private extension TestProximityInteractor {
-
+  
   static let mockPresentationRequest = Constants.mockPresentationRequest
-
-  static func mockUiModels() -> [RequestDataUI] {
-    let dataRow = RequestDataRow(
+  
+  static func mockUiModels() -> [RequestDataUiModel] {
+    let claim = DocumentElementClaim.primitive(
       id: Constants.randomIdentifier,
-      isSelected: true,
-      title: "displayName",
-      value: .string("elementIdentifier"),
-      elementKey: "elementIdentifier",
-      namespace: "nameSpace"
+      title: "elementIdentifier",
+      documentId: Constants.isoMdlModelId,
+      nameSpace: "nameSpace",
+      path: ["elementIdentifier"],
+      type: .mdoc,
+      value: .string("value"),
+      status: .available(isRequired: false)
     )
-    let listItem = dataRow.mapToListItem()
     return [
-      RequestDataUI(
-        id: Constants.isoMdlModelId,
-        requestDataRow: [
-          dataRow
-        ],
-        requestDataSection: RequestDataSection(
+      RequestDataUiModel(
+        section: .init(
           id: Constants.isoMdlModelId,
-          title: Constants.isoMdlName
-        ), listItems: [
-          listItem
-        ]
+          title: Constants.isoMdlName,
+          listItems: [
+            .single(
+              .init(
+                collapsed: .init(
+                  mainText: .custom("value"),
+                  overlineText: .custom("elementIdentifier"),
+                  isEnable: true,
+                  trailingContent: .checkbox(
+                    true,
+                    true,
+                    { _ in }
+                  )
+                ),
+                domainModel: claim
+              )
+            )
+          ]
+        )
       )
     ]
   }
-
+  
   static let mockRequestItems = [
-    Constants.randomIdentifier : [
+    Constants.isoMdlModelId : [
       "nameSpace": [
         RequestItem(elementIdentifier: "elementIdentifier")
       ]

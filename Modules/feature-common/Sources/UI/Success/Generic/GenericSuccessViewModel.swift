@@ -16,11 +16,11 @@
 import logic_ui
 import logic_business
 
-struct SuccessState: ViewState {
+struct GenericSuccessState: ViewState {
   let config: UIConfig.Success
 }
 
-final class SuccessViewModel<Router: RouterHost>: ViewModel<Router, SuccessState> {
+final class GenericSuccessViewModel<Router: RouterHost>: ViewModel<Router, GenericSuccessState> {
 
   private let deepLinkController: DeepLinkController
 

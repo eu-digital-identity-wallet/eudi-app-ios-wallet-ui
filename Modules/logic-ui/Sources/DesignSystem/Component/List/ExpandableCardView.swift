@@ -18,7 +18,7 @@ import logic_resources
 
 public struct ExpandableCardView<Content: View>: View {
   private let title: LocalizableStringKey
-  private let subtitle: LocalizableStringKey
+  private let subtitle: LocalizableStringKey?
   private let backgroundColor: Color
   private let mainTextVerticalPadding: CGFloat?
   private let isLoading: Bool
@@ -27,7 +27,7 @@ public struct ExpandableCardView<Content: View>: View {
   public init(
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
     title: LocalizableStringKey,
-    subtitle: LocalizableStringKey,
+    subtitle: LocalizableStringKey? = nil,
     mainTextVerticalPadding: CGFloat? = nil,
     isLoading: Bool = false,
     @ViewBuilder content: @escaping () -> Content

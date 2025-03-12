@@ -13,336 +13,481 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import SwiftUI
 import logic_business
 import logic_core
+import logic_ui
+import Copyable
 
-public struct RequestDataRow: Identifiable, Equatable, Sendable {
+public typealias PresentationListItemSection = ListItemSection<DocumentElementClaim>
+private typealias PresentationExpandableListItem = ExpandableListItem<DocumentElementClaim>
 
-  public enum Value: Equatable, Sendable {
-    case string(String)
-    case image(Image)
-
-    public var string: String? {
-      switch self {
-        case .string(let string):
-          string
-        default:
-          nil
-      }
-    }
-
-    public var image: Image? {
-      switch self {
-        case .image(let image):
-          image
-        default:
-          nil
-      }
-    }
-  }
+@Copyable
+public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
 
   @EquatableNoop
   public var id: String
 
-  public let title: String
-  public let value: Value
+  public let section: PresentationListItemSection
 
-  public var isSelected: Bool
-  public var isEnabled: Bool
-
-  public var elementKey: String
-  public var namespace: String
-
-  public var documentId: String {
-    if let lastPart = id.split(separator: "_").last {
-      return String(lastPart)
-    }
-    return id
+  public var log: String {
+    "id: \(section.id), title: \(section.title)"
   }
 
   public init(
     id: String = UUID().uuidString,
-    isSelected: Bool,
-    title: String,
-    value: DocValue,
-    elementKey: String = "namespaced_key",
-    namespace: String = "doc.namespace"
+    section: PresentationListItemSection
   ) {
     self.id = id
-    self.isSelected = isSelected
-    self.title = title
-    switch value {
-      case .string(let string):
-        self.value = .string(string)
-        self.isEnabled = true
-      case .unavailable(let string):
-        self.value = .string(string)
-        self.isEnabled = false
-        self.isSelected = false
-      case .image(let image):
-        self.value = .image(image)
-        self.isEnabled = true
-      case .mandatory(let item):
-        switch item {
-        case .string(let string):
-          self.value = .string(string)
-        case .image(let image):
-          self.value = .image(image)
-        }
-        self.isEnabled = false
-        self.isSelected = true
-    }
-    self.elementKey = elementKey
-    self.namespace = namespace
-  }
-
-  public mutating func setSelected(_ isSelected: Bool) {
-    self.isSelected = isSelected
-  }
-}
-
-public extension RequestDataRow {
-  func mapToListItem() -> ListItemData {
-    let item = self
-    switch item.value {
-    case .string(let value):
-      return .init(
-        id: item.id,
-        mainText: .custom(value),
-        overlineText: .custom(item.title),
-        isEnable: item.isEnabled,
-        trailingContent: .checkbox(
-          item.isEnabled,
-          item.isSelected,
-          { _ in }
-        )
-      )
-
-    case .image(let image):
-        return .init(
-        id: item.id,
-        mainText: .custom(item.title),
-        leadingIcon: .init(image: image),
-        isEnable: item.isEnabled,
-        trailingContent: .checkbox(
-          item.isEnabled,
-          item.isSelected
-        ) { _ in }
-      )
-    }
-  }
-}
-
-public struct RequestDataSection: Identifiable, Equatable, Sendable {
-
-  public var id: String
-  public let title: String
-
-  public init(
-    id: String = UUID().uuidString,
-    title: String
-  ) {
-    self.id = id
-    self.title = title
-  }
-}
-
-public struct RequestDataVerification: Identifiable, Equatable, Sendable {
-
-  public var id: String
-  public let title: String
-  public var items: [RequestDataRow]
-
-  public init(
-    id: String = UUID().uuidString,
-    title: String,
-    items: [RequestDataRow]
-  ) {
-    self.id = id
-    self.title = title
-    self.items = items
-  }
-
-  mutating func setItems(with items: [RequestDataRow]) {
-    self.items = items
+    self.section = section
   }
 }
 
 extension RequestDataUiModel {
+  mutating func toggleSelection(id: String) {
 
-  public static func items(
-    for docElements: [DocElementsViewModel],
-    walletKitController: WalletKitController
-  ) -> [RequestDataUI] {
-    var requestDataCell = [RequestDataUI]()
+    func findSelection(id: String, listItems: inout [PresentationExpandableListItem]) {
+      for index in listItems.indices {
+        switch listItems[index] {
+        case .single(let item):
 
-    for docElement in docElements {
+          guard item.collapsed.groupId == id else {
+            continue
+          }
 
-      // Filter fields for Selectable Disclosed Fields
-      let dataFields = documentSelectiveDisclosableFields(
-        for: docElement.elements,
-        with: docElement,
-        walletKitController: walletKitController
-      )
-
-      // Filter fields for mandatory keys for verification
-      let verificationFields = documentMandatoryVerificationFields(
-        for: docElement.elements,
-        with: docElement,
-        walletKitController: walletKitController
-      )
-
-      let dataRows = (dataFields + (verificationFields ?? [])).sorted { $0.title.lowercased() < $1.title.lowercased() }
-
-      guard !dataFields.isEmpty || verificationFields != nil else {
-        continue
-      }
-
-      let section = RequestDataSection(
-        id: docElement.id,
-        title: docElement.displayName.orEmpty
-      )
-      let data = RequestDataUI(
-        id: section.id,
-        requestDataRow: dataRows,
-        requestDataSection: section,
-        listItems: dataRows.map { item in
-          switch item.value {
-            case .string(let value):
-              ListItemData(
-                id: item.id,
-                mainText: .custom(value),
-                overlineText: .custom(item.title),
-                trailingContent: .checkbox(
-                  item.isEnabled,
-                  item.isSelected,
-                  { _ in }
+          switch item.collapsed.trailingContent {
+          case .checkbox(let isEnabled, let isSelected, let onClick):
+            guard isEnabled else { break }
+            listItems[index] = .single(
+              item.copy(
+                collapsed: item.collapsed.copy(
+                  trailingContent: .checkbox(isEnabled, !isSelected, onClick)
                 )
               )
-
-            case .image(let image):
-              ListItemData(
-                id: item.id,
-                mainText: .custom(item.title),
-                leadingIcon: .init(image: image),
-                trailingContent: .checkbox(
-                  item.isEnabled,
-                  item.isSelected
-                ) { _ in }
-              )
+            )
+          default:
+            break
+          }
+        case .nested(let item):
+          if item.collapsed.groupId == id {
+            listItems[index] = .nested(item.copy(isExpanded: !item.isExpanded))
+          } else {
+            var children = item.expanded
+            findSelection(id: id, listItems: &children)
+            listItems[index] = .nested(item.copy(expanded: children))
           }
         }
-      )
-
-      requestDataCell.append(data)
+      }
     }
 
-    return requestDataCell
-  }
+    var listItems = section.listItems
 
-  fileprivate static func documentSelectiveDisclosableFields(
-    for docElements: [ElementViewModel],
-    with docElement: DocElementsViewModel,
-    walletKitController: WalletKitController
-  ) -> [RequestDataRow] {
-    docElements
-      .filter { element in
-        let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: docElement.docType))
-        return !mandatoryKeys.contains(element.elementIdentifier)
-      }
-      .map { element in
-        RequestDataRow(
-          id: "\(element.id)_\(docElement.id)",
-          isSelected: true,
-          title: element.displayName.ifNil { element.elementIdentifier },
-          value: walletKitController.valueForElementIdentifier(
-            with: docElement.id,
-            elementIdentifier: element.elementIdentifier,
-            isMandatory: false,
-            parser: {
-              Locale.current.localizedDateTime(
-                date: $0,
-                uiFormatter: "dd MMM yyyy"
-              )
-            }
-          ),
-          elementKey: element.elementIdentifier,
-          namespace: element.nameSpace
-        )
-      }
-  }
+    findSelection(id: id, listItems: &listItems)
 
-  fileprivate static func documentMandatoryVerificationFields(
-    for docElements: [ElementViewModel],
-    with docElement: DocElementsViewModel,
-    walletKitController: WalletKitController
-  ) -> [RequestDataRow]? {
-    let mandatoryFields = docElements
-      .filter { element in
-        let mandatoryKeys = walletKitController.mandatoryFields(for: .init(rawValue: docElement.docType))
-        return mandatoryKeys.contains(element.elementIdentifier)
-      }
-      .map { element in
-        RequestDataRow(
-          id: "\(element.id)_\(docElement.id)",
-          isSelected: true,
-          title: element.displayName.ifNil { element.elementIdentifier },
-          value: walletKitController.valueForElementIdentifier(
-            with: docElement.id,
-            elementIdentifier: element.elementIdentifier,
-            isMandatory: true,
-            parser: {
-              Locale.current.localizedDateTime(
-                date: $0,
-                uiFormatter: "dd MMM yyyy"
-              )
-            }
-          ),
-          elementKey: element.elementIdentifier,
-          namespace: element.nameSpace
-        )
-      }
-
-    guard mandatoryFields.count > 0 else {
-      return nil
-    }
-
-    return mandatoryFields
+    self = self.copy(
+      section: self.section.copy(listItems: listItems)
+    )
   }
 }
 
-public struct RequestDataUiModel {
-  public static func mockData() -> [RequestDataUI] {
-    [
-      RequestDataUI(
-        requestDataRow: [
-          RequestDataRow(isSelected: true, title: "Family Name", value: .string("Tzouvaras")),
-          RequestDataRow(isSelected: true, title: "First Name", value: .string("Stilianos")),
-          RequestDataRow(isSelected: true, title: "Date of Birth", value: .string("21-09-1985")),
-          RequestDataRow(isSelected: true, title: "Resident Country", value: .string("Greece"))
-        ],
-        requestDataSection: RequestDataSection(title: "MDL"),
-        listItems: [
-          ListItemData(
-            mainText: .custom("Tzouvaras"),
-            overlineText: .custom("Family Name")
-          ),
-          ListItemData(
-            mainText: .custom("Stilianos"),
-            overlineText: .custom("First Name")
-          ),
-          ListItemData(
-            mainText: .custom("21-09-1985"),
-            overlineText: .custom("Date of Birth")
-          ),
-          ListItemData(
-            mainText: .custom("Greece"),
-            overlineText: .custom("Resident")
+public extension Array where Element == RequestDataUiModel {
+
+  func prepareRequest() -> RequestItemsWrapper {
+
+    func flatSelectedValues(
+      currentList: [PresentationExpandableListItem],
+      newList: inout [PresentationExpandableListItem]
+    ) {
+      currentList.forEach {
+        switch $0 {
+        case .single(let item):
+          switch item.collapsed.trailingContent {
+          case .checkbox(_, let isSelected, _):
+            if isSelected {
+              newList.append($0)
+            }
+          default:
+            break
+          }
+        case .nested(let item):
+          flatSelectedValues(currentList: item.expanded, newList: &newList)
+        }
+      }
+    }
+
+    var models: [RequestDataUiModel] = []
+
+    self.forEach { model in
+
+      var expandableList: [PresentationExpandableListItem] = []
+
+      flatSelectedValues(currentList: model.section.listItems, newList: &expandableList)
+
+      if !expandableList.isEmpty {
+        models.append(
+          model.copy(
+            section: .init(
+              id: model.section.id,
+              title: model.section.title,
+              listItems: expandableList
+            )
           )
-        ]
+        )
+      }
+    }
+
+    let requestConvertible = models
+      .reduce(into: [PresentationExpandableListItem]()) { partialResult, document in
+        partialResult.append(contentsOf: document.section.listItems)
+      }
+      .reduce(into: RequestItemsWrapper()) { partialResult, claim in
+
+        var path: [String] {
+          switch claim.domainModel?.type {
+          case .mdoc:
+            guard let first = claim.domainModel?.path?.first else {
+              return []
+            }
+            return [first]
+          case .sdjwt:
+            return  claim.domainModel?.path ?? []
+          default:
+            return []
+          }
+        }
+
+        var documentId: String {
+          claim.domainModel?.documentId ?? ""
+        }
+
+        var nameSpace: String {
+          claim.domainModel?.nameSpace ?? ""
+        }
+
+        let requestItem: RequestItem = .init(elementPath: path)
+        var nameSpaceDict = partialResult.requestItems[documentId, default: [nameSpace: [requestItem]]]
+        nameSpaceDict[nameSpace, default: [requestItem]].appendIfNotExists(requestItem)
+        partialResult.requestItems[documentId] = nameSpaceDict
+      }
+
+    return requestConvertible
+  }
+
+  func filterSelectedRows() -> [PresentationListItemSection] {
+
+    func filterSelection(
+      currentList: [PresentationExpandableListItem],
+      newList: inout [PresentationExpandableListItem]
+    ) {
+      currentList.forEach {
+        switch $0 {
+        case .single(let item):
+          switch item.collapsed.trailingContent {
+          case .checkbox(_, let isSelected, _):
+            if isSelected {
+              newList.append($0)
+            }
+          default:
+            break
+          }
+        case .nested(let item):
+          newList.append($0)
+          let groupPosition = newList.count - 1
+          var children: [PresentationExpandableListItem] = []
+          filterSelection(currentList: item.expanded, newList: &children)
+          if !children.isEmpty {
+            newList[groupPosition] = .nested(
+              .init(
+                collapsed: item.collapsed,
+                expanded: children,
+                isExpanded: item.isExpanded
+              )
+            )
+          } else {
+            newList.remove(at: groupPosition)
+          }
+        }
+      }
+    }
+
+    var sections: [PresentationListItemSection] = []
+
+    self.forEach { model in
+
+      var expandableList: [PresentationExpandableListItem] = []
+
+      filterSelection(currentList: model.section.listItems, newList: &expandableList)
+
+      if !expandableList.isEmpty {
+        sections.append(
+          .init(
+            id: model.section.id,
+            title: model.section.title,
+            listItems: expandableList
+          )
+        )
+      }
+    }
+
+    return sections
+  }
+
+  func canShare() -> Bool {
+
+    func getAllSingleItems(
+      all: [PresentationExpandableListItem],
+      result: inout [PresentationExpandableListItem.SingleListItemData]
+    ) {
+      all.forEach { item in
+        switch item {
+        case .nested(let item):
+          getAllSingleItems(all: item.expanded, result: &result)
+        case .single(let item):
+          result.append(item)
+        }
+      }
+    }
+
+    var listItems: [PresentationExpandableListItem.SingleListItemData] = []
+    self.forEach {
+      getAllSingleItems(all: $0.section.listItems, result: &listItems)
+    }
+
+    let canShareDataRows = listItems
+      .map {
+        $0.collapsed.trailingContent
+      }
+      .flatMap {
+        var selectedItems: [Bool] = []
+        switch $0 {
+        case .checkbox(_, let isSelected, _):
+          selectedItems.append(isSelected)
+        default:
+          break
+        }
+        return selectedItems
+      }
+      .filter { $0 }
+      .isEmpty
+
+    return !canShareDataRows
+  }
+}
+
+public extension RequestDataUiModel {
+  static func mockData() -> [RequestDataUiModel] {
+    [
+      RequestDataUiModel(
+        section: .init(
+          id: UUID().uuidString,
+          title: "MDL",
+          listItems: [
+            .single(
+              .init(
+                collapsed: ListItemData(
+                  mainText: .custom("Tzouvaras"),
+                  overlineText: .custom("Family Name")
+                ),
+                domainModel: nil
+              )
+            ),
+            .single(
+              .init(
+                collapsed: ListItemData(
+                  mainText: .custom("Stilianos"),
+                  overlineText: .custom("First Name")
+                ),
+                domainModel: nil
+              )
+            ),
+            .single(
+              .init(
+                collapsed: ListItemData(
+                  mainText: .custom("21-09-1985"),
+                  overlineText: .custom("Date of Birth")
+                ),
+                domainModel: nil
+              )
+            ),
+            .single(
+              .init(
+                collapsed: ListItemData(
+                  mainText: .custom("Greece"),
+                  overlineText: .custom("Resident")
+                ),
+                domainModel: nil
+              )
+            )
+          ]
+        )
       )
     ]
+  }
+}
+
+public extension Array where Element == DocElements {
+  func toUiModels(with walletKitController: WalletKitController) -> [RequestDataUiModel] {
+    self.compactMap { element in
+
+      var title: String {
+        return switch element {
+        case .msoMdoc(let msoMdocElements):
+          msoMdocElements.displayName.ifNilOrEmpty { msoMdocElements.docType }
+        case .sdJwt(let sdJwtElements):
+          sdJwtElements.displayName.ifNilOrEmpty { sdJwtElements.vct }
+        }
+      }
+
+      var type: DocumentElementType {
+        return switch element {
+        case .msoMdoc:
+          .mdoc
+        case .sdJwt:
+          .sdjwt
+        }
+      }
+
+      let claims = switch element {
+      case .msoMdoc(let doc):
+        doc.nameSpacedElements
+          .reduce(into: [MsoMdocElement]()) { partialResult, nameSpaceElement in
+            partialResult.append(contentsOf: nameSpaceElement.elements)
+          }
+          .reduce(into: [DocClaim]()) { partialResult, element in
+            if let claim = element.docClaim {
+              partialResult.append(claim)
+            }
+          }
+      case .sdJwt(let doc):
+        doc.sdJwtElements
+          .reduce(into: [SdJwtElement]()) { partialResult, sdJwtElement in
+            partialResult.append(sdJwtElement)
+          }
+          .reduce(into: [DocClaim]()) { partialResult, element in
+            if let claim = element.docClaim {
+              partialResult.append(claim)
+            }
+          }
+      }
+
+      let dataFields = claims.selectiveDisclosableFields(
+        id: element.docId,
+        type: type,
+        walletKitController: walletKitController
+      )
+
+      let dataRows = dataFields.sorted { $0.title.lowercased() < $1.title.lowercased() }
+
+      guard !dataFields.isEmpty else {
+        return nil
+      }
+
+      return .init(
+        section: .init(
+          id: element.docId,
+          title: title,
+          listItems: dataRows.toListItems()
+        )
+      )
+    }
+  }
+}
+
+private extension Array where Element == DocClaim {
+  func selectiveDisclosableFields(
+    id: String,
+    type: DocumentElementType,
+    walletKitController: WalletKitController
+  ) -> [DocumentElementClaim] {
+    self
+      .map { claim in
+        return walletKitController.parseDocClaim(
+          docId: id,
+          groupId: nil,
+          docClaim: claim,
+          type: type,
+          parser: {
+            Locale.current.localizedDateTime(
+              date: $0,
+              uiFormatter: "dd MMM yyyy"
+            )
+          }
+        )
+      }
+  }
+}
+
+private extension Array where Element == DocumentElementClaim {
+  func toListItems() -> [PresentationExpandableListItem] {
+    self.compactMap { $0.toListItem() }
+  }
+}
+
+private extension DocumentElementClaim {
+  func toListItem() -> PresentationExpandableListItem? {
+    return self.toExpandableListItem()
+  }
+}
+
+private extension DocumentElementClaim {
+  func toExpandableListItem() -> PresentationExpandableListItem? {
+    switch self {
+    case .group(let id, let title, let items):
+      return .nested(
+        .init(
+          collapsed: .init(groupId: id, mainText: .custom(title)),
+          expanded: items.compactMap { $0.toExpandableListItem() },
+          isExpanded: false
+        )
+      )
+    case .primitive(
+      let id,
+      let title,
+      _,
+      _,
+      _,
+      _,
+      let value,
+      let status
+    ):
+      switch value {
+      case .string(let value):
+        return .single(
+          .init(
+            collapsed: .init(
+              groupId: id,
+              mainText: .custom(value),
+              overlineText: .custom(title),
+              isEnable: !status.isRequired,
+              trailingContent: .checkbox(
+                !status.isRequired && status.isAvailable,
+                status.isAvailable,
+                { _ in }
+              )
+            ),
+            domainModel: self
+          )
+        )
+      case .image(let image):
+        return .single(
+          .init(
+            collapsed: .init(
+              groupId: id,
+              mainText: .custom(title),
+              leadingIcon: .init(image: image),
+              isEnable: !status.isRequired,
+              trailingContent: .checkbox(
+                !status.isRequired && status.isAvailable,
+                status.isAvailable,
+                { _ in }
+              )
+            ),
+            domainModel: self
+          )
+        )
+      case .unavailable:
+        return nil
+      }
+    }
   }
 }

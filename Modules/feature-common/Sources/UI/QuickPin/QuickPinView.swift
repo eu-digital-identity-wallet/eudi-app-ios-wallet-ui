@@ -46,9 +46,7 @@ struct QuickPinView<Router: RouterHost>: View {
       destructiveAction: {
         viewModel.onPop()
       },
-      baseAction: {
-        viewModel.onShowCancellationModal()
-      }
+      baseAction: viewModel.onShowCancellationModal()
     )
   }
 }

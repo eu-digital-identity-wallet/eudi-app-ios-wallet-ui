@@ -13,18 +13,17 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-@_exported import logic_ui
-@_exported import logic_resources
-@_exported import logic_business
-@_exported import feature_common
+import logic_ui
+import logic_resources
+import feature_common
 
-open class ProximitySuccessViewModel<Router: RouterHost>: BaseSuccessViewModel<Router> {
+class ProximitySuccessViewModel<Router: RouterHost, RequestItem: Sendable>: DocumentSuccessViewModel<Router, RequestItem> {
 
-  public override init(
+  public init(
     router: Router,
     config: any UIConfigType,
     deepLinkController: DeepLinkController,
-    requestItems: [any Routable]
+    requestItems: [ListItemSection<RequestItem>]
   ) {
 
     super.init(

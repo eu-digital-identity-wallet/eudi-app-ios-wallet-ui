@@ -18,17 +18,17 @@ import logic_business
 import logic_ui
 import feature_common
 
-struct ProximitySuccessView<Router: RouterHost>: View {
+struct ProximitySuccessView<Router: RouterHost, RequestItem: Sendable>: View {
 
-  @ObservedObject private var viewModel: ProximitySuccessViewModel<Router>
+  @ObservedObject private var viewModel: ProximitySuccessViewModel<Router, RequestItem>
 
   init(
-    with viewModel: ProximitySuccessViewModel<Router>
+    with viewModel: ProximitySuccessViewModel<Router, RequestItem>
   ) {
     self.viewModel = viewModel
   }
 
   var body: some View {
-    BaseSuccessView(with: viewModel)
+    DocumentSuccessView(with: viewModel)
   }
 }

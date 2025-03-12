@@ -100,7 +100,6 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
           .biometry(
             config: UIConfig.Biometry(
               navigationTitle: .biometryConfirmRequest,
-              title: getTitle(),
               caption: .requestDataShareBiometryCaption,
               quickPinOnlyCaption: .requestDataShareQuickPinCaption,
               navigationSuccessType: .push(

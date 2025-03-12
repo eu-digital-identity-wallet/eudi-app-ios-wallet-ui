@@ -18,7 +18,9 @@ import logic_resources
 import logic_business
 import logic_core
 import logic_ui
+import Copyable
 
+@Copyable
 public struct DocumentDetailsUIModel: Equatable, Identifiable, Routable {
 
   public let id: String
@@ -27,7 +29,7 @@ public struct DocumentDetailsUIModel: Equatable, Identifiable, Routable {
   public let issuer: IssuerField?
   public let createdAt: Date
   public let hasExpired: Bool
-  public let documentFields: [ListItemData]
+  public let documentFields: [GenericExpandableItem]
 
   public var log: String {
     "id: \(id), type: \(type.rawValue), name: \(documentName)"
@@ -70,32 +72,78 @@ public extension DocumentDetailsUIModel {
       hasExpired: false,
       documentFields:
         [
-          .init(
-            mainText: .custom("AB12356"),
-            overlineText: .custom("ID no")
+          .single(
+            .init(
+              collapsed: .init(
+                mainText: .custom("AB12356"),
+                overlineText: .custom("ID no")
+              ),
+              domainModel: nil
+            )
           ),
-          .init(
-            mainText: .custom("Hellenic"),
-            overlineText: .custom("Nationality")
+          .single(
+            .init(
+              collapsed: .init(
+                mainText: .custom("Hellenic"),
+                overlineText: .custom("Nationality")
+              ),
+              domainModel: nil
+            )
           ),
-          .init(
-            mainText: .custom("21 Oct 1994"),
-            overlineText: .custom("Place of birth")
+          .single(
+            .init(
+              collapsed: .init(
+                mainText: .custom("21 Oct 1994"),
+                overlineText: .custom("Place of birth")
+              ),
+              domainModel: nil
+            )
           ),
-          .init(
-            mainText: .custom("1,82"),
-            overlineText: .custom("Height")
+          .single(
+            .init(
+              collapsed: .init(
+                mainText: .custom("1,82"),
+                overlineText: .custom("Height")
+              ),
+              domainModel: nil
+            )
           )
         ]
       +
       Array(
         count: 6,
-        createElement: .init(
-          mainText: .custom("Placeholder Field Value".padded(padLength: 10)),
-          overlineText: .custom("Placeholder Field Title".padded(padLength: 5))
+        createElement: .single(
+          .init(
+            collapsed: .init(
+              mainText: .custom("Placeholder Field Value".padded(padLength: 10)),
+              overlineText: .custom("Placeholder Field Title".padded(padLength: 5))
+            ),
+            domainModel: nil
+          )
         )
       )
     )
+  }
+
+  func toggleVisibility(isVisible: Bool) -> [GenericExpandableItem] {
+
+    func toggleSelection(isVisible: Bool, fields: inout [GenericExpandableItem]) {
+      for index in fields.indices {
+        switch fields[index] {
+        case .single(let item):
+          fields[index] = .single(item.copy(collapsed: item.collapsed.copy(isBlur: isVisible)))
+        case .nested(let item):
+          var children = item.expanded
+          toggleSelection(isVisible: isVisible, fields: &children)
+          fields[index] = .nested(item.copy(expanded: children))
+        }
+      }
+    }
+
+    var documentFields = self.documentFields
+    toggleSelection(isVisible: isVisible, fields: &documentFields)
+    return documentFields
+
   }
 }
 
@@ -115,23 +163,14 @@ extension DocClaimsDecodable {
       )
     }
 
-    let documentFields: [ListItemData] =
-    flattenValues(
+    let documentFields: [GenericExpandableItem] =
+    parseClaim(
+      documentId: self.id,
       isSensitive: isSensitive,
       input: docClaims
-        .compactMap({$0})
-        .parseDates(
-          parser: {
-            Locale.current.localizedDateTime(
-              date: $0,
-              uiFormatter: "dd MMM yyyy"
-            )
-          }
-        )
-        .parseUserPseudonym()
     )
     .sorted(by: {
-      $0.mainText.toString.localizedCompare($1.mainText.toString) == .orderedAscending
+      $0.title.localizedCompare($1.title) == .orderedAscending
     })
 
     var bearerName: String {
@@ -152,45 +191,67 @@ extension DocClaimsDecodable {
     )
   }
 
-  private func flattenValues(
-    isSensitive: Bool = true,
+  private func parseClaim(
+    documentId: String,
+    isSensitive: Bool,
     input: [DocClaim]
-  ) -> [ListItemData] {
-    input.reduce(into: []) { partialResult, docClaim in
-
-      let uuid = UUID().uuidString
-      let title = docClaim.displayName.ifNilOrEmpty { docClaim.name }
-
-      if let uiImage = docClaim.dataValue.image {
-
-        partialResult.append(
-          .init(
-            id: uuid,
-            mainText: .custom(title),
-            leadingIcon: .init(image: Image(uiImage: uiImage)),
-            isBlur: isSensitive
+  ) -> [GenericExpandableItem] {
+    input
+      .parseDates(
+        parser: {
+          Locale.current.localizedDateTime(
+            date: $0,
+            uiFormatter: "dd MMM yyyy"
           )
-        )
+        }
+      )
+      .parseUserPseudonyms()
+      .reduce(into: []) { partialResult, docClaim in
 
-      } else if let nested = docClaim.children {
-        partialResult.append(
-          .init(
-            id: uuid,
-            mainText: .custom(docClaim.flattenNested(nested: nested).stringValue),
-            overlineText: .custom(title),
-            isBlur: isSensitive
+        let title = docClaim.displayName.ifNilOrEmpty { docClaim.name }
+
+        if let nested = docClaim.children {
+          let children = parseClaim(
+            documentId: documentId,
+            isSensitive: isSensitive,
+            input: nested
           )
-        )
-      } else {
-        partialResult.append(
-          .init(
-            id: uuid,
-            mainText: .custom(docClaim.stringValue),
-            overlineText: .custom(title),
-            isBlur: isSensitive
+          partialResult.append(
+            .nested(
+              .init(
+                collapsed: .init(mainText: .custom(title)),
+                expanded: children,
+                isExpanded: false
+              )
+            )
           )
-        )
+        } else if let uiImage = docClaim.dataValue.image {
+          partialResult.append(
+            .single(
+              .init(
+                collapsed: .init(
+                  mainText: .custom(title),
+                  leadingIcon: .init(image: Image(uiImage: uiImage)),
+                  isBlur: isSensitive
+                ),
+                domainModel: nil
+              )
+            )
+          )
+        } else {
+          partialResult.append(
+            .single(
+              .init(
+                collapsed: .init(
+                  mainText: .custom(docClaim.stringValue),
+                  overlineText: .custom(title),
+                  isBlur: isSensitive
+                ),
+                domainModel: nil
+              )
+            )
+          )
+        }
       }
-    }
   }
 }

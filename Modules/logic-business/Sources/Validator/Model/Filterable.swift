@@ -18,8 +18,6 @@ import Copyable
 
 public protocol FilterableItemPayload: Sendable { }
 
-extension Array: FilterableItemPayload where Element: FilterableItemPayload {}
-
 @Copyable
 public struct FilterableList: Sendable {
   public let items: [FilterableItem]

@@ -15,14 +15,12 @@
  */
 
 import feature_common
+import logic_core
 
-final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<Router> {
+final class ProximityLoadingViewModel<Router: RouterHost, RequestItem: Sendable>: BaseLoadingViewModel<Router, RequestItem> {
 
   private let interactor: ProximityInteractor
-  private let relyingParty: String
-  private let relyingPartyIsTrusted: Bool
   private var publisherTask: Task<Void, Error>?
-  private let requestItems: [RequestDataUI]
 
   init(
     router: Router,
@@ -30,19 +28,18 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
     relyingParty: String,
     relyingPartyIsTrusted: Bool,
     originator: AppRoute,
-    requestItems: [any Routable]
+    requestItems: [ListItemSection<RequestItem>]
   ) {
-    guard
-      let requestItems = requestItems as? [RequestDataUI]
-    else {
-      fatalError("ProximityLoadingViewModel:: Invalid configuraton")
-    }
 
     self.interactor = interactor
-    self.relyingParty = relyingParty
-    self.relyingPartyIsTrusted = relyingPartyIsTrusted
-    self.requestItems = requestItems
-    super.init(router: router, originator: originator, cancellationTimeout: 5)
+    super.init(
+      router: router,
+      originator: originator,
+      requestItems: requestItems,
+      relyingParty: relyingParty,
+      relyingPartyIsTrusted: relyingPartyIsTrusted,
+      cancellationTimeout: 5
+    )
   }
 
   func subscribeToCoordinatorPublisher() async {
@@ -69,7 +66,7 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
   }
 
   override func getTitle() -> LocalizableStringKey {
-    .requestDataTitle([relyingParty])
+    .requestDataTitle([getRelyingParty()])
   }
 
   override func getCaption() -> LocalizableStringKey {
@@ -82,10 +79,10 @@ final class ProximityLoadingViewModel<Router: RouterHost>: BaseLoadingViewModel<
       .proximitySuccess(
         config: DocumentSuccessUIConfig(
           successNavigation: .pop(screen: getOriginator()),
-          relyingParty: relyingParty,
-          relyingPartyIsTrusted: relyingPartyIsTrusted
+          relyingParty: getRelyingParty(),
+          relyingPartyIsTrusted: isRelyingPartyIstrusted()
         ),
-        requestItems.map { $0.matToListItemSection() }
+        getRequestItems()
       )
     )
   }
