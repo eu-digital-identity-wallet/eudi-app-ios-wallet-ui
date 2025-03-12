@@ -90,17 +90,10 @@ private func content(
         .bold()
         .frame(maxWidth: .infinity, alignment: .leading)
 
-      // MARK: - TODO REWORK WrapListItemsView
       VStack(spacing: .zero) {
-
         WrapExpandableListView(
-          header: .init(
-            mainText: .custom("")
-          ),
           items: viewState.document.documentFields,
-          hideSensitiveContent: false,
-          onItemClick: { _ in }
-        )
+          hideSensitiveContent: isVisible)
       }
       .shimmer(isLoading: viewState.isLoading)
 

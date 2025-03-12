@@ -18,56 +18,80 @@ import logic_resources
 
 public struct WrapExpandableListView<T: Sendable>: View {
 
-  private let header: ListItemData
+  private let header: ListItemData?
   private let items: [ExpandableListItem<T>]
   private let backgroundColor: Color
-  private let onItemClick: (ListItemData) -> Void
+  private let onItemClick: ((ListItemData) -> Void)?
   private let hideSensitiveContent: Bool
+  private let hasHeader: Bool
 
   public init(
-    header: ListItemData,
+    header: ListItemData? = nil,
     items: [ExpandableListItem<T>],
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
     hideSensitiveContent: Bool,
-    onItemClick: @escaping (ListItemData) -> Void
+    hasHeader: Bool = true,
+    onItemClick: ((ListItemData) -> Void)? = nil
   ) {
     self.header = header
     self.items = items
     self.backgroundColor = backgroundColor
     self.hideSensitiveContent = hideSensitiveContent
+    self.hasHeader = hasHeader
     self.onItemClick = onItemClick
   }
 
   public var body: some View {
     WrapCardView {
       VStack(alignment: .leading) {
-        ExpandableCardView(
-          backgroundColor: backgroundColor,
-          title: header.mainText,
-          subtitle: header.supportingText
-        ) {
-          ForEach(items, id: \.id) { item in
-            switch item {
-            case .single(let singleData):
-              WrapListItemView(listItem: singleData.collapsed) {
-                onItemClick(singleData.collapsed)
-              }
-            case .nested(let nestedData):
-              WrapExpandableListView(
-                header: nestedData.collapsed,
-                items: nestedData.expanded,
-                hideSensitiveContent: hideSensitiveContent,
-                onItemClick: onItemClick
-              )
-            }
+        if let header {
+          ExpandableCardView(
+            backgroundColor: backgroundColor,
+            title: header.mainText,
+            subtitle: header.supportingText
+          ) {
+            contentList()
           }
+        } else {
+          contentList()
         }
       }
     }
   }
+
+  @ViewBuilder
+  private func contentList() -> some View {
+    ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
+      expandableItemView(item)
+
+      if index < items.count - 1 {
+        Divider()
+          .background(Theme.shared.color.onSurfaceVariant.opacity(0.2))
+      }
+    }
+  }
+
+  @ViewBuilder
+  private func expandableItemView(_ item: ExpandableListItem<T>) -> some View {
+    switch item {
+    case .single(let singleData):
+      WrapListItemView(listItem: singleData.collapsed) {
+        onItemClick?(singleData.collapsed)
+      }
+    case .nested(let nestedData):
+      WrapExpandableListView(
+        header: nestedData.collapsed,
+        items: nestedData.expanded,
+        backgroundColor: backgroundColor,
+        hideSensitiveContent: hideSensitiveContent,
+        onItemClick: onItemClick
+      )
+    }
+
+  }
 }
 
-struct ParentView: View {
+struct WrapExpandableListPreviewView: View {
   @State private var expandableItems: [ExpandableListItem] = [
     .single(
       GenericExpandableItem.SingleListItemData(
@@ -144,6 +168,6 @@ struct ParentView: View {
 }
 
 #Preview {
-  ParentView()
+  WrapExpandableListPreviewView()
     .padding()
 }

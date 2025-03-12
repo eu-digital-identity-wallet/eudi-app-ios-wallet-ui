@@ -82,8 +82,6 @@ private func documents<RequestItem: Sendable>(
   onSelectionChanged: @escaping @Sendable (String) -> Void
 ) -> some View {
   if !viewState.items.isEmpty {
-
-    // MARK: - TODO REWORK
     VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
       ForEach(viewState.items, id: \.id) { section in
         WrapExpandableListView(

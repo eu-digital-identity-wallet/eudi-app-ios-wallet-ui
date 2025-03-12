@@ -88,8 +88,6 @@ private func content(
       if viewState.items.isEmpty {
         noDocumentsFound(getScreenRect: getScreenRect)
       } else {
-
-        // MARK: - TODO REWORK
         VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
           ForEach(viewState.items, id: \.id) { section in
             WrapExpandableListView(
