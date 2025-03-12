@@ -66,7 +66,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
         succededIssuedDocuments: [],
         failedDocuments: [],
         isFromOnPause: true,
-        hasDefaultFilters: false
+        hasDefaultFilters: true
       )
     )
 

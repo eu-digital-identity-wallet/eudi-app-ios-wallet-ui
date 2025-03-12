@@ -145,10 +145,22 @@ public extension Array where Element == RequestDataUiModel {
         var path: [String] {
           switch claim.domainModel?.type {
           case .mdoc:
-            guard let first = claim.domainModel?.path?.first else {
+
+            guard let path = claim.domainModel?.path else {
               return []
             }
-            return [first]
+
+            guard
+              let elementIdenfitier = path.reduce(into: [String](), { partialResult, claimPath in
+                if !claimPath.isEmpty {
+                  partialResult.self.append(claimPath)
+                }
+              }).last
+            else {
+              return []
+            }
+
+            return [elementIdenfitier]
           case .sdjwt:
             return  claim.domainModel?.path ?? []
           default:
@@ -341,9 +353,9 @@ public extension Array where Element == DocElements {
       var type: DocumentElementType {
         return switch element {
         case .msoMdoc:
-          .mdoc
+            .mdoc
         case .sdJwt:
-          .sdjwt
+            .sdjwt
         }
       }
 
