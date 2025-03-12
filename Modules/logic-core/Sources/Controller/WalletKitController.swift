@@ -388,7 +388,7 @@ extension WalletKitController {
       path: claim.path,
       type: type,
       value: value,
-      status: .available(isRequired: !claim.isOptional)
+      status: .available(isRequired: false)
     )
   }
 }
