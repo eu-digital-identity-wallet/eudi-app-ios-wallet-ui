@@ -426,7 +426,7 @@ private extension TestProximityInteractor {
       title: "elementIdentifier",
       documentId: Constants.isoMdlModelId,
       nameSpace: "nameSpace",
-      path: ["elementIdentifier"],
+      path: ["nameSpace", "elementIdentifier"],
       type: .mdoc,
       value: .string("value"),
       status: .available(isRequired: false)
@@ -461,7 +461,7 @@ private extension TestProximityInteractor {
   static let mockRequestItems = [
     Constants.isoMdlModelId : [
       "nameSpace": [
-        RequestItem(elementIdentifier: "elementIdentifier")
+        RequestItem(elementPath: ["elementIdentifier"])
       ]
     ]
   ]
