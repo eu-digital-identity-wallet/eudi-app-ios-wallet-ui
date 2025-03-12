@@ -43,7 +43,7 @@ public struct WrapListItemsView: View {
         }
       )
       if index < listItems.count - 1 {
-        CustomDivider()
+        ListDivider()
       }
     }
   }

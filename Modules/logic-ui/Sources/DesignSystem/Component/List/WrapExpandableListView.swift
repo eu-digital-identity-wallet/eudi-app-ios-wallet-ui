@@ -65,7 +65,7 @@ public struct WrapExpandableListView<T: Sendable>: View {
       expandableItemView(item)
 
       if index < items.count - 1 {
-        CustomDivider()
+        ListDivider()
       }
     }
   }

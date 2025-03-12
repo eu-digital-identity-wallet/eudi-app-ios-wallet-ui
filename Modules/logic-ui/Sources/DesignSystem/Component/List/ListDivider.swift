@@ -16,7 +16,7 @@
 import SwiftUI
 import logic_resources
 
-public struct CustomDivider: View {
+public struct ListDivider: View {
 
   private let backgroundColor: Color
   private let height: CGFloat
@@ -41,5 +41,5 @@ public struct CustomDivider: View {
 }
 
 #Preview {
-  CustomDivider()
+  ListDivider()
 }
