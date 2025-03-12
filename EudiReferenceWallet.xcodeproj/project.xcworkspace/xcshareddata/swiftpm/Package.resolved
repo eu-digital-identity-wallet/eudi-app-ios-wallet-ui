@@ -1,5 +1,5 @@
 {
-  "originHash" : "7bd9934c5c06aaed38339af59647ec288c31a9fb6a04200a5d9fd11dee7e5459",
+  "originHash" : "4a9bba141115ab89da02628f4c3f6dae52f795755b73b383053fb087a135b777",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "a3b965598ea9d6200bc3a2762862ccd65ba2e648",
-        "version" : "0.5.7"
+        "revision" : "a32a6c07542c5ea2055e619b0f1f09d9b4d70c7e",
+        "version" : "0.5.8"
       }
     },
     {
@@ -114,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "63dcc0bfb92bae65dfa89a7a15029f01f8447dcd",
-        "version" : "0.5.9"
+        "revision" : "4fcf227cbc80f4bc0e35e12d0e4be44dfd218a47",
+        "version" : "0.6.0"
       }
     },
     {
@@ -123,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "e30b0bfedab739a1c68dfe1f2608d544c57bd042",
-        "version" : "0.4.7"
+        "revision" : "9035e447e9a0b3107ac11613ef81472202b9adf0",
+        "version" : "0.4.8"
       }
     },
     {
@@ -186,8 +186,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "4795f04fa728e993bf263cfbde42d215b9d3b2c9",
-        "version" : "0.9.9"
+        "revision" : "366cef2f5b6282f4377403be3e8d17ce908cd680",
+        "version" : "0.10.0"
       }
     },
     {
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "90974a211a42c9cd5e7c172601b6220576ec3bb7",
-        "version" : "0.4.7"
+        "revision" : "2bccbe11d65de8954e881da1b6de578509f6e16a",
+        "version" : "0.4.8"
       }
     },
     {
@@ -393,8 +393,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-certificates.git",
       "state" : {
-        "revision" : "274f8668d3ec5d2892904d8465635c5ea659f767",
-        "version" : "1.7.0"
+        "revision" : "bd5987524cb24e2cdd6bee2add5dd26b9387824b",
+        "version" : "1.8.0"
       }
     },
     {

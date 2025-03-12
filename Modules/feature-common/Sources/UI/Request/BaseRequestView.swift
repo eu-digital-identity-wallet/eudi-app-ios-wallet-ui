@@ -89,7 +89,7 @@ private func content(
         noDocumentsFound(getScreenRect: getScreenRect)
       } else {
         VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-          
+
           ForEach(viewState.items, id: \.id) { section in
             WrapExpandableListView(
               header: .init(
@@ -106,7 +106,7 @@ private func content(
             .typography(Theme.shared.font.bodyMedium)
             .foregroundColor(Theme.shared.color.onSurface)
             .multilineTextAlignment(.leading)
-          
+
           VSpacer.medium()
         }
         .padding(.top, Theme.shared.dimension.padding)
