@@ -177,7 +177,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
 
     router.push(
       with: .featureCommonModule(
-        .success(
+        .genericSuccess(
           config: UIConfig.Success(
             title: .init(value: buttonTitle),
             subtitle: viewState.success,

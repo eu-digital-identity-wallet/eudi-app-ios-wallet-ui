@@ -279,7 +279,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
     }
 
     return .featureCommonModule(
-      .success(
+      .genericSuccess(
         config: UIConfig.Success(
           title: title,
           subtitle: caption,

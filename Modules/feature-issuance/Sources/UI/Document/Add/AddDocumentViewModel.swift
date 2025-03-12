@@ -235,7 +235,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     }
 
     return .featureCommonModule(
-      .success(
+      .genericSuccess(
         config: UIConfig.Success(
           title: .init(
             value: .inProgress,

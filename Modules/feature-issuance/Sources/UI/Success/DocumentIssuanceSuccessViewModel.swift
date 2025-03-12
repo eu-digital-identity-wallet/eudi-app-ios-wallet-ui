@@ -17,7 +17,7 @@ import logic_ui
 import logic_resources
 import feature_common
 
-class DocumentIssuanceSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: BaseSuccessViewModel<Router, RequestItem> {
+class DocumentIssuanceSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: DocumentSuccessViewModel<Router, RequestItem> {
 
   public init(
     router: Router,

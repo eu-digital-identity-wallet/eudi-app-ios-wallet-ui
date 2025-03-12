@@ -50,8 +50,8 @@ public final class CommonRouter {
           ), config: config
         )
       ).eraseToAnyView()
-    case .success(let config):
-      SuccessView(
+    case .genericSuccess(let config):
+      GenericSuccessView(
         with: .init(
           config: config,
           router: host,

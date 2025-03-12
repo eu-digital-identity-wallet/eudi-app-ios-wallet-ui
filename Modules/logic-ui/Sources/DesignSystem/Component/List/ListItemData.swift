@@ -219,3 +219,53 @@ public enum ExpandableListItem<T: Sendable>: Identifiable, Equatable, Sendable {
     }
   }
 }
+
+public extension Array {
+  func removeTrailingContent<T: Sendable>() -> [ListItemSection<T>] where Element == ListItemSection<T> {
+
+    func removeTrailingFromExpandableItems(with items: [ExpandableListItem<T>]) -> [ExpandableListItem<T>] {
+      items.map { item in
+        return switch item {
+        case .single(let item):
+          ExpandableListItem<T>.single(
+            .init(
+              collapsed: item.collapsed.copy(trailingContent: nil),
+              domainModel: item.domainModel
+            )
+          )
+        case .nested(let item):
+          ExpandableListItem<T>.nested(
+            .init(
+              collapsed: item.collapsed,
+              expanded: removeTrailingFromExpandableItems(with: item.expanded),
+              isExpanded: false
+            )
+          )
+        }
+      }
+    }
+
+    return self.map { section in
+      let items = section.listItems.map {
+        switch $0 {
+        case .single(let item):
+          return ExpandableListItem<T>.single(
+            .init(
+              collapsed: item.collapsed.copy(trailingContent: nil),
+              domainModel: item.domainModel
+            )
+          )
+        case .nested(let item):
+          return ExpandableListItem<T>.nested(
+            .init(
+              collapsed: item.collapsed,
+              expanded: removeTrailingFromExpandableItems(with: item.expanded),
+              isExpanded: false
+            )
+          )
+        }
+      }
+      return ListItemSection<T>.init(id: section.id, title: section.title, listItems: items)
+    }
+  }
+}

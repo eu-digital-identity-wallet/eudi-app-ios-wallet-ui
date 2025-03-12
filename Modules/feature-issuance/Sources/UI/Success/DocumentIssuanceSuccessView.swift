@@ -30,6 +30,6 @@ struct DocumentIssuanceSuccessView<Router: RouterHost, RequestItem: Sendable>: V
   }
 
   var body: some View {
-    BaseSuccessView(with: viewModel)
+    DocumentSuccessView(with: viewModel)
   }
 }

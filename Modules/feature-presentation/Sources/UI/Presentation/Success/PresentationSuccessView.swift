@@ -29,6 +29,6 @@ struct PresentationSuccessView<Router: RouterHost, RequestItem: Sendable>: View 
   }
 
   var body: some View {
-    BaseSuccessView(with: viewModel)
+    DocumentSuccessView(with: viewModel)
   }
 }

@@ -18,7 +18,7 @@
 @_exported import logic_business
 
 @Copyable
-public struct BaseSuccessState<T: Sendable>: ViewState {
+public struct DocumentSuccessState<T: Sendable>: ViewState {
   let config: DocumentSuccessUIConfig
   let relyingParty: RelyingPartyData
   let items: [ListItemSection<T>]
@@ -26,7 +26,7 @@ public struct BaseSuccessState<T: Sendable>: ViewState {
   let isLoading: Bool
 }
 
-open class BaseSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: ViewModel<Router, BaseSuccessState<RequestItem>> {
+open class DocumentSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: ViewModel<Router, DocumentSuccessState<RequestItem>> {
 
   private let deepLinkController: DeepLinkController
 
@@ -56,7 +56,7 @@ open class BaseSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: View
           isVerified: config.relyingPartyIsTrusted,
           name: .custom(config.relyingParty ?? "")
         ),
-        items: requestItems,
+        items: requestItems.removeTrailingContent(),
         navigationTitle: config.relyingPartyIsTrusted
         ? .documentAdded
         : .dataShared,
