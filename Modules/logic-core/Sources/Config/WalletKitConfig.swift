@@ -89,10 +89,19 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var readerConfig: ReaderConfig {
-    guard let cert = Data(name: "eudi_pid_issuer_ut", ext: "der") else {
-      return .init(trustedCerts: [])
+    let certificates = [
+      "pid_issuer_cacz01",
+      "pid_issuer_caee01",
+      "pid_issuer_caeu01",
+      "pid_issuer_calu01",
+      "pid_issuer_canl01",
+      "pid_issuer_capt01",
+      "pid_issuer_caut01"
+    ]
+    let certsData: [Data] = certificates.compactMap {
+      Data(name: $0, ext: "der")
     }
-    return .init(trustedCerts: [cert])
+    return .init(trustedCerts: certsData)
   }
 
   var documentStorageServiceName: String {

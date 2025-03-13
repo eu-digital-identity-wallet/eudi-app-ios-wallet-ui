@@ -14,7 +14,6 @@
 		F05E9F382AFABBC200891E8F /* feature-presentation in Resources */ = {isa = PBXBuildFile; fileRef = F05E9F372AFABBC200891E8F /* feature-presentation */; };
 		F06325102AC598370004601F /* logic-test in Resources */ = {isa = PBXBuildFile; fileRef = F063250F2AC598370004601F /* logic-test */; };
 		F06325122AC59AF50004601F /* feature-test in Resources */ = {isa = PBXBuildFile; fileRef = F06325112AC59AF50004601F /* feature-test */; };
-		F0635CA82B72431D00260E50 /* eudi_pid_issuer_ut.der in Resources */ = {isa = PBXBuildFile; fileRef = F0635CA72B72431D00260E50 /* eudi_pid_issuer_ut.der */; };
 		F069CC3F2AFAC0AD0033AAC5 /* feature-proximity in Resources */ = {isa = PBXBuildFile; fileRef = F069CC3D2AFAC0AD0033AAC5 /* feature-proximity */; };
 		F069CC402AFAC0AD0033AAC5 /* feature-issuance in Resources */ = {isa = PBXBuildFile; fileRef = F069CC3E2AFAC0AD0033AAC5 /* feature-issuance */; };
 		F0A013982AC35ECA00065EAD /* logic-business in Resources */ = {isa = PBXBuildFile; fileRef = F0A013922AC35ECA00065EAD /* logic-business */; };
@@ -23,6 +22,13 @@
 		F0A0139C2AC35ECA00065EAD /* logic-ui in Resources */ = {isa = PBXBuildFile; fileRef = F0A013962AC35ECA00065EAD /* logic-ui */; };
 		F0BFE9B72AD557290062826F /* feature-common in Resources */ = {isa = PBXBuildFile; fileRef = F0BFE9B62AD557290062826F /* feature-common */; };
 		F0C6207E2B6A6246007F903F /* logic-analytics in Resources */ = {isa = PBXBuildFile; fileRef = F0C6207D2B6A6246007F903F /* logic-analytics */; };
+		F0FFD1E72D82DBB20044B5C1 /* pid_issuer_caee01.der in Resources */ = {isa = PBXBuildFile; fileRef = F0FFD1E12D82DBB20044B5C1 /* pid_issuer_caee01.der */; };
+		F0FFD1E82D82DBB20044B5C1 /* pid_issuer_caeu01.der in Resources */ = {isa = PBXBuildFile; fileRef = F0FFD1E22D82DBB20044B5C1 /* pid_issuer_caeu01.der */; };
+		F0FFD1E92D82DBB20044B5C1 /* pid_issuer_caut01.der in Resources */ = {isa = PBXBuildFile; fileRef = F0FFD1E62D82DBB20044B5C1 /* pid_issuer_caut01.der */; };
+		F0FFD1EA2D82DBB20044B5C1 /* pid_issuer_capt01.der in Resources */ = {isa = PBXBuildFile; fileRef = F0FFD1E52D82DBB20044B5C1 /* pid_issuer_capt01.der */; };
+		F0FFD1EB2D82DBB20044B5C1 /* pid_issuer_cacz01.der in Resources */ = {isa = PBXBuildFile; fileRef = F0FFD1E02D82DBB20044B5C1 /* pid_issuer_cacz01.der */; };
+		F0FFD1EC2D82DBB20044B5C1 /* pid_issuer_calu01.der in Resources */ = {isa = PBXBuildFile; fileRef = F0FFD1E32D82DBB20044B5C1 /* pid_issuer_calu01.der */; };
+		F0FFD1ED2D82DBB20044B5C1 /* pid_issuer_canl01.der in Resources */ = {isa = PBXBuildFile; fileRef = F0FFD1E42D82DBB20044B5C1 /* pid_issuer_canl01.der */; };
 		F12E940F2ABC6C000086EC93 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12E940E2ABC6C000086EC93 /* AppDelegate.swift */; };
 		F14907BC2ABAF54B00DDFE56 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14907BB2ABAF54B00DDFE56 /* Application.swift */; };
 		F14907C02ABAF55000DDFE56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F14907BF2ABAF55000DDFE56 /* Assets.xcassets */; };
@@ -40,7 +46,6 @@
 		F05E9F372AFABBC200891E8F /* feature-presentation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-presentation"; path = "Modules/feature-presentation"; sourceTree = "<group>"; };
 		F063250F2AC598370004601F /* logic-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-test"; path = "Modules/logic-test"; sourceTree = "<group>"; };
 		F06325112AC59AF50004601F /* feature-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-test"; path = "Modules/feature-test"; sourceTree = "<group>"; };
-		F0635CA72B72431D00260E50 /* eudi_pid_issuer_ut.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = eudi_pid_issuer_ut.der; sourceTree = "<group>"; };
 		F069CC3D2AFAC0AD0033AAC5 /* feature-proximity */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-proximity"; path = "Modules/feature-proximity"; sourceTree = "<group>"; };
 		F069CC3E2AFAC0AD0033AAC5 /* feature-issuance */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-issuance"; path = "Modules/feature-issuance"; sourceTree = "<group>"; };
 		F09E1EA22AC3443000779C25 /* Wallet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Wallet.plist; sourceTree = "<group>"; };
@@ -53,6 +58,13 @@
 		F0BFE9B62AD557290062826F /* feature-common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-common"; path = "Modules/feature-common"; sourceTree = "<group>"; };
 		F0C6207D2B6A6246007F903F /* logic-analytics */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-analytics"; path = "Modules/logic-analytics"; sourceTree = "<group>"; };
 		F0DF43F42BA083DF003498ED /* logic-authentication */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-authentication"; path = "Modules/logic-authentication"; sourceTree = "<group>"; };
+		F0FFD1E02D82DBB20044B5C1 /* pid_issuer_cacz01.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pid_issuer_cacz01.der; sourceTree = "<group>"; };
+		F0FFD1E12D82DBB20044B5C1 /* pid_issuer_caee01.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pid_issuer_caee01.der; sourceTree = "<group>"; };
+		F0FFD1E22D82DBB20044B5C1 /* pid_issuer_caeu01.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pid_issuer_caeu01.der; sourceTree = "<group>"; };
+		F0FFD1E32D82DBB20044B5C1 /* pid_issuer_calu01.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pid_issuer_calu01.der; sourceTree = "<group>"; };
+		F0FFD1E42D82DBB20044B5C1 /* pid_issuer_canl01.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pid_issuer_canl01.der; sourceTree = "<group>"; };
+		F0FFD1E52D82DBB20044B5C1 /* pid_issuer_capt01.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pid_issuer_capt01.der; sourceTree = "<group>"; };
+		F0FFD1E62D82DBB20044B5C1 /* pid_issuer_caut01.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pid_issuer_caut01.der; sourceTree = "<group>"; };
 		F12E940E2ABC6C000086EC93 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F14907B82ABAF54B00DDFE56 /* EudiWallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EudiWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F14907BB2ABAF54B00DDFE56 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
@@ -75,14 +87,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1194D22F2B06362900377213 /* Sample */ = {
-			isa = PBXGroup;
-			children = (
-				F0635CA72B72431D00260E50 /* eudi_pid_issuer_ut.der */,
-			);
-			path = Sample;
-			sourceTree = "<group>";
-		};
 		F09E1EA02AC33A6800779C25 /* Config */ = {
 			isa = PBXGroup;
 			children = (
@@ -92,6 +96,20 @@
 				F1CACAE12AC3098C00B40DED /* WalletDemo.xcconfig */,
 			);
 			path = Config;
+			sourceTree = "<group>";
+		};
+		F0FFD1DF2D82DB8C0044B5C1 /* Certificate */ = {
+			isa = PBXGroup;
+			children = (
+				F0FFD1E02D82DBB20044B5C1 /* pid_issuer_cacz01.der */,
+				F0FFD1E12D82DBB20044B5C1 /* pid_issuer_caee01.der */,
+				F0FFD1E22D82DBB20044B5C1 /* pid_issuer_caeu01.der */,
+				F0FFD1E32D82DBB20044B5C1 /* pid_issuer_calu01.der */,
+				F0FFD1E42D82DBB20044B5C1 /* pid_issuer_canl01.der */,
+				F0FFD1E52D82DBB20044B5C1 /* pid_issuer_capt01.der */,
+				F0FFD1E62D82DBB20044B5C1 /* pid_issuer_caut01.der */,
+			);
+			path = Certificate;
 			sourceTree = "<group>";
 		};
 		F14907AF2ABAF54B00DDFE56 = {
@@ -116,7 +134,7 @@
 		F14907BA2ABAF54B00DDFE56 /* Wallet */ = {
 			isa = PBXGroup;
 			children = (
-				1194D22F2B06362900377213 /* Sample */,
+				F0FFD1DF2D82DB8C0044B5C1 /* Certificate */,
 				F09E1EA02AC33A6800779C25 /* Config */,
 				F14907BB2ABAF54B00DDFE56 /* Application.swift */,
 				F12E940E2ABC6C000086EC93 /* AppDelegate.swift */,
@@ -238,7 +256,6 @@
 				F0C6207E2B6A6246007F903F /* logic-analytics in Resources */,
 				F02921632B8E07870076A58B /* WalletDemoRelease.xcconfig in Resources */,
 				F1CACAE02AC3097100B40DED /* WalletDev.xcconfig in Resources */,
-				F0635CA82B72431D00260E50 /* eudi_pid_issuer_ut.der in Resources */,
 				F0A013992AC35ECA00065EAD /* logic-api in Resources */,
 				F0A0139A2AC35ECA00065EAD /* feature-startup in Resources */,
 				F1CACAE22AC3098C00B40DED /* WalletDemo.xcconfig in Resources */,
@@ -246,6 +263,13 @@
 				F0A0139C2AC35ECA00065EAD /* logic-ui in Resources */,
 				F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */,
 				F05E9F382AFABBC200891E8F /* feature-presentation in Resources */,
+				F0FFD1E72D82DBB20044B5C1 /* pid_issuer_caee01.der in Resources */,
+				F0FFD1E82D82DBB20044B5C1 /* pid_issuer_caeu01.der in Resources */,
+				F0FFD1E92D82DBB20044B5C1 /* pid_issuer_caut01.der in Resources */,
+				F0FFD1EA2D82DBB20044B5C1 /* pid_issuer_capt01.der in Resources */,
+				F0FFD1EB2D82DBB20044B5C1 /* pid_issuer_cacz01.der in Resources */,
+				F0FFD1EC2D82DBB20044B5C1 /* pid_issuer_calu01.der in Resources */,
+				F0FFD1ED2D82DBB20044B5C1 /* pid_issuer_canl01.der in Resources */,
 				F069CC3F2AFAC0AD0033AAC5 /* feature-proximity in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
