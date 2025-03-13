@@ -60,11 +60,11 @@ public protocol WalletKitController: Sendable {
   ) async throws -> [WalletStorage.Document]
   func parseDocClaim(
     docId: String,
-    groupId: String?,
+    groupId: String,
     docClaim: DocClaim,
     type: DocumentElementType,
     parser: (String) -> String
-  ) -> DocumentElementClaim
+  ) -> [DocumentElementClaim]
   func retrieveLogFileUrl() -> URL?
   func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document
   func storeDynamicIssuancePendingUrl(with url: URL)
@@ -319,7 +319,7 @@ extension WalletKitController {
 
   private func parseChildren(
     docId: String,
-    groupId: String?,
+    groupId: String,
     docClaims: [DocClaim],
     type: DocumentElementType,
     parser: (String) -> String,
@@ -333,62 +333,77 @@ extension WalletKitController {
         type: type,
         parser: parser
       )
-      claims.append(docElementClaim)
+      claims.append(contentsOf: docElementClaim)
     }
   }
 
   public func parseDocClaim(
     docId: String,
-    groupId: String?,
+    groupId: String,
     docClaim: DocClaim,
     type: DocumentElementType,
     parser: (String) -> String
-  ) -> DocumentElementClaim {
+  ) -> [DocumentElementClaim] {
 
-    let claim = docClaim
-      .parseDate(parser: parser)
-      .parseUserPseudonym()
+    if let children = docClaim.children, !children.isEmpty {
 
-    if let children = claim.children, !children.isEmpty {
-
-      let id: String? = type == .mdoc
-      ? UUID().uuidString
-      : nil
-
+      let title = docClaim.displayName.ifNilOrEmpty { docClaim.name }
       var childClaims: [DocumentElementClaim] = []
 
       parseChildren(
         docId: docId,
-        groupId: id,
+        groupId: groupId,
         docClaims: children,
         type: type,
         parser: parser,
         claims: &childClaims
       )
-      return .group(
-        id: UUID().uuidString,
-        title: claim.displayName.ifNilOrEmpty { claim.name },
-        items: childClaims
-      )
-    }
 
-    var value: DocumentElementValue {
-      if let image = claim.dataValue.image {
-        .image(Image(uiImage: image))
+      return if title.isEmpty {
+        childClaims
       } else {
-        .string(claim.stringValue)
+        [
+          .group(
+            id: UUID().uuidString,
+            title: docClaim.displayName.ifNilOrEmpty { docClaim.name },
+            items: childClaims
+          )
+        ]
       }
     }
 
-    return .primitive(
-      id: groupId ?? UUID().uuidString,
-      title: claim.displayName.ifNilOrEmpty { claim.name },
-      documentId: docId,
-      nameSpace: claim.namespace,
-      path: claim.path,
-      type: type,
-      value: value,
-      status: .available(isRequired: false)
-    )
+    var value: DocumentElementValue {
+      if let image = docClaim.dataValue.image {
+        return .image(Image(uiImage: image))
+      } else {
+
+        let claim = docClaim
+          .parseDate(parser: parser)
+          .parseUserPseudonym()
+
+        return .string(claim.stringValue)
+      }
+    }
+
+    var groupIdentifier: String {
+      if type == .sdjwt, docClaim.path.last?.isEmpty == true {
+        groupId
+      } else {
+        UUID().uuidString
+      }
+    }
+
+    return [
+      .primitive(
+        id: groupIdentifier,
+        title: docClaim.displayName.ifNilOrEmpty { docClaim.name },
+        documentId: docId,
+        nameSpace: docClaim.namespace,
+        path: docClaim.path,
+        type: type,
+        value: value,
+        status: .available(isRequired: false)
+      )
+    ]
   }
 }

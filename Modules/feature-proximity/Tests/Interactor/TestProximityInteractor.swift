@@ -240,6 +240,7 @@ final class TestProximityInteractor: EudiTest {
           parser: any()
         )
       ).thenReturn(
+       [
         .primitive(
           id: Constants.randomIdentifier,
           title: "elementIdentifier",
@@ -250,6 +251,7 @@ final class TestProximityInteractor: EudiTest {
           value: .string("value"),
           status: .available(isRequired: false)
         )
+       ]
       )
     }
     
