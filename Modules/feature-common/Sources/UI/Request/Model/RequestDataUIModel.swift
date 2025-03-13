@@ -150,7 +150,21 @@ public extension Array where Element == RequestDataUiModel {
             }
             return [path[1]]
           case .sdjwt:
-            return  claim.domainModel?.path ?? []
+            guard let path = claim.domainModel?.path else {
+              return []
+            }
+            let claimPath = path.compactMap {
+              return if !$0.isEmpty {
+                $0
+              } else {
+                nil
+              }
+            }
+            return if claimPath.count == 1, let path = claimPath.first {
+              [path]
+            } else {
+              claimPath
+            }
           default:
             return []
           }
