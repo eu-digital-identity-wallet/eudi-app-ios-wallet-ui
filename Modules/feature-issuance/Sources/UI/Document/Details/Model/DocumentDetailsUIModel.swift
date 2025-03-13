@@ -196,26 +196,21 @@ extension DocClaimsDecodable {
     isSensitive: Bool,
     input: [DocClaim]
   ) -> [GenericExpandableItem] {
-    input
-      .parseDates(
-        parser: {
-          Locale.current.localizedDateTime(
-            date: $0,
-            uiFormatter: "dd MMM yyyy"
-          )
-        }
-      )
-      .parseUserPseudonyms()
-      .reduce(into: []) { partialResult, docClaim in
+    input.reduce(into: []) { partialResult, docClaim in
 
-        let title = docClaim.displayName.ifNilOrEmpty { docClaim.name }
+      let title = docClaim.displayName.ifNilOrEmpty { docClaim.name }
 
-        if let nested = docClaim.children {
-          let children = parseClaim(
-            documentId: documentId,
-            isSensitive: isSensitive,
-            input: nested
-          )
+      if let nested = docClaim.children {
+
+        let children = parseClaim(
+          documentId: documentId,
+          isSensitive: isSensitive,
+          input: nested
+        )
+
+        if title.isEmpty {
+          partialResult.append(contentsOf: children)
+        } else {
           partialResult.append(
             .nested(
               .init(
@@ -225,33 +220,46 @@ extension DocClaimsDecodable {
               )
             )
           )
-        } else if let uiImage = docClaim.dataValue.image {
-          partialResult.append(
-            .single(
-              .init(
-                collapsed: .init(
-                  mainText: .custom(title),
-                  leadingIcon: .init(image: Image(uiImage: uiImage)),
-                  isBlur: isSensitive
-                ),
-                domainModel: nil
-              )
-            )
-          )
-        } else {
-          partialResult.append(
-            .single(
-              .init(
-                collapsed: .init(
-                  mainText: .custom(docClaim.stringValue),
-                  overlineText: .custom(title),
-                  isBlur: isSensitive
-                ),
-                domainModel: nil
-              )
-            )
-          )
         }
+      } else if let uiImage = docClaim.dataValue.image {
+        partialResult.append(
+          .single(
+            .init(
+              collapsed: .init(
+                mainText: .custom(title),
+                leadingIcon: .init(image: Image(uiImage: uiImage)),
+                isBlur: isSensitive
+              ),
+              domainModel: nil
+            )
+          )
+        )
+      } else {
+
+        let claim = docClaim
+          .parseDate(
+            parser: {
+              Locale.current.localizedDateTime(
+                date: $0,
+                uiFormatter: "dd MMM yyyy"
+              )
+            }
+          )
+          .parseUserPseudonym()
+
+        partialResult.append(
+          .single(
+            .init(
+              collapsed: .init(
+                mainText: .custom(claim.stringValue),
+                overlineText: .custom(title),
+                isBlur: isSensitive
+              ),
+              domainModel: nil
+            )
+          )
+        )
       }
+    }
   }
 }

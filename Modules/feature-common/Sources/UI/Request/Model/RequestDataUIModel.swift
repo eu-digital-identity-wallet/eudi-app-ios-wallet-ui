@@ -414,18 +414,20 @@ private extension Array where Element == DocClaim {
     walletKitController: WalletKitController
   ) -> [DocumentElementClaim] {
     self
-      .map { claim in
-        return walletKitController.parseDocClaim(
-          docId: id,
-          groupId: nil,
-          docClaim: claim,
-          type: type,
-          parser: {
-            Locale.current.localizedDateTime(
-              date: $0,
-              uiFormatter: "dd MMM yyyy"
-            )
-          }
+      .reduce(into: [DocumentElementClaim]()) { partialResult, claim in
+        partialResult.append(
+          contentsOf: walletKitController.parseDocClaim(
+            docId: id,
+            groupId: UUID().uuidString,
+            docClaim: claim,
+            type: type,
+            parser: {
+              Locale.current.localizedDateTime(
+                date: $0,
+                uiFormatter: "dd MMM yyyy"
+              )
+            }
+          )
         )
       }
   }
