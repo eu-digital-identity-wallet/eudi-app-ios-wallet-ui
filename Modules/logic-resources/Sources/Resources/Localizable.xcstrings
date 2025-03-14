@@ -738,6 +738,17 @@
         }
       }
     },
+    "filter_by_status" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Status"
+          }
+        }
+      }
+    },
     "filters" : {
       "extractionState" : "manual",
       "localizations" : {

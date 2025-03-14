@@ -62,7 +62,7 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
       ),
       .init(
         name: "Document Signing",
-        status: .completed,
+        status: .failed,
         transactionDate: "11 Mar 2025 09:20 AM",
         transactionCategory: .category(for: "11 Mar 2025 09:20 AM")
       ),
@@ -79,8 +79,14 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
         transactionCategory: .category(for: "10 Mar 2025 09:20 AM")
       ),
       .init(
-        name: "Another Document Signing",
+        name: "Sharing Request",
         status: .completed,
+        transactionDate: "10 Aug 2024 09:20 AM",
+        transactionCategory: .category(for: "10 Aug 2024 09:20 AM")
+      ),
+      .init(
+        name: "Another Document Signing",
+        status: .failed,
         transactionDate: "06 Mar 2025 09:20 AM",
         transactionCategory: .category(for: "06 Mar 2025 09:20 AM")
       ),
@@ -97,13 +103,13 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
         transactionCategory: .category(for: "14 Jan 2025 11:07 AM")
       ),
       .init(
-        name: "A Document",
+        name: "Document",
         status: .completed,
-        transactionDate: "12 Mar 2025 11:07 AM",
-        transactionCategory: .category(for: "12 Mar 2025 11:07 AM")
+        transactionDate: "14 Mar 2025 10:07 AM",
+        transactionCategory: .category(for: "14 Mar 2025 11:07 AM")
       ),
       .init(
-        name: "B Document",
+        name: "Document",
         status: .completed,
         transactionDate: "12 Mar 2025 12:00 PM",
         transactionCategory: .category(for: "12 Mar 2025 09:07 AM")

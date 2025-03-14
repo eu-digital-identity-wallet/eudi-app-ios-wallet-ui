@@ -94,7 +94,8 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
           attributes: TransactionFilterableAttributes(
             sortingKey: transaction.transactionDate,
             searchTags: transactionSearchTags,
-            name: transaction.name
+            name: transaction.name,
+            status: transaction.status
           )
         )
       }
@@ -134,6 +135,35 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
             )
           ],
           filterType: .orderBy
+        ),
+        MultipleSelectionFilterGroup(
+          id: FilterIds.FILTER_BY_STATUS_ID,
+          name: LocalizableStringKey.filterByStatus.toString,
+          filters: [
+            FilterItem(
+              id: FilterIds.FILTER_BY_STATUS_COMPLETED,
+              name: "Completed",
+              selected: true,
+              isDefault: true
+            ),
+            FilterItem(
+              id: FilterIds.FILTER_BY_STATUS_FAILED,
+              name: "Failed",
+              selected: true,
+              isDefault: true
+            )
+          ],
+          filterableAction: FilterMultipleAction<TransactionFilterableAttributes>(predicate: { attribute, filter in
+            switch filter.id {
+            case FilterIds.FILTER_BY_STATUS_COMPLETED:
+              attribute.status == .completed
+            case FilterIds.FILTER_BY_STATUS_FAILED:
+              attribute.status == .failed
+            default:
+              true
+            }
+          }),
+          filterType: .other
         )
       ],
       sortOrder: SortOrderType.descending
@@ -141,7 +171,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
   }
 
   func applyFilters() async {
-    await filterValidator.applyFilters()
+    await filterValidator.applyFilters(sortOrder: .descending)
   }
 
   func resetFilters() async {

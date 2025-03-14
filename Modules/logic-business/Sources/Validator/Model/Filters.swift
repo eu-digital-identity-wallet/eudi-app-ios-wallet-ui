@@ -45,8 +45,8 @@ public struct Filters: Sendable {
     !filterGroups.isEmpty
   }
 
-  public static func emptyFilters() -> Filters {
-    return Filters(filterGroups: [], sortOrder: .ascending)
+  public static func emptyFilters(sortOrder: SortOrderType = .ascending) -> Filters {
+    return Filters(filterGroups: [], sortOrder: sortOrder)
   }
 }
 

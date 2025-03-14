@@ -43,7 +43,7 @@ extension Date {
   }
 
   func isValid() -> Bool {
-    return self > Date()
+    return self >= Date()
   }
 
   func isExpired() -> Bool {

@@ -22,24 +22,33 @@ public enum TransactionCategory: Hashable, Equatable, Sendable {
   case month(dateTime: String)
 
   public var title: String {
-    return switch self {
+    switch self {
     case .today:
-      "TODAY"
+      return "TODAY"
     case .thisWeek:
-      "THIS WEEK"
+      return "THIS WEEK"
     case .month(let dateTime):
-      dateTime
+      return dateTime
     }
   }
 
   public var order: Int {
-    return switch self {
+    switch self {
     case .today:
-      0
+      return 0
     case .thisWeek:
-      1
-    case .month:
-      2
+      return 1
+    case .month(let dateTime):
+      let formatter = DateFormatter()
+      formatter.dateFormat = "MMM yyyy"
+      if let date = formatter.date(from: dateTime) {
+        let calendar = Calendar.current
+        let yearMonth = calendar.dateComponents([.year, .month], from: date)
+        let year = yearMonth.year ?? 0
+        let month = yearMonth.month ?? 0
+        return (year * 12 + month)
+      }
+      return 2
     }
   }
 
@@ -63,23 +72,5 @@ public enum TransactionCategory: Hashable, Equatable, Sendable {
       let formattedMonthYear = date.formattedMonthYear()
       return .month(dateTime: formattedMonthYear)
     }
-  }
-
-  public static func sortMonths(_ categories: [TransactionCategory]) -> [TransactionCategory] {
-    let sortedCategories = categories.sorted {
-      switch ($0, $1) {
-      case (.month(let dateTime1), .month(let dateTime2)):
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM yyyy"
-        guard let date1 = dateFormatter.date(from: dateTime1),
-              let date2 = dateFormatter.date(from: dateTime2) else {
-          return false
-        }
-        return date1 < date2
-      default:
-        return false
-      }
-    }
-    return sortedCategories
   }
 }

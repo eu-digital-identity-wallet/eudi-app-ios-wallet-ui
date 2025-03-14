@@ -26,7 +26,7 @@ public protocol FilterValidator: Sendable {
   func getFilterResultStream() -> AsyncStream<FilterResultPartialState>
   func initializeValidator(filters: Filters, filterableList: FilterableList) async
   func updateLists(sortOrder: SortOrderType, filterableList: FilterableList) async
-  func applyFilters() async
+  func applyFilters(sortOrder: SortOrderType) async
   func applySearch(query: String) async
   func resetFilters() async
   func revertFilters() async
@@ -84,16 +84,19 @@ actor FilterValidatorImpl: FilterValidator {
       }
     }
 
-    appliedFilters = Filters(filterGroups: mergedFilterGroups, sortOrder: appliedFilters.sortOrder)
+    appliedFilters = Filters(
+      filterGroups: mergedFilterGroups,
+      sortOrder: defaultFilters.sortOrder
+    )
 
     self.initialList = filterableList
   }
 
-  func applyFilters() async {
+  func applyFilters(sortOrder: SortOrderType = .ascending) async {
 
     if !snapshotFilters.isEmpty {
       appliedFilters = snapshotFilters.copy()
-      snapshotFilters = Filters.emptyFilters()
+      snapshotFilters = Filters.emptyFilters(sortOrder: sortOrder)
     }
 
     var filteredList = appliedFilters.filterGroups.reduce(initialList) { currentList, group in

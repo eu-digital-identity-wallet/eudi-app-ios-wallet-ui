@@ -29,9 +29,7 @@ struct TransactionTabView<Router: RouterHost>: View {
     content(
       state: viewModel.viewState,
       searchQuery: $viewModel.searchQuery,
-      onAction: { _ in
-
-      }
+      onAction: { _ in }
     )
     .sheet(isPresented: $viewModel.isFilterModalShowing) {
       FiltersListView(sections: viewModel.viewState.filterUIModel) {
@@ -65,15 +63,39 @@ private func content(
         description: .noResultsDescription
       )
     } else if !state.transactions.isEmpty {
+      let monthCategories = state.transactions.keys.filter { if case .month = $0 { return true } else { return false } }
+      let nonMonthCategories = state.transactions.keys.filter { if case .month = $0 { return false } else { return true } }
+
+      let sortedMonthCategories = monthCategories.sorted { $0.order > $1.order }
+
       List {
-        ForEach(Array(state.transactions.keys).sorted(by: { $0.order < $1.order }), id: \.self) { category in
+        ForEach(nonMonthCategories.sorted(by: { $0.order < $1.order }), id: \.self) { category in
           Section(header: Text(category.title)) {
             WrapCardView {
               VStack(spacing: 0) {
                 WrapListItemsView(listItems: state.transactions[category]?.map({ transaction in
                   transaction.listItem
-                }) ?? []
-                )}
+                }) ?? [])
+              }
+            }
+            .listRowSeparator(.hidden)
+          }
+          .listRowInsets(.init(
+            top: SPACING_SMALL,
+            leading: SPACING_MEDIUM,
+            bottom: .zero,
+            trailing: SPACING_MEDIUM)
+          )
+        }
+
+        ForEach(sortedMonthCategories, id: \.self) { category in
+          Section(header: Text(category.title)) {
+            WrapCardView {
+              VStack(spacing: 0) {
+                WrapListItemsView(listItems: state.transactions[category]?.map({ transaction in
+                  transaction.listItem
+                }) ?? [])
+              }
             }
             .listRowSeparator(.hidden)
           }

@@ -303,7 +303,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
   }
 
   func applyFilters() async {
-    await filterValidator.applyFilters()
+    await filterValidator.applyFilters(sortOrder: .ascending)
   }
 
   func applySearch(query: String) async {
