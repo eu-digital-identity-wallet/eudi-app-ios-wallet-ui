@@ -386,10 +386,15 @@ extension WalletKitController {
     }
 
     var groupIdentifier: String {
-      if type == .sdjwt, docClaim.path.last?.isEmpty == true {
+      return switch type {
+      case .mdoc:
         groupId
-      } else {
-        UUID().uuidString
+      case .sdjwt:
+        if docClaim.path.last?.isEmpty == true {
+          groupId
+        } else {
+          UUID().uuidString
+        }
       }
     }
 
