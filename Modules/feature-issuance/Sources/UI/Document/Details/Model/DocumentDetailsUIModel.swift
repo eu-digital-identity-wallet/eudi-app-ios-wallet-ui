@@ -169,9 +169,6 @@ extension DocClaimsDecodable {
       isSensitive: isSensitive,
       input: docClaims
     )
-    .sorted(by: {
-      $0.title.localizedCompare($1.title) == .orderedAscending
-    })
 
     var bearerName: String {
       guard let fullName = getBearersName() else {
@@ -202,11 +199,13 @@ extension DocClaimsDecodable {
 
       if let nested = docClaim.children {
 
-        let children = parseClaim(
+        var children = parseClaim(
           documentId: documentId,
           isSensitive: isSensitive,
           input: nested
         )
+
+        children = children.sortByName()
 
         if title.isEmpty {
           partialResult.append(contentsOf: children)
@@ -260,6 +259,6 @@ extension DocClaimsDecodable {
           )
         )
       }
-    }
+    }.sortByName()
   }
 }
