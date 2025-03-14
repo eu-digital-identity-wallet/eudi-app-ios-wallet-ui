@@ -429,7 +429,7 @@ private extension Array where Element == DocClaim {
             }
           )
         )
-      }
+      }.sortByName()
   }
 }
 

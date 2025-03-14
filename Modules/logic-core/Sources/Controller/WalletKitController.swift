@@ -360,13 +360,13 @@ extension WalletKitController {
       )
 
       return if title.isEmpty {
-        childClaims
+        childClaims.sortByName()
       } else {
         [
           .group(
             id: UUID().uuidString,
             title: docClaim.displayName.ifNilOrEmpty { docClaim.name },
-            items: childClaims
+            items: childClaims.sortByName()
           )
         ]
       }
