@@ -55,6 +55,12 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
   static func mocks() -> [TransactionCategory: [TransactionUIModel]] {
     let transactions: [TransactionUIModel] = [
       .init(
+        name: "Document",
+        status: .completed,
+        transactionDate: "17 Mar 2025 09:40 AM",
+        transactionCategory: .category(for: "17 Mar 2025 09:40 AM")
+      ),
+      .init(
         name: "Document Signing",
         status: .completed,
         transactionDate: "02 Mar 2025 09:20 AM",
@@ -70,7 +76,7 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
         name: "Data Sharing Request",
         status: .completed,
         transactionDate: "03 Mar 2025 09:20 AM",
-        transactionCategory: .category(for: "03 Mar 2025 08:20 PM")
+        transactionCategory: .category(for: "03 Mar 2025 08:20 AM")
       ),
       .init(
         name: "Data Sharing Request",

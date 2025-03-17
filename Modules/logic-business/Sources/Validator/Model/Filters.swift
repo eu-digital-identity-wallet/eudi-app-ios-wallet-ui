@@ -166,6 +166,7 @@ public struct FilterMultipleAction<T: FilterableAttributes>: FilterAction {
 
     return FilterableList(items: matchingItems)
   }
+
 }
 
 public enum FilterResult: Sendable {
