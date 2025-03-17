@@ -20,6 +20,8 @@ struct VciConfig: Sendable {
   public let issuerUrl: String
   public let clientId: String
   public let redirectUri: URL
+  public let usePAR: Bool
+  public let useDPoP: Bool
 }
 
 struct ReaderConfig: Sendable {
@@ -77,13 +79,17 @@ struct WalletKitConfigImpl: WalletKitConfig {
         .init(
           issuerUrl: "https://issuer.eudiw.dev",
           clientId: "wallet-dev",
-          redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!
+          redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!,
+          usePAR: true,
+          useDPoP: true
         )
     case .DEV:
         .init(
           issuerUrl: "https://dev.issuer.eudiw.dev",
           clientId: "wallet-dev",
-          redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!
+          redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!,
+          usePAR: true,
+          useDPoP: true
         )
     }
   }
