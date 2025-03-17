@@ -100,7 +100,9 @@ final class WalletKitControllerImpl: WalletKitController {
     wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
     wallet.openID4VciConfig = .init(
       client: .public(id: configLogic.vciConfig.clientId),
-      authFlowRedirectionURI: configLogic.vciConfig.redirectUri
+      authFlowRedirectionURI: configLogic.vciConfig.redirectUri,
+      usePAR: configLogic.vciConfig.usePAR,
+      useDPoP: configLogic.vciConfig.useDPoP
     )
     wallet.trustedReaderCertificates = configLogic.readerConfig.trustedCerts
     wallet.logFileName = configLogic.logFileName
