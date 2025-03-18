@@ -21,16 +21,22 @@ struct TransactionFilterableAttributes: FilterableAttributes {
   var searchTags: [String]
   let name: String?
   let status: TransactionStatus?
+  let startDate: String?
+  let endDate: String?
 
   init(
     sortingKey: String,
     searchTags: [String],
     name: String? = nil,
-    status: TransactionStatus? = nil
+    status: TransactionStatus? = nil,
+    startDate: String? = nil,
+    endDate: String? = nil
   ) {
     self.sortingKey = sortingKey
     self.searchTags = searchTags
     self.name = name
     self.status = status
+    self.startDate = startDate
+    self.endDate = endDate
   }
 }

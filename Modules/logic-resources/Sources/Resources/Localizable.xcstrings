@@ -408,6 +408,17 @@
         }
       }
     },
+    "completed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completed"
+          }
+        }
+      }
+    },
     "credential_offer_partial_success_caption" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -628,6 +639,17 @@
         }
       }
     },
+    "end_date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End date"
+          }
+        }
+      }
+    },
     "error_unable_fetch_document" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -705,6 +727,17 @@
         }
       }
     },
+    "failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed"
+          }
+        }
+      }
+    },
     "filter_by_category" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -712,6 +745,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Filter by Category"
+          }
+        }
+      }
+    },
+    "filter_by_date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
           }
         }
       }
@@ -1903,6 +1947,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SORT BY ISSUED DATE"
+          }
+        }
+      }
+    },
+    "start_date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start date"
           }
         }
       }

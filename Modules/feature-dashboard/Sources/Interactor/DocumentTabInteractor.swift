@@ -427,7 +427,9 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
             id: filter.id,
             title: filter.name,
             selected: filter.selected,
-            filterAction: filter.filterableAction
+            filterAction: filter.filterableAction,
+            filterSectionType: filter.filterElementType,
+            dateRangeType: filter.dateRangeType
           )
         },
         sectionTitle: filteredGroup.name

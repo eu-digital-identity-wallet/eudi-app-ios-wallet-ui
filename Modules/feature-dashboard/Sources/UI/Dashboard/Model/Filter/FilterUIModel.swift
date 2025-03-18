@@ -28,6 +28,24 @@ public struct FilterUIItem: Sendable, Identifiable {
   public let title: String
   public let selected: Bool
   public let filterAction: FilterAction
+  public let filterSectionType: FilterElementType
+  public let dateRangeType: DateRangeType?
+
+  init(
+    id: String,
+    title: String,
+    selected: Bool,
+    filterAction: FilterAction,
+    filterSectionType: FilterElementType,
+    dateRangeType: DateRangeType? = nil
+  ) {
+    self.id = id
+    self.title = title
+    self.selected = selected
+    self.filterAction = filterAction
+    self.filterSectionType = filterSectionType
+    self.dateRangeType = dateRangeType
+  }
 }
 
 public extension FilterUISection {

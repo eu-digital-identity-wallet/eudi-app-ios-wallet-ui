@@ -431,6 +431,16 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "search_documents")
     case .filterByStatus:
       bundle.localizedString(forKey: "filter_by_status")
+    case .completed:
+      bundle.localizedString(forKey: "completed")
+    case .failed:
+      bundle.localizedString(forKey: "failed")
+    case .filterByDate:
+      bundle.localizedString(forKey: "filter_by_date")
+    case .startDate:
+      bundle.localizedString(forKey: "start_date")
+    case .endDate:
+      bundle.localizedString(forKey: "end_date")
     case .transactionInformation:
       bundle.localizedString(forKey: "transaction_information")
     case .transactionDetailsDataSigned:

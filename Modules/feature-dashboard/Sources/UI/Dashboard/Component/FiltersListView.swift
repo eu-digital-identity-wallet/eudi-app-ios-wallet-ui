@@ -23,6 +23,8 @@ struct FiltersListView: View {
   @Environment(\.dismiss) var dismiss
 
   @State private var isApplied: Bool = false
+  @State private var startDate: Date = Date()
+  @State private var endDate: Date = Date()
 
   var resetFiltersAction: () -> Void
   var applyFiltersAction: () -> Void
@@ -100,18 +102,41 @@ struct FiltersListView: View {
   ) -> some View {
     Section(header: Text(sectionTitle)) {
       ForEach(filters.indices, id: \.self) { index in
-        HStack {
-          Text(filters[index].title)
-            .frame(maxWidth: .infinity, alignment: .topLeading)
-          if filters[index].selected {
-            Theme.shared.image.checkmark
-              .foregroundColor(ThemeManager.shared.color.primary)
+        if filters[index].filterSectionType == .radio {
+          HStack {
+            Text(filters[index].title)
+              .frame(maxWidth: .infinity, alignment: .topLeading)
+            if filters[index].selected {
+              Theme.shared.image.checkmark
+                .foregroundColor(ThemeManager.shared.color.primary)
+            }
           }
-        }
-        .contentShape(Rectangle())
-        .frame(maxWidth: .infinity)
-        .onTapGesture {
-          updateFiltersCallback?(sectionID, filters[index].id)
+          .contentShape(Rectangle())
+          .frame(maxWidth: .infinity)
+          .onTapGesture {
+            updateFiltersCallback?(sectionID, filters[index].id)
+          }
+        } else if filters[index].filterSectionType == .picker {
+          switch filters[index].dateRangeType {
+          case .start:
+            DatePicker(selection: $startDate, in: ...Date.now, displayedComponents: .date) {
+              Text(filters[index].title)
+            }
+            .onChange(of: startDate) { newDate in
+              startDate = newDate
+              updateFiltersCallback?(sectionID, filters[index].id)
+            }
+          case .end:
+            DatePicker(selection: $endDate, in: ...Date.now, displayedComponents: .date) {
+              Text(filters[index].title)
+                .onChange(of: endDate) { newDate in
+                  endDate = newDate
+                  updateFiltersCallback?(sectionID, filters[index].id)
+                }
+            }
+          case .none:
+            Text("None")
+          }
         }
       }
     }

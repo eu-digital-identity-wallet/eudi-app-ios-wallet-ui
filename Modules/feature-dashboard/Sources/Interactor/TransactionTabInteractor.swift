@@ -95,7 +95,9 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
             sortingKey: transaction.transactionDate,
             searchTags: transactionSearchTags,
             name: transaction.name,
-            status: transaction.status
+            status: transaction.status,
+            startDate: transaction.transactionDate,
+            endDate: transaction.transactionDate
           )
         )
       }
@@ -137,18 +139,46 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
           filterType: .orderBy
         ),
         MultipleSelectionFilterGroup(
+          id: FilterIds.FILTER_BY_DATE,
+          name: LocalizableStringKey.filterByDate.toString,
+          filters: [
+            FilterItem(
+              id: FilterIds.FILTER_BY_START_DATE,
+              name: LocalizableStringKey.startDate.toString,
+              selected: false,
+              isDefault: false,
+              filterElementType: .picker,
+              dateRangeType: .start
+            ),
+            FilterItem(
+              id: FilterIds.FILTER_BY_END_DATE,
+              name: LocalizableStringKey.endDate.toString,
+              selected: false,
+              isDefault: false,
+              filterElementType: .picker,
+              dateRangeType: .end
+            )
+          ],
+          filterableAction: FilterMultipleAction<TransactionFilterableAttributes>(predicate: { attribute, _ in
+            print("Start Date: \(attribute.startDate)")
+            print("End Date: \(attribute.endDate)")
+            return true
+          }),
+          filterType: .other
+        ),
+        MultipleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_STATUS_ID,
           name: LocalizableStringKey.filterByStatus.toString,
           filters: [
             FilterItem(
               id: FilterIds.FILTER_BY_STATUS_COMPLETED,
-              name: "Completed",
+              name: LocalizableStringKey.completed.toString,
               selected: true,
               isDefault: true
             ),
             FilterItem(
               id: FilterIds.FILTER_BY_STATUS_FAILED,
-              name: "Failed",
+              name: LocalizableStringKey.failed.toString,
               selected: true,
               isDefault: true
             )
@@ -234,7 +264,9 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
             id: filter.id,
             title: filter.name,
             selected: filter.selected,
-            filterAction: filter.filterableAction
+            filterAction: filter.filterableAction,
+            filterSectionType: filter.filterElementType,
+            dateRangeType: filter.dateRangeType
           )
         },
         sectionTitle: filteredGroup.name

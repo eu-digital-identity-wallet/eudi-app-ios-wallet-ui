@@ -215,6 +215,11 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case filterByCategory
   case searchDocuments
   case filterByStatus
+  case completed
+  case failed
+  case filterByDate
+  case startDate
+  case endDate
   case transactionInformation
   case transactionDetailsDataShare
   case transactionDetailsDataSigned

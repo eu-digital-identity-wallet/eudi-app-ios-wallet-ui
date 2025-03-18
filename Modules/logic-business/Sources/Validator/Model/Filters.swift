@@ -24,6 +24,16 @@ public enum FilterGroupType: Sendable {
   case orderBy
 }
 
+public enum DateRangeType: Sendable {
+  case start
+  case end
+}
+
+public enum FilterElementType: Sendable {
+  case radio
+  case picker
+}
+
 @Copyable
 public struct Filters: Sendable {
   public let filterGroups: [FilterGroup]
@@ -105,21 +115,30 @@ public struct FilterItem: Sendable {
   public let id: String
   public let name: String
   public let selected: Bool
+  public let selectedDate: String?
   public let isDefault: Bool
+  public let filterElementType: FilterElementType
   public let filterableAction: FilterAction
+  public let dateRangeType: DateRangeType?
 
   public init(
     id: String = UUID().uuidString,
     name: String,
     selected: Bool,
+    selectedDate: String? = nil,
     isDefault: Bool = false,
-    filterableAction: FilterAction = DefaultFilterAction()
+    filterElementType: FilterElementType = .radio,
+    filterableAction: FilterAction = DefaultFilterAction(),
+    dateRangeType: DateRangeType? = nil
   ) {
     self.id = id
     self.name = name
     self.selected = selected
+    self.selectedDate = selectedDate
     self.isDefault = isDefault
+    self.filterElementType = filterElementType
     self.filterableAction = filterableAction
+    self.dateRangeType = dateRangeType
   }
 }
 
