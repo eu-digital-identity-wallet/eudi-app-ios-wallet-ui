@@ -159,17 +159,12 @@ public struct FilterMultipleAction<T: FilterableAttributes>: FilterAction {
 
     guard !selectedFilters.isEmpty else { return filterableItems }
 
-    var matchingItems = [FilterableItem]()
-
-    for filter in selectedFilters {
-      for item in filterableItems.items {
-        if let attributes = item.attributes as? T, predicate(attributes, filter) {
-          matchingItems.insert(item, at: 0)
-        }
-      }
+    let matchingItems = filterableItems.items.filter { item in
+      guard let attributes = item.attributes as? T else { return false }
+      return selectedFilters.contains { filter in predicate(attributes, filter) }
     }
 
-    return FilterableList(items: Array(matchingItems))
+    return FilterableList(items: matchingItems)
   }
 }
 
