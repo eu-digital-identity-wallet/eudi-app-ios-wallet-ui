@@ -17,32 +17,29 @@ import SwiftUI
 import logic_resources
 
 public struct TransactionCardView: View {
-  private let cornerRadius: CGFloat
   private let backgroundColor: Color
-  private let title: String
-  private let subtitle: String
-  private let caption: String
+  private let title: LocalizableStringKey
+  private let subtitle: LocalizableStringKey
+  private let caption: LocalizableStringKey
 
-  private let footerTitle: String
-  private let footerSubtitle: String
+  private let footerTitle: LocalizableStringKey
+  private let footerSubtitle: LocalizableStringKey
 
   private let verifiedIcon: Image?
   private let isVerified: Bool
   private let onAction: (() -> Void)?
 
   public init(
-    cornerRadius: CGFloat = 13,
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
-    title: String,
-    subtitle: String,
-    caption: String,
-    footerTitle: String,
-    footerSubtitle: String,
+    title: LocalizableStringKey,
+    subtitle: LocalizableStringKey,
+    caption: LocalizableStringKey,
+    footerTitle: LocalizableStringKey,
+    footerSubtitle: LocalizableStringKey,
     verifiedIcon: Image? = nil,
     isVerified: Bool = false,
     onAction: (() -> Void)? = nil
   ) {
-    self.cornerRadius = cornerRadius
     self.backgroundColor = backgroundColor
     self.title = title
     self.subtitle = subtitle
@@ -58,12 +55,16 @@ public struct TransactionCardView: View {
     WrapCardView(backgroundColor: backgroundColor) {
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
-        VStack(alignment: .leading, spacing: .zero) {
+        VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
           Text(title)
-            .typography(Theme.shared.font.bodyLarge)
+            .typography(Theme.shared.font.titleSmall)
             .foregroundStyle(Theme.shared.color.onSurface)
+            .fontWeight(.bold)
             .if(isVerified) {
-              $0.rightImage(image: Theme.shared.image.walletVerified)
+              $0.rightImage(
+                image: verifiedIcon ?? Theme.shared.image.verified,
+                spacing: SPACING_SMALL
+              )
             }
           Text(subtitle)
             .typography(Theme.shared.font.bodyMedium)
@@ -74,7 +75,7 @@ public struct TransactionCardView: View {
         }
 
         HStack {
-          VStack(alignment: .leading, spacing: 4) {
+          VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
             Text(footerTitle)
               .typography(Theme.shared.font.bodyMedium)
               .foregroundStyle(Theme.shared.color.onSurfaceVariant)
@@ -93,20 +94,20 @@ public struct TransactionCardView: View {
 #Preview {
   VStack(spacing: 16) {
     TransactionCardView(
-      title: "Hellenic Government",
-      subtitle: "Government agency",
-      caption: "Brussels - Belgium",
-      footerTitle: "Date",
-      footerSubtitle: "16 February 2024"
+      title: .custom("Hellenic Government"),
+      subtitle: .custom("Government agency"),
+      caption: .custom("Brussels - Belgium"),
+      footerTitle: .custom("Date"),
+      footerSubtitle: .custom("16 February 2024")
     )
 
     TransactionCardView(
-      title: "Hellenic Government",
-      subtitle: "Government agency",
-      caption: "Brussels - Belgium",
-      footerTitle: "Date",
-      footerSubtitle: "16 February 2024",
-      verifiedIcon: Image(systemName: "checkmark"),
+      title: .custom("Hellenic Government"),
+      subtitle: .custom("Government agency"),
+      caption: .custom("Brussels - Belgium"),
+      footerTitle: .custom("Date"),
+      footerSubtitle: .custom("16 February 2024"),
+      verifiedIcon: Theme.shared.image.verified,
       isVerified: true,
       onAction: {}
     )

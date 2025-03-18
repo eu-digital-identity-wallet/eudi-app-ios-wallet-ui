@@ -214,6 +214,14 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case orderBy
   case filterByCategory
   case searchDocuments
+  case transactionInformation
+  case transactionDetailsDataShare
+  case transactionDetailsDataSigned
+  case transactionDetailsReportTransactionButton
+  case transactionDetailsRequestDeletionButton
+  case transactionDetailsReportTransactionMessage
+  case transactionDetailsRequestDeletionMessage
+  case transactionDetailsScreenCardDateLabel
   case or
 }
 

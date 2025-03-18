@@ -1940,6 +1940,94 @@
         }
       }
     },
+    "transaction_details_data_shared" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DATA SHARED"
+          }
+        }
+      }
+    },
+    "transaction_details_data_signed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DATA SIGNED"
+          }
+        }
+      }
+    },
+    "transaction_details_report_transaction_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Report suspicious transaction"
+          }
+        }
+      }
+    },
+    "transaction_details_report_transaction_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you believe this relying party has unlawfully requested personal data, you can report this transaction to the authorities."
+          }
+        }
+      }
+    },
+    "transaction_details_request_deletion_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Request data deletion"
+          }
+        }
+      }
+    },
+    "transaction_details_request_deletion_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can request to stop processing personal data linked to this transaction. This may affect your access to services."
+          }
+        }
+      }
+    },
+    "transaction_details_screen_card_date_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        }
+      }
+    },
+    "transaction_information" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transaction information"
+          }
+        }
+      }
+    },
     "transactions" : {
       "extractionState" : "manual",
       "localizations" : {

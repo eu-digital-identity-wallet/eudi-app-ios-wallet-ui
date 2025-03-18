@@ -429,6 +429,22 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "filter_by_category")
     case .searchDocuments:
       bundle.localizedString(forKey: "search_documents")
+    case .transactionInformation:
+      bundle.localizedString(forKey: "transaction_information")
+    case .transactionDetailsDataSigned:
+      bundle.localizedString(forKey: "transaction_details_data_signed")
+    case .transactionDetailsDataShare:
+      bundle.localizedString(forKey: "transaction_details_data_shared")
+    case .transactionDetailsReportTransactionButton:
+      bundle.localizedString(forKey: "transaction_details_report_transaction_button")
+    case .transactionDetailsRequestDeletionButton:
+      bundle.localizedString(forKey: "transaction_details_request_deletion_button")
+    case .transactionDetailsReportTransactionMessage:
+      bundle.localizedString(forKey: "transaction_details_report_transaction_message")
+    case .transactionDetailsRequestDeletionMessage:
+      bundle.localizedString(forKey: "transaction_details_request_deletion_message")
+    case .transactionDetailsScreenCardDateLabel:
+      bundle.localizedString(forKey: "transaction_details_screen_card_date_label")
     case .or:
       bundle.localizedString(forKey: "or")
     }

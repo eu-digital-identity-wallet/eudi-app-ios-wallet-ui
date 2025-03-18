@@ -66,6 +66,7 @@ public protocol ImageManagerProtocol: Sendable {
   var successSecuredWallet: Image { get }
   var digitalIdIssuance: Image { get }
   var documentSuccessPending: Image { get }
+  var verified: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -120,6 +121,7 @@ final class ImageManager: ImageManagerProtocol {
     case successSecuredWallet = "success-secured-wallet"
     case digitalIdIssuance = "digital-id-issuance"
     case documentSuccessPending = "document-success-pending"
+    case verified = "verified"
   }
 
   // MARK: - Properties
@@ -277,5 +279,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var documentSuccessPending: Image {
     Image(ImageEnum.documentSuccessPending.rawValue, bundle: bundle)
+  }
+  var verified: Image {
+    Image(ImageEnum.verified.rawValue, bundle: bundle)
   }
 }
