@@ -64,6 +64,12 @@ public final class DashboardRouter {
           )
         )
       ).eraseToAnyView()
+    case .issuanceAddDocumentOptions:
+      AddDocumentOptionsView(
+        with: .init(
+          router: host
+        )
+      ).eraseToAnyView()
     }
   }
 }

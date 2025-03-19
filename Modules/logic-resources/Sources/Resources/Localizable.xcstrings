@@ -1187,7 +1187,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Or"
+            "value" : "OR"
           }
         }
       }
@@ -1693,7 +1693,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Scan a QR"
+            "value" : "Scan QR"
           }
         }
       }

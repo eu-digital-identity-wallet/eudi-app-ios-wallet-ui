@@ -201,10 +201,8 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
 
   func onAdd() {
     router.push(
-      with: .featureCommonModule(
-        .issuanceAddDocumentOptions(
-          config: IssuanceFlowUiConfig(flow: .extraDocument)
-        )
+      with: .featureDashboardModule(
+        .issuanceAddDocumentOptions
       )
     )
   }

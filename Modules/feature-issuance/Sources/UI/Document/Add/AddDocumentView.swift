@@ -39,8 +39,20 @@ struct AddDocumentView<Router: RouterHost>: View {
       isLoading: viewModel.viewState.isLoading,
       toolbarContent: viewModel.toolbarContent()
     ) {
+
       content(viewState: viewModel.viewState) { type in
         viewModel.onClick(for: type)
+      }
+
+      if viewModel.viewState.showFooterScanner {
+
+        VSpacer.extraSmall()
+
+        scanFooter(
+          viewState: viewModel.viewState,
+          contentSize: contentSize,
+          action: viewModel.onScanClick()
+        )
       }
     }
     .task {
@@ -79,12 +91,74 @@ private func content(
   }
 }
 
+@MainActor
+@ViewBuilder
+private func scanFooter(
+  viewState: AddDocumentViewState,
+  contentSize: CGFloat,
+  action: @escaping @autoclosure () -> Void
+) -> some View {
+  VStack(spacing: SPACING_MEDIUM) {
+
+    Spacer()
+
+    HStack {
+
+      Spacer()
+
+      VStack(alignment: .center, spacing: SPACING_MEDIUM) {
+
+        Text(.or)
+          .typography(Theme.shared.font.bodyMedium)
+          .foregroundColor(Theme.shared.color.onSurfaceVariant )
+          .shimmer(isLoading: viewState.isLoading)
+
+        Theme.shared.image.scanDocumentImage
+      }
+
+      Spacer()
+    }
+
+    WrapButtonView(
+      style: .secondaryWithColor(
+        textColor: Theme.shared.color.primary,
+        backgroundColor: Theme.shared.color.surfaceContainerLowest,
+        borderColor: Theme.shared.color.primary
+      ),
+      title: .scanQrCode,
+      onAction: action()
+    )
+
+    Spacer()
+
+  }
+  .frame(maxWidth: .infinity, maxHeight: contentSize)
+  .padding([.horizontal, .bottom])
+  .background(Theme.shared.color.surfaceContainer)
+  .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
+}
+
 #Preview {
   let viewState = AddDocumentViewState(
     addDocumentCellModels: AddDocumentUIModel.mocks,
     error: nil,
-    config: IssuanceFlowUiConfig(flow: .noDocument)
+    config: IssuanceFlowUiConfig(flow: .noDocument),
+    showFooterScanner: true
   )
 
   content(viewState: viewState) { _ in }
+}
+
+#Preview {
+  let viewState = AddDocumentViewState(
+    addDocumentCellModels: AddDocumentUIModel.mocks,
+    error: nil,
+    config: IssuanceFlowUiConfig(flow: .noDocument),
+    showFooterScanner: true
+  )
+  scanFooter(
+    viewState: viewState,
+    contentSize: 500,
+    action: {}()
+  )
 }

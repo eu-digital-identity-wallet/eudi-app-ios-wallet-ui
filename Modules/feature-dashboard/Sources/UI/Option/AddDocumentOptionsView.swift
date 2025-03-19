@@ -17,14 +17,14 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-public struct AddDocumentOptionsView<Router: RouterHost>: View {
+struct AddDocumentOptionsView<Router: RouterHost>: View {
   @ObservedObject var viewModel: AddDocumentOptionsViewModel<Router>
 
-  public init(with viewModel: AddDocumentOptionsViewModel<Router>) {
+  init(with viewModel: AddDocumentOptionsViewModel<Router>) {
     self.viewModel = viewModel
   }
 
-  public var body: some View {
+  var body: some View {
     ContentScreenView(
       padding: .zero,
       canScroll: true,

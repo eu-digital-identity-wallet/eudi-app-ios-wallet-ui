@@ -60,13 +60,6 @@ public final class CommonRouter {
           )
         )
       ).eraseToAnyView()
-    case .issuanceAddDocumentOptions(config: let config):
-      AddDocumentOptionsView(
-        with: .init(
-          router: host,
-          config: config
-        )
-      ).eraseToAnyView()
     }
   }
 }

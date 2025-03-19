@@ -135,11 +135,9 @@ private func informativeText(viewState: ScannerState) -> some View {
 }
 
 #Preview {
-  let config = ScannerUiConfig(
-    flow: .issuing(
-      IssuanceFlowUiConfig(flow: .extraDocument)
-    )
-  )
+
+  let config = ScannerUiConfig(flow: .presentation)
+
   let viewState = ScannerState(
     config: config,
     error: nil,

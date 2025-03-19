@@ -36,7 +36,6 @@ public enum FeatureCommonRouteModule: AppRouteModule {
   case qrScanner(config: any UIConfigType)
   case biometry(config: any UIConfigType)
   case genericSuccess(config: any UIConfigType)
-  case issuanceAddDocumentOptions(config: any UIConfigType)
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -48,8 +47,6 @@ public enum FeatureCommonRouteModule: AppRouteModule {
       (key: "QuickPin", arguments: ["config": config.log])
     case .qrScanner(config: let config):
       (key: "QRScanner", arguments: ["config": config.log])
-    case .issuanceAddDocumentOptions(let config):
-      (key: "issuanceAddDocumentOptions", arguments: ["config": config.log])
     }
   }
 }
@@ -59,6 +56,7 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
   case dashboard
   case signDocument
   case sideMenu
+  case issuanceAddDocumentOptions
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -68,6 +66,8 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
       (key: "SignDocument", arguments: [:])
     case .sideMenu:
       (key: "SideMenu", arguments: [:])
+    case .issuanceAddDocumentOptions:
+      (key: "issuanceAddDocumentOptions", arguments: [:])
     }
   }
 }
