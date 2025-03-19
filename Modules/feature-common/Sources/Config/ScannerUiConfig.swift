@@ -65,8 +65,8 @@ public extension ScannerUiConfig {
       return switch self {
       case .presentation:
         "presentation"
-      case .issuing:
-        "issuing"
+      case .issuing(let successNavigation, let cancelNavigation):
+        "type: issuing successNavigation: \(successNavigation.key) cancelNavigation: \(cancelNavigation.key)"
       }
     }
   }
