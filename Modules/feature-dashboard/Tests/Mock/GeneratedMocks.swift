@@ -2557,7 +2557,7 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Option/AddDocumentOptionsView.swift'
+// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/IssuanceOption/IssuanceOptionView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2574,7 +2574,7 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Option/AddDocumentOptionsViewModel.swift'
+// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/IssuanceOption/IssuanceOptionViewModel.swift'
 
 import Cuckoo
 import SwiftUI

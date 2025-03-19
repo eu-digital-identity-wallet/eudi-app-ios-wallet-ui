@@ -64,8 +64,8 @@ public final class DashboardRouter {
           )
         )
       ).eraseToAnyView()
-    case .issuanceAddDocumentOptions:
-      AddDocumentOptionsView(
+    case .issuanceOption:
+      IssuanceOptionView(
         with: .init(
           router: host
         )

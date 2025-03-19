@@ -19,10 +19,11 @@ import logic_resources
 public enum ButtonViewStyle {
   case primary
   case secondary
-  case secondaryWithColor(
+  case custom(
     textColor: Color,
     backgroundColor: Color,
-    borderColor: Color
+    borderColor: Color,
+    useBorder: Bool
   )
   case error
   case success
@@ -37,7 +38,7 @@ public enum ButtonViewStyle {
       Theme.shared.color.error
     case .success:
       Theme.shared.color.surfaceContainerLowest
-    case .secondaryWithColor(let textColor, _, _):
+    case .custom(let textColor, _, _, _):
       textColor
     }
   }
@@ -51,7 +52,7 @@ public enum ButtonViewStyle {
       Theme.shared.color.background
     case .success:
       Theme.shared.color.success
-    case .secondaryWithColor(_, let background, _):
+    case .custom(_, let background, _, _):
       background
     }
   }
@@ -59,8 +60,10 @@ public enum ButtonViewStyle {
     switch self {
     case .primary:
       0
-    case .secondary, .success, .error, .secondaryWithColor:
+    case .secondary, .success, .error:
       1
+    case .custom(_, _, _, let useBorder):
+      useBorder ? 1 : 0
     }
   }
   var borderColor: Color {
@@ -71,7 +74,7 @@ public enum ButtonViewStyle {
       Theme.shared.color.primary
     case .error:
       Theme.shared.color.error
-    case .secondaryWithColor(_, _, let borderColor):
+    case .custom(_, _, let borderColor, _):
       borderColor
     }
   }
