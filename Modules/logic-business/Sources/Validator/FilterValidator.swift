@@ -250,7 +250,10 @@ actor FilterValidatorImpl: FilterValidator {
     }
   }
 
-  private func updateFilterInGroup(group: FilterGroup, filterId: String) -> FilterGroup {
+  private func updateFilterInGroup(
+    group: FilterGroup,
+    filterId: String
+  ) -> FilterGroup {
     if var multipleGroup = group as? MultipleSelectionFilterGroup {
       multipleGroup.filters = multipleGroup.filters.map { filter in
         let updatedFilter = filter

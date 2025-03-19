@@ -111,6 +111,17 @@
         }
       }
     },
+    "attestation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "attestation"
+          }
+        }
+      }
+    },
     "authenticate" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -602,6 +613,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Document number"
+          }
+        }
+      }
+    },
+    "document_signing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document Signing"
           }
         }
       }
@@ -1533,6 +1555,17 @@
         }
       }
     },
+    "relying_party" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relying Party"
+          }
+        }
+      }
+    },
     "removed_from_favorites" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1925,6 +1958,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select a document from your device to sign electronically."
+          }
+        }
+      }
+    },
+    "signed_documents" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signed Documents"
           }
         }
       }

@@ -20,6 +20,8 @@ import logic_resources
 public enum FilterGroupType: Sendable {
   case issuer
   case documentCategory
+  case relyingParty
+  case attestation
   case other
   case orderBy
 }

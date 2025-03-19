@@ -13,6 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
 import logic_core
 import logic_business
 import logic_resources
@@ -97,7 +98,10 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
             name: transaction.name,
             status: transaction.status,
             startDate: transaction.transactionDate,
-            endDate: transaction.transactionDate
+            endDate: transaction.transactionDate,
+            relyingPartyName: transaction.relyingPartyName,
+            attestationName: transaction.attestationName,
+            transactionType: transaction.transactionType
           )
         )
       }
@@ -108,7 +112,8 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
 
   func initializeFilters(filterableList: FilterableList) async {
     let filtersGroup = createFiltersGroup()
-    await filterValidator.initializeValidator(filters: filtersGroup, filterableList: filterableList)
+    let filters = await addDynamicFilters(transactions: filterableList, filters: filtersGroup)
+    await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
   }
 
   func createFiltersGroup() -> Filters {
@@ -139,34 +144,6 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
           filterType: .orderBy
         ),
         MultipleSelectionFilterGroup(
-          id: FilterIds.FILTER_BY_DATE,
-          name: LocalizableStringKey.filterByDate.toString,
-          filters: [
-            FilterItem(
-              id: FilterIds.FILTER_BY_START_DATE,
-              name: LocalizableStringKey.startDate.toString,
-              selected: false,
-              isDefault: false,
-              filterElementType: .picker,
-              dateRangeType: .start
-            ),
-            FilterItem(
-              id: FilterIds.FILTER_BY_END_DATE,
-              name: LocalizableStringKey.endDate.toString,
-              selected: false,
-              isDefault: false,
-              filterElementType: .picker,
-              dateRangeType: .end
-            )
-          ],
-          filterableAction: FilterMultipleAction<TransactionFilterableAttributes>(predicate: { attribute, _ in
-            print("Start Date: \(attribute.startDate)")
-            print("End Date: \(attribute.endDate)")
-            return true
-          }),
-          filterType: .other
-        ),
-        MultipleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_STATUS_ID,
           name: LocalizableStringKey.filterByStatus.toString,
           filters: [
@@ -194,6 +171,41 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
             }
           }),
           filterType: .other
+        ),
+        MultipleSelectionFilterGroup(
+          id: FilterIds.FILTER_BY_RELYING_PARY_NAME,
+          name: LocalizableStringKey.relyingParty.toString,
+          filters: [],
+          filterableAction: FilterMultipleAction<TransactionFilterableAttributes>(predicate: { attribute, filter in
+            attribute.relyingPartyName == filter.name
+          }),
+          filterType: .relyingParty
+        ),
+        MultipleSelectionFilterGroup(
+          id: FilterIds.FILTER_BY_ATTESTATION_NAME,
+          name: LocalizableStringKey.attestation.toString,
+          filters: [],
+          filterableAction: FilterMultipleAction<TransactionFilterableAttributes>(predicate: { attribute, filter in
+            attribute.attestationName == filter.name
+          }),
+          filterType: .attestation
+        ),
+        SingleSelectionFilterGroup(
+          id: FilterIds.DOCUMENT_SIGNING_GROUP,
+          name: LocalizableStringKey.documentSigning.toString,
+          filters: [
+            FilterItem(
+              id: FilterIds.FILTER_BY_DOCUMENT_SIGNING,
+              name: LocalizableStringKey.signedDocuments.toString,
+              selected: false,
+              filterableAction: Filter<TransactionFilterableAttributes>(predicate: { attribute, _ in
+                if attribute.transactionType == .signing { return true }
+                return false
+              })
+
+            )
+          ],
+          filterType: .orderBy
         )
       ],
       sortOrder: SortOrderType.descending
@@ -223,6 +235,25 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
 
   func applySearch(query: String) async {
     await filterValidator.applySearch(query: query)
+  }
+
+  func addDynamicFilters(transactions: FilterableList, filters: Filters) async -> Filters {
+    let newFilterGroups: [FilterGroup] = filters.filterGroups.map { filterGroup in
+      if let multipleGroup = filterGroup as? MultipleSelectionFilterGroup {
+        switch multipleGroup.filterType {
+        case .relyingParty:
+          return multipleGroup.copy(filters: addRelyingPartyName(transactions: transactions)) as any FilterGroup
+        case .attestation:
+          return multipleGroup.copy(filters: addAttestationName(transactions: transactions)) as any FilterGroup
+        default:
+          return multipleGroup as any FilterGroup
+        }
+      }
+
+      return filterGroup
+    }
+
+    return filters.copy(filterGroups: newFilterGroups)
   }
 
   func onFilterChangeState() -> AsyncStream<TransactionFiltersPartialState> {
@@ -272,5 +303,53 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
         sectionTitle: filteredGroup.name
       )
     }
+  }
+
+  private func addRelyingPartyName(transactions: FilterableList) -> [FilterItem] {
+    let distinctRelyingPartyNames = transactions.items.compactMap {
+      ($0.attributes as? TransactionFilterableAttributes)?.relyingPartyName
+    }.reduce(into: [String]()) { unique, element in
+      if !unique.contains(element) {
+        unique.append(element)
+      }
+    }
+
+    let filterItems = distinctRelyingPartyNames.map { relyingPartyName in
+      return FilterItem(
+        id: UUID().uuidString,
+        name: relyingPartyName,
+        selected: true,
+        isDefault: true,
+        filterableAction: Filter<TransactionFilterableAttributes>(predicate: { attributes, filter in
+          attributes.relyingPartyName == filter.name
+        })
+      )
+    }
+
+    return filterItems
+  }
+
+  private func addAttestationName(transactions: FilterableList) -> [FilterItem] {
+    let distinctAttestationNames = transactions.items.compactMap {
+      ($0.attributes as? TransactionFilterableAttributes)?.attestationName
+    }.reduce(into: [String]()) { unique, element in
+      if !unique.contains(element) {
+        unique.append(element)
+      }
+    }
+
+    let filterItems = distinctAttestationNames.map { attestationName in
+      return FilterItem(
+        id: UUID().uuidString,
+        name: attestationName,
+        selected: true,
+        isDefault: true,
+        filterableAction: Filter<TransactionFilterableAttributes>(predicate: { attributes, filter in
+          attributes.attestationName == filter.name
+        })
+      )
+    }
+
+    return filterItems
   }
 }

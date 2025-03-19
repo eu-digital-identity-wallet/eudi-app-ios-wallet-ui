@@ -15,10 +15,14 @@
  */
 public struct FilterIds {
   public static let ASCENDING_DESCENDING_GROUP = "ascending_descending_group"
+  public static let DOCUMENT_SIGNING_GROUP = "document_signing_group"
   public static let ORDER_BY_ASCENDING = "order_by_ascending"
   public static let ORDER_BY_DESCENDING = "order_by_descending"
   public static let FILTER_BY_STATE_GROUP_ID = "state_group_id"
   public static let FILTER_BY_STATUS_ID = "status_id"
+  public static let FILTER_BY_RELYING_PARY_NAME = "relying_party_name"
+  public static let FILTER_BY_ATTESTATION_NAME = "attestation_name"
+  public static let FILTER_BY_DOCUMENT_SIGNING = "document_signing"
   public static let FILTER_BY_DATE = "date"
   public static let FILTER_BY_STATE_VALID = "state_valid"
   public static let FILTER_BY_STATE_EXPIRED = "state_expired"
