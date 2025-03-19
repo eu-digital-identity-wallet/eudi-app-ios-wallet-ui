@@ -877,40 +877,6 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Document/AddDocumentOptionsView.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
-// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Document/AddDocumentOptionsViewModel.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Loading/BaseLoadingView.swift'
 
 import Cuckoo
@@ -2578,6 +2544,40 @@ import SwiftUI
 
 import Cuckoo
 import Foundation
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_storage
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_dashboard
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Option/AddDocumentOptionsView.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_storage
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_dashboard
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Option/AddDocumentOptionsViewModel.swift'
+
+import Cuckoo
+import SwiftUI
 import logic_resources
 @testable import logic_core
 @testable import logic_business

@@ -34,7 +34,10 @@ public extension ScannerUiConfig {
   enum Flow: Equatable, Sendable {
 
     case presentation
-    case issuing(IssuanceFlowUiConfig)
+    case issuing(
+      successNavigation: UIConfig.TwoWayNavigationType,
+      cancelNavigation: UIConfig.ThreeWayNavigationType
+    )
 
     var title: LocalizableStringKey {
       return switch self {

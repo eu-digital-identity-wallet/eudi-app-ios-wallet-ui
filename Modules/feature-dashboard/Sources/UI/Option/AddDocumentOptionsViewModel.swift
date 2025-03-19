@@ -16,30 +16,23 @@
 import SwiftUI
 import logic_ui
 import logic_resources
+import feature_common
 
 @Copyable
-public struct AddDocumentOptionsViewState: ViewState {
-  let isLoading: Bool
+struct AddDocumentOptionsViewState: ViewState {
   let error: ContentErrorView.Config?
-  let config: IssuanceFlowUiConfig
   let title: LocalizableStringKey
 }
 
-open class AddDocumentOptionsViewModel<Router: RouterHost>: ViewModel<Router, AddDocumentOptionsViewState> {
+class AddDocumentOptionsViewModel<Router: RouterHost>: ViewModel<Router, AddDocumentOptionsViewState> {
 
-  public init(
-    router: Router,
-    config: any UIConfigType
+  init(
+    router: Router
   ) {
-    guard let config = config as? IssuanceFlowUiConfig else {
-      fatalError("AddDocumentViewModel:: Invalid configuraton")
-    }
     super.init(
       router: router,
       initialState: .init(
-        isLoading: false,
         error: nil,
-        config: config,
         title: .addDocumentsToWallet
       )
     )
@@ -49,7 +42,20 @@ open class AddDocumentOptionsViewModel<Router: RouterHost>: ViewModel<Router, Ad
     router.push(
       with: .featureCommonModule(
         .qrScanner(
-          config: ScannerUiConfig(flow: .issuing(viewState.config))
+          config: ScannerUiConfig(
+            flow: .issuing(
+              successNavigation: .popTo(
+                .featureDashboardModule(
+                  .dashboard
+                )
+              ),
+              cancelNavigation: .popTo(
+                .featureDashboardModule(
+                  .issuanceAddDocumentOptions
+                )
+              )
+            )
+          )
         )
       )
     )

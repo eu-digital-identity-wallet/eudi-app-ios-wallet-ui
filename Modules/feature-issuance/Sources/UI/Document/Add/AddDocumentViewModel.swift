@@ -25,6 +25,7 @@ struct AddDocumentViewState: ViewState {
   let addDocumentCellModels: [AddDocumentUIModel]
   let error: ContentErrorView.Config?
   let config: IssuanceFlowUiConfig
+  let showFooterScanner: Bool
 
   var isFlowCancellable: Bool {
     return config.isExtraDocumentFlow
@@ -56,7 +57,8 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
       initialState: .init(
         addDocumentCellModels: AddDocumentUIModel.mocks,
         error: nil,
-        config: config
+        config: config,
+        showFooterScanner: config.isNoDocumentFlow
       )
     )
   }
@@ -95,11 +97,26 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
   }
 
   func onScanClick() {
-    router.push(with: .featureCommonModule(.qrScanner(config: ScannerUiConfig(flow: .issuing(viewState.config)))))
+    router.push(
+      with: .featureCommonModule(
+        .qrScanner(
+          config: ScannerUiConfig(
+            flow: .issuing(
+              successNavigation: .push(.featureDashboardModule(.dashboard)),
+              cancelNavigation: .popTo(
+                .featureIssuanceModule(
+                  .issuanceAddDocument(config: viewState.config)
+                )
+              )
+            )
+          )
+        )
+      )
+    )
   }
 
   func pop() {
-    router.popTo(with: .featureDashboardModule(.dashboard))
+    router.pop()
   }
 
   func toolbarContent() -> ToolBarContent? {
@@ -107,14 +124,14 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     case .noDocument:
       nil
     case .extraDocument:
-      .init(
-        trailingActions: [],
-        leadingActions: [
-          Action(image: Theme.shared.image.chevronLeft) {
-            self.pop()
-          }
-        ]
-      )
+        .init(
+          trailingActions: [],
+          leadingActions: [
+            Action(image: Theme.shared.image.chevronLeft) {
+              self.pop()
+            }
+          ]
+        )
     }
   }
 
@@ -298,9 +315,9 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
 
     let onSuccesNavigation = switch viewState.config.flow {
     case .noDocument:
-        UIConfig.DeepLinkNavigationType.push(screen: .featureDashboardModule(.dashboard))
+      UIConfig.DeepLinkNavigationType.push(screen: .featureDashboardModule(.dashboard))
     case .extraDocument:
-        UIConfig.DeepLinkNavigationType.pop(screen: .featureDashboardModule(.dashboard))
+      UIConfig.DeepLinkNavigationType.pop(screen: .featureDashboardModule(.dashboard))
     }
 
     switch state {
