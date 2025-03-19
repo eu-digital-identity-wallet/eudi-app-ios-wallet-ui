@@ -17,10 +17,10 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
-struct AddDocumentOptionsView<Router: RouterHost>: View {
-  @ObservedObject var viewModel: AddDocumentOptionsViewModel<Router>
+struct IssuanceOptionView<Router: RouterHost>: View {
+  @ObservedObject var viewModel: IssuanceOptionViewModel<Router>
 
-  init(with viewModel: AddDocumentOptionsViewModel<Router>) {
+  init(with viewModel: IssuanceOptionViewModel<Router>) {
     self.viewModel = viewModel
   }
 

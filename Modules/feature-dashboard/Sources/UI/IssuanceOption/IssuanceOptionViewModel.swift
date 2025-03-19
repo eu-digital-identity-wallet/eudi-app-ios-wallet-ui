@@ -19,12 +19,12 @@ import logic_resources
 import feature_common
 
 @Copyable
-struct AddDocumentOptionsViewState: ViewState {
+struct IssuanceOptionViewState: ViewState {
   let error: ContentErrorView.Config?
   let title: LocalizableStringKey
 }
 
-class AddDocumentOptionsViewModel<Router: RouterHost>: ViewModel<Router, AddDocumentOptionsViewState> {
+class IssuanceOptionViewModel<Router: RouterHost>: ViewModel<Router, IssuanceOptionViewState> {
 
   init(
     router: Router
@@ -51,7 +51,7 @@ class AddDocumentOptionsViewModel<Router: RouterHost>: ViewModel<Router, AddDocu
               ),
               cancelNavigation: .popTo(
                 .featureDashboardModule(
-                  .issuanceAddDocumentOptions
+                  .issuanceOption
                 )
               )
             )

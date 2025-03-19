@@ -120,10 +120,11 @@ private func scanFooter(
     }
 
     WrapButtonView(
-      style: .secondaryWithColor(
+      style: .custom(
         textColor: Theme.shared.color.primary,
         backgroundColor: Theme.shared.color.surfaceContainerLowest,
-        borderColor: Theme.shared.color.primary
+        borderColor: Theme.shared.color.primary,
+        useBorder: true
       ),
       title: .scanQrCode,
       onAction: action()

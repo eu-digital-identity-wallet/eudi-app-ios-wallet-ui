@@ -202,7 +202,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   func onAdd() {
     router.push(
       with: .featureDashboardModule(
-        .issuanceAddDocumentOptions
+        .issuanceOption
       )
     )
   }

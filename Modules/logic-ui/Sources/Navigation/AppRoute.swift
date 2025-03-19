@@ -56,7 +56,7 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
   case dashboard
   case signDocument
   case sideMenu
-  case issuanceAddDocumentOptions
+  case issuanceOption
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -66,8 +66,8 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
       (key: "SignDocument", arguments: [:])
     case .sideMenu:
       (key: "SideMenu", arguments: [:])
-    case .issuanceAddDocumentOptions:
-      (key: "issuanceAddDocumentOptions", arguments: [:])
+    case .issuanceOption:
+      (key: "issuanceOption", arguments: [:])
     }
   }
 }
