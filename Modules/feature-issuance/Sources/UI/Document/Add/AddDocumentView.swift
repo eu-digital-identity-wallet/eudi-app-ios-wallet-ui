@@ -110,8 +110,7 @@ private func scanFooter(
 
         Text(.or)
           .typography(Theme.shared.font.bodyMedium)
-          .foregroundColor(Theme.shared.color.onSurfaceVariant )
-          .shimmer(isLoading: viewState.isLoading)
+          .foregroundColor(Theme.shared.color.onSurfaceVariant)
 
         Theme.shared.image.scanDocumentImage
       }
