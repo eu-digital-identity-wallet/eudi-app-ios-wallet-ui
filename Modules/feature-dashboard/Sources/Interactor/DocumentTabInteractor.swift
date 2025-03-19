@@ -229,8 +229,8 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
           id: FilterIds.FILTER_BY_ISSUER_GROUP_ID,
           name: LocalizableStringKey.filterByIssuer.toString,
           filters: [],
-          filterableAction: Filter<DocumentFilterableAttributes>(predicate: { attribute, filter in
-            attribute.name == filter.name
+          filterableAction: FilterMultipleAction<DocumentFilterableAttributes>(predicate: { attribute, filter in
+            attribute.issuer == filter.name
           }),
           filterType: .issuer
         ),
