@@ -16,20 +16,33 @@
 import Copyable
 import logic_ui
 
-public typealias TransactionListItemSection = ListItemSection<TransactionClaimItem>
-private typealias TransactionExpandableListItem = ExpandableListItem<TransactionClaimItem>
-
 @Copyable
 public struct TransactionDetailsUIModel: Equatable, Identifiable, Routable {
   public let id: String
   public let transactionId: String
   public let transactionName: String
   public let transactionIdentifier: String
-  public let transactionDetailsDataSharedList: [TransactionListItemSection]
-  public let transactionDetailsDataSigned: [TransactionListItemSection]
+  public let transactionDetailsDataSharedList: [TransactionDetailsDataHolder]
+  public let transactionDetailsDataSigned: [TransactionDetailsDataHolder]
 
   public var log: String {
     "id: \(id), transactionId: \(transactionId), transactionName: \(transactionName)"
+  }
+}
+
+public struct TransactionDetailsDataHolder: Equatable, Identifiable, Sendable {
+  public let id: String
+  public let title: String
+  public let dataSharedItems: [ListItemData]
+
+  public init(
+    id: String = UUID().uuidString,
+    title: String,
+    dataSharedItems: [ListItemData]
+  ) {
+    self.id = id
+    self.title = title
+    self.dataSharedItems = dataSharedItems
   }
 }
 
@@ -41,77 +54,31 @@ public extension TransactionDetailsUIModel {
       transactionName: "transaction Name",
       transactionIdentifier: "transaction Identifier",
       transactionDetailsDataSharedList: [
-        .init(
-          id: UUID().uuidString,
+        TransactionDetailsDataHolder(
           title: "Digital ID",
-          listItems: [
-            .single(
-              .init(
-                collapsed: ListItemData(
-                  mainText: .custom("Joe"),
-                  overlineText: .custom("Family Name")
-                ),
-                domainModel: nil
-              )
+          dataSharedItems: [
+            ListItemData(
+              mainText: .custom("Joe"),
+              overlineText: .custom("Family Name")
             ),
-            .single(
-              .init(
-                collapsed: ListItemData(
-                  mainText: .custom("yes"),
-                  overlineText: .custom("Age over 18")
-                ),
-                domainModel: nil
-              )
-            )
-          ]
-        ),
-        .init(
-          id: UUID().uuidString,
-          title: "Driving License",
-          listItems: [
-            .single(
-              .init(
-                collapsed: ListItemData(
-                  mainText: .custom("Joe"),
-                  overlineText: .custom("Family Name")
-                ),
-                domainModel: nil
-              )
-            ),
-            .single(
-              .init(
-                collapsed: ListItemData(
-                  mainText: .custom("yes"),
-                  overlineText: .custom("Age over 18")
-                ),
-                domainModel: nil
-              )
+            ListItemData(
+              mainText: .custom("Joe"),
+              overlineText: .custom("Family Name")
             )
           ]
         )
       ],
       transactionDetailsDataSigned: [
-        .init(
-          id: UUID().uuidString,
-          title: "Driving License",
-          listItems: [
-            .single(
-              .init(
-                collapsed: ListItemData(
-                  mainText: .custom("Joe"),
-                  overlineText: .custom("Family Name")
-                ),
-                domainModel: nil
-              )
+        TransactionDetailsDataHolder(
+          title: "Signature details",
+          dataSharedItems: [
+            ListItemData(
+              mainText: .custom("Joe"),
+              overlineText: .custom("Family Name")
             ),
-            .single(
-              .init(
-                collapsed: ListItemData(
-                  mainText: .custom("yes"),
-                  overlineText: .custom("Age over 18")
-                ),
-                domainModel: nil
-              )
+            ListItemData(
+              mainText: .custom("Joe"),
+              overlineText: .custom("Family Name")
             )
           ]
         )

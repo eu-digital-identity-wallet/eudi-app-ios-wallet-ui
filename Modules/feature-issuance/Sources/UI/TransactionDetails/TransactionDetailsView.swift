@@ -68,41 +68,45 @@ private func content(
         isCompleted: state.transactionDetailsCardData.isCompleted
       )
 
-      VStack(spacing: SPACING_SMALL) {
-        Text(.transactionDetailsDataShare)
-          .typography(Theme.shared.font.bodySmall)
-          .fontWeight(.semibold)
-          .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-          .frame(maxWidth: .infinity, alignment: .leading)
+      if let transactionDetailsDataSharedList = state.transactionDetailsUi?.transactionDetailsDataSharedList {
+        VStack(spacing: SPACING_SMALL) {
+          Text(.transactionDetailsDataShare)
+            .typography(Theme.shared.font.bodySmall)
+            .fontWeight(.semibold)
+            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-        ForEach(state.transactionDetailsUi?.transactionDetailsDataSharedList ?? []) { item in
-          WrapExpandableListView(
-            header: .init(
-              mainText: .custom(item.title),
-              supportingText: .viewDetails
-            ),
-            items: item.listItems,
-            hideSensitiveContent: false
-          )
+          ForEach(transactionDetailsDataSharedList) { item in
+            WrapCardView {
+              ExpandableCardView(
+                title: .custom(item.title),
+                subtitle: .viewDetails
+              ) {
+                TransactionDetailsListItemsView(listItems: item.dataSharedItems)
+              }
+            }
+          }
         }
       }
 
-      VStack(spacing: SPACING_SMALL) {
-        Text(.transactionDetailsDataSigned)
-          .typography(Theme.shared.font.bodySmall)
-          .fontWeight(.semibold)
-          .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-          .frame(maxWidth: .infinity, alignment: .leading)
+      if let transactionDetailsDataSigned = state.transactionDetailsUi?.transactionDetailsDataSigned {
+        VStack(spacing: SPACING_SMALL) {
+          Text(.transactionDetailsDataSigned)
+            .typography(Theme.shared.font.bodySmall)
+            .fontWeight(.semibold)
+            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-        ForEach(state.transactionDetailsUi?.transactionDetailsDataSigned ?? []) { item in
-          WrapExpandableListView(
-            header: .init(
-              mainText: .custom(item.title),
-              supportingText: .viewDetails
-            ),
-            items: item.listItems,
-            hideSensitiveContent: false
-          )
+          ForEach(transactionDetailsDataSigned) { item in
+            WrapCardView {
+              ExpandableCardView(
+                title: .custom(item.title),
+                subtitle: .viewDetails
+              ) {
+                TransactionDetailsListItemsView(listItems: item.dataSharedItems)
+              }
+            }
+          }
         }
       }
 

@@ -13,6 +13,9 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
+import logic_ui
+
 public struct TransactionClaimItem: Sendable {
   private let transactionId: String
   private let elementIdentifier: String
@@ -39,15 +42,15 @@ public struct TransactionDetailsDomain: Sendable {
   private let transactionName: String
   private let transactionId: String
   private let transactionIdentifier: String?
-  private let sharedDataClaimItems: [TransactionClaimItem]
-  private let signedDataClaimItems: [TransactionClaimItem]
+  private let sharedDataClaimItems: [TransactionClaim]
+  private let signedDataClaimItems: [TransactionClaim]
 
   public init(
     transactionName: String,
     transactionId: String = "id",
     transactionIdentifier: String? = nil,
-    sharedDataClaimItems: [TransactionClaimItem],
-    signedDataClaimItems: [TransactionClaimItem]
+    sharedDataClaimItems: [TransactionClaim],
+    signedDataClaimItems: [TransactionClaim]
   ) {
     self.transactionName = transactionName
     self.transactionId = transactionId
@@ -57,8 +60,38 @@ public struct TransactionDetailsDomain: Sendable {
   }
 }
 
+public struct TransactionClaim: Sendable {
+  public let displayName: String
+  public let claims: [TransactionClaimItem]
+}
+
+extension TransactionClaimItem {
+  func toListItem() -> ListItemData {
+    ListItemData(
+      mainText: .custom(value),
+      supportingText: .custom(readableName)
+    )
+  }
+}
+
+extension TransactionClaim {
+  func toUiModel() -> TransactionDetailsDataHolder {
+    TransactionDetailsDataHolder(
+      title: displayName,
+      dataSharedItems: claims.map { $0.toListItem() }
+    )
+  }
+}
+
 public extension TransactionDetailsDomain {
   func toUiModel() -> TransactionDetailsUIModel {
-    TransactionDetailsUIModel.mockData()
+    TransactionDetailsUIModel(
+      id: UUID().uuidString,
+      transactionId: transactionId,
+      transactionName: transactionName,
+      transactionIdentifier: transactionIdentifier ?? "",
+      transactionDetailsDataSharedList: sharedDataClaimItems.map { $0.toUiModel() },
+      transactionDetailsDataSigned: signedDataClaimItems.map { $0.toUiModel() }
+    )
   }
 }

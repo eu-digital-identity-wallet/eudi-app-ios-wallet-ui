@@ -44,27 +44,52 @@ final class TransactionDetailsInteractorImpl: TransactionDetailsInteractor {
       transactionName: "A transaction name",
       transactionId: "randomId",
       sharedDataClaimItems: [
-        TransactionClaimItem(
-          transactionId: "0",
-          value: "John",
-          readableName: "given_name"
+        .init(
+          displayName: "Digital ID",
+          claims: [
+            TransactionClaimItem(
+              transactionId: "0",
+              value: "John",
+              readableName: "Given name"
+            ),
+            TransactionClaimItem(
+              transactionId: "1",
+              value: "Doe",
+              readableName: "Family name"
+            )
+          ]
         ),
-        TransactionClaimItem(
-          transactionId: "1",
-          value: "Doe",
-          readableName: "family_name"
+        .init(
+          displayName: "Driving License",
+          claims: [
+            TransactionClaimItem(
+              transactionId: "0",
+              value: "John",
+              readableName: "Given name"
+            ),
+            TransactionClaimItem(
+              transactionId: "1",
+              value: "Doe",
+              readableName: "Family name"
+            )
+          ]
         )
       ],
       signedDataClaimItems: [
-        TransactionClaimItem(
-          transactionId: "0",
-          value: "John",
-          readableName: "given_name"
-        ),
-        TransactionClaimItem(
-          transactionId: "1",
-          value: "Doe",
-          readableName: "family_name"
+        .init(
+          displayName: "Signature details",
+          claims: [
+            TransactionClaimItem(
+              transactionId: "0",
+              value: "John",
+              readableName: "Given name"
+            ),
+            TransactionClaimItem(
+              transactionId: "1",
+              value: "Doe",
+              readableName: "Family name"
+            )
+          ]
         )
       ]
     )
