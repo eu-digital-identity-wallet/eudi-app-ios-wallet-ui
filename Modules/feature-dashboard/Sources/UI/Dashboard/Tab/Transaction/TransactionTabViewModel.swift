@@ -154,6 +154,14 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
       }.store(in: &cancellables)
   }
 
+  func onTransactionDetails() {
+    router.push(
+      with: .featureIssuanceModule(
+        .transactionDetails
+      )
+    )
+  }
+
   private func updateToolBar() {
     self.onUpdateToolbar(
       .init(

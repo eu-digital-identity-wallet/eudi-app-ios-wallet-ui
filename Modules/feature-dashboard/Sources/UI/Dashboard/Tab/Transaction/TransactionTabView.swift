@@ -29,7 +29,9 @@ struct TransactionTabView<Router: RouterHost>: View {
     content(
       state: viewModel.viewState,
       searchQuery: $viewModel.searchQuery,
-      onAction: { _ in }
+      onAction: {
+        viewModel.onTransactionDetails()
+      }
     )
     .sheet(isPresented: $viewModel.isFilterModalShowing) {
       FiltersListView(sections: viewModel.viewState.filterUIModel) {
@@ -54,7 +56,7 @@ struct TransactionTabView<Router: RouterHost>: View {
 private func content(
   state: TransactionTabState,
   searchQuery: Binding<String>,
-  onAction: @escaping (TransactionUIModel) -> Void
+  onAction: @escaping () -> Void
 ) -> some View {
   VStack {
     if state.transactions.isEmpty && !searchQuery.wrappedValue.isEmpty {
@@ -72,10 +74,14 @@ private func content(
         ForEach(nonMonthCategories.sorted(by: { $0.order < $1.order }), id: \.self) { category in
           Section(header: Text(category.title)) {
             WrapCardView {
-              VStack(spacing: 0) {
-                WrapListItemsView(listItems: state.transactions[category]?.map({ transaction in
-                  transaction.listItem
-                }) ?? [])
+              VStack(spacing: .zero) {
+                WrapListItemsView(
+                  listItems: state.transactions[category]?.map({ transaction in
+                    transaction.listItem
+                  }) ?? []
+                ) { _ in
+                  onAction()
+                }
               }
             }
             .listRowSeparator(.hidden)
@@ -91,10 +97,14 @@ private func content(
         ForEach(sortedMonthCategories, id: \.self) { category in
           Section(header: Text(category.title)) {
             WrapCardView {
-              VStack(spacing: 0) {
-                WrapListItemsView(listItems: state.transactions[category]?.map({ transaction in
-                  transaction.listItem
-                }) ?? [])
+              VStack(spacing: .zero) {
+                WrapListItemsView(
+                  listItems: state.transactions[category]?.map({ transaction in
+                    transaction.listItem
+                  }) ?? []
+                ) { _ in
+                  onAction()
+                }
               }
             }
             .listRowSeparator(.hidden)
@@ -141,6 +151,6 @@ private func content(
   content(
     state: state,
     searchQuery: .constant(""),
-    onAction: { _ in }
+    onAction: {}
   )
 }
