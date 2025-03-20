@@ -27,6 +27,7 @@ public struct WrapListItemView: View {
   private let mainTextVerticalPadding: CGFloat?
   private let minHeight: Bool
   private let clickableArea: ClickableArea
+  private let isLoading: Bool
 
   private var overlineText: LocalizableStringKey? {
     guard
@@ -43,12 +44,14 @@ public struct WrapListItemView: View {
     mainTextVerticalPadding: CGFloat? = nil,
     minHeight: Bool = true,
     clickableArea: ClickableArea = .entireRow,
+    isLoading: Bool = false,
     action: (() -> Void)? = nil
   ) {
     self.listItem = listItem
     self.mainTextVerticalPadding = mainTextVerticalPadding
     self.minHeight = minHeight
     self.clickableArea = clickableArea
+    self.isLoading = isLoading
     self.action = action
   }
 
@@ -143,6 +146,8 @@ public struct WrapListItemView: View {
     .if(minHeight) {
       $0.frame(minHeight: 80, alignment: .leading)
     }
+    .disabled(self.isLoading)
+    .shimmer(isLoading: self.isLoading)
   }
 }
 
