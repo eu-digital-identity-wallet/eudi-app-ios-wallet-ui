@@ -445,6 +445,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "transaction_details_request_deletion_message")
     case .transactionDetailsScreenCardDateLabel:
       bundle.localizedString(forKey: "transaction_details_screen_card_date_label")
+    case .transactionDetailsCompleted:
+      bundle.localizedString(forKey: "transaction_details_completed")
     case .or:
       bundle.localizedString(forKey: "or")
     }

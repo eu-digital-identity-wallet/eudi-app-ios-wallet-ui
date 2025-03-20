@@ -56,3 +56,9 @@ public struct TransactionDetailsDomain: Sendable {
     self.signedDataClaimItems = signedDataClaimItems
   }
 }
+
+public extension TransactionDetailsDomain {
+  func toUiModel() -> TransactionDetailsUIModel {
+    TransactionDetailsUIModel.mockData()
+  }
+}

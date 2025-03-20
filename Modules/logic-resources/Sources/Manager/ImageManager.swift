@@ -33,6 +33,7 @@ public protocol ImageManagerProtocol: Sendable {
   var eye: Image { get }
   var eyeSlash: Image { get }
   var checkmarkCircleFill: Image { get }
+  var checkmarkCircle: Image { get }
   var checkmarkSquareFill: Image { get }
   var square: Image { get }
   var plus: Image { get }
@@ -88,6 +89,7 @@ final class ImageManager: ImageManagerProtocol {
     case eye = "eye"
     case eyeSlash = "eye.slash"
     case checkmarkCircleFill = "checkmark.circle.fill"
+    case checkmarkCircle = "checkmark.circle"
     case checkmarkSquareFill = "checkmark.square.fill"
     case square = "square"
     case plus = "plus"
@@ -180,6 +182,9 @@ final class ImageManager: ImageManagerProtocol {
   }
   var checkmarkCircleFill: Image {
     Image(systemName: ImageEnum.checkmarkCircleFill.rawValue)
+  }
+  var checkmarkCircle: Image {
+    Image(systemName: ImageEnum.checkmarkCircle.rawValue)
   }
   var checkmarkSquareFill: Image {
     Image(systemName: ImageEnum.checkmarkSquareFill.rawValue)

@@ -64,7 +64,8 @@ private func content(
         caption: state.transactionDetailsCardData.relyingPartyName,
         footerTitle: .transactionDetailsScreenCardDateLabel,
         footerSubtitle: state.transactionDetailsCardData.transactionDate,
-        isVerified: state.transactionDetailsCardData.isVerified
+        isVerified: state.transactionDetailsCardData.isVerified,
+        isCompleted: state.transactionDetailsCardData.isCompleted
       )
 
       VStack(spacing: SPACING_SMALL) {

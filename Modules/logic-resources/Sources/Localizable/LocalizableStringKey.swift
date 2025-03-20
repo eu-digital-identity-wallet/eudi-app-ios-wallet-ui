@@ -222,6 +222,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case transactionDetailsReportTransactionMessage
   case transactionDetailsRequestDeletionMessage
   case transactionDetailsScreenCardDateLabel
+  case transactionDetailsCompleted
   case or
 }
 

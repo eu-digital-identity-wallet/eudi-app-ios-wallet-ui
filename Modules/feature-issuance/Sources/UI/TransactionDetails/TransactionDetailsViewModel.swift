@@ -52,7 +52,8 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
           relyingPartyName: .custom("Central issuer"),
           transactionDate: .custom("16 February 2024"),
           status: .custom("Completed"),
-          isVerified: true
+          isVerified: true,
+          isCompleted: true
         ),
         transactionDetailsUi: nil,
         isLoading: false,
@@ -72,7 +73,7 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
     case .success(let transactions):
       self.setState {
         $0.copy(
-          transactionDetailsUi: TransactionDetailsUIModel.mockData(),
+          transactionDetailsUi: transactions.toUiModel(),
           isLoading: false
         )
       }
@@ -95,7 +96,6 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
 
   func toolbarContent() -> ToolBarContent? {
     .init(
-      trailingActions: [],
       leadingActions: [
         Action(image: Theme.shared.image.chevronLeft) {
           self.pop()

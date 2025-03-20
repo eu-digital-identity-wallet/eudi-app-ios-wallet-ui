@@ -27,6 +27,7 @@ public struct TransactionCardView: View {
 
   private let verifiedIcon: Image?
   private let isVerified: Bool
+  private let isCompleted: Bool
   private let onAction: (() -> Void)?
 
   public init(
@@ -38,6 +39,7 @@ public struct TransactionCardView: View {
     footerSubtitle: LocalizableStringKey,
     verifiedIcon: Image? = nil,
     isVerified: Bool = false,
+    isCompleted: Bool = false,
     onAction: (() -> Void)? = nil
   ) {
     self.backgroundColor = backgroundColor
@@ -48,6 +50,7 @@ public struct TransactionCardView: View {
     self.footerSubtitle = footerSubtitle
     self.verifiedIcon = verifiedIcon
     self.isVerified = isVerified
+    self.isCompleted = isCompleted
     self.onAction = onAction
   }
 
@@ -83,7 +86,25 @@ public struct TransactionCardView: View {
               .typography(Theme.shared.font.bodyMedium)
               .foregroundStyle(Theme.shared.color.onSurfaceVariant)
           }
+
           Spacer()
+
+          if isCompleted {
+            HStack(spacing: SPACING_SMALL) {
+              Text(.transactionDetailsCompleted)
+                .typography(Theme.shared.font.labelMedium)
+                .leftImage(
+                  image: Theme.shared.image.checkmarkCircle,
+                  spacing: SPACING_SMALL,
+                  size: 18
+                )
+            }
+            .padding(.horizontal, SPACING_SMALL)
+            .padding(.vertical, SPACING_SMALL)
+            .background(Theme.shared.color.success)
+            .cornerRadius(8)
+            .foregroundStyle(Theme.shared.color.onPrimary)
+          }
         }
       }
       .padding(.all, SPACING_MEDIUM)
@@ -109,6 +130,7 @@ public struct TransactionCardView: View {
       footerSubtitle: .custom("16 February 2024"),
       verifiedIcon: Theme.shared.image.verified,
       isVerified: true,
+      isCompleted: true,
       onAction: {}
     )
   }

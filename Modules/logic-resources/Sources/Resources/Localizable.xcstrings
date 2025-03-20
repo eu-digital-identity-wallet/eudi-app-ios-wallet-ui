@@ -1940,6 +1940,17 @@
         }
       }
     },
+    "transaction_details_completed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completed"
+          }
+        }
+      }
+    },
     "transaction_details_data_shared" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -22,6 +22,7 @@ public struct TransactionDetailsCardData {
   public let transactionDate: LocalizableStringKey
   public let status: LocalizableStringKey
   public let isVerified: Bool
+  public let isCompleted: Bool
 
   public init(
     transactionType: LocalizableStringKey,
@@ -29,7 +30,8 @@ public struct TransactionDetailsCardData {
     relyingPartyName: LocalizableStringKey,
     transactionDate: LocalizableStringKey,
     status: LocalizableStringKey,
-    isVerified: Bool = false
+    isVerified: Bool = false,
+    isCompleted: Bool = false
   ) {
     self.transactionItemLabel = transactionItemLabel
     self.transactionType = transactionType
@@ -37,5 +39,6 @@ public struct TransactionDetailsCardData {
     self.transactionDate = transactionDate
     self.status = status
     self.isVerified = isVerified
+    self.isCompleted = isCompleted
   }
 }
