@@ -91,15 +91,21 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
         await handleResumeIssuance()
       }
     case .failure(let error):
+      let link = hasDeepLink()
       setState {
         $0.copy(
           addDocumentCellModels: [],
-          error: .init(
+          error: link == nil
+          ? .init(
             description: .custom(error.localizedDescription),
             cancelAction: self.setState { $0.copy(error: nil) },
             action: { Task { await self.initialize() } }
           )
+          : nil
         )
+      }
+      if let link {
+        handleDeepLink(with: link)
       }
     }
   }
