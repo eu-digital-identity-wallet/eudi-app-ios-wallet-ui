@@ -32,7 +32,7 @@ struct AddDocumentViewState: ViewState {
   }
 
   var isLoading: Bool {
-    addDocumentCellModels.allSatisfy { $0.isLoading }
+    !addDocumentCellModels.isEmpty && addDocumentCellModels.allSatisfy { $0.isLoading }
   }
 }
 
@@ -64,6 +64,17 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
   }
 
   func initialize() async {
+
+    setState {
+      $0
+        .copy(
+          addDocumentCellModels: viewState.addDocumentCellModels.isEmpty
+          ? AddDocumentUIModel.mocks
+          : viewState.addDocumentCellModels
+        )
+        .copy(error: nil)
+    }
+
     switch await self.interactor.fetchScopedDocuments(
       with: viewState.config.flow
     ) {
@@ -82,9 +93,10 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     case .failure(let error):
       setState {
         $0.copy(
+          addDocumentCellModels: [],
           error: .init(
             description: .custom(error.localizedDescription),
-            cancelAction: self.pop(),
+            cancelAction: self.setState { $0.copy(error: nil) },
             action: { Task { await self.initialize() } }
           )
         )

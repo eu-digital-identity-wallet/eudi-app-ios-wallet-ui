@@ -79,12 +79,12 @@ private func content(
           WrapCardView {
             WrapListItemView(
               listItem: cell.listItem,
+              isLoading: cell.isLoading,
               action: { action(cell.configId) }
             )
           }
         }
       }
-      .shimmer(isLoading: viewState.isLoading)
     }
     .padding(.horizontal, Theme.shared.dimension.padding)
     .padding(.bottom)
@@ -126,6 +126,7 @@ private func scanFooter(
         useBorder: true
       ),
       title: .scanQrCode,
+      isLoading: viewState.isLoading,
       onAction: action()
     )
 
