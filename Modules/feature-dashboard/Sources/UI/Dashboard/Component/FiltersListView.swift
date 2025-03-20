@@ -124,7 +124,6 @@ struct FiltersListView: View {
             }
             .onChange(of: startDate) { newDate in
               startDate = newDate
-              print(startDate)
               updateFiltersCallback?(sectionID, filters[index].id)
             }
           case .end:
@@ -132,12 +131,11 @@ struct FiltersListView: View {
               Text(filters[index].title)
                 .onChange(of: endDate) { newDate in
                   endDate = newDate
-                  print(endDate)
                   updateFiltersCallback?(sectionID, filters[index].id)
                 }
             }
           case .none:
-            Text("None")
+            EmptyView()
           }
         }
       }

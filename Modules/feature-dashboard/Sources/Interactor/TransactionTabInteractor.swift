@@ -173,6 +173,32 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
           filterType: .other
         ),
         MultipleSelectionFilterGroup(
+          id: FilterIds.FILTER_BY_DATE,
+          name: LocalizableStringKey.filterByDate.toString,
+          filters: [
+            FilterItem(
+              id: FilterIds.FILTER_BY_START_DATE,
+              name: LocalizableStringKey.startDate.toString,
+              selected: false,
+              isDefault: false,
+              filterElementType: .picker,
+              dateRangeType: .start
+            ),
+            FilterItem(
+              id: FilterIds.FILTER_BY_END_DATE,
+              name: LocalizableStringKey.endDate.toString,
+              selected: false,
+              isDefault: false,
+              filterElementType: .picker,
+              dateRangeType: .end
+            )
+          ],
+          filterableAction: FilterMultipleAction<TransactionFilterableAttributes>(predicate: { _, _ in
+            return true
+          }),
+          filterType: .other
+        ),
+        MultipleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_RELYING_PARY_NAME,
           name: LocalizableStringKey.relyingParty.toString,
           filters: [],

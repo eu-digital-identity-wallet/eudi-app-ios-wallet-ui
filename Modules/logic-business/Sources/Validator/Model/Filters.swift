@@ -117,7 +117,8 @@ public struct FilterItem: Sendable {
   public let id: String
   public let name: String
   public let selected: Bool
-  public let selectedDate: String?
+  public let startDate: String?
+  public let endDate: String?
   public let isDefault: Bool
   public let filterElementType: FilterElementType
   public let filterableAction: FilterAction
@@ -127,7 +128,8 @@ public struct FilterItem: Sendable {
     id: String = UUID().uuidString,
     name: String,
     selected: Bool,
-    selectedDate: String? = nil,
+    startDate: String? = nil,
+    endDate: String? = nil,
     isDefault: Bool = false,
     filterElementType: FilterElementType = .radio,
     filterableAction: FilterAction = DefaultFilterAction(),
@@ -136,7 +138,8 @@ public struct FilterItem: Sendable {
     self.id = id
     self.name = name
     self.selected = selected
-    self.selectedDate = selectedDate
+    self.startDate = startDate
+    self.endDate = endDate
     self.isDefault = isDefault
     self.filterElementType = filterElementType
     self.filterableAction = filterableAction
