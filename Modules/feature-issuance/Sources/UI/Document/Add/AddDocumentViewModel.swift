@@ -75,6 +75,8 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
         .copy(error: nil)
     }
 
+    let link = hasDeepLink()
+
     switch await self.interactor.fetchScopedDocuments(
       with: viewState.config.flow
     ) {
@@ -85,13 +87,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
         )
         .copy(error: nil)
       }
-      if let link = hasDeepLink() {
-        handleDeepLink(with: link)
-      } else {
-        await handleResumeIssuance()
-      }
     case .failure(let error):
-      let link = hasDeepLink()
       setState {
         $0.copy(
           addDocumentCellModels: [],
@@ -104,9 +100,11 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
           : nil
         )
       }
-      if let link {
-        handleDeepLink(with: link)
-      }
+    }
+    if let link {
+      handleDeepLink(with: link)
+    } else {
+      await handleResumeIssuance()
     }
   }
 
