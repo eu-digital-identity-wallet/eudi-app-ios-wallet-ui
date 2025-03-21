@@ -20,7 +20,6 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable, Sendable {
 
   case mDocPid
   case sdJwtPid
-  case mDocPseudonym
   case other(formatType: String)
 
   public var rawValue: String {
@@ -29,8 +28,6 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable, Sendable {
       Self.mDocPidDocType
     case .sdJwtPid:
       Self.sdJwtPidDocType
-    case .mDocPseudonym:
-      Self.mDocPseudonymDocType
     case .other(let formatType):
       formatType
     }
@@ -42,8 +39,6 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable, Sendable {
       self = .mDocPid
     case Self.sdJwtPidDocType:
       self = .sdJwtPid
-    case Self.mDocPseudonymDocType:
-      self = .mDocPseudonym
     default:
       self = .other(formatType: rawValue)
     }
@@ -53,5 +48,4 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable, Sendable {
 private extension DocumentTypeIdentifier {
   static let mDocPidDocType = "eu.europa.ec.eudi.pid.1"
   static let sdJwtPidDocType = "urn:eu.europa.ec.eudi:pid:1"
-  static let mDocPseudonymDocType = "eu.europa.ec.eudi.pseudonym.age_over_18.1"
 }
