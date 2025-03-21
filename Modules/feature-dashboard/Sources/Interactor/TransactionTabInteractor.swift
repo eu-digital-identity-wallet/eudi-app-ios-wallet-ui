@@ -216,7 +216,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
           }),
           filterType: .attestation
         ),
-        SingleSelectionFilterGroup(
+        ReversibleSingleSelectionFilterGroup(
           id: FilterIds.DOCUMENT_SIGNING_GROUP,
           name: LocalizableStringKey.documentSigning.toString,
           filters: [
@@ -224,14 +224,18 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
               id: FilterIds.FILTER_BY_DOCUMENT_SIGNING,
               name: LocalizableStringKey.signedDocuments.toString,
               selected: false,
-              filterableAction: Filter<TransactionFilterableAttributes>(predicate: { attribute, _ in
-                if attribute.transactionType == .signing { return true }
-                return false
+              isDefault: false,
+              filterableAction: Filter<TransactionFilterableAttributes>(predicate: { attribute, filter in
+                switch filter.id {
+                case FilterIds.FILTER_BY_DOCUMENT_SIGNING:
+                  return attribute.transactionType == .signing
+                default:
+                  return true
+                }
               })
-
             )
           ],
-          filterType: .orderBy
+          filterType: .other
         )
       ],
       sortOrder: SortOrderType.descending

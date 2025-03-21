@@ -90,6 +90,26 @@ public struct SingleSelectionFilterGroup: FilterGroup {
 }
 
 @Copyable
+public struct ReversibleSingleSelectionFilterGroup: FilterGroup {
+  public var id: String
+  public var name: String
+  public var filters: [FilterItem]
+  public var filterType: FilterGroupType
+
+  public init(
+    id: String = UUID().uuidString,
+    name: String,
+    filters: [FilterItem],
+    filterType: FilterGroupType
+  ) {
+    self.id = id
+    self.name = name
+    self.filters = filters
+    self.filterType = filterType
+  }
+}
+
+@Copyable
 public struct MultipleSelectionFilterGroup: FilterGroup {
   public var id: String
   public var name: String

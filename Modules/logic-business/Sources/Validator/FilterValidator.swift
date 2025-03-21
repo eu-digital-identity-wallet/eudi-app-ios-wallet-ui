@@ -105,6 +105,8 @@ actor FilterValidatorImpl: FilterValidator {
         return applyMultipleSelectionFilter(currentList, multipleGroup)
       case let singleGroup as SingleSelectionFilterGroup:
         return applySingleSelectionFilter(currentList, singleGroup)
+      case let reversingSingleGroup as ReversibleSingleSelectionFilterGroup:
+        return applyReversibleSingleSelectionFilter(currentList, reversingSingleGroup)
       default:
         return currentList
       }
@@ -227,6 +229,21 @@ actor FilterValidatorImpl: FilterValidator {
       }
   }
 
+  private func applyReversibleSingleSelectionFilter(
+    _ currentList: FilterableList,
+    _ group: ReversibleSingleSelectionFilterGroup
+  ) -> FilterableList {
+    guard let selectedFilter = group.filters.first(where: { $0.selected }) else {
+      return currentList
+    }
+
+    return selectedFilter.filterableAction.applyFilter(
+      sortOrder: appliedFilters.sortOrder,
+      filterableItems: currentList,
+      filter: selectedFilter
+    )
+  }
+
   private func mergeFilters(
     newFilterGroup: FilterGroup,
     existingFilterGroup: FilterGroup
@@ -239,14 +256,17 @@ actor FilterValidatorImpl: FilterValidator {
     }
 
     switch newFilterGroup {
-      case var multipleGroup as MultipleSelectionFilterGroup:
-        multipleGroup.filters = mergedFilters
-        return multipleGroup
-      case var singleGroup as SingleSelectionFilterGroup:
-        singleGroup.filters = mergedFilters
-        return singleGroup
-      default:
-        return newFilterGroup
+    case var multipleGroup as MultipleSelectionFilterGroup:
+      multipleGroup.filters = mergedFilters
+      return multipleGroup
+    case var singleGroup as SingleSelectionFilterGroup:
+      singleGroup.filters = mergedFilters
+      return singleGroup
+    case var reversibleSingleGroup as ReversibleSingleSelectionFilterGroup:
+      reversibleSingleGroup.filters = mergedFilters
+      return reversibleSingleGroup
+    default:
+      return newFilterGroup
     }
   }
 
@@ -274,7 +294,24 @@ actor FilterValidatorImpl: FilterValidator {
       return singleGroup
     }
 
+    if var reversibleGroup = group as? ReversibleSingleSelectionFilterGroup {
+      reversibleGroup.filters = reversibleGroup.filters.map { filter in
+        return filter.id == filterId ? filter.copy(selected: !filter.selected) : filter
+      }
+      return reversibleGroup
+    }
+
     return group
+  }
+
+  func toggleFilterSelection(filters: [FilterItem], filterId: String) -> [FilterItem] {
+    return filters.map { filter in
+      if filter.id == filterId {
+        return FilterItem(id: filter.id, name: filter.name, selected: !filter.selected)
+      } else {
+        return filter
+      }
+    }
   }
 
   func checkIfDefaultFiltersApplied(groups: [FilterGroup]) -> Bool {
