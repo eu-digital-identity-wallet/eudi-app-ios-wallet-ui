@@ -126,32 +126,42 @@ struct WalletKitConfigImpl: WalletKitConfig {
       .Government: [
         .mDocPid,
         .sdJwtPid,
-        .mDocPseudonym,
         .other(formatType: "org.iso.18013.5.1.mDL"),
+        .other(formatType: "eu.europa.ec.eudi.pseudonym.age_over_18.1"),
+        .other(formatType: "urn:eu.europa.ec.eudi:pseudonym_age_over_18:1"),
         .other(formatType: "eu.europa.ec.eudi.tax.1"),
-        .other(formatType: "eu.europa.ec.eudi.pseudonym.age_over_18.deferred_endpoint")
+        .other(formatType: "urn:eu.europa.ec.eudi:tax:1"),
+        .other(formatType: "eu.europa.ec.eudi.pseudonym.age_over_18.deferred_endpoint"),
+        .other(formatType: "eu.europa.ec.eudi.cor.1")
       ],
       .Travel: [
         .other(formatType: "org.iso.23220.2.photoid.1"),
+        .other(formatType: "org.iso.23220.photoID.1"),
         .other(formatType: "org.iso.18013.5.1.reservation")
       ],
       .Finance: [
-        .other(formatType: "eu.europa.ec.eudi.iban.1")
+        .other(formatType: "eu.europa.ec.eudi.iban.1"),
+        .other(formatType: "urn:eu.europa.ec.eudi:iban:1")
       ],
       .Education: [],
       .Health: [
         .other(formatType: "eu.europa.ec.eudi.hiid.1"),
-        .other(formatType: "eu.europa.ec.eudi.ehic.1")
+        .other(formatType: "urn:eu.europa.ec.eudi:hiid:1"),
+        .other(formatType: "eu.europa.ec.eudi.ehic.1"),
+        .other(formatType: "urn:eu.europa.ec.eudi:ehic:1")
       ],
       .SocialSecurity: [
-        .other(formatType: "eu.europa.ec.eudi.samplepda1.1")
+        .other(formatType: "eu.europa.ec.eudi.samplepda1.1"),
+        .other(formatType: "urn:eu.europa.ec.eudi:pda1:1")
       ],
       .Retail: [
         .other(formatType: "eu.europa.ec.eudi.loyalty.1"),
-        .other(formatType: "eu.europa.ec.eudi.msisdn.1")
+        .other(formatType: "eu.europa.ec.eudi.msisdn.1"),
+        .other(formatType: "urn:eu.europa.ec.eudi:msisdn:1")
       ],
       .Other: [
-        .other(formatType: "eu.europa.ec.eudi.por.1")
+        .other(formatType: "eu.europa.ec.eudi.por.1"),
+        .other(formatType: "urn:eu.europa.ec.eudi:por:1")
       ]
     ]
   }
