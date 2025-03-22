@@ -115,16 +115,41 @@ platform :ios do
     if ENV['PROD_REMOTE_REPO']
       upload_tag(
         remoteUrl: ENV['PROD_REMOTE_REPO'],
-        tag: tagVersion,
+        tag: tagVersion
       )
     end
-  
+
     if ENV['DEV_REMOTE_REPO']
       upload_tag(
         remoteUrl: ENV['DEV_REMOTE_REPO'],
         tag: tagVersion,
       )
     end
+
+    if ENV['GITHUB_RELEASE_REPO'] && ENV['GITHUB_RELEASE_TOKEN']
+      github_release(
+        token: ENV['GITHUB_RELEASE_TOKEN'],
+        repo: ENV['GITHUB_RELEASE_REPO'],
+        tag: tagVersion,
+        version: fullVersion
+      )
+    end
+  
+  end
+
+  desc "Release to github"
+  lane :github_release do |values|
+    token = values[:token]
+    repo = values[:repo]
+    tag = values[:tag]
+    version = values[:version]
+    github_release = set_github_release(
+      repository_name: repo,
+      api_token: token,
+      name: version,
+      tag_name: tag,
+      is_generate_release_notes: true
+    )
   end
 
   desc "Upload tag to remote repo"
