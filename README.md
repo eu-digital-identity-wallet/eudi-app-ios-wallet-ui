@@ -103,33 +103,9 @@ Minimum device requirements
 
 ### Prerequisites
 
-To complete the flows described below, you must build and run the application with Xcode. Alternatively, you can directly download the Android app onto your device.
+To complete the flows described below, you must build and run the application with Xcode. Alternatively, you can download the iOS app directly onto your device through TestFlight.
 
-App center download method (Android app)
-
-In addition to building the app from the source, you can also use the Android app, which you can download *[here](https://install.appcenter.ms/orgs/eu-digital-identity-wallet/apps/eudi-reference-android/distribution_groups/eudi%20wallet%20(demo)%20public)*
-
-Run the app from the source (Xcode build)
-
-Clone this repo and make sure you have access to the dependencies below:
-
-[iso18013-data-model](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git)
-
-[iso18013-data-transfer](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git)
-
-[iso18013-security](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git)
-
-[wallet-storage.](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git)
-
-[wallet-kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit)
-
-[openid4vp-swift](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git)
-
-[presentation-exchange-swift](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-presentation-exchange-swift.git)
-
-[openid4vci-swift](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift)
-
-[eudi-lib-ios-rqes-ui](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui)
+You can download [here](https://testflight.apple.com/join/S6jkqx1B)
 
 You will also need to download the Android Verifier app. More information can be found [here](wiki/verifier_proximity.md)
 
