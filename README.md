@@ -103,9 +103,7 @@ Minimum device requirements
 
 ### Prerequisites
 
-To complete the flows described below, you must build and run the application with Xcode. Alternatively, you can download the iOS app directly onto your device through TestFlight.
-
-You can download [here](https://testflight.apple.com/join/S6jkqx1B)
+To complete the flows described below, you must build and run the application with Xcode. Alternatively, you can download the Android app [here](https://github.com/eu-digital-identity-wallet/eudi-app-android-wallet-ui/releases).
 
 You will also need to download the Android Verifier app. More information can be found [here](wiki/verifier_proximity.md)
 
