@@ -46,9 +46,7 @@ public struct FloatingActionButtonBarView: View {
       FloatingActionButtonView(
         title: .addDoc,
         textColor: Theme.shared.color.onSurface,
-        backgroundColor: colorScheme == .dark
-        ? Theme.shared.color.background
-        : Theme.shared.color.background,
+        backgroundColor: Theme.shared.color.background,
         icon: Theme.shared.image.plus,
         iconColor: Theme.shared.color.onSurface,
         isLoading: isLoading,
