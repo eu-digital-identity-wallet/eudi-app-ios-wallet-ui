@@ -62,7 +62,7 @@ public struct AddNewDocumentCellView: View {
             .frame(maxWidth: 32)
           Text(title)
             .typography(Theme.shared.font.bodyLarge)
-            .foregroundColor(isEnabled ? Theme.shared.color.onSurface : Theme.shared.color.onSurface)
+            .foregroundColor(Theme.shared.color.onSurface)
           Spacer()
           Theme.shared.image.plus
             .font(.body.bold())

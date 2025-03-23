@@ -36,11 +36,7 @@ public struct WrapCheckBoxView: View {
   let onTap: TapListener
 
   var checkBoxColor: Color {
-    if self.isEnabled {
-      Theme.shared.color.primary
-    } else {
-      Theme.shared.color.onSurface
-    }
+    Theme.shared.color.primary
   }
 
   var titleTextColor: Color {
