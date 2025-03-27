@@ -133,6 +133,22 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
     }
   }
 
+  func updateDateFilters(
+    sectionID: String,
+    filterID: String,
+    startDate: Date,
+    endDate: Date
+  ) {
+    Task {
+      await interactor.updateDateFilters(
+        sectionID: sectionID,
+        filterID: filterID,
+        startDate: startDate,
+        endDate: endDate
+      )
+    }
+  }
+
   private func onMyWallet() {
     router.push(
       with: .featureDashboardModule(

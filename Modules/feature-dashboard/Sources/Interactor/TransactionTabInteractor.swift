@@ -40,6 +40,7 @@ public protocol TransactionTabInteractor: Sendable {
   func resetFilters() async
   func revertFilters() async
   func updateFilters(sectionID: String, filterID: String)  async
+  func updateDateFilters(sectionID: String, filterID: String, startDate: Date, endDate: Date)  async
   func applySearch(query: String) async
 }
 
@@ -97,8 +98,8 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
             searchTags: transactionSearchTags,
             name: transaction.name,
             status: transaction.status,
-            startDate: transaction.transactionDate,
-            endDate: transaction.transactionDate,
+            startDate: transaction.transactionDate.toDate() ?? Date.now,
+            endDate: transaction.transactionDate.toDate() ?? Date.now,
             relyingPartyName: transaction.relyingPartyName,
             attestationName: transaction.attestationName,
             transactionType: transaction.transactionType
@@ -144,6 +145,51 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
           filterType: .orderBy
         ),
         MultipleSelectionFilterGroup(
+          id: FilterIds.FILTER_BY_DATE,
+          name: LocalizableStringKey.filterByDate.toString,
+          filters: [
+            FilterItem(
+              id: FilterIds.FILTER_BY_START_DATE,
+              name: LocalizableStringKey.startDate.toString,
+              selected: true,
+              isDefault: true,
+              selectedDate: Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date(),
+              filterElementType: .datePicker,
+              dateRangeType: .start
+            ),
+            FilterItem(
+              id: FilterIds.FILTER_BY_END_DATE,
+              name: LocalizableStringKey.endDate.toString,
+              selected: true,
+              isDefault: true,
+              selectedDate: Calendar.current.date(byAdding: .year, value: +1, to: Date()) ?? Date(),
+              filterElementType: .datePicker,
+              dateRangeType: .end
+            )
+          ],
+          filterableAction: FilterMultipleAction<TransactionFilterableAttributes>(predicate: { attribute, filter in
+            switch filter.id {
+            case FilterIds.FILTER_BY_START_DATE:
+                if let selectedDate = filter.selectedDate, let startDate = attribute.startDate {
+                  print("---------- FILTER_BY_START_DATE")
+                  return selectedDate <= startDate
+                } else {
+                  return true
+                }
+            case FilterIds.FILTER_BY_END_DATE:
+                if let selectedDate = filter.selectedDate, let endDate = attribute.endDate {
+                  print("---------- FILTER_BY_END_DATE")
+                  return selectedDate >= endDate
+                } else {
+                  return true
+                }
+            default:
+                return true
+            }
+          }),
+          filterType: .other
+        ),
+        MultipleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_STATUS_ID,
           name: LocalizableStringKey.filterByStatus.toString,
           filters: [
@@ -169,32 +215,6 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
             default:
               true
             }
-          }),
-          filterType: .other
-        ),
-        MultipleSelectionFilterGroup(
-          id: FilterIds.FILTER_BY_DATE,
-          name: LocalizableStringKey.filterByDate.toString,
-          filters: [
-            FilterItem(
-              id: FilterIds.FILTER_BY_START_DATE,
-              name: LocalizableStringKey.startDate.toString,
-              selected: false,
-              isDefault: false,
-              filterElementType: .picker,
-              dateRangeType: .start
-            ),
-            FilterItem(
-              id: FilterIds.FILTER_BY_END_DATE,
-              name: LocalizableStringKey.endDate.toString,
-              selected: false,
-              isDefault: false,
-              filterElementType: .picker,
-              dateRangeType: .end
-            )
-          ],
-          filterableAction: FilterMultipleAction<TransactionFilterableAttributes>(predicate: { _, _ in
-            return true
           }),
           filterType: .other
         ),
@@ -256,6 +276,15 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
 
   func updateFilters(sectionID: String, filterID: String)  async {
     await filterValidator.updateFilter(filterGroupId: sectionID, filterId: filterID)
+  }
+
+  func updateDateFilters(
+    sectionID: String,
+    filterID: String,
+    startDate: Date,
+    endDate: Date
+  )  async {
+    await filterValidator.updateDateFilters(filterGroupId: sectionID, filterId: filterID, startDate: startDate, endDate: endDate)
   }
 
   func updateLists(filterableList: FilterableList) async {
@@ -325,6 +354,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
             id: filter.id,
             title: filter.name,
             selected: filter.selected,
+            selectedDate: filter.selectedDate,
             filterAction: filter.filterableAction,
             filterSectionType: filter.filterElementType,
             dateRangeType: filter.dateRangeType

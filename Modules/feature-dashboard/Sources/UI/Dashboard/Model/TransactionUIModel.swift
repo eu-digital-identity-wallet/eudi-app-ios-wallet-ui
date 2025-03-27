@@ -20,6 +20,15 @@ import logic_resources
 import logic_business
 import logic_ui
 
+extension String {
+  func toDate(format: String = "dd MMM yyyy hh:mm a", locale: Locale = .init(identifier: "en_US_POSIX")) -> Date? {
+    let formatter = DateFormatter()
+    formatter.dateFormat = format
+    formatter.locale = locale
+    return formatter.date(from: self)
+  }
+}
+
 public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload {
   public let id: String
   public let name: String

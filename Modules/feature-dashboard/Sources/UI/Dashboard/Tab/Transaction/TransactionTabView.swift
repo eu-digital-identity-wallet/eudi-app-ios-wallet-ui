@@ -44,6 +44,9 @@ struct TransactionTabView<Router: RouterHost>: View {
       updateFiltersCallback: { sectionID, filterID in
         viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
       }
+      updateDateFiltersCallback: { sectionID, filterID, startDate, endDate in
+        viewModel.updateDateFilters(sectionID: sectionID, filterID: filterID, startDate: startDate, endDate: endDate)
+      }
     }
     .onAppear {
       viewModel.onCreate()

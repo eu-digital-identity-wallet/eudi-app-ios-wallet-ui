@@ -33,7 +33,7 @@ public enum DateRangeType: Sendable {
 
 public enum FilterElementType: Sendable {
   case radio
-  case picker
+  case datePicker
 }
 
 @Copyable
@@ -137,33 +137,30 @@ public struct FilterItem: Sendable {
   public let id: String
   public let name: String
   public let selected: Bool
-  public let startDate: String?
-  public let endDate: String?
   public let isDefault: Bool
+  public let selectedDate: Date?
   public let filterElementType: FilterElementType
-  public let filterableAction: FilterAction
   public let dateRangeType: DateRangeType?
+  public let filterableAction: FilterAction
 
   public init(
     id: String = UUID().uuidString,
     name: String,
     selected: Bool,
-    startDate: String? = nil,
-    endDate: String? = nil,
     isDefault: Bool = false,
+    selectedDate: Date? = nil,
     filterElementType: FilterElementType = .radio,
-    filterableAction: FilterAction = DefaultFilterAction(),
-    dateRangeType: DateRangeType? = nil
+    dateRangeType: DateRangeType? = nil,
+    filterableAction: FilterAction = DefaultFilterAction()
   ) {
     self.id = id
     self.name = name
     self.selected = selected
-    self.startDate = startDate
-    self.endDate = endDate
     self.isDefault = isDefault
+    self.selectedDate = selectedDate
     self.filterElementType = filterElementType
-    self.filterableAction = filterableAction
     self.dateRangeType = dateRangeType
+    self.filterableAction = filterableAction
   }
 }
 

@@ -23,12 +23,13 @@ struct FiltersListView: View {
   @Environment(\.dismiss) var dismiss
 
   @State private var isApplied: Bool = false
-  @State private var startDate: Date = Date()
-  @State private var endDate: Date = Date()
+  @State private var startDate: Date = Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date()
+  @State private var endDate: Date = Calendar.current.date(byAdding: .year, value: 1, to: Date()) ?? Date()
 
   var resetFiltersAction: () -> Void
   var applyFiltersAction: () -> Void
   var updateFiltersCallback: ((String, String) -> Void)?
+  var updateDateFiltersCallback: ((String, String, Date, Date) -> Void)?
   var revertFilters: () -> Void
 
   let sections: [FilterUISection]
@@ -38,12 +39,14 @@ struct FiltersListView: View {
     resetFiltersAction: @escaping () -> Void,
     applyFiltersAction: @escaping () -> Void,
     revertFilters: @escaping () -> Void,
-    updateFiltersCallback: ((String, String) -> Void)?
+    updateFiltersCallback: ((String, String) -> Void)?,
+    updateDateFiltersCallback: ((String, String, Date, Date) -> Void)? = nil
   ) {
     self.sections = sections
     self.resetFiltersAction = resetFiltersAction
     self.applyFiltersAction = applyFiltersAction
     self.updateFiltersCallback = updateFiltersCallback
+    self.updateDateFiltersCallback = updateDateFiltersCallback
     self.revertFilters = revertFilters
   }
 
@@ -116,22 +119,32 @@ struct FiltersListView: View {
           .onTapGesture {
             updateFiltersCallback?(sectionID, filters[index].id)
           }
-        } else if filters[index].filterSectionType == .picker {
+        } else if filters[index].filterSectionType == .datePicker {
           switch filters[index].dateRangeType {
           case .start:
-            DatePicker(selection: $startDate, in: ...Date.now, displayedComponents: .date) {
+            DatePicker(selection: $startDate, displayedComponents: .date) {
               Text(filters[index].title)
+            }
+            .onAppear {
+              if let filterDate = filters[index].selectedDate {
+                startDate = filterDate
+              }
             }
             .onChange(of: startDate) { newDate in
               startDate = newDate
-              updateFiltersCallback?(sectionID, filters[index].id)
+              updateDateFiltersCallback?(sectionID, filters[index].id, newDate, endDate)
             }
           case .end:
-            DatePicker(selection: $endDate, in: ...Date.now, displayedComponents: .date) {
+            DatePicker(selection: $endDate, displayedComponents: .date) {
               Text(filters[index].title)
+                .onAppear {
+                  if let filterDate = filters[index].selectedDate {
+                    endDate = filterDate
+                  }
+                }
                 .onChange(of: endDate) { newDate in
                   endDate = newDate
-                  updateFiltersCallback?(sectionID, filters[index].id)
+                  updateDateFiltersCallback?(sectionID, filters[index].id, startDate, newDate)
                 }
             }
           case .none:

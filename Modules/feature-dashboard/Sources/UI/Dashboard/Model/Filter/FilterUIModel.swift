@@ -27,6 +27,7 @@ public struct FilterUIItem: Sendable, Identifiable {
   public let id: String
   public let title: String
   public let selected: Bool
+  public let selectedDate: Date?
   public let filterAction: FilterAction
   public let filterSectionType: FilterElementType
   public let dateRangeType: DateRangeType?
@@ -35,6 +36,7 @@ public struct FilterUIItem: Sendable, Identifiable {
     id: String,
     title: String,
     selected: Bool,
+    selectedDate: Date? = nil,
     filterAction: FilterAction,
     filterSectionType: FilterElementType,
     dateRangeType: DateRangeType? = nil
@@ -42,6 +44,7 @@ public struct FilterUIItem: Sendable, Identifiable {
     self.id = id
     self.title = title
     self.selected = selected
+    self.selectedDate = selectedDate
     self.filterAction = filterAction
     self.filterSectionType = filterSectionType
     self.dateRangeType = dateRangeType

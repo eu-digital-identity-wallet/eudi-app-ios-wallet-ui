@@ -31,6 +31,7 @@ public protocol FilterValidator: Sendable {
   func resetFilters() async
   func revertFilters() async
   func updateFilter(filterGroupId: String, filterId: String) async
+  func updateDateFilters(filterGroupId: String, filterId: String, startDate: Date, endDate: Date) async
   func updateSortOrder(sortOrder: SortOrderType) async
 }
 
@@ -171,6 +172,36 @@ actor FilterValidatorImpl: FilterValidator {
     )
   }
 
+  func updateDateFilters(filterGroupId: String, filterId: String, startDate: Date, endDate: Date) async {
+    let filtersUpdate = snapshotFilters.isEmpty ? appliedFilters : snapshotFilters
+
+    let updatedFilterGroups = filtersUpdate.filterGroups.map { group in
+      return group.id == filterGroupId ? updateFilterInGroup(group: group, filterId: filterId, startDate: startDate, endDate: endDate) : group
+    }
+
+    let sortOrder = updatedFilterGroups
+      .filter { $0.filterType == .orderBy }
+      .flatMap { $0.filters }
+      .first { $0.selected }?.id == FilterIds.ORDER_BY_ASCENDING
+    ? SortOrderType.ascending
+    : SortOrderType.descending
+
+    let updatedFilters = filtersUpdate.copy(
+      filterGroups: updatedFilterGroups,
+      sortOrder: sortOrder
+    )
+
+    snapshotFilters = updatedFilters
+
+    self.filterResultSubject.send(
+      .success(
+        .filterUpdateResult(
+          updatedFilters: snapshotFilters
+        )
+      )
+    )
+  }
+
   func revertFilters() async {
     snapshotFilters = Filters.emptyFilters()
     self.filterResultSubject.send(
@@ -272,12 +303,21 @@ actor FilterValidatorImpl: FilterValidator {
 
   private func updateFilterInGroup(
     group: FilterGroup,
-    filterId: String
+    filterId: String,
+    startDate: Date? = nil,
+    endDate: Date? = nil
   ) -> FilterGroup {
     if var multipleGroup = group as? MultipleSelectionFilterGroup {
       multipleGroup.filters = multipleGroup.filters.map { filter in
         let updatedFilter = filter
         if filter.id == filterId {
+          if filter.id == FilterIds.FILTER_BY_START_DATE {
+//            return updatedFilter.copy(selected: !filter.selected, selectedDate: startDate)
+          }
+          if filter.id == FilterIds.FILTER_BY_END_DATE {
+            return updatedFilter.copy(selected: !filter.selected, selectedDate: endDate)
+          }
+
           return updatedFilter.copy(selected: !filter.selected)
         }
         return updatedFilter
