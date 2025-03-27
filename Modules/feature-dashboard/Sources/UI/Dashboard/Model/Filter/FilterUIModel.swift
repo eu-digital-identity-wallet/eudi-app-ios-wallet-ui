@@ -27,27 +27,27 @@ public struct FilterUIItem: Sendable, Identifiable {
   public let id: String
   public let title: String
   public let selected: Bool
-  public let selectedDate: Date?
+  public let startDate: Date?
+  public let endDate: Date?
   public let filterAction: FilterAction
   public let filterSectionType: FilterElementType
-  public let dateRangeType: DateRangeType?
 
   init(
     id: String,
     title: String,
     selected: Bool,
-    selectedDate: Date? = nil,
+    startDate: Date? = nil,
+    endDate: Date? = nil,
     filterAction: FilterAction,
-    filterSectionType: FilterElementType,
-    dateRangeType: DateRangeType? = nil
+    filterSectionType: FilterElementType
   ) {
     self.id = id
     self.title = title
     self.selected = selected
-    self.selectedDate = selectedDate
+    self.startDate = startDate
+    self.endDate = endDate
     self.filterAction = filterAction
     self.filterSectionType = filterSectionType
-    self.dateRangeType = dateRangeType
   }
 }
 

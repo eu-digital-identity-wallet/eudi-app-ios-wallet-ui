@@ -24,6 +24,7 @@ public enum FilterGroupType: Sendable {
   case attestation
   case other
   case orderBy
+  case dateRange
 }
 
 public enum DateRangeType: Sendable {
@@ -138,9 +139,9 @@ public struct FilterItem: Sendable {
   public let name: String
   public let selected: Bool
   public let isDefault: Bool
-  public let selectedDate: Date?
+  public let startDate: Date?
+  public let endDate: Date?
   public let filterElementType: FilterElementType
-  public let dateRangeType: DateRangeType?
   public let filterableAction: FilterAction
 
   public init(
@@ -148,18 +149,18 @@ public struct FilterItem: Sendable {
     name: String,
     selected: Bool,
     isDefault: Bool = false,
-    selectedDate: Date? = nil,
+    startDate: Date? = nil,
+    endDate: Date? = nil,
     filterElementType: FilterElementType = .radio,
-    dateRangeType: DateRangeType? = nil,
     filterableAction: FilterAction = DefaultFilterAction()
   ) {
     self.id = id
     self.name = name
     self.selected = selected
     self.isDefault = isDefault
-    self.selectedDate = selectedDate
+    self.startDate = startDate
+    self.endDate = endDate
     self.filterElementType = filterElementType
-    self.dateRangeType = dateRangeType
     self.filterableAction = filterableAction
   }
 }

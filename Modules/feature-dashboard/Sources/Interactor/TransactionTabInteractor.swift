@@ -98,8 +98,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
             searchTags: transactionSearchTags,
             name: transaction.name,
             status: transaction.status,
-            startDate: transaction.transactionDate.toDate() ?? Date.now,
-            endDate: transaction.transactionDate.toDate() ?? Date.now,
+            creationDate: transaction.transactionDate.toDate() ?? Date.now,
             relyingPartyName: transaction.relyingPartyName,
             attestationName: transaction.attestationName,
             transactionType: transaction.transactionType
@@ -144,50 +143,33 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
           ],
           filterType: .orderBy
         ),
-        MultipleSelectionFilterGroup(
-          id: FilterIds.FILTER_BY_DATE,
+        SingleSelectionFilterGroup(
+          id: FilterIds.FILTER_BY_TRANSACTION_DATE_GROUP_ID,
           name: LocalizableStringKey.filterByDate.toString,
           filters: [
             FilterItem(
-              id: FilterIds.FILTER_BY_START_DATE,
-              name: LocalizableStringKey.startDate.toString,
+              id: FilterIds.FILTER_BY_TRANSACTION_DATE_RANGE,
+              name: LocalizableStringKey.defaultLabel.toString,
               selected: true,
               isDefault: true,
-              selectedDate: Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date(),
+              startDate: Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date(),
+              endDate: Calendar.current.date(byAdding: .year, value: +1, to: Date()) ?? Date(),
               filterElementType: .datePicker,
-              dateRangeType: .start
-            ),
-            FilterItem(
-              id: FilterIds.FILTER_BY_END_DATE,
-              name: LocalizableStringKey.endDate.toString,
-              selected: true,
-              isDefault: true,
-              selectedDate: Calendar.current.date(byAdding: .year, value: +1, to: Date()) ?? Date(),
-              filterElementType: .datePicker,
-              dateRangeType: .end
+              filterableAction: Filter<TransactionFilterableAttributes>(predicate: { attribute, filter in
+                guard
+                  let creationDate = attribute.creationDate,
+                  let start = filter.startDate,
+                  let end = filter.endDate
+                else {
+                  return filter.startDate == nil && filter.endDate == nil
+                    ? true
+                    : false
+                }
+                return (start...end).contains(creationDate)
+              })
             )
           ],
-          filterableAction: FilterMultipleAction<TransactionFilterableAttributes>(predicate: { attribute, filter in
-            switch filter.id {
-            case FilterIds.FILTER_BY_START_DATE:
-                if let selectedDate = filter.selectedDate, let startDate = attribute.startDate {
-                  print("---------- FILTER_BY_START_DATE")
-                  return selectedDate <= startDate
-                } else {
-                  return true
-                }
-            case FilterIds.FILTER_BY_END_DATE:
-                if let selectedDate = filter.selectedDate, let endDate = attribute.endDate {
-                  print("---------- FILTER_BY_END_DATE")
-                  return selectedDate >= endDate
-                } else {
-                  return true
-                }
-            default:
-                return true
-            }
-          }),
-          filterType: .other
+          filterType: .dateRange
         ),
         MultipleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_STATUS_ID,
@@ -354,10 +336,10 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
             id: filter.id,
             title: filter.name,
             selected: filter.selected,
-            selectedDate: filter.selectedDate,
+            startDate: filter.startDate,
+            endDate: filter.endDate,
             filterAction: filter.filterableAction,
-            filterSectionType: filter.filterElementType,
-            dateRangeType: filter.dateRangeType
+            filterSectionType: filter.filterElementType
           )
         },
         sectionTitle: filteredGroup.name

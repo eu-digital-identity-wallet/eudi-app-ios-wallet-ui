@@ -120,35 +120,30 @@ struct FiltersListView: View {
             updateFiltersCallback?(sectionID, filters[index].id)
           }
         } else if filters[index].filterSectionType == .datePicker {
-          switch filters[index].dateRangeType {
-          case .start:
-            DatePicker(selection: $startDate, displayedComponents: .date) {
-              Text(filters[index].title)
+          DatePicker(selection: $startDate, displayedComponents: .date) {
+            Text(.startDate)
+          }
+          .onAppear {
+            if let date = filters[index].startDate {
+              startDate = date
             }
-            .onAppear {
-              if let filterDate = filters[index].selectedDate {
-                startDate = filterDate
+          }
+          .onChange(of: startDate) { newDate in
+            startDate = newDate
+            updateDateFiltersCallback?(sectionID, filters[index].id, newDate, endDate)
+          }
+
+          DatePicker(selection: $endDate, displayedComponents: .date) {
+            Text(.endDate)
+              .onAppear {
+                if let date = filters[index].endDate {
+                  endDate = date
+                }
               }
-            }
-            .onChange(of: startDate) { newDate in
-              startDate = newDate
-              updateDateFiltersCallback?(sectionID, filters[index].id, newDate, endDate)
-            }
-          case .end:
-            DatePicker(selection: $endDate, displayedComponents: .date) {
-              Text(filters[index].title)
-                .onAppear {
-                  if let filterDate = filters[index].selectedDate {
-                    endDate = filterDate
-                  }
-                }
-                .onChange(of: endDate) { newDate in
-                  endDate = newDate
-                  updateDateFiltersCallback?(sectionID, filters[index].id, startDate, newDate)
-                }
-            }
-          case .none:
-            EmptyView()
+              .onChange(of: endDate) { newDate in
+                endDate = newDate
+                updateDateFiltersCallback?(sectionID, filters[index].id, startDate, newDate)
+              }
           }
         }
       }

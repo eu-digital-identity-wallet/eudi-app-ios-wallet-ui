@@ -21,8 +21,7 @@ struct TransactionFilterableAttributes: FilterableAttributes {
   var searchTags: [String]
   let name: String?
   let status: TransactionStatus?
-  let startDate: Date?
-  let endDate: Date?
+  let creationDate: Date?
   let relyingPartyName: String?
   let attestationName: String?
   let transactionType: TransactionType?
@@ -32,8 +31,7 @@ struct TransactionFilterableAttributes: FilterableAttributes {
     searchTags: [String],
     name: String? = nil,
     status: TransactionStatus? = nil,
-    startDate: Date? = nil,
-    endDate: Date? = nil,
+    creationDate: Date? = nil,
     relyingPartyName: String? = nil,
     attestationName: String? = nil,
     transactionType: TransactionType? = .presentation
@@ -42,8 +40,7 @@ struct TransactionFilterableAttributes: FilterableAttributes {
     self.searchTags = searchTags
     self.name = name
     self.status = status
-    self.startDate = startDate
-    self.endDate = endDate
+    self.creationDate = creationDate
     self.relyingPartyName = relyingPartyName
     self.attestationName = attestationName
     self.transactionType = transactionType

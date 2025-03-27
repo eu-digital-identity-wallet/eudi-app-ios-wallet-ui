@@ -311,13 +311,6 @@ actor FilterValidatorImpl: FilterValidator {
       multipleGroup.filters = multipleGroup.filters.map { filter in
         let updatedFilter = filter
         if filter.id == filterId {
-          if filter.id == FilterIds.FILTER_BY_START_DATE {
-//            return updatedFilter.copy(selected: !filter.selected, selectedDate: startDate)
-          }
-          if filter.id == FilterIds.FILTER_BY_END_DATE {
-            return updatedFilter.copy(selected: !filter.selected, selectedDate: endDate)
-          }
-
           return updatedFilter.copy(selected: !filter.selected)
         }
         return updatedFilter
@@ -329,6 +322,9 @@ actor FilterValidatorImpl: FilterValidator {
     if var singleGroup = group as? SingleSelectionFilterGroup {
       singleGroup.filters = singleGroup.filters.map { filter in
         let updatedFilter = filter
+        if filter.id == FilterIds.FILTER_BY_TRANSACTION_DATE_RANGE {
+          return updatedFilter.copy(startDate: startDate, endDate: endDate)
+        }
         return updatedFilter.copy(selected: (filter.id == filterId))
       }
       return singleGroup
