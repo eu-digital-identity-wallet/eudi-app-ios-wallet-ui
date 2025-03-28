@@ -1,13 +1,13 @@
 {
-  "originHash" : "eedbd57f7c88aef5f79700c1659aca0bf54a3137d78dc6ef83505dc4ec3525f6",
+  "originHash" : "f238a861ae19aed3aaeab2eec81eb6a313937c6c8ed37f51bc04429234448b91",
   "pins" : [
     {
       "identity" : "activityindicatorview",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/exyte/ActivityIndicatorView.git",
       "state" : {
-        "revision" : "9970fd0bb7a05dad0b6566ae1f56937716686b24",
-        "version" : "1.1.1"
+        "revision" : "36140867802ae4a1d2b11490bcbbefe058001d14",
+        "version" : "1.2.1"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
       "state" : {
-        "revision" : "b3ac77bf56306b09e301efc12601803dc28f9f39",
-        "version" : "2.0.15"
+        "revision" : "8f723758c47bd7b7dc340b66f9dbd1170f331ed2",
+        "version" : "2.0.16"
       }
     },
     {
@@ -132,8 +132,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "2eedaa77cf5515f8821c9573c59db18f919891b1",
-        "version" : "0.12.1"
+        "revision" : "8242b43aa470a4a203cd163f5491b2f888819cf9",
+        "version" : "0.12.2"
       }
     },
     {
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui.git",
       "state" : {
-        "revision" : "0813c81a3d6a3c9b9c0b5589df473b430f73aba4",
-        "version" : "0.1.8"
+        "revision" : "04c277944ec73a343c557a627a41f022692f172f",
+        "version" : "0.1.9"
       }
     },
     {
@@ -177,8 +177,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
       "state" : {
-        "revision" : "1a5418f8bb11f31ef5acd0a795944e340ad29b9d",
-        "version" : "0.8.2"
+        "revision" : "b240cae2f084ceabfdad88fe56404f255060e2b9",
+        "version" : "0.8.3"
       }
     },
     {
@@ -186,8 +186,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "2cb1279d7903c9c2fceb4eb2693e7c18b2976673",
-        "version" : "0.10.3"
+        "revision" : "9c3e0839cd68bfe9066738f972c219080874eb92",
+        "version" : "0.10.4"
       }
     },
     {
@@ -339,8 +339,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Sextant.git",
       "state" : {
-        "revision" : "b2141d4a693e2a768720534009cb621252be39a0",
-        "version" : "0.4.33"
+        "revision" : "91729059122eaafe42aa47207e1873c8bb9a844d",
+        "version" : "0.4.34"
       }
     },
     {
@@ -348,8 +348,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Spanker.git",
       "state" : {
-        "revision" : "d4b439bf76a40fb45d86a24d13b9c26e7d630eee",
-        "version" : "0.2.49"
+        "revision" : "dc24d4860c64c41f8def204ba28db841b9099336",
+        "version" : "0.2.50"
       }
     },
     {
@@ -427,7 +427,7 @@
     {
       "identity" : "swift-format",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-format.git",
+      "location" : "https://github.com/swiftlang/swift-format",
       "state" : {
         "revision" : "83248b4fa37919f78ffbd4650946759bcc54c2b5",
         "version" : "509.0.0"
@@ -463,7 +463,7 @@
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
+      "location" : "https://github.com/swiftlang/swift-syntax",
       "state" : {
         "revision" : "74203046135342e4a4a627476dd6caf8b28fe11b",
         "version" : "509.0.0"
@@ -483,8 +483,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/SwiftCopyableMacro.git",
       "state" : {
-        "revision" : "ef98211fe120f887fdd772d5ae4f025b759551dd",
-        "version" : "0.0.1"
+        "revision" : "1983f8e7d805d323b834846b1a7594a327729cbe",
+        "version" : "0.0.3"
       }
     },
     {
