@@ -169,11 +169,16 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
                   return false
                 }
                 
-                if start == end {
-                  return Calendar.current.isDate(creationDate, inSameDayAs: start)
+                let calendar = Calendar.current
+                
+                let startOfDay = calendar.startOfDay(for: start)
+                let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: end) ?? end
+                
+                if startOfDay == endOfDay {
+                  return calendar.isDate(creationDate, inSameDayAs: startOfDay)
                 }
                 
-                return (start...end).contains(creationDate)
+                return (startOfDay...endOfDay).contains(creationDate)
               })
             )
           ],
