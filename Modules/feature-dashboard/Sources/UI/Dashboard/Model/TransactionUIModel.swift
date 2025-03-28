@@ -66,8 +66,8 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
       .init(
         name: "Document",
         status: .completed,
-        transactionDate: "17 Mar 2025 09:40 AM",
-        transactionCategory: .category(for: "17 Mar 2025 09:40 AM"),
+        transactionDate: "28 Mar 2025 09:30 AM",
+        transactionCategory: .category(for: "28 Mar 2025 09:30 AM"),
         relyingPartyName: "Empty Relying Name",
         attestationName: "Empty Attestation Name",
         transactionType: .signing
@@ -75,8 +75,8 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
       .init(
         name: "Document Signing",
         status: .completed,
-        transactionDate: "02 Mar 2025 09:20 AM",
-        transactionCategory: .category(for: "02 Mar 2025 09:20 PM"),
+        transactionDate: "27 Mar 2025 09:20 AM",
+        transactionCategory: .category(for: "27 Mar 2025 09:20 PM"),
         relyingPartyName: "Test Relying Party Name A",
         attestationName: "Empty Attestation Name"
       ),

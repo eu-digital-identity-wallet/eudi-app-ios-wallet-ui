@@ -157,14 +157,22 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
               filterElementType: .datePicker,
               filterableAction: Filter<TransactionFilterableAttributes>(predicate: { attribute, filter in
                 guard
-                  let creationDate = attribute.creationDate,
                   let start = filter.startDate,
                   let end = filter.endDate
                 else {
                   return filter.startDate == nil && filter.endDate == nil
-                    ? true
-                    : false
                 }
+                
+                guard start <= end else { return false }
+                
+                guard let creationDate = attribute.creationDate else {
+                  return false
+                }
+                
+                if start == end {
+                  return Calendar.current.isDate(creationDate, inSameDayAs: start)
+                }
+                
                 return (start...end).contains(creationDate)
               })
             )

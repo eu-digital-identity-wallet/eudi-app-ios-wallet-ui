@@ -38,6 +38,8 @@ struct TransactionTabView<Router: RouterHost>: View {
         viewModel.resetFilters()
       } applyFiltersAction: {
         viewModel.fetch()
+      } showIndicator: {
+        viewModel.showIndicator()
       } revertFilters: {
         viewModel.revertFilters()
       }
@@ -149,7 +151,8 @@ private func content(
     filterUIModel: [],
     failedTransactions: [],
     isFromOnPause: false,
-    hasDefaultFilters: false
+    hasDefaultFilters: false,
+    dateHasChanged: false
   )
   content(
     state: state,

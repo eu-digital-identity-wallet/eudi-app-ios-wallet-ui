@@ -26,6 +26,7 @@ struct TransactionTabState: ViewState {
   let failedTransactions: [String]
   let isFromOnPause: Bool
   let hasDefaultFilters: Bool
+  let dateHasChanged: Bool
 }
 
 final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, TransactionTabState> {
@@ -52,7 +53,8 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         filterUIModel: [],
         failedTransactions: [],
         isFromOnPause: true,
-        hasDefaultFilters: false
+        hasDefaultFilters: false,
+        dateHasChanged: false
       )
     )
 
@@ -110,12 +112,26 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
       }
     }
   }
+  
+  func showIndicator() {
+    setState {
+      $0.copy(
+        dateHasChanged: true
+      )
+    }
+  }
 
   func showFilters() {
     isFilterModalShowing = true
   }
 
   func resetFilters() {
+    setState {
+      $0.copy(
+        dateHasChanged: false
+      )
+    }
+
     Task {
       await interactor.resetFilters()
     }
@@ -209,7 +225,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
             $0.copy(
               transactions: transactions,
               filterUIModel: filterSections,
-              hasDefaultFilters: hasDefaultFilters
+              hasDefaultFilters: viewState.dateHasChanged ? false : hasDefaultFilters
             )
           }
           updateToolBar()

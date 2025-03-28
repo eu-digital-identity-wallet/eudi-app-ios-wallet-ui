@@ -28,6 +28,7 @@ struct FiltersListView: View {
 
   var resetFiltersAction: () -> Void
   var applyFiltersAction: () -> Void
+  var showIndicator: (() -> Void)?
   var updateFiltersCallback: ((String, String) -> Void)?
   var updateDateFiltersCallback: ((String, String, Date, Date) -> Void)?
   var revertFilters: () -> Void
@@ -38,6 +39,7 @@ struct FiltersListView: View {
     sections: [FilterUISection],
     resetFiltersAction: @escaping () -> Void,
     applyFiltersAction: @escaping () -> Void,
+    showIndicator: (() -> Void)? = nil,
     revertFilters: @escaping () -> Void,
     updateFiltersCallback: ((String, String) -> Void)?,
     updateDateFiltersCallback: ((String, String, Date, Date) -> Void)? = nil
@@ -45,6 +47,7 @@ struct FiltersListView: View {
     self.sections = sections
     self.resetFiltersAction = resetFiltersAction
     self.applyFiltersAction = applyFiltersAction
+    self.showIndicator = showIndicator
     self.updateFiltersCallback = updateFiltersCallback
     self.updateDateFiltersCallback = updateDateFiltersCallback
     self.revertFilters = revertFilters
@@ -130,6 +133,10 @@ struct FiltersListView: View {
           }
           .onChange(of: startDate) { newDate in
             startDate = newDate
+            let expectedStartDate = Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date()
+            if !Calendar.current.isDate(startDate, equalTo: expectedStartDate, toGranularity: .day) {
+              showIndicator?()
+            }
             updateDateFiltersCallback?(sectionID, filters[index].id, newDate, endDate)
           }
 
