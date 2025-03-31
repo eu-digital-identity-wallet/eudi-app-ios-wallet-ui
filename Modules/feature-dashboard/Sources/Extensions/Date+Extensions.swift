@@ -49,4 +49,11 @@ extension Date {
   func isExpired() -> Bool {
     return self < Date()
   }
+  
+  func formattedString() -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd MMM yyyy hh:mm a"
+    return formatter.string(from: self)
+  }
+
 }

@@ -33,7 +33,7 @@ public protocol TransactionTabInteractor: Sendable {
   func fetchTransactions(failedTransactions: [String]) async -> TransactionsPartialState
   func fetchFilteredTransactions(failedTransactions: [String]) async -> FilterableList?
   func initializeFilters(filterableList: FilterableList) async
-  func createFiltersGroup() -> Filters
+  func createFiltersGroup(earliestDate: Date, latestDate: Date) -> Filters
   func applyFilters() async
   func updateLists(filterableList: FilterableList) async
   @MainActor func onFilterChangeState() -> AsyncStream<TransactionFiltersPartialState>
@@ -111,12 +111,15 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
   }
 
   func initializeFilters(filterableList: FilterableList) async {
-    let filtersGroup = createFiltersGroup()
+    let filtersGroup = createFiltersGroup(
+      earliestDate: getEarliestTransactionDate(from: filterableList),
+      latestDate: getLatesTransactionDate(from: filterableList)
+    )
     let filters = await addDynamicFilters(transactions: filterableList, filters: filtersGroup)
     await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
   }
 
-  func createFiltersGroup() -> Filters {
+  func createFiltersGroup(earliestDate: Date, latestDate: Date) -> Filters {
     return Filters(
       filterGroups: [
         SingleSelectionFilterGroup(
@@ -152,8 +155,8 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
               name: LocalizableStringKey.defaultLabel.toString,
               selected: true,
               isDefault: true,
-              startDate: Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date(),
-              endDate: Calendar.current.date(byAdding: .year, value: +1, to: Date()) ?? Date(),
+              startDate: earliestDate,
+              endDate: latestDate,
               filterElementType: .datePicker,
               filterableAction: Filter<TransactionFilterableAttributes>(predicate: { attribute, filter in
                 guard
@@ -283,7 +286,10 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
   }
 
   func updateLists(filterableList: FilterableList) async {
-    let sortOrder = createFiltersGroup().sortOrder
+    let sortOrder = createFiltersGroup(
+      earliestDate: getEarliestTransactionDate(from: filterableList),
+      latestDate: getLatesTransactionDate(from: filterableList)
+    ).sortOrder
     await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
   }
 
@@ -367,7 +373,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
       if !unique.contains(element) {
         unique.append(element)
       }
-    }
+    }.sorted()
 
     let filterItems = distinctRelyingPartyNames.map { relyingPartyName in
       return FilterItem(
@@ -391,7 +397,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
       if !unique.contains(element) {
         unique.append(element)
       }
-    }
+    }.sorted()
 
     let filterItems = distinctAttestationNames.map { attestationName in
       return FilterItem(
@@ -406,5 +412,17 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
     }
 
     return filterItems
+  }
+  
+  private func getEarliestTransactionDate(from transactions: FilterableList) -> Date {
+    return transactions.items
+      .compactMap { ($0.attributes as? TransactionFilterableAttributes)?.creationDate }
+      .min() ?? Date()
+  }
+  
+  private func getLatesTransactionDate(from transactions: FilterableList) -> Date {
+    return transactions.items
+      .compactMap { ($0.attributes as? TransactionFilterableAttributes)?.creationDate }
+      .max() ?? Date()
   }
 }

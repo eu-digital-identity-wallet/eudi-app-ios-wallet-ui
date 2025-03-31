@@ -36,8 +36,8 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
     status: TransactionStatus,
     transactionDate: String,
     transactionCategory: TransactionCategory,
-    relyingPartyName: String? = nil,
-    attestationName: String? = nil,
+    relyingPartyName: String? = "Transactions without relying party",
+    attestationName: String? = "Transactions without attestation name",
     transactionType: TransactionType? = .presentation
   ) {
     self.id = id
@@ -62,121 +62,113 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
   }
 
   static func mocks() -> [TransactionCategory: [TransactionUIModel]] {
+    
+    let now = Date()
+    let fiveMinutesAgo = Calendar.gregorian.date(byAdding: .minute, value: -5, to: now) ?? now
+    let yesterday = Calendar.gregorian.date(byAdding: .day, value: -1, to: now) ?? now
+    
     let transactions: [TransactionUIModel] = [
       .init(
-        name: "Document",
+        name: "Document Signing",
         status: .completed,
-        transactionDate: "28 Mar 2025 09:30 AM",
-        transactionCategory: .category(for: "28 Mar 2025 09:30 AM"),
-        relyingPartyName: "Empty Relying Name",
-        attestationName: "Empty Attestation Name",
+        transactionDate: fiveMinutesAgo.formattedString(),
+        transactionCategory: .category(for: fiveMinutesAgo.formattedString()),
         transactionType: .signing
       ),
       .init(
         name: "Document Signing",
         status: .completed,
-        transactionDate: "27 Mar 2025 09:20 AM",
-        transactionCategory: .category(for: "27 Mar 2025 09:20 PM"),
-        relyingPartyName: "Test Relying Party Name A",
-        attestationName: "Empty Attestation Name"
+        transactionDate: yesterday.formattedString(),
+        transactionCategory: .category(for: yesterday.formattedString()),
+        transactionType: .signing
+      ),
+      .init(
+        name: "Another Document Signing",
+        status: .completed,
+        transactionDate: "23 February 2025 09:20 AM",
+        transactionCategory: .category(for: "23 February 2025 09:20 AM"),
+        transactionType: .signing
+      ),
+      .init(
+        name: "Document Signing",
+        status: .completed,
+        transactionDate: "20 February 2025 09:20 AM",
+        transactionCategory: .category(for: "20 February 2025 09:20 AM"),
+        transactionType: .signing
+      ),
+      .init(
+        name: "PID Presentation",
+        status: .failed,
+        transactionDate: "19 February 2025 05:40 PM",
+        transactionCategory: .category(for: "19 February 2025 05:40 PM"),
+        relyingPartyName: "Test relying party",
+        attestationName: "PID Presentation"
+      ),
+      .init(
+        name: "Identity Verification",
+        status: .completed,
+        transactionDate: "17 February 2025 11:55 AM",
+        transactionCategory: .category(for: "17 February 2025 11:55 AM"),
+        relyingPartyName: "Test relying party",
+        attestationName: "Identity Verification"
+      ),
+      .init(
+        name: "Document Signing",
+        status: .completed,
+        transactionDate: "10 February 2025 01:15 PM",
+        transactionCategory: .category(for: "10 February 2025 01:15 PM"),
+        transactionType: .signing
+      ),
+      .init(
+        name: "Data Sharing Request",
+        status: .failed,
+        transactionDate: "20 January 2025 04:30 PM",
+        transactionCategory: .category(for: "20 January 2025 04:30 PM"),
+        relyingPartyName: "Test relying party, other",
+        attestationName: "Data Sharing Request"
+      ),
+      .init(
+        name: "Document Signing",
+        status: .completed,
+        transactionDate: "20 December 2024 10:05 AM",
+        transactionCategory: .category(for: "20 December 2024 10:05 AM"),
+        transactionType: .signing
+      ),
+      .init(
+        name: "PID Presentation",
+        status: .failed,
+        transactionDate: "01 November 2024 02:20 PM",
+        transactionCategory: .category(for: "01 November 2024 02:20 PM"),
+        relyingPartyName: "Test relying party",
+        attestationName: "PID Presentation"
+      ),
+      .init(
+        name: "PID Presentation",
+        status: .completed,
+        transactionDate: "01 March 2024 02:20 PM",
+        transactionCategory: .category(for: "01 March 2024 02:20 PM"),
+        relyingPartyName: "Test relying party",
+        attestationName: "PID Presentation"
       ),
       .init(
         name: "Document Signing",
         status: .failed,
-        transactionDate: "11 Mar 2025 09:20 AM",
-        transactionCategory: .category(for: "11 Mar 2025 09:20 AM"),
-        relyingPartyName: "Empty Relying Name",
-        attestationName: "Empty Attestation Name"
+        transactionDate: "22 February 2024 09:45 AM",
+        transactionCategory: .category(for: "22 February 2024 09:45 AM")
       ),
       .init(
-        name: "Data Sharing Request",
+        name: "Identity Verification",
         status: .completed,
-        transactionDate: "03 Mar 2025 09:20 AM",
-        transactionCategory: .category(for: "03 Mar 2025 08:20 AM"),
-        relyingPartyName: "Test Relying Party Name B",
-        attestationName: "Empty Attestation Name",
-        transactionType: .signing
+        transactionDate: "17 February 2024 11:30 AM",
+        transactionCategory: .category(for: "17 February 2024 11:30 AM"),
+        relyingPartyName: "Test relying party",
+        attestationName: "Identity Verification"
       ),
       .init(
-        name: "Data Sharing Request",
+        name: "Old Document",
         status: .completed,
-        transactionDate: "10 Mar 2025 09:20 AM",
-        transactionCategory: .category(for: "10 Mar 2025 09:20 AM"),
-        relyingPartyName: "Empty Relying Name",
-        attestationName: "Empty Attestation Name"
-      ),
-      .init(
-        name: "Sharing Request",
-        status: .completed,
-        transactionDate: "10 Aug 2024 09:20 AM",
-        transactionCategory: .category(for: "10 Aug 2024 09:20 AM"),
-        relyingPartyName: "Empty Relying Name",
-        attestationName: "Empty Attestation Name"
-      ),
-      .init(
-        name: "Another Document Signing",
-        status: .failed,
-        transactionDate: "06 Mar 2025 09:20 AM",
-        transactionCategory: .category(for: "06 Mar 2025 09:20 AM"),
-        relyingPartyName: "Empty Relying Name",
-        attestationName: "Empty Attestation Name"
-      ),
-      .init(
-        name: "New Document Signing",
-        status: .completed,
-        transactionDate: "24 Feb 2025 11:07 AM",
-        transactionCategory: .category(for: "24 Feb 2025 11:07 AM"),
-        relyingPartyName: "Empty Relying Name",
-        attestationName: "Attestation Name B"
-      ),
-      .init(
-        name: "Another Document Signing",
-        status: .completed,
-        transactionDate: "14 Jan 2025 11:07 AM",
-        transactionCategory: .category(for: "14 Jan 2025 11:07 AM"),
-        relyingPartyName: "Empty Relying Name",
-        attestationName: "Empty Attestation Name"
-      ),
-      .init(
-        name: "Document",
-        status: .completed,
-        transactionDate: "14 Mar 2025 10:07 AM",
-        transactionCategory: .category(for: "14 Mar 2025 11:07 AM"),
-        relyingPartyName: "Empty Relying Name",
-        attestationName: "Empty Attestation Name",
-        transactionType: .signing
-      ),
-      .init(
-        name: "Document",
-        status: .completed,
-        transactionDate: "12 Mar 2025 12:00 PM",
-        transactionCategory: .category(for: "12 Mar 2025 09:07 AM"),
-        relyingPartyName: "Empty Relying Name",
-        attestationName: "Empty Attestation Name"
-      ),
-      .init(
-        name: "PID Presentation",
-        status: .failed,
-        transactionDate: "03 Jul 2024 11:07 AM",
-        transactionCategory: .category(for: "03 Jul 2024 11:07 AM"),
-        relyingPartyName: "Empty Relying Name",
-        attestationName: "Empty Attestation Name"
-      ),
-      .init(
-        name: "Other PID Presentation",
-        status: .completed,
-        transactionDate: "03 Apr 2024 11:07 AM",
-        transactionCategory: .category(for: "03 Apr 2024 09:07 AM"),
-        relyingPartyName: "Empty Relying Name",
-        attestationName: "Attestation Name A",
-        transactionType: .signing
-      ), .init(
-        name: "PID Presentation",
-        status: .completed,
-        transactionDate: "04 Apr 2024 11:07 AM",
-        transactionCategory: .category(for: "04 Apr 2024 10:07 AM"),
-        relyingPartyName: "Empty Relying Name",
-        attestationName: "Empty Attestation Name"
+        transactionDate: "15 May 1999 10:30 AM",
+        transactionCategory: .category(for: "15 May 1999 10:30 AM")
       )
     ]
 
@@ -216,7 +208,7 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
       formatter.dateFormat = "h:mm a"
       return formatter.string(from: transactionDate)
     } else {
-      formatter.dateFormat = "dd MMM yyyy h:mm a"
+      formatter.dateFormat = "dd MMM yyyy"
       return formatter.string(from: transactionDate)
     }
   }
