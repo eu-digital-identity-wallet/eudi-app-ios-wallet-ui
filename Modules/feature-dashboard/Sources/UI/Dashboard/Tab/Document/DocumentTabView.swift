@@ -145,6 +145,7 @@ private func content(
   }
   .searchable(
     searchText: searchQuery,
+    placeholder: .searchDocuments,
     backgroundColor: Theme.shared.color.background,
     onSearchTextChange: { _ in }
   )

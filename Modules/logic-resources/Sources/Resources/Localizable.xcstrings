@@ -117,7 +117,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "attestation"
+            "value" : "Filter By Attestation"
           }
         }
       }
@@ -623,7 +623,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Document Signing"
+            "value" : "Filter By Document Signing"
           }
         }
       }
@@ -777,7 +777,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Date"
+            "value" : "Filter By Transaction Date Period"
           }
         }
       }
@@ -799,7 +799,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filter by State"
+            "value" : "Filter By State"
           }
         }
       }
@@ -810,7 +810,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Status"
+            "value" : "Filter By Status"
           }
         }
       }
@@ -1561,7 +1561,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Relying Party"
+            "value" : "Filter By Relying Party"
           }
         }
       }
@@ -1881,6 +1881,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search Documents"
+          }
+        }
+      }
+    },
+    "search_transactions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search Transactions"
           }
         }
       }

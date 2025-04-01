@@ -130,7 +130,7 @@ struct FiltersListView: View {
             updateFiltersCallback?(sectionID, filters[index].id)
           }
         } else if filters[index].filterSectionType == .datePicker {
-          DatePicker(selection: $startDate, displayedComponents: .date) {
+          DatePicker(selection: $startDate, in: ...endDate, displayedComponents: .date) {
             Text(.startDate)
           }
           .onAppear {
@@ -147,7 +147,7 @@ struct FiltersListView: View {
             updateDateFiltersCallback?(sectionID, filters[index].id, newDate, endDate)
           }
 
-          DatePicker(selection: $endDate, displayedComponents: .date) {
+          DatePicker(selection: $endDate,in: startDate..., displayedComponents: .date) {
             Text(.endDate)
               .onAppear {
                 if let date = filters[index].endDate {

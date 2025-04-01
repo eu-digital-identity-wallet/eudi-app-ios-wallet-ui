@@ -85,14 +85,14 @@ public struct LeadingIcon: Sendable, Equatable {
 }
 
 public enum TrailingContent: Sendable, Equatable {
-  case icon(Image, Color = Color.accentColor)
+  case icon(Image, Color = Color.accentColor, String = "")
   case checkbox(Bool, Bool, @Sendable (Bool) -> Void)
   case empty
 
   public static func == (lhs: TrailingContent, rhs: TrailingContent) -> Bool {
     switch (lhs, rhs) {
-    case let (.icon(lImage, lColor), .icon(rImage, rColor)):
-      return lImage == rImage && lColor == rColor
+    case let (.icon(lImage, lColor, lhs), .icon(rImage, rColor, rhs)):
+      return lImage == rImage && lColor == rColor && lhs == rhs
     case let (.checkbox(lValue, lIsEnabled, _), .checkbox(rValue, rIsEnabled, _)):
       return lValue == rValue && lIsEnabled == rIsEnabled
     case (.empty, .empty):

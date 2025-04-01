@@ -57,22 +57,26 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
       supportingText: .custom(formattedTransactionDate()),
       supportingTextColor: Theme.shared.color.onSurface,
       overlineTextColor: status == .completed ? Theme.shared.color.success : Theme.shared.color.error,
-      trailingContent: .icon(Theme.shared.image.chevronRight, Theme.shared.color.onSurfaceVariant)
+      trailingContent: .icon(
+        Theme.shared.image.chevronRight,
+        Theme.shared.color.onSurfaceVariant,
+        transactionType?.rawValue ?? ""
+      )
     )
   }
 
   static func mocks() -> [TransactionCategory: [TransactionUIModel]] {
     
     let now = Date()
-    let fiveMinutesAgo = Calendar.gregorian.date(byAdding: .minute, value: -5, to: now) ?? now
+    let twentyMinutesAgo = Calendar.gregorian.date(byAdding: .minute, value: -20, to: now) ?? now
     let yesterday = Calendar.gregorian.date(byAdding: .day, value: -1, to: now) ?? now
     
     let transactions: [TransactionUIModel] = [
       .init(
         name: "Document Signing",
         status: .completed,
-        transactionDate: fiveMinutesAgo.formattedString(),
-        transactionCategory: .category(for: fiveMinutesAgo.formattedString()),
+        transactionDate: twentyMinutesAgo.formattedString(),
+        transactionCategory: .category(for: twentyMinutesAgo.formattedString()),
         transactionType: .signing
       ),
       .init(
@@ -110,7 +114,8 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
         transactionDate: "17 February 2025 11:55 AM",
         transactionCategory: .category(for: "17 February 2025 11:55 AM"),
         relyingPartyName: "Test relying party",
-        attestationName: "Identity Verification"
+        attestationName: "Identity Verification",
+        transactionType: .issuance
       ),
       .init(
         name: "Document Signing",
@@ -136,14 +141,6 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
       ),
       .init(
         name: "PID Presentation",
-        status: .failed,
-        transactionDate: "01 November 2024 02:20 PM",
-        transactionCategory: .category(for: "01 November 2024 02:20 PM"),
-        relyingPartyName: "Test relying party",
-        attestationName: "PID Presentation"
-      ),
-      .init(
-        name: "PID Presentation",
         status: .completed,
         transactionDate: "01 March 2024 02:20 PM",
         transactionCategory: .category(for: "01 March 2024 02:20 PM"),
@@ -154,7 +151,8 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
         name: "Document Signing",
         status: .failed,
         transactionDate: "22 February 2024 09:45 AM",
-        transactionCategory: .category(for: "22 February 2024 09:45 AM")
+        transactionCategory: .category(for: "22 February 2024 09:45 AM"),
+        transactionType: .signing
       ),
       .init(
         name: "Identity Verification",
@@ -168,7 +166,8 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
         name: "Old Document",
         status: .completed,
         transactionDate: "15 May 1999 10:30 AM",
-        transactionCategory: .category(for: "15 May 1999 10:30 AM")
+        transactionCategory: .category(for: "15 May 1999 10:30 AM"),
+        transactionType: .signing
       )
     ]
 
@@ -220,6 +219,7 @@ public enum TransactionStatus: String, CaseIterable, Sendable {
 }
 
 public enum TransactionType: String, CaseIterable, Sendable {
-  case signing = "Signing"
-  case presentation = "Presentation"
+  case signing = "e-Signature"
+  case presentation = "Data Sharing"
+  case issuance = "Issuance"
 }

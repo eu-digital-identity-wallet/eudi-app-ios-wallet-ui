@@ -38,7 +38,7 @@ extension Date {
 
   func formattedMonthYear() -> String {
     let formatter = DateFormatter()
-    formatter.dateFormat = "MMM yyyy"
+    formatter.dateFormat = "MMMM yyyy"
     formatter.locale = Locale(identifier: "en_US_POSIX")
     return formatter.string(from: self.toLocal()).uppercased()
   }

@@ -107,18 +107,23 @@ public struct WrapListItemView: View {
             .truncationMode(.tail)
         }
       }
-      .frame(maxWidth: .infinity, alignment: .leading)
 
       if let trailingContent = listItem.trailingContent {
         switch trailingContent {
-        case .icon(let image, let color):
-          image
-            .renderingMode(.template)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 13, height: 13)
-            .foregroundColor(color)
-
+        case .icon(let image, let color, let text):
+          HStack(spacing: SPACING_SMALL){
+            Text(text)
+              .font(Theme.shared.font.bodySmall.font)
+              .foregroundColor(color)
+              .frame(maxWidth: .infinity,alignment: .topTrailing)
+              .multilineTextAlignment(.trailing)
+            image
+              .renderingMode(.template)
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(width: 13, height: 13)
+              .foregroundColor(color)
+          }
         case .checkbox(let enabled, let isChecked, let onToggle):
           WrapCheckbox(
             checkboxData: CheckboxData(

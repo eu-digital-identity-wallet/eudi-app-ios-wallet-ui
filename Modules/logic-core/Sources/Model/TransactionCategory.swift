@@ -40,7 +40,7 @@ public enum TransactionCategory: Hashable, Equatable, Sendable {
       return 1
     case .month(let dateTime):
       let formatter = DateFormatter()
-      formatter.dateFormat = "MMM yyyy"
+      formatter.dateFormat = "MMMM yyyy"
       if let date = formatter.date(from: dateTime) {
         let calendar = Calendar.current
         let yearMonth = calendar.dateComponents([.year, .month], from: date)
@@ -54,7 +54,7 @@ public enum TransactionCategory: Hashable, Equatable, Sendable {
 
   public static func category(
     for dateString: String,
-    using format: String = "dd MMM yyyy HH:mm a"
+    using format: String = "dd MMMM yyyy HH:mm a"
   ) -> TransactionCategory {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = format
