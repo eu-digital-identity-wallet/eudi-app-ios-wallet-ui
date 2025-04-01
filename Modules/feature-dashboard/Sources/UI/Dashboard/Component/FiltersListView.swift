@@ -100,7 +100,7 @@ struct FiltersListView: View {
       .onAppear {
         let availableDates = sections.flatMap { $0.filters }
           .compactMap { ($0.startDate, $0.endDate) }
-        
+
         startDate = availableDates.compactMap { $0.0 }.min() ?? Date()
         endDate = availableDates.compactMap { $0.1 }.max() ?? Date()
       }
@@ -147,7 +147,7 @@ struct FiltersListView: View {
             updateDateFiltersCallback?(sectionID, filters[index].id, newDate, endDate)
           }
 
-          DatePicker(selection: $endDate,in: startDate..., displayedComponents: .date) {
+          DatePicker(selection: $endDate, in: startDate..., displayedComponents: .date) {
             Text(.endDate)
               .onAppear {
                 if let date = filters[index].endDate {

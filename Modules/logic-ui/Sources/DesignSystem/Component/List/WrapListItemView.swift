@@ -107,15 +107,18 @@ public struct WrapListItemView: View {
             .truncationMode(.tail)
         }
       }
+      .if(listItem.trailingContent == nil) {
+        $0.frame(maxWidth: .infinity, alignment: .leading)
+      }
 
       if let trailingContent = listItem.trailingContent {
         switch trailingContent {
         case .icon(let image, let color, let text):
-          HStack(spacing: SPACING_SMALL){
+          HStack(spacing: SPACING_SMALL) {
             Text(text)
               .font(Theme.shared.font.bodySmall.font)
               .foregroundColor(color)
-              .frame(maxWidth: .infinity,alignment: .topTrailing)
+              .frame(maxWidth: .infinity, alignment: .topTrailing)
               .multilineTextAlignment(.trailing)
             image
               .renderingMode(.template)
