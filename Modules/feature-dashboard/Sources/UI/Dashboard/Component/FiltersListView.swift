@@ -97,6 +97,13 @@ struct FiltersListView: View {
           revertFilters()
         }
       }
+      .onAppear {
+        let availableDates = sections.flatMap { $0.filters }
+          .compactMap { ($0.startDate, $0.endDate) }
+        
+        startDate = availableDates.compactMap { $0.0 }.min() ?? Date()
+        endDate = availableDates.compactMap { $0.1 }.max() ?? Date()
+      }
     }
   }
 
@@ -133,7 +140,7 @@ struct FiltersListView: View {
           }
           .onChange(of: startDate) { newDate in
             startDate = newDate
-            let expectedStartDate = Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date()
+            let expectedStartDate = filters[index].startDate ?? Date()
             if !Calendar.current.isDate(startDate, equalTo: expectedStartDate, toGranularity: .day) {
               showIndicator?()
             }
@@ -149,6 +156,10 @@ struct FiltersListView: View {
               }
               .onChange(of: endDate) { newDate in
                 endDate = newDate
+                let expectedStartDate = filters[index].endDate ?? Date()
+                if !Calendar.current.isDate(startDate, equalTo: expectedStartDate, toGranularity: .day) {
+                  showIndicator?()
+                }
                 updateDateFiltersCallback?(sectionID, filters[index].id, startDate, newDate)
               }
           }
