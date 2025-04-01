@@ -112,7 +112,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
       }
     }
   }
-  
+
   func showIndicator() {
     setState {
       $0.copy(

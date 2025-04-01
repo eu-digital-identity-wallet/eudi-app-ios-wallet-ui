@@ -69,12 +69,11 @@ private func content(
       )
 
       if let transactionDetailsDataSharedList = state.transactionDetailsUi?.transactionDetailsDataSharedList {
-        VStack(spacing: SPACING_SMALL) {
+        VStack(alignment: .leading, spacing: SPACING_SMALL) {
           Text(.transactionDetailsDataShare)
             .typography(Theme.shared.font.bodySmall)
             .fontWeight(.semibold)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-            .frame(maxWidth: .infinity, alignment: .leading)
 
           ForEach(transactionDetailsDataSharedList) { item in
             WrapCardView {
@@ -90,12 +89,11 @@ private func content(
       }
 
       if let transactionDetailsDataSigned = state.transactionDetailsUi?.transactionDetailsDataSigned {
-        VStack(spacing: SPACING_SMALL) {
+        VStack(alignment: .leading, spacing: SPACING_SMALL) {
           Text(.transactionDetailsDataSigned)
             .typography(Theme.shared.font.bodySmall)
             .fontWeight(.semibold)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-            .frame(maxWidth: .infinity, alignment: .leading)
 
           ForEach(transactionDetailsDataSigned) { item in
             WrapCardView {
@@ -138,7 +136,7 @@ private func content(
         }
       }
     }
+    .padding(Theme.shared.dimension.padding)
+    .padding(.bottom)
   }
-  .padding(Theme.shared.dimension.padding)
-  .padding(.bottom)
 }

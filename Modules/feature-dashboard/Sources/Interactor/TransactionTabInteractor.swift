@@ -165,22 +165,22 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
                 else {
                   return filter.startDate == nil && filter.endDate == nil
                 }
-                
+
                 guard start <= end else { return false }
-                
+
                 guard let creationDate = attribute.creationDate else {
                   return false
                 }
-                
+
                 let calendar = Calendar.current
-                
+
                 let startOfDay = calendar.startOfDay(for: start)
                 let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: end) ?? end
-                
+
                 if startOfDay == endOfDay {
                   return calendar.isDate(creationDate, inSameDayAs: startOfDay)
                 }
-                
+
                 return (startOfDay...endOfDay).contains(creationDate)
               })
             )
@@ -413,13 +413,13 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
 
     return filterItems
   }
-  
+
   private func getEarliestTransactionDate(from transactions: FilterableList) -> Date {
     return transactions.items
       .compactMap { ($0.attributes as? TransactionFilterableAttributes)?.creationDate }
       .min() ?? Date()
   }
-  
+
   private func getLatesTransactionDate(from transactions: FilterableList) -> Date {
     return transactions.items
       .compactMap { ($0.attributes as? TransactionFilterableAttributes)?.creationDate }

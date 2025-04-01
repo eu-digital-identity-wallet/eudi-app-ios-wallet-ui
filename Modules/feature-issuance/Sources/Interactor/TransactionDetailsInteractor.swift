@@ -58,21 +58,6 @@ final class TransactionDetailsInteractorImpl: TransactionDetailsInteractor {
               readableName: "Family name"
             )
           ]
-        ),
-        .init(
-          displayName: "Driving License",
-          claims: [
-            TransactionClaimItem(
-              transactionId: "0",
-              value: "John",
-              readableName: "Given name"
-            ),
-            TransactionClaimItem(
-              transactionId: "1",
-              value: "Doe",
-              readableName: "Family name"
-            )
-          ]
         )
       ],
       signedDataClaimItems: [

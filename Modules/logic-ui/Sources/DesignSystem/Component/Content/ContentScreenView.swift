@@ -80,6 +80,7 @@ public struct ContentScreenView<Content: View>: View {
       }
       .disabled(isLoading)
     }
+    .scrollIndicators(.hidden)
     .background(background)
     .if(allowBackGesture == false) {
       $0.navigationBarBackButtonHidden()

@@ -66,11 +66,11 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
   }
 
   static func mocks() -> [TransactionCategory: [TransactionUIModel]] {
-    
+
     let now = Date()
     let twentyMinutesAgo = Calendar.gregorian.date(byAdding: .minute, value: -20, to: now) ?? now
     let yesterday = Calendar.gregorian.date(byAdding: .day, value: -1, to: now) ?? now
-    
+
     let transactions: [TransactionUIModel] = [
       .init(
         name: "Document Signing",
