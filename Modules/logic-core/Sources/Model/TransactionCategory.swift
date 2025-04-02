@@ -15,20 +15,21 @@
  */
 
 import Foundation
+import logic_resources
 
 public enum TransactionCategory: Hashable, Equatable, Sendable {
   case today
   case thisWeek
   case month(dateTime: String)
 
-  public var title: String {
+  public var title: LocalizableStringKey {
     switch self {
     case .today:
-      return "TODAY"
+      return LocalizableStringKey.today
     case .thisWeek:
-      return "THIS WEEK"
+      return LocalizableStringKey.thisWeek
     case .month(let dateTime):
-      return dateTime
+      return LocalizableStringKey.custom(dateTime)
     }
   }
 
@@ -39,9 +40,7 @@ public enum TransactionCategory: Hashable, Equatable, Sendable {
     case .thisWeek:
       return 1
     case .month(let dateTime):
-      let formatter = DateFormatter()
-      formatter.dateFormat = "MMMM yyyy"
-      if let date = formatter.date(from: dateTime) {
+      if let date = Date.monthYearFormatter.date(from: dateTime) {
         let calendar = Calendar.current
         let yearMonth = calendar.dateComponents([.year, .month], from: date)
         let year = yearMonth.year ?? 0
@@ -52,15 +51,8 @@ public enum TransactionCategory: Hashable, Equatable, Sendable {
     }
   }
 
-  public static func category(
-    for dateString: String,
-    using format: String = "dd MMMM yyyy HH:mm a"
-  ) -> TransactionCategory {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = format
-    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-
-    guard let date = dateFormatter.date(from: dateString) else {
+  public static func category(for dateString: String) -> TransactionCategory {
+    guard let date = Date.date(from: dateString) else {
       return .month(dateTime: "")
     }
 
@@ -69,8 +61,7 @@ public enum TransactionCategory: Hashable, Equatable, Sendable {
     } else if date.isThisWeek() {
       return .thisWeek
     } else {
-      let formattedMonthYear = date.formattedMonthYear()
-      return .month(dateTime: formattedMonthYear)
+      return .month(dateTime: date.formattedMonthYear())
     }
   }
 }

@@ -16,6 +16,21 @@
 import Foundation
 
 extension Date {
+
+  static let monthYearFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "MMMM yyyy"
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    return formatter
+  }()
+
+  static let transactionDateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd MMMM yyyy HH:mm a"
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    return formatter
+  }()
+
   func toLocal() -> Date {
     let timeZone = TimeZone.current
     let seconds = timeZone.secondsFromGMT(for: self)
@@ -41,5 +56,9 @@ extension Date {
     formatter.dateFormat = "MMMM yyyy"
     formatter.locale = Locale(identifier: "en_US_POSIX")
     return formatter.string(from: self.toLocal()).uppercased()
+  }
+
+  static func date(from string: String) -> Date? {
+    return Date.transactionDateFormatter.date(from: string)
   }
 }

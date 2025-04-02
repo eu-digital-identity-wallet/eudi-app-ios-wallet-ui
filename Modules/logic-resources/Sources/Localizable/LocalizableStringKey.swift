@@ -235,6 +235,11 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case transactionDetailsScreenCardDateLabel
   case transactionDetailsCompleted
   case or
+  case today
+  case thisWeek
+  case unknownDate
+  case minutesAgo([String])
+  case minuteAgo([String])
 }
 
 public extension LocalizableStringKey {

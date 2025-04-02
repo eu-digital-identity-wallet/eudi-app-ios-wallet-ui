@@ -53,8 +53,8 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
   public var listItem: ListItemData {
     return ListItemData(
       mainText: .custom(name),
-      overlineText: .custom(status.rawValue),
-      supportingText: .custom(formattedTransactionDate()),
+      overlineText: status.statusTitle,
+      supportingText: formattedTransactionDate(),
       supportingTextColor: Theme.shared.color.onSurface,
       overlineTextColor: status == .completed ? Theme.shared.color.success : Theme.shared.color.error,
       trailingContent: .icon(
@@ -181,13 +181,13 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
     return self
   }
 
-  private func formattedTransactionDate() -> String {
+  private func formattedTransactionDate() -> LocalizableStringKey {
     let formatter = DateFormatter()
     formatter.dateFormat = "dd MMM yyyy hh:mm a"
     formatter.locale = Locale(identifier: "en_US_POSIX")
 
     guard let transactionDate = formatter.date(from: transactionDate) else {
-      return transactionDate
+      return LocalizableStringKey.custom(transactionDate)
     }
 
     let now = Date()
@@ -195,27 +195,40 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
 
     if let diff = calendar.dateComponents([.minute], from: transactionDate, to: now).minute {
       if diff < 0 {
-        return "Unknown Date"
+        return LocalizableStringKey.unknownDate
       } else if diff == 60 {
-        return "\(diff) minutes ago"
+        return LocalizableStringKey.minutesAgo([String(diff)])
       } else if diff < 60 {
-        return "\(diff) minute\(diff == 1 ? "" : "s") ago"
+        if diff == 1 {
+          return LocalizableStringKey.minuteAgo([String(diff)])
+        } else {
+          return LocalizableStringKey.minutesAgo([String(diff)])
+        }
       }
     }
 
     if calendar.isDateInToday(transactionDate) {
       formatter.dateFormat = "h:mm a"
-      return formatter.string(from: transactionDate)
+      return LocalizableStringKey.custom(formatter.string(from: transactionDate))
     } else {
       formatter.dateFormat = "dd MMM yyyy"
-      return formatter.string(from: transactionDate)
+      return LocalizableStringKey.custom(formatter.string(from: transactionDate))
     }
   }
 }
 
-public enum TransactionStatus: String, CaseIterable, Sendable {
-  case completed = "Completed"
-  case failed = "Failed"
+public enum TransactionStatus: Sendable {
+  case completed
+  case failed
+
+  var statusTitle: LocalizableStringKey {
+    switch self {
+    case .completed:
+      return .completed
+    case .failed:
+      return .failed
+    }
+  }
 }
 
 public enum TransactionType: String, CaseIterable, Sendable {

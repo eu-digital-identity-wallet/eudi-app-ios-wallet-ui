@@ -1156,6 +1156,28 @@
         }
       }
     },
+    "minute_ago" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ minute ago"
+          }
+        }
+      }
+    },
+    "minutes_ago" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ minutes ago"
+          }
+        }
+      }
+    },
     "missing_pid" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2050,6 +2072,28 @@
         }
       }
     },
+    "this_week" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "THIS WEEK"
+          }
+        }
+      }
+    },
+    "today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TODAY"
+          }
+        }
+      }
+    },
     "transaction_code_format_error" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2222,6 +2266,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not available"
+          }
+        }
+      }
+    },
+    "unknown_date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown Date"
           }
         }
       }

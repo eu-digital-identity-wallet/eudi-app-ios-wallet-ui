@@ -471,6 +471,16 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "transaction_details_completed")
     case .or:
       bundle.localizedString(forKey: "or")
+    case .today:
+      bundle.localizedString(forKey: "today")
+    case .thisWeek:
+      bundle.localizedString(forKey: "this_week")
+    case .unknownDate:
+      bundle.localizedString(forKey: "unknown_date")
+    case .minutesAgo(let args):
+      bundle.localizedStringWithArguments(forKey: "minutes_ago", arguments: args)
+    case .minuteAgo(let args):
+      bundle.localizedStringWithArguments(forKey: "minute_ago", arguments: args)
     }
   }
 }
