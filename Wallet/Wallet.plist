@@ -23,8 +23,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>CFBundleVersion</key>
-	<string>1</string>
 	<key>Changelog Url</key>
 	<string>$(CHANGELOG_URL)</string>
 	<key>Core User Auth</key>
