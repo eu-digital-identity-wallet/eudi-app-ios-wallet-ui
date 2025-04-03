@@ -1,11 +1,6 @@
-#
-//  ci_post_clone.sh
-//  EudiWallet
-//
-//  Created by Jan-Ingar Tistel on 02/04/2025.
-//
+#!/bin/sh
 
-#!/bin/zsh
+# Exit on error (-e), undefined vars (-u), and pipeline failures (-o pipefail)
+set -euo pipefail
 
-mkdir -p ~/Library/org.swift.swiftpm/security/
-cp macros.json ~/Library/org.swift.swiftpm/security/
+defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
