@@ -44,6 +44,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   @Published var isFilterModalShowing: Bool = false
   @Published var isDeleteDeferredModalShowing: Bool = false
   @Published var isSuccededDocumentsModalShowing: Bool = false
+  @Published var isRevokedModalShowing: Bool = false
   @Published var searchQuery: String = ""
 
   private var deferredTask: Task<DeferredPartialState, Error>?

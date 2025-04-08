@@ -1665,6 +1665,17 @@
         }
       }
     },
+    "revoked" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "revoked"
+          }
+        }
+      }
+    },
     "saved_to_favorites" : {
       "extractionState" : "manual",
       "localizations" : {

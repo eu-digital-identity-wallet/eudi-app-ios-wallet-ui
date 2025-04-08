@@ -431,6 +431,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "search_documents")
     case .or:
       bundle.localizedString(forKey: "or")
+    case .revoked:
+      bundle.localizedString(forKey: "revoked")
     }
   }
 }

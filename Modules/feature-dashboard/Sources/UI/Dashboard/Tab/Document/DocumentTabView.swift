@@ -36,7 +36,7 @@ struct DocumentTabView<Router: RouterHost>: View {
         switch item.value.state {
         case .issued:
           viewModel.onDocumentDetails(documentId: item.value.id)
-        case .pending, .failed:
+        case .pending, .failed, .revoked:
           viewModel.onDeleteDeferredDocument(with: item)
         }
       }
@@ -66,6 +66,24 @@ struct DocumentTabView<Router: RouterHost>: View {
       Text(.issuanceDetailsDeletionCaption([viewModel.viewState.pendingDocumentTitle]))
     }
     .sheetDialog(isPresented: $viewModel.isSuccededDocumentsModalShowing) {
+      SheetContentView {
+        VStack(spacing: SPACING_MEDIUM) {
+
+          ContentTitleView(
+            title: .deferredDocumentsIssuedModalTitle,
+            caption: .defferedDocumentsIssuedModalCaption
+          )
+
+          deferredSuccessList(
+            state: viewModel.viewState,
+            onDocumentDetails: {
+              viewModel.onDocumentDetails(documentId: $0)
+            }
+          )
+        }
+      }
+    }
+    .sheetDialog(isPresented: $viewModel.isRevokedModalShowing) {
       SheetContentView {
         VStack(spacing: SPACING_MEDIUM) {
 

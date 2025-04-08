@@ -287,6 +287,7 @@ public extension DocumentUIModel.Value {
     case issued
     case pending
     case failed
+    case revoked
   }
 }
 
@@ -362,6 +363,8 @@ extension DocClaimsDecodable {
         return .pending
       case .failed:
         return .issuanceFailed
+      case .revoked:
+        return .revoked
       }
     }
   }
@@ -386,6 +389,8 @@ extension DocClaimsDecodable {
         return Theme.shared.color.warning
       case .failed:
         return Theme.shared.color.error
+      case .revoked:
+        return Theme.shared.color.error
       }
     }
   }
@@ -399,6 +404,8 @@ extension DocClaimsDecodable {
     case .pending:
       return Theme.shared.image.clockIndicator
     case .failed:
+      return Theme.shared.image.errorIndicator
+    case .revoked:
       return Theme.shared.image.errorIndicator
     }
   }
