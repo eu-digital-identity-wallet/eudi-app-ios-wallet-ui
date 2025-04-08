@@ -90,6 +90,13 @@ private func content(
         .bold()
         .frame(maxWidth: .infinity, alignment: .leading)
 
+      if viewState.isRevoked {
+        RevokedDocumentView(
+          message: .documentDetailsRevokedDocumentMessage,
+          revokedDate: .documentDetailsRevokedOn(["March 29, 202"])
+        )
+      }
+
       VStack(spacing: .zero) {
         WrapExpandableListView(
           items: viewState.document.documentFields,
@@ -146,7 +153,8 @@ private func content(
     ),
     hasDeleteAction: true,
     documentFieldsCount: DocumentDetailsUIModel.mock().documentFields.count,
-    isBookmarked: true
+    isBookmarked: true,
+    isRevoked: true
   )
 
   ContentScreenView(

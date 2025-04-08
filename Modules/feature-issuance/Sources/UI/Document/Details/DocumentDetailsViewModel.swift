@@ -28,6 +28,7 @@ struct DocumentDetailsViewState: ViewState {
   let hasDeleteAction: Bool
   let documentFieldsCount: Int
   let isBookmarked: Bool
+  let isRevoked: Bool
 
   var isCancellable: Bool {
     return config.isExtraDocument
@@ -64,7 +65,8 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         config: config,
         hasDeleteAction: false,
         documentFieldsCount: 0,
-        isBookmarked: false
+        isBookmarked: false,
+        isRevoked: false
       )
     )
   }

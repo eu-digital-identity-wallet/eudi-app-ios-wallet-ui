@@ -433,6 +433,10 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "or")
     case .revoked:
       bundle.localizedString(forKey: "revoked")
+    case .documentDetailsRevokedDocumentMessage:
+      bundle.localizedString(forKey: "document_details_revoked_document_message")
+    case .documentDetailsRevokedOn(let args):
+        bundle.localizedStringWithArguments(forKey: "document_details_revoked_on", arguments: args)
     }
   }
 }

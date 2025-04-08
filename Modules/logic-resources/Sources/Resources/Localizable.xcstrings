@@ -584,6 +584,28 @@
         }
       }
     },
+    "document_details_revoked_document_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This document has been revoked by the issuer. Contact the issuing service for more information."
+          }
+        }
+      }
+    },
+    "document_details_revoked_on" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoked on: %@"
+          }
+        }
+      }
+    },
     "document_number" : {
       "extractionState" : "manual",
       "localizations" : {
