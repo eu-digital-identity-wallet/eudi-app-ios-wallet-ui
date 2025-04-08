@@ -258,6 +258,12 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
               name: LocalizableStringKey.expired.toString,
               selected: false,
               isDefault: false
+            ),
+            FilterItem(
+              id: FilterIds.FILTER_BY_STATE_REVOKED,
+              name: LocalizableStringKey.revoked.toString,
+              selected: true,
+              isDefault: true
             )
           ],
           filterableAction: FilterMultipleAction<DocumentFilterableAttributes>(predicate: { attribute, filter in
@@ -266,6 +272,8 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
               attribute.expiryDate?.isValid() == true || attribute.expiryDate == nil
             case FilterIds.FILTER_BY_STATE_EXPIRED:
               attribute.expiryDate?.isExpired() == true
+            case FilterIds.FILTER_BY_STATE_REVOKED:
+              attribute.isRevoked
             default:
               true
             }
