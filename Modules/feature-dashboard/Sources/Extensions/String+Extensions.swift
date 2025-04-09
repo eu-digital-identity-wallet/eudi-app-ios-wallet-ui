@@ -16,10 +16,12 @@
 import Foundation
 
 extension String {
+
   func toDate(format: String = "dd MMM yyyy hh:mm a", locale: Locale = .init(identifier: "en_US_POSIX")) -> Date? {
     let formatter = DateFormatter()
     formatter.dateFormat = format
     formatter.locale = locale
     return formatter.date(from: self)
   }
+
 }

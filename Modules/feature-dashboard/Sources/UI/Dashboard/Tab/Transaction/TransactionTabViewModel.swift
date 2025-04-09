@@ -27,6 +27,7 @@ struct TransactionTabState: ViewState {
   let isFromOnPause: Bool
   let hasDefaultFilters: Bool
   let dateHasChanged: Bool
+  let sortIsDescending: Bool
 }
 
 final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, TransactionTabState> {
@@ -54,7 +55,8 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         failedTransactions: [],
         isFromOnPause: true,
         hasDefaultFilters: false,
-        dateHasChanged: false
+        dateHasChanged: false,
+        sortIsDescending: false
       )
     )
 
@@ -225,7 +227,8 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
             $0.copy(
               transactions: transactions,
               filterUIModel: filterSections,
-              hasDefaultFilters: viewState.dateHasChanged ? false : hasDefaultFilters
+              hasDefaultFilters: viewState.dateHasChanged ? false : hasDefaultFilters,
+              sortIsDescending: sortIsDescending(filterSections)
             )
           }
           updateToolBar()
@@ -239,5 +242,12 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         }
       }
     }
+  }
+
+  private func sortIsDescending(_ filterSections: [FilterUISection]) -> Bool {
+    guard let firstFilter = filterSections.first?.filters.first else {
+      return false
+    }
+    return firstFilter.selected
   }
 }

@@ -20,6 +20,7 @@ public struct FilterIds {
   public static let ORDER_BY_DESCENDING = "order_by_descending"
   public static let FILTER_BY_STATE_GROUP_ID = "state_group_id"
   public static let FILTER_BY_STATUS_ID = "status_id"
+  public static let FILTER_BY_TYPE_ID = "type_id"
   public static let FILTER_BY_RELYING_PARY_NAME = "relying_party_name"
   public static let FILTER_BY_ATTESTATION_NAME = "attestation_name"
   public static let FILTER_BY_DOCUMENT_SIGNING = "document_signing"
@@ -41,4 +42,7 @@ public struct FilterIds {
   public static let FILTER_SORT_DEFAULT = "sort_default"
   public static let FILTER_SORT_DATE_ISSUED = "sort_date_issued"
   public static let FILTER_SORT_EXPIRY_DATE = "sort_expiry_date"
+  public static let FILTER_BY_TYPE_PRESENTATION = "presentation"
+  public static let FILTER_BY_TYPE_SIGNING = "signing"
+  public static let FILTER_BY_TYPE_ISSUANCE = "issuance"
 }

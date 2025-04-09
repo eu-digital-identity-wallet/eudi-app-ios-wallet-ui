@@ -61,4 +61,12 @@ extension Date {
   static func date(from string: String) -> Date? {
     return Date.transactionDateFormatter.date(from: string)
   }
+
+  var monthYearOrder: Int {
+    let calendar = Calendar.current
+    let components = calendar.dateComponents([.year, .month], from: self)
+    let year = components.year ?? 0
+    let month = components.month ?? 0
+    return (year * 12 + month)
+  }
 }

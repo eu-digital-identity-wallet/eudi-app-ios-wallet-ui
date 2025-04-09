@@ -134,6 +134,29 @@ public struct MultipleSelectionFilterGroup: FilterGroup {
 }
 
 @Copyable
+public struct ReversibleMultipleSelectionFilterGroup: FilterGroup {
+  public var id: String
+  public var name: String
+  public var filters: [FilterItem]
+  public var filterableAction: FilterAction
+  public var filterType: FilterGroupType
+
+  public init(
+    id: String = UUID().uuidString,
+    name: String,
+    filters: [FilterItem],
+    filterableAction: FilterAction,
+    filterType: FilterGroupType
+  ) {
+    self.id = id
+    self.name = name
+    self.filters = filters
+    self.filterableAction = filterableAction
+    self.filterType = filterType
+  }
+}
+
+@Copyable
 public struct FilterItem: Sendable {
   public let id: String
   public let name: String

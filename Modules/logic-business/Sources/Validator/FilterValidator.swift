@@ -104,6 +104,8 @@ actor FilterValidatorImpl: FilterValidator {
       switch group {
       case let multipleGroup as MultipleSelectionFilterGroup:
         return applyMultipleSelectionFilter(currentList, multipleGroup)
+      case let reversingMultipleGroup as ReversibleMultipleSelectionFilterGroup:
+        return applyReversibleMultipleSelectionFilter(currentList, reversingMultipleGroup)
       case let singleGroup as SingleSelectionFilterGroup:
         return applySingleSelectionFilter(currentList, singleGroup)
       case let reversingSingleGroup as ReversibleSingleSelectionFilterGroup:
@@ -250,14 +252,15 @@ actor FilterValidatorImpl: FilterValidator {
           _ currentList: FilterableList,
           _ group: SingleSelectionFilterGroup
   ) -> FilterableList {
-    return group.filters.filter { $0.selected }
-      .reduce(currentList) { innerCurrentList, filter in
-        filter.filterableAction.applyFilter(
-          sortOrder: appliedFilters.sortOrder,
-          filterableItems: innerCurrentList,
-          filter: filter
-        )
-      }
+    guard let selectedFilter = group.filters.first(where: { $0.selected }) else {
+      return .init(items: [])
+    }
+
+    return selectedFilter.filterableAction.applyFilter(
+      sortOrder: appliedFilters.sortOrder,
+      filterableItems: currentList,
+      filter: selectedFilter
+    )
   }
 
   private func applyReversibleSingleSelectionFilter(
@@ -275,6 +278,15 @@ actor FilterValidatorImpl: FilterValidator {
     )
   }
 
+  private func applyReversibleMultipleSelectionFilter(
+    _ currentList: FilterableList,
+    _ group: ReversibleMultipleSelectionFilterGroup
+  ) -> FilterableList {
+    return group.filters.contains { $0.selected } ?
+    group.filterableAction.applyFilterGroup(filterableItems: currentList, filterGroup: group) :
+    currentList
+  }
+
   private func mergeFilters(
     newFilterGroup: FilterGroup,
     existingFilterGroup: FilterGroup
@@ -290,6 +302,9 @@ actor FilterValidatorImpl: FilterValidator {
     case var multipleGroup as MultipleSelectionFilterGroup:
       multipleGroup.filters = mergedFilters
       return multipleGroup
+    case var reversibleMultipleGroup as ReversibleMultipleSelectionFilterGroup:
+      reversibleMultipleGroup.filters = mergedFilters
+      return reversibleMultipleGroup
     case var singleGroup as SingleSelectionFilterGroup:
       singleGroup.filters = mergedFilters
       return singleGroup
@@ -330,11 +345,18 @@ actor FilterValidatorImpl: FilterValidator {
       return singleGroup
     }
 
-    if var reversibleGroup = group as? ReversibleSingleSelectionFilterGroup {
-      reversibleGroup.filters = reversibleGroup.filters.map { filter in
+    if var singleReversibleGroup = group as? ReversibleSingleSelectionFilterGroup {
+      singleReversibleGroup.filters = singleReversibleGroup.filters.map { filter in
         return filter.id == filterId ? filter.copy(selected: !filter.selected) : filter
       }
-      return reversibleGroup
+      return singleReversibleGroup
+    }
+
+    if var multipleReversibleGroup = group as? ReversibleMultipleSelectionFilterGroup {
+      multipleReversibleGroup.filters = multipleReversibleGroup.filters.map { filter in
+        return filter.id == filterId ? filter.copy(selected: !filter.selected) : filter
+      }
+      return multipleReversibleGroup
     }
 
     return group

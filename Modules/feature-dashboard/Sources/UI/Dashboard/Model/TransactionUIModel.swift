@@ -26,9 +26,7 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
   public let status: TransactionStatus
   public let transactionDate: String
   public let transactionCategory: TransactionCategory
-  public let relyingPartyName: String?
-  public let attestationName: String?
-  public let transactionType: TransactionType?
+  public let transactionType: TransactionType
 
   public init(
     id: String = UUID().uuidString,
@@ -36,17 +34,14 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
     status: TransactionStatus,
     transactionDate: String,
     transactionCategory: TransactionCategory,
-    relyingPartyName: String? = "Transactions without relying party",
-    attestationName: String? = "Transactions without attestation name",
-    transactionType: TransactionType? = .presentation
+    relyingPartyName: String? = nil,
+    transactionType: TransactionType
   ) {
     self.id = id
     self.name = name
     self.status = status
     self.transactionDate = transactionDate
     self.transactionCategory = TransactionCategory.category(for: transactionDate)
-    self.relyingPartyName = relyingPartyName
-    self.attestationName = attestationName
     self.transactionType = transactionType
   }
 
@@ -60,7 +55,7 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
       trailingContent: .icon(
         Theme.shared.image.chevronRight,
         Theme.shared.color.onSurfaceVariant,
-        transactionType?.rawValue ?? ""
+        transactionType.typeTitle
       )
     )
   }
@@ -69,7 +64,12 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
 
     let now = Date()
     let twentyMinutesAgo = Calendar.gregorian.date(byAdding: .minute, value: -20, to: now) ?? now
-    let yesterday = Calendar.gregorian.date(byAdding: .day, value: -1, to: now) ?? now
+    let threeHoursAgo = Calendar.gregorian.date(byAdding: .hour, value: -3, to: now) ?? now
+    let twoDaysAgo = Calendar.gregorian.date(byAdding: .day, value: -2, to: now) ?? now
+    let threeDaysAgo = Calendar.gregorian.date(byAdding: .day, value: -3, to: now) ?? now
+    let threeDaysMinusFourHoursAgo = Calendar.gregorian.date(byAdding: .day, value: -3, to: now).flatMap {
+        Calendar.gregorian.date(byAdding: .hour, value: -4, to: $0)
+    } ?? now
 
     let transactions: [TransactionUIModel] = [
       .init(
@@ -82,8 +82,29 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
       .init(
         name: "Document Signing",
         status: .completed,
-        transactionDate: yesterday.formattedString(),
-        transactionCategory: .category(for: yesterday.formattedString()),
+        transactionDate: threeHoursAgo.formattedString(),
+        transactionCategory: .category(for: threeHoursAgo.formattedString()),
+        transactionType: .signing
+      ),
+      .init(
+        name: "Document Signing",
+        status: .completed,
+        transactionDate: twoDaysAgo.formattedString(),
+        transactionCategory: .category(for: twoDaysAgo.formattedString()),
+        transactionType: .signing
+      ),
+      .init(
+        name: "Document Signing",
+        status: .completed,
+        transactionDate: threeDaysAgo.formattedString(),
+        transactionCategory: .category(for: threeDaysAgo.formattedString()),
+        transactionType: .signing
+      ),
+      .init(
+        name: "Document Signing",
+        status: .completed,
+        transactionDate: threeDaysMinusFourHoursAgo.formattedString(),
+        transactionCategory: .category(for: threeDaysMinusFourHoursAgo.formattedString()),
         transactionType: .signing
       ),
       .init(
@@ -101,21 +122,18 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
         transactionType: .signing
       ),
       .init(
-        name: "PID Presentation",
+        name: "Relying Party Name 1",
         status: .failed,
         transactionDate: "19 February 2025 05:40 PM",
         transactionCategory: .category(for: "19 February 2025 05:40 PM"),
-        relyingPartyName: "Test relying party",
-        attestationName: "PID Presentation"
+        transactionType: .presentation
       ),
       .init(
-        name: "Identity Verification",
+        name: "Relying Party Name 2",
         status: .completed,
         transactionDate: "17 February 2025 11:55 AM",
         transactionCategory: .category(for: "17 February 2025 11:55 AM"),
-        relyingPartyName: "Test relying party",
-        attestationName: "Identity Verification",
-        transactionType: .issuance
+        transactionType: .presentation
       ),
       .init(
         name: "Document Signing",
@@ -125,12 +143,11 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
         transactionType: .signing
       ),
       .init(
-        name: "Data Sharing Request",
+        name: "Relying Party Name 2",
         status: .failed,
         transactionDate: "20 January 2025 04:30 PM",
         transactionCategory: .category(for: "20 January 2025 04:30 PM"),
-        relyingPartyName: "Test relying party, other",
-        attestationName: "Data Sharing Request"
+        transactionType: .presentation
       ),
       .init(
         name: "Document Signing",
@@ -140,12 +157,11 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
         transactionType: .signing
       ),
       .init(
-        name: "PID Presentation",
+        name: "Relying Party Name 1",
         status: .completed,
         transactionDate: "01 March 2024 02:20 PM",
         transactionCategory: .category(for: "01 March 2024 02:20 PM"),
-        relyingPartyName: "Test relying party",
-        attestationName: "PID Presentation"
+        transactionType: .presentation
       ),
       .init(
         name: "Document Signing",
@@ -155,12 +171,25 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
         transactionType: .signing
       ),
       .init(
-        name: "Identity Verification",
+        name: "Relying Party Name 3",
         status: .completed,
         transactionDate: "17 February 2024 11:30 AM",
         transactionCategory: .category(for: "17 February 2024 11:30 AM"),
-        relyingPartyName: "Test relying party",
-        attestationName: "Identity Verification"
+        transactionType: .presentation
+      ),
+      .init(
+        name: "Issuance 1",
+        status: .failed,
+        transactionDate: "17 February 2024 12:30 AM",
+        transactionCategory: .category(for: "17 February 2024 12:30 AM"),
+        transactionType: .issuance
+      ),
+      .init(
+        name: "Issuance 2",
+        status: .completed,
+        transactionDate: "18 February 2024 04:20 AM",
+        transactionCategory: .category(for: "18 February 2024 04:20 AM"),
+        transactionType: .issuance
       ),
       .init(
         name: "Old Document",
@@ -211,7 +240,7 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
       formatter.dateFormat = "h:mm a"
       return LocalizableStringKey.custom(formatter.string(from: transactionDate))
     } else {
-      formatter.dateFormat = "dd MMM yyyy"
+      formatter.dateFormat = "dd MMM yyyy h:mm a"
       return LocalizableStringKey.custom(formatter.string(from: transactionDate))
     }
   }
@@ -231,8 +260,19 @@ public enum TransactionStatus: Sendable {
   }
 }
 
-public enum TransactionType: String, CaseIterable, Sendable {
-  case signing = "e-Signature"
-  case presentation = "Data Sharing"
-  case issuance = "Issuance"
+public enum TransactionType: Sendable {
+  case presentation
+  case issuance
+  case signing
+
+  var typeTitle: LocalizableStringKey {
+    switch self {
+    case .presentation:
+      return .dataSharing
+    case .issuance:
+      return .issuance
+    case .signing:
+      return .eSignature
+    }
+  }
 }

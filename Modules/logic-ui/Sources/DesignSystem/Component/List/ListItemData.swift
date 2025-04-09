@@ -85,7 +85,7 @@ public struct LeadingIcon: Sendable, Equatable {
 }
 
 public enum TrailingContent: Sendable, Equatable {
-  case icon(Image, Color = Color.accentColor, String = "")
+  case icon(Image, Color = Color.accentColor, LocalizableStringKey = .custom(""))
   case checkbox(Bool, Bool, @Sendable (Bool) -> Void)
   case empty
 

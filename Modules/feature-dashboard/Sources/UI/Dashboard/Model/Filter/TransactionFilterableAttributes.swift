@@ -19,30 +19,24 @@ import logic_business
 struct TransactionFilterableAttributes: FilterableAttributes {
   let sortingKey: String
   var searchTags: [String]
-  let name: String?
   let status: TransactionStatus?
   let creationDate: Date?
   let relyingPartyName: String?
-  let attestationName: String?
   let transactionType: TransactionType?
 
   init(
     sortingKey: String,
     searchTags: [String],
-    name: String? = nil,
     status: TransactionStatus? = nil,
     creationDate: Date? = nil,
     relyingPartyName: String? = nil,
-    attestationName: String? = nil,
     transactionType: TransactionType? = .presentation
   ) {
     self.sortingKey = sortingKey
     self.searchTags = searchTags
-    self.name = name
     self.status = status
     self.creationDate = creationDate
     self.relyingPartyName = relyingPartyName
-    self.attestationName = attestationName
     self.transactionType = transactionType
   }
 }

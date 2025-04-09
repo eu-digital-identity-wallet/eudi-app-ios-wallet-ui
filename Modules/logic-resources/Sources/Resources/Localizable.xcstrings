@@ -474,6 +474,17 @@
         }
       }
     },
+    "data_sharing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data Sharing"
+          }
+        }
+      }
+    },
     "data_sharing_request" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -650,6 +661,17 @@
         }
       }
     },
+    "e_signature" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e-Signature"
+          }
+        }
+      }
+    },
     "electronically_sign_digital_documents" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -660,6 +682,9 @@
           }
         }
       }
+    },
+    "empty" : {
+      "extractionState" : "manual"
     },
     "end_date" : {
       "extractionState" : "manual",
@@ -815,6 +840,17 @@
         }
       }
     },
+    "filter_by_type" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter By Type"
+          }
+        }
+      }
+    },
     "filters" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -921,6 +957,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid quick pin"
+          }
+        }
+      }
+    },
+    "issuance" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuance"
           }
         }
       }
@@ -1331,6 +1378,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Please wait..."
+          }
+        }
+      }
+    },
+    "presentation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation"
           }
         }
       }
@@ -2006,6 +2064,17 @@
         }
       }
     },
+    "signing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signing"
+          }
+        }
+      }
+    },
     "sort_by" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2101,6 +2170,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid transaction code format. Length should be between %@ to %@ digits and only numeric characters are allowed."
+          }
+        }
+      }
+    },
+    "transaction_date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transaction Date"
           }
         }
       }

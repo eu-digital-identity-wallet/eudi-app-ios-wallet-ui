@@ -481,6 +481,20 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedStringWithArguments(forKey: "minutes_ago", arguments: args)
     case .minuteAgo(let args):
       bundle.localizedStringWithArguments(forKey: "minute_ago", arguments: args)
+    case .transactionDate:
+      bundle.localizedString(forKey: "transaction_date")
+    case .filterByType:
+      bundle.localizedString(forKey: "filter_by_type")
+    case .presentation:
+      bundle.localizedString(forKey: "presentation")
+    case .signing:
+      bundle.localizedString(forKey: "signing")
+    case .issuance:
+      bundle.localizedString(forKey: "issuance")
+    case .dataSharing:
+      bundle.localizedString(forKey: "data_sharing")
+    case .eSignature:
+      bundle.localizedString(forKey: "e_signature")
     }
   }
 }

@@ -240,6 +240,13 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case unknownDate
   case minutesAgo([String])
   case minuteAgo([String])
+  case transactionDate
+  case filterByType
+  case presentation
+  case signing
+  case issuance
+  case dataSharing
+  case eSignature
 }
 
 public extension LocalizableStringKey {

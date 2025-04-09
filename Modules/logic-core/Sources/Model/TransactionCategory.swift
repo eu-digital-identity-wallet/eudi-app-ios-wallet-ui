@@ -18,48 +18,49 @@ import Foundation
 import logic_resources
 
 public enum TransactionCategory: Hashable, Equatable, Sendable {
-  case today
-  case thisWeek
+
   case month(dateTime: String)
 
   public var title: LocalizableStringKey {
     switch self {
-    case .today:
-      return LocalizableStringKey.today
-    case .thisWeek:
-      return LocalizableStringKey.thisWeek
     case .month(let dateTime):
-      return LocalizableStringKey.custom(dateTime)
+      switch dateTime {
+      case LocalizableStringKey.today.toString:
+        return .today
+      case LocalizableStringKey.thisWeek.toString:
+        return .thisWeek
+      default:
+        return LocalizableStringKey.custom(dateTime)
+      }
     }
   }
 
   public var order: Int {
     switch self {
-    case .today:
-      return 0
-    case .thisWeek:
-      return 1
     case .month(let dateTime):
-      if let date = Date.monthYearFormatter.date(from: dateTime) {
-        let calendar = Calendar.current
-        let yearMonth = calendar.dateComponents([.year, .month], from: date)
-        let year = yearMonth.year ?? 0
-        let month = yearMonth.month ?? 0
-        return (year * 12 + month)
+      switch dateTime {
+      case LocalizableStringKey.today.toString:
+        return Int.max - 2
+      case LocalizableStringKey.thisWeek.toString:
+        return Int.max - 3
+      default:
+        if let date = Date.monthYearFormatter.date(from: dateTime) {
+          return date.monthYearOrder
+        }
+        return 0
       }
-      return 2
     }
   }
 
   public static func category(for dateString: String) -> TransactionCategory {
     guard let date = Date.date(from: dateString) else {
-      return .month(dateTime: "")
+      return .month(dateTime: LocalizableStringKey.custom("").toString)
     }
 
     if date.isToday() {
-      return .today
+      return .month(dateTime: LocalizableStringKey.today.toString)
     } else if date.isThisWeek() {
-      return .thisWeek
+      return .month(dateTime: LocalizableStringKey.thisWeek.toString)
     } else {
       return .month(dateTime: date.formattedMonthYear())
     }
