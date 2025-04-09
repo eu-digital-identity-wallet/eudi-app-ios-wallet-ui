@@ -474,17 +474,6 @@
         }
       }
     },
-    "data_sharing" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Data Sharing"
-          }
-        }
-      }
-    },
     "data_sharing_request" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -657,17 +646,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Done"
-          }
-        }
-      }
-    },
-    "e_signature" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "e-Signature"
           }
         }
       }
@@ -2445,6 +2423,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Welcome back, %@"
+          }
+        }
+      }
+    },
+    "without_relying_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Relying Party"
           }
         }
       }

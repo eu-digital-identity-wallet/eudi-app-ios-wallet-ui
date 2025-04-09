@@ -74,7 +74,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
 
   public func fetchFilteredTransactions(failedTransactions: [String]) -> FilterableList? {
 
-    let transactions = TransactionUIModel.mocks()
+    let transactions = TransactionUIModel.emptyList()
 
     guard !transactions.isEmpty else {
       return nil
@@ -129,8 +129,8 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
               id: FilterIds.ORDER_BY_ASCENDING,
               name: LocalizableStringKey.ascending.toString,
               selected: false,
-              filterableAction: Sort<TransactionFilterableAttributes, String>(predicate: { attribute in
-                attribute.sortingKey
+              filterableAction: Sort<TransactionFilterableAttributes, Date>(predicate: { attribute in
+                attribute.creationDate
               })
             ),
             FilterItem(
@@ -138,8 +138,8 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
               name: LocalizableStringKey.descending.toString,
               selected: true,
               isDefault: true,
-              filterableAction: Sort<TransactionFilterableAttributes, String>(predicate: { attribute in
-                attribute.sortingKey
+              filterableAction: Sort<TransactionFilterableAttributes, Date>(predicate: { attribute in
+                attribute.creationDate
               })
             )
           ],
@@ -154,8 +154,8 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
               name: LocalizableStringKey.transactionDate.toString,
               selected: true,
               isDefault: true,
-              filterableAction: Sort<TransactionFilterableAttributes, String>(predicate: { attribute in
-                attribute.sortingKey
+              filterableAction: Sort<TransactionFilterableAttributes, Date>(predicate: { attribute in
+                attribute.creationDate
               })
             )
           ],
@@ -174,29 +174,8 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
               endDate: latestDate,
               filterElementType: .datePicker,
               filterableAction: Filter<TransactionFilterableAttributes>(predicate: { attribute, filter in
-                guard
-                  let start = filter.startDate,
-                  let end = filter.endDate
-                else {
-                  return filter.startDate == nil && filter.endDate == nil
-                }
-
-                guard start <= end else { return false }
-
-                guard let creationDate = attribute.creationDate else {
-                  return false
-                }
-
-                let calendar = Calendar.current
-
-                let startOfDay = calendar.startOfDay(for: start)
-                let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: end) ?? end
-
-                if startOfDay == endOfDay {
-                  return calendar.isDate(creationDate, inSameDayAs: startOfDay)
-                }
-
-                return (startOfDay...endOfDay).contains(creationDate)
+                guard let creationDate = attribute.creationDate else { return false }
+                return creationDate.isBetween(filter.startDate, filter.endDate) ?? true
               })
             )
           ],
@@ -231,16 +210,20 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
           }),
           filterType: .other
         ),
-        ReversibleMultipleSelectionFilterGroup(
+        MultipleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_RELYING_PARY_NAME,
           name: LocalizableStringKey.relyingParty.toString,
           filters: [],
           filterableAction: FilterMultipleAction<TransactionFilterableAttributes>(predicate: { attribute, filter in
-            if attribute.relyingPartyName != nil, filter.selected {
+            if filter.id == FilterIds.FILTER_BY_RELYING_PARTY_NONE {
+               return attribute.relyingPartyName == nil
+            }
+
+            if attribute.relyingPartyName != nil {
               return attribute.relyingPartyName == filter.name
             }
 
-            return true
+            return false
           }),
           filterType: .relyingParty
         ),
@@ -325,7 +308,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
 
   func addDynamicFilters(transactions: FilterableList, filters: Filters) async -> Filters {
     let newFilterGroups: [FilterGroup] = filters.filterGroups.map { filterGroup in
-      if let multipleGroup = filterGroup as? ReversibleMultipleSelectionFilterGroup {
+      if let multipleGroup = filterGroup as? MultipleSelectionFilterGroup {
         switch multipleGroup.filterType {
         case .relyingParty:
           return multipleGroup.copy(filters: addRelyingPartyName(transactions: transactions)) as any FilterGroup
@@ -397,21 +380,25 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
       if !unique.contains(element) {
         unique.append(element)
       }
-    }.sorted()
+    }
 
     let filterItems = distinctRelyingPartyNames.map { relyingPartyName in
       return FilterItem(
         id: UUID().uuidString,
         name: relyingPartyName,
         selected: true,
-        isDefault: true,
-        filterableAction: Filter<TransactionFilterableAttributes>(predicate: { attributes, filter in
-          attributes.relyingPartyName == filter.name
-        })
+        isDefault: true
       )
-    }
+    }.sorted { $0.name < $1.name }
 
-    return filterItems
+    return [
+      FilterItem(
+        id: FilterIds.FILTER_BY_RELYING_PARTY_NONE,
+        name: LocalizableStringKey.withoutRelyingName.toString,
+        selected: true,
+        isDefault: true
+      )
+    ] + filterItems
   }
 
   private func getEarliestTransactionDate(from transactions: FilterableList) -> Date {

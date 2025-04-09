@@ -245,8 +245,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case presentation
   case signing
   case issuance
-  case dataSharing
-  case eSignature
+  case withoutRelyingName
 }
 
 public extension LocalizableStringKey {

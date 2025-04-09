@@ -67,7 +67,14 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
   func onCreate() {
     onUpdateToolbar(
       .init(
-        trailingActions: nil,
+        trailingActions: [
+          Action(
+            image: Theme.shared.image.filterMenuIcon,
+            hasIndicator: !viewState.hasDefaultFilters
+          ) {
+            self.showFilters()
+          }
+        ],
         leadingActions: [
           Action(image: Theme.shared.image.menuIcon) {
             self.onMyWallet()

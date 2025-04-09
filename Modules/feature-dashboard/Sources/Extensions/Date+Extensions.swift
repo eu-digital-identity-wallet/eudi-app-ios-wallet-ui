@@ -57,4 +57,22 @@ extension Date {
     return formatter.string(from: self)
   }
 
+  func isBetween(_ startDate: Date?, _ endDate: Date?) -> Bool? {
+    guard let start = startDate, let end = endDate else {
+      return startDate == nil && endDate == nil ? nil : false
+    }
+
+    guard start <= end else { return false }
+
+    let calendar = Calendar.current
+    let startOfDay = calendar.startOfDay(for: start)
+    let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: end) ?? end
+
+    if startOfDay == endOfDay {
+      return calendar.isDate(self, inSameDayAs: startOfDay)
+    }
+
+    return (startOfDay...endOfDay).contains(self)
+  }
+
 }

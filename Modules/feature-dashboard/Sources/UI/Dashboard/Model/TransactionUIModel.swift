@@ -203,6 +203,11 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
     return Dictionary(grouping: transactions, by: { $0.transactionCategory })
   }
 
+  static func emptyList() -> [TransactionCategory: [TransactionUIModel]] {
+    let transactions: [TransactionUIModel] = []
+    return Dictionary(grouping: transactions, by: { $0.transactionCategory })
+  }
+
   func transformToTransactionUi(
     with failedDocuments: [String] = [],
     categories: TransactionCategory
@@ -237,10 +242,10 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
     }
 
     if calendar.isDateInToday(transactionDate) {
-      formatter.dateFormat = "h:mm a"
+      formatter.dateFormat = "hh:mm a"
       return LocalizableStringKey.custom(formatter.string(from: transactionDate))
     } else {
-      formatter.dateFormat = "dd MMM yyyy h:mm a"
+      formatter.dateFormat = "dd MMM yyyy hh:mm a"
       return LocalizableStringKey.custom(formatter.string(from: transactionDate))
     }
   }
@@ -268,11 +273,11 @@ public enum TransactionType: Sendable {
   var typeTitle: LocalizableStringKey {
     switch self {
     case .presentation:
-      return .dataSharing
+      return .presentation
     case .issuance:
       return .issuance
     case .signing:
-      return .eSignature
+      return .signing
     }
   }
 }

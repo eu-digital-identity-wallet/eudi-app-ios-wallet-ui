@@ -491,10 +491,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "signing")
     case .issuance:
       bundle.localizedString(forKey: "issuance")
-    case .dataSharing:
-      bundle.localizedString(forKey: "data_sharing")
-    case .eSignature:
-      bundle.localizedString(forKey: "e_signature")
+    case .withoutRelyingName:
+      bundle.localizedString(forKey: "without_relying_name")
     }
   }
 }

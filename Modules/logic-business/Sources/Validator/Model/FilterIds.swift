@@ -45,4 +45,5 @@ public struct FilterIds {
   public static let FILTER_BY_TYPE_PRESENTATION = "presentation"
   public static let FILTER_BY_TYPE_SIGNING = "signing"
   public static let FILTER_BY_TYPE_ISSUANCE = "issuance"
+  public static let FILTER_BY_RELYING_PARTY_NONE = "relying_party_name_none"
 }
