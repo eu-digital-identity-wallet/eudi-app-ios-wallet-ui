@@ -74,7 +74,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
 
   public func fetchFilteredTransactions(failedTransactions: [String]) -> FilterableList? {
 
-    let transactions = TransactionUIModel.emptyList()
+    let transactions = TransactionUIModel.mocks()
 
     guard !transactions.isEmpty else {
       return nil

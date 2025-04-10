@@ -54,7 +54,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         filterUIModel: [],
         failedTransactions: [],
         isFromOnPause: true,
-        hasDefaultFilters: false,
+        hasDefaultFilters: true,
         dateHasChanged: false,
         sortIsDescending: false
       )
@@ -65,25 +65,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
   }
 
   func onCreate() {
-    onUpdateToolbar(
-      .init(
-        trailingActions: [
-          Action(
-            image: Theme.shared.image.filterMenuIcon,
-            hasIndicator: !viewState.hasDefaultFilters
-          ) {
-            self.showFilters()
-          }
-        ],
-        leadingActions: [
-          Action(image: Theme.shared.image.menuIcon) {
-            self.onMyWallet()
-          }
-        ]
-      ),
-      .transactions
-    )
-
+    updateToolBar()
     fetch()
   }
 
@@ -209,7 +191,8 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         trailingActions: [
           Action(
             image: Theme.shared.image.filterMenuIcon,
-            hasIndicator: !viewState.hasDefaultFilters
+            hasIndicator: !viewState.hasDefaultFilters,
+            disabled: viewState.filterUIModel.isEmpty
           ) {
             self.showFilters()
           }

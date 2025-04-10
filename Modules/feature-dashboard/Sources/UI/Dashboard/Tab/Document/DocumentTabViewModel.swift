@@ -82,7 +82,6 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
 
   func fetch() {
     Task {
-
       let failedDocuments = viewState.failedDocuments
 
       let state = await Task.detached { () -> DocumentsPartialState in
@@ -321,7 +320,8 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
           },
           Action(
             image: Theme.shared.image.filterMenuIcon,
-            hasIndicator: !viewState.hasDefaultFilters
+            hasIndicator: !viewState.hasDefaultFilters,
+            disabled: viewState.filterUIModel.isEmpty
           ) {
             self.showFilters()
           }

@@ -203,11 +203,6 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
     return Dictionary(grouping: transactions, by: { $0.transactionCategory })
   }
 
-  static func emptyList() -> [TransactionCategory: [TransactionUIModel]] {
-    let transactions: [TransactionUIModel] = []
-    return Dictionary(grouping: transactions, by: { $0.transactionCategory })
-  }
-
   func transformToTransactionUi(
     with failedDocuments: [String] = [],
     categories: TransactionCategory
