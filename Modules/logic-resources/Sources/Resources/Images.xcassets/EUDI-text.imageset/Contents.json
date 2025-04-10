@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "EUDI-text.svg",
+      "filename" : "text-logo-digdir.pdf",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "image.png",
+      "filename" : "text-logo-digdir-darkmode.pdf",
       "idiom" : "universal"
     }
   ],
