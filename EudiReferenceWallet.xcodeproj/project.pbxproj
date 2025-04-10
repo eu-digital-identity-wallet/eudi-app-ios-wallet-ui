@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		089B4B6A2DA7A5D600EA196D /* Cert2.der in Resources */ = {isa = PBXBuildFile; fileRef = 089B4B692DA7A5D600EA196D /* Cert2.der */; };
+		089B4B6C2DA7A5DC00EA196D /* Cert1.der in Resources */ = {isa = PBXBuildFile; fileRef = 089B4B6B2DA7A5DC00EA196D /* Cert1.der */; };
 		F02921632B8E07870076A58B /* WalletDemoRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */; };
 		F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */; };
 		F02AE38F2BA6E45F00C25C59 /* logic-assembly in Resources */ = {isa = PBXBuildFile; fileRef = F02AE38E2BA6E45F00C25C59 /* logic-assembly */; };
@@ -38,6 +40,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		089B4B692DA7A5D600EA196D /* Cert2.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = Cert2.der; sourceTree = "<group>"; };
+		089B4B6B2DA7A5DC00EA196D /* Cert1.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = Cert1.der; sourceTree = "<group>"; };
 		08D9175E2D9D65E900FC7A15 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		1198ECD72AC453F200F4E71A /* logic-resources */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-resources"; path = "Modules/logic-resources"; sourceTree = "<group>"; };
 		F018D9F32D087C410015876D /* logic-storage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-storage"; path = "Modules/logic-storage"; sourceTree = "<group>"; };
@@ -117,6 +121,8 @@
 				F0FFD1E42D82DBB20044B5C1 /* pid_issuer_canl01.der */,
 				F0FFD1E52D82DBB20044B5C1 /* pid_issuer_capt01.der */,
 				F0FFD1E62D82DBB20044B5C1 /* pid_issuer_caut01.der */,
+				089B4B692DA7A5D600EA196D /* Cert2.der */,
+				089B4B6B2DA7A5DC00EA196D /* Cert1.der */,
 			);
 			path = Certificate;
 			sourceTree = "<group>";
@@ -270,7 +276,9 @@
 				F0A0139A2AC35ECA00065EAD /* feature-startup in Resources */,
 				F1CACAE22AC3098C00B40DED /* WalletDemo.xcconfig in Resources */,
 				F0BFE9B72AD557290062826F /* feature-common in Resources */,
+				089B4B6A2DA7A5D600EA196D /* Cert2.der in Resources */,
 				F0A0139C2AC35ECA00065EAD /* logic-ui in Resources */,
+				089B4B6C2DA7A5DC00EA196D /* Cert1.der in Resources */,
 				F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */,
 				F05E9F382AFABBC200891E8F /* feature-presentation in Resources */,
 				F0FFD1E72D82DBB20044B5C1 /* pid_issuer_caee01.der in Resources */,
