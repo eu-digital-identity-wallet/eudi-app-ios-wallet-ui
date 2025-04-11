@@ -96,13 +96,13 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
   var readerConfig: ReaderConfig {
     let certificates = [
-      "pid_issuer_cacz01",
-      "pid_issuer_caee01",
-      "pid_issuer_caeu01",
-      "pid_issuer_calu01",
-      "pid_issuer_canl01",
-      "pid_issuer_capt01",
-      "pid_issuer_caut01"
+      "pidissuerca02_cz",
+      "pidissuerca02_ee",
+      "pidissuerca02_eu",
+      "pidissuerca02_lu",
+      "pidissuerca02_nl",
+      "pidissuerca02_pt",
+      "pidissuerca02_ut"
     ]
     let certsData: [Data] = certificates.compactMap {
       Data(name: $0, ext: "der")
