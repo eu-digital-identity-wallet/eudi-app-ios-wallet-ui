@@ -15,7 +15,6 @@
  */
 import Swinject
 import logic_core
-import logic_storage
 
 public final class FeatureIssuanceAssembly: Assembly {
 
@@ -29,8 +28,7 @@ public final class FeatureIssuanceAssembly: Assembly {
 
     container.register(DocumentDetailsInteractor.self) { r in
       DocumentDetailsInteractorImpl(
-        walletController: r.force(WalletKitController.self),
-        bookmarkStorageController: r.force((any BookmarkStorageController).self)
+        walletController: r.force(WalletKitController.self)
       )
     }
     .inObjectScope(ObjectScope.transient)

@@ -215,6 +215,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case filterByCategory
   case searchDocuments
   case or
+  case errorFetchTransactionLog
 }
 
 public extension LocalizableStringKey {

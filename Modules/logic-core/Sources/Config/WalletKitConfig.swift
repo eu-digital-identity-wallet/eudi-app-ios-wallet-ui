@@ -15,6 +15,7 @@
  */
 import Foundation
 import logic_business
+import EudiWalletKit
 
 struct VciConfig: Sendable {
   public let issuerUrl: String
@@ -59,14 +60,24 @@ protocol WalletKitConfig: Sendable {
    * Document categories
    */
   var documentsCategories: DocumentCategories { get }
+
+  /**
+   * Logger For Transactions
+   */
+  var transactionLogger: TransactionLogger { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {
 
   let configLogic: ConfigLogic
+  let transactionLoggerImpl: TransactionLogger
 
-  init(configLogic: ConfigLogic) {
+  init(
+    configLogic: ConfigLogic,
+    transactionLogger: TransactionLogger
+  ) {
     self.configLogic = configLogic
+    self.transactionLoggerImpl = transactionLogger
   }
 
   var userAuthenticationRequired: Bool {
@@ -164,5 +175,9 @@ struct WalletKitConfigImpl: WalletKitConfig {
         .other(formatType: "urn:eu.europa.ec.eudi:por:1")
       ]
     ]
+  }
+
+  var transactionLogger: any TransactionLogger {
+    return self.transactionLoggerImpl
   }
 }

@@ -19,6 +19,7 @@ import Combine
 import logic_resources
 import logic_business
 import SwiftUI
+import logic_storage
 
 private enum KeyIdentifier: String, KeyChainWrapper {
   public var value: String {
@@ -46,7 +47,6 @@ public protocol WalletKitController: Sendable {
   func fetchDocuments(with ids: [String]) -> [DocClaimsDecodable]
 
   func clearAllDocuments() async
-  func clearDocuments(status: DocumentStatus) async throws
   func deleteDocument(with id: String, status: DocumentStatus) async throws
   func loadDocuments() async throws
 
@@ -71,6 +71,16 @@ public protocol WalletKitController: Sendable {
   func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData?
   func getScopedDocuments() async throws -> [ScopedDocument]
   func getDocumentCategories() -> DocumentCategories
+
+  func isDocumentBookmarked(with id: String) -> Bool
+  func storeBookmarkedDocument(with id: String) throws
+  func removeBookmarkedDocument(with id: String) throws
+
+  func fetchTransactionLog(with id: String) async throws -> TransactionLogData
+  func fetchTransactionLogs() async throws -> [TransactionLogData]
+
+  func isDocumentRevoked(with id: String) -> Bool
+  func fetchRevokedDocuments() throws -> [String]
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -80,15 +90,24 @@ final class WalletKitControllerImpl: WalletKitController {
 
   private let configLogic: WalletKitConfig
   private let keyChainController: KeyChainController
+  private let bookmarkStorageController: any BookmarkStorageController
+  private let transactionLogStorageController: any TransactionLogStorageController
+  private let revokedDocumentStorageController: any RevokedDocumentStorageController
 
   init(
     configLogic: WalletKitConfig,
     keyChainController: KeyChainController,
-    sessionCoordinatorHolder: SessionCoordinatorHolder
+    sessionCoordinatorHolder: SessionCoordinatorHolder,
+    bookmarkStorageController: any BookmarkStorageController,
+    transactionLogStorageController: any TransactionLogStorageController,
+    revokedDocumentStorageController: any RevokedDocumentStorageController
   ) {
     self.configLogic = configLogic
     self.keyChainController = keyChainController
     self.sessionCoordinatorHolder = sessionCoordinatorHolder
+    self.bookmarkStorageController = bookmarkStorageController
+    self.transactionLogStorageController = transactionLogStorageController
+    self.revokedDocumentStorageController = revokedDocumentStorageController
 
     guard let walletKit = try? EudiWallet(serviceName: configLogic.documentStorageServiceName) else {
       fatalError("Unable to Initialize WalletKit")
@@ -106,6 +125,7 @@ final class WalletKitControllerImpl: WalletKitController {
     )
     wallet.trustedReaderCertificates = configLogic.readerConfig.trustedCerts
     wallet.logFileName = configLogic.logFileName
+    walletKit.transactionLogger = configLogic.transactionLogger
   }
 
   func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssuanceModel {
@@ -126,14 +146,12 @@ final class WalletKitControllerImpl: WalletKitController {
 
   func clearAllDocuments() async {
     try? await wallet.deleteAllDocuments()
-  }
-
-  func clearDocuments(status: DocumentStatus) async throws {
-    return try await wallet.deleteDocuments(status: status)
+    try? revokedDocumentStorageController.deleteAll()
   }
 
   func deleteDocument(with id: String, status: DocumentStatus) async throws {
-    return try await wallet.deleteDocument(id: id, status: status)
+    try await wallet.deleteDocument(id: id, status: status)
+    try revokedDocumentStorageController.delete(id)
   }
 
   func loadDocuments() async throws {
@@ -288,6 +306,56 @@ final class WalletKitControllerImpl: WalletKitController {
   func getDocumentCategories() -> DocumentCategories {
     let sorted = configLogic.documentsCategories.sorted { $0.key.order < $1.key.order }
     return DocumentCategories(uniqueKeysWithValues: sorted)
+  }
+
+  func isDocumentBookmarked(with id: String) -> Bool {
+    return (try? bookmarkStorageController.retrieve(id)) != nil
+  }
+
+  func storeBookmarkedDocument(with id: String) throws {
+    try bookmarkStorageController.store(.init(identifier: id))
+  }
+
+  func removeBookmarkedDocument(with id: String) throws {
+    try bookmarkStorageController.delete(id)
+  }
+
+  func fetchTransactionLog(with id: String) async throws -> TransactionLogData {
+    return try await Task.detached { () -> TransactionLogData in
+      guard
+        let storedLog = try? self.transactionLogStorageController.retrieve(id),
+        let coreLog = try? storedLog.toCoreTransactionLog()
+      else {
+        throw WalletCoreError.unableToFetchTransactionLog
+      }
+      return self.wallet.parseTransactionLog(coreLog)
+    }.value
+  }
+
+  func fetchTransactionLogs() async throws -> [TransactionLogData] {
+    return try await Task.detached { () -> [TransactionLogData] in
+      guard
+        let storedLogs = try? self.transactionLogStorageController.retrieveAll()
+      else {
+        throw WalletCoreError.unableToFetchTransactionLog
+      }
+      return storedLogs.compactMap {
+        guard let coreLog = try? $0.toCoreTransactionLog() else {
+          return nil
+        }
+        return self.wallet.parseTransactionLog(coreLog)
+      }
+    }.value
+  }
+
+  func fetchRevokedDocuments() throws -> [String] {
+    return try self.revokedDocumentStorageController.retrieveAll().map {
+      return $0.identifier
+    }
+  }
+
+  func isDocumentRevoked(with id: String) -> Bool {
+    return (try? revokedDocumentStorageController.retrieve(id)) != nil
   }
 }
 

@@ -1443,13 +1443,13 @@ public class MockDocumentDetailsInteractor: DocumentDetailsInteractor, Cuckoo.Pr
         )
     }
     
-    public func fetchBookmarks(_ p0: String) async throws -> Bookmark {
-        return try await cuckoo_manager.callThrows(
-            "fetchBookmarks(_ p0: String) async throws -> Bookmark",
+    public func isBookmarked(_ p0: String) async -> Bool {
+        return await cuckoo_manager.call(
+            "isBookmarked(_ p0: String) async -> Bool",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.fetchBookmarks(p0)
+            defaultCall: await __defaultImplStub!.isBookmarked(p0)
         )
     }
     
@@ -1496,10 +1496,10 @@ public class MockDocumentDetailsInteractor: DocumentDetailsInteractor, Cuckoo.Pr
             ))
         }
         
-        func fetchBookmarks<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), Bookmark> where M1.MatchedType == String {
+        func isBookmarked<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubFunction<(String), Bool> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentDetailsInteractor.self,
-                method: "fetchBookmarks(_ p0: String) async throws -> Bookmark",
+                method: "isBookmarked(_ p0: String) async -> Bool",
                 parameterMatchers: matchers
             ))
         }
@@ -1558,10 +1558,10 @@ public class MockDocumentDetailsInteractor: DocumentDetailsInteractor, Cuckoo.Pr
         
         
         @discardableResult
-        func fetchBookmarks<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Bookmark> where M1.MatchedType == String {
+        func isBookmarked<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Bool> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "fetchBookmarks(_ p0: String) async throws -> Bookmark",
+                "isBookmarked(_ p0: String) async -> Bool",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1606,8 +1606,8 @@ public class DocumentDetailsInteractorStub:DocumentDetailsInteractor, @unchecked
         return DefaultValueRegistry.defaultValue(for: (DocumentDetailsDeletionPartialState).self)
     }
     
-    public func fetchBookmarks(_ p0: String) async throws -> Bookmark {
-        return DefaultValueRegistry.defaultValue(for: (Bookmark).self)
+    public func isBookmarked(_ p0: String) async -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
     public func save(_ p0: String) async throws {
@@ -6141,6 +6141,7 @@ import Cuckoo
 
 import Cuckoo
 import Foundation
+import EudiWalletKit
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -6226,6 +6227,16 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             )
         }
     }
+    
+    var transactionLogger: TransactionLogger {
+        get {
+            return cuckoo_manager.getter(
+                "transactionLogger",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.transactionLogger
+            )
+        }
+    }
 
 
     struct __StubbingProxy_WalletKitConfig: Cuckoo.StubbingProxy {
@@ -6257,6 +6268,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         
         var documentsCategories: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,DocumentCategories> {
             return .init(manager: cuckoo_manager, name: "documentsCategories")
+        }
+        
+        var transactionLogger: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,TransactionLogger> {
+            return .init(manager: cuckoo_manager, name: "transactionLogger")
         }
     }
 
@@ -6293,6 +6308,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         
         var documentsCategories: Cuckoo.VerifyReadOnlyProperty<DocumentCategories> {
             return .init(manager: cuckoo_manager, name: "documentsCategories", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var transactionLogger: Cuckoo.VerifyReadOnlyProperty<TransactionLogger> {
+            return .init(manager: cuckoo_manager, name: "transactionLogger", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
     }
 }
@@ -6332,6 +6351,12 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
     var documentsCategories: DocumentCategories {
         get {
             return DefaultValueRegistry.defaultValue(for: (DocumentCategories).self)
+        }
+    }
+    
+    var transactionLogger: TransactionLogger {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (TransactionLogger).self)
         }
     }
 
@@ -6515,16 +6540,6 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func clearDocuments(status p0: DocumentStatus) async throws {
-        return try await cuckoo_manager.callThrows(
-            "clearDocuments(status p0: DocumentStatus) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.clearDocuments(status: p0)
-        )
-    }
-    
     public func deleteDocument(with p0: String, status p1: DocumentStatus) async throws {
         return try await cuckoo_manager.callThrows(
             "deleteDocument(with p0: String, status p1: DocumentStatus) async throws",
@@ -6658,6 +6673,76 @@ return cuckoo_manager.call(
             defaultCall: __defaultImplStub!.getDocumentCategories()
         )
     }
+    
+    public func isDocumentBookmarked(with p0: String) -> Bool {
+        return cuckoo_manager.call(
+            "isDocumentBookmarked(with p0: String) -> Bool",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.isDocumentBookmarked(with: p0)
+        )
+    }
+    
+    public func storeBookmarkedDocument(with p0: String) throws {
+        return try cuckoo_manager.callThrows(
+            "storeBookmarkedDocument(with p0: String) throws",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.storeBookmarkedDocument(with: p0)
+        )
+    }
+    
+    public func removeBookmarkedDocument(with p0: String) throws {
+        return try cuckoo_manager.callThrows(
+            "removeBookmarkedDocument(with p0: String) throws",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.removeBookmarkedDocument(with: p0)
+        )
+    }
+    
+    public func fetchTransactionLog(with p0: String) async throws -> TransactionLogData {
+        return try await cuckoo_manager.callThrows(
+            "fetchTransactionLog(with p0: String) async throws -> TransactionLogData",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.fetchTransactionLog(with: p0)
+        )
+    }
+    
+    public func fetchTransactionLogs() async throws -> [TransactionLogData] {
+        return try await cuckoo_manager.callThrows(
+            "fetchTransactionLogs() async throws -> [TransactionLogData]",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.fetchTransactionLogs()
+        )
+    }
+    
+    public func isDocumentRevoked(with p0: String) -> Bool {
+        return cuckoo_manager.call(
+            "isDocumentRevoked(with p0: String) -> Bool",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.isDocumentRevoked(with: p0)
+        )
+    }
+    
+    public func fetchRevokedDocuments() throws -> [String] {
+        return try cuckoo_manager.callThrows(
+            "fetchRevokedDocuments() throws -> [String]",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.fetchRevokedDocuments()
+        )
+    }
 
     public struct __StubbingProxy_WalletKitController: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -6774,14 +6859,6 @@ return cuckoo_manager.call(
             ))
         }
         
-        func clearDocuments<M1: Cuckoo.Matchable>(status p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(DocumentStatus)> where M1.MatchedType == DocumentStatus {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentStatus)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "clearDocuments(status p0: DocumentStatus) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
         func deleteDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with p0: M1, status p1: M2) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String, DocumentStatus)> where M1.MatchedType == String, M2.MatchedType == DocumentStatus {
             let matchers: [Cuckoo.ParameterMatcher<(String, DocumentStatus)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
@@ -6882,6 +6959,62 @@ return cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "getDocumentCategories() -> DocumentCategories",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func isDocumentBookmarked<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<(String), Bool> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "isDocumentBookmarked(with p0: String) -> Bool",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func storeBookmarkedDocument<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String)> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "storeBookmarkedDocument(with p0: String) throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func removeBookmarkedDocument<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String)> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "removeBookmarkedDocument(with p0: String) throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func fetchTransactionLog<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), TransactionLogData> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "fetchTransactionLog(with p0: String) async throws -> TransactionLogData",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func fetchTransactionLogs() -> Cuckoo.ProtocolStubThrowingFunction<(), [TransactionLogData]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "fetchTransactionLogs() async throws -> [TransactionLogData]",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func isDocumentRevoked<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<(String), Bool> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "isDocumentRevoked(with p0: String) -> Bool",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func fetchRevokedDocuments() -> Cuckoo.ProtocolStubThrowingFunction<(), [String]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "fetchRevokedDocuments() throws -> [String]",
                 parameterMatchers: matchers
             ))
         }
@@ -7060,18 +7193,6 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func clearDocuments<M1: Cuckoo.Matchable>(status p0: M1) -> Cuckoo.__DoNotUse<(DocumentStatus), Void> where M1.MatchedType == DocumentStatus {
-            let matchers: [Cuckoo.ParameterMatcher<(DocumentStatus)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "clearDocuments(status p0: DocumentStatus) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
         func deleteDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with p0: M1, status p1: M2) -> Cuckoo.__DoNotUse<(String, DocumentStatus), Void> where M1.MatchedType == String, M2.MatchedType == DocumentStatus {
             let matchers: [Cuckoo.ParameterMatcher<(String, DocumentStatus)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return cuckoo_manager.verify(
@@ -7225,6 +7346,90 @@ return cuckoo_manager.call(
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func isDocumentBookmarked<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), Bool> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "isDocumentBookmarked(with p0: String) -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func storeBookmarkedDocument<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "storeBookmarkedDocument(with p0: String) throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func removeBookmarkedDocument<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "removeBookmarkedDocument(with p0: String) throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func fetchTransactionLog<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), TransactionLogData> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "fetchTransactionLog(with p0: String) async throws -> TransactionLogData",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func fetchTransactionLogs() -> Cuckoo.__DoNotUse<(), [TransactionLogData]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "fetchTransactionLogs() async throws -> [TransactionLogData]",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func isDocumentRevoked<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), Bool> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "isDocumentRevoked(with p0: String) -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func fetchRevokedDocuments() -> Cuckoo.__DoNotUse<(), [String]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "fetchRevokedDocuments() throws -> [String]",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -7290,10 +7495,6 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func clearDocuments(status p0: DocumentStatus) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
     public func deleteDocument(with p0: String, status p1: DocumentStatus) async throws {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
@@ -7344,6 +7545,34 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
     
     public func getDocumentCategories() -> DocumentCategories {
         return DefaultValueRegistry.defaultValue(for: (DocumentCategories).self)
+    }
+    
+    public func isDocumentBookmarked(with p0: String) -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+    
+    public func storeBookmarkedDocument(with p0: String) throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func removeBookmarkedDocument(with p0: String) throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func fetchTransactionLog(with p0: String) async throws -> TransactionLogData {
+        return DefaultValueRegistry.defaultValue(for: (TransactionLogData).self)
+    }
+    
+    public func fetchTransactionLogs() async throws -> [TransactionLogData] {
+        return DefaultValueRegistry.defaultValue(for: ([TransactionLogData]).self)
+    }
+    
+    public func isDocumentRevoked(with p0: String) -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+    
+    public func fetchRevokedDocuments() throws -> [String] {
+        return DefaultValueRegistry.defaultValue(for: ([String]).self)
     }
 }
 
@@ -8414,6 +8643,23 @@ import Foundation
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/TransactionLog+Extension.swift'
+
+import Cuckoo
+import EudiWalletKit
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_storage
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/URLComponents+Extensions.swift'
 
 import Cuckoo
@@ -8450,7 +8696,6 @@ import Foundation
 
 import Cuckoo
 import Foundation
-import EudiWalletKit
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -9126,6 +9371,602 @@ public class BookmarkStorageControllerStub:BookmarkStorageController, @unchecked
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Controller/RevokedDocumentStorageController.swift'
+
+import Cuckoo
+import RealmSwift
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_storage
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+public class MockRevokedDocumentStorageController: RevokedDocumentStorageController, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = RevokedDocumentStorageController
+    public typealias Stubbing = __StubbingProxy_RevokedDocumentStorageController
+    public typealias Verification = __VerificationProxy_RevokedDocumentStorageController
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any RevokedDocumentStorageController)?
+
+    public func enableDefaultImplementation(_ stub: any RevokedDocumentStorageController) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+    
+    public func store(_ p0: Value) throws {
+        return try cuckoo_manager.callThrows(
+            "store(_ p0: Value) throws",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.store(p0)
+        )
+    }
+    
+    public func store(_ p0: [Value]) throws {
+        return try cuckoo_manager.callThrows(
+            "store(_ p0: [Value]) throws",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.store(p0)
+        )
+    }
+    
+    public func update(_ p0: Value) throws {
+        return try cuckoo_manager.callThrows(
+            "update(_ p0: Value) throws",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.update(p0)
+        )
+    }
+    
+    public func retrieve(_ p0: String) throws -> Value {
+        return try cuckoo_manager.callThrows(
+            "retrieve(_ p0: String) throws -> Value",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.retrieve(p0)
+        )
+    }
+    
+    public func retrieveAll() throws -> [Value] {
+        return try cuckoo_manager.callThrows(
+            "retrieveAll() throws -> [Value]",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.retrieveAll()
+        )
+    }
+    
+    public func delete(_ p0: String) throws {
+        return try cuckoo_manager.callThrows(
+            "delete(_ p0: String) throws",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.delete(p0)
+        )
+    }
+    
+    public func deleteAll() throws {
+        return try cuckoo_manager.callThrows(
+            "deleteAll() throws",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.deleteAll()
+        )
+    }
+
+    public struct __StubbingProxy_RevokedDocumentStorageController: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(Value)> where M1.MatchedType == Value {
+            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
+                method: "store(_ p0: Value) throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<([Value])> where M1.MatchedType == [Value] {
+            let matchers: [Cuckoo.ParameterMatcher<([Value])>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
+                method: "store(_ p0: [Value]) throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func update<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(Value)> where M1.MatchedType == Value {
+            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
+                method: "update(_ p0: Value) throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func retrieve<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), Value> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
+                method: "retrieve(_ p0: String) throws -> Value",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func retrieveAll() -> Cuckoo.ProtocolStubThrowingFunction<(), [Value]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
+                method: "retrieveAll() throws -> [Value]",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String)> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
+                method: "delete(_ p0: String) throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func deleteAll() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
+                method: "deleteAll() throws",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    public struct __VerificationProxy_RevokedDocumentStorageController: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Value), Void> where M1.MatchedType == Value {
+            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "store(_ p0: Value) throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<([Value]), Void> where M1.MatchedType == [Value] {
+            let matchers: [Cuckoo.ParameterMatcher<([Value])>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "store(_ p0: [Value]) throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func update<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Value), Void> where M1.MatchedType == Value {
+            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "update(_ p0: Value) throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func retrieve<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Value> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "retrieve(_ p0: String) throws -> Value",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func retrieveAll() -> Cuckoo.__DoNotUse<(), [Value]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "retrieveAll() throws -> [Value]",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "delete(_ p0: String) throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func deleteAll() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "deleteAll() throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+public class RevokedDocumentStorageControllerStub:RevokedDocumentStorageController, @unchecked Sendable {
+
+
+    
+    public func store(_ p0: Value) throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func store(_ p0: [Value]) throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func update(_ p0: Value) throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func retrieve(_ p0: String) throws -> Value {
+        return DefaultValueRegistry.defaultValue(for: (Value).self)
+    }
+    
+    public func retrieveAll() throws -> [Value] {
+        return DefaultValueRegistry.defaultValue(for: ([Value]).self)
+    }
+    
+    public func delete(_ p0: String) throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func deleteAll() throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+}
+
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Controller/TransactionLogStorageController.swift'
+
+import Cuckoo
+import RealmSwift
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_storage
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+public class MockTransactionLogStorageController: TransactionLogStorageController, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = TransactionLogStorageController
+    public typealias Stubbing = __StubbingProxy_TransactionLogStorageController
+    public typealias Verification = __VerificationProxy_TransactionLogStorageController
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any TransactionLogStorageController)?
+
+    public func enableDefaultImplementation(_ stub: any TransactionLogStorageController) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+    
+    public func store(_ p0: Value) throws {
+        return try cuckoo_manager.callThrows(
+            "store(_ p0: Value) throws",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.store(p0)
+        )
+    }
+    
+    public func store(_ p0: [Value]) throws {
+        return try cuckoo_manager.callThrows(
+            "store(_ p0: [Value]) throws",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.store(p0)
+        )
+    }
+    
+    public func update(_ p0: Value) throws {
+        return try cuckoo_manager.callThrows(
+            "update(_ p0: Value) throws",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.update(p0)
+        )
+    }
+    
+    public func retrieve(_ p0: String) throws -> Value {
+        return try cuckoo_manager.callThrows(
+            "retrieve(_ p0: String) throws -> Value",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.retrieve(p0)
+        )
+    }
+    
+    public func retrieveAll() throws -> [Value] {
+        return try cuckoo_manager.callThrows(
+            "retrieveAll() throws -> [Value]",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.retrieveAll()
+        )
+    }
+    
+    public func delete(_ p0: String) throws {
+        return try cuckoo_manager.callThrows(
+            "delete(_ p0: String) throws",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.delete(p0)
+        )
+    }
+    
+    public func deleteAll() throws {
+        return try cuckoo_manager.callThrows(
+            "deleteAll() throws",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.deleteAll()
+        )
+    }
+
+    public struct __StubbingProxy_TransactionLogStorageController: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(Value)> where M1.MatchedType == Value {
+            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
+                method: "store(_ p0: Value) throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<([Value])> where M1.MatchedType == [Value] {
+            let matchers: [Cuckoo.ParameterMatcher<([Value])>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
+                method: "store(_ p0: [Value]) throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func update<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(Value)> where M1.MatchedType == Value {
+            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
+                method: "update(_ p0: Value) throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func retrieve<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), Value> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
+                method: "retrieve(_ p0: String) throws -> Value",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func retrieveAll() -> Cuckoo.ProtocolStubThrowingFunction<(), [Value]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
+                method: "retrieveAll() throws -> [Value]",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String)> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
+                method: "delete(_ p0: String) throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func deleteAll() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
+                method: "deleteAll() throws",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    public struct __VerificationProxy_TransactionLogStorageController: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Value), Void> where M1.MatchedType == Value {
+            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "store(_ p0: Value) throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<([Value]), Void> where M1.MatchedType == [Value] {
+            let matchers: [Cuckoo.ParameterMatcher<([Value])>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "store(_ p0: [Value]) throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func update<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Value), Void> where M1.MatchedType == Value {
+            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "update(_ p0: Value) throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func retrieve<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Value> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "retrieve(_ p0: String) throws -> Value",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func retrieveAll() -> Cuckoo.__DoNotUse<(), [Value]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "retrieveAll() throws -> [Value]",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "delete(_ p0: String) throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func deleteAll() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "deleteAll() throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+public class TransactionLogStorageControllerStub:TransactionLogStorageController, @unchecked Sendable {
+
+
+    
+    public func store(_ p0: Value) throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func store(_ p0: [Value]) throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func update(_ p0: Value) throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func retrieve(_ p0: String) throws -> Value {
+        return DefaultValueRegistry.defaultValue(for: (Value).self)
+    }
+    
+    public func retrieveAll() throws -> [Value] {
+        return DefaultValueRegistry.defaultValue(for: ([Value]).self)
+    }
+    
+    public func delete(_ p0: String) throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func deleteAll() throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+}
+
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Error/StorageError.swift'
 
 import Cuckoo
@@ -9160,6 +10001,38 @@ import RealmSwift
 
 
 // MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Model/Bookmark.swift'
+
+import Cuckoo
+import RealmSwift
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_storage
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Model/RevokedDocument.swift'
+
+import Cuckoo
+import RealmSwift
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_storage
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Model/TransactionLog.swift'
 
 import Cuckoo
 import RealmSwift
