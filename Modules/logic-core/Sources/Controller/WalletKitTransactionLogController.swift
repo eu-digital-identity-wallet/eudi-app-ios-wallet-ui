@@ -30,7 +30,7 @@ final actor WalletKitTransactionLogControllerImpl: TransactionLogger {
       let jsonResultData = try JSONEncoder().encode(transaction)
       let value = try jsonResultData.toJSONString()
 
-      try transactionLogStorageController.store(
+      try await transactionLogStorageController.store(
         .init(identifier: UUID().uuidString, value: value)
       )
     } catch {
