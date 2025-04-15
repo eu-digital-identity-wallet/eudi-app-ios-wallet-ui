@@ -14,7 +14,7 @@ let package = Package(
   dependencies: [
     .package(
       url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
-      exact: "0.10.5"
+      exact: "0.10.9"
     ),
     .package(
       name: "logic-resources",
@@ -23,6 +23,10 @@ let package = Package(
     .package(
       name: "logic-business",
       path: "./logic-business"
+    ),
+    .package(
+      name: "logic-storage",
+      path: "./logic-storage"
     )
   ],
   targets: [
@@ -31,6 +35,7 @@ let package = Package(
       dependencies: [
         "logic-resources",
         "logic-business",
+        "logic-storage",
         .product(
           name: "EudiWalletKit",
           package: "eudi-lib-ios-wallet-kit"

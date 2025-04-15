@@ -15,44 +15,48 @@
  */
 import RealmSwift
 
-class RealmBookmark: Object {
+class RealmTransactionLog: Object {
 
   @Persisted(primaryKey: true) var identifier: String
+  @Persisted var value: String = ""
 
-  convenience init(identifier: String) {
+  convenience init(identifier: String, value: String) {
     self.init()
     self.identifier = identifier
+    self.value = value
   }
 }
 
-public struct Bookmark: StoredObject {
+public struct TransactionLog: StoredObject {
   public let identifier: String
+  public let value: String
 
-  public init(identifier: String) {
+  public init(identifier: String, value: String) {
     self.identifier = identifier
+    self.value = value
   }
 }
 
-extension RealmBookmark {
-  func toBookmark() -> Bookmark {
-    Bookmark(identifier: self.identifier)
+extension RealmTransactionLog {
+  func toTransactionLog() -> TransactionLog {
+    TransactionLog(identifier: self.identifier, value: self.value)
   }
 }
 
-extension Bookmark {
-  func toRealmBookmark() -> RealmBookmark {
-    RealmBookmark(identifier: self.identifier)
+extension TransactionLog {
+  func toRealmTransactionLog() -> RealmTransactionLog {
+    RealmTransactionLog(identifier: self.identifier, value: self.value)
   }
 }
 
-extension Array where Element == RealmBookmark {
-  func toBookmarks() -> [Bookmark] {
-    self.map { $0.toBookmark() }
+extension Array where Element == RealmTransactionLog {
+  func toTransactionLogs() -> [TransactionLog] {
+    self.map { $0.toTransactionLog() }
   }
 }
 
-extension Array where Element == Bookmark {
-  func toRealmBookmarks() -> [RealmBookmark] {
-    self.map { $0.toRealmBookmark() }
+extension Array where Element == TransactionLog {
+  func toRealmTransactionLogs() -> [RealmTransactionLog] {
+    self.map { $0.toRealmTransactionLog() }
   }
 }

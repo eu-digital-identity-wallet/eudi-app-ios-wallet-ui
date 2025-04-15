@@ -17,12 +17,11 @@ import Foundation
 import logic_ui
 import logic_resources
 import logic_core
-import logic_storage
 
 public protocol DocumentDetailsInteractor: Sendable {
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
   func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState
-  func fetchBookmarks(_ identifier: String) async throws -> Bookmark
+  func isBookmarked(_ identifier: String) async -> Bool
   func save(_ identifier: String) async throws
   func delete(_ identifier: String) async throws
 }
@@ -30,14 +29,11 @@ public protocol DocumentDetailsInteractor: Sendable {
 final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 
   private let walletController: WalletKitController
-  private let bookmarkStorageController: any BookmarkStorageController
 
   public init(
-    walletController: WalletKitController,
-    bookmarkStorageController: any BookmarkStorageController
+    walletController: WalletKitController
   ) {
     self.walletController = walletController
-    self.bookmarkStorageController = bookmarkStorageController
   }
 
   public func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
@@ -85,17 +81,16 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     return successState
   }
 
-  func fetchBookmarks(_ identifier: String) async throws -> Bookmark {
-    try bookmarkStorageController.retrieve(identifier)
+  func isBookmarked(_ identifier: String) async -> Bool {
+    return await walletController.isDocumentBookmarked(with: identifier)
   }
 
   func save(_ identifier: String) async throws {
-    let bookmark = Bookmark(identifier: identifier)
-    try bookmarkStorageController.store(bookmark)
+    try await walletController.storeBookmarkedDocument(with: identifier)
   }
 
   func delete(_ identifier: String) async throws {
-    try bookmarkStorageController.delete(identifier)
+    try await walletController.removeBookmarkedDocument(with: identifier)
   }
 }
 
