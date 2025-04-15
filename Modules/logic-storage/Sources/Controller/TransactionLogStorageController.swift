@@ -25,77 +25,91 @@ final class TransactionLogStorageControllerImpl: TransactionLogStorageController
     self.realmService = realmService
   }
 
-  func store(_ value: TransactionLog) throws {
-    let realm = try realmService.get()
-    let realmValue = value.toRealmTransactionLog()
-    try realm.write {
-      realm.add(realmValue, update: .all)
+  func store(_ value: TransactionLog) async throws {
+    try await dbAsync {
+      let realm = try self.realmService.get()
+      let realmValue = value.toRealmTransactionLog()
+      try realm.write {
+        realm.add(realmValue, update: .all)
+      }
     }
   }
 
-  func store(_ values: [TransactionLog]) throws {
-    let realm = try realmService.get()
-    let realmValues = values.toRealmTransactionLogs()
-    try realm.write {
-      realm.add(realmValues, update: .all)
+  func store(_ values: [TransactionLog]) async throws {
+    try await dbAsync {
+      let realm = try self.realmService.get()
+      let realmValues = values.toRealmTransactionLogs()
+      try realm.write {
+        realm.add(realmValues, update: .all)
+      }
     }
   }
 
-  func update(_ value: TransactionLog) throws {
-    let realm = try realmService.get()
-    let realmValue = value.toRealmTransactionLog()
-    try realm.write {
-      realm.add(realmValue, update: .modified)
+  func update(_ value: TransactionLog) async throws {
+    try await dbAsync {
+      let realm = try self.realmService.get()
+      let realmValue = value.toRealmTransactionLog()
+      try realm.write {
+        realm.add(realmValue, update: .modified)
+      }
     }
   }
 
-  func retrieve(_ identifier: String) throws -> TransactionLog {
-    let realm = try realmService.get()
-    guard
-      let log = realm.object(
-        ofType: RealmTransactionLog.self,
-        forPrimaryKey: identifier
-      )?.toTransactionLog()
-    else {
-      throw StorageError.itemNotFound
-    }
-    return log
-  }
-
-  func retrieveAll() throws -> [TransactionLog] {
-    let realm = try realmService.get()
-    let logs = realm.objects(RealmTransactionLog.self)
-    guard !logs.isEmpty else {
-      throw StorageError.itemsNotFound
-    }
-    return logs.toList().toTransactionLogs()
-  }
-
-  func delete(_ identifier: String) throws {
-    let realm = try realmService.get()
-
-    guard
-      let value = realm.object(
-        ofType: RealmTransactionLog.self,
-        forPrimaryKey: identifier
-      )
-    else {
-      return
-    }
-
-    try realm.write {
-      realm.delete(value)
+  func retrieve(_ identifier: String) async throws -> TransactionLog {
+    try await dbAsync {
+      let realm = try self.realmService.get()
+      guard
+        let log = realm.object(
+          ofType: RealmTransactionLog.self,
+          forPrimaryKey: identifier
+        )?.toTransactionLog()
+      else {
+        throw StorageError.itemNotFound
+      }
+      return log
     }
   }
 
-  func deleteAll() throws {
-    let realm = try realmService.get()
-    let values = realm.objects(RealmTransactionLog.self)
-    guard !values.isEmpty else {
-      return
+  func retrieveAll() async throws -> [TransactionLog] {
+    try await dbAsync {
+      let realm = try self.realmService.get()
+      let logs = realm.objects(RealmTransactionLog.self)
+      guard !logs.isEmpty else {
+        throw StorageError.itemsNotFound
+      }
+      return logs.toList().toTransactionLogs()
     }
-    try realm.write {
-      realm.delete(values)
+  }
+
+  func delete(_ identifier: String) async throws {
+    try await dbAsync {
+      let realm = try self.realmService.get()
+
+      guard
+        let value = realm.object(
+          ofType: RealmTransactionLog.self,
+          forPrimaryKey: identifier
+        )
+      else {
+        return
+      }
+
+      try realm.write {
+        realm.delete(value)
+      }
+    }
+  }
+
+  func deleteAll() async throws {
+    try await dbAsync {
+      let realm = try self.realmService.get()
+      let values = realm.objects(RealmTransactionLog.self)
+      guard !values.isEmpty else {
+        return
+      }
+      try realm.write {
+        realm.delete(values)
+      }
     }
   }
 }

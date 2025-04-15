@@ -72,15 +72,15 @@ public protocol WalletKitController: Sendable {
   func getScopedDocuments() async throws -> [ScopedDocument]
   func getDocumentCategories() -> DocumentCategories
 
-  func isDocumentBookmarked(with id: String) -> Bool
-  func storeBookmarkedDocument(with id: String) throws
-  func removeBookmarkedDocument(with id: String) throws
+  func isDocumentBookmarked(with id: String) async -> Bool
+  func storeBookmarkedDocument(with id: String) async throws
+  func removeBookmarkedDocument(with id: String) async throws
 
   func fetchTransactionLog(with id: String) async throws -> TransactionLogData
   func fetchTransactionLogs() async throws -> [TransactionLogData]
 
-  func isDocumentRevoked(with id: String) -> Bool
-  func fetchRevokedDocuments() throws -> [String]
+  func isDocumentRevoked(with id: String) async -> Bool
+  func fetchRevokedDocuments() async throws -> [String]
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -146,12 +146,12 @@ final class WalletKitControllerImpl: WalletKitController {
 
   func clearAllDocuments() async {
     try? await wallet.deleteAllDocuments()
-    try? revokedDocumentStorageController.deleteAll()
+    try? await revokedDocumentStorageController.deleteAll()
   }
 
   func deleteDocument(with id: String, status: DocumentStatus) async throws {
     try await wallet.deleteDocument(id: id, status: status)
-    try revokedDocumentStorageController.delete(id)
+    try await revokedDocumentStorageController.delete(id)
   }
 
   func loadDocuments() async throws {
@@ -308,54 +308,50 @@ final class WalletKitControllerImpl: WalletKitController {
     return DocumentCategories(uniqueKeysWithValues: sorted)
   }
 
-  func isDocumentBookmarked(with id: String) -> Bool {
-    return (try? bookmarkStorageController.retrieve(id)) != nil
+  func isDocumentBookmarked(with id: String) async -> Bool {
+    return await (try? bookmarkStorageController.retrieve(id)) != nil
   }
 
-  func storeBookmarkedDocument(with id: String) throws {
-    try bookmarkStorageController.store(.init(identifier: id))
+  func storeBookmarkedDocument(with id: String) async throws {
+    try await bookmarkStorageController.store(.init(identifier: id))
   }
 
-  func removeBookmarkedDocument(with id: String) throws {
-    try bookmarkStorageController.delete(id)
+  func removeBookmarkedDocument(with id: String) async throws {
+    try await bookmarkStorageController.delete(id)
   }
 
   func fetchTransactionLog(with id: String) async throws -> TransactionLogData {
-    return try await Task.detached { () -> TransactionLogData in
-      guard
-        let storedLog = try? self.transactionLogStorageController.retrieve(id),
-        let coreLog = try? storedLog.toCoreTransactionLog()
-      else {
-        throw WalletCoreError.unableToFetchTransactionLog
-      }
-      return self.wallet.parseTransactionLog(coreLog)
-    }.value
+    guard
+      let storedLog = try? await self.transactionLogStorageController.retrieve(id),
+      let coreLog = try? storedLog.toCoreTransactionLog()
+    else {
+      throw WalletCoreError.unableToFetchTransactionLog
+    }
+    return self.wallet.parseTransactionLog(coreLog)
   }
 
   func fetchTransactionLogs() async throws -> [TransactionLogData] {
-    return try await Task.detached { () -> [TransactionLogData] in
-      guard
-        let storedLogs = try? self.transactionLogStorageController.retrieveAll()
-      else {
-        throw WalletCoreError.unableToFetchTransactionLog
+    guard
+      let storedLogs = try? await self.transactionLogStorageController.retrieveAll()
+    else {
+      throw WalletCoreError.unableToFetchTransactionLog
+    }
+    return storedLogs.compactMap {
+      guard let coreLog = try? $0.toCoreTransactionLog() else {
+        return nil
       }
-      return storedLogs.compactMap {
-        guard let coreLog = try? $0.toCoreTransactionLog() else {
-          return nil
-        }
-        return self.wallet.parseTransactionLog(coreLog)
-      }
-    }.value
+      return self.wallet.parseTransactionLog(coreLog)
+    }
   }
 
-  func fetchRevokedDocuments() throws -> [String] {
-    return try self.revokedDocumentStorageController.retrieveAll().map {
+  func fetchRevokedDocuments() async throws -> [String] {
+    return try await self.revokedDocumentStorageController.retrieveAll().map {
       return $0.identifier
     }
   }
 
-  func isDocumentRevoked(with id: String) -> Bool {
-    return (try? revokedDocumentStorageController.retrieve(id)) != nil
+  func isDocumentRevoked(with id: String) async -> Bool {
+    return (try? await revokedDocumentStorageController.retrieve(id)) != nil
   }
 }
 
