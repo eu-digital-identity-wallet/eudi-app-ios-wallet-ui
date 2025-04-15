@@ -23,6 +23,7 @@ public enum WalletCoreError: LocalizedError {
   case unableToIssueAndStore
   case transactionCodeFormat([String])
   case unableToPresentAndShare
+  case unableToFetchTransactionLog
 
   public var errorDescription: String? {
     return switch self {
@@ -38,6 +39,8 @@ public enum WalletCoreError: LocalizedError {
       LocalizableStringKey.transactionCodeFormatError(args).toString
     case .unableToPresentAndShare:
       LocalizableStringKey.unableToPresentAndShare.toString
+    case .unableToFetchTransactionLog:
+      LocalizableStringKey.errorFetchTransactionLog.toString
     }
   }
 }

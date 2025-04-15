@@ -1,5 +1,5 @@
 {
-  "originHash" : "d3b70237fb92b08b1e72a8ea6bc4c85574a38cf833f31c24a5775387c40b9729",
+  "originHash" : "a54bc7155d99a577a171a66a8fe2f063a3ddf3c666f58647c39fe3ae588a6423",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tadija/AEXML.git",
       "state" : {
-        "revision" : "38f7d00b23ecd891e1ee656fa6aeebd6ba04ecc3",
-        "version" : "4.6.1"
+        "revision" : "db806756c989760b35108146381535aec231092b",
+        "version" : "4.7.0"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
       "state" : {
-        "revision" : "8f723758c47bd7b7dc340b66f9dbd1170f331ed2",
-        "version" : "2.0.16"
+        "revision" : "fa58476fa3d4081723be9a1d7c3fa43c318f6be3",
+        "version" : "2.0.17"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "a32a6c07542c5ea2055e619b0f1f09d9b4d70c7e",
-        "version" : "0.5.8"
+        "revision" : "22334a56b62509dfb1037c6152df9cc6b17dc261",
+        "version" : "0.6.3"
       }
     },
     {
@@ -114,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "4fcf227cbc80f4bc0e35e12d0e4be44dfd218a47",
-        "version" : "0.6.0"
+        "revision" : "880763c809db126e8194ab2ca80651dc590fb238",
+        "version" : "0.6.4"
       }
     },
     {
@@ -123,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "9035e447e9a0b3107ac11613ef81472202b9adf0",
-        "version" : "0.4.8"
+        "revision" : "5eb0ddde311bbe10008829aea468fa8e53b18342",
+        "version" : "0.5.2"
       }
     },
     {
@@ -132,8 +132,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "751f66133efceb0662a3d6acfdd644d2627aa655",
-        "version" : "0.12.3"
+        "revision" : "e2f3ab9a4cea1b0369c8aa5bc15cbe9482a355b0",
+        "version" : "0.13.0"
       }
     },
     {
@@ -177,8 +177,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
       "state" : {
-        "revision" : "679a14c70ffd8ee37a81412ce388298e726747a7",
-        "version" : "0.9.0"
+        "revision" : "d859d78d3109e8de5307b688e41d4c34e0fd5bdd",
+        "version" : "0.10.1"
+      }
+    },
+    {
+      "identity" : "eudi-lib-ios-statium-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-statium-swift.git",
+      "state" : {
+        "revision" : "25427865918ea07119264c8e1f4caab3d97e3e70",
+        "version" : "0.2.0"
       }
     },
     {
@@ -186,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "e8e1c081f196bfb85130ce2a2bbf11b020b5d0f9",
-        "version" : "0.10.5"
+        "revision" : "f7df7e15342a6f1b4f9471da19258381145ad8eb",
+        "version" : "0.10.9"
       }
     },
     {
@@ -195,8 +204,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "2bccbe11d65de8954e881da1b6de578509f6e16a",
-        "version" : "0.4.8"
+        "revision" : "b24347d93f4646d224c463c47646ace25c680f2d",
+        "version" : "0.5.2"
       }
     },
     {
@@ -303,8 +312,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Rainbow",
       "state" : {
-        "revision" : "e0dada9cd44e3fa7ec3b867e49a8ddbf543e3df3",
-        "version" : "4.0.1"
+        "revision" : "0c627a4f8a39ef37eadec1ceec02e4a7f55561ac",
+        "version" : "4.1.0"
       }
     },
     {
@@ -321,8 +330,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/realm/realm-swift.git",
       "state" : {
-        "revision" : "8cb364a6a63695df296f05b53f7c3f3b1dda6af3",
-        "version" : "10.54.3"
+        "revision" : "d94d44781167fbb8d7a46fb181e784a6446ca5c1",
+        "version" : "10.54.4"
       }
     },
     {
@@ -375,8 +384,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser",
       "state" : {
-        "revision" : "8f4d2753f0e4778c76d5f05ad16c74f707390531",
-        "version" : "1.2.3"
+        "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
+        "version" : "1.5.0"
       }
     },
     {
@@ -463,10 +472,10 @@
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-syntax",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
       "state" : {
-        "revision" : "74203046135342e4a4a627476dd6caf8b28fe11b",
-        "version" : "509.0.0"
+        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
+        "version" : "509.1.1"
       }
     },
     {
@@ -528,8 +537,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LebJe/TOMLKit.git",
       "state" : {
-        "revision" : "404c4dd011743461bff12d00a5118d0ed59d630c",
-        "version" : "0.5.5"
+        "revision" : "ec6198d37d495efc6acd4dffbd262cdca7ff9b3f",
+        "version" : "0.6.0"
       }
     },
     {
@@ -555,8 +564,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tuist/XcodeProj.git",
       "state" : {
-        "revision" : "3797181813ee963fe305d939232bc576d23ddbb0",
-        "version" : "8.15.0"
+        "revision" : "b1caa062d4aaab3e3d2bed5fe0ac5f8ce9bf84f4",
+        "version" : "8.27.7"
       }
     }
   ],

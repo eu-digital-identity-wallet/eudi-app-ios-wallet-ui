@@ -14,7 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import EudiWalletKit
 
 extension Array where Element == WalletStorage.Document {
   func transformToDeferredDecodables() -> [DocClaimsDecodable] {
@@ -29,6 +28,7 @@ extension WalletStorage.Document {
     let metadata = DocMetadata(from: self.metadata)
     return DeferrredDocument(
       id: self.id,
+      statusIdentifier: nil,
       createdAt: self.createdAt,
       displayName: metadata?.getDisplayName(Locale.current.systemLanguageCode),
       docClaims: [],

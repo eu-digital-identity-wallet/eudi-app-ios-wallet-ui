@@ -15,7 +15,7 @@
  */
 import RealmSwift
 
-class RealmBookmark: Object {
+class RealmRevokedDocument: Object {
 
   @Persisted(primaryKey: true) var identifier: String
 
@@ -25,7 +25,7 @@ class RealmBookmark: Object {
   }
 }
 
-public struct Bookmark: StoredObject {
+public struct RevokedDocument: StoredObject {
   public let identifier: String
 
   public init(identifier: String) {
@@ -33,26 +33,26 @@ public struct Bookmark: StoredObject {
   }
 }
 
-extension RealmBookmark {
-  func toBookmark() -> Bookmark {
-    Bookmark(identifier: self.identifier)
+extension RealmRevokedDocument {
+  func toRevokedDocument() -> RevokedDocument {
+    RevokedDocument(identifier: self.identifier)
   }
 }
 
-extension Bookmark {
-  func toRealmBookmark() -> RealmBookmark {
-    RealmBookmark(identifier: self.identifier)
+extension RevokedDocument {
+  func toRealmRevokedDocument() -> RealmRevokedDocument {
+    RealmRevokedDocument(identifier: self.identifier)
   }
 }
 
-extension Array where Element == RealmBookmark {
-  func toBookmarks() -> [Bookmark] {
-    self.map { $0.toBookmark() }
+extension Array where Element == RealmRevokedDocument {
+  func toRealmRevokedDocument() -> [RevokedDocument] {
+    self.map { $0.toRevokedDocument() }
   }
 }
 
-extension Array where Element == Bookmark {
-  func toRealmBookmarks() -> [RealmBookmark] {
-    self.map { $0.toRealmBookmark() }
+extension Array where Element == RevokedDocument {
+  func toRealmRevokedDocuments() -> [RealmRevokedDocument] {
+    self.map { $0.toRealmRevokedDocument() }
   }
 }

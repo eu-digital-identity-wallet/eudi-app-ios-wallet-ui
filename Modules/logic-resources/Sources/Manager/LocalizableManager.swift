@@ -431,6 +431,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "search_documents")
     case .or:
       bundle.localizedString(forKey: "or")
+    case .errorFetchTransactionLog:
+      bundle.localizedString(forKey: "fetch_error_transaction_log")
     }
   }
 }

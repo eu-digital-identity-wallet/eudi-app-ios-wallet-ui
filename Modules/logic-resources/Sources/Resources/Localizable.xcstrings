@@ -705,6 +705,17 @@
         }
       }
     },
+    "fetch_error_transaction_log" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to fetch transaction log"
+          }
+        }
+      }
+    },
     "filter_by_category" : {
       "extractionState" : "manual",
       "localizations" : {
