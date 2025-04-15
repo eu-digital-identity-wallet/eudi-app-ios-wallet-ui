@@ -54,6 +54,7 @@ extension Constants {
     configurationIdentifier: nil,
     validFrom: nil,
     validUntil: nil,
+    statusIdentifier: nil,
     modifiedAt: nil,
     docClaims: [
       .init(
@@ -87,6 +88,7 @@ extension Constants {
     configurationIdentifier: nil,
     validFrom: nil,
     validUntil: nil,
+    statusIdentifier: nil,
     modifiedAt: nil,
     docClaims: [
       .init(
@@ -117,6 +119,8 @@ extension Constants {
 extension Constants {
   struct MockPresentationService: PresentationService {
     
+    var transactionLog: EudiWalletKit.TransactionLog
+    
     func startQrEngagement(secureAreaName: String?, crv: MdocDataModel18013.CoseEcCurve) async throws -> String {
       ""
     }
@@ -137,8 +141,18 @@ extension Constants {
     func sendResponse(userAccepted: Bool, itemsToSend: EudiWalletKit.RequestItems, onSuccess: ((URL?) -> Void)?) async throws {}
   }
   
+  static let mockTransactionLog: TransactionLog = .init(
+    timestamp: .min,
+    status: .completed,
+    type: .presentation,
+    dataFormat: .cbor
+  )
+  
   static let mockPresentationSession = PresentationSession(
-    presentationService: MockPresentationService(flow: .other),
+    presentationService: MockPresentationService(
+      transactionLog: mockTransactionLog,
+      flow: .other
+    ),
     docIdToPresentInfo: [:],
     userAuthenticationRequired: false
   )

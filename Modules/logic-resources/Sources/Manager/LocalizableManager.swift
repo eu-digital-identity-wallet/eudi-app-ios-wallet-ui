@@ -436,7 +436,9 @@ final class LocalizableManager: LocalizableManagerType {
     case .documentDetailsRevokedDocumentMessage:
       bundle.localizedString(forKey: "document_details_revoked_document_message")
     case .documentDetailsRevokedOn(let args):
-        bundle.localizedStringWithArguments(forKey: "document_details_revoked_on", arguments: args)
+      bundle.localizedStringWithArguments(forKey: "document_details_revoked_on", arguments: args)
+    case .errorFetchTransactionLog:
+      bundle.localizedString(forKey: "fetch_error_transaction_log")
     }
   }
 }

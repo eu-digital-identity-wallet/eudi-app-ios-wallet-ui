@@ -15,6 +15,7 @@
  */
 import Swinject
 import logic_business
+import logic_storage
 
 public final class LogicCoreAssembly: Assembly {
 
@@ -22,7 +23,10 @@ public final class LogicCoreAssembly: Assembly {
 
   public func assemble(container: Container) {
     container.register(WalletKitConfig.self) { r in
-      WalletKitConfigImpl(configLogic: r.force(ConfigLogic.self))
+      WalletKitConfigImpl(
+        configLogic: r.force(ConfigLogic.self),
+        transactionLogger: r.force(TransactionLogger.self)
+      )
     }
     .inObjectScope(ObjectScope.container)
 
@@ -30,7 +34,10 @@ public final class LogicCoreAssembly: Assembly {
       WalletKitControllerImpl(
         configLogic: r.force(WalletKitConfig.self),
         keyChainController: r.force(KeyChainController.self),
-        sessionCoordinatorHolder: r.force(SessionCoordinatorHolder.self)
+        sessionCoordinatorHolder: r.force(SessionCoordinatorHolder.self),
+        bookmarkStorageController: r.force((any BookmarkStorageController).self),
+        transactionLogStorageController: r.force((any TransactionLogStorageController).self),
+        revokedDocumentStorageController: r.force((any RevokedDocumentStorageController).self)
       )
     }
     .inObjectScope(ObjectScope.container)
@@ -49,5 +56,12 @@ public final class LogicCoreAssembly: Assembly {
       SessionCoordinatorHolderImpl()
     }
     .inObjectScope(ObjectScope.transient)
+
+    container.register(TransactionLogger.self) { r in
+      WalletKitTransactionLogControllerImpl(
+        transactionLogStorageController: r.force((any TransactionLogStorageController).self)
+      )
+    }
+    .inObjectScope(ObjectScope.graph)
   }
 }

@@ -13,15 +13,28 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import logic_storage
 import Foundation
 
-public extension Data {
-  func toJSONString(prettyPrinted: Bool = false) throws -> String {
-    if let jsonObject = try? JSONSerialization.jsonObject(with: self), JSONSerialization.isValidJSONObject(jsonObject) {
-      let options: JSONSerialization.WritingOptions = prettyPrinted ? .prettyPrinted : []
-      let prettyData = try JSONSerialization.data(withJSONObject: jsonObject, options: options)
-      return String(data: prettyData, encoding: .utf8) ?? ""
+final actor WalletKitTransactionLogControllerImpl: TransactionLogger {
+
+  private let transactionLogStorageController: any TransactionLogStorageController
+
+  init(transactionLogStorageController: any TransactionLogStorageController) {
+    self.transactionLogStorageController = transactionLogStorageController
+  }
+
+  func log(transaction: EudiWalletKit.TransactionLog) async throws {
+    do {
+
+      let jsonResultData = try JSONEncoder().encode(transaction)
+      let value = try jsonResultData.toJSONString()
+
+      try await transactionLogStorageController.store(
+        .init(identifier: UUID().uuidString, value: value)
+      )
+    } catch {
+      throw error
     }
-    return String(data: self, encoding: .utf8).orEmpty
   }
 }
