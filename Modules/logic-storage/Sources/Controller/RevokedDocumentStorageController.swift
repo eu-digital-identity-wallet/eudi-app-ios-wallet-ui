@@ -26,90 +26,40 @@ final class RevokedDocumentStorageControllerImpl: RevokedDocumentStorageControll
   }
 
   func store(_ value: RevokedDocument) async throws {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-      let realmValue = value.toRealmRevokedDocument()
-      try realm.write {
-        realm.add(realmValue, update: .all)
-      }
-    }
+    try await realmService.write(value.toRealmRevokedDocument())
   }
 
   func store(_ values: [RevokedDocument]) async throws {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-      let realmValues = values.toRealmRevokedDocuments()
-      try realm.write {
-        realm.add(realmValues, update: .all)
-      }
-    }
+    try await realmService.writeAll(values.toRealmRevokedDocuments())
   }
 
   func update(_ value: RevokedDocument) async throws {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-      let realmValue = value.toRealmRevokedDocument()
-      try realm.write {
-        realm.add(realmValue, update: .modified)
-      }
-    }
+    try await realmService.write(value.toRealmRevokedDocument())
   }
 
   func retrieve(_ identifier: String) async throws -> RevokedDocument {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-      guard
-        let revokedDocument = realm.object(
-          ofType: RealmRevokedDocument.self,
-          forPrimaryKey: identifier
-        )?.toRevokedDocument()
-      else {
-        throw StorageError.itemNotFound
-      }
-      return revokedDocument
+    let revokedDocument = try await realmService.read(RealmRevokedDocument.self, id: identifier) {
+      $0.toRevokedDocument()
     }
+    guard let revokedDocument else {
+      throw StorageError.itemNotFound
+    }
+    return revokedDocument
   }
 
   func retrieveAll() async throws -> [RevokedDocument] {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-      let revokedDocuments = realm.objects(RealmRevokedDocument.self)
-      guard !revokedDocuments.isEmpty else {
-        throw StorageError.itemsNotFound
-      }
-      return revokedDocuments.toList().toRealmRevokedDocument()
+    let revokedDocuments = try await realmService.readAll(RealmRevokedDocument.self, map: { $0.toRevokedDocument() })
+    guard !revokedDocuments.isEmpty else {
+      throw StorageError.itemsNotFound
     }
+    return revokedDocuments
   }
 
   func delete(_ identifier: String) async throws {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-
-      guard
-        let value = realm.object(
-          ofType: RealmRevokedDocument.self,
-          forPrimaryKey: identifier
-        )
-      else {
-        return
-      }
-
-      try realm.write {
-        realm.delete(value)
-      }
-    }
+    try await realmService.delete(RealmRevokedDocument.self, id: identifier)
   }
 
   func deleteAll() async throws {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-      let values = realm.objects(RealmRevokedDocument.self)
-      guard !values.isEmpty else {
-        return
-      }
-      try realm.write {
-        realm.delete(values)
-      }
-    }
+    try await realmService.deleteAll(of: RealmRevokedDocument.self)
   }
 }

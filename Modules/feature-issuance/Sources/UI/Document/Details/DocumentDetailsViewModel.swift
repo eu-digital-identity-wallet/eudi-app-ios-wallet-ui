@@ -80,7 +80,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
     switch state {
 
-    case .success(let document):
+    case .success(let document, let isBookmarked):
       switch viewState.config.flow {
       case .extraDocument:
         self.setState {
@@ -88,7 +88,8 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
             document: document,
             isLoading: false,
             hasDeleteAction: true,
-            documentFieldsCount: document.documentFields.count
+            documentFieldsCount: document.documentFields.count,
+            isBookmarked: isBookmarked
           ).copy(error: nil)
         }
       case .noDocument:
@@ -133,15 +134,6 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     isDeletionModalShowing = !isDeletionModalShowing
   }
 
-  func bookmarked() async {
-    let isBookmarked = await interactor.isBookmarked(viewState.config.documentId)
-    self.setState {
-      $0.copy(
-        isBookmarked: isBookmarked
-      )
-    }
-  }
-
   func saveBookmark(_ identifier: String) {
     Task {
       do {
@@ -160,6 +152,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
             )
           }
         }
+        self.showAlert = true
       } catch {}
     }
   }
@@ -187,7 +180,6 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
           image: viewState.isBookmarked ? Theme.shared.image.bookmarkIconFill : Theme.shared.image.bookmarkIcon
         ) {
           self.saveBookmark(self.viewState.document.id)
-          self.showAlert = true
         },
         Action(
           image: isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye
