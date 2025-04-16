@@ -487,6 +487,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "issuance")
     case .withoutRelyingName:
       bundle.localizedString(forKey: "without_relying_name")
+    case .errorFetchTransactionLog:
+      bundle.localizedString(forKey: "fetch_error_transaction_log")
     }
   }
 }

@@ -15,9 +15,9 @@
  */
 import RealmSwift
 
-public protocol BookmarkStorageController: StorageController where Value == Bookmark {}
+public protocol RevokedDocumentStorageController: StorageController where Value == RevokedDocument {}
 
-final class BookmarkStorageControllerImpl: BookmarkStorageController {
+final class RevokedDocumentStorageControllerImpl: RevokedDocumentStorageController {
 
   private let realmService: RealmService
 
@@ -25,59 +25,59 @@ final class BookmarkStorageControllerImpl: BookmarkStorageController {
     self.realmService = realmService
   }
 
-  func store(_ value: Bookmark) async throws {
+  func store(_ value: RevokedDocument) async throws {
     try await dbAsync {
       let realm = try self.realmService.get()
-      let realmValue = value.toRealmBookmark()
+      let realmValue = value.toRealmRevokedDocument()
       try realm.write {
         realm.add(realmValue, update: .all)
       }
     }
   }
 
-  func store(_ values: [Bookmark]) async throws {
+  func store(_ values: [RevokedDocument]) async throws {
     try await dbAsync {
       let realm = try self.realmService.get()
-      let realmValues = values.toRealmBookmarks()
+      let realmValues = values.toRealmRevokedDocuments()
       try realm.write {
         realm.add(realmValues, update: .all)
       }
     }
   }
 
-  func update(_ value: Bookmark) async throws {
+  func update(_ value: RevokedDocument) async throws {
     try await dbAsync {
       let realm = try self.realmService.get()
-      let realmValue = value.toRealmBookmark()
+      let realmValue = value.toRealmRevokedDocument()
       try realm.write {
         realm.add(realmValue, update: .modified)
       }
     }
   }
 
-  func retrieve(_ identifier: String) async throws -> Bookmark {
+  func retrieve(_ identifier: String) async throws -> RevokedDocument {
     try await dbAsync {
       let realm = try self.realmService.get()
       guard
-        let bookmark = realm.object(
-          ofType: RealmBookmark.self,
+        let revokedDocument = realm.object(
+          ofType: RealmRevokedDocument.self,
           forPrimaryKey: identifier
-        )?.toBookmark()
+        )?.toRevokedDocument()
       else {
         throw StorageError.itemNotFound
       }
-      return bookmark
+      return revokedDocument
     }
   }
 
-  func retrieveAll() async throws -> [Bookmark] {
+  func retrieveAll() async throws -> [RevokedDocument] {
     try await dbAsync {
       let realm = try self.realmService.get()
-      let bookmarks = realm.objects(RealmBookmark.self)
-      guard !bookmarks.isEmpty else {
+      let revokedDocuments = realm.objects(RealmRevokedDocument.self)
+      guard !revokedDocuments.isEmpty else {
         throw StorageError.itemsNotFound
       }
-      return bookmarks.toList().toBookmarks()
+      return revokedDocuments.toList().toRealmRevokedDocument()
     }
   }
 
@@ -87,7 +87,7 @@ final class BookmarkStorageControllerImpl: BookmarkStorageController {
 
       guard
         let value = realm.object(
-          ofType: RealmBookmark.self,
+          ofType: RealmRevokedDocument.self,
           forPrimaryKey: identifier
         )
       else {
@@ -103,7 +103,7 @@ final class BookmarkStorageControllerImpl: BookmarkStorageController {
   func deleteAll() async throws {
     try await dbAsync {
       let realm = try self.realmService.get()
-      let values = realm.objects(RealmBookmark.self)
+      let values = realm.objects(RealmRevokedDocument.self)
       guard !values.isEmpty else {
         return
       }

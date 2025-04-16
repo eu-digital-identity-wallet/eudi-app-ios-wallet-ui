@@ -134,21 +134,11 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   }
 
   func bookmarked() async {
-
-    let documentId = viewState.config.documentId
-    do {
-      _ = try await interactor.fetchBookmarks(documentId)
-      self.setState {
-        $0.copy(
-          isBookmarked: true
-        )
-      }
-    } catch {
-      self.setState {
-        $0.copy(
-          isBookmarked: false
-        )
-      }
+    let isBookmarked = await interactor.isBookmarked(viewState.config.documentId)
+    self.setState {
+      $0.copy(
+        isBookmarked: isBookmarked
+      )
     }
   }
 

@@ -15,9 +15,9 @@
  */
 import RealmSwift
 
-public protocol BookmarkStorageController: StorageController where Value == Bookmark {}
+public protocol TransactionLogStorageController: StorageController where Value == TransactionLog {}
 
-final class BookmarkStorageControllerImpl: BookmarkStorageController {
+final class TransactionLogStorageControllerImpl: TransactionLogStorageController {
 
   private let realmService: RealmService
 
@@ -25,59 +25,59 @@ final class BookmarkStorageControllerImpl: BookmarkStorageController {
     self.realmService = realmService
   }
 
-  func store(_ value: Bookmark) async throws {
+  func store(_ value: TransactionLog) async throws {
     try await dbAsync {
       let realm = try self.realmService.get()
-      let realmValue = value.toRealmBookmark()
+      let realmValue = value.toRealmTransactionLog()
       try realm.write {
         realm.add(realmValue, update: .all)
       }
     }
   }
 
-  func store(_ values: [Bookmark]) async throws {
+  func store(_ values: [TransactionLog]) async throws {
     try await dbAsync {
       let realm = try self.realmService.get()
-      let realmValues = values.toRealmBookmarks()
+      let realmValues = values.toRealmTransactionLogs()
       try realm.write {
         realm.add(realmValues, update: .all)
       }
     }
   }
 
-  func update(_ value: Bookmark) async throws {
+  func update(_ value: TransactionLog) async throws {
     try await dbAsync {
       let realm = try self.realmService.get()
-      let realmValue = value.toRealmBookmark()
+      let realmValue = value.toRealmTransactionLog()
       try realm.write {
         realm.add(realmValue, update: .modified)
       }
     }
   }
 
-  func retrieve(_ identifier: String) async throws -> Bookmark {
+  func retrieve(_ identifier: String) async throws -> TransactionLog {
     try await dbAsync {
       let realm = try self.realmService.get()
       guard
-        let bookmark = realm.object(
-          ofType: RealmBookmark.self,
+        let log = realm.object(
+          ofType: RealmTransactionLog.self,
           forPrimaryKey: identifier
-        )?.toBookmark()
+        )?.toTransactionLog()
       else {
         throw StorageError.itemNotFound
       }
-      return bookmark
+      return log
     }
   }
 
-  func retrieveAll() async throws -> [Bookmark] {
+  func retrieveAll() async throws -> [TransactionLog] {
     try await dbAsync {
       let realm = try self.realmService.get()
-      let bookmarks = realm.objects(RealmBookmark.self)
-      guard !bookmarks.isEmpty else {
+      let logs = realm.objects(RealmTransactionLog.self)
+      guard !logs.isEmpty else {
         throw StorageError.itemsNotFound
       }
-      return bookmarks.toList().toBookmarks()
+      return logs.toList().toTransactionLogs()
     }
   }
 
@@ -87,7 +87,7 @@ final class BookmarkStorageControllerImpl: BookmarkStorageController {
 
       guard
         let value = realm.object(
-          ofType: RealmBookmark.self,
+          ofType: RealmTransactionLog.self,
           forPrimaryKey: identifier
         )
       else {
@@ -103,7 +103,7 @@ final class BookmarkStorageControllerImpl: BookmarkStorageController {
   func deleteAll() async throws {
     try await dbAsync {
       let realm = try self.realmService.get()
-      let values = realm.objects(RealmBookmark.self)
+      let values = realm.objects(RealmTransactionLog.self)
       guard !values.isEmpty else {
         return
       }

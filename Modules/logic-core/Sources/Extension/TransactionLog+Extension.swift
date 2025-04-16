@@ -13,23 +13,18 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-public protocol StorageController: Sendable {
+import logic_storage
+import EudiWalletKit
+import Foundation
 
-  associatedtype Value: StoredObject
-
-  func store(_ value: Value) async throws
-  func store(_ values: [Value]) async throws
-  func update(_ value: Value) async throws
-  func retrieve(_ identifier: String) async throws -> Value
-  func retrieveAll() async throws -> [Value]
-  func delete(_ identifier: String) async throws
-  func deleteAll() async throws
-}
-
-extension StorageController {
-  func dbAsync<T: Sendable>(_ block: @Sendable @escaping () async throws -> T) async throws -> T {
-    return try await Task.detached(priority: .background) { () -> T in
-      return try await block()
-    }.value
+extension logic_storage.TransactionLog {
+  func toCoreTransactionLog() throws -> EudiWalletKit.TransactionLog {
+    guard
+      let value = self.value.data(using: .utf8),
+      let coreLog = try? JSONDecoder().decode(EudiWalletKit.TransactionLog.self, from: value)
+    else {
+      throw WalletCoreError.unableToFetchTransactionLog
+    }
+    return coreLog
   }
 }
