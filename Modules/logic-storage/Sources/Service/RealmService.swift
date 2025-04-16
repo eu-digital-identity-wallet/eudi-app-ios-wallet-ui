@@ -14,21 +14,58 @@
  * governing permissions and limitations under the Licence.
  */
 import RealmSwift
+import Foundation
 
-protocol RealmService: Sendable {
-  func get() throws -> Realm
-}
+actor RealmService {
 
-final class RealmServiceImpl: RealmService {
+  private let realm: Realm
 
-  private let storageConfig: StorageConfig
-
-  init(storageConfig: StorageConfig) {
-    self.storageConfig = storageConfig
+  init(_ config: Realm.Configuration) async throws {
+    realm = try await Realm.open(configuration: config)
   }
 
-  func get() throws -> Realm {
-    return try Realm(configuration: storageConfig.realmConfiguration)
+  func write<T: Object>(_ object: T) async throws {
+    try await realm.asyncWrite {
+      realm.add(object, update: .modified)
+    }
   }
 
+  func writeAll<T: Object>(_ objects: [T]) async throws {
+    try await realm.asyncWrite {
+      realm.add(objects, update: .modified)
+    }
+  }
+
+  func read<T: Object, R: Sendable>(_ type: T.Type, id: String, map: (T) -> R) async throws -> R? {
+    guard let obj = realm.object(ofType: type, forPrimaryKey: id) else {
+      return nil
+    }
+    return map(obj)
+  }
+
+  func readAll<T: Object, R: Sendable>(_ type: T.Type, map: (T) -> R) async throws -> [R] {
+    let items = Array(realm.objects(type))
+    return items.map(map)
+  }
+
+  func delete<T: Object>(_ type: T.Type, id: String) async throws {
+    try await realm.asyncWrite {
+      if let value = realm.object(ofType: type, forPrimaryKey: id) {
+        realm.delete(value)
+      }
+    }
+  }
+
+  func deleteAll<T: Object>(of type: T.Type) async throws {
+    try await realm.asyncWrite {
+      let all = realm.objects(type)
+      if !all.isEmpty {
+        realm.delete(all)
+      }
+    }
+  }
+
+  func close() {
+    realm.invalidate()
+  }
 }

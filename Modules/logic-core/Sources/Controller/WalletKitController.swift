@@ -146,7 +146,6 @@ final class WalletKitControllerImpl: WalletKitController {
 
   func clearAllDocuments() async {
     try? await wallet.deleteAllDocuments()
-    try? await revokedDocumentStorageController.deleteAll()
   }
 
   func deleteDocument(with id: String, status: DocumentStatus) async throws {
