@@ -67,7 +67,7 @@ private func content(
     if state.transactions.isEmpty && !searchQuery.wrappedValue.isEmpty {
       ContentUnavailableView(
         title: .noResults,
-        description: .noResultsDescription
+        description: .noResultsTransactionsDescription
       )
     } else if !state.transactions.isEmpty {
       List {
@@ -101,7 +101,7 @@ private func content(
     } else if !state.isLoading {
       ContentUnavailableView(
         title: .noResults,
-        description: .noResultsDescription
+        description: .noResultsTransactionsDescription
       )
     } else {
       ContentLoaderView(showLoader: .constant(true))

@@ -347,8 +347,10 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "wallet_is_secured")
     case .noResults:
       bundle.localizedString(forKey: "no_results")
-    case .noResultsDescription:
-      bundle.localizedString(forKey: "no_results_description")
+    case .noResultsDocumentsDescription:
+      bundle.localizedString(forKey: "no_results_documents_description")
+    case .noResultsTransactionsDescription:
+      bundle.localizedString(forKey: "no_results_transactions_description")
     case .proximityConnectionNfcDescription:
       bundle.localizedString(forKey: "proximity_connection_nfc_description")
     case .orShareViaNfc:
@@ -457,14 +459,6 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "transaction_details_data_signed")
     case .transactionDetailsDataShare:
       bundle.localizedString(forKey: "transaction_details_data_shared")
-    case .transactionDetailsReportTransactionButton:
-      bundle.localizedString(forKey: "transaction_details_report_transaction_button")
-    case .transactionDetailsRequestDeletionButton:
-      bundle.localizedString(forKey: "transaction_details_request_deletion_button")
-    case .transactionDetailsReportTransactionMessage:
-      bundle.localizedString(forKey: "transaction_details_report_transaction_message")
-    case .transactionDetailsRequestDeletionMessage:
-      bundle.localizedString(forKey: "transaction_details_request_deletion_message")
     case .transactionDetailsScreenCardDateLabel:
       bundle.localizedString(forKey: "transaction_details_screen_card_date_label")
     case .transactionDetailsCompleted:

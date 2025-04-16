@@ -182,7 +182,8 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestsTheFollowing
   case walletIsSecured
   case noResults
-  case noResultsDescription
+  case noResultsDocumentsDescription
+  case noResultsTransactionsDescription
   case proximityConnectionNfcDescription
   case orShareViaNfc
   case expiryPeriodSectionTitle
@@ -228,10 +229,6 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case transactionInformation
   case transactionDetailsDataShare
   case transactionDetailsDataSigned
-  case transactionDetailsReportTransactionButton
-  case transactionDetailsRequestDeletionButton
-  case transactionDetailsReportTransactionMessage
-  case transactionDetailsRequestDeletionMessage
   case transactionDetailsScreenCardDateLabel
   case transactionDetailsCompleted
   case or

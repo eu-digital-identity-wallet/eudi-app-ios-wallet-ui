@@ -88,7 +88,7 @@ private func content(
         }
       }
 
-      if let transactionDetailsDataSigned = state.transactionDetailsUi?.transactionDetailsDataSigned {
+      if let transactionDetailsDataSigned = state.transactionDetailsUi?.transactionDetailsDataSigned, transactionDetailsDataSigned.isEmpty {
         VStack(alignment: .leading, spacing: SPACING_SMALL) {
           Text(.transactionDetailsDataSigned)
             .typography(Theme.shared.font.bodySmall)
@@ -105,34 +105,6 @@ private func content(
               }
             }
           }
-        }
-      }
-
-      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-        VStack(alignment: .leading, spacing: SPACING_SMALL) {
-          Text(.transactionDetailsRequestDeletionMessage)
-            .font(Theme.shared.font.bodyLarge.font)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-
-          WrapButtonView(
-            style: .error,
-            title: .transactionDetailsRequestDeletionButton,
-            isLoading: state.isLoading,
-            onAction: onShowDeleteModal()
-          )
-        }
-
-        VStack(alignment: .leading, spacing: SPACING_SMALL) {
-          Text(.transactionDetailsReportTransactionMessage)
-            .font(Theme.shared.font.bodyLarge.font)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-
-          WrapButtonView(
-            style: .secondary,
-            title: .transactionDetailsReportTransactionButton,
-            isLoading: state.isLoading,
-            onAction: onShowDeleteModal()
-          )
         }
       }
     }

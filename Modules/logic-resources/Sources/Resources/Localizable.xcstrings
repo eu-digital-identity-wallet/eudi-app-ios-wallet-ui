@@ -1272,13 +1272,24 @@
         }
       }
     },
-    "no_results_description" : {
+    "no_results_documents_description" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No documents match your search. Try changing your search or filters."
+            "value" : "No documents found. Try changing your search or filters."
+          }
+        }
+      }
+    },
+    "no_results_transactions_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No transactions found. Try changing your search or filters."
           }
         }
       }
@@ -2192,50 +2203,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "DATA SIGNED"
-          }
-        }
-      }
-    },
-    "transaction_details_report_transaction_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Report suspicious transaction"
-          }
-        }
-      }
-    },
-    "transaction_details_report_transaction_message" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If you believe this relying party has unlawfully requested personal data, you can report this transaction to the authorities."
-          }
-        }
-      }
-    },
-    "transaction_details_request_deletion_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Request data deletion"
-          }
-        }
-      }
-    },
-    "transaction_details_request_deletion_message" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You can request to stop processing personal data linked to this transaction. This may affect your access to services."
           }
         }
       }
