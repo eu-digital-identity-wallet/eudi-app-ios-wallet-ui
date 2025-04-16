@@ -21,7 +21,6 @@ import logic_core
 public protocol DocumentDetailsInteractor: Sendable {
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
   func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState
-  func isBookmarked(_ identifier: String) async -> Bool
   func save(_ identifier: String) async throws
   func delete(_ identifier: String) async throws
 }
@@ -41,7 +40,8 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     guard let documentDetails = document?.transformToDocumentDetailsUi() else {
       return .failure(WalletCoreError.unableFetchDocument)
     }
-    return .success(documentDetails)
+    let isBookmarked = await walletController.isDocumentBookmarked(with: documentId)
+    return .success(documentDetails, isBookmarked)
   }
 
   public func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
@@ -81,10 +81,6 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     return successState
   }
 
-  func isBookmarked(_ identifier: String) async -> Bool {
-    return await walletController.isDocumentBookmarked(with: identifier)
-  }
-
   func save(_ identifier: String) async throws {
     try await walletController.storeBookmarkedDocument(with: identifier)
   }
@@ -95,7 +91,7 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 }
 
 public enum DocumentDetailsPartialState: Sendable {
-  case success(DocumentDetailsUIModel)
+  case success(DocumentDetailsUIModel, Bool)
   case failure(Error)
 }
 

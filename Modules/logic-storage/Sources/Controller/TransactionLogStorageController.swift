@@ -26,90 +26,40 @@ final class TransactionLogStorageControllerImpl: TransactionLogStorageController
   }
 
   func store(_ value: TransactionLog) async throws {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-      let realmValue = value.toRealmTransactionLog()
-      try realm.write {
-        realm.add(realmValue, update: .all)
-      }
-    }
+    try await realmService.write(value.toRealmTransactionLog())
   }
 
   func store(_ values: [TransactionLog]) async throws {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-      let realmValues = values.toRealmTransactionLogs()
-      try realm.write {
-        realm.add(realmValues, update: .all)
-      }
-    }
+    try await realmService.writeAll(values.toRealmTransactionLogs())
   }
 
   func update(_ value: TransactionLog) async throws {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-      let realmValue = value.toRealmTransactionLog()
-      try realm.write {
-        realm.add(realmValue, update: .modified)
-      }
-    }
+    try await realmService.write(value.toRealmTransactionLog())
   }
 
   func retrieve(_ identifier: String) async throws -> TransactionLog {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-      guard
-        let log = realm.object(
-          ofType: RealmTransactionLog.self,
-          forPrimaryKey: identifier
-        )?.toTransactionLog()
-      else {
-        throw StorageError.itemNotFound
-      }
-      return log
+    let log = try await realmService.read(RealmTransactionLog.self, id: identifier) {
+      $0.toTransactionLog()
     }
+    guard let log else {
+      throw StorageError.itemNotFound
+    }
+    return log
   }
 
   func retrieveAll() async throws -> [TransactionLog] {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-      let logs = realm.objects(RealmTransactionLog.self)
-      guard !logs.isEmpty else {
-        throw StorageError.itemsNotFound
-      }
-      return logs.toList().toTransactionLogs()
+    let logs = try await realmService.readAll(RealmTransactionLog.self, map: { $0.toTransactionLog() })
+    guard !logs.isEmpty else {
+      throw StorageError.itemsNotFound
     }
+    return logs
   }
 
   func delete(_ identifier: String) async throws {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-
-      guard
-        let value = realm.object(
-          ofType: RealmTransactionLog.self,
-          forPrimaryKey: identifier
-        )
-      else {
-        return
-      }
-
-      try realm.write {
-        realm.delete(value)
-      }
-    }
+    try await realmService.delete(RealmTransactionLog.self, id: identifier)
   }
 
   func deleteAll() async throws {
-    try await dbAsync {
-      let realm = try self.realmService.get()
-      let values = realm.objects(RealmTransactionLog.self)
-      guard !values.isEmpty else {
-        return
-      }
-      try realm.write {
-        realm.delete(values)
-      }
-    }
+    try await realmService.deleteAll(of: RealmTransactionLog.self)
   }
 }
