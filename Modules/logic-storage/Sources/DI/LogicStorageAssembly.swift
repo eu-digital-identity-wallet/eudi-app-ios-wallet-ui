@@ -27,18 +27,23 @@ public final class LogicStorageAssembly: Assembly {
     }
     .inObjectScope(ObjectScope.container)
 
+    container.register(RealmService.self) { r in
+      RealmServiceImpl(storageConfig: r.force(StorageConfig.self))
+    }
+    .inObjectScope(ObjectScope.container)
+
     container.register((any BookmarkStorageController).self) { r in
-      BookmarkStorageControllerImpl(storageConfig: r.force(StorageConfig.self))
+      BookmarkStorageControllerImpl(realmService: r.force(RealmService.self))
     }
     .inObjectScope(ObjectScope.transient)
 
     container.register((any TransactionLogStorageController).self) { r in
-      TransactionLogStorageControllerImpl(storageConfig: r.force(StorageConfig.self))
+      TransactionLogStorageControllerImpl(realmService: r.force(RealmService.self))
     }
     .inObjectScope(ObjectScope.transient)
 
     container.register((any RevokedDocumentStorageController).self) { r in
-      RevokedDocumentStorageControllerImpl(storageConfig: r.force(StorageConfig.self))
+      RevokedDocumentStorageControllerImpl(realmService: r.force(RealmService.self))
     }
     .inObjectScope(ObjectScope.transient)
   }

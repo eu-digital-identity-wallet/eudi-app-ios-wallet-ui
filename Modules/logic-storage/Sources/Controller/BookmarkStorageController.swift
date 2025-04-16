@@ -19,30 +19,26 @@ public protocol BookmarkStorageController: StorageController where Value == Book
 
 final class BookmarkStorageControllerImpl: BookmarkStorageController {
 
-  private let realmConfig: Realm.Configuration
+  private let realmService: RealmService
 
-  init(storageConfig: StorageConfig) {
-    self.realmConfig = storageConfig.realmConfiguration
+  init(realmService: RealmService) {
+    self.realmService = realmService
   }
 
   func store(_ value: Bookmark) async throws {
-    let actor = try await RealmService(realmConfig)
-    try await actor.write(value.toRealmBookmark())
+    try await realmService.write(value.toRealmBookmark())
   }
 
   func store(_ values: [Bookmark]) async throws {
-    let actor = try await RealmService(realmConfig)
-    try await actor.writeAll(values.toRealmBookmarks())
+    try await realmService.writeAll(values.toRealmBookmarks())
   }
 
   func update(_ value: Bookmark) async throws {
-    let actor = try await RealmService(realmConfig)
-    try await actor.write(value.toRealmBookmark())
+    try await realmService.write(value.toRealmBookmark())
   }
 
   func retrieve(_ identifier: String) async throws -> Bookmark {
-    let actor = try await RealmService(realmConfig)
-    let bookmark = try await actor.read(RealmBookmark.self, id: identifier) {
+    let bookmark = try await realmService.read(RealmBookmark.self, id: identifier) {
       $0.toBookmark()
     }
     guard let bookmark else {
@@ -52,8 +48,7 @@ final class BookmarkStorageControllerImpl: BookmarkStorageController {
   }
 
   func retrieveAll() async throws -> [Bookmark] {
-    let actor = try await RealmService(realmConfig)
-    let bookmarks = try await actor.readAll(RealmBookmark.self, map: { $0.toBookmark() })
+    let bookmarks = try await realmService.readAll(RealmBookmark.self, map: { $0.toBookmark() })
     guard !bookmarks.isEmpty else {
       throw StorageError.itemsNotFound
     }
@@ -61,12 +56,10 @@ final class BookmarkStorageControllerImpl: BookmarkStorageController {
   }
 
   func delete(_ identifier: String) async throws {
-    let actor = try await RealmService(realmConfig)
-    try await actor.delete(RealmBookmark.self, id: identifier)
+    try await realmService.delete(RealmBookmark.self, id: identifier)
   }
 
   func deleteAll() async throws {
-    let actor = try await RealmService(realmConfig)
-    try await actor.deleteAll(of: RealmBookmark.self)
+    try await realmService.deleteAll(of: RealmBookmark.self)
   }
 }

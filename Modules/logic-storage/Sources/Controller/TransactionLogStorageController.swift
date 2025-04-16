@@ -19,30 +19,26 @@ public protocol TransactionLogStorageController: StorageController where Value =
 
 final class TransactionLogStorageControllerImpl: TransactionLogStorageController {
 
-  private let realmConfig: Realm.Configuration
+  private let realmService: RealmService
 
-  init(storageConfig: StorageConfig) {
-    self.realmConfig = storageConfig.realmConfiguration
+  init(realmService: RealmService) {
+    self.realmService = realmService
   }
 
   func store(_ value: TransactionLog) async throws {
-    let actor = try await RealmService(realmConfig)
-    try await actor.write(value.toRealmTransactionLog())
+    try await realmService.write(value.toRealmTransactionLog())
   }
 
   func store(_ values: [TransactionLog]) async throws {
-    let actor = try await RealmService(realmConfig)
-    try await actor.writeAll(values.toRealmTransactionLogs())
+    try await realmService.writeAll(values.toRealmTransactionLogs())
   }
 
   func update(_ value: TransactionLog) async throws {
-    let actor = try await RealmService(realmConfig)
-    try await actor.write(value.toRealmTransactionLog())
+    try await realmService.write(value.toRealmTransactionLog())
   }
 
   func retrieve(_ identifier: String) async throws -> TransactionLog {
-    let actor = try await RealmService(realmConfig)
-    let log = try await actor.read(RealmTransactionLog.self, id: identifier) {
+    let log = try await realmService.read(RealmTransactionLog.self, id: identifier) {
       $0.toTransactionLog()
     }
     guard let log else {
@@ -52,8 +48,7 @@ final class TransactionLogStorageControllerImpl: TransactionLogStorageController
   }
 
   func retrieveAll() async throws -> [TransactionLog] {
-    let actor = try await RealmService(realmConfig)
-    let logs = try await actor.readAll(RealmTransactionLog.self, map: { $0.toTransactionLog() })
+    let logs = try await realmService.readAll(RealmTransactionLog.self, map: { $0.toTransactionLog() })
     guard !logs.isEmpty else {
       throw StorageError.itemsNotFound
     }
@@ -61,12 +56,10 @@ final class TransactionLogStorageControllerImpl: TransactionLogStorageController
   }
 
   func delete(_ identifier: String) async throws {
-    let actor = try await RealmService(realmConfig)
-    try await actor.delete(RealmTransactionLog.self, id: identifier)
+    try await realmService.delete(RealmTransactionLog.self, id: identifier)
   }
 
   func deleteAll() async throws {
-    let actor = try await RealmService(realmConfig)
-    try await actor.deleteAll(of: RealmTransactionLog.self)
+    try await realmService.deleteAll(of: RealmTransactionLog.self)
   }
 }

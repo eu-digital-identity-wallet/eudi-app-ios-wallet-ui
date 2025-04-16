@@ -50,8 +50,6 @@ final class StartupInteractorImpl: StartupInteractor {
     await manageStorageForFirstRun()
     try? await walletKitController.loadDocuments()
     try? await Task.sleep(nanoseconds: splashAnimationDuration.nanoseconds)
-    // MARK: - TODO FOR TESTING
-    _ = try? await walletKitController.fetchRevokedDocuments()
     if quickPinInteractor.hasPin() {
       return .featureCommonModule(
         .biometry(
