@@ -1253,7 +1253,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Or share via BLE"
+            "value" : "Or share via bluetooth"
           }
         }
       }
