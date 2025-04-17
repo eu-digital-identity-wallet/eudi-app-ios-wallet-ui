@@ -491,6 +491,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "fetch_error_transaction_log")
     case .incomplete:
       bundle.localizedString(forKey: "incomplete")
+    case .justNow:
+      bundle.localizedString(forKey: "just_now")
     }
   }
 }

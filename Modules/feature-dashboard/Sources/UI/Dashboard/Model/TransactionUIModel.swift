@@ -68,7 +68,7 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
     let twoDaysAgo = Calendar.gregorian.date(byAdding: .day, value: -2, to: now) ?? now
     let threeDaysAgo = Calendar.gregorian.date(byAdding: .day, value: -3, to: now) ?? now
     let threeDaysMinusFourHoursAgo = Calendar.gregorian.date(byAdding: .day, value: -3, to: now).flatMap {
-        Calendar.gregorian.date(byAdding: .hour, value: -4, to: $0)
+      Calendar.gregorian.date(byAdding: .hour, value: -4, to: $0)
     } ?? now
 
     let transactions: [TransactionUIModel] = [
@@ -203,46 +203,8 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
     return Dictionary(grouping: transactions, by: { $0.transactionCategory })
   }
 
-//  func transformToTransactionUi(
-//    with failedDocuments: [String] = [],
-//    categories: TransactionCategory
-//  ) -> TransactionUIModel {
-//    return self
-//  }
-
   private func formattedTransactionDate() -> LocalizableStringKey {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "dd MMM yyyy hh:mm a"
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-
-    guard let transactionDate = formatter.date(from: transactionDate) else {
-      return LocalizableStringKey.custom(transactionDate)
-    }
-
-    let now = Date()
-    let calendar = Calendar.current
-
-    if let diff = calendar.dateComponents([.minute], from: transactionDate, to: now).minute {
-      if diff < 0 {
-        return LocalizableStringKey.unknownDate
-      } else if diff == 60 {
-        return LocalizableStringKey.minutesAgo([String(diff)])
-      } else if diff < 60 {
-        if diff == 1 {
-          return LocalizableStringKey.minuteAgo([String(diff)])
-        } else {
-          return LocalizableStringKey.minutesAgo([String(diff)])
-        }
-      }
-    }
-
-    if calendar.isDateInToday(transactionDate) {
-      formatter.dateFormat = "hh:mm a"
-      return LocalizableStringKey.custom(formatter.string(from: transactionDate))
-    } else {
-      formatter.dateFormat = "dd MMM yyyy hh:mm a"
-      return LocalizableStringKey.custom(formatter.string(from: transactionDate))
-    }
+    Date.fromFormattedTransactionString(transactionDate)?.formattedForTransactionDisplay() ?? .custom(transactionDate)
   }
 }
 
@@ -258,12 +220,6 @@ public enum TransactionStatus: Sendable {
     case .failed, .incomplete:
       return .failed
     }
-  }
-}
-
-extension TransactionLog.Status {
-  func mapToTransactionStatus() -> TransactionStatus {
-    return .completed
   }
 }
 
@@ -291,8 +247,8 @@ extension TransactionLogData {
       return .init(
         name: logData.relyingParty.name,
         status: logData.status.mapToTransactionStatus(),
-        transactionDate: "logData.timestamp",
-        transactionCategory: .category(for: "logData.timestamp"),
+        transactionDate: logData.timestamp.formattedAsDayMonthYearTime(),
+        transactionCategory: .category(for: logData.timestamp.formattedAsDayMonthYearTime()),
         transactionType: .presentation
       )
     case .issuance, .signing:
@@ -303,6 +259,19 @@ extension TransactionLogData {
         transactionCategory: .category(for: ""),
         transactionType: .presentation
       )
+    }
+  }
+}
+
+extension TransactionLog.Status {
+  func mapToTransactionStatus() -> TransactionStatus {
+    switch self {
+    case .incomplete:
+      return .incomplete
+    case .completed:
+      return .completed
+    case .failed:
+      return .failed
     }
   }
 }

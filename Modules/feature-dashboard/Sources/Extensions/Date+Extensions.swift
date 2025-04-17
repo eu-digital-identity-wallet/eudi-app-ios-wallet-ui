@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import logic_resources
 
 extension Date {
-
   func isWithinNextDays(_ days: Int) -> Bool {
     let calendar = Calendar.current
 
@@ -75,4 +75,43 @@ extension Date {
     return (startOfDay...endOfDay).contains(self)
   }
 
+  func formattedAsDayMonthYearTime() -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "d MMMM yyyy hh:mm a"
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = TimeZone.current
+    return formatter.string(from: self)
+  }
+
+  static func fromFormattedTransactionString(_ string: String) -> Date? {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd MMM yyyy hh:mm a"
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    return formatter.date(from: string)
+  }
+
+  func formattedForTransactionDisplay() -> LocalizableStringKey {
+    let now = Date()
+    let calendar = Calendar.current
+
+    if let diff = calendar.dateComponents([.minute], from: self, to: now).minute {
+      if diff < 0 {
+        return .unknownDate
+      } else if diff == 0 {
+        return .justNow
+      } else if diff < 60 {
+        return diff == 1 ? .minuteAgo([String(diff)]) : .minutesAgo([String(diff)])
+      }
+    }
+
+    let formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    if calendar.isDateInToday(self) {
+      formatter.dateFormat = "hh:mm a"
+    } else {
+      formatter.dateFormat = "dd MMM yyyy hh:mm a"
+    }
+
+    return .custom(formatter.string(from: self))
+  }
 }

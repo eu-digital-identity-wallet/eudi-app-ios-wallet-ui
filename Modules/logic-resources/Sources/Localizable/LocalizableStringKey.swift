@@ -245,6 +245,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case withoutRelyingName
   case errorFetchTransactionLog
   case incomplete
+  case justNow
 }
 
 public extension LocalizableStringKey {
