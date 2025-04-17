@@ -1247,7 +1247,18 @@
         }
       }
     },
-    "proximity_connection_nfc_description" : {
+    "proximity_connection_ble" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or share via BLE"
+          }
+        }
+      }
+    },
+    "proximity_connection_ble_description" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
