@@ -26,7 +26,7 @@ public protocol WalletKitConfig {
   var vciConfig: VciConfig { get }
 }
 ```
-Based on the Build Variant of the Wallet (e.g. Dev)
+Based on the Build Variant of the Wallet (e.g., Dev)
 
 ```swift
 struct WalletKitConfigImpl: WalletKitConfig {
@@ -127,7 +127,7 @@ final class RQESConfig: EudiRQESUiConfig {
 }
 ```
 
-Based on the Build Variant and Type of the Wallet (e.g. Dev Debug)
+Based on the Build Variant and Type of the Wallet (e.g., Dev Debug)
 
 ```swift
 final class RQESConfig: EudiRQESUiConfig {
@@ -188,9 +188,9 @@ final class RQESConfig: EudiRQESUiConfig {
 
 ## DeepLink Schemas configuration
 
-According to the specifications issuance and presentation require deep-linking for the same device flows.
+According to the specifications, issuance, presentation, and RQES require deep-linking for the same device flows.
 
-If you want to change or add your own you can do it by adjusting the *Wallet.plist* file.
+If you want to change or add your own, you can do it by adjusting the *Wallet.plist* file.
 
 ```xml
 <array>
@@ -205,12 +205,13 @@ If you want to change or add your own you can do it by adjusting the *Wallet.pli
 			<string>mdoc-openid4vp</string>
 			<string>openid4vp</string>
 			<string>openid-credential-offer</string>
+			<string>rqes</string>
 		</array>
 	</dict>
 </array>
 ```
 
-Let's assume you want to add a new one for the credential offer (e.g. custom-my-offer://) the *Wallet.plist* should look like this:
+Let's assume you want to add a new one for the credential offer (e.g., custom-my-offer://), the *Wallet.plist* should look like this:
 
 ```xml
 <array>
@@ -225,6 +226,7 @@ Let's assume you want to add a new one for the credential offer (e.g. custom-my-
 			<string>mdoc-openid4vp</string>
 			<string>openid4vp</string>
 			<string>openid-credential-offer</string>
+			<string>rqes</string>
 			<string>custom-my-offer</string>
 		</array>
 	</dict>
@@ -241,6 +243,7 @@ public extension DeepLink {
 
     case openid4vp
     case credential_offer
+    case rqes
     case external
 
     static func parseType(
@@ -252,6 +255,8 @@ public extension DeepLink {
         return .openid4vp
       case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme):
         return .credential_offer
+      case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
+        return .rqes
       default:
         return .external
       }
@@ -268,6 +273,7 @@ public extension DeepLink {
 
     case openid4vp
     case credential_offer
+    case rqes
     case custom_my_offer
     case external
 
@@ -282,6 +288,8 @@ public extension DeepLink {
         return .credential_offer
       case _ where custom_my_offer.getSchemas(with: urlSchemaController).contains(scheme):
         return .credential_offer
+      case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
+        return .rqes
       default:
         return .external
       }
@@ -333,7 +341,7 @@ let walletSession: URLSession = {
 }()
 ```
 
-Once the above is in place add the following:
+Once the above is in place, add the following:
 
 ```swift
 wallet.urlSession = walletSession
@@ -413,7 +421,7 @@ container.register(PinStorageProvider.self) { r in
 
 The application allows the configuration of multiple analytics providers. You can configure the following:
 
-1. Initializing the provider (e.g. Firebase, Appcenter, etc...)
+1. Initializing the provider (e.g., Firebase, Appcenter, etc)
 2. Screen logging
 3. Event logging
 
