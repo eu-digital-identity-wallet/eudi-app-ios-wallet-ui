@@ -63,12 +63,12 @@ final class StorageConfigImpl: StorageConfig {
 private extension StorageConfigImpl {
   func getRealmKey() -> Data {
 
-    if let storedKey = keyChainController.getData(key: KeyChainIdentifier.realmKey), storedKey.count == 64 {
+    if let storedKey = keyChainController.getData(key: KeyChainIdentifier.realmKey) {
       return storedKey
     }
 
     var key = Data(count: 64)
-    let result = key.withUnsafeMutableBytes {
+    _ = key.withUnsafeMutableBytes {
         SecRandomCopyBytes(kSecRandomDefault, 64, $0.baseAddress!)
     }
 
