@@ -6,7 +6,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -22,7 +21,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -38,7 +36,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -54,7 +51,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -71,7 +67,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -87,7 +82,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -103,7 +97,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -120,7 +113,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -138,7 +130,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -157,7 +148,6 @@ import LocalAuthentication
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -460,7 +450,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -655,7 +644,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -818,7 +806,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -834,7 +821,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -851,7 +837,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -868,7 +853,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -885,7 +869,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -901,7 +884,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -918,7 +900,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -934,7 +915,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -951,7 +931,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -967,7 +946,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -984,7 +962,6 @@ import Copyable
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -1003,7 +980,6 @@ import CodeScanner
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -1019,7 +995,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -1035,7 +1010,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -1051,7 +1025,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -1068,7 +1041,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -1083,7 +1055,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -1099,7 +1070,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -1115,7 +1085,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -1131,7 +1100,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -1147,7 +1115,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -1242,7 +1209,6 @@ import EudiRQESUi
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -1338,7 +1304,6 @@ import Combine
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -1975,7 +1940,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2173,7 +2137,6 @@ import Combine
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2336,7 +2299,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2806,7 +2768,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2823,7 +2784,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2839,7 +2799,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2857,7 +2816,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2873,7 +2831,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2890,7 +2847,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2906,7 +2862,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2924,7 +2879,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2941,7 +2895,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2957,7 +2910,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2974,7 +2926,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -2991,7 +2942,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3008,7 +2958,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3025,7 +2974,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3042,7 +2990,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3059,7 +3006,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3076,7 +3022,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3093,7 +3038,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3109,7 +3053,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3125,7 +3068,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3142,7 +3084,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3157,7 +3098,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3240,7 +3180,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3401,7 +3340,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3563,7 +3501,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3580,7 +3517,6 @@ import Alamofire
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3741,7 +3677,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3757,7 +3692,6 @@ import struct Foundation.Data
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3954,7 +3888,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3970,7 +3903,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -3986,7 +3918,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -4079,7 +4010,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -4244,7 +4174,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -4431,7 +4360,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -4446,7 +4374,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -4607,7 +4534,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -4624,7 +4550,6 @@ import EudiRQESUi
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -4829,7 +4754,6 @@ import KeychainAccess
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -5229,7 +5153,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -5599,7 +5522,6 @@ import UIKit
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -5761,7 +5683,6 @@ import Swinject
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -5880,7 +5801,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -5896,7 +5816,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -5912,7 +5831,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -5928,7 +5846,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -5944,7 +5861,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -5960,7 +5876,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -5976,7 +5891,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -5992,7 +5906,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -6009,7 +5922,6 @@ import Combine
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -6025,7 +5937,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -6041,7 +5952,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -6057,7 +5967,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -6074,7 +5983,6 @@ import UIKit
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -6090,7 +5998,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -6108,7 +6015,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -6511,7 +6417,6 @@ import libPhoneNumber
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -6751,7 +6656,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -6878,7 +6782,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -6895,7 +6798,6 @@ import Copyable
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -7049,7 +6951,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -7204,7 +7105,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -7221,7 +7121,6 @@ import EudiWalletKit
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -7449,10 +7348,10 @@ import Foundation
 import Combine
 import logic_resources
 import SwiftUI
+import logic_storage
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -8661,7 +8560,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -8676,7 +8574,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -8692,7 +8589,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -8711,7 +8607,6 @@ import UIKit
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9073,7 +8968,6 @@ import UIKit
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9397,7 +9291,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9628,7 +9521,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9644,7 +9536,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9661,7 +9552,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9678,7 +9568,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9693,7 +9582,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9710,7 +9598,6 @@ import OpenID4VCI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9726,7 +9613,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9738,12 +9624,12 @@ import Foundation
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/TransactionLog+Extension.swift'
 
 import Cuckoo
+import logic_storage
 import EudiWalletKit
 import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9759,7 +9645,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9775,7 +9660,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9791,7 +9675,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9807,7 +9690,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9824,7 +9706,6 @@ import OrderedCollections
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9841,7 +9722,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9858,7 +9738,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9873,7 +9752,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9889,7 +9767,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9906,7 +9783,6 @@ import EudiWalletKit
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -9999,7 +9875,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -10016,1653 +9891,11 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
 @testable import feature_common
 @testable import feature_dashboard
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Config/StorageConfig.swift'
-
-import Cuckoo
-import RealmSwift
-import Foundation
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-class MockStorageConfig: StorageConfig, Cuckoo.ProtocolMock, @unchecked Sendable {
-    typealias MocksType = StorageConfig
-    typealias Stubbing = __StubbingProxy_StorageConfig
-    typealias Verification = __VerificationProxy_StorageConfig
-
-    // Original typealiases
-
-    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any StorageConfig)?
-
-    func enableDefaultImplementation(_ stub: any StorageConfig) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-    
-    var schemaVersion: UInt64 {
-        get {
-            return cuckoo_manager.getter(
-                "schemaVersion",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.schemaVersion
-            )
-        }
-    }
-    
-    var databaseName: String {
-        get {
-            return cuckoo_manager.getter(
-                "databaseName",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.databaseName
-            )
-        }
-    }
-    
-    var databaseExtension: String {
-        get {
-            return cuckoo_manager.getter(
-                "databaseExtension",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.databaseExtension
-            )
-        }
-    }
-    
-    var realmConfiguration: Realm.Configuration {
-        get {
-            return cuckoo_manager.getter(
-                "realmConfiguration",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.realmConfiguration
-            )
-        }
-    }
-
-
-    struct __StubbingProxy_StorageConfig: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        var schemaVersion: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockStorageConfig,UInt64> {
-            return .init(manager: cuckoo_manager, name: "schemaVersion")
-        }
-        
-        var databaseName: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockStorageConfig,String> {
-            return .init(manager: cuckoo_manager, name: "databaseName")
-        }
-        
-        var databaseExtension: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockStorageConfig,String> {
-            return .init(manager: cuckoo_manager, name: "databaseExtension")
-        }
-        
-        var realmConfiguration: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockStorageConfig,Realm.Configuration> {
-            return .init(manager: cuckoo_manager, name: "realmConfiguration")
-        }
-    }
-
-    struct __VerificationProxy_StorageConfig: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        var schemaVersion: Cuckoo.VerifyReadOnlyProperty<UInt64> {
-            return .init(manager: cuckoo_manager, name: "schemaVersion", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var databaseName: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "databaseName", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var databaseExtension: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "databaseExtension", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var realmConfiguration: Cuckoo.VerifyReadOnlyProperty<Realm.Configuration> {
-            return .init(manager: cuckoo_manager, name: "realmConfiguration", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-    }
-}
-
-class StorageConfigStub:StorageConfig, @unchecked Sendable {
-    
-    var schemaVersion: UInt64 {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (UInt64).self)
-        }
-    }
-    
-    var databaseName: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
-        }
-    }
-    
-    var databaseExtension: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
-        }
-    }
-    
-    var realmConfiguration: Realm.Configuration {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Realm.Configuration).self)
-        }
-    }
-
-
-}
-
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Controller/BookmarkStorageController.swift'
-
-import Cuckoo
-import RealmSwift
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-public class MockBookmarkStorageController: BookmarkStorageController, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = BookmarkStorageController
-    public typealias Stubbing = __StubbingProxy_BookmarkStorageController
-    public typealias Verification = __VerificationProxy_BookmarkStorageController
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any BookmarkStorageController)?
-
-    public func enableDefaultImplementation(_ stub: any BookmarkStorageController) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-    
-    public func store(_ p0: Value) async throws {
-        return try await cuckoo_manager.callThrows(
-            "store(_ p0: Value) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.store(p0)
-        )
-    }
-    
-    public func store(_ p0: [Value]) async throws {
-        return try await cuckoo_manager.callThrows(
-            "store(_ p0: [Value]) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.store(p0)
-        )
-    }
-    
-    public func update(_ p0: Value) async throws {
-        return try await cuckoo_manager.callThrows(
-            "update(_ p0: Value) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.update(p0)
-        )
-    }
-    
-    public func retrieve(_ p0: String) async throws -> Value {
-        return try await cuckoo_manager.callThrows(
-            "retrieve(_ p0: String) async throws -> Value",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.retrieve(p0)
-        )
-    }
-    
-    public func retrieveAll() async throws -> [Value] {
-        return try await cuckoo_manager.callThrows(
-            "retrieveAll() async throws -> [Value]",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.retrieveAll()
-        )
-    }
-    
-    public func delete(_ p0: String) async throws {
-        return try await cuckoo_manager.callThrows(
-            "delete(_ p0: String) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.delete(p0)
-        )
-    }
-    
-    public func deleteAll() async throws {
-        return try await cuckoo_manager.callThrows(
-            "deleteAll() async throws",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.deleteAll()
-        )
-    }
-
-    public struct __StubbingProxy_BookmarkStorageController: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(Value)> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBookmarkStorageController.self,
-                method: "store(_ p0: Value) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<([Value])> where M1.MatchedType == [Value] {
-            let matchers: [Cuckoo.ParameterMatcher<([Value])>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBookmarkStorageController.self,
-                method: "store(_ p0: [Value]) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func update<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(Value)> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBookmarkStorageController.self,
-                method: "update(_ p0: Value) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func retrieve<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), Value> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBookmarkStorageController.self,
-                method: "retrieve(_ p0: String) async throws -> Value",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func retrieveAll() -> Cuckoo.ProtocolStubThrowingFunction<(), [Value]> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBookmarkStorageController.self,
-                method: "retrieveAll() async throws -> [Value]",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String)> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockBookmarkStorageController.self,
-                method: "delete(_ p0: String) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func deleteAll() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockBookmarkStorageController.self,
-                method: "deleteAll() async throws",
-                parameterMatchers: matchers
-            ))
-        }
-    }
-
-    public struct __VerificationProxy_BookmarkStorageController: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        
-        @discardableResult
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Value), Void> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "store(_ p0: Value) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<([Value]), Void> where M1.MatchedType == [Value] {
-            let matchers: [Cuckoo.ParameterMatcher<([Value])>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "store(_ p0: [Value]) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func update<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Value), Void> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "update(_ p0: Value) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func retrieve<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Value> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "retrieve(_ p0: String) async throws -> Value",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func retrieveAll() -> Cuckoo.__DoNotUse<(), [Value]> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "retrieveAll() async throws -> [Value]",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "delete(_ p0: String) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func deleteAll() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "deleteAll() async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-    }
-}
-
-public class BookmarkStorageControllerStub:BookmarkStorageController, @unchecked Sendable {
-
-
-    
-    public func store(_ p0: Value) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func store(_ p0: [Value]) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func update(_ p0: Value) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func retrieve(_ p0: String) async throws -> Value {
-        return DefaultValueRegistry.defaultValue(for: (Value).self)
-    }
-    
-    public func retrieveAll() async throws -> [Value] {
-        return DefaultValueRegistry.defaultValue(for: ([Value]).self)
-    }
-    
-    public func delete(_ p0: String) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func deleteAll() async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-}
-
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Controller/RevokedDocumentStorageController.swift'
-
-import Cuckoo
-import RealmSwift
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-public class MockRevokedDocumentStorageController: RevokedDocumentStorageController, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = RevokedDocumentStorageController
-    public typealias Stubbing = __StubbingProxy_RevokedDocumentStorageController
-    public typealias Verification = __VerificationProxy_RevokedDocumentStorageController
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any RevokedDocumentStorageController)?
-
-    public func enableDefaultImplementation(_ stub: any RevokedDocumentStorageController) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-    
-    public func store(_ p0: Value) async throws {
-        return try await cuckoo_manager.callThrows(
-            "store(_ p0: Value) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.store(p0)
-        )
-    }
-    
-    public func store(_ p0: [Value]) async throws {
-        return try await cuckoo_manager.callThrows(
-            "store(_ p0: [Value]) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.store(p0)
-        )
-    }
-    
-    public func update(_ p0: Value) async throws {
-        return try await cuckoo_manager.callThrows(
-            "update(_ p0: Value) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.update(p0)
-        )
-    }
-    
-    public func retrieve(_ p0: String) async throws -> Value {
-        return try await cuckoo_manager.callThrows(
-            "retrieve(_ p0: String) async throws -> Value",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.retrieve(p0)
-        )
-    }
-    
-    public func retrieveAll() async throws -> [Value] {
-        return try await cuckoo_manager.callThrows(
-            "retrieveAll() async throws -> [Value]",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.retrieveAll()
-        )
-    }
-    
-    public func delete(_ p0: String) async throws {
-        return try await cuckoo_manager.callThrows(
-            "delete(_ p0: String) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.delete(p0)
-        )
-    }
-    
-    public func deleteAll() async throws {
-        return try await cuckoo_manager.callThrows(
-            "deleteAll() async throws",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.deleteAll()
-        )
-    }
-
-    public struct __StubbingProxy_RevokedDocumentStorageController: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(Value)> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
-                method: "store(_ p0: Value) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<([Value])> where M1.MatchedType == [Value] {
-            let matchers: [Cuckoo.ParameterMatcher<([Value])>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
-                method: "store(_ p0: [Value]) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func update<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(Value)> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
-                method: "update(_ p0: Value) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func retrieve<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), Value> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
-                method: "retrieve(_ p0: String) async throws -> Value",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func retrieveAll() -> Cuckoo.ProtocolStubThrowingFunction<(), [Value]> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
-                method: "retrieveAll() async throws -> [Value]",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String)> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
-                method: "delete(_ p0: String) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func deleteAll() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockRevokedDocumentStorageController.self,
-                method: "deleteAll() async throws",
-                parameterMatchers: matchers
-            ))
-        }
-    }
-
-    public struct __VerificationProxy_RevokedDocumentStorageController: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        
-        @discardableResult
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Value), Void> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "store(_ p0: Value) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<([Value]), Void> where M1.MatchedType == [Value] {
-            let matchers: [Cuckoo.ParameterMatcher<([Value])>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "store(_ p0: [Value]) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func update<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Value), Void> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "update(_ p0: Value) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func retrieve<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Value> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "retrieve(_ p0: String) async throws -> Value",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func retrieveAll() -> Cuckoo.__DoNotUse<(), [Value]> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "retrieveAll() async throws -> [Value]",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "delete(_ p0: String) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func deleteAll() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "deleteAll() async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-    }
-}
-
-public class RevokedDocumentStorageControllerStub:RevokedDocumentStorageController, @unchecked Sendable {
-
-
-    
-    public func store(_ p0: Value) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func store(_ p0: [Value]) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func update(_ p0: Value) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func retrieve(_ p0: String) async throws -> Value {
-        return DefaultValueRegistry.defaultValue(for: (Value).self)
-    }
-    
-    public func retrieveAll() async throws -> [Value] {
-        return DefaultValueRegistry.defaultValue(for: ([Value]).self)
-    }
-    
-    public func delete(_ p0: String) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func deleteAll() async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-}
-
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Controller/TransactionLogStorageController.swift'
-
-import Cuckoo
-import RealmSwift
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-public class MockTransactionLogStorageController: TransactionLogStorageController, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = TransactionLogStorageController
-    public typealias Stubbing = __StubbingProxy_TransactionLogStorageController
-    public typealias Verification = __VerificationProxy_TransactionLogStorageController
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any TransactionLogStorageController)?
-
-    public func enableDefaultImplementation(_ stub: any TransactionLogStorageController) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-    
-    public func store(_ p0: Value) async throws {
-        return try await cuckoo_manager.callThrows(
-            "store(_ p0: Value) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.store(p0)
-        )
-    }
-    
-    public func store(_ p0: [Value]) async throws {
-        return try await cuckoo_manager.callThrows(
-            "store(_ p0: [Value]) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.store(p0)
-        )
-    }
-    
-    public func update(_ p0: Value) async throws {
-        return try await cuckoo_manager.callThrows(
-            "update(_ p0: Value) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.update(p0)
-        )
-    }
-    
-    public func retrieve(_ p0: String) async throws -> Value {
-        return try await cuckoo_manager.callThrows(
-            "retrieve(_ p0: String) async throws -> Value",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.retrieve(p0)
-        )
-    }
-    
-    public func retrieveAll() async throws -> [Value] {
-        return try await cuckoo_manager.callThrows(
-            "retrieveAll() async throws -> [Value]",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.retrieveAll()
-        )
-    }
-    
-    public func delete(_ p0: String) async throws {
-        return try await cuckoo_manager.callThrows(
-            "delete(_ p0: String) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.delete(p0)
-        )
-    }
-    
-    public func deleteAll() async throws {
-        return try await cuckoo_manager.callThrows(
-            "deleteAll() async throws",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.deleteAll()
-        )
-    }
-
-    public struct __StubbingProxy_TransactionLogStorageController: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(Value)> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
-                method: "store(_ p0: Value) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<([Value])> where M1.MatchedType == [Value] {
-            let matchers: [Cuckoo.ParameterMatcher<([Value])>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
-                method: "store(_ p0: [Value]) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func update<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(Value)> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
-                method: "update(_ p0: Value) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func retrieve<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), Value> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
-                method: "retrieve(_ p0: String) async throws -> Value",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func retrieveAll() -> Cuckoo.ProtocolStubThrowingFunction<(), [Value]> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
-                method: "retrieveAll() async throws -> [Value]",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String)> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
-                method: "delete(_ p0: String) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func deleteAll() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockTransactionLogStorageController.self,
-                method: "deleteAll() async throws",
-                parameterMatchers: matchers
-            ))
-        }
-    }
-
-    public struct __VerificationProxy_TransactionLogStorageController: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        
-        @discardableResult
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Value), Void> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "store(_ p0: Value) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<([Value]), Void> where M1.MatchedType == [Value] {
-            let matchers: [Cuckoo.ParameterMatcher<([Value])>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "store(_ p0: [Value]) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func update<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Value), Void> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "update(_ p0: Value) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func retrieve<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Value> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "retrieve(_ p0: String) async throws -> Value",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func retrieveAll() -> Cuckoo.__DoNotUse<(), [Value]> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "retrieveAll() async throws -> [Value]",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "delete(_ p0: String) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func deleteAll() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "deleteAll() async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-    }
-}
-
-public class TransactionLogStorageControllerStub:TransactionLogStorageController, @unchecked Sendable {
-
-
-    
-    public func store(_ p0: Value) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func store(_ p0: [Value]) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func update(_ p0: Value) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func retrieve(_ p0: String) async throws -> Value {
-        return DefaultValueRegistry.defaultValue(for: (Value).self)
-    }
-    
-    public func retrieveAll() async throws -> [Value] {
-        return DefaultValueRegistry.defaultValue(for: ([Value]).self)
-    }
-    
-    public func delete(_ p0: String) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func deleteAll() async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-}
-
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Error/StorageError.swift'
-
-import Cuckoo
-import Foundation
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Extension/Results+Extensions.swift'
-
-import Cuckoo
-import RealmSwift
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Model/Bookmark.swift'
-
-import Cuckoo
-import RealmSwift
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Model/RevokedDocument.swift'
-
-import Cuckoo
-import RealmSwift
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Model/TransactionLog.swift'
-
-import Cuckoo
-import RealmSwift
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Service/RealmService.swift'
-
-import Cuckoo
-import RealmSwift
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-class MockRealmService: RealmService, Cuckoo.ProtocolMock, @unchecked Sendable {
-    typealias MocksType = RealmService
-    typealias Stubbing = __StubbingProxy_RealmService
-    typealias Verification = __VerificationProxy_RealmService
-
-    // Original typealiases
-
-    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any RealmService)?
-
-    func enableDefaultImplementation(_ stub: any RealmService) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-    
-    func get() throws -> Realm {
-        return try cuckoo_manager.callThrows(
-            "get() throws -> Realm",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.get()
-        )
-    }
-
-    struct __StubbingProxy_RealmService: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        func get() -> Cuckoo.ProtocolStubThrowingFunction<(), Realm> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockRealmService.self,
-                method: "get() throws -> Realm",
-                parameterMatchers: matchers
-            ))
-        }
-    }
-
-    struct __VerificationProxy_RealmService: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        
-        @discardableResult
-        func get() -> Cuckoo.__DoNotUse<(), Realm> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "get() throws -> Realm",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-    }
-}
-
-class RealmServiceStub:RealmService, @unchecked Sendable {
-
-
-    
-    func get() throws -> Realm {
-        return DefaultValueRegistry.defaultValue(for: (Realm).self)
-    }
-}
-
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Type/StorageController.swift'
-
-import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-public class MockStorageController<Value: StoredObject>: StorageController, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = DefaultImplCaller
-    public typealias Stubbing = __StubbingProxy_StorageController
-    public typealias Verification = __VerificationProxy_StorageController
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    public class DefaultImplCaller: StorageController, @unchecked Sendable {
-        private let reference: Any
-    
-        
-        init<_CUCKOO$$GENERIC: StorageController>(from defaultImpl: UnsafeMutablePointer<_CUCKOO$$GENERIC>, keeping reference: @escaping @autoclosure () -> Any?) where _CUCKOO$$GENERIC.Value == Value {
-            self.reference = reference
-    
-            _storage$1$store = defaultImpl.pointee.store
-            _storage$2$store = defaultImpl.pointee.store
-            _storage$3$update = defaultImpl.pointee.update
-            _storage$4$retrieve = defaultImpl.pointee.retrieve
-            _storage$5$retrieveAll = defaultImpl.pointee.retrieveAll
-            _storage$6$delete = defaultImpl.pointee.delete
-            _storage$7$deleteAll = defaultImpl.pointee.deleteAll
-        }
-    
-
-        private let _storage$1$store: (Value) async throws -> Void
-        public func store(_ p0: Value) async throws {
-            return try await _storage$1$store(p0)
-        }
-
-        private let _storage$2$store: ([Value]) async throws -> Void
-        public func store(_ p0: [Value]) async throws {
-            return try await _storage$2$store(p0)
-        }
-
-        private let _storage$3$update: (Value) async throws -> Void
-        public func update(_ p0: Value) async throws {
-            return try await _storage$3$update(p0)
-        }
-
-        private let _storage$4$retrieve: (String) async throws -> Value
-        public func retrieve(_ p0: String) async throws -> Value {
-            return try await _storage$4$retrieve(p0)
-        }
-
-        private let _storage$5$retrieveAll: () async throws -> [Value]
-        public func retrieveAll() async throws -> [Value] {
-            return try await _storage$5$retrieveAll()
-        }
-
-        private let _storage$6$delete: (String) async throws -> Void
-        public func delete(_ p0: String) async throws {
-            return try await _storage$6$delete(p0)
-        }
-
-        private let _storage$7$deleteAll: () async throws -> Void
-        public func deleteAll() async throws {
-            return try await _storage$7$deleteAll()
-        }
-    }
-
-    private var __defaultImplStub: DefaultImplCaller?
-
-    public func enableDefaultImplementation<_CUCKOO$$GENERIC: StorageController>(_ stub: _CUCKOO$$GENERIC) where _CUCKOO$$GENERIC.Value == Value {
-        var mutableStub = stub
-        __defaultImplStub = DefaultImplCaller(from: &mutableStub, keeping: mutableStub)
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-    public func enableDefaultImplementation<_CUCKOO$$GENERIC: StorageController>(mutating stub: UnsafeMutablePointer<_CUCKOO$$GENERIC>) where _CUCKOO$$GENERIC.Value == Value {
-        __defaultImplStub = DefaultImplCaller(from: stub, keeping: nil)
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-    
-    public func store(_ p0: Value) async throws {
-        return try await cuckoo_manager.callThrows(
-            "store(_ p0: Value) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.store(p0)
-        )
-    }
-    
-    public func store(_ p0: [Value]) async throws {
-        return try await cuckoo_manager.callThrows(
-            "store(_ p0: [Value]) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.store(p0)
-        )
-    }
-    
-    public func update(_ p0: Value) async throws {
-        return try await cuckoo_manager.callThrows(
-            "update(_ p0: Value) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.update(p0)
-        )
-    }
-    
-    public func retrieve(_ p0: String) async throws -> Value {
-        return try await cuckoo_manager.callThrows(
-            "retrieve(_ p0: String) async throws -> Value",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.retrieve(p0)
-        )
-    }
-    
-    public func retrieveAll() async throws -> [Value] {
-        return try await cuckoo_manager.callThrows(
-            "retrieveAll() async throws -> [Value]",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.retrieveAll()
-        )
-    }
-    
-    public func delete(_ p0: String) async throws {
-        return try await cuckoo_manager.callThrows(
-            "delete(_ p0: String) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.delete(p0)
-        )
-    }
-    
-    public func deleteAll() async throws {
-        return try await cuckoo_manager.callThrows(
-            "deleteAll() async throws",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.deleteAll()
-        )
-    }
-
-    public struct __StubbingProxy_StorageController: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(Value)> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockStorageController.self,
-                method: "store(_ p0: Value) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<([Value])> where M1.MatchedType == [Value] {
-            let matchers: [Cuckoo.ParameterMatcher<([Value])>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockStorageController.self,
-                method: "store(_ p0: [Value]) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func update<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(Value)> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockStorageController.self,
-                method: "update(_ p0: Value) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func retrieve<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), Value> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockStorageController.self,
-                method: "retrieve(_ p0: String) async throws -> Value",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func retrieveAll() -> Cuckoo.ProtocolStubThrowingFunction<(), [Value]> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockStorageController.self,
-                method: "retrieveAll() async throws -> [Value]",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String)> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockStorageController.self,
-                method: "delete(_ p0: String) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func deleteAll() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<()> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockStorageController.self,
-                method: "deleteAll() async throws",
-                parameterMatchers: matchers
-            ))
-        }
-    }
-
-    public struct __VerificationProxy_StorageController: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        
-        @discardableResult
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Value), Void> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "store(_ p0: Value) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func store<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<([Value]), Void> where M1.MatchedType == [Value] {
-            let matchers: [Cuckoo.ParameterMatcher<([Value])>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "store(_ p0: [Value]) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func update<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Value), Void> where M1.MatchedType == Value {
-            let matchers: [Cuckoo.ParameterMatcher<(Value)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "update(_ p0: Value) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func retrieve<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Value> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "retrieve(_ p0: String) async throws -> Value",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func retrieveAll() -> Cuckoo.__DoNotUse<(), [Value]> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "retrieveAll() async throws -> [Value]",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "delete(_ p0: String) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func deleteAll() -> Cuckoo.__DoNotUse<(), Void> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "deleteAll() async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-    }
-}
-
-public class StorageControllerStub<Value: StoredObject>:StorageController, @unchecked Sendable {
-
-
-    
-    public func store(_ p0: Value) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func store(_ p0: [Value]) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func update(_ p0: Value) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func retrieve(_ p0: String) async throws -> Value {
-        return DefaultValueRegistry.defaultValue(for: (Value).self)
-    }
-    
-    public func retrieveAll() async throws -> [Value] {
-        return DefaultValueRegistry.defaultValue(for: ([Value]).self)
-    }
-    
-    public func delete(_ p0: String) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func deleteAll() async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-}
-
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-storage/Sources/Type/StoredObject.swift'
-
-import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_storage
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_dashboard
-
-public class MockStoredObject: StoredObject, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = StoredObject
-    public typealias Stubbing = __StubbingProxy_StoredObject
-    public typealias Verification = __VerificationProxy_StoredObject
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any StoredObject)?
-
-    public func enableDefaultImplementation(_ stub: any StoredObject) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-
-    public struct __StubbingProxy_StoredObject: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-    }
-
-    public struct __VerificationProxy_StoredObject: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-    }
-}
-
-public class StoredObjectStub:StoredObject, @unchecked Sendable {
-
-
-}
-
 
 
 
@@ -11675,7 +9908,6 @@ import Copyable
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -11736,7 +9968,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -11872,7 +10103,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -11957,7 +10187,6 @@ import EudiRQESUi
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12187,7 +10416,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12283,7 +10511,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12300,7 +10527,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12317,7 +10543,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12334,7 +10559,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12350,7 +10574,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12367,7 +10590,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12384,7 +10606,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12401,7 +10622,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12418,7 +10638,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12435,7 +10654,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12452,7 +10670,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12469,7 +10686,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12486,7 +10702,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12504,7 +10719,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12522,7 +10736,6 @@ import UIPilot
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12539,7 +10752,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12556,7 +10768,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12574,7 +10785,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12591,7 +10801,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12608,7 +10817,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12625,7 +10833,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12642,7 +10849,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12659,7 +10865,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12676,7 +10881,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12693,7 +10897,6 @@ import Copyable
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12710,7 +10913,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12727,7 +10929,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12744,7 +10945,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12761,7 +10961,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12778,7 +10977,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12795,7 +10993,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12812,7 +11009,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12829,7 +11025,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12845,7 +11040,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12861,7 +11055,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12878,7 +11071,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12895,7 +11087,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12913,7 +11104,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12930,7 +11120,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12948,7 +11137,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12965,7 +11153,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12982,7 +11169,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -12998,7 +11184,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13116,7 +11301,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13132,7 +11316,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13148,7 +11331,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13165,7 +11347,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13182,7 +11363,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13199,7 +11379,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13216,7 +11395,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13233,7 +11411,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13250,7 +11427,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13267,7 +11443,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13283,7 +11458,6 @@ import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13300,7 +11474,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13315,7 +11488,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13332,7 +11504,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13347,7 +11518,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13363,7 +11533,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13380,7 +11549,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13397,7 +11565,6 @@ import UIKit
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13414,7 +11581,6 @@ import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13431,7 +11597,6 @@ import UIKit
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13450,7 +11615,6 @@ import Shimmer
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13467,7 +11631,6 @@ import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13482,7 +11645,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13589,7 +11751,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
@@ -13672,7 +11833,6 @@ import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
-@testable import logic_storage
 @testable import logic_ui
 @testable import logic_api
 @testable import logic_authentication
