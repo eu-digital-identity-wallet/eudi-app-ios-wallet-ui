@@ -30,8 +30,8 @@ public enum TransactionFiltersPartialState: Sendable {
 }
 
 public protocol TransactionTabInteractor: Sendable {
-  func fetchTransactions(failedTransactions: [String]) async -> TransactionsPartialState
-  func fetchFilteredTransactions(failedTransactions: [String]) async -> FilterableList?
+  func fetchTransactions(failedTransactions: [String]) async throws -> TransactionsPartialState
+  func fetchFilteredTransactions(failedTransactions: [String]) async throws -> FilterableList?
   func initializeFilters(filterableList: FilterableList) async
   func createFiltersGroup(earliestDate: Date, latestDate: Date) -> Filters
   func applyFilters() async
@@ -46,14 +46,17 @@ public protocol TransactionTabInteractor: Sendable {
 
 final class TransactionTabInteractorImpl: TransactionTabInteractor {
 
+  private let walletKitController: WalletKitController
   private let filterValidator: FilterValidator
 
   @MainActor
   private var filtersStateAsync: AsyncStream<TransactionFiltersPartialState>.Continuation?
 
   init(
+    walletKitController: WalletKitController,
     filterValidator: FilterValidator
   ) {
+    self.walletKitController = walletKitController
     self.filterValidator = filterValidator
   }
 
@@ -61,9 +64,9 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
     filtersStateAsync?.finish()
   }
 
-  func fetchTransactions(failedTransactions: [String]) async -> TransactionsPartialState {
+  func fetchTransactions(failedTransactions: [String]) async throws -> TransactionsPartialState {
 
-    let transactions: FilterableList? = fetchFilteredTransactions(failedTransactions: failedTransactions)
+    let transactions: FilterableList? = try await fetchFilteredTransactions(failedTransactions: failedTransactions)
 
     guard let transactions = transactions else {
       return .failure(WalletCoreError.unableFetchDocuments)
@@ -72,35 +75,41 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
     return .success(transactions)
   }
 
-  public func fetchFilteredTransactions(failedTransactions: [String]) -> FilterableList? {
-
-    let transactions = TransactionUIModel.mocks()
+  public func fetchFilteredTransactions(failedTransactions: [String]) async throws -> FilterableList? {
+    let transactions = try await self.walletKitController.fetchTransactionLogs()
 
     guard !transactions.isEmpty else {
       return nil
     }
 
-    let filterableItems = transactions.flatMap { (_, models) in
-      models.map { transaction in
-        let transactionSearchTags: [String] = {
-          var tags = [transaction.name]
-          let transactionName = transaction.name.trimmingCharacters(in: .whitespacesAndNewlines)
-          if !transactionName.isEmpty {
-            tags.append(transactionName)
-          }
-          return tags
-        }()
+    let filterableItems = transactions.map { transaction in
 
+      let transactionPayload = transaction.transformToTransactionUI()
+
+      switch transaction {
+      case .presentation(let logData):
+        var tags = [logData.relyingParty.name]
+        let transactionName = logData.relyingParty.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !transactionName.isEmpty {
+          tags.append(transactionName)
+        }
         return FilterableItem(
-          payload: transaction,
+          payload: transactionPayload,
           attributes: TransactionFilterableAttributes(
-            sortingKey: transaction.transactionDate,
-            searchTags: transactionSearchTags,
-            status: transaction.status,
-            creationDate: transaction.transactionDate.toDate() ?? Date.now,
-            relyingPartyName: (transaction.transactionType == .presentation || transaction.transactionType == .issuance) ?
-            transaction.name : nil,
-            transactionType: transaction.transactionType
+            sortingKey: logData.relyingParty.name.lowercased(),
+            searchTags: tags,
+            status: logData.status.mapToTransactionStatus(),
+            creationDate: logData.timestamp,
+            relyingPartyName: logData.relyingParty.name,
+            transactionType: .presentation
+          )
+        )
+      case .issuance, .signing:
+        return FilterableItem(
+          payload: transactionPayload,
+          attributes: TransactionFilterableAttributes(
+            sortingKey: "",
+            searchTags: []
           )
         )
       }

@@ -42,6 +42,7 @@ public final class FeatureDashboardAssembly: Assembly {
 
     container.register(TransactionTabInteractor.self) { r in
       TransactionTabInteractorImpl(
+        walletKitController: r.force(WalletKitController.self),
         filterValidator: r.force(FilterValidator.self)
       )
     }

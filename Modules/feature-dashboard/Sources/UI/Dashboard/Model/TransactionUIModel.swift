@@ -203,12 +203,12 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
     return Dictionary(grouping: transactions, by: { $0.transactionCategory })
   }
 
-  func transformToTransactionUi(
-    with failedDocuments: [String] = [],
-    categories: TransactionCategory
-  ) -> TransactionUIModel {
-    return self
-  }
+//  func transformToTransactionUi(
+//    with failedDocuments: [String] = [],
+//    categories: TransactionCategory
+//  ) -> TransactionUIModel {
+//    return self
+//  }
 
   private func formattedTransactionDate() -> LocalizableStringKey {
     let formatter = DateFormatter()
@@ -247,6 +247,7 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
 }
 
 public enum TransactionStatus: Sendable {
+  case incomplete
   case completed
   case failed
 
@@ -254,9 +255,15 @@ public enum TransactionStatus: Sendable {
     switch self {
     case .completed:
       return .completed
-    case .failed:
+    case .failed, .incomplete:
       return .failed
     }
+  }
+}
+
+extension TransactionLog.Status {
+  func mapToTransactionStatus() -> TransactionStatus {
+    return .completed
   }
 }
 
@@ -273,6 +280,29 @@ public enum TransactionType: Sendable {
       return .issuance
     case .signing:
       return .signing
+    }
+  }
+}
+
+extension TransactionLogData {
+  func transformToTransactionUI() -> TransactionUIModel {
+    switch self {
+    case .presentation(let logData):
+      return .init(
+        name: logData.relyingParty.name,
+        status: logData.status.mapToTransactionStatus(),
+        transactionDate: "logData.timestamp",
+        transactionCategory: .category(for: "logData.timestamp"),
+        transactionType: .presentation
+      )
+    case .issuance, .signing:
+      return .init(
+        name: "",
+        status: .completed,
+        transactionDate: "",
+        transactionCategory: .category(for: ""),
+        transactionType: .presentation
+      )
     }
   }
 }

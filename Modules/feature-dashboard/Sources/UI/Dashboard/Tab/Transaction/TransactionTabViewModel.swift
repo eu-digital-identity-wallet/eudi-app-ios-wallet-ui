@@ -73,8 +73,8 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
     Task {
       let failedTrasnactions = viewState.failedTransactions
 
-      let state = await Task.detached { () -> TransactionsPartialState in
-        return await self.interactor.fetchTransactions(failedTransactions: failedTrasnactions)
+      let state = try await Task.detached { () -> TransactionsPartialState in
+        return try await self.interactor.fetchTransactions(failedTransactions: failedTrasnactions)
       }.value
 
       switch state {
