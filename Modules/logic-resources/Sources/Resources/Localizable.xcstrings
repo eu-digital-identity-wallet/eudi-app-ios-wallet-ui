@@ -1247,17 +1247,6 @@
         }
       }
     },
-    "proximity_connection_ble" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Or share via bluetooth"
-          }
-        }
-      }
-    },
     "proximity_connection_ble_description" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -99,9 +99,6 @@ private func content(
 @ViewBuilder
 private func nfcFooter(contentSize: CGFloat) -> some View {
   VStack(alignment: .center, spacing: SPACING_SMALL) {
-    Text(.orShareViaBle)
-      .typography(Theme.shared.font.bodyLarge)
-      .foregroundStyle(Theme.shared.color.onSurface)
 
     Theme.shared.image.ble
       .resizable()

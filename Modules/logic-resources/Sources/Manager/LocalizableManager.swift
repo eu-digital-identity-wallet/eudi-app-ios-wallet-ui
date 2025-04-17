@@ -351,8 +351,6 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "no_results_description")
     case .proximityConnectionBleDescription:
       bundle.localizedString(forKey: "proximity_connection_ble_description")
-    case .orShareViaBle:
-      bundle.localizedString(forKey: "proximity_connection_ble")
     case .filters:
       bundle.localizedString(forKey: "filters")
     case .sortByIssuedDateSectionTitle:

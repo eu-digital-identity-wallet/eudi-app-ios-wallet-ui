@@ -73,7 +73,7 @@ final class ImageManager: ImageManagerProtocol {
   enum ImageEnum: String {
     case faceId = "face-id"
     case id = "id"
-    case ble = "nfc"
+    case ble = "ble"
     case touchId = "touch-id"
     case logo = "logo"
     case arrowLeft = "arrow.left"
