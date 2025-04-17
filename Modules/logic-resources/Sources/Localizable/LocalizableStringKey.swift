@@ -184,8 +184,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case noResults
   case noResultsDocumentsDescription
   case noResultsTransactionsDescription
-  case proximityConnectionNfcDescription
-  case orShareViaNfc
+  case proximityConnectionBleDescription
   case expiryPeriodSectionTitle
   case selectExpiryPeriod
   case filterByState
