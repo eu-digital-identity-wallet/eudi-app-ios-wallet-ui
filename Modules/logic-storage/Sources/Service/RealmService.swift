@@ -14,7 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import RealmSwift
-import Foundation
 
 protocol RealmService: Sendable {
   @MainActor func write<T: Object>(_ object: T) async throws

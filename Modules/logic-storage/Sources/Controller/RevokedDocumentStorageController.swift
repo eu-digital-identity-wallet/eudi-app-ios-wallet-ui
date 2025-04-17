@@ -48,7 +48,7 @@ final class RevokedDocumentStorageControllerImpl: RevokedDocumentStorageControll
   }
 
   func retrieveAll() async throws -> [RevokedDocument] {
-    let revokedDocuments = try await realmService.readAll(RealmRevokedDocument.self, map: { $0.toRevokedDocument() })
+    let revokedDocuments = try await realmService.readAll(RealmRevokedDocument.self) { $0.toRevokedDocument() }
     guard !revokedDocuments.isEmpty else {
       throw StorageError.itemsNotFound
     }

@@ -48,7 +48,7 @@ final class BookmarkStorageControllerImpl: BookmarkStorageController {
   }
 
   func retrieveAll() async throws -> [Bookmark] {
-    let bookmarks = try await realmService.readAll(RealmBookmark.self, map: { $0.toBookmark() })
+    let bookmarks = try await realmService.readAll(RealmBookmark.self) { $0.toBookmark() }
     guard !bookmarks.isEmpty else {
       throw StorageError.itemsNotFound
     }

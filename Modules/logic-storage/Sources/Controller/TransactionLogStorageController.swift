@@ -48,7 +48,7 @@ final class TransactionLogStorageControllerImpl: TransactionLogStorageController
   }
 
   func retrieveAll() async throws -> [TransactionLog] {
-    let logs = try await realmService.readAll(RealmTransactionLog.self, map: { $0.toTransactionLog() })
+    let logs = try await realmService.readAll(RealmTransactionLog.self) { $0.toTransactionLog() }
     guard !logs.isEmpty else {
       throw StorageError.itemsNotFound
     }
