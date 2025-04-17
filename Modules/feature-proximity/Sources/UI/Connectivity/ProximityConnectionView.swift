@@ -99,16 +99,13 @@ private func content(
 @ViewBuilder
 private func nfcFooter(contentSize: CGFloat) -> some View {
   VStack(alignment: .center, spacing: SPACING_SMALL) {
-    Text(.orShareViaNfc)
-      .typography(Theme.shared.font.bodyLarge)
-      .foregroundStyle(Theme.shared.color.onSurface)
 
-    Theme.shared.image.nfc
+    Theme.shared.image.ble
       .resizable()
       .scaledToFit()
       .frame(width: 36, height: 36)
 
-    Text(.proximityConnectionNfcDescription)
+    Text(.proximityConnectionBleDescription)
       .typography(Theme.shared.font.bodyMedium)
       .foregroundStyle(Theme.shared.color.onSurface)
   }

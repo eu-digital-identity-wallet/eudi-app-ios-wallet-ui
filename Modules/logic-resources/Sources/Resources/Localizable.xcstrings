@@ -1247,7 +1247,7 @@
         }
       }
     },
-    "proximity_connection_nfc_description" : {
+    "proximity_connection_ble_description" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
