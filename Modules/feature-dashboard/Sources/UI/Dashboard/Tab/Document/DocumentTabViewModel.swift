@@ -27,7 +27,7 @@ struct DocumentTabState: ViewState {
   let pendingDeletionDocument: DocumentUIModel?
   let succededIssuedDocuments: [DocumentUIModel]
   let failedDocuments: [String]
-  let isFromOnPause: Bool
+  let isPaused: Bool
   let hasDefaultFilters: Bool
 
   var pendingDocumentTitle: String {
@@ -44,7 +44,6 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   @Published var isFilterModalShowing: Bool = false
   @Published var isDeleteDeferredModalShowing: Bool = false
   @Published var isSuccededDocumentsModalShowing: Bool = false
-  @Published var isRevokedModalShowing: Bool = false
   @Published var searchQuery: String = ""
 
   private var deferredTask: Task<DeferredPartialState, Error>?
@@ -66,7 +65,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
         pendingDeletionDocument: nil,
         succededIssuedDocuments: [],
         failedDocuments: [],
-        isFromOnPause: true,
+        isPaused: true,
         hasDefaultFilters: true
       )
     )
@@ -93,7 +92,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
       switch state {
       case .success(let documents):
 
-        if viewState.isFromOnPause {
+        if viewState.isPaused {
           await interactor.initializeFilters(filterableList: documents)
         } else {
           await interactor.updateLists(filterableList: documents)
@@ -103,7 +102,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
 
         setState {
           $0.copy(
-            isFromOnPause: false
+            isPaused: false
           )
         }
         onDocumentsRetrievedPostActions()
@@ -148,9 +147,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
 
   func onPause() {
     self.deferredTask?.cancel()
-    if !isFilterModalShowing {
-      setState { $0.copy(isFromOnPause: true) }
-    }
+    self.setState { $0.copy(isPaused: true) }
   }
 
   func onDocumentDetails(documentId: String) {
@@ -211,6 +208,12 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   func showFilters() {
     isFilterModalShowing = true
     onPause()
+  }
+
+  func handleRevocationNotification() {
+    if !viewState.isPaused {
+      fetch()
+    }
   }
 
   private func listenForSuccededIssuedModalChanges() {

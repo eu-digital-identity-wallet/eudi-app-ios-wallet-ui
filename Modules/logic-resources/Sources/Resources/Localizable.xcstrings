@@ -595,17 +595,6 @@
         }
       }
     },
-    "document_details_revoked_on" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revoked on: %@"
-          }
-        }
-      }
-    },
     "document_number" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1705,6 +1694,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "revoked"
+          }
+        }
+      }
+    },
+    "revoked_modal_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The following documents have been revoked."
+          }
+        }
+      }
+    },
+    "revoked_modal_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoked documents"
           }
         }
       }

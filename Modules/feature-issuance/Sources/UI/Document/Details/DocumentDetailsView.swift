@@ -69,6 +69,10 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     .task {
       await viewModel.fetchDocumentDetails()
     }
+    .onReceive(NotificationCenter.default.publisher(for: NSNotification.RevocationDocumentDetailsRefresh)) { data in
+      guard let payload = data.userInfo else { return }
+      viewModel.handleRevocationNotification(for: payload)
+    }
   }
 }
 
@@ -91,8 +95,7 @@ private func content(
 
       if viewState.isRevoked {
         RevokedDocumentView(
-          message: .documentDetailsRevokedDocumentMessage,
-          revokedDate: .documentDetailsRevokedOn(["March 29, 202"])
+          message: .documentDetailsRevokedDocumentMessage
         )
       }
 

@@ -82,7 +82,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
     switch state {
 
-    case .success(let document, let isBookmarked):
+    case .success(let document, let isBookmarked, let isRevoked):
       switch viewState.config.flow {
       case .extraDocument:
         self.setState {
@@ -91,7 +91,8 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
             isLoading: false,
             hasDeleteAction: true,
             documentFieldsCount: document.documentFields.count,
-            isBookmarked: isBookmarked
+            isBookmarked: isBookmarked,
+            isRevoked: isRevoked
           ).copy(error: nil)
         }
       case .noDocument:
@@ -196,6 +197,13 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         }
       ]
     )
+  }
+
+  func handleRevocationNotification(for payload: [AnyHashable: Any]?) {
+    guard let ids = payload?["revoked_ids"] as? [String] else { return }
+    if ids.contains(where: { $0 == viewState.document.id }) {
+      setState { $0.copy(isRevoked: true) }
+    }
   }
 
   private func toggleVisibility() {

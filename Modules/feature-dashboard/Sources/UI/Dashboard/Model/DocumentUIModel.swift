@@ -294,10 +294,15 @@ public extension DocumentUIModel.Value {
 extension Array where Element == DocClaimsDecodable {
   func transformToDocumentUi(
     with failedDocuments: [String] = [],
-    categories: DocumentCategories
+    categories: DocumentCategories,
+    isRevoked: Bool
   ) -> [DocumentUIModel] {
     self.map { item in
-      item.transformToDocumentUi(with: failedDocuments, categories: categories)
+      item.transformToDocumentUi(
+        with: failedDocuments,
+        categories: categories,
+        isRevoked: isRevoked
+      )
     }
   }
 }
@@ -305,11 +310,16 @@ extension Array where Element == DocClaimsDecodable {
 extension DocClaimsDecodable {
   func transformToDocumentUi(
     with failedDocuments: [String] = [],
-    categories: DocumentCategories
+    categories: DocumentCategories,
+    isRevoked: Bool
   ) -> DocumentUIModel {
-    let state: DocumentUIModel.Value.State = failedDocuments.contains(
-      where: { $0 == self.id }
-    ) ? .failed : (self is DeferrredDocument) ? .pending : .issued
+    let state: DocumentUIModel.Value.State = failedDocuments.contains(where: { $0 == self.id })
+    ? .failed
+    : (self is DeferrredDocument)
+    ? .pending
+    : isRevoked
+    ? .revoked
+    : .issued
 
     let expiresAt = self.getExpiryDate(
       parser: {

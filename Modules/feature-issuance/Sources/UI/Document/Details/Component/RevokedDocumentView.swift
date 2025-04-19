@@ -20,16 +20,13 @@ import logic_resources
 
 struct RevokedDocumentView: View {
   private let message: LocalizableStringKey
-  private let revokedDate: LocalizableStringKey
   private let backgroundColor: Color
 
   init(
     message: LocalizableStringKey,
-    revokedDate: LocalizableStringKey,
     backgroundColor: Color = Theme.shared.color.errorContainer
   ) {
     self.message = message
-    self.revokedDate = revokedDate
     self.backgroundColor = backgroundColor
   }
 
@@ -39,17 +36,9 @@ struct RevokedDocumentView: View {
         .font(Theme.shared.font.bodyMedium.font)
         .foregroundColor(Theme.shared.color.error)
         .multilineTextAlignment(.leading)
-
-      ListDivider(
-        backgroundColor: Theme.shared.color.outlineVariant,
-        spacing: SPACING_NONE
-      )
-
-      Text(revokedDate)
-        .font(Theme.shared.font.bodySmall.font)
-        .foregroundColor(Theme.shared.color.error)
     }
     .padding(Theme.shared.dimension.padding)
+    .frame(maxWidth: .infinity)
     .background(backgroundColor)
     .cornerRadius(12)
   }
@@ -57,7 +46,6 @@ struct RevokedDocumentView: View {
 
 #Preview {
   RevokedDocumentView(
-    message: .documentDetailsRevokedDocumentMessage,
-    revokedDate: .documentDetailsRevokedOn(["March 29, 202"])
+    message: .documentDetailsRevokedDocumentMessage
   )
 }

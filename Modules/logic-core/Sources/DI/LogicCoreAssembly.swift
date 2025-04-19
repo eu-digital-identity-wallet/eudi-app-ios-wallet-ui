@@ -63,5 +63,13 @@ public final class LogicCoreAssembly: Assembly {
       )
     }
     .inObjectScope(ObjectScope.graph)
+
+    container.register(RevocationWorkManager.self) { r in
+      RevocationWorkManagerImpl(
+        configLogic: r.force(WalletKitConfig.self),
+        walletKitController: r.force(WalletKitController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.graph)
   }
 }

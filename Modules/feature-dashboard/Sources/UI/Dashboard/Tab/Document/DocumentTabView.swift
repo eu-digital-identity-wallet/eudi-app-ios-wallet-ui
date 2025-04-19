@@ -34,9 +34,9 @@ struct DocumentTabView<Router: RouterHost>: View {
       searchQuery: $viewModel.searchQuery,
       onAction: { item in
         switch item.value.state {
-        case .issued:
+        case .issued, .revoked:
           viewModel.onDocumentDetails(documentId: item.value.id)
-        case .pending, .failed, .revoked:
+        case .pending, .failed:
           viewModel.onDeleteDeferredDocument(with: item)
         }
       }
@@ -83,24 +83,6 @@ struct DocumentTabView<Router: RouterHost>: View {
         }
       }
     }
-    .sheetDialog(isPresented: $viewModel.isRevokedModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
-
-          ContentTitleView(
-            title: .deferredDocumentsIssuedModalTitle,
-            caption: .defferedDocumentsIssuedModalCaption
-          )
-
-          deferredSuccessList(
-            state: viewModel.viewState,
-            onDocumentDetails: {
-              viewModel.onDocumentDetails(documentId: $0)
-            }
-          )
-        }
-      }
-    }
     .onChange(of: scenePhase) { phase in
       viewModel.setPhase(with: phase)
     }
@@ -109,6 +91,9 @@ struct DocumentTabView<Router: RouterHost>: View {
     }
     .onDisappear {
       viewModel.onPause()
+    }
+    .onReceive(NotificationCenter.default.publisher(for: NSNotification.RevocationDocumentTabRefresh)) { _ in
+      viewModel.handleRevocationNotification()
     }
   }
 }
@@ -209,7 +194,7 @@ private func deferredSuccessList(
           .foregroundStyle(Theme.shared.color.primary)
       }
       .padding()
-      .background(Theme.shared.color.background)
+      .background(Theme.shared.color.surfaceContainer)
       .clipShape(.rect(cornerRadius: 8))
       .onTapGesture {
         onDocumentDetails(item.value.id)
@@ -228,7 +213,7 @@ private func deferredSuccessList(
     pendingDeletionDocument: nil,
     succededIssuedDocuments: [],
     failedDocuments: [],
-    isFromOnPause: false,
+    isPaused: false,
     hasDefaultFilters: false
   )
   content(

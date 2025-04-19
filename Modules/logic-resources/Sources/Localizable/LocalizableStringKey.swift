@@ -216,8 +216,9 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case or
   case revoked
   case documentDetailsRevokedDocumentMessage
-  case documentDetailsRevokedOn([String])
   case errorFetchTransactionLog
+  case revokedModalTitle
+  case revokedModalDescription
 }
 
 public extension LocalizableStringKey {
