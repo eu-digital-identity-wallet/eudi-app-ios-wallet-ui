@@ -30,6 +30,7 @@ public struct FilterIds {
   public static let FILTER_BY_TRANSACTION_DATE_GROUP_ID = "transaction_date_group_id"
   public static let FILTER_BY_TRANSACTION_DATE_RANGE = "by_transaction_date_range"
   public static let FILTER_BY_STATUS_FAILED = "status_failed"
+  public static let FILTER_BY_STATE_REVOKED = "state_revoked"
   public static let FILTER_BY_DOCUMENT_CATEGORY_GROUP_ID = "category_group_id"
   public static let FILTER_BY_ISSUER_GROUP_ID = "issuer_group_id"
   public static let FILTER_BY_PERIOD_GROUP_ID = "by_period_group_id"

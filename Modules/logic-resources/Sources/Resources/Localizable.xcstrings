@@ -606,6 +606,17 @@
         }
       }
     },
+    "document_details_revoked_document_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This document has been revoked by the issuer. Contact the issuing service for more information."
+          }
+        }
+      }
+    },
     "document_number" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1851,6 +1862,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Retrieve logs"
+          }
+        }
+      }
+    },
+    "revoked" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "revoked"
+          }
+        }
+      }
+    },
+    "revoked_modal_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The following documents have been revoked."
+          }
+        }
+      }
+    },
+    "revoked_modal_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoked documents"
           }
         }
       }

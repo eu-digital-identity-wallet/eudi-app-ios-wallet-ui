@@ -245,6 +245,10 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case errorFetchTransactionLog
   case incomplete
   case justNow
+  case revoked
+  case documentDetailsRevokedDocumentMessage
+  case revokedModalTitle
+  case revokedModalDescription
 }
 
 public extension LocalizableStringKey {

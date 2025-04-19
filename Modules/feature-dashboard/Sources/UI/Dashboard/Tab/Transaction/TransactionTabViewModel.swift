@@ -24,7 +24,7 @@ struct TransactionTabState: ViewState {
   let transactions: [TransactionCategory: [TransactionUIModel]]
   let filterUIModel: [FilterUISection]
   let failedTransactions: [String]
-  let isFromOnPause: Bool
+  let isInitialBoot: Bool
   let hasDefaultFilters: Bool
   let dateHasChanged: Bool
   let sortIsDescending: Bool
@@ -53,7 +53,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         transactions: [:],
         filterUIModel: [],
         failedTransactions: [],
-        isFromOnPause: true,
+        isInitialBoot: true,
         hasDefaultFilters: true,
         dateHasChanged: false,
         sortIsDescending: false
@@ -79,7 +79,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
 
       switch state {
       case .success(let transactions):
-        if viewState.isFromOnPause {
+        if viewState.isInitialBoot {
           await interactor.initializeFilters(filterableList: transactions)
         } else {
           await interactor.updateLists(filterableList: transactions)
@@ -90,7 +90,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         setState {
           $0.copy(
             isLoading: false,
-            isFromOnPause: false
+            isInitialBoot: false
           )
         }
       case .failure:

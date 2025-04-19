@@ -20,7 +20,7 @@ import OrderedCollections
 @testable import logic_test
 @testable import feature_test
 
-final class TestDashboardInteractor: EudiTest {
+final class TestDocumentTabInteractor: EudiTest {
   
   var interactor: DocumentTabInteractor!
   var walletKitController: MockWalletKitController!
@@ -76,6 +76,7 @@ final class TestDashboardInteractor: EudiTest {
   
   func testFetchDocuments_WhenWalletKitControllerReturnsEmpty_ThenReturnError() async {
     // Given
+    stubFetchRevokedDocuments(with: [])
     stubFetchDocuments(with: [])
     stubFetchIssuedDocuments(with: [])
     stubFetchDocumentsWithExclusion(with: [])
@@ -105,7 +106,9 @@ final class TestDashboardInteractor: EudiTest {
         .Other: []
       ]
     }
-
+    stubFetchRevokedDocuments(
+      with: []
+    )
     stubFetchDocuments(
       with: [
         Constants.euPidModel,
@@ -133,7 +136,7 @@ final class TestDashboardInteractor: EudiTest {
   }
 }
 
-private extension TestDashboardInteractor {
+private extension TestDocumentTabInteractor {
   
   func stubFetchDocuments(with documents: [DocClaimsDecodable]) {
     stub(walletKitController) { mock in
@@ -168,6 +171,12 @@ private extension TestDashboardInteractor {
   func stubFetchDocumentCategories(with categories: OrderedDictionary<DocumentCategory, [DocumentTypeIdentifier]>) {
     stub(walletKitController) { mock in
       when(mock.getDocumentCategories()).thenReturn(categories)
+    }
+  }
+  
+  func stubFetchRevokedDocuments(with revokedDocuments: [String]) {
+    stub(walletKitController) { mock in
+      when(mock.fetchRevokedDocuments()).thenReturn(revokedDocuments)
     }
   }
 }

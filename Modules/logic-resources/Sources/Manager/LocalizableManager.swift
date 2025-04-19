@@ -491,6 +491,14 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "incomplete")
     case .justNow:
       bundle.localizedString(forKey: "just_now")
+    case .revoked:
+      bundle.localizedString(forKey: "revoked")
+    case .documentDetailsRevokedDocumentMessage:
+      bundle.localizedString(forKey: "document_details_revoked_document_message")
+    case .revokedModalTitle:
+      bundle.localizedString(forKey: "revoked_modal_title")
+    case .revokedModalDescription:
+      bundle.localizedString(forKey: "revoked_modal_description")
     }
   }
 }

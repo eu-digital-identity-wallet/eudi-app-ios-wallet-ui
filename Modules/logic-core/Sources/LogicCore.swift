@@ -19,3 +19,4 @@
 @_exported import MdocSecurity18013
 @_exported import MdocDataTransfer18013
 @_exported import WalletStorage
+@_exported import StatiumSwift

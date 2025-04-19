@@ -255,6 +255,8 @@ final class TestProximityInteractor: EudiTest {
       )
     }
     
+    stubFetchRevokedDocuments(with: [])
+    
     // When
     let state = await interactor.onRequestReceived()
     
@@ -277,6 +279,8 @@ final class TestProximityInteractor: EudiTest {
     stub(presentationSessionCoordinator) { mock in
       when(mock.requestReceived()).thenThrow(expectedError)
     }
+    
+    stubFetchRevokedDocuments(with: [])
     
     // When
     let state = await interactor.onRequestReceived()
@@ -467,4 +471,10 @@ private extension TestProximityInteractor {
       ]
     ]
   ]
+  
+  func stubFetchRevokedDocuments(with revokedDocuments: [String]) {
+    stub(walletKitController) { mock in
+      when(mock.fetchRevokedDocuments()).thenReturn(revokedDocuments)
+    }
+  }
 }

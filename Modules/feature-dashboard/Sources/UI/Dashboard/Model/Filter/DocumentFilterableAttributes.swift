@@ -24,6 +24,7 @@ struct DocumentFilterableAttributes: FilterableAttributes {
   let issuer: String?
   let name: String?
   let category: String?
+  let isRevoked: Bool
 
   init(
     sortingKey: String,
@@ -32,7 +33,8 @@ struct DocumentFilterableAttributes: FilterableAttributes {
     expiryDate: Date? = nil,
     issuer: String? = nil,
     name: String? = nil,
-    category: String? = nil
+    category: String? = nil,
+    isRevoked: Bool = false
   ) {
     self.sortingKey = sortingKey
     self.searchTags = searchTags
@@ -41,5 +43,6 @@ struct DocumentFilterableAttributes: FilterableAttributes {
     self.issuer = issuer
     self.name = name
     self.category = category
+    self.isRevoked = isRevoked
   }
 }
