@@ -429,8 +429,16 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "search_documents")
     case .or:
       bundle.localizedString(forKey: "or")
+    case .revoked:
+      bundle.localizedString(forKey: "revoked")
+    case .documentDetailsRevokedDocumentMessage:
+      bundle.localizedString(forKey: "document_details_revoked_document_message")
     case .errorFetchTransactionLog:
       bundle.localizedString(forKey: "fetch_error_transaction_log")
+    case .revokedModalTitle:
+      bundle.localizedString(forKey: "revoked_modal_title")
+    case .revokedModalDescription:
+      bundle.localizedString(forKey: "revoked_modal_description")
     }
   }
 }

@@ -65,6 +65,11 @@ protocol WalletKitConfig: Sendable {
    * Logger For Transactions
    */
   var transactionLogger: TransactionLogger { get }
+
+  /**
+   * The interval (in seconds) at which revocations are checked.
+   */
+  var revocationInterval: TimeInterval { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {
@@ -179,5 +184,9 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
   var transactionLogger: any TransactionLogger {
     return self.transactionLoggerImpl
+  }
+
+  var revocationInterval: TimeInterval {
+    300
   }
 }

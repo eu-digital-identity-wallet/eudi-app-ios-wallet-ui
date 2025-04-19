@@ -41,7 +41,8 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
       return .failure(WalletCoreError.unableFetchDocument)
     }
     let isBookmarked = await walletController.isDocumentBookmarked(with: documentId)
-    return .success(documentDetails, isBookmarked)
+    let isRevoked = await walletController.isDocumentRevoked(with: documentId)
+    return .success(documentDetails, isBookmarked, isRevoked)
   }
 
   public func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
@@ -91,7 +92,7 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 }
 
 public enum DocumentDetailsPartialState: Sendable {
-  case success(DocumentDetailsUIModel, Bool)
+  case success(DocumentDetailsUIModel, Bool, Bool)
   case failure(Error)
 }
 

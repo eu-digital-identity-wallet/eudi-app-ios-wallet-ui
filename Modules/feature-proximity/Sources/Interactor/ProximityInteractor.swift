@@ -110,8 +110,11 @@ final class ProximityInteractorImpl: ProximityInteractor {
   public func onRequestReceived() async -> ProximityRequestPartialState {
     do {
       let response = try await sessionCoordinatorHolder.getActiveProximityCoordinator().requestReceived()
+      let revokedDocuments = try await walletKitController.fetchRevokedDocuments()
+      let documents = response.items.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
+      guard !documents.isEmpty else { return .failure(WalletCoreError.unableFetchDocuments) }
       return .success(
-        response.items.toUiModels(
+        documents.toUiModels(
           with: self.walletKitController
         ),
         relyingParty: response.relyingParty,

@@ -287,16 +287,22 @@ public extension DocumentUIModel.Value {
     case issued
     case pending
     case failed
+    case revoked
   }
 }
 
 extension Array where Element == DocClaimsDecodable {
   func transformToDocumentUi(
     with failedDocuments: [String] = [],
-    categories: DocumentCategories
+    categories: DocumentCategories,
+    isRevoked: Bool
   ) -> [DocumentUIModel] {
     self.map { item in
-      item.transformToDocumentUi(with: failedDocuments, categories: categories)
+      item.transformToDocumentUi(
+        with: failedDocuments,
+        categories: categories,
+        isRevoked: isRevoked
+      )
     }
   }
 }
@@ -304,11 +310,16 @@ extension Array where Element == DocClaimsDecodable {
 extension DocClaimsDecodable {
   func transformToDocumentUi(
     with failedDocuments: [String] = [],
-    categories: DocumentCategories
+    categories: DocumentCategories,
+    isRevoked: Bool
   ) -> DocumentUIModel {
-    let state: DocumentUIModel.Value.State = failedDocuments.contains(
-      where: { $0 == self.id }
-    ) ? .failed : (self is DeferrredDocument) ? .pending : .issued
+    let state: DocumentUIModel.Value.State = failedDocuments.contains(where: { $0 == self.id })
+    ? .failed
+    : (self is DeferrredDocument)
+    ? .pending
+    : isRevoked
+    ? .revoked
+    : .issued
 
     let expiresAt = self.getExpiryDate(
       parser: {
@@ -362,6 +373,8 @@ extension DocClaimsDecodable {
         return .pending
       case .failed:
         return .issuanceFailed
+      case .revoked:
+        return .revoked
       }
     }
   }
@@ -386,6 +399,8 @@ extension DocClaimsDecodable {
         return Theme.shared.color.warning
       case .failed:
         return Theme.shared.color.error
+      case .revoked:
+        return Theme.shared.color.error
       }
     }
   }
@@ -399,6 +414,8 @@ extension DocClaimsDecodable {
     case .pending:
       return Theme.shared.image.clockIndicator
     case .failed:
+      return Theme.shared.image.errorIndicator
+    case .revoked:
       return Theme.shared.image.errorIndicator
     }
   }
