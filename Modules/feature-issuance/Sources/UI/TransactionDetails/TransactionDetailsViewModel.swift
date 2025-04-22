@@ -29,6 +29,7 @@ struct TransactionDetailsViewState: ViewState {
   let transactionDetailsUi: TransactionDetailsUIModel?
   var isLoading: Bool
   let error: ContentErrorView.Config?
+  let config: TransactionDetailsUiConfig
 }
 
 final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, TransactionDetailsViewState> {
@@ -37,8 +38,12 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
 
   init(
     router: Router,
-    interactor: TransactionDetailsInteractor
+    interactor: TransactionDetailsInteractor,
+    config: any UIConfigType
   ) {
+    guard let config = config as? TransactionDetailsUiConfig else {
+      fatalError("TransactionDetailsViewModel:: Invalid configuraton")
+    }
     self.interactor = interactor
     super.init(
       router: router,
@@ -57,16 +62,20 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
         ),
         transactionDetailsUi: nil,
         isLoading: false,
-        error: nil
+        error: nil,
+        config: config
       )
     )
   }
 
   func getTransactionDetails() async {
+
+    let transactionId = viewState.config.transactionId
+
     self.setState { $0.copy(isLoading: true).copy(error: nil) }
 
     let state = await Task.detached { () -> TransactionDetailsInteractorPartialState in
-      return await self.interactor.getTransactionDetails(transactionId: "transactionId")
+      return await self.interactor.getTransactionDetails(transactionId: transactionId)
     }.value
 
     switch state {

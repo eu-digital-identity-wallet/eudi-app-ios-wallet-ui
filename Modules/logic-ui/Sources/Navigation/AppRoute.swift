@@ -159,7 +159,7 @@ public enum FeatureIssuanceRouteModule: AppRouteModule {
   case issuanceSuccess(config: any UIConfigType, requestItems: [any Routable])
   case credentialOfferRequest(config: any UIConfigType)
   case issuanceCode(config: any UIConfigType)
-  case transactionDetails
+  case transactionDetails(config: any UIConfigType)
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -173,8 +173,8 @@ public enum FeatureIssuanceRouteModule: AppRouteModule {
       (key: "IssuanceCode", arguments: ["config": config.log])
     case .credentialOfferRequest(let config):
       (key: "CredentialOfferRequest", arguments: ["config": config.log])
-    case .transactionDetails:
-      (key: "CredentialOfferRequest", arguments: [:])
+    case .transactionDetails(let config):
+      (key: "CredentialOfferRequest", arguments: ["config": config.log])
     }
   }
 }

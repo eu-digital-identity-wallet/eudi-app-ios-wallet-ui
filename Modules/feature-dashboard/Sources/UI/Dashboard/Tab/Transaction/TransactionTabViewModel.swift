@@ -17,6 +17,7 @@ import Foundation
 import logic_ui
 import logic_core
 import logic_resources
+import feature_common
 
 @Copyable
 struct TransactionTabState: ViewState {
@@ -71,29 +72,38 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
 
   func fetch() {
     Task {
-      let failedTrasnactions = viewState.failedTransactions
+      let failedTransactions = viewState.failedTransactions
 
-      let state = try await Task.detached { () -> TransactionsPartialState in
-        return try await self.interactor.fetchTransactions(failedTransactions: failedTrasnactions)
-      }.value
+      do {
+        let state = try await Task.detached {
+          try await self.interactor.fetchTransactions(failedTransactions: failedTransactions)
+        }.value
 
-      switch state {
-      case .success(let transactions):
-        if viewState.isInitialBoot {
-          await interactor.initializeFilters(filterableList: transactions)
-        } else {
-          await interactor.updateLists(filterableList: transactions)
+        switch state {
+        case .success(let transactions):
+          if viewState.isInitialBoot {
+            await interactor.initializeFilters(filterableList: transactions)
+          } else {
+            await interactor.updateLists(filterableList: transactions)
+          }
+
+          await interactor.applyFilters()
+
+          setState {
+            $0.copy(
+              isLoading: false,
+              isInitialBoot: false
+            )
+          }
+        case .failure:
+          setState {
+            $0.copy(
+              isLoading: false,
+              transactions: [:]
+            )
+          }
         }
-
-        await interactor.applyFilters()
-
-        setState {
-          $0.copy(
-            isLoading: false,
-            isInitialBoot: false
-          )
-        }
-      case .failure:
+      } catch {
         setState {
           $0.copy(
             isLoading: false,
@@ -177,10 +187,14 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
       }.store(in: &cancellables)
   }
 
-  func onTransactionDetails() {
+  func onTransactionDetails(transactionId: String) {
     router.push(
       with: .featureIssuanceModule(
-        .transactionDetails
+        .transactionDetails(
+          config: TransactionDetailsUiConfig(
+            flow: .transaction(transactionId)
+          )
+        )
       )
     )
   }

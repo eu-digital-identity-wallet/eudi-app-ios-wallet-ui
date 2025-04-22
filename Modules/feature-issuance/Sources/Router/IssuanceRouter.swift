@@ -78,13 +78,14 @@ public final class IssuanceRouter {
           config: config
         )
       ).eraseToAnyView()
-    case .transactionDetails:
+    case .transactionDetails(config: let config):
       TransactionDetailsView(
         with: .init(
           router: host,
           interactor: DIGraph.resolver.force(
             TransactionDetailsInteractor.self
-          )
+          ),
+          config: config
         )
       ).eraseToAnyView()
     }

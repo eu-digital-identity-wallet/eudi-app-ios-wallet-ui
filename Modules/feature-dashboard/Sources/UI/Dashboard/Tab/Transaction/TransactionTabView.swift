@@ -30,7 +30,7 @@ struct TransactionTabView<Router: RouterHost>: View {
       state: viewModel.viewState,
       searchQuery: $viewModel.searchQuery,
       onAction: {
-        viewModel.onTransactionDetails()
+        viewModel.onTransactionDetails(transactionId: $0)
       }
     )
     .sheet(isPresented: $viewModel.isFilterModalShowing) {
@@ -61,7 +61,7 @@ struct TransactionTabView<Router: RouterHost>: View {
 private func content(
   state: TransactionTabState,
   searchQuery: Binding<String>,
-  onAction: @escaping () -> Void
+  onAction: @escaping (String) -> Void
 ) -> some View {
   VStack {
     if state.transactions.isEmpty && !searchQuery.wrappedValue.isEmpty {
@@ -79,8 +79,8 @@ private func content(
                   listItems: state.transactions[category]?.map({ transaction in
                     transaction.listItem
                   }) ?? []
-                ) { _ in
-                  onAction()
+                ) { item in
+                  onAction(item.id)
                 }
               }
             }
@@ -123,7 +123,7 @@ private func content(
     transactions: [:],
     filterUIModel: [],
     failedTransactions: [],
-    isFromOnPause: false,
+    isInitialBoot: false,
     hasDefaultFilters: false,
     dateHasChanged: false,
     sortIsDescending: true
@@ -131,6 +131,6 @@ private func content(
   content(
     state: state,
     searchQuery: .constant(""),
-    onAction: {}
+    onAction: { _ in }
   )
 }

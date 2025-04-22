@@ -76,7 +76,13 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
   }
 
   public func fetchFilteredTransactions(failedTransactions: [String]) async throws -> FilterableList? {
-    let transactions = try await self.walletKitController.fetchTransactionLogs()
+    let transactions: [TransactionLogData]
+
+    do {
+      transactions = try await self.walletKitController.fetchTransactionLogs()
+    } catch {
+      return nil
+    }
 
     guard !transactions.isEmpty else {
       return nil
