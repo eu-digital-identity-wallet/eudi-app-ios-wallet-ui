@@ -94,7 +94,7 @@ final class PresentationInteractorImpl: PresentationInteractor {
   public func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
     do {
       let response = try await sessionCoordinatorHolder.getActiveRemoteCoordinator().requestReceived()
-      let revokedDocuments = try await walletKitController.fetchRevokedDocuments()
+      let revokedDocuments = (try? await walletKitController.fetchRevokedDocuments()) ?? []
       let documents = response.items.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
       guard !documents.isEmpty else { return .failure(WalletCoreError.unableFetchDocuments) }
       return .success(
