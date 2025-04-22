@@ -24,7 +24,7 @@ public enum TransactionsPartialState: Sendable {
 }
 
 public enum TransactionFiltersPartialState: Sendable {
-  case filterApplyResult([TransactionCategory: [TransactionUIModel]], [FilterUISection], Bool)
+  case filterApplyResult([TransactionCategory: [TransactionTabUIModel]], [FilterUISection], Bool)
   case filterUpdateResult([FilterUISection])
   case cancelled
 }
@@ -348,7 +348,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
             switch filterResult {
             case .filterApplyResult(let filteredList, let updatedFilters, let hasDefaultFilters):
               let transactionsUI = filteredList.items.compactMap { filterableItem in
-                return filterableItem.payload as? TransactionUIModel
+                return filterableItem.payload as? TransactionTabUIModel
               }
               let transactions = Dictionary(grouping: transactionsUI, by: { $0.transactionCategory })
 

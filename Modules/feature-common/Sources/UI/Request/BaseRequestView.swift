@@ -35,7 +35,6 @@ public struct BaseRequestView<Router: RouterHost>: View {
     ) {
       content(
         viewState: viewModel.viewState,
-        getScreenRect: getScreenRect(),
         onShare: viewModel.onShare,
         onSelectionChanged: { id in
           Task {
@@ -75,7 +74,24 @@ public struct BaseRequestView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: RequestViewState,
-  getScreenRect: CGRect,
+  onShare: @escaping () -> Void,
+  onSelectionChanged: @escaping @Sendable (String) -> Void
+) -> some View {
+  if viewState.items.isEmpty {
+    noDocumentsFound(viewState: viewState)
+  } else {
+    scrollableContent(
+      viewState: viewState,
+      onShare: onShare,
+      onSelectionChanged: onSelectionChanged
+    )
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func scrollableContent(
+  viewState: RequestViewState,
   onShare: @escaping () -> Void,
   onSelectionChanged: @escaping @Sendable (String) -> Void
 ) -> some View {
@@ -84,10 +100,7 @@ private func content(
       ContentHeader(
         config: viewState.contentHeaderConfig
       )
-
-      if viewState.items.isEmpty {
-        noDocumentsFound(getScreenRect: getScreenRect)
-      } else {
+      ZStack {
         VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
           ForEach(viewState.items, id: \.id) { section in
@@ -112,35 +125,28 @@ private func content(
         .padding(.top, Theme.shared.dimension.padding)
         .shimmer(isLoading: viewState.isLoading)
       }
+      .padding(Theme.shared.dimension.padding)
     }
-    .padding(Theme.shared.dimension.padding)
   }
 }
 
 @MainActor
 @ViewBuilder
-private func noDocumentsFound(getScreenRect: CGRect) -> some View {
-  VStack(alignment: .center) {
-
-    Spacer()
-
-    VStack(alignment: .center, spacing: SPACING_MEDIUM) {
-
-      let imageSize = getScreenRect.width / 4
-
-      Theme.shared.image.exclamationmarkCircle
-        .renderingMode(.template)
-        .resizable()
-        .foregroundStyle(Theme.shared.color.secondaryFixed)
-        .frame(width: imageSize, height: imageSize)
-
-      Text(.requestDataNoDocument)
-        .typography(Theme.shared.font.bodyLarge)
-        .foregroundColor(Theme.shared.color.secondaryFixed)
-        .multilineTextAlignment(.center)
+private func noDocumentsFound(
+  viewState: RequestViewState
+) -> some View {
+  VStack(spacing: .zero) {
+    ContentHeader(
+      config: viewState.contentHeaderConfig
+    )
+    VStack(spacing: .zero) {
+      Spacer()
+      ContentEmptyView(
+        title: .requestDataNoDocument
+      )
+      Spacer()
     }
-
-    Spacer()
+    .padding(.horizontal, Theme.shared.dimension.padding)
   }
 }
 
@@ -167,7 +173,6 @@ private func noDocumentsFound(getScreenRect: CGRect) -> some View {
   ContentScreenView {
     content(
       viewState: viewState,
-      getScreenRect: UIScreen.main.bounds,
       onShare: {},
       onSelectionChanged: { _ in }
     )

@@ -29,21 +29,6 @@ import Foundation
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Config/Issuance/IssuanceDetailUiConfig.swift'
-
-import Cuckoo
-import Foundation
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_startup
-
-
-
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Config/Issuance/IssuanceFlowUiConfig.swift'
 
 import Cuckoo
@@ -127,6 +112,20 @@ import Cuckoo
 import logic_resources
 import Foundation
 import SwiftUI
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_startup
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Extension/DocClaimsDecodable+Extensions.swift'
+
+import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -850,6 +849,23 @@ import logic_resources
 import Cuckoo
 import SwiftUI
 import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_startup
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Document/Model/DocumentUIModel.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+import Copyable
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

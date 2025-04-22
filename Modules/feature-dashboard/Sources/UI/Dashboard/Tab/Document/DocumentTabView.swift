@@ -16,7 +16,6 @@
 import SwiftUI
 import logic_resources
 import logic_ui
-import logic_core
 
 struct DocumentTabView<Router: RouterHost>: View {
 
@@ -103,7 +102,7 @@ struct DocumentTabView<Router: RouterHost>: View {
 private func content(
   state: DocumentTabState,
   searchQuery: Binding<String>,
-  onAction: @escaping (DocumentUIModel) -> Void
+  onAction: @escaping (DocumentTabUIModel) -> Void
 ) -> some View {
   VStack {
     if state.documents.isEmpty && !searchQuery.wrappedValue.isEmpty {

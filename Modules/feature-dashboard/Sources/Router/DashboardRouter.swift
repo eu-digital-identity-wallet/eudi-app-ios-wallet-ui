@@ -70,6 +70,26 @@ public final class DashboardRouter {
           router: host
         )
       ).eraseToAnyView()
+    case .documentDetails(id: let id):
+      DocumentDetailsView(
+        with: .init(
+          router: host,
+          interactor: DIGraph.resolver.force(
+            DocumentDetailsInteractor.self
+          ),
+          documentId: id
+        )
+      ).eraseToAnyView()
+    case .transactionDetails(id: let id):
+      TransactionDetailsView(
+        with: .init(
+          router: host,
+          interactor: DIGraph.resolver.force(
+            TransactionDetailsInteractor.self
+          ),
+          transactionId: id
+        )
+      ).eraseToAnyView()
     }
   }
 }

@@ -21,11 +21,11 @@ import feature_common
 @Copyable
 struct DocumentTabState: ViewState {
   let isLoading: Bool
-  let documents: [DocumentCategory: [DocumentUIModel]]
+  let documents: [DocumentCategory: [DocumentTabUIModel]]
   let filterUIModel: [FilterUISection]
   let phase: ScenePhase
-  let pendingDeletionDocument: DocumentUIModel?
-  let succededIssuedDocuments: [DocumentUIModel]
+  let pendingDeletionDocument: DocumentTabUIModel?
+  let succededIssuedDocuments: [DocumentTabUIModel]
   let failedDocuments: [String]
   let isPaused: Bool
   let hasDefaultFilters: Bool
@@ -154,17 +154,13 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
     isSuccededDocumentsModalShowing = false
 
     router.push(
-      with: .featureIssuanceModule(
-        .issuanceDocumentDetails(
-          config: IssuanceDetailUiConfig(
-            flow: .extraDocument(documentId)
-          )
-        )
+      with: .featureDashboardModule(
+        .documentDetails(id: documentId)
       )
     )
   }
 
-  func onDeleteDeferredDocument(with document: DocumentUIModel) {
+  func onDeleteDeferredDocument(with document: DocumentTabUIModel) {
     setState { $0.copy(pendingDeletionDocument: document) }
     toggleDeleteDeferredModal()
   }

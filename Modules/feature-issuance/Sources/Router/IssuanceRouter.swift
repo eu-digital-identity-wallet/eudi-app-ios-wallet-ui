@@ -34,16 +34,6 @@ public final class IssuanceRouter {
           config: config
         )
       ).eraseToAnyView()
-    case .issuanceDocumentDetails(config: let config):
-      DocumentDetailsView(
-        with: .init(
-          router: host,
-          interactor: DIGraph.resolver.force(
-            DocumentDetailsInteractor.self
-          ),
-          config: config
-        )
-      ).eraseToAnyView()
     case .issuanceSuccess(
       let config,
       let uiModels
@@ -74,16 +64,6 @@ public final class IssuanceRouter {
           router: host,
           interactor: DIGraph.resolver.force(
             DocumentOfferInteractor.self
-          ),
-          config: config
-        )
-      ).eraseToAnyView()
-    case .transactionDetails(config: let config):
-      TransactionDetailsView(
-        with: .init(
-          router: host,
-          interactor: DIGraph.resolver.force(
-            TransactionDetailsInteractor.self
           ),
           config: config
         )

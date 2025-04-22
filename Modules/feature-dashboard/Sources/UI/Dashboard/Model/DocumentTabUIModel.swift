@@ -20,7 +20,7 @@ import logic_resources
 import logic_business
 import logic_ui
 
-public struct DocumentUIModel: Identifiable, Equatable, FilterableItemPayload {
+public struct DocumentTabUIModel: Identifiable, Equatable, FilterableItemPayload {
 
   @EquatableNoop
   public var id: String
@@ -38,7 +38,7 @@ public struct DocumentUIModel: Identifiable, Equatable, FilterableItemPayload {
   }
 }
 
-public extension DocumentUIModel {
+public extension DocumentTabUIModel {
 
   struct Value: Equatable, Sendable {
 
@@ -63,7 +63,7 @@ public extension DocumentUIModel {
     public let documentCategory: DocumentCategory
   }
 
-  static func mocks() -> [DocumentCategory: [DocumentUIModel]] {
+  static func mocks() -> [DocumentCategory: [DocumentTabUIModel]] {
     [
       DocumentCategory.Other:
         [
@@ -282,7 +282,7 @@ public extension DocumentUIModel {
   }
 }
 
-public extension DocumentUIModel.Value {
+public extension DocumentTabUIModel.Value {
   enum State: Equatable, Sendable {
     case issued
     case pending
@@ -296,7 +296,7 @@ extension Array where Element == DocClaimsDecodable {
     with failedDocuments: [String] = [],
     categories: DocumentCategories,
     isRevoked: Bool
-  ) -> [DocumentUIModel] {
+  ) -> [DocumentTabUIModel] {
     self.map { item in
       item.transformToDocumentUi(
         with: failedDocuments,
@@ -312,8 +312,8 @@ extension DocClaimsDecodable {
     with failedDocuments: [String] = [],
     categories: DocumentCategories,
     isRevoked: Bool
-  ) -> DocumentUIModel {
-    let state: DocumentUIModel.Value.State = failedDocuments.contains(where: { $0 == self.id })
+  ) -> DocumentTabUIModel {
+    let state: DocumentTabUIModel.Value.State = failedDocuments.contains(where: { $0 == self.id })
     ? .failed
     : (self is DeferrredDocument)
     ? .pending
@@ -360,7 +360,7 @@ extension DocClaimsDecodable {
   }
 
   func supportingText(
-    _ state: DocumentUIModel.Value.State,
+    _ state: DocumentTabUIModel.Value.State,
     _ expiresAt: String?
   ) -> LocalizableStringKey {
     if hasExpired {
@@ -387,7 +387,7 @@ extension DocClaimsDecodable {
   }
 
   func supportingColor(
-    _ state: DocumentUIModel.Value.State
+    _ state: DocumentTabUIModel.Value.State
   ) -> Color {
     if hasExpired {
       return Theme.shared.color.error
@@ -406,7 +406,7 @@ extension DocClaimsDecodable {
   }
 
   func indicatorImage(
-    _ state: DocumentUIModel.Value.State
+    _ state: DocumentTabUIModel.Value.State
   ) -> Image {
     switch state {
     case .issued:

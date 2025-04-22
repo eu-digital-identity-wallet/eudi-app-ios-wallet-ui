@@ -34,7 +34,7 @@ struct ConfigUiLogicImpl: ConfigUiLogic {
 
   public var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] = [
     AppRoute.featureDashboardModule(.dashboard).info.key: .init(Theme.shared.color.background),
-    AppRoute.featureIssuanceModule(.issuanceDocumentDetails(config: NoConfig())).info.key: .init(Theme.shared.color.background)
+    AppRoute.featureDashboardModule(.documentDetails(id: "")).info.key: .init(Theme.shared.color.background)
   ]
 
   public var dashboardRoute: AppRoute {

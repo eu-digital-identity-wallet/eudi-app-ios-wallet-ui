@@ -31,13 +31,13 @@ public enum DeleteDeferredPartialState: Sendable {
 }
 
 public enum DocumentFiltersPartialState: Sendable {
-  case filterApplyResult([DocumentCategory: [DocumentUIModel]], [FilterUISection], Bool)
+  case filterApplyResult([DocumentCategory: [DocumentTabUIModel]], [FilterUISection], Bool)
   case filterUpdateResult([FilterUISection])
   case cancelled
 }
 
 public enum DeferredPartialState: Sendable {
-  case completion(issued: [DocumentUIModel], failed: [String])
+  case completion(issued: [DocumentTabUIModel], failed: [String])
   case cancelled
 }
 
@@ -94,7 +94,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
             switch filterResult {
             case .filterApplyResult(let filteredList, let updatedFilters, let hasDefaultFilters):
               let documentsUI = filteredList.items.compactMap { filterableItem in
-                return filterableItem.payload as? DocumentUIModel
+                return filterableItem.payload as? DocumentTabUIModel
               }
               let documents = Dictionary(grouping: documentsUI, by: { $0.value.documentCategory })
               let filterSections = filterUISection(filters: updatedFilters)
@@ -362,7 +362,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
 
   func requestDeferredIssuance() async -> DeferredPartialState {
 
-    var issued: [DocumentUIModel] = []
+    var issued: [DocumentTabUIModel] = []
     var failed: [String] = []
 
     let categories = self.walletKitController.getDocumentCategories()

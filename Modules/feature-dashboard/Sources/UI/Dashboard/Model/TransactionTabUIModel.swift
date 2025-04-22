@@ -20,7 +20,7 @@ import logic_resources
 import logic_business
 import logic_ui
 
-public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload {
+public struct TransactionTabUIModel: Identifiable, Sendable, FilterableItemPayload {
   public let id: String
   public let name: String
   public let status: TransactionStatus
@@ -60,7 +60,7 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
     )
   }
 
-  static func mocks() -> [TransactionCategory: [TransactionUIModel]] {
+  static func mocks() -> [TransactionCategory: [TransactionTabUIModel]] {
 
     let now = Date()
     let twentyMinutesAgo = Calendar.gregorian.date(byAdding: .minute, value: -20, to: now) ?? now
@@ -71,7 +71,7 @@ public struct TransactionUIModel: Identifiable, Sendable, FilterableItemPayload 
       Calendar.gregorian.date(byAdding: .hour, value: -4, to: $0)
     } ?? now
 
-    let transactions: [TransactionUIModel] = [
+    let transactions: [TransactionTabUIModel] = [
       .init(
         name: "Document Signing",
         status: .completed,
@@ -241,7 +241,7 @@ public enum TransactionType: Sendable {
 }
 
 extension TransactionLogData {
-  func transformToTransactionUI() -> TransactionUIModel {
+  func transformToTransactionUI() -> TransactionTabUIModel {
     switch self {
     case .presentation(let logData):
       return .init(

@@ -21,22 +21,14 @@ import logic_core
 
 @Copyable
 struct DocumentDetailsViewState: ViewState {
-  let document: DocumentDetailsUIModel
+  let document: DocumentUIModel
   let isLoading: Bool
   let error: ContentErrorView.Config?
-  let config: IssuanceDetailUiConfig
+  let documentId: String
   let hasDeleteAction: Bool
   let documentFieldsCount: Int
   let isBookmarked: Bool
   let isRevoked: Bool
-
-  var isCancellable: Bool {
-    return config.isExtraDocument
-  }
-
-  var hasContinueButton: Bool {
-    return !config.isExtraDocument
-  }
 }
 
 final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, DocumentDetailsViewState> {
@@ -50,19 +42,16 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   init(
     router: Router,
     interactor: DocumentDetailsInteractor,
-    config: any UIConfigType
+    documentId: String
   ) {
-    guard let config = config as? IssuanceDetailUiConfig else {
-      fatalError("DocumentDetailsViewModel:: Invalid configuraton")
-    }
     self.interactor = interactor
     super.init(
       router: router,
       initialState: .init(
-        document: DocumentDetailsUIModel.mock(),
+        document: DocumentUIModel.mock(),
         isLoading: true,
         error: nil,
-        config: config,
+        documentId: documentId,
         hasDeleteAction: false,
         documentFieldsCount: 0,
         isBookmarked: false,
@@ -73,7 +62,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
   func fetchDocumentDetails() async {
 
-    let documentId = viewState.config.documentId
+    let documentId = viewState.documentId
     let state = await Task.detached { () -> DocumentDetailsPartialState in
       return await self.interactor.fetchStoredDocument(
         documentId: documentId
@@ -83,29 +72,16 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     switch state {
 
     case .success(let document, let isBookmarked, let isRevoked):
-      switch viewState.config.flow {
-      case .extraDocument:
-        self.setState {
-          $0.copy(
-            document: document,
-            isLoading: false,
-            hasDeleteAction: true,
-            documentFieldsCount: document.documentFields.count,
-            isBookmarked: isBookmarked,
-            isRevoked: isRevoked
-          ).copy(error: nil)
-        }
-      case .noDocument:
-        self.setState {
-          $0.copy(
-            document: document,
-            isLoading: false,
-            hasDeleteAction: false,
-            documentFieldsCount: document.documentFields.count
-          ).copy(error: nil)
-        }
+      self.setState {
+        $0.copy(
+          document: document,
+          isLoading: false,
+          hasDeleteAction: true,
+          documentFieldsCount: document.documentFields.count,
+          isBookmarked: isBookmarked,
+          isRevoked: isRevoked
+        ).copy(error: nil)
       }
-
     case .failure(let error):
       self.setState {
         $0.copy(

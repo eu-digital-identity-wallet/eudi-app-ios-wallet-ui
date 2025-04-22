@@ -60,5 +60,17 @@ public final class FeatureDashboardAssembly: Assembly {
         reachabilityController: r.force(ReachabilityController.self)
       )
     }
+
+    container.register(DocumentDetailsInteractor.self) { r in
+      DocumentDetailsInteractorImpl(
+        walletController: r.force(WalletKitController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.transient)
+
+    container.register(TransactionDetailsInteractor.self) { r in
+      TransactionDetailsInteractorImpl(walletController: r.force(WalletKitController.self))
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

@@ -22,7 +22,7 @@ import feature_common
 @Copyable
 struct TransactionTabState: ViewState {
   let isLoading: Bool
-  let transactions: [TransactionCategory: [TransactionUIModel]]
+  let transactions: [TransactionCategory: [TransactionTabUIModel]]
   let filterUIModel: [FilterUISection]
   let failedTransactions: [String]
   let isInitialBoot: Bool
@@ -189,12 +189,8 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
 
   func onTransactionDetails(transactionId: String) {
     router.push(
-      with: .featureIssuanceModule(
-        .transactionDetails(
-          config: TransactionDetailsUiConfig(
-            flow: .transaction(transactionId)
-          )
-        )
+      with: .featureDashboardModule(
+        .transactionDetails(id: transactionId)
       )
     )
   }

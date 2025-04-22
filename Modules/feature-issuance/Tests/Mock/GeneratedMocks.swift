@@ -29,21 +29,6 @@ import Foundation
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Config/Issuance/IssuanceDetailUiConfig.swift'
-
-import Cuckoo
-import Foundation
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Config/Issuance/IssuanceFlowUiConfig.swift'
 
 import Cuckoo
@@ -127,6 +112,20 @@ import Cuckoo
 import logic_resources
 import Foundation
 import SwiftUI
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Extension/DocClaimsDecodable+Extensions.swift'
+
+import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -861,6 +860,23 @@ import logic_resources
 
 
 
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Document/Model/DocumentUIModel.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+import Copyable
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Loading/BaseLoadingView.swift'
 
 import Cuckoo
@@ -1361,202 +1377,6 @@ public class AddDocumentInteractorStub:AddDocumentInteractor, @unchecked Sendabl
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/Interactor/DocumentDetailsInteractor.swift'
-
-import Cuckoo
-import Foundation
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-public class MockDocumentDetailsInteractor: DocumentDetailsInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = DocumentDetailsInteractor
-    public typealias Stubbing = __StubbingProxy_DocumentDetailsInteractor
-    public typealias Verification = __VerificationProxy_DocumentDetailsInteractor
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any DocumentDetailsInteractor)?
-
-    public func enableDefaultImplementation(_ stub: any DocumentDetailsInteractor) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-    
-    public func fetchStoredDocument(documentId p0: String) async -> DocumentDetailsPartialState {
-        return await cuckoo_manager.call(
-            "fetchStoredDocument(documentId p0: String) async -> DocumentDetailsPartialState",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.fetchStoredDocument(documentId: p0)
-        )
-    }
-    
-    public func deleteDocument(with p0: String, and p1: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
-        return await cuckoo_manager.call(
-            "deleteDocument(with p0: String, and p1: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState",
-            parameters: (p0, p1),
-            escapingParameters: (p0, p1),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.deleteDocument(with: p0, and: p1)
-        )
-    }
-    
-    public func save(_ p0: String) async throws {
-        return try await cuckoo_manager.callThrows(
-            "save(_ p0: String) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.save(p0)
-        )
-    }
-    
-    public func delete(_ p0: String) async throws {
-        return try await cuckoo_manager.callThrows(
-            "delete(_ p0: String) async throws",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.delete(p0)
-        )
-    }
-
-    public struct __StubbingProxy_DocumentDetailsInteractor: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        func fetchStoredDocument<M1: Cuckoo.Matchable>(documentId p0: M1) -> Cuckoo.ProtocolStubFunction<(String), DocumentDetailsPartialState> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentDetailsInteractor.self,
-                method: "fetchStoredDocument(documentId p0: String) async -> DocumentDetailsPartialState",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func deleteDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with p0: M1, and p1: M2) -> Cuckoo.ProtocolStubFunction<(String, DocumentTypeIdentifier), DocumentDetailsDeletionPartialState> where M1.MatchedType == String, M2.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(String, DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentDetailsInteractor.self,
-                method: "deleteDocument(with p0: String, and p1: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func save<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String)> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentDetailsInteractor.self,
-                method: "save(_ p0: String) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String)> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentDetailsInteractor.self,
-                method: "delete(_ p0: String) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-    }
-
-    public struct __VerificationProxy_DocumentDetailsInteractor: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        
-        @discardableResult
-        func fetchStoredDocument<M1: Cuckoo.Matchable>(documentId p0: M1) -> Cuckoo.__DoNotUse<(String), DocumentDetailsPartialState> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "fetchStoredDocument(documentId p0: String) async -> DocumentDetailsPartialState",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func deleteDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(with p0: M1, and p1: M2) -> Cuckoo.__DoNotUse<(String, DocumentTypeIdentifier), DocumentDetailsDeletionPartialState> where M1.MatchedType == String, M2.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(String, DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
-            return cuckoo_manager.verify(
-                "deleteDocument(with p0: String, and p1: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func save<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "save(_ p0: String) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func delete<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "delete(_ p0: String) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-    }
-}
-
-public class DocumentDetailsInteractorStub:DocumentDetailsInteractor, @unchecked Sendable {
-
-
-    
-    public func fetchStoredDocument(documentId p0: String) async -> DocumentDetailsPartialState {
-        return DefaultValueRegistry.defaultValue(for: (DocumentDetailsPartialState).self)
-    }
-    
-    public func deleteDocument(with p0: String, and p1: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
-        return DefaultValueRegistry.defaultValue(for: (DocumentDetailsDeletionPartialState).self)
-    }
-    
-    public func save(_ p0: String) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func delete(_ p0: String) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-}
-
-
-
-
 // MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/Interactor/DocumentOfferInteractor.swift'
 
 import Cuckoo
@@ -1821,100 +1641,6 @@ public class DocumentOfferInteractorStub:DocumentOfferInteractor, @unchecked Sen
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/Interactor/TransactionDetailsInteractor.swift'
-
-import Cuckoo
-import Foundation
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-public class MockTransactionDetailsInteractor: TransactionDetailsInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = TransactionDetailsInteractor
-    public typealias Stubbing = __StubbingProxy_TransactionDetailsInteractor
-    public typealias Verification = __VerificationProxy_TransactionDetailsInteractor
-
-    // Original typealiases
-
-    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
-
-    private var __defaultImplStub: (any TransactionDetailsInteractor)?
-
-    public func enableDefaultImplementation(_ stub: any TransactionDetailsInteractor) {
-        __defaultImplStub = stub
-        cuckoo_manager.enableDefaultStubImplementation()
-    }
-
-    
-    public func getTransactionDetails(transactionId p0: String) async -> TransactionDetailsInteractorPartialState {
-        return await cuckoo_manager.call(
-            "getTransactionDetails(transactionId p0: String) async -> TransactionDetailsInteractorPartialState",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.getTransactionDetails(transactionId: p0)
-        )
-    }
-
-    public struct __StubbingProxy_TransactionDetailsInteractor: Cuckoo.StubbingProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-    
-        public init(manager: Cuckoo.MockManager) {
-            self.cuckoo_manager = manager
-        }
-        
-        func getTransactionDetails<M1: Cuckoo.Matchable>(transactionId p0: M1) -> Cuckoo.ProtocolStubFunction<(String), TransactionDetailsInteractorPartialState> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockTransactionDetailsInteractor.self,
-                method: "getTransactionDetails(transactionId p0: String) async -> TransactionDetailsInteractorPartialState",
-                parameterMatchers: matchers
-            ))
-        }
-    }
-
-    public struct __VerificationProxy_TransactionDetailsInteractor: Cuckoo.VerificationProxy {
-        private let cuckoo_manager: Cuckoo.MockManager
-        private let callMatcher: Cuckoo.CallMatcher
-        private let sourceLocation: Cuckoo.SourceLocation
-    
-        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-            self.cuckoo_manager = manager
-            self.callMatcher = callMatcher
-            self.sourceLocation = sourceLocation
-        }
-        
-        
-        @discardableResult
-        func getTransactionDetails<M1: Cuckoo.Matchable>(transactionId p0: M1) -> Cuckoo.__DoNotUse<(String), TransactionDetailsInteractorPartialState> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "getTransactionDetails(transactionId p0: String) async -> TransactionDetailsInteractorPartialState",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-    }
-}
-
-public class TransactionDetailsInteractorStub:TransactionDetailsInteractor, @unchecked Sendable {
-
-
-    
-    public func getTransactionDetails(transactionId p0: String) async -> TransactionDetailsInteractorPartialState {
-        return DefaultValueRegistry.defaultValue(for: (TransactionDetailsInteractorPartialState).self)
-    }
-}
-
-
-
-
 // MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/UI/Document/Add/AddDocumentView.swift'
 
 import Cuckoo
@@ -1995,71 +1721,6 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/UI/Document/Details/Component/RevokedDocumentView.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
-// MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/UI/Document/Details/DocumentDetailsView.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
-// MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/UI/Document/Details/DocumentDetailsViewModel.swift'
-
-import Cuckoo
-import Foundation
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
-// MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/UI/Document/Details/Model/DocumentDetailsUIModel.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
-import Copyable
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
 // MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/UI/Document/Offer/Component/DocumentOfferCellView.swift'
 
 import Cuckoo
@@ -2128,99 +1789,6 @@ import logic_resources
 
 import Cuckoo
 import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
-// MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/UI/TransactionDetails/Model/TransactionDetailsCardData.swift'
-
-import Cuckoo
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
-// MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/UI/TransactionDetails/Model/TransactionDetailsDomain.swift'
-
-import Cuckoo
-import Foundation
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
-// MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/UI/TransactionDetails/Model/TransactionDetailsUi.swift'
-
-import Cuckoo
-import Copyable
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
-// MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/UI/TransactionDetails/TransactionDetailsListItemsView.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
-// MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/UI/TransactionDetails/TransactionDetailsView.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_issuance
-
-
-
-// MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/UI/TransactionDetails/TransactionDetailsViewModel.swift'
-
-import Cuckoo
-import Foundation
 import logic_resources
 @testable import logic_core
 @testable import logic_business
