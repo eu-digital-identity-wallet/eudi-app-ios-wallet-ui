@@ -56,8 +56,10 @@ public extension DocClaimsDecodable {
       documentFields: documentFields
     )
   }
+}
 
-  private func parseClaim(
+public extension DocClaimsDecodable {
+  func parseClaim(
     documentId: String,
     isSensitive: Bool,
     input: [DocClaim]

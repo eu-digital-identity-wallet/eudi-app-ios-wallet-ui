@@ -23,7 +23,7 @@ import logic_core
 @Copyable
 struct TransactionDetailsViewState: ViewState {
   let title: LocalizableStringKey
-  let transactionDetailsUi: TransactionDetailsUi?
+  let transactionDetailsUi: TransactionDetailsUiModel?
   var isLoading: Bool
   let error: ContentErrorView.Config?
   let transactionId: String

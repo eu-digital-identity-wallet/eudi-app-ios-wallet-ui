@@ -17,47 +17,43 @@ import Foundation
 import Copyable
 import logic_ui
 import logic_resources
+import logic_core
 
 @Copyable
-public struct TransactionDetailsUi: Equatable, Identifiable, Routable {
-  public var id: String
-  public let transactionId: String
-  public let transactionDetailsCardData: TransactionDetailsCardData
-  public let transactionDetailsDataShared: TransactionDetailsDataSharedHolder
-  public let transactionDetailsDataSigned: TransactionDetailsDataSignedHolder?
+public struct TransactionDetailsUiModel: Equatable, Identifiable, Routable {
+
+  public let id: String
+  let transactionDetailsCardData: TransactionDetailsCardData
+  let items: [ListItemSection<Sendable>]
 
   public var log: String {
-    "transactionId: \(transactionId)"
+    "transactionId: \(id)"
   }
 
-  public init(
-    id: String = UUID().uuidString,
-    transactionId: String,
+  init(
+    id: String,
     transactionDetailsCardData: TransactionDetailsCardData,
-    transactionDetailsDataShared: TransactionDetailsDataSharedHolder,
-    transactionDetailsDataSigned: TransactionDetailsDataSignedHolder? = nil
+    items: [ListItemSection<Sendable>],
   ) {
     self.id = id
-    self.transactionId = transactionId
     self.transactionDetailsCardData = transactionDetailsCardData
-    self.transactionDetailsDataShared = transactionDetailsDataShared
-    self.transactionDetailsDataSigned = transactionDetailsDataSigned
+    self.items = items
   }
 }
 
 public struct TransactionDetailsCardData: Equatable, Identifiable, Routable {
   public let id: String
-  public let transactionTypeLabel: String
-  public let transactionStatusLabel: String
-  public let transactionDate: String
-  public let relyingPartyName: String?
-  public let relyingPartyIsVerified: Bool?
+  let transactionTypeLabel: String
+  let transactionStatusLabel: String
+  let transactionDate: String
+  let relyingPartyName: String?
+  let relyingPartyIsVerified: Bool?
 
   public var log: String {
     "id: \(id)"
   }
 
-  public init(
+  init(
     id: String = UUID().uuidString,
     transactionTypeLabel: String,
     transactionStatusLabel: String,
@@ -74,36 +70,37 @@ public struct TransactionDetailsCardData: Equatable, Identifiable, Routable {
   }
 }
 
-public struct TransactionDetailsDataSharedHolder: Equatable, Identifiable, Routable {
-  public let id: String
-  public let dataSharedItems: [String]
+extension TransactionLogItem {
+  func toUiModel() -> TransactionDetailsUiModel {
 
-  public var log: String {
-    "id: \(id)"
-  }
+    var relyingPartyData: TransactionLog.RelyingParty? {
+      return switch self.transactionLogData {
+      case .presentation(let log):
+        log.relyingParty
+      case .issuance, .signing:
+        nil
+      }
+    }
 
-  public init(
-    id: String = UUID().uuidString,
-    dataSharedItems: [String]
-  ) {
-    self.id = id
-    self.dataSharedItems = dataSharedItems
-  }
-}
+    var items: [ListItemSection<Sendable>] {
+      return switch self.transactionLogData {
+      case .presentation(let log):
+        log.documents.transformToTransactionListItemSections()
+      case .issuance, .signing:
+        []
+      }
+    }
 
-public struct TransactionDetailsDataSignedHolder: Equatable, Identifiable, Routable {
-  public let id: String
-  public let dataSignedItems: [String]
-
-  public var log: String {
-    "id: \(id)"
-  }
-
-  public init(
-    id: String = UUID().uuidString,
-    dataSignedItems: [String]
-  ) {
-    self.id = id
-    self.dataSignedItems = dataSignedItems
+    return .init(
+      id: self.id,
+      transactionDetailsCardData: TransactionDetailsCardData(
+        transactionTypeLabel: "A",
+        transactionStatusLabel: "A",
+        transactionDate: "A",
+        relyingPartyName: relyingPartyData?.name,
+        relyingPartyIsVerified: relyingPartyData?.isVerified
+      ),
+      items: items
+    )
   }
 }

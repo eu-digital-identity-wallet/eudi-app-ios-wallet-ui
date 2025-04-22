@@ -13,21 +13,26 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_storage
-import EudiWalletKit
-import Foundation
+import SwiftUI
+import feature_common
+import logic_core
 
-extension logic_storage.TransactionLog {
-  func toTransactionLogItem(
-    id: String,
-    parse: (EudiWalletKit.TransactionLog) -> (TransactionLogData)
-  ) throws -> TransactionLogItem {
-    guard
-      let value = self.value.data(using: .utf8),
-      let coreLog = try? JSONDecoder().decode(EudiWalletKit.TransactionLog.self, from: value)
-    else {
-      throw WalletCoreError.unableToFetchTransactionLog
-    }
-    return .init(id: id, transactionLogData: parse(coreLog))
+public extension DocClaimsDecodable {
+  func transformToTransactionListItemSection() -> ListItemSection<Sendable> {
+    return .init(
+      id: self.id,
+      title: self.displayName.ifNilOrEmpty { self.docType.orEmpty },
+      listItems: self.parseClaim(
+        documentId: self.id,
+        isSensitive: false,
+        input: self.docClaims
+      )
+    )
+  }
+}
+
+public extension Array where Element == DocClaimsDecodable {
+  func transformToTransactionListItemSections() -> [ListItemSection<Sendable>] {
+    return self.map { $0.transformToTransactionListItemSection() }
   }
 }

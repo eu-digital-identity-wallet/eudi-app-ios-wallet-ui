@@ -6066,9 +6066,9 @@ return cuckoo_manager.call(
         )
     }
     
-    public func fetchTransactionLog(with p0: String) async throws -> TransactionLogData {
+    public func fetchTransactionLog(with p0: String) async throws -> TransactionLogItem {
         return try await cuckoo_manager.callThrows(
-            "fetchTransactionLog(with p0: String) async throws -> TransactionLogData",
+            "fetchTransactionLog(with p0: String) async throws -> TransactionLogItem",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -6076,9 +6076,9 @@ return cuckoo_manager.call(
         )
     }
     
-    public func fetchTransactionLogs() async throws -> [TransactionLogData] {
+    public func fetchTransactionLogs() async throws -> [TransactionLogItem] {
         return try await cuckoo_manager.callThrows(
-            "fetchTransactionLogs() async throws -> [TransactionLogData]",
+            "fetchTransactionLogs() async throws -> [TransactionLogItem]",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -6379,18 +6379,18 @@ return cuckoo_manager.call(
             ))
         }
         
-        func fetchTransactionLog<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), TransactionLogData> where M1.MatchedType == String {
+        func fetchTransactionLog<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), TransactionLogItem> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "fetchTransactionLog(with p0: String) async throws -> TransactionLogData",
+                method: "fetchTransactionLog(with p0: String) async throws -> TransactionLogItem",
                 parameterMatchers: matchers
             ))
         }
         
-        func fetchTransactionLogs() -> Cuckoo.ProtocolStubThrowingFunction<(), [TransactionLogData]> {
+        func fetchTransactionLogs() -> Cuckoo.ProtocolStubThrowingFunction<(), [TransactionLogItem]> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "fetchTransactionLogs() async throws -> [TransactionLogData]",
+                method: "fetchTransactionLogs() async throws -> [TransactionLogItem]",
                 parameterMatchers: matchers
             ))
         }
@@ -6801,10 +6801,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func fetchTransactionLog<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), TransactionLogData> where M1.MatchedType == String {
+        func fetchTransactionLog<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), TransactionLogItem> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "fetchTransactionLog(with p0: String) async throws -> TransactionLogData",
+                "fetchTransactionLog(with p0: String) async throws -> TransactionLogItem",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -6813,10 +6813,10 @@ return cuckoo_manager.call(
         
         
         @discardableResult
-        func fetchTransactionLogs() -> Cuckoo.__DoNotUse<(), [TransactionLogData]> {
+        func fetchTransactionLogs() -> Cuckoo.__DoNotUse<(), [TransactionLogItem]> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "fetchTransactionLogs() async throws -> [TransactionLogData]",
+                "fetchTransactionLogs() async throws -> [TransactionLogItem]",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7011,12 +7011,12 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func fetchTransactionLog(with p0: String) async throws -> TransactionLogData {
-        return DefaultValueRegistry.defaultValue(for: (TransactionLogData).self)
+    public func fetchTransactionLog(with p0: String) async throws -> TransactionLogItem {
+        return DefaultValueRegistry.defaultValue(for: (TransactionLogItem).self)
     }
     
-    public func fetchTransactionLogs() async throws -> [TransactionLogData] {
-        return DefaultValueRegistry.defaultValue(for: ([TransactionLogData]).self)
+    public func fetchTransactionLogs() async throws -> [TransactionLogItem] {
+        return DefaultValueRegistry.defaultValue(for: ([TransactionLogItem]).self)
     }
     
     public func isDocumentRevoked(with p0: String) async -> Bool {
@@ -8388,6 +8388,20 @@ import logic_resources
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/TransactionLogItem.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_presentation
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Worker/RevocationWorkManager.swift'
 
 import Cuckoo
@@ -9538,22 +9552,6 @@ import logic_resources
 
 
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/TappableCellView.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_presentation
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/TransactionCardView.swift'
 
 import Cuckoo
 import SwiftUI

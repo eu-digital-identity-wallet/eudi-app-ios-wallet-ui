@@ -29,7 +29,7 @@ public struct TransactionTabUIModel: Identifiable, Sendable, FilterableItemPaylo
   public let transactionType: TransactionType
 
   public init(
-    id: String = UUID().uuidString,
+    id: String,
     name: String,
     status: TransactionStatus,
     transactionDate: String,
@@ -47,160 +47,18 @@ public struct TransactionTabUIModel: Identifiable, Sendable, FilterableItemPaylo
 
   public var listItem: ListItemData {
     return ListItemData(
+      id: self.id,
       mainText: .custom(name),
-      overlineText: status.statusTitle,
-      supportingText: formattedTransactionDate(),
+      overlineText: self.status.statusTitle,
+      supportingText: self.formattedTransactionDate(),
       supportingTextColor: Theme.shared.color.onSurface,
-      overlineTextColor: status == .completed ? Theme.shared.color.success : Theme.shared.color.error,
+      overlineTextColor: self.status == .completed ? Theme.shared.color.success : Theme.shared.color.error,
       trailingContent: .icon(
         Theme.shared.image.chevronRight,
         Theme.shared.color.onSurfaceVariant,
-        transactionType.typeTitle
+        self.transactionType.typeTitle
       )
     )
-  }
-
-  static func mocks() -> [TransactionCategory: [TransactionTabUIModel]] {
-
-    let now = Date()
-    let twentyMinutesAgo = Calendar.gregorian.date(byAdding: .minute, value: -20, to: now) ?? now
-    let threeHoursAgo = Calendar.gregorian.date(byAdding: .hour, value: -3, to: now) ?? now
-    let twoDaysAgo = Calendar.gregorian.date(byAdding: .day, value: -2, to: now) ?? now
-    let threeDaysAgo = Calendar.gregorian.date(byAdding: .day, value: -3, to: now) ?? now
-    let threeDaysMinusFourHoursAgo = Calendar.gregorian.date(byAdding: .day, value: -3, to: now).flatMap {
-      Calendar.gregorian.date(byAdding: .hour, value: -4, to: $0)
-    } ?? now
-
-    let transactions: [TransactionTabUIModel] = [
-      .init(
-        name: "Document Signing",
-        status: .completed,
-        transactionDate: twentyMinutesAgo.formattedString(),
-        transactionCategory: .category(for: twentyMinutesAgo.formattedString()),
-        transactionType: .signing
-      ),
-      .init(
-        name: "Document Signing",
-        status: .completed,
-        transactionDate: threeHoursAgo.formattedString(),
-        transactionCategory: .category(for: threeHoursAgo.formattedString()),
-        transactionType: .signing
-      ),
-      .init(
-        name: "Document Signing",
-        status: .completed,
-        transactionDate: twoDaysAgo.formattedString(),
-        transactionCategory: .category(for: twoDaysAgo.formattedString()),
-        transactionType: .signing
-      ),
-      .init(
-        name: "Document Signing",
-        status: .completed,
-        transactionDate: threeDaysAgo.formattedString(),
-        transactionCategory: .category(for: threeDaysAgo.formattedString()),
-        transactionType: .signing
-      ),
-      .init(
-        name: "Document Signing",
-        status: .completed,
-        transactionDate: threeDaysMinusFourHoursAgo.formattedString(),
-        transactionCategory: .category(for: threeDaysMinusFourHoursAgo.formattedString()),
-        transactionType: .signing
-      ),
-      .init(
-        name: "Another Document Signing",
-        status: .completed,
-        transactionDate: "23 February 2025 09:20 AM",
-        transactionCategory: .category(for: "23 February 2025 09:20 AM"),
-        transactionType: .signing
-      ),
-      .init(
-        name: "Document Signing",
-        status: .completed,
-        transactionDate: "20 February 2025 09:20 AM",
-        transactionCategory: .category(for: "20 February 2025 09:20 AM"),
-        transactionType: .signing
-      ),
-      .init(
-        name: "Relying Party Name 1",
-        status: .failed,
-        transactionDate: "19 February 2025 05:40 PM",
-        transactionCategory: .category(for: "19 February 2025 05:40 PM"),
-        transactionType: .presentation
-      ),
-      .init(
-        name: "Relying Party Name 2",
-        status: .completed,
-        transactionDate: "17 February 2025 11:55 AM",
-        transactionCategory: .category(for: "17 February 2025 11:55 AM"),
-        transactionType: .presentation
-      ),
-      .init(
-        name: "Document Signing",
-        status: .completed,
-        transactionDate: "10 February 2025 01:15 PM",
-        transactionCategory: .category(for: "10 February 2025 01:15 PM"),
-        transactionType: .signing
-      ),
-      .init(
-        name: "Relying Party Name 2",
-        status: .failed,
-        transactionDate: "20 January 2025 04:30 PM",
-        transactionCategory: .category(for: "20 January 2025 04:30 PM"),
-        transactionType: .presentation
-      ),
-      .init(
-        name: "Document Signing",
-        status: .completed,
-        transactionDate: "20 December 2024 10:05 AM",
-        transactionCategory: .category(for: "20 December 2024 10:05 AM"),
-        transactionType: .signing
-      ),
-      .init(
-        name: "Relying Party Name 1",
-        status: .completed,
-        transactionDate: "01 March 2024 02:20 PM",
-        transactionCategory: .category(for: "01 March 2024 02:20 PM"),
-        transactionType: .presentation
-      ),
-      .init(
-        name: "Document Signing",
-        status: .failed,
-        transactionDate: "22 February 2024 09:45 AM",
-        transactionCategory: .category(for: "22 February 2024 09:45 AM"),
-        transactionType: .signing
-      ),
-      .init(
-        name: "Relying Party Name 3",
-        status: .completed,
-        transactionDate: "17 February 2024 11:30 AM",
-        transactionCategory: .category(for: "17 February 2024 11:30 AM"),
-        transactionType: .presentation
-      ),
-      .init(
-        name: "Issuance 1",
-        status: .failed,
-        transactionDate: "17 February 2024 12:30 AM",
-        transactionCategory: .category(for: "17 February 2024 12:30 AM"),
-        transactionType: .issuance
-      ),
-      .init(
-        name: "Issuance 2",
-        status: .completed,
-        transactionDate: "18 February 2024 04:20 AM",
-        transactionCategory: .category(for: "18 February 2024 04:20 AM"),
-        transactionType: .issuance
-      ),
-      .init(
-        name: "Old Document",
-        status: .completed,
-        transactionDate: "15 May 1999 10:30 AM",
-        transactionCategory: .category(for: "15 May 1999 10:30 AM"),
-        transactionType: .signing
-      )
-    ]
-
-    return Dictionary(grouping: transactions, by: { $0.transactionCategory })
   }
 
   private func formattedTransactionDate() -> LocalizableStringKey {
@@ -240,11 +98,12 @@ public enum TransactionType: Sendable {
   }
 }
 
-extension TransactionLogData {
+extension TransactionLogItem {
   func transformToTransactionUI() -> TransactionTabUIModel {
-    switch self {
+    switch self.transactionLogData {
     case .presentation(let logData):
       return .init(
+        id: self.id,
         name: logData.relyingParty.name,
         status: logData.status.mapToTransactionStatus(),
         transactionDate: logData.timestamp.formattedAsDayMonthYearTime(),
@@ -253,6 +112,7 @@ extension TransactionLogData {
       )
     case .issuance, .signing:
       return .init(
+        id: self.id,
         name: "",
         status: .completed,
         transactionDate: "",

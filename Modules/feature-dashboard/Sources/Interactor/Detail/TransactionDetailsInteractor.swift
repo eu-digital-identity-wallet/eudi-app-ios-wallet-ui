@@ -13,15 +13,10 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_ui
-import logic_resources
-import feature_common
-import logic_business
 import logic_core
 
 public enum TransactionDetailsInteractorPartialState: Sendable {
-  case success(transactionDetailsUi: TransactionDetailsUi)
+  case success(transactionDetailsUi: TransactionDetailsUiModel)
   case failure(error: String)
 }
 
@@ -42,36 +37,11 @@ final class TransactionDetailsInteractorImpl: TransactionDetailsInteractor {
   public func getTransactionDetails(transactionId: String) async -> TransactionDetailsInteractorPartialState {
     do {
       let transaction = try await walletController.fetchTransactionLog(with: transactionId)
-
-      let relyingPartyData: TransactionLog.RelyingParty?
-
-      switch transaction {
-        case .issuance:
-          relyingPartyData = nil
-        case .presentation(let log):
-          relyingPartyData = log.relyingParty
-        case .signing:
-          relyingPartyData = nil
-      }
-
-      let transactionDetailsUi = TransactionDetailsUi(
-        transactionId: transactionId,
-        transactionDetailsCardData: TransactionDetailsCardData(
-          transactionTypeLabel: "A",
-          transactionStatusLabel: "A",
-          transactionDate: "A",
-          relyingPartyName: relyingPartyData?.name,
-          relyingPartyIsVerified: relyingPartyData?.isVerified
-        ),
-        transactionDetailsDataShared: TransactionDetailsDataSharedHolder(dataSharedItems: []),
-        transactionDetailsDataSigned: nil
-      )
       return .success(
-        transactionDetailsUi: transactionDetailsUi
+        transactionDetailsUi: transaction.toUiModel()
       )
     } catch {
-      print(error)
-      return .failure(error: WalletCoreError.unableToFetchTransactionLog.localizedDescription)
+      return .failure(error: error.localizedDescription)
     }
   }
 }
