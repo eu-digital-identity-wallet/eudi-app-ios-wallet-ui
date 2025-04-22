@@ -21,7 +21,7 @@ import logic_business
 import logic_core
 
 public enum TransactionDetailsInteractorPartialState: Sendable {
-  case success(transactionDetailsDomain: TransactionDetailsDomain)
+  case success(transactionDetailsUi: TransactionDetailsUi)
   case failure(error: String)
 }
 
@@ -40,47 +40,38 @@ final class TransactionDetailsInteractorImpl: TransactionDetailsInteractor {
   }
 
   public func getTransactionDetails(transactionId: String) async -> TransactionDetailsInteractorPartialState {
-    let transactionDetailsDomain = TransactionDetailsDomain(
-      transactionName: "A transaction name",
-      transactionId: "randomId",
-      sharedDataClaimItems: [
-        .init(
-          displayName: "Digital ID",
-          claims: [
-            TransactionClaimItem(
-              transactionId: "0",
-              value: "John",
-              readableName: "Given name"
-            ),
-            TransactionClaimItem(
-              transactionId: "1",
-              value: "Doe",
-              readableName: "Family name"
-            )
-          ]
-        )
-      ],
-      signedDataClaimItems: [
-        .init(
-          displayName: "Signature details",
-          claims: [
-            TransactionClaimItem(
-              transactionId: "0",
-              value: "John",
-              readableName: "Given name"
-            ),
-            TransactionClaimItem(
-              transactionId: "1",
-              value: "Doe",
-              readableName: "Family name"
-            )
-          ]
-        )
-      ]
-    )
+    do {
+      let transaction = try await walletController.fetchTransactionLog(with: transactionId)
 
-    return .success(
-      transactionDetailsDomain: transactionDetailsDomain
-    )
+      let relyingPartyData: TransactionLog.RelyingParty?
+
+      switch transaction {
+        case .issuance:
+          relyingPartyData = nil
+        case .presentation(let log):
+          relyingPartyData = log.relyingParty
+        case .signing:
+          relyingPartyData = nil
+      }
+
+      let transactionDetailsUi = TransactionDetailsUi(
+        transactionId: transactionId,
+        transactionDetailsCardData: TransactionDetailsCardData(
+          transactionTypeLabel: "A",
+          transactionStatusLabel: "A",
+          transactionDate: "A",
+          relyingPartyName: relyingPartyData?.name,
+          relyingPartyIsVerified: relyingPartyData?.isVerified
+        ),
+        transactionDetailsDataShared: TransactionDetailsDataSharedHolder(dataSharedItems: []),
+        transactionDetailsDataSigned: nil
+      )
+      return .success(
+        transactionDetailsUi: transactionDetailsUi
+      )
+    } catch {
+      print(error)
+      return .failure(error: WalletCoreError.unableToFetchTransactionLog.localizedDescription)
+    }
   }
 }

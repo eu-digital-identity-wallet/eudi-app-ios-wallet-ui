@@ -58,55 +58,51 @@ private func content(
   ScrollView {
     VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
 
-      TransactionCardView(
-        title: state.transactionDetailsCardData.transactionType,
-        subtitle: state.transactionDetailsCardData.transactionItemLabel,
-        caption: state.transactionDetailsCardData.relyingPartyName,
-        footerTitle: .transactionDetailsScreenCardDateLabel,
-        footerSubtitle: state.transactionDetailsCardData.transactionDate,
-        isVerified: state.transactionDetailsCardData.isVerified,
-        isCompleted: state.transactionDetailsCardData.isCompleted
-      )
-
-      if let transactionDetailsDataSharedList = state.transactionDetailsUi?.transactionDetailsDataSharedList {
-        VStack(alignment: .leading, spacing: SPACING_SMALL) {
-          Text(.transactionDetailsDataShare)
-            .typography(Theme.shared.font.bodySmall)
-            .fontWeight(.semibold)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-
-          ForEach(transactionDetailsDataSharedList) { item in
-            WrapCardView {
-              ExpandableCardView(
-                title: .custom(item.title),
-                subtitle: .viewDetails
-              ) {
-                TransactionDetailsListItemsView(listItems: item.dataSharedItems)
-              }
-            }
-          }
-        }
+      if let transactionDetailsCardData = state.transactionDetailsUi?.transactionDetailsCardData {
+        TransactionCardView(
+          transactionDetailsCardData: transactionDetailsCardData
+        )
       }
 
-      if let transactionDetailsDataSigned = state.transactionDetailsUi?.transactionDetailsDataSigned, transactionDetailsDataSigned.isEmpty {
-        VStack(alignment: .leading, spacing: SPACING_SMALL) {
-          Text(.transactionDetailsDataSigned)
-            .typography(Theme.shared.font.bodySmall)
-            .fontWeight(.semibold)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-
-          ForEach(transactionDetailsDataSigned) { item in
-            WrapCardView {
-              ExpandableCardView(
-                title: .custom(item.title),
-                subtitle: .viewDetails
-              ) {
-                TransactionDetailsListItemsView(listItems: item.dataSharedItems)
-              }
-            }
-          }
-        }
-      }
+//      if let transactionDetailsDataSharedList = state.transactionDetailsUi?.transactionDetailsDataSharedList {
+//        VStack(alignment: .leading, spacing: SPACING_SMALL) {
+//          Text(.transactionDetailsDataShare)
+//            .typography(Theme.shared.font.bodySmall)
+//            .fontWeight(.semibold)
+//            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+//
+//          ForEach(transactionDetailsDataSharedList) { item in
+//            WrapCardView {
+//              ExpandableCardView(
+//                title: .custom(item.title),
+//                subtitle: .viewDetails
+//              ) {
+//                TransactionDetailsListItemsView(listItems: item.dataSharedItems)
+//              }
+//            }
+//          }
+//        }
+//      }
+//
+//      if let transactionDetailsDataSigned = state.transactionDetailsUi?.transactionDetailsDataSigned, transactionDetailsDataSigned.isEmpty {
+//        VStack(alignment: .leading, spacing: SPACING_SMALL) {
+//          Text(.transactionDetailsDataSigned)
+//            .typography(Theme.shared.font.bodySmall)
+//            .fontWeight(.semibold)
+//            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+//
+//          ForEach(transactionDetailsDataSigned) { item in
+//            WrapCardView {
+//              ExpandableCardView(
+//                title: .custom(item.title),
+//                subtitle: .viewDetails
+//              ) {
+//                TransactionDetailsListItemsView(listItems: item.dataSharedItems)
+//              }
+//            }
+//          }
+//        }
+//      }
 
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
         VStack(alignment: .leading, spacing: SPACING_SMALL) {

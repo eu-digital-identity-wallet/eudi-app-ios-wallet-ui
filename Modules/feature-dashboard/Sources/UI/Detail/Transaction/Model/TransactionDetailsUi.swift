@@ -13,76 +13,97 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
 import Copyable
 import logic_ui
+import logic_resources
 
 @Copyable
-public struct TransactionDetailsUIModel: Equatable, Identifiable, Routable {
-  public let id: String
+public struct TransactionDetailsUi: Equatable, Identifiable, Routable {
+  public var id: String
   public let transactionId: String
-  public let transactionName: String
-  public let transactionIdentifier: String
-  public let transactionDetailsDataSharedList: [TransactionDetailsDataHolder]
-  public let transactionDetailsDataSigned: [TransactionDetailsDataHolder]
+  public let transactionDetailsCardData: TransactionDetailsCardData
+  public let transactionDetailsDataShared: TransactionDetailsDataSharedHolder
+  public let transactionDetailsDataSigned: TransactionDetailsDataSignedHolder?
 
   public var log: String {
-    "id: \(id), transactionId: \(transactionId), transactionName: \(transactionName)"
+    "transactionId: \(transactionId)"
   }
-}
-
-public struct TransactionDetailsDataHolder: Equatable, Identifiable, Sendable {
-  public let id: String
-  public let title: String
-  public let dataSharedItems: [ListItemData]
 
   public init(
     id: String = UUID().uuidString,
-    title: String,
-    dataSharedItems: [ListItemData]
+    transactionId: String,
+    transactionDetailsCardData: TransactionDetailsCardData,
+    transactionDetailsDataShared: TransactionDetailsDataSharedHolder,
+    transactionDetailsDataSigned: TransactionDetailsDataSignedHolder? = nil
   ) {
     self.id = id
-    self.title = title
+    self.transactionId = transactionId
+    self.transactionDetailsCardData = transactionDetailsCardData
+    self.transactionDetailsDataShared = transactionDetailsDataShared
+    self.transactionDetailsDataSigned = transactionDetailsDataSigned
+  }
+}
+
+public struct TransactionDetailsCardData: Equatable, Identifiable, Routable {
+  public let id: String
+  public let transactionTypeLabel: String
+  public let transactionStatusLabel: String
+  public let transactionDate: String
+  public let relyingPartyName: String?
+  public let relyingPartyIsVerified: Bool?
+
+  public var log: String {
+    "id: \(id)"
+  }
+
+  public init(
+    id: String = UUID().uuidString,
+    transactionTypeLabel: String,
+    transactionStatusLabel: String,
+    transactionDate: String,
+    relyingPartyName: String? = nil,
+    relyingPartyIsVerified: Bool? = false
+  ) {
+    self.id = id
+    self.transactionTypeLabel = transactionTypeLabel
+    self.transactionStatusLabel = transactionStatusLabel
+    self.transactionDate = transactionDate
+    self.relyingPartyName = relyingPartyName
+    self.relyingPartyIsVerified = relyingPartyIsVerified
+  }
+}
+
+public struct TransactionDetailsDataSharedHolder: Equatable, Identifiable, Routable {
+  public let id: String
+  public let dataSharedItems: [String]
+
+  public var log: String {
+    "id: \(id)"
+  }
+
+  public init(
+    id: String = UUID().uuidString,
+    dataSharedItems: [String]
+  ) {
+    self.id = id
     self.dataSharedItems = dataSharedItems
   }
 }
 
-public extension TransactionDetailsUIModel {
-  static func mockData() -> TransactionDetailsUIModel {
-    TransactionDetailsUIModel(
-      id: UUID().uuidString,
-      transactionId: "transaction Id",
-      transactionName: "transaction Name",
-      transactionIdentifier: "transaction Identifier",
-      transactionDetailsDataSharedList: [
-        TransactionDetailsDataHolder(
-          title: "Digital ID",
-          dataSharedItems: [
-            ListItemData(
-              mainText: .custom("Joe"),
-              overlineText: .custom("Family Name")
-            ),
-            ListItemData(
-              mainText: .custom("Joe"),
-              overlineText: .custom("Family Name")
-            )
-          ]
-        )
-      ],
-      transactionDetailsDataSigned: [
-        TransactionDetailsDataHolder(
-          title: "Signature details",
-          dataSharedItems: [
-            ListItemData(
-              mainText: .custom("Joe"),
-              overlineText: .custom("Family Name")
-            ),
-            ListItemData(
-              mainText: .custom("Joe"),
-              overlineText: .custom("Family Name")
-            )
-          ]
-        )
-      ]
-    )
+public struct TransactionDetailsDataSignedHolder: Equatable, Identifiable, Routable {
+  public let id: String
+  public let dataSignedItems: [String]
+
+  public var log: String {
+    "id: \(id)"
+  }
+
+  public init(
+    id: String = UUID().uuidString,
+    dataSignedItems: [String]
+  ) {
+    self.id = id
+    self.dataSignedItems = dataSignedItems
   }
 }

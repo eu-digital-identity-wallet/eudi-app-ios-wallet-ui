@@ -229,6 +229,19 @@ public struct WrapListItemView: View {
         )
       )
     }
+
+    WrapCardView {
+      WrapListItemView(
+        listItem: .init(
+          mainText: .custom("Another Item"),
+          trailingContent: .icon(
+            Image(systemName: "plus"),
+            Color.accentColor,
+            LocalizableStringKey.custom("Signing")
+          )
+        )
+      )
+    }
   }
   .padding()
 }

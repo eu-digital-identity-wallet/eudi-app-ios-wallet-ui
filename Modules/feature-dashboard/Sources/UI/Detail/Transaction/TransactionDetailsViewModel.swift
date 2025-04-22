@@ -23,8 +23,7 @@ import logic_core
 @Copyable
 struct TransactionDetailsViewState: ViewState {
   let title: LocalizableStringKey
-  let transactionDetailsCardData: TransactionDetailsCardData
-  let transactionDetailsUi: TransactionDetailsUIModel?
+  let transactionDetailsUi: TransactionDetailsUi?
   var isLoading: Bool
   let error: ContentErrorView.Config?
   let transactionId: String
@@ -44,15 +43,6 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
       router: router,
       initialState: .init(
         title: .transactionInformation,
-        transactionDetailsCardData: TransactionDetailsCardData(
-          transactionType: .custom("e-Signature"),
-          transactionItemLabel: .custom("File_signed.pdf"),
-          relyingPartyName: .custom("Central issuer"),
-          transactionDate: .custom("16 February 2024"),
-          status: .custom("Completed"),
-          isVerified: true,
-          isCompleted: true
-        ),
         transactionDetailsUi: nil,
         isLoading: false,
         error: nil,
@@ -75,7 +65,7 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
     case .success(let transactions):
       self.setState {
         $0.copy(
-          transactionDetailsUi: transactions.toUiModel(),
+          transactionDetailsUi: transactions,
           isLoading: false
         )
       }
