@@ -499,6 +499,14 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "revoked_modal_title")
     case .revokedModalDescription:
       bundle.localizedString(forKey: "revoked_modal_description")
+    case .transactionDetailsRequestDeletionMessage:
+      bundle.localizedString(forKey: "transaction_details_eequest_deletion_message")
+    case .transactionDetailsRequestDeletionButton:
+      bundle.localizedString(forKey: "transaction_details_eequest_deletion_button")
+    case .transactionDetailsReportTransactionMessage:
+      bundle.localizedString(forKey: "transaction_details_report_transaction_message")
+    case .transactionDetailsReportTransactionButton:
+      bundle.localizedString(forKey: "transaction_detailsReport_transaction_button")
     }
   }
 }

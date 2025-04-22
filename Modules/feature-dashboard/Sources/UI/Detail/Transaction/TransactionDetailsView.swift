@@ -107,6 +107,34 @@ private func content(
           }
         }
       }
+
+      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+        VStack(alignment: .leading, spacing: SPACING_SMALL) {
+          Text(.transactionDetailsRequestDeletionMessage)
+            .font(Theme.shared.font.bodyLarge.font)
+            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+
+          WrapButtonView(
+            style: .error,
+            title: .transactionDetailsRequestDeletionButton,
+            isLoading: state.isLoading,
+            onAction: onShowDeleteModal()
+          )
+        }
+
+        VStack(alignment: .leading, spacing: SPACING_SMALL) {
+          Text(.transactionDetailsReportTransactionMessage)
+            .font(Theme.shared.font.bodyLarge.font)
+            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+
+          WrapButtonView(
+            style: .secondary,
+            title: .transactionDetailsReportTransactionButton,
+            isLoading: state.isLoading,
+            onAction: onShowDeleteModal()
+          )
+        }
+      }
     }
     .padding(Theme.shared.dimension.padding)
     .padding(.bottom)

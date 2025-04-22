@@ -249,6 +249,10 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case documentDetailsRevokedDocumentMessage
   case revokedModalTitle
   case revokedModalDescription
+  case transactionDetailsRequestDeletionMessage
+  case transactionDetailsRequestDeletionButton
+  case transactionDetailsReportTransactionMessage
+  case transactionDetailsReportTransactionButton
 }
 
 public extension LocalizableStringKey {

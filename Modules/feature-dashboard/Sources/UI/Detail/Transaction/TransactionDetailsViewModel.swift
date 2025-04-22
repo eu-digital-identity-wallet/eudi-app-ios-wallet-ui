@@ -23,8 +23,6 @@ import logic_core
 @Copyable
 struct TransactionDetailsViewState: ViewState {
   let title: LocalizableStringKey
-  let detailsDataSharedSection: LocalizableStringKey
-  let detailsDataSignedSection: LocalizableStringKey
   let transactionDetailsCardData: TransactionDetailsCardData
   let transactionDetailsUi: TransactionDetailsUIModel?
   var isLoading: Bool
@@ -46,8 +44,6 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
       router: router,
       initialState: .init(
         title: .transactionInformation,
-        detailsDataSharedSection: .transactionDetailsDataShare,
-        detailsDataSignedSection: .transactionDetailsDataSigned,
         transactionDetailsCardData: TransactionDetailsCardData(
           transactionType: .custom("e-Signature"),
           transactionItemLabel: .custom("File_signed.pdf"),

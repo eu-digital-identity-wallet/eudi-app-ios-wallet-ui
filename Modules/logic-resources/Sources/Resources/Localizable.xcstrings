@@ -2284,6 +2284,39 @@
         }
       }
     },
+    "transaction_details_eequest_deletion_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Request data deletion"
+          }
+        }
+      }
+    },
+    "transaction_details_eequest_deletion_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can request to stop processing personal data linked to this transaction. This may affect your access to services."
+          }
+        }
+      }
+    },
+    "transaction_details_report_transaction_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you believe this relying party has unlawfully requested personal data, you can report this transaction to the authorities. "
+          }
+        }
+      }
+    },
     "transaction_details_screen_card_date_label" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2291,6 +2324,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Date"
+          }
+        }
+      }
+    },
+    "transaction_detailsReport_transaction_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Report suspicious transaction"
           }
         }
       }
