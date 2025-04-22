@@ -5891,17 +5891,6 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/Date+Extensions.swift'
-
-import Cuckoo
-import Foundation
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_authentication
-
-
-
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/DocClaim+Extensions.swift'
 
 import Cuckoo
@@ -6166,18 +6155,6 @@ public class RequestItemConvertibleStub:RequestItemConvertible, @unchecked Senda
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/ScopedDocument.swift'
 
 import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_authentication
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/TransactionCategory.swift'
-
-import Cuckoo
-import Foundation
-import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
