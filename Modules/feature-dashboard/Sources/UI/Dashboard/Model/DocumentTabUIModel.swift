@@ -24,18 +24,9 @@ public struct DocumentTabUIModel: Identifiable, Equatable, FilterableItemPayload
 
   @EquatableNoop
   public var id: String
+
   public let value: Value
   public let listItem: ListItemData
-
-  public init(
-    id: String,
-    value: Value,
-    listItem: ListItemData
-  ) {
-    self.id = id
-    self.value = value
-    self.listItem = listItem
-  }
 }
 
 public extension DocumentTabUIModel {

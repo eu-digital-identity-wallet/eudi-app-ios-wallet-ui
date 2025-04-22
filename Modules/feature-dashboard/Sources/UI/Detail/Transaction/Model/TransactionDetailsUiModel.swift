@@ -14,44 +14,27 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import Copyable
 import logic_ui
-import logic_resources
 import logic_core
+import logic_business
 
-@Copyable
-public struct TransactionDetailsUiModel: Equatable, Identifiable, Routable {
+public struct TransactionDetailsUiModel: Equatable, Identifiable, Sendable {
 
   public let id: String
-  let transactionDetailsCardData: TransactionDetailsCardData
-  let items: [ListItemSection<Sendable>]
-
-  public var log: String {
-    "transactionId: \(id)"
-  }
-
-  init(
-    id: String,
-    transactionDetailsCardData: TransactionDetailsCardData,
-    items: [ListItemSection<Sendable>],
-  ) {
-    self.id = id
-    self.transactionDetailsCardData = transactionDetailsCardData
-    self.items = items
-  }
+  public let transactionDetailsCardData: TransactionDetailsCardData
+  public let items: [ListItemSection<Sendable>]
 }
 
-public struct TransactionDetailsCardData: Equatable, Identifiable, Routable {
-  public let id: String
-  let transactionTypeLabel: String
-  let transactionStatusLabel: String
-  let transactionDate: String
-  let relyingPartyName: String?
-  let relyingPartyIsVerified: Bool?
+public struct TransactionDetailsCardData: Equatable, Identifiable, Sendable {
 
-  public var log: String {
-    "id: \(id)"
-  }
+  @EquatableNoop
+  public var id: String
+
+  public let transactionTypeLabel: String
+  public let transactionStatusLabel: String
+  public let transactionDate: String
+  public let relyingPartyName: String?
+  public let relyingPartyIsVerified: Bool?
 
   init(
     id: String = UUID().uuidString,
@@ -102,5 +85,25 @@ extension TransactionLogItem {
       ),
       items: items
     )
+  }
+}
+
+extension DocClaimsDecodable {
+  func transformToTransactionListItemSection() -> ListItemSection<Sendable> {
+    return .init(
+      id: self.id,
+      title: self.displayName.ifNilOrEmpty { self.docType.orEmpty },
+      listItems: self.parseClaim(
+        documentId: self.id,
+        isSensitive: false,
+        input: self.docClaims
+      )
+    )
+  }
+}
+
+extension Array where Element == DocClaimsDecodable {
+  func transformToTransactionListItemSections() -> [ListItemSection<Sendable>] {
+    return self.map { $0.transformToTransactionListItemSection() }
   }
 }

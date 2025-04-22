@@ -28,7 +28,7 @@ public struct TransactionTabUIModel: Identifiable, Sendable, FilterableItemPaylo
   public let transactionCategory: TransactionCategory
   public let transactionType: TransactionType
 
-  public init(
+  init(
     id: String,
     name: String,
     status: TransactionStatus,
