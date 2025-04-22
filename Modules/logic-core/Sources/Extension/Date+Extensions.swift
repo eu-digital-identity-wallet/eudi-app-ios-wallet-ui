@@ -17,56 +17,14 @@ import Foundation
 
 extension Date {
 
-  static let monthYearFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "MMMM yyyy"
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    return formatter
-  }()
-
   static let transactionDateFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateFormat = "dd MMMM yyyy HH:mm a"
-    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.locale = Locale.current.userSelectedLocale
     return formatter
   }()
 
-  func toLocal() -> Date {
-    let timeZone = TimeZone.current
-    let seconds = timeZone.secondsFromGMT(for: self)
-    return addingTimeInterval(TimeInterval(seconds))
-  }
-
-  func isToday() -> Bool {
-    let calendar = Calendar.current
-    let todayStart = calendar.startOfDay(for: Date())
-    let todayEnd = calendar.date(byAdding: .day, value: 1, to: todayStart)!
-    return self >= todayStart && self < todayEnd
-  }
-
-  func isThisWeek() -> Bool {
-    let calendar = Calendar.current
-    let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date()))!
-    let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek)!
-    return self.toLocal() >= startOfWeek && self.toLocal() < endOfWeek
-  }
-
-  func formattedMonthYear() -> String {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "MMMM yyyy"
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    return formatter.string(from: self.toLocal()).uppercased()
-  }
-
   static func date(from string: String) -> Date? {
     return Date.transactionDateFormatter.date(from: string)
-  }
-
-  var monthYearOrder: Int {
-    let calendar = Calendar.current
-    let components = calendar.dateComponents([.year, .month], from: self)
-    let year = components.year ?? 0
-    let month = components.month ?? 0
-    return (year * 12 + month)
   }
 }

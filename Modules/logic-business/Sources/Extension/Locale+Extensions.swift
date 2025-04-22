@@ -27,7 +27,7 @@ public extension Locale {
     "dd/MM/yyyy"
   ]
 
-  private var userSelectedLocale: Locale {
+  var userSelectedLocale: Locale {
     guard let identifier = DIGraph.resolver.resolve(PrefsController.self)?.getUserLocale() else {
       return Locale.current
     }
@@ -75,6 +75,20 @@ public extension Locale {
     return parseDateFormatter.string(from: date)
   }
 
+  func parseDate(
+    date: String,
+    formatters: [String] = serviceDateFormatters
+  ) -> Date? {
+    for formatter in formatters {
+      let parseDateFormatter = DateFormatter()
+      parseDateFormatter.dateFormat = formatter
+      if let normalDate = parseDateFormatter.date(from: date) {
+        return normalDate
+      }
+    }
+    return nil
+  }
+
   private func parseDate(
     date: String,
     uiFormatter: DateFormatter,
@@ -93,19 +107,5 @@ public extension Locale {
       return date
     }
     return uiFormatter.string(from: parsedDate)
-  }
-
-  func parseDate(
-    date: String,
-    formatters: [String] = serviceDateFormatters
-  ) -> Date? {
-    for formatter in formatters {
-      let parseDateFormatter = DateFormatter()
-      parseDateFormatter.dateFormat = formatter
-      if let normalDate = parseDateFormatter.date(from: date) {
-        return normalDate
-      }
-    }
-    return nil
   }
 }

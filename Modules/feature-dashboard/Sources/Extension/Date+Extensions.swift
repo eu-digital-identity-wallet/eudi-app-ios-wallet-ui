@@ -17,76 +17,11 @@ import Foundation
 import logic_resources
 
 extension Date {
-  func isWithinNextDays(_ days: Int) -> Bool {
-    let calendar = Calendar.current
-
-    guard let futureDate = calendar.date(byAdding: .day, value: days, to: Date()) else {
-      return false
-    }
-
-    return self >= Date() && self <= futureDate
-  }
-
-  func isBeyondNextDays(_ days: Int) -> Bool {
-    let calendar = Calendar.current
-
-    guard let futureDate = calendar.date(byAdding: .day, value: days, to: Date()) else {
-      return false
-    }
-
-    return self > futureDate
-  }
-
-  func isBeforeToday() -> Bool {
-    let calendar = Calendar.current
-    return calendar.compare(self, to: Date(), toGranularity: .day) == .orderedAscending
-  }
-
-  func isValid() -> Bool {
-    return self >= Date()
-  }
-
-  func isExpired() -> Bool {
-    return self < Date()
-  }
-
-  func formattedString() -> String {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "dd MMMM yyyy hh:mm a"
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    return formatter.string(from: self)
-  }
-
-  func isBetween(_ startDate: Date?, _ endDate: Date?) -> Bool? {
-    guard let start = startDate, let end = endDate else {
-      return startDate == nil && endDate == nil ? nil : false
-    }
-
-    guard start <= end else { return false }
-
-    let calendar = Calendar.current
-    let startOfDay = calendar.startOfDay(for: start)
-    let endOfDay = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: end) ?? end
-
-    if startOfDay == endOfDay {
-      return calendar.isDate(self, inSameDayAs: startOfDay)
-    }
-
-    return (startOfDay...endOfDay).contains(self)
-  }
-
-  func formattedAsDayMonthYearTime() -> String {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "d MMMM yyyy hh:mm a"
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.timeZone = TimeZone.current
-    return formatter.string(from: self)
-  }
 
   static func fromFormattedTransactionString(_ string: String) -> Date? {
     let formatter = DateFormatter()
     formatter.dateFormat = "dd MMM yyyy hh:mm a"
-    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.locale = Locale.current.userSelectedLocale
     return formatter.date(from: string)
   }
 
@@ -105,7 +40,7 @@ extension Date {
     }
 
     let formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.locale = Locale.current.userSelectedLocale
     if calendar.isDateInToday(self) {
       formatter.dateFormat = "hh:mm a"
     } else {
