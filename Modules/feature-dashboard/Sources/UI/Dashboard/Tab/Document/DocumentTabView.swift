@@ -34,7 +34,7 @@ struct DocumentTabView<Router: RouterHost>: View {
       searchQuery: $viewModel.searchQuery,
       onAction: { item in
         switch item.value.state {
-        case .issued:
+        case .issued, .revoked:
           viewModel.onDocumentDetails(documentId: item.value.id)
         case .pending, .failed:
           viewModel.onDeleteDeferredDocument(with: item)
@@ -91,6 +91,9 @@ struct DocumentTabView<Router: RouterHost>: View {
     }
     .onDisappear {
       viewModel.onPause()
+    }
+    .onReceive(NotificationCenter.default.publisher(for: NSNotification.RevocationDocumentTabRefresh)) { _ in
+      viewModel.handleRevocationNotification()
     }
   }
 }
@@ -191,7 +194,7 @@ private func deferredSuccessList(
           .foregroundStyle(Theme.shared.color.primary)
       }
       .padding()
-      .background(Theme.shared.color.background)
+      .background(Theme.shared.color.surfaceContainer)
       .clipShape(.rect(cornerRadius: 8))
       .onTapGesture {
         onDocumentDetails(item.value.id)
@@ -210,7 +213,7 @@ private func deferredSuccessList(
     pendingDeletionDocument: nil,
     succededIssuedDocuments: [],
     failedDocuments: [],
-    isFromOnPause: false,
+    isPaused: false,
     hasDefaultFilters: false
   )
   content(

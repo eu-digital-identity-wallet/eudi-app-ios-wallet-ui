@@ -68,7 +68,10 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     )
     .task {
       await viewModel.fetchDocumentDetails()
-      await viewModel.bookmarked()
+    }
+    .onReceive(NotificationCenter.default.publisher(for: NSNotification.RevocationDocumentDetailsRefresh)) { data in
+      guard let payload = data.userInfo else { return }
+      viewModel.handleRevocationNotification(for: payload)
     }
   }
 }
@@ -89,6 +92,12 @@ private func content(
         .font(.largeTitle)
         .bold()
         .frame(maxWidth: .infinity, alignment: .leading)
+
+      if viewState.isRevoked {
+        RevokedDocumentView(
+          message: .documentDetailsRevokedDocumentMessage
+        )
+      }
 
       VStack(spacing: .zero) {
         WrapExpandableListView(
@@ -146,7 +155,8 @@ private func content(
     ),
     hasDeleteAction: true,
     documentFieldsCount: DocumentDetailsUIModel.mock().documentFields.count,
-    isBookmarked: true
+    isBookmarked: true,
+    isRevoked: true
   )
 
   ContentScreenView(

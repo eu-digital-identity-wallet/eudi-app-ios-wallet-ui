@@ -13,15 +13,16 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+
 public protocol StorageController: Sendable {
 
   associatedtype Value: StoredObject
 
-  func store(_ value: Value) throws
-  func store(_ values: [Value]) throws
-  func update(_ value: Value) throws
-  func retrieve(_ identifier: String) throws -> Value
-  func retrieveAll() throws -> [Value]
-  func delete(_ identifier: String) throws
-  func deleteAll() throws
+  func store(_ value: Value) async throws
+  func store(_ values: [Value]) async throws
+  func update(_ value: Value) async throws
+  func retrieve(_ identifier: String) async throws -> Value
+  func retrieveAll() async throws -> [Value]
+  func delete(_ identifier: String) async throws
+  func deleteAll() async throws
 }

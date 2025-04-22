@@ -47,12 +47,12 @@ extension Bookmark {
 
 extension Array where Element == RealmBookmark {
   func toBookmarks() -> [Bookmark] {
-    self.map { .init(identifier: $0.identifier) }
+    self.map { $0.toBookmark() }
   }
 }
 
 extension Array where Element == Bookmark {
   func toRealmBookmarks() -> [RealmBookmark] {
-    self.map { .init(identifier: $0.identifier) }
+    self.map { $0.toRealmBookmark() }
   }
 }

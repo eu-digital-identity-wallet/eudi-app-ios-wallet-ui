@@ -20,6 +20,7 @@ public struct FilterIds {
   public static let FILTER_BY_STATE_GROUP_ID = "state_group_id"
   public static let FILTER_BY_STATE_VALID = "state_valid"
   public static let FILTER_BY_STATE_EXPIRED = "state_expired"
+  public static let FILTER_BY_STATE_REVOKED = "state_revoked"
   public static let FILTER_BY_DOCUMENT_CATEGORY_GROUP_ID = "category_group_id"
   public static let FILTER_BY_ISSUER_GROUP_ID = "issuer_group_id"
   public static let FILTER_BY_PERIOD_GROUP_ID = "by_period_group_id"

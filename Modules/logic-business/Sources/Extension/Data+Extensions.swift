@@ -16,11 +16,12 @@
 import Foundation
 
 public extension Data {
-  var prettyJson: String? {
-    guard let object = try? JSONSerialization.jsonObject(with: self, options: []),
-          let data = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted, .sortedKeys]),
-          let prettyPrintedString = String(data: data, encoding: .utf8) else { return nil }
-
-    return prettyPrintedString
+  func toJSONString(prettyPrinted: Bool = false) throws -> String {
+    if let jsonObject = try? JSONSerialization.jsonObject(with: self), JSONSerialization.isValidJSONObject(jsonObject) {
+      let options: JSONSerialization.WritingOptions = prettyPrinted ? .prettyPrinted : []
+      let prettyData = try JSONSerialization.data(withJSONObject: jsonObject, options: options)
+      return String(data: prettyData, encoding: .utf8) ?? ""
+    }
+    return String(data: self, encoding: .utf8).orEmpty
   }
 }

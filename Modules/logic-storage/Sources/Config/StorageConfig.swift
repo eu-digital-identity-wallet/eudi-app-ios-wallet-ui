@@ -21,6 +21,7 @@ protocol StorageConfig: Sendable {
   var schemaVersion: UInt64 { get }
   var databaseName: String { get }
   var databaseExtension: String { get }
+  var databaseKey: Data { get }
   var realmConfiguration: Realm.Configuration { get }
 }
 
@@ -44,28 +45,35 @@ final class StorageConfigImpl: StorageConfig {
     "realm"
   }
 
+  var databaseKey: Data {
+    getRealmKey()
+  }
+
   var realmConfiguration: Realm.Configuration {
     var realmConfig = Realm.Configuration.defaultConfiguration
     realmConfig.schemaVersion = self.schemaVersion
     realmConfig.fileURL?.deleteLastPathComponent()
     realmConfig.fileURL?.appendPathComponent(self.databaseName)
     realmConfig.fileURL?.appendPathExtension(self.databaseExtension)
-    realmConfig.encryptionKey = getRealmKey()
+    realmConfig.encryptionKey = self.databaseKey
     return realmConfig
   }
-
 }
 
 private extension StorageConfigImpl {
   func getRealmKey() -> Data {
+
     if let storedKey = keyChainController.getData(key: KeyChainIdentifier.realmKey) {
       return storedKey
     }
-    var newKey = Data(count: 64)
-    _ = newKey.withUnsafeMutableBytes { (pointer: UnsafeMutableRawBufferPointer) in
-      SecRandomCopyBytes(kSecRandomDefault, 64, pointer.baseAddress!)
+
+    var key = Data(count: 64)
+    _ = key.withUnsafeMutableBytes {
+        SecRandomCopyBytes(kSecRandomDefault, 64, $0.baseAddress!)
     }
-    keyChainController.storeValue(key: KeyChainIdentifier.realmKey, value: newKey)
-    return newKey
+
+    keyChainController.storeValue(key: KeyChainIdentifier.realmKey, value: key)
+
+    return key
   }
 }

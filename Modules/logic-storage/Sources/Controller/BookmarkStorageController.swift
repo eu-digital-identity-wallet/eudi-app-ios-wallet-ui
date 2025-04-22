@@ -25,77 +25,41 @@ final class BookmarkStorageControllerImpl: BookmarkStorageController {
     self.realmService = realmService
   }
 
-  func store(_ value: Bookmark) throws {
-    let realm = try realmService.get()
-    let realmValue = value.toRealmBookmark()
-    try realm.write {
-      realm.add(realmValue, update: .all)
-    }
+  func store(_ value: Bookmark) async throws {
+    try await realmService.write(value.toRealmBookmark())
   }
 
-  func store(_ values: [Bookmark]) throws {
-    let realm = try realmService.get()
-    let realmValues = values.toRealmBookmarks()
-    try realm.write {
-      realm.add(realmValues, update: .all)
-    }
+  func store(_ values: [Bookmark]) async throws {
+    try await realmService.writeAll(values.toRealmBookmarks())
   }
 
-  func update(_ value: Bookmark) throws {
-    let realm = try realmService.get()
-    let realmValue = value.toRealmBookmark()
-    try realm.write {
-      realm.add(realmValue, update: .modified)
-    }
+  func update(_ value: Bookmark) async throws {
+    try await realmService.write(value.toRealmBookmark())
   }
 
-  func retrieve(_ identifier: String) throws -> Bookmark {
-    let realm = try realmService.get()
-    guard
-      let bookmark = realm.object(
-        ofType: RealmBookmark.self,
-        forPrimaryKey: identifier
-      )?.toBookmark()
-    else {
+  func retrieve(_ identifier: String) async throws -> Bookmark {
+    let bookmark = try await realmService.read(RealmBookmark.self, id: identifier) {
+      $0.toBookmark()
+    }
+    guard let bookmark else {
       throw StorageError.itemNotFound
     }
     return bookmark
   }
 
-  func retrieveAll() throws -> [Bookmark] {
-    let realm = try realmService.get()
-    let bookmarks = realm.objects(RealmBookmark.self)
+  func retrieveAll() async throws -> [Bookmark] {
+    let bookmarks = try await realmService.readAll(RealmBookmark.self) { $0.toBookmark() }
     guard !bookmarks.isEmpty else {
       throw StorageError.itemsNotFound
     }
-    return bookmarks.toList().toBookmarks()
+    return bookmarks
   }
 
-  func delete(_ identifier: String) throws {
-    let realm = try realmService.get()
-
-    guard
-      let value = realm.object(
-        ofType: RealmBookmark.self,
-        forPrimaryKey: identifier
-      )
-    else {
-      return
-    }
-
-    try realm.write {
-      realm.delete(value)
-    }
+  func delete(_ identifier: String) async throws {
+    try await realmService.delete(RealmBookmark.self, id: identifier)
   }
 
-  func deleteAll() throws {
-    let realm = try realmService.get()
-    let values = realm.objects(RealmBookmark.self)
-    guard !values.isEmpty else {
-      return
-    }
-    try realm.write {
-      realm.delete(values)
-    }
+  func deleteAll() async throws {
+    try await realmService.deleteAll(of: RealmBookmark.self)
   }
 }

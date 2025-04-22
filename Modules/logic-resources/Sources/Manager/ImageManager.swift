@@ -20,7 +20,7 @@ public protocol ImageManagerProtocol: Sendable {
   var logo: Image { get }
   var faceId: Image { get }
   var id: Image { get }
-  var nfc: Image { get }
+  var ble: Image { get }
   var touchId: Image { get }
   var arrowLeft: Image { get }
   var chevronUp: Image { get }
@@ -73,7 +73,7 @@ final class ImageManager: ImageManagerProtocol {
   enum ImageEnum: String {
     case faceId = "face-id"
     case id = "id"
-    case nfc = "nfc"
+    case ble = "ble"
     case touchId = "touch-id"
     case logo = "logo"
     case arrowLeft = "arrow.left"
@@ -137,8 +137,8 @@ final class ImageManager: ImageManagerProtocol {
   var id: Image {
     Image(ImageEnum.id.rawValue, bundle: bundle)
   }
-  var nfc: Image {
-    Image(ImageEnum.nfc.rawValue, bundle: bundle)
+  var ble: Image {
+    Image(ImageEnum.ble.rawValue, bundle: bundle)
   }
   var touchId: Image {
     Image(ImageEnum.touchId.rawValue, bundle: bundle)

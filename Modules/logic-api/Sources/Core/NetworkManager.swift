@@ -105,14 +105,14 @@ actor NetworkManagerImpl: NetworkManager {
   nonisolated func log(request: URLRequest, responseData: Data? = nil) {
     print("1️⃣ Request: " + (request.url?.absoluteString ?? "") )
     print("2️⃣ Request Http Method: " + (request.httpMethod ?? "") )
-    print("3️⃣ Request HttpBody: " + (request.httpBody?.prettyJson ?? "") )
+    print("3️⃣ Request HttpBody: " + ((try? request.httpBody?.toJSONString(prettyPrinted: true)).orEmpty) )
     print("4️⃣ Request Headers: ")
     request.allHTTPHeaderFields?.forEach({ key, value in
       print("\(key): \(value)")
     })
 
     if let responseData {
-      print("✅ Response Body: " + (responseData.prettyJson ?? "") )
+      print("✅ Response Body: " + ((try? responseData.toJSONString(prettyPrinted: true)).orEmpty) )
     }
   }
 }

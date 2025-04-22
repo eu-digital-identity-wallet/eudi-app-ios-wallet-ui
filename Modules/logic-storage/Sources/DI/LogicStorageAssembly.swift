@@ -36,5 +36,15 @@ public final class LogicStorageAssembly: Assembly {
       BookmarkStorageControllerImpl(realmService: r.force(RealmService.self))
     }
     .inObjectScope(ObjectScope.transient)
+
+    container.register((any TransactionLogStorageController).self) { r in
+      TransactionLogStorageControllerImpl(realmService: r.force(RealmService.self))
+    }
+    .inObjectScope(ObjectScope.transient)
+
+    container.register((any RevokedDocumentStorageController).self) { r in
+      RevokedDocumentStorageControllerImpl(realmService: r.force(RealmService.self))
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

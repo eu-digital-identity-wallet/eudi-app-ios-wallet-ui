@@ -16,10 +16,12 @@
 import Foundation
 import UIKit
 import logic_assembly
+import logic_core
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
   private lazy var analyticsController: AnalyticsController = DIGraph.resolver.force(AnalyticsController.self)
+  private lazy var revocationWorkManager: RevocationWorkManager = DIGraph.resolver.force(RevocationWorkManager.self)
 
   func application(
     _ application: UIApplication,
@@ -28,6 +30,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // Initialize Reporting
     initializeReporting()
+
+    // Initialize Revocation Worker
+    initializeRevocationWorker()
 
     return true
   }
@@ -44,5 +49,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   private func initializeReporting() {
     analyticsController.initialize()
+  }
+
+  private func initializeRevocationWorker() {
+    Task { await revocationWorkManager.start() }
   }
 }

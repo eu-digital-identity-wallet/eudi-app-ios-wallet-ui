@@ -183,8 +183,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case walletIsSecured
   case noResults
   case noResultsDescription
-  case proximityConnectionNfcDescription
-  case orShareViaNfc
+  case proximityConnectionBleDescription
   case expiryPeriodSectionTitle
   case selectExpiryPeriod
   case filterByState
@@ -215,6 +214,11 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case filterByCategory
   case searchDocuments
   case or
+  case revoked
+  case documentDetailsRevokedDocumentMessage
+  case errorFetchTransactionLog
+  case revokedModalTitle
+  case revokedModalDescription
 }
 
 public extension LocalizableStringKey {

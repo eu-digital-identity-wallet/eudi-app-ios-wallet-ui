@@ -54,7 +54,6 @@ public protocol DocumentTabInteractor: Sendable {
   func revertFilters() async
   func applySearch(query: String) async
   func updateFilters(sectionID: String, filterID: String) async
-  func fetchFilteredDocuments(failedDocuments: [String]) -> FilterableList?
   func updateLists(filterableList: FilterableList) async
   func updateSortOrder(sortOrder: SortOrderType)
   func createFiltersGroup() -> Filters
@@ -258,14 +257,22 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
               name: LocalizableStringKey.expired.toString,
               selected: false,
               isDefault: false
+            ),
+            FilterItem(
+              id: FilterIds.FILTER_BY_STATE_REVOKED,
+              name: LocalizableStringKey.revoked.toString,
+              selected: true,
+              isDefault: true
             )
           ],
           filterableAction: FilterMultipleAction<DocumentFilterableAttributes>(predicate: { attribute, filter in
             switch filter.id {
             case FilterIds.FILTER_BY_STATE_VALID:
-              attribute.expiryDate?.isValid() == true || attribute.expiryDate == nil
+              (attribute.expiryDate?.isValid() == true || attribute.expiryDate == nil) && !attribute.isRevoked
             case FilterIds.FILTER_BY_STATE_EXPIRED:
-              attribute.expiryDate?.isExpired() == true
+              attribute.expiryDate?.isExpired() == true && !attribute.isRevoked
+            case FilterIds.FILTER_BY_STATE_REVOKED:
+              attribute.isRevoked
             default:
               true
             }
@@ -335,7 +342,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
 
   func fetchDocuments(failedDocuments: [String]) async -> DocumentsPartialState {
 
-    let documents: FilterableList? = fetchFilteredDocuments(failedDocuments: failedDocuments)
+    let documents = await fetchFilteredDocuments(failedDocuments: failedDocuments)
 
     guard let documents = documents else {
       return .failure(WalletCoreError.unableFetchDocuments)
@@ -359,6 +366,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     var failed: [String] = []
 
     let categories = self.walletKitController.getDocumentCategories()
+    let revokedDocuments = try? await self.walletKitController.fetchRevokedDocuments()
 
     for deferred in walletKitController.fetchDeferredDocuments() {
 
@@ -367,7 +375,13 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
       do {
         let document = try await walletKitController.requestDeferredIssuance(with: deferred)
         if (document is DeferrredDocument) == false {
-          issued.append(document.transformToDocumentUi(categories: categories))
+          let isRevoked = revokedDocuments?.first { $0 == deferred.id } != nil
+          issued.append(
+            document.transformToDocumentUi(
+              categories: categories,
+              isRevoked: isRevoked
+            )
+          )
         }
       } catch {
         failed.append(deferred.id)
@@ -381,8 +395,10 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     return walletKitController.retrieveLogFileUrl()
   }
 
-  public func fetchFilteredDocuments(failedDocuments: [String]) -> FilterableList? {
+  private func fetchFilteredDocuments(failedDocuments: [String]) async -> FilterableList? {
+
     let documents = self.walletKitController.fetchAllDocuments()
+    let revokedDocuments = try? await self.walletKitController.fetchRevokedDocuments()
 
     guard !documents.isEmpty else {
       return nil
@@ -390,7 +406,12 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
 
     let filterableItems = documents.map { document in
 
-      let documentPayload = document.transformToDocumentUi(categories: self.walletKitController.getDocumentCategories())
+      let isRevoked = revokedDocuments?.first { $0 == document.id } != nil
+
+      let documentPayload = document.transformToDocumentUi(
+        categories: self.walletKitController.getDocumentCategories(),
+        isRevoked: isRevoked
+      )
 
       let documentSearchTags: [String] = {
         var tags = [document.displayName ?? ""]
@@ -410,7 +431,8 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
           expiryDate: document.validUntil,
           issuer: document.issuerName,
           name: document.displayName,
-          category: documentPayload.value.documentCategory.filterAttribute.capitalizedFirst()
+          category: documentPayload.value.documentCategory.filterAttribute.capitalizedFirst(),
+          isRevoked: isRevoked
         )
       )
     }

@@ -123,9 +123,10 @@ final class DeepLinkControllerImpl: DeepLinkController {
           )
         )
       } else {
-        postNotification(
-          with: NSNotification.PresentationVC,
-          and: ["session": remoteSessionCoordinator]
+        NotificationCenter.default.post(
+          name: NSNotification.PresentationVC,
+          object: nil,
+          userInfo: ["session": remoteSessionCoordinator]
         )
       }
     case .external:
@@ -141,9 +142,10 @@ final class DeepLinkControllerImpl: DeepLinkController {
       if !routerHost.isScreenForeground(with: .featureIssuanceModule(.credentialOfferRequest(config: config))) {
         routerHost.push(with: .featureIssuanceModule(.credentialOfferRequest(config: config)))
       } else {
-        postNotification(
-          with: NSNotification.CredentialOffer,
-          and: ["uri": deepLinkExecutable.plainUrl.absoluteString]
+        NotificationCenter.default.post(
+          name: NSNotification.CredentialOffer,
+          object: nil,
+          userInfo: ["uri": deepLinkExecutable.plainUrl.absoluteString]
         )
       }
     case .rqes:
@@ -176,17 +178,6 @@ final class DeepLinkControllerImpl: DeepLinkController {
 
   public func removeCachedDeepLinkURL() {
     prefsController.remove(forKey: .cachedDeepLink)
-  }
-
-  private func postNotification(
-    with name: NSNotification.Name,
-    and info: [AnyHashable: Any]? = nil
-  ) {
-    NotificationCenter.default.post(
-      name: name,
-      object: nil,
-      userInfo: info
-    )
   }
 }
 
