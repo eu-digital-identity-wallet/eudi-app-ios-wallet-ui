@@ -18,13 +18,16 @@ import EudiWalletKit
 import Foundation
 
 extension logic_storage.TransactionLog {
-  func toCoreTransactionLog() throws -> EudiWalletKit.TransactionLog {
+  func toTransactionLogItem(
+    id: String,
+    parse: (EudiWalletKit.TransactionLog) -> (TransactionLogData)
+  ) throws -> TransactionLogItem {
     guard
       let value = self.value.data(using: .utf8),
       let coreLog = try? JSONDecoder().decode(EudiWalletKit.TransactionLog.self, from: value)
     else {
       throw WalletCoreError.unableToFetchTransactionLog
     }
-    return coreLog
+    return .init(id: id, transactionLogData: parse(coreLog))
   }
 }

@@ -13,10 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_ui
-import logic_resources
 import logic_core
+import feature_common
 
 public protocol DocumentDetailsInteractor: Sendable {
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
@@ -37,7 +35,7 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 
   public func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
     let document = walletController.fetchDocument(with: documentId)
-    guard let documentDetails = document?.transformToDocumentDetailsUi() else {
+    guard let documentDetails = document?.transformToDocumentUi() else {
       return .failure(WalletCoreError.unableFetchDocument)
     }
     let isBookmarked = await walletController.isDocumentBookmarked(with: documentId)
@@ -92,7 +90,7 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 }
 
 public enum DocumentDetailsPartialState: Sendable {
-  case success(DocumentDetailsUIModel, Bool, Bool)
+  case success(DocumentUIModel, Bool, Bool)
   case failure(Error)
 }
 

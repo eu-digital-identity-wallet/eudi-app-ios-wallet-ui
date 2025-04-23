@@ -107,18 +107,26 @@ public struct WrapListItemView: View {
             .truncationMode(.tail)
         }
       }
+      .layoutPriority(1)
       .frame(maxWidth: .infinity, alignment: .leading)
 
       if let trailingContent = listItem.trailingContent {
         switch trailingContent {
-        case .icon(let image, let color):
-          image
-            .renderingMode(.template)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 20, height: 20)
-            .foregroundColor(color)
-
+        case .icon(let image, let color, let text):
+          HStack(spacing: SPACING_SMALL) {
+            Text(text)
+              .font(Theme.shared.font.bodySmall.font)
+              .foregroundColor(color)
+              .multilineTextAlignment(.trailing)
+              .gone(if: text.toString.isEmpty)
+            image
+              .renderingMode(.template)
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(width: 14, height: 14)
+              .foregroundColor(color)
+          }
+          .frame(alignment: .trailing)
         case .checkbox(let enabled, let isChecked, let onToggle):
           WrapCheckbox(
             checkboxData: CheckboxData(
@@ -218,6 +226,19 @@ public struct WrapListItemView: View {
         listItem: .init(
           mainText: .custom("Another Item"),
           trailingContent: .icon(Image(systemName: "plus"))
+        )
+      )
+    }
+
+    WrapCardView {
+      WrapListItemView(
+        listItem: .init(
+          mainText: .custom("Another Item"),
+          trailingContent: .icon(
+            Image(systemName: "plus"),
+            Color.accentColor,
+            LocalizableStringKey.custom("Signing")
+          )
         )
       )
     }

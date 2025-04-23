@@ -141,7 +141,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
   func fetchStoredDocuments(documentIds: [String]) async -> IssueDocumentsPartialState {
     let documents = walletController.fetchDocuments(with: documentIds)
     let documentsDetails = documents.compactMap {
-      $0.transformToDocumentDetailsUi(isSensitive: false)
+      $0.transformToDocumentUi(isSensitive: false)
     }
 
     if documentsDetails.isEmpty {
@@ -171,6 +171,6 @@ public enum IssueDynamicDocumentPartialState: Sendable {
 }
 
 public enum IssueDocumentsPartialState: Sendable {
-  case success([DocumentDetailsUIModel])
+  case success([DocumentUIModel])
   case failure(Error)
 }

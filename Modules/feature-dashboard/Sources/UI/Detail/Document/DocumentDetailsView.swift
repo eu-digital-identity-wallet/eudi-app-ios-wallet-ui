@@ -29,7 +29,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
   var body: some View {
     ContentScreenView(
       padding: .zero,
-      canScroll: !viewModel.viewState.hasContinueButton,
+      canScroll: true,
       errorConfig: viewModel.viewState.error,
       navigationTitle: .details,
       toolbarContent: viewModel.toolbarContent()
@@ -130,15 +130,6 @@ private func content(
           onAction: onShowDeleteModal()
         )
       }
-
-      if viewState.hasContinueButton {
-        WrapButtonView(
-          style: .primary,
-          title: .issuanceDetailsContinueButton,
-          isLoading: viewState.isLoading,
-          onAction: onContinue()
-        )
-      }
     }
     .padding(Theme.shared.dimension.padding)
     .padding(.bottom)
@@ -147,14 +138,12 @@ private func content(
 
 #Preview {
   let viewState = DocumentDetailsViewState(
-    document: DocumentDetailsUIModel.mock(),
+    document: DocumentUIModel.mock(),
     isLoading: false,
     error: nil,
-    config: IssuanceDetailUiConfig(
-      flow: .extraDocument("documentId")
-    ),
+    documentId: "",
     hasDeleteAction: true,
-    documentFieldsCount: DocumentDetailsUIModel.mock().documentFields.count,
+    documentFieldsCount: DocumentUIModel.mock().documentFields.count,
     isBookmarked: true,
     isRevoked: true
   )

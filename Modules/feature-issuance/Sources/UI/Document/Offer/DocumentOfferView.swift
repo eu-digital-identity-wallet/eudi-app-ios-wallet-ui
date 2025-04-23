@@ -33,8 +33,7 @@ struct DocumentOfferView<Router: RouterHost>: View {
       toolbarContent: viewModel.toolbarContent()
     ) {
       content(
-        viewState: viewModel.viewState,
-        imageSize: getScreenRect().width / 4
+        viewState: viewModel.viewState
       )
     }
     .task {
@@ -52,37 +51,45 @@ struct DocumentOfferView<Router: RouterHost>: View {
 @MainActor
 @ViewBuilder
 private func content(
-  viewState: DocumentOfferViewState,
-  imageSize: CGFloat
+  viewState: DocumentOfferViewState
+) -> some View {
+  if viewState.documentOfferUiModel.uiOffers.isEmpty {
+    noDocumentsFound(viewState: viewState)
+  } else {
+    scrollableContent(viewState: viewState)
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func scrollableContent(
+  viewState: DocumentOfferViewState
 ) -> some View {
   ScrollView {
     VStack(spacing: .zero) {
+
       ContentHeader(
         config: viewState.contentHeaderConfig
       )
 
-      if viewState.documentOfferUiModel.uiOffers.isEmpty {
-        noDocumentsFound(imageSize: imageSize)
-      } else {
-        VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
-          ForEach(viewState.documentOfferUiModel.uiOffers) { cell in
-            WrapCardView {
-              DocumentOfferCellView(
-                cellModel: cell,
-                isLoading: viewState.isLoading
-              )
-            }
+        ForEach(viewState.documentOfferUiModel.uiOffers) { cell in
+          WrapCardView {
+            DocumentOfferCellView(
+              cellModel: cell,
+              isLoading: viewState.isLoading
+            )
           }
-
-          Text(.shareDataReview)
-            .typography(Theme.shared.font.bodyMedium)
-            .foregroundColor(Theme.shared.color.onSurface)
-            .multilineTextAlignment(.leading)
-            .shimmer(isLoading: viewState.isLoading)
-
-          VSpacer.medium()
         }
+
+        Text(.shareDataReview)
+          .typography(Theme.shared.font.bodyMedium)
+          .foregroundColor(Theme.shared.color.onSurface)
+          .multilineTextAlignment(.leading)
+          .shimmer(isLoading: viewState.isLoading)
+
+        VSpacer.medium()
       }
     }
   }
@@ -90,25 +97,17 @@ private func content(
 
 @MainActor
 @ViewBuilder
-private func noDocumentsFound(imageSize: CGFloat) -> some View {
-  VStack(alignment: .center) {
-
+private func noDocumentsFound(
+  viewState: DocumentOfferViewState
+) -> some View {
+  VStack(spacing: .zero) {
+    ContentHeader(
+      config: viewState.contentHeaderConfig
+    )
     Spacer()
-
-    VStack(alignment: .center, spacing: SPACING_MEDIUM) {
-
-      Theme.shared.image.exclamationmarkCircle
-        .renderingMode(.template)
-        .resizable()
-        .foregroundStyle(Theme.shared.color.onSurface)
-        .frame(width: imageSize, height: imageSize)
-
-      Text(.requestCredentialOfferNoDocument)
-        .typography(Theme.shared.font.bodyMedium)
-        .foregroundColor(Theme.shared.color.onSurface)
-        .multilineTextAlignment(.center)
-    }
-
+    ContentEmptyView(
+      title: .requestCredentialOfferNoDocument
+    )
     Spacer()
   }
 }
@@ -136,8 +135,7 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
 
   ContentScreenView {
     content(
-      viewState: viewState,
-      imageSize: UIScreen.main.bounds.width / 4
+      viewState: viewState
     )
   }
 }
@@ -171,8 +169,7 @@ private func noDocumentsFound(imageSize: CGFloat) -> some View {
 
   ContentScreenView {
     content(
-      viewState: viewState,
-      imageSize: UIScreen.main.bounds.width / 4
+      viewState: viewState
     )
   }
 }

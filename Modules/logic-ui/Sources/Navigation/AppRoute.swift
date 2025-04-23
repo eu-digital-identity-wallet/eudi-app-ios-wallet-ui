@@ -57,6 +57,8 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
   case signDocument
   case sideMenu
   case issuanceOption
+  case documentDetails(id: String)
+  case transactionDetails(id: String)
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -68,6 +70,10 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
       (key: "SideMenu", arguments: [:])
     case .issuanceOption:
       (key: "issuanceOption", arguments: [:])
+    case .documentDetails(let id):
+      (key: "DocumentDetails", arguments: ["id": id])
+    case .transactionDetails(let id):
+      (key: "TransactionDetails", arguments: ["id": id])
     }
   }
 }
@@ -155,7 +161,6 @@ public indirect enum FeatureProximityRouteModule: AppRouteModule {
 public enum FeatureIssuanceRouteModule: AppRouteModule {
 
   case issuanceAddDocument(config: any UIConfigType)
-  case issuanceDocumentDetails(config: any UIConfigType)
   case issuanceSuccess(config: any UIConfigType, requestItems: [any Routable])
   case credentialOfferRequest(config: any UIConfigType)
   case issuanceCode(config: any UIConfigType)
@@ -164,8 +169,6 @@ public enum FeatureIssuanceRouteModule: AppRouteModule {
     return switch self {
     case .issuanceAddDocument(let config):
       (key: "IssuanceAddDocument", arguments: ["config": config.log])
-    case .issuanceDocumentDetails(let config):
-      (key: "IssuanceDocumentDetails", arguments: ["config": config.log])
     case .issuanceSuccess(let config, _):
       (key: "IssuanceSuccess", arguments: ["config": config.log])
     case .issuanceCode(let config):

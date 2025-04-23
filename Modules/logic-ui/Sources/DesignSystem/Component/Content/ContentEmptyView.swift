@@ -27,7 +27,7 @@ public struct ContentEmptyView: View {
   public init(
     title: LocalizableStringKey,
     image: Image = Theme.shared.image.exclamationmarkCircle,
-    iconColor: Color = Theme.shared.color.background,
+    iconColor: Color = Theme.shared.color.onSurface,
     textColor: Color = Theme.shared.color.onSurface,
     onClick: (() -> Void)? = nil
   ) {
@@ -39,13 +39,16 @@ public struct ContentEmptyView: View {
   }
 
   public var body: some View {
+
+    let imageSize = getScreenRect().width / 4
+
     VStack(alignment: .center, spacing: SPACING_MEDIUM) {
 
       image
         .resizable()
         .scaledToFit()
         .foregroundColor(iconColor)
-        .frame(height: 50)
+        .frame(width: imageSize, height: imageSize)
 
       Text(title)
         .multilineTextAlignment(.center)

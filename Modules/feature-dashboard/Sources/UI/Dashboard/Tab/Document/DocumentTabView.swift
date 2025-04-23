@@ -16,7 +16,6 @@
 import SwiftUI
 import logic_resources
 import logic_ui
-import logic_core
 
 struct DocumentTabView<Router: RouterHost>: View {
 
@@ -103,11 +102,14 @@ struct DocumentTabView<Router: RouterHost>: View {
 private func content(
   state: DocumentTabState,
   searchQuery: Binding<String>,
-  onAction: @escaping (DocumentUIModel) -> Void
+  onAction: @escaping (DocumentTabUIModel) -> Void
 ) -> some View {
   VStack {
     if state.documents.isEmpty && !searchQuery.wrappedValue.isEmpty {
-      contentUnavailableView()
+      ContentUnavailableView(
+        title: .noResults,
+        description: .noResultsDocumentsDescription
+      )
     } else if !state.documents.isEmpty {
       List {
         ForEach(state.documents.keys.sorted(by: { $0.order < $1.order }), id: \.self) { category in
@@ -118,6 +120,7 @@ private func content(
                   onAction(item)
                 }
               }
+              .listRowBackground(Theme.shared.color.background)
               .listRowSeparator(.hidden)
             }
             .listRowInsets(.init(
@@ -131,46 +134,26 @@ private func content(
       }
       .shimmer(isLoading: state.isLoading)
       .listStyle(.plain)
+      .scrollContentBackground(.hidden)
       .scrollIndicators(.hidden)
       .clipped()
     } else if !state.isLoading {
-      contentUnavailableView()
+      ContentUnavailableView(
+        title: .noResults,
+        description: .noResultsDocumentsDescription
+      )
     } else {
-      loader()
+      ContentLoaderView(showLoader: .constant(true))
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
   }
   .searchable(
     searchText: searchQuery,
+    placeholder: .searchDocuments,
     backgroundColor: Theme.shared.color.background,
     onSearchTextChange: { _ in }
   )
   .background(Theme.shared.color.background)
-}
-
-@MainActor
-@ViewBuilder
-private func loader() -> some View {
-  Spacer()
-  ContentLoaderView(showLoader: .constant(true))
-  Spacer()
-}
-
-@MainActor
-@ViewBuilder
-private func contentUnavailableView() -> some View {
-  VStack(spacing: SPACING_SMALL) {
-    Text(.noResults)
-      .typography(Theme.shared.font.titleLarge)
-      .fontWeight(.bold)
-
-    Text(.noResultsDescription)
-      .typography(Theme.shared.font.bodyLarge)
-      .foregroundStyle(Theme.shared.color.onSurface)
-      .multilineTextAlignment(.center)
-  }
-  .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-  .padding(.top, SPACING_LARGE_MEDIUM)
-  .padding(.horizontal, SPACING_MEDIUM)
 }
 
 @MainActor

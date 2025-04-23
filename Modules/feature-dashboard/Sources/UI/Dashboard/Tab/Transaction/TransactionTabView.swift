@@ -15,6 +15,7 @@
  */
 import SwiftUI
 import logic_ui
+import logic_resources
 
 struct TransactionTabView<Router: RouterHost>: View {
 
@@ -25,21 +26,113 @@ struct TransactionTabView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    content()
-      .onAppear {
-        viewModel.onCreate()
+    content(
+      state: viewModel.viewState,
+      searchQuery: $viewModel.searchQuery,
+      onAction: {
+        viewModel.onTransactionDetails(transactionId: $0)
       }
+    )
+    .sheet(isPresented: $viewModel.isFilterModalShowing) {
+      FiltersListView(sections: viewModel.viewState.filterUIModel) {
+        viewModel.resetFilters()
+      } applyFiltersAction: {
+        viewModel.fetch()
+      } showIndicator: {
+        viewModel.showIndicator()
+      } revertFilters: {
+        viewModel.revertFilters()
+      }
+      updateFiltersCallback: { sectionID, filterID in
+        viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
+      }
+      updateDateFiltersCallback: { sectionID, filterID, startDate, endDate in
+        viewModel.updateDateFilters(sectionID: sectionID, filterID: filterID, startDate: startDate, endDate: endDate)
+      }
+    }
+    .onAppear {
+      viewModel.onCreate()
+    }
   }
 }
 
 @MainActor
 @ViewBuilder
-private func content() -> some View {
+private func content(
+  state: TransactionTabState,
+  searchQuery: Binding<String>,
+  onAction: @escaping (String) -> Void
+) -> some View {
   VStack {
-    Text("Under construction")
+    if state.transactions.isEmpty && !searchQuery.wrappedValue.isEmpty {
+      ContentUnavailableView(
+        title: .noResults,
+        description: .noResultsTransactionsDescription
+      )
+    } else if !state.transactions.isEmpty {
+      List {
+        ForEach(state.transactions.keys.sorted(by: { state.sortIsDescending ? $0.order < $1.order : $0.order > $1.order }), id: \.self) { category in
+          Section(header: Text(category.title)) {
+            WrapCardView {
+              VStack(spacing: .zero) {
+                WrapListItemsView(
+                  listItems: state.transactions[category]?.map({ transaction in
+                    transaction.listItem
+                  }) ?? []
+                ) { item in
+                  onAction(item.id)
+                }
+              }
+            }
+            .listRowBackground(Theme.shared.color.background)
+            .listRowSeparator(.hidden)
+          }
+          .listRowInsets(.init(
+            top: SPACING_SMALL,
+            leading: SPACING_MEDIUM,
+            bottom: .zero,
+            trailing: SPACING_MEDIUM)
+          )
+        }
+      }
+      .shimmer(isLoading: state.isLoading)
+      .listStyle(.plain)
+      .scrollContentBackground(.hidden)
+      .scrollIndicators(.hidden)
+      .clipped()
+    } else if !state.isLoading {
+      ContentUnavailableView(
+        title: .noResults,
+        description: .noResultsTransactionsDescription
+      )
+    } else {
+      ContentLoaderView(showLoader: .constant(true))
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
   }
+  .searchable(
+    searchText: searchQuery,
+    placeholder: .searchTransactions,
+    backgroundColor: Theme.shared.color.background,
+    onSearchTextChange: { _ in }
+  )
+  .background(Theme.shared.color.background)
 }
 
 #Preview {
-  content()
+  let state = TransactionTabState(
+    isLoading: false,
+    transactions: [:],
+    filterUIModel: [],
+    failedTransactions: [],
+    isInitialBoot: false,
+    hasDefaultFilters: false,
+    dateHasChanged: false,
+    sortIsDescending: true
+  )
+  content(
+    state: state,
+    searchQuery: .constant(""),
+    onAction: { _ in }
+  )
 }

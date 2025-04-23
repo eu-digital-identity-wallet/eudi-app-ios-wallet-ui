@@ -30,14 +30,14 @@ public enum DeleteDeferredPartialState: Sendable {
   case failure(Error)
 }
 
-public enum FiltersPartialState: Sendable {
-  case filterApplyResult([DocumentCategory: [DocumentUIModel]], [FilterUISection], Bool)
+public enum DocumentFiltersPartialState: Sendable {
+  case filterApplyResult([DocumentCategory: [DocumentTabUIModel]], [FilterUISection], Bool)
   case filterUpdateResult([FilterUISection])
   case cancelled
 }
 
 public enum DeferredPartialState: Sendable {
-  case completion(issued: [DocumentUIModel], failed: [String])
+  case completion(issued: [DocumentTabUIModel], failed: [String])
   case cancelled
 }
 
@@ -47,7 +47,7 @@ public protocol DocumentTabInteractor: Sendable {
   func deleteDeferredDocument(with id: String) async -> DeleteDeferredPartialState
   func requestDeferredIssuance() async -> DeferredPartialState
   func retrieveLogFileUrl() -> URL?
-  @MainActor func onFilterChangeState() -> AsyncStream<FiltersPartialState>
+  @MainActor func onFilterChangeState() -> AsyncStream<DocumentFiltersPartialState>
   func initializeFilters(filterableList: FilterableList) async
   func applyFilters() async
   func resetFilters() async
@@ -66,7 +66,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
   private let filterValidator: FilterValidator
 
   @MainActor
-  private var filtersStateAsync: AsyncStream<FiltersPartialState>.Continuation?
+  private var filtersStateAsync: AsyncStream<DocumentFiltersPartialState>.Continuation?
 
   init(
     walletKitController: WalletKitController,
@@ -84,7 +84,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     return !walletKitController.fetchDeferredDocuments().isEmpty
   }
 
-  func onFilterChangeState() -> AsyncStream<FiltersPartialState> {
+  func onFilterChangeState() -> AsyncStream<DocumentFiltersPartialState> {
     return AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
       self.filtersStateAsync = continuation
       Task {
@@ -94,7 +94,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
             switch filterResult {
             case .filterApplyResult(let filteredList, let updatedFilters, let hasDefaultFilters):
               let documentsUI = filteredList.items.compactMap { filterableItem in
-                return filterableItem.payload as? DocumentUIModel
+                return filterableItem.payload as? DocumentTabUIModel
               }
               let documents = Dictionary(grouping: documentsUI, by: { $0.value.documentCategory })
               let filterSections = filterUISection(filters: updatedFilters)
@@ -310,7 +310,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
   }
 
   func applyFilters() async {
-    await filterValidator.applyFilters()
+    await filterValidator.applyFilters(sortOrder: .ascending)
   }
 
   func applySearch(query: String) async {
@@ -362,7 +362,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
 
   func requestDeferredIssuance() async -> DeferredPartialState {
 
-    var issued: [DocumentUIModel] = []
+    var issued: [DocumentTabUIModel] = []
     var failed: [String] = []
 
     let categories = self.walletKitController.getDocumentCategories()
@@ -449,7 +449,8 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
             id: filter.id,
             title: filter.name,
             selected: filter.selected,
-            filterAction: filter.filterableAction
+            filterAction: filter.filterableAction,
+            filterSectionType: filter.filterElementType
           )
         },
         sectionTitle: filteredGroup.name

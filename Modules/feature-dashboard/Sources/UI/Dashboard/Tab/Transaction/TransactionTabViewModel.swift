@@ -15,15 +15,30 @@
  */
 import Foundation
 import logic_ui
+import logic_core
 import logic_resources
+import feature_common
 
 @Copyable
-struct TransactionTabState: ViewState {}
+struct TransactionTabState: ViewState {
+  let isLoading: Bool
+  let transactions: [TransactionCategory: [TransactionTabUIModel]]
+  let filterUIModel: [FilterUISection]
+  let failedTransactions: [String]
+  let isInitialBoot: Bool
+  let hasDefaultFilters: Bool
+  let dateHasChanged: Bool
+  let sortIsDescending: Bool
+}
 
 final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, TransactionTabState> {
 
   private let interactor: TransactionTabInteractor
   private let onUpdateToolbar: (ToolBarContent, LocalizableStringKey) -> Void
+  private let SEARCH_INPUT_DEBOUNCE = 250
+
+  @Published var isFilterModalShowing: Bool = false
+  @Published var searchQuery: String = ""
 
   init(
     router: Router,
@@ -34,14 +49,164 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
     self.onUpdateToolbar = onUpdateToolbar
     super.init(
       router: router,
-      initialState: .init()
+      initialState: .init(
+        isLoading: true,
+        transactions: [:],
+        filterUIModel: [],
+        failedTransactions: [],
+        isInitialBoot: true,
+        hasDefaultFilters: true,
+        dateHasChanged: false,
+        sortIsDescending: false
+      )
     )
+
+    onFiltersChangeState()
+    subscribeToSearch()
   }
 
   func onCreate() {
-    onUpdateToolbar(
+    updateToolBar()
+    fetch()
+  }
+
+  func fetch() {
+    Task {
+      let failedTransactions = viewState.failedTransactions
+
+      do {
+        let state = try await Task.detached {
+          try await self.interactor.fetchTransactions(failedTransactions: failedTransactions)
+        }.value
+
+        switch state {
+        case .success(let transactions):
+          if viewState.isInitialBoot {
+            await interactor.initializeFilters(filterableList: transactions)
+          } else {
+            await interactor.updateLists(filterableList: transactions)
+          }
+
+          await interactor.applyFilters()
+
+          setState {
+            $0.copy(
+              isLoading: false,
+              isInitialBoot: false
+            )
+          }
+        case .failure:
+          setState {
+            $0.copy(
+              isLoading: false,
+              transactions: [:]
+            )
+          }
+        }
+      } catch {
+        setState {
+          $0.copy(
+            isLoading: false,
+            transactions: [:]
+          )
+        }
+      }
+    }
+  }
+
+  func showIndicator() {
+    setState {
+      $0.copy(
+        dateHasChanged: true
+      )
+    }
+  }
+
+  func showFilters() {
+    isFilterModalShowing = true
+  }
+
+  func resetFilters() {
+    setState {
+      $0.copy(
+        dateHasChanged: false
+      )
+    }
+
+    Task {
+      await interactor.resetFilters()
+    }
+  }
+
+  func revertFilters() {
+    Task {
+      await interactor.revertFilters()
+    }
+  }
+
+  func updateFilters(sectionID: String, filterID: String) {
+    Task {
+      await interactor.updateFilters(sectionID: sectionID, filterID: filterID)
+    }
+  }
+
+  func updateDateFilters(
+    sectionID: String,
+    filterID: String,
+    startDate: Date,
+    endDate: Date
+  ) {
+    Task {
+      await interactor.updateDateFilters(
+        sectionID: sectionID,
+        filterID: filterID,
+        startDate: startDate,
+        endDate: endDate
+      )
+    }
+  }
+
+  private func onMyWallet() {
+    router.push(
+      with: .featureDashboardModule(
+        .sideMenu
+      )
+    )
+  }
+
+  private func subscribeToSearch() {
+    $searchQuery
+      .dropFirst()
+      .debounce(for: .milliseconds(SEARCH_INPUT_DEBOUNCE), scheduler: RunLoop.main)
+      .removeDuplicates()
+      .sink { [weak self] query in
+        guard let self = self else { return }
+        Task {
+          await self.interactor.applySearch(query: query)
+        }
+      }.store(in: &cancellables)
+  }
+
+  func onTransactionDetails(transactionId: String) {
+    router.push(
+      with: .featureDashboardModule(
+        .transactionDetails(id: transactionId)
+      )
+    )
+  }
+
+  private func updateToolBar() {
+    self.onUpdateToolbar(
       .init(
-        trailingActions: nil,
+        trailingActions: [
+          Action(
+            image: Theme.shared.image.filterMenuIcon,
+            hasIndicator: !viewState.hasDefaultFilters,
+            disabled: viewState.filterUIModel.isEmpty
+          ) {
+            self.showFilters()
+          }
+        ],
         leadingActions: [
           Action(image: Theme.shared.image.menuIcon) {
             self.onMyWallet()
@@ -52,11 +217,37 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
     )
   }
 
-  private func onMyWallet() {
-    router.push(
-      with: .featureDashboardModule(
-        .sideMenu
-      )
-    )
+  private func onFiltersChangeState() {
+    Task {
+      for await state in interactor.onFilterChangeState() {
+        switch state {
+
+        case .filterApplyResult(let transactions, let filterSections, let hasDefaultFilters):
+          setState {
+            $0.copy(
+              transactions: transactions,
+              filterUIModel: filterSections,
+              hasDefaultFilters: viewState.dateHasChanged ? false : hasDefaultFilters,
+              sortIsDescending: sortIsDescending(filterSections)
+            )
+          }
+          updateToolBar()
+        case .filterUpdateResult(let filterSections):
+          setState {
+            $0.copy(
+              filterUIModel: filterSections
+            )
+          }
+        case .cancelled: break
+        }
+      }
+    }
+  }
+
+  private func sortIsDescending(_ filterSections: [FilterUISection]) -> Bool {
+    guard let firstFilter = filterSections.first?.filters.first else {
+      return false
+    }
+    return firstFilter.selected
   }
 }

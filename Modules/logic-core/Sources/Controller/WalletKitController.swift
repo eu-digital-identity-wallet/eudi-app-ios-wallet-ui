@@ -76,8 +76,8 @@ public protocol WalletKitController: Sendable {
   func storeBookmarkedDocument(with id: String) async throws
   func removeBookmarkedDocument(with id: String) async throws
 
-  func fetchTransactionLog(with id: String) async throws -> TransactionLogData
-  func fetchTransactionLogs() async throws -> [TransactionLogData]
+  func fetchTransactionLog(with id: String) async throws -> TransactionLogItem
+  func fetchTransactionLogs() async throws -> [TransactionLogItem]
 
   func isDocumentRevoked(with id: String) async -> Bool
   func fetchRevokedDocuments() async throws -> [String]
@@ -323,27 +323,35 @@ final class WalletKitControllerImpl: WalletKitController {
     try await bookmarkStorageController.delete(id)
   }
 
-  func fetchTransactionLog(with id: String) async throws -> TransactionLogData {
+  func fetchTransactionLog(with id: String) async throws -> TransactionLogItem {
     guard
       let storedLog = try? await self.transactionLogStorageController.retrieve(id),
-      let coreLog = try? storedLog.toCoreTransactionLog()
+      let item = try? storedLog.toTransactionLogItem(
+        id: storedLog.identifier,
+        parse: { self.wallet.parseTransactionLog($0) }
+      )
     else {
       throw WalletCoreError.unableToFetchTransactionLog
     }
-    return self.wallet.parseTransactionLog(coreLog)
+    return item
   }
 
-  func fetchTransactionLogs() async throws -> [TransactionLogData] {
+  func fetchTransactionLogs() async throws -> [TransactionLogItem] {
     guard
       let storedLogs = try? await self.transactionLogStorageController.retrieveAll()
     else {
       throw WalletCoreError.unableToFetchTransactionLog
     }
     return storedLogs.compactMap {
-      guard let coreLog = try? $0.toCoreTransactionLog() else {
+      guard
+        let item = try? $0.toTransactionLogItem(
+          id: $0.identifier,
+          parse: { self.wallet.parseTransactionLog($0) }
+        )
+      else {
         return nil
       }
-      return self.wallet.parseTransactionLog(coreLog)
+      return item
     }
   }
 

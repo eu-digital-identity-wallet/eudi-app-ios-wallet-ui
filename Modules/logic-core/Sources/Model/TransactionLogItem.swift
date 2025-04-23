@@ -13,12 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-public protocol TransactionTabInteractor: Sendable {
-
-}
-
-final class TransactionTabInteractorImpl: TransactionTabInteractor {
-  init() {
-
-  }
+public struct TransactionLogItem: Sendable {
+  public let id: String
+  public let transactionLogData: TransactionLogData
 }

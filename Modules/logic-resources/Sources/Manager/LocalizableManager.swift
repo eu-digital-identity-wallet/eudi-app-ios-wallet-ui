@@ -347,8 +347,10 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "wallet_is_secured")
     case .noResults:
       bundle.localizedString(forKey: "no_results")
-    case .noResultsDescription:
-      bundle.localizedString(forKey: "no_results_description")
+    case .noResultsDocumentsDescription:
+      bundle.localizedString(forKey: "no_results_documents_description")
+    case .noResultsTransactionsDescription:
+      bundle.localizedString(forKey: "no_results_transactions_description")
     case .proximityConnectionBleDescription:
       bundle.localizedString(forKey: "proximity_connection_ble_description")
     case .filters:
@@ -427,18 +429,84 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "filter_by_category")
     case .searchDocuments:
       bundle.localizedString(forKey: "search_documents")
+    case .searchTransactions:
+      bundle.localizedString(forKey: "search_transactions")
+    case .filterByStatus:
+      bundle.localizedString(forKey: "filter_by_status")
+    case .completed:
+      bundle.localizedString(forKey: "completed")
+    case .failed:
+      bundle.localizedString(forKey: "failed")
+    case .filterByDate:
+      bundle.localizedString(forKey: "filter_by_date")
+    case .startDate:
+      bundle.localizedString(forKey: "start_date")
+    case .endDate:
+      bundle.localizedString(forKey: "end_date")
+    case .relyingParty:
+      bundle.localizedString(forKey: "relying_party")
+    case .attestation:
+      bundle.localizedString(forKey: "attestation")
+    case .documentSigning:
+      bundle.localizedString(forKey: "document_signing")
+    case .signedDocuments:
+      bundle.localizedString(forKey: "signed_documents")
+    case .transactionInformation:
+      bundle.localizedString(forKey: "transaction_information")
+    case .transactionDetailsDataSigned:
+      bundle.localizedString(forKey: "transaction_details_data_signed")
+    case .transactionDetailsDataShare:
+      bundle.localizedString(forKey: "transaction_details_data_shared")
+    case .transactionDetailsScreenCardDateLabel:
+      bundle.localizedString(forKey: "transaction_details_screen_card_date_label")
+    case .transactionDetailsCompleted:
+      bundle.localizedString(forKey: "transaction_details_completed")
     case .or:
       bundle.localizedString(forKey: "or")
+    case .today:
+      bundle.localizedString(forKey: "today")
+    case .thisWeek:
+      bundle.localizedString(forKey: "this_week")
+    case .unknownDate:
+      bundle.localizedString(forKey: "unknown_date")
+    case .minutesAgo(let args):
+      bundle.localizedStringWithArguments(forKey: "minutes_ago", arguments: args)
+    case .minuteAgo(let args):
+      bundle.localizedStringWithArguments(forKey: "minute_ago", arguments: args)
+    case .transactionDate:
+      bundle.localizedString(forKey: "transaction_date")
+    case .filterByType:
+      bundle.localizedString(forKey: "filter_by_type")
+    case .presentation:
+      bundle.localizedString(forKey: "presentation")
+    case .signing:
+      bundle.localizedString(forKey: "signing")
+    case .issuance:
+      bundle.localizedString(forKey: "issuance")
+    case .withoutRelyingName:
+      bundle.localizedString(forKey: "without_relying_name")
+    case .errorFetchTransactionLog:
+      bundle.localizedString(forKey: "fetch_error_transaction_log")
+    case .incomplete:
+      bundle.localizedString(forKey: "incomplete")
+    case .justNow:
+      bundle.localizedString(forKey: "just_now")
     case .revoked:
       bundle.localizedString(forKey: "revoked")
     case .documentDetailsRevokedDocumentMessage:
       bundle.localizedString(forKey: "document_details_revoked_document_message")
-    case .errorFetchTransactionLog:
-      bundle.localizedString(forKey: "fetch_error_transaction_log")
     case .revokedModalTitle:
       bundle.localizedString(forKey: "revoked_modal_title")
     case .revokedModalDescription:
       bundle.localizedString(forKey: "revoked_modal_description")
+    case .transactionDetailsRequestDeletionMessage:
+      bundle.localizedString(forKey: "transaction_details_eequest_deletion_message")
+    case .transactionDetailsRequestDeletionButton:
+      bundle.localizedString(forKey: "transaction_details_eequest_deletion_button")
+    case .transactionDetailsReportTransactionMessage:
+      bundle.localizedString(forKey: "transaction_details_report_transaction_message")
+    case .transactionDetailsReportTransactionButton:
+      bundle.localizedString(forKey: "transaction_detailsReport_transaction_button")
     }
   }
 }

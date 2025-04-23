@@ -33,6 +33,7 @@ public protocol ImageManagerProtocol: Sendable {
   var eye: Image { get }
   var eyeSlash: Image { get }
   var checkmarkCircleFill: Image { get }
+  var checkmarkCircle: Image { get }
   var checkmarkSquareFill: Image { get }
   var square: Image { get }
   var plus: Image { get }
@@ -66,6 +67,7 @@ public protocol ImageManagerProtocol: Sendable {
   var successSecuredWallet: Image { get }
   var digitalIdIssuance: Image { get }
   var documentSuccessPending: Image { get }
+  var verified: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -87,6 +89,7 @@ final class ImageManager: ImageManagerProtocol {
     case eye = "eye"
     case eyeSlash = "eye.slash"
     case checkmarkCircleFill = "checkmark.circle.fill"
+    case checkmarkCircle = "checkmark.circle"
     case checkmarkSquareFill = "checkmark.square.fill"
     case square = "square"
     case plus = "plus"
@@ -120,6 +123,7 @@ final class ImageManager: ImageManagerProtocol {
     case successSecuredWallet = "success-secured-wallet"
     case digitalIdIssuance = "digital-id-issuance"
     case documentSuccessPending = "document-success-pending"
+    case verified = "verified"
   }
 
   // MARK: - Properties
@@ -178,6 +182,9 @@ final class ImageManager: ImageManagerProtocol {
   }
   var checkmarkCircleFill: Image {
     Image(systemName: ImageEnum.checkmarkCircleFill.rawValue)
+  }
+  var checkmarkCircle: Image {
+    Image(systemName: ImageEnum.checkmarkCircle.rawValue)
   }
   var checkmarkSquareFill: Image {
     Image(systemName: ImageEnum.checkmarkSquareFill.rawValue)
@@ -277,5 +284,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var documentSuccessPending: Image {
     Image(ImageEnum.documentSuccessPending.rawValue, bundle: bundle)
+  }
+  var verified: Image {
+    Image(ImageEnum.verified.rawValue, bundle: bundle)
   }
 }

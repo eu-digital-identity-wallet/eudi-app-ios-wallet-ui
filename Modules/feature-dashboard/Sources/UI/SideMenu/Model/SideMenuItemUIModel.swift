@@ -25,7 +25,7 @@ public struct SideMenuItemUIModel: Identifiable {
   public let isShareLink: Bool
   public let action: () -> Void
 
-  public init(
+  init(
     id: String = UUID().uuidString,
     title: LocalizableStringKey,
     showDivider: Bool = true,

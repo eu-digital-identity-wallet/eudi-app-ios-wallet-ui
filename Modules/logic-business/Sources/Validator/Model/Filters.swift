@@ -20,8 +20,21 @@ import logic_resources
 public enum FilterGroupType: Sendable {
   case issuer
   case documentCategory
+  case relyingParty
+  case attestation
   case other
   case orderBy
+  case dateRange
+}
+
+public enum DateRangeType: Sendable {
+  case start
+  case end
+}
+
+public enum FilterElementType: Sendable {
+  case radio
+  case datePicker
 }
 
 @Copyable
@@ -45,8 +58,8 @@ public struct Filters: Sendable {
     !filterGroups.isEmpty
   }
 
-  public static func emptyFilters() -> Filters {
-    return Filters(filterGroups: [], sortOrder: .ascending)
+  public static func emptyFilters(sortOrder: SortOrderType = .ascending) -> Filters {
+    return Filters(filterGroups: [], sortOrder: sortOrder)
   }
 }
 
@@ -59,6 +72,26 @@ public protocol FilterGroup: Sendable {
 
 @Copyable
 public struct SingleSelectionFilterGroup: FilterGroup {
+  public var id: String
+  public var name: String
+  public var filters: [FilterItem]
+  public var filterType: FilterGroupType
+
+  public init(
+    id: String = UUID().uuidString,
+    name: String,
+    filters: [FilterItem],
+    filterType: FilterGroupType
+  ) {
+    self.id = id
+    self.name = name
+    self.filters = filters
+    self.filterType = filterType
+  }
+}
+
+@Copyable
+public struct ReversibleSingleSelectionFilterGroup: FilterGroup {
   public var id: String
   public var name: String
   public var filters: [FilterItem]
@@ -101,11 +134,37 @@ public struct MultipleSelectionFilterGroup: FilterGroup {
 }
 
 @Copyable
+public struct ReversibleMultipleSelectionFilterGroup: FilterGroup {
+  public var id: String
+  public var name: String
+  public var filters: [FilterItem]
+  public var filterableAction: FilterAction
+  public var filterType: FilterGroupType
+
+  public init(
+    id: String = UUID().uuidString,
+    name: String,
+    filters: [FilterItem],
+    filterableAction: FilterAction,
+    filterType: FilterGroupType
+  ) {
+    self.id = id
+    self.name = name
+    self.filters = filters
+    self.filterableAction = filterableAction
+    self.filterType = filterType
+  }
+}
+
+@Copyable
 public struct FilterItem: Sendable {
   public let id: String
   public let name: String
   public let selected: Bool
   public let isDefault: Bool
+  public let startDate: Date?
+  public let endDate: Date?
+  public let filterElementType: FilterElementType
   public let filterableAction: FilterAction
 
   public init(
@@ -113,12 +172,18 @@ public struct FilterItem: Sendable {
     name: String,
     selected: Bool,
     isDefault: Bool = false,
+    startDate: Date? = nil,
+    endDate: Date? = nil,
+    filterElementType: FilterElementType = .radio,
     filterableAction: FilterAction = DefaultFilterAction()
   ) {
     self.id = id
     self.name = name
     self.selected = selected
     self.isDefault = isDefault
+    self.startDate = startDate
+    self.endDate = endDate
+    self.filterElementType = filterElementType
     self.filterableAction = filterableAction
   }
 }
@@ -166,6 +231,7 @@ public struct FilterMultipleAction<T: FilterableAttributes>: FilterAction {
 
     return FilterableList(items: matchingItems)
   }
+
 }
 
 public enum FilterResult: Sendable {

@@ -72,6 +72,7 @@ struct HomeTabView<Router: RouterHost>: View {
     .onAppear {
       viewModel.onCreate()
     }
+    .background(Theme.shared.color.background)
   }
 }
 
@@ -135,6 +136,7 @@ private func content(
     .padding(.horizontal, SPACING_MEDIUM)
   }
   .clipped()
+  .background(Theme.shared.color.background)
 }
 
 #Preview {

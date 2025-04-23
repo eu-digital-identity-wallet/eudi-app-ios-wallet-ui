@@ -23,10 +23,14 @@ struct FiltersListView: View {
   @Environment(\.dismiss) var dismiss
 
   @State private var isApplied: Bool = false
+  @State private var startDate: Date = Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date()
+  @State private var endDate: Date = Calendar.current.date(byAdding: .year, value: 1, to: Date()) ?? Date()
 
   var resetFiltersAction: () -> Void
   var applyFiltersAction: () -> Void
+  var showIndicator: (() -> Void)?
   var updateFiltersCallback: ((String, String) -> Void)?
+  var updateDateFiltersCallback: ((String, String, Date, Date) -> Void)?
   var revertFilters: () -> Void
 
   let sections: [FilterUISection]
@@ -35,13 +39,17 @@ struct FiltersListView: View {
     sections: [FilterUISection],
     resetFiltersAction: @escaping () -> Void,
     applyFiltersAction: @escaping () -> Void,
+    showIndicator: (() -> Void)? = nil,
     revertFilters: @escaping () -> Void,
-    updateFiltersCallback: ((String, String) -> Void)?
+    updateFiltersCallback: ((String, String) -> Void)?,
+    updateDateFiltersCallback: ((String, String, Date, Date) -> Void)? = nil
   ) {
     self.sections = sections
     self.resetFiltersAction = resetFiltersAction
     self.applyFiltersAction = applyFiltersAction
+    self.showIndicator = showIndicator
     self.updateFiltersCallback = updateFiltersCallback
+    self.updateDateFiltersCallback = updateDateFiltersCallback
     self.revertFilters = revertFilters
   }
 
@@ -89,6 +97,13 @@ struct FiltersListView: View {
           revertFilters()
         }
       }
+      .onAppear {
+        let availableDates = sections.flatMap { $0.filters }
+          .compactMap { ($0.startDate, $0.endDate) }
+
+        startDate = availableDates.compactMap { $0.0 }.min() ?? Date()
+        endDate = availableDates.compactMap { $0.1 }.max() ?? Date()
+      }
     }
   }
 
@@ -100,18 +115,54 @@ struct FiltersListView: View {
   ) -> some View {
     Section(header: Text(sectionTitle)) {
       ForEach(filters.indices, id: \.self) { index in
-        HStack {
-          Text(filters[index].title)
-            .frame(maxWidth: .infinity, alignment: .topLeading)
-          if filters[index].selected {
-            Theme.shared.image.checkmark
-              .foregroundColor(ThemeManager.shared.color.primary)
+        if filters[index].filterSectionType == .radio {
+          HStack {
+            Text(filters[index].title)
+              .frame(maxWidth: .infinity, alignment: .topLeading)
+            if filters[index].selected {
+              Theme.shared.image.checkmark
+                .foregroundColor(ThemeManager.shared.color.primary)
+            }
           }
-        }
-        .contentShape(Rectangle())
-        .frame(maxWidth: .infinity)
-        .onTapGesture {
-          updateFiltersCallback?(sectionID, filters[index].id)
+          .contentShape(Rectangle())
+          .frame(maxWidth: .infinity)
+          .onTapGesture {
+            updateFiltersCallback?(sectionID, filters[index].id)
+          }
+        } else if filters[index].filterSectionType == .datePicker {
+          DatePicker(selection: $startDate, in: ...endDate, displayedComponents: .date) {
+            Text(.startDate)
+          }
+          .onAppear {
+            if let date = filters[index].startDate {
+              startDate = date
+            }
+          }
+          .onChange(of: startDate) { newDate in
+            startDate = newDate
+            let expectedStartDate = filters[index].startDate ?? Date()
+            if !Calendar.current.isDate(startDate, equalTo: expectedStartDate, toGranularity: .day) {
+              showIndicator?()
+            }
+            updateDateFiltersCallback?(sectionID, filters[index].id, newDate, endDate)
+          }
+
+          DatePicker(selection: $endDate, in: startDate..., displayedComponents: .date) {
+            Text(.endDate)
+              .onAppear {
+                if let date = filters[index].endDate {
+                  endDate = date
+                }
+              }
+              .onChange(of: endDate) { newDate in
+                endDate = newDate
+                let expectedStartDate = filters[index].endDate ?? Date()
+                if !Calendar.current.isDate(startDate, equalTo: expectedStartDate, toGranularity: .day) {
+                  showIndicator?()
+                }
+                updateDateFiltersCallback?(sectionID, filters[index].id, startDate, newDate)
+              }
+          }
         }
       }
     }
