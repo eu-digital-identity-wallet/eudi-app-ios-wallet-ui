@@ -32,6 +32,7 @@ public struct TransactionDetailsCardData: Equatable, Identifiable, Sendable {
 
   public let transactionTypeLabel: String
   public let transactionStatusLabel: String
+  public let transactionIsCompleted: Bool
   public let transactionDate: String
   public let relyingPartyName: String?
   public let relyingPartyIsVerified: Bool?
@@ -40,6 +41,7 @@ public struct TransactionDetailsCardData: Equatable, Identifiable, Sendable {
     id: String = UUID().uuidString,
     transactionTypeLabel: String,
     transactionStatusLabel: String,
+    transactionIsCompleted: Bool,
     transactionDate: String,
     relyingPartyName: String? = nil,
     relyingPartyIsVerified: Bool? = false
@@ -47,6 +49,7 @@ public struct TransactionDetailsCardData: Equatable, Identifiable, Sendable {
     self.id = id
     self.transactionTypeLabel = transactionTypeLabel
     self.transactionStatusLabel = transactionStatusLabel
+    self.transactionIsCompleted = transactionIsCompleted
     self.transactionDate = transactionDate
     self.relyingPartyName = relyingPartyName
     self.relyingPartyIsVerified = relyingPartyIsVerified
@@ -55,6 +58,35 @@ public struct TransactionDetailsCardData: Equatable, Identifiable, Sendable {
 
 extension TransactionLogItem {
   func toUiModel() -> TransactionDetailsUiModel {
+
+    var transactionTypeLabel: TransactionType {
+      return switch transactionLogData {
+      case .presentation:
+          .presentation
+      case .issuance:
+          .issuance
+      case .signing:
+          .signing
+      }
+    }
+
+    var transactionStatus: TransactionStatus? {
+      return switch transactionLogData {
+      case .presentation(let log):
+        log.status.mapToTransactionStatus()
+      case .issuance, .signing:
+        nil
+      }
+    }
+
+    var transactionDateLabel: String {
+      return switch transactionLogData {
+      case .presentation(let log):
+        log.timestamp.formattedTimestamp().toString
+      case .issuance, .signing:
+        ""
+      }
+    }
 
     var relyingPartyData: TransactionLog.RelyingParty? {
       return switch self.transactionLogData {
@@ -77,9 +109,10 @@ extension TransactionLogItem {
     return .init(
       id: self.id,
       transactionDetailsCardData: TransactionDetailsCardData(
-        transactionTypeLabel: "A",
-        transactionStatusLabel: "A",
-        transactionDate: "A",
+        transactionTypeLabel: transactionTypeLabel.typeTitle.toString,
+        transactionStatusLabel: transactionStatus?.statusTitle.toString ?? "",
+        transactionIsCompleted: transactionStatus == .completed,
+        transactionDate: transactionDateLabel,
         relyingPartyName: relyingPartyData?.name,
         relyingPartyIsVerified: relyingPartyData?.isVerified
       ),

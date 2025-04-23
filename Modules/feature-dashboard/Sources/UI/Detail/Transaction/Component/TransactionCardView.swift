@@ -34,18 +34,17 @@ public struct TransactionCardView: View {
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
         VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
-          Text(transactionDetailsCardData.transactionStatusLabel)
-            .typography(Theme.shared.font.titleSmall)
-            .foregroundStyle(Theme.shared.color.onSurface)
-            .fontWeight(.bold)
-          Text(transactionDetailsCardData.relyingPartyName ?? "")
-            .typography(Theme.shared.font.bodyMedium)
+          Text(transactionDetailsCardData.transactionTypeLabel)
+            .typography(Theme.shared.font.labelSmall)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+          Text(transactionDetailsCardData.relyingPartyName ?? "")
+            .typography(Theme.shared.font.bodyLarge)
+            .foregroundStyle(Theme.shared.color.onSurface)
             .if(transactionDetailsCardData.relyingPartyIsVerified ?? false) {
               $0.rightImage(
                 image: Theme.shared.image.verified,
                 spacing: SPACING_SMALL
-              )
+              ).foregroundStyle(Theme.shared.color.success)
             }
         }
 
@@ -54,6 +53,7 @@ public struct TransactionCardView: View {
             Text(.transactionDetailsScreenCardDateLabel)
               .typography(Theme.shared.font.bodyMedium)
               .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+              .fontWeight(.semibold)
             Text(transactionDetailsCardData.transactionDate)
               .typography(Theme.shared.font.bodyMedium)
               .foregroundStyle(Theme.shared.color.onSurfaceVariant)
@@ -63,11 +63,12 @@ public struct TransactionCardView: View {
 
           HStack(spacing: SPACING_SMALL) {
             Text(transactionDetailsCardData.transactionStatusLabel)
-              .typography(Theme.shared.font.labelMedium)
+              .typography(Theme.shared.font.labelLarge)
+              .foregroundStyle(Theme.shared.color.surfaceContainerLowest)
           }
           .padding(.horizontal, SPACING_SMALL)
           .padding(.vertical, SPACING_SMALL)
-          .background(Theme.shared.color.success)
+          .background(transactionDetailsCardData.transactionIsCompleted ? Theme.shared.color.success : Theme.shared.color.error)
           .cornerRadius(8)
           .foregroundStyle(Theme.shared.color.onPrimary)
         }
@@ -83,6 +84,7 @@ public struct TransactionCardView: View {
       transactionDetailsCardData: TransactionDetailsCardData(
         transactionTypeLabel: "Data sharing",
         transactionStatusLabel: "Completed",
+        transactionIsCompleted: true,
         transactionDate: "16 February 2024",
         relyingPartyName: "Hellenic Government",
         relyingPartyIsVerified: true

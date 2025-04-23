@@ -36,6 +36,13 @@ extension Date {
     return formatter.date(from: string)
   }
 
+  func formattedTimestamp() -> LocalizableStringKey {
+    let formatter = DateFormatter()
+    formatter.locale = Locale.current.userSelectedLocale
+    formatter.dateFormat = "dd MMM yyyy hh:mm a"
+    return .custom(formatter.string(from: self))
+  }
+
   func formattedForTransactionDisplay() -> LocalizableStringKey {
     let now = Date()
     let calendar = Calendar.current

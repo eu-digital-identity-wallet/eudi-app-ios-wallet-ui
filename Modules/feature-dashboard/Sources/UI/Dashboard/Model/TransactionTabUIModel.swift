@@ -67,7 +67,6 @@ public struct TransactionTabUIModel: Identifiable, Sendable, FilterableItemPaylo
 }
 
 public enum TransactionStatus: Sendable {
-  case incomplete
   case completed
   case failed
 
@@ -75,7 +74,7 @@ public enum TransactionStatus: Sendable {
     switch self {
     case .completed:
       return .completed
-    case .failed, .incomplete:
+    case .failed:
       return .failed
     }
   }
@@ -126,11 +125,9 @@ extension TransactionLogItem {
 extension TransactionLog.Status {
   func mapToTransactionStatus() -> TransactionStatus {
     switch self {
-    case .incomplete:
-      return .incomplete
     case .completed:
       return .completed
-    case .failed:
+    case .failed, .incomplete:
       return .failed
     }
   }

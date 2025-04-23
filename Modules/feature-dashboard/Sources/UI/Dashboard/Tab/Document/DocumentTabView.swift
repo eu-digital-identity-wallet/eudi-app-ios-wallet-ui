@@ -120,6 +120,7 @@ private func content(
                   onAction(item)
                 }
               }
+              .listRowBackground(Theme.shared.color.background)
               .listRowSeparator(.hidden)
             }
             .listRowInsets(.init(
@@ -133,6 +134,7 @@ private func content(
       }
       .shimmer(isLoading: state.isLoading)
       .listStyle(.plain)
+      .scrollContentBackground(.hidden)
       .scrollIndicators(.hidden)
       .clipped()
     } else if !state.isLoading {

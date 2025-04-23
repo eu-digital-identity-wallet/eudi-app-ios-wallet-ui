@@ -64,71 +64,51 @@ private func content(
         )
       }
 
-//      if let transactionDetailsDataSharedList = state.transactionDetailsUi?.transactionDetailsDataSharedList {
-//        VStack(alignment: .leading, spacing: SPACING_SMALL) {
-//          Text(.transactionDetailsDataShare)
-//            .typography(Theme.shared.font.bodySmall)
-//            .fontWeight(.semibold)
-//            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-//
-//          ForEach(transactionDetailsDataSharedList) { item in
-//            WrapCardView {
-//              ExpandableCardView(
-//                title: .custom(item.title),
-//                subtitle: .viewDetails
-//              ) {
-//                TransactionDetailsListItemsView(listItems: item.dataSharedItems)
-//              }
-//            }
-//          }
-//        }
-//      }
-//
-//      if let transactionDetailsDataSigned = state.transactionDetailsUi?.transactionDetailsDataSigned, transactionDetailsDataSigned.isEmpty {
-//        VStack(alignment: .leading, spacing: SPACING_SMALL) {
-//          Text(.transactionDetailsDataSigned)
-//            .typography(Theme.shared.font.bodySmall)
-//            .fontWeight(.semibold)
-//            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-//
-//          ForEach(transactionDetailsDataSigned) { item in
-//            WrapCardView {
-//              ExpandableCardView(
-//                title: .custom(item.title),
-//                subtitle: .viewDetails
-//              ) {
-//                TransactionDetailsListItemsView(listItems: item.dataSharedItems)
-//              }
-//            }
-//          }
-//        }
-//      }
-
-      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+      if let transactionDetailsDataSharedList = state.transactionDetailsUi?.items, !transactionDetailsDataSharedList.isEmpty {
         VStack(alignment: .leading, spacing: SPACING_SMALL) {
-          Text(.transactionDetailsRequestDeletionMessage)
-            .font(Theme.shared.font.bodyLarge.font)
+          Text(.transactionDetailsDataShare)
+            .typography(Theme.shared.font.bodySmall)
+            .fontWeight(.semibold)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
 
-          WrapButtonView(
-            style: .error,
-            title: .transactionDetailsRequestDeletionButton,
-            isLoading: state.isLoading,
-            onAction: onShowDeleteModal()
-          )
+          ForEach(transactionDetailsDataSharedList) { item in
+            WrapExpandableListView(
+              header: .init(
+                mainText: .custom(item.title),
+                supportingText: .viewDetails
+              ),
+              items: item.listItems,
+              hideSensitiveContent: false
+            )
+          }
         }
 
-        VStack(alignment: .leading, spacing: SPACING_SMALL) {
-          Text(.transactionDetailsReportTransactionMessage)
-            .font(Theme.shared.font.bodyLarge.font)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+        VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+          VStack(alignment: .leading, spacing: SPACING_SMALL) {
+            Text(.transactionDetailsRequestDeletionMessage)
+              .font(Theme.shared.font.bodyLarge.font)
+              .foregroundStyle(Theme.shared.color.onSurfaceVariant)
 
-          WrapButtonView(
-            style: .secondary,
-            title: .transactionDetailsReportTransactionButton,
-            isLoading: state.isLoading,
-            onAction: onShowDeleteModal()
-          )
+            WrapButtonView(
+              style: .error,
+              title: .transactionDetailsRequestDeletionButton,
+              isLoading: state.isLoading,
+              onAction: onShowDeleteModal()
+            )
+          }
+
+          VStack(alignment: .leading, spacing: SPACING_SMALL) {
+            Text(.transactionDetailsReportTransactionMessage)
+              .font(Theme.shared.font.bodyLarge.font)
+              .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+
+            WrapButtonView(
+              style: .secondary,
+              title: .transactionDetailsReportTransactionButton,
+              isLoading: state.isLoading,
+              onAction: onShowDeleteModal()
+            )
+          }
         }
       }
     }
