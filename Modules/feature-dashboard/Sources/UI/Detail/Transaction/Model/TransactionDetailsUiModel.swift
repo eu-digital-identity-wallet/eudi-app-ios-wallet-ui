@@ -22,7 +22,7 @@ public struct TransactionDetailsUiModel: Equatable, Identifiable, Sendable {
 
   public let id: String
   public let transactionDetailsCardData: TransactionDetailsCardData
-  public let items: [ListItemSection<Sendable>]
+  public let items: [GenericListItemSection]
 }
 
 public struct TransactionDetailsCardData: Equatable, Identifiable, Sendable {
@@ -65,7 +65,7 @@ extension TransactionLogItem {
       }
     }
 
-    var items: [ListItemSection<Sendable>] {
+    var items: [GenericListItemSection] {
       return switch self.transactionLogData {
       case .presentation(let log):
         log.documents.transformToTransactionListItemSections()
@@ -89,7 +89,7 @@ extension TransactionLogItem {
 }
 
 extension DocClaimsDecodable {
-  func transformToTransactionListItemSection() -> ListItemSection<Sendable> {
+  func transformToTransactionListItemSection() -> GenericListItemSection {
     return .init(
       id: self.id,
       title: self.displayName.ifNilOrEmpty { self.docType.orEmpty },
@@ -103,7 +103,7 @@ extension DocClaimsDecodable {
 }
 
 extension Array where Element == DocClaimsDecodable {
-  func transformToTransactionListItemSections() -> [ListItemSection<Sendable>] {
+  func transformToTransactionListItemSections() -> [GenericListItemSection] {
     return self.map { $0.transformToTransactionListItemSection() }
   }
 }

@@ -103,6 +103,8 @@ public enum TrailingContent: Sendable, Equatable {
   }
 }
 
+public typealias GenericListItemSection = ListItemSection<Sendable>
+
 @Copyable
 public struct ListItemSection<T: Sendable>: Identifiable, Equatable, Routable {
 
