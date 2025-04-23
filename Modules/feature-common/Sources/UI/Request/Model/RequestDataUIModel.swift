@@ -160,11 +160,7 @@ public extension Array where Element == RequestDataUiModel {
                 nil
               }
             }
-            return if let path = claimPath.last {
-              [path]
-            } else {
-              claimPath
-            }
+            return claimPath
           default:
             return []
           }
