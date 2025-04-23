@@ -21,20 +21,23 @@ import logic_resources
 struct RevokedDocumentView: View {
   private let message: LocalizableStringKey
   private let backgroundColor: Color
+  private let textColor: Color
 
   init(
     message: LocalizableStringKey,
-    backgroundColor: Color = Theme.shared.color.errorContainer
+    backgroundColor: Color = Theme.shared.color.errorContainer,
+    textColor: Color = Theme.shared.color.onErrorContainer
   ) {
     self.message = message
     self.backgroundColor = backgroundColor
+    self.textColor = textColor
   }
 
   var body: some View {
     VStack(alignment: .leading, spacing: SPACING_SMALL) {
       Text(message)
         .font(Theme.shared.font.bodyMedium.font)
-        .foregroundColor(Theme.shared.color.error)
+        .foregroundColor(textColor)
         .multilineTextAlignment(.leading)
     }
     .padding(Theme.shared.dimension.padding)
