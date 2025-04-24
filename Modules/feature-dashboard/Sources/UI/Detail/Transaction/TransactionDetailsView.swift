@@ -93,6 +93,7 @@ private func content(
               style: .error,
               title: .transactionDetailsRequestDeletionButton,
               isLoading: state.isLoading,
+              isEnabled: false,
               onAction: onShowDeleteModal()
             )
           }
@@ -106,6 +107,7 @@ private func content(
               style: .secondary,
               title: .transactionDetailsReportTransactionButton,
               isLoading: state.isLoading,
+              isEnabled: false,
               onAction: onShowDeleteModal()
             )
           }
