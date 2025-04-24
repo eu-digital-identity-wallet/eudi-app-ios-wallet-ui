@@ -315,10 +315,10 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
     self.onUpdateToolbar(
       .init(
         trailingActions: [
-          Action(image: Theme.shared.image.plus) {
+          .init(image: Theme.shared.image.plus) {
             self.onAdd()
           },
-          Action(
+          .init(
             image: Theme.shared.image.filterMenuIcon,
             hasIndicator: !viewState.hasDefaultFilters,
             disabled: viewState.filterUIModel.isEmpty
@@ -327,7 +327,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
           }
         ],
         leadingActions: [
-          Action(image: Theme.shared.image.menuIcon) {
+          .init(image: Theme.shared.image.menuIcon) {
             self.onMyWallet()
           }
         ]

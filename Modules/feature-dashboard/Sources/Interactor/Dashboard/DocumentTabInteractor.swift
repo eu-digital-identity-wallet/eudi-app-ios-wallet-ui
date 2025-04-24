@@ -469,7 +469,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
 
     let filterItems = distinctCategories.map { category in
       return FilterItem(
-        id: UUID().uuidString,
+        id: category,
         name: category,
         selected: true,
         isDefault: true
@@ -490,7 +490,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
 
     let filterItems = distinctIssuers.map { issuer in
       return FilterItem(
-        id: UUID().uuidString,
+        id: issuer,
         name: issuer,
         selected: true,
         isDefault: true,

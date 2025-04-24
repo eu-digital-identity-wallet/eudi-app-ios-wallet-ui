@@ -32,7 +32,14 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       canScroll: true,
       errorConfig: viewModel.viewState.error,
       navigationTitle: .details,
-      toolbarContent: viewModel.toolbarContent()
+      toolbarContent: viewModel.toolbarContent(),
+      notificationAction: .init(
+        name: NSNotification.RevocationDocumentDetailsRefresh,
+        callback: {
+          guard let payload = $0 else { return }
+          viewModel.handleRevocationNotification(for: payload)
+        }
+      )
     ) {
 
       content(
@@ -68,10 +75,6 @@ struct DocumentDetailsView<Router: RouterHost>: View {
     )
     .task {
       await viewModel.fetchDocumentDetails()
-    }
-    .onReceive(NotificationCenter.default.publisher(for: NSNotification.RevocationDocumentDetailsRefresh)) { data in
-      guard let payload = data.userInfo else { return }
-      viewModel.handleRevocationNotification(for: payload)
     }
   }
 }

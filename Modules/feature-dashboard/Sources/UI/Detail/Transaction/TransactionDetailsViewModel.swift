@@ -89,7 +89,7 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
   func toolbarContent() -> ToolBarContent? {
     .init(
       leadingActions: [
-        Action(image: Theme.shared.image.chevronLeft) {
+        .init(image: Theme.shared.image.chevronLeft) {
           self.pop()
         }
       ]

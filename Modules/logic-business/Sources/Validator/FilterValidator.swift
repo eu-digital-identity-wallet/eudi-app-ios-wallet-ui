@@ -293,7 +293,11 @@ actor FilterValidatorImpl: FilterValidator {
   ) -> FilterGroup {
     let mergedFilters = newFilterGroup.filters.map { newFilter in
       if let existingFilter = existingFilterGroup.filters.first(where: { $0.id == newFilter.id }) {
-        return newFilter.copy(selected: existingFilter.selected)
+        return newFilter.copy(
+          selected: existingFilter.selected,
+          startDate: existingFilter.startDate,
+          endDate: existingFilter.endDate
+        )
       }
       return newFilter
     }

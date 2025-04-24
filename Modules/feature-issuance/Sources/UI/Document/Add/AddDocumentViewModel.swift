@@ -143,7 +143,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
         .init(
           trailingActions: [],
           leadingActions: [
-            Action(image: Theme.shared.image.chevronLeft) {
+            .init(image: Theme.shared.image.chevronLeft) {
               self.pop()
             }
           ]

@@ -52,7 +52,7 @@ struct ScannerView<Router: RouterHost>: View {
     .init(
       trailingActions: [],
       leadingActions: [
-        Action(image: Theme.shared.image.chevronLeft) {
+        .init(image: Theme.shared.image.chevronLeft) {
           viewModel.pop()
         }
       ]

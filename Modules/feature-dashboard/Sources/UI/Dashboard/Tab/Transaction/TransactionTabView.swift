@@ -53,6 +53,9 @@ struct TransactionTabView<Router: RouterHost>: View {
     .onAppear {
       viewModel.onCreate()
     }
+    .onDisappear {
+      viewModel.onPause()
+    }
   }
 }
 
@@ -125,7 +128,7 @@ private func content(
     transactions: [:],
     filterUIModel: [],
     failedTransactions: [],
-    isInitialBoot: false,
+    isPaused: false,
     hasDefaultFilters: false,
     dateHasChanged: false,
     sortIsDescending: true

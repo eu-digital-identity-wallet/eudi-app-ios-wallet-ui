@@ -155,12 +155,12 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   func toolbarContent() -> ToolBarContent {
     .init(
       trailingActions: [
-        Action(
+        .init(
           image: viewState.isBookmarked ? Theme.shared.image.bookmarkIconFill : Theme.shared.image.bookmarkIcon
         ) {
           self.saveBookmark(self.viewState.document.id)
         },
-        Action(
+        .init(
           image: isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye
         ) {
           self.isVisible.toggle()
@@ -168,7 +168,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         }
       ],
       leadingActions: [
-        Action(image: Theme.shared.image.chevronLeft) {
+        .init(image: Theme.shared.image.chevronLeft) {
           self.pop()
         }
       ]
