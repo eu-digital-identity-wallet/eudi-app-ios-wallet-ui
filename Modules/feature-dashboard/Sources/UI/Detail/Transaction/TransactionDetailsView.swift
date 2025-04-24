@@ -114,6 +114,7 @@ private func content(
         }
       }
     }
+    .shimmer(isLoading: state.isLoading)
     .padding(Theme.shared.dimension.padding)
     .padding(.bottom)
   }
