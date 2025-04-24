@@ -25,7 +25,7 @@ struct TransactionTabState: ViewState {
   let transactions: [TransactionCategory: [TransactionTabUIModel]]
   let filterUIModel: [FilterUISection]
   let failedTransactions: [String]
-  let isInitialBoot: Bool
+  let isPaused: Bool
   let hasDefaultFilters: Bool
   let dateHasChanged: Bool
   let sortIsDescending: Bool
@@ -54,7 +54,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         transactions: [:],
         filterUIModel: [],
         failedTransactions: [],
-        isInitialBoot: true,
+        isPaused: true,
         hasDefaultFilters: true,
         dateHasChanged: false,
         sortIsDescending: false
@@ -81,7 +81,8 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
 
         switch state {
         case .success(let transactions):
-          if viewState.isInitialBoot {
+
+          if viewState.isPaused {
             await interactor.initializeFilters(filterableList: transactions)
           } else {
             await interactor.updateLists(filterableList: transactions)
@@ -92,7 +93,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
           setState {
             $0.copy(
               isLoading: false,
-              isInitialBoot: false
+              isPaused: false
             )
           }
         case .failure:
@@ -150,6 +151,10 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
     }
   }
 
+  func onPause() {
+    self.setState { $0.copy(isPaused: true) }
+  }
+
   func updateDateFilters(
     sectionID: String,
     filterID: String,
@@ -199,7 +204,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
     self.onUpdateToolbar(
       .init(
         trailingActions: [
-          Action(
+          .init(
             image: Theme.shared.image.filterMenuIcon,
             hasIndicator: !viewState.hasDefaultFilters,
             disabled: viewState.filterUIModel.isEmpty
@@ -208,7 +213,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
           }
         ],
         leadingActions: [
-          Action(image: Theme.shared.image.menuIcon) {
+          .init(image: Theme.shared.image.menuIcon) {
             self.onMyWallet()
           }
         ]

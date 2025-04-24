@@ -400,7 +400,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
 
     let filterItems = distinctRelyingPartyNames.map { relyingPartyName in
       return FilterItem(
-        id: UUID().uuidString,
+        id: relyingPartyName,
         name: relyingPartyName,
         selected: true,
         isDefault: true

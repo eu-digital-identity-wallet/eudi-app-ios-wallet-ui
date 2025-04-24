@@ -176,10 +176,10 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
   }
 
   func toolbarContent() -> ToolBarContent? {
-    var leadingActions: [Action] = []
+    var leadingActions: [ToolBarContent.Action] = []
     if viewState.isCancellable {
       leadingActions.append(
-        Action(
+        .init(
           image: Theme.shared.image.chevronLeft
         ) {
           self.onPop()

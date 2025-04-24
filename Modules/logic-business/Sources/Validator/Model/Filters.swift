@@ -78,7 +78,7 @@ public struct SingleSelectionFilterGroup: FilterGroup {
   public var filterType: FilterGroupType
 
   public init(
-    id: String = UUID().uuidString,
+    id: String,
     name: String,
     filters: [FilterItem],
     filterType: FilterGroupType
@@ -98,7 +98,7 @@ public struct ReversibleSingleSelectionFilterGroup: FilterGroup {
   public var filterType: FilterGroupType
 
   public init(
-    id: String = UUID().uuidString,
+    id: String,
     name: String,
     filters: [FilterItem],
     filterType: FilterGroupType
@@ -119,7 +119,7 @@ public struct MultipleSelectionFilterGroup: FilterGroup {
   public var filterType: FilterGroupType
 
   public init(
-    id: String = UUID().uuidString,
+    id: String,
     name: String,
     filters: [FilterItem],
     filterableAction: FilterAction,
@@ -142,7 +142,7 @@ public struct ReversibleMultipleSelectionFilterGroup: FilterGroup {
   public var filterType: FilterGroupType
 
   public init(
-    id: String = UUID().uuidString,
+    id: String,
     name: String,
     filters: [FilterItem],
     filterableAction: FilterAction,
@@ -168,7 +168,7 @@ public struct FilterItem: Sendable {
   public let filterableAction: FilterAction
 
   public init(
-    id: String = UUID().uuidString,
+    id: String,
     name: String,
     selected: Bool,
     isDefault: Bool = false,

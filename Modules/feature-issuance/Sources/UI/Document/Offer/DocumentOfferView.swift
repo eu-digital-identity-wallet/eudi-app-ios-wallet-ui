@@ -30,7 +30,14 @@ struct DocumentOfferView<Router: RouterHost>: View {
     ContentScreenView(
       errorConfig: viewModel.viewState.error,
       navigationTitle: .addDocumentRequest,
-      toolbarContent: viewModel.toolbarContent()
+      toolbarContent: viewModel.toolbarContent(),
+      notificationAction: .init(
+        name: NSNotification.CredentialOffer,
+        callback: {
+          guard let payload = $0 else { return }
+          viewModel.handleNotification(with: payload)
+        }
+      )
     ) {
       content(
         viewState: viewModel.viewState
@@ -38,12 +45,6 @@ struct DocumentOfferView<Router: RouterHost>: View {
     }
     .task {
       await viewModel.initialize()
-    }
-    .onReceive(NotificationCenter.default.publisher(for: NSNotification.CredentialOffer)) { data in
-      guard let payload = data.userInfo else {
-        return
-      }
-      viewModel.handleNotification(with: payload)
     }
   }
 }

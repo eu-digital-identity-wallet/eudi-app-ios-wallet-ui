@@ -117,23 +117,25 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
   }
 
   func toolbarContent() -> ToolBarContent? {
-    var leadingActions: [Action] = []
+    var leadingActions: [ToolBarContent.Action] = []
     if viewState.isCancellable {
       leadingActions.append(
-        Action(
+        .init(
           image: Theme.shared.image.chevronLeft
         ) {
           self.onShowCancellationModal()
-      })
+        })
     }
 
     return .init(
-      trailingActions: [Action(
-        title: viewState.button,
-        disabled: !viewState.isButtonActive
-      ) {
-        self.onButtonClick()
-      }],
+      trailingActions: [
+        .init(
+          title: viewState.button,
+          disabled: !viewState.isButtonActive
+        ) {
+          self.onButtonClick()
+        }
+      ],
       leadingActions: leadingActions
     )
   }

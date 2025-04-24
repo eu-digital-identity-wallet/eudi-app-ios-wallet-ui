@@ -275,14 +275,14 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
   func toolbarContent() -> ToolBarContent {
     .init(
       trailingActions: [
-        Action(
+        .init(
           title: .issueButton
         ) {
           self.onIssueDocuments()
         }
       ],
       leadingActions: [
-        Action(
+        .init(
           title: .cancelButton
         ) {
           self.onPop()
