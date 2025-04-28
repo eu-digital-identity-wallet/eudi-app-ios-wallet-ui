@@ -14,7 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import logic_resources
 
 struct ContentSheetView<Content: View>: View {
 

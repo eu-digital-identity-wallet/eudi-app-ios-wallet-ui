@@ -13,10 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 @preconcurrency import LocalAuthentication
 import Combine
-import SwiftUI
 import logic_business
 
 internal final class BiometryError: @unchecked Sendable {

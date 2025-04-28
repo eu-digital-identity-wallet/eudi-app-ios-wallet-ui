@@ -15,7 +15,6 @@
  */
 import Foundation
 import Copyable
-import logic_resources
 
 public enum FilterGroupType: Sendable {
   case issuer

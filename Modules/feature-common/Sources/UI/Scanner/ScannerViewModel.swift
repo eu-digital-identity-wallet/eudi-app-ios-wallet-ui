@@ -14,7 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_ui
-import logic_core
 import logic_resources
 import logic_business
 

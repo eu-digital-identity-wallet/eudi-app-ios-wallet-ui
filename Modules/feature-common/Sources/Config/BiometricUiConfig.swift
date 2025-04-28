@@ -15,7 +15,6 @@
  */
 import logic_ui
 import logic_resources
-import Foundation
 
 public extension UIConfig {
   struct Biometry: UIConfigType, Equatable {
