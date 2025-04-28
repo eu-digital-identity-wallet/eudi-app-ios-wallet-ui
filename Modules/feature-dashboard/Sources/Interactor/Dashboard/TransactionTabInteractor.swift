@@ -80,7 +80,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
     let transactions: FilterableList? = try await fetchFilteredTransactions()
 
     guard let transactions = transactions else {
-      return .failure(WalletCoreError.unableFetchDocuments)
+      return .failure(WalletCoreError.unableToFetchTransactionLog)
     }
 
     return .success(
