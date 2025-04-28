@@ -123,7 +123,7 @@ public struct WrapListItemView: View {
               .renderingMode(.template)
               .resizable()
               .aspectRatio(contentMode: .fit)
-              .frame(width: 14, height: 14)
+              .frame(width: 16, height: 16)
               .foregroundColor(color)
           }
           .frame(alignment: .trailing)

@@ -26,52 +26,17 @@ public struct TransactionDetailsUiModel: Equatable, Identifiable, Sendable {
   public let items: [GenericListItemSection]
 }
 
-public struct TransactionDetailsCardData: Equatable, Identifiable, Sendable {
-
-  @EquatableNoop
-  public var id: String
-
-  public let transactionTypeLabel: LocalizableStringKey
-  public let transactionStatusLabel: LocalizableStringKey
-  public let transactionIsCompleted: Bool
-  public let transactionDate: LocalizableStringKey
-  public let relyingPartyName: LocalizableStringKey?
-  public let relyingPartyIsVerified: Bool?
-
-  init(
-    id: String = UUID().uuidString,
-    transactionTypeLabel: LocalizableStringKey,
-    transactionStatusLabel: LocalizableStringKey,
-    transactionIsCompleted: Bool,
-    transactionDate: LocalizableStringKey,
-    relyingPartyName: LocalizableStringKey? = nil,
-    relyingPartyIsVerified: Bool? = false
-  ) {
-    self.id = id
-    self.transactionTypeLabel = transactionTypeLabel
-    self.transactionStatusLabel = transactionStatusLabel
-    self.transactionIsCompleted = transactionIsCompleted
-    self.transactionDate = transactionDate
-    self.relyingPartyName = relyingPartyName
-    self.relyingPartyIsVerified = relyingPartyIsVerified
-  }
-}
-
 extension TransactionDetailsUiModel {
   static func mock() -> TransactionDetailsUiModel {
     TransactionDetailsUiModel(
       id: "id",
-      transactionDetailsCardData: TransactionDetailsCardData(
-        transactionTypeLabel: .custom("Presentation"),
-        transactionStatusLabel: .custom("EUDI remote verifier"),
-        transactionIsCompleted: true,
-        transactionDate: .custom("24 Apr 2025 10:30")
-      ),
+      transactionDetailsCardData: TransactionDetailsCardData.mock(),
       items: [
         .init(
           id: "pid",
           title: "PID",
-          listItems: [])
+          listItems: []
+        )
       ]
     )
   }

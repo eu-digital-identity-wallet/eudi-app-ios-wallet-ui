@@ -20,13 +20,16 @@ import logic_ui
 public struct TransactionCardView: View {
   private let backgroundColor: Color
   private let transactionDetailsCardData: TransactionDetailsCardData
+  private let isLoading: Bool
 
   public init(
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
-    transactionDetailsCardData: TransactionDetailsCardData
+    transactionDetailsCardData: TransactionDetailsCardData,
+    isLoading: Bool = false
   ) {
     self.backgroundColor = backgroundColor
     self.transactionDetailsCardData = transactionDetailsCardData
+    self.isLoading = isLoading
   }
 
   public var body: some View {
@@ -77,6 +80,7 @@ public struct TransactionCardView: View {
       }
       .padding(.all, SPACING_MEDIUM)
     }
+    .shimmer(isLoading: isLoading)
   }
 }
 
