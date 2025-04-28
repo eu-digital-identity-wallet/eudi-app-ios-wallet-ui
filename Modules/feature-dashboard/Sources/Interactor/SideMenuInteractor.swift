@@ -16,8 +16,6 @@
 import Foundation
 import logic_core
 import logic_business
-import logic_resources
-import Combine
 
 public protocol SideMenuInteractor: Sendable {
   func getAppVersion() -> String

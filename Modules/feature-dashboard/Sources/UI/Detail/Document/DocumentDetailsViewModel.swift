@@ -13,8 +13,6 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_ui
 import logic_resources
 import feature_common
 import logic_core
@@ -25,7 +23,6 @@ struct DocumentDetailsViewState: ViewState {
   let isLoading: Bool
   let error: ContentErrorView.Config?
   let documentId: String
-  let hasDeleteAction: Bool
   let documentFieldsCount: Int
   let isBookmarked: Bool
   let isRevoked: Bool
@@ -52,7 +49,6 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         isLoading: true,
         error: nil,
         documentId: documentId,
-        hasDeleteAction: false,
         documentFieldsCount: 0,
         isBookmarked: false,
         isRevoked: false
@@ -76,7 +72,6 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         $0.copy(
           document: document,
           isLoading: false,
-          hasDeleteAction: true,
           documentFieldsCount: document.documentFields.count,
           isBookmarked: isBookmarked,
           isRevoked: isRevoked

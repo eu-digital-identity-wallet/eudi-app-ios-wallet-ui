@@ -96,9 +96,22 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
       case .presentation(let logData):
 
         var tags = [logData.relyingParty.name]
+
         let transactionName = logData.relyingParty.name.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let credentials: [String] = logData.documents
+          .compactMap(\.displayName)
+
+        let credentialsTrimmed = credentials.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+
         if !transactionName.isEmpty {
           tags.append(transactionName)
+        }
+        if !credentials.isEmpty {
+          tags.append(contentsOf: credentials)
+        }
+        if !credentialsTrimmed.isEmpty {
+          tags.append(contentsOf: credentialsTrimmed)
         }
         return FilterableItem(
           payload: transactionPayload,

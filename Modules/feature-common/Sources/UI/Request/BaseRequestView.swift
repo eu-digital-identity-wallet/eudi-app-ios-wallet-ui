@@ -111,6 +111,7 @@ private func scrollableContent(
               ),
               items: section.section.listItems,
               hideSensitiveContent: false,
+              isLoading: viewState.isLoading,
               onItemClick: { onSelectionChanged($0.groupId) }
             )
           }
@@ -119,11 +120,11 @@ private func scrollableContent(
             .typography(Theme.shared.font.bodyMedium)
             .foregroundColor(Theme.shared.color.onSurface)
             .multilineTextAlignment(.leading)
+            .shimmer(isLoading: viewState.isLoading)
 
           VSpacer.medium()
         }
         .padding(.top, Theme.shared.dimension.padding)
-        .shimmer(isLoading: viewState.isLoading)
       }
       .padding(Theme.shared.dimension.padding)
     }

@@ -95,6 +95,7 @@ private func content(
         .font(.largeTitle)
         .bold()
         .frame(maxWidth: .infinity, alignment: .leading)
+        .shimmer(isLoading: viewState.isLoading)
 
       if viewState.isRevoked {
         RevokedDocumentView(
@@ -105,9 +106,10 @@ private func content(
       VStack(spacing: .zero) {
         WrapExpandableListView(
           items: viewState.document.documentFields,
-          hideSensitiveContent: isVisible)
+          hideSensitiveContent: isVisible,
+          isLoading: viewState.isLoading
+        )
       }
-      .shimmer(isLoading: viewState.isLoading)
 
       if let issuer = viewState.document.issuer {
         VStack(spacing: SPACING_SMALL) {
@@ -116,23 +118,22 @@ private func content(
             .fontWeight(.semibold)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .shimmer(isLoading: viewState.isLoading)
 
           CardViewWithLogoView(
             icon: .remoteImage(issuer.logoUrl, nil),
-            title: .custom(issuer.name)
+            title: .custom(issuer.name),
+            isLoading: viewState.isLoading
           )
         }
-        .shimmer(isLoading: viewState.isLoading)
       }
 
-      if viewState.hasDeleteAction {
-        WrapButtonView(
-          style: .error,
-          title: .deleteDocument,
-          isLoading: viewState.isLoading,
-          onAction: onShowDeleteModal()
-        )
-      }
+      WrapButtonView(
+        style: .error,
+        title: .deleteDocument,
+        isLoading: viewState.isLoading,
+        onAction: onShowDeleteModal()
+      )
     }
     .padding(Theme.shared.dimension.padding)
     .padding(.bottom)
@@ -145,7 +146,6 @@ private func content(
     isLoading: false,
     error: nil,
     documentId: "",
-    hasDeleteAction: true,
     documentFieldsCount: DocumentUIModel.mock().documentFields.count,
     isBookmarked: true,
     isRevoked: true

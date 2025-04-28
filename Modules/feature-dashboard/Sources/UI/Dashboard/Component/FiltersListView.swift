@@ -15,7 +15,6 @@
  */
 import SwiftUI
 import logic_ui
-import Foundation
 import logic_resources
 
 struct FiltersListView: View {

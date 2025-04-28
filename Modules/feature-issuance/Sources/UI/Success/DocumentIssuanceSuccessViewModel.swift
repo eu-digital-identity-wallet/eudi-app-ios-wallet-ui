@@ -14,7 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_ui
-import logic_resources
 import feature_common
 
 class DocumentIssuanceSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: DocumentSuccessViewModel<Router, RequestItem> {

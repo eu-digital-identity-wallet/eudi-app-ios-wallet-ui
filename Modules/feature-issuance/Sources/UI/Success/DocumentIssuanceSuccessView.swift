@@ -14,10 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import logic_ui
-import logic_resources
 import feature_common
-import logic_core
 
 struct DocumentIssuanceSuccessView<Router: RouterHost, RequestItem: Sendable>: View {
 

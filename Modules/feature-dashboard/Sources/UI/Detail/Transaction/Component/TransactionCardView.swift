@@ -20,13 +20,16 @@ import logic_ui
 public struct TransactionCardView: View {
   private let backgroundColor: Color
   private let transactionDetailsCardData: TransactionDetailsCardData
+  private let isLoading: Bool
 
   public init(
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
-    transactionDetailsCardData: TransactionDetailsCardData
+    transactionDetailsCardData: TransactionDetailsCardData,
+    isLoading: Bool = false
   ) {
     self.backgroundColor = backgroundColor
     self.transactionDetailsCardData = transactionDetailsCardData
+    self.isLoading = isLoading
   }
 
   public var body: some View {
@@ -37,15 +40,17 @@ public struct TransactionCardView: View {
           Text(transactionDetailsCardData.transactionTypeLabel)
             .typography(Theme.shared.font.labelSmall)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-          Text(transactionDetailsCardData.relyingPartyName ?? "")
-            .typography(Theme.shared.font.bodyLarge)
-            .foregroundStyle(Theme.shared.color.onSurface)
-            .if(transactionDetailsCardData.relyingPartyIsVerified ?? false) {
-              $0.rightImage(
-                image: Theme.shared.image.verified,
-                spacing: SPACING_SMALL
-              ).foregroundStyle(Theme.shared.color.success)
-            }
+          if let relyingPartyName = transactionDetailsCardData.relyingPartyName {
+            Text(relyingPartyName)
+              .typography(Theme.shared.font.bodyLarge)
+              .foregroundStyle(Theme.shared.color.onSurface)
+              .if(transactionDetailsCardData.relyingPartyIsVerified ?? false) {
+                $0.rightImage(
+                  image: Theme.shared.image.verified,
+                  spacing: SPACING_SMALL
+                ).foregroundStyle(Theme.shared.color.success)
+              }
+          }
         }
 
         HStack {
@@ -75,6 +80,7 @@ public struct TransactionCardView: View {
       }
       .padding(.all, SPACING_MEDIUM)
     }
+    .shimmer(isLoading: isLoading)
   }
 }
 
@@ -82,11 +88,11 @@ public struct TransactionCardView: View {
   VStack(spacing: 16) {
     TransactionCardView(
       transactionDetailsCardData: TransactionDetailsCardData(
-        transactionTypeLabel: "Data sharing",
-        transactionStatusLabel: "Completed",
+        transactionTypeLabel: .custom("Data sharing"),
+        transactionStatusLabel: .custom("Completed"),
         transactionIsCompleted: true,
-        transactionDate: "16 February 2024",
-        relyingPartyName: "Hellenic Government",
+        transactionDate: .custom("16 February 2024"),
+        relyingPartyName: .custom("Hellenic Government"),
         relyingPartyIsVerified: true
       )
     )

@@ -24,6 +24,7 @@ public struct WrapExpandableListView<T: Sendable>: View {
   private let onItemClick: ((ListItemData) -> Void)?
   private let hideSensitiveContent: Bool
   private let hasHeader: Bool
+  private let isLoading: Bool
 
   public init(
     header: ListItemData? = nil,
@@ -31,6 +32,7 @@ public struct WrapExpandableListView<T: Sendable>: View {
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
     hideSensitiveContent: Bool,
     hasHeader: Bool = true,
+    isLoading: Bool = false,
     onItemClick: ((ListItemData) -> Void)? = nil
   ) {
     self.header = header
@@ -38,6 +40,7 @@ public struct WrapExpandableListView<T: Sendable>: View {
     self.backgroundColor = backgroundColor
     self.hideSensitiveContent = hideSensitiveContent
     self.hasHeader = hasHeader
+    self.isLoading = isLoading
     self.onItemClick = onItemClick
   }
 
@@ -48,7 +51,8 @@ public struct WrapExpandableListView<T: Sendable>: View {
           ExpandableCardView(
             backgroundColor: backgroundColor,
             title: header.mainText,
-            subtitle: header.supportingText
+            subtitle: header.supportingText,
+            isLoading: isLoading
           ) {
             contentList()
           }
@@ -56,6 +60,7 @@ public struct WrapExpandableListView<T: Sendable>: View {
           contentList()
         }
       }
+      .shimmer(isLoading: isLoading)
     }
   }
 

@@ -15,7 +15,6 @@
  */
 import SwiftUI
 import logic_ui
-import logic_resources
 import feature_common
 
 struct OfferCodeView<Router: RouterHost>: View {

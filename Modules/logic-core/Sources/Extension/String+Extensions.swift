@@ -14,8 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 
-import Foundation
-
 extension String {
   func toBool() -> Bool {
     Bool(self) ?? false

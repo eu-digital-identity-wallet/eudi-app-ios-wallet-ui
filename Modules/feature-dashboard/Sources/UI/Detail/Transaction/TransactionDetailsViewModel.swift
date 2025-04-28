@@ -13,18 +13,15 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import logic_ui
 import logic_resources
-import logic_business
 import feature_common
-import logic_core
 
 @Copyable
 struct TransactionDetailsViewState: ViewState {
   let title: LocalizableStringKey
   let transactionDetailsUi: TransactionDetailsUiModel?
-  var isLoading: Bool
+  let isLoading: Bool
   let error: ContentErrorView.Config?
   let transactionId: String
 }
@@ -43,8 +40,8 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
       router: router,
       initialState: .init(
         title: .transactionInformation,
-        transactionDetailsUi: nil,
-        isLoading: false,
+        transactionDetailsUi: TransactionDetailsUiModel.mock(),
+        isLoading: true,
         error: nil,
         transactionId: transactionId
       )

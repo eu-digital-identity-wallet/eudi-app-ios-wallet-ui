@@ -1233,7 +1233,6 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Extension/Array+Extensions.swift'
 
 import Cuckoo
-import Foundation
 @testable import logic_business
 
 
@@ -1331,7 +1330,6 @@ import Foundation
 // MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Extension/URL+Extensions.swift'
 
 import Cuckoo
-import Foundation
 import UIKit
 @testable import logic_business
 
@@ -1348,9 +1346,7 @@ import Foundation
 // MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Validator/FilterValidator.swift'
 
 import Cuckoo
-import Combine
 import Foundation
-import logic_resources
 @testable import logic_business
 
 public class MockFilterValidator: FilterValidator, Cuckoo.ProtocolMock, @unchecked Sendable {
@@ -1743,7 +1739,6 @@ public class FilterValidatorStub:FilterValidator, @unchecked Sendable {
 
 import Cuckoo
 import Foundation
-import Combine
 import Peppermint
 import libPhoneNumber
 @testable import logic_business
@@ -2251,7 +2246,6 @@ public class FilterableAttributesStub:FilterableAttributes, @unchecked Sendable 
 import Cuckoo
 import Foundation
 import Copyable
-import logic_resources
 @testable import logic_business
 
 public class MockFilterGroup: FilterGroup, Cuckoo.ProtocolMock, @unchecked Sendable {

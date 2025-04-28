@@ -1644,7 +1644,6 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Extension/Array+Extensions.swift'
 
 import Cuckoo
-import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -1778,7 +1777,6 @@ import Foundation
 // MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Extension/URL+Extensions.swift'
 
 import Cuckoo
-import Foundation
 import UIKit
 @testable import logic_core
 @testable import logic_business
@@ -1801,9 +1799,7 @@ import Foundation
 // MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Validator/FilterValidator.swift'
 
 import Cuckoo
-import Combine
 import Foundation
-import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -2199,7 +2195,6 @@ public class FilterValidatorStub:FilterValidator, @unchecked Sendable {
 
 import Cuckoo
 import Foundation
-import Combine
 import Peppermint
 import libPhoneNumber
 @testable import logic_core
@@ -2719,7 +2714,6 @@ public class FilterableAttributesStub:FilterableAttributes, @unchecked Sendable 
 import Cuckoo
 import Foundation
 import Copyable
-import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -3128,9 +3122,6 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Controller/WalletKitController.swift'
 
 import Cuckoo
-import Foundation
-import Combine
-import logic_resources
 import SwiftUI
 import logic_storage
 @testable import logic_core
@@ -4470,8 +4461,6 @@ import Foundation
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Coordinator/ProximitySessionCoordinator.swift'
 
 import Cuckoo
-import Foundation
-import Combine
 import logic_resources
 import UIKit
 @testable import logic_core
@@ -4827,8 +4816,6 @@ public class ProximitySessionCoordinatorStub:ProximitySessionCoordinator, @unche
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Coordinator/RemoteSessionCoordinator.swift'
 
 import Cuckoo
-import Foundation
-import Combine
 import logic_resources
 import UIKit
 @testable import logic_core
@@ -5386,8 +5373,6 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/DocClaim+Extensions.swift'
 
 import Cuckoo
-import Foundation
-import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -5399,7 +5384,6 @@ import logic_resources
 
 import Cuckoo
 import SwiftUI
-import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -5432,7 +5416,6 @@ import OpenID4VCI
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/String+Extensions.swift'
 
 import Cuckoo
-import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -5467,7 +5450,6 @@ import Foundation
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/WalletKitConfig+Extensions.swift'
 
 import Cuckoo
-import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -5524,8 +5506,6 @@ import SwiftUI
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DocumentIdentifier.swift'
 
 import Cuckoo
-import Foundation
-import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -5557,7 +5537,6 @@ import Foundation
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/RequestItemConvertible.swift'
 
 import Cuckoo
-import Foundation
 import EudiWalletKit
 @testable import logic_core
 @testable import logic_business
@@ -5847,7 +5826,6 @@ public class ViewStateStub:ViewState, @unchecked Sendable {
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/Config/ConfigUiLogic.swift'
 
 import Cuckoo
-import Foundation
 import logic_resources
 @testable import logic_core
 @testable import logic_business
@@ -6373,7 +6351,6 @@ class UrlSchemaControllerStub:UrlSchemaController, @unchecked Sendable {
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Button/ButtonStyles.swift'
 
 import Cuckoo
-import Foundation
 import SwiftUI
 import logic_resources
 @testable import logic_core
@@ -6482,7 +6459,6 @@ import logic_resources
 
 import Cuckoo
 import SwiftUI
-import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -6544,7 +6520,6 @@ import logic_resources
 import Cuckoo
 import SwiftUI
 import logic_resources
-import UIPilot
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -6556,7 +6531,6 @@ import UIPilot
 
 import Cuckoo
 import SwiftUI
-import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -6817,43 +6791,6 @@ import logic_resources
 
 
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Splash/SplashBackgroundView.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Text/ExpandableTextView.swift'
-
-import Cuckoo
-import Foundation
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Text/KeyValueView.swift'
-
-import Cuckoo
-import Foundation
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Text/ScrollableTextView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -7176,7 +7113,6 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/Extension/UIApplication+Extensions.swift'
 
 import Cuckoo
-import Foundation
 import UIKit
 @testable import logic_core
 @testable import logic_business
@@ -7200,7 +7136,6 @@ import SwiftUI
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/Extension/UIScreen+Extensions.swift'
 
 import Cuckoo
-import Foundation
 import UIKit
 @testable import logic_core
 @testable import logic_business

@@ -17,7 +17,6 @@ import SwiftUI
 import logic_ui
 import feature_common
 import logic_resources
-import logic_core
 
 struct AddDocumentView<Router: RouterHost>: View {
 

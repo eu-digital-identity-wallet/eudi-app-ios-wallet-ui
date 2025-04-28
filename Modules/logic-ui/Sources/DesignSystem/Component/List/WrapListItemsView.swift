@@ -20,14 +20,17 @@ public struct WrapListItemsView: View {
   private let listItems: [ListItemData]
   private let action: ((ListItemData) -> Void)?
   private let mainTextVerticalPadding: CGFloat?
+  private let isLoading: Bool
 
   public init(
     listItems: [ListItemData],
     mainTextVerticalPadding: CGFloat? = nil,
+    isLoading: Bool = false,
     action: ((ListItemData) -> Void)? = nil
   ) {
     self.listItems = listItems
     self.mainTextVerticalPadding = mainTextVerticalPadding
+    self.isLoading = isLoading
     self.action = action
   }
 
@@ -36,6 +39,7 @@ public struct WrapListItemsView: View {
       WrapListItemView(
         listItem: item,
         mainTextVerticalPadding: mainTextVerticalPadding,
+        isLoading: isLoading,
         action: {
           if item.isEnable {
             action?(item)

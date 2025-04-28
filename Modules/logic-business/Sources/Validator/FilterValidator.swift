@@ -13,9 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Combine
 import Foundation
-import logic_resources
 
 public enum FilterResultPartialState: Sendable {
   case success(FilterResult)

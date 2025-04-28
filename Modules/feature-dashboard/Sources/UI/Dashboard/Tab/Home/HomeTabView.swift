@@ -16,8 +16,6 @@
 import SwiftUI
 import logic_ui
 import logic_resources
-import feature_common
-import logic_business
 
 struct HomeTabView<Router: RouterHost>: View {
 

@@ -13,10 +13,10 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import logic_ui
 import logic_core
 import logic_business
+import logic_resources
 
 public struct TransactionDetailsUiModel: Equatable, Identifiable, Sendable {
 
@@ -25,34 +25,19 @@ public struct TransactionDetailsUiModel: Equatable, Identifiable, Sendable {
   public let items: [GenericListItemSection]
 }
 
-public struct TransactionDetailsCardData: Equatable, Identifiable, Sendable {
-
-  @EquatableNoop
-  public var id: String
-
-  public let transactionTypeLabel: String
-  public let transactionStatusLabel: String
-  public let transactionIsCompleted: Bool
-  public let transactionDate: String
-  public let relyingPartyName: String?
-  public let relyingPartyIsVerified: Bool?
-
-  init(
-    id: String = UUID().uuidString,
-    transactionTypeLabel: String,
-    transactionStatusLabel: String,
-    transactionIsCompleted: Bool,
-    transactionDate: String,
-    relyingPartyName: String? = nil,
-    relyingPartyIsVerified: Bool? = false
-  ) {
-    self.id = id
-    self.transactionTypeLabel = transactionTypeLabel
-    self.transactionStatusLabel = transactionStatusLabel
-    self.transactionIsCompleted = transactionIsCompleted
-    self.transactionDate = transactionDate
-    self.relyingPartyName = relyingPartyName
-    self.relyingPartyIsVerified = relyingPartyIsVerified
+extension TransactionDetailsUiModel {
+  static func mock() -> TransactionDetailsUiModel {
+    TransactionDetailsUiModel(
+      id: "id",
+      transactionDetailsCardData: TransactionDetailsCardData.mock(),
+      items: [
+        .init(
+          id: "pid",
+          title: "PID",
+          listItems: []
+        )
+      ]
+    )
   }
 }
 
@@ -79,12 +64,12 @@ extension TransactionLogItem {
       }
     }
 
-    var transactionDateLabel: String {
+    var transactionDateLabel: LocalizableStringKey {
       return switch transactionLogData {
       case .presentation(let log):
-        log.timestamp.formattedTimestamp().toString
+        .custom(log.timestamp.formattedTimestamp().toString)
       case .issuance, .signing:
-        ""
+        .custom("")
       }
     }
 
@@ -109,11 +94,11 @@ extension TransactionLogItem {
     return .init(
       id: self.id,
       transactionDetailsCardData: TransactionDetailsCardData(
-        transactionTypeLabel: transactionTypeLabel.typeTitle.toString,
-        transactionStatusLabel: transactionStatus?.statusTitle.toString ?? "",
+        transactionTypeLabel: transactionTypeLabel.typeTitle,
+        transactionStatusLabel: transactionStatus?.statusTitle ?? .custom(""),
         transactionIsCompleted: transactionStatus == .completed,
         transactionDate: transactionDateLabel,
-        relyingPartyName: relyingPartyData?.name,
+        relyingPartyName: .custom(relyingPartyData?.name ?? ""),
         relyingPartyIsVerified: relyingPartyData?.isVerified
       ),
       items: items

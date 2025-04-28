@@ -14,9 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import logic_resources
 import logic_ui
-import logic_core
 
 struct DocumentOfferCellView: View {
 

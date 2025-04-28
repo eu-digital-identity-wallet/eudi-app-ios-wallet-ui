@@ -16,9 +16,7 @@
 import Foundation
 import logic_ui
 import logic_resources
-import logic_business
 import feature_common
-import logic_core
 
 @Copyable
 struct DocumentOfferViewState: ViewState {

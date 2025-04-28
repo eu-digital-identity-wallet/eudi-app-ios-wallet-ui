@@ -14,7 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import logic_ui
 import feature_common
 import logic_resources
 import logic_core
@@ -60,7 +59,8 @@ private func content(
 
       if let transactionDetailsCardData = state.transactionDetailsUi?.transactionDetailsCardData {
         TransactionCardView(
-          transactionDetailsCardData: transactionDetailsCardData
+          transactionDetailsCardData: transactionDetailsCardData,
+          isLoading: state.isLoading
         )
       }
 
@@ -70,6 +70,7 @@ private func content(
             .typography(Theme.shared.font.bodySmall)
             .fontWeight(.semibold)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .shimmer(isLoading: state.isLoading)
 
           ForEach(transactionDetailsDataSharedList) { item in
             WrapExpandableListView(
@@ -78,7 +79,8 @@ private func content(
                 supportingText: .viewDetails
               ),
               items: item.listItems,
-              hideSensitiveContent: false
+              hideSensitiveContent: false,
+              isLoading: state.isLoading
             )
           }
         }
@@ -88,6 +90,7 @@ private func content(
             Text(.transactionDetailsRequestDeletionMessage)
               .font(Theme.shared.font.bodyLarge.font)
               .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+              .shimmer(isLoading: state.isLoading)
 
             WrapButtonView(
               style: .error,
@@ -102,6 +105,7 @@ private func content(
             Text(.transactionDetailsReportTransactionMessage)
               .font(Theme.shared.font.bodyLarge.font)
               .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+              .shimmer(isLoading: state.isLoading)
 
             WrapButtonView(
               style: .secondary,

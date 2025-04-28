@@ -14,7 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import logic_ui
 import feature_common
 
 struct PresentationRequestView<Router: RouterHost>: View {
