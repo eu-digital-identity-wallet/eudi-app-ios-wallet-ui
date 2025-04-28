@@ -15,7 +15,6 @@
  */
 import Swinject
 import logic_authentication
-import logic_business
 import logic_core
 
 public final class FeatureCommonAssembly: Assembly {

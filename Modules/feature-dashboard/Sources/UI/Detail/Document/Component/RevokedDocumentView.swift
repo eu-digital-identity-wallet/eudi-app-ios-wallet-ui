@@ -15,7 +15,6 @@
  */
 import SwiftUI
 import logic_ui
-import feature_common
 import logic_resources
 
 struct RevokedDocumentView: View {

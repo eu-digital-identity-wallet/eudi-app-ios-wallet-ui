@@ -15,7 +15,6 @@
  */
 import Foundation
 import SwiftUI
-
 import logic_resources
 
 public struct ExpandableTextView: View {
