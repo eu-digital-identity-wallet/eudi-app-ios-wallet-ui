@@ -25,7 +25,6 @@ struct DocumentDetailsViewState: ViewState {
   let isLoading: Bool
   let error: ContentErrorView.Config?
   let documentId: String
-  let hasDeleteAction: Bool
   let documentFieldsCount: Int
   let isBookmarked: Bool
   let isRevoked: Bool
@@ -52,7 +51,6 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         isLoading: true,
         error: nil,
         documentId: documentId,
-        hasDeleteAction: false,
         documentFieldsCount: 0,
         isBookmarked: false,
         isRevoked: false
@@ -76,7 +74,6 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         $0.copy(
           document: document,
           isLoading: false,
-          hasDeleteAction: true,
           documentFieldsCount: document.documentFields.count,
           isBookmarked: isBookmarked,
           isRevoked: isRevoked
