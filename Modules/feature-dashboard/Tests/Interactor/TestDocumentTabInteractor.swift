@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 import XCTest
-import logic_core
 import OrderedCollections
-@testable import feature_dashboard
+@testable import logic_core
 @testable import logic_test
 @testable import feature_test
+@testable import feature_dashboard
 
 final class TestDocumentTabInteractor: EudiTest {
   
