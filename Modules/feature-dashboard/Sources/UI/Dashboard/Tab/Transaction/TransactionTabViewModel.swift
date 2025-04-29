@@ -21,11 +21,12 @@ struct TransactionTabState: ViewState {
   let isLoading: Bool
   let transactions: [TransactionCategory: [TransactionTabUIModel]]
   let filterUIModel: [FilterUISection]
-  let failedTransactions: [String]
   let isPaused: Bool
   let hasDefaultFilters: Bool
   let dateHasChanged: Bool
   let sortIsDescending: Bool
+  let minStartDate: Date
+  let maxEndDate: Date
 }
 
 final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, TransactionTabState> {
@@ -50,11 +51,12 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         isLoading: true,
         transactions: [:],
         filterUIModel: [],
-        failedTransactions: [],
         isPaused: true,
         hasDefaultFilters: true,
         dateHasChanged: false,
-        sortIsDescending: false
+        sortIsDescending: false,
+        minStartDate: Date(),
+        maxEndDate: Date()
       )
     )
 
@@ -69,18 +71,21 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
 
   func fetch() {
     Task {
-      let failedTransactions = viewState.failedTransactions
 
       do {
         let state = try await Task.detached {
-          try await self.interactor.fetchTransactions(failedTransactions: failedTransactions)
+          try await self.interactor.fetchTransactions()
         }.value
 
         switch state {
-        case .success(let transactions):
+        case .success(let transactions, let minStartDate, let maxEndDate):
 
           if viewState.isPaused {
-            await interactor.initializeFilters(filterableList: transactions)
+            await interactor.initializeFilters(
+              filterableList: transactions,
+              minStartDate: minStartDate,
+              maxEndDate: maxEndDate
+            )
           } else {
             await interactor.updateLists(filterableList: transactions)
           }
@@ -90,7 +95,9 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
           setState {
             $0.copy(
               isLoading: false,
-              isPaused: false
+              isPaused: false,
+              minStartDate: minStartDate,
+              maxEndDate: maxEndDate
             )
           }
         case .failure:
