@@ -101,7 +101,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
         )
     case .DEV:
         .init(
-          issuerUrl: "https://dev.issuer.eudiw.dev",
+          issuerUrl: "https://demo-utsteder.test.eidas2sandkasse.net",
           clientId: "wallet-dev",
           redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
