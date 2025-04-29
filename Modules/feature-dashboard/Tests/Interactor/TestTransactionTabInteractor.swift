@@ -314,7 +314,6 @@ final class TestTransactionTabInteractor: EudiTest {
 }
 
 private extension TestTransactionTabInteractor {
-  
   func stubFetchTransactionsWithError() {
     stub(walletKitController) { mock in
       when(mock.fetchTransactionLogs())
