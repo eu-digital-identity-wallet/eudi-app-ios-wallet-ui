@@ -15,21 +15,18 @@
  */
 import XCTest
 import logic_core
-import OrderedCollections
-@testable import feature_dashboard
+import logic_business
 @testable import logic_test
 @testable import feature_test
+@testable import feature_dashboard
 
-/// Test Suite for `TransactionTabInteractorImpl`.
 final class TestTransactionTabInteractor: EudiTest {
   
-  // MARK: - Properties
   var interactor: TransactionTabInteractor!
   var walletKitController: MockWalletKitController!
   var filterValidator: MockFilterValidator!
   var configLogic: MockConfigLogic!
   
-  // MARK: - Setup and Teardown
   override func setUp() {
     self.walletKitController = MockWalletKitController()
     self.configLogic = MockConfigLogic()
@@ -46,9 +43,6 @@ final class TestTransactionTabInteractor: EudiTest {
     self.configLogic = nil
   }
   
-  // MARK: - Test Cases
-  
-  /// Test case that verifies the behavior when `walletKitController` throws an error.
   func testFetchTransactions_WhenWalletKitControllerThrowsError_ThenReturnError() async {
     // Given
     stubFetchTransactionsWithError()
@@ -68,7 +62,6 @@ final class TestTransactionTabInteractor: EudiTest {
     }
   }
   
-  /// Test case that verifies the behavior when the `walletKitController` returns an empty list.
   func testFetchTransactions_WhenWalletKitControllerReturnsEmpty_ThenReturnError() async {
     //Given
     stubFetchTransactions(with: [])
@@ -88,7 +81,6 @@ final class TestTransactionTabInteractor: EudiTest {
     }
   }
   
-  /// Test case that verifies the behavior when the `walletKitController` returns valid transaction data.
   func testFetchTransactions_WhenWalletKitControllerReturnsData_ThenReturnUiModels() async {
     //Given
     stubFetchTransactions(with: [
@@ -110,7 +102,6 @@ final class TestTransactionTabInteractor: EudiTest {
     }
   }
   
-  /// Test case that verifies the behavior when `fetchFilteredTransactions` returns an empty list.
   func testFetchFilteredTransactions_WhenWalletKitControllerReturnsEmptyList_ThenReturnNil() async {
     // Given
     stubFetchTransactions(with: [])
@@ -127,7 +118,6 @@ final class TestTransactionTabInteractor: EudiTest {
     }
   }
   
-  /// Test case that verifies the behavior when `fetchFilteredTransactions` returns multiple items.
   func testFetchFilteredTransactions_WhenWalletKitControllerReturnsMultipleItems_ThenReturnFilteredList() async {
     // Given
     stubFetchTransactions(with: [
@@ -160,25 +150,255 @@ final class TestTransactionTabInteractor: EudiTest {
       XCTFail("Unexpected error: \(error)")
     }
   }
+  
+  func testInitializeFilters_WithFilterableList_InitializesValidator() async {
+    // Given
+    stubFetchTransactions(with: [
+      Constants.eudiRemoteVerifierMock,
+      Constants.otherRelPartyMock
+    ])
+    
+    stubInitializeValidator()
+    
+    do {
+      // When
+      let filterableList = try await interactor.fetchFilteredTransactions(failedTransactions: [])
+      
+      await interactor.initializeFilters(filterableList: filterableList!)
+      
+      // Then
+      verify(filterValidator).initializeValidator(filters: any(), filterableList: any())
+      
+      XCTAssertTrue(true)
+    } catch {
+      XCTFail("Unexpected error: \(error)")
+    }
+  }
+  
+  func testInitializeFilters_WithEmptyFilterableList_InitializesValidator() async {
+    // Given
+    stubFetchTransactions(with: [])
+    stubInitializeValidator()
+    
+    do {
+      // When
+      let filterableList = try await interactor.fetchFilteredTransactions(failedTransactions: [])
+      
+      guard let filterableList else {
+        XCTAssertTrue(true)
+        return
+      }
+      
+      await interactor.initializeFilters(filterableList: filterableList)
+      
+      // Then
+      verify(filterValidator).initializeValidator(filters: any(), filterableList: any())
+      
+      XCTAssertTrue(true)
+    } catch {
+      XCTFail("Unexpected error: \(error)")
+    }
+  }
+  
+  func testApplyFilters_CallsFilterValidator() async {
+    // Given
+    stubInitializeValidator()
+    stubApplyFilters()
+    
+    // When
+    await interactor.applyFilters()
+    
+    // Then
+    verify(filterValidator).applyFilters(sortOrder: any())
+  }
+  
+  func testUpdateLists_CallsFilterValidator() async {
+    // Given
+    stubFetchTransactions(with: [
+      Constants.eudiRemoteVerifierMock,
+      Constants.otherRelPartyMock
+    ])
+    stubInitializeValidator()
+    stubUpdateLists()
+    
+    do {
+      // When
+      let filterableList = try await interactor.fetchFilteredTransactions(failedTransactions: [])
+      await interactor.updateLists(filterableList: filterableList!)
+      
+      // Then
+      verify(filterValidator).updateLists(
+        sortOrder: any(),
+        filterableList: any()
+      )
+    }  catch {
+      XCTFail("Unexpected error: \(error)")
+    }
+  }
+  
+  func testResetFilters_CallsFilterValidator() async {
+    // Given
+    stubInitializeValidator()
+    stubResetFilters()
+    
+    // When
+    await interactor.resetFilters()
+    
+    // Then
+    verify(filterValidator).resetFilters()
+  }
+  
+  func testRevertFilters_CallsFilterValidator() async {
+    // Given
+    stubInitializeValidator()
+    stubRevertFilters()
+    
+    // When
+    await interactor.revertFilters()
+    
+    // Then
+    verify(filterValidator).revertFilters()
+  }
+  
+  func testUpdateFilters_CallsFilterValidator() async {
+    // Given
+    stubInitializeValidator()
+    stubUpdateFilters()
+    
+    // When
+    await interactor.updateFilters(
+      sectionID: "",
+      filterID: ""
+    )
+    
+    // Then
+    verify(filterValidator).updateFilter(
+      filterGroupId: any(),
+      filterId: any()
+    )
+  }
+  
+  func testUpdateDateFilters_CallsFilterValidator() async {
+    // Given
+    stubInitializeValidator()
+    stubUpdateDateFilter()
+    
+    // When
+    await interactor.updateDateFilters(
+      sectionID: "",
+      filterID: "",
+      startDate: .now,
+      endDate: .now
+    )
+    
+    // Then
+    verify(filterValidator).updateDateFilters(
+      filterGroupId: any(),
+      filterId: any(),
+      startDate: any(),
+      endDate: any()
+    )
+  }
+  
+  func testApplySearch_CallsFilterValidator() async {
+    // Given
+    stubInitializeValidator()
+    stubApplySearch()
+    
+    // When
+    await interactor.applySearch(query: "")
+    
+    // Then
+    verify(filterValidator).applySearch(query: any())
+  }
 }
-
-// MARK: - Private Extensions for Mock Data
 
 private extension TestTransactionTabInteractor {
   
-  /// Mocks a failing fetch of transactions with an error.
   func stubFetchTransactionsWithError() {
     stub(walletKitController) { mock in
-      when(mock.fetchTransactionLogs()).thenThrow(WalletCoreError.unableToFetchTransactionLog)
+      when(mock.fetchTransactionLogs())
+        .thenThrow(WalletCoreError.unableToFetchTransactionLog)
     }
   }
   
-  /// Mocks a successful fetch of transactions with provided data.
   func stubFetchTransactions(with transactions: [TransactionLogItem]) {
     stub(walletKitController) { mock in
-      when(mock.fetchTransactionLogs()).thenReturn(transactions)
+      when(mock.fetchTransactionLogs())
+        .thenReturn(transactions)
     }
   }
   
+  func stubInitializeValidator() {
+    stub(filterValidator) { mock in
+      when(mock.initializeValidator(
+        filters: any(),
+        filterableList: any())
+      )
+      .thenDoNothing()
+    }
+  }
+  
+  func stubApplyFilters() {
+    stub(filterValidator) { mock in
+      when(mock.applyFilters(
+        sortOrder: any())
+      )
+      .thenDoNothing()
+    }
+  }
+  
+  func stubUpdateLists() {
+    stub(filterValidator) { mock in
+      when(mock.updateLists(
+        sortOrder: any(),
+        filterableList: any())
+      )
+      .thenDoNothing()
+    }
+  }
+  
+  func stubResetFilters() {
+    stub(filterValidator) { mock in
+      when(mock.resetFilters()).thenDoNothing()
+    }
+  }
+  
+  func stubRevertFilters() {
+    stub(filterValidator) { mock in
+      when(mock.revertFilters()).thenDoNothing()
+    }
+  }
+  
+  func stubUpdateFilters() {
+    stub(filterValidator) { mock in
+      when(mock.updateFilter(
+        filterGroupId: any(),
+        filterId: any())
+      )
+      .thenDoNothing()
+    }
+  }
+  
+  func stubUpdateDateFilter() {
+    stub(filterValidator) { mock in
+      when(mock.updateDateFilters(
+        filterGroupId: any(),
+        filterId: any(),
+        startDate: any(),
+        endDate: any())
+      )
+      .thenDoNothing()
+    }
+  }
+  
+  func stubApplySearch() {
+    stub(filterValidator) { mock in
+      when(mock.applySearch(
+        query: any())
+      )
+      .thenDoNothing()
+    }
+  }
 }
 
