@@ -42,7 +42,11 @@ public protocol TransactionTabInteractor: Sendable {
   ) async
   func createFiltersGroup(earliestDate: Date, latestDate: Date) -> Filters
   func applyFilters() async
-  func updateLists(filterableList: FilterableList) async
+  func updateLists(
+    filterableList: FilterableList,
+    minStartDate: Date,
+    maxEndDate: Date
+  ) async
   @MainActor func onFilterChangeState() -> AsyncStream<TransactionFiltersPartialState>
   func resetFilters() async
   func revertFilters() async
@@ -82,7 +86,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
     return .success(
       filterableList: transactions,
       minStartDate: getEarliestTransactionDate(from: transactions),
-      maxEndDate: getLatesTransactionDate(from: transactions)
+      maxEndDate: getLatestTransactionDate(from: transactions)
     )
   }
 
@@ -275,10 +279,14 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
     await filterValidator.updateDateFilters(filterGroupId: sectionID, filterId: filterID, startDate: startDate, endDate: endDate)
   }
 
-  func updateLists(filterableList: FilterableList) async {
+  func updateLists(
+    filterableList: FilterableList,
+    minStartDate: Date,
+    maxEndDate: Date
+  ) async {
     let sortOrder = createFiltersGroup(
-      earliestDate: getEarliestTransactionDate(from: filterableList),
-      latestDate: getLatesTransactionDate(from: filterableList)
+      earliestDate: minStartDate,
+      latestDate: maxEndDate
     ).sortOrder
     await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
   }
@@ -453,7 +461,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
       .min() ?? Date()
   }
 
-  private func getLatesTransactionDate(from transactions: FilterableList) -> Date {
+  private func getLatestTransactionDate(from transactions: FilterableList) -> Date {
     return transactions.items
       .compactMap { ($0.attributes as? TransactionFilterableAttributes)?.creationDate }
       .map { Calendar.current.date(byAdding: .minute, value: 1, to: $0) ?? $0 }

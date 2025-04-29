@@ -2005,13 +2005,13 @@ public class MockTransactionTabInteractor: TransactionTabInteractor, Cuckoo.Prot
         )
     }
     
-    public func updateLists(filterableList p0: FilterableList) async {
+    public func updateLists(filterableList p0: FilterableList, minStartDate p1: Date, maxEndDate p2: Date) async {
         return await cuckoo_manager.call(
-            "updateLists(filterableList p0: FilterableList) async",
-            parameters: (p0),
-            escapingParameters: (p0),
+            "updateLists(filterableList p0: FilterableList, minStartDate p1: Date, maxEndDate p2: Date) async",
+            parameters: (p0, p1, p2),
+            escapingParameters: (p0, p1, p2),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.updateLists(filterableList: p0)
+            defaultCall: await __defaultImplStub!.updateLists(filterableList: p0, minStartDate: p1, maxEndDate: p2)
         )
     }
     
@@ -2114,10 +2114,10 @@ public class MockTransactionTabInteractor: TransactionTabInteractor, Cuckoo.Prot
             ))
         }
         
-        func updateLists<M1: Cuckoo.Matchable>(filterableList p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(FilterableList)> where M1.MatchedType == FilterableList {
-            let matchers: [Cuckoo.ParameterMatcher<(FilterableList)>] = [wrap(matchable: p0) { $0 }]
+        func updateLists<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(filterableList p0: M1, minStartDate p1: M2, maxEndDate p2: M3) -> Cuckoo.ProtocolStubNoReturnFunction<(FilterableList, Date, Date)> where M1.MatchedType == FilterableList, M2.MatchedType == Date, M3.MatchedType == Date {
+            let matchers: [Cuckoo.ParameterMatcher<(FilterableList, Date, Date)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return .init(stub: cuckoo_manager.createStub(for: MockTransactionTabInteractor.self,
-                method: "updateLists(filterableList p0: FilterableList) async",
+                method: "updateLists(filterableList p0: FilterableList, minStartDate p1: Date, maxEndDate p2: Date) async",
                 parameterMatchers: matchers
             ))
         }
@@ -2232,10 +2232,10 @@ public class MockTransactionTabInteractor: TransactionTabInteractor, Cuckoo.Prot
         
         
         @discardableResult
-        func updateLists<M1: Cuckoo.Matchable>(filterableList p0: M1) -> Cuckoo.__DoNotUse<(FilterableList), Void> where M1.MatchedType == FilterableList {
-            let matchers: [Cuckoo.ParameterMatcher<(FilterableList)>] = [wrap(matchable: p0) { $0 }]
+        func updateLists<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(filterableList p0: M1, minStartDate p1: M2, maxEndDate p2: M3) -> Cuckoo.__DoNotUse<(FilterableList, Date, Date), Void> where M1.MatchedType == FilterableList, M2.MatchedType == Date, M3.MatchedType == Date {
+            let matchers: [Cuckoo.ParameterMatcher<(FilterableList, Date, Date)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return cuckoo_manager.verify(
-                "updateLists(filterableList p0: FilterableList) async",
+                "updateLists(filterableList p0: FilterableList, minStartDate p1: Date, maxEndDate p2: Date) async",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -2336,7 +2336,7 @@ public class TransactionTabInteractorStub:TransactionTabInteractor, @unchecked S
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func updateLists(filterableList p0: FilterableList) async {
+    public func updateLists(filterableList p0: FilterableList, minStartDate p1: Date, maxEndDate p2: Date) async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

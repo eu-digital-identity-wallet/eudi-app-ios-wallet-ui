@@ -87,7 +87,11 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
               maxEndDate: maxEndDate
             )
           } else {
-            await interactor.updateLists(filterableList: transactions)
+            await interactor.updateLists(
+              filterableList: transactions,
+              minStartDate: minStartDate,
+              maxEndDate: maxEndDate
+            )
           }
 
           await interactor.applyFilters()
