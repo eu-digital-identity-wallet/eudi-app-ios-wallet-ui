@@ -19,7 +19,11 @@ import logic_business
 import logic_resources
 
 public enum TransactionsPartialState: Sendable {
-  case success(FilterableList)
+  case success(
+    filterableList: FilterableList,
+    minStartDate: Date,
+    maxEndDate: Date
+  )
   case failure(Error)
 }
 
@@ -30,12 +34,19 @@ public enum TransactionFiltersPartialState: Sendable {
 }
 
 public protocol TransactionTabInteractor: Sendable {
-  func fetchTransactions(failedTransactions: [String]) async throws -> TransactionsPartialState
-  func fetchFilteredTransactions(failedTransactions: [String]) async throws -> FilterableList?
-  func initializeFilters(filterableList: FilterableList) async
+  func fetchTransactions() async throws -> TransactionsPartialState
+  func initializeFilters(
+    filterableList: FilterableList,
+    minStartDate: Date,
+    maxEndDate: Date
+  ) async
   func createFiltersGroup(earliestDate: Date, latestDate: Date) -> Filters
   func applyFilters() async
-  func updateLists(filterableList: FilterableList) async
+  func updateLists(
+    filterableList: FilterableList,
+    minStartDate: Date,
+    maxEndDate: Date
+  ) async
   @MainActor func onFilterChangeState() -> AsyncStream<TransactionFiltersPartialState>
   func resetFilters() async
   func revertFilters() async
@@ -64,84 +75,29 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
     filtersStateAsync?.finish()
   }
 
-  func fetchTransactions(failedTransactions: [String]) async throws -> TransactionsPartialState {
+  func fetchTransactions() async throws -> TransactionsPartialState {
 
-    let transactions: FilterableList? = try await fetchFilteredTransactions(failedTransactions: failedTransactions)
+    let transactions: FilterableList? = try await fetchFilteredTransactions()
 
     guard let transactions = transactions else {
       return .failure(WalletCoreError.unableFetchDocuments)
     }
 
-    return .success(transactions)
+    return .success(
+      filterableList: transactions,
+      minStartDate: getEarliestTransactionDate(from: transactions),
+      maxEndDate: getLatestTransactionDate(from: transactions)
+    )
   }
 
-  public func fetchFilteredTransactions(failedTransactions: [String]) async throws -> FilterableList? {
-    let transactions: [TransactionLogItem]
-
-    do {
-      transactions = try await self.walletKitController.fetchTransactionLogs()
-    } catch {
-      return nil
-    }
-
-    guard !transactions.isEmpty else {
-      return nil
-    }
-
-    let filterableItems = transactions.map { transaction in
-
-      let transactionPayload = transaction.transformToTransactionUI()
-
-      switch transaction.transactionLogData {
-      case .presentation(let logData):
-
-        var tags = [logData.relyingParty.name]
-
-        let transactionName = logData.relyingParty.name.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        let credentials: [String] = logData.documents
-          .compactMap(\.displayName)
-
-        let credentialsTrimmed = credentials.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-
-        if !transactionName.isEmpty {
-          tags.append(transactionName)
-        }
-        if !credentials.isEmpty {
-          tags.append(contentsOf: credentials)
-        }
-        if !credentialsTrimmed.isEmpty {
-          tags.append(contentsOf: credentialsTrimmed)
-        }
-        return FilterableItem(
-          payload: transactionPayload,
-          attributes: TransactionFilterableAttributes(
-            sortingKey: logData.relyingParty.name.lowercased(),
-            searchTags: tags,
-            status: logData.status.mapToTransactionStatus(),
-            creationDate: logData.timestamp,
-            relyingPartyName: logData.relyingParty.name,
-            transactionType: .presentation
-          )
-        )
-      case .issuance, .signing:
-        return FilterableItem(
-          payload: transactionPayload,
-          attributes: TransactionFilterableAttributes(
-            sortingKey: "",
-            searchTags: []
-          )
-        )
-      }
-    }
-
-    return FilterableList(items: filterableItems)
-  }
-
-  func initializeFilters(filterableList: FilterableList) async {
+  func initializeFilters(
+    filterableList: FilterableList,
+    minStartDate: Date,
+    maxEndDate: Date
+  ) async {
     let filtersGroup = createFiltersGroup(
-      earliestDate: getEarliestTransactionDate(from: filterableList),
-      latestDate: getLatesTransactionDate(from: filterableList)
+      earliestDate: minStartDate,
+      latestDate: maxEndDate
     )
     let filters = await addDynamicFilters(transactions: filterableList, filters: filtersGroup)
     await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
@@ -323,10 +279,14 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
     await filterValidator.updateDateFilters(filterGroupId: sectionID, filterId: filterID, startDate: startDate, endDate: endDate)
   }
 
-  func updateLists(filterableList: FilterableList) async {
+  func updateLists(
+    filterableList: FilterableList,
+    minStartDate: Date,
+    maxEndDate: Date
+  ) async {
     let sortOrder = createFiltersGroup(
-      earliestDate: getEarliestTransactionDate(from: filterableList),
-      latestDate: getLatesTransactionDate(from: filterableList)
+      earliestDate: minStartDate,
+      latestDate: maxEndDate
     ).sortOrder
     await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
   }
@@ -380,6 +340,71 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
         }
       }
     }
+  }
+
+  private func fetchFilteredTransactions() async throws -> FilterableList? {
+    let transactions: [TransactionLogItem]
+
+    do {
+      transactions = try await self.walletKitController.fetchTransactionLogs()
+    } catch {
+      return nil
+    }
+
+    guard !transactions.isEmpty else {
+      return nil
+    }
+
+    let filterableItems = transactions.map { transaction in
+
+      let transactionPayload = transaction.transformToTransactionUI()
+
+      switch transaction.transactionLogData {
+      case .presentation(let logData):
+
+        var tags = [logData.relyingParty.name]
+
+        let relyingPartyTrimmed = logData.relyingParty.name.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let credentials: [String] = logData.documents
+          .compactMap(\.displayName)
+
+        let credentialsTrimmed = credentials.map {
+          $0.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
+        if !relyingPartyTrimmed.isEmpty {
+          tags.append(relyingPartyTrimmed)
+        }
+        if !credentials.isEmpty {
+          tags.append(contentsOf: credentials)
+        }
+        if !credentialsTrimmed.isEmpty {
+          tags.append(contentsOf: credentialsTrimmed)
+        }
+        return FilterableItem(
+          payload: transactionPayload,
+          attributes: TransactionFilterableAttributes(
+            sortingKey: logData.relyingParty.name.lowercased(),
+            searchTags: tags,
+            status: logData.status.mapToTransactionStatus(),
+            creationDate: logData.timestamp,
+            relyingPartyName: logData.relyingParty.name,
+            transactionType: .presentation
+          )
+        )
+      case .issuance, .signing:
+        return FilterableItem(
+          payload: transactionPayload,
+          attributes: TransactionFilterableAttributes(
+            sortingKey: "",
+            searchTags: []
+          )
+        )
+      }
+    }
+
+    return FilterableList(items: filterableItems)
   }
 
   private func filterUISection(filters: Filters) -> [FilterUISection] {
@@ -436,9 +461,10 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
       .min() ?? Date()
   }
 
-  private func getLatesTransactionDate(from transactions: FilterableList) -> Date {
+  private func getLatestTransactionDate(from transactions: FilterableList) -> Date {
     return transactions.items
       .compactMap { ($0.attributes as? TransactionFilterableAttributes)?.creationDate }
+      .map { Calendar.current.date(byAdding: .minute, value: 1, to: $0) ?? $0 }
       .max() ?? Date()
   }
 }

@@ -34,7 +34,11 @@ struct TransactionTabView<Router: RouterHost>: View {
       }
     )
     .sheet(isPresented: $viewModel.isFilterModalShowing) {
-      FiltersListView(sections: viewModel.viewState.filterUIModel) {
+      FiltersListView(
+        sections: viewModel.viewState.filterUIModel,
+        minStartDate: viewModel.viewState.minStartDate,
+        maxEndDate: viewModel.viewState.maxEndDate
+      ) {
         viewModel.resetFilters()
       } applyFiltersAction: {
         viewModel.fetch()
@@ -127,11 +131,12 @@ private func content(
     isLoading: false,
     transactions: [:],
     filterUIModel: [],
-    failedTransactions: [],
     isPaused: false,
     hasDefaultFilters: false,
     dateHasChanged: false,
-    sortIsDescending: true
+    sortIsDescending: true,
+    minStartDate: Date(),
+    maxEndDate: Date()
   )
   content(
     state: state,

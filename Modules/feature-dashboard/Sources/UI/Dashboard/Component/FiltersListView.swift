@@ -22,20 +22,25 @@ struct FiltersListView: View {
   @Environment(\.dismiss) var dismiss
 
   @State private var isApplied: Bool = false
-  @State private var startDate: Date = Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date()
-  @State private var endDate: Date = Calendar.current.date(byAdding: .year, value: 1, to: Date()) ?? Date()
+  @State private var startDate: Date
+  @State private var endDate: Date
 
-  var resetFiltersAction: () -> Void
-  var applyFiltersAction: () -> Void
-  var showIndicator: (() -> Void)?
-  var updateFiltersCallback: ((String, String) -> Void)?
-  var updateDateFiltersCallback: ((String, String, Date, Date) -> Void)?
-  var revertFilters: () -> Void
+  private let minStartDate: Date
+  private let maxEndDate: Date
 
-  let sections: [FilterUISection]
+  private var resetFiltersAction: () -> Void
+  private var applyFiltersAction: () -> Void
+  private var showIndicator: (() -> Void)?
+  private var updateFiltersCallback: ((String, String) -> Void)?
+  private var updateDateFiltersCallback: ((String, String, Date, Date) -> Void)?
+  private var revertFilters: () -> Void
+
+  private let sections: [FilterUISection]
 
   init(
     sections: [FilterUISection],
+    minStartDate: Date? = nil,
+    maxEndDate: Date? = nil,
     resetFiltersAction: @escaping () -> Void,
     applyFiltersAction: @escaping () -> Void,
     showIndicator: (() -> Void)? = nil,
@@ -50,6 +55,10 @@ struct FiltersListView: View {
     self.updateFiltersCallback = updateFiltersCallback
     self.updateDateFiltersCallback = updateDateFiltersCallback
     self.revertFilters = revertFilters
+    self.minStartDate = minStartDate ?? Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date()
+    self.maxEndDate = maxEndDate ?? Calendar.current.date(byAdding: .year, value: 1, to: Date()) ?? Date()
+    self.startDate = minStartDate ?? Date()
+    self.endDate = maxEndDate ?? Date()
   }
 
   var body: some View {
@@ -100,8 +109,8 @@ struct FiltersListView: View {
         let availableDates = sections.flatMap { $0.filters }
           .compactMap { ($0.startDate, $0.endDate) }
 
-        startDate = availableDates.compactMap { $0.0 }.min() ?? Date()
-        endDate = availableDates.compactMap { $0.1 }.max() ?? Date()
+        startDate = availableDates.compactMap { $0.0 }.min() ?? minStartDate
+        endDate = availableDates.compactMap { $0.1 }.max() ?? maxEndDate
       }
     }
   }
@@ -129,7 +138,8 @@ struct FiltersListView: View {
             updateFiltersCallback?(sectionID, filters[index].id)
           }
         } else if filters[index].filterSectionType == .datePicker {
-          DatePicker(selection: $startDate, in: ...endDate, displayedComponents: .date) {
+
+          DatePicker(selection: $startDate, in: minStartDate...endDate, displayedComponents: .date) {
             Text(.startDate)
           }
           .onAppear {
@@ -146,7 +156,7 @@ struct FiltersListView: View {
             updateDateFiltersCallback?(sectionID, filters[index].id, newDate, endDate)
           }
 
-          DatePicker(selection: $endDate, in: startDate..., displayedComponents: .date) {
+          DatePicker(selection: $endDate, in: startDate...maxEndDate, displayedComponents: .date) {
             Text(.endDate)
               .onAppear {
                 if let date = filters[index].endDate {
