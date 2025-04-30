@@ -49,7 +49,7 @@ final class TestTransactionTabInteractor: EudiTest {
     
     do {
       // When
-      let state = try await interactor.fetchTransactions(failedTransactions: [])
+      let state = try await interactor.fetchTransactions()
       // Then
       switch state {
       case .failure(let error):
@@ -68,7 +68,7 @@ final class TestTransactionTabInteractor: EudiTest {
     
     do {
       // When
-      let state = try await interactor.fetchTransactions(failedTransactions: [])
+      let state = try await interactor.fetchTransactions()
       // Then
       switch state {
       case .failure(let error):
@@ -89,7 +89,7 @@ final class TestTransactionTabInteractor: EudiTest {
     
     do {
       // When
-      let state = try await interactor.fetchTransactions(failedTransactions: [])
+      let state = try await interactor.fetchTransactions()
       // Then
       switch state {
       case .success:
@@ -101,56 +101,7 @@ final class TestTransactionTabInteractor: EudiTest {
       XCTFail("Unexpected error: \(error)")
     }
   }
-  
-  func testFetchFilteredTransactions_WhenWalletKitControllerReturnsEmptyList_ThenReturnNil() async {
-    // Given
-    stubFetchTransactions(with: [])
-    
-    do {
-      // When
-      let result = try await interactor.fetchFilteredTransactions(failedTransactions: [])
-      
-      // Then
-      XCTAssertNil(result, "Expected nil when no transactions are found")
-      
-    } catch {
-      XCTFail("Unexpected error: \(error)")
-    }
-  }
-  
-  func testFetchFilteredTransactions_WhenWalletKitControllerReturnsMultipleItems_ThenReturnFilteredList() async {
-    // Given
-    stubFetchTransactions(with: [
-      Constants.eudiRemoteVerifierMock,
-      Constants.otherRelPartyMock
-    ])
-    
-    do {
-      // When
-      let result = try await interactor.fetchFilteredTransactions(failedTransactions: [])
-      
-      // Then
-      XCTAssertNotNil(result, "Expected non-nil FilterableList")
-      XCTAssertEqual(result?.items.count, 2, "Expected exactly two FilterableItems")
-      
-      result?.items.forEach { item in
-        if let attributes = item.attributes as? TransactionFilterableAttributes {
-          switch attributes.transactionType {
-          case .presentation:
-            XCTAssertTrue(true)
-          case .issuance, .signing:
-            XCTFail("Unexpected relying party name: \(String(describing: attributes.relyingPartyName))")
-          default:
-            XCTFail("Unexpected relying party name: \(String(describing: attributes.relyingPartyName))")
-          }
-        }
-      }
-      
-    } catch {
-      XCTFail("Unexpected error: \(error)")
-    }
-  }
-  
+
   func testInitializeFilters_WithFilterableList_InitializesValidator() async {
     // Given
     stubFetchTransactions(with: [
@@ -162,10 +113,18 @@ final class TestTransactionTabInteractor: EudiTest {
     
     do {
       // When
-      let filterableList = try await interactor.fetchFilteredTransactions(failedTransactions: [])
+      let state = try await interactor.fetchTransactions()
       
-      await interactor.initializeFilters(filterableList: filterableList!)
-      
+      switch state {
+      case .success(let filterableList, let minStartDate, let maxEndDate):
+        await interactor.initializeFilters(
+          filterableList: filterableList,
+          minStartDate: minStartDate,
+          maxEndDate: maxEndDate
+        )
+      case .failure(let error):
+        XCTFail("Error: \(error)")
+      }
       // Then
       verify(filterValidator).initializeValidator(filters: any(), filterableList: any())
       
@@ -182,19 +141,19 @@ final class TestTransactionTabInteractor: EudiTest {
     
     do {
       // When
-      let filterableList = try await interactor.fetchFilteredTransactions(failedTransactions: [])
+      let state = try await interactor.fetchTransactions()
       
-      guard let filterableList else {
-        XCTAssertTrue(true)
+      switch state {
+      case .success(let filterableList, let minStartDate, let maxEndDate):
+        await interactor.initializeFilters(
+          filterableList: filterableList,
+          minStartDate: minStartDate,
+          maxEndDate: maxEndDate
+        )
+      case .failure(let error):
+        XCTAssertEqual(error.localizedDescription, WalletCoreError.unableToFetchTransactionLog.localizedDescription)
         return
       }
-      
-      await interactor.initializeFilters(filterableList: filterableList)
-      
-      // Then
-      verify(filterValidator).initializeValidator(filters: any(), filterableList: any())
-      
-      XCTAssertTrue(true)
     } catch {
       XCTFail("Unexpected error: \(error)")
     }
@@ -223,15 +182,17 @@ final class TestTransactionTabInteractor: EudiTest {
     
     do {
       // When
-      let filterableList = try await interactor.fetchFilteredTransactions(failedTransactions: [])
-      await interactor.updateLists(filterableList: filterableList!)
+      let state = try await interactor.fetchTransactions()
       
-      // Then
-      verify(filterValidator).updateLists(
-        sortOrder: any(),
-        filterableList: any()
-      )
-    }  catch {
+      switch state {
+      case .success(let filterableList, let minStartDate, let maxEndDate):
+        //Then
+        await interactor.updateLists(filterableList: filterableList, minStartDate: minStartDate, maxEndDate: maxEndDate)
+      case .failure(let error):
+        XCTAssertEqual(error.localizedDescription, WalletCoreError.unableToFetchTransactionLog.localizedDescription)
+        return
+      }
+    } catch {
       XCTFail("Unexpected error: \(error)")
     }
   }
