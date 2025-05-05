@@ -19,6 +19,7 @@ import OrderedCollections
 @testable import logic_test
 @testable import feature_test
 @testable import feature_dashboard
+@testable import logic_business
 
 final class TestDocumentTabInteractor: EudiTest {
   
@@ -227,6 +228,56 @@ final class TestDocumentTabInteractor: EudiTest {
     
     // Then
     verify(filterValidator).applySearch(query: any())
+  }
+
+  func testOnFilterChangeState() async {
+    // Given
+    let filterApplyResult: FilterResult = .filterApplyResult(
+      filteredList: FilterableList(items: []),
+      updatedFilters: Filters(
+        filterGroups: [],
+        sortOrder: .ascending
+      ),
+      hasDefaultFilters: true
+    )
+    let filterUpdateResult: FilterResult = .filterUpdateResult(
+      updatedFilters: Filters(
+        filterGroups: [],
+        sortOrder: .ascending
+      )
+    )
+
+    stub(filterValidator) { stub in
+      when(stub.getFilterResultStream()).thenReturn(AsyncStream { continuation in
+        continuation.yield(FilterResultPartialState.success(filterApplyResult))
+        continuation.yield(FilterResultPartialState.success(filterUpdateResult))
+        continuation.finish()
+      })
+    }
+
+    // When
+    let resultStream = await interactor.onFilterChangeState()
+    var results = [DocumentFiltersPartialState]()
+
+    Task {
+      for try await result in resultStream {
+        results.append(result)
+      }
+
+      XCTAssertEqual(results.count, 2)
+      if case let .filterApplyResult(transactions, sections, _) = results[0] {
+        XCTAssertTrue(transactions.isEmpty)
+        XCTAssertEqual(sections.count, 0)
+      } else {
+        XCTFail("Expected .filterApplyResult, but got \(results[0])")
+      }
+
+      if case let .filterUpdateResult(sections) = results[1] {
+        XCTAssertEqual(sections.count, 0)
+      } else {
+        XCTFail("Expected .filterUpdateResult, but got \(results[1])")
+      }
+    }
   }
 }
 
