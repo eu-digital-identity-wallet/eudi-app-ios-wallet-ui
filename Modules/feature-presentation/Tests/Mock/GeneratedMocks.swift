@@ -1083,6 +1083,16 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
         )
     }
     
+    public func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
+        return await cuckoo_manager.call(
+            "onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.onRequestReceived()
+        )
+    }
+    
     public func onSendResponse() async -> RemoteSentResponsePartialState {
         return await cuckoo_manager.call(
             "onSendResponse() async -> RemoteSentResponsePartialState",
@@ -1158,6 +1168,14 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
             let matchers: [Cuckoo.ParameterMatcher<([RequestDataUiModel])>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractor.self,
                 method: "onResponsePrepare(requestItems p0: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error>",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func onRequestReceived() -> Cuckoo.ProtocolStubFunction<(), Result<OnlineAuthenticationRequestSuccessModel, Error>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractor.self,
+                method: "onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>",
                 parameterMatchers: matchers
             ))
         }
@@ -1256,6 +1274,18 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
         
         
         @discardableResult
+        func onRequestReceived() -> Cuckoo.__DoNotUse<(), Result<OnlineAuthenticationRequestSuccessModel, Error>> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
         func onSendResponse() -> Cuckoo.__DoNotUse<(), RemoteSentResponsePartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
@@ -1322,6 +1352,10 @@ public class PresentationInteractorStub:PresentationInteractor, @unchecked Senda
     
     public func onResponsePrepare(requestItems p0: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error> {
         return DefaultValueRegistry.defaultValue(for: (Result<RequestItemConvertible, Error>).self)
+    }
+    
+    public func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
+        return DefaultValueRegistry.defaultValue(for: (Result<OnlineAuthenticationRequestSuccessModel, Error>).self)
     }
     
     public func onSendResponse() async -> RemoteSentResponsePartialState {

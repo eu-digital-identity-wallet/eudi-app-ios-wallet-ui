@@ -43,6 +43,7 @@ public protocol PresentationInteractor: Sendable {
   func getCoordinator() -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error>
+  func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onSendResponse() async -> RemoteSentResponsePartialState
   func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator)
   func storeDynamicIssuancePendingUrl(with url: URL)
