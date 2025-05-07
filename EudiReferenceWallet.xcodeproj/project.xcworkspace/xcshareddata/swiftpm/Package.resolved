@@ -1,5 +1,5 @@
 {
-  "originHash" : "f5935bff84d6db973715147b9fdf65cfe2e232fe7cf9933daf1ffa487e0de83e",
+  "originHash" : "cca0f586f65807c7be4b3d05c75113e8a0449da804217c254fbfdfd50f34dcaf",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
       "state" : {
-        "revision" : "fa58476fa3d4081723be9a1d7c3fa43c318f6be3",
-        "version" : "2.0.17"
+        "revision" : "3ecee6db6771fabc674eaf15e225cdbd8c4e6e8d",
+        "version" : "2.0.18"
       }
     },
     {
@@ -114,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "183c76315b914329d67c2e32cc25a8785bf4937a",
-        "version" : "0.6.5"
+        "revision" : "9bc7392c0a4cd7bf3c7b1f7963717a4c555f0c94",
+        "version" : "0.6.6"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-presentation-exchange-swift.git",
       "state" : {
-        "revision" : "773d7cccdf3d2df4fc6f7629a6076dfe4b2b680d",
-        "version" : "0.3.0"
+        "revision" : "3c0e80bc212bf3f68de2781b38565235dca83b23",
+        "version" : "0.4.0"
       }
     },
     {
@@ -177,8 +177,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
       "state" : {
-        "revision" : "d859d78d3109e8de5307b688e41d4c34e0fd5bdd",
-        "version" : "0.10.1"
+        "revision" : "4ffcbd99cd2cac9cf0e0eb4d3b2c289f404ef610",
+        "version" : "0.11.0"
       }
     },
     {
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "7b09d484de3b6526f9358501794280e48c4332b4",
-        "version" : "0.11.1"
+        "revision" : "bd8b6781631cd5a38796c83c9525aa0fdcd792c7",
+        "version" : "0.11.2"
       }
     },
     {
@@ -348,8 +348,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Sextant.git",
       "state" : {
-        "revision" : "91729059122eaafe42aa47207e1873c8bb9a844d",
-        "version" : "0.4.34"
+        "revision" : "74b947a80df5c8c776262546832e370afe2341f6",
+        "version" : "0.4.35"
       }
     },
     {
@@ -407,15 +407,6 @@
       }
     },
     {
-      "identity" : "swift-cmark",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-cmark.git",
-      "state" : {
-        "revision" : "b022b08312decdc46585e0b3440d97f6f22ef703",
-        "version" : "0.6.0"
-      }
-    },
-    {
       "identity" : "swift-collections",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
@@ -434,15 +425,6 @@
       }
     },
     {
-      "identity" : "swift-format",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-format",
-      "state" : {
-        "revision" : "83248b4fa37919f78ffbd4650946759bcc54c2b5",
-        "version" : "509.0.0"
-      }
-    },
-    {
       "identity" : "swift-log",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
@@ -458,15 +440,6 @@
       "state" : {
         "revision" : "aa94b38bf88c7d9cbc87ceafcdffadaffbc2bffa",
         "version" : "0.1.0"
-      }
-    },
-    {
-      "identity" : "swift-markdown",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-markdown.git",
-      "state" : {
-        "revision" : "ea79e83c8744d2b50b0dc2d5bbd1e857e1253bf9",
-        "version" : "0.6.0"
       }
     },
     {
