@@ -22,7 +22,6 @@ public protocol AddDocumentInteractor: Sendable {
   func issueDocument(configId: String) async -> IssueResultPartialState
   func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState
   func getScopedDocument(configId: String) async throws -> ScopedDocument
-
   func getHoldersName(for documentIdentifier: String) -> String?
   func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableStringKey?
   func fetchStoredDocuments(documentIds: [String]) async -> IssueDocumentsPartialState
