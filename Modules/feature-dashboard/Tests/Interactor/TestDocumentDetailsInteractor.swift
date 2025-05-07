@@ -36,7 +36,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     self.interactor = nil
   }
   
-  func testFetchStoredDocument() async {
+  func testFetchStoredDocument_WhenCalled_ThenReturnsExpectedValues() async {
     // Given
     let documentId = Constants.euPidModel.id
     stubFetchDocument(for: documentId)
@@ -58,7 +58,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     
   }
   
-  func testFetchStoredDocument_Failure() async {
+  func testFetchStoredDocument_WhenFetchFails_ThenReturnsError() async {
     // Given
     let documentId = "nonexistentId"
     stubFetchDocumentFailure(for: documentId)
@@ -75,7 +75,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testDeleteDocument_ShouldRebootTrue() async {
+  func testDeleteDocument_WhenCalled_ThenReturnsRebootTrue() async {
     // Given
     let documentId = Constants.euPidModel.id
     let type: DocumentTypeIdentifier = .mDocPid
@@ -93,7 +93,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testDeleteDocument_ShouldRebootFalse() async {
+  func testDeleteDocument_WhenCalled_ThenReturnsRebootFalse() async {
     // Given
     let documentId = Constants.euPidModel.id
     let type: DocumentTypeIdentifier = .mDocPid
@@ -111,7 +111,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testDeleteDocument_Failure() async {
+  func testDeleteDocument_WhenDeleteFails_ThenReturnsError() async {
     // Given
     let documentId = "nonexistentId"
     let type: DocumentTypeIdentifier = .mDocPid
@@ -129,7 +129,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testSaveDocument_Success() async throws {
+  func testSaveDocument_WhenSaveSucceeds_ThenNoErrorThrown() async throws {
     // Given
     let documentId = Constants.euPidModel.id
     stubSaveBookmark(for: documentId)
@@ -142,7 +142,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testSaveDocument_Failure() async {
+  func testSaveDocument_WhenSaveFails_ThenReturnsError() async {
     // Given
     let documentId = "nonexistentId"
     stubSaveBookmarkFailure(for: documentId)
@@ -156,7 +156,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testDeleteBookmark_Success() async throws {
+  func testDeleteBookmark_WhenDeleteSucceeds_ThenNoErrorThrown() async throws {
     let documentId = Constants.euPidModel.id
     stubDeleteBookmark(for: documentId)
     
@@ -167,7 +167,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testDeleteBookmark_Failure() async {
+  func testDeleteBookmark_WhenDeleteFails_ThenReturnsError() async {
     let documentId = "nonexistentId"
     stubDeleteBookmarkFailure(for: documentId)
     
