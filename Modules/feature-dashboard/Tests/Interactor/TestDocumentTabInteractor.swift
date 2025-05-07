@@ -136,7 +136,7 @@ final class TestDocumentTabInteractor: EudiTest {
     }
   }
   
-  func testApplyFilters_CallsFilterValidator() async {
+  func testApplyFilters_WhenCalled_ThenUsesFilterValidator() async {
     // Given
     stubInitializeValidator()
     stubApplyFilters()
@@ -148,7 +148,7 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(filterValidator).applyFilters(sortOrder: any())
   }
   
-  func testUpdateLists_CallsFilterValidator() async {
+  func testUpdateLists_WhenDocumentsFetched_ThenUsesFilterValidator() async {
     // Given
     stubFetchDocuments(with: [
       Constants.euPidModel,
@@ -176,7 +176,7 @@ final class TestDocumentTabInteractor: EudiTest {
     }
   }
   
-  func testResetFilters_CallsFilterValidator() async {
+  func testResetFilters_WhenCalled_ThenUsesFilterValidator() async {
     // Given
     stubInitializeValidator()
     stubResetFilters()
@@ -188,7 +188,7 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(filterValidator).resetFilters()
   }
   
-  func testRevertFilters_CallsFilterValidator() async {
+  func testRevertFilters_WhenCalled_ThenUsesFilterValidator() async {
     // Given
     stubInitializeValidator()
     stubRevertFilters()
@@ -200,7 +200,7 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(filterValidator).revertFilters()
   }
   
-  func testUpdateFilters_CallsFilterValidator() async {
+  func testUpdateFilters_WhenCalled_ThenUsesFilterValidator() async {
     // Given
     stubInitializeValidator()
     stubUpdateFilters()
@@ -218,7 +218,7 @@ final class TestDocumentTabInteractor: EudiTest {
     )
   }
   
-  func testApplySearch_CallsFilterValidator() async {
+  func testApplySearch_WhenCalled_ThenUsesFilterValidator() async {
     // Given
     stubInitializeValidator()
     stubApplySearch()
@@ -230,7 +230,7 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(filterValidator).applySearch(query: any())
   }
 
-  func testOnFilterChangeState() async {
+  func testOnFilterChangeState_WhenStreamEmitsResults_ThenProcessesResultsCorrectly() async {
     // Given
     let filterApplyResult: FilterResult = .filterApplyResult(
       filteredList: FilterableList(items: []),
