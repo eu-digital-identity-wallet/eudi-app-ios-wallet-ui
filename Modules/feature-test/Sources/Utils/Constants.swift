@@ -172,7 +172,6 @@ extension Constants {
               elements: [
                 .init(
                   elementIdentifier: "elementIdentifier",
-                  displayName: "localizedName",
                   isOptional: false,
                   stringValue: "value",
                   docClaim: .init(name: "elementIdentifier", dataValue: .string("value"), stringValue: "value"),
