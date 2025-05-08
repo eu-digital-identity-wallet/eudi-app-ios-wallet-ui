@@ -43,7 +43,7 @@ final class TestTransactionTabInteractor: EudiTest {
     self.configLogic = nil
   }
   
-  func testFetchTransactions_WhenWalletKitControllerThrowsError_ThenReturnError() async {
+  func testFetchTransactions_WhenWalletKitControllerThrowsError_ThenReturnsExpectedError() async {
     // Given
     stubFetchTransactionsWithError()
     
@@ -62,7 +62,7 @@ final class TestTransactionTabInteractor: EudiTest {
     }
   }
   
-  func testFetchTransactions_WhenWalletKitControllerReturnsEmpty_ThenReturnError() async {
+  func testFetchTransactions_WhenWalletKitControllerReturnsEmpty_ThenReturnsExpectedError() async {
     //Given
     stubFetchTransactions(with: [])
     
@@ -81,7 +81,7 @@ final class TestTransactionTabInteractor: EudiTest {
     }
   }
   
-  func testFetchTransactions_WhenWalletKitControllerReturnsData_ThenReturnUiModels() async {
+  func testFetchTransactions_WhenWalletKitControllerReturnsData_ThenReturnsExpectedUIModels() async {
     //Given
     stubFetchTransactions(with: [
       Constants.eudiRemoteVerifierMock
@@ -102,7 +102,7 @@ final class TestTransactionTabInteractor: EudiTest {
     }
   }
 
-  func testFetchTransactions_WhenInitializedWithFilterableList_ThenInitializesValidator() async {
+  func testFetchTransactions_WhenInitializedWithFilterableList_ThenInitializesFilterValidator() async {
     // Given
     stubFetchTransactions(with: [
       Constants.eudiRemoteVerifierMock,
@@ -134,7 +134,7 @@ final class TestTransactionTabInteractor: EudiTest {
     }
   }
   
-  func testFetchTransactions_WhenEmptyFilterableList_ThenInitializesValidator() async {
+  func testFetchTransactions_WhenEmptyFilterableList_ThenInitializesFilterValidator() async {
     // Given
     stubFetchTransactions(with: [])
     stubInitializeValidator()
@@ -158,8 +158,8 @@ final class TestTransactionTabInteractor: EudiTest {
       XCTFail("Unexpected error: \(error)")
     }
   }
-  
-  func testApplyFilters_WhenCalled_ThenUsesFilterValidator() async {
+
+  func testApplyFilters_WhenInteractorCalled_ThenUsesFilterValidatorToApplyFilters() async {
     // Given
     stubInitializeValidator()
     stubApplyFilters()
@@ -171,7 +171,7 @@ final class TestTransactionTabInteractor: EudiTest {
     verify(filterValidator).applyFilters(sortOrder: any())
   }
   
-  func testUpdateLists_WhenCalled_ThenUsesFilterValidator() async {
+  func testUpdateLists_WhenInteractorCalled_ThenUsesFilterValidatorToUpdateLists() async {
     // Given
     stubFetchTransactions(with: [
       Constants.eudiRemoteVerifierMock,
@@ -196,8 +196,8 @@ final class TestTransactionTabInteractor: EudiTest {
       XCTFail("Unexpected error: \(error)")
     }
   }
-  
-  func testResetFilters_WhenCalled_ThenUsesFilterValidator() async {
+
+  func testResetFilters_WhenInteractorCalled_ThenUsesFilterValidatorToResetFilters() async {
     // Given
     stubInitializeValidator()
     stubResetFilters()
@@ -209,7 +209,7 @@ final class TestTransactionTabInteractor: EudiTest {
     verify(filterValidator).resetFilters()
   }
   
-  func testRevertFilters_CallsFilterValidator() async {
+  func testRevertFilters_WhenInteractorCalled_ThenUsesFilterValidatorToRevertFilters() async {
     // Given
     stubInitializeValidator()
     stubRevertFilters()
@@ -221,7 +221,7 @@ final class TestTransactionTabInteractor: EudiTest {
     verify(filterValidator).revertFilters()
   }
   
-  func testRevertFilters_WhenCalled_ThenUsesFilterValidator() async {
+  func testUpdateFilters_WhenInteractorCalled_ThenUsesFilterValidatorToUpdateFilters() async {
     // Given
     stubInitializeValidator()
     stubUpdateFilters()
@@ -239,7 +239,7 @@ final class TestTransactionTabInteractor: EudiTest {
     )
   }
   
-  func testUpdateDateFilters_WhenCalled_ThenUsesFilterValidator() async {
+  func testUpdateDateFilters_WhenInteractorCalled_ThenUsesFilterValidatorToUpdateDateFilters() async {
     // Given
     stubInitializeValidator()
     stubUpdateDateFilter()
@@ -261,7 +261,7 @@ final class TestTransactionTabInteractor: EudiTest {
     )
   }
   
-  func testApplySearch_WhenCalled_ThenUsesFilterValidator() async {
+  func testApplySearch_WhenInteractorCalled_ThenUsesFilterValidatorToApplySearch() async {
     // Given
     stubInitializeValidator()
     stubApplySearch()
@@ -273,7 +273,7 @@ final class TestTransactionTabInteractor: EudiTest {
     verify(filterValidator).applySearch(query: any())
   }
 
-  func testOnFilterChangeState_WhenStreamEmitsResults_ThenProcessesResultsCorrectly() async {
+  func testOnFilterChangeState_WhenStreamEmitsResults_ThenProcessesResultsAsExpected() async {
     // Given
     let filterApplyResult: FilterResult = .filterApplyResult(
       filteredList: FilterableList(items: []),

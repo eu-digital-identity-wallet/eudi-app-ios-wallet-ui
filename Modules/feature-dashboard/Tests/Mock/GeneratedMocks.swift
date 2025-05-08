@@ -1307,16 +1307,6 @@ public class MockDocumentTabInteractor: DocumentTabInteractor, Cuckoo.ProtocolMo
         )
     }
     
-    public func createFiltersGroup() -> Filters {
-        return cuckoo_manager.call(
-            "createFiltersGroup() -> Filters",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.createFiltersGroup()
-        )
-    }
-    
     public func addDynamicFilters(documents p0: FilterableList, filters p1: Filters) async -> Filters {
         return await cuckoo_manager.call(
             "addDynamicFilters(documents p0: FilterableList, filters p1: Filters) async -> Filters",
@@ -1442,14 +1432,6 @@ public class MockDocumentTabInteractor: DocumentTabInteractor, Cuckoo.ProtocolMo
             let matchers: [Cuckoo.ParameterMatcher<(SortOrderType)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentTabInteractor.self,
                 method: "updateSortOrder(sortOrder p0: SortOrderType)",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func createFiltersGroup() -> Cuckoo.ProtocolStubFunction<(), Filters> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentTabInteractor.self,
-                method: "createFiltersGroup() -> Filters",
                 parameterMatchers: matchers
             ))
         }
@@ -1644,18 +1626,6 @@ public class MockDocumentTabInteractor: DocumentTabInteractor, Cuckoo.ProtocolMo
         
         
         @discardableResult
-        func createFiltersGroup() -> Cuckoo.__DoNotUse<(), Filters> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "createFiltersGroup() -> Filters",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
         func addDynamicFilters<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(documents p0: M1, filters p1: M2) -> Cuckoo.__DoNotUse<(FilterableList, Filters), Filters> where M1.MatchedType == FilterableList, M2.MatchedType == Filters {
             let matchers: [Cuckoo.ParameterMatcher<(FilterableList, Filters)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return cuckoo_manager.verify(
@@ -1726,10 +1696,6 @@ public class DocumentTabInteractorStub:DocumentTabInteractor, @unchecked Sendabl
     
     public func updateSortOrder(sortOrder p0: SortOrderType) {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func createFiltersGroup() -> Filters {
-        return DefaultValueRegistry.defaultValue(for: (Filters).self)
     }
     
     public func addDynamicFilters(documents p0: FilterableList, filters p1: Filters) async -> Filters {
@@ -1985,16 +1951,6 @@ public class MockTransactionTabInteractor: TransactionTabInteractor, Cuckoo.Prot
         )
     }
     
-    public func createFiltersGroup(earliestDate p0: Date, latestDate p1: Date) -> Filters {
-        return cuckoo_manager.call(
-            "createFiltersGroup(earliestDate p0: Date, latestDate p1: Date) -> Filters",
-            parameters: (p0, p1),
-            escapingParameters: (p0, p1),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.createFiltersGroup(earliestDate: p0, latestDate: p1)
-        )
-    }
-    
     public func applyFilters() async {
         return await cuckoo_manager.call(
             "applyFilters() async",
@@ -2098,14 +2054,6 @@ public class MockTransactionTabInteractor: TransactionTabInteractor, Cuckoo.Prot
             ))
         }
         
-        func createFiltersGroup<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(earliestDate p0: M1, latestDate p1: M2) -> Cuckoo.ProtocolStubFunction<(Date, Date), Filters> where M1.MatchedType == Date, M2.MatchedType == Date {
-            let matchers: [Cuckoo.ParameterMatcher<(Date, Date)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockTransactionTabInteractor.self,
-                method: "createFiltersGroup(earliestDate p0: Date, latestDate p1: Date) -> Filters",
-                parameterMatchers: matchers
-            ))
-        }
-        
         func applyFilters() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockTransactionTabInteractor.self,
@@ -2200,18 +2148,6 @@ public class MockTransactionTabInteractor: TransactionTabInteractor, Cuckoo.Prot
             let matchers: [Cuckoo.ParameterMatcher<(FilterableList, Date, Date)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return cuckoo_manager.verify(
                 "initializeFilters(filterableList p0: FilterableList, minStartDate p1: Date, maxEndDate p2: Date) async",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func createFiltersGroup<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(earliestDate p0: M1, latestDate p1: M2) -> Cuckoo.__DoNotUse<(Date, Date), Filters> where M1.MatchedType == Date, M2.MatchedType == Date {
-            let matchers: [Cuckoo.ParameterMatcher<(Date, Date)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
-            return cuckoo_manager.verify(
-                "createFiltersGroup(earliestDate p0: Date, latestDate p1: Date) -> Filters",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -2326,10 +2262,6 @@ public class TransactionTabInteractorStub:TransactionTabInteractor, @unchecked S
     
     public func initializeFilters(filterableList p0: FilterableList, minStartDate p1: Date, maxEndDate p2: Date) async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func createFiltersGroup(earliestDate p0: Date, latestDate p1: Date) -> Filters {
-        return DefaultValueRegistry.defaultValue(for: (Filters).self)
     }
     
     public func applyFilters() async {

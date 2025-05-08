@@ -40,8 +40,8 @@ final class TestHomeTabInteractor: EudiTest {
     self.reachabilityController = nil
     self.walletKitController = nil
   }
-
-  func testFetchUsername_WhenPidDocumentReturnsName_ThenReturnsThatName() {
+  
+  func testFetchUsername_WhenPidDocumentReturnsValidName_ThenReturnsThatName() {
     // Given
     stubFetchMainPidDocument(with: Constants.euPidModel)
     
@@ -51,8 +51,16 @@ final class TestHomeTabInteractor: EudiTest {
     // Then
     XCTAssertEqual(username, "John")
   }
-
-  func testOpenBleSettings_WhenMethodIsCalled_ThenVerifyAtLeastOnce() async {
+  
+  func testGetWalletKitController_WhenInteractorCalled_ThenReturnsInjectedWalletKitController() {
+    // When
+    let result = interactor.getWalletKitController()
+    
+    // Then
+    XCTAssertTrue(result is MockWalletKitController, "The result should be of type MockWalletKitController")
+  }
+  
+  func testOpenBleSettings_WhenInteractorCalled_ThenVerifyBleSettingsOpen() async {
     // Given
     stub(reachabilityController) { mock in
       when(mock.openBleSettings()).thenDoNothing()
@@ -78,7 +86,7 @@ private extension TestHomeTabInteractor {
       when(mock.fetchMainPidDocument()).thenReturn(document)
     }
   }
-
+  
   func checkBle(with status: Reachability.BleAvailibity) async {
     // Given
     let publisher = Just(status).eraseToAnyPublisher()
