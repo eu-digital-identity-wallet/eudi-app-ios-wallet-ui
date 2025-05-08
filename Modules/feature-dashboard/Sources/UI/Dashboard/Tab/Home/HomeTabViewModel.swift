@@ -89,6 +89,8 @@ final class HomeTabViewModel<Router: RouterHost>: ViewModel<Router, HomeTabState
     router.push(with: .featureDashboardModule(.signDocument))
   }
 
+    
+    // HERE!!
   func onShowScanner() {
     router.push(with: .featureCommonModule(.qrScanner(config: ScannerUiConfig(flow: .presentation))))
   }

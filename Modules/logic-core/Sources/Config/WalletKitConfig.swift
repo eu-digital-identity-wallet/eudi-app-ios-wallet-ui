@@ -119,8 +119,9 @@ struct WalletKitConfigImpl: WalletKitConfig {
       "pidissuerca02_nl",
       "pidissuerca02_pt",
       "pidissuerca02_ut",
-      "Cert1",
-      "Cert2"
+      "brukarsted1",
+      "brukarsted2",
+      "utsteder1"
     ]
     let certsData: [Data] = certificates.compactMap {
       Data(name: $0, ext: "der")
