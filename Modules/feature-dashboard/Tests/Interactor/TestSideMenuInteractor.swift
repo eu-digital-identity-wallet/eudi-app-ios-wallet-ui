@@ -39,7 +39,7 @@ final class TestSideMenuInteractor: EudiTest {
     self.configLogic = nil
   }
   
-  func testGetAppVersion_WhenCalled_ThenReturnsExpectedVersion() {
+  func testGetAppVersion_WhenConfigLogicReturnsAppVersion_ThenReturnsExpectedVersion() {
     // Given
     let appVersion = getAppVersion()
     
@@ -50,7 +50,7 @@ final class TestSideMenuInteractor: EudiTest {
     XCTAssertEqual(version, appVersion)
   }
   
-  func testRetrieveLogFileUrl_WhenCalled_ThenReturnsExpectedUrl() {
+  func testRetrieveLogFileUrl_WhenWalletKitControllerReturnsLogFileUrl_ThenReturnsExpectedUrl() {
     // Given
     let expectedUrl = stubLogFileUrl()
     
@@ -61,7 +61,7 @@ final class TestSideMenuInteractor: EudiTest {
     XCTAssertEqual(result, expectedUrl)
   }
 
-  func testRetrieveChangeLogUrl_WhenCalled_ThenReturnsExpectedUrl() {
+  func testRetrieveChangeLogUrl_WhenConfigLogicReturnsChangeLogUrl_ThenReturnsExpectedUrl() {
     // Given
     let expectedUrl = stubChangeLogUrl()
     

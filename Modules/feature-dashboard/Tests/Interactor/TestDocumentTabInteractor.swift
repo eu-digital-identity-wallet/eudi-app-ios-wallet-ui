@@ -44,7 +44,7 @@ final class TestDocumentTabInteractor: EudiTest {
     self.configLogic = nil
   }
   
-  func testHasDeferredDocuments_WhenControllerReturnsValues_ThenReturnTrue() {
+  func testHasDeferredDocuments_WhenControllerReturnsDeferredDocuments_ThenReturnTrue() {
     // Given
     stubFetchDeferredDocuments(
       with: [
@@ -66,7 +66,7 @@ final class TestDocumentTabInteractor: EudiTest {
     XCTAssertTrue(result)
   }
   
-  func testHasDeferredDocuments_WhenControllerReturnsNoValues_ThenReturnFalse() {
+  func testHasDeferredDocuments_WhenControllerReturnsNoDeferredDocuments_ThenReturnFalse() {
     // Given
     stubFetchDeferredDocuments(with: [])
     // When
@@ -136,7 +136,7 @@ final class TestDocumentTabInteractor: EudiTest {
     }
   }
   
-  func testApplyFilters_WhenCalled_ThenUsesFilterValidator() async {
+  func testApplyFilters_WhenFiltersApplied_ThenUsesFilterValidator() async {
     // Given
     stubInitializeValidator()
     stubApplyFilters()
@@ -148,7 +148,7 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(filterValidator).applyFilters(sortOrder: any())
   }
   
-  func testUpdateLists_WhenDocumentsFetched_ThenUsesFilterValidator() async {
+  func testUpdateLists_WhenDocumentsFetchedAndStateIsSuccess_ThenUsesFilterValidator() async {
     // Given
     stubFetchDocuments(with: [
       Constants.euPidModel,
@@ -176,7 +176,7 @@ final class TestDocumentTabInteractor: EudiTest {
     }
   }
   
-  func testResetFilters_WhenCalled_ThenUsesFilterValidator() async {
+  func testResetFilters_WhenInteractorCalled_ThenUsesFilterValidator() async {
     // Given
     stubInitializeValidator()
     stubResetFilters()
@@ -188,7 +188,7 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(filterValidator).resetFilters()
   }
   
-  func testRevertFilters_WhenCalled_ThenUsesFilterValidator() async {
+  func testRevertFilters_WhenInteractorCalled_ThenUsesFilterValidator() async {
     // Given
     stubInitializeValidator()
     stubRevertFilters()
@@ -200,7 +200,7 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(filterValidator).revertFilters()
   }
   
-  func testUpdateFilters_WhenCalled_ThenUsesFilterValidator() async {
+  func testUpdateFilters_WhenInteractorCalled_ThenUsesFilterValidator() async {
     // Given
     stubInitializeValidator()
     stubUpdateFilters()
@@ -218,7 +218,7 @@ final class TestDocumentTabInteractor: EudiTest {
     )
   }
   
-  func testApplySearch_WhenCalled_ThenUsesFilterValidator() async {
+  func testApplySearch_WhenInteractorCalled_ThenUsesFilterValidator() async {
     // Given
     stubInitializeValidator()
     stubApplySearch()
