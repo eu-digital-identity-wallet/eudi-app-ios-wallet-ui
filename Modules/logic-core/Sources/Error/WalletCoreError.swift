@@ -16,7 +16,7 @@
 import Foundation
 import logic_resources
 
-public enum WalletCoreError: LocalizedError {
+public enum WalletCoreError: LocalizedError, Equatable {
   case unableFetchDocuments
   case unableFetchDocument
   case missingPid

@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 import XCTest
-import logic_business
-import logic_core
-@testable import feature_dashboard
+@testable import logic_core
 @testable import logic_test
 @testable import feature_test
+@testable import logic_business
+@testable import feature_dashboard
 
 final class TestHomeTabInteractor: EudiTest {
   
@@ -41,7 +41,26 @@ final class TestHomeTabInteractor: EudiTest {
     self.walletKitController = nil
   }
   
-  func testOpenBleSettings_WhenMethodIsCalled_ThenVerifyAtLeastOnce() async {
+  func testFetchUsername_WhenPidDocumentReturnsValidName_ThenReturnsThatName() {
+    // Given
+    stubFetchMainPidDocument(with: Constants.euPidModel)
+    
+    // When
+    let username = interactor.fetchUsername()
+    
+    // Then
+    XCTAssertEqual(username, "John")
+  }
+  
+  func testGetWalletKitController_WhenInteractorCalled_ThenReturnsInjectedWalletKitController() {
+    // When
+    let result = interactor.getWalletKitController()
+    
+    // Then
+    XCTAssertTrue(result is MockWalletKitController, "The result should be of type MockWalletKitController")
+  }
+  
+  func testOpenBleSettings_WhenInteractorCalled_ThenVerifyBleSettingsOpen() async {
     // Given
     stub(reachabilityController) { mock in
       when(mock.openBleSettings()).thenDoNothing()
@@ -62,6 +81,12 @@ final class TestHomeTabInteractor: EudiTest {
 }
 
 private extension TestHomeTabInteractor {
+  func stubFetchMainPidDocument(with document: DocClaimsDecodable?) {
+    stub(walletKitController) { mock in
+      when(mock.fetchMainPidDocument()).thenReturn(document)
+    }
+  }
+  
   func checkBle(with status: Reachability.BleAvailibity) async {
     // Given
     let publisher = Just(status).eraseToAnyPublisher()
