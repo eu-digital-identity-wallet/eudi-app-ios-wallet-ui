@@ -39,20 +39,9 @@ struct HomeTabView<Router: RouterHost>: View {
       openSignDocument: viewModel.openSignDocument(),
       toggleSignDocumentAlert: viewModel.toggleSignDocumentAlert()
     )
-    .confirmationDialog(
-      .authenticate,
-      isPresented: $viewModel.isAuthenticateModalShowing,
-      titleVisibility: .visible
-    ) {
-      Button(.cancelButton, role: .cancel) {}
-      Button(.inPerson) {
-        viewModel.onShare()
-      }
-      Button(.online) {
+    .onChange(of: viewModel.isAuthenticateModalShowing) { showOnline in
+        guard showOnline else { return }
         viewModel.onShowScanner()
-      }
-    } message: {
-      Text(.authenticateAuthoriseTransactions)
     }
     .confirmationDialog(
       .bleDisabledModalTitle,
