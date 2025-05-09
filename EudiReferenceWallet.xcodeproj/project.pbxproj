@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1FD9B4B02DCE339B000C7DB1 /* original_RP_Intermediate.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B4AF2DCE339B000C7DB1 /* original_RP_Intermediate.der */; };
-		1FD9B4B22DCE33CA000C7DB1 /* new_Trusted_Cert.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B4B12DCE33CA000C7DB1 /* new_Trusted_Cert.der */; };
+		1FD4FB0C2DCC91780029F567 /* brukarsted1.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4FB0B2DCC91780029F567 /* brukarsted1.der */; };
+		1FD4FB0E2DCC917E0029F567 /* brukarsted2.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4FB0D2DCC917E0029F567 /* brukarsted2.der */; };
+		1FD4FB102DCC91C90029F567 /* utsteder1.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4FB0F2DCC91C90029F567 /* utsteder1.der */; };
 		F02921632B8E07870076A58B /* WalletDemoRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */; };
 		F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */; };
 		F02AE38F2BA6E45F00C25C59 /* logic-assembly in Resources */ = {isa = PBXBuildFile; fileRef = F02AE38E2BA6E45F00C25C59 /* logic-assembly */; };
@@ -42,8 +43,9 @@
 /* Begin PBXFileReference section */
 		08D9175E2D9D65E900FC7A15 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		1198ECD72AC453F200F4E71A /* logic-resources */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-resources"; path = "Modules/logic-resources"; sourceTree = "<group>"; };
-		1FD9B4AF2DCE339B000C7DB1 /* original_RP_Intermediate.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = original_RP_Intermediate.der; sourceTree = "<group>"; };
-		1FD9B4B12DCE33CA000C7DB1 /* new_Trusted_Cert.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = new_Trusted_Cert.der; sourceTree = "<group>"; };
+		1FD4FB0B2DCC91780029F567 /* brukarsted1.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = brukarsted1.der; sourceTree = "<group>"; };
+		1FD4FB0D2DCC917E0029F567 /* brukarsted2.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = brukarsted2.der; sourceTree = "<group>"; };
+		1FD4FB0F2DCC91C90029F567 /* utsteder1.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = utsteder1.der; sourceTree = "<group>"; };
 		F018D9F32D087C410015876D /* logic-storage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-storage"; path = "Modules/logic-storage"; sourceTree = "<group>"; };
 		F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WalletDemoRelease.xcconfig; sourceTree = "<group>"; };
 		F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WalletDevRelease.xcconfig; sourceTree = "<group>"; };
@@ -121,8 +123,9 @@
 				F0A984732DA917130051A4DB /* pidissuerca02_nl.der */,
 				F0A984742DA917130051A4DB /* pidissuerca02_pt.der */,
 				F0A984752DA917130051A4DB /* pidissuerca02_ut.der */,
-				1FD9B4AF2DCE339B000C7DB1 /* original_RP_Intermediate.der */,
-				1FD9B4B12DCE33CA000C7DB1 /* new_Trusted_Cert.der */,
+				1FD4FB0B2DCC91780029F567 /* brukarsted1.der */,
+				1FD4FB0D2DCC917E0029F567 /* brukarsted2.der */,
+				1FD4FB0F2DCC91C90029F567 /* utsteder1.der */,
 			);
 			path = Certificate;
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 				F06325122AC59AF50004601F /* feature-test in Resources */,
 				F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */,
 				F0A013982AC35ECA00065EAD /* logic-business in Resources */,
+				1FD4FB0C2DCC91780029F567 /* brukarsted1.der in Resources */,
 				F069CC402AFAC0AD0033AAC5 /* feature-issuance in Resources */,
 				F14907C02ABAF55000DDFE56 /* Assets.xcassets in Resources */,
 				F06325102AC598370004601F /* logic-test in Resources */,
@@ -274,10 +278,8 @@
 				F1CACAE02AC3097100B40DED /* WalletDev.xcconfig in Resources */,
 				F0A013992AC35ECA00065EAD /* logic-api in Resources */,
 				F0A0139A2AC35ECA00065EAD /* feature-startup in Resources */,
-				1FD9B4B02DCE339B000C7DB1 /* original_RP_Intermediate.der in Resources */,
 				F1CACAE22AC3098C00B40DED /* WalletDemo.xcconfig in Resources */,
 				F0BFE9B72AD557290062826F /* feature-common in Resources */,
-				1FD9B4B22DCE33CA000C7DB1 /* new_Trusted_Cert.der in Resources */,
 				F0A984762DA917130051A4DB /* pidissuerca02_ut.der in Resources */,
 				F0A984772DA917130051A4DB /* pidissuerca02_nl.der in Resources */,
 				F0A984782DA917130051A4DB /* pidissuerca02_cz.der in Resources */,
@@ -286,8 +288,10 @@
 				F0A9847B2DA917130051A4DB /* pidissuerca02_lu.der in Resources */,
 				F0A9847C2DA917130051A4DB /* pidissuerca02_eu.der in Resources */,
 				F0A0139C2AC35ECA00065EAD /* logic-ui in Resources */,
+				1FD4FB102DCC91C90029F567 /* utsteder1.der in Resources */,
 				F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */,
 				F05E9F382AFABBC200891E8F /* feature-presentation in Resources */,
+				1FD4FB0E2DCC917E0029F567 /* brukarsted2.der in Resources */,
 				F069CC3F2AFAC0AD0033AAC5 /* feature-proximity in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
