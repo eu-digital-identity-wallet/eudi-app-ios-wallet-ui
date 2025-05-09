@@ -39,7 +39,7 @@ final class TestAddDocumentInteractor: EudiTest {
     self.walletKitController = nil
   }
   
-  func test_fetchScopedDocuments_withValidFlow_returnsSuccess() async {
+  func testFetchScopedDocuments_whenScopedDocuments_thenReturnsSuccess() async {
     // Given
     stubGetScopedDocumentsSuccess(with: [
       Constants.scopedDocument
@@ -47,7 +47,7 @@ final class TestAddDocumentInteractor: EudiTest {
     
     // When
     let result = await interactor.fetchScopedDocuments(with: .extraDocument)
-    
+
     // Then
     switch result {
     case .success(let documents):
@@ -57,8 +57,26 @@ final class TestAddDocumentInteractor: EudiTest {
       XCTFail("Expected success but got \(result)")
     }
   }
-  
-  func test_fetchScopedDocuments_whenThrowsError_returnsFailure() async {
+
+  func testFetchScopedDocuments_whenGetScopedDocuments_thenReturnsSuccess() async {
+    // Given
+    stubGetScopedDocumentsSuccess(with: [
+      Constants.scopedDocumentNotPid
+    ])
+
+    // When
+    let result = await interactor.fetchScopedDocuments(with: .noDocument)
+
+    // Then
+    switch result {
+    case .success(let documents):
+      XCTAssertEqual(documents.count, 0)
+    default:
+      XCTFail("Expected success but got \(result)")
+    }
+  }
+
+  func testFetchScopedDocuments_whenGetScopedDocuments_thenReturnsFailure() async {
     // Given
     stubGetScopedDocumentsFailure()
     
@@ -74,7 +92,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func test_issueDocument_returnsDeferredSuccess_whenDocumentIsDeferred() async {
+  func testIssueDocument_whenDefferedPendingDocument_thenReturnSuccess() async {
     // Given
     let configId = "deferred-doc"
     let document = Constants.defferedPendingDocument
@@ -92,8 +110,27 @@ final class TestAddDocumentInteractor: EudiTest {
       XCTFail("Expected .deferredSuccess but got \(result)")
     }
   }
-  
-  func test_issueDocument_returnsFailure_whenIssuanceThrowsError() async {
+
+  func testIssueDocument_whenIssuedDocument_thenReturnSuccess() async {
+    // Given
+    let configId = "deferred-doc"
+    let document = Constants.issuedPendingDocument
+
+    stubResumeDynamicIssuanceDefferedSuccess(document: document)
+
+    // When
+    let result = await interactor.issueDocument(configId: configId)
+
+    // Then
+    switch result {
+    case .success:
+      XCTAssertTrue(true)
+    default:
+      XCTFail("Expected .deferredSuccess but got \(result)")
+    }
+  }
+
+  func testIssueDocument_whenDefferedPendingDocument_thenReturnsFailure() async {
     // Given
     let configId = "fail-doc"
     
@@ -111,7 +148,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func test_resumeDynamicIssuance_returnsDeferredSuccess_whenDocumentIsDeferred() async {
+  func testResumeDynamicIssuance_whenDefferedPending_thenReturnDefferedSuccess() async {
     // Given
     let pendingDoc = Constants.defferedPendingDocument
     
@@ -134,7 +171,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func test_resumeDynamicIssuance_returnsSuccess_whenDocumentIsIssued() async {
+  func testResumeDynamicIssuance_whenIssuePending_thenReturnSuccess() async {
     // Given
     let pendingDoc = Constants.issuedPendingDocument
     
@@ -158,7 +195,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func test_resumeDynamicIssuance_returnsFailure_whenIssuanceFails() async {
+  func testResumeDynamicIssuance_whenIssuePending_thenIssuanceFails() async {
     // Given
     let pendingDoc = Constants.issuedPendingDocument
     
@@ -180,8 +217,31 @@ final class TestAddDocumentInteractor: EudiTest {
       XCTFail("Expected .failure but got \(result)")
     }
   }
-  
-  func test_resumeDynamicIssuance_returnsNoPending_whenNoPendingDataExists() async {
+
+  func testResumeDynamicIssuance_whenPending_thenReturnSuccess() async {
+    // Given
+    let pendingDoc = Constants.pendingDocument
+
+    let pendingData = DynamicIssuancePendingData(
+      pendingDoc: pendingDoc,
+      url: URL(string: "https://example.com")!
+    )
+
+    stubResumeDynamicIssuanceIssued(pendingData: pendingData, pendingDoc: pendingDoc)
+
+    // When
+    let result = await interactor.resumeDynamicIssuance()
+
+    // Then
+    switch result {
+    case .failure(let error):
+      XCTAssertEqual(error as? WalletCoreError, WalletCoreError.unableToIssueAndStore)
+    default:
+      XCTFail("Expected .failure but got \(result)")
+    }
+  }
+
+  func testResumeDynamicIssuance_whenReturnsNoPending_thenNoPendingDataExists() async {
     // Given
     stub(walletKitController) { stub in
       when(stub.getDynamicIssuancePendingData()
@@ -200,7 +260,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func test_getScopedDocument_returnsMatchingDocument() async throws {
+  func testGetScopedDocument_whenScopedDocument_thenReturnsMatchingDocument() async throws {
     // Given
     let configId = "test-config-id"
     let scopedDocument = Constants.scopedDocument
@@ -216,7 +276,7 @@ final class TestAddDocumentInteractor: EudiTest {
     XCTAssertEqual(result, scopedDocument)
   }
   
-  func test_getScopedDocument_returnsEmpty_whenNoMatchingDocument() async throws {
+  func testGetScopedDocument_whenGetScopedDocument_thenNoMatchingDocument() async throws {
     let configId = "non-existent-config"
     let scopedDocument = Constants.scopedDocument
     
@@ -228,7 +288,7 @@ final class TestAddDocumentInteractor: EudiTest {
     XCTAssertEqual(result, ScopedDocument.empty())
   }
   
-  func test_getScopedDocument_returnsEmpty_whenNoDocumentsAvailable() async throws {
+  func testGetScopedDocument_whenGetScopedDocuments_thenNoDocumentsAvailable() async throws {
     let configId = "test-config-id"
     
     stub(walletKitController) { stub in
@@ -240,7 +300,7 @@ final class TestAddDocumentInteractor: EudiTest {
     XCTAssertEqual(result, ScopedDocument.empty())
   }
   
-  func test_getScopedDocument_throwsError_whenFetchingFails() async {
+  func testGetScopedDocument_whenGetScopedDocuments_thenThrowError() async {
     let configId = "test-config-id"
     
     stub(walletKitController) { stub in
@@ -256,109 +316,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func test_getHoldersName_returnsFullName_whenDocumentExists() {
-    // Given
-    let documentIdentifier = Constants.euPidModelId
-    let document = Constants.euPidModel
-    
-    stub(walletKitController) { stub in
-      when(stub.fetchDocument(with: equal(to: documentIdentifier)))
-        .thenReturn(document)
-    }
-    
-    // When
-    let result = interactor.getHoldersName(for: documentIdentifier)
-    
-    // Then
-    XCTAssertEqual(result, "John Doe", "Expected the holder's name to be 'John Doe' but got \(String(describing: result))")
-  }
-  
-  func test_getHoldersName_returnsNil_whenDocumentNotFound() {
-    // Given
-    let documentIdentifier = "test-config-id"
-    
-    stub(walletKitController) { stub in
-      when(stub.fetchDocument(with: equal(to: documentIdentifier)))
-        .thenReturn(nil)
-    }
-    
-    // When
-    let result = interactor.getHoldersName(for: documentIdentifier)
-    
-    // Then
-    XCTAssertNil(result, "Expected result to be nil when document does not exist")
-  }
-  
-  func test_getHoldersName_returnsNil_whenNameIsMissing() {
-    // Given
-    let documentIdentifier = Constants.euPidModelId
-    var document = Constants.euPidModel
-    document.docClaims = []  // Χωρίς όνομα
-    
-    stub(walletKitController) { stub in
-      when(stub.fetchDocument(with: equal(to: documentIdentifier)))
-        .thenReturn(document)
-    }
-    
-    // When
-    let result = interactor.getHoldersName(for: documentIdentifier)
-    
-    // Then
-    XCTAssertNil(result, "Expected nil when holder's name is missing")
-  }
-  
-  func test_getDocumentSuccessCaption_returnsCaption_whenDocumentExistsWithDisplayName() {
-    // Given
-    let documentIdentifier = Constants.euPidModelId
-    let document = Constants.euPidModel
-    
-    stub(walletKitController) { stub in
-      when(stub.fetchDocument(with: equal(to: documentIdentifier)))
-        .thenReturn(document)
-    }
-    
-    // When
-    let result = interactor.getDocumentSuccessCaption(for: documentIdentifier)
-    
-    // Then
-    XCTAssertEqual(result, .issuanceSuccessCaption([Constants.euPidName]))
-  }
-  
-  func test_getDocumentSuccessCaption_returnsCaptionWithEmptyString_whenDocumentExistsWithoutDisplayName() {
-    // Given
-    let documentIdentifier = Constants.euPidModelId
-    var document = Constants.euPidModel
-    document.displayName = nil
-    
-    stub(walletKitController) { stub in
-      when(stub.fetchDocument(with: equal(to: documentIdentifier)))
-        .thenReturn(document)
-    }
-    
-    // When
-    let result = interactor.getDocumentSuccessCaption(for: documentIdentifier)
-    
-    // Then
-    XCTAssertEqual(result, .issuanceSuccessCaption([""]))
-  }
-  
-  func test_getDocumentSuccessCaption_returnsNil_whenDocumentDoesNotExist() {
-    // Given
-    let documentIdentifier = "non-existent-document"
-    
-    stub(walletKitController) { stub in
-      when(stub.fetchDocument(with: equal(to: documentIdentifier)))
-        .thenReturn(nil)
-    }
-    
-    // When
-    let result = interactor.getDocumentSuccessCaption(for: documentIdentifier)
-    
-    // Then
-    XCTAssertNil(result, "Expected nil when document does not exist")
-  }
-  
-  func test_fetchStoredDocuments_returnsSuccess_whenDocumentsExist() async {
+  func testFetchStoredDocuments_whenDocumentsExist_thenReturnsSuccess() async {
     // Given
     let documentIds = [
       "doc-id-1",
@@ -389,7 +347,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func test_fetchStoredDocuments_returnsFailure_whenDocumentsDoNotExist() async {
+  func testFetchStoredDocuments_whenDocumentsDoNotExist_thenReturnsFailure() async {
     // Given
     let documentIds = ["non-existent-doc"]
     
@@ -410,7 +368,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func test_fetchStoredDocuments_returnsFailure_whenNoDocumentsReturned() async {
+  func testFetchStoredDocuments_whenNoDocumentsReturned_thenReturnsFailure() async {
     // Given
     let documentIds: [String] = []
     

@@ -117,7 +117,14 @@ extension Constants {
     configId: "test-config-id",
     isPid: true
   )
-  
+
+  static let scopedDocumentNotPid = ScopedDocument(
+    name: "Test Document",
+    issuer: "Test Issuer",
+    configId: "test-config-id",
+    isPid: false
+  )
+
   static let defferedPendingDocument = Document(
     id: "doc-id",
     docType: "type",
@@ -140,6 +147,18 @@ extension Constants {
     metadata: nil,
     displayName: "My Document",
     status: .issued
+  )
+
+  static let pendingDocument = Document(
+    id: "doc-id",
+    docType: "type",
+    docDataFormat: .sdjwt,
+    data: Data(),
+    secureAreaName: nil,
+    createdAt: Date(),
+    metadata: nil,
+    displayName: "My Document",
+    status: .pending
   )
 }
 
