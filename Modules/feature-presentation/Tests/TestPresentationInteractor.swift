@@ -61,7 +61,7 @@ final class TestPresentationInteractor: EudiTest {
     presentationCoordinator = nil
   }
 
-  func testGetSessionStatePublisher_WhenCoordinatorIsValid_ThenReturnsSuccess() {
+  func testGetSessionStatePublisher_WhenActiveCoordinatorReturnsStream_ThenResultIsSuccessWithThatStream() {
     // Given
     let expectedStream: AsyncStream<PresentationState> = AsyncStream { completion in }
 
@@ -85,7 +85,7 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testGetSessionStatePublisher_WhenCoordinatorIsValid_ThenReturnsError() {
+  func testGetSessionStatePublisher_WhenActiveCoordinatorThrowsError_ThenReturnsFailureWithThatError() {
     // Given
     let expectedError = RuntimeError.genericError
 
@@ -105,7 +105,7 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testGetCoordinator_WhenInteractorMethodCalled_ThenReturnSuccess() {
+  func testGetCoordinator_WhenActiveCoordinatorExists_ThenReturnsSuccessWithCoordinator() {
     // Given
     let expectedStream: AsyncStream<PresentationState> = AsyncStream { completion in }
 
@@ -129,7 +129,7 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testGetCoordinator_WhenInteractorMethodCalled_ReturnError() {
+  func testGetCoordinator_WhenActiveCoordinatorThrowsError_ThenReturnsFailureWithThatError() {
     // Given
     let expectedError = RuntimeError.genericError
 
@@ -149,7 +149,7 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testUpdatePresentationCoordinator_WhenInteractorMethodCalled_ThenCalled() {
+  func testUpdatePresentationCoordinator_WhenUpdatingWithCoordinator_ThenCallsSetActiveRemoteCoordinatorTwice() {
     // Given
     let expectedStream: AsyncStream<PresentationState> = AsyncStream { completion in }
 
@@ -164,7 +164,7 @@ final class TestPresentationInteractor: EudiTest {
     verify(sessionCoordinatorHolder, times(2)).setActiveRemoteCoordinator(any())
   }
 
-  func testStoreDynamicIssuancePendingUrl_WhenInteractorMethodCalled_ThenCallsWalletKitController() {
+  func testStoreDynamicIssuancePendingUrl_WhenCalledWithUrl_ThenCallsWalletKitControllerStoreDynamicIssuancePendingUrl() {
     // Given
     let expectedURL = URL(string: "https://example.com/pending")!
 
@@ -179,7 +179,7 @@ final class TestPresentationInteractor: EudiTest {
     verify(walletKitController).storeDynamicIssuancePendingUrl(with: any())
   }
 
-  func testStopPresentation_WhenInteractorMethodCalled_henVerifyWalletKitControllerStopPresentation() {
+  func testStopPresentation_WhenInteractorMethodCalled_ThenCallsWalletKitControllerStopPresentation() {
     // Given
     stub(walletKitController) { mock in
       when(mock.stopPresentation()).thenDoNothing()
@@ -190,7 +190,7 @@ final class TestPresentationInteractor: EudiTest {
     verify(walletKitController).stopPresentation()
   }
 
-  func testStopPresentation_WhenInteractorMethodCalled_ThenVerifyWalletKitControllerStopPresentation() async {
+  func testStopPresentation_WhenInteractorCalled_ThenCallsWalletKitControllerStopPresentation() async {
     // Given
     stub(walletKitController) { mock in
       when(mock.stopPresentation()).thenDoNothing()
@@ -202,7 +202,7 @@ final class TestPresentationInteractor: EudiTest {
     verify(walletKitController).stopPresentation()
   }
 
-  func testOnDeviceEngagement_WhenonRequest_wasCalled() async {
+  func testOnDeviceEngagement_WhenRequestReceivedAndClaimsParsed_ThenReturnsSuccessWithModel() async {
     // Given
     let request = Self.mockPresentationRequest
     let expectedStream: AsyncStream<PresentationState> = AsyncStream { completion in }
@@ -268,7 +268,7 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testOnRequestReceived_WhenCoordinatorRequestReceivedReturnsSuccess_ThenVerifySuccessState() async {
+  func testOnRequestReceived_WhenCoordinatorReturnsRequest_ThenEmitsSuccessStateWithParsedUiModels() async {
     // Given
     let request = Self.mockPresentationRequest
 
@@ -320,7 +320,7 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testOnRequestReceived_WhenCoordinatorRequestReceivedThrowsError_ThenVerifyFailureState() async {
+  func testOnRequestReceived_WhenCoordinatorRequestReceivedThrowsError_ThenReturnsFailureWithThatError() async {
     // Given
     let expectedError = PresentationSessionError.conversionToRequestItemModel
 
@@ -345,7 +345,7 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testOnResponsePrepare_WhenRequestItemsContainDataOrVerificationRows_ThenVerifySuccessStateAndRequestItems() async {
+  func testOnResponsePrepare_WhenCoordinatorSetState_ThenReturnsSuccessWithMappedRequestItemsAndCallsSetState() async {
     // Given
     let expectedRequestItems = Self.mockRequestItems
 
@@ -367,7 +367,7 @@ final class TestPresentationInteractor: EudiTest {
     verify(presentationCoordinator).setState(presentationState: any())
   }
 
-  func testOnResponsePrepare_WhenRequestItemsContainDataOrVerificationRows_ThenSessionFailure() async {
+  func testOnResponsePrepare_WhenSessionCoordinatorThrowsInvalidStateError_ThenReturnsFailureWithThatError() async {
     // Given
     let expectedError = PresentationSessionError.invalidState
 
@@ -391,7 +391,7 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testOnResponsePrepare_WhenRequestItemsDoNotContainDataOrVerificationRows_ThenVerifyFailureState() async {
+  func testOnResponsePrepare_WhenRequestItemsMissingDataOrVerificationRows_ThenReturnsFailureWithConversionError() async {
     // Given
     let expectedError = PresentationSessionError.conversionToRequestItemModel
 
@@ -407,7 +407,7 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testOnSendResponse_WhenCoordinatorPresentationStateIsResponseToSend_ThenverifySuccessState() async {
+  func testOnSendResponse_WhenCoordinatorStateIsResponseToSend_ThenReturnsSentAndInvokesSendResponse() async {
     // Given
     let presetationState: PresentationState = .responseToSend(Self.mockRequestItems)
 
@@ -440,7 +440,7 @@ final class TestPresentationInteractor: EudiTest {
     )
   }
 
-  func testOnSendResponse_WhenCoordinatorPresentationStateIsNotResponseToSend_ThenVerifyFailureState() async {
+  func testOnSendResponse_WhenCoordinatorStateIsNotResponseToSend_ThenReturnsFailureWithInvalidStateError() async {
     // Given
     let presetationState: PresentationState = .prepareQr
     let expectedError = PresentationSessionError.invalidState
@@ -463,7 +463,7 @@ final class TestPresentationInteractor: EudiTest {
     verify(presentationCoordinator).getState()
   }
 
-  func testOnSendResponse_WhenCoordinatorPresentationStateIsResponseToSend_ThenFailure() async {
+  func testOnSendResponse_WhenCoordinatorStateIsResponseToSendAndActiveCoordinatorThrowsError_ThenReturnsFailureWithThatError() async {
     // Given
     let presetationState: PresentationState = .responseToSend(Self.mockRequestItems)
     let expectedError = PresentationSessionError.invalidState
