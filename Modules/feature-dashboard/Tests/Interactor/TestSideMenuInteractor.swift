@@ -91,25 +91,25 @@ extension TestSideMenuInteractor {
     // Given
     let url = URL(string: "file.url")!
     
-    //When
+    // When
     stub(walletKitController) { mock in
       when(mock.retrieveLogFileUrl()).thenReturn(url)
     }
     
-    //Then
+    // Then
     return url
   }
   
   func stubChangeLogUrl() -> URL {
-    //Given
+    // Given
     let url = URL(string: "log.url")!
     
-    //When
+    // When
     stub(configLogic) { mock in
       when(mock.changelogUrl.get).thenReturn(url)
     }
     
-    //Then
+    // Then
     return url
   }
 }

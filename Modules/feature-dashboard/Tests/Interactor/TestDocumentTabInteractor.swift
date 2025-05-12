@@ -44,7 +44,7 @@ final class TestDocumentTabInteractor: EudiTest {
     self.configLogic = nil
   }
   
-  func testHasDeferredDocuments_WhenControllerReturnsDeferredDocuments_ThenReturnTrue() {
+  func testHasDeferredDocuments_WhenWalletKitControllerReturnsDeferredDocuments_ThenReturnsTrue() {
     // Given
     stubFetchDeferredDocuments(
       with: [
@@ -60,30 +60,36 @@ final class TestDocumentTabInteractor: EudiTest {
         )
       ]
     )
+    
     // When
     let result = interactor.hasDeferredDocuments()
+    
     // Then
     XCTAssertTrue(result)
   }
   
-  func testHasDeferredDocuments_WhenControllerReturnsNoDeferredDocuments_ThenReturnFalse() {
+  func testHasDeferredDocuments_WhenWalletKitControllerReturnsNoDeferredDocuments_ThenReturnsFalse() {
     // Given
     stubFetchDeferredDocuments(with: [])
+    
     // When
     let result = interactor.hasDeferredDocuments()
+    
     // Then
     XCTAssertFalse(result)
   }
   
-  func testFetchDocuments_WhenWalletKitControllerReturnsEmpty_ThenReturnError() async {
+  func testFetchDocuments_WhenWalletKitControllerReturnsEmptyDocuments_ThenReturnsError() async {
     // Given
     stubFetchRevokedDocuments(with: [])
     stubFetchDocuments(with: [])
     stubFetchIssuedDocuments(with: [])
     stubFetchDocumentsWithExclusion(with: [])
     stubFetchMainPidDocument(with: nil)
+    
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
+    
     // Then
     switch state {
     case .failure(let error):
@@ -93,7 +99,7 @@ final class TestDocumentTabInteractor: EudiTest {
     }
   }
   
-  func testFetchDocuments_WhenWalletKitControllerReturnsData_ThenReturnUiModels() async {
+  func testFetchDocuments_WhenWalletKitControllerReturnsData_ThenReturnsUiModels() async {
     // Given
     var documentsCategories: DocumentCategories {
       [
@@ -125,8 +131,10 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDocumentCategories(with: documentsCategories)
     stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
     stubFetchMainPidDocument(with: Constants.euPidModel)
+    
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
+    
     // Then
     switch state {
     case .success:
@@ -136,7 +144,7 @@ final class TestDocumentTabInteractor: EudiTest {
     }
   }
   
-  func testApplyFilters_WhenFiltersApplied_ThenUsesFilterValidator() async {
+  func testApplyFilters_WhenFilterValidorApplyFilters_ThenApplyFiltersWasCalled() async {
     // Given
     stubInitializeValidator()
     stubApplyFilters()
@@ -148,7 +156,7 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(filterValidator).applyFilters(sortOrder: any())
   }
   
-  func testUpdateLists_WhenDocumentsFetchedAndStateIsSuccess_ThenUsesFilterValidator() async {
+  func testUpdateLists_WhenDocumentsFetchedAndStateIsSuccess_ThenUsesFilterValidatoroUpdateLists() async {
     // Given
     stubFetchDocuments(with: [
       Constants.euPidModel,
@@ -159,24 +167,20 @@ final class TestDocumentTabInteractor: EudiTest {
     stubInitializeValidator()
     stubUpdateLists()
     
-    do {
-      // When
-      let state = await interactor.fetchDocuments(failedDocuments: [])
-      
-      switch state {
-      case .success(let filterableList):
-        //Then
-        await interactor.updateLists(filterableList: filterableList)
-      case .failure(let error):
-        XCTAssertEqual(error.localizedDescription, WalletCoreError.unableFetchDocuments.localizedDescription)
-        return
-      }
-    } catch {
-      XCTFail("Unexpected error: \(error)")
+    // When
+    let state = await interactor.fetchDocuments(failedDocuments: [])
+    
+    // Then
+    switch state {
+    case .success(let filterableList):
+      await interactor.updateLists(filterableList: filterableList)
+    case .failure(let error):
+      XCTAssertEqual(error.localizedDescription, WalletCoreError.unableFetchDocuments.localizedDescription)
+      return
     }
   }
   
-  func testResetFilters_WhenInteractorCalled_ThenUsesFilterValidator() async {
+  func testResetFilters_WhenFilterValidorResetFilters_ThenResetFiltersWasCalled() async {
     // Given
     stubInitializeValidator()
     stubResetFilters()
@@ -188,7 +192,7 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(filterValidator).resetFilters()
   }
   
-  func testRevertFilters_WhenInteractorCalled_ThenUsesFilterValidator() async {
+  func testResetFilters_WhenFilterValidorRevertFilters_ThenRevertFiltersWasCalled() async {
     // Given
     stubInitializeValidator()
     stubRevertFilters()
@@ -200,7 +204,7 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(filterValidator).revertFilters()
   }
   
-  func testUpdateFilters_WhenInteractorCalled_ThenUsesFilterValidator() async {
+  func testUpdateFilters_WhenFilterValidorUpdateFilters_ThenUpdateFiltersWasCalled() async {
     // Given
     stubInitializeValidator()
     stubUpdateFilters()
@@ -218,7 +222,7 @@ final class TestDocumentTabInteractor: EudiTest {
     )
   }
   
-  func testApplySearch_WhenInteractorCalled_ThenUsesFilterValidator() async {
+  func testApplySearch_WhenFilterValidorApplySearch_ThenUsesFilterValidator() async {
     // Given
     stubInitializeValidator()
     stubApplySearch()
@@ -229,7 +233,7 @@ final class TestDocumentTabInteractor: EudiTest {
     // Then
     verify(filterValidator).applySearch(query: any())
   }
-
+  
   func testOnFilterChangeState_WhenStreamEmitsResults_ThenProcessesResultsCorrectly() async {
     // Given
     let filterApplyResult: FilterResult = .filterApplyResult(
@@ -246,7 +250,7 @@ final class TestDocumentTabInteractor: EudiTest {
         sortOrder: .ascending
       )
     )
-
+    
     stub(filterValidator) { stub in
       when(stub.getFilterResultStream()).thenReturn(AsyncStream { continuation in
         continuation.yield(FilterResultPartialState.success(filterApplyResult))
@@ -254,16 +258,17 @@ final class TestDocumentTabInteractor: EudiTest {
         continuation.finish()
       })
     }
-
+    
     // When
     let resultStream = await interactor.onFilterChangeState()
     var results = [DocumentFiltersPartialState]()
-
+    
+    // Then
     Task {
       for try await result in resultStream {
         results.append(result)
       }
-
+      
       XCTAssertEqual(results.count, 2)
       if case let .filterApplyResult(transactions, sections, _) = results[0] {
         XCTAssertTrue(transactions.isEmpty)
@@ -271,7 +276,7 @@ final class TestDocumentTabInteractor: EudiTest {
       } else {
         XCTFail("Expected .filterApplyResult, but got \(results[0])")
       }
-
+      
       if case let .filterUpdateResult(sections) = results[1] {
         XCTAssertEqual(sections.count, 0)
       } else {

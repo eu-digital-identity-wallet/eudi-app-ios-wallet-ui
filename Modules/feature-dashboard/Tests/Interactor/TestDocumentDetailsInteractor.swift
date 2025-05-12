@@ -36,7 +36,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     self.interactor = nil
   }
   
-  func testFetchStoredDocument_WhenInteractorCalledAndDocumentIdIsValid_ThenReturnsExpectedValues() async {
+  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocument_ThenReturnsExpectedValues() async {
     // Given
     let documentId = Constants.euPidModel.id
     stubFetchDocument(for: documentId)
@@ -57,7 +57,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testFetchStoredDocument_WhenInteractorCalledAndDocumentIdIsInvalid_ThenReturnsError() async {
+  func testFetchStoredDocument_WhenWalletKitControllerReturnsDocumentFetchFailure_ThenReturnsError() async {
     // Given
     let documentId = "nonexistentId"
     stubFetchDocumentFailure(for: documentId)
@@ -74,7 +74,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testDeleteDocument_WhenInteractorCalledAndRebootIsRequired_ThenReturnsRebootTrue() async {
+  func testDeleteDocument_WhenWalletKitControllerReturnsRebootRequired_ThenReturnsRebootTrue() async {
     // Given
     let documentId = Constants.euPidModel.id
     let type: DocumentTypeIdentifier = .mDocPid
@@ -92,7 +92,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testDeleteDocument_WhenInteractorCalledAndRebootIsNotRequired_ThenReturnsRebootFalse() async {
+  func testDeleteDocument_WhenWalletKitControllerReturnsRebootNotRequired_ThenReturnsRebootFalse() async {
     // Given
     let documentId = Constants.euPidModel.id
     let type: DocumentTypeIdentifier = .mDocPid
@@ -110,7 +110,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
 
-  func testDeleteDocument_WhenInteractorCalledAndTypeIsMDocPidWithMultipleDocuments_ThenShouldDeleteAllDocuments() async throws {
+  func testDeleteDocument_WhenWalletKitControllerReturnsMultipleValidDocuments_ThenShouldDeleteAllDocuments() async throws {
     // Given
     let documentId = Constants.euPidModel.id
     let type: DocumentTypeIdentifier = .mDocPid
@@ -128,7 +128,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testDeleteDocument_WhenInteractorCalledAndTypeIsNotMDocPidOrSdJwtPid_ThenShouldNotDeleteAllDocuments() async throws {
+  func testDeleteDocument_WhenWalletKitControllerReturnsNonValidDocuments_ThenShouldNotDeleteAllDocuments() async throws {
     // Given
     let documentId = Constants.euPidModel.id
     let type: DocumentTypeIdentifier = .other(formatType: "other")
@@ -146,7 +146,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testDeleteDocument_WhenTypeIsMDocPidAndMainPidIsDifferent_ThenShouldNotDeleteAllDocuments() async throws {
+  func testDeleteDocument_WhenWalletKitControllerReturnsDifferentPid_ThenShouldNotDeleteAllDocuments() async throws {
     // Given
     let documentId = "other-id"
     let type: DocumentTypeIdentifier = .mDocPid
@@ -164,7 +164,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testDeleteDocument_WhenInteractorCalledAndDeleteFails_ThenReturnsError() async {
+  func testDeleteDocument_WhenWalletKitControllerReturnsDeleteFailure_ThenReturnsError() async {
     // Given
     let documentId = "nonexistentId"
     let type: DocumentTypeIdentifier = .mDocPid
@@ -182,20 +182,16 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testSaveDocument_WhenInteractorCalledAndSaveSucceeds_ThenNoErrorThrown() async throws {
+  func testSaveDocument_WhenWalletKitControllerReturnsSaveSuccess_ThenNoErrorThrown() async throws {
     // Given
     let documentId = Constants.euPidModel.id
     stubSaveBookmark(for: documentId)
     
     // When / Then
-    do {
-      try await interactor.save(documentId)
-    } catch {
-      XCTFail("Expected save to succeed, but failed with \(error)")
-    }
+    try await interactor.save(documentId)
   }
   
-  func testSaveDocument_WhenInteractorCalledAndSaveFails_ThenReturnsError() async {
+  func testSaveDocument_WhenWalletKitControllerReturnsSaveFailure_ThenReturnsError() async throws {
     // Given
     let documentId = "nonexistentId"
     stubSaveBookmarkFailure(for: documentId)
@@ -209,21 +205,21 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testDeleteBookmark_WhenInteractorCalledAndDeleteSucceeds_ThenNoErrorThrown() async throws {
+  func testDeleteBookmark_WhenWalletKitControllerReturnsDeleteSuccess_ThenNoErrorThrown() async throws {
+    // Given
     let documentId = Constants.euPidModel.id
     stubDeleteBookmark(for: documentId)
     
-    do {
-      try await interactor.delete(documentId)
-    } catch {
-      XCTFail("Expected delete to succeed, but failed with \(error)")
-    }
+    // When / Then
+    try await interactor.delete(documentId)
   }
   
-  func testDeleteBookmark_WhenInteractorCalledAndDeleteFails_ThenReturnsError() async {
+  func testDeleteBookmark_WhenWalletKitControllerReturnsDeleteFailure_ThenReturnsError() async throws {
+    // Given
     let documentId = "nonexistentId"
     stubDeleteBookmarkFailure(for: documentId)
     
+    // When / Then
     do {
       try await interactor.delete(documentId)
       XCTFail("Expected failure but succeeded")
@@ -277,12 +273,7 @@ extension TestDocumentDetailsInteractor {
   }
   
   func stubShouldRebootFalse(for id: String) {
-    guard let controller = walletKitController else {
-      XCTFail("walletKitController was nil")
-      return
-    }
-    
-    stub(controller) { stub in
+    stub(walletKitController) { stub in
       when(stub.fetchIssuedDocuments(with: any()))
         .thenReturn([
           Constants.euPidModel,

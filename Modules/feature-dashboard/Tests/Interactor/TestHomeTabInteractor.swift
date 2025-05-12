@@ -52,7 +52,7 @@ final class TestHomeTabInteractor: EudiTest {
     XCTAssertEqual(username, "John")
   }
   
-  func testGetWalletKitController_WhenInteractorCalled_ThenReturnsInjectedWalletKitController() {
+  func testGetWalletKitController_WhenIteractorReturnsWalletKitController_ThenVerifyControllerIsInjected() {
     // When
     let result = interactor.getWalletKitController()
     
@@ -60,22 +60,24 @@ final class TestHomeTabInteractor: EudiTest {
     XCTAssertTrue(result is MockWalletKitController, "The result should be of type MockWalletKitController")
   }
   
-  func testOpenBleSettings_WhenInteractorCalled_ThenVerifyBleSettingsOpen() async {
+  func testOpenBleSettings_WhenReachabilityControllerFetchBleSettings_ThenVerifyBleSettingsOpen() async {
     // Given
     stub(reachabilityController) { mock in
       when(mock.openBleSettings()).thenDoNothing()
     }
+    
     // When
     await interactor.openBleSettings()
+    
     // Then
     verify(reachabilityController).openBleSettings()
   }
   
-  func testGetBleAvailability_WhenBleIsAvailable_ThenReturnAvailableEnum() async {
+  func testGetBleAvailability_WhenReachabilityControllerReturnsBleAvailability_ThenVerifyAvailableEnum() async {
     await checkBle(with: Reachability.BleAvailibity.available)
   }
   
-  func testGetBleAvailability_WhenBleIsDisabled_ThenReturnDisabledEnum() async {
+  func testGetBleAvailability_WhenReachabilityControllerReturnsBleAvailability_ThenVerifyDisabledEnum() async {
     await checkBle(with: Reachability.BleAvailibity.disabled)
   }
 }
@@ -93,8 +95,10 @@ private extension TestHomeTabInteractor {
     stub(reachabilityController) { mock in
       when(mock.getBleAvailibity()).thenReturn(publisher)
     }
+    
     // When
     let bleAvailability = await interactor.getBleAvailability()
+    
     // Then
     XCTAssertEqual(bleAvailability, status)
   }
