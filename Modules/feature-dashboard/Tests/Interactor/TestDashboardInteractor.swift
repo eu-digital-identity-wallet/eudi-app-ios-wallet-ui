@@ -37,7 +37,7 @@ final class TestDashboardInteractor: EudiTest {
     self.interactor = nil
   }
   
-  func testGetWalletKitController_WhenInteractorCalledAndInjectedWalletKitController_ThenVerifyControllerIsInjected() {
+  func testGetWalletKitController_WhenIteractorReturnsWalletKitController_ThenVerifyControllerIsInjected() {
     // When
     let result = interactor.getWalletKitController()
     

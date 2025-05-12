@@ -36,7 +36,7 @@ final class TestTransactionDetailsInteractor: EudiTest {
     self.interactor = nil
   }
   
-  func testGetTransactionDetails_WhenTransactionExists_ThenReturnsExpectedUIModel() async {
+  func testGetTransactionDetails_WhenWalletKitControllerReturnsTransactions_ThenReturnsExpectedUIModel() async {
     // Given
     let transactionId = Constants.eudiRemoteVerifierMock.id
     stubFetchTransaction()
@@ -55,7 +55,7 @@ final class TestTransactionDetailsInteractor: EudiTest {
     }
   }
   
-  func testGetTransactionDetails_WhenTransactionNotFound_ThenReturnsExpectedError() async {
+  func testGetTransactionDetails_WhenWalletKitControllerReturnsTransactionsFailure_ThenReturnsExpectedError() async {
     // Given
     let transactionId = "nonexistentTransactionId"
     stubFetchTransactionFailure(for: transactionId)
