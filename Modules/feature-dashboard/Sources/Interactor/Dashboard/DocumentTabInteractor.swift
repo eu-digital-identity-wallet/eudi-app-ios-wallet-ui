@@ -260,8 +260,8 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
             FilterItem(
               id: FilterIds.FILTER_BY_STATE_REVOKED,
               name: LocalizableStringKey.revoked.toString,
-              selected: true,
-              isDefault: true
+              selected: false,
+              isDefault: false
             )
           ],
           filterableAction: FilterMultipleAction<DocumentFilterableAttributes>(predicate: { attribute, filter in
