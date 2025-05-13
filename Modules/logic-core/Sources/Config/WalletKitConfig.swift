@@ -120,7 +120,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
       "pidissuerca02_pt",
       "pidissuerca02_ut",
       "new_Trusted_Cert",
-      "RP_Intermediate_Acces_Cert"
+      "RP_Intermediate_Access_Cert"
     ]
     let certsData: [Data] = certificates.compactMap {
       Data(name: $0, ext: "der")
