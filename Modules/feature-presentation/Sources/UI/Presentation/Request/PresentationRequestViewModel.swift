@@ -64,7 +64,8 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
           )
         )
       }
-    case .failure:
+    case .failure(let error):
+      Logger(label:"PresentationRequest displaying").error("Error: \(error)")
       self.onEmptyDocuments()
     }
   }
