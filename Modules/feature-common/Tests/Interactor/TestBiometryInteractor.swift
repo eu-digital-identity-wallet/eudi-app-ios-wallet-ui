@@ -26,7 +26,8 @@ final class TestBiometryInteractor: EudiTest {
   var prefsController: MockPrefsController!
   var quickPinInteractor: MockQuickPinInteractor!
   var systemBiometricController: MockSystemBiometryController!
-  
+  var cancellables: Set<AnyCancellable> = []
+
   override func setUp() {
     self.prefsController = MockPrefsController()
     self.quickPinInteractor = MockQuickPinInteractor()
@@ -40,6 +41,7 @@ final class TestBiometryInteractor: EudiTest {
   }
   
   override func tearDown() {
+    self.cancellables.removeAll()
     self.interactor = nil
     self.prefsController = nil
     self.quickPinInteractor = nil
@@ -200,5 +202,120 @@ final class TestBiometryInteractor: EudiTest {
     let method = interactor.currentBiometricsMethod
     // Then
     XCTAssertEqual(method, "")
+  }
+
+  func testAuthenticate_WhenRequestBiometricUnlock_ThenEmitsAuthenticated() {
+    // Given
+    let successPub = Just(())
+      .setFailureType(to: SystemBiometryError.self)
+      .eraseToAnyPublisher()
+    stub(systemBiometricController) { mock in
+      when(mock.requestBiometricUnlock()).thenReturn(successPub)
+    }
+
+    let exp = expectation(description: "should get .authenticated")
+    var received: [BiometricsState] = []
+
+    // When
+    interactor.authenticate()
+      .sink { state in
+        received.append(state)
+        if state == .authenticated { exp.fulfill() }
+      }
+      .store(in: &cancellables)
+
+    // Then
+    wait(for: [exp], timeout: 0.5)
+    XCTAssertEqual(received, [.authenticated])
+  }
+
+  func testAuthenticate_WhenRequestBiometrckUnlockFailure_ThenEmitsFailureWithError() {
+    // Given
+    let failPub = Fail<Void, SystemBiometryError>(
+      error: .deniedAccess
+    ).eraseToAnyPublisher()
+
+    stub(systemBiometricController) { mock in
+      when(mock.requestBiometricUnlock()).thenReturn(failPub)
+    }
+
+    let exp = expectation(description: "should get .failure(.deniedAccess)")
+    var received: [BiometricsState] = []
+
+    // When
+    interactor.authenticate()
+      .sink { state in
+        received.append(state)
+        if case .failure(.deniedAccess) = state { exp.fulfill() }
+      }
+      .store(in: &cancellables)
+
+    // Then
+    wait(for: [exp], timeout: 0.5)
+    XCTAssertEqual(received, [.failure(.deniedAccess)])
+  }
+
+  func testAuthenticate_WhenRequestBiometricUnlockWithUseTestDispatcherTrue_ThenEmitsAuthenticated() {
+      // Given
+    self.interactor = BiometryInteractorImpl(
+      prefsController: self.prefsController,
+      quickPinInteractor: self.quickPinInteractor,
+      biometryController: self.systemBiometricController,
+      useTestDispatcher: false
+    )
+
+      let successPub = Just(())
+        .setFailureType(to: SystemBiometryError.self)
+        .eraseToAnyPublisher()
+      stub(systemBiometricController) { mock in
+        when(mock.requestBiometricUnlock()).thenReturn(successPub)
+      }
+
+      let exp = expectation(description: "should get .authenticated")
+      var received: [BiometricsState] = []
+
+      // When
+      interactor.authenticate()
+        .sink { state in
+          received.append(state)
+          if state == .authenticated { exp.fulfill() }
+        }
+        .store(in: &cancellables)
+
+      // Then
+      wait(for: [exp], timeout: 1.0)
+      XCTAssertEqual(received, [.authenticated])
+    }
+
+  func testAuthenticate_WhenRequestBiometricUnlockWithUseTestDispatcherTrue_ThenEmitsFailure() {
+    // Given
+    self.interactor = BiometryInteractorImpl(
+      prefsController: self.prefsController,
+      quickPinInteractor: self.quickPinInteractor,
+      biometryController: self.systemBiometricController,
+      useTestDispatcher: false
+    )
+
+    let failPub = Fail<Void, SystemBiometryError>(
+      error: .deniedAccess
+    ).eraseToAnyPublisher()
+    stub(systemBiometricController) { mock in
+      when(mock.requestBiometricUnlock()).thenReturn(failPub)
+    }
+
+    let exp = expectation(description: "should get .failure(.deniedAccess)")
+    var received: [BiometricsState] = []
+
+    // When
+    interactor.authenticate()
+      .sink { state in
+        received.append(state)
+        if case .failure(.deniedAccess) = state { exp.fulfill() }
+      }
+      .store(in: &cancellables)
+
+    // Then
+    wait(for: [exp], timeout: 1.0)
+    XCTAssertEqual(received, [.failure(.deniedAccess)])
   }
 }
