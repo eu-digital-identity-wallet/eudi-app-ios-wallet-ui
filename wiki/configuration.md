@@ -117,8 +117,6 @@ final class RQESConfig: EudiRQESUiConfig {
   // Optional. Default is false.
   var printLogs: Bool
 
-  var rQESConfig: RqesServiceConfig
-
   // Optional. Default English translations will be used if not set.
   var translations: [String : [LocalizableKey : String]]
 
@@ -147,7 +145,11 @@ final class RQESConfig: EudiRQESUiConfig {
         .init(
           name: "your_dev_name",
           uri: URL(string: "your_dev_uri")!,
-          scaURL: "your_dev_sca"
+          scaURL: "your_dev_sca",
+          clientId: "your_dev_clientid",
+          clientSecret: "your_dev_secret",
+          authFlowRedirectionURI: "your_dev_redirect",
+          hashAlgorithm: .SHA256
         )
       ]
     case .DEMO:
@@ -155,7 +157,11 @@ final class RQESConfig: EudiRQESUiConfig {
         .init(
           name: "your_demo_name",
           uri: URL(string: "your_demo_uri")!,
-          scaURL: "your_demo_sca"
+          scaURL: "your_demo_sca",
+          clientId: "your_demo_clientid",
+          clientSecret: "your_demo_secret",
+          authFlowRedirectionURI: "your_demo_redirect",
+          hashAlgorithm: .SHA256
         )
       ]
     }
@@ -163,25 +169,6 @@ final class RQESConfig: EudiRQESUiConfig {
 
   var printLogs: Bool {
     buildType == .DEBUG
-  }
-
-  var rQESConfig: RqesServiceConfig {
-    return switch buildVariant {
-    case .DEV:
-        .init(
-          clientId: "your_dev_clientid",
-          clientSecret: "your_dev_secret",
-          authFlowRedirectionURI: "your_dev_redirect",
-          hashAlgorithm: .SHA256
-        )
-    case .DEMO:
-        .init(
-          clientId: "your_demo_clientid",
-          clientSecret: "your_demo_secret",
-          authFlowRedirectionURI: "your_demo_redirect",
-          hashAlgorithm: .SHA256
-        )
-    }
   }
 }
 ```
