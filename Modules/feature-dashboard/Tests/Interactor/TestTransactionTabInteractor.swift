@@ -93,53 +93,50 @@ final class TestTransactionTabInteractor: EudiTest {
     }
   }
   
-  func testFetchTransactions_WhenInitializedWithFilterableList_ThenInitializesFilterValidator() async throws {
+  func testInializeFilters_WhenInitializedWithFilterableList_ThenInitializesFilterValidator() async throws {
     // Given
-    stubFetchTransactions(with: [
-      Constants.eudiRemoteVerifierMock,
-      Constants.otherRelPartyMock
-    ])
+    let filterableList = Self.mockFilterableList
+    let minStartDate = Self.mockMinStartDate
+    let maxEndDate = Self.mockMaxEndDate
+    let filters = Self.mockFilters
     
     stubInitializeValidator()
     
     // When
-    let state = try await interactor.fetchTransactions()
-    
-    switch state {
-    case .success(let filterableList, let minStartDate, let maxEndDate):
-      await interactor.initializeFilters(
-        filterableList: filterableList,
-        minStartDate: minStartDate,
-        maxEndDate: maxEndDate
-      )
-    case .failure(let error):
-      XCTFail("Error: \(error)")
-    }
+    await interactor.initializeFilters(
+      filterableList: filterableList,
+      minStartDate: minStartDate,
+      maxEndDate: maxEndDate
+    )
     
     // Then
-    verify(filterValidator).initializeValidator(filters: any(), filterableList: any())
+    verify(filterValidator).initializeValidator(
+      filters: any(),
+      filterableList: filterableList
+    )
   }
   
-  func testFetchTransactions_WhenWalletKitControllerReturnsEmptyTransactions_ThenInitializesFilterValidator() async throws {
+  func testInializeFilters_WhenWalletKitControllerReturnsEmptyTransactions_ThenInitializesFilterValidator() async throws {
     // Given
-    stubFetchTransactions(with: [])
-    stubInitializeValidator()
+    let filterableList = Self.mockEmptyFilterableList
+    let minStartDate = Self.mockMinStartDate
+    let maxEndDate = Self.mockMaxEndDate
+    let filters = Self.mockFilters
+    
+    stubInitializeValidatorWithEmptyList()
     
     // When
-    let state = try await interactor.fetchTransactions()
+    await interactor.initializeFilters(
+      filterableList: filterableList,
+      minStartDate: minStartDate,
+      maxEndDate: maxEndDate
+    )
     
     // Then
-    switch state {
-    case .success(let filterableList, let minStartDate, let maxEndDate):
-      await interactor.initializeFilters(
-        filterableList: filterableList,
-        minStartDate: minStartDate,
-        maxEndDate: maxEndDate
-      )
-    case .failure(let error):
-      XCTAssertEqual(error.localizedDescription, WalletCoreError.unableToFetchTransactionLog.localizedDescription)
-      return
-    }
+    verify(filterValidator).initializeValidator(
+      filters: any(),
+      filterableList: filterableList
+    )
   }
   
   func testApplyFilters_WhenFilterValidorApplyFilters_ThenApplyFiltersWasCalled() async {
@@ -151,29 +148,26 @@ final class TestTransactionTabInteractor: EudiTest {
     await interactor.applyFilters()
     
     // Then
-    verify(filterValidator).applyFilters(sortOrder: any())
+    verify(filterValidator).applyFilters(sortOrder: Self.sortOrderDescending)
   }
   
   func testUpdateLists_WhenTransactionsFetchedAndStateIsSuccess_ThenUsesFilterValidatorToUpdateLists() async throws {
     // Given
-    stubFetchTransactions(with: [
-      Constants.eudiRemoteVerifierMock,
-      Constants.otherRelPartyMock
-    ])
     stubInitializeValidator()
     stubUpdateLists()
     
     // When
-    let state = try await interactor.fetchTransactions()
-    
-    switch state {
-    case .success(let filterableList, let minStartDate, let maxEndDate):
-      //Then
-      await interactor.updateLists(filterableList: filterableList, minStartDate: minStartDate, maxEndDate: maxEndDate)
-    case .failure(let error):
-      XCTAssertEqual(error.localizedDescription, WalletCoreError.unableToFetchTransactionLog.localizedDescription)
-      return
-    }
+    await interactor.updateLists(
+      filterableList: Self.mockFilterableList,
+      minStartDate: Self.mockMinStartDate,
+      maxEndDate: Self.mockMaxEndDate
+    )
+     
+    // Then
+    verify(filterValidator).updateLists(
+      sortOrder: Self.sortOrderDescending,
+      filterableList: Self.mockFilterableList
+    )
   }
   
   func testResetFilters_WhenFilterValidorResetFilters_ThenResetFiltersWasCalled() async {
@@ -240,17 +234,18 @@ final class TestTransactionTabInteractor: EudiTest {
     )
   }
   
-  func testApplySearch_WhenFilterValidorApplySearch_ThenUsesFilterValidator() async {
+  func testApplySearch_WhenFilterValidatorApplySearch_ThenUsesFilterValidator() async {
     // Given
     stubInitializeValidator()
     stubApplySearch()
     
     // When
-    await interactor.applySearch(query: "")
+    await interactor.applySearch(query: "PID")
     
     // Then
-    verify(filterValidator).applySearch(query: any())
+    verify(filterValidator).applySearch(query: equal(to: "PID"))
   }
+
   
   func testOnFilterChangeState_WhenStreamEmitsResults_ThenProcessesResultsAsExpected() async {
     // Given
@@ -305,6 +300,54 @@ final class TestTransactionTabInteractor: EudiTest {
 }
 
 private extension TestTransactionTabInteractor {
+  
+  static let mockMaxEndDate = Date()
+  static let mockMinStartDate = Date()
+  static let sortOrderDescending: SortOrderType = .descending
+  static let mockEmptyFilterableList: FilterableList = .init(items: [])
+  
+  static let mockTransactionTabUIModel: TransactionTabUIModel =
+    .init(
+      id: "transaction-id",
+      name: "EUDI Remote Verifier",
+      status: .completed,
+      transactionDate: "15 May 2025 10:30 am",
+      transactionCategory: .category(for: "15 May 2025 10:30 am"),
+      transactionType: .presentation
+    )
+  
+  static let mockTransactionFilterableAttributes: TransactionFilterableAttributes =
+    .init(
+      sortingKey: "eudi remote verifier",
+      searchTags: ["EUDI Remote Verifier", "PID"]
+    )
+  
+  static let mockFilters: Filters = .init(
+    filterGroups: [
+      SingleSelectionFilterGroup(
+        id: "ascending_descending_group",
+        name: "order by",
+        filters: [
+          .init(
+            id: "order_by_descending",
+            name: "descending",
+            selected: true
+          )
+        ],
+        filterType: .orderBy
+      )
+    ],
+    sortOrder: .descending
+  )
+  
+  static let mockFilterableList: FilterableList = .init(
+    items: [
+      FilterableItem (
+        payload: TestTransactionTabInteractor.mockTransactionTabUIModel,
+        attributes: TestTransactionTabInteractor.mockTransactionFilterableAttributes)
+    ]
+  )
+  
   func stubFetchTransactionsWithError() {
     stub(walletKitController) { mock in
       when(mock.fetchTransactionLogs())
@@ -323,7 +366,17 @@ private extension TestTransactionTabInteractor {
     stub(filterValidator) { mock in
       when(mock.initializeValidator(
         filters: any(),
-        filterableList: any())
+        filterableList: Self.mockFilterableList)
+      )
+      .thenDoNothing()
+    }
+  }
+  
+  func stubInitializeValidatorWithEmptyList() {
+    stub(filterValidator) { mock in
+      when(mock.initializeValidator(
+        filters: any(),
+        filterableList: Self.mockEmptyFilterableList)
       )
       .thenDoNothing()
     }
@@ -331,10 +384,8 @@ private extension TestTransactionTabInteractor {
   
   func stubApplyFilters() {
     stub(filterValidator) { mock in
-      when(mock.applyFilters(
-        sortOrder: any())
-      )
-      .thenDoNothing()
+      when(mock.applyFilters(sortOrder: Self.sortOrderDescending))
+        .thenDoNothing()
     }
   }
   
@@ -350,13 +401,15 @@ private extension TestTransactionTabInteractor {
   
   func stubResetFilters() {
     stub(filterValidator) { mock in
-      when(mock.resetFilters()).thenDoNothing()
+      when(mock.resetFilters())
+        .thenDoNothing()
     }
   }
   
   func stubRevertFilters() {
     stub(filterValidator) { mock in
-      when(mock.revertFilters()).thenDoNothing()
+      when(mock.revertFilters())
+        .thenDoNothing()
     }
   }
   
@@ -385,10 +438,10 @@ private extension TestTransactionTabInteractor {
   func stubApplySearch() {
     stub(filterValidator) { mock in
       when(mock.applySearch(
-        query: any())
+        query: equal(to: "PID"))
       )
       .thenDoNothing()
     }
   }
-}
 
+}
