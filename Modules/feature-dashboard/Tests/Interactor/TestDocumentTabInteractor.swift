@@ -153,31 +153,23 @@ final class TestDocumentTabInteractor: EudiTest {
     await interactor.applyFilters()
     
     // Then
-    verify(filterValidator).applyFilters(sortOrder: any())
+    verify(filterValidator).applyFilters(sortOrder: Self.sortOrderAscending)
   }
   
   func testUpdateLists_WhenDocumentsFetchedAndStateIsSuccess_ThenUsesFilterValidatoroUpdateLists() async {
     // Given
-    stubFetchDocuments(with: [
-      Constants.euPidModel,
-      Constants.isoMdlModel
-    ])
-    stubFetchDocumentCategories(with: [:])
-    stubFetchRevokedDocuments(with: [])
     stubInitializeValidator()
     stubUpdateLists()
     
-    // When
-    let state = await interactor.fetchDocuments(failedDocuments: [])
-    
-    // Then
-    switch state {
-    case .success(let filterableList):
-      await interactor.updateLists(filterableList: filterableList)
-    case .failure(let error):
-      XCTAssertEqual(error.localizedDescription, WalletCoreError.unableFetchDocuments.localizedDescription)
-      return
-    }
+    //Then
+    await interactor.updateLists(
+      filterableList: Self.mockFilterablelist
+    )
+      
+    verify(filterValidator).updateLists(
+      sortOrder: Self.sortOrderAscending,
+      filterableList: Self.mockFilterablelist
+    )
   }
   
   func testResetFilters_WhenFilterValidorResetFilters_ThenResetFiltersWasCalled() async {
@@ -228,10 +220,10 @@ final class TestDocumentTabInteractor: EudiTest {
     stubApplySearch()
     
     // When
-    await interactor.applySearch(query: "")
+    await interactor.applySearch(query: "search")
     
     // Then
-    verify(filterValidator).applySearch(query: any())
+    verify(filterValidator).applySearch(query: equal(to: "search"))
   }
   
   func testOnFilterChangeState_WhenStreamEmitsResults_ThenProcessesResultsCorrectly() async {
@@ -288,6 +280,36 @@ final class TestDocumentTabInteractor: EudiTest {
 
 private extension TestDocumentTabInteractor {
   
+  static let sortOrderAscending: SortOrderType = .ascending
+  
+  static let mockDocumentTabUIModel: DocumentTabUIModel = .init(
+    id: "document-ui-model-id",
+    value:
+      .init(
+        id: "pid-document-id",
+        heading: "Digital Credentials Issuer",
+        title: "PID",
+        createdAt: Date(),
+        expiresAt: "",
+        hasExpired: false,
+        state: .issued,
+        image: .none,
+        documentCategory: .Government),
+    listItem: .init(mainText: .custom("PID"))
+  )
+  
+  static let mockDocumentFilterableAttributes: DocumentFilterableAttributes =
+    .init(
+      sortingKey: "pid",
+      searchTags: ["Digital Credentials Issuer","PID"]
+    )
+  
+  static let mockFilterablelist: FilterableList = .init(items: [
+    FilterableItem (
+      payload: TestDocumentTabInteractor.mockDocumentTabUIModel,
+      attributes: TestDocumentTabInteractor.mockDocumentFilterableAttributes)
+  ])
+  
   func stubFetchDocuments(with documents: [DocClaimsDecodable]) {
     stub(walletKitController) { mock in
       when(mock.fetchAllDocuments()).thenReturn(documents)
@@ -334,7 +356,7 @@ private extension TestDocumentTabInteractor {
     stub(filterValidator) { mock in
       when(mock.initializeValidator(
         filters: any(),
-        filterableList: any())
+        filterableList: Self.mockFilterablelist)
       )
       .thenDoNothing()
     }
@@ -342,10 +364,8 @@ private extension TestDocumentTabInteractor {
   
   func stubApplyFilters() {
     stub(filterValidator) { mock in
-      when(mock.applyFilters(
-        sortOrder: any())
-      )
-      .thenDoNothing()
+      when(mock.applyFilters(sortOrder: Self.sortOrderAscending))
+        .thenDoNothing()
     }
   }
   
@@ -384,7 +404,7 @@ private extension TestDocumentTabInteractor {
   func stubApplySearch() {
     stub(filterValidator) { mock in
       when(mock.applySearch(
-        query: any())
+        query: equal(to: "search"))
       )
       .thenDoNothing()
     }

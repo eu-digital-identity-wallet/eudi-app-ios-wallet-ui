@@ -5396,6 +5396,16 @@ public class MockFilterableItemPayload: FilterableItemPayload, Cuckoo.ProtocolMo
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
+    
+    public var id: String {
+        get {
+            return cuckoo_manager.getter(
+                "id",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.id
+            )
+        }
+    }
 
 
     public struct __StubbingProxy_FilterableItemPayload: Cuckoo.StubbingProxy {
@@ -5403,6 +5413,10 @@ public class MockFilterableItemPayload: FilterableItemPayload, Cuckoo.ProtocolMo
     
         public init(manager: Cuckoo.MockManager) {
             self.cuckoo_manager = manager
+        }
+        
+        var id: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockFilterableItemPayload,String> {
+            return .init(manager: cuckoo_manager, name: "id")
         }
     }
 
@@ -5416,10 +5430,20 @@ public class MockFilterableItemPayload: FilterableItemPayload, Cuckoo.ProtocolMo
             self.callMatcher = callMatcher
             self.sourceLocation = sourceLocation
         }
+        
+        var id: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "id", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
     }
 }
 
 public class FilterableItemPayloadStub:FilterableItemPayload, @unchecked Sendable {
+    
+    public var id: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+    }
 
 
 }
