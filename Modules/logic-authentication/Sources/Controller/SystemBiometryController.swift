@@ -34,6 +34,21 @@ public enum SystemBiometryError: Error, LocalizedError, Identifiable, Sendable {
   case biometryNotSupported
 
   public var id: String { localizedDescription }
+
+  public var errorDescription: String? {
+    switch self {
+    case .deniedAccess:
+      return NSLocalizedString("You have denied access. Please go to the settings, locate this application and turn the Face ID on", comment: "")
+    case .noFaceIdEnrolled:
+      return NSLocalizedString("You have not enabled Face ID yet", comment: "")
+    case .noFingerprintEnrolled:
+      return NSLocalizedString("You have not enabled fingerprint yet", comment: "")
+    case .biometricError:
+      return NSLocalizedString("Your biometric method has not been recognized", comment: "")
+    case .biometryNotSupported:
+      return NSLocalizedString("This device does not support biometry", comment: "")
+    }
+  }
 }
 
 final class SystemBiometryControllerImpl: SystemBiometryController {
