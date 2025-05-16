@@ -23,8 +23,6 @@ internal final class BiometryError: @unchecked Sendable {
 
 public protocol SystemBiometryController: Sendable {
   var biometryType: LABiometryType { get }
-  func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError>
-  func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometryError>
   func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometryError>
 }
 
@@ -36,33 +34,22 @@ public enum SystemBiometryError: Error, LocalizedError, Identifiable, Sendable {
   case biometryNotSupported
 
   public var id: String { localizedDescription }
-
-  public var errorDescription: String? {
-    switch self {
-    case .deniedAccess:
-      return NSLocalizedString("You have denied access. Please go to the settings, locate this application and turn the Face ID on", comment: "")
-    case .noFaceIdEnrolled:
-      return NSLocalizedString("You have not enabled Face ID yet", comment: "")
-    case .noFingerprintEnrolled:
-      return NSLocalizedString("You have not enabled fingerprint yet", comment: "")
-    case .biometricError:
-      return NSLocalizedString("Your biometric method has not been recognized", comment: "")
-    case .biometryNotSupported:
-      return NSLocalizedString("This device does not support biometry", comment: "")
-    }
-  }
 }
 
 final class SystemBiometryControllerImpl: SystemBiometryController {
 
   public var biometryType: LABiometryType { context.biometryType }
 
-  private let context = LAContext()
+  private let context: LAContext
   private let keyChainController: KeyChainController
 
   private let biometricError: BiometryError = .init()
 
-  public init(keyChainController: KeyChainController) {
+  public init(
+    context: LAContext = LAContext(),
+    keyChainController: KeyChainController
+  ) {
+    self.context = context
     self.keyChainController = keyChainController
     _ = canEvaluateForBiometrics()
   }
@@ -71,7 +58,18 @@ final class SystemBiometryControllerImpl: SystemBiometryController {
     self.context.invalidate()
   }
 
-  public func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError> {
+  public func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometryError> {
+    canEvaluateForBiometrics()
+      .flatMap { [weak self] (_) -> AnyPublisher<Void, SystemBiometryError> in
+        guard let self = self else {
+          return Fail(error: SystemBiometryError.biometricError).eraseToAnyPublisher()
+        }
+        return self.evaluateBiometrics()
+      }
+      .eraseToAnyPublisher()
+  }
+
+  private func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError> {
 
     guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &biometricError.value) else {
       return Fail(error: SystemBiometryError.deniedAccess).eraseToAnyPublisher()
@@ -99,7 +97,7 @@ final class SystemBiometryControllerImpl: SystemBiometryController {
     return Just(true).setFailureType(to: SystemBiometryError.self).eraseToAnyPublisher()
   }
 
-  public func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometryError> {
+  private func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometryError> {
     return Deferred {
       Future { [weak self] promise in
         guard let self = self else { return }
@@ -113,13 +111,5 @@ final class SystemBiometryControllerImpl: SystemBiometryController {
       }
     }
     .eraseToAnyPublisher()
-  }
-
-  public func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometryError> {
-    canEvaluateForBiometrics()
-      .flatMap { [weak self] (_) -> AnyPublisher<Void, SystemBiometryError> in
-        guard let self = self else { return Fail(error: SystemBiometryError.biometricError).eraseToAnyPublisher() }
-        return self.evaluateBiometrics()
-      }.eraseToAnyPublisher()
   }
 }

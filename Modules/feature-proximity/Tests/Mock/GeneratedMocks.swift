@@ -2533,26 +2533,6 @@ public class MockSystemBiometryController: SystemBiometryController, Cuckoo.Prot
     }
 
     
-    public func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError> {
-        return cuckoo_manager.call(
-            "canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError>",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.canEvaluateForBiometrics()
-        )
-    }
-    
-    public func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometryError> {
-        return cuckoo_manager.call(
-            "evaluateBiometrics() -> AnyPublisher<Void, SystemBiometryError>",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.evaluateBiometrics()
-        )
-    }
-    
     public func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometryError> {
         return cuckoo_manager.call(
             "requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometryError>",
@@ -2572,22 +2552,6 @@ public class MockSystemBiometryController: SystemBiometryController, Cuckoo.Prot
         
         var biometryType: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockSystemBiometryController,LABiometryType> {
             return .init(manager: cuckoo_manager, name: "biometryType")
-        }
-        
-        func canEvaluateForBiometrics() -> Cuckoo.ProtocolStubFunction<(), AnyPublisher<Bool, SystemBiometryError>> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockSystemBiometryController.self,
-                method: "canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError>",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func evaluateBiometrics() -> Cuckoo.ProtocolStubFunction<(), AnyPublisher<Void, SystemBiometryError>> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockSystemBiometryController.self,
-                method: "evaluateBiometrics() -> AnyPublisher<Void, SystemBiometryError>",
-                parameterMatchers: matchers
-            ))
         }
         
         func requestBiometricUnlock() -> Cuckoo.ProtocolStubFunction<(), AnyPublisher<Void, SystemBiometryError>> {
@@ -2616,30 +2580,6 @@ public class MockSystemBiometryController: SystemBiometryController, Cuckoo.Prot
         
         
         @discardableResult
-        func canEvaluateForBiometrics() -> Cuckoo.__DoNotUse<(), AnyPublisher<Bool, SystemBiometryError>> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError>",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func evaluateBiometrics() -> Cuckoo.__DoNotUse<(), AnyPublisher<Void, SystemBiometryError>> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "evaluateBiometrics() -> AnyPublisher<Void, SystemBiometryError>",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
         func requestBiometricUnlock() -> Cuckoo.__DoNotUse<(), AnyPublisher<Void, SystemBiometryError>> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
@@ -2661,14 +2601,6 @@ public class SystemBiometryControllerStub:SystemBiometryController, @unchecked S
     }
 
 
-    
-    public func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError> {
-        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<Bool, SystemBiometryError>).self)
-    }
-    
-    public func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometryError> {
-        return DefaultValueRegistry.defaultValue(for: (AnyPublisher<Void, SystemBiometryError>).self)
-    }
     
     public func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometryError> {
         return DefaultValueRegistry.defaultValue(for: (AnyPublisher<Void, SystemBiometryError>).self)
