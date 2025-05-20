@@ -16,9 +16,7 @@
 import SwiftUI
 import logic_ui
 import logic_resources
-import logic_business
 import feature_common
-import logic_core
 
 struct DashboardView<Router: RouterHost>: View {
 
@@ -35,7 +33,14 @@ struct DashboardView<Router: RouterHost>: View {
       padding: .zero,
       canScroll: false,
       navigationTitle: viewModel.viewState.navigationTitle,
-      toolbarContent: viewModel.viewState.toolBarContent
+      toolbarContent: viewModel.viewState.toolBarContent,
+      notificationAction: .init(
+        name: NSNotification.RevocationDashboard,
+        callback: {
+          guard let payload = $0 else { return }
+          viewModel.handleRevocationNotification(for: payload)
+        }
+      )
     ) {
       content(
         tabView: { tab in
@@ -81,10 +86,6 @@ struct DashboardView<Router: RouterHost>: View {
     .task {
       await viewModel.onCreate()
     }
-    .onReceive(NotificationCenter.default.publisher(for: NSNotification.RevocationDashboard)) { data in
-      guard let payload = data.userInfo else { return }
-      viewModel.handleRevocationNotification(for: payload)
-    }
   }
 }
 
@@ -115,13 +116,13 @@ private func content(
       .tag(SelectedTab.documents)
 
     tabView(.transactions)
-      .tabItem {
-        Label(
-          .transactions,
-          systemImage: "arrow.left.arrow.right"
-        )
-      }
-    //.tag(SelectedTab.transactions)
+    .tabItem {
+      Label(
+        .transactions,
+        systemImage: "arrow.left.arrow.right"
+      )
+    }
+    .tag(SelectedTab.transactions)
   }
 }
 

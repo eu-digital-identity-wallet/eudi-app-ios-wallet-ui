@@ -13,11 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_ui
 import logic_resources
 import feature_common
-import logic_business
 import logic_core
 
 public protocol AddDocumentInteractor: Sendable {
@@ -141,7 +138,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
   func fetchStoredDocuments(documentIds: [String]) async -> IssueDocumentsPartialState {
     let documents = walletController.fetchDocuments(with: documentIds)
     let documentsDetails = documents.compactMap {
-      $0.transformToDocumentDetailsUi(isSensitive: false)
+      $0.transformToDocumentUi(isSensitive: false)
     }
 
     if documentsDetails.isEmpty {
@@ -171,6 +168,6 @@ public enum IssueDynamicDocumentPartialState: Sendable {
 }
 
 public enum IssueDocumentsPartialState: Sendable {
-  case success([DocumentDetailsUIModel])
+  case success([DocumentUIModel])
   case failure(Error)
 }

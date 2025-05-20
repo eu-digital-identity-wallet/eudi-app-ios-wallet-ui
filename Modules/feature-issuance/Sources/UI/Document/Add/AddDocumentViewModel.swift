@@ -13,10 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import logic_ui
 import logic_resources
-import logic_business
 import feature_common
 import logic_core
 
@@ -143,7 +141,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
         .init(
           trailingActions: [],
           leadingActions: [
-            Action(image: Theme.shared.image.chevronLeft) {
+            .init(image: Theme.shared.image.chevronLeft) {
               self.pop()
             }
           ]

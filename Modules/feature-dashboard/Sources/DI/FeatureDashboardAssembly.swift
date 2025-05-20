@@ -40,8 +40,11 @@ public final class FeatureDashboardAssembly: Assembly {
       )
     }
 
-    container.register(TransactionTabInteractor.self) { _ in
-      TransactionTabInteractorImpl()
+    container.register(TransactionTabInteractor.self) { r in
+      TransactionTabInteractorImpl(
+        walletKitController: r.force(WalletKitController.self),
+        filterValidator: r.force(FilterValidator.self)
+      )
     }
 
     container.register(DocumentTabInteractor.self) { r in
@@ -57,5 +60,17 @@ public final class FeatureDashboardAssembly: Assembly {
         reachabilityController: r.force(ReachabilityController.self)
       )
     }
+
+    container.register(DocumentDetailsInteractor.self) { r in
+      DocumentDetailsInteractorImpl(
+        walletController: r.force(WalletKitController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.transient)
+
+    container.register(TransactionDetailsInteractor.self) { r in
+      TransactionDetailsInteractorImpl(walletController: r.force(WalletKitController.self))
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

@@ -13,9 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import logic_resources
-import logic_business
 
 public typealias AppRouteKey = String
 
@@ -34,7 +32,7 @@ struct ConfigUiLogicImpl: ConfigUiLogic {
 
   public var backgroundColorForScreenDictionary: [AppRouteKey: UIConfig.ToolBar] = [
     AppRoute.featureDashboardModule(.dashboard).info.key: .init(Theme.shared.color.background),
-    AppRoute.featureIssuanceModule(.issuanceDocumentDetails(config: NoConfig())).info.key: .init(Theme.shared.color.background)
+    AppRoute.featureDashboardModule(.documentDetails(id: "")).info.key: .init(Theme.shared.color.background)
   ]
 
   public var dashboardRoute: AppRoute {

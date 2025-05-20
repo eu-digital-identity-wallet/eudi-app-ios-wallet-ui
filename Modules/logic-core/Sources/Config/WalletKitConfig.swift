@@ -101,7 +101,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
         )
     case .DEV:
         .init(
-          issuerUrl: "https://demo-utsteder.test.eidas2sandkasse.net",
+          issuerUrl: "https://dev.issuer.eudiw.dev",
           clientId: "wallet-dev",
           redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
@@ -118,9 +118,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
       "pidissuerca02_lu",
       "pidissuerca02_nl",
       "pidissuerca02_pt",
-      "pidissuerca02_ut",
-      "Cert1",
-      "Cert2"
+      "pidissuerca02_ut"
     ]
     let certsData: [Data] = certificates.compactMap {
       Data(name: $0, ext: "der")

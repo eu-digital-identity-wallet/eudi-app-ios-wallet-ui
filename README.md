@@ -35,7 +35,7 @@ The EUDIW project provides an iOS app through this repository. Please refer to t
 
 The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit) and a list of available libraries to facilitate remote presentation, proximity, and issuing test/demo functionality following the specification of the [ARF](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework), including:
  
-- OpenID4VP - draft 23 (remote presentation), presentation exchange v2.0,
+- OpenID4VP - draft 24 (remote presentation), presentation exchange v2.0, DCQL
  
 - ISO18013-5 (proximity presentation),
  
@@ -43,7 +43,7 @@ The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.co
  
 - Issuer functionality, to support development and testing, one can access an OID4VCI test/demo service for issuing at:
 
-  - [EUDI Issuer (Draft 15)](https://issuer.eudiw.dev/)
+  - [EUDI Issuer](https://issuer.eudiw.dev/)
 
   - [OpenID4VCI PID and mDL Issuer (python)](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py)
  

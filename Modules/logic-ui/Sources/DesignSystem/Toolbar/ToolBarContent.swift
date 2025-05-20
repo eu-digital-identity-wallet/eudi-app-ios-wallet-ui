@@ -16,26 +16,28 @@
 import SwiftUI
 import logic_resources
 
-public struct Action: Identifiable {
-  public let id = UUID()
-  public let title: LocalizableStringKey?
-  public let image: Image?
-  public let hasIndicator: Bool?
-  public let disabled: Bool
-  public let callback: (() -> Void)?
+public extension ToolBarContent {
+  struct Action: Identifiable {
+    public let id = UUID()
+    public let title: LocalizableStringKey?
+    public let image: Image?
+    public let hasIndicator: Bool?
+    public let disabled: Bool
+    public let callback: (() -> Void)?
 
-  public init(
-    title: LocalizableStringKey? = nil,
-    image: Image? = nil,
-    hasIndicator: Bool? = nil,
-    disabled: Bool = false,
-    callback: (() -> Void)? = nil
-  ) {
-    self.title = title
-    self.image = image
-    self.hasIndicator = hasIndicator
-    self.disabled = disabled
-    self.callback = callback
+    public init(
+      title: LocalizableStringKey? = nil,
+      image: Image? = nil,
+      hasIndicator: Bool? = nil,
+      disabled: Bool = false,
+      callback: (() -> Void)? = nil
+    ) {
+      self.title = title
+      self.image = image
+      self.hasIndicator = hasIndicator
+      self.disabled = disabled
+      self.callback = callback
+    }
   }
 }
 
@@ -77,10 +79,10 @@ public struct ToolBarContent: ToolbarContent {
 }
 
 private struct ActionView: View {
-  let action: Action
+  let action: ToolBarContent.Action
   let disabled: Bool
 
-  init(action: Action, disabled: Bool) {
+  init(action: ToolBarContent.Action, disabled: Bool) {
     self.action = action
     self.disabled = disabled
   }
@@ -123,19 +125,19 @@ private struct ActionView: View {
       .toolbar {
         ToolBarContent(
           trailingActions: [
-            Action(
+            .init(
               title: .custom("State"),
               disabled: false,
               callback: {}
             ),
-            Action(
+            .init(
               title: .custom("Proceed"),
               disabled: false,
               callback: {}
             )
           ],
           leadingActions: [
-            Action(
+            .init(
               image: Image(systemName: "plus"),
               disabled: false,
               callback: {}

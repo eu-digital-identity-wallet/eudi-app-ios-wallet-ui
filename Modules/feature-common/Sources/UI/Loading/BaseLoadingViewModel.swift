@@ -119,7 +119,7 @@ open class BaseLoadingViewModel<Router: RouterHost, RequestItem: Sendable>: View
   public func toolbarContent() -> ToolBarContent {
     .init(
       leadingActions: [
-        Action(image: Theme.shared.image.xmark) {
+        .init(image: Theme.shared.image.xmark) {
           self.viewState.isCancellable ? self.onNavigate(type: .pop) : nil
         }
       ]

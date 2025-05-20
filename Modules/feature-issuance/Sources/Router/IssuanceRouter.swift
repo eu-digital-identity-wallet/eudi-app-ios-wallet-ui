@@ -34,16 +34,6 @@ public final class IssuanceRouter {
           config: config
         )
       ).eraseToAnyView()
-    case .issuanceDocumentDetails(config: let config):
-      DocumentDetailsView(
-        with: .init(
-          router: host,
-          interactor: DIGraph.resolver.force(
-            DocumentDetailsInteractor.self
-          ),
-          config: config
-        )
-      ).eraseToAnyView()
     case .issuanceSuccess(
       let config,
       let uiModels
@@ -55,7 +45,7 @@ public final class IssuanceRouter {
           deepLinkController: DIGraph.resolver.force(
             DeepLinkController.self
           ),
-          requestItems: uiModels.compactMap { $0 as? ListItemSection<Sendable> }
+          requestItems: uiModels.compactMap { $0 as? GenericListItemSection }
         )
       ).eraseToAnyView()
     case .credentialOfferRequest(let config):

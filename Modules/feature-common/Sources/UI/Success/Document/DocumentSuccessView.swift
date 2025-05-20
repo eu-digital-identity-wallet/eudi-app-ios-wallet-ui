@@ -14,7 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import logic_business
 import logic_ui
 
 public struct DocumentSuccessView<Router: RouterHost, RequestItem: Sendable>: View {
@@ -92,9 +91,9 @@ private func documents<RequestItem: Sendable>(
           items: section.listItems,
           backgroundColor: backgroundColor,
           hideSensitiveContent: false,
+          isLoading: viewState.isLoading,
           onItemClick: { onSelectionChanged($0.groupId) }
         )
-        .shimmer(isLoading: viewState.isLoading)
       }
     }
   }

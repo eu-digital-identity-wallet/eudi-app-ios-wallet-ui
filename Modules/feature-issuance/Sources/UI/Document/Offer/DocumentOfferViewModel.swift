@@ -16,9 +16,7 @@
 import Foundation
 import logic_ui
 import logic_resources
-import logic_business
 import feature_common
-import logic_core
 
 @Copyable
 struct DocumentOfferViewState: ViewState {
@@ -275,14 +273,14 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
   func toolbarContent() -> ToolBarContent {
     .init(
       trailingActions: [
-        Action(
+        .init(
           title: .issueButton
         ) {
           self.onIssueDocuments()
         }
       ],
       leadingActions: [
-        Action(
+        .init(
           title: .cancelButton
         ) {
           self.onPop()

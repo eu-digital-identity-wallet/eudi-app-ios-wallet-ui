@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Foundation
 import SwiftUI
 import logic_ui
 import logic_resources
-import logic_core
 import CodeScanner
 
 struct ScannerView<Router: RouterHost>: View {
@@ -52,7 +50,7 @@ struct ScannerView<Router: RouterHost>: View {
     .init(
       trailingActions: [],
       leadingActions: [
-        Action(image: Theme.shared.image.chevronLeft) {
+        .init(image: Theme.shared.image.chevronLeft) {
           viewModel.pop()
         }
       ]

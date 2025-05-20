@@ -13,7 +13,6 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import logic_core
 import logic_business
 import feature_common
@@ -110,7 +109,7 @@ final class ProximityInteractorImpl: ProximityInteractor {
   public func onRequestReceived() async -> ProximityRequestPartialState {
     do {
       let response = try await sessionCoordinatorHolder.getActiveProximityCoordinator().requestReceived()
-      let revokedDocuments = try await walletKitController.fetchRevokedDocuments()
+      let revokedDocuments = (try? await walletKitController.fetchRevokedDocuments()) ?? []
       let documents = response.items.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
       guard !documents.isEmpty else { return .failure(WalletCoreError.unableFetchDocuments) }
       return .success(

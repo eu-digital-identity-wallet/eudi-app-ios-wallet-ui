@@ -13,9 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import logic_core
-import logic_business
 import feature_common
 
 public struct OnlineAuthenticationRequestSuccessModel: Sendable {
@@ -45,6 +43,7 @@ public protocol PresentationInteractor: Sendable {
   func getCoordinator() -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error>
+  func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onSendResponse() async -> RemoteSentResponsePartialState
   func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator)
   func storeDynamicIssuancePendingUrl(with url: URL)
@@ -94,7 +93,7 @@ final class PresentationInteractorImpl: PresentationInteractor {
   public func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
     do {
       let response = try await sessionCoordinatorHolder.getActiveRemoteCoordinator().requestReceived()
-      let revokedDocuments = try await walletKitController.fetchRevokedDocuments()
+      let revokedDocuments = (try? await walletKitController.fetchRevokedDocuments()) ?? []
       let documents = response.items.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
       guard !documents.isEmpty else { return .failure(WalletCoreError.unableFetchDocuments) }
       return .success(
