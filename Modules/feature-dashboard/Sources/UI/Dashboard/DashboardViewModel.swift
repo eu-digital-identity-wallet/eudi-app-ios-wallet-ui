@@ -15,8 +15,6 @@
  */
 import Foundation
 import logic_ui
-import logic_business
-import logic_core
 import feature_common
 
 @Copyable
@@ -99,12 +97,8 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     isRevokedModalShowing = false
 
     router.push(
-      with: .featureIssuanceModule(
-        .issuanceDocumentDetails(
-          config: IssuanceDetailUiConfig(
-            flow: .extraDocument(documentId)
-          )
-        )
+      with: .featureDashboardModule(
+        .documentDetails(id: documentId)
       )
     )
   }

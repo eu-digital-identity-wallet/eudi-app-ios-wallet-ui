@@ -13,10 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-
 import SwiftUI
 import logic_resources
-import UIPilot
 
 public struct ContentScreenView<Content: View>: View {
 
@@ -30,6 +28,7 @@ public struct ContentScreenView<Content: View>: View {
   private let navigationTitle: LocalizableStringKey?
   private let isLoading: Bool
   private let toolbarContent: ToolBarContent?
+  private let notificationAction: NotificationAction?
 
   public init(
     padding: CGFloat = Theme.shared.dimension.padding,
@@ -41,6 +40,7 @@ public struct ContentScreenView<Content: View>: View {
     navigationTitle: LocalizableStringKey? = nil,
     isLoading: Bool = false,
     toolbarContent: ToolBarContent? = nil,
+    notificationAction: NotificationAction? = nil,
     @ViewBuilder content: () -> Content
   ) {
     self.content = content()
@@ -53,6 +53,7 @@ public struct ContentScreenView<Content: View>: View {
     self.navigationTitle = navigationTitle
     self.isLoading = isLoading
     self.toolbarContent = toolbarContent
+    self.notificationAction = notificationAction
   }
 
   public var body: some View {
@@ -80,10 +81,31 @@ public struct ContentScreenView<Content: View>: View {
       }
       .disabled(isLoading)
     }
+    .scrollIndicators(.hidden)
     .background(background)
     .if(allowBackGesture == false) {
       $0.navigationBarBackButtonHidden()
     }
+    .if(notificationAction != nil) {
+      $0.onReceive(NotificationCenter.default.publisher(for: notificationAction!.name)) { data in
+        notificationAction!.callback(data.userInfo)
+      }
+    }
     .fastenDynamicType()
+  }
+}
+
+public extension ContentScreenView {
+  struct NotificationAction {
+    public let name: Notification.Name
+    public let callback: ([AnyHashable: Any]?) -> Void
+
+    public init(
+      name: Notification.Name,
+      callback: @escaping ([AnyHashable: Any]?) -> Void
+    ) {
+      self.name = name
+      self.callback = callback
+    }
   }
 }

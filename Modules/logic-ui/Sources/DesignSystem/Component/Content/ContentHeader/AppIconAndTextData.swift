@@ -14,7 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import logic_resources
 
 public struct AppIconAndTextData {
   public let appIcon: Image

@@ -16,8 +16,6 @@
 import SwiftUI
 import logic_ui
 import logic_resources
-import feature_common
-import logic_business
 
 struct HomeTabView<Router: RouterHost>: View {
 
@@ -61,6 +59,7 @@ struct HomeTabView<Router: RouterHost>: View {
     .onAppear {
       viewModel.onCreate()
     }
+    .background(Theme.shared.color.background)
   }
 }
 
@@ -106,6 +105,7 @@ private func content(
     .padding(.horizontal, SPACING_MEDIUM)
   }
   .clipped()
+  .background(Theme.shared.color.background)
 }
 
 #Preview {

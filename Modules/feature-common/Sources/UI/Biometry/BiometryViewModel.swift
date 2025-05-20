@@ -13,7 +13,6 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import logic_ui
 import logic_authentication
 
@@ -176,10 +175,10 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
   }
 
   func toolbarContent() -> ToolBarContent? {
-    var leadingActions: [Action] = []
+    var leadingActions: [ToolBarContent.Action] = []
     if viewState.isCancellable {
       leadingActions.append(
-        Action(
+        .init(
           image: Theme.shared.image.chevronLeft
         ) {
           self.onPop()

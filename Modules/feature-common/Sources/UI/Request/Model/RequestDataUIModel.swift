@@ -14,7 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import logic_business
 import logic_core
 import logic_ui
 import Copyable
@@ -160,11 +159,7 @@ public extension Array where Element == RequestDataUiModel {
                 nil
               }
             }
-            return if let path = claimPath.last {
-              [path]
-            } else {
-              claimPath
-            }
+            return claimPath
           default:
             return []
           }

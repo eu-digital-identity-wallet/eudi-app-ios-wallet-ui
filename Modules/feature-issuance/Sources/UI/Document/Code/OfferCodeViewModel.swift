@@ -16,9 +16,7 @@
 import Foundation
 import logic_ui
 import logic_resources
-import logic_business
 import feature_common
-import logic_core
 
 @Copyable
 struct OfferCodeViewState: ViewState {
@@ -112,7 +110,7 @@ final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeV
     .init(
       trailingActions: [],
       leadingActions: [
-        Action(image: Theme.shared.image.chevronLeft) {
+        .init(image: Theme.shared.image.chevronLeft) {
           self.onPop()
         }
       ]

@@ -14,7 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import logic_business
 import logic_resources
 
 public struct SideMenuItemUIModel: Identifiable {
@@ -25,7 +24,7 @@ public struct SideMenuItemUIModel: Identifiable {
   public let isShareLink: Bool
   public let action: () -> Void
 
-  public init(
+  init(
     id: String = UUID().uuidString,
     title: LocalizableStringKey,
     showDivider: Bool = true,

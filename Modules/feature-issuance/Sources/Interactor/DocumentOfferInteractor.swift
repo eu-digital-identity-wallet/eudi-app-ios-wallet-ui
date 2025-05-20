@@ -13,8 +13,6 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_ui
 import logic_resources
 import feature_common
 import logic_business
@@ -223,7 +221,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
   func fetchStoredDocuments(documentIds: [String]) async -> OfferDocumentsPartialState {
     let documents = walletController.fetchDocuments(with: documentIds)
     let documentsDetails = documents.compactMap {
-      $0.transformToDocumentDetailsUi(isSensitive: false)
+      $0.transformToDocumentUi(isSensitive: false)
     }
 
     if documentsDetails.isEmpty {
@@ -298,7 +296,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
   private func retrieveDocumentSuccessRoute(
     successNavigation: UIConfig.TwoWayNavigationType,
-    documents: [DocumentDetailsUIModel]
+    documents: [DocumentUIModel]
   ) -> AppRoute {
     var navigationType: UIConfig.DeepLinkNavigationType {
       return switch successNavigation {
@@ -347,6 +345,6 @@ public enum OfferDynamicIssuancePartialState: Sendable {
 }
 
 public enum OfferDocumentsPartialState: Sendable {
-  case success([DocumentDetailsUIModel])
+  case success([DocumentUIModel])
   case failure(Error)
 }

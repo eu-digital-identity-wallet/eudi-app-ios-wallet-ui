@@ -183,7 +183,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   func toolbarContent() -> ToolBarContent {
     .init(
       trailingActions: [
-        Action(
+        .init(
           title: .shareButton,
           disabled: !viewState.allowShare
         ) {
@@ -191,7 +191,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         }
       ],
       leadingActions: [
-        Action(
+        .init(
           image: Theme.shared.image.chevronLeft) {
             self.onPop()
           }

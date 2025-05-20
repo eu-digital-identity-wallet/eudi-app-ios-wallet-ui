@@ -13,9 +13,6 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-import logic_ui
-import logic_resources
 import feature_common
 
 @Copyable
@@ -64,7 +61,7 @@ final class HomeTabViewModel<Router: RouterHost>: ViewModel<Router, HomeTabState
       .init(
         trailingActions: nil,
         leadingActions: [
-          Action(image: Theme.shared.image.menuIcon) {
+          .init(image: Theme.shared.image.menuIcon) {
             self.onMyWallet()
           }
         ]

@@ -62,7 +62,7 @@ final class TestProximityInteractor: EudiTest {
     self.presentationSessionCoordinator = nil
   }
   
-  func testOnDeviceEngagement_WhenInteractorMethodCalled_ThenVerifyCoordinatorInitializedAndState() async {
+  func testOnDeviceEngagement_WhenCoordinatorInitialize_ThenVerifyCoordinatorInitializedAndState() async {
     // Given
     stub(presentationSessionCoordinator) { mock in
       when(mock.initialize()).thenDoNothing()
@@ -73,7 +73,7 @@ final class TestProximityInteractor: EudiTest {
     verify(presentationSessionCoordinator).initialize()
   }
   
-  func testGetSessionStatePublisher_WhenInteractorMethodCalledAndCoordinatorIsValid_ThenVerifyStateSuccess() async {
+  func testGetSessionStatePublisher_WhenCoordinatorIsValid_ThenVerifyStateSuccess() async {
     // Given
     let sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> = SendableCurrentValueSubject(.loading)
     let stream: AsyncStream<PresentationState> = AsyncStream { completion in }
@@ -95,7 +95,7 @@ final class TestProximityInteractor: EudiTest {
     }
   }
   
-  func testGetSessionStatePublisher_WhenInteractorMethodCalledAndCoordinatorIsNotValid_ThenVerifyStateFailure() async {
+  func testGetSessionStatePublisher_WhenCoordinatorIsNotValid_ThenVerifyStateFailure() async {
     // Given
     let expectedError = RuntimeError.genericError
     stub(sessionHolder) { mock in
@@ -112,7 +112,7 @@ final class TestProximityInteractor: EudiTest {
     }
   }
   
-  func testGetCoordinator_WhenInteractorMethodCalledAndCoordinatorIsValid_ThenVerifyStateSuccess() async {
+  func testGetCoordinator_WhenCoordinatorIsValid_ThenVerifyStateSuccess() async {
     // When
     let state = interactor.getCoordinator()
     // Then
@@ -124,7 +124,7 @@ final class TestProximityInteractor: EudiTest {
     }
   }
   
-  func testGetCoordinator_WhenInteractorMethodCalledAndCoordinatorIsNotValid_ThenVerifyStateSuccess() async {
+  func testGetCoordinator_WhenCoordinatorIsNotValid_ThenVerifyStateSuccess() async {
     // Given
     let expectedError = RuntimeError.genericError
     stub(sessionHolder) { mock in
@@ -208,7 +208,7 @@ final class TestProximityInteractor: EudiTest {
     verify(presentationSessionCoordinator).startQrEngagement()
   }
   
-  func testStopPresentation_WhenInteractorMethodCalled_ThenVerifyWalletKitControllerStopPresentation() async {
+  func testStopPresentation_WhenWalletKitControllerStopPresenation_ThenVerifyWalletKitControllerStopPresentation() async {
     // Given
     stub(walletKitController) { mock in
       when(mock.stopPresentation()).thenDoNothing()
