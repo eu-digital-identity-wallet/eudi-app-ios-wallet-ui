@@ -66,7 +66,7 @@ public struct TextConfig {
   }
 }
 
-public struct ContentHeader: View {
+public struct ContentHeaderView: View {
   private let config: ContentHeaderConfig
 
   public init(config: ContentHeaderConfig) {
@@ -75,12 +75,12 @@ public struct ContentHeader: View {
 
   public var body: some View {
     VStack(alignment: .center, spacing: SPACING_MEDIUM) {
-      AppIconAndText(
+      AppIconAndTextView(
         appIconAndTextData: config.appIconAndTextData
       )
 
       if let description = config.description {
-        WrapText(
+        WrapTextView(
           text: description,
           textConfig: config.descriptionTextConfig ?? TextConfig(
             font: Theme.shared.font.bodyLarge.font,
@@ -94,7 +94,7 @@ public struct ContentHeader: View {
       }
 
       if let mainText = config.mainText {
-        WrapText(
+        WrapTextView(
           text: mainText,
           textConfig: config.mainTextConfig ?? TextConfig(
             font: Theme.shared.font.headlineMedium.font,
@@ -124,7 +124,7 @@ public struct ContentHeader: View {
       }
 
       if let relyingPartyData = config.relyingPartyData {
-        RelyingParty(relyingPartyData: relyingPartyData)
+        RelyingPartyView(relyingPartyData: relyingPartyData)
           .padding(.vertical, SPACING_SMALL)
       }
     }
@@ -133,7 +133,7 @@ public struct ContentHeader: View {
 }
 
 #Preview {
-  ContentHeader(
+  ContentHeaderView(
     config: ContentHeaderConfig(
       appIconAndTextData: AppIconAndTextData(
         appIcon: Image(systemName: "app"),

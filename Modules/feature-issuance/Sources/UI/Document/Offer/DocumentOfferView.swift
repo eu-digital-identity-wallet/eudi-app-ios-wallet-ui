@@ -69,7 +69,7 @@ private func scrollableContent(
   ScrollView {
     VStack(spacing: .zero) {
 
-      ContentHeader(
+      ContentHeaderView(
         config: viewState.contentHeaderConfig
       )
 
@@ -102,7 +102,7 @@ private func noDocumentsFound(
   viewState: DocumentOfferViewState
 ) -> some View {
   VStack(spacing: .zero) {
-    ContentHeader(
+    ContentHeaderView(
       config: viewState.contentHeaderConfig
     )
     Spacer()

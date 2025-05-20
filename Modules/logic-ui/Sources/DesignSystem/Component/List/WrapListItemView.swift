@@ -128,7 +128,7 @@ public struct WrapListItemView: View {
           }
           .frame(alignment: .trailing)
         case .checkbox(let enabled, let isChecked, let onToggle):
-          WrapCheckbox(
+          WrapCheckboxView(
             checkboxData: CheckboxData(
               isChecked: isChecked,
               enabled: enabled,

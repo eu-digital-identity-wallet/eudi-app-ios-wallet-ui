@@ -34,7 +34,7 @@ public struct AppIconAndTextData {
   }
 }
 
-public struct AppIconAndText: View {
+public struct AppIconAndTextView: View {
   private let appIconAndTextData: AppIconAndTextData
 
   public init(

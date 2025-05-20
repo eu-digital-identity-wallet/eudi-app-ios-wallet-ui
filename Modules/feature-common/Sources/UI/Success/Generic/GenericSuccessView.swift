@@ -42,7 +42,7 @@ private func content(
   onButtonClicked: @escaping (UIConfig.Success.Button) -> Void
 ) -> some View {
 
-  ContentHeader(
+  ContentHeaderView(
     config: ContentHeaderConfig(
       appIconAndTextData: AppIconAndTextData(
         appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,

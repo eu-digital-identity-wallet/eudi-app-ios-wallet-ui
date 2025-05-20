@@ -16,21 +16,30 @@
 import SwiftUI
 import logic_resources
 
-public struct WrapText: View {
-  private let text: LocalizableStringKey
-  private let textConfig: TextConfig
+public struct ListDividerView: View {
 
-  public init(text: LocalizableStringKey, textConfig: TextConfig) {
-    self.text = text
-    self.textConfig = textConfig
+  private let backgroundColor: Color
+  private let height: CGFloat
+  private let spacing: CGFloat
+
+  public init(
+    backgroundColor: Color = Theme.shared.color.onSurfaceVariant.opacity(0.2),
+    height: CGFloat = 1,
+    spacing: CGFloat = SPACING_MEDIUM
+  ) {
+    self.backgroundColor = backgroundColor
+    self.height = height
+    self.spacing = spacing
   }
 
   public var body: some View {
-    Text(text)
-      .font(textConfig.font)
-      .foregroundColor(textConfig.color)
-      .multilineTextAlignment(textConfig.textAlign)
-      .lineLimit(textConfig.maxLines)
-      .fontWeight(textConfig.fontWeight)
+    Rectangle()
+      .fill(backgroundColor)
+      .frame(height: height)
+      .padding(.horizontal, spacing)
   }
+}
+
+#Preview {
+  ListDividerView()
 }

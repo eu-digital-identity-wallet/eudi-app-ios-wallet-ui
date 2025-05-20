@@ -41,7 +41,7 @@ public struct RelyingPartyData {
   }
 }
 
-public struct RelyingParty: View {
+public struct RelyingPartyView: View {
   private let relyingPartyData: RelyingPartyData
 
   public init(relyingPartyData: RelyingPartyData) {
@@ -70,7 +70,7 @@ public struct RelyingParty: View {
       }
 
       if let name = relyingPartyData.name {
-        WrapText(
+        WrapTextView(
           text: name,
           textConfig: relyingPartyData.nameTextConfig ?? TextConfig(
             font: Theme.shared.font.bodyLarge.font,
@@ -90,7 +90,7 @@ public struct RelyingParty: View {
       }
 
       if let description = relyingPartyData.description {
-        WrapText(
+        WrapTextView(
           text: description,
           textConfig: relyingPartyData.descriptionTextConfig ?? TextConfig(
             font: Theme.shared.font.bodyMedium.font,
