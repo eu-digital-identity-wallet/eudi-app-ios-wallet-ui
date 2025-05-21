@@ -44,7 +44,7 @@ public struct TransactionDetailsListItemsView: View {
         }
       )
       if index < listItems.count - 1 {
-        ListDivider()
+        ListDividerView()
       }
     }
   }

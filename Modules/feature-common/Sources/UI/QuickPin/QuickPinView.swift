@@ -60,7 +60,7 @@ private func content(
   onButtonClick: @escaping () -> Void
 ) -> some View {
 
-  ContentHeader(
+  ContentHeaderView(
     config: ContentHeaderConfig(
       appIconAndTextData: AppIconAndTextData(
         appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,

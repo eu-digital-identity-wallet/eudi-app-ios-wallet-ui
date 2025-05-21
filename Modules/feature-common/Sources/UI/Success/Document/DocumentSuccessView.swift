@@ -48,7 +48,7 @@ private func content<RequestItem: Sendable>(
   ScrollView {
 
     VStack(spacing: .zero) {
-      ContentHeader(
+      ContentHeaderView(
         config: ContentHeaderConfig(
           appIconAndTextData: AppIconAndTextData(
             appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,

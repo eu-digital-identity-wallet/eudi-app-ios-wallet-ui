@@ -15,183 +15,57 @@
  */
 import SwiftUI
 import logic_resources
-import logic_business
 
-public struct WrapCheckBoxView: View {
+public struct CheckboxData {
+  public let isChecked: Bool
+  public let enabled: Bool
+  public let onCheckedChange: ((Bool) -> Void)?
+}
 
-  enum Value {
-    case string(String)
-    case image(Image)
-  }
-
-  public typealias TapListener = ((String) -> Void)?
-
-  let isSelected: Bool
-  let isVisible: Bool
-  let isEnabled: Bool
-  let isLoading: Bool
-  let id: String
-  let title: String
-  let value: Value
-  let onTap: TapListener
-
-  var checkBoxColor: Color {
-    Theme.shared.color.primary
-  }
-
-  var titleTextColor: Color {
-    if self.isEnabled {
-      Theme.shared.color.onSurface
-    } else {
-      Theme.shared.color.onSurface
-    }
-  }
+public struct WrapCheckboxView: View {
+  private let checkboxData: CheckboxData
+  private let size: CGFloat
 
   public init(
-    isSelected: Bool,
-    isVisible: Bool,
-    isEnabled: Bool,
-    isLoading: Bool,
-    id: String,
-    title: String,
-    value: Any,
-    onTap: TapListener = nil
+    checkboxData: CheckboxData,
+    size: CGFloat = 24
   ) {
-    self.isSelected = isSelected
-    self.isVisible = isVisible
-    self.isEnabled = isEnabled
-    self.isLoading = isLoading
-    self.id = id
-    self.title = title
-    switch value {
-    case let value as Image:
-      self.value = .image(value)
-    case let value as String:
-      self.value = .string(value)
-    default:
-      self.value = .string("")
-    }
-    self.onTap = onTap
+    self.checkboxData = checkboxData
+    self.size = size
   }
-
-  @ViewBuilder
-  private var contentValue: some View {
-    switch value {
-    case .string(let value):
-      Text(value)
-        .typography(Theme.shared.font.titleMedium)
-        .foregroundStyle(Theme.shared.color.onSurface)
-    case .image(let image):
-      image
-        .resizable()
-        .aspectRatio(contentMode: .fit)
-        .frame(maxHeight: 50)
-    }
-  }
-
   public var body: some View {
-
-    HStack(spacing: SPACING_SMALL) {
-
-      let image: Image = self.isSelected
-      ? Theme.shared.image.checkmarkSquareFill
-      : Theme.shared.image.square
-
-      image
+    Button {
+      if checkboxData.enabled {
+        checkboxData.onCheckedChange?(!checkboxData.isChecked)
+      }
+    } label: {
+      checkmarkSquare
         .resizable()
-        .scaledToFit()
-        .frame(height: 25)
-        .foregroundStyle(self.checkBoxColor)
+        .frame(width: size, height: size)
+        .foregroundColor(checkboxData.enabled ? Theme.shared.color.primary : Theme.shared.color.secondary)
+    }
+    .disabled(!checkboxData.enabled)
+  }
 
-      if !self.isVisible {
-        Text(self.title)
-          .typography(Theme.shared.font.titleMedium)
-          .foregroundStyle(self.titleTextColor)
-      } else {
-        VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
+  private var checkmarkSquare: Image {
+    checkboxData.isChecked ? Theme.shared.image.checkmarkSquareFill : Theme.shared.image.square
+  }
+}
 
-          Text(self.title)
-            .typography(Theme.shared.font.bodyMedium)
-            .foregroundStyle(Theme.shared.color.onSurface)
+struct WrapCheckbox_Previews: PreviewProvider {
+  @State static var isChecked: Bool = true
 
-          contentValue
+  static var previews: some View {
+    WrapCheckboxView(
+      checkboxData: CheckboxData(
+        isChecked: isChecked,
+        enabled: true,
+        onCheckedChange: { newValue in
+          isChecked = newValue
         }
-      }
-
-      Spacer()
-    }
-    .frame(maxWidth: .infinity)
-    .if(self.onTap != nil && self.isEnabled && !self.isLoading) {
-      $0.onTapGesture {
-        self.onTap?(self.id)
-      }
-    }
-    .disabled(!self.isEnabled || self.isLoading)
-    .shimmer(isLoading: self.isLoading)
-    .animation(.easeInOut, value: self.isVisible)
-  }
-}
-
-struct WrapCheckBoxViewPreview: View {
-  var body: some View {
-    VStack {
-      WrapCheckBoxView(
-        isSelected: false,
-        isVisible: true,
-        isEnabled: true,
-        isLoading: false,
-        id: "1",
-        title: "Title",
-        value: "title"
       )
-
-      WrapCheckBoxView(
-        isSelected: true,
-        isVisible: true,
-        isEnabled: true,
-        isLoading: false,
-        id: "1",
-        title: "Title",
-        value: "title"
-      )
-
-      WrapCheckBoxView(
-        isSelected: true,
-        isVisible: false,
-        isEnabled: true,
-        isLoading: false,
-        id: "1",
-        title: "Title",
-        value: "title"
-      )
-
-      WrapCheckBoxView(
-        isSelected: true,
-        isVisible: false,
-        isEnabled: true,
-        isLoading: true,
-        id: "1",
-        title: "Title",
-        value: "title"
-      )
-
-      WrapCheckBoxView(
-        isSelected: false,
-        isVisible: true,
-        isEnabled: false,
-        isLoading: false,
-        id: "1",
-        title: "Title",
-        value: "title"
-      )
-    }
+    )
     .padding()
-  }
-}
-
-#Preview {
-  Group {
-    WrapCheckBoxViewPreview().lightModePreview()
-    WrapCheckBoxViewPreview().darkModePreview()
+    .previewLayout(.sizeThatFits)
   }
 }

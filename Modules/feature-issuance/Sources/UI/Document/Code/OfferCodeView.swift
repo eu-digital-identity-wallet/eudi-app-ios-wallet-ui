@@ -82,7 +82,7 @@ private func content(
   codeIsFocused: Binding<Bool>
 ) -> some View {
 
-  ContentHeader(
+  ContentHeaderView(
     config: viewState.contentHeaderConfig
   )
 

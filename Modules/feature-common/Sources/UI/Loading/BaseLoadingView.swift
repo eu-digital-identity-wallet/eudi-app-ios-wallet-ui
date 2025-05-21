@@ -46,7 +46,7 @@ private func content(
   contentHeaderConfig: ContentHeaderConfig
 ) -> some View {
   VStack(alignment: .center, spacing: SPACING_LARGE_MEDIUM) {
-    ContentHeader(
+    ContentHeaderView(
       config: contentHeaderConfig
     )
     Spacer()

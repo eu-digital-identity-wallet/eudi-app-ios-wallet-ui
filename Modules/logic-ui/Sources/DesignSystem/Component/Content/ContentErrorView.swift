@@ -28,7 +28,7 @@ public struct ContentErrorView: View {
 
     ContentScreenView {
 
-      ContentHeaderView(dismissIcon: Theme.shared.image.xmark) {
+      ContentHeaderErrorView(dismissIcon: Theme.shared.image.xmark) {
         config.cancelAction()
       }
 

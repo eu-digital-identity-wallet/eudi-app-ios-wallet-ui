@@ -14,6 +14,7 @@
 - .*Style.swift
 - .*Styles.swift
 - .*Modifier.swift
+- .*ToolBarContent.swift
 - EasySpacer.swift
 
 # Router

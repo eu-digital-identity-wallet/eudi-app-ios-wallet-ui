@@ -65,7 +65,7 @@ private func content(
 ) -> some View {
 
   if viewState.config.displayLogo {
-    ContentHeader(
+    ContentHeaderView(
       config: viewState.contentHeaderConfig
     )
   }

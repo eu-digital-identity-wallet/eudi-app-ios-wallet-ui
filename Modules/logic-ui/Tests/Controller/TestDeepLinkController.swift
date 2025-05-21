@@ -25,7 +25,7 @@ final class TestDeepLinkController: EudiTest {
   var prefsController: MockPrefsController!
   var urlSchemaController: MockUrlSchemaController!
   var routerHost: MockRouterHost!
-  
+
   override func setUp() {
     self.prefsController = MockPrefsController()
     self.urlSchemaController = MockUrlSchemaController()
@@ -97,7 +97,7 @@ final class TestDeepLinkController: EudiTest {
     verify(prefsController).setValue(any(), forKey: Prefs.Key.cachedDeepLink)
     verify(prefsController, times(0)).remove(forKey: Prefs.Key.cachedDeepLink)
   }
-  
+
   func testHandleDeepLinkAction_WhenRouterReturnsAfterAuthorizationFlowAndActionIsOpenId4VPAndScreenNotForeground_ThenValidateCachingRemovalAndExecutionOfNavigation() async {
     // Given
     let sessionCoordinator = RemoteSessionCoordinatorImpl(
@@ -239,6 +239,33 @@ final class TestDeepLinkController: EudiTest {
     // Then
     verify(prefsController).setValue(any(), forKey: Prefs.Key.cachedDeepLink)
   }
+
+  func testHandleDeepLinkAction_WhenCredentialOfferActionAndScreenIsNotForeground_ThenPushCredentialOfferRequest() async {
+    // Given
+    let sessionCoordinator = RemoteSessionCoordinatorImpl(
+      session: Self.mockPresentationSession
+    )
+    let pendingAction = Self.mockedCredentialOfferDeepLinkAction
+
+    stubHandleDeepLink(
+      action: pendingAction,
+      route: nil,
+      isAfterAuth: true,
+      isScreenForeground: true
+    )
+
+    // When
+    await controller.handleDeepLinkAction(
+      routerHost: routerHost,
+      deepLinkExecutable: pendingAction,
+      remoteSessionCoordinator: sessionCoordinator
+    )
+
+    // Then
+    verify(prefsController, times(0)).setValue(any(), forKey: Prefs.Key.cachedDeepLink)
+    verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
+    verify(routerHost, times(0)).push(with: any())
+  }
 }
 
 private extension TestDeepLinkController {
@@ -283,7 +310,13 @@ private extension TestDeepLinkController {
     plainUrl: mockedExternalUrl,
     action: .external
   )
-  
+
+  static let mockedCredentialOfferDeepLinkAction = DeepLink.Executable(
+    link: URLComponents(url: mockedExternalUrl, resolvingAgainstBaseURL: true)!,
+    plainUrl: mockedExternalUrl,
+    action: .credential_offer
+  )
+
   static let mockedMalformedUrl: URL = URL(string: "not_a_valid_url")!
   
 }
