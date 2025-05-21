@@ -55,7 +55,6 @@ public protocol DocumentTabInteractor: Sendable {
   func updateFilters(sectionID: String, filterID: String) async
   func updateLists(filterableList: FilterableList) async
   func updateSortOrder(sortOrder: SortOrderType)
-  func createFiltersGroup() -> Filters
   func addDynamicFilters(documents: FilterableList, filters: Filters) async -> Filters
 }
 
@@ -112,7 +111,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     }
   }
 
-  func createFiltersGroup() -> Filters {
+  private func createFiltersGroup() -> Filters {
     return Filters(
       filterGroups: [
         SingleSelectionFilterGroup(
