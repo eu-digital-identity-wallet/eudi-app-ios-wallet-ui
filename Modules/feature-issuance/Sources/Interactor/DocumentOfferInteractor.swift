@@ -31,9 +31,6 @@ public protocol DocumentOfferInteractor: Sendable {
     issuerName: String,
     successNavigation: UIConfig.TwoWayNavigationType
   ) async -> OfferDynamicIssuancePartialState
-
-  func getHoldersName(for documentIdentifier: String) -> String?
-  func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableStringKey?
   func fetchStoredDocuments(documentIds: [String]) async -> OfferDocumentsPartialState
 }
 
@@ -198,24 +195,6 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
     } catch {
       return .failure(WalletCoreError.unableToIssueAndStore)
     }
-  }
-
-  public func getHoldersName(for documentIdentifier: String) -> String? {
-    guard
-      let bearerName = walletController.fetchDocument(with: documentIdentifier)?.getBearersName()
-    else {
-      return nil
-    }
-    return  "\(bearerName.first) \(bearerName.last)"
-  }
-
-  public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableStringKey? {
-    guard
-      let document = walletController.fetchDocument(with: documentIdentifier)
-    else {
-      return nil
-    }
-    return .issuanceSuccessCaption([document.displayName.orEmpty])
   }
 
   func fetchStoredDocuments(documentIds: [String]) async -> OfferDocumentsPartialState {

@@ -15,7 +15,7 @@
  */
 import logic_ui
 
-public struct AddDocumentUIModel: Identifiable, Sendable {
+public struct AddDocumentUIModel: Identifiable, Sendable, Equatable {
 
   public let id: String
   public let listItem: ListItemData

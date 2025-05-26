@@ -86,6 +86,13 @@ final class TestSystemBiometryController: EudiTest {
         receiveCompletion: { completion in
           if case let .failure(err) = completion {
             XCTAssertEqual(err, .deniedAccess)
+            XCTAssertEqual(
+              err.errorDescription,
+              NSLocalizedString(
+                "You have denied access. Please go to the settings, locate this application and turn the Face ID on",
+                comment: ""
+              )
+            )
             exp.fulfill()
           }
         },
@@ -114,6 +121,10 @@ final class TestSystemBiometryController: EudiTest {
         receiveCompletion: { completion in
           if case let .failure(err) = completion {
             XCTAssertEqual(err, .noFaceIdEnrolled)
+            XCTAssertEqual(
+              err.errorDescription,
+              NSLocalizedString("You have not enabled Face ID yet", comment: "")
+            )
             exp.fulfill()
           }
         },
@@ -139,6 +150,10 @@ final class TestSystemBiometryController: EudiTest {
         receiveCompletion: { completion in
           if case let .failure(err) = completion {
             XCTAssertEqual(err, .noFingerprintEnrolled)
+            XCTAssertEqual(
+              err.errorDescription,
+              NSLocalizedString("You have not enabled fingerprint yet", comment: "")
+            )
             exp.fulfill()
           }
         },
@@ -160,6 +175,10 @@ final class TestSystemBiometryController: EudiTest {
         receiveCompletion: { completion in
           if case let .failure(err) = completion {
             XCTAssertEqual(err, .biometryNotSupported)
+            XCTAssertEqual(
+              err.errorDescription,
+              NSLocalizedString("This device does not support biometry", comment: "")
+            )
             exp.fulfill()
           }
         },
@@ -214,6 +233,10 @@ final class TestSystemBiometryController: EudiTest {
         receiveCompletion: { completion in
           if case let .failure(err) = completion {
             XCTAssertEqual(err, .biometricError)
+            XCTAssertEqual(
+              err.errorDescription,
+              NSLocalizedString("Your biometric method has not been recognized", comment: "")
+            )
             exp.fulfill()
           }
         },

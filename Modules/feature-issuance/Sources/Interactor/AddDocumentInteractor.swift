@@ -22,9 +22,6 @@ public protocol AddDocumentInteractor: Sendable {
   func issueDocument(configId: String) async -> IssueResultPartialState
   func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState
   func getScopedDocument(configId: String) async throws -> ScopedDocument
-
-  func getHoldersName(for documentIdentifier: String) -> String?
-  func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableStringKey?
   func fetchStoredDocuments(documentIds: [String]) async -> IssueDocumentsPartialState
 }
 
@@ -115,24 +112,6 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     try await walletController.getScopedDocuments().first {
       $0.configId == configId
     } ?? ScopedDocument.empty()
-  }
-
-  public func getHoldersName(for documentIdentifier: String) -> String? {
-    guard
-      let bearerName = walletController.fetchDocument(with: documentIdentifier)?.getBearersName()
-    else {
-      return nil
-    }
-    return  "\(bearerName.first) \(bearerName.last)"
-  }
-
-  public func getDocumentSuccessCaption(for documentIdentifier: String) -> LocalizableStringKey? {
-    guard
-      let document = walletController.fetchDocument(with: documentIdentifier)
-    else {
-      return nil
-    }
-    return .issuanceSuccessCaption([document.displayName.orEmpty])
   }
 
   func fetchStoredDocuments(documentIds: [String]) async -> IssueDocumentsPartialState {
