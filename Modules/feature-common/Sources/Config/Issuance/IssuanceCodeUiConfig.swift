@@ -56,3 +56,9 @@ extension OfferedDocModel: @retroactive Equatable {
     return lhs.displayName == rhs.displayName && lhs.docType == rhs.docType
   }
 }
+
+extension OfferedIssuanceModel: @retroactive Equatable {
+  public static func == (lhs: OfferedIssuanceModel, rhs: OfferedIssuanceModel) -> Bool {
+    return lhs.issuerName == rhs.issuerName
+  }
+}

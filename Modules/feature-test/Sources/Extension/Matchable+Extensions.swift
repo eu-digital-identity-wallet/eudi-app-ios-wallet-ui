@@ -16,7 +16,29 @@
 import logic_business
 import logic_ui
 import Cuckoo
+import logic_core
 
 extension Prefs.Key: @retroactive Matchable {}
 
 extension AppRoute: @retroactive Matchable {}
+
+extension OfferedDocModel: @retroactive Matchable {
+  public var matcher: ParameterMatcher<OfferedDocModel> {
+    return ParameterMatcher { other in
+      return self.credentialConfigurationIdentifier == other.credentialConfigurationIdentifier &&
+      self.docType == other.docType &&
+      self.scope == other.scope &&
+      self.displayName == other.displayName &&
+      self.algValuesSupported == other.algValuesSupported
+    }
+  }
+}
+
+extension OfferedIssuanceModel: @retroactive Matchable {
+  public var matcher: ParameterMatcher<OfferedIssuanceModel> {
+    return ParameterMatcher { other in
+      return self.issuerName == other.issuerName &&
+      self.issuerLogoUrl == other.issuerLogoUrl
+    }
+  }
+}

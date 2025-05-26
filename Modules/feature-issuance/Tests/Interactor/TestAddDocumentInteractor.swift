@@ -58,6 +58,25 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
 
+  func testFetchScopedDocuments_whenScopedDocumentsCompare_thenReturnsSuccess() async {
+    // Given
+    stubGetScopedDocumentsSuccess(with: [
+      Constants.scopedDocument,
+      Constants.scopedDocumentNotPid
+    ])
+
+    // When
+    let result = await interactor.fetchScopedDocuments(with: .extraDocument)
+
+    // Then
+    switch result {
+    case .success(let documents):
+      XCTAssertEqual(documents.count, 2)
+    default:
+      XCTFail("Expected success but got \(result)")
+    }
+  }
+
   func testFetchScopedDocuments_whenGetScopedDocuments_thenReturnsSuccess() async {
     // Given
     stubGetScopedDocumentsSuccess(with: [
@@ -386,6 +405,55 @@ final class TestAddDocumentInteractor: EudiTest {
       XCTAssertEqual(error as! WalletCoreError, WalletCoreError.unableFetchDocument)
     default:
       XCTFail("Expected .failure but got \(result)")
+    }
+  }
+
+  func testFetchScopedDocuments_WhenDocumentsReturned_ThenReturnsSuccessMocks() async {
+    // Given
+    let scopedDocument1 = ScopedDocument(
+      name: "Document name 1",
+      issuer: "Test Issuer",
+      configId: "id",
+      isPid: true
+    )
+
+    let scopedDocument2 = ScopedDocument(
+      name: "Document name 2",
+      issuer: "Test Issuer",
+      configId: "id",
+      isPid: true
+    )
+
+    let scopedDocument3 = ScopedDocument(
+      name: "Document name 3",
+      issuer: "Test Issuer",
+      configId: "id",
+      isPid: true
+    )
+
+    let scopedDocument4 = ScopedDocument(
+      name: "Document name 4",
+      issuer: "Test Issuer",
+      configId: "id",
+      isPid: true
+    )
+
+    stubGetScopedDocumentsSuccess(with: [
+      scopedDocument1,
+      scopedDocument2,
+      scopedDocument3,
+      scopedDocument4
+    ])
+
+    // When
+    let result = await interactor.fetchScopedDocuments(with: .extraDocument)
+
+    // Then
+    switch result {
+    case .success(let documents):
+      XCTAssertEqual(documents.first?.configId, AddDocumentUIModel.mocks.first?.configId)
+    default:
+      XCTFail("Expected success but got \(result)")
     }
   }
 }

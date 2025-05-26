@@ -321,7 +321,7 @@ final class TestDocumentOfferInteractor: EudiTest {
   }
 
   func testIssueDocuments_WhenIssueDocumentsByOfferUrl_ThenReturnFailure() async {
-    //Given
+    // Given
     let config = UIConfig.TwoWayNavigationType.push(
       .featureCommonModule(
         .genericSuccess(config: UIConfig.Success(
@@ -366,7 +366,7 @@ final class TestDocumentOfferInteractor: EudiTest {
   }
 
   func testIssueDocuments_WhenIssueDocumentsByOfferUrlEmptyDocuments_ThenReturnFailure() async {
-    //Given
+    // Given
     let config = UIConfig.TwoWayNavigationType.push(
       .featureCommonModule(
         .genericSuccess(config: UIConfig.Success(
@@ -409,7 +409,7 @@ final class TestDocumentOfferInteractor: EudiTest {
   }
 
   func testIssueDocuments_WhenIssueDocumentsByOfferUrl_ThenReturnSuccess() async {
-    //Given
+    // Given
     let document = Document(
       id: "doc-id",
       docType: "type",
@@ -464,7 +464,7 @@ final class TestDocumentOfferInteractor: EudiTest {
   }
 
   func testIssueDocuments_WhenIssueDocumentsByOfferUrlauthorizePresentationUrl_ThenReturnSuccess() async {
-    //Given
+    // Given
     let document = Document(
       id: "doc-id",
       docType: "type",
@@ -513,11 +513,187 @@ final class TestDocumentOfferInteractor: EudiTest {
 
     // Then
     switch result {
-    case .partialSuccess(let documents):
-      XCTAssertNotNil(documents)
+    case .partialSuccess(let route):
+      XCTAssertNotNil(route)
     default:
       XCTFail("Expected success, but got \(result)")
     }
   }
 
+  func testIssueDocuments_WhenIssueDocumentsByOfferUrlWithDocOffers_ThenReturnSuccess() async {
+    // Given
+    let document = Document(
+      id: "doc-id",
+      docType: "type",
+      docDataFormat: .sdjwt,
+      data: Data(),
+      secureAreaName: nil,
+      createdAt: Date(),
+      metadata: nil,
+      displayName: "My Document",
+      status: .issued
+    )
+
+    let docOffers = [
+      OfferedDocModel(
+        credentialConfigurationIdentifier: "id",
+        scope: "scope",
+        displayName: "My Document",
+        algValuesSupported: []
+      )
+    ]
+
+    let config = UIConfig.TwoWayNavigationType.push(
+      .featureCommonModule(
+        .genericSuccess(config: UIConfig.Success(
+          title: .init(value: .addDocumentTitle),
+          subtitle: .addDocumentTitle,
+          buttons: [],
+          visualKind: UIConfig.Success.VisualKind.defaultIcon)
+        )
+      )
+    )
+
+    let uri = "uri"
+    let txCodeValue = "txCodeValue"
+
+    stub(walletKitController) { mock in
+      mock.issueDocumentsByOfferUrl(
+        offerUri: uri,
+        docTypes: docOffers,
+        txCodeValue: txCodeValue
+      )
+      .thenReturn([document])
+
+      when(mock.fetchDocuments(with: any())).thenReturn([Constants.euPidModel])
+    }
+
+    // When
+    let result = await interactor.issueDocuments(
+      with: uri,
+      issuerName: "issuerName",
+      docOffers: docOffers,
+      successNavigation: config,
+      txCodeValue: txCodeValue
+    )
+
+    // Then
+    switch result {
+    case .success(let route):
+      XCTAssertNotNil(route)
+    default:
+      XCTFail("Expected success, but got \(result)")
+    }
+  }
+
+  func testProcessOfferRequest_WhenResolveOfferUrlDocTypes_ThenReturnFailure() async {
+    // Given
+    let uri = "uri"
+    let exceptedError = WalletCoreError.unableToIssueAndStore
+
+    stub(walletKitController) { mock in
+      mock.resolveOfferUrlDocTypes(uriOffer: uri).thenThrow(exceptedError)
+
+      mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.euPidModel])
+    }
+
+    // When
+    let result = await interactor.processOfferRequest(with: uri)
+
+    // Then
+    switch result {
+    case .failure(let error):
+      XCTAssertEqual(error as! WalletCoreError, WalletCoreError.unableToIssueAndStore)
+    default:
+      XCTFail("Expected success, but got \(result)")
+    }
+  }
+
+  func testOfferedIssuance_WhenModelTransforms_ThenToDocumentOfferUIModel() {
+    let docModel = OfferedDocModel(
+      credentialConfigurationIdentifier: "id",
+      docType: "type",
+      scope: "scope",
+      displayName: "Display Name",
+      algValuesSupported: []
+    )
+
+    let issuanceModel = OfferedIssuanceModel(
+      issuerName: "Issuer",
+      issuerLogoUrl: "https://logo.com/logo.png",
+      docModels: [docModel],
+      txCodeSpec: TxCode(inputMode: .text, length: 6, description: "description")
+    )
+
+    let offerUI = issuanceModel.transformToDocumentOfferUi()
+
+    XCTAssertEqual(offerUI.issuerName, "Issuer")
+    XCTAssertEqual(offerUI.issuerLogo?.absoluteString, "https://logo.com/logo.png")
+    XCTAssertEqual(offerUI.uiOffers.count, 1)
+    XCTAssertEqual(offerUI.uiOffers.first?.documentName, "Display Name")
+    XCTAssertEqual(offerUI.txCode?.isRequired, true)
+    XCTAssertEqual(offerUI.txCode?.codeLenght, 6)
+  }
+
+  func testDocumentOffer_MockUIModel() {
+    // Given
+    let mock = DocumentOfferUIModel.mock()
+
+    // When / Then
+    XCTAssertEqual(mock.issuerName, LocalizableStringKey.unknownIssuer.toString)
+    XCTAssertNil(mock.issuerLogo)
+    XCTAssertNil(mock.txCode)
+    XCTAssertEqual(mock.uiOffers.count, 5)
+    XCTAssertEqual(mock.uiOffers.first?.documentName, "Document Name")
+
+    for offer in mock.uiOffers {
+      XCTAssertEqual(offer.listItem.mainText.toString, "Document Name")
+    }
+    XCTAssertEqual(mock.docOffers.count, 0)
+  }
+
+  func testProcessOfferRequest_WhenResolveOfferUrlDocTypes_ThenReturnSuccess() async {
+    // Given
+    let expectedDocumentOfferUIModel = DocumentOfferUIModel(
+      issuerName: "issuerName",
+      issuerLogo: URL(string: "issuerLogoUrl"),
+      txCode: DocumentOfferUIModel.TxCode(isRequired: true, codeLenght: 6),
+      uiOffers: [],
+      docOffers: []
+    )
+
+    let uri = "uri"
+    let docModels = [
+      OfferedDocModel(
+        credentialConfigurationIdentifier: "id",
+        scope: "scope",
+        displayName: "My Document",
+        algValuesSupported: []
+      )
+    ]
+
+    let offeredIssuanceModel =  OfferedIssuanceModel(
+      issuerName: "issuerName",
+      issuerLogoUrl: "issuerLogoUrl",
+      docModels: docModels,
+      txCodeSpec: nil
+    )
+
+    stub(walletKitController) { mock in
+      mock.resolveOfferUrlDocTypes(uriOffer: uri).thenReturn(offeredIssuanceModel)
+
+      mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.euPidModel])
+    }
+
+    // When
+    let result = await interactor.processOfferRequest(with: uri)
+
+    // Then
+    switch result {
+    case .success(let doc):
+      XCTAssertEqual(doc.issuerName, expectedDocumentOfferUIModel.issuerName)
+    default:
+      XCTFail("Expected success, but got \(result)")
+    }
+  }
 }
