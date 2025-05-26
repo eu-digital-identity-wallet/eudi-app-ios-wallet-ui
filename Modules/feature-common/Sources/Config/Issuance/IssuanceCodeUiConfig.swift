@@ -50,9 +50,3 @@ public struct IssuanceCodeUiConfig: UIConfigType, Equatable {
     self.navigationCancelType = navigationCancelType
   }
 }
-
-extension OfferedDocModel: @retroactive Equatable {
-  public static func == (lhs: OfferedDocModel, rhs: OfferedDocModel) -> Bool {
-    return lhs.displayName == rhs.displayName && lhs.docType == rhs.docType
-  }
-}

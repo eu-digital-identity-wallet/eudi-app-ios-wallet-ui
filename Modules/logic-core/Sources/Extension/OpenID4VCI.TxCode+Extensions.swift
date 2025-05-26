@@ -13,16 +13,12 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-@testable import feature_issuance
-@testable import feature_test
-@testable import logic_test
+import OpenID4VCI
 
-final class BaseTests: EudiTest {
-    func testExample() throws {
-        // XCTest Documentation
-        // https://developer.apple.com/documentation/xctest
-
-        // Defining Test Cases and Test Methods
-        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
-    }
+extension TxCode: @retroactive Equatable {
+  public static func == (lhs: TxCode, rhs: TxCode) -> Bool {
+    return lhs.inputMode == rhs.inputMode
+    && lhs.length == rhs.length
+    && lhs.inputMode == rhs.inputMode
+  }
 }

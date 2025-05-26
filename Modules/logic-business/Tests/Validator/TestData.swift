@@ -186,42 +186,42 @@ let multipleSelectionGroupAllSelected = MultipleSelectionFilterGroup(
 
 let filtersWithSingleSelection = Filters(
   filterGroups: [singleSelectionGroup],
-  sortOrder: .ascending,
+  sortOrder: .ascending
 )
 
 let filtersWithMultipleSelectionSize3 = Filters(
   filterGroups: [multipleSelectionGroupSize3],
-  sortOrder: .descending,
+  sortOrder: .descending
 )
 
 let filtersWithMultipleSelectionSize4 = Filters(
   filterGroups: [multipleSelectionGroupSize4],
-  sortOrder: .descending,
+  sortOrder: .descending
 )
 
 let filtersWithMultipleSelection = Filters(
   filterGroups: [multipleSelectionGroup],
-  sortOrder: .descending,
+  sortOrder: .descending
 )
 
 let filtersWithReversibleSingleSelection = Filters(
   filterGroups: [reversibleSelectionGroup],
-  sortOrder: .descending,
+  sortOrder: .descending
 )
 
 let filtersWithReversibleMultipleSelection = Filters(
   filterGroups: [reversibleMultiSelectionGroup],
-  sortOrder: .descending,
+  sortOrder: .descending
 )
 
 let filtersWithMultipleSelectionNoSelection = Filters(
   filterGroups: [multipleSelectionGroupNoSelection],
-  sortOrder: .descending,
+  sortOrder: .descending
 )
 
 let filtersWithMultipleSelectionAllSelected = Filters(
   filterGroups: [multipleSelectionGroupAllSelected],
-  sortOrder: .ascending,
+  sortOrder: .ascending
 )
 
 let filterableList = FilterableList(

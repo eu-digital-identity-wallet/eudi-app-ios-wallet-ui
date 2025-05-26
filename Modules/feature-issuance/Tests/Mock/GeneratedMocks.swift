@@ -1084,26 +1084,6 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
         )
     }
     
-    public func getHoldersName(for p0: String) -> String? {
-        return cuckoo_manager.call(
-            "getHoldersName(for p0: String) -> String?",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.getHoldersName(for: p0)
-        )
-    }
-    
-    public func getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey? {
-        return cuckoo_manager.call(
-            "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.getDocumentSuccessCaption(for: p0)
-        )
-    }
-    
     public func fetchStoredDocuments(documentIds p0: [String]) async -> IssueDocumentsPartialState {
         return await cuckoo_manager.call(
             "fetchStoredDocuments(documentIds p0: [String]) async -> IssueDocumentsPartialState",
@@ -1149,22 +1129,6 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractor.self,
                 method: "getScopedDocument(configId p0: String) async throws -> ScopedDocument",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getHoldersName<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(String), String?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractor.self,
-                method: "getHoldersName(for p0: String) -> String?",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(String), LocalizableStringKey?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractor.self,
-                method: "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
                 parameterMatchers: matchers
             ))
         }
@@ -1239,30 +1203,6 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
         
         
         @discardableResult
-        func getHoldersName<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(String), String?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "getHoldersName(for p0: String) -> String?",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(String), LocalizableStringKey?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
         func fetchStoredDocuments<M1: Cuckoo.Matchable>(documentIds p0: M1) -> Cuckoo.__DoNotUse<([String]), IssueDocumentsPartialState> where M1.MatchedType == [String] {
             let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
@@ -1293,14 +1233,6 @@ public class AddDocumentInteractorStub:AddDocumentInteractor, @unchecked Sendabl
     
     public func getScopedDocument(configId p0: String) async throws -> ScopedDocument {
         return DefaultValueRegistry.defaultValue(for: (ScopedDocument).self)
-    }
-    
-    public func getHoldersName(for p0: String) -> String? {
-        return DefaultValueRegistry.defaultValue(for: (String?).self)
-    }
-    
-    public func getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey? {
-        return DefaultValueRegistry.defaultValue(for: (LocalizableStringKey?).self)
     }
     
     public func fetchStoredDocuments(documentIds p0: [String]) async -> IssueDocumentsPartialState {
@@ -1371,26 +1303,6 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
         )
     }
     
-    public func getHoldersName(for p0: String) -> String? {
-        return cuckoo_manager.call(
-            "getHoldersName(for p0: String) -> String?",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.getHoldersName(for: p0)
-        )
-    }
-    
-    public func getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey? {
-        return cuckoo_manager.call(
-            "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.getDocumentSuccessCaption(for: p0)
-        )
-    }
-    
     public func fetchStoredDocuments(documentIds p0: [String]) async -> OfferDocumentsPartialState {
         return await cuckoo_manager.call(
             "fetchStoredDocuments(documentIds p0: [String]) async -> OfferDocumentsPartialState",
@@ -1428,22 +1340,6 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
             let matchers: [Cuckoo.ParameterMatcher<(String, UIConfig.TwoWayNavigationType)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentOfferInteractor.self,
                 method: "resumeDynamicIssuance(issuerName p0: String, successNavigation p1: UIConfig.TwoWayNavigationType) async -> OfferDynamicIssuancePartialState",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getHoldersName<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(String), String?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentOfferInteractor.self,
-                method: "getHoldersName(for p0: String) -> String?",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(String), LocalizableStringKey?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentOfferInteractor.self,
-                method: "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
                 parameterMatchers: matchers
             ))
         }
@@ -1506,30 +1402,6 @@ public class MockDocumentOfferInteractor: DocumentOfferInteractor, Cuckoo.Protoc
         
         
         @discardableResult
-        func getHoldersName<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(String), String?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "getHoldersName(for p0: String) -> String?",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getDocumentSuccessCaption<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(String), LocalizableStringKey?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey?",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
         func fetchStoredDocuments<M1: Cuckoo.Matchable>(documentIds p0: M1) -> Cuckoo.__DoNotUse<([String]), OfferDocumentsPartialState> where M1.MatchedType == [String] {
             let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
@@ -1556,14 +1428,6 @@ public class DocumentOfferInteractorStub:DocumentOfferInteractor, @unchecked Sen
     
     public func resumeDynamicIssuance(issuerName p0: String, successNavigation p1: UIConfig.TwoWayNavigationType) async -> OfferDynamicIssuancePartialState {
         return DefaultValueRegistry.defaultValue(for: (OfferDynamicIssuancePartialState).self)
-    }
-    
-    public func getHoldersName(for p0: String) -> String? {
-        return DefaultValueRegistry.defaultValue(for: (String?).self)
-    }
-    
-    public func getDocumentSuccessCaption(for p0: String) -> LocalizableStringKey? {
-        return DefaultValueRegistry.defaultValue(for: (LocalizableStringKey?).self)
     }
     
     public func fetchStoredDocuments(documentIds p0: [String]) async -> OfferDocumentsPartialState {
@@ -8291,10 +8155,53 @@ import Cuckoo
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/OfferedDocModel+Extensions.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/OfferedIssuanceModel+Extensions.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/OpenID4VCI.Display+Extensions.swift'
 
 import Cuckoo
 import Foundation
+import OpenID4VCI
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/OpenID4VCI.TxCode+Extensions.swift'
+
+import Cuckoo
 import OpenID4VCI
 @testable import logic_core
 @testable import logic_business
@@ -8321,7 +8228,7 @@ import Cuckoo
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/TransactionLog+Extension.swift'
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/TransactionLog+Extensions.swift'
 
 import Cuckoo
 import logic_storage
