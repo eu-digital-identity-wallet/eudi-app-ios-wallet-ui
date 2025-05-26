@@ -13,15 +13,12 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-@testable import logic_authentication
-@testable import logic_test
 
-final class BaseTests: EudiTest {
-    func testExample() throws {
-        // XCTest Documentation
-        // https://developer.apple.com/documentation/xctest
-
-        // Defining Test Cases and Test Methods
-        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
-    }
+extension OfferedIssuanceModel: @retroactive Equatable {
+  public static func == (lhs: OfferedIssuanceModel, rhs: OfferedIssuanceModel) -> Bool {
+    return lhs.issuerName == rhs.issuerName
+    && lhs.issuerLogoUrl == rhs.issuerLogoUrl
+    && lhs.docModels == rhs.docModels
+    && lhs.txCodeSpec == rhs.txCodeSpec
+  }
 }
