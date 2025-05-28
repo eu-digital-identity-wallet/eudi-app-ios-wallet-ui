@@ -18,6 +18,6 @@ import Cuckoo
 
 extension FilterableList: @retroactive Matchable {}
 
-extension SortOrderType: Matchable {}
+extension SortOrderType: @retroactive Matchable {}
 
 //extension Filters: @retroactive Matchable {}

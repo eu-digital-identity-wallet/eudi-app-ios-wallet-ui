@@ -93,7 +93,7 @@ final class TestTransactionTabInteractor: EudiTest {
     }
   }
   
-  func testInializeFilters_WhenInitializedWithFilterableList_ThenInitializesFilterValidator() async throws {
+  func testInitializeFilters_WhenInitializedWithFilterableList_ThenInitializesFilterValidator() async throws {
     // Given
     let filterableList = Self.mockFilterableList
     let minStartDate = Self.mockMinStartDate
@@ -116,7 +116,7 @@ final class TestTransactionTabInteractor: EudiTest {
     )
   }
   
-  func testInializeFilters_WhenWalletKitControllerReturnsEmptyTransactions_ThenInitializesFilterValidator() async throws {
+  func testInitializeFilters_WhenWalletKitControllerReturnsEmptyTransactions_ThenInitializesFilterValidator() async throws {
     // Given
     let filterableList = Self.mockEmptyFilterableList
     let minStartDate = Self.mockMinStartDate
@@ -139,7 +139,7 @@ final class TestTransactionTabInteractor: EudiTest {
     )
   }
   
-  func testApplyFilters_WhenFilterValidorApplyFilters_ThenApplyFiltersWasCalled() async {
+  func testApplyFilters_WhenFilterValidatorApplyFilters_ThenApplyFiltersWasCalled() async {
     // Given
     stubInitializeValidator()
     stubApplyFilters()
@@ -170,7 +170,7 @@ final class TestTransactionTabInteractor: EudiTest {
     )
   }
   
-  func testResetFilters_WhenFilterValidorResetFilters_ThenResetFiltersWasCalled() async {
+  func testResetFilters_WhenFilterValidatorResetFilters_ThenResetFiltersWasCalled() async {
     // Given
     stubInitializeValidator()
     stubResetFilters()
@@ -182,7 +182,7 @@ final class TestTransactionTabInteractor: EudiTest {
     verify(filterValidator).resetFilters()
   }
   
-  func testResetFilters_WhenFilterValidorRevertFilters_ThenRevertFiltersWasCalled() async {
+  func testRevertFilters_WhenFilterValidatorRevertFilters_ThenRevertFiltersWasCalled() async {
     // Given
     stubInitializeValidator()
     stubRevertFilters()
@@ -194,7 +194,7 @@ final class TestTransactionTabInteractor: EudiTest {
     verify(filterValidator).revertFilters()
   }
   
-  func testUpdateFilters_WhenFilterValidorUpdateFilters_ThenUpdateFiltersWasCalled() async {
+  func testUpdateFilters_WhenFilterValidatorUpdateFilters_ThenUpdateFiltersWasCalled() async {
     // Given
     stubInitializeValidator()
     stubUpdateFilters()
@@ -212,7 +212,7 @@ final class TestTransactionTabInteractor: EudiTest {
     )
   }
   
-  func testUpdateDateFilters_WhenFilterValidorUpdateDateFilters_ThenUpdateDateFiltersWasCalled() async {
+  func testUpdateDateFilters_WhenFilterValidatorUpdateDateFilters_ThenUpdateDateFiltersWasCalled() async {
     // Given
     stubInitializeValidator()
     stubUpdateDateFilter()

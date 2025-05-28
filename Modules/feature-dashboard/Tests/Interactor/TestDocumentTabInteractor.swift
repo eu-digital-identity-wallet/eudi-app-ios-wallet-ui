@@ -144,7 +144,34 @@ final class TestDocumentTabInteractor: EudiTest {
     }
   }
   
-  func testApplyFilters_WhenFilterValidorApplyFilters_ThenApplyFiltersWasCalled() async {
+  func testDeleteDeferredDocument_WhenWalletKitControllerDeleteSucceedsAndNoDocumentsRemain_ThenReturnsNoDocuments() async {
+    // Given
+    stubDeleteSucceedsNoDocuments()
+    
+    // When
+    let result = await interactor.deleteDeferredDocument(with: "some-id")
+    
+    // Then
+    XCTAssertEqual(result, .noDocuments)
+  }
+  
+  func testDeleteDeferredDocument_WhenWalletKitControllerDeleteFails_ThenReturnsFailure() async {
+    // Given
+    stubDeleteFails()
+    
+    // When
+    let result = await interactor.deleteDeferredDocument(with: "some-id")
+    
+    // Then
+    switch result {
+    case .failure(let error):
+      XCTAssertNotNil(error)
+    default:
+      XCTFail("Expected failure")
+    }
+  }
+  
+  func testApplyFilters_WhenFilterValidatorApplyFilters_ThenApplyFiltersWasCalled() async {
     // Given
     stubInitializeValidator()
     stubApplyFilters()
@@ -156,7 +183,7 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(filterValidator).applyFilters(sortOrder: Self.sortOrderAscending)
   }
   
-  func testUpdateLists_WhenDocumentsFetchedAndStateIsSuccess_ThenUsesFilterValidatoroUpdateLists() async {
+  func testUpdateLists_WhenDocumentsFetchedAndStateIsSuccess_ThenUsesFilterValidatorUpdateLists() async {
     // Given
     stubInitializeValidator()
     stubUpdateLists()
@@ -165,14 +192,14 @@ final class TestDocumentTabInteractor: EudiTest {
     await interactor.updateLists(
       filterableList: Self.mockFilterablelist
     )
-      
+    
     verify(filterValidator).updateLists(
       sortOrder: Self.sortOrderAscending,
       filterableList: Self.mockFilterablelist
     )
   }
   
-  func testResetFilters_WhenFilterValidorResetFilters_ThenResetFiltersWasCalled() async {
+  func testResetFilters_WhenFilterValidatorResetFilters_ThenResetFiltersWasCalled() async {
     // Given
     stubInitializeValidator()
     stubResetFilters()
@@ -184,7 +211,7 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(filterValidator).resetFilters()
   }
   
-  func testResetFilters_WhenFilterValidorRevertFilters_ThenRevertFiltersWasCalled() async {
+  func testRevertFilters_WhenFilterValidatorRevertFilters_ThenRevertFiltersWasCalled() async {
     // Given
     stubInitializeValidator()
     stubRevertFilters()
@@ -196,7 +223,7 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(filterValidator).revertFilters()
   }
   
-  func testUpdateFilters_WhenFilterValidorUpdateFilters_ThenUpdateFiltersWasCalled() async {
+  func testUpdateFilters_WhenFilterValidatorUpdateFilters_ThenUpdateFiltersWasCalled() async {
     // Given
     stubInitializeValidator()
     stubUpdateFilters()
@@ -214,7 +241,7 @@ final class TestDocumentTabInteractor: EudiTest {
     )
   }
   
-  func testApplySearch_WhenFilterValidorApplySearch_ThenUsesFilterValidator() async {
+  func testApplySearch_WhenFilterValidatorApplySearch_ThenUsesFilterValidator() async {
     // Given
     stubInitializeValidator()
     stubApplySearch()
@@ -285,16 +312,16 @@ private extension TestDocumentTabInteractor {
   static let mockDocumentTabUIModel: DocumentTabUIModel = .init(
     id: "document-ui-model-id",
     value:
-      .init(
-        id: "pid-document-id",
-        heading: "Digital Credentials Issuer",
-        title: "PID",
-        createdAt: Date(),
-        expiresAt: "",
-        hasExpired: false,
-        state: .issued,
-        image: .none,
-        documentCategory: .Government),
+        .init(
+          id: "pid-document-id",
+          heading: "Digital Credentials Issuer",
+          title: "PID",
+          createdAt: Date(),
+          expiresAt: "",
+          hasExpired: false,
+          state: .issued,
+          image: .none,
+          documentCategory: .Government),
     listItem: .init(mainText: .custom("PID"))
   )
   
@@ -349,6 +376,21 @@ private extension TestDocumentTabInteractor {
   func stubFetchRevokedDocuments(with revokedDocuments: [String]) {
     stub(walletKitController) { mock in
       when(mock.fetchRevokedDocuments()).thenReturn(revokedDocuments)
+    }
+  }
+  
+  func stubDeleteSucceedsNoDocuments() {
+    stub(walletKitController) { mock in
+      when(mock.fetchAllDocuments()).thenReturn([])
+      when(mock.deleteDocument(with: any(), status: any())).thenDoNothing()
+    }
+  }
+  
+  func stubDeleteFails() {
+    stub(walletKitController) { mock in
+      when(mock.deleteDocument(with: any(), status: any()))
+        .thenThrow(WalletCoreError.unableFetchDocument)
+      when(mock.fetchAllDocuments()).thenReturn([])
     }
   }
   

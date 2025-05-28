@@ -92,7 +92,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testDeleteDocument_WhenWalletKitControllerReturnsRebootNotRequired_ThenReturnsRebootFalse() async {
+  func testDeleteDocument_WhenWalletKitControllerReturnsRebootNotRequired_ThenReturnsRebootTrue() async {
     // Given
     let documentId = Constants.euPidModel.id
     let type: DocumentTypeIdentifier = .mDocPid
@@ -164,7 +164,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
   
-  func testDeleteDocument_WhenWalletKitControllerReturnsDeleteFailure_ThenReturnsError() async {
+  func testDeleteDocument_WhenWalletKitControllerReturnsDeleteSuccess_ThenSucceeds() async {
     // Given
     let documentId = "nonexistentId"
     let type: DocumentTypeIdentifier = .mDocPid

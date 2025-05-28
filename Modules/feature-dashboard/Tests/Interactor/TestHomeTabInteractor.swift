@@ -52,7 +52,7 @@ final class TestHomeTabInteractor: EudiTest {
     XCTAssertEqual(username, "John")
   }
   
-  func testGetWalletKitController_WhenIteractorReturnsWalletKitController_ThenVerifyControllerIsInjected() {
+  func testGetWalletKitController_WhenInteractorReturnsWalletKitController_ThenVerifyControllerIsInjected() {
     // When
     let result = interactor.getWalletKitController()
     

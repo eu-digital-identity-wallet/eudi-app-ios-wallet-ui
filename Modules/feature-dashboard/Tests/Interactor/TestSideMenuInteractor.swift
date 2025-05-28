@@ -61,7 +61,7 @@ final class TestSideMenuInteractor: EudiTest {
     XCTAssertEqual(result, expectedUrl)
   }
 
-  func testRetrieveChangeLogUrl_WhenConfigLogicReturnsChangeLogUrl_ThenReturnsExpectedUrl() {
+  func testRetrieveChangelogUrl_WhenConfigLogicReturnsChangelogUrl_ThenReturnsExpectedUrl() {
     // Given
     let expectedUrl = stubChangeLogUrl()
     

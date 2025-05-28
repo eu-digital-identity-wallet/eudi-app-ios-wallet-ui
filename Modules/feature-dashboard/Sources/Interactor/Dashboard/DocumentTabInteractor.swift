@@ -23,10 +23,23 @@ public enum DocumentsPartialState: Sendable {
   case failure(Error)
 }
 
-public enum DeleteDeferredPartialState: Sendable {
+public enum DeleteDeferredPartialState: Sendable, Equatable {
   case success
   case noDocuments
   case failure(Error)
+}
+
+extension DeleteDeferredPartialState {
+  public static func == (lhs: DeleteDeferredPartialState, rhs: DeleteDeferredPartialState) -> Bool {
+    switch (lhs, rhs) {
+    case (.success, .success), (.noDocuments, .noDocuments):
+      return true
+    case let (.failure(lhsError), .failure(rhsError)):
+      return lhsError.localizedDescription == rhsError.localizedDescription
+    default:
+      return false
+    }
+  }
 }
 
 public enum DocumentFiltersPartialState: Sendable {
