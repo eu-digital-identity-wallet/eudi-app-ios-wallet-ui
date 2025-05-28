@@ -549,7 +549,6 @@ final class TestProximityInteractor: EudiTest {
       XCTFail("Expected success state, got \(state)")
     }
   }
-
 }
 
 private extension TestProximityInteractor {

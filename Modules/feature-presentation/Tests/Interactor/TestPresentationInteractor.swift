@@ -487,6 +487,117 @@ final class TestPresentationInteractor: EudiTest {
       XCTFail("Wrong state \(state)")
     }
   }
+
+  func testOnSendResponse_WhenSecondGetActiveRemoteCoordinatorThrows_ThenReturnsFailure() async {
+    // Given
+    let presentationState: PresentationState = .responseToSend(Self.mockRequestItems)
+    let expectedError = PresentationSessionError.invalidState
+
+    stub(sessionCoordinatorHolder) { mock in
+      when(mock.getActiveRemoteCoordinator())
+          .thenReturn(presentationCoordinator)
+          .thenThrow(expectedError)
+    }
+    stub(presentationCoordinator) { mock in
+      when(mock.getState()).thenReturn(presentationState)
+    }
+
+    // When
+    let result = await interactor.onSendResponse()
+
+    // Then
+    switch result {
+    case .failure(let error):
+      XCTAssertEqual(error.localizedDescription, expectedError.localizedDescription)
+    default:
+      XCTFail("Expected failure, got \(result)")
+    }
+  }
+
+  func testOnRequestReceived_WhenAllDocumentsRevoked_ThenReturnsFailure() async {
+    // Given
+    let mockResponse = Self.mockPresentationRequest
+    let allDocIds = mockResponse.items.map { $0.docId }
+
+    stub(presentationCoordinator) { mock in
+      when(mock.requestReceived()).thenReturn(mockResponse)
+    }
+    stub(walletKitController) { mock in
+      when(mock.fetchRevokedDocuments()).thenReturn(allDocIds)
+    }
+
+    stub(walletKitController) { mock in
+      when(
+        mock.parseDocClaim(
+          docId: any(),
+          groupId: any(),
+          docClaim: any(),
+          type: any(),
+          parser: any()
+        )
+      ).thenReturn([])
+    }
+
+    // When
+    let result = await interactor.onRequestReceived()
+
+    // Then
+    switch result {
+    case .failure(let error):
+      XCTAssertEqual(
+        error.localizedDescription,
+        WalletCoreError.unableFetchDocuments.localizedDescription
+      )
+    default:
+      XCTFail("Expected failure, got \(result)")
+    }
+  }
+
+  func testOnRequestReceived_WhenFetchRevokedDocumentsThrows_ThenReturnsSuccess() async {
+    // Given
+    let mockResponse = Self.mockPresentationRequest
+
+    stub(presentationCoordinator) { mock in
+        when(mock.requestReceived()).thenReturn(mockResponse)
+    }
+    stub(walletKitController) { mock in
+        when(mock.fetchRevokedDocuments()).thenThrow(RuntimeError.genericError)
+    }
+    // Also stub parseDocClaim
+    stub(walletKitController) { mock in
+      when(
+        mock.parseDocClaim(
+          docId: any(),
+          groupId: any(),
+          docClaim: any(),
+          type: any(),
+          parser: any()
+        )
+      ).thenReturn([
+        .primitive(
+          id: Constants.randomIdentifier,
+          title: "elementIdentifier",
+          documentId: Constants.isoMdlModelId,
+          nameSpace: "nameSpace",
+          path: ["elementIdentifier"],
+          type: .mdoc,
+          value: .string("value"),
+          status: .available(isRequired: false)
+        )
+      ])
+    }
+
+    // When
+    let result = await interactor.onRequestReceived()
+
+    // Then
+    switch result {
+    case .success:
+      XCTAssertTrue(true)
+    default:
+      XCTFail("Expected success, got \(result)")
+    }
+  }
 }
 
 private extension TestPresentationInteractor {
