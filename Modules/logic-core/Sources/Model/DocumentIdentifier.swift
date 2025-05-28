@@ -45,5 +45,5 @@ public enum DocumentTypeIdentifier: RawRepresentable, Equatable, Sendable {
 
 private extension DocumentTypeIdentifier {
   static let mDocPidDocType = "eu.europa.ec.eudi.pid.1"
-  static let sdJwtPidDocType = "urn:eu.europa.ec.eudi:pid:1"
+  static let sdJwtPidDocType = "urn:eudi:pid:1"
 }

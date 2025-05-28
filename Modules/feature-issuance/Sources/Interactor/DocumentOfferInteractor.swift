@@ -61,10 +61,14 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
       let hasPidInOffer = offer.docModels.first(
         where: { offer in
-          let identifier = DocumentTypeIdentifier(rawValue: offer.docType.ifNilOrEmpty { offer.credentialConfigurationIdentifier })
-          // MARK: - TODO Re-activate once SD-JWT PID Rule book is in place in ARF.
-          // return identifier == .mDocPid || identifier == .sdJwtPid
-          return identifier == .mDocPid
+          let identifier = DocumentTypeIdentifier(
+            rawValue: offer.docType.ifNilOrEmpty {
+              offer.vct.ifNilOrEmpty {
+                offer.credentialConfigurationIdentifier
+              }
+            }
+          )
+          return identifier == .mDocPid || identifier == .sdJwtPid
         }
       ) != nil
 
