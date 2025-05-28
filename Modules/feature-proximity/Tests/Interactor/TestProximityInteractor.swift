@@ -420,6 +420,135 @@ final class TestProximityInteractor: EudiTest {
     verify(presentationSessionCoordinator, times(0)).getState()
     verify(presentationSessionCoordinator, times(0)).sendResponse(response: any())
   }
+
+  func testOnResponsePrepare_WhenGetActiveProximityCoordinatorThrowsError_ThenVerifyFailureState() async {
+    // Given
+    let expectedError = RuntimeError.genericError
+    let validRequestItems = Self.mockUiModels()
+
+    stub(sessionHolder) { mock in
+      when(mock.getActiveProximityCoordinator()).thenThrow(expectedError)
+    }
+
+    // When
+    let state = await interactor.onResponsePrepare(requestItems: validRequestItems)
+
+    // Then
+    switch state {
+    case .failure(let error):
+      XCTAssertEqual(error.localizedDescription, expectedError.localizedDescription)
+    default:
+      XCTFail("Expected failure state, got \(state)")
+    }
+  }
+
+  func testOnSendResponse_WhenGetActiveProximityCoordinatorThrowsError_ThenVerifyFailureState() async {
+    // Given
+    let presetationState: PresentationState = .responseToSend(Self.mockRequestItems)
+    let expectedError = PresentationSessionError.invalidState
+
+    stub(sessionHolder) { mock in
+      when(
+        mock.getActiveProximityCoordinator()
+      )
+      .thenReturn(presentationSessionCoordinator)
+      .thenThrow(expectedError)
+    }
+
+    stub(presentationSessionCoordinator) { mock in
+      when(mock.getState()).thenReturn(presetationState)
+    }
+
+    // When
+    let state = await interactor.onSendResponse()
+
+    // Then
+    switch state {
+    case .failure(let error):
+      XCTAssertEqual(
+        error.localizedDescription,
+        expectedError.localizedDescription
+      )
+    default:
+      XCTFail("Expected failure state, got \(state)")
+    }
+  }
+
+  func testOnRequestReceived_WhenAllDocumentsAreRevoked_ThenVerifyFailureState() async {
+    // Given
+    let mockResponse = Self.mockPresentationRequest
+    let revokedDocIds = mockResponse.items.map { $0.docId }
+
+    stub(presentationSessionCoordinator) { mock in
+      when(mock.requestReceived()).thenReturn(mockResponse)
+    }
+    stub(walletKitController) { mock in
+      when(mock.fetchRevokedDocuments()).thenReturn(revokedDocIds)
+    }
+
+    // When
+    let state = await interactor.onRequestReceived()
+
+    // Then
+    switch state {
+    case .failure(let error):
+      XCTAssertEqual(
+        error.localizedDescription,
+        WalletCoreError.unableFetchDocuments.localizedDescription
+      )
+    default:
+      XCTFail("Expected failure state, got \(state)")
+    }
+  }
+
+  func testOnRequestReceived_WhenFetchRevokedDocumentsThrowsAndItemsNotEmpty_ThenVerifySuccessState() async {
+    // Given
+    let mockResponse = Self.mockPresentationRequest
+
+    stub(presentationSessionCoordinator) { mock in
+      when(mock.requestReceived()).thenReturn(mockResponse)
+    }
+
+    stub(walletKitController) { mock in
+      when(mock.fetchRevokedDocuments()).thenThrow(RuntimeError.genericError)
+    }
+
+    stub(walletKitController) { mock in
+      when(
+        mock.parseDocClaim(
+          docId: any(),
+          groupId: any(),
+          docClaim: any(),
+          type: any(),
+          parser: any()
+        )
+      ).thenReturn(
+       [
+        .primitive(
+          id: Constants.randomIdentifier,
+          title: "elementIdentifier",
+          documentId: Constants.isoMdlModelId,
+          nameSpace: "nameSpace",
+          path: ["elementIdentifier"],
+          type: .mdoc,
+          value: .string("value"),
+          status: .available(isRequired: false)
+        )
+       ]
+      )
+    }
+
+    // When
+    let state = await interactor.onRequestReceived()
+
+    // Then
+    switch state {
+    case .success:
+      XCTAssertTrue(true)
+    default:
+      XCTFail("Expected success state, got \(state)")
+    }
+  }
 }
 
 private extension TestProximityInteractor {
