@@ -14,11 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 import XCTest
-import logic_core
 import OrderedCollections
-@testable import feature_dashboard
+@testable import logic_core
 @testable import logic_test
 @testable import feature_test
+@testable import feature_dashboard
+@testable import logic_business
 
 final class TestDocumentTabInteractor: EudiTest {
   
@@ -43,7 +44,7 @@ final class TestDocumentTabInteractor: EudiTest {
     self.configLogic = nil
   }
   
-  func testHasDeferredDocuments_WhenControllerReturnsValues_ThenReturnTrue() {
+  func testHasDeferredDocuments_WhenWalletKitControllerReturnsDeferredDocuments_ThenReturnsTrue() {
     // Given
     stubFetchDeferredDocuments(
       with: [
@@ -59,30 +60,36 @@ final class TestDocumentTabInteractor: EudiTest {
         )
       ]
     )
+    
     // When
     let result = interactor.hasDeferredDocuments()
+    
     // Then
     XCTAssertTrue(result)
   }
   
-  func testHasDeferredDocuments_WhenControllerReturnsNoValues_ThenReturnFalse() {
+  func testHasDeferredDocuments_WhenWalletKitControllerReturnsNoDeferredDocuments_ThenReturnsFalse() {
     // Given
     stubFetchDeferredDocuments(with: [])
+    
     // When
     let result = interactor.hasDeferredDocuments()
+    
     // Then
     XCTAssertFalse(result)
   }
   
-  func testFetchDocuments_WhenWalletKitControllerReturnsEmpty_ThenReturnError() async {
+  func testFetchDocuments_WhenWalletKitControllerReturnsEmptyDocuments_ThenReturnsError() async {
     // Given
     stubFetchRevokedDocuments(with: [])
     stubFetchDocuments(with: [])
     stubFetchIssuedDocuments(with: [])
     stubFetchDocumentsWithExclusion(with: [])
     stubFetchMainPidDocument(with: nil)
+    
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
+    
     // Then
     switch state {
     case .failure(let error):
@@ -92,7 +99,7 @@ final class TestDocumentTabInteractor: EudiTest {
     }
   }
   
-  func testFetchDocuments_WhenWalletKitControllerReturnsData_ThenReturnUiModels() async {
+  func testFetchDocuments_WhenWalletKitControllerReturnsData_ThenReturnsUiModels() async {
     // Given
     var documentsCategories: DocumentCategories {
       [
@@ -124,8 +131,10 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDocumentCategories(with: documentsCategories)
     stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
     stubFetchMainPidDocument(with: Constants.euPidModel)
+    
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
+    
     // Then
     switch state {
     case .success:
@@ -134,9 +143,199 @@ final class TestDocumentTabInteractor: EudiTest {
       XCTFail("Wrong state \(state)")
     }
   }
+  
+  func testDeleteDeferredDocument_WhenWalletKitControllerDeleteSucceedsAndNoDocumentsRemain_ThenReturnsNoDocuments() async {
+    // Given
+    stubDeleteSucceedsNoDocuments()
+    
+    // When
+    let result = await interactor.deleteDeferredDocument(with: "some-id")
+    
+    // Then
+    XCTAssertEqual(result, .noDocuments)
+  }
+  
+  func testDeleteDeferredDocument_WhenWalletKitControllerDeleteFails_ThenReturnsFailure() async {
+    // Given
+    stubDeleteFails()
+    
+    // When
+    let result = await interactor.deleteDeferredDocument(with: "some-id")
+    
+    // Then
+    switch result {
+    case .failure(let error):
+      XCTAssertNotNil(error)
+    default:
+      XCTFail("Expected failure")
+    }
+  }
+  
+  func testApplyFilters_WhenFilterValidatorApplyFilters_ThenApplyFiltersWasCalled() async {
+    // Given
+    stubInitializeValidator()
+    stubApplyFilters()
+    
+    // When
+    await interactor.applyFilters()
+    
+    // Then
+    verify(filterValidator).applyFilters(sortOrder: Self.sortOrderAscending)
+  }
+  
+  func testUpdateLists_WhenDocumentsFetchedAndStateIsSuccess_ThenUsesFilterValidatorUpdateLists() async {
+    // Given
+    stubInitializeValidator()
+    stubUpdateLists()
+    
+    //Then
+    await interactor.updateLists(
+      filterableList: Self.mockFilterablelist
+    )
+    
+    verify(filterValidator).updateLists(
+      sortOrder: Self.sortOrderAscending,
+      filterableList: Self.mockFilterablelist
+    )
+  }
+  
+  func testResetFilters_WhenFilterValidatorResetFilters_ThenResetFiltersWasCalled() async {
+    // Given
+    stubInitializeValidator()
+    stubResetFilters()
+    
+    // When
+    await interactor.resetFilters()
+    
+    // Then
+    verify(filterValidator).resetFilters()
+  }
+  
+  func testRevertFilters_WhenFilterValidatorRevertFilters_ThenRevertFiltersWasCalled() async {
+    // Given
+    stubInitializeValidator()
+    stubRevertFilters()
+    
+    // When
+    await interactor.revertFilters()
+    
+    // Then
+    verify(filterValidator).revertFilters()
+  }
+  
+  func testUpdateFilters_WhenFilterValidatorUpdateFilters_ThenUpdateFiltersWasCalled() async {
+    // Given
+    stubInitializeValidator()
+    stubUpdateFilters()
+    
+    // When
+    await interactor.updateFilters(
+      sectionID: "",
+      filterID: ""
+    )
+    
+    // Then
+    verify(filterValidator).updateFilter(
+      filterGroupId: any(),
+      filterId: any()
+    )
+  }
+  
+  func testApplySearch_WhenFilterValidatorApplySearch_ThenUsesFilterValidator() async {
+    // Given
+    stubInitializeValidator()
+    stubApplySearch()
+    
+    // When
+    await interactor.applySearch(query: "search")
+    
+    // Then
+    verify(filterValidator).applySearch(query: equal(to: "search"))
+  }
+  
+  func testOnFilterChangeState_WhenStreamEmitsResults_ThenProcessesResultsCorrectly() async {
+    // Given
+    let filterApplyResult: FilterResult = .filterApplyResult(
+      filteredList: FilterableList(items: []),
+      updatedFilters: Filters(
+        filterGroups: [],
+        sortOrder: .ascending
+      ),
+      hasDefaultFilters: true
+    )
+    let filterUpdateResult: FilterResult = .filterUpdateResult(
+      updatedFilters: Filters(
+        filterGroups: [],
+        sortOrder: .ascending
+      )
+    )
+    
+    stub(filterValidator) { stub in
+      when(stub.getFilterResultStream()).thenReturn(AsyncStream { continuation in
+        continuation.yield(FilterResultPartialState.success(filterApplyResult))
+        continuation.yield(FilterResultPartialState.success(filterUpdateResult))
+        continuation.finish()
+      })
+    }
+    
+    // When
+    let resultStream = await interactor.onFilterChangeState()
+    var results = [DocumentFiltersPartialState]()
+    
+    // Then
+    Task {
+      for try await result in resultStream {
+        results.append(result)
+      }
+      
+      XCTAssertEqual(results.count, 2)
+      if case let .filterApplyResult(transactions, sections, _) = results[0] {
+        XCTAssertTrue(transactions.isEmpty)
+        XCTAssertEqual(sections.count, 0)
+      } else {
+        XCTFail("Expected .filterApplyResult, but got \(results[0])")
+      }
+      
+      if case let .filterUpdateResult(sections) = results[1] {
+        XCTAssertEqual(sections.count, 0)
+      } else {
+        XCTFail("Expected .filterUpdateResult, but got \(results[1])")
+      }
+    }
+  }
 }
 
 private extension TestDocumentTabInteractor {
+  
+  static let sortOrderAscending: SortOrderType = .ascending
+  
+  static let mockDocumentTabUIModel: DocumentTabUIModel = .init(
+    id: "document-ui-model-id",
+    value:
+        .init(
+          id: "pid-document-id",
+          heading: "Digital Credentials Issuer",
+          title: "PID",
+          createdAt: Date(),
+          expiresAt: "",
+          hasExpired: false,
+          state: .issued,
+          image: .none,
+          documentCategory: .Government),
+    listItem: .init(mainText: .custom("PID"))
+  )
+  
+  static let mockDocumentFilterableAttributes: DocumentFilterableAttributes =
+    .init(
+      sortingKey: "pid",
+      searchTags: ["Digital Credentials Issuer","PID"]
+    )
+  
+  static let mockFilterablelist: FilterableList = .init(items: [
+    FilterableItem (
+      payload: TestDocumentTabInteractor.mockDocumentTabUIModel,
+      attributes: TestDocumentTabInteractor.mockDocumentFilterableAttributes)
+  ])
   
   func stubFetchDocuments(with documents: [DocClaimsDecodable]) {
     stub(walletKitController) { mock in
@@ -167,7 +366,7 @@ private extension TestDocumentTabInteractor {
       when(mock.fetchMainPidDocument()).thenReturn(document)
     }
   }
-
+  
   func stubFetchDocumentCategories(with categories: OrderedDictionary<DocumentCategory, [DocumentTypeIdentifier]>) {
     stub(walletKitController) { mock in
       when(mock.getDocumentCategories()).thenReturn(categories)
@@ -177,6 +376,79 @@ private extension TestDocumentTabInteractor {
   func stubFetchRevokedDocuments(with revokedDocuments: [String]) {
     stub(walletKitController) { mock in
       when(mock.fetchRevokedDocuments()).thenReturn(revokedDocuments)
+    }
+  }
+  
+  func stubDeleteSucceedsNoDocuments() {
+    stub(walletKitController) { mock in
+      when(mock.fetchAllDocuments()).thenReturn([])
+      when(mock.deleteDocument(with: any(), status: any())).thenDoNothing()
+    }
+  }
+  
+  func stubDeleteFails() {
+    stub(walletKitController) { mock in
+      when(mock.deleteDocument(with: any(), status: any()))
+        .thenThrow(WalletCoreError.unableFetchDocument)
+      when(mock.fetchAllDocuments()).thenReturn([])
+    }
+  }
+  
+  func stubInitializeValidator() {
+    stub(filterValidator) { mock in
+      when(mock.initializeValidator(
+        filters: any(),
+        filterableList: Self.mockFilterablelist)
+      )
+      .thenDoNothing()
+    }
+  }
+  
+  func stubApplyFilters() {
+    stub(filterValidator) { mock in
+      when(mock.applyFilters(sortOrder: Self.sortOrderAscending))
+        .thenDoNothing()
+    }
+  }
+  
+  func stubUpdateLists() {
+    stub(filterValidator) { mock in
+      when(mock.updateLists(
+        sortOrder: any(),
+        filterableList: any())
+      )
+      .thenDoNothing()
+    }
+  }
+  
+  func stubResetFilters() {
+    stub(filterValidator) { mock in
+      when(mock.resetFilters()).thenDoNothing()
+    }
+  }
+  
+  func stubRevertFilters() {
+    stub(filterValidator) { mock in
+      when(mock.revertFilters()).thenDoNothing()
+    }
+  }
+  
+  func stubUpdateFilters() {
+    stub(filterValidator) { mock in
+      when(mock.updateFilter(
+        filterGroupId: any(),
+        filterId: any())
+      )
+      .thenDoNothing()
+    }
+  }
+  
+  func stubApplySearch() {
+    stub(filterValidator) { mock in
+      when(mock.applySearch(
+        query: equal(to: "search"))
+      )
+      .thenDoNothing()
     }
   }
 }

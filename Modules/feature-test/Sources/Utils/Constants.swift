@@ -198,6 +198,58 @@ extension Constants {
     dataFormat: .cbor
   )
   
+  static let eudiRemoteVerifierMock: TransactionLogItem = .init(
+    id: "transactionId1",
+    transactionLogData: .presentation(
+      log: .init(
+        TransactionLog(
+          timestamp: Int64(Date().timeIntervalSince1970),
+          status: .completed,
+          errorMessage: nil,
+          rawRequest: nil,
+          rawResponse: nil,
+          relyingParty: TransactionLog.RelyingParty(
+            name: "EUDI Remote Verifier",
+            isVerified: true,
+            certificateChain: [],
+            readerAuth: nil
+          ),
+          type: .presentation,
+          dataFormat: .json,
+          sessionTranscript: nil,
+          docMetadata: nil
+        ),
+        uiCulture: Locale.current.systemLanguageCode
+      )
+    )
+  )
+  
+  static let otherRelPartyMock: TransactionLogItem = .init(
+    id: "transactionId2",
+    transactionLogData: .presentation(
+      log: .init(
+        TransactionLog(
+          timestamp: Int64(Date().addingTimeInterval(-3600).timeIntervalSince1970),
+          status: .failed,
+          errorMessage: "Some Error",
+          rawRequest: nil,
+          rawResponse: nil,
+          relyingParty: TransactionLog.RelyingParty(
+            name: "Other Relaying Party",
+            isVerified: false,
+            certificateChain: [],
+            readerAuth: nil
+          ),
+          type: .presentation,
+          dataFormat: .json,
+          sessionTranscript: nil,
+          docMetadata: nil
+        ),
+        uiCulture: Locale.current.systemLanguageCode
+      )
+    )
+  )
+  
   static let mockPresentationSession = PresentationSession(
     presentationService: MockPresentationService(
       transactionLog: mockTransactionLog,

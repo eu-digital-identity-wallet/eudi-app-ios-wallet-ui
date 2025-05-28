@@ -40,7 +40,6 @@ public protocol TransactionTabInteractor: Sendable {
     minStartDate: Date,
     maxEndDate: Date
   ) async
-  func createFiltersGroup(earliestDate: Date, latestDate: Date) -> Filters
   func applyFilters() async
   func updateLists(
     filterableList: FilterableList,
@@ -80,7 +79,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
     let transactions: FilterableList? = try await fetchFilteredTransactions()
 
     guard let transactions = transactions else {
-      return .failure(WalletCoreError.unableFetchDocuments)
+      return .failure(WalletCoreError.unableToFetchTransactionLog)
     }
 
     return .success(
@@ -103,7 +102,7 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
     await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
   }
 
-  func createFiltersGroup(earliestDate: Date, latestDate: Date) -> Filters {
+  private func createFiltersGroup(earliestDate: Date, latestDate: Date) -> Filters {
     return Filters(
       filterGroups: [
         SingleSelectionFilterGroup(

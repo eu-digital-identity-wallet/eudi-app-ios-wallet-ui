@@ -23,10 +23,23 @@ public enum DocumentsPartialState: Sendable {
   case failure(Error)
 }
 
-public enum DeleteDeferredPartialState: Sendable {
+public enum DeleteDeferredPartialState: Sendable, Equatable {
   case success
   case noDocuments
   case failure(Error)
+}
+
+extension DeleteDeferredPartialState {
+  public static func == (lhs: DeleteDeferredPartialState, rhs: DeleteDeferredPartialState) -> Bool {
+    switch (lhs, rhs) {
+    case (.success, .success), (.noDocuments, .noDocuments):
+      return true
+    case let (.failure(lhsError), .failure(rhsError)):
+      return lhsError.localizedDescription == rhsError.localizedDescription
+    default:
+      return false
+    }
+  }
 }
 
 public enum DocumentFiltersPartialState: Sendable {
@@ -55,7 +68,6 @@ public protocol DocumentTabInteractor: Sendable {
   func updateFilters(sectionID: String, filterID: String) async
   func updateLists(filterableList: FilterableList) async
   func updateSortOrder(sortOrder: SortOrderType)
-  func createFiltersGroup() -> Filters
   func addDynamicFilters(documents: FilterableList, filters: Filters) async -> Filters
 }
 
@@ -112,7 +124,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     }
   }
 
-  func createFiltersGroup() -> Filters {
+  private func createFiltersGroup() -> Filters {
     return Filters(
       filterGroups: [
         SingleSelectionFilterGroup(

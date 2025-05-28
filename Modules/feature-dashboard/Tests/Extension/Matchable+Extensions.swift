@@ -14,37 +14,8 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_business
-import EudiRQESUi
+import Cuckoo
 
-public protocol DocumentSignInteractor: Sendable {
-  func initiateSigning(url: URL) async
-}
+extension FilterableList: @retroactive Matchable {}
 
-final class DocumentSignInteractorImpl: DocumentSignInteractor {
-
-  private let configLogic: ConfigLogic
-
-  init(configLogic: ConfigLogic) {
-    self.configLogic = configLogic
-  }
-
-  func initiateSigning(url: URL) async {
-
-    let eudiRQESUi: EudiRQESUi
-
-    do {
-      eudiRQESUi = try .instance()
-    } catch {
-      eudiRQESUi = .init(config: configLogic.rqesConfig)
-    }
-
-    guard let controller = await UIApplication.shared.topViewController() else {
-      return
-    }
-
-    try? await eudiRQESUi.initiate(
-      on: controller,
-      fileUrl: url
-    )
-  }
-}
+extension SortOrderType: @retroactive Matchable {}

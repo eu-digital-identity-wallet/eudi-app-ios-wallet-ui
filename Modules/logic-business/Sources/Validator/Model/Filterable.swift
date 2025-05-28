@@ -16,10 +16,17 @@
 import Foundation
 import Copyable
 
-public protocol FilterableItemPayload: Sendable { }
+public protocol FilterableItemPayload: Sendable {
+  var id: String { get }
+}
+
+public protocol FilterableAttributes: Sendable {
+  var sortingKey: String { get }
+  var searchTags: [String] { get }
+}
 
 @Copyable
-public struct FilterableList: Sendable {
+public struct FilterableList: Sendable, Equatable {
   public let items: [FilterableItem]
 
   public init (
@@ -45,20 +52,23 @@ extension FilterableList {
   }
 }
 
-public struct FilterableItem: Sendable {
-  public let payload: FilterableItemPayload
-  public let attributes: FilterableAttributes
+public struct FilterableItem: Sendable, Equatable {
+  public let payload: any FilterableItemPayload
+  public let attributes: any FilterableAttributes
 
   public init (
-    payload: FilterableItemPayload,
-    attributes: FilterableAttributes
+    payload: any FilterableItemPayload,
+    attributes: any FilterableAttributes
   ) {
     self.payload = payload
     self.attributes = attributes
   }
 }
 
-public protocol FilterableAttributes: Sendable {
-  var sortingKey: String { get }
-  var searchTags: [String] { get }
+public extension FilterableItem {
+  static func == (lhs: FilterableItem, rhs: FilterableItem) -> Bool {
+    lhs.payload.id == rhs.payload.id
+    && lhs.attributes.searchTags == rhs.attributes.searchTags
+    && lhs.attributes.sortingKey == rhs.attributes.sortingKey
+  }
 }
