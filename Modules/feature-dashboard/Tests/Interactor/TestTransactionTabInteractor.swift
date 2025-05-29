@@ -98,7 +98,6 @@ final class TestTransactionTabInteractor: EudiTest {
     let filterableList = Self.mockFilterableList
     let minStartDate = Self.mockMinStartDate
     let maxEndDate = Self.mockMaxEndDate
-    let filters = Self.mockFilters
     
     stubInitializeValidator()
     
@@ -121,7 +120,6 @@ final class TestTransactionTabInteractor: EudiTest {
     let filterableList = Self.mockEmptyFilterableList
     let minStartDate = Self.mockMinStartDate
     let maxEndDate = Self.mockMaxEndDate
-    let filters = Self.mockFilters
     
     stubInitializeValidatorWithEmptyList()
     
@@ -321,24 +319,6 @@ private extension TestTransactionTabInteractor {
       sortingKey: "eudi remote verifier",
       searchTags: ["EUDI Remote Verifier", "PID"]
     )
-  
-  static let mockFilters: Filters = .init(
-    filterGroups: [
-      SingleSelectionFilterGroup(
-        id: "ascending_descending_group",
-        name: "order by",
-        filters: [
-          .init(
-            id: "order_by_descending",
-            name: "descending",
-            selected: true
-          )
-        ],
-        filterType: .orderBy
-      )
-    ],
-    sortOrder: .descending
-  )
   
   static let mockFilterableList: FilterableList = .init(
     items: [

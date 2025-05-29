@@ -1,5 +1,5 @@
 {
-  "originHash" : "b07cbb870192044909fb4ab344ea7595287bafc401a5d84077d7d32cba00886d",
+  "originHash" : "7bce7c6e32b37dfe8147cffdae309ce9743a26146160db9b047bf62ec0d2bd89",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "bc6c34487d03491988db0994e435fdab5c4b5209",
-        "version" : "0.11.6"
+        "revision" : "baf0df5883e89f107dd2bc82f085076ed80a1610",
+        "version" : "0.11.7"
       }
     },
     {
@@ -384,8 +384,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser",
       "state" : {
-        "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
-        "version" : "1.5.0"
+        "revision" : "011f0c765fb46d9cac61bca19be0527e99c98c8b",
+        "version" : "1.5.1"
       }
     },
     {
