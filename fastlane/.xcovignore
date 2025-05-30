@@ -7,15 +7,23 @@
 - Config.*.swift
 
 # Views/Components
-- ViewModel.swift
 - .*View.swift
-- .*ViewModel.swift
 - .*Shape.swift
 - .*Style.swift
 - .*Styles.swift
 - .*Modifier.swift
 - .*ToolBarContent.swift
 - EasySpacer.swift
+
+# ViewModel
+- ViewModel.swift
+- .*ViewModel.swift
+
+# UIModel
+- .*UIModel.swift
+
+# Data Model
+- .*Data.swift
 
 # Router
 - .*Router.swift
@@ -32,3 +40,21 @@
 
 # Provider
 - .*Provider.swift
+
+# Attribute
+- .*Attributes.swift
+
+# Controller
+- PrefsController.swift
+- ReachabilityController.swift
+- KeyChainController.swift
+- UrlSchemaController.swift
+
+# Interactor
+- DocumentSignInteractor.swift
+
+# Folders
+- Modules/logic-business/Sources/Builder
+- Modules/logic-business/Sources/Wrapper
+- Modules/logic-business/Sources/Error
+- Modules/logic-business/Sources/Validator/Model
