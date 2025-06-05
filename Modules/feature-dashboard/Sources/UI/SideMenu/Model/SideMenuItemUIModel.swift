@@ -22,6 +22,7 @@ public struct SideMenuItemUIModel: Identifiable {
   public let title: LocalizableStringKey
   public let showDivider: Bool
   public let isShareLink: Bool
+  public let isToggle: Bool
   public let action: () -> Void
 
   init(
@@ -29,12 +30,14 @@ public struct SideMenuItemUIModel: Identifiable {
     title: LocalizableStringKey,
     showDivider: Bool = true,
     isShareLink: Bool = false,
+    isToggle: Bool = false,
     action: @autoclosure @escaping () -> Void
   ) {
     self.id = id
     self.title = title
     self.showDivider = showDivider
     self.isShareLink = isShareLink
+    self.isToggle = isToggle
     self.action = action
   }
 }

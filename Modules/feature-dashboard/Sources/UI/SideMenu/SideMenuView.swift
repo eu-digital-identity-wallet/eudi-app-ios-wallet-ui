@@ -54,32 +54,14 @@ struct SideMenuView<Router: RouterHost>: View {
 private func content(viewState: SideMenuViewState) -> some View {
   VStack(spacing: SPACING_MEDIUM_SMALL) {
     ForEach(viewState.items) { item in
-      if item.isShareLink {
-        if let fileUrl = viewState.logsUrl {
-          ShareLink(item: fileUrl) {
-            TappableCellView(
-              title: .retrieveLogs,
-              showDivider: item.showDivider,
-              useOverlay: false,
-              action: {}()
-            )
-          }
-        }
-      } else {
-        TappableCellView(
-          title: item.title,
-          showDivider: item.showDivider,
-          action: item.action()
-        )
-      }
+      TappableCellView(
+        title: item.title,
+        showDivider: item.showDivider,
+        action: item.action()
+      )
     }
 
     Spacer()
-
-    Text(viewState.appVersion)
-      .typography(Theme.shared.font.bodyMedium)
-      .frame(maxWidth: .infinity, alignment: .center)
-
   }
   .padding(.bottom, SPACING_LARGE_MEDIUM)
 }
@@ -91,10 +73,7 @@ private func content(viewState: SideMenuViewState) -> some View {
         title: .changeQuickPinOption,
         action: {}()
       )
-    ],
-    appVersion: "",
-    logsUrl: URL(string: "https://www.example.com"),
-    changelogUrl: URL(string: "https://www.example.com")
+    ]
   )
   ContentScreenView(
     padding: .zero,

@@ -2679,7 +2679,7 @@ public class DocumentSignInteractorStub:DocumentSignInteractor, @unchecked Senda
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/Interactor/SideMenuInteractor.swift'
+// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/Interactor/SettingsInteractor.swift'
 
 import Cuckoo
 import Foundation
@@ -2692,18 +2692,18 @@ import Foundation
 @testable import feature_common
 @testable import feature_dashboard
 
-public class MockSideMenuInteractor: SideMenuInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
-    public typealias MocksType = SideMenuInteractor
-    public typealias Stubbing = __StubbingProxy_SideMenuInteractor
-    public typealias Verification = __VerificationProxy_SideMenuInteractor
+public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = SettingsInteractor
+    public typealias Stubbing = __StubbingProxy_SettingsInteractor
+    public typealias Verification = __VerificationProxy_SettingsInteractor
 
     // Original typealiases
 
     public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
-    private var __defaultImplStub: (any SideMenuInteractor)?
+    private var __defaultImplStub: (any SettingsInteractor)?
 
-    public func enableDefaultImplementation(_ stub: any SideMenuInteractor) {
+    public func enableDefaultImplementation(_ stub: any SettingsInteractor) {
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
@@ -2738,8 +2738,28 @@ public class MockSideMenuInteractor: SideMenuInteractor, Cuckoo.ProtocolMock, @u
             defaultCall: __defaultImplStub!.retrieveChangeLogUrl()
         )
     }
+    
+    public func bacthCounter(isEnabled p0: Bool) {
+        return cuckoo_manager.call(
+            "bacthCounter(isEnabled p0: Bool)",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.bacthCounter(isEnabled: p0)
+        )
+    }
+    
+    public func isBatchCounterEnabled() -> Bool {
+        return cuckoo_manager.call(
+            "isBatchCounterEnabled() -> Bool",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.isBatchCounterEnabled()
+        )
+    }
 
-    public struct __StubbingProxy_SideMenuInteractor: Cuckoo.StubbingProxy {
+    public struct __StubbingProxy_SettingsInteractor: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         public init(manager: Cuckoo.MockManager) {
@@ -2748,7 +2768,7 @@ public class MockSideMenuInteractor: SideMenuInteractor, Cuckoo.ProtocolMock, @u
         
         func getAppVersion() -> Cuckoo.ProtocolStubFunction<(), String> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockSideMenuInteractor.self,
+            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
                 method: "getAppVersion() -> String",
                 parameterMatchers: matchers
             ))
@@ -2756,7 +2776,7 @@ public class MockSideMenuInteractor: SideMenuInteractor, Cuckoo.ProtocolMock, @u
         
         func retrieveLogFileUrl() -> Cuckoo.ProtocolStubFunction<(), URL?> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockSideMenuInteractor.self,
+            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
                 method: "retrieveLogFileUrl() -> URL?",
                 parameterMatchers: matchers
             ))
@@ -2764,14 +2784,30 @@ public class MockSideMenuInteractor: SideMenuInteractor, Cuckoo.ProtocolMock, @u
         
         func retrieveChangeLogUrl() -> Cuckoo.ProtocolStubFunction<(), URL?> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockSideMenuInteractor.self,
+            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
                 method: "retrieveChangeLogUrl() -> URL?",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func bacthCounter<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(Bool)> where M1.MatchedType == Bool {
+            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
+                method: "bacthCounter(isEnabled p0: Bool)",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func isBatchCounterEnabled() -> Cuckoo.ProtocolStubFunction<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
+                method: "isBatchCounterEnabled() -> Bool",
                 parameterMatchers: matchers
             ))
         }
     }
 
-    public struct __VerificationProxy_SideMenuInteractor: Cuckoo.VerificationProxy {
+    public struct __VerificationProxy_SettingsInteractor: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -2817,10 +2853,34 @@ public class MockSideMenuInteractor: SideMenuInteractor, Cuckoo.ProtocolMock, @u
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func bacthCounter<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.__DoNotUse<(Bool), Void> where M1.MatchedType == Bool {
+            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "bacthCounter(isEnabled p0: Bool)",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func isBatchCounterEnabled() -> Cuckoo.__DoNotUse<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "isBatchCounterEnabled() -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
-public class SideMenuInteractorStub:SideMenuInteractor, @unchecked Sendable {
+public class SettingsInteractorStub:SettingsInteractor, @unchecked Sendable {
 
 
     
@@ -2834,6 +2894,14 @@ public class SideMenuInteractorStub:SideMenuInteractor, @unchecked Sendable {
     
     public func retrieveChangeLogUrl() -> URL? {
         return DefaultValueRegistry.defaultValue(for: (URL?).self)
+    }
+    
+    public func bacthCounter(isEnabled p0: Bool) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func isBatchCounterEnabled() -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
 }
 
@@ -3248,6 +3316,36 @@ import logic_resources
 import Cuckoo
 import Foundation
 import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_dashboard
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/SideMenu/Settings/SettingsView.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_dashboard
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/SideMenu/Settings/SettingsViewModel.swift'
+
+import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

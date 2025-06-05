@@ -144,6 +144,17 @@
         }
       }
     },
+    "batch_issuance_counter" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batch issuance counter"
+          }
+        }
+      }
+    },
     "before_today" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2049,6 +2060,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select document"
+          }
+        }
+      }
+    },
+    "settings_menu" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
           }
         }
       }

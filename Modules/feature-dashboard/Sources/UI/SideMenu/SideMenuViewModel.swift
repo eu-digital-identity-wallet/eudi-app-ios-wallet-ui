@@ -20,70 +20,43 @@ import feature_common
 @Copyable
 struct SideMenuViewState: ViewState {
   let items: [SideMenuItemUIModel]
-  let appVersion: String
-  let logsUrl: URL?
-  let changelogUrl: URL?
 }
 
 final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuViewState> {
 
-  private let interactor: SideMenuInteractor
-  private let walletKitController: WalletKitController
-
   init(
-    router: Router,
-    interactor: SideMenuInteractor,
-    walletKit: WalletKitController
+    router: Router
   ) {
-    self.interactor = interactor
-    self.walletKitController = walletKit
     super.init(
       router: router,
       initialState: .init(
-        items: [],
-        appVersion: interactor.getAppVersion(),
-        logsUrl: interactor.retrieveLogFileUrl(),
-        changelogUrl: interactor.retrieveChangeLogUrl()
+        items: []
       )
     )
 
-    if let changelogUrl = interactor.retrieveChangeLogUrl() {
-      setState {
-        $0.copy(items: [
+    setState {
+      $0.copy(
+        items: [
           .init(
             title: .changeQuickPinOption,
             action: self.updatePin()
           ),
           .init(
-            title: .retrieveLogs,
-            isShareLink: true,
-            action: {}()
-          ),
-          .init(
-            title: .changelog,
+            title: .settings,
             showDivider: false,
-            action: changelogUrl.open()
+            action: self.settings()
           )
-        ])
-      }
-    } else {
-      setState {
-        $0.copy(
-          items: [
-            .init(
-              title: .changeQuickPinOption,
-              action: self.updatePin()
-            ),
-            .init(
-              title: .retrieveLogs,
-              showDivider: false,
-              isShareLink: true,
-              action: {}()
-            )
-          ]
-        )
-      }
+        ]
+      )
     }
+  }
+
+  func settings() {
+    router.push(
+      with: .featureDashboardModule(
+        .settingsMenu
+      )
+    )
   }
 
   func updatePin() {
