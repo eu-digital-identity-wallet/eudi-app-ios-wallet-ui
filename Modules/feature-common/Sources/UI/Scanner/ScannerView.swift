@@ -34,7 +34,7 @@ struct ScannerView<Router: RouterHost>: View {
     ContentScreenView(
       padding: SPACING_NONE,
       navigationTitle: viewModel.viewState.title,
-      toolbarContent: toolbarContent()
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState,
@@ -44,17 +44,6 @@ struct ScannerView<Router: RouterHost>: View {
           viewModel.onResult(scanResult: scanResult)
         }
     }
-  }
-
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: [],
-      leadingActions: [
-        .init(image: Theme.shared.image.chevronLeft) {
-          viewModel.pop()
-        }
-      ]
-    )
   }
 }
 

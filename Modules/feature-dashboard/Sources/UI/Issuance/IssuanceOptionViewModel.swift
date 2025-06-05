@@ -70,7 +70,14 @@ class IssuanceOptionViewModel<Router: RouterHost>: ViewModel<Router, IssuanceOpt
     )
   }
 
-  func pop() {
-    router.pop()
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        .init(image: Theme.shared.image.chevronLeft) {
+          self.router.pop()
+        }
+      ]
+    )
   }
 }

@@ -506,6 +506,10 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "transaction_details_report_transaction_message")
     case .transactionDetailsReportTransactionButton:
       bundle.localizedString(forKey: "transaction_detailsReport_transaction_button")
+    case .settings:
+      bundle.localizedString(forKey: "settings_menu")
+    case .batchIssuanceCunter:
+      bundle.localizedString(forKey: "batch_issuance_counter")
     }
   }
 }

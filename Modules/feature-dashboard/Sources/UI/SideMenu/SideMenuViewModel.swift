@@ -20,70 +20,27 @@ import feature_common
 @Copyable
 struct SideMenuViewState: ViewState {
   let items: [SideMenuItemUIModel]
-  let appVersion: String
-  let logsUrl: URL?
-  let changelogUrl: URL?
 }
 
 final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuViewState> {
 
-  private let interactor: SideMenuInteractor
-  private let walletKitController: WalletKitController
-
   init(
-    router: Router,
-    interactor: SideMenuInteractor,
-    walletKit: WalletKitController
+    router: Router
   ) {
-    self.interactor = interactor
-    self.walletKitController = walletKit
     super.init(
       router: router,
-      initialState: .init(
-        items: [],
-        appVersion: interactor.getAppVersion(),
-        logsUrl: interactor.retrieveLogFileUrl(),
-        changelogUrl: interactor.retrieveChangeLogUrl()
-      )
+      initialState: .init(items: [])
     )
 
-    if let changelogUrl = interactor.retrieveChangeLogUrl() {
-      setState {
-        $0.copy(items: [
-          .init(
-            title: .changeQuickPinOption,
-            action: self.updatePin()
-          ),
-          .init(
-            title: .retrieveLogs,
-            isShareLink: true,
-            action: {}()
-          ),
-          .init(
-            title: .changelog,
-            showDivider: false,
-            action: changelogUrl.open()
-          )
-        ])
-      }
-    } else {
-      setState {
-        $0.copy(
-          items: [
-            .init(
-              title: .changeQuickPinOption,
-              action: self.updatePin()
-            ),
-            .init(
-              title: .retrieveLogs,
-              showDivider: false,
-              isShareLink: true,
-              action: {}()
-            )
-          ]
-        )
-      }
-    }
+    buildMenuItems()
+  }
+
+  func settings() {
+    router.push(
+      with: .featureDashboardModule(
+        .settingsMenu
+      )
+    )
   }
 
   func updatePin() {
@@ -98,7 +55,32 @@ final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuVie
     )
   }
 
-  func onPop() {
-    router.pop()
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        .init(image: Theme.shared.image.chevronLeft) {
+          self.router.pop()
+        }
+      ]
+    )
+  }
+
+  private func buildMenuItems() {
+    setState {
+      $0.copy(
+        items: [
+          .init(
+            title: .changeQuickPinOption,
+            action: self.updatePin()
+          ),
+          .init(
+            title: .settings,
+            showDivider: false,
+            action: self.settings()
+          )
+        ]
+      )
+    }
   }
 }

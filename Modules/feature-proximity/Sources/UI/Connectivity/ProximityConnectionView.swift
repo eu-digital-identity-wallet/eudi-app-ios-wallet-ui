@@ -33,7 +33,7 @@ struct ProximityConnectionView<Router: RouterHost>: View {
       padding: .zero,
       errorConfig: viewModel.viewState.error,
       navigationTitle: .authenticate,
-      toolbarContent: toolbarContent()
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState,
@@ -43,17 +43,6 @@ struct ProximityConnectionView<Router: RouterHost>: View {
     .task {
       await viewModel.initialize()
     }
-  }
-
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: [],
-      leadingActions: [
-        .init(image: Theme.shared.image.chevronLeft) {
-          viewModel.pop()
-        }
-      ]
-    )
   }
 }
 

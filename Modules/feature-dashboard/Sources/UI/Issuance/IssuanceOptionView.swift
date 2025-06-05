@@ -29,24 +29,13 @@ struct IssuanceOptionView<Router: RouterHost>: View {
       padding: .zero,
       canScroll: true,
       navigationTitle: .addDocumentTitle,
-      toolbarContent: toolbarContent()
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         onAddDocumentClick: { viewModel.onAddDocumentClick() },
         onScanClick: { viewModel.onScanClick() }
       )
     }
-  }
-
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: [],
-      leadingActions: [
-        .init(image: Theme.shared.image.chevronLeft) {
-          viewModel.pop()
-        }
-      ]
-    )
   }
 }
 
