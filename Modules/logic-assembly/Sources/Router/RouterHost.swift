@@ -45,13 +45,12 @@ final class RouterHostImpl: RouterHost, ObservableObject {
     onNavigationFollowUp(with: route)
   }
 
-  public func popTo(with route: AppRoute, inclusive: Bool, animated: Bool) {
+  public func popTo(with route: AppRoute, inclusive: Bool) {
     guard
       canNavigate(
         block: self.popTo(
           with: route,
-          inclusive: inclusive,
-          animated: animated
+          inclusive: inclusive
         )
       )
     else {
@@ -76,17 +75,13 @@ final class RouterHostImpl: RouterHost, ObservableObject {
     onNavigationFollowUp(with: route)
   }
 
-  public func popTo(with route: AppRoute, inclusive: Bool) {
-    popTo(with: route, inclusive: inclusive, animated: true)
-  }
-
   public func popTo(with route: AppRoute) {
-    popTo(with: route, inclusive: false, animated: true)
+    popTo(with: route, inclusive: false)
   }
 
-  public func pop(animated: Bool) {
+  public func pop() {
     guard
-      canNavigate(block: self.pop(animated: animated))
+      canNavigate(block: self.pop())
     else {
       return
     }
@@ -95,10 +90,6 @@ final class RouterHostImpl: RouterHost, ObservableObject {
     if let current = getCurrentScreen() {
       onNavigationFollowUp(with: current)
     }
-  }
-
-  public func pop() {
-    pop(animated: true)
   }
 
   public func getCurrentScreen() -> AppRoute? {
@@ -207,7 +198,6 @@ private extension RouterHostImpl {
             host.resolveView(route)
           }
       }
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
   }
 }
