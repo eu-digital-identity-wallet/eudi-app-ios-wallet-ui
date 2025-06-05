@@ -19,10 +19,10 @@ import logic_resources
 
 struct StartupView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewModel: StartupViewModel<Router>
+  @StateObject private var viewModel: StartupViewModel<Router>
 
   init(with viewModel: StartupViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
   }
 
   var body: some View {

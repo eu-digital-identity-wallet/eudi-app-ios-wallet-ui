@@ -56,6 +56,7 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
   case dashboard
   case signDocument
   case sideMenu
+  case settingsMenu
   case issuanceOption
   case documentDetails(id: String)
   case transactionDetails(id: String)
@@ -68,6 +69,8 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
       (key: "SignDocument", arguments: [:])
     case .sideMenu:
       (key: "SideMenu", arguments: [:])
+    case .settingsMenu:
+      (key: "settingsMenu", arguments: [:])
     case .issuanceOption:
       (key: "issuanceOption", arguments: [:])
     case .documentDetails(let id):

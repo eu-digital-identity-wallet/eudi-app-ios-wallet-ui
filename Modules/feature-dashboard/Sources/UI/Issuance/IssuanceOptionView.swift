@@ -18,10 +18,11 @@ import logic_ui
 import logic_resources
 
 struct IssuanceOptionView<Router: RouterHost>: View {
-  @ObservedObject var viewModel: IssuanceOptionViewModel<Router>
+
+  @StateObject private var viewModel: IssuanceOptionViewModel<Router>
 
   init(with viewModel: IssuanceOptionViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
   }
 
   var body: some View {
@@ -29,24 +30,13 @@ struct IssuanceOptionView<Router: RouterHost>: View {
       padding: .zero,
       canScroll: true,
       navigationTitle: .addDocumentTitle,
-      toolbarContent: toolbarContent()
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         onAddDocumentClick: { viewModel.onAddDocumentClick() },
         onScanClick: { viewModel.onScanClick() }
       )
     }
-  }
-
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: [],
-      leadingActions: [
-        .init(image: Theme.shared.image.chevronLeft) {
-          viewModel.pop()
-        }
-      ]
-    )
   }
 }
 

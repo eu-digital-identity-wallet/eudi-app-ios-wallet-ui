@@ -18,12 +18,12 @@ import feature_common
 
 struct ProximitySuccessView<Router: RouterHost, RequestItem: Sendable>: View {
 
-  @ObservedObject private var viewModel: ProximitySuccessViewModel<Router, RequestItem>
+  @StateObject private var viewModel: ProximitySuccessViewModel<Router, RequestItem>
 
   init(
     with viewModel: ProximitySuccessViewModel<Router, RequestItem>
   ) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
   }
 
   var body: some View {

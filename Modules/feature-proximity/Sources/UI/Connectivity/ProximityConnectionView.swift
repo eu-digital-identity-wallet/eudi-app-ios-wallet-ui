@@ -19,12 +19,12 @@ import logic_resources
 
 struct ProximityConnectionView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewModel: ProximityConnectionViewModel<Router>
+  @StateObject private var viewModel: ProximityConnectionViewModel<Router>
 
   var contentSize: CGFloat = 0.0
 
   init(with viewModel: ProximityConnectionViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
     self.contentSize = getScreenRect().width / 1.5
   }
 
@@ -33,7 +33,7 @@ struct ProximityConnectionView<Router: RouterHost>: View {
       padding: .zero,
       errorConfig: viewModel.viewState.error,
       navigationTitle: .authenticate,
-      toolbarContent: toolbarContent()
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState,
@@ -43,17 +43,6 @@ struct ProximityConnectionView<Router: RouterHost>: View {
     .task {
       await viewModel.initialize()
     }
-  }
-
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: [],
-      leadingActions: [
-        .init(image: Theme.shared.image.chevronLeft) {
-          viewModel.pop()
-        }
-      ]
-    )
   }
 }
 

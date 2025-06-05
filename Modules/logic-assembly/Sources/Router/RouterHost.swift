@@ -13,19 +13,21 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-@preconcurrency import UIPilot
 import logic_ui
 
 private typealias QueueItem = () -> Void
 
-final class RouterHostImpl: RouterHost {
+final class RouterHostImpl: RouterHost, ObservableObject {
 
-  private let pilot: UIPilot<AppRoute>
+  @Published private var pathElements: [AppRoute] = []
+  private let rootRoute: AppRoute = .featureStartupModule(.startup)
+
   private let uiConfigLogic: ConfigUiLogic
   private let analyticsController: AnalyticsController
 
-  private var queueNavigation: [QueueItem] = []
   private let lockInterval: Int = 1000
+
+  private var queueNavigation: [QueueItem] = []
   private var isLocked: Bool = false
 
   init(
@@ -34,13 +36,12 @@ final class RouterHostImpl: RouterHost {
   ) {
     self.uiConfigLogic = uiConfigLogic
     self.analyticsController = analyticsController
-    self.pilot = UIPilot(initial: .featureStartupModule(.startup), debug: true)
   }
 
   public func push(with route: AppRoute) {
     guard canNavigate(block: self.push(with: route)) else { return }
     lockNavigation()
-    pilot.push(route)
+    pathElements.append(route)
     onNavigationFollowUp(with: route)
   }
 
@@ -56,8 +57,22 @@ final class RouterHostImpl: RouterHost {
     else {
       return
     }
+
     lockNavigation()
-    pilot.popTo(route, inclusive: inclusive, animated: animated)
+
+    if route.info.key == rootRoute.info.key {
+      pathElements.removeAll()
+    } else if let idx = pathElements.lastIndex(where: { $0.info.key == route.info.key }) {
+      if inclusive {
+        pathElements.removeSubrange(idx..<pathElements.count)
+      } else {
+        let cutoff = idx + 1
+        if cutoff < pathElements.count {
+          pathElements.removeSubrange(cutoff..<pathElements.count)
+        }
+      }
+    }
+
     onNavigationFollowUp(with: route)
   }
 
@@ -76,7 +91,7 @@ final class RouterHostImpl: RouterHost {
       return
     }
     lockNavigation()
-    pilot.pop(animated: animated)
+    pathElements.removeLast()
     if let current = getCurrentScreen() {
       onNavigationFollowUp(with: current)
     }
@@ -87,13 +102,7 @@ final class RouterHostImpl: RouterHost {
   }
 
   public func getCurrentScreen() -> AppRoute? {
-    return pilot.routes.last
-  }
-
-  public func composeApplication() -> AnyView {
-    return UIPilotHost(pilot) { route in
-      self.resolveView(route)
-    }.eraseToAnyView()
+    return pathElements.last
   }
 
   public func getToolbarConfig() -> UIConfig.ToolBar {
@@ -118,17 +127,21 @@ final class RouterHostImpl: RouterHost {
   }
 
   public func isScreenOnBackStack(with route: AppRoute) -> Bool {
-    pilot.routes.contains(where: { $0.info.key == route.info.key })
+    pathElements.contains(where: { $0.info.key == route.info.key })
+  }
+
+  public func composeApplication() -> AnyView {
+    RouterContainerView(host: self).eraseToAnyView()
   }
 }
 
 private extension RouterHostImpl {
 
-  @MainActor private func isForegroundOrBackStack(with route: AppRoute) -> Bool {
+  @MainActor func isForegroundOrBackStack(with route: AppRoute) -> Bool {
     return isScreenForeground(with: route) || isScreenOnBackStack(with: route)
   }
 
-  @MainActor private func canNavigate(block: @escaping @autoclosure () -> Void) -> Bool {
+  @MainActor func canNavigate(block: @escaping @autoclosure () -> Void) -> Bool {
     guard !isLocked else {
       queueNavigation.append(block)
       return false
@@ -136,7 +149,7 @@ private extension RouterHostImpl {
     return true
   }
 
-  @MainActor private func lockNavigation() {
+  @MainActor func lockNavigation() {
     isLocked = true
     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(lockInterval)) {
       self.isLocked = false
@@ -144,14 +157,14 @@ private extension RouterHostImpl {
     }
   }
 
-  @MainActor private func executePendingNavigation() {
+  @MainActor func executePendingNavigation() {
     guard let item = queueNavigation.getQueuedItem() else {
       return
     }
     item()
   }
 
-  @MainActor private func onNavigationFollowUp(with route: AppRoute) {
+  @MainActor func onNavigationFollowUp(with route: AppRoute) {
     notifyBackgroundColorUpdate()
     analyticsController.logScreen(
       screen: route.info.key,
@@ -159,12 +172,11 @@ private extension RouterHostImpl {
     )
   }
 
-  @MainActor private func notifyBackgroundColorUpdate() {
+  @MainActor func notifyBackgroundColorUpdate() {
     NotificationCenter.default.post(name: .shouldChangeBackgroundColor, object: nil)
   }
 
-  @MainActor
-  private func resolveView(_ route: AppRoute) -> AnyView {
+  @MainActor func resolveView(_ route: AppRoute) -> AnyView {
     switch route {
     case .featureStartupModule(let module):
       StartupRouter.resolve(module: module, host: self)
@@ -178,6 +190,24 @@ private extension RouterHostImpl {
       PresentationRouter.resolve(module: module, host: self)
     case .featureProximityModule(let module):
       ProximityRouter.resolve(module: module, host: self)
+    }
+  }
+}
+
+private extension RouterHostImpl {
+
+  struct RouterContainerView: View {
+
+    @ObservedObject var host: RouterHostImpl
+
+    var body: some View {
+      NavigationStack(path: $host.pathElements) {
+        host.resolveView(host.rootRoute)
+          .navigationDestination(for: AppRoute.self) { route in
+            host.resolveView(route)
+          }
+      }
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
   }
 }

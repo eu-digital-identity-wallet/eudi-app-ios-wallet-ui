@@ -20,10 +20,10 @@ import logic_resources
 
 struct DocumentDetailsView<Router: RouterHost>: View {
 
-  @ObservedObject var viewModel: DocumentDetailsViewModel<Router>
+  @StateObject private var viewModel: DocumentDetailsViewModel<Router>
 
   init(with viewModel: DocumentDetailsViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
   }
 
   var body: some View {

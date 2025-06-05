@@ -33,8 +33,9 @@ public final class FeatureDashboardAssembly: Assembly {
       DocumentSignInteractorImpl(configLogic: r.force(ConfigLogic.self))
     }
 
-    container.register(SideMenuInteractor.self) { r in
-      SideMenuInteractorImpl(
+    container.register(SettingsInteractor.self) { r in
+      SettingsInteractorImpl(
+        prefsController: r.force(PrefsController.self),
         walletController: r.force(WalletKitController.self),
         configLogic: r.force(ConfigLogic.self)
       )

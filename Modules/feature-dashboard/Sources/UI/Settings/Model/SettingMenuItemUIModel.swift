@@ -13,18 +13,31 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import SwiftUI
-import feature_common
+import Foundation
+import logic_resources
 
-struct PresentationLoadingView<Router: RouterHost, RequestItem: Sendable>: View {
+struct SettingMenuItemUIModel: Identifiable {
 
-  @StateObject private var viewModel: PresentationLoadingViewModel<Router, RequestItem>
+  let id: String
+  let title: LocalizableStringKey
+  let showDivider: Bool
+  let isShareLink: Bool
+  let isToggle: Bool
+  let action: () -> Void
 
-  init(with viewModel: PresentationLoadingViewModel<Router, RequestItem>) {
-    self._viewModel = StateObject(wrappedValue: viewModel)
-  }
-
-  var body: some View {
-    BaseLoadingView(with: viewModel.router, viewModel: viewModel)
+  init(
+    id: String = UUID().uuidString,
+    title: LocalizableStringKey,
+    showDivider: Bool = true,
+    isShareLink: Bool = false,
+    isToggle: Bool = false,
+    action: @autoclosure @escaping () -> Void
+  ) {
+    self.id = id
+    self.title = title
+    self.showDivider = showDivider
+    self.isShareLink = isShareLink
+    self.isToggle = isToggle
+    self.action = action
   }
 }

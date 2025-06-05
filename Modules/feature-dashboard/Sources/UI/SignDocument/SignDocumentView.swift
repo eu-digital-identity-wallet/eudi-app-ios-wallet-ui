@@ -18,16 +18,16 @@ import feature_common
 
 struct SignDocumentView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewModel: SignDocumentViewModel<Router>
+  @StateObject private var viewModel: SignDocumentViewModel<Router>
 
   public init(with viewModel: SignDocumentViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
   }
 
   var body: some View {
     ContentScreenView(
       navigationTitle: .signDocument,
-      toolbarContent: toolbarContent()
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState
@@ -49,17 +49,6 @@ struct SignDocumentView<Router: RouterHost>: View {
 
       Spacer()
     }
-  }
-
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: [],
-      leadingActions: [
-        .init(image: Theme.shared.image.chevronLeft) {
-          viewModel.pop()
-        }
-      ]
-    )
   }
 }
 

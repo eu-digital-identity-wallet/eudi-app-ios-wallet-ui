@@ -20,12 +20,12 @@ import logic_resources
 
 struct AddDocumentView<Router: RouterHost>: View {
 
-  @ObservedObject var viewModel: AddDocumentViewModel<Router>
+  @StateObject private var viewModel: AddDocumentViewModel<Router>
 
   var contentSize: CGFloat = 0.0
 
   init(with viewModel: AddDocumentViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
     self.contentSize = getScreenRect().width / 2.0
   }
 

@@ -43,8 +43,15 @@ final class SignDocumentViewModel<Router: RouterHost>: ViewModel<Router, SignDoc
     )
   }
 
-  func pop() {
-    router.pop()
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        .init(image: Theme.shared.image.chevronLeft) {
+          self.router.pop()
+        }
+      ]
+    )
   }
 
   func onFileSelection(with url: URL) {

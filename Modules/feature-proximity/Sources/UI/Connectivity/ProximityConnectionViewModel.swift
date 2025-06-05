@@ -70,6 +70,22 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
     }
   }
 
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        .init(image: Theme.shared.image.chevronLeft) {
+          self.pop()
+        }
+      ]
+    )
+  }
+
+  private func pop() {
+    interactor.stopPresentation()
+    router.pop()
+  }
+
   private func onQRGeneration() async {
     switch await interactor.onQRGeneration() {
     case .success(let qrImage):
@@ -77,11 +93,6 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
     case .failure(let error):
       self.onError(with: error)
     }
-  }
-
-  func goBack() {
-    interactor.stopPresentation()
-    router.pop()
   }
 
   private func onConnectionSuccess() {
@@ -106,13 +117,9 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
       $0.copy(
         error: .init(
           description: .custom(error.localizedDescription),
-          cancelAction: self.router.pop()
+          cancelAction: self.pop()
         )
       )
     }
-  }
-
-  func pop() {
-    router.pop()
   }
 }

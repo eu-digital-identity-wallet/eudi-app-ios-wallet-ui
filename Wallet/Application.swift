@@ -27,7 +27,6 @@ struct Application: App {
   @State var toolbarConfig: UIConfig.ToolBar = .init(Theme.shared.color.surface)
 
   private let routerHost: RouterHost
-  private let configUiLogic: ConfigUiLogic
   private let deepLinkController: DeepLinkController
   private let walletKitController: WalletKitController
 
@@ -37,7 +36,6 @@ struct Application: App {
     DIGraph.assembleDependenciesGraph()
 
     self.routerHost = DIGraph.resolver.force(RouterHost.self)
-    self.configUiLogic = DIGraph.resolver.force(ConfigUiLogic.self)
     self.deepLinkController = DIGraph.resolver.force(DeepLinkController.self)
     self.walletKitController = DIGraph.resolver.force(WalletKitController.self)
     self.toolbarConfig = routerHost.getToolbarConfig()

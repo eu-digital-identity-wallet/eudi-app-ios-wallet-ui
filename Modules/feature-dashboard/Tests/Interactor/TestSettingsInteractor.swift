@@ -14,49 +14,54 @@
  * governing permissions and limitations under the Licence.
  */
 import XCTest
+import logic_business
 @testable import logic_core
 @testable import logic_test
 @testable import feature_dashboard
 
-final class TestSideMenuInteractor: EudiTest {
-  
-  var interactor: SideMenuInteractor!
+final class TestSettingsInteractor: EudiTest {
+
+  var interactor: SettingsInteractor!
   var walletKitController: MockWalletKitController!
+  var prefsController: MockPrefsController!
   var configLogic: MockConfigLogic!
-  
+
   override func setUp() {
     self.walletKitController = MockWalletKitController()
+    self.prefsController = MockPrefsController()
     self.configLogic = MockConfigLogic()
-    self.interactor = SideMenuInteractorImpl(
+    self.interactor = SettingsInteractorImpl(
+      prefsController: prefsController,
       walletController: walletKitController,
       configLogic: configLogic
     )
   }
-  
+
   override func tearDown() {
     self.interactor = nil
     self.walletKitController = nil
     self.configLogic = nil
+    self.prefsController = nil
   }
-  
+
   func testGetAppVersion_WhenConfigLogicReturnsAppVersion_ThenReturnsExpectedVersion() {
     // Given
     let appVersion = getAppVersion()
-    
+
     // When
     let version = interactor.getAppVersion()
-    
+
     // Then
     XCTAssertEqual(version, appVersion)
   }
-  
+
   func testRetrieveLogFileUrl_WhenWalletKitControllerReturnsLogFileUrl_ThenReturnsExpectedUrl() {
     // Given
     let expectedUrl = stubLogFileUrl()
-    
+
     // When
     let result = interactor.retrieveLogFileUrl()
-    
+
     // Then
     XCTAssertEqual(result, expectedUrl)
   }
@@ -64,51 +69,90 @@ final class TestSideMenuInteractor: EudiTest {
   func testRetrieveChangelogUrl_WhenConfigLogicReturnsChangelogUrl_ThenReturnsExpectedUrl() {
     // Given
     let expectedUrl = stubChangeLogUrl()
-    
+
     // When
     let result = interactor.retrieveChangeLogUrl()
-    
+
     // Then
     XCTAssertEqual(result, expectedUrl)
   }
+
+  func testIsBatchCounterEnabled_WhenPrefsControllerReturnsTrue_ThenReturnsTrue() {
+    // Given
+    stub(prefsController) { mock in
+      when(mock.getBool(forKey: Prefs.Key.batchCounter)).thenReturn(true)
+    }
+
+    // When
+    let result = interactor.isBatchCounterEnabled()
+
+    // Then
+    XCTAssertTrue(result)
+  }
+
+  func testIsBatchCounterEnabled_WhenPrefsControllerReturnsFalse_ThenReturnsFalse() {
+    // Given
+    stub(prefsController) { mock in
+      when(mock.getBool(forKey: Prefs.Key.batchCounter)).thenReturn(false)
+    }
+
+    // When
+    let result = interactor.isBatchCounterEnabled()
+
+    // Then
+    XCTAssertFalse(result)
+  }
+
+  func testBatchCounter_WhenSetToTrue_CallsPrefsControllerWithTrue() {
+    // Given
+    stub(prefsController) { mock in
+      when(mock.setValue(any(), forKey: Prefs.Key.batchCounter)).thenDoNothing()
+    }
+
+    // When
+    interactor.setBatchCounter(isEnabled: true)
+    
+    // Then
+    verify(prefsController).setValue(any(), forKey: Prefs.Key.batchCounter)
+  }
 }
 
-extension TestSideMenuInteractor {
+extension TestSettingsInteractor {
   func getAppVersion() -> String {
     // Given
     let version = "1.0.0"
-    
+
     //When
     stub(configLogic) { mock in
       when(mock.appVersion.get).thenReturn(version)
     }
-    
+
     //Then
     return version
   }
-  
+
   func stubLogFileUrl() -> URL {
     // Given
     let url = URL(string: "file.url")!
-    
+
     // When
     stub(walletKitController) { mock in
       when(mock.retrieveLogFileUrl()).thenReturn(url)
     }
-    
+
     // Then
     return url
   }
-  
+
   func stubChangeLogUrl() -> URL {
     // Given
     let url = URL(string: "log.url")!
-    
+
     // When
     stub(configLogic) { mock in
       when(mock.changelogUrl.get).thenReturn(url)
     }
-    
+
     // Then
     return url
   }

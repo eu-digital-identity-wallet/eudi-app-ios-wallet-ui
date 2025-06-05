@@ -21,10 +21,15 @@ public struct TappableCellView: View {
   public let showDivider: Bool
   public let useOverlay: Bool
   public let action: () -> Void
+  public let isToggle: Bool
+
+  @Binding var isOn: Bool
 
   public init(
     title: LocalizableStringKey,
     showDivider: Bool,
+    isToggle: Bool = false,
+    isOn: Binding<Bool> = .constant(false),
     useOverlay: Bool = true,
     action: @autoclosure @escaping () -> Void
   ) {
@@ -32,6 +37,8 @@ public struct TappableCellView: View {
     self.useOverlay = useOverlay
     self.action = action
     self.showDivider = showDivider
+    self.isToggle = isToggle
+    self._isOn = isOn
   }
 
   public var body: some View {
@@ -43,18 +50,24 @@ public struct TappableCellView: View {
           .lineLimit(1)
           .minimumScaleFactor(0.8)
 
-        Theme.shared.image.chevronRight
-          .frame(maxWidth: .infinity, alignment: .topTrailing)
-          .foregroundColor(Theme.shared.color.onSurface)
+        if isToggle {
+          Toggle("", isOn: $isOn)
+            .labelsHidden()
+            .frame(maxWidth: .infinity, alignment: .topTrailing)
+        } else {
+          Theme.shared.image.chevronRight
+            .frame(maxWidth: .infinity, alignment: .topTrailing)
+            .foregroundColor(Theme.shared.color.onSurface)
+        }
       }
       if showDivider {
         Divider()
       }
     }
-    .if(useOverlay) {
+    .if(useOverlay && !isToggle) {
       $0.contentShape(Rectangle())
     }
-    .if(useOverlay) {
+    .if(useOverlay && !isToggle) {
       $0.onTapGesture {
         action()
       }

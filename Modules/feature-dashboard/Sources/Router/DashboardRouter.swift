@@ -55,9 +55,15 @@ public final class DashboardRouter {
     case .sideMenu:
       SideMenuView(
         with: .init(
+          router: host
+        )
+      ).eraseToAnyView()
+    case .settingsMenu:
+      SettingsView(
+        with: .init(
           router: host,
           interactor: DIGraph.resolver.force(
-            SideMenuInteractor.self
+            SettingsInteractor.self
           ),
           walletKit: DIGraph.resolver.force(
             WalletKitController.self

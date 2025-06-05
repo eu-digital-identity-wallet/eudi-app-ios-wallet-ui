@@ -19,10 +19,10 @@ import logic_resources
 
 struct QuickPinView<Router: RouterHost>: View {
 
-  @ObservedObject var viewModel: QuickPinViewModel<Router>
+  @StateObject private var viewModel: QuickPinViewModel<Router>
 
   init(with viewModel: QuickPinViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
   }
 
   var body: some View {

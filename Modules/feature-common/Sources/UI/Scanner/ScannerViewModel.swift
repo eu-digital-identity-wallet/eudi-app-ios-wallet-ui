@@ -115,6 +115,17 @@ final class ScannerViewModel<Router: RouterHost>: ViewModel<Router, ScannerState
     UIApplication.shared.openAppSettings()
   }
 
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        .init(image: Theme.shared.image.chevronLeft) {
+          self.router.pop()
+        }
+      ]
+    )
+  }
+
   private func onScanResultValidated(scanResult: String) async {
     switch viewState.config.flow {
     case .presentation:
@@ -139,9 +150,5 @@ final class ScannerViewModel<Router: RouterHost>: ViewModel<Router, ScannerState
         )
       )
     }
-  }
-
-  func pop() {
-    router.pop()
   }
 }
