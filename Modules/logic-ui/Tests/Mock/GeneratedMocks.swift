@@ -6845,18 +6845,6 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Splash/SplashBackgroundView.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-
-
-
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Type/AccesibilityLocatorViewModifier.swift'
 
 import Cuckoo
@@ -7428,26 +7416,6 @@ public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock, @unchecked Sendabl
         )
     }
     
-    public func popTo(with p0: AppRoute, inclusive p1: Bool, animated p2: Bool) {
-        return cuckoo_manager.call(
-            "popTo(with p0: AppRoute, inclusive p1: Bool, animated p2: Bool)",
-            parameters: (p0, p1, p2),
-            escapingParameters: (p0, p1, p2),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.popTo(with: p0, inclusive: p1, animated: p2)
-        )
-    }
-    
-    public func pop(animated p0: Bool) {
-        return cuckoo_manager.call(
-            "pop(animated p0: Bool)",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.pop(animated: p0)
-        )
-    }
-    
     public func pop() {
         return cuckoo_manager.call(
             "pop()",
@@ -7563,22 +7531,6 @@ public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock, @unchecked Sendabl
             ))
         }
         
-        func popTo<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(with p0: M1, inclusive p1: M2, animated p2: M3) -> Cuckoo.ProtocolStubNoReturnFunction<(AppRoute, Bool, Bool)> where M1.MatchedType == AppRoute, M2.MatchedType == Bool, M3.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute, Bool, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockRouterHost.self,
-                method: "popTo(with p0: AppRoute, inclusive p1: Bool, animated p2: Bool)",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func pop<M1: Cuckoo.Matchable>(animated p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(Bool)> where M1.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockRouterHost.self,
-                method: "pop(animated p0: Bool)",
-                parameterMatchers: matchers
-            ))
-        }
-        
         func pop() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRouterHost.self,
@@ -7677,30 +7629,6 @@ public class MockRouterHost: RouterHost, Cuckoo.ProtocolMock, @unchecked Sendabl
             let matchers: [Cuckoo.ParameterMatcher<(AppRoute)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
                 "push(with p0: AppRoute)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func popTo<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(with p0: M1, inclusive p1: M2, animated p2: M3) -> Cuckoo.__DoNotUse<(AppRoute, Bool, Bool), Void> where M1.MatchedType == AppRoute, M2.MatchedType == Bool, M3.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(AppRoute, Bool, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
-            return cuckoo_manager.verify(
-                "popTo(with p0: AppRoute, inclusive p1: Bool, animated p2: Bool)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func pop<M1: Cuckoo.Matchable>(animated p0: M1) -> Cuckoo.__DoNotUse<(Bool), Void> where M1.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "pop(animated p0: Bool)",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7834,14 +7762,6 @@ public class RouterHostStub:RouterHost, @unchecked Sendable {
 
     
     public func push(with p0: AppRoute) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func popTo(with p0: AppRoute, inclusive p1: Bool, animated p2: Bool) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func pop(animated p0: Bool) {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

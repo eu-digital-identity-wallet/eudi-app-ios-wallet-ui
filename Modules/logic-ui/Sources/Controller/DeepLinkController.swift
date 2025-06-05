@@ -92,8 +92,7 @@ final class DeepLinkControllerImpl: DeepLinkController {
       if shouldPopToDashboardFirst {
         routerHost.popTo(
           with: .featureDashboardModule(.dashboard),
-          inclusive: false,
-          animated: false
+          inclusive: false
         )
       }
       return
