@@ -19,7 +19,7 @@ import feature_common
 
 @Copyable
 struct SettingsViewState: ViewState {
-  let items: [SideMenuItemUIModel]
+  let items: [SettingMenuItemUIModel]
   let appVersion: String
   let logsUrl: URL?
   let changelogUrl: URL?
@@ -48,57 +48,63 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
       )
     )
 
-    self.isBatchCounterEnabled = interactor.isBatchCounterEnabled()
+    buildMenuItems()
+    subscribeBatchToggle()
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        .init(image: Theme.shared.image.chevronLeft) {
+          self.router.pop()
+        }
+      ]
+    )
+  }
+
+  private func buildMenuItems() {
+
+    isBatchCounterEnabled = interactor.isBatchCounterEnabled()
+
+    var items: [SettingMenuItemUIModel] = [
+      .init(
+        title: .batchIssuanceCunter,
+        showDivider: true,
+        isToggle: true,
+        action: self.updateBatchCounter(self.isBatchCounterEnabled)
+      ),
+      .init(
+        title: .retrieveLogs,
+        isShareLink: true,
+        action: {}()
+      )
+    ]
 
     if let changelogUrl = interactor.retrieveChangeLogUrl() {
-      setState {
-        $0.copy(items: [
-          .init(
-            title: .batchIssuanceCunter,
-            showDivider: true,
-            isToggle: true,
-            action: self.setBatchCounterEnabled(self.isBatchCounterEnabled)
-          ),
-          .init(
-            title: .retrieveLogs,
-            isShareLink: true,
-            action: {}()
-          ),
-          .init(
-            title: .changelog,
-            showDivider: false,
-            action: changelogUrl.open()
-          )
-        ])
-      }
-    } else {
-      setState {
-        $0.copy(
-          items: [
-            .init(
-              title: .batchIssuanceCunter,
-              showDivider: true,
-              isToggle: true,
-              action: self.setBatchCounterEnabled(self.isBatchCounterEnabled)
-            ),
-            .init(
-              title: .retrieveLogs,
-              showDivider: false,
-              isShareLink: true,
-              action: {}()
-            )
-          ]
+      items.append(
+        .init(
+          title: .changelog,
+          showDivider: false,
+          action: changelogUrl.open()
         )
-      }
+      )
     }
+
+    setState { $0.copy(items: items) }
   }
 
-  func setBatchCounterEnabled(_ enabled: Bool) {
-    interactor.bacthCounter(isEnabled: enabled)
-    isBatchCounterEnabled = enabled
+  private func subscribeBatchToggle() {
+    $isBatchCounterEnabled
+      .dropFirst()
+      .removeDuplicates()
+      .sink { [weak self] isEnabled in
+        guard let self = self else { return }
+        self.updateBatchCounter(isEnabled)
+      }.store(in: &cancellables)
   }
 
-  func onPop() {
-    router.pop()
+  private func updateBatchCounter(_ isEnabled: Bool) {
+    interactor.setBatchCounter(isEnabled: isEnabled)
   }
 }

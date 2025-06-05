@@ -29,26 +29,10 @@ final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuVie
   ) {
     super.init(
       router: router,
-      initialState: .init(
-        items: []
-      )
+      initialState: .init(items: [])
     )
 
-    setState {
-      $0.copy(
-        items: [
-          .init(
-            title: .changeQuickPinOption,
-            action: self.updatePin()
-          ),
-          .init(
-            title: .settings,
-            showDivider: false,
-            action: self.settings()
-          )
-        ]
-      )
-    }
+    buildMenuItems()
   }
 
   func settings() {
@@ -71,7 +55,32 @@ final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuVie
     )
   }
 
-  func onPop() {
-    router.pop()
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        .init(image: Theme.shared.image.chevronLeft) {
+          self.router.pop()
+        }
+      ]
+    )
+  }
+
+  private func buildMenuItems() {
+    setState {
+      $0.copy(
+        items: [
+          .init(
+            title: .changeQuickPinOption,
+            action: self.updatePin()
+          ),
+          .init(
+            title: .settings,
+            showDivider: false,
+            action: self.settings()
+          )
+        ]
+      )
+    }
   }
 }

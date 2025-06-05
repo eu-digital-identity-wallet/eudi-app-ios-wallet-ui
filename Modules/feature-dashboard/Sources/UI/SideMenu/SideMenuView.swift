@@ -29,23 +29,12 @@ struct SideMenuView<Router: RouterHost>: View {
     ContentScreenView(
       canScroll: true,
       navigationTitle: .myEuWallet,
-      toolbarContent: toolbarContent()
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState
       )
     }
-  }
-
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: [],
-      leadingActions: [
-        .init(image: Theme.shared.image.chevronLeft) {
-          viewModel.onPop()
-        }
-      ]
-    )
   }
 }
 

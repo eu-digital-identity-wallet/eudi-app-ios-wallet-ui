@@ -110,7 +110,7 @@ final class TestSettingsInteractor: EudiTest {
     }
 
     // When
-    interactor.bacthCounter(isEnabled: true)
+    interactor.setBatchCounter(isEnabled: true)
     
     // Then
     verify(prefsController).setValue(any(), forKey: Prefs.Key.batchCounter)

@@ -2739,13 +2739,13 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
         )
     }
     
-    public func bacthCounter(isEnabled p0: Bool) {
+    public func setBatchCounter(isEnabled p0: Bool) {
         return cuckoo_manager.call(
-            "bacthCounter(isEnabled p0: Bool)",
+            "setBatchCounter(isEnabled p0: Bool)",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.bacthCounter(isEnabled: p0)
+            defaultCall: __defaultImplStub!.setBatchCounter(isEnabled: p0)
         )
     }
     
@@ -2790,10 +2790,10 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
             ))
         }
         
-        func bacthCounter<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(Bool)> where M1.MatchedType == Bool {
+        func setBatchCounter<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(Bool)> where M1.MatchedType == Bool {
             let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
-                method: "bacthCounter(isEnabled p0: Bool)",
+                method: "setBatchCounter(isEnabled p0: Bool)",
                 parameterMatchers: matchers
             ))
         }
@@ -2856,10 +2856,10 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
         
         
         @discardableResult
-        func bacthCounter<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.__DoNotUse<(Bool), Void> where M1.MatchedType == Bool {
+        func setBatchCounter<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.__DoNotUse<(Bool), Void> where M1.MatchedType == Bool {
             let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "bacthCounter(isEnabled p0: Bool)",
+                "setBatchCounter(isEnabled p0: Bool)",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -2896,7 +2896,7 @@ public class SettingsInteractorStub:SettingsInteractor, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (URL?).self)
     }
     
-    public func bacthCounter(isEnabled p0: Bool) {
+    public func setBatchCounter(isEnabled p0: Bool) {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -3311,7 +3311,7 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/SideMenu/Model/SideMenuItemUIModel.swift'
+// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Settings/Model/SettingMenuItemUIModel.swift'
 
 import Cuckoo
 import Foundation
@@ -3327,7 +3327,7 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/SideMenu/Settings/SettingsView.swift'
+// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Settings/SettingsView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -3343,9 +3343,25 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/SideMenu/Settings/SettingsViewModel.swift'
+// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Settings/SettingsViewModel.swift'
 
 import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_dashboard
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/SideMenu/Model/SideMenuItemUIModel.swift'
+
+import Cuckoo
+import Foundation
+import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

@@ -22,7 +22,6 @@ public struct TappableCellView: View {
   public let useOverlay: Bool
   public let action: () -> Void
   public let isToggle: Bool
-//  public var isOn: Binding<Bool>?
 
   @Binding var isOn: Bool
 

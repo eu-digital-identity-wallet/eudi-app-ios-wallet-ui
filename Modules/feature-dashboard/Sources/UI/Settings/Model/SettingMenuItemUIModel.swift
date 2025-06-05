@@ -16,22 +16,28 @@
 import Foundation
 import logic_resources
 
-struct SideMenuItemUIModel: Identifiable {
+struct SettingMenuItemUIModel: Identifiable {
 
   let id: String
   let title: LocalizableStringKey
   let showDivider: Bool
+  let isShareLink: Bool
+  let isToggle: Bool
   let action: () -> Void
 
   init(
     id: String = UUID().uuidString,
     title: LocalizableStringKey,
     showDivider: Bool = true,
+    isShareLink: Bool = false,
+    isToggle: Bool = false,
     action: @autoclosure @escaping () -> Void
   ) {
     self.id = id
     self.title = title
     self.showDivider = showDivider
+    self.isShareLink = isShareLink
+    self.isToggle = isToggle
     self.action = action
   }
 }

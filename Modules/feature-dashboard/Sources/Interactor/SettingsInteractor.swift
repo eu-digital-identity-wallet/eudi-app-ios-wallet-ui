@@ -21,7 +21,7 @@ public protocol SettingsInteractor: Sendable {
   func getAppVersion() -> String
   func retrieveLogFileUrl() -> URL?
   func retrieveChangeLogUrl() -> URL?
-  func bacthCounter(isEnabled: Bool)
+  func setBatchCounter(isEnabled: Bool)
   func isBatchCounterEnabled() -> Bool
 }
 
@@ -57,7 +57,7 @@ final class SettingsInteractorImpl: SettingsInteractor {
     prefsController.getBool(forKey: .batchCounter)
   }
 
-  func bacthCounter(isEnabled: Bool) {
+  func setBatchCounter(isEnabled: Bool) {
     prefsController.setValue(isEnabled, forKey: .batchCounter)
   }
 }

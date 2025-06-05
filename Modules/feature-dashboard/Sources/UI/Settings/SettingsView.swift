@@ -27,28 +27,14 @@ struct SettingsView<Router: RouterHost>: View {
   var body: some View {
     ContentScreenView(
       canScroll: true,
-      navigationTitle: .myEuWallet,
-      toolbarContent: toolbarContent()
+      navigationTitle: .settings,
+      toolbarContent: viewModel.toolbarContent()
     ) {
       content(
         viewState: viewModel.viewState,
-        isBatchCounterEnabled: $viewModel.isBatchCounterEnabled,
-        setBatchCounterEnabled: { isBatchCounterEnabled in
-          viewModel.setBatchCounterEnabled(isBatchCounterEnabled)
-        }
+        isBatchCounterEnabled: $viewModel.isBatchCounterEnabled
       )
     }
-  }
-
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: [],
-      leadingActions: [
-        .init(image: Theme.shared.image.chevronLeft) {
-          viewModel.onPop()
-        }
-      ]
-    )
   }
 }
 
@@ -56,8 +42,7 @@ struct SettingsView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: SettingsViewState,
-  isBatchCounterEnabled: Binding<Bool>,
-  setBatchCounterEnabled: @escaping (Bool) -> Void
+  isBatchCounterEnabled: Binding<Bool>
 ) -> some View {
   VStack(spacing: SPACING_MEDIUM_SMALL) {
     ForEach(viewState.items) { item in
@@ -78,11 +63,8 @@ private func content(
           showDivider: item.showDivider,
           isToggle: true,
           isOn: isBatchCounterEnabled,
-          action: {}()
+          action: item.action()
         )
-        .onChange(of: isBatchCounterEnabled.wrappedValue) { newValue in
-          setBatchCounterEnabled(newValue)
-        }
       } else {
         TappableCellView(
           title: item.title,
@@ -120,8 +102,7 @@ private func content(
   ) {
     content(
       viewState: viewSate,
-      isBatchCounterEnabled: .constant(true),
-      setBatchCounterEnabled: { _ in }
+      isBatchCounterEnabled: .constant(true)
     )
   }
 }
