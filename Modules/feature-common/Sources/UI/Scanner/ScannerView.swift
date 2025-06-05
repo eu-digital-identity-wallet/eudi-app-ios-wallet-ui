@@ -20,12 +20,12 @@ import CodeScanner
 
 struct ScannerView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewModel: ScannerViewModel<Router>
+  @StateObject private var viewModel: ScannerViewModel<Router>
 
   private var cameraSurfaceSize: CGFloat = .zero
 
   init(with viewModel: ScannerViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
     self.cameraSurfaceSize = getScreenRect().width - (Theme.shared.dimension.padding * 2)
   }
 

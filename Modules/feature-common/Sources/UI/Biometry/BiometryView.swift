@@ -19,11 +19,11 @@ import logic_resources
 
 struct BiometryView<Router: RouterHost>: View {
 
-  @ObservedObject var viewModel: BiometryViewModel<Router>
+  @StateObject private var viewModel: BiometryViewModel<Router>
   @Environment(\.scenePhase) var scenePhase
 
   init(with viewModel: BiometryViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
   }
 
   var body: some View {

@@ -20,10 +20,10 @@ import logic_core
 
 struct TransactionDetailsView<Router: RouterHost>: View {
 
-  @ObservedObject var viewModel: TransactionDetailsViewModel<Router>
+  @StateObject private var viewModel: TransactionDetailsViewModel<Router>
 
   init(with viewModel: TransactionDetailsViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
   }
 
   var body: some View {

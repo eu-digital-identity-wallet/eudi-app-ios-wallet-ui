@@ -19,12 +19,12 @@ import logic_resources
 
 struct ProximityConnectionView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewModel: ProximityConnectionViewModel<Router>
+  @StateObject private var viewModel: ProximityConnectionViewModel<Router>
 
   var contentSize: CGFloat = 0.0
 
   init(with viewModel: ProximityConnectionViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
     self.contentSize = getScreenRect().width / 1.5
   }
 

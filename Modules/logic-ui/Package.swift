@@ -30,10 +30,6 @@ let package = Package(
       path: "./logic-resources"
     ),
     .package(
-      url: "https://github.com/canopas/UIPilot.git",
-      from: "2.0.0"
-    ),
-    .package(
       url: "https://github.com/twostraws/CodeScanner",
       from: "2.4.1"
     ),
@@ -71,10 +67,6 @@ let package = Package(
         .product(
           name: "CodeScanner",
           package: "CodeScanner"
-        ),
-        .product(
-          name: "UIPilot",
-          package: "UIPilot"
         ),
         .product(
           name: "ActivityIndicatorView",

@@ -18,12 +18,12 @@ import feature_common
 
 struct DocumentIssuanceSuccessView<Router: RouterHost, RequestItem: Sendable>: View {
 
-  @ObservedObject private var viewModel: DocumentIssuanceSuccessViewModel<Router, RequestItem>
+  @StateObject private var viewModel: DocumentIssuanceSuccessViewModel<Router, RequestItem>
 
   init(
     with viewModel: DocumentIssuanceSuccessViewModel<Router, RequestItem>
   ) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
   }
 
   var body: some View {

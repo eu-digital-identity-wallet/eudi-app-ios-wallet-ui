@@ -79,7 +79,7 @@ public struct ContentHeaderErrorView: View {
         }
       }
     }
-    .frame(height: SPACING_EXTRA_LARGE)
+    .padding(.bottom)
   }
 }
 

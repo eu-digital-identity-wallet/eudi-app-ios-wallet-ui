@@ -18,12 +18,12 @@ import feature_common
 
 struct PresentationSuccessView<Router: RouterHost, RequestItem: Sendable>: View {
 
-  @ObservedObject private var viewModel: PresentationSuccessViewModel<Router, RequestItem>
+  @StateObject private var viewModel: PresentationSuccessViewModel<Router, RequestItem>
 
   init(
     with viewModel: PresentationSuccessViewModel<Router, RequestItem>
   ) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
   }
 
   var body: some View {

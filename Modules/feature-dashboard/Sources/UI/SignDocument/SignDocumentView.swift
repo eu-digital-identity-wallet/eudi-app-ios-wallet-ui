@@ -18,10 +18,10 @@ import feature_common
 
 struct SignDocumentView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewModel: SignDocumentViewModel<Router>
+  @StateObject private var viewModel: SignDocumentViewModel<Router>
 
   public init(with viewModel: SignDocumentViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
   }
 
   var body: some View {

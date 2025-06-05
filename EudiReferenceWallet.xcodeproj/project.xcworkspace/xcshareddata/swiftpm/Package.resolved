@@ -1,5 +1,5 @@
 {
-  "originHash" : "7bce7c6e32b37dfe8147cffdae309ce9743a26146160db9b047bf62ec0d2bd89",
+  "originHash" : "5c270928a32fe8508d24d3343efdc6220c1f93669fc754ec73038d3223a5cd35",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -512,15 +512,6 @@
       "state" : {
         "revision" : "ec6198d37d495efc6acd4dffbd262cdca7ff9b3f",
         "version" : "0.6.0"
-      }
-    },
-    {
-      "identity" : "uipilot",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/canopas/UIPilot.git",
-      "state" : {
-        "revision" : "33b8123dd1e68d861d0cfce27879d5ff1755fd21",
-        "version" : "2.0.2"
       }
     },
     {

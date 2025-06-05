@@ -19,10 +19,10 @@ import logic_resources
 
 struct SideMenuView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewModel: SideMenuViewModel<Router>
+  @StateObject private var viewModel: SideMenuViewModel<Router>
 
   init(with viewModel: SideMenuViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = StateObject(wrappedValue: viewModel)
   }
 
   var body: some View {
