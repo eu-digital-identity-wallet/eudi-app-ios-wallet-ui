@@ -26,11 +26,14 @@ public protocol DocumentDetailsInteractor: Sendable {
 final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 
   private let walletController: WalletKitController
+  private let prefsController: PrefsController
 
   public init(
-    walletController: WalletKitController
+    walletController: WalletKitController,
+    prefsController: PrefsController
   ) {
     self.walletController = walletController
+    self.prefsController = prefsController
   }
 
   public func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
@@ -40,7 +43,16 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     }
     let isBookmarked = await walletController.isDocumentBookmarked(with: documentId)
     let isRevoked = await walletController.isDocumentRevoked(with: documentId)
-    return .success(documentDetails, isBookmarked, isRevoked)
+
+    if isBatchCounterEnabled() {
+      do {
+        let info = try await getCredentialsUsageCount(documentId: documentId)
+        return .success(documentDetails, info, isBookmarked, isRevoked)
+      } catch {
+        return .success(documentDetails, nil, isBookmarked, isRevoked)
+      }
+    }
+    return .success(documentDetails, nil, isBookmarked, isRevoked)
   }
 
   public func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
@@ -87,10 +99,46 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
   func delete(_ identifier: String) async throws {
     try await walletController.removeBookmarkedDocument(with: identifier)
   }
+
+  private func getCredentialsUsageCount(documentId: String) async throws -> DocumentCredentialsInfoUi? {
+    if let usageCounts = try await walletController.getCredentialsUsageCount(
+      id: documentId
+    ) {
+      return DocumentCredentialsInfoUi(
+        availableCredentials: usageCounts.remaining,
+        totalCredentials: usageCounts.total,
+        title: .documentDetailsDocumentCredentialsText([usageCounts.remaining.string, usageCounts.total.string]),
+        collapsedInfo: CollapsedInfo(
+          moreInfoText: .documentDetailsDocumentCredentialsMoreInfoText
+        ),
+        expandedInfo: ExpandedInfo(
+          subtitle: .documentDetailsDocumentCredentialsExpandedTextSubtitle,
+          hideButtonText: .documentDetailsDocumentCredentialsExpandedButtonHideText
+        )
+      )
+    } else {
+      return DocumentCredentialsInfoUi(
+        availableCredentials: 10,
+        totalCredentials: 10,
+        title: .documentDetailsDocumentCredentialsText(["10", "10"]),
+        collapsedInfo: CollapsedInfo(
+          moreInfoText: .documentDetailsDocumentCredentialsMoreInfoText
+        ),
+        expandedInfo: ExpandedInfo(
+          subtitle: .documentDetailsDocumentCredentialsExpandedTextSubtitle,
+          hideButtonText: .documentDetailsDocumentCredentialsExpandedButtonHideText
+        )
+      )
+    }
+  }
+
+  private func isBatchCounterEnabled() -> Bool {
+    prefsController.getBool(forKey: .batchCounter)
+  }
 }
 
 public enum DocumentDetailsPartialState: Sendable {
-  case success(DocumentUIModel, Bool, Bool)
+  case success(DocumentUIModel, DocumentCredentialsInfoUi?, Bool, Bool)
   case failure(Error)
 }
 

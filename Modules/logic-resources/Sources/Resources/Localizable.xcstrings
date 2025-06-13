@@ -617,6 +617,50 @@
         }
       }
     },
+    "document_details_document_credentials_expanded_button_hide_text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide"
+          }
+        }
+      }
+    },
+    "document_details_document_credentials_expanded_text_subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For security reasons, this document can be shared a limited number of times before it needs to be re-issued by the issuing authority."
+          }
+        }
+      }
+    },
+    "document_details_document_credentials_more_info_text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More info"
+          }
+        }
+      }
+    },
+    "document_details_document_credentials_text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/%@ instances remaining"
+          }
+        }
+      }
+    },
     "document_details_revoked_document_message" : {
       "extractionState" : "manual",
       "localizations" : {
