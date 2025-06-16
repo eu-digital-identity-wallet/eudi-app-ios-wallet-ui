@@ -74,6 +74,7 @@ public protocol DocumentTabInteractor: Sendable {
 final class DocumentTabInteractorImpl: DocumentTabInteractor {
 
   private let walletKitController: WalletKitController
+  private let prefsController: PrefsController
   private let filterValidator: FilterValidator
 
   @MainActor
@@ -81,9 +82,11 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
 
   init(
     walletKitController: WalletKitController,
+    prefsController: PrefsController,
     filterValidator: FilterValidator
   ) {
     self.walletKitController = walletKitController
+    self.prefsController = prefsController
     self.filterValidator = filterValidator
   }
 
@@ -388,7 +391,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
         if (document is DeferrredDocument) == false {
           let isRevoked = revokedDocuments?.first { $0 == deferred.id } != nil
           issued.append(
-            document.transformToDocumentUi(
+            document.transformToDocumentTabUi(
               categories: categories,
               isRevoked: isRevoked
             )
@@ -407,7 +410,6 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
   }
 
   private func fetchFilteredDocuments(failedDocuments: [String]) async -> FilterableList? {
-
     let documents = self.walletKitController.fetchAllDocuments()
     let revokedDocuments = try? await self.walletKitController.fetchRevokedDocuments()
 
@@ -415,13 +417,31 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
       return nil
     }
 
-    let filterableItems = documents.map { document in
+    var filterableItems: [FilterableItem] = []
 
+    var usageCounts: [(Int?, Int?)] = Array(repeating: (nil, nil), count: documents.count)
+
+    await withTaskGroup(of: (Int, (Int?, Int?)).self) { group in
+      for (index, document) in documents.enumerated() {
+        group.addTask {
+          let usage = await self.getCredentialsUsageCount(documentId: document.id)
+          return (index, usage)
+        }
+      }
+
+      for await (index, usage) in group {
+        usageCounts[index] = usage
+      }
+    }
+
+    for (index, document) in documents.enumerated() {
       let isRevoked = revokedDocuments?.first { $0 == document.id } != nil
+      let usageCount = usageCounts[index]
 
-      let documentPayload = document.transformToDocumentUi(
+      let documentPayload = document.transformToDocumentTabUi(
         categories: self.walletKitController.getDocumentCategories(),
-        isRevoked: isRevoked
+        isRevoked: isRevoked,
+        usageCount: isBatchCounterEnabled() ? usageCount : nil
       )
 
       let documentSearchTags: [String] = {
@@ -433,7 +453,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
         return tags
       }()
 
-      return FilterableItem(
+      let item = FilterableItem(
         payload: documentPayload,
         attributes: DocumentFilterableAttributes(
           sortingKey: document.displayName?.lowercased() ?? "",
@@ -446,9 +466,23 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
           isRevoked: isRevoked
         )
       )
+
+      filterableItems.append(item)
     }
 
     return FilterableList(items: filterableItems)
+  }
+
+  private func getCredentialsUsageCount(documentId: String) async -> (Int?, Int?) {
+    do {
+      if let usageCounts = try await walletKitController.getCredentialsUsageCount(id: documentId) {
+        return (usageCounts.remaining, usageCounts.total)
+      } else {
+        return (10, 10)
+      }
+    } catch {
+      return (nil, nil)
+    }
   }
 
   private func filterUISection(filters: Filters) -> [FilterUISection] {
@@ -512,5 +546,9 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     }
 
     return filterItems
+  }
+
+  private func isBatchCounterEnabled() -> Bool {
+    prefsController.getBool(forKey: .batchCounter)
   }
 }

@@ -62,27 +62,12 @@ public extension DocumentTabUIModel.Value {
   }
 }
 
-extension Array where Element == DocClaimsDecodable {
-  func transformToDocumentUi(
-    with failedDocuments: [String] = [],
-    categories: DocumentCategories,
-    isRevoked: Bool
-  ) -> [DocumentTabUIModel] {
-    self.map { item in
-      item.transformToDocumentUi(
-        with: failedDocuments,
-        categories: categories,
-        isRevoked: isRevoked
-      )
-    }
-  }
-}
-
 extension DocClaimsDecodable {
-  func transformToDocumentUi(
+  func transformToDocumentTabUi(
     with failedDocuments: [String] = [],
     categories: DocumentCategories,
-    isRevoked: Bool
+    isRevoked: Bool,
+    usageCount: (Int?, Int?)? = nil
   ) -> DocumentTabUIModel {
     let state: DocumentTabUIModel.Value.State = failedDocuments.contains(where: { $0 == self.id })
     ? .failed
@@ -125,7 +110,7 @@ extension DocClaimsDecodable {
           imageUrl: issuerLogo,
           image: Theme.shared.image.id
         ),
-        trailingContent: .icon(indicatorImage(state), supportingColor(state))
+        trailingContent: .icon(indicatorImage(state), supportingColor(state), getUsageCount(usage: usageCount))
       )
     )
   }
@@ -188,6 +173,14 @@ extension DocClaimsDecodable {
       return Theme.shared.image.errorIndicator
     case .revoked:
       return Theme.shared.image.errorIndicator
+    }
+  }
+
+  func getUsageCount(usage: (Int?, Int?)? = nil) -> LocalizableStringKey {
+    if let remaining = usage?.0, let total = usage?.1 {
+      .custom("\(remaining)/\(total)")
+    } else {
+      .custom("")
     }
   }
 }

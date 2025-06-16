@@ -45,12 +45,8 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     let isRevoked = await walletController.isDocumentRevoked(with: documentId)
 
     if isBatchCounterEnabled() {
-      do {
-        let info = try await getCredentialsUsageCount(documentId: documentId)
-        return .success(documentDetails, info, isBookmarked, isRevoked)
-      } catch {
-        return .success(documentDetails, nil, isBookmarked, isRevoked)
-      }
+      let info = await getCredentialsUsageCount(documentId: documentId)
+      return .success(documentDetails, info, isBookmarked, isRevoked)
     }
     return .success(documentDetails, nil, isBookmarked, isRevoked)
   }
@@ -100,35 +96,37 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     try await walletController.removeBookmarkedDocument(with: identifier)
   }
 
-  private func getCredentialsUsageCount(documentId: String) async throws -> DocumentCredentialsInfoUi? {
-    if let usageCounts = try await walletController.getCredentialsUsageCount(
-      id: documentId
-    ) {
-      return DocumentCredentialsInfoUi(
-        availableCredentials: usageCounts.remaining,
-        totalCredentials: usageCounts.total,
-        title: .documentDetailsDocumentCredentialsText([usageCounts.remaining.string, usageCounts.total.string]),
-        collapsedInfo: CollapsedInfo(
-          moreInfoText: .documentDetailsDocumentCredentialsMoreInfoText
-        ),
-        expandedInfo: ExpandedInfo(
-          subtitle: .documentDetailsDocumentCredentialsExpandedTextSubtitle,
-          hideButtonText: .documentDetailsDocumentCredentialsExpandedButtonHideText
+  private func getCredentialsUsageCount(documentId: String) async -> DocumentCredentialsInfoUi? {
+    do {
+      if let usageCounts = try await walletController.getCredentialsUsageCount(id: documentId) {
+        return DocumentCredentialsInfoUi(
+          availableCredentials: usageCounts.remaining,
+          totalCredentials: usageCounts.total,
+          title: .documentDetailsDocumentCredentialsText([usageCounts.remaining.string, usageCounts.total.string]),
+          collapsedInfo: CollapsedInfo(
+            moreInfoText: .documentDetailsDocumentCredentialsMoreInfoText
+          ),
+          expandedInfo: ExpandedInfo(
+            subtitle: .documentDetailsDocumentCredentialsExpandedTextSubtitle,
+            hideButtonText: .documentDetailsDocumentCredentialsExpandedButtonHideText
+          )
         )
-      )
-    } else {
-      return DocumentCredentialsInfoUi(
-        availableCredentials: 10,
-        totalCredentials: 10,
-        title: .documentDetailsDocumentCredentialsText(["10", "10"]),
-        collapsedInfo: CollapsedInfo(
-          moreInfoText: .documentDetailsDocumentCredentialsMoreInfoText
-        ),
-        expandedInfo: ExpandedInfo(
-          subtitle: .documentDetailsDocumentCredentialsExpandedTextSubtitle,
-          hideButtonText: .documentDetailsDocumentCredentialsExpandedButtonHideText
+      } else {
+        return DocumentCredentialsInfoUi(
+          availableCredentials: 10,
+          totalCredentials: 10,
+          title: .documentDetailsDocumentCredentialsText(["10", "10"]),
+          collapsedInfo: CollapsedInfo(
+            moreInfoText: .documentDetailsDocumentCredentialsMoreInfoText
+          ),
+          expandedInfo: ExpandedInfo(
+            subtitle: .documentDetailsDocumentCredentialsExpandedTextSubtitle,
+            hideButtonText: .documentDetailsDocumentCredentialsExpandedButtonHideText
+          )
         )
-      )
+      }
+    } catch {
+      return nil
     }
   }
 
