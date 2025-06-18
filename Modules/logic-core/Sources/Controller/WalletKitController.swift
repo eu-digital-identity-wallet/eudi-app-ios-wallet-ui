@@ -46,7 +46,7 @@ public protocol WalletKitController: Sendable {
   func deleteDocument(with id: String, status: DocumentStatus) async throws
   func loadDocuments() async throws
 
-  func issueDocument(identifier: String) async throws -> WalletStorage.Document
+  func issueDocument(identifier: String, docTypeIdentifier: DocumentTypeIdentifier) async throws -> WalletStorage.Document
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable
   func resolveOfferUrlDocTypes(uriOffer: String) async throws -> OfferedIssuanceModel
   func issueDocumentsByOfferUrl(
@@ -138,6 +138,16 @@ final class WalletKitControllerImpl: WalletKitController {
     docTypes: [OfferedDocModel],
     txCodeValue: String?
   ) async throws -> [WalletStorage.Document] {
+    let docTypes = docTypes.map { docType in
+      let identifier: DocumentTypeIdentifier? = docType.docType.map {
+        DocumentTypeIdentifier(rawValue: $0)
+      } ?? docType.vct.map { DocumentTypeIdentifier(rawValue: $0) }
+
+      let rule = configLogic.documentIssuanceConfig.rule(for: identifier)
+      let keyOptions = KeyOptions(credentialPolicy: rule.policy, batchSize: rule.numberOfCredentials)
+      return docType.copy(keyOptions: keyOptions)
+    }
+
     return try await wallet.issueDocumentsByOfferUrl(
       offerUri: offerUri,
       docTypes: docTypes,
@@ -224,8 +234,11 @@ final class WalletKitControllerImpl: WalletKitController {
     fetchIssuedDocuments().filter { ids.contains($0.id) }
   }
 
-  func issueDocument(identifier: String) async throws -> WalletStorage.Document {
-    return try await wallet.issueDocument(docType: nil, scope: nil, identifier: identifier)
+  func issueDocument(identifier: String, docTypeIdentifier: DocumentTypeIdentifier) async throws -> WalletStorage.Document {
+    let rule = configLogic.documentIssuanceConfig.rule(for: docTypeIdentifier)
+    let keyOptions = KeyOptions(credentialPolicy: rule.policy, batchSize: rule.numberOfCredentials)
+
+    return try await wallet.issueDocument(docType: nil, scope: nil, identifier: identifier, keyOptions: keyOptions)
   }
 
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable {
@@ -284,21 +297,25 @@ final class WalletKitControllerImpl: WalletKitController {
     return metadata.credentialsSupported.compactMap { credential in
       switch credential.value {
       case .msoMdoc(let config):
+        let identifier = DocumentTypeIdentifier(rawValue: config.docType)
         return ScopedDocument(
           name: config.display.getName(fallback: credential.key.value),
           issuer: metadata.display.getName(fallback: ""),
           configId: credential.key.value,
-          isPid: DocumentTypeIdentifier(rawValue: config.docType) == .mDocPid
+          isPid: identifier == .mDocPid,
+          docTypeIdentifier: identifier
         )
       case .sdJwtVc(let config):
         guard let vct = config.vct else {
           return nil
         }
+        let identifier = DocumentTypeIdentifier(rawValue: vct)
         return ScopedDocument(
           name: config.display.getName(fallback: credential.key.value),
           issuer: metadata.display.getName(fallback: ""),
           configId: credential.key.value,
-          isPid: DocumentTypeIdentifier(rawValue: vct) == .sdJwtPid
+          isPid: identifier == .sdJwtPid,
+          docTypeIdentifier: identifier
         )
       default: return nil
       }

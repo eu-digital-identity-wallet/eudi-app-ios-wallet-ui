@@ -19,7 +19,7 @@ import logic_core
 
 public protocol AddDocumentInteractor: Sendable {
   func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> ScopedDocumentsPartialState
-  func issueDocument(configId: String) async -> IssueResultPartialState
+  func issueDocument(configId: String, docTypeIdentifier: DocumentTypeIdentifier) async -> IssueResultPartialState
   func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState
   func getScopedDocument(configId: String) async throws -> ScopedDocument
   func fetchStoredDocuments(documentIds: [String]) async -> IssueDocumentsPartialState
@@ -45,7 +45,8 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
               trailingContent: .icon(Theme.shared.image.plus)
             ),
             isEnabled: true,
-            configId: doc.configId
+            configId: doc.configId,
+            docTypeIdentifier: doc.docTypeIdentifier
           )
         } else {
           return nil
@@ -61,9 +62,12 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     }
   }
 
-  public func issueDocument(configId: String) async -> IssueResultPartialState {
+  public func issueDocument(
+    configId: String,
+    docTypeIdentifier: DocumentTypeIdentifier
+  ) async -> IssueResultPartialState {
     do {
-      let doc = try await walletController.issueDocument(identifier: configId)
+      let doc = try await walletController.issueDocument(identifier: configId, docTypeIdentifier: docTypeIdentifier)
       if doc.isDeferred {
         return .deferredSuccess
       } else if let authorizePresentationUrl = doc.authorizePresentationUrl {

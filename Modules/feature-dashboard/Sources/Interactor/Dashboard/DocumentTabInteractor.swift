@@ -67,7 +67,6 @@ public protocol DocumentTabInteractor: Sendable {
   func applySearch(query: String) async
   func updateFilters(sectionID: String, filterID: String) async
   func updateLists(filterableList: FilterableList) async
-  func updateSortOrder(sortOrder: SortOrderType)
   func addDynamicFilters(documents: FilterableList, filters: Filters) async -> Filters
 }
 
@@ -348,12 +347,6 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
   }
 
-  func updateSortOrder(sortOrder: SortOrderType) {
-    Task {
-      await filterValidator.updateSortOrder(sortOrder: sortOrder)
-    }
-  }
-
   func fetchDocuments(failedDocuments: [String]) async -> DocumentsPartialState {
 
     let documents = await fetchFilteredDocuments(failedDocuments: failedDocuments)
@@ -418,30 +411,13 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     }
 
     var filterableItems: [FilterableItem] = []
-
-    var usageCounts: [(Int?, Int?)] = Array(repeating: (nil, nil), count: documents.count)
-
-    await withTaskGroup(of: (Int, (Int?, Int?)).self) { group in
-      for (index, document) in documents.enumerated() {
-        group.addTask {
-          let usage = await self.getCredentialsUsageCount(documentId: document.id)
-          return (index, usage)
-        }
-      }
-
-      for await (index, usage) in group {
-        usageCounts[index] = usage
-      }
-    }
-
-    for (index, document) in documents.enumerated() {
+    for document in documents {
       let isRevoked = revokedDocuments?.first { $0 == document.id } != nil
-      let usageCount = usageCounts[index]
 
       let documentPayload = document.transformToDocumentTabUi(
         categories: self.walletKitController.getDocumentCategories(),
         isRevoked: isRevoked,
-        usageCount: isBatchCounterEnabled() ? usageCount : nil
+        usageCount: isBatchCounterEnabled() ? await getCredentialsUsageCount(documentId: document.id) : nil
       )
 
       let documentSearchTags: [String] = {
@@ -466,22 +442,21 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
           isRevoked: isRevoked
         )
       )
-
       filterableItems.append(item)
     }
 
     return FilterableList(items: filterableItems)
   }
 
-  private func getCredentialsUsageCount(documentId: String) async -> (Int?, Int?) {
+  private func getCredentialsUsageCount(documentId: String) async -> (remaining: Int?, total: Int?) {
     do {
       if let usageCounts = try await walletKitController.getCredentialsUsageCount(id: documentId) {
-        return (usageCounts.remaining, usageCounts.total)
+        return (remaining: usageCounts.remaining, total: usageCounts.total)
       } else {
-        return (10, 10)
+        return (remaining: 1, total: 1)
       }
     } catch {
-      return (nil, nil)
+      return (remaining: nil, total: nil)
     }
   }
 

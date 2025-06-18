@@ -13,17 +13,21 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import EudiWalletKit
 
-public struct ScopedDocument: Equatable, Sendable {
-  public let name: String
-  public let issuer: String
-  public let configId: String
-  public let isPid: Bool
-  public let docTypeIdentifier: DocumentTypeIdentifier
+struct DocumentIssuanceConfig {
+  let defaultRule: DocumentIssuanceRule
+  let documentSpecificRules: [DocumentTypeIdentifier: DocumentIssuanceRule]
+
+  func rule(for documentIdentifier: DocumentTypeIdentifier?) -> DocumentIssuanceRule {
+    guard let documentIdentifier, let rule = documentSpecificRules[documentIdentifier] else {
+      return defaultRule
+    }
+    return rule
+  }
 }
 
-public extension ScopedDocument {
-  static func empty() -> ScopedDocument {
-    .init(name: "", issuer: "", configId: "", isPid: false, docTypeIdentifier: .mDocPid)
-  }
+struct DocumentIssuanceRule {
+  let policy: CredentialPolicy
+  let numberOfCredentials: Int
 }

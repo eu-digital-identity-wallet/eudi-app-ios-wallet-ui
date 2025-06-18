@@ -27,7 +27,7 @@ private extension Constants {
   
   static let pkb64 = "pQECIAEhWCBoHIiBQnDRMLUT4yOLqJ1l8mrfNIgrjNnFq4RyZgxSmiJYIGD/Sabu6GejaR4eTiym1JkyjnBNcJ+f59pN+lCEyhVyI1ggC6EPCKyGci++LGWUX3fXpPFW6pYO8pyyKLMKs1qF0jo="
   static let kcSks = KeyChainSecureKeyStorage(serviceName: "name", accessGroup: "Group")
-  static let pk = CoseKeyPrivate(privateKeyId: pkb64, secureArea: SoftwareSecureArea.create(storage: kcSks))
+  static let pk = CoseKeyPrivate(privateKeyId: pkb64, index: 0, secureArea: SoftwareSecureArea.create(storage: kcSks))
   static let dr = DeviceResponse(data: Constants.sampleCborData.bytes)!
 }
 
@@ -55,6 +55,7 @@ extension Constants {
     validFrom: nil,
     validUntil: nil,
     statusIdentifier: nil,
+    secureAreaName: nil,
     modifiedAt: nil,
     docClaims: [
       .init(
@@ -89,6 +90,7 @@ extension Constants {
     validFrom: nil,
     validUntil: nil,
     statusIdentifier: nil,
+    secureAreaName: nil,
     modifiedAt: nil,
     docClaims: [
       .init(
@@ -115,14 +117,16 @@ extension Constants {
     name: "Test Document",
     issuer: "Test Issuer",
     configId: "test-config-id",
-    isPid: true
+    isPid: true,
+    docTypeIdentifier: DocumentTypeIdentifier.mDocPid
   )
 
   static let scopedDocumentNotPid = ScopedDocument(
     name: "Test Document",
     issuer: "Test Issuer",
     configId: "test-config-id",
-    isPid: false
+    isPid: false,
+    docTypeIdentifier: DocumentTypeIdentifier.mDocPid
   )
 
   static let defferedPendingDocument = Document(
@@ -130,7 +134,7 @@ extension Constants {
     docType: "type",
     docDataFormat: .sdjwt,
     data: Data(),
-    secureAreaName: nil,
+    docKeyInfo: nil,
     createdAt: Date(),
     metadata: nil,
     displayName: "My Document",
@@ -142,7 +146,7 @@ extension Constants {
     docType: "type",
     docDataFormat: .sdjwt,
     data: Data(),
-    secureAreaName: nil,
+    docKeyInfo: nil,
     createdAt: Date(),
     metadata: nil,
     displayName: "My Document",
@@ -154,7 +158,7 @@ extension Constants {
     docType: "type",
     docDataFormat: .sdjwt,
     data: Data(),
-    secureAreaName: nil,
+    docKeyInfo: nil,
     createdAt: Date(),
     metadata: nil,
     displayName: "My Document",
@@ -256,6 +260,7 @@ extension Constants {
       flow: .other
     ),
     docIdToPresentInfo: [:],
+    documentKeyIndexes: [:],
     userAuthenticationRequired: false
   )
 }

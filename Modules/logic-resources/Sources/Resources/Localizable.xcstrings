@@ -705,6 +705,17 @@
         }
       }
     },
+    "documents_list_credentials_usage_text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/%@"
+          }
+        }
+      }
+    },
     "done_button" : {
       "extractionState" : "manual",
       "localizations" : {

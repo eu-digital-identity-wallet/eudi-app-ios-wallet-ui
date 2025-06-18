@@ -114,13 +114,17 @@ final class TestAddDocumentInteractor: EudiTest {
   func testIssueDocument_whenDefferedPendingDocument_thenReturnSuccess() async {
     // Given
     let configId = "deferred-doc"
+    let identifier = DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
     let document = Constants.defferedPendingDocument
     
     stubResumeDynamicIssuanceDefferedSuccess(document: document)
     
     // When
-    let result = await interactor.issueDocument(configId: configId)
-    
+    let result = await interactor.issueDocument(
+      configId: configId,
+      docTypeIdentifier: identifier
+    )
+
     // Then
     switch result {
     case .deferredSuccess:
@@ -133,12 +137,13 @@ final class TestAddDocumentInteractor: EudiTest {
   func testIssueDocument_whenIssuedDocument_thenReturnSuccess() async {
     // Given
     let configId = "deferred-doc"
+    let identifier = DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
     let document = Constants.issuedPendingDocument
 
     stubResumeDynamicIssuanceDefferedSuccess(document: document)
 
     // When
-    let result = await interactor.issueDocument(configId: configId)
+    let result = await interactor.issueDocument(configId: configId, docTypeIdentifier: identifier)
 
     // Then
     switch result {
@@ -152,12 +157,13 @@ final class TestAddDocumentInteractor: EudiTest {
   func testIssueDocument_whenDefferedPendingDocument_thenReturnsFailure() async {
     // Given
     let configId = "fail-doc"
-    
-    stubIssueDocumentFailure(configId: configId)
+    let identifier = DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
+
+    stubIssueDocumentFailure(configId: configId, docTypeIdentifier: identifier)
     
     // When
-    let result = await interactor.issueDocument(configId: configId)
-    
+    let result = await interactor.issueDocument(configId: configId, docTypeIdentifier: identifier)
+
     // Then
     switch result {
     case .failure(let error):
@@ -414,28 +420,32 @@ final class TestAddDocumentInteractor: EudiTest {
       name: "Document name 1",
       issuer: "Test Issuer",
       configId: "id",
-      isPid: true
+      isPid: true,
+      docTypeIdentifier: .mDocPid
     )
 
     let scopedDocument2 = ScopedDocument(
       name: "Document name 2",
       issuer: "Test Issuer",
       configId: "id",
-      isPid: true
+      isPid: true,
+      docTypeIdentifier: .mDocPid
     )
 
     let scopedDocument3 = ScopedDocument(
       name: "Document name 3",
       issuer: "Test Issuer",
       configId: "id",
-      isPid: true
+      isPid: true,
+      docTypeIdentifier: .mDocPid
     )
 
     let scopedDocument4 = ScopedDocument(
       name: "Document name 4",
       issuer: "Test Issuer",
       configId: "id",
-      isPid: true
+      isPid: true,
+      docTypeIdentifier: .mDocPid
     )
 
     stubGetScopedDocumentsSuccess(with: [
@@ -480,10 +490,10 @@ private extension TestAddDocumentInteractor {
     }
   }
   
-  func stubIssueDocumentFailure(configId: String) {
+  func stubIssueDocumentFailure(configId: String, docTypeIdentifier: DocumentTypeIdentifier) {
     stub(walletKitController) { stub in
       when(stub.issueDocument(
-        identifier: equal(to: configId))
+        identifier: equal(to: configId), docTypeIdentifier: equal(to: docTypeIdentifier))
       ).thenThrow(WalletCoreError.unableToIssueAndStore)
     }
   }
@@ -492,7 +502,7 @@ private extension TestAddDocumentInteractor {
     document: WalletStorage.Document
   ) {
     stub(walletKitController) { stub in
-      when(stub.issueDocument(identifier: equal(to: "deferred-doc")))
+      when(stub.issueDocument(identifier: equal(to: "deferred-doc"), docTypeIdentifier: equal(to: DocumentTypeIdentifier.init(rawValue: "eu.europa.ec.eudi.pid.1"))))
         .thenReturn(document)
     }
   }

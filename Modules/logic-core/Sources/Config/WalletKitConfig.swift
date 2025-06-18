@@ -70,6 +70,11 @@ protocol WalletKitConfig: Sendable {
    * The interval (in seconds) at which revocations are checked.
    */
   var revocationInterval: TimeInterval { get }
+
+  /**
+   * Configuration for document issuance, including default rules and specific overrides.
+   */
+  var documentIssuanceConfig: DocumentIssuanceConfig { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {
@@ -188,5 +193,24 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
   var revocationInterval: TimeInterval {
     300
+  }
+
+  var documentIssuanceConfig: DocumentIssuanceConfig {
+    DocumentIssuanceConfig(
+      defaultRule: DocumentIssuanceRule(
+        policy: .rotateUse,
+        numberOfCredentials: 1
+      ),
+      documentSpecificRules: [
+        DocumentTypeIdentifier.mDocPid: DocumentIssuanceRule(
+          policy: .oneTimeUse,
+          numberOfCredentials: 2
+        ),
+        DocumentTypeIdentifier.sdJwtPid: DocumentIssuanceRule(
+          policy: .oneTimeUse,
+          numberOfCredentials: 2
+        )
+      ]
+    )
   }
 }

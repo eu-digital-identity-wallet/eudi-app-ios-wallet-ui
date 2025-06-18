@@ -99,35 +99,32 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
   private func getCredentialsUsageCount(documentId: String) async -> DocumentCredentialsInfoUi? {
     do {
       if let usageCounts = try await walletController.getCredentialsUsageCount(id: documentId) {
-        return DocumentCredentialsInfoUi(
-          availableCredentials: usageCounts.remaining,
-          totalCredentials: usageCounts.total,
-          title: .documentDetailsDocumentCredentialsText([usageCounts.remaining.string, usageCounts.total.string]),
-          collapsedInfo: CollapsedInfo(
-            moreInfoText: .documentDetailsDocumentCredentialsMoreInfoText
-          ),
-          expandedInfo: ExpandedInfo(
-            subtitle: .documentDetailsDocumentCredentialsExpandedTextSubtitle,
-            hideButtonText: .documentDetailsDocumentCredentialsExpandedButtonHideText
-          )
-        )
+        return documentCredentialsInfoUi(usageCounts: usageCounts)
       } else {
-        return DocumentCredentialsInfoUi(
-          availableCredentials: 10,
-          totalCredentials: 10,
-          title: .documentDetailsDocumentCredentialsText(["10", "10"]),
-          collapsedInfo: CollapsedInfo(
-            moreInfoText: .documentDetailsDocumentCredentialsMoreInfoText
-          ),
-          expandedInfo: ExpandedInfo(
-            subtitle: .documentDetailsDocumentCredentialsExpandedTextSubtitle,
-            hideButtonText: .documentDetailsDocumentCredentialsExpandedButtonHideText
-          )
-        )
+        return documentCredentialsInfoUi()
       }
     } catch {
       return nil
     }
+  }
+
+  private func documentCredentialsInfoUi(usageCounts: CredentialsUsageCounts? = nil) -> DocumentCredentialsInfoUi {
+    let defaultValue = 1
+    let availableCredentials = usageCounts?.remaining ?? defaultValue
+    let totalCredentials = usageCounts?.total ?? defaultValue
+
+    return DocumentCredentialsInfoUi(
+      availableCredentials: availableCredentials,
+      totalCredentials: totalCredentials,
+      title: .documentDetailsDocumentCredentialsText([availableCredentials.string, totalCredentials.string]),
+      collapsedInfo: CollapsedInfo(
+        moreInfoText: .documentDetailsDocumentCredentialsMoreInfoText
+      ),
+      expandedInfo: ExpandedInfo(
+        subtitle: .documentDetailsDocumentCredentialsExpandedTextSubtitle,
+        hideButtonText: .documentDetailsDocumentCredentialsExpandedButtonHideText
+      )
+    )
   }
 
   private func isBatchCounterEnabled() -> Bool {
