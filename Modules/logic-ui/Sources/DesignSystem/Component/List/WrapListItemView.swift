@@ -87,16 +87,43 @@ public struct WrapListItemView: View {
             .truncationMode(.tail)
         }
 
-        Text(listItem.mainText)
-          .typography(Theme.shared.font.headlineMedium)
-          .foregroundStyle(Theme.shared.color.onSurface)
-          .fontWeight(listItem.mainStyle == .plain ? .medium : .bold)
-          .lineLimit(nil)
-          .multilineTextAlignment(.leading)
-          .truncationMode(.tail)
-          .if(listItem.isBlur) {
-            $0.blur(radius: 4, opaque: false)
+        HStack(spacing: SPACING_SMALL) {
+          Text(listItem.mainText)
+            .typography(Theme.shared.font.headlineMedium)
+            .foregroundStyle(Theme.shared.color.onSurface)
+            .fontWeight(listItem.mainStyle == .plain ? .medium : .bold)
+            .lineLimit(nil)
+            .multilineTextAlignment(.leading)
+            .truncationMode(.tail)
+            .if(listItem.isBlur) {
+              $0.blur(radius: 4, opaque: false)
+            }
+
+          Spacer()
+
+          if let trailingContent = listItem.trailingContent {
+            switch trailingContent {
+            case .icon(let image, let color, let text):
+              HStack(spacing: SPACING_SMALL) {
+                Text(text)
+                  .font(Theme.shared.font.bodySmall.font)
+                  .foregroundColor(color)
+                  .lineLimit(1)
+                  .multilineTextAlignment(.trailing)
+                  .gone(if: text.toString.isEmpty)
+                image
+                  .renderingMode(.template)
+                  .resizable()
+                  .aspectRatio(contentMode: .fit)
+                  .frame(width: 16, height: 16)
+                  .foregroundColor(color)
+              }
+              .frame(alignment: .trailing)
+            case .empty, .checkbox:
+              EmptyView()
+            }
           }
+        }
 
         if let supportingText = listItem.supportingText {
           Text(supportingText)
@@ -112,21 +139,6 @@ public struct WrapListItemView: View {
 
       if let trailingContent = listItem.trailingContent {
         switch trailingContent {
-        case .icon(let image, let color, let text):
-          HStack(spacing: SPACING_SMALL) {
-            Text(text)
-              .font(Theme.shared.font.bodySmall.font)
-              .foregroundColor(color)
-              .multilineTextAlignment(.trailing)
-              .gone(if: text.toString.isEmpty)
-            image
-              .renderingMode(.template)
-              .resizable()
-              .aspectRatio(contentMode: .fit)
-              .frame(width: 16, height: 16)
-              .foregroundColor(color)
-          }
-          .frame(alignment: .trailing)
         case .checkbox(let enabled, let isChecked, let onToggle):
           WrapCheckboxView(
             checkboxData: CheckboxData(
@@ -139,7 +151,7 @@ public struct WrapListItemView: View {
                   action?()
                 }
               }))
-        case .empty:
+        case .icon, .empty:
           EmptyView()
         }
       }

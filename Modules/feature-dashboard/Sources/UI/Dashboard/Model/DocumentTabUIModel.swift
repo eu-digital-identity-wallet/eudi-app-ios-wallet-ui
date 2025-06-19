@@ -122,13 +122,14 @@ extension DocClaimsDecodable {
   func supportingText(
     _ state: DocumentTabUIModel.Value.State,
     _ expiresAt: String?
-  ) -> LocalizableStringKey {
+  ) -> LocalizableStringKey? {
     if hasExpired {
       return .expired
     } else {
       switch state {
       case .issued:
-        return .custom(expiry(expiresAt: expiresAt).orEmpty)
+        guard let expiresAt = expiry(expiresAt: expiresAt) else { return nil }
+        return .custom(expiresAt)
       case .pending:
         return .pending
       case .failed:
