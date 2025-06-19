@@ -26,6 +26,7 @@ struct DocumentDetailsViewState: ViewState {
   let documentFieldsCount: Int
   let isBookmarked: Bool
   let isRevoked: Bool
+  let documentCredentialsInfo: DocumentCredentialsInfoUi?
 }
 
 final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, DocumentDetailsViewState> {
@@ -33,6 +34,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   @Published var isDeletionModalShowing: Bool = false
   @Published var isVisible = true
   @Published var showAlert = false
+  @Published var documentCredentialsInfoIsExpanded = false
 
   private let interactor: DocumentDetailsInteractor
 
@@ -51,7 +53,8 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         documentId: documentId,
         documentFieldsCount: 0,
         isBookmarked: false,
-        isRevoked: false
+        isRevoked: false,
+        documentCredentialsInfo: nil
       )
     )
   }
@@ -67,14 +70,15 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
     switch state {
 
-    case .success(let document, let isBookmarked, let isRevoked):
+    case .success(let document, let documentCredentialsInfo, let isBookmarked, let isRevoked):
       self.setState {
         $0.copy(
           document: document,
           isLoading: false,
           documentFieldsCount: document.documentFields.count,
           isBookmarked: isBookmarked,
-          isRevoked: isRevoked
+          isRevoked: isRevoked,
+          documentCredentialsInfo: documentCredentialsInfo
         ).copy(error: nil)
       }
     case .failure(let error):

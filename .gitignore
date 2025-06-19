@@ -87,4 +87,7 @@ iOSInjectionProject/
 #XCOV
 xcov_output
 
+#DSStore
+.DS_Store
+
 # End of https://www.toptal.com/developers/gitignore/api/swift

@@ -62,27 +62,12 @@ public extension DocumentTabUIModel.Value {
   }
 }
 
-extension Array where Element == DocClaimsDecodable {
-  func transformToDocumentUi(
-    with failedDocuments: [String] = [],
-    categories: DocumentCategories,
-    isRevoked: Bool
-  ) -> [DocumentTabUIModel] {
-    self.map { item in
-      item.transformToDocumentUi(
-        with: failedDocuments,
-        categories: categories,
-        isRevoked: isRevoked
-      )
-    }
-  }
-}
-
 extension DocClaimsDecodable {
-  func transformToDocumentUi(
+  func transformToDocumentTabUi(
     with failedDocuments: [String] = [],
     categories: DocumentCategories,
-    isRevoked: Bool
+    isRevoked: Bool,
+    usageCount: (remaining: Int?, total: Int?)? = nil
   ) -> DocumentTabUIModel {
     let state: DocumentTabUIModel.Value.State = failedDocuments.contains(where: { $0 == self.id })
     ? .failed
@@ -125,7 +110,11 @@ extension DocClaimsDecodable {
           imageUrl: issuerLogo,
           image: Theme.shared.image.id
         ),
-        trailingContent: .icon(indicatorImage(state), supportingColor(state))
+        trailingContent: .textWithIcon(
+          indicatorImage(state),
+          supportingColor(state),
+          getUsageCount(usage: usageCount)
+        )
       )
     )
   }
@@ -133,13 +122,14 @@ extension DocClaimsDecodable {
   func supportingText(
     _ state: DocumentTabUIModel.Value.State,
     _ expiresAt: String?
-  ) -> LocalizableStringKey {
+  ) -> LocalizableStringKey? {
     if hasExpired {
       return .expired
     } else {
       switch state {
       case .issued:
-        return .custom(expiry(expiresAt: expiresAt).orEmpty)
+        guard let expiresAt = expiry(expiresAt: expiresAt) else { return nil }
+        return .custom(expiresAt)
       case .pending:
         return .pending
       case .failed:
@@ -188,6 +178,15 @@ extension DocClaimsDecodable {
       return Theme.shared.image.errorIndicator
     case .revoked:
       return Theme.shared.image.errorIndicator
+    }
+  }
+
+  func getUsageCount(usage: (remaining: Int?, total: Int?)? = nil) -> LocalizableStringKey {
+    if let remaining = usage?.remaining?.string,
+       let total = usage?.total?.string {
+      .documentsListCredentialsUsageText([remaining, total])
+    } else {
+      .custom("")
     }
   }
 }

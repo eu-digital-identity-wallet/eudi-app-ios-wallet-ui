@@ -67,13 +67,13 @@ public protocol DocumentTabInteractor: Sendable {
   func applySearch(query: String) async
   func updateFilters(sectionID: String, filterID: String) async
   func updateLists(filterableList: FilterableList) async
-  func updateSortOrder(sortOrder: SortOrderType)
   func addDynamicFilters(documents: FilterableList, filters: Filters) async -> Filters
 }
 
 final class DocumentTabInteractorImpl: DocumentTabInteractor {
 
   private let walletKitController: WalletKitController
+  private let prefsController: PrefsController
   private let filterValidator: FilterValidator
 
   @MainActor
@@ -81,9 +81,11 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
 
   init(
     walletKitController: WalletKitController,
+    prefsController: PrefsController,
     filterValidator: FilterValidator
   ) {
     self.walletKitController = walletKitController
+    self.prefsController = prefsController
     self.filterValidator = filterValidator
   }
 
@@ -345,12 +347,6 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
   }
 
-  func updateSortOrder(sortOrder: SortOrderType) {
-    Task {
-      await filterValidator.updateSortOrder(sortOrder: sortOrder)
-    }
-  }
-
   func fetchDocuments(failedDocuments: [String]) async -> DocumentsPartialState {
 
     let documents = await fetchFilteredDocuments(failedDocuments: failedDocuments)
@@ -388,7 +384,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
         if (document is DeferrredDocument) == false {
           let isRevoked = revokedDocuments?.first { $0 == deferred.id } != nil
           issued.append(
-            document.transformToDocumentUi(
+            document.transformToDocumentTabUi(
               categories: categories,
               isRevoked: isRevoked
             )
@@ -407,7 +403,6 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
   }
 
   private func fetchFilteredDocuments(failedDocuments: [String]) async -> FilterableList? {
-
     let documents = self.walletKitController.fetchAllDocuments()
     let revokedDocuments = try? await self.walletKitController.fetchRevokedDocuments()
 
@@ -415,13 +410,14 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
       return nil
     }
 
-    let filterableItems = documents.map { document in
-
+    var filterableItems: [FilterableItem] = []
+    for document in documents {
       let isRevoked = revokedDocuments?.first { $0 == document.id } != nil
 
-      let documentPayload = document.transformToDocumentUi(
+      let documentPayload = document.transformToDocumentTabUi(
         categories: self.walletKitController.getDocumentCategories(),
-        isRevoked: isRevoked
+        isRevoked: isRevoked,
+        usageCount: isBatchCounterEnabled() ? await getCredentialsUsageCount(documentId: document.id) : nil
       )
 
       let documentSearchTags: [String] = {
@@ -433,7 +429,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
         return tags
       }()
 
-      return FilterableItem(
+      let item = FilterableItem(
         payload: documentPayload,
         attributes: DocumentFilterableAttributes(
           sortingKey: document.displayName?.lowercased() ?? "",
@@ -446,9 +442,22 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
           isRevoked: isRevoked
         )
       )
+      filterableItems.append(item)
     }
 
     return FilterableList(items: filterableItems)
+  }
+
+  private func getCredentialsUsageCount(documentId: String) async -> (remaining: Int?, total: Int?) {
+    do {
+      if let usageCounts = try await walletKitController.getCredentialsUsageCount(id: documentId) {
+        return (remaining: usageCounts.remaining, total: usageCounts.total)
+      } else {
+        return (remaining: 1, total: 1)
+      }
+    } catch {
+      return (remaining: nil, total: nil)
+    }
   }
 
   private func filterUISection(filters: Filters) -> [FilterUISection] {
@@ -512,5 +521,9 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     }
 
     return filterItems
+  }
+
+  private func isBatchCounterEnabled() -> Bool {
+    prefsController.getBool(forKey: .batchCounter)
   }
 }

@@ -14,12 +14,14 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_ui
+import logic_core
 
 public struct AddDocumentUIModel: Identifiable, Sendable, Equatable {
 
   public let id: String
   public let listItem: ListItemData
   public let configId: String
+  public let docTypeIdentifier: DocumentTypeIdentifier
   public var isEnabled: Bool
   public var isLoading: Bool
 
@@ -27,13 +29,15 @@ public struct AddDocumentUIModel: Identifiable, Sendable, Equatable {
     listItem: ListItemData,
     isEnabled: Bool,
     isLoading: Bool = false,
-    configId: String
+    configId: String,
+    docTypeIdentifier: DocumentTypeIdentifier
   ) {
     self.id = UUID().uuidString
     self.isEnabled = isEnabled
     self.listItem = listItem
     self.isLoading = isLoading
     self.configId = configId
+    self.docTypeIdentifier = docTypeIdentifier
   }
 }
 
@@ -44,25 +48,29 @@ public extension AddDocumentUIModel {
         listItem: .init(mainText: .custom("Document name 1")),
         isEnabled: true,
         isLoading: true,
-        configId: "id"
+        configId: "id",
+        docTypeIdentifier: .mDocPid
       ),
       .init(
         listItem: .init(mainText: .custom("Document name 2")),
         isEnabled: true,
         isLoading: true,
-        configId: "id"
+        configId: "id",
+        docTypeIdentifier: .mDocPid
       ),
       .init(
         listItem: .init(mainText: .custom("Document name 3")),
         isEnabled: true,
         isLoading: true,
-        configId: "id"
+        configId: "id",
+        docTypeIdentifier: .mDocPid
       ),
       .init(
         listItem: .init(mainText: .custom("Document name 4")),
         isEnabled: true,
         isLoading: true,
-        configId: "id"
+        configId: "id",
+        docTypeIdentifier: .mDocPid
       )
     ]
   }
