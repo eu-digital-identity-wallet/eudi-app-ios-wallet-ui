@@ -184,7 +184,8 @@ The released software is an initial development release version:
 -  The initial development release is not yet comprehensively documented. 
 -  Users of the software must perform sufficient engineering and additional testing to properly evaluate their application and determine whether any of the open-sourced components is suitable for use in that application.
 -  We strongly recommend not to put this version of the software into production use.
--  Only the latest version of the software will be supported
+-  Only the latest version of the software will be supported.
+-  This project is tested with BrowserStack.
 
 ## Package structure
 
@@ -287,6 +288,3 @@ Unless required by applicable law or agreed to in writing, software distributed 
 the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF 
 ANY KIND, either express or implied. See the Licence for the specific language 
 governing permissions and limitations under the Licence.
-
-
-This project is tested with BrowserStack.
