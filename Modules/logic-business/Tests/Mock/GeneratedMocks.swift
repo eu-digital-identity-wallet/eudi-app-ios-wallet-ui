@@ -349,7 +349,7 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
             "validateKeyChainBiometry() throws",
             parameters: (),
             escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: __defaultImplStub!.validateKeyChainBiometry()
         )
     }
@@ -421,7 +421,7 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
             ))
         }
         
-        func validateKeyChainBiometry() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<()> {
+        func validateKeyChainBiometry() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(),Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockKeyChainController.self,
                 method: "validateKeyChainBiometry() throws",

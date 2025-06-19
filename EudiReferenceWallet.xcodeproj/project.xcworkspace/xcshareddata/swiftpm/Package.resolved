@@ -1,5 +1,5 @@
 {
-  "originHash" : "796ef3ac8f17325dc15c2a51c0018c7c22d7183396ab5eff3f75a4300eb59d29",
+  "originHash" : "e4d54cd5eaa1360ed3a4f41026bcf5ec302ecd2a1fcb85f27b44e5160498931b",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
       "state" : {
-        "revision" : "3ecee6db6771fabc674eaf15e225cdbd8c4e6e8d",
-        "version" : "2.0.18"
+        "revision" : "856aa829a5717220326368589a3d1390e7ec1785",
+        "version" : "2.1.0"
       }
     },
     {
@@ -159,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-kit.git",
       "state" : {
-        "revision" : "d14210fa24c79f611495f942f6a45cef1c095d3b",
-        "version" : "0.1.0"
+        "revision" : "7299c827c603e711c750c2c384dc8311b9b2db6f",
+        "version" : "0.1.1"
       }
     },
     {
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui.git",
       "state" : {
-        "revision" : "bdb16533c6fdc090fcb74df05ccbc6174fecfd7d",
-        "version" : "0.2.1"
+        "revision" : "763e26243aed475bb9292a020d4d75ed1d597521",
+        "version" : "0.2.2"
       }
     },
     {
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "20f0a0d13226b5c0b7262d909efd0465007c7de9",
-        "version" : "0.12.2"
+        "revision" : "649be5c78ed1ba990b28e796ad5ea1e13d169142",
+        "version" : "0.12.3"
       }
     },
     {
@@ -213,8 +213,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-sdjwt-swift.git",
       "state" : {
-        "revision" : "5d318469727bc845f4b001490974b80392d2acb8",
-        "version" : "0.6.3"
+        "revision" : "7bb3dc24aa2cbf6485b3982b1b77c736db7c8348",
+        "version" : "0.6.2"
       }
     },
     {
@@ -330,8 +330,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/realm/realm-swift.git",
       "state" : {
-        "revision" : "d94d44781167fbb8d7a46fb181e784a6446ca5c1",
-        "version" : "10.54.4"
+        "revision" : "54eebd2b5e7a4a8055a7a8b55ac859a48462d722",
+        "version" : "10.54.5"
       }
     },
     {
