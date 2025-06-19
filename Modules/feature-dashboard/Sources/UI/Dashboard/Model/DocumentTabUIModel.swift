@@ -110,7 +110,7 @@ extension DocClaimsDecodable {
           imageUrl: issuerLogo,
           image: Theme.shared.image.id
         ),
-        trailingContent: .icon(
+        trailingContent: .textWithIcon(
           indicatorImage(state),
           supportingColor(state),
           getUsageCount(usage: usageCount)

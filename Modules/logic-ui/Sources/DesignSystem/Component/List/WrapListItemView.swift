@@ -103,7 +103,7 @@ public struct WrapListItemView: View {
 
           if let trailingContent = listItem.trailingContent {
             switch trailingContent {
-            case .icon(let image, let color, let text):
+            case .textWithIcon(let image, let color, let text):
               HStack(spacing: SPACING_SMALL) {
                 Text(text)
                   .font(Theme.shared.font.bodySmall.font)
@@ -119,8 +119,8 @@ public struct WrapListItemView: View {
                   .foregroundColor(color)
               }
               .frame(alignment: .trailing)
-            case .empty, .checkbox:
-              EmptyView()
+              case .empty, .checkbox, .icon:
+                EmptyView()
             }
           }
         }
@@ -139,6 +139,13 @@ public struct WrapListItemView: View {
 
       if let trailingContent = listItem.trailingContent {
         switch trailingContent {
+        case .icon(let image, let color):
+          image
+            .renderingMode(.template)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 16, height: 16)
+            .foregroundColor(color)
         case .checkbox(let enabled, let isChecked, let onToggle):
           WrapCheckboxView(
             checkboxData: CheckboxData(
@@ -151,7 +158,7 @@ public struct WrapListItemView: View {
                   action?()
                 }
               }))
-        case .icon, .empty:
+        case .empty, .textWithIcon:
           EmptyView()
         }
       }
@@ -246,7 +253,7 @@ public struct WrapListItemView: View {
       WrapListItemView(
         listItem: .init(
           mainText: .custom("Another Item"),
-          trailingContent: .icon(
+          trailingContent: .textWithIcon(
             Image(systemName: "plus"),
             Color.accentColor,
             LocalizableStringKey.custom("Signing")
