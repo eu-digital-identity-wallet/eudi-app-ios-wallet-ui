@@ -40,8 +40,8 @@ struct AddDocumentView<Router: RouterHost>: View {
       toolbarContent: viewModel.toolbarContent()
     ) {
 
-      content(viewState: viewModel.viewState) { type, identifier in
-        viewModel.onClick(for: type, docTypeIdentifier: identifier)
+      content(viewState: viewModel.viewState) { configId, identifier in
+        viewModel.onClick(configId: configId, docTypeIdentifier: identifier)
       }
 
       if viewModel.viewState.showFooterScanner {

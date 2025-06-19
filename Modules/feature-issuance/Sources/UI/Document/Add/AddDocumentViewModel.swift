@@ -106,7 +106,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     }
   }
 
-  func onClick(for configId: String, docTypeIdentifier: DocumentTypeIdentifier) {
+  func onClick(configId: String, docTypeIdentifier: DocumentTypeIdentifier) {
     issueDocument(configId: configId, docTypeIdentifier: docTypeIdentifier)
   }
 
