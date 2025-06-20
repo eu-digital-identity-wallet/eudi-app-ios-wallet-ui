@@ -82,6 +82,7 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
   }
 
   private func pop() {
+    publisherTask?.cancel()
     interactor.stopPresentation()
     router.pop()
   }
