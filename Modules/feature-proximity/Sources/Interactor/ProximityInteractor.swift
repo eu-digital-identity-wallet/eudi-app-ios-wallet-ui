@@ -23,7 +23,7 @@ public enum ProximityResponsePartialState: Sendable {
 }
 
 public enum ProximityResponsePreparationPartialState: Sendable {
-  case success(any RequestItemConvertible)
+  case success(RequestItemConvertible)
   case failure(Error)
 }
 

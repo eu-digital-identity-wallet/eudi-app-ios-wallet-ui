@@ -42,7 +42,7 @@ public protocol PresentationInteractor: Sendable {
   func getSessionStatePublisher() -> RemotePublisherPartialState
   func getCoordinator() -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
-  func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<any RequestItemConvertible, Error>
+  func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error>
   func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onSendResponse() async -> RemoteSentResponsePartialState
   func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator)
@@ -111,7 +111,7 @@ final class PresentationInteractorImpl: PresentationInteractor {
     }
   }
 
-  public func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<any RequestItemConvertible, Error> {
+  public func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error> {
 
     let requestConvertible = requestItems.prepareRequest()
 

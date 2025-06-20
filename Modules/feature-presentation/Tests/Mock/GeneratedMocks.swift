@@ -1073,9 +1073,9 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
         )
     }
     
-    public func onResponsePrepare(requestItems p0: [RequestDataUiModel]) async -> Result<any RequestItemConvertible, Error> {
+    public func onResponsePrepare(requestItems p0: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error> {
         return await cuckoo_manager.call(
-            "onResponsePrepare(requestItems p0: [RequestDataUiModel]) async -> Result<any RequestItemConvertible, Error>",
+            "onResponsePrepare(requestItems p0: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error>",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -1164,10 +1164,10 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
             ))
         }
         
-        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems p0: M1) -> Cuckoo.ProtocolStubFunction<([RequestDataUiModel]), Result<any RequestItemConvertible, Error>> where M1.MatchedType == [RequestDataUiModel] {
+        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems p0: M1) -> Cuckoo.ProtocolStubFunction<([RequestDataUiModel]), Result<RequestItemConvertible, Error>> where M1.MatchedType == [RequestDataUiModel] {
             let matchers: [Cuckoo.ParameterMatcher<([RequestDataUiModel])>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractor.self,
-                method: "onResponsePrepare(requestItems p0: [RequestDataUiModel]) async -> Result<any RequestItemConvertible, Error>",
+                method: "onResponsePrepare(requestItems p0: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error>",
                 parameterMatchers: matchers
             ))
         }
@@ -1262,10 +1262,10 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
         
         
         @discardableResult
-        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems p0: M1) -> Cuckoo.__DoNotUse<([RequestDataUiModel]), Result<any RequestItemConvertible, Error>> where M1.MatchedType == [RequestDataUiModel] {
+        func onResponsePrepare<M1: Cuckoo.Matchable>(requestItems p0: M1) -> Cuckoo.__DoNotUse<([RequestDataUiModel]), Result<RequestItemConvertible, Error>> where M1.MatchedType == [RequestDataUiModel] {
             let matchers: [Cuckoo.ParameterMatcher<([RequestDataUiModel])>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "onResponsePrepare(requestItems p0: [RequestDataUiModel]) async -> Result<any RequestItemConvertible, Error>",
+                "onResponsePrepare(requestItems p0: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error>",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1350,8 +1350,8 @@ public class PresentationInteractorStub:PresentationInteractor, @unchecked Senda
         return DefaultValueRegistry.defaultValue(for: (Result<OnlineAuthenticationRequestSuccessModel, Error>).self)
     }
     
-    public func onResponsePrepare(requestItems p0: [RequestDataUiModel]) async -> Result<any RequestItemConvertible, Error> {
-        return DefaultValueRegistry.defaultValue(for: (Result<any RequestItemConvertible, Error>).self)
+    public func onResponsePrepare(requestItems p0: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error> {
+        return DefaultValueRegistry.defaultValue(for: (Result<RequestItemConvertible, Error>).self)
     }
     
     public func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
@@ -7160,9 +7160,9 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         )
     }
     
-    public func sendResponse(response p0: any RequestItemConvertible) async {
+    public func sendResponse(response p0: RequestItemConvertible) async {
         return await cuckoo_manager.call(
-            "sendResponse(response p0: any RequestItemConvertible) async",
+            "sendResponse(response p0: RequestItemConvertible) async",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -7245,10 +7245,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             ))
         }
         
-        func sendResponse<M1: Cuckoo.Matchable>(response p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(any RequestItemConvertible)> where M1.MatchedType == any RequestItemConvertible {
-            let matchers: [Cuckoo.ParameterMatcher<(any RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
+        func sendResponse<M1: Cuckoo.Matchable>(response p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(RequestItemConvertible)> where M1.MatchedType == RequestItemConvertible {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockProximitySessionCoordinator.self,
-                method: "sendResponse(response p0: any RequestItemConvertible) async",
+                method: "sendResponse(response p0: RequestItemConvertible) async",
                 parameterMatchers: matchers
             ))
         }
@@ -7339,10 +7339,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func sendResponse<M1: Cuckoo.Matchable>(response p0: M1) -> Cuckoo.__DoNotUse<(any RequestItemConvertible), Void> where M1.MatchedType == any RequestItemConvertible {
-            let matchers: [Cuckoo.ParameterMatcher<(any RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
+        func sendResponse<M1: Cuckoo.Matchable>(response p0: M1) -> Cuckoo.__DoNotUse<(RequestItemConvertible), Void> where M1.MatchedType == RequestItemConvertible {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "sendResponse(response p0: any RequestItemConvertible) async",
+                "sendResponse(response p0: RequestItemConvertible) async",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7423,7 +7423,7 @@ public class ProximitySessionCoordinatorStub:ProximitySessionCoordinator, @unche
         return DefaultValueRegistry.defaultValue(for: (PresentationRequest).self)
     }
     
-    public func sendResponse(response p0: any RequestItemConvertible) async {
+    public func sendResponse(response p0: RequestItemConvertible) async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -7509,9 +7509,9 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         )
     }
     
-    public func sendResponse(response p0: any RequestItemConvertible) async {
+    public func sendResponse(response p0: RequestItemConvertible) async {
         return await cuckoo_manager.call(
-            "sendResponse(response p0: any RequestItemConvertible) async",
+            "sendResponse(response p0: RequestItemConvertible) async",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -7586,10 +7586,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             ))
         }
         
-        func sendResponse<M1: Cuckoo.Matchable>(response p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(any RequestItemConvertible)> where M1.MatchedType == any RequestItemConvertible {
-            let matchers: [Cuckoo.ParameterMatcher<(any RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
+        func sendResponse<M1: Cuckoo.Matchable>(response p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(RequestItemConvertible)> where M1.MatchedType == RequestItemConvertible {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRemoteSessionCoordinator.self,
-                method: "sendResponse(response p0: any RequestItemConvertible) async",
+                method: "sendResponse(response p0: RequestItemConvertible) async",
                 parameterMatchers: matchers
             ))
         }
@@ -7668,10 +7668,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func sendResponse<M1: Cuckoo.Matchable>(response p0: M1) -> Cuckoo.__DoNotUse<(any RequestItemConvertible), Void> where M1.MatchedType == any RequestItemConvertible {
-            let matchers: [Cuckoo.ParameterMatcher<(any RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
+        func sendResponse<M1: Cuckoo.Matchable>(response p0: M1) -> Cuckoo.__DoNotUse<(RequestItemConvertible), Void> where M1.MatchedType == RequestItemConvertible {
+            let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "sendResponse(response p0: any RequestItemConvertible) async",
+                "sendResponse(response p0: RequestItemConvertible) async",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7748,7 +7748,7 @@ public class RemoteSessionCoordinatorStub:RemoteSessionCoordinator, @unchecked S
         return DefaultValueRegistry.defaultValue(for: (PresentationRequest).self)
     }
     
-    public func sendResponse(response p0: any RequestItemConvertible) async {
+    public func sendResponse(response p0: RequestItemConvertible) async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

@@ -20,7 +20,7 @@ public enum PresentationState: Sendable {
   case prepareQr
   case qrReady(imageData: Data)
   case requestReceived(PresentationRequest)
-  case responseToSend(any RequestItemConvertible)
+  case responseToSend(RequestItemConvertible)
   case responseSent(URL?)
   case error(Error)
 }
