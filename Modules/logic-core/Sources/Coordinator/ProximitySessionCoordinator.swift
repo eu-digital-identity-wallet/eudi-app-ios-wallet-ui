@@ -40,7 +40,6 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
   let sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> = .init(.loading)
 
   private let session: PresentationSession
-
   private let sendableAnyCancellable: SendableAnyCancellable = .init()
 
   init(session: PresentationSession) {
@@ -110,10 +109,7 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
   }
 
   func getStream() -> AsyncStream<PresentationState> {
-    return sendableCurrentValueSubject
-      .getSubject()
-      .removeDuplicates()
-      .toAsyncStream()
+    self.sendableCurrentValueSubject.getAsyncStream()
   }
 
   public func stopPresentation() {

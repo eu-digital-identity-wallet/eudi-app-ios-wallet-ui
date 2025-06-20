@@ -39,7 +39,6 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
   let sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> = .init(.loading)
 
   private let sendableAnyCancellable: SendableAnyCancellable = .init()
-
   private let session: PresentationSession
 
   init(session: PresentationSession) {
@@ -93,10 +92,7 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
   }
 
   public func getStream() -> AsyncStream<PresentationState> {
-    self.sendableCurrentValueSubject
-      .getSubject()
-      .removeDuplicates()
-      .toAsyncStream()
+    self.sendableCurrentValueSubject.getAsyncStream()
   }
 
   public func stopPresentation() {

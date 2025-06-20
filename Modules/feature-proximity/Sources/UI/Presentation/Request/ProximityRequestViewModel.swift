@@ -29,22 +29,6 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
     super.init(router: router, originator: originator)
   }
 
-  func subscribeToCoordinatorPublisher() async {
-    switch self.interactor.getSessionStatePublisher() {
-    case .success(let publisher):
-      for try await state in publisher {
-        switch state {
-        case .error(let error):
-          self.onError(with: error)
-        default:
-          ()
-        }
-      }
-    case .failure(let error):
-      self.onError(with: error)
-    }
-  }
-
   override func doWork() async {
 
     self.onStartLoading()
@@ -178,6 +162,22 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
       Task {
         try? await self.publisherTask?.value
       }
+    }
+  }
+
+  private func subscribeToCoordinatorPublisher() async {
+    switch self.interactor.getSessionStatePublisher() {
+    case .success(let publisher):
+      for try await state in publisher {
+        switch state {
+        case .error(let error):
+          self.onError(with: error)
+        default:
+          ()
+        }
+      }
+    case .failure(let error):
+      self.onError(with: error)
     }
   }
 }
