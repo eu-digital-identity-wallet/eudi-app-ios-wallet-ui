@@ -26,7 +26,7 @@ public protocol ProximitySessionCoordinator: Sendable {
   func initialize() async
   func startQrEngagement() async throws -> UIImage
   func requestReceived() async throws -> PresentationRequest
-  func sendResponse(response: RequestItemConvertible) async
+  func sendResponse(response: any RequestItemConvertible) async
 
   func getState() async -> PresentationState
   func setState(presentationState: PresentationState)
@@ -97,8 +97,8 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
     return createRequest()
   }
 
-  public func sendResponse(response: RequestItemConvertible) async {
-    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems())
+  public func sendResponse(response: any RequestItemConvertible) async {
+    await session.sendResponse(userAccepted: true, itemsToSend: response.items)
   }
 
   public func getState() async -> PresentationState {
@@ -110,7 +110,10 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
   }
 
   func getStream() -> AsyncStream<PresentationState> {
-    return sendableCurrentValueSubject.getAsyncStream()
+    return sendableCurrentValueSubject
+      .getSubject()
+      .removeDuplicates()
+      .toAsyncStream()
   }
 
   public func stopPresentation() {

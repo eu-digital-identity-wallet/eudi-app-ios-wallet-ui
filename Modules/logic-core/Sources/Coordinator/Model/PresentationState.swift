@@ -20,7 +20,28 @@ public enum PresentationState: Sendable {
   case prepareQr
   case qrReady(imageData: Data)
   case requestReceived(PresentationRequest)
-  case responseToSend(RequestItemConvertible)
+  case responseToSend(any RequestItemConvertible)
   case responseSent(URL?)
   case error(Error)
+}
+
+extension PresentationState: Equatable {
+  public static func == (lhs: PresentationState, rhs: PresentationState) -> Bool {
+    return switch (lhs, rhs) {
+    case (.loading, .loading), (.prepareQr, .prepareQr):
+      true
+    case let (.qrReady(a), .qrReady(b)):
+      a == b
+    case let (.requestReceived(a), .requestReceived(b)):
+      a == b
+    case let (.responseToSend(a), .responseToSend(b)):
+      a.items == b.items
+    case let (.responseSent(a), .responseSent(b)):
+      a == b
+    case let (.error(a), .error(b)):
+      a.localizedDescription == b.localizedDescription
+    default:
+      false
+    }
+  }
 }

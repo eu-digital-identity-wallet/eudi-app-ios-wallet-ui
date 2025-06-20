@@ -73,7 +73,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
       let items = self.viewState.items
 
-      let result = await Task.detached { () -> Result<RequestItemConvertible, Error> in
+      let result = await Task.detached { () -> Result<any RequestItemConvertible, Error> in
         return await self.interactor.onResponsePrepare(requestItems: items)
       }.value
 

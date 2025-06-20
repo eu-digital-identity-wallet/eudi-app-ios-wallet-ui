@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-public struct PresentationRequest: Sendable {
+public struct PresentationRequest: Sendable, Equatable {
   public let items: [DocElements]
   public let relyingParty: String
   public let dataRequestInfo: String

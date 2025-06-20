@@ -25,7 +25,7 @@ public protocol RemoteSessionCoordinator: Sendable {
 
   func initialize() async
   func requestReceived() async throws -> PresentationRequest
-  func sendResponse(response: RequestItemConvertible) async
+  func sendResponse(response: any RequestItemConvertible) async
 
   func getState() async -> PresentationState
   func getStream() -> AsyncStream<PresentationState>
@@ -78,8 +78,8 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
     return createRequest()
   }
 
-  public func sendResponse(response: RequestItemConvertible) async {
-    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems(), onCancel: nil) { url in
+  public func sendResponse(response: any RequestItemConvertible) async {
+    await session.sendResponse(userAccepted: true, itemsToSend: response.items, onCancel: nil) { url in
       self.sendableCurrentValueSubject.setValue(.responseSent(url))
     }
   }
@@ -93,7 +93,10 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
   }
 
   public func getStream() -> AsyncStream<PresentationState> {
-    self.sendableCurrentValueSubject.getAsyncStream()
+    self.sendableCurrentValueSubject
+      .getSubject()
+      .removeDuplicates()
+      .toAsyncStream()
   }
 
   public func stopPresentation() {

@@ -174,9 +174,9 @@ public extension Array where Element == RequestDataUiModel {
         }
 
         let requestItem: RequestItem = .init(elementPath: path)
-        var nameSpaceDict = partialResult.requestItems[documentId, default: [nameSpace: [requestItem]]]
+        var nameSpaceDict = partialResult.items[documentId, default: [nameSpace: [requestItem]]]
         nameSpaceDict[nameSpace, default: [requestItem]].appendIfNotExists(requestItem)
-        partialResult.requestItems[documentId] = nameSpaceDict
+        partialResult.items[documentId] = nameSpaceDict
       }
 
     return requestConvertible
