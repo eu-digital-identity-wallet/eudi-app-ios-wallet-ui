@@ -25,15 +25,18 @@ final class TestDocumentTabInteractor: EudiTest {
   
   var interactor: DocumentTabInteractor!
   var walletKitController: MockWalletKitController!
+  var prefsController: MockPrefsController!
   var filterValidator: MockFilterValidator!
   var configLogic: MockConfigLogic!
   
   override func setUp() {
     self.walletKitController = MockWalletKitController()
+    self.prefsController = MockPrefsController()
     self.configLogic = MockConfigLogic()
     self.filterValidator = MockFilterValidator()
     self.interactor = DocumentTabInteractorImpl(
       walletKitController: walletKitController,
+      prefsController: prefsController,
       filterValidator: filterValidator
     )
   }
@@ -41,6 +44,7 @@ final class TestDocumentTabInteractor: EudiTest {
   override func tearDown() {
     self.interactor = nil
     self.walletKitController = nil
+    self.prefsController = nil
     self.configLogic = nil
   }
   
@@ -52,7 +56,7 @@ final class TestDocumentTabInteractor: EudiTest {
           docType: nil,
           docDataFormat: .cbor,
           data: Data(),
-          secureAreaName: nil,
+          docKeyInfo: nil,
           createdAt: nil,
           metadata: nil,
           displayName: "",
@@ -86,7 +90,8 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchIssuedDocuments(with: [])
     stubFetchDocumentsWithExclusion(with: [])
     stubFetchMainPidDocument(with: nil)
-    
+    stubGetCredentialsUsageCountNil()
+
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
     
@@ -131,7 +136,9 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDocumentCategories(with: documentsCategories)
     stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
     stubFetchMainPidDocument(with: Constants.euPidModel)
-    
+    stubGetCredentialsUsageCount()
+    stubIsBatchCounterEnabled()
+
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
     
@@ -303,6 +310,20 @@ final class TestDocumentTabInteractor: EudiTest {
       }
     }
   }
+
+  func testRetrieveLogFileUrl_WhenWallketKitRetriveLogFileUrl_ThenVerify() async {
+    // Given
+    let expectedUrl = URL(string: "https://example.com")!
+    stub(walletKitController) { stub in
+      stub.retrieveLogFileUrl().thenReturn(expectedUrl)
+    }
+
+    // When
+    let _ = interactor.retrieveLogFileUrl()
+
+    // Then
+    verify(walletKitController).retrieveLogFileUrl()
+  }
 }
 
 private extension TestDocumentTabInteractor {
@@ -449,6 +470,38 @@ private extension TestDocumentTabInteractor {
         query: equal(to: "search"))
       )
       .thenDoNothing()
+    }
+  }
+
+  func stubGetCredentialsUsageCount(
+    remaining: Int = 2,
+    total: Int = 10
+  ) {
+    stub(walletKitController) { mock in
+      mock.getCredentialsUsageCount(
+        id: any()
+      )
+      .thenReturn(
+        try! CredentialsUsageCounts(
+          total: total,
+          remaining: remaining
+        )
+      )
+    }
+  }
+
+  func stubGetCredentialsUsageCountNil() {
+    stub(walletKitController) { mock in
+      mock.getCredentialsUsageCount(
+        id: any()
+      )
+      .thenReturn(nil)
+    }
+  }
+
+  func stubIsBatchCounterEnabled(_ enabled: Bool = true) {
+    stub(prefsController) { stub in
+      when(stub.getBool(forKey: Prefs.Key.batchCounter)).thenReturn(enabled)
     }
   }
 }

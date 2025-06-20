@@ -40,17 +40,36 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
         originator: originator
       )
     )
-    publisherTask = Task {
-      await self.subscribeToCoordinatorPublisher()
-    }
   }
 
   func initialize() async {
+    self.startPublisherTask()
     await self.interactor.onDeviceEngagement()
-    try? await publisherTask?.value
   }
 
-  func subscribeToCoordinatorPublisher() async {
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        .init(image: Theme.shared.image.chevronLeft) {
+          self.pop()
+        }
+      ]
+    )
+  }
+
+  private func startPublisherTask() {
+    if publisherTask == nil || publisherTask?.isCancelled == true {
+      publisherTask = Task {
+        await self.subscribeToCoordinatorPublisher()
+      }
+      Task {
+        try? await self.publisherTask?.value
+      }
+    }
+  }
+
+  private func subscribeToCoordinatorPublisher() async {
     switch self.interactor.getSessionStatePublisher() {
     case .success(let publisher):
       for try await state in publisher {
@@ -70,18 +89,8 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
     }
   }
 
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: [],
-      leadingActions: [
-        .init(image: Theme.shared.image.chevronLeft) {
-          self.pop()
-        }
-      ]
-    )
-  }
-
   private func pop() {
+    publisherTask?.cancel()
     interactor.stopPresentation()
     router.pop()
   }

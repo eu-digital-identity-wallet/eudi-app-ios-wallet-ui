@@ -106,8 +106,8 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     }
   }
 
-  func onClick(for configId: String) {
-    issueDocument(configId: configId)
+  func onClick(configId: String, docTypeIdentifier: DocumentTypeIdentifier) {
+    issueDocument(configId: configId, docTypeIdentifier: docTypeIdentifier)
   }
 
   func onScanClick() {
@@ -187,7 +187,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     }
   }
 
-  private func issueDocument(configId: String) {
+  private func issueDocument(configId: String, docTypeIdentifier: DocumentTypeIdentifier) {
     Task {
       setState {
         $0.copy(
@@ -197,7 +197,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
       }
 
       let state = await Task.detached { () -> IssueResultPartialState in
-        return await self.interactor.issueDocument(configId: configId)
+        return await self.interactor.issueDocument(configId: configId, docTypeIdentifier: docTypeIdentifier)
       }.value
 
       switch state {

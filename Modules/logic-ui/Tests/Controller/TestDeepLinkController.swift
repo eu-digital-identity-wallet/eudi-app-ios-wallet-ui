@@ -356,6 +356,7 @@ private extension TestDeepLinkController {
       flow: .other
     ),
     docIdToPresentInfo: [:],
+    documentKeyIndexes: [:],
     userAuthenticationRequired: false
   )
 }

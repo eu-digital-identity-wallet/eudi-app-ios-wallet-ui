@@ -17,6 +17,7 @@ import SwiftUI
 import logic_ui
 import feature_common
 import logic_resources
+import logic_core
 
 struct AddDocumentView<Router: RouterHost>: View {
 
@@ -39,8 +40,8 @@ struct AddDocumentView<Router: RouterHost>: View {
       toolbarContent: viewModel.toolbarContent()
     ) {
 
-      content(viewState: viewModel.viewState) { type in
-        viewModel.onClick(for: type)
+      content(viewState: viewModel.viewState) { configId, identifier in
+        viewModel.onClick(configId: configId, docTypeIdentifier: identifier)
       }
 
       if viewModel.viewState.showFooterScanner {
@@ -64,7 +65,7 @@ struct AddDocumentView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: AddDocumentViewState,
-  action: @escaping (String) -> Void
+  action: @escaping (String, DocumentTypeIdentifier) -> Void
 ) -> some View {
   ScrollView {
     VStack(spacing: SPACING_LARGE_MEDIUM) {
@@ -79,7 +80,7 @@ private func content(
             WrapListItemView(
               listItem: cell.listItem,
               isLoading: cell.isLoading,
-              action: { action(cell.configId) }
+              action: { action(cell.configId, cell.docTypeIdentifier) }
             )
           }
         }
@@ -146,7 +147,7 @@ private func scanFooter(
     showFooterScanner: true
   )
 
-  content(viewState: viewState) { _ in }
+  content(viewState: viewState) { _, _ in }
 }
 
 #Preview {

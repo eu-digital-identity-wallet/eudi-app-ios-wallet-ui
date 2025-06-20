@@ -129,7 +129,7 @@ final class ProximityInteractorImpl: ProximityInteractor {
 
     let requestConvertible = requestItems.prepareRequest()
 
-    guard requestConvertible.requestItems.isEmpty == false else {
+    guard requestConvertible.items.isEmpty == false else {
       return .failure(PresentationSessionError.conversionToRequestItemModel)
     }
 
@@ -139,7 +139,7 @@ final class ProximityInteractorImpl: ProximityInteractor {
       return .failure(error)
     }
 
-    return .success(requestConvertible.asRequestItems())
+    return .success(requestConvertible.items)
   }
 
   public func onSendResponse() async -> ProximityResponsePartialState {

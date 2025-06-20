@@ -20,18 +20,15 @@ public extension Publisher where Self.Failure == Never, Self.Output: Sendable {
   func toAsyncStream() -> AsyncStream<Self.Output> {
     return AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
 
-      let cancellable = self.sink(
-        receiveCompletion: { _ in
-          Task {
+      let cancellable = self
+        .sink(
+          receiveCompletion: { _ in
             continuation.finish()
-          }
-        },
-        receiveValue: { value in
-          Task {
+          },
+          receiveValue: { value in
             _ = continuation.yield(value)
           }
-        }
-      )
+        )
       continuation.onTermination = { _ in
         cancellable.cancel()
       }

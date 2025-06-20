@@ -115,7 +115,7 @@ final class PresentationInteractorImpl: PresentationInteractor {
 
     let requestConvertible = requestItems.prepareRequest()
 
-    guard requestConvertible.requestItems.isEmpty == false else {
+    guard requestConvertible.items.isEmpty == false else {
       return .failure(PresentationSessionError.conversionToRequestItemModel)
     }
 
@@ -125,7 +125,7 @@ final class PresentationInteractorImpl: PresentationInteractor {
       return .failure(error)
     }
 
-    return .success(requestConvertible.asRequestItems())
+    return .success(requestConvertible.items)
   }
 
   public func onSendResponse() async -> RemoteSentResponsePartialState {

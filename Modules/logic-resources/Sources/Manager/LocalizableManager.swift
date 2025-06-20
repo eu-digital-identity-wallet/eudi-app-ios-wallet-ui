@@ -510,6 +510,16 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "settings_menu")
     case .batchIssuanceCunter:
       bundle.localizedString(forKey: "batch_issuance_counter")
+    case .documentDetailsDocumentCredentialsText(let args):
+      bundle.localizedStringWithArguments(forKey: "document_details_document_credentials_text", arguments: args)
+    case .documentDetailsDocumentCredentialsMoreInfoText:
+      bundle.localizedString(forKey: "document_details_document_credentials_more_info_text")
+    case .documentDetailsDocumentCredentialsExpandedTextSubtitle:
+      bundle.localizedString(forKey: "document_details_document_credentials_expanded_text_subtitle")
+    case .documentDetailsDocumentCredentialsExpandedButtonHideText:
+      bundle.localizedString(forKey: "document_details_document_credentials_expanded_button_hide_text")
+    case .documentsListCredentialsUsageText(let args):
+      bundle.localizedStringWithArguments(forKey: "documents_list_credentials_usage_text", arguments: args)
     }
   }
 }

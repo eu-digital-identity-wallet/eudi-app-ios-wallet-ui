@@ -103,6 +103,12 @@ private func content(
         )
       }
 
+      if let credentialsInfo = viewState.documentCredentialsInfo {
+        ExpandableDocumentCredentialsView(
+          documentCredentialsInfo: credentialsInfo
+        )
+      }
+
       VStack(spacing: .zero) {
         WrapExpandableListView(
           items: viewState.document.documentFields,
@@ -148,7 +154,19 @@ private func content(
     documentId: "",
     documentFieldsCount: DocumentUIModel.mock().documentFields.count,
     isBookmarked: true,
-    isRevoked: true
+    isRevoked: true,
+    documentCredentialsInfo: DocumentCredentialsInfoUi(
+      availableCredentials: 5,
+      totalCredentials: 10,
+      title: .custom("instances remaining"),
+      collapsedInfo: CollapsedInfo(
+        moreInfoText: .custom("More Info")
+      ),
+      expandedInfo: ExpandedInfo(
+        subtitle: .custom("For security reasons, this document can be shared a limited number of times before it needs to be re-issued by the issuing authority."),
+        hideButtonText: .custom("Hide")
+      )
+    )
   )
 
   ContentScreenView(

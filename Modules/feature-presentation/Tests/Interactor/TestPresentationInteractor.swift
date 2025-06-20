@@ -358,8 +358,8 @@ final class TestPresentationInteractor: EudiTest {
 
     // Then
     switch state {
-    case .success(let items):
-      XCTAssertEqual(items.asRequestItems(), expectedRequestItems)
+    case .success(let request):
+      XCTAssertEqual(request.items, expectedRequestItems)
     default:
       XCTFail("Wrong state \(state)")
     }

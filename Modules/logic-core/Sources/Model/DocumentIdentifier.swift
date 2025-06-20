@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-public enum DocumentTypeIdentifier: RawRepresentable, Equatable, Sendable {
+public enum DocumentTypeIdentifier: RawRepresentable, Equatable, Sendable, Hashable {
 
   case mDocPid
   case sdJwtPid

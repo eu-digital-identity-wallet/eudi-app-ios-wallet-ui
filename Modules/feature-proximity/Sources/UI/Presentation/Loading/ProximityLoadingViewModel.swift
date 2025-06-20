@@ -40,29 +40,6 @@ final class ProximityLoadingViewModel<Router: RouterHost, RequestItem: Sendable>
     )
   }
 
-  func subscribeToCoordinatorPublisher() async {
-    switch self.interactor.getSessionStatePublisher() {
-    case .success(let publisher):
-      for try await state in publisher {
-        switch state {
-        case .error(let error):
-          self.onError(with: error)
-        case .responseSent:
-          self.interactor.stopPresentation()
-          self.onNavigate(
-            type: .push(
-              getOnSuccessRoute()
-            )
-          )
-        default:
-          ()
-        }
-      }
-    case .failure(let error):
-      self.onError(with: error)
-    }
-  }
-
   override func getTitle() -> LocalizableStringKey {
     .requestDataTitle([getRelyingParty()])
   }
@@ -101,7 +78,7 @@ final class ProximityLoadingViewModel<Router: RouterHost, RequestItem: Sendable>
 
   override func doWork() async {
 
-    startPublisherTask()
+    self.startPublisherTask()
 
     let state = await Task.detached { () -> ProximityResponsePartialState in
       return await self.interactor.onSendResponse()
@@ -122,6 +99,29 @@ final class ProximityLoadingViewModel<Router: RouterHost, RequestItem: Sendable>
       Task {
         try? await self.publisherTask?.value
       }
+    }
+  }
+
+  private func subscribeToCoordinatorPublisher() async {
+    switch self.interactor.getSessionStatePublisher() {
+    case .success(let publisher):
+      for try await state in publisher {
+        switch state {
+        case .error(let error):
+          self.onError(with: error)
+        case .responseSent:
+          self.interactor.stopPresentation()
+          self.onNavigate(
+            type: .push(
+              getOnSuccessRoute()
+            )
+          )
+        default:
+          ()
+        }
+      }
+    case .failure(let error):
+      self.onError(with: error)
     }
   }
 }

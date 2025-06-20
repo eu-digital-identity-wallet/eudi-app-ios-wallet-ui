@@ -51,7 +51,7 @@ public struct TransactionTabUIModel: Identifiable, Sendable, Equatable, Filterab
       supportingText: self.formattedTransactionDate(),
       supportingTextColor: Theme.shared.color.onSurface,
       overlineTextColor: self.status == .completed ? Theme.shared.color.success : Theme.shared.color.error,
-      trailingContent: .icon(
+      trailingContent: .textWithIcon(
         Theme.shared.image.chevronRight,
         Theme.shared.color.onSurfaceVariant,
         self.transactionType.typeTitle

@@ -98,7 +98,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       docType: "type",
       docDataFormat: .sdjwt,
       data: Data(),
-      secureAreaName: nil,
+      docKeyInfo: nil,
       createdAt: Date(),
       metadata: nil,
       displayName: "My Document",
@@ -159,7 +159,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       docType: "type",
       docDataFormat: .sdjwt,
       data: Data(),
-      secureAreaName: nil,
+      docKeyInfo: nil,
       createdAt: Date(),
       metadata: nil,
       displayName: "My Document",
@@ -220,7 +220,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       docType: "type",
       docDataFormat: .sdjwt,
       data: Data(),
-      secureAreaName: nil,
+      docKeyInfo: nil,
       createdAt: Date(),
       metadata: nil,
       displayName: "My Document",
@@ -281,7 +281,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       docType: "type",
       docDataFormat: .sdjwt,
       data: Data(),
-      secureAreaName: nil,
+      docKeyInfo: nil,
       createdAt: Date(),
       metadata: nil,
       displayName: "My Document",
@@ -415,7 +415,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       docType: "type",
       docDataFormat: .sdjwt,
       data: Data(),
-      secureAreaName: nil,
+      docKeyInfo: nil,
       createdAt: Date(),
       metadata: nil,
       displayName: "My Document",
@@ -470,7 +470,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       docType: "type",
       docDataFormat: .sdjwt,
       data: Data(),
-      secureAreaName: nil,
+      docKeyInfo: nil,
       createdAt: Date(),
       metadata: nil,
       displayName: "My Document",
@@ -527,7 +527,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       docType: "type",
       docDataFormat: .sdjwt,
       data: Data(),
-      secureAreaName: nil,
+      docKeyInfo: nil,
       createdAt: Date(),
       metadata: nil,
       displayName: "My Document",
@@ -538,8 +538,10 @@ final class TestDocumentOfferInteractor: EudiTest {
       OfferedDocModel(
         credentialConfigurationIdentifier: "id",
         scope: "scope",
+        identifier: "identifier",
         displayName: "My Document",
-        algValuesSupported: []
+        algValuesSupported: [],
+        keyOptions: KeyOptions(credentialPolicy: .oneTimeUse, batchSize: 1)
       )
     ]
 
@@ -614,8 +616,10 @@ final class TestDocumentOfferInteractor: EudiTest {
       credentialConfigurationIdentifier: "id",
       docType: "type",
       scope: "scope",
+      identifier: "identifier",
       displayName: "Display Name",
-      algValuesSupported: []
+      algValuesSupported: [],
+      keyOptions: KeyOptions(credentialPolicy: .oneTimeUse, batchSize: 1)
     )
 
     let issuanceModel = OfferedIssuanceModel(
@@ -667,8 +671,10 @@ final class TestDocumentOfferInteractor: EudiTest {
       OfferedDocModel(
         credentialConfigurationIdentifier: "id",
         scope: "scope",
+        identifier: "identifier",
         displayName: "My Document",
-        algValuesSupported: []
+        algValuesSupported: [],
+        keyOptions: KeyOptions(credentialPolicy: .oneTimeUse, batchSize: 1)
       )
     ]
 

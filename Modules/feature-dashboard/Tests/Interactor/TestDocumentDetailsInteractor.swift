@@ -24,16 +24,21 @@ final class TestDocumentDetailsInteractor: EudiTest {
   
   var interactor: DocumentDetailsInteractor!
   var walletKitController: MockWalletKitController!
-  
+  var prefsController: MockPrefsController!
+
   override func setUp() {
     self.walletKitController = MockWalletKitController()
+    self.prefsController = MockPrefsController()
     self.interactor = DocumentDetailsInteractorImpl(
-      walletController: walletKitController
+      walletController: walletKitController,
+      prefsController: prefsController
     )
   }
   
   override func tearDown() {
     self.interactor = nil
+    self.walletKitController = nil
+    self.prefsController = nil
   }
   
   func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocument_ThenReturnsExpectedValues() async {
@@ -42,14 +47,18 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubFetchDocument(for: documentId)
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
-    
+    stubIsBatchCounterEnabled()
+    stubGetCredentialsUsageCount()
+
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
     
     // Then
     switch result {
-    case .success(let uiModel, let isBookmarked, let isRevoked):
+    case .success(let uiModel, let documentCredentialsInfoUi, let isBookmarked, let isRevoked):
       XCTAssertEqual(uiModel.id, documentId)
+      XCTAssertEqual(documentCredentialsInfoUi?.availableCredentials, 2)
+      XCTAssertEqual(documentCredentialsInfoUi?.totalCredentials, 10)
       XCTAssertFalse(isBookmarked)
       XCTAssertFalse(isRevoked)
     case .failure:
@@ -249,7 +258,7 @@ extension TestDocumentDetailsInteractor {
         .thenReturn(isBookmarked)
     }
   }
-  
+
   func stubIsRevoked(for id: String, isRevoked: Bool) {
     stub(walletKitController) { stub in
       when(stub.isDocumentRevoked(with: equal(to: id)))
@@ -332,6 +341,38 @@ extension TestDocumentDetailsInteractor {
     stub(walletKitController) { stub in
       when(stub.removeBookmarkedDocument(with: equal(to: id)))
         .thenThrow(WalletCoreError.unableFetchDocument)
+    }
+  }
+
+  func stubGetCredentialsUsageCount(
+    remaining: Int = 2,
+    total: Int = 10
+  ) {
+    stub(walletKitController) { mock in
+      mock.getCredentialsUsageCount(
+        id: any()
+      )
+      .thenReturn(
+        try! CredentialsUsageCounts(
+          total: total,
+          remaining: remaining
+        )
+      )
+    }
+  }
+
+  func stubGetCredentialsUsageCountNil() {
+    stub(walletKitController) { mock in
+      mock.getCredentialsUsageCount(
+        id: any()
+      )
+      .thenReturn(nil)
+    }
+  }
+
+  func stubIsBatchCounterEnabled(_ enabled: Bool = true) {
+    stub(prefsController) { stub in
+      when(stub.getBool(forKey: Prefs.Key.batchCounter)).thenReturn(enabled)
     }
   }
 }

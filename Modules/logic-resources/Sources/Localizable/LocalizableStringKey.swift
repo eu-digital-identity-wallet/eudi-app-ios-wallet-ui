@@ -255,6 +255,11 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case transactionDetailsReportTransactionButton
   case settings
   case batchIssuanceCunter
+  case documentDetailsDocumentCredentialsText([String])
+  case documentDetailsDocumentCredentialsMoreInfoText
+  case documentDetailsDocumentCredentialsExpandedTextSubtitle
+  case documentDetailsDocumentCredentialsExpandedButtonHideText
+  case documentsListCredentialsUsageText([String])
 }
 
 public extension LocalizableStringKey {

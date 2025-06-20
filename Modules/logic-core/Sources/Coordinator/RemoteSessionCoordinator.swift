@@ -39,7 +39,6 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
   let sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> = .init(.loading)
 
   private let sendableAnyCancellable: SendableAnyCancellable = .init()
-
   private let session: PresentationSession
 
   init(session: PresentationSession) {
@@ -79,7 +78,7 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
   }
 
   public func sendResponse(response: RequestItemConvertible) async {
-    await session.sendResponse(userAccepted: true, itemsToSend: response.asRequestItems(), onCancel: nil) { url in
+    await session.sendResponse(userAccepted: true, itemsToSend: response.items, onCancel: nil) { url in
       self.sendableCurrentValueSubject.setValue(.responseSent(url))
     }
   }
