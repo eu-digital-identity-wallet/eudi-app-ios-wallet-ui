@@ -16,36 +16,12 @@
 import SwiftUI
 import logic_resources
 
-struct SearchableModifier: ViewModifier {
-  @Binding var searchText: String
-  let placeholder: LocalizableStringKey
-  let backgroundColor: Color?
-  let onSearchTextChange: (String) -> Void
-
-  func body(content: Content) -> some View {
-    VStack(spacing: .zero) {
-      CustomSearchBar(
-        text: $searchText,
-        placeholder: placeholder
-      )
-      .padding(.horizontal, SPACING_SMALL)
-      .background(backgroundColor)
-
-      content
-        .onChange(of: searchText) { newValue in
-          onSearchTextChange(newValue)
-        }
-    }
-  }
-}
-
-// MARK: - Custom View Extension
 public extension View {
   func searchable(
     searchText: Binding<String>,
     placeholder: LocalizableStringKey = .search,
     backgroundColor: Color? = nil,
-    onSearchTextChange: @escaping (String) -> Void
+    onSearchTextChange: ((String) -> Void)? = nil
   ) -> some View {
     modifier(
       SearchableModifier(
@@ -58,7 +34,42 @@ public extension View {
   }
 }
 
-struct CustomSearchBar: UIViewRepresentable {
+private struct SearchableModifier: ViewModifier {
+  @Binding var searchText: String
+  let placeholder: LocalizableStringKey
+  let backgroundColor: Color?
+  let onSearchTextChange: ((String) -> Void)?
+
+  init(
+    searchText: Binding<String>,
+    placeholder: LocalizableStringKey,
+    backgroundColor: Color?,
+    onSearchTextChange: ((String) -> Void)? = nil
+  ) {
+    self._searchText = searchText
+    self.placeholder = placeholder
+    self.backgroundColor = backgroundColor
+    self.onSearchTextChange = onSearchTextChange
+  }
+
+  func body(content: Content) -> some View {
+    VStack(spacing: .zero) {
+      CustomSearchBar(
+        text: $searchText,
+        placeholder: placeholder
+      )
+      .padding(.horizontal, SPACING_SMALL)
+      .background(backgroundColor)
+
+      content
+        .onChange(of: searchText) { newValue in
+          onSearchTextChange?(newValue)
+        }
+    }
+  }
+}
+
+private struct CustomSearchBar: UIViewRepresentable {
   @Binding var text: String
   let placeholder: LocalizableStringKey
 

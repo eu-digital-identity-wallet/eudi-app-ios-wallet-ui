@@ -120,8 +120,7 @@ private func content(
   .searchable(
     searchText: searchQuery,
     placeholder: .searchTransactions,
-    backgroundColor: Theme.shared.color.background,
-    onSearchTextChange: { _ in }
+    backgroundColor: Theme.shared.color.background
   )
   .background(Theme.shared.color.background)
 }
