@@ -158,20 +158,14 @@ private struct CustomSearchBar: UIViewRepresentable {
   ]
 
   NavigationView {
-    WrapListView(
-      sections: [
-        (header: "GOVERNMENT", items: todayTransactions)
-      ],
-      style: .plain,
-      hideRowSeperators: true,
-      listRowBackground: .clear,
-      rowContent: { transaction in
-        WrapCardView {
-          WrapListItemView(
-            listItem: transaction
-          )
-        }
-      }
+    WrapListItemsView(
+      listItems: [
+        .init(mainText: .custom("Family name"), supportingText: .custom("Doe")),
+        .init(mainText: .custom("Given names"), supportingText: .custom("John")),
+        .init(mainText: .custom("Date of birth"), supportingText: .custom("21 Oct 1994")),
+        .init(mainText: .custom("Age over 18"), supportingText: .custom("21 Oct 1994")),
+        .init(mainText: .custom("Date of issue"), supportingText: .custom("21 Oct 1994"))
+      ]
     )
     .searchable(
       searchText: .constant(""),
