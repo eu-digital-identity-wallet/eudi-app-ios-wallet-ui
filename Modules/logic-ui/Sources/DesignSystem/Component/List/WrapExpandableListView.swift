@@ -95,7 +95,7 @@ public struct WrapExpandableListView<T: Sendable>: View {
   }
 }
 
-struct WrapExpandableListPreviewView: View {
+private struct WrapExpandableListPreviewView: View {
   @State private var expandableItems: [ExpandableListItem] = [
     .single(
       GenericExpandableItem.SingleListItemData(

@@ -40,7 +40,7 @@ public extension View {
   }
 }
 
-struct ConfirmationDialogModifier: ViewModifier {
+private struct ConfirmationDialogModifier: ViewModifier {
   let title: LocalizableStringKey
   let message: LocalizableStringKey
   let destructiveText: LocalizableStringKey?
