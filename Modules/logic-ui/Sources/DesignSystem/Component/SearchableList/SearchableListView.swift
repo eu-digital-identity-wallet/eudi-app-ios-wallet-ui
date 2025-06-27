@@ -133,30 +133,6 @@ private struct CustomSearchBar: UIViewRepresentable {
 }
 
 #Preview {
-  let todayTransactions: [ListItemData] = [
-    .init(
-      mainText: .transactions,
-      overlineText: .expired,
-      supportingText: .expiryDate,
-      overlineTextColor: .green,
-      trailingContent: .icon(Image(systemName: "chevron.right"))
-    ),
-    .init(
-      mainText: .transactions,
-      overlineText: .expired,
-      supportingText: .expiryDate,
-      overlineTextColor: .green,
-      trailingContent: .icon(Image(systemName: "chevron.right"))
-    ),
-    .init(
-      mainText: .transactions,
-      overlineText: .expired,
-      supportingText: .expiryDate,
-      overlineTextColor: .red,
-      trailingContent: .icon(Image(systemName: "chevron.right"))
-    )
-  ]
-
   NavigationView {
     WrapListItemsView(
       listItems: [
@@ -170,6 +146,6 @@ private struct CustomSearchBar: UIViewRepresentable {
     .searchable(
       searchText: .constant(""),
       placeholder: .search
-    ) { _ in }
+    )
   }
 }

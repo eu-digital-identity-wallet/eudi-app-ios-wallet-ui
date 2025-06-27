@@ -65,7 +65,79 @@ final class TestDocumentDetailsInteractor: EudiTest {
       XCTFail("Expected success, but got failure.")
     }
   }
-  
+
+  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocumentWithBatchDisabled_ThenReturnsExpectedValues() async {
+    // Given
+    let documentId = Constants.euPidModel.id
+    stubFetchDocument(for: documentId)
+    stubIsBookmarked(for: documentId, isBookmarked: false)
+    stubIsRevoked(for: documentId, isRevoked: false)
+    stubIsBatchCounterEnabled(false)
+    stubGetCredentialsUsageCount()
+
+    // When
+    let result = await interactor.fetchStoredDocument(documentId: documentId)
+
+    // Then
+    switch result {
+    case .success(let uiModel, _, let isBookmarked, let isRevoked):
+      XCTAssertEqual(uiModel.id, documentId)
+      XCTAssertFalse(isBookmarked)
+      XCTAssertFalse(isRevoked)
+    case .failure:
+      XCTFail("Expected success, but got failure.")
+    }
+  }
+
+  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocumentWithNilUsageCount_ThenReturnsExpectedValues() async {
+    // Given
+    let documentId = Constants.euPidModel.id
+    stubFetchDocument(for: documentId)
+    stubIsBookmarked(for: documentId, isBookmarked: false)
+    stubIsRevoked(for: documentId, isRevoked: false)
+    stubIsBatchCounterEnabled()
+    stubGetCredentialsUsageCountNil()
+
+    // When
+    let result = await interactor.fetchStoredDocument(documentId: documentId)
+
+    // Then
+    switch result {
+    case .success(let uiModel, let documentCredentialsInfoUi, let isBookmarked, let isRevoked):
+      XCTAssertEqual(uiModel.id, documentId)
+      XCTAssertEqual(documentCredentialsInfoUi?.availableCredentials, 1)
+      XCTAssertEqual(documentCredentialsInfoUi?.totalCredentials, 1)
+      XCTAssertFalse(isBookmarked)
+      XCTAssertFalse(isRevoked)
+    case .failure:
+      XCTFail("Expected success, but got failure.")
+    }
+  }
+
+  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocumentWithUsageCountError_ThenReturnsExpectedValues() async {
+    // Given
+    let documentId = Constants.euPidModel.id
+    stubFetchDocument(for: documentId)
+    stubIsBookmarked(for: documentId, isBookmarked: false)
+    stubIsRevoked(for: documentId, isRevoked: false)
+    stubIsBatchCounterEnabled()
+    stubGetCredentialsUsageCountWithError()
+
+    // When
+    let result = await interactor.fetchStoredDocument(documentId: documentId)
+
+    // Then
+    switch result {
+    case .success(let uiModel, let documentCredentialsInfoUi, let isBookmarked, let isRevoked):
+      XCTAssertEqual(uiModel.id, documentId)
+      XCTAssertNil(documentCredentialsInfoUi)
+      XCTAssertFalse(isBookmarked)
+      XCTAssertFalse(isRevoked)
+    case .failure:
+      XCTFail("Expected success, but got failure.")
+    }
+  }
+
   func testFetchStoredDocument_WhenWalletKitControllerReturnsDocumentFetchFailure_ThenReturnsError() async {
     // Given
     let documentId = "nonexistentId"
@@ -190,7 +262,41 @@ final class TestDocumentDetailsInteractor: EudiTest {
       XCTAssertTrue(error.localizedDescription.contains("Failed"))
     }
   }
-  
+
+  func testDeleteDocument_WhenWalletKitControllerReturnsDeleteWithError_ThenReturnsFailure() async {
+    // Given
+    let documentId = "nonexistentId"
+    let type: DocumentTypeIdentifier = .other(formatType: "other")
+
+    stub(walletKitController) { stub in
+      when(stub.fetchIssuedDocuments(with: any()))
+        .thenReturn([Constants.euPidModel])
+
+      when(stub.fetchMainPidDocument())
+        .thenReturn(Constants.euPidModel)
+
+      when(stub.deleteDocument(with: equal(to: documentId), status: any()))
+        .thenThrow(WalletCoreError.unableFetchDocument)
+
+      when(stub.clearAllDocuments())
+        .thenDoNothing()
+    }
+
+    // When
+    let result = await interactor.deleteDocument(with: documentId, and: type)
+
+    // Then
+    switch result {
+    case .success:
+      XCTFail("Expected failure but got success")
+    case .failure(let error):
+      XCTAssertEqual(
+        error.localizedDescription,
+        WalletCoreError.unableFetchDocument.localizedDescription
+      )
+    }
+  }
+
   func testSaveDocument_WhenWalletKitControllerReturnsSaveSuccess_ThenNoErrorThrown() async throws {
     // Given
     let documentId = Constants.euPidModel.id
@@ -367,6 +473,15 @@ extension TestDocumentDetailsInteractor {
         id: any()
       )
       .thenReturn(nil)
+    }
+  }
+
+  func stubGetCredentialsUsageCountWithError() {
+    stub(walletKitController) { mock in
+      mock.getCredentialsUsageCount(
+        id: any()
+      )
+      .thenThrow(WalletCoreError.unableFetchDocuments)
     }
   }
 
