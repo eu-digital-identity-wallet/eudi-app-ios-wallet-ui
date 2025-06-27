@@ -16,7 +16,27 @@
 import SwiftUI
 import logic_resources
 
-struct AlertAlertViewModifier: ViewModifier {
+public extension View {
+  func alertView(
+    isPresented: Binding<Bool>,
+    title: LocalizableStringKey,
+    message: LocalizableStringKey,
+    buttonText: LocalizableStringKey = .close,
+    onDismiss: (() -> Void)? = nil
+  ) -> some View {
+    self.modifier(
+      AlertAlertViewModifier(
+        isPresented: isPresented,
+        title: title,
+        message: message,
+        buttonText: buttonText,
+        onDismiss: onDismiss
+      )
+    )
+  }
+}
+
+private struct AlertAlertViewModifier: ViewModifier {
   @Binding var isPresented: Bool
   let title: LocalizableStringKey
   let message: LocalizableStringKey
@@ -40,27 +60,7 @@ struct AlertAlertViewModifier: ViewModifier {
   }
 }
 
-public extension View {
-  func alertView(
-    isPresented: Binding<Bool>,
-    title: LocalizableStringKey,
-    message: LocalizableStringKey,
-    buttonText: LocalizableStringKey = .close,
-    onDismiss: (() -> Void)? = nil
-  ) -> some View {
-    self.modifier(
-      AlertAlertViewModifier(
-        isPresented: isPresented,
-        title: title,
-        message: message,
-        buttonText: buttonText,
-        onDismiss: onDismiss
-      )
-    )
-  }
-}
-
-struct PreviewView: View {
+private struct PreviewView: View {
   @State private var showAlert = false
 
   var body: some View {

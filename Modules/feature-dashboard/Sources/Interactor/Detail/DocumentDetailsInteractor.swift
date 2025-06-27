@@ -28,7 +28,7 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
   private let walletController: WalletKitController
   private let prefsController: PrefsController
 
-  public init(
+  init(
     walletController: WalletKitController,
     prefsController: PrefsController
   ) {
@@ -36,7 +36,7 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     self.prefsController = prefsController
   }
 
-  public func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
+  func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
     let document = walletController.fetchDocument(with: documentId)
     guard let documentDetails = document?.transformToDocumentUi() else {
       return .failure(WalletCoreError.unableFetchDocument)
@@ -51,7 +51,7 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     return .success(documentDetails, nil, isBookmarked, isRevoked)
   }
 
-  public func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
+  func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
 
     let successState: DocumentDetailsDeletionPartialState
 
