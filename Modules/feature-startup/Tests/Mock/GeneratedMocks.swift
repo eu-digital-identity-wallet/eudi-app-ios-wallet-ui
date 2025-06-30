@@ -6845,12 +6845,12 @@ public class MockProximitySessionCoordinator: ProximitySessionCoordinator, Cucko
 
     public required init(session p0: PresentationSession) {}
     
-    public func initialize() async {
-        return await cuckoo_manager.call(
-            "initialize() async",
+    public func initialize() async throws {
+        return try await cuckoo_manager.callThrows(
+            "initialize() async throws",
             parameters: (),
             escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.initialize()
         )
     }
@@ -6936,10 +6936,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             return .init(manager: cuckoo_manager, name: "sendableCurrentValueSubject")
         }
         
-        func initialize() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+        func initialize() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(),Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockProximitySessionCoordinator.self,
-                method: "initialize() async",
+                method: "initialize() async throws",
                 parameterMatchers: matchers
             ))
         }
@@ -7021,7 +7021,7 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         func initialize() -> Cuckoo.__DoNotUse<(), Void> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "initialize() async",
+                "initialize() async throws",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7126,7 +7126,7 @@ public class ProximitySessionCoordinatorStub:ProximitySessionCoordinator, @unche
     public required init(session p0: PresentationSession) {}
 
     
-    public func initialize() async {
+    public func initialize() async throws {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

@@ -1063,9 +1063,9 @@ public class MockProximityInteractor: ProximityInteractor, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func onDeviceEngagement() async {
+    public func onDeviceEngagement() async -> ProximityDeviceEngagementPartialState {
         return await cuckoo_manager.call(
-            "onDeviceEngagement() async",
+            "onDeviceEngagement() async -> ProximityDeviceEngagementPartialState",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -1146,10 +1146,10 @@ public class MockProximityInteractor: ProximityInteractor, Cuckoo.ProtocolMock, 
             ))
         }
         
-        func onDeviceEngagement() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+        func onDeviceEngagement() -> Cuckoo.ProtocolStubFunction<(), ProximityDeviceEngagementPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractor.self,
-                method: "onDeviceEngagement() async",
+                method: "onDeviceEngagement() async -> ProximityDeviceEngagementPartialState",
                 parameterMatchers: matchers
             ))
         }
@@ -1232,10 +1232,10 @@ public class MockProximityInteractor: ProximityInteractor, Cuckoo.ProtocolMock, 
         
         
         @discardableResult
-        func onDeviceEngagement() -> Cuckoo.__DoNotUse<(), Void> {
+        func onDeviceEngagement() -> Cuckoo.__DoNotUse<(), ProximityDeviceEngagementPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "onDeviceEngagement() async",
+                "onDeviceEngagement() async -> ProximityDeviceEngagementPartialState",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1316,8 +1316,8 @@ public class ProximityInteractorStub:ProximityInteractor, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (ProximityCoordinatorPartialState).self)
     }
     
-    public func onDeviceEngagement() async {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    public func onDeviceEngagement() async -> ProximityDeviceEngagementPartialState {
+        return DefaultValueRegistry.defaultValue(for: (ProximityDeviceEngagementPartialState).self)
     }
     
     public func onQRGeneration() async -> ProximityQrCodePartialState {
@@ -7127,12 +7127,12 @@ public class MockProximitySessionCoordinator: ProximitySessionCoordinator, Cucko
 
     public required init(session p0: PresentationSession) {}
     
-    public func initialize() async {
-        return await cuckoo_manager.call(
-            "initialize() async",
+    public func initialize() async throws {
+        return try await cuckoo_manager.callThrows(
+            "initialize() async throws",
             parameters: (),
             escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.initialize()
         )
     }
@@ -7218,10 +7218,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             return .init(manager: cuckoo_manager, name: "sendableCurrentValueSubject")
         }
         
-        func initialize() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+        func initialize() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(),Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockProximitySessionCoordinator.self,
-                method: "initialize() async",
+                method: "initialize() async throws",
                 parameterMatchers: matchers
             ))
         }
@@ -7303,7 +7303,7 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         func initialize() -> Cuckoo.__DoNotUse<(), Void> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "initialize() async",
+                "initialize() async throws",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7408,7 +7408,7 @@ public class ProximitySessionCoordinatorStub:ProximitySessionCoordinator, @unche
     public required init(session p0: PresentationSession) {}
 
     
-    public func initialize() async {
+    public func initialize() async throws {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

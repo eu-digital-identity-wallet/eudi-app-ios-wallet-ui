@@ -62,14 +62,38 @@ final class TestProximityInteractor: EudiTest {
     self.presentationSessionCoordinator = nil
   }
   
-  func testOnDeviceEngagement_WhenCoordinatorInitialize_ThenVerifyCoordinatorInitializedAndState() async {
+  func testOnDeviceEngagement_WhenCoordinatorInitializeSuccess_ThenVerifyCoordinatorInitializedAndState() async {
     // Given
     stub(presentationSessionCoordinator) { mock in
       when(mock.initialize()).thenDoNothing()
     }
     // When
-    await interactor.onDeviceEngagement()
+    let state = await interactor.onDeviceEngagement()
     // Then
+    switch state {
+    case .success:
+      XCTAssertTrue(true)
+    default:
+      XCTFail("Wrong state \(state)")
+    }
+    verify(presentationSessionCoordinator).initialize()
+  }
+  
+  func testOnDeviceEngagement_WhenCoordinatorInitializeThrowsError_ThenVerifyStateError() async {
+    // Given
+    let expectedError = RuntimeError.genericError
+    stub(presentationSessionCoordinator) { mock in
+      when(mock.initialize()).thenThrow(expectedError)
+    }
+    // When
+    let state = await interactor.onDeviceEngagement()
+    // Then
+    switch state {
+    case .failure(let error):
+      XCTAssertEqual(expectedError.localizedDescription, error.localizedDescription)
+    default:
+      XCTFail("Wrong state \(state)")
+    }
     verify(presentationSessionCoordinator).initialize()
   }
   
