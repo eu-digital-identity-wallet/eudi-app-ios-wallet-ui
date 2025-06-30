@@ -100,7 +100,7 @@ In addition to the change below, in order for the app to interact with locally r
 Before running the app in the simulator add these lines of code to the top of the file WalletKitController just below the import statements. 
 
 ```swift
-class SelfSignedDelegate: NSObject, URLSessionDelegate {
+final class SelfSignedDelegate: NSObject, URLSessionDelegate {
   func urlSession(
     _ session: URLSession,
     didReceive challenge: URLAuthenticationChallenge,
@@ -131,13 +131,14 @@ let walletSession: URLSession = {
 }()
 ```
 
-Once the above is in place add:
+Once the above is in place, adjust the initializer:
 
 ```swift
-wallet.urlSession = walletSession
+guard let walletKit = try? EudiWallet(serviceName: configLogic.documentStorageServiceName, networking: walletSession) else {
+  fatalError("Unable to Initialize WalletKit")
+}
 ```
 
-in the initializer. This change will allow the app to interact with web services that rely on self signed certificates.
+This change will allow the app to interact with web services that rely on self-signed certificates.
 
 For all configuration options please refer to [this document](configuration.md)
-
