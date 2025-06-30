@@ -297,7 +297,7 @@ This section describes configuring the application to interact with services uti
 Add these lines of code to the top of the file *WalletKitController*, inside the logic-core module, just below the import statements. 
 
 ```swift
-class SelfSignedDelegate: NSObject, URLSessionDelegate {
+final class SelfSignedDelegate: NSObject, URLSessionDelegate {
   func urlSession(
     _ session: URLSession,
     didReceive challenge: URLAuthenticationChallenge,
@@ -328,13 +328,15 @@ let walletSession: URLSession = {
 }()
 ```
 
-Once the above is in place, add the following:
+Once the above is in place, adjust the initializer:
 
 ```swift
-wallet.urlSession = walletSession
+guard let walletKit = try? EudiWallet(serviceName: configLogic.documentStorageServiceName, networking: walletSession) else {
+  fatalError("Unable to Initialize WalletKit")
+}
 ```
 
-in the initializer. This change will allow the app to interact with web services that rely on self-signed certificates.
+This change will allow the app to interact with web services that rely on self-signed certificates.
 
 ## Theme configuration
 
