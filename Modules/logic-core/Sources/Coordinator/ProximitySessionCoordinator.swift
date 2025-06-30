@@ -23,7 +23,7 @@ public protocol ProximitySessionCoordinator: Sendable {
 
   init(session: PresentationSession)
 
-  func initialize() async
+  func initialize() async throws
   func startQrEngagement() async throws -> UIImage
   func requestReceived() async throws -> PresentationRequest
   func sendResponse(response: RequestItemConvertible) async
@@ -72,8 +72,8 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
     stopPresentation()
   }
 
-  public func initialize() async {
-    await session.startQrEngagement()
+  public func initialize() async throws {
+    try await session.startQrEngagement()
     _ = await session.receiveRequest()
   }
 

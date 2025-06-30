@@ -17,6 +17,11 @@ import logic_core
 import logic_business
 import feature_common
 
+public enum ProximityDeviceEngagementPartialState: Sendable {
+  case success
+  case failure(Error)
+}
+
 public enum ProximityResponsePartialState: Sendable {
   case sent
   case failure(Error)
@@ -52,7 +57,7 @@ public protocol ProximityInteractor: Sendable {
   func getSessionStatePublisher() -> ProximityPublisherPartialState
   func getCoordinator() -> ProximityCoordinatorPartialState
 
-  func onDeviceEngagement() async
+  func onDeviceEngagement() async -> ProximityDeviceEngagementPartialState
   func onQRGeneration() async -> ProximityQrCodePartialState
   func onRequestReceived() async -> ProximityRequestPartialState
   func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> ProximityResponsePreparationPartialState
@@ -92,8 +97,13 @@ final class ProximityInteractorImpl: ProximityInteractor {
     }
   }
 
-  public func onDeviceEngagement() async {
-    try? await sessionCoordinatorHolder.getActiveProximityCoordinator().initialize()
+  public func onDeviceEngagement() async -> ProximityDeviceEngagementPartialState {
+    do {
+      try await sessionCoordinatorHolder.getActiveProximityCoordinator().initialize()
+      return .success
+    } catch {
+      return .failure(error)
+    }
   }
 
   public func onQRGeneration() async -> ProximityQrCodePartialState {

@@ -44,7 +44,11 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
 
   func initialize() async {
     self.startPublisherTask()
-    await self.interactor.onDeviceEngagement()
+    switch await self.interactor.onDeviceEngagement() {
+    case .success: break
+    case .failure(let error):
+      self.onError(with: error)
+    }
   }
 
   func toolbarContent() -> ToolBarContent {
