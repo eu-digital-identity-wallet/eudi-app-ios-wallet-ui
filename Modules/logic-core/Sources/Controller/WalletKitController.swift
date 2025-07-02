@@ -238,7 +238,7 @@ final class WalletKitControllerImpl: WalletKitController {
     let rule = configLogic.documentIssuanceConfig.rule(for: docTypeIdentifier)
     let keyOptions = KeyOptions(credentialPolicy: rule.policy, batchSize: rule.numberOfCredentials)
 
-    return try await wallet.issueDocument(docType: nil, scope: nil, identifier: identifier, keyOptions: keyOptions)
+    return try await wallet.issueDocument(docTypeIdentifier: .identifier(identifier), keyOptions: keyOptions)
   }
 
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable {
