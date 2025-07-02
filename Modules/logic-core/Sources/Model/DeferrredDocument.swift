@@ -32,4 +32,5 @@ public struct DeferrredDocument: DocClaimsDecodable {
   public var validFrom: Date?
   public var validUntil: Date?
   public var secureAreaName: String?
+  public var credentialsUsageCounts: MdocDataModel18013.CredentialsUsageCounts?
 }

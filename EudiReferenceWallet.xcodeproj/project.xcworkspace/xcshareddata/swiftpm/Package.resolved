@@ -1,5 +1,5 @@
 {
-  "originHash" : "8cc764b2852eedbc793facb6a287952bc30f52dc4a31d9533080bc280d8a4b3e",
+  "originHash" : "73d992565f6a07aa2fdb80342f9bcd60c9c73d6e4eeee5c3fa99a3ca279f0500",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "487104f0fb6cf5ce1caca6b0f86f79fff8c2ea01",
-        "version" : "0.7.1"
+        "revision" : "f95787c4efbf2daa7297811bd5386d74f06e1c3b",
+        "version" : "0.7.2"
       }
     },
     {
@@ -114,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "6493069b36f745d66a576069f766b78f6eaec099",
-        "version" : "0.7.1"
+        "revision" : "6a057419f9b619c63c2519cfec0a24942ee20e6c",
+        "version" : "0.7.2"
       }
     },
     {
@@ -123,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "f952ee5ddbd6d55a07aa7284cf0524fedc3ec4e9",
-        "version" : "0.6.1"
+        "revision" : "522f25b054c780494f2ecd1f6d00285352d0b572",
+        "version" : "0.6.3"
       }
     },
     {
@@ -132,8 +132,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "389fcbcf0b2303acfa21bb09afa636d1979feeaa",
-        "version" : "0.14.1"
+        "revision" : "2309adb82d968cb81ea7afb8580e0dd4a942b5d9",
+        "version" : "0.15.1"
       }
     },
     {
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "1f1dd5edee3d32b7b4bba381256a349b7296d831",
-        "version" : "0.12.6"
+        "revision" : "af1f68db6c60a380576e901b30ebae850ded97ed",
+        "version" : "0.12.7"
       }
     },
     {
@@ -384,8 +384,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser",
       "state" : {
-        "revision" : "011f0c765fb46d9cac61bca19be0527e99c98c8b",
-        "version" : "1.5.1"
+        "revision" : "309a47b2b1d9b5e991f36961c983ecec72275be3",
+        "version" : "1.6.1"
       }
     },
     {
@@ -393,8 +393,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-asn1.git",
       "state" : {
-        "revision" : "a54383ada6cecde007d374f58f864e29370ba5c3",
-        "version" : "1.3.2"
+        "revision" : "f70225981241859eb4aa1a18a75531d26637c8cc",
+        "version" : "1.4.0"
       }
     },
     {
