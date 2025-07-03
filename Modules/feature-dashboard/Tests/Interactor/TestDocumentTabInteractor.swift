@@ -91,7 +91,6 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDocumentsWithExclusion(with: [])
     stubFetchMainPidDocument(with: nil)
     stubIsBatchCounterEnabled()
-    stubGetCredentialsUsageCountNil()
 
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
@@ -137,7 +136,6 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDocumentCategories(with: documentsCategories)
     stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
     stubFetchMainPidDocument(with: Constants.euPidModel)
-    stubGetCredentialsUsageCount()
     stubIsBatchCounterEnabled()
 
     // When
@@ -485,54 +483,6 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
     stubFetchMainPidDocument(with: Constants.euPidModel)
     stubIsBatchCounterEnabled()
-    stubGetCredentialsUsageCountNil()
-
-    // When
-    let state = await interactor.fetchDocuments(failedDocuments: [])
-
-    // Then
-    switch state {
-    case .success:
-      XCTAssertTrue(true)
-    default:
-      XCTFail("Wrong state \(state)")
-    }
-  }
-
-  func testFetchDocuments_WhenWalletKitControllerReturnsDataUsageCountThrowError_ThenReturnsUiModels() async {
-    // Given
-    var documentsCategories: DocumentCategories {
-      [
-        .Government: [],
-        .Travel: [],
-        .Finance: [],
-        .Education: [],
-        .Health: [],
-        .SocialSecurity: [],
-        .Retail: [],
-        .Other: []
-      ]
-    }
-    stubFetchRevokedDocuments(
-      with: []
-    )
-    stubFetchDocuments(
-      with: [
-        Constants.euPidModel,
-        Constants.isoMdlModel
-      ]
-    )
-    stubFetchIssuedDocuments(
-      with: [
-        Constants.euPidModel,
-        Constants.isoMdlModel
-      ]
-    )
-    stubFetchDocumentCategories(with: documentsCategories)
-    stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
-    stubFetchMainPidDocument(with: Constants.euPidModel)
-    stubIsBatchCounterEnabled()
-    stubGetCredentialsUsageCountWithError()
 
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
@@ -691,41 +641,6 @@ private extension TestDocumentTabInteractor {
         query: equal(to: "search"))
       )
       .thenDoNothing()
-    }
-  }
-
-  func stubGetCredentialsUsageCount(
-    remaining: Int = 2,
-    total: Int = 10
-  ) {
-    stub(walletKitController) { mock in
-      mock.getCredentialsUsageCount(
-        id: any()
-      )
-      .thenReturn(
-        try! CredentialsUsageCounts(
-          total: total,
-          remaining: remaining
-        )
-      )
-    }
-  }
-
-  func stubGetCredentialsUsageCountNil() {
-    stub(walletKitController) { mock in
-      mock.getCredentialsUsageCount(
-        id: any()
-      )
-      .thenReturn(nil)
-    }
-  }
-
-  func stubGetCredentialsUsageCountWithError() {
-    stub(walletKitController) { mock in
-      mock.getCredentialsUsageCount(
-        id: any()
-      )
-      .thenThrow(WalletCoreError.unableFetchDocuments)
     }
   }
 

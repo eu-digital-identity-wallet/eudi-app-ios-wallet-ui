@@ -417,7 +417,9 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
       let documentPayload = document.transformToDocumentTabUi(
         categories: self.walletKitController.getDocumentCategories(),
         isRevoked: isRevoked,
-        usageCount: isBatchCounterEnabled() ? await getCredentialsUsageCount(documentId: document.id) : nil
+        usageCount: isBatchCounterEnabled()
+        ? getCredentialsUsageCount(credentialsUsageCounts: document.credentialsUsageCounts)
+        : nil
       )
 
       let documentSearchTags: [String] = {
@@ -448,15 +450,11 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     return FilterableList(items: filterableItems)
   }
 
-  private func getCredentialsUsageCount(documentId: String) async -> (remaining: Int?, total: Int?) {
-    do {
-      if let usageCounts = try await walletKitController.getCredentialsUsageCount(id: documentId) {
-        return (remaining: usageCounts.remaining, total: usageCounts.total)
-      } else {
-        return (remaining: 1, total: 1)
-      }
-    } catch {
-      return (remaining: nil, total: nil)
+  private func getCredentialsUsageCount(credentialsUsageCounts: CredentialsUsageCounts?) -> (remaining: Int?, total: Int?) {
+    if let usageCounts = credentialsUsageCounts {
+      return (remaining: usageCounts.remaining, total: usageCounts.total)
+    } else {
+      return (remaining: 1, total: 1)
     }
   }
 

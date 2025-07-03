@@ -48,7 +48,6 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsBatchCounterEnabled()
-    stubGetCredentialsUsageCount()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -57,8 +56,8 @@ final class TestDocumentDetailsInteractor: EudiTest {
     switch result {
     case .success(let uiModel, let documentCredentialsInfoUi, let isBookmarked, let isRevoked):
       XCTAssertEqual(uiModel.id, documentId)
-      XCTAssertEqual(documentCredentialsInfoUi?.availableCredentials, 2)
-      XCTAssertEqual(documentCredentialsInfoUi?.totalCredentials, 10)
+      XCTAssertEqual(documentCredentialsInfoUi?.availableCredentials, 1)
+      XCTAssertEqual(documentCredentialsInfoUi?.totalCredentials, 1)
       XCTAssertFalse(isBookmarked)
       XCTAssertFalse(isRevoked)
     case .failure:
@@ -73,7 +72,6 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsBatchCounterEnabled(false)
-    stubGetCredentialsUsageCount()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -96,7 +94,6 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsBatchCounterEnabled()
-    stubGetCredentialsUsageCountNil()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -107,30 +104,6 @@ final class TestDocumentDetailsInteractor: EudiTest {
       XCTAssertEqual(uiModel.id, documentId)
       XCTAssertEqual(documentCredentialsInfoUi?.availableCredentials, 1)
       XCTAssertEqual(documentCredentialsInfoUi?.totalCredentials, 1)
-      XCTAssertFalse(isBookmarked)
-      XCTAssertFalse(isRevoked)
-    case .failure:
-      XCTFail("Expected success, but got failure.")
-    }
-  }
-
-  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocumentWithUsageCountError_ThenReturnsExpectedValues() async {
-    // Given
-    let documentId = Constants.euPidModel.id
-    stubFetchDocument(for: documentId)
-    stubIsBookmarked(for: documentId, isBookmarked: false)
-    stubIsRevoked(for: documentId, isRevoked: false)
-    stubIsBatchCounterEnabled()
-    stubGetCredentialsUsageCountWithError()
-
-    // When
-    let result = await interactor.fetchStoredDocument(documentId: documentId)
-
-    // Then
-    switch result {
-    case .success(let uiModel, let documentCredentialsInfoUi, let isBookmarked, let isRevoked):
-      XCTAssertEqual(uiModel.id, documentId)
-      XCTAssertNil(documentCredentialsInfoUi)
       XCTAssertFalse(isBookmarked)
       XCTAssertFalse(isRevoked)
     case .failure:
@@ -447,41 +420,6 @@ extension TestDocumentDetailsInteractor {
     stub(walletKitController) { stub in
       when(stub.removeBookmarkedDocument(with: equal(to: id)))
         .thenThrow(WalletCoreError.unableFetchDocument)
-    }
-  }
-
-  func stubGetCredentialsUsageCount(
-    remaining: Int = 2,
-    total: Int = 10
-  ) {
-    stub(walletKitController) { mock in
-      mock.getCredentialsUsageCount(
-        id: any()
-      )
-      .thenReturn(
-        try! CredentialsUsageCounts(
-          total: total,
-          remaining: remaining
-        )
-      )
-    }
-  }
-
-  func stubGetCredentialsUsageCountNil() {
-    stub(walletKitController) { mock in
-      mock.getCredentialsUsageCount(
-        id: any()
-      )
-      .thenReturn(nil)
-    }
-  }
-
-  func stubGetCredentialsUsageCountWithError() {
-    stub(walletKitController) { mock in
-      mock.getCredentialsUsageCount(
-        id: any()
-      )
-      .thenThrow(WalletCoreError.unableFetchDocuments)
     }
   }
 

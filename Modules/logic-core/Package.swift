@@ -12,9 +12,13 @@ let package = Package(
       targets: ["logic-core"])
   ],
   dependencies: [
+//    .package(
+//      url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
+//      exact: "0.12.7"
+//    ),
     .package(
-      url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
-      exact: "0.12.7"
+      url: "https://github.com/niscy-eudiw/eudi-lib-ios-wallet-kit.git",
+      branch: "main"
     ),
     .package(
       name: "logic-resources",
