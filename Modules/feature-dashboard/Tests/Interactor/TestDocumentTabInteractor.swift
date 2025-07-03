@@ -104,7 +104,7 @@ final class TestDocumentTabInteractor: EudiTest {
     }
   }
   
-  func testFetchDocuments_WhenWalletKitControllerReturnsData_ThenReturnsUiModels() async {
+  func testFetchDocuments_WhenWalletKitControllerReturnsData_ThenReturnsUiModels() async throws {
     // Given
     var documentsCategories: DocumentCategories {
       [
@@ -118,24 +118,30 @@ final class TestDocumentTabInteractor: EudiTest {
         .Other: []
       ]
     }
+    let expectedPid: GenericMdocModel = Constants.euPidModel
+    expectedPid.credentialsUsageCounts = try .init(total: 10, remaining: 10)
+    
+    let expectedMdl: GenericMdocModel = Constants.isoMdlModel
+    expectedMdl.credentialsUsageCounts = try .init(total: 1, remaining: 1)
+    
     stubFetchRevokedDocuments(
       with: []
     )
     stubFetchDocuments(
       with: [
-        Constants.euPidModel,
-        Constants.isoMdlModel
+        expectedPid,
+        expectedMdl
       ]
     )
     stubFetchIssuedDocuments(
       with: [
-        Constants.euPidModel,
-        Constants.isoMdlModel
+        expectedPid,
+        expectedMdl
       ]
     )
     stubFetchDocumentCategories(with: documentsCategories)
-    stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
-    stubFetchMainPidDocument(with: Constants.euPidModel)
+    stubFetchDocumentsWithExclusion(with: [expectedMdl])
+    stubFetchMainPidDocument(with: expectedPid)
     stubIsBatchCounterEnabled()
 
     // When
@@ -464,24 +470,30 @@ final class TestDocumentTabInteractor: EudiTest {
         .Other: []
       ]
     }
+    let expectedPid: GenericMdocModel = Constants.euPidModel
+    expectedPid.credentialsUsageCounts = nil
+    
+    let expectedMdl: GenericMdocModel = Constants.isoMdlModel
+    expectedMdl.credentialsUsageCounts = nil
+    
     stubFetchRevokedDocuments(
       with: []
     )
     stubFetchDocuments(
       with: [
-        Constants.euPidModel,
-        Constants.isoMdlModel
+        expectedPid,
+        expectedMdl
       ]
     )
     stubFetchIssuedDocuments(
       with: [
-        Constants.euPidModel,
-        Constants.isoMdlModel
+        expectedPid,
+        expectedMdl
       ]
     )
     stubFetchDocumentCategories(with: documentsCategories)
-    stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
-    stubFetchMainPidDocument(with: Constants.euPidModel)
+    stubFetchDocumentsWithExclusion(with: [expectedMdl])
+    stubFetchMainPidDocument(with: expectedPid)
     stubIsBatchCounterEnabled()
 
     // When

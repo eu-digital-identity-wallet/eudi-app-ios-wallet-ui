@@ -41,10 +41,13 @@ final class TestDocumentDetailsInteractor: EudiTest {
     self.prefsController = nil
   }
   
-  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocument_ThenReturnsExpectedValues() async {
+  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocument_ThenReturnsExpectedValues() async throws {
     // Given
-    let documentId = Constants.euPidModel.id
-    stubFetchDocument(for: documentId)
+    let expectedDocument = Constants.euPidModel
+    expectedDocument.credentialsUsageCounts = try .init(total: 10, remaining: 10)
+    let documentId = expectedDocument.id
+    
+    stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsBatchCounterEnabled()
@@ -56,8 +59,8 @@ final class TestDocumentDetailsInteractor: EudiTest {
     switch result {
     case .success(let uiModel, let documentCredentialsInfoUi, let isBookmarked, let isRevoked):
       XCTAssertEqual(uiModel.id, documentId)
-      XCTAssertEqual(documentCredentialsInfoUi?.availableCredentials, 1)
-      XCTAssertEqual(documentCredentialsInfoUi?.totalCredentials, 1)
+      XCTAssertEqual(documentCredentialsInfoUi?.availableCredentials, 10)
+      XCTAssertEqual(documentCredentialsInfoUi?.totalCredentials, 10)
       XCTAssertFalse(isBookmarked)
       XCTAssertFalse(isRevoked)
     case .failure:
@@ -65,10 +68,13 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
 
-  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocumentWithBatchDisabled_ThenReturnsExpectedValues() async {
+  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocumentWithBatchDisabled_ThenReturnsExpectedValues() async throws {
     // Given
-    let documentId = Constants.euPidModel.id
-    stubFetchDocument(for: documentId)
+    let expectedDocument = Constants.euPidModel
+    expectedDocument.credentialsUsageCounts = try .init(total: 5, remaining: 2)
+    let documentId = expectedDocument.id
+    
+    stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsBatchCounterEnabled(false)
@@ -89,8 +95,11 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
   func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocumentWithNilUsageCount_ThenReturnsExpectedValues() async {
     // Given
-    let documentId = Constants.euPidModel.id
-    stubFetchDocument(for: documentId)
+    let expectedDocument = Constants.euPidModel
+    expectedDocument.credentialsUsageCounts = nil
+    let documentId = expectedDocument.id
+    
+    stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsBatchCounterEnabled()
@@ -318,10 +327,10 @@ final class TestDocumentDetailsInteractor: EudiTest {
 }
 
 extension TestDocumentDetailsInteractor {
-  func stubFetchDocument(for id: String) {
+  func stubFetchDocument(for id: String, document: GenericMdocModel = Constants.euPidModel) {
     stub(walletKitController) { stub in
       when(stub.fetchDocument(with: equal(to: id)))
-        .thenReturn(Constants.euPidModel)
+        .thenReturn(document)
     }
   }
   

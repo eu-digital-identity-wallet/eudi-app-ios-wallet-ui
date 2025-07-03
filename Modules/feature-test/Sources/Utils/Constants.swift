@@ -55,6 +55,7 @@ extension Constants {
     validFrom: nil,
     validUntil: nil,
     statusIdentifier: nil,
+    credentialsUsageCounts: nil,
     secureAreaName: nil,
     modifiedAt: nil,
     docClaims: [
@@ -90,6 +91,7 @@ extension Constants {
     validFrom: nil,
     validUntil: nil,
     statusIdentifier: nil,
+    credentialsUsageCounts: nil,
     secureAreaName: nil,
     modifiedAt: nil,
     docClaims: [
