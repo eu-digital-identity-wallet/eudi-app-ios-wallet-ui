@@ -118,11 +118,8 @@ final class TestDocumentTabInteractor: EudiTest {
         .Other: []
       ]
     }
-    let expectedPid: GenericMdocModel = Constants.euPidModel
-    expectedPid.credentialsUsageCounts = try .init(total: 10, remaining: 10)
-    
-    let expectedMdl: GenericMdocModel = Constants.isoMdlModel
-    expectedMdl.credentialsUsageCounts = try .init(total: 1, remaining: 1)
+    let expectedPid = Constants.createEuPidModel(credentialsUsageCounts: try .init(total: 10, remaining: 10))
+    let expectedMdl = Constants.createIsoMdlModel()
     
     stubFetchRevokedDocuments(
       with: []
@@ -185,7 +182,7 @@ final class TestDocumentTabInteractor: EudiTest {
 
   func testDeleteDeferredDocument_WhenWalletKitControllerDeleteSucceeds_ThenReturnsDocuments() async {
     // Given
-    let expectedDocument = Constants.euPidModel
+    let expectedDocument = Constants.createEuPidModel()
     stub(walletKitController) { mock in
       when(mock.deleteDocument(with: any(), status: any())).thenDoNothing()
       when(mock.fetchAllDocuments()).thenReturn([expectedDocument])
@@ -347,7 +344,7 @@ final class TestDocumentTabInteractor: EudiTest {
 
   func testRequestDeferredIssuance_WhenAllIssuanceSucceeds_ThenReturnsIssuedModels() async {
     // Given
-    let issuedDoc = Constants.euPidModel
+    let issuedDoc = Constants.createEuPidModel()
 
     stubFetchDeferredDocuments(
       with: [
@@ -421,7 +418,7 @@ final class TestDocumentTabInteractor: EudiTest {
 
   func testRequestDeferredIssuance_WhenNoDeferredDocuments_ThenReturnsEmptyIssuedAndFailed() async {
     // Given
-    let issuedDoc = Constants.euPidModel
+    let issuedDoc = Constants.createEuPidModel()
     stubFetchDeferredDocuments(with: [])
     stubFetchRevokedDocuments(with: [])
     stubFetchDocumentCategories(with: [:])
@@ -470,11 +467,8 @@ final class TestDocumentTabInteractor: EudiTest {
         .Other: []
       ]
     }
-    let expectedPid: GenericMdocModel = Constants.euPidModel
-    expectedPid.credentialsUsageCounts = nil
-    
-    let expectedMdl: GenericMdocModel = Constants.isoMdlModel
-    expectedMdl.credentialsUsageCounts = nil
+    let expectedPid = Constants.createEuPidModel()
+    let expectedMdl = Constants.createIsoMdlModel()
     
     stubFetchRevokedDocuments(
       with: []

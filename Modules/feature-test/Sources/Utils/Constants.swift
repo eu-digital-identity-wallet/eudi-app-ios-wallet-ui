@@ -43,77 +43,81 @@ extension Constants {
   static let documentCreatedAt = Date()
   static let claimExpiredAt = Date()
   
-  static let isoMdlModel = GenericMdocModel(
-    id: isoMdlModelId,
-    createdAt: documentCreatedAt,
-    docType: dr.documents!.first!.issuerSigned.issuerAuth.mso.docType,
-    displayName: isoMdlName,
-    display: nil,
-    issuerDisplay: nil,
-    credentialIssuerIdentifier: nil,
-    configurationIdentifier: nil,
-    validFrom: nil,
-    validUntil: nil,
-    statusIdentifier: nil,
-    credentialsUsageCounts: nil,
-    secureAreaName: nil,
-    modifiedAt: nil,
-    docClaims: [
-      .init(
-        name: DocumentJsonKeys.EXPIRY_DATE,
-        dataValue: .date(claimExpiredAt.formatted()),
-        stringValue: claimExpiredAt.formatted()
-      ),
-      .init(
-        name: DocumentJsonKeys.FIRST_NAME,
-        dataValue: .string(claimFirstName),
-        stringValue: claimFirstName
-      ),
-      .init(
-        name: DocumentJsonKeys.LAST_NAME,
-        dataValue: .string(claimLastName),
-        stringValue: claimLastName
-      )
-    ],
-    docDataFormat: .cbor,
-    hashingAlg: nil
-  )
+  static func createEuPidModel(credentialsUsageCounts: CredentialsUsageCounts? = nil) -> DocClaimsDecodable {
+    return GenericMdocModel(
+      id: euPidModelId,
+      createdAt: documentCreatedAt,
+      docType: dr.documents!.last!.issuerSigned.issuerAuth.mso.docType,
+      displayName: euPidName,
+      display: nil,
+      issuerDisplay: nil,
+      credentialIssuerIdentifier: nil,
+      configurationIdentifier: nil,
+      validFrom: nil,
+      validUntil: nil,
+      statusIdentifier: nil,
+      credentialsUsageCounts: credentialsUsageCounts,
+      secureAreaName: nil,
+      modifiedAt: nil,
+      docClaims: [
+        .init(
+          name: DocumentJsonKeys.EXPIRY_DATE,
+          dataValue: .date(claimExpiredAt.formatted()),
+          stringValue: claimExpiredAt.formatted()
+        ),
+        .init(
+          name: DocumentJsonKeys.FIRST_NAME,
+          dataValue: .string(claimFirstName),
+          stringValue: claimFirstName
+        ),
+        .init(
+          name: DocumentJsonKeys.LAST_NAME,
+          dataValue: .string(claimLastName),
+          stringValue: claimLastName
+        )
+      ],
+      docDataFormat: .cbor,
+      hashingAlg: nil
+    )
+  }
   
-  static let euPidModel = GenericMdocModel(
-    id: euPidModelId,
-    createdAt: documentCreatedAt,
-    docType: dr.documents!.last!.issuerSigned.issuerAuth.mso.docType,
-    displayName: euPidName,
-    display: nil,
-    issuerDisplay: nil,
-    credentialIssuerIdentifier: nil,
-    configurationIdentifier: nil,
-    validFrom: nil,
-    validUntil: nil,
-    statusIdentifier: nil,
-    credentialsUsageCounts: nil,
-    secureAreaName: nil,
-    modifiedAt: nil,
-    docClaims: [
-      .init(
-        name: DocumentJsonKeys.EXPIRY_DATE,
-        dataValue: .date(claimExpiredAt.formatted()),
-        stringValue: claimExpiredAt.formatted()
-      ),
-      .init(
-        name: DocumentJsonKeys.FIRST_NAME,
-        dataValue: .string(claimFirstName),
-        stringValue: claimFirstName
-      ),
-      .init(
-        name: DocumentJsonKeys.LAST_NAME,
-        dataValue: .string(claimLastName),
-        stringValue: claimLastName
-      )
-    ],
-    docDataFormat: .cbor,
-    hashingAlg: nil
-  )
+  static func createIsoMdlModel(credentialsUsageCounts: CredentialsUsageCounts? = nil) -> DocClaimsDecodable {
+    return GenericMdocModel(
+      id: isoMdlModelId,
+      createdAt: documentCreatedAt,
+      docType: dr.documents!.first!.issuerSigned.issuerAuth.mso.docType,
+      displayName: isoMdlName,
+      display: nil,
+      issuerDisplay: nil,
+      credentialIssuerIdentifier: nil,
+      configurationIdentifier: nil,
+      validFrom: nil,
+      validUntil: nil,
+      statusIdentifier: nil,
+      credentialsUsageCounts: credentialsUsageCounts,
+      secureAreaName: nil,
+      modifiedAt: nil,
+      docClaims: [
+        .init(
+          name: DocumentJsonKeys.EXPIRY_DATE,
+          dataValue: .date(claimExpiredAt.formatted()),
+          stringValue: claimExpiredAt.formatted()
+        ),
+        .init(
+          name: DocumentJsonKeys.FIRST_NAME,
+          dataValue: .string(claimFirstName),
+          stringValue: claimFirstName
+        ),
+        .init(
+          name: DocumentJsonKeys.LAST_NAME,
+          dataValue: .string(claimLastName),
+          stringValue: claimLastName
+        )
+      ],
+      docDataFormat: .cbor,
+      hashingAlg: nil
+    )
+  }
   
   static let scopedDocument = ScopedDocument(
     name: "Test Document",

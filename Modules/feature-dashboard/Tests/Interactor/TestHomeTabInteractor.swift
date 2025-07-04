@@ -43,7 +43,7 @@ final class TestHomeTabInteractor: EudiTest {
   
   func testFetchUsername_WhenPidDocumentReturnsValidName_ThenReturnsThatName() {
     // Given
-    stubFetchMainPidDocument(with: Constants.euPidModel)
+    stubFetchMainPidDocument(with: Constants.createEuPidModel())
     
     // When
     let username = interactor.fetchUsername()

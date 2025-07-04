@@ -43,8 +43,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
   
   func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocument_ThenReturnsExpectedValues() async throws {
     // Given
-    let expectedDocument = Constants.euPidModel
-    expectedDocument.credentialsUsageCounts = try .init(total: 10, remaining: 10)
+    let expectedDocument = Constants.createEuPidModel(credentialsUsageCounts: try .init(total: 10, remaining: 10))
     let documentId = expectedDocument.id
     
     stubFetchDocument(for: documentId, document: expectedDocument)
@@ -70,8 +69,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
   func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocumentWithBatchDisabled_ThenReturnsExpectedValues() async throws {
     // Given
-    let expectedDocument = Constants.euPidModel
-    expectedDocument.credentialsUsageCounts = try .init(total: 5, remaining: 2)
+    let expectedDocument = Constants.createEuPidModel(credentialsUsageCounts: try .init(total: 5, remaining: 2))
     let documentId = expectedDocument.id
     
     stubFetchDocument(for: documentId, document: expectedDocument)
@@ -95,8 +93,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
   func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocumentWithNilUsageCount_ThenReturnsExpectedValues() async {
     // Given
-    let expectedDocument = Constants.euPidModel
-    expectedDocument.credentialsUsageCounts = nil
+    let expectedDocument = Constants.createEuPidModel()
     let documentId = expectedDocument.id
     
     stubFetchDocument(for: documentId, document: expectedDocument)
@@ -139,7 +136,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
   
   func testDeleteDocument_WhenWalletKitControllerReturnsRebootRequired_ThenReturnsRebootTrue() async {
     // Given
-    let documentId = Constants.euPidModel.id
+    let documentId = Constants.euPidModelId
     let type: DocumentTypeIdentifier = .mDocPid
     stubShouldRebootTrue(for: documentId)
     
@@ -157,7 +154,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
   
   func testDeleteDocument_WhenWalletKitControllerReturnsRebootNotRequired_ThenReturnsRebootTrue() async {
     // Given
-    let documentId = Constants.euPidModel.id
+    let documentId = Constants.euPidModelId
     let type: DocumentTypeIdentifier = .mDocPid
     stubShouldRebootFalse(for: documentId)
     
@@ -175,7 +172,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
   func testDeleteDocument_WhenWalletKitControllerReturnsMultipleValidDocuments_ThenShouldDeleteAllDocuments() async throws {
     // Given
-    let documentId = Constants.euPidModel.id
+    let documentId = Constants.euPidModelId
     let type: DocumentTypeIdentifier = .mDocPid
     stubShouldRebootTrue(for: documentId)
     
@@ -193,7 +190,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
   
   func testDeleteDocument_WhenWalletKitControllerReturnsNonValidDocuments_ThenShouldNotDeleteAllDocuments() async throws {
     // Given
-    let documentId = Constants.euPidModel.id
+    let documentId = Constants.euPidModelId
     let type: DocumentTypeIdentifier = .other(formatType: "other")
     stubShouldRebootFalse(for: documentId)
     
@@ -252,10 +249,10 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
     stub(walletKitController) { stub in
       when(stub.fetchIssuedDocuments(with: any()))
-        .thenReturn([Constants.euPidModel])
+        .thenReturn([Constants.createEuPidModel()])
 
       when(stub.fetchMainPidDocument())
-        .thenReturn(Constants.euPidModel)
+        .thenReturn(Constants.createEuPidModel())
 
       when(stub.deleteDocument(with: equal(to: documentId), status: any()))
         .thenThrow(WalletCoreError.unableFetchDocument)
@@ -281,7 +278,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
   func testSaveDocument_WhenWalletKitControllerReturnsSaveSuccess_ThenNoErrorThrown() async throws {
     // Given
-    let documentId = Constants.euPidModel.id
+    let documentId = Constants.euPidModelId
     stubSaveBookmark(for: documentId)
     
     // When / Then
@@ -304,7 +301,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
   
   func testDeleteBookmark_WhenWalletKitControllerReturnsDeleteSuccess_ThenNoErrorThrown() async throws {
     // Given
-    let documentId = Constants.euPidModel.id
+    let documentId = Constants.euPidModelId
     stubDeleteBookmark(for: documentId)
     
     // When / Then
@@ -327,7 +324,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
 }
 
 extension TestDocumentDetailsInteractor {
-  func stubFetchDocument(for id: String, document: GenericMdocModel = Constants.euPidModel) {
+  func stubFetchDocument(for id: String, document: DocClaimsDecodable = Constants.createEuPidModel()) {
     stub(walletKitController) { stub in
       when(stub.fetchDocument(with: equal(to: id)))
         .thenReturn(document)
@@ -358,11 +355,11 @@ extension TestDocumentDetailsInteractor {
     stub(walletKitController) { stub in
       when(stub.fetchIssuedDocuments(with: any()))
         .thenReturn([
-          Constants.euPidModel
+          Constants.createEuPidModel()
         ])
       
       when(stub.fetchMainPidDocument())
-        .thenReturn(Constants.euPidModel)
+        .thenReturn(Constants.createEuPidModel())
       
       when(stub.clearAllDocuments())
         .thenDoNothing()
@@ -373,12 +370,12 @@ extension TestDocumentDetailsInteractor {
     stub(walletKitController) { stub in
       when(stub.fetchIssuedDocuments(with: any()))
         .thenReturn([
-          Constants.euPidModel,
-          Constants.euPidModel
+          Constants.createEuPidModel(),
+          Constants.createEuPidModel()
         ])
       
       when(stub.fetchMainPidDocument())
-        .thenReturn(Constants.euPidModel)
+        .thenReturn(Constants.createEuPidModel())
       
       when(stub.deleteDocument(with: equal(to: id), status: equal(to: DocumentStatus.issued)))
         .thenDoNothing()
@@ -391,10 +388,10 @@ extension TestDocumentDetailsInteractor {
   func stubDeleteDocumentFailure(for id: String) {
     stub(walletKitController) { stub in
       when(stub.fetchIssuedDocuments(with: any()))
-        .thenReturn([Constants.euPidModel])
+        .thenReturn([Constants.createEuPidModel()])
       
       when(stub.fetchMainPidDocument())
-        .thenReturn(Constants.euPidModel)
+        .thenReturn(Constants.createEuPidModel())
       
       when(stub.deleteDocument(with: equal(to: id), status: any()))
         .thenThrow(WalletCoreError.unableFetchDocument)
