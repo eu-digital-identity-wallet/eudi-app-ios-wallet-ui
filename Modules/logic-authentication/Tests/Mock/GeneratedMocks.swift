@@ -4016,16 +4016,6 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             defaultCall: await __defaultImplStub!.getDocumentStatus(for: p0)
         )
     }
-    
-    public func getCredentialsUsageCount(id p0: String) async throws -> CredentialsUsageCounts? {
-        return try await cuckoo_manager.callThrows(
-            "getCredentialsUsageCount(id p0: String) async throws -> CredentialsUsageCounts?",
-            parameters: (p0),
-            escapingParameters: (p0),
-errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.getCredentialsUsageCount(id: p0)
-        )
-    }
 
     public struct __StubbingProxy_WalletKitController: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -4322,14 +4312,6 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             let matchers: [Cuckoo.ParameterMatcher<(StatusIdentifier)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "getDocumentStatus(for p0: StatusIdentifier) async throws -> CredentialStatus",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getCredentialsUsageCount<M1: Cuckoo.Matchable>(id p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), CredentialsUsageCounts?,Error> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "getCredentialsUsageCount(id p0: String) async throws -> CredentialsUsageCounts?",
                 parameterMatchers: matchers
             ))
         }
@@ -4781,18 +4763,6 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
                 sourceLocation: sourceLocation
             )
         }
-        
-        
-        @discardableResult
-        func getCredentialsUsageCount<M1: Cuckoo.Matchable>(id p0: M1) -> Cuckoo.__DoNotUse<(String), CredentialsUsageCounts?> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "getCredentialsUsageCount(id p0: String) async throws -> CredentialsUsageCounts?",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
     }
 }
 
@@ -4948,10 +4918,6 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
     
     public func getDocumentStatus(for p0: StatusIdentifier) async throws -> CredentialStatus {
         return DefaultValueRegistry.defaultValue(for: (CredentialStatus).self)
-    }
-    
-    public func getCredentialsUsageCount(id p0: String) async throws -> CredentialsUsageCounts? {
-        return DefaultValueRegistry.defaultValue(for: (CredentialsUsageCounts?).self)
     }
 }
 

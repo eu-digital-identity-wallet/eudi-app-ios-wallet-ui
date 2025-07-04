@@ -81,7 +81,6 @@ public protocol WalletKitController: Sendable {
   func removeRevokedDocument(with id: String) async throws
 
   func getDocumentStatus(for statusIdentifier: StatusIdentifier) async throws -> CredentialStatus
-  func getCredentialsUsageCount(id: String) async throws -> CredentialsUsageCounts?
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -197,10 +196,6 @@ final class WalletKitControllerImpl: WalletKitController {
 
   func fetchAllDocuments() -> [DocClaimsDecodable] {
     return fetchIssuedDocuments() + fetchDeferredDocuments().transformToDeferredDecodables()
-  }
-
-  func getCredentialsUsageCount(id: String) async throws -> CredentialsUsageCounts? {
-    try await wallet.getCredentialsUsageCount(id: id)
   }
 
   func fetchDeferredDocuments() -> [WalletStorage.Document] {

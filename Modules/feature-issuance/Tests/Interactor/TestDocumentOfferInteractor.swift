@@ -180,7 +180,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       ))
       .thenReturn(document)
 
-      when(mock.fetchDocuments(with: any())).thenReturn([Constants.euPidModel])
+      when(mock.fetchDocuments(with: any())).thenReturn([Constants.createEuPidModel()])
     }
 
     // When
@@ -241,7 +241,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       ))
       .thenReturn(document)
 
-      when(mock.fetchDocuments(with: any())).thenReturn([Constants.euPidModel])
+      when(mock.fetchDocuments(with: any())).thenReturn([Constants.createEuPidModel()])
     }
 
     // When
@@ -302,7 +302,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       ))
       .thenReturn(document)
 
-      when(mock.fetchDocuments(with: any())).thenReturn([Constants.euPidModel])
+      when(mock.fetchDocuments(with: any())).thenReturn([Constants.createEuPidModel()])
     }
 
     // When
@@ -499,7 +499,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       )
       .thenReturn([document])
 
-      when(mock.fetchDocuments(with: any())).thenReturn([Constants.euPidModel])
+      when(mock.fetchDocuments(with: any())).thenReturn([Constants.createEuPidModel()])
     }
 
     // When
@@ -567,7 +567,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       )
       .thenReturn([document])
 
-      when(mock.fetchDocuments(with: any())).thenReturn([Constants.euPidModel])
+      when(mock.fetchDocuments(with: any())).thenReturn([Constants.createEuPidModel()])
     }
 
     // When
@@ -596,7 +596,7 @@ final class TestDocumentOfferInteractor: EudiTest {
     stub(walletKitController) { mock in
       mock.resolveOfferUrlDocTypes(uriOffer: uri).thenThrow(exceptedError)
 
-      mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.euPidModel])
+      mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.createEuPidModel()])
     }
 
     // When
@@ -688,7 +688,7 @@ final class TestDocumentOfferInteractor: EudiTest {
     stub(walletKitController) { mock in
       mock.resolveOfferUrlDocTypes(uriOffer: uri).thenReturn(offeredIssuanceModel)
 
-      mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.euPidModel])
+      mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.createEuPidModel()])
     }
 
     // When

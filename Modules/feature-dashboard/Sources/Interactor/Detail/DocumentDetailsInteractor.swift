@@ -45,7 +45,7 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     let isRevoked = await walletController.isDocumentRevoked(with: documentId)
 
     if isBatchCounterEnabled() {
-      let info = await getCredentialsUsageCount(documentId: documentId)
+      let info = getCredentialsUsageCount(credentialsUsageCounts: document?.credentialsUsageCounts)
       return .success(documentDetails, info, isBookmarked, isRevoked)
     }
     return .success(documentDetails, nil, isBookmarked, isRevoked)
@@ -96,15 +96,11 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     try await walletController.removeBookmarkedDocument(with: identifier)
   }
 
-  private func getCredentialsUsageCount(documentId: String) async -> DocumentCredentialsInfoUi? {
-    do {
-      if let usageCounts = try await walletController.getCredentialsUsageCount(id: documentId) {
-        return documentCredentialsInfoUi(usageCounts: usageCounts)
-      } else {
-        return documentCredentialsInfoUi()
-      }
-    } catch {
-      return nil
+  private func getCredentialsUsageCount(credentialsUsageCounts: CredentialsUsageCounts?) -> DocumentCredentialsInfoUi? {
+    if let usageCounts = credentialsUsageCounts {
+      return documentCredentialsInfoUi(usageCounts: usageCounts)
+    } else {
+      return documentCredentialsInfoUi()
     }
   }
 

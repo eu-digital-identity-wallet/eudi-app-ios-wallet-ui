@@ -57,7 +57,9 @@ final class TestStartupInteractor: EudiTest {
   func testInitialize_WhenIsNotFirstBootAndPinIsNotSet_ThenReturnQuickPinAppRoute() async throws {
     // Given
     let expectedConfig = QuickPinUiConfig(flow: .set)
-    stubFetchDocuments(with: [Constants.euPidModel, Constants.isoMdlModel])
+    let expectedPid = Constants.createEuPidModel()
+    let expectedMdl = Constants.createIsoMdlModel()
+    stubFetchDocuments(with: [expectedPid, expectedMdl])
     stubHasPin(with: false)
     stubRunAtLeastOnce()
     // When
@@ -82,7 +84,9 @@ final class TestStartupInteractor: EudiTest {
   func testInitialize_WhenIsNotFirstBootAndPinIsSetAndHasIssuedDocuments_ThenReturnBiometricsAppRouteWithNavigationSuccessDashboard() async throws {
     // Given
     let expectedConfig = biometryConfig(with: true)
-    stubFetchDocuments(with: [Constants.euPidModel, Constants.isoMdlModel])
+    let expectedPid = Constants.createEuPidModel()
+    let expectedMdl = Constants.createIsoMdlModel()
+    stubFetchDocuments(with: [expectedPid, expectedMdl])
     stubHasPin(with: true)
     stubRunAtLeastOnce()
     // When
@@ -132,7 +136,9 @@ final class TestStartupInteractor: EudiTest {
   func testInitialize_WhenIsFirstBootAndPinIsNotSet_ThenClearDocumentStorageAndReturnQuickPinAppRoute() async throws {
     // Given
     let expectedConfig = QuickPinUiConfig(flow: .set)
-    stubFetchDocuments(with: [Constants.euPidModel, Constants.isoMdlModel])
+    let expectedPid = Constants.createEuPidModel()
+    let expectedMdl = Constants.createIsoMdlModel()
+    stubFetchDocuments(with: [expectedPid, expectedMdl])
     stubHasPin(with: false)
     stubRunAtLeastOnce(false)
     // When

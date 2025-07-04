@@ -347,8 +347,8 @@ final class TestAddDocumentInteractor: EudiTest {
       "doc-id-1",
       "doc-id-2"
     ]
-    let pidDocument = Constants.euPidModel
-    let mdlDocument = Constants.isoMdlModel
+    let pidDocument = Constants.createEuPidModel()
+    let mdlDocument = Constants.createIsoMdlModel()
     
     let transformedPidDocument = pidDocument.transformToDocumentUi(isSensitive: false)
     let transformedMdlDocument = mdlDocument.transformToDocumentUi(isSensitive: false)

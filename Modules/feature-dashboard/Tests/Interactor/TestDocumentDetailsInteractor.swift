@@ -41,14 +41,15 @@ final class TestDocumentDetailsInteractor: EudiTest {
     self.prefsController = nil
   }
   
-  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocument_ThenReturnsExpectedValues() async {
+  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocument_ThenReturnsExpectedValues() async throws {
     // Given
-    let documentId = Constants.euPidModel.id
-    stubFetchDocument(for: documentId)
+    let expectedDocument = Constants.createEuPidModel(credentialsUsageCounts: try .init(total: 10, remaining: 10))
+    let documentId = expectedDocument.id
+    
+    stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsBatchCounterEnabled()
-    stubGetCredentialsUsageCount()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -57,7 +58,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     switch result {
     case .success(let uiModel, let documentCredentialsInfoUi, let isBookmarked, let isRevoked):
       XCTAssertEqual(uiModel.id, documentId)
-      XCTAssertEqual(documentCredentialsInfoUi?.availableCredentials, 2)
+      XCTAssertEqual(documentCredentialsInfoUi?.availableCredentials, 10)
       XCTAssertEqual(documentCredentialsInfoUi?.totalCredentials, 10)
       XCTAssertFalse(isBookmarked)
       XCTAssertFalse(isRevoked)
@@ -66,14 +67,15 @@ final class TestDocumentDetailsInteractor: EudiTest {
     }
   }
 
-  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocumentWithBatchDisabled_ThenReturnsExpectedValues() async {
+  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocumentWithBatchDisabled_ThenReturnsExpectedValues() async throws {
     // Given
-    let documentId = Constants.euPidModel.id
-    stubFetchDocument(for: documentId)
+    let expectedDocument = Constants.createEuPidModel(credentialsUsageCounts: try .init(total: 5, remaining: 2))
+    let documentId = expectedDocument.id
+    
+    stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsBatchCounterEnabled(false)
-    stubGetCredentialsUsageCount()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -91,12 +93,13 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
   func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocumentWithNilUsageCount_ThenReturnsExpectedValues() async {
     // Given
-    let documentId = Constants.euPidModel.id
-    stubFetchDocument(for: documentId)
+    let expectedDocument = Constants.createEuPidModel()
+    let documentId = expectedDocument.id
+    
+    stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsBatchCounterEnabled()
-    stubGetCredentialsUsageCountNil()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -107,30 +110,6 @@ final class TestDocumentDetailsInteractor: EudiTest {
       XCTAssertEqual(uiModel.id, documentId)
       XCTAssertEqual(documentCredentialsInfoUi?.availableCredentials, 1)
       XCTAssertEqual(documentCredentialsInfoUi?.totalCredentials, 1)
-      XCTAssertFalse(isBookmarked)
-      XCTAssertFalse(isRevoked)
-    case .failure:
-      XCTFail("Expected success, but got failure.")
-    }
-  }
-
-  func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocumentWithUsageCountError_ThenReturnsExpectedValues() async {
-    // Given
-    let documentId = Constants.euPidModel.id
-    stubFetchDocument(for: documentId)
-    stubIsBookmarked(for: documentId, isBookmarked: false)
-    stubIsRevoked(for: documentId, isRevoked: false)
-    stubIsBatchCounterEnabled()
-    stubGetCredentialsUsageCountWithError()
-
-    // When
-    let result = await interactor.fetchStoredDocument(documentId: documentId)
-
-    // Then
-    switch result {
-    case .success(let uiModel, let documentCredentialsInfoUi, let isBookmarked, let isRevoked):
-      XCTAssertEqual(uiModel.id, documentId)
-      XCTAssertNil(documentCredentialsInfoUi)
       XCTAssertFalse(isBookmarked)
       XCTAssertFalse(isRevoked)
     case .failure:
@@ -157,7 +136,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
   
   func testDeleteDocument_WhenWalletKitControllerReturnsRebootRequired_ThenReturnsRebootTrue() async {
     // Given
-    let documentId = Constants.euPidModel.id
+    let documentId = Constants.euPidModelId
     let type: DocumentTypeIdentifier = .mDocPid
     stubShouldRebootTrue(for: documentId)
     
@@ -175,7 +154,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
   
   func testDeleteDocument_WhenWalletKitControllerReturnsRebootNotRequired_ThenReturnsRebootTrue() async {
     // Given
-    let documentId = Constants.euPidModel.id
+    let documentId = Constants.euPidModelId
     let type: DocumentTypeIdentifier = .mDocPid
     stubShouldRebootFalse(for: documentId)
     
@@ -193,7 +172,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
   func testDeleteDocument_WhenWalletKitControllerReturnsMultipleValidDocuments_ThenShouldDeleteAllDocuments() async throws {
     // Given
-    let documentId = Constants.euPidModel.id
+    let documentId = Constants.euPidModelId
     let type: DocumentTypeIdentifier = .mDocPid
     stubShouldRebootTrue(for: documentId)
     
@@ -211,7 +190,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
   
   func testDeleteDocument_WhenWalletKitControllerReturnsNonValidDocuments_ThenShouldNotDeleteAllDocuments() async throws {
     // Given
-    let documentId = Constants.euPidModel.id
+    let documentId = Constants.euPidModelId
     let type: DocumentTypeIdentifier = .other(formatType: "other")
     stubShouldRebootFalse(for: documentId)
     
@@ -270,10 +249,10 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
     stub(walletKitController) { stub in
       when(stub.fetchIssuedDocuments(with: any()))
-        .thenReturn([Constants.euPidModel])
+        .thenReturn([Constants.createEuPidModel()])
 
       when(stub.fetchMainPidDocument())
-        .thenReturn(Constants.euPidModel)
+        .thenReturn(Constants.createEuPidModel())
 
       when(stub.deleteDocument(with: equal(to: documentId), status: any()))
         .thenThrow(WalletCoreError.unableFetchDocument)
@@ -299,7 +278,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
   func testSaveDocument_WhenWalletKitControllerReturnsSaveSuccess_ThenNoErrorThrown() async throws {
     // Given
-    let documentId = Constants.euPidModel.id
+    let documentId = Constants.euPidModelId
     stubSaveBookmark(for: documentId)
     
     // When / Then
@@ -322,7 +301,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
   
   func testDeleteBookmark_WhenWalletKitControllerReturnsDeleteSuccess_ThenNoErrorThrown() async throws {
     // Given
-    let documentId = Constants.euPidModel.id
+    let documentId = Constants.euPidModelId
     stubDeleteBookmark(for: documentId)
     
     // When / Then
@@ -345,10 +324,10 @@ final class TestDocumentDetailsInteractor: EudiTest {
 }
 
 extension TestDocumentDetailsInteractor {
-  func stubFetchDocument(for id: String) {
+  func stubFetchDocument(for id: String, document: DocClaimsDecodable = Constants.createEuPidModel()) {
     stub(walletKitController) { stub in
       when(stub.fetchDocument(with: equal(to: id)))
-        .thenReturn(Constants.euPidModel)
+        .thenReturn(document)
     }
   }
   
@@ -376,11 +355,11 @@ extension TestDocumentDetailsInteractor {
     stub(walletKitController) { stub in
       when(stub.fetchIssuedDocuments(with: any()))
         .thenReturn([
-          Constants.euPidModel
+          Constants.createEuPidModel()
         ])
       
       when(stub.fetchMainPidDocument())
-        .thenReturn(Constants.euPidModel)
+        .thenReturn(Constants.createEuPidModel())
       
       when(stub.clearAllDocuments())
         .thenDoNothing()
@@ -391,12 +370,12 @@ extension TestDocumentDetailsInteractor {
     stub(walletKitController) { stub in
       when(stub.fetchIssuedDocuments(with: any()))
         .thenReturn([
-          Constants.euPidModel,
-          Constants.euPidModel
+          Constants.createEuPidModel(),
+          Constants.createEuPidModel()
         ])
       
       when(stub.fetchMainPidDocument())
-        .thenReturn(Constants.euPidModel)
+        .thenReturn(Constants.createEuPidModel())
       
       when(stub.deleteDocument(with: equal(to: id), status: equal(to: DocumentStatus.issued)))
         .thenDoNothing()
@@ -409,10 +388,10 @@ extension TestDocumentDetailsInteractor {
   func stubDeleteDocumentFailure(for id: String) {
     stub(walletKitController) { stub in
       when(stub.fetchIssuedDocuments(with: any()))
-        .thenReturn([Constants.euPidModel])
+        .thenReturn([Constants.createEuPidModel()])
       
       when(stub.fetchMainPidDocument())
-        .thenReturn(Constants.euPidModel)
+        .thenReturn(Constants.createEuPidModel())
       
       when(stub.deleteDocument(with: equal(to: id), status: any()))
         .thenThrow(WalletCoreError.unableFetchDocument)
@@ -447,41 +426,6 @@ extension TestDocumentDetailsInteractor {
     stub(walletKitController) { stub in
       when(stub.removeBookmarkedDocument(with: equal(to: id)))
         .thenThrow(WalletCoreError.unableFetchDocument)
-    }
-  }
-
-  func stubGetCredentialsUsageCount(
-    remaining: Int = 2,
-    total: Int = 10
-  ) {
-    stub(walletKitController) { mock in
-      mock.getCredentialsUsageCount(
-        id: any()
-      )
-      .thenReturn(
-        try! CredentialsUsageCounts(
-          total: total,
-          remaining: remaining
-        )
-      )
-    }
-  }
-
-  func stubGetCredentialsUsageCountNil() {
-    stub(walletKitController) { mock in
-      mock.getCredentialsUsageCount(
-        id: any()
-      )
-      .thenReturn(nil)
-    }
-  }
-
-  func stubGetCredentialsUsageCountWithError() {
-    stub(walletKitController) { mock in
-      mock.getCredentialsUsageCount(
-        id: any()
-      )
-      .thenThrow(WalletCoreError.unableFetchDocuments)
     }
   }
 

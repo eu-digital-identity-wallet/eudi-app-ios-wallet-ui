@@ -91,7 +91,6 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDocumentsWithExclusion(with: [])
     stubFetchMainPidDocument(with: nil)
     stubIsBatchCounterEnabled()
-    stubGetCredentialsUsageCountNil()
 
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
@@ -105,7 +104,7 @@ final class TestDocumentTabInteractor: EudiTest {
     }
   }
   
-  func testFetchDocuments_WhenWalletKitControllerReturnsData_ThenReturnsUiModels() async {
+  func testFetchDocuments_WhenWalletKitControllerReturnsData_ThenReturnsUiModels() async throws {
     // Given
     var documentsCategories: DocumentCategories {
       [
@@ -119,25 +118,27 @@ final class TestDocumentTabInteractor: EudiTest {
         .Other: []
       ]
     }
+    let expectedPid = Constants.createEuPidModel(credentialsUsageCounts: try .init(total: 10, remaining: 10))
+    let expectedMdl = Constants.createIsoMdlModel()
+    
     stubFetchRevokedDocuments(
       with: []
     )
     stubFetchDocuments(
       with: [
-        Constants.euPidModel,
-        Constants.isoMdlModel
+        expectedPid,
+        expectedMdl
       ]
     )
     stubFetchIssuedDocuments(
       with: [
-        Constants.euPidModel,
-        Constants.isoMdlModel
+        expectedPid,
+        expectedMdl
       ]
     )
     stubFetchDocumentCategories(with: documentsCategories)
-    stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
-    stubFetchMainPidDocument(with: Constants.euPidModel)
-    stubGetCredentialsUsageCount()
+    stubFetchDocumentsWithExclusion(with: [expectedMdl])
+    stubFetchMainPidDocument(with: expectedPid)
     stubIsBatchCounterEnabled()
 
     // When
@@ -181,7 +182,7 @@ final class TestDocumentTabInteractor: EudiTest {
 
   func testDeleteDeferredDocument_WhenWalletKitControllerDeleteSucceeds_ThenReturnsDocuments() async {
     // Given
-    let expectedDocument = Constants.euPidModel
+    let expectedDocument = Constants.createEuPidModel()
     stub(walletKitController) { mock in
       when(mock.deleteDocument(with: any(), status: any())).thenDoNothing()
       when(mock.fetchAllDocuments()).thenReturn([expectedDocument])
@@ -343,7 +344,7 @@ final class TestDocumentTabInteractor: EudiTest {
 
   func testRequestDeferredIssuance_WhenAllIssuanceSucceeds_ThenReturnsIssuedModels() async {
     // Given
-    let issuedDoc = Constants.euPidModel
+    let issuedDoc = Constants.createEuPidModel()
 
     stubFetchDeferredDocuments(
       with: [
@@ -417,7 +418,7 @@ final class TestDocumentTabInteractor: EudiTest {
 
   func testRequestDeferredIssuance_WhenNoDeferredDocuments_ThenReturnsEmptyIssuedAndFailed() async {
     // Given
-    let issuedDoc = Constants.euPidModel
+    let issuedDoc = Constants.createEuPidModel()
     stubFetchDeferredDocuments(with: [])
     stubFetchRevokedDocuments(with: [])
     stubFetchDocumentCategories(with: [:])
@@ -466,73 +467,28 @@ final class TestDocumentTabInteractor: EudiTest {
         .Other: []
       ]
     }
+    let expectedPid = Constants.createEuPidModel()
+    let expectedMdl = Constants.createIsoMdlModel()
+    
     stubFetchRevokedDocuments(
       with: []
     )
     stubFetchDocuments(
       with: [
-        Constants.euPidModel,
-        Constants.isoMdlModel
+        expectedPid,
+        expectedMdl
       ]
     )
     stubFetchIssuedDocuments(
       with: [
-        Constants.euPidModel,
-        Constants.isoMdlModel
+        expectedPid,
+        expectedMdl
       ]
     )
     stubFetchDocumentCategories(with: documentsCategories)
-    stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
-    stubFetchMainPidDocument(with: Constants.euPidModel)
+    stubFetchDocumentsWithExclusion(with: [expectedMdl])
+    stubFetchMainPidDocument(with: expectedPid)
     stubIsBatchCounterEnabled()
-    stubGetCredentialsUsageCountNil()
-
-    // When
-    let state = await interactor.fetchDocuments(failedDocuments: [])
-
-    // Then
-    switch state {
-    case .success:
-      XCTAssertTrue(true)
-    default:
-      XCTFail("Wrong state \(state)")
-    }
-  }
-
-  func testFetchDocuments_WhenWalletKitControllerReturnsDataUsageCountThrowError_ThenReturnsUiModels() async {
-    // Given
-    var documentsCategories: DocumentCategories {
-      [
-        .Government: [],
-        .Travel: [],
-        .Finance: [],
-        .Education: [],
-        .Health: [],
-        .SocialSecurity: [],
-        .Retail: [],
-        .Other: []
-      ]
-    }
-    stubFetchRevokedDocuments(
-      with: []
-    )
-    stubFetchDocuments(
-      with: [
-        Constants.euPidModel,
-        Constants.isoMdlModel
-      ]
-    )
-    stubFetchIssuedDocuments(
-      with: [
-        Constants.euPidModel,
-        Constants.isoMdlModel
-      ]
-    )
-    stubFetchDocumentCategories(with: documentsCategories)
-    stubFetchDocumentsWithExclusion(with: [Constants.isoMdlModel])
-    stubFetchMainPidDocument(with: Constants.euPidModel)
-    stubIsBatchCounterEnabled()
-    stubGetCredentialsUsageCountWithError()
 
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
@@ -691,41 +647,6 @@ private extension TestDocumentTabInteractor {
         query: equal(to: "search"))
       )
       .thenDoNothing()
-    }
-  }
-
-  func stubGetCredentialsUsageCount(
-    remaining: Int = 2,
-    total: Int = 10
-  ) {
-    stub(walletKitController) { mock in
-      mock.getCredentialsUsageCount(
-        id: any()
-      )
-      .thenReturn(
-        try! CredentialsUsageCounts(
-          total: total,
-          remaining: remaining
-        )
-      )
-    }
-  }
-
-  func stubGetCredentialsUsageCountNil() {
-    stub(walletKitController) { mock in
-      mock.getCredentialsUsageCount(
-        id: any()
-      )
-      .thenReturn(nil)
-    }
-  }
-
-  func stubGetCredentialsUsageCountWithError() {
-    stub(walletKitController) { mock in
-      mock.getCredentialsUsageCount(
-        id: any()
-      )
-      .thenThrow(WalletCoreError.unableFetchDocuments)
     }
   }
 

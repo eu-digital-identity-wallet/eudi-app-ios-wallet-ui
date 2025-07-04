@@ -350,11 +350,17 @@ private extension TestDeepLinkController {
     dataFormat: .cbor
   )
   
+  static let mockStorageService: DataStorageService = KeyChainStorageService(
+    serviceName: "",
+    accessGroup: ""
+  )
+  
   static let mockPresentationSession = PresentationSession(
     presentationService: MockPresentationService(
       transactionLog: mockTransactionLog,
       flow: .other
     ),
+    storageManager: .init(storageService: mockStorageService),
     docIdToPresentInfo: [:],
     documentKeyIndexes: [:],
     userAuthenticationRequired: false
