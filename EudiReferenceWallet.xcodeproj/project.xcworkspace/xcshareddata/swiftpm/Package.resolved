@@ -1,5 +1,5 @@
 {
-  "originHash" : "c7c39017be0de09b1b4f63d4037d892e3a01872489fb29695211610551e46295",
+  "originHash" : "e0991643e0659977a1d0ee133a470acd2a0afc5e5b849347355a7f85ad8c1ae6",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -60,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Chronometer.git",
       "state" : {
-        "revision" : "d21b89e5cb5929b5175bdb3ad710a52cbf497eaa",
-        "version" : "0.1.12"
+        "revision" : "99d4f4137837a28e1e294eb69ac66ad53c0934d3",
+        "version" : "0.1.14"
       }
     },
     {
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "d6c8c9ca5d30352b3b5361c89bcb5a9e937bfb96",
-        "version" : "0.13.0"
+        "revision" : "7ad60a7c6a14ebe39d7670405ffe8e16ffca1b55",
+        "version" : "0.13.2"
       }
     },
     {
@@ -348,8 +348,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Sextant.git",
       "state" : {
-        "revision" : "74b947a80df5c8c776262546832e370afe2341f6",
-        "version" : "0.4.35"
+        "revision" : "3a6ba431ecd4fd564e3c80e23d03ad1d9069a9f4",
+        "version" : "0.4.36"
       }
     },
     {
@@ -357,8 +357,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Spanker.git",
       "state" : {
-        "revision" : "dc24d4860c64c41f8def204ba28db841b9099336",
-        "version" : "0.2.50"
+        "revision" : "820f96e9e5836e2ac9808c1b706727b876fa3d9b",
+        "version" : "0.2.51"
       }
     },
     {
