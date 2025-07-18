@@ -144,7 +144,7 @@ final class RQESConfig: EudiRQESUiConfig {
       [
         .init(
           name: "your_dev_name",
-          rsspId: your_dev_rssp,
+          rsspId: "your_dev_rssp",
           tsaUrl: "your_dev_tsa",
           clientId: "your_dev_clientid",
           clientSecret: "your_dev_secret",
@@ -156,7 +156,7 @@ final class RQESConfig: EudiRQESUiConfig {
       [
         .init(
           name: "your_demo_name",
-          rsspId: your_demo_rssp,
+          rsspId: "your_demo_rssp",
           tsaUrl: "your_demo_tsa",
           clientId: "your_demo_clientid",
           clientSecret: "your_demo_secret",
