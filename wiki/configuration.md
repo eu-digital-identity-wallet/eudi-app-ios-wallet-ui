@@ -144,8 +144,8 @@ final class RQESConfig: EudiRQESUiConfig {
       [
         .init(
           name: "your_dev_name",
-          uri: URL(string: "your_dev_uri")!,
-          scaURL: "your_dev_sca",
+          rsspId: your_dev_rssp,
+          tsaUrl: "your_dev_tsa",
           clientId: "your_dev_clientid",
           clientSecret: "your_dev_secret",
           authFlowRedirectionURI: "your_dev_redirect",
@@ -156,8 +156,8 @@ final class RQESConfig: EudiRQESUiConfig {
       [
         .init(
           name: "your_demo_name",
-          uri: URL(string: "your_demo_uri")!,
-          scaURL: "your_demo_sca",
+          rsspId: your_demo_rssp,
+          tsaUrl: "your_demo_tsa",
           clientId: "your_demo_clientid",
           clientSecret: "your_demo_secret",
           authFlowRedirectionURI: "your_demo_redirect",

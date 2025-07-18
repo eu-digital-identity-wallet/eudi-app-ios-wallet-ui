@@ -31,8 +31,8 @@ final class RQESConfig: EudiRQESUiConfig {
       [
         .init(
           name: "Wallet-Centric",
-          uri: URL(string: "https://walletcentric.signer.eudiw.dev/csc/v2")!,
-          scaURL: "https://walletcentric.signer.eudiw.dev",
+          rsspId: "https://walletcentric.signer.eudiw.dev/csc/v2",
+          tsaUrl: "https://timestamp.sectigo.com/qualified",
           clientId: "wallet-client",
           clientSecret: "somesecret2",
           authFlowRedirectionURI: "rqes://oauth/callback",
@@ -43,8 +43,8 @@ final class RQESConfig: EudiRQESUiConfig {
       [
         .init(
           name: "Wallet-Centric",
-          uri: URL(string: "https://walletcentric.signer.eudiw.dev/csc/v2")!,
-          scaURL: "https://walletcentric.signer.eudiw.dev",
+          rsspId: "https://walletcentric.signer.eudiw.dev/csc/v2",
+          tsaUrl: "https://timestamp.sectigo.com/qualified",
           clientId: "wallet-client",
           clientSecret: "somesecret2",
           authFlowRedirectionURI: "rqes://oauth/callback",
