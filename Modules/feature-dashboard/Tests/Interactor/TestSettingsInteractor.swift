@@ -28,10 +28,8 @@ final class TestSettingsInteractor: EudiTest {
 
   override func setUp() {
     self.walletKitController = MockWalletKitController()
-    self.prefsController = MockPrefsController()
     self.configLogic = MockConfigLogic()
     self.interactor = SettingsInteractorImpl(
-      prefsController: prefsController,
       walletController: walletKitController,
       configLogic: configLogic
     )
@@ -41,7 +39,6 @@ final class TestSettingsInteractor: EudiTest {
     self.interactor = nil
     self.walletKitController = nil
     self.configLogic = nil
-    self.prefsController = nil
   }
 
   func testGetAppVersion_WhenConfigLogicReturnsAppVersion_ThenReturnsExpectedVersion() {
@@ -75,45 +72,6 @@ final class TestSettingsInteractor: EudiTest {
 
     // Then
     XCTAssertEqual(result, expectedUrl)
-  }
-
-  func testIsBatchCounterEnabled_WhenPrefsControllerReturnsTrue_ThenReturnsTrue() {
-    // Given
-    stub(prefsController) { mock in
-      when(mock.getBool(forKey: Prefs.Key.batchCounter)).thenReturn(true)
-    }
-
-    // When
-    let result = interactor.isBatchCounterEnabled()
-
-    // Then
-    XCTAssertTrue(result)
-  }
-
-  func testIsBatchCounterEnabled_WhenPrefsControllerReturnsFalse_ThenReturnsFalse() {
-    // Given
-    stub(prefsController) { mock in
-      when(mock.getBool(forKey: Prefs.Key.batchCounter)).thenReturn(false)
-    }
-
-    // When
-    let result = interactor.isBatchCounterEnabled()
-
-    // Then
-    XCTAssertFalse(result)
-  }
-
-  func testBatchCounter_WhenSetToTrue_CallsPrefsControllerWithTrue() {
-    // Given
-    stub(prefsController) { mock in
-      when(mock.setValue(any(), forKey: Prefs.Key.batchCounter)).thenDoNothing()
-    }
-
-    // When
-    interactor.setBatchCounter(isEnabled: true)
-    
-    // Then
-    verify(prefsController).setValue(any(), forKey: Prefs.Key.batchCounter)
   }
 }
 

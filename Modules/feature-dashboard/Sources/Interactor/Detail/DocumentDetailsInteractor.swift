@@ -44,11 +44,8 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     let isBookmarked = await walletController.isDocumentBookmarked(with: documentId)
     let isRevoked = await walletController.isDocumentRevoked(with: documentId)
 
-    if isBatchCounterEnabled() {
-      let info = getCredentialsUsageCount(credentialsUsageCounts: document?.credentialsUsageCounts)
-      return .success(documentDetails, info, isBookmarked, isRevoked)
-    }
-    return .success(documentDetails, nil, isBookmarked, isRevoked)
+    let info = getCredentialsUsageCount(credentialsUsageCounts: document?.credentialsUsageCounts)
+    return .success(documentDetails, info, isBookmarked, isRevoked)
   }
 
   func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
@@ -121,10 +118,6 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
         hideButtonText: .documentDetailsDocumentCredentialsExpandedButtonHideText
       )
     )
-  }
-
-  private func isBatchCounterEnabled() -> Bool {
-    prefsController.getBool(forKey: .batchCounter)
   }
 }
 

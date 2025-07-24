@@ -49,7 +49,6 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
-    stubIsBatchCounterEnabled()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -75,7 +74,6 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
-    stubIsBatchCounterEnabled(false)
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -99,7 +97,6 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
-    stubIsBatchCounterEnabled()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -426,12 +423,6 @@ extension TestDocumentDetailsInteractor {
     stub(walletKitController) { stub in
       when(stub.removeBookmarkedDocument(with: equal(to: id)))
         .thenThrow(WalletCoreError.unableFetchDocument)
-    }
-  }
-
-  func stubIsBatchCounterEnabled(_ enabled: Bool = true) {
-    stub(prefsController) { stub in
-      when(stub.getBool(forKey: Prefs.Key.batchCounter)).thenReturn(enabled)
     }
   }
 }

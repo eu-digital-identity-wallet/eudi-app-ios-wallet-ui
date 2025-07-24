@@ -785,6 +785,17 @@
         }
       }
     },
+    "expandable_document_credentials_update_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update now"
+          }
+        }
+      }
+    },
     "expiration_period" : {
       "extractionState" : "manual",
       "localizations" : {

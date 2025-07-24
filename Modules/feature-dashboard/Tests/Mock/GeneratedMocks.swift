@@ -2704,26 +2704,6 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
             defaultCall: __defaultImplStub!.retrieveChangeLogUrl()
         )
     }
-    
-    public func setBatchCounter(isEnabled p0: Bool) {
-        return cuckoo_manager.call(
-            "setBatchCounter(isEnabled p0: Bool)",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.setBatchCounter(isEnabled: p0)
-        )
-    }
-    
-    public func isBatchCounterEnabled() -> Bool {
-        return cuckoo_manager.call(
-            "isBatchCounterEnabled() -> Bool",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.isBatchCounterEnabled()
-        )
-    }
 
     public struct __StubbingProxy_SettingsInteractor: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -2752,22 +2732,6 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
                 method: "retrieveChangeLogUrl() -> URL?",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func setBatchCounter<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(Bool)> where M1.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
-                method: "setBatchCounter(isEnabled p0: Bool)",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func isBatchCounterEnabled() -> Cuckoo.ProtocolStubFunction<(), Bool> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
-                method: "isBatchCounterEnabled() -> Bool",
                 parameterMatchers: matchers
             ))
         }
@@ -2819,30 +2783,6 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
                 sourceLocation: sourceLocation
             )
         }
-        
-        
-        @discardableResult
-        func setBatchCounter<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.__DoNotUse<(Bool), Void> where M1.MatchedType == Bool {
-            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "setBatchCounter(isEnabled p0: Bool)",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func isBatchCounterEnabled() -> Cuckoo.__DoNotUse<(), Bool> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "isBatchCounterEnabled() -> Bool",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
     }
 }
 
@@ -2860,14 +2800,6 @@ public class SettingsInteractorStub:SettingsInteractor, @unchecked Sendable {
     
     public func retrieveChangeLogUrl() -> URL? {
         return DefaultValueRegistry.defaultValue(for: (URL?).self)
-    }
-    
-    public func setBatchCounter(isEnabled p0: Bool) {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func isBatchCounterEnabled() -> Bool {
-        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
 }
 

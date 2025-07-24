@@ -26,7 +26,6 @@ struct SettingsViewState: ViewState {
 }
 
 final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsViewState> {
-  @Published var isBatchCounterEnabled: Bool = false
 
   private let interactor: SettingsInteractor
   private let walletKitController: WalletKitController
@@ -49,7 +48,6 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     )
 
     buildMenuItems()
-    subscribeBatchToggle()
   }
 
   func toolbarContent() -> ToolBarContent {
@@ -65,15 +63,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
 
   private func buildMenuItems() {
 
-    isBatchCounterEnabled = interactor.isBatchCounterEnabled()
-
     var items: [SettingMenuItemUIModel] = [
-      .init(
-        title: .batchIssuanceCunter,
-        showDivider: true,
-        isToggle: true,
-        action: self.updateBatchCounter(self.isBatchCounterEnabled)
-      ),
       .init(
         title: .retrieveLogs,
         isShareLink: true,
@@ -92,19 +82,5 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     }
 
     setState { $0.copy(items: items) }
-  }
-
-  private func subscribeBatchToggle() {
-    $isBatchCounterEnabled
-      .dropFirst()
-      .removeDuplicates()
-      .sink { [weak self] isEnabled in
-        guard let self = self else { return }
-        self.updateBatchCounter(isEnabled)
-      }.store(in: &cancellables)
-  }
-
-  private func updateBatchCounter(_ isEnabled: Bool) {
-    interactor.setBatchCounter(isEnabled: isEnabled)
   }
 }

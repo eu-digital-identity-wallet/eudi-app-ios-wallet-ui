@@ -73,7 +73,6 @@ public protocol DocumentTabInteractor: Sendable {
 final class DocumentTabInteractorImpl: DocumentTabInteractor {
 
   private let walletKitController: WalletKitController
-  private let prefsController: PrefsController
   private let filterValidator: FilterValidator
 
   @MainActor
@@ -81,11 +80,9 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
 
   init(
     walletKitController: WalletKitController,
-    prefsController: PrefsController,
     filterValidator: FilterValidator
   ) {
     self.walletKitController = walletKitController
-    self.prefsController = prefsController
     self.filterValidator = filterValidator
   }
 
@@ -417,9 +414,7 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
       let documentPayload = document.transformToDocumentTabUi(
         categories: self.walletKitController.getDocumentCategories(),
         isRevoked: isRevoked,
-        usageCount: isBatchCounterEnabled()
-        ? getCredentialsUsageCount(credentialsUsageCounts: document.credentialsUsageCounts)
-        : nil
+        usageCount: getCredentialsUsageCount(credentialsUsageCounts: document.credentialsUsageCounts)
       )
 
       let documentSearchTags: [String] = {
@@ -519,9 +514,5 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     }
 
     return filterItems
-  }
-
-  private func isBatchCounterEnabled() -> Bool {
-    prefsController.getBool(forKey: .batchCounter)
   }
 }
