@@ -22,19 +22,22 @@ public struct DocumentCredentialsInfoUi: Sendable {
   public let title: LocalizableStringKey
   public let collapsedInfo: CollapsedInfo?
   public let expandedInfo: ExpandedInfo?
+  public let isExpanded: Bool
 
   public init(
     availableCredentials: Int,
     totalCredentials: Int,
     title: LocalizableStringKey,
     collapsedInfo: CollapsedInfo? = nil,
-    expandedInfo: ExpandedInfo? = nil
+    expandedInfo: ExpandedInfo? = nil,
+    isExpanded: Bool = false
   ) {
     self.availableCredentials = availableCredentials
     self.totalCredentials = totalCredentials
     self.title = title
     self.collapsedInfo = collapsedInfo
     self.expandedInfo = expandedInfo
+    self.isExpanded = isExpanded
   }
 }
 
@@ -48,12 +51,12 @@ public struct CollapsedInfo: Sendable {
 
 public struct ExpandedInfo: Sendable {
   public let subtitle: LocalizableStringKey
-  public let updateNowButtonText: LocalizableStringKey?
+  public let updateNowButtonText: LocalizableStringKey
   public let hideButtonText: LocalizableStringKey
 
   public init(
     subtitle: LocalizableStringKey,
-    updateNowButtonText: LocalizableStringKey? = nil,
+    updateNowButtonText: LocalizableStringKey,
     hideButtonText: LocalizableStringKey
   ) {
     self.subtitle = subtitle

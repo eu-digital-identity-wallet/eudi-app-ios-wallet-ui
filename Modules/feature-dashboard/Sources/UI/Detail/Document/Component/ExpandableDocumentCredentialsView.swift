@@ -59,7 +59,7 @@ struct ExpandableDocumentCredentialsView: View {
             .multilineTextAlignment(.leading)
         }
 
-        HStack {
+        HStack(spacing: SPACING_MEDIUM) {
           Spacer()
           Button {
             withAnimation {
@@ -69,6 +69,22 @@ struct ExpandableDocumentCredentialsView: View {
             Text(info.hideButtonText)
               .font(Theme.shared.font.bodyLarge.font)
               .foregroundColor(Theme.shared.color.primary)
+          }
+
+          Button {
+            withAnimation {
+              isExpanded.toggle()
+            }
+          } label: {
+            Text(LocalizableStringKey.expandableDocumentCredentialsUpdateButton)
+              .padding()
+              .foregroundColor(Theme.shared.color.onPrimary)
+              .background(Theme.shared.color.primary)
+              .cornerRadius(22)
+              .overlay(
+                RoundedRectangle(cornerRadius: 22)
+                  .stroke(Theme.shared.color.primary, lineWidth: 1)
+              )
           }
         }
       }
@@ -116,7 +132,7 @@ struct ExpandableDocumentCredentialsView: View {
         moreInfoText: .custom("More Info")
       ),
       expandedInfo: ExpandedInfo(
-        subtitle: .custom("For security reasons, this document can be shared a limited number of times before it needs to be re-issued by the issuing authority."),
+        subtitle: .custom("For security reasons, this document can be shared a limited number of times before it needs to be re-issued by the issuing authority."), updateNowButtonText: .custom("Update now"),
         hideButtonText: .custom("Hide")
       )
     )

@@ -164,6 +164,7 @@ private func content(
       ),
       expandedInfo: ExpandedInfo(
         subtitle: .custom("For security reasons, this document can be shared a limited number of times before it needs to be re-issued by the issuing authority."),
+        updateNowButtonText: .custom("Update now"),
         hideButtonText: .custom("Hide")
       )
     )

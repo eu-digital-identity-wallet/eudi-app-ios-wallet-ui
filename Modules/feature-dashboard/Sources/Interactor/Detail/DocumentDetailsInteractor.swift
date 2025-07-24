@@ -115,6 +115,7 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
       ),
       expandedInfo: ExpandedInfo(
         subtitle: .documentDetailsDocumentCredentialsExpandedTextSubtitle,
+        updateNowButtonText: .expandableDocumentCredentialsUpdateButton,
         hideButtonText: .documentDetailsDocumentCredentialsExpandedButtonHideText
       )
     )
