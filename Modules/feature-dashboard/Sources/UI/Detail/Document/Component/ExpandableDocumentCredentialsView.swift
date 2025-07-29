@@ -76,21 +76,12 @@ struct ExpandableDocumentCredentialsView: View {
           }
 
           if let updateNowButtonText = info.updateNowButtonText {
-            Button {
-              withAnimation {
-                onPrimaryButtonClicked()
-              }
-            } label: {
-              Text(updateNowButtonText)
-                .padding()
-                .foregroundColor(Theme.shared.color.onPrimary)
-                .background(Theme.shared.color.primary)
-                .cornerRadius(Theme.shared.shape.small)
-                .overlay(
-                  RoundedRectangle(cornerRadius: Theme.shared.shape.small)
-                    .stroke(Theme.shared.color.primary, lineWidth: 1)
-                )
-            }
+            WrapButtonView(
+              style: .primary,
+              title: updateNowButtonText,
+              gravity: .none,
+              onAction: onPrimaryButtonClicked()
+            )
           }
         }
       }
