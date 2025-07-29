@@ -522,6 +522,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedStringWithArguments(forKey: "documents_list_credentials_usage_text", arguments: args)
     case .expandableDocumentCredentialsIssueButton:
       bundle.localizedString(forKey: "expandable_document_credentials_issue_button")
+    case .issuanceAddDocumentNoOptions:
+      bundle.localizedString(forKey: "issuance_add_document_no_options")
     }
   }
 }

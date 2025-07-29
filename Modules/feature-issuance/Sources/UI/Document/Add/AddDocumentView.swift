@@ -75,13 +75,17 @@ private func content(
         .foregroundStyle(Theme.shared.color.onSurface)
 
       VStack(spacing: SPACING_MEDIUM_SMALL) {
-        ForEach(viewState.addDocumentCellModels) { cell in
-          WrapCardView {
-            WrapListItemView(
-              listItem: cell.listItem,
-              isLoading: cell.isLoading,
-              action: { action(cell.configId, cell.docTypeIdentifier) }
-            )
+        if viewState.addDocumentCellModels.isEmpty {
+          noDocumentsFound()
+        } else {
+          ForEach(viewState.addDocumentCellModels) { cell in
+            WrapCardView {
+              WrapListItemView(
+                listItem: cell.listItem,
+                isLoading: cell.isLoading,
+                action: { action(cell.configId, cell.docTypeIdentifier) }
+              )
+            }
           }
         }
       }
@@ -89,6 +93,17 @@ private func content(
     .padding(.horizontal, Theme.shared.dimension.padding)
     .padding(.bottom)
   }
+}
+
+@MainActor
+@ViewBuilder
+private func noDocumentsFound() -> some View {
+  VStack(spacing: .zero) {
+    ContentEmptyView(
+      title: .issuanceAddDocumentNoOptions
+    )
+  }
+  .padding(.horizontal, Theme.shared.dimension.padding)
 }
 
 @MainActor

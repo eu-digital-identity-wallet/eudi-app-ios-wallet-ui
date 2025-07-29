@@ -1060,6 +1060,17 @@
         }
       }
     },
+    "issuance_add_document_no_options" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No available documents"
+          }
+        }
+      }
+    },
     "issuance_code_caption" : {
       "extractionState" : "manual",
       "localizations" : {

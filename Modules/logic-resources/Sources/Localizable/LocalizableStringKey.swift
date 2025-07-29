@@ -261,6 +261,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case documentDetailsDocumentCredentialsExpandedButtonHideText
   case documentsListCredentialsUsageText([String])
   case expandableDocumentCredentialsIssueButton
+  case issuanceAddDocumentNoOptions
 }
 
 public extension LocalizableStringKey {
