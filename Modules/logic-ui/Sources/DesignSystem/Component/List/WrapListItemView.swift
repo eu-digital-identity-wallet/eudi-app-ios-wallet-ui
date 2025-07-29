@@ -107,7 +107,7 @@ public struct WrapListItemView: View {
               HStack(spacing: SPACING_SMALL) {
                 Text(text)
                   .font(Theme.shared.font.bodySmall.font)
-                  .foregroundColor(color)
+                  .foregroundColor(Theme.shared.color.onSurfaceVariant)
                   .lineLimit(1)
                   .multilineTextAlignment(.trailing)
                   .gone(if: text.toString.isEmpty)

@@ -134,7 +134,8 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDocumentCategories(with: documentsCategories)
     stubFetchDocumentsWithExclusion(with: [expectedMdl])
     stubFetchMainPidDocument(with: expectedPid)
-
+    stubIsDocumentLowOnCredentials()
+    
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
     
@@ -482,6 +483,7 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDocumentCategories(with: documentsCategories)
     stubFetchDocumentsWithExclusion(with: [expectedMdl])
     stubFetchMainPidDocument(with: expectedPid)
+    stubIsDocumentLowOnCredentials()
 
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
@@ -584,7 +586,14 @@ private extension TestDocumentTabInteractor {
       when(mock.fetchAllDocuments()).thenReturn([])
     }
   }
-  
+
+  func stubIsDocumentLowOnCredentials(hasLowOnCredentials: Bool = true) {
+    stub(walletKitController) { stub in
+      when(stub.isDocumentLowOnCredentials(document: any()))
+        .thenReturn(hasLowOnCredentials)
+    }
+  }
+
   func stubInitializeValidator() {
     stub(filterValidator) { mock in
       when(mock.initializeValidator(

@@ -81,6 +81,7 @@ public protocol WalletKitController: Sendable {
   func removeRevokedDocument(with id: String) async throws
 
   func getDocumentStatus(for statusIdentifier: StatusIdentifier) async throws -> CredentialStatus
+  func isDocumentLowOnCredentials(document: DocClaimsDecodable?) -> Bool
 }
 
 final class WalletKitControllerImpl: WalletKitController {
@@ -314,6 +315,14 @@ final class WalletKitControllerImpl: WalletKitController {
         )
       default: return nil
       }
+    }
+  }
+
+  func isDocumentLowOnCredentials(document: DocClaimsDecodable?) -> Bool {
+    if let document, let documentRemainingCredentials = document.credentialsUsageCounts?.remaining {
+      return document.credentialPolicy == CredentialPolicy.oneTimeUse && documentRemainingCredentials <= 1
+    } else {
+      return false
     }
   }
 

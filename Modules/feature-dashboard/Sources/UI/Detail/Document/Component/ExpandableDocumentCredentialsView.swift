@@ -22,13 +22,17 @@ struct ExpandableDocumentCredentialsView: View {
 
   private let backgroundColor: Color
   private let documentCredentialsInfo: DocumentCredentialsInfoUi
+  private let onPrimaryButtonClicked: () -> Void
 
   init(
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
-    documentCredentialsInfo: DocumentCredentialsInfoUi
+    documentCredentialsInfo: DocumentCredentialsInfoUi,
+    onPrimaryButtonClicked: @escaping () -> Void
   ) {
+    self.isExpanded = documentCredentialsInfo.isExpanded
     self.backgroundColor = backgroundColor
     self.documentCredentialsInfo = documentCredentialsInfo
+    self.onPrimaryButtonClicked = onPrimaryButtonClicked
   }
 
   var body: some View {
@@ -71,20 +75,22 @@ struct ExpandableDocumentCredentialsView: View {
               .foregroundColor(Theme.shared.color.primary)
           }
 
-          Button {
-            withAnimation {
-              isExpanded.toggle()
+          if let updateNowButtonText = info.updateNowButtonText {
+            Button {
+              withAnimation {
+                onPrimaryButtonClicked()
+              }
+            } label: {
+              Text(updateNowButtonText)
+                .padding()
+                .foregroundColor(Theme.shared.color.onPrimary)
+                .background(Theme.shared.color.primary)
+                .cornerRadius(Theme.shared.shape.small)
+                .overlay(
+                  RoundedRectangle(cornerRadius: Theme.shared.shape.small)
+                    .stroke(Theme.shared.color.primary, lineWidth: 1)
+                )
             }
-          } label: {
-            Text(LocalizableStringKey.expandableDocumentCredentialsUpdateButton)
-              .padding()
-              .foregroundColor(Theme.shared.color.onPrimary)
-              .background(Theme.shared.color.primary)
-              .cornerRadius(22)
-              .overlay(
-                RoundedRectangle(cornerRadius: 22)
-                  .stroke(Theme.shared.color.primary, lineWidth: 1)
-              )
           }
         }
       }
@@ -135,6 +141,7 @@ struct ExpandableDocumentCredentialsView: View {
         subtitle: .custom("For security reasons, this document can be shared a limited number of times before it needs to be re-issued by the issuing authority."), updateNowButtonText: .custom("Update now"),
         hideButtonText: .custom("Hide")
       )
-    )
+    ),
+    onPrimaryButtonClicked: {}
   )
 }

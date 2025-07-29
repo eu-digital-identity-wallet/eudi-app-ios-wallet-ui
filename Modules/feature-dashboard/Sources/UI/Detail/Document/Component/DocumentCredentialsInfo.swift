@@ -51,12 +51,12 @@ public struct CollapsedInfo: Sendable {
 
 public struct ExpandedInfo: Sendable {
   public let subtitle: LocalizableStringKey
-  public let updateNowButtonText: LocalizableStringKey
+  public let updateNowButtonText: LocalizableStringKey?
   public let hideButtonText: LocalizableStringKey
 
   public init(
     subtitle: LocalizableStringKey,
-    updateNowButtonText: LocalizableStringKey,
+    updateNowButtonText: LocalizableStringKey? = nil,
     hideButtonText: LocalizableStringKey
   ) {
     self.subtitle = subtitle

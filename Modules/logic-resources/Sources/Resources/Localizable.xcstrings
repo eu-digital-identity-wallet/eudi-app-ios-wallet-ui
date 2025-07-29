@@ -785,13 +785,13 @@
         }
       }
     },
-    "expandable_document_credentials_update_button" : {
+    "expandable_document_credentials_issue_button" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Update now"
+            "value" : "Issue new"
           }
         }
       }

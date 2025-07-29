@@ -44,7 +44,11 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     let isBookmarked = await walletController.isDocumentBookmarked(with: documentId)
     let isRevoked = await walletController.isDocumentRevoked(with: documentId)
 
-    let info = getCredentialsUsageCount(credentialsUsageCounts: document?.credentialsUsageCounts)
+    let documentIsLowOnCredentials = walletController.isDocumentLowOnCredentials(document: document)
+    let info = getCredentialsUsageCount(
+      credentialsUsageCounts: document?.credentialsUsageCounts,
+      documentIsLowOnCredentials: documentIsLowOnCredentials
+    )
     return .success(documentDetails, info, isBookmarked, isRevoked)
   }
 
@@ -93,15 +97,21 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     try await walletController.removeBookmarkedDocument(with: identifier)
   }
 
-  private func getCredentialsUsageCount(credentialsUsageCounts: CredentialsUsageCounts?) -> DocumentCredentialsInfoUi? {
+  private func getCredentialsUsageCount(
+    credentialsUsageCounts: CredentialsUsageCounts?,
+    documentIsLowOnCredentials: Bool
+  ) -> DocumentCredentialsInfoUi? {
     if let usageCounts = credentialsUsageCounts {
-      return documentCredentialsInfoUi(usageCounts: usageCounts)
+      return documentCredentialsInfoUi(usageCounts: usageCounts, documentIsLowOnCredentials: documentIsLowOnCredentials)
     } else {
-      return documentCredentialsInfoUi()
+      return documentCredentialsInfoUi(documentIsLowOnCredentials: documentIsLowOnCredentials)
     }
   }
 
-  private func documentCredentialsInfoUi(usageCounts: CredentialsUsageCounts? = nil) -> DocumentCredentialsInfoUi {
+  private func documentCredentialsInfoUi(
+    usageCounts: CredentialsUsageCounts? = nil,
+    documentIsLowOnCredentials: Bool
+  ) -> DocumentCredentialsInfoUi {
     let defaultValue = 1
     let availableCredentials = usageCounts?.remaining ?? defaultValue
     let totalCredentials = usageCounts?.total ?? defaultValue
@@ -115,9 +125,10 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
       ),
       expandedInfo: ExpandedInfo(
         subtitle: .documentDetailsDocumentCredentialsExpandedTextSubtitle,
-        updateNowButtonText: .expandableDocumentCredentialsUpdateButton,
+        updateNowButtonText: documentIsLowOnCredentials ? .expandableDocumentCredentialsIssueButton : nil,
         hideButtonText: .documentDetailsDocumentCredentialsExpandedButtonHideText
-      )
+      ),
+      isExpanded: documentIsLowOnCredentials
     )
   }
 }

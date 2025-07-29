@@ -112,6 +112,18 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     isDeletionModalShowing = !isDeletionModalShowing
   }
 
+  func issueNewDocument() {
+    router.push(
+      with: .featureIssuanceModule(
+        .issuanceAddDocument(
+          config: IssuanceFlowUiConfig(
+            flow: .extraDocument(viewState.document.type)
+          )
+        )
+      )
+    )
+  }
+
   func saveBookmark(_ identifier: String) {
     Task {
       do {

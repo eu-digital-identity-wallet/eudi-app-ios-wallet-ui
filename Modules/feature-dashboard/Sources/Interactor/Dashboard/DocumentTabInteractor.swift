@@ -411,10 +411,15 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     for document in documents {
       let isRevoked = revokedDocuments?.first { $0 == document.id } != nil
 
+      let documentIsLowOnCredentials = walletKitController.isDocumentLowOnCredentials(document: document)
       let documentPayload = document.transformToDocumentTabUi(
         categories: self.walletKitController.getDocumentCategories(),
         isRevoked: isRevoked,
-        usageCount: getCredentialsUsageCount(credentialsUsageCounts: document.credentialsUsageCounts)
+        documentIsLowOnCredentials: documentIsLowOnCredentials,
+        usageCount: getCredentialsUsageCount(
+          credentialsUsageCounts: document.credentialsUsageCounts,
+          isDeferred: (document is DeferrredDocument) == true
+        )
       )
 
       let documentSearchTags: [String] = {
@@ -445,12 +450,17 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     return FilterableList(items: filterableItems)
   }
 
-  private func getCredentialsUsageCount(credentialsUsageCounts: CredentialsUsageCounts?) -> (remaining: Int?, total: Int?) {
-    if let usageCounts = credentialsUsageCounts {
-      return (remaining: usageCounts.remaining, total: usageCounts.total)
-    } else {
-      return (remaining: 1, total: 1)
+  private func getCredentialsUsageCount(
+    credentialsUsageCounts: CredentialsUsageCounts?,
+    isDeferred: Bool
+  ) -> (remaining: Int?, total: Int?) {
+    guard !isDeferred else {
+      return (remaining: nil, total: nil)
     }
+
+    let remaining = credentialsUsageCounts?.remaining ?? 1
+    let total = credentialsUsageCounts?.total ?? 1
+    return (remaining, total)
   }
 
   private func filterUISection(filters: Filters) -> [FilterUISection] {
