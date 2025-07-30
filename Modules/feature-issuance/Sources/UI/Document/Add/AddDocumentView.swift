@@ -39,9 +39,12 @@ struct AddDocumentView<Router: RouterHost>: View {
       isLoading: viewModel.viewState.isLoading,
       toolbarContent: viewModel.toolbarContent()
     ) {
-
-      content(viewState: viewModel.viewState) { configId, identifier in
-        viewModel.onClick(configId: configId, docTypeIdentifier: identifier)
+      if viewModel.viewState.addDocumentCellModels.isEmpty {
+        noDocumentsFound()
+      } else {
+        content(viewState: viewModel.viewState) { configId, identifier in
+          viewModel.onClick(configId: configId, docTypeIdentifier: identifier)
+        }
       }
 
       if viewModel.viewState.showFooterScanner {
@@ -75,17 +78,13 @@ private func content(
         .foregroundStyle(Theme.shared.color.onSurface)
 
       VStack(spacing: SPACING_MEDIUM_SMALL) {
-        if viewState.addDocumentCellModels.isEmpty {
-          noDocumentsFound()
-        } else {
-          ForEach(viewState.addDocumentCellModels) { cell in
-            WrapCardView {
-              WrapListItemView(
-                listItem: cell.listItem,
-                isLoading: cell.isLoading,
-                action: { action(cell.configId, cell.docTypeIdentifier) }
-              )
-            }
+        ForEach(viewState.addDocumentCellModels) { cell in
+          WrapCardView {
+            WrapListItemView(
+              listItem: cell.listItem,
+              isLoading: cell.isLoading,
+              action: { action(cell.configId, cell.docTypeIdentifier) }
+            )
           }
         }
       }
@@ -93,15 +92,22 @@ private func content(
     .padding(.horizontal, Theme.shared.dimension.padding)
     .padding(.bottom)
   }
+  .disabled(viewState.addDocumentCellModels.isEmpty)
 }
 
 @MainActor
 @ViewBuilder
 private func noDocumentsFound() -> some View {
   VStack(spacing: .zero) {
+    Text(.chooseFromListTitle)
+      .typography(Theme.shared.font.bodyLarge)
+      .foregroundStyle(Theme.shared.color.onSurface)
+
+    Spacer()
     ContentEmptyView(
       title: .issuanceAddDocumentNoOptions
     )
+    Spacer()
   }
   .padding(.horizontal, Theme.shared.dimension.padding)
 }

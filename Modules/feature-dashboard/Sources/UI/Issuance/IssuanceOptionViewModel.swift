@@ -64,7 +64,7 @@ class IssuanceOptionViewModel<Router: RouterHost>: ViewModel<Router, IssuanceOpt
     router.push(
       with: .featureIssuanceModule(
         .issuanceAddDocument(
-          config: IssuanceFlowUiConfig(flow: .extraDocument(nil))
+          config: IssuanceFlowUiConfig(flow: .extraDocument(filterType: nil))
         )
       )
     )

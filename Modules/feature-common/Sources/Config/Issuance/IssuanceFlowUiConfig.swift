@@ -51,6 +51,6 @@ public struct IssuanceFlowUiConfig: UIConfigType, Equatable {
 public extension IssuanceFlowUiConfig {
   enum Flow: Equatable, Sendable {
     case noDocument
-    case extraDocument(DocumentTypeIdentifier?)
+    case extraDocument(filterType: DocumentTypeIdentifier?)
   }
 }

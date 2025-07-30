@@ -117,7 +117,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
       with: .featureIssuanceModule(
         .issuanceAddDocument(
           config: IssuanceFlowUiConfig(
-            flow: .extraDocument(viewState.document.type)
+            flow: .extraDocument(filterType: viewState.document.type)
           )
         )
       )

@@ -80,6 +80,7 @@ struct ExpandableDocumentCredentialsView: View {
               style: .primary,
               title: updateNowButtonText,
               gravity: .none,
+              cornerRadius: Theme.shared.shape.large,
               onAction: onPrimaryButtonClicked()
             )
           }
