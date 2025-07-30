@@ -3578,6 +3578,16 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             defaultCall: await __defaultImplStub!.getDocumentStatus(for: p0)
         )
     }
+    
+    public func isDocumentLowOnCredentials(document p0: DocClaimsDecodable?) -> Bool {
+        return cuckoo_manager.call(
+            "isDocumentLowOnCredentials(document p0: DocClaimsDecodable?) -> Bool",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.isDocumentLowOnCredentials(document: p0)
+        )
+    }
 
     public struct __StubbingProxy_WalletKitController: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -3874,6 +3884,14 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             let matchers: [Cuckoo.ParameterMatcher<(StatusIdentifier)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "getDocumentStatus(for p0: StatusIdentifier) async throws -> CredentialStatus",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func isDocumentLowOnCredentials<M1: Cuckoo.OptionalMatchable>(document p0: M1) -> Cuckoo.ProtocolStubFunction<(DocClaimsDecodable?), Bool> where M1.OptionalMatchedType == DocClaimsDecodable {
+            let matchers: [Cuckoo.ParameterMatcher<(DocClaimsDecodable?)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "isDocumentLowOnCredentials(document p0: DocClaimsDecodable?) -> Bool",
                 parameterMatchers: matchers
             ))
         }
@@ -4325,6 +4343,18 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func isDocumentLowOnCredentials<M1: Cuckoo.OptionalMatchable>(document p0: M1) -> Cuckoo.__DoNotUse<(DocClaimsDecodable?), Bool> where M1.OptionalMatchedType == DocClaimsDecodable {
+            let matchers: [Cuckoo.ParameterMatcher<(DocClaimsDecodable?)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "isDocumentLowOnCredentials(document p0: DocClaimsDecodable?) -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -4480,6 +4510,10 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
     
     public func getDocumentStatus(for p0: StatusIdentifier) async throws -> CredentialStatus {
         return DefaultValueRegistry.defaultValue(for: (CredentialStatus).self)
+    }
+    
+    public func isDocumentLowOnCredentials(document p0: DocClaimsDecodable?) -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
 }
 

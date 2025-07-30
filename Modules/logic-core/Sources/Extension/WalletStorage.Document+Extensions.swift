@@ -39,7 +39,9 @@ extension WalletStorage.Document {
       credentialIssuerIdentifier: metadata?.credentialIssuerIdentifier,
       configurationIdentifier: metadata?.configurationIdentifier,
       validFrom: nil,
-      validUntil: nil
+      validUntil: nil,
+      credentialsUsageCounts: nil,
+      credentialPolicy: .oneTimeUse
     )
   }
 }

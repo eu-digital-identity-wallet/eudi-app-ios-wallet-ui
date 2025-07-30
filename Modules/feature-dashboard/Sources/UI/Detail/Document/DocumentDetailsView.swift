@@ -51,6 +51,8 @@ struct DocumentDetailsView<Router: RouterHost>: View {
         viewModel.onContinue()
       } onShowDeleteModal: {
         viewModel.onShowDeleteModal()
+      } issueNewDocument: {
+        viewModel.issueNewDocument()
       }
     }
     .confirmationDialog(
@@ -86,7 +88,8 @@ private func content(
   isVisible: Bool,
   showAlert: @escaping () -> Void,
   onContinue: @escaping () -> Void,
-  onShowDeleteModal: @escaping () -> Void
+  onShowDeleteModal: @escaping () -> Void,
+  issueNewDocument: @escaping () -> Void
 ) -> some View {
   ScrollView {
     VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
@@ -105,7 +108,8 @@ private func content(
 
       if let credentialsInfo = viewState.documentCredentialsInfo {
         ExpandableDocumentCredentialsView(
-          documentCredentialsInfo: credentialsInfo
+          documentCredentialsInfo: credentialsInfo,
+          onPrimaryButtonClicked: issueNewDocument
         )
       }
 
@@ -164,6 +168,7 @@ private func content(
       ),
       expandedInfo: ExpandedInfo(
         subtitle: .custom("For security reasons, this document can be shared a limited number of times before it needs to be re-issued by the issuing authority."),
+        updateNowButtonText: .custom("Update now"),
         hideButtonText: .custom("Hide")
       )
     )
@@ -178,7 +183,8 @@ private func content(
       isVisible: true,
       showAlert: {},
       onContinue: {},
-      onShowDeleteModal: {}
+      onShowDeleteModal: {},
+      issueNewDocument: {}
     )
   }
 }

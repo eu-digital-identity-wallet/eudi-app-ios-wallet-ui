@@ -49,7 +49,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
-    stubIsBatchCounterEnabled()
+    stubIsDocumentLowOnCredentials()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -75,7 +75,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
-    stubIsBatchCounterEnabled(false)
+    stubIsDocumentLowOnCredentials()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -99,7 +99,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
-    stubIsBatchCounterEnabled()
+    stubIsDocumentLowOnCredentials()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -330,7 +330,14 @@ extension TestDocumentDetailsInteractor {
         .thenReturn(document)
     }
   }
-  
+
+  func stubIsDocumentLowOnCredentials(hasLowOnCredentials: Bool = true) {
+    stub(walletKitController) { stub in
+      when(stub.isDocumentLowOnCredentials(document: any()))
+        .thenReturn(hasLowOnCredentials)
+    }
+  }
+
   func stubFetchDocumentFailure(for id: String) {
     stub(walletKitController) { stub in
       when(stub.fetchDocument(with: equal(to: id))).thenReturn(nil)
@@ -426,12 +433,6 @@ extension TestDocumentDetailsInteractor {
     stub(walletKitController) { stub in
       when(stub.removeBookmarkedDocument(with: equal(to: id)))
         .thenThrow(WalletCoreError.unableFetchDocument)
-    }
-  }
-
-  func stubIsBatchCounterEnabled(_ enabled: Bool = true) {
-    stub(prefsController) { stub in
-      when(stub.getBool(forKey: Prefs.Key.batchCounter)).thenReturn(enabled)
     }
   }
 }

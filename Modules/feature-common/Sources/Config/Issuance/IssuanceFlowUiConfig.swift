@@ -14,21 +14,33 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_ui
+import logic_core
 
 public struct IssuanceFlowUiConfig: UIConfigType, Equatable {
 
   public let flow: Flow
 
   public var log: String {
-    return "flow: \(flow.rawValue)"
+    switch flow {
+    case .noDocument:
+      return "flow: noDocument"
+    case .extraDocument(let identifier):
+      return "flow: extraDocument(\(identifier?.rawValue ?? ""))"
+    }
   }
 
   public var isNoDocumentFlow: Bool {
-    self.flow == .noDocument
+    if case .noDocument = flow {
+      return true
+    }
+    return false
   }
 
   public var isExtraDocumentFlow: Bool {
-    self.flow == .extraDocument
+    if case .extraDocument = flow {
+      return true
+    }
+    return false
   }
 
   public init(flow: Flow) {
@@ -37,8 +49,8 @@ public struct IssuanceFlowUiConfig: UIConfigType, Equatable {
 }
 
 public extension IssuanceFlowUiConfig {
-  enum Flow: String, Equatable, Sendable {
+  enum Flow: Equatable, Sendable {
     case noDocument
-    case extraDocument
+    case extraDocument(filterType: DocumentTypeIdentifier?)
   }
 }

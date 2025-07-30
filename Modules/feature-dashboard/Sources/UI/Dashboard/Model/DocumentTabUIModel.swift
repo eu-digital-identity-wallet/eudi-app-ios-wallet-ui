@@ -67,6 +67,7 @@ extension DocClaimsDecodable {
     with failedDocuments: [String] = [],
     categories: DocumentCategories,
     isRevoked: Bool,
+    documentIsLowOnCredentials: Bool = false,
     usageCount: (remaining: Int?, total: Int?)? = nil
   ) -> DocumentTabUIModel {
     let state: DocumentTabUIModel.Value.State = failedDocuments.contains(where: { $0 == self.id })
@@ -111,8 +112,8 @@ extension DocClaimsDecodable {
           image: Theme.shared.image.id
         ),
         trailingContent: .textWithIcon(
-          indicatorImage(state),
-          supportingColor(state),
+          indicatorImage(state, documentIsLowOnCredentials: documentIsLowOnCredentials),
+          indicatorImageColor(state, documentIsLowOnCredentials: documentIsLowOnCredentials),
           getUsageCount(usage: usageCount)
         )
       )
@@ -152,31 +153,58 @@ extension DocClaimsDecodable {
   ) -> Color {
     if hasExpired {
       return Theme.shared.color.error
-    } else {
-      switch state {
-      case .issued:
-        return Theme.shared.color.onSurfaceVariant
-      case .pending:
-        return Theme.shared.color.warning
-      case .failed:
-        return Theme.shared.color.error
-      case .revoked:
-        return Theme.shared.color.error
-      }
+    }
+
+    switch state {
+    case .issued:
+      return Theme.shared.color.onSurfaceVariant
+    case .pending:
+      return Theme.shared.color.warning
+    case .failed, .revoked:
+      return Theme.shared.color.error
+    }
+  }
+
+  func indicatorImageColor(
+    _ state: DocumentTabUIModel.Value.State,
+    documentIsLowOnCredentials: Bool
+  ) -> Color {
+    if hasExpired {
+      return Theme.shared.color.error
+    }
+
+    if documentIsLowOnCredentials {
+      return Theme.shared.color.warning
+    }
+
+    switch state {
+    case .issued:
+      return Theme.shared.color.onSurfaceVariant
+    case .pending:
+      return Theme.shared.color.warning
+    case .failed, .revoked:
+      return Theme.shared.color.error
     }
   }
 
   func indicatorImage(
-    _ state: DocumentTabUIModel.Value.State
+    _ state: DocumentTabUIModel.Value.State,
+    documentIsLowOnCredentials: Bool
   ) -> Image {
+    if hasExpired {
+      return Theme.shared.image.errorIndicator
+    }
+
+    if documentIsLowOnCredentials {
+      return Theme.shared.image.errorIndicator
+    }
+
     switch state {
     case .issued:
       return Theme.shared.image.chevronRight
     case .pending:
       return Theme.shared.image.clockIndicator
-    case .failed:
-      return Theme.shared.image.errorIndicator
-    case .revoked:
+    case .failed, .revoked:
       return Theme.shared.image.errorIndicator
     }
   }

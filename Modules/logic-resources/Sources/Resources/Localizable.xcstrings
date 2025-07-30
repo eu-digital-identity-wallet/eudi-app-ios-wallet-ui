@@ -785,6 +785,17 @@
         }
       }
     },
+    "expandable_document_credentials_issue_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issue new"
+          }
+        }
+      }
+    },
     "expiration_period" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1045,6 +1056,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Issuance"
+          }
+        }
+      }
+    },
+    "issuance_add_document_no_options" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No available documents"
           }
         }
       }

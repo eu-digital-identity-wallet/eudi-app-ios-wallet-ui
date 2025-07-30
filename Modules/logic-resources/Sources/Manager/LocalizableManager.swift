@@ -520,6 +520,10 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "document_details_document_credentials_expanded_button_hide_text")
     case .documentsListCredentialsUsageText(let args):
       bundle.localizedStringWithArguments(forKey: "documents_list_credentials_usage_text", arguments: args)
+    case .expandableDocumentCredentialsIssueButton:
+      bundle.localizedString(forKey: "expandable_document_credentials_issue_button")
+    case .issuanceAddDocumentNoOptions:
+      bundle.localizedString(forKey: "issuance_add_document_no_options")
     }
   }
 }

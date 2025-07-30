@@ -22,13 +22,17 @@ struct ExpandableDocumentCredentialsView: View {
 
   private let backgroundColor: Color
   private let documentCredentialsInfo: DocumentCredentialsInfoUi
+  private let onPrimaryButtonClicked: () -> Void
 
   init(
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
-    documentCredentialsInfo: DocumentCredentialsInfoUi
+    documentCredentialsInfo: DocumentCredentialsInfoUi,
+    onPrimaryButtonClicked: @escaping () -> Void
   ) {
+    self.isExpanded = documentCredentialsInfo.isExpanded
     self.backgroundColor = backgroundColor
     self.documentCredentialsInfo = documentCredentialsInfo
+    self.onPrimaryButtonClicked = onPrimaryButtonClicked
   }
 
   var body: some View {
@@ -59,7 +63,7 @@ struct ExpandableDocumentCredentialsView: View {
             .multilineTextAlignment(.leading)
         }
 
-        HStack {
+        HStack(spacing: SPACING_MEDIUM) {
           Spacer()
           Button {
             withAnimation {
@@ -69,6 +73,16 @@ struct ExpandableDocumentCredentialsView: View {
             Text(info.hideButtonText)
               .font(Theme.shared.font.bodyLarge.font)
               .foregroundColor(Theme.shared.color.primary)
+          }
+
+          if let updateNowButtonText = info.updateNowButtonText {
+            WrapButtonView(
+              style: .primary,
+              title: updateNowButtonText,
+              gravity: .none,
+              cornerRadius: Theme.shared.shape.large,
+              onAction: onPrimaryButtonClicked()
+            )
           }
         }
       }
@@ -116,9 +130,10 @@ struct ExpandableDocumentCredentialsView: View {
         moreInfoText: .custom("More Info")
       ),
       expandedInfo: ExpandedInfo(
-        subtitle: .custom("For security reasons, this document can be shared a limited number of times before it needs to be re-issued by the issuing authority."),
+        subtitle: .custom("For security reasons, this document can be shared a limited number of times before it needs to be re-issued by the issuing authority."), updateNowButtonText: .custom("Update now"),
         hideButtonText: .custom("Hide")
       )
-    )
+    ),
+    onPrimaryButtonClicked: {}
   )
 }

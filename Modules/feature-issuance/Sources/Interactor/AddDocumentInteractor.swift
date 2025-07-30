@@ -38,19 +38,25 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
   public func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> ScopedDocumentsPartialState {
     do {
       let documents: [AddDocumentUIModel] = try await walletController.getScopedDocuments().compactMap { doc in
-        if flow == .extraDocument || doc.isPid {
-          return .init(
-            listItem: .init(
-              mainText: .custom(doc.name),
-              trailingContent: .icon(Theme.shared.image.plus)
-            ),
-            isEnabled: true,
-            configId: doc.configId,
-            docTypeIdentifier: doc.docTypeIdentifier
-          )
-        } else {
-          return nil
+        switch flow {
+        case .noDocument:
+          guard doc.isPid else { return nil }
+
+        case .extraDocument(let identifier):
+          if let identifier, doc.docTypeIdentifier != identifier {
+            return nil
+          }
         }
+
+        return .init(
+          listItem: .init(
+            mainText: .custom(doc.name),
+            trailingContent: .icon(Theme.shared.image.plus)
+          ),
+          isEnabled: true,
+          configId: doc.configId,
+          docTypeIdentifier: doc.docTypeIdentifier
+        )
       }.sorted(by: compare)
       return .success(documents)
     } catch {

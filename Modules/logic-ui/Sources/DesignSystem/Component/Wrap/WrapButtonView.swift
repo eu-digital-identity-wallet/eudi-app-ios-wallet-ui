@@ -115,7 +115,9 @@ public struct WrapButtonView: View {
           }
         }
         .padding()
-        .frame(maxWidth: .infinity)
+        .if(gravity != .none) {
+          $0.frame(maxWidth: .infinity)
+        }
         .background(backgroundColor)
         .cornerRadius(cornerRadius)
         .overlay(
@@ -134,7 +136,7 @@ public struct WrapButtonView: View {
 
 public extension WrapButtonView {
   enum Gravity {
-    case center, start, end
+    case center, start, end, none
   }
 }
 

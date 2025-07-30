@@ -21,22 +21,17 @@ public protocol SettingsInteractor: Sendable {
   func getAppVersion() -> String
   func retrieveLogFileUrl() -> URL?
   func retrieveChangeLogUrl() -> URL?
-  func setBatchCounter(isEnabled: Bool)
-  func isBatchCounterEnabled() -> Bool
 }
 
 final class SettingsInteractorImpl: SettingsInteractor {
 
-  private let prefsController: PrefsController
   private let walletController: WalletKitController
   private let configLogic: ConfigLogic
 
   init(
-    prefsController: PrefsController,
     walletController: WalletKitController,
     configLogic: ConfigLogic
   ) {
-    self.prefsController = prefsController
     self.walletController = walletController
     self.configLogic = configLogic
   }
@@ -51,13 +46,5 @@ final class SettingsInteractorImpl: SettingsInteractor {
 
   func retrieveChangeLogUrl() -> URL? {
     return configLogic.changelogUrl
-  }
-
-  func isBatchCounterEnabled() -> Bool {
-    prefsController.getBool(forKey: .batchCounter)
-  }
-
-  func setBatchCounter(isEnabled: Bool) {
-    prefsController.setValue(isEnabled, forKey: .batchCounter)
   }
 }

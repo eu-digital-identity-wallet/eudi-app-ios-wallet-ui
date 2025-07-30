@@ -81,7 +81,8 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     case .success(let documents):
       setState {
         $0.copy(
-          addDocumentCellModels: documents
+          addDocumentCellModels: documents,
+          showFooterScanner: viewState.addDocumentCellModels.isEmpty
         )
         .copy(error: nil)
       }
@@ -111,12 +112,21 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
   }
 
   func onScanClick() {
+    var successNavigation: UIConfig.TwoWayNavigationType {
+      switch viewState.config.flow {
+      case .noDocument:
+        .push(.featureDashboardModule(.dashboard))
+      case .extraDocument:
+        .popTo(.featureDashboardModule(.dashboard))
+      }
+    }
+
     router.push(
       with: .featureCommonModule(
         .qrScanner(
           config: ScannerUiConfig(
             flow: .issuing(
-              successNavigation: .push(.featureDashboardModule(.dashboard)),
+              successNavigation: successNavigation,
               cancelNavigation: .popTo(
                 .featureIssuanceModule(
                   .issuanceAddDocument(config: viewState.config)

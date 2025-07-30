@@ -25,18 +25,15 @@ final class TestDocumentTabInteractor: EudiTest {
   
   var interactor: DocumentTabInteractor!
   var walletKitController: MockWalletKitController!
-  var prefsController: MockPrefsController!
   var filterValidator: MockFilterValidator!
   var configLogic: MockConfigLogic!
   
   override func setUp() {
     self.walletKitController = MockWalletKitController()
-    self.prefsController = MockPrefsController()
     self.configLogic = MockConfigLogic()
     self.filterValidator = MockFilterValidator()
     self.interactor = DocumentTabInteractorImpl(
       walletKitController: walletKitController,
-      prefsController: prefsController,
       filterValidator: filterValidator
     )
   }
@@ -44,7 +41,6 @@ final class TestDocumentTabInteractor: EudiTest {
   override func tearDown() {
     self.interactor = nil
     self.walletKitController = nil
-    self.prefsController = nil
     self.configLogic = nil
   }
   
@@ -90,7 +86,6 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchIssuedDocuments(with: [])
     stubFetchDocumentsWithExclusion(with: [])
     stubFetchMainPidDocument(with: nil)
-    stubIsBatchCounterEnabled()
 
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
@@ -139,8 +134,8 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDocumentCategories(with: documentsCategories)
     stubFetchDocumentsWithExclusion(with: [expectedMdl])
     stubFetchMainPidDocument(with: expectedPid)
-    stubIsBatchCounterEnabled()
-
+    stubIsDocumentLowOnCredentials()
+    
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
     
@@ -488,7 +483,7 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDocumentCategories(with: documentsCategories)
     stubFetchDocumentsWithExclusion(with: [expectedMdl])
     stubFetchMainPidDocument(with: expectedPid)
-    stubIsBatchCounterEnabled()
+    stubIsDocumentLowOnCredentials()
 
     // When
     let state = await interactor.fetchDocuments(failedDocuments: [])
@@ -591,7 +586,14 @@ private extension TestDocumentTabInteractor {
       when(mock.fetchAllDocuments()).thenReturn([])
     }
   }
-  
+
+  func stubIsDocumentLowOnCredentials(hasLowOnCredentials: Bool = true) {
+    stub(walletKitController) { stub in
+      when(stub.isDocumentLowOnCredentials(document: any()))
+        .thenReturn(hasLowOnCredentials)
+    }
+  }
+
   func stubInitializeValidator() {
     stub(filterValidator) { mock in
       when(mock.initializeValidator(
@@ -647,12 +649,6 @@ private extension TestDocumentTabInteractor {
         query: equal(to: "search"))
       )
       .thenDoNothing()
-    }
-  }
-
-  func stubIsBatchCounterEnabled(_ enabled: Bool = true) {
-    stub(prefsController) { stub in
-      when(stub.getBool(forKey: Prefs.Key.batchCounter)).thenReturn(enabled)
     }
   }
 }

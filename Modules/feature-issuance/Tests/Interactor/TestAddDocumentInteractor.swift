@@ -46,7 +46,7 @@ final class TestAddDocumentInteractor: EudiTest {
     ])
     
     // When
-    let result = await interactor.fetchScopedDocuments(with: .extraDocument)
+    let result = await interactor.fetchScopedDocuments(with: .extraDocument(filterType: nil))
 
     // Then
     switch result {
@@ -66,7 +66,7 @@ final class TestAddDocumentInteractor: EudiTest {
     ])
 
     // When
-    let result = await interactor.fetchScopedDocuments(with: .extraDocument)
+    let result = await interactor.fetchScopedDocuments(with: .extraDocument(filterType: nil))
 
     // Then
     switch result {
@@ -100,8 +100,8 @@ final class TestAddDocumentInteractor: EudiTest {
     stubGetScopedDocumentsFailure()
     
     // When
-    let result = await interactor.fetchScopedDocuments(with: .extraDocument)
-    
+    let result = await interactor.fetchScopedDocuments(with: .extraDocument(filterType: nil))
+
     // Then
     switch result {
     case .failure(let error):
@@ -456,7 +456,7 @@ final class TestAddDocumentInteractor: EudiTest {
     ])
 
     // When
-    let result = await interactor.fetchScopedDocuments(with: .extraDocument)
+    let result = await interactor.fetchScopedDocuments(with: .extraDocument(filterType: nil))
 
     // Then
     switch result {
