@@ -204,11 +204,11 @@ struct WalletKitConfigImpl: WalletKitConfig {
       documentSpecificRules: [
         DocumentTypeIdentifier.mDocPid: DocumentIssuanceRule(
           policy: .oneTimeUse,
-          numberOfCredentials: 2
+          numberOfCredentials: 10
         ),
         DocumentTypeIdentifier.sdJwtPid: DocumentIssuanceRule(
           policy: .oneTimeUse,
-          numberOfCredentials: 2
+          numberOfCredentials: 10
         )
       ]
     )
