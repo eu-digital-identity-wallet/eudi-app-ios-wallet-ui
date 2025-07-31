@@ -82,7 +82,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
       setState {
         $0.copy(
           addDocumentCellModels: documents,
-          showFooterScanner: viewState.addDocumentCellModels.isEmpty
+          showFooterScanner: showScannerFooter(documents: documents)
         )
         .copy(error: nil)
       }
@@ -376,5 +376,9 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
         )
       }
     }
+  }
+
+  private func showScannerFooter(documents: [AddDocumentUIModel]) -> Bool {
+    viewState.config.flow == .noDocument || documents.isEmpty
   }
 }
