@@ -1,5 +1,5 @@
 {
-  "originHash" : "6cb85bbb13dee2ce207651c52fccfd5f8c32bb90650b90af0efdeb35cd3cb608",
+  "originHash" : "62d1616d9563972dd8ec3e65d2ef5d68f8806f4f424e773b903ba972cd118506",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -461,9 +461,18 @@
       }
     },
     {
+      "identity" : "swift-log-oslog",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/chrisaljoudi/swift-log-oslog.git",
+      "state" : {
+        "revision" : "176d41d46429e79c806333025b226e0c50a0c602",
+        "version" : "0.2.2"
+      }
+    },
+    {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-syntax.git",
+      "location" : "https://github.com/swiftlang/swift-syntax",
       "state" : {
         "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
         "version" : "509.1.1"

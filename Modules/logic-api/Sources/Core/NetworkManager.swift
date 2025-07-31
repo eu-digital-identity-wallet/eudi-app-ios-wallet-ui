@@ -16,6 +16,7 @@
 import Foundation
 import Alamofire
 import logic_business
+import Logging
 
 protocol NetworkManager {
   func execute<R: NetworkRequest, T: Decodable & Sendable>(
@@ -102,17 +103,19 @@ actor NetworkManagerImpl: NetworkManager {
     return urlRequest
   }
 
+  static let logger = Logger(label: "NetworkManager")
   nonisolated func log(request: URLRequest, responseData: Data? = nil) {
-    print("1️⃣ Request: " + (request.url?.absoluteString ?? "") )
-    print("2️⃣ Request Http Method: " + (request.httpMethod ?? "") )
-    print("3️⃣ Request HttpBody: " + ((try? request.httpBody?.toJSONString(prettyPrinted: true)).orEmpty) )
-    print("4️⃣ Request Headers: ")
+
+    Self.logger.info("1️⃣ Request: \(request.url?.absoluteString ?? "")" )
+    Self.logger.info("2️⃣ Request Http Method: \(request.httpMethod ?? "")" )
+    Self.logger.info("3️⃣ Request HttpBody: \((try? request.httpBody?.toJSONString(prettyPrinted: true)).orEmpty)" )
+    Self.logger.info("4️⃣ Request Headers: ")
     request.allHTTPHeaderFields?.forEach({ key, value in
-      print("\(key): \(value)")
+      Self.logger.info("\(key): \(value)")
     })
 
     if let responseData {
-      print("✅ Response Body: " + ((try? responseData.toJSONString(prettyPrinted: true)).orEmpty) )
+      Self.logger.info("✅ Response Body: \((try? responseData.toJSONString(prettyPrinted: true)).orEmpty)" )
     }
   }
 }

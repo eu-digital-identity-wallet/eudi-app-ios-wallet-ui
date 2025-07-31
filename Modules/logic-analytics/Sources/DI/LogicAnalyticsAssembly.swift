@@ -15,6 +15,7 @@
  */
 import Swinject
 import Foundation
+import os
 
 public final class LogicAnalyticsAssembly: Assembly {
 
@@ -40,5 +41,26 @@ public final class LogicAnalyticsAssembly: Assembly {
       config
     }
     .inObjectScope(ObjectScope.graph)
+  }
+}
+
+@objc(AnalyticsConfigImpl)
+final class AnalyticsConfigImpl: NSObject, AnalyticsConfig {
+  let analyticsProviders: [String: AnalyticsProvider] = ["Logger": AnalyticsProviderImp()]
+}
+
+struct AnalyticsProviderImp: AnalyticsProvider {
+  let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Debug")
+
+  func initialize(key: String) {
+    logger.info("analytics initialized: \(key)")
+  }
+
+  func logScreen(screen: String, arguments: [String: String]) {
+    logger.info("screen: \(screen) \(arguments)")
+  }
+
+  func logEvent(event: String, arguments: [String: String]) {
+    logger.info("event: \(event) \(arguments)")
   }
 }

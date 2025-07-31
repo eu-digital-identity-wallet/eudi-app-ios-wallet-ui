@@ -34,7 +34,7 @@ public struct ContentErrorView: View {
 
       ContentTitleView(title: config.title, caption: config.description)
 
-      Spacer()
+      DebugLogView()
 
       if let action = config.action {
         WrapButtonView(

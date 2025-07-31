@@ -145,6 +145,7 @@ private func noDocumentsFound(
       ContentEmptyView(
         title: .requestDataNoDocument
       )
+      DebugLogView()
       Spacer()
     }
     .padding(.horizontal, Theme.shared.dimension.padding)

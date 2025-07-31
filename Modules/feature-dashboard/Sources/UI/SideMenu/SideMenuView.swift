@@ -50,6 +50,8 @@ private func content(viewState: SideMenuViewState) -> some View {
       )
     }
 
+    DebugLogView()
+
     Spacer()
   }
   .padding(.bottom, SPACING_LARGE_MEDIUM)

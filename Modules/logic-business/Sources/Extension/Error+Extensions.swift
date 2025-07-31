@@ -14,11 +14,10 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import Logging
 
 public extension Error {
   func log() {
-    #if DEBUG
-    print(self)
-    #endif
+    Logger(label: "Error extension").info("\(self)")
   }
 }

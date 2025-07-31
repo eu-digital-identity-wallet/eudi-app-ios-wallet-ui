@@ -16,6 +16,7 @@ let package = Package(
       url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       exact: "0.13.4"
     ),
+    .package(url: "https://github.com/chrisaljoudi/swift-log-oslog.git", exact: "0.2.2"),
     .package(
       name: "logic-resources",
       path: "./logic-resources"
@@ -36,6 +37,10 @@ let package = Package(
         "logic-resources",
         "logic-business",
         "logic-storage",
+        .product(
+          name: "LoggingOSLog",
+          package: "swift-log-oslog"
+        ),
         .product(
           name: "EudiWalletKit",
           package: "eudi-lib-ios-wallet-kit"
