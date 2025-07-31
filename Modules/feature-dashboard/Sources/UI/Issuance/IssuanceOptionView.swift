@@ -17,6 +17,136 @@ import SwiftUI
 import logic_ui
 import logic_resources
 
+struct IssuerSelectionView<Router: RouterHost>: View {
+  @ObservedObject var viewModel: IssuanceOptionViewModel<Router>
+  @State private var newIssuerName: String = ""
+  @State private var newIssuerUrl: String = "http://"
+  @State private var availableIssuers: [IssuerInfo] = IssuerManager.shared.getIssuers()
+
+  init(viewModel: IssuanceOptionViewModel<Router>) {
+    self.viewModel = viewModel
+  }
+
+  var body: some View {
+    ContentScreenView(
+      padding: .zero,
+      canScroll: false,
+      navigationTitle: .selectIssuer,
+      toolbarContent: toolbarContent()
+    ) {
+      VStack(spacing: SPACING_MEDIUM) {
+        // MARK: - Add new issuer section
+        VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+          Text("Add New Issuer")
+            .font(.headline)
+            .padding(.horizontal)
+
+          VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+            VStack(alignment: .leading, spacing: 4) {
+              Text("Issuer Name")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+              TextField("Enter issuer name", text: $newIssuerName)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+              Text("Issuer URL")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+              TextField("Enter issuer URL", text: $newIssuerUrl)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .keyboardType(.URL)
+                .autocapitalization(.none)
+
+              if !viewModel.isURLValid(newIssuerUrl) {
+                Text("Please enter a valid HTTPS URL")
+                  .font(.caption)
+                  .foregroundColor(Theme.shared.color.error)
+              }
+            }
+
+            Button(action: {
+              if !newIssuerName.isEmpty && viewModel.isURLValid(newIssuerUrl) {
+                IssuerManager.shared.addIssuer(newIssuerName, url: newIssuerUrl)
+                availableIssuers = IssuerManager.shared.getIssuers()
+                newIssuerName = ""
+                newIssuerUrl = "http://"
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+              }
+            }, label: {
+              Text("Add Issuer")
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(
+                  !newIssuerName.isEmpty && viewModel.isURLValid(newIssuerUrl) ?
+                  Theme.shared.color.primary : Color.gray.opacity(0.3)
+                )
+                .foregroundColor(.white)
+                .cornerRadius(8)
+            })
+            .disabled(newIssuerName.isEmpty || newIssuerUrl.isEmpty)
+          }
+          .padding()
+          .background(
+            RoundedRectangle(cornerRadius: 12)
+              .fill(Theme.shared.color.surfaceContainer)
+          )
+          .padding(.horizontal)
+        }
+
+        // MARK: - List of available issuers
+        ScrollView {
+          VStack(spacing: SPACING_MEDIUM_SMALL) {
+            ForEach(availableIssuers, id: \.name) { issuer in
+              Button(action: {
+                viewModel.onIssuerSelected(issuer.name)
+              }, label: {
+                HStack {
+                  VStack(alignment: .leading, spacing: 4) {
+                    Text(issuer.name)
+                      .typography(Theme.shared.font.bodyLarge)
+                      .foregroundStyle(Theme.shared.color.primary)
+                    Text(issuer.url)
+                      .typography(Theme.shared.font.bodyMedium)
+                      .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+                  }
+                  Spacer()
+
+                  if issuer.name == viewModel.viewState.selectedIssuer {
+                    Image(systemName: "checkmark.circle.fill")
+                      .foregroundStyle(Theme.shared.color.blue)
+                  }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(
+                  RoundedRectangle(cornerRadius: 12)
+                    .fill(Theme.shared.color.surfaceContainer)
+                )
+              })
+              .buttonStyle(PlainButtonStyle())
+              .padding(.horizontal)
+            }
+          }
+          .padding(.vertical, SPACING_MEDIUM)
+        }
+      }
+    }
+  }
+
+  func toolbarContent() -> ToolBarContent {
+    .init(
+      trailingActions: [],
+      leadingActions: [
+        ToolBarContent.Action(image: Theme.shared.image.chevronLeft) {
+          viewModel.pop()
+        }
+      ]
+    )
+  }
+}
+
 struct IssuanceOptionView<Router: RouterHost>: View {
 
   @StateObject private var viewModel: IssuanceOptionViewModel<Router>

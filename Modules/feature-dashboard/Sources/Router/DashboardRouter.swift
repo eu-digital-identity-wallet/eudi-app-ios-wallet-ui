@@ -96,6 +96,12 @@ public final class DashboardRouter {
           transactionId: id
         )
       ).eraseToAnyView()
+    case .issuerSelection:
+      IssuerSelectionView(
+        viewModel: .init(
+          router: host
+        )
+      ).eraseToAnyView()
     }
   }
 }

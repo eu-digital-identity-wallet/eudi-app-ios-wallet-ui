@@ -21,18 +21,23 @@ import feature_common
 struct IssuanceOptionViewState: ViewState {
   let error: ContentErrorView.Config?
   let title: LocalizableStringKey
+  let selectedIssuer: String
 }
 
 class IssuanceOptionViewModel<Router: RouterHost>: ViewModel<Router, IssuanceOptionViewState> {
 
   init(
-    router: Router
+    router: Router,
+    selectedIssuer: String? = nil
   ) {
+    let initialIssuer = IssuerManager.shared.getSelectedIssuer() ?? selectedIssuer ?? IssuerManager.shared.defaultIssuerName
+
     super.init(
       router: router,
       initialState: .init(
         error: nil,
-        title: .addDocumentsToWallet
+        title: .addDocumentsToWallet,
+        selectedIssuer: initialIssuer
       )
     )
   }
@@ -72,12 +77,47 @@ class IssuanceOptionViewModel<Router: RouterHost>: ViewModel<Router, IssuanceOpt
 
   func toolbarContent() -> ToolBarContent {
     .init(
-      trailingActions: [],
+      trailingActions: [
+        ToolBarContent.Action(image: Theme.shared.image.plus) {
+          self.showIssuerSelection()
+        }
+      ],
       leadingActions: [
         .init(image: Theme.shared.image.chevronLeft) {
           self.router.pop()
         }
       ]
     )
+  }
+
+  // MARK: - Show IssuerSelectionView
+  func showIssuerSelection() {
+    router.push(
+      with: .featureDashboardModule(
+        .issuerSelection(
+          viewState.selectedIssuer
+        )
+      )
+    )
+  }
+
+  func onIssuerSelected(_ issuer: String) {
+    IssuerManager.shared.setSelectedIssuer(issuer)
+    setState {
+      $0.copy(selectedIssuer: issuer)
+    }
+  }
+
+  func pop() {
+    router.pop()
+  }
+
+  func isURLValid(_ urlString: String) -> Bool {
+    guard let url = URL(string: urlString),
+          url.scheme == "http" || url.scheme == "https",
+          url.host != nil else {
+      return false
+    }
+    return true
   }
 }

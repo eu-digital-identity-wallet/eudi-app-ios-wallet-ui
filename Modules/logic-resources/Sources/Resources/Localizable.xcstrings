@@ -2119,6 +2119,17 @@
         }
       }
     },
+    "select_issuer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose the issuer"
+            }
+          }
+        }
+    },
     "settings_menu" : {
       "extractionState" : "manual",
       "localizations" : {

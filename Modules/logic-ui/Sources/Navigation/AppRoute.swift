@@ -60,6 +60,7 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
   case issuanceOption
   case documentDetails(id: String)
   case transactionDetails(id: String)
+  case issuerSelection(String)
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -77,6 +78,8 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
       (key: "DocumentDetails", arguments: ["id": id])
     case .transactionDetails(let id):
       (key: "TransactionDetails", arguments: ["id": id])
+    case .issuerSelection:
+      (key: "issuerSelection", arguments: [:])
     }
   }
 }

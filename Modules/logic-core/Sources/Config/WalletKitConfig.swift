@@ -25,6 +25,10 @@ struct VciConfig: Sendable {
   public let useDPoP: Bool
 }
 
+private enum UserDefaultsKeys {
+  static let selectedIssuerUrl = "selectedIssuerUrl"
+}
+
 struct ReaderConfig: Sendable {
   public let trustedCerts: [Data]
 }
@@ -98,7 +102,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
     return switch configLogic.appBuildVariant {
     case .DEMO:
         .init(
-          issuerUrl: "https://issuer.eudiw.dev",
+          issuerUrl: UserDefaults.standard.string(forKey: UserDefaultsKeys.selectedIssuerUrl) ??
+          "https://issuer.eudiw.dev",
           clientId: "wallet-dev",
           redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
@@ -106,7 +111,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
         )
     case .DEV:
         .init(
-          issuerUrl: "https://dev.issuer.eudiw.dev",
+          issuerUrl: UserDefaults.standard.string(forKey: UserDefaultsKeys.selectedIssuerUrl) ??
+          "https://dev.issuer.eudiw.dev",
           clientId: "wallet-dev",
           redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
