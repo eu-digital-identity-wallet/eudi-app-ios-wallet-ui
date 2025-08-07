@@ -241,27 +241,27 @@ _(NOTE: These videos are from the Android version)_
 
 Issuance
 
-[Issuance](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/assets/129499766/9e9fb151-38ca-48f7-a0d7-669ce816513b)
+[Issuance](https://github.com/user-attachments/assets/3c7d29fe-27b9-409c-b470-07bce1537e75)
 
 Presentation
 
-[Presentation](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/assets/129499766/76953733-4841-4581-9c7e-f53499f408f3)
+[Presentation](https://github.com/user-attachments/assets/e23fc563-5650-4a83-a05b-53a54f6dd209)
 
 Proximity
 
-[Proximity](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/assets/129499766/68c975e1-1f99-441e-acef-e4a42572ab4d)
+[Proximity](https://github.com/user-attachments/assets/d60c57bb-809a-437b-a76f-3c6c20e0bd16)
 
 ## Disclaimer
 
 The released software is an initial development release version: 
--  The initial development release is an early endeavor reflecting the efforts of a short time-boxed period, and by no means can it be considered as the final product.  
--  The initial development release may be changed substantially over time and might introduce new features but also may change or remove existing ones, potentially breaking compatibility with your existing code.
+-  The initial development release is an early endeavor reflecting the efforts of a short time-boxed period, and by no means can it be considered the final product.  
+-  The initial development release may be changed substantially over time and might introduce new features, but also may change or remove existing ones, potentially breaking compatibility with your existing code.
 -  The initial development release is limited in functional scope.
 -  The initial development release may contain errors or design flaws and other problems that could cause system or other failures and data loss.
 -  The initial development release has reduced security, privacy, availability, and reliability standards relative to future releases. This could make the software slower, less reliable, or more vulnerable to attacks than mature software.
 -  The initial development release is not yet comprehensively documented. 
--  Users of the software must perform sufficient engineering and additional testing to properly evaluate their application and determine whether any of the open-sourced components is suitable for use in that application.
--  We strongly recommend not to put this version of the software into production use.
+-  Users of the software must perform sufficient engineering and additional testing to properly evaluate their application and determine whether any of the open-sourced components are suitable for use in that application.
+-  We strongly recommend not putting this version of the software into production use.
 -  Only the latest version of the software will be supported.
 -  This project is tested with BrowserStack.
 
