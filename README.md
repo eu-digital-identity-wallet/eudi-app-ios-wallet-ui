@@ -237,8 +237,6 @@ graph TD;
 
 ## Demo videos
 
-_(NOTE: These videos are from the Android version)_
-
 Issuance
 
 [Issuance](https://github.com/user-attachments/assets/3c7d29fe-27b9-409c-b470-07bce1537e75)
