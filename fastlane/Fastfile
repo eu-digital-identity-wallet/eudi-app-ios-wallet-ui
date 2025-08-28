@@ -39,7 +39,7 @@ platform :ios do
     )
   end
 
-  desc "Build EUDI Wallet Demo version and upload it to AppCenter"
+  desc "Build & Deploy Wallet"
   lane :deploy do
     ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "600"
 
@@ -265,21 +265,5 @@ platform :ios do
       configName: configName,
       version: version,
     )
-  end
-
-  desc "Change App Display Name"
-  lane :update_display_name do |values|
-    displayName = values[:displayName]
-    xcodeproj = values[:xcodeproj]
-    target = values[:target]
-
-    puts "New display name: #{displayName} for #{target} in #{xcodeproj}"
-
-    project = Xcodeproj::Project.open("../#{xcodeproj}")
-    target = project.targets.find { |t| t.name == target }
-    target.build_configurations.each do |config|
-      config.build_settings["INFOPLIST_KEY_CFBundleDisplayName"] = displayName
-    end
-    project.save
   end
 end
