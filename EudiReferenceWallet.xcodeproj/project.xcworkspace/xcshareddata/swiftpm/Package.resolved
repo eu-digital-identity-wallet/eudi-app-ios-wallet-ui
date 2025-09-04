@@ -1,5 +1,5 @@
 {
-  "originHash" : "4a9eaba6536780bda1383d036552ba5b8979761f5bcecf0ac987cbfeefbd50c0",
+  "originHash" : "1246d05df55f24e41eabc293f04d9ef5b318fbd2f0027f033097dfa8856bff73",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -56,15 +56,6 @@
       }
     },
     {
-      "identity" : "chronometer",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KittyMac/Chronometer.git",
-      "state" : {
-        "revision" : "99d4f4137837a28e1e294eb69ac66ad53c0934d3",
-        "version" : "0.1.14"
-      }
-    },
-    {
       "identity" : "codescanner",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twostraws/CodeScanner",
@@ -105,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "2eabc58231614e6a509053c8411239b1cd47244a",
-        "version" : "0.7.5"
+        "revision" : "ef575d483fec3840e461ef38e6154aee3f7519b9",
+        "version" : "0.7.6"
       }
     },
     {
@@ -114,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "277e3a80014e8c2acf47a1a9e076d98610080b70",
-        "version" : "0.7.5"
+        "revision" : "f9293a56d34ab6927faebf69b79f8ef0e2ba3448",
+        "version" : "0.7.7"
       }
     },
     {
@@ -123,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "c8db844ce7d3330c3096b3794fb1a1ae9d2dbaa0",
-        "version" : "0.6.5"
+        "revision" : "1037552695e8372551a73fae41dad01442616d82",
+        "version" : "0.6.7"
       }
     },
     {
@@ -134,15 +125,6 @@
       "state" : {
         "revision" : "508556bdd1cf517735a0e6405c9dbd2704e6a892",
         "version" : "0.15.4"
-      }
-    },
-    {
-      "identity" : "eudi-lib-ios-presentation-exchange-swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-presentation-exchange-swift.git",
-      "state" : {
-        "revision" : "0c28d64c636e65c6734d2f89c7a4fb4be76fe05e",
-        "version" : "0.4.2"
       }
     },
     {
@@ -177,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
       "state" : {
-        "revision" : "b322b0d7c910614c31a1ce2513b1529b8485b515",
-        "version" : "0.15.1"
+        "revision" : "b88d6a2eb9b78fa367a89a1ce63dbae0949a1829",
+        "version" : "0.16.0"
       }
     },
     {
@@ -195,8 +177,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "c48a518a800203d9628b898fcd7350eca2fcacb6",
-        "version" : "0.13.5"
+        "revision" : "c7b67459c3a648e9170fcae80d8f9097b3aefcd9",
+        "version" : "0.14.0"
       }
     },
     {
@@ -236,15 +218,6 @@
       }
     },
     {
-      "identity" : "hitch",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KittyMac/Hitch.git",
-      "state" : {
-        "revision" : "d6c147a1d70992db39a141cb5bf9cf8fbb776250",
-        "version" : "0.4.148"
-      }
-    },
-    {
       "identity" : "jose-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/beatt83/jose-swift.git",
@@ -260,15 +233,6 @@
       "state" : {
         "revision" : "c2664a902e75c0426a1d43132bd4babc6fd173d3",
         "version" : "3.0.0"
-      }
-    },
-    {
-      "identity" : "jsonschema.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kylef/JSONSchema.swift",
-      "state" : {
-        "revision" : "d14de4b2d9205068c9db89c00d097ca43c897000",
-        "version" : "0.6.0"
       }
     },
     {
@@ -350,24 +314,6 @@
       "state" : {
         "revision" : "4c77c7384768acf1093d66ccaacf298d322b10b7",
         "version" : "0.15.0"
-      }
-    },
-    {
-      "identity" : "sextant",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KittyMac/Sextant.git",
-      "state" : {
-        "revision" : "3a6ba431ecd4fd564e3c80e23d03ad1d9069a9f4",
-        "version" : "0.4.36"
-      }
-    },
-    {
-      "identity" : "spanker",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KittyMac/Spanker.git",
-      "state" : {
-        "revision" : "820f96e9e5836e2ac9808c1b706727b876fa3d9b",
-        "version" : "0.2.51"
       }
     },
     {
@@ -519,8 +465,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Swinject/Swinject.git",
       "state" : {
-        "revision" : "be9dbcc7b86811bc131539a20c6f9c2d3e56919f",
-        "version" : "2.9.1"
+        "revision" : "b685b549fe4d8ae265fc7a2f27d0789720425d69",
+        "version" : "2.10.0"
       }
     },
     {

@@ -13,7 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-@preconcurrency import Swinject
+import Swinject
 
 public protocol DIGraphType: Sendable {
   var assembler: Assembler { get }
@@ -22,7 +22,7 @@ public protocol DIGraphType: Sendable {
 
 public final class DIGraph: DIGraphType {
 
-  public let assembler: Assembler
+  nonisolated(unsafe) public let assembler: Assembler
 
   private init() {
     self.assembler = Assembler()
@@ -35,7 +35,7 @@ public final class DIGraph: DIGraphType {
 
 public extension DIGraph {
 
-  static let resolver: Resolver = shared.assembler.resolver
+  nonisolated(unsafe) static let resolver: Resolver = shared.assembler.resolver
 
   static func lazyLoad(with assemblies: [Assembly]) {
     DIGraph.shared.lazyLoad(with: assemblies)
