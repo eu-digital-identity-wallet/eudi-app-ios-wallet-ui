@@ -171,7 +171,7 @@ final class WalletKitControllerImpl: WalletKitController {
   func startProximityPresentation() async -> ProximitySessionCoordinator {
     self.stopPresentation()
     let session = await wallet.beginPresentation(flow: .ble)
-    let proximitySessionCoordinator = DIGraph.resolver.force(
+    let proximitySessionCoordinator = DIGraph.shared.resolver.force(
       ProximitySessionCoordinator.self,
       argument: session
     )
@@ -415,7 +415,7 @@ private extension WalletKitControllerImpl {
     let data = urlString.data(using: .utf8) ?? Data()
 
     let session = await wallet.beginPresentation(flow: .openid4vp(qrCode: data))
-    let remoteSessionCoordinator = DIGraph.resolver.force(
+    let remoteSessionCoordinator = DIGraph.shared.resolver.force(
       RemoteSessionCoordinator.self,
       argument: session
     )

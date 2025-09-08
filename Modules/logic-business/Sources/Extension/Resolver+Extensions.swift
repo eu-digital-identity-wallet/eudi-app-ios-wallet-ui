@@ -13,23 +13,30 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_ui
-import logic_business
+import Swinject
 
-@MainActor
-public final class StartupRouter {
+public extension Resolver {
 
-  public static func resolve(module: FeatureStartupRouteModule, host: some RouterHost) -> AnyView {
-    switch module {
-    case .startup:
-      StartupView(
-        with: .init(
-          router: host,
-          interactor: DIGraph.shared.resolver.force(
-            StartupInteractor.self
-          )
-        )
-      ).eraseToAnyView()
-    }
+  func force<Service>(_ serviceType: Service.Type) -> Service {
+    resolve(serviceType)!
+  }
+
+  func force<Service>(_ serviceType: Service.Type, name: String?) -> Service {
+    resolve(serviceType, name: name)!
+  }
+
+  func force<Service, Arg1>(
+    _ serviceType: Service.Type,
+    argument: Arg1
+  ) -> Service {
+    resolve(serviceType, argument: argument)!
+  }
+
+  func force<Service, Arg1>(
+    _ serviceType: Service.Type,
+    name: String?,
+    argument: Arg1
+  ) -> Service {
+    resolve(serviceType, name: name, argument: argument)!
   }
 }
