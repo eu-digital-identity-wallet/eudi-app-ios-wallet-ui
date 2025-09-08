@@ -35,9 +35,9 @@ struct Application: App {
     // Depedency Injection
     DIGraph.assembleDependenciesGraph()
 
-    self.routerHost = DIGraph.resolver.force(RouterHost.self)
-    self.deepLinkController = DIGraph.resolver.force(DeepLinkController.self)
-    self.walletKitController = DIGraph.resolver.force(WalletKitController.self)
+    self.routerHost = DIGraph.shared.resolver.force(RouterHost.self)
+    self.deepLinkController = DIGraph.shared.resolver.force(DeepLinkController.self)
+    self.walletKitController = DIGraph.shared.resolver.force(WalletKitController.self)
     self.toolbarConfig = routerHost.getToolbarConfig()
   }
 

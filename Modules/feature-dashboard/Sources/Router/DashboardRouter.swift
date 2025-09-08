@@ -26,19 +26,19 @@ public final class DashboardRouter {
       DashboardView(
         with: .init(
           router: host,
-          dashboardInteractor: DIGraph.resolver.force(
+          dashboardInteractor: DIGraph.shared.resolver.force(
             DashboardInteractor.self
           ),
-          homeTabInteractor: DIGraph.resolver.force(
+          homeTabInteractor: DIGraph.shared.resolver.force(
             HomeTabInteractor.self
           ),
-          documentTabInteractor: DIGraph.resolver.force(
+          documentTabInteractor: DIGraph.shared.resolver.force(
             DocumentTabInteractor.self
           ),
-          transactionTabInteractor: DIGraph.resolver.force(
+          transactionTabInteractor: DIGraph.shared.resolver.force(
             TransactionTabInteractor.self
           ),
-          deepLinkController: DIGraph.resolver.force(
+          deepLinkController: DIGraph.shared.resolver.force(
             DeepLinkController.self
           )
         )
@@ -47,7 +47,7 @@ public final class DashboardRouter {
       SignDocumentView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             DocumentSignInteractor.self
           )
         )
@@ -62,10 +62,10 @@ public final class DashboardRouter {
       SettingsView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             SettingsInteractor.self
           ),
-          walletKit: DIGraph.resolver.force(
+          walletKit: DIGraph.shared.resolver.force(
             WalletKitController.self
           )
         )
@@ -80,7 +80,7 @@ public final class DashboardRouter {
       DocumentDetailsView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             DocumentDetailsInteractor.self
           ),
           documentId: id
@@ -90,7 +90,7 @@ public final class DashboardRouter {
       TransactionDetailsView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             TransactionDetailsInteractor.self
           ),
           transactionId: id

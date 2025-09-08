@@ -28,7 +28,7 @@ public extension Locale {
   ]
 
   var userSelectedLocale: Locale {
-    guard let identifier = DIGraph.resolver.resolve(PrefsController.self)?.getUserLocale() else {
+    guard let identifier = DIGraph.shared.resolver.resolve(PrefsController.self)?.getUserLocale() else {
       return Locale.current
     }
     return Locale(identifier: identifier)

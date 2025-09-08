@@ -32,7 +32,7 @@ public final class PresentationRouter {
       PresentationLoadingView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             PresentationInteractor.self,
             argument: presentationCoordinator as RemoteSessionCoordinator
           ),
@@ -49,7 +49,7 @@ public final class PresentationRouter {
       PresentationRequestView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             PresentationInteractor.self,
             argument: presentationCoordinator as RemoteSessionCoordinator
           ),
@@ -64,7 +64,7 @@ public final class PresentationRouter {
         with: .init(
           router: host,
           config: config,
-          deepLinkController: DIGraph.resolver.force(
+          deepLinkController: DIGraph.shared.resolver.force(
             DeepLinkController.self
           ),
           requestItems: uiModels.compactMap { $0 as? PresentationListItemSection }

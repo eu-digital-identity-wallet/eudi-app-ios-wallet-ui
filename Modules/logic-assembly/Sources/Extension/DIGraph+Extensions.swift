@@ -17,7 +17,7 @@
 public extension DIGraph {
 
   static func assembleDependenciesGraph() {
-    DIGraph.lazyLoad(
+    DIGraph.shared.lazyLoad(
       with: [
         // Logic Modules
         LogicBusinessAssembly(),

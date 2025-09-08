@@ -25,10 +25,10 @@ public final class IssuanceRouter {
       AddDocumentView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             AddDocumentInteractor.self
           ),
-          deepLinkController: DIGraph.resolver.force(
+          deepLinkController: DIGraph.shared.resolver.force(
             DeepLinkController.self
           ),
           config: config
@@ -42,7 +42,7 @@ public final class IssuanceRouter {
         with: .init(
           router: host,
           config: config,
-          deepLinkController: DIGraph.resolver.force(
+          deepLinkController: DIGraph.shared.resolver.force(
             DeepLinkController.self
           ),
           requestItems: uiModels.compactMap { $0 as? GenericListItemSection }
@@ -52,7 +52,7 @@ public final class IssuanceRouter {
       DocumentOfferView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             DocumentOfferInteractor.self
           ),
           config: config
@@ -62,7 +62,7 @@ public final class IssuanceRouter {
       OfferCodeView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             DocumentOfferInteractor.self
           ),
           config: config

@@ -20,8 +20,8 @@ import logic_core
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-  private lazy var analyticsController: AnalyticsController = DIGraph.resolver.force(AnalyticsController.self)
-  private lazy var revocationWorkManager: RevocationWorkManager = DIGraph.resolver.force(RevocationWorkManager.self)
+  private lazy var analyticsController: AnalyticsController = DIGraph.shared.resolver.force(AnalyticsController.self)
+  private lazy var revocationWorkManager: RevocationWorkManager = DIGraph.shared.resolver.force(RevocationWorkManager.self)
 
   func application(
     _ application: UIApplication,

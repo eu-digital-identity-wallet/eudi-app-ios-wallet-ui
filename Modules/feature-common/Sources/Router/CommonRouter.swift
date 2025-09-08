@@ -25,7 +25,7 @@ public final class CommonRouter {
       QuickPinView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             QuickPinInteractor.self
           ),
           config: config
@@ -36,7 +36,7 @@ public final class CommonRouter {
         with: .init(
           config: config,
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             ScannerInteractor.self
           )
         )
@@ -45,7 +45,7 @@ public final class CommonRouter {
       BiometryView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             BiometryInteractor.self
           ), config: config
         )
@@ -55,7 +55,7 @@ public final class CommonRouter {
         with: .init(
           config: config,
           router: host,
-          deepLinkController: DIGraph.resolver.force(
+          deepLinkController: DIGraph.shared.resolver.force(
             DeepLinkController.self
           )
         )

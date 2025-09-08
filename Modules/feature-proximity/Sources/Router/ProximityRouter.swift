@@ -29,7 +29,7 @@ public final class ProximityRouter {
       ProximityConnectionView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             ProximityInteractor.self,
             argument: presentationCoordinator as ProximitySessionCoordinator
           ),
@@ -43,7 +43,7 @@ public final class ProximityRouter {
       ProximityRequestView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             ProximityInteractor.self,
             argument: presentationCoordinator as ProximitySessionCoordinator
           ),
@@ -60,7 +60,7 @@ public final class ProximityRouter {
       ProximityLoadingView(
         with: .init(
           router: host,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             ProximityInteractor.self,
             argument: presentationCoordinator as ProximitySessionCoordinator
           ),
@@ -78,7 +78,7 @@ public final class ProximityRouter {
         with: .init(
           router: host,
           config: config,
-          deepLinkController: DIGraph.resolver.force(
+          deepLinkController: DIGraph.shared.resolver.force(
             DeepLinkController.self
           ),
           requestItems: uiModels.compactMap { $0 as? PresentationListItemSection }

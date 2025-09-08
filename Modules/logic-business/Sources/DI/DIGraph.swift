@@ -16,13 +16,18 @@
 import Swinject
 
 public protocol DIGraphType: Sendable {
+  var resolver: Resolver { get }
   var assembler: Assembler { get }
   func lazyLoad(with assemblies: [Assembly])
 }
 
 public final class DIGraph: DIGraphType {
 
-  nonisolated(unsafe) public let assembler: Assembler
+  public let assembler: Assembler
+
+  public var resolver: Resolver {
+    assembler.resolver
+  }
 
   private init() {
     self.assembler = Assembler()
@@ -34,40 +39,5 @@ public final class DIGraph: DIGraphType {
 }
 
 public extension DIGraph {
-
-  nonisolated(unsafe) static let resolver: Resolver = shared.assembler.resolver
-
-  static func lazyLoad(with assemblies: [Assembly]) {
-    DIGraph.shared.lazyLoad(with: assemblies)
-  }
-}
-
-private extension DIGraph {
   static let shared: DIGraphType = DIGraph()
-}
-
-public extension Resolver {
-
-  func force<Service>(_ serviceType: Service.Type) -> Service {
-    resolve(serviceType)!
-  }
-
-  func force<Service>(_ serviceType: Service.Type, name: String?) -> Service {
-    resolve(serviceType, name: name)!
-  }
-
-  func force<Service, Arg1>(
-    _ serviceType: Service.Type,
-    argument: Arg1
-  ) -> Service {
-    resolve(serviceType, argument: argument)!
-  }
-
-  func force<Service, Arg1>(
-    _ serviceType: Service.Type,
-    name: String?,
-    argument: Arg1
-  ) -> Service {
-    resolve(serviceType, name: name, argument: argument)!
-  }
 }
