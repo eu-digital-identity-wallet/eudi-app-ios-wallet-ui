@@ -81,7 +81,7 @@ private func content(
   ContentScreenView {
     content(viewState: .init(
       listItem: .init(
-        mainText: .selectDocument,
+        mainContent: .text(.selectDocument),
         trailingContent: .icon(Theme.shared.image.plus)
       )
     ), action: {}

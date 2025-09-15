@@ -103,7 +103,7 @@ extension DocClaimsDecodable {
         documentCategory: categories.first(where: { $1.contains(self.documentTypeIdentifier) })?.key ?? .Other
       ),
       listItem: .init(
-        mainText: .custom(displayName.orEmpty),
+        mainContent: .text(.custom(displayName.orEmpty)),
         overlineText: .custom(issuerName),
         supportingText: supportingText(state, expiresAt),
         supportingTextColor: supportingColor(state),

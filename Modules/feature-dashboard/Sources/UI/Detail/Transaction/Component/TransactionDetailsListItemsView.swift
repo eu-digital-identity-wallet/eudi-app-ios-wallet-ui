@@ -53,11 +53,11 @@ public struct TransactionDetailsListItemsView: View {
 #Preview {
   TransactionDetailsListItemsView(
     listItems: [
-      .init(mainText: .custom("Family name"), supportingText: .custom("Doe")),
-      .init(mainText: .custom("Given names"), supportingText: .custom("John")),
-      .init(mainText: .custom("Date of birth"), supportingText: .custom("21 Oct 1994")),
-      .init(mainText: .custom("Age over 18"), supportingText: .custom("21 Oct 1994")),
-      .init(mainText: .custom("Date of issue"), supportingText: .custom("21 Oct 1994"))
+      .init(mainContent: .text(.custom("Family name")), supportingText: .custom("Doe")),
+      .init(mainContent: .text(.custom("Given names")), supportingText: .custom("John")),
+      .init(mainContent: .text(.custom("Date of birth")), supportingText: .custom("21 Oct 1994")),
+      .init(mainContent: .text(.custom("Age over 18")), supportingText: .custom("21 Oct 1994")),
+      .init(mainContent: .text(.custom("Date of issue")), supportingText: .custom("21 Oct 1994"))
     ]
   )
   .padding()

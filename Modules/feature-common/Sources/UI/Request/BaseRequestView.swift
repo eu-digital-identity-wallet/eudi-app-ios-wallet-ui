@@ -106,7 +106,7 @@ private func scrollableContent(
           ForEach(viewState.items, id: \.id) { section in
             WrapExpandableListView(
               header: .init(
-                mainText: .custom(section.section.title),
+                mainContent: .text(.custom(section.section.title)),
                 supportingText: .viewDetails
               ),
               items: section.section.listItems,

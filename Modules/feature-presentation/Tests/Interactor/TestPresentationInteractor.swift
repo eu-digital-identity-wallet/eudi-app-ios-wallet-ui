@@ -624,7 +624,7 @@ private extension TestPresentationInteractor {
             .single(
               .init(
                 collapsed: .init(
-                  mainText: .custom("value"),
+                  mainContent: .text(.custom("value")),
                   overlineText: .custom("elementIdentifier"),
                   isEnable: true,
                   trailingContent: .checkbox(

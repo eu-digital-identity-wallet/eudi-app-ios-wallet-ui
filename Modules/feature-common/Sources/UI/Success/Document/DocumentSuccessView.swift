@@ -85,7 +85,7 @@ private func documents<RequestItem: Sendable>(
       ForEach(viewState.items, id: \.id) { section in
         WrapExpandableListView(
           header: .init(
-            mainText: .custom(section.title),
+            mainContent: .text(.custom(section.title)),
             supportingText: .viewDetails
           ),
           items: section.listItems,

@@ -84,7 +84,9 @@ public extension DocClaimsDecodable {
           partialResult.append(
             .nested(
               .init(
-                collapsed: .init(mainText: .custom(title)),
+                collapsed: .init(
+                  mainContent: .text(.custom(title))
+                ),
                 expanded: children,
                 isExpanded: false
               )
@@ -92,18 +94,33 @@ public extension DocClaimsDecodable {
           )
         }
       } else if let uiImage = docClaim.dataValue.image {
-        partialResult.append(
-          .single(
-            .init(
-              collapsed: .init(
-                mainText: .custom(title),
-                leadingIcon: .init(image: Image(uiImage: uiImage)),
-                isBlur: isSensitive
-              ),
-              domainModel: nil
+        if docClaim.name == DocumentJsonKeys.SIGNATURE {
+          partialResult.append(
+            .single(
+              .init(
+                collapsed: .init(
+                  mainContent: .image(Image(uiImage: uiImage)),
+                  overlineText: .custom(title),
+                  isBlur: isSensitive
+                ),
+                domainModel: nil
+              )
             )
           )
-        )
+        } else {
+          partialResult.append(
+            .single(
+              .init(
+                collapsed: .init(
+                  mainContent: .text(.custom(title)),
+                  leadingIcon: .init(image: Image(uiImage: uiImage)),
+                  isBlur: isSensitive
+                ),
+                domainModel: nil
+              )
+            )
+          )
+        }
       } else {
 
         let claim = docClaim
@@ -121,7 +138,7 @@ public extension DocClaimsDecodable {
           .single(
             .init(
               collapsed: .init(
-                mainText: .custom(claim.stringValue),
+                mainContent: .text(.custom(claim.stringValue)),
                 overlineText: .custom(title),
                 isBlur: isSensitive
               ),

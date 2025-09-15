@@ -294,7 +294,7 @@ public extension RequestDataUiModel {
             .single(
               .init(
                 collapsed: ListItemData(
-                  mainText: .custom("Tzouvaras"),
+                  mainContent: .text(.custom("Tzouvaras")),
                   overlineText: .custom("Family Name")
                 ),
                 domainModel: nil
@@ -303,7 +303,7 @@ public extension RequestDataUiModel {
             .single(
               .init(
                 collapsed: ListItemData(
-                  mainText: .custom("Stilianos"),
+                  mainContent: .text(.custom("Stilianos")),
                   overlineText: .custom("First Name")
                 ),
                 domainModel: nil
@@ -312,7 +312,7 @@ public extension RequestDataUiModel {
             .single(
               .init(
                 collapsed: ListItemData(
-                  mainText: .custom("21-09-1985"),
+                  mainContent: .text(.custom("21-09-1985")),
                   overlineText: .custom("Date of Birth")
                 ),
                 domainModel: nil
@@ -321,7 +321,7 @@ public extension RequestDataUiModel {
             .single(
               .init(
                 collapsed: ListItemData(
-                  mainText: .custom("Greece"),
+                  mainContent: .text(.custom("Greece")),
                   overlineText: .custom("Resident")
                 ),
                 domainModel: nil
@@ -446,7 +446,7 @@ private extension DocumentElementClaim {
     case .group(let id, let title, let items):
       return .nested(
         .init(
-          collapsed: .init(groupId: id, mainText: .custom(title)),
+          collapsed: .init(groupId: id, mainContent: .text(.custom(title))),
           expanded: items.compactMap { $0.toExpandableListItem() },
           isExpanded: false
         )
@@ -467,7 +467,7 @@ private extension DocumentElementClaim {
           .init(
             collapsed: .init(
               groupId: id,
-              mainText: .custom(value),
+              mainContent: .text(.custom(value)),
               overlineText: .custom(title),
               isEnable: !status.isRequired,
               trailingContent: .checkbox(
@@ -480,22 +480,41 @@ private extension DocumentElementClaim {
           )
         )
       case .image(let image):
-        return .single(
-          .init(
-            collapsed: .init(
-              groupId: id,
-              mainText: .custom(title),
-              leadingIcon: .init(image: image),
-              isEnable: !status.isRequired,
-              trailingContent: .checkbox(
-                !status.isRequired && status.isAvailable,
-                status.isAvailable,
-                { _ in }
-              )
-            ),
-            domainModel: self
+        if path?.last == DocumentJsonKeys.SIGNATURE {
+          return .single(
+            .init(
+              collapsed: .init(
+                groupId: id,
+                mainContent: .image(image),
+                overlineText: .custom(title),
+                isEnable: !status.isRequired,
+                trailingContent: .checkbox(
+                  !status.isRequired && status.isAvailable,
+                  status.isAvailable,
+                  { _ in }
+                )
+              ),
+              domainModel: self
+            )
           )
-        )
+        } else {
+          return .single(
+            .init(
+              collapsed: .init(
+                groupId: id,
+                mainContent: .text(.custom(title)),
+                leadingIcon: .init(image: image),
+                isEnable: !status.isRequired,
+                trailingContent: .checkbox(
+                  !status.isRequired && status.isAvailable,
+                  status.isAvailable,
+                  { _ in }
+                )
+              ),
+              domainModel: self
+            )
+          )
+        }
       case .unavailable:
         return nil
       }

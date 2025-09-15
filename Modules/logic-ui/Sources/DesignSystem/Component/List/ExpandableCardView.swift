@@ -47,7 +47,7 @@ public struct ExpandableCardView<Content: View>: View {
         VStack(spacing: .zero) {
           WrapListItemView(
             listItem: .init(
-              mainText: header.mainText,
+              mainContent: header.mainContent,
               mainStyle: .bold,
               supportingText: header.supportingText,
               trailingContent: .icon(

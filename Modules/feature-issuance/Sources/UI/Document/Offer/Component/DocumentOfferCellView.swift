@@ -42,7 +42,9 @@ struct DocumentOfferCellView: View {
 #Preview {
   DocumentOfferCellView(
     cellModel: DocumentOfferUIModel.UIOffer(
-      listItem: .init(mainText: .custom("Name")),
+      listItem: .init(
+        mainContent: .text(.custom("Name"))
+      ),
       documentName: "Name"
     ),
     isLoading: false
