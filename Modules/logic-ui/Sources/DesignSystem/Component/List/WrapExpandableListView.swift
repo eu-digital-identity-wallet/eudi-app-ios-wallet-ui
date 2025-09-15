@@ -50,8 +50,7 @@ public struct WrapExpandableListView<T: Sendable>: View {
         if let header {
           ExpandableCardView(
             backgroundColor: backgroundColor,
-            title: header.mainText,
-            subtitle: header.supportingText,
+            header: header,
             isLoading: isLoading
           ) {
             contentList()
