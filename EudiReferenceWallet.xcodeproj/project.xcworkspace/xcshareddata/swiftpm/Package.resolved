@@ -1,5 +1,5 @@
 {
-  "originHash" : "86c588817c554050bd4d97f3bee360991b8118db907f1d5ee0c436d76eb8b6c6",
+  "originHash" : "51e351d16733633a2cd5494b64a33cd02c4b8394d1575cb4a5be107128115ecf",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -132,8 +132,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-csc-swift.git",
       "state" : {
-        "revision" : "975e11e9cc5bc51236b572e5a982b37fb612acc4",
-        "version" : "0.6.1"
+        "revision" : "1bcf7f8470f03a3c2aa8e9b05b9f272eae49be18",
+        "version" : "0.6.2"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-kit.git",
       "state" : {
-        "revision" : "551747c56a1ebddb46f0534cab4ff0c321ae4529",
-        "version" : "0.6.1"
+        "revision" : "03d4d5238215aeb43698b117127e42ca70a356fd",
+        "version" : "0.6.2"
       }
     },
     {
@@ -150,8 +150,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui.git",
       "state" : {
-        "revision" : "785eb0736258578433f6769126348cd2cefdd2d4",
-        "version" : "0.3.3"
+        "revision" : "9444c5404491106f89f0173e7b3d289647542e3d",
+        "version" : "0.3.5"
       }
     },
     {
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-podofo",
       "state" : {
-        "revision" : "12c5adb7435d42f2ba7eb5c12b1f0d8a55da280b",
-        "version" : "0.3.4"
+        "revision" : "fe0269ba1ed58789cad865d87f759f4ba3658c67",
+        "version" : "0.3.7"
       }
     },
     {
@@ -357,8 +357,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-certificates.git",
       "state" : {
-        "revision" : "20c451f1ad8e344e61ddbb34ef196653d4b73ea6",
-        "version" : "1.13.0"
+        "revision" : "4b092f15164144c24554e0a75e080a960c5190a6",
+        "version" : "1.14.0"
       }
     },
     {

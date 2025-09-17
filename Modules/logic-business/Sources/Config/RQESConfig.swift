@@ -31,7 +31,7 @@ final class RQESConfig: EudiRQESUiConfig {
       [
         .init(
           name: "Wallet-Centric",
-          rsspId: "https://walletcentric.signer.eudiw.dev/csc/v2",
+          rsspId: "https://walletcentric.signer.dev.eudiw.dev/csc/v2",
           tsaUrl: "https://timestamp.sectigo.com/qualified",
           clientId: "wallet-client",
           clientSecret: "somesecret2",
