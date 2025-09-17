@@ -651,7 +651,7 @@ final class TestDocumentOfferInteractor: EudiTest {
     XCTAssertEqual(mock.uiOffers.first?.documentName, "Document Name")
 
     for offer in mock.uiOffers {
-      XCTAssertEqual(offer.listItem.mainText.toString, "Document Name")
+      XCTAssertEqual(offer.listItem.mainContent.asString, "Document Name")
     }
     XCTAssertEqual(mock.docOffers.count, 0)
   }

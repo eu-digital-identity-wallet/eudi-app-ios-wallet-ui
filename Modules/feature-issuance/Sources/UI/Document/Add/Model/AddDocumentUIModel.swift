@@ -45,28 +45,36 @@ public extension AddDocumentUIModel {
   static var mocks: [AddDocumentUIModel] {
     [
       .init(
-        listItem: .init(mainText: .custom("Document name 1")),
+        listItem: .init(
+          mainContent: .text(.custom("Document name 1"))
+        ),
         isEnabled: true,
         isLoading: true,
         configId: "id",
         docTypeIdentifier: .mDocPid
       ),
       .init(
-        listItem: .init(mainText: .custom("Document name 2")),
+        listItem: .init(
+          mainContent: .text(.custom("Document name 2"))
+        ),
         isEnabled: true,
         isLoading: true,
         configId: "id",
         docTypeIdentifier: .mDocPid
       ),
       .init(
-        listItem: .init(mainText: .custom("Document name 3")),
+        listItem: .init(
+          mainContent: .text(.custom("Document name 3"))
+        ),
         isEnabled: true,
         isLoading: true,
         configId: "id",
         docTypeIdentifier: .mDocPid
       ),
       .init(
-        listItem: .init(mainText: .custom("Document name 4")),
+        listItem: .init(
+          mainContent: .text(.custom("Document name 4"))
+        ),
         isEnabled: true,
         isLoading: true,
         configId: "id",

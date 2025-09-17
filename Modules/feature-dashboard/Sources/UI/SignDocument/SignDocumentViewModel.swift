@@ -36,7 +36,7 @@ final class SignDocumentViewModel<Router: RouterHost>: ViewModel<Router, SignDoc
       router: router,
       initialState: .init(
         listItem: .init(
-          mainText: .selectDocument,
+          mainContent: .text(.selectDocument),
           trailingContent: .icon(Theme.shared.image.plus)
         )
       )

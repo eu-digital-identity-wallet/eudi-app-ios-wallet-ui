@@ -36,7 +36,7 @@ extension DocumentUIModel {
           .single(
             .init(
               collapsed: .init(
-                mainText: .custom("AB12356"),
+                mainContent: .text(.custom("AB12356")),
                 overlineText: .custom("ID no")
               ),
               domainModel: nil
@@ -45,7 +45,7 @@ extension DocumentUIModel {
           .single(
             .init(
               collapsed: .init(
-                mainText: .custom("Hellenic"),
+                mainContent: .text(.custom("Hellenic")),
                 overlineText: .custom("Nationality")
               ),
               domainModel: nil
@@ -54,7 +54,7 @@ extension DocumentUIModel {
           .single(
             .init(
               collapsed: .init(
-                mainText: .custom("21 Oct 1994"),
+                mainContent: .text(.custom("21 Oct 1994")),
                 overlineText: .custom("Place of birth")
               ),
               domainModel: nil
@@ -63,7 +63,7 @@ extension DocumentUIModel {
           .single(
             .init(
               collapsed: .init(
-                mainText: .custom("1,82"),
+                mainContent: .text(.custom("1,82")),
                 overlineText: .custom("Height")
               ),
               domainModel: nil
@@ -76,7 +76,7 @@ extension DocumentUIModel {
         createElement: .single(
           .init(
             collapsed: .init(
-              mainText: .custom("Placeholder Field Value".padded(padLength: 10)),
+              mainContent: .text(.custom("Placeholder Field Value".padded(padLength: 10))),
               overlineText: .custom("Placeholder Field Title".padded(padLength: 5))
             ),
             domainModel: nil

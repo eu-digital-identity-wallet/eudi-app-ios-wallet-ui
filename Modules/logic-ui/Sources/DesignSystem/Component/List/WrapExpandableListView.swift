@@ -50,8 +50,7 @@ public struct WrapExpandableListView<T: Sendable>: View {
         if let header {
           ExpandableCardView(
             backgroundColor: backgroundColor,
-            title: header.mainText,
-            subtitle: header.supportingText,
+            header: header,
             isLoading: isLoading
           ) {
             contentList()
@@ -100,7 +99,7 @@ private struct WrapExpandableListPreviewView: View {
     .single(
       GenericExpandableItem.SingleListItemData(
         collapsed: ListItemData(
-          mainText: .custom("Single 1"),
+          mainContent: .text(.custom("Single 1")),
           trailingContent: .checkbox(
             true,
             true,
@@ -112,17 +111,23 @@ private struct WrapExpandableListPreviewView: View {
     ),
     .nested(
       GenericExpandableItem.NestedListItemData(
-        collapsed: ListItemData(mainText: .custom("Group 1")),
+        collapsed: ListItemData(
+          mainContent: .text(.custom("Group 1"))
+        ),
         expanded: [
           .single(
             ExpandableListItem.SingleListItemData(
-              collapsed: ListItemData(mainText: .custom("Item 1")),
+              collapsed: ListItemData(
+                mainContent: .text(.custom("Item 1"))
+              ),
               domainModel: nil
             )
           ),
           .single(
             GenericExpandableItem.SingleListItemData(
-              collapsed: ListItemData(mainText: .custom("Item 2")),
+              collapsed: ListItemData(
+                mainContent: .text(.custom("Item 2"))
+              ),
               domainModel: nil
             )
           )
@@ -132,23 +137,31 @@ private struct WrapExpandableListPreviewView: View {
     ),
     .single(
       GenericExpandableItem.SingleListItemData(
-        collapsed: ListItemData(mainText: .custom("Single 2")),
+        collapsed: ListItemData(
+          mainContent: .text(.custom("Single 2"))
+        ),
         domainModel: nil
       )
     ),
     .nested(
       ExpandableListItem.NestedListItemData(
-        collapsed: ListItemData(mainText: .custom("Group 2")),
+        collapsed: ListItemData(
+          mainContent: .text(.custom("Group 2"))
+        ),
         expanded: [
           .single(
             ExpandableListItem.SingleListItemData(
-              collapsed: ListItemData(mainText: .custom("Item 1")),
+              collapsed: ListItemData(
+                mainContent: .text(.custom("Item 1"))
+              ),
               domainModel: nil
             )
           ),
           .single(
             ExpandableListItem.SingleListItemData(
-              collapsed: ListItemData(mainText: .custom("Item 2")),
+              collapsed: ListItemData(
+                mainContent: .text(.custom("Item 2"))
+              ),
               domainModel: nil
             )
           )
@@ -161,7 +174,7 @@ private struct WrapExpandableListPreviewView: View {
   var body: some View {
     WrapExpandableListView(
       header: ListItemData(
-        mainText: .custom("Expandable List"),
+        mainContent: .text(.custom("Expandable List")),
         supportingText: .custom("View details")
       ),
       items: expandableItems,

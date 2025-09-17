@@ -46,7 +46,7 @@ public struct TransactionTabUIModel: Identifiable, Sendable, Equatable, Filterab
   public var listItem: ListItemData {
     return ListItemData(
       id: self.id,
-      mainText: .custom(name),
+      mainContent: .text(.custom(name)),
       overlineText: self.status.statusTitle,
       supportingText: self.formattedTransactionDate(),
       supportingTextColor: Theme.shared.color.onSurface,

@@ -50,7 +50,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
 
         return .init(
           listItem: .init(
-            mainText: .custom(doc.name),
+            mainContent: .text(.custom(doc.name)),
             trailingContent: .icon(Theme.shared.image.plus)
           ),
           isEnabled: true,
@@ -64,7 +64,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
     }
 
     func compare(_ first: AddDocumentUIModel, _ second: AddDocumentUIModel) -> Bool {
-      return first.listItem.mainText.toString.lowercased() < second.listItem.mainText.toString.lowercased()
+      return first.listItem.mainContent.asString.lowercased() < second.listItem.mainContent.asString.lowercased()
     }
   }
 

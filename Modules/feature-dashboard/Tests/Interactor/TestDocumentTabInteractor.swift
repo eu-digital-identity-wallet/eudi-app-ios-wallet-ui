@@ -515,7 +515,7 @@ private extension TestDocumentTabInteractor {
           state: .issued,
           image: .none,
           documentCategory: .Government),
-    listItem: .init(mainText: .custom("PID"))
+    listItem: .init(mainContent: .text(.custom("PID")))
   )
   
   static let mockDocumentFilterableAttributes: DocumentFilterableAttributes =

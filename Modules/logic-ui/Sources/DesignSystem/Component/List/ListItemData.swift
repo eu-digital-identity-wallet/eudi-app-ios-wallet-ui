@@ -31,7 +31,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
   @EquatableNoop
   public var groupId: String
 
-  public let mainText: LocalizableStringKey
+  public let mainContent: MainContent
   public let mainStyle: MainStyle
   public let overlineText: LocalizableStringKey?
   public let supportingText: LocalizableStringKey?
@@ -45,7 +45,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
   public init(
     id: String = UUID().uuidString,
     groupId: String? = nil,
-    mainText: LocalizableStringKey,
+    mainContent: MainContent,
     mainStyle: MainStyle = .plain,
     overlineText: LocalizableStringKey? = nil,
     supportingText: LocalizableStringKey? = nil,
@@ -58,7 +58,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
   ) {
     self.id = id
     self.groupId = groupId ?? id
-    self.mainText = mainText
+    self.mainContent = mainContent
     self.mainStyle = mainStyle
     self.overlineText = overlineText
     self.supportingText = supportingText
@@ -81,6 +81,31 @@ public struct LeadingIcon: Sendable, Equatable {
   ) {
     self.imageUrl = imageUrl
     self.image = image
+  }
+}
+
+public enum MainContent: Sendable, Equatable {
+  case text(LocalizableStringKey)
+  case image(Image)
+
+  public var asString: String {
+    switch self {
+    case .text(let key):
+      return key.toString
+    case .image:
+      return ""
+    }
+  }
+
+  public static func == (lhs: MainContent, rhs: MainContent) -> Bool {
+    switch (lhs, rhs) {
+    case let (.text(lKey), .text(rKey)):
+      return lKey == rKey
+    case let (.image(lURL), .image(rURL)):
+      return lURL == rURL
+    default:
+      return false
+    }
   }
 }
 
@@ -148,10 +173,10 @@ public enum ExpandableListItem<T: Sendable>: Identifiable, Equatable, Sendable {
       if let overlineText = data.collapsed.overlineText {
         overlineText.toString
       } else {
-        data.collapsed.mainText.toString
+        data.collapsed.mainContent.asString
       }
     case .nested(let data):
-      data.collapsed.mainText.toString
+      data.collapsed.mainContent.asString
     }
   }
 
@@ -164,12 +189,12 @@ public enum ExpandableListItem<T: Sendable>: Identifiable, Equatable, Sendable {
     }
   }
 
-  public var mainText: LocalizableStringKey {
+  public var mainText: MainContent {
     return switch self {
     case .single(let data):
-      data.collapsed.mainText
+      data.collapsed.mainContent
     case .nested(let data):
-      data.collapsed.mainText
+      data.collapsed.mainContent
     }
   }
 

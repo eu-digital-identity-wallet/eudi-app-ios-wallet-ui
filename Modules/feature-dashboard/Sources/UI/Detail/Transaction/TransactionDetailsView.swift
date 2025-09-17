@@ -75,7 +75,7 @@ private func content(
           ForEach(transactionDetailsDataSharedList) { item in
             WrapExpandableListView(
               header: .init(
-                mainText: .custom(item.title),
+                mainContent: .text(.custom(item.title)),
                 supportingText: .viewDetails
               ),
               items: item.listItems,
