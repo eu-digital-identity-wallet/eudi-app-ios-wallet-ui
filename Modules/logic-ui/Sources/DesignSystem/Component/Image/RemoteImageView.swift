@@ -14,8 +14,8 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import CachedAsyncImage
 import logic_resources
+import SDWebImageSwiftUI
 
 public struct RemoteImageView: View {
 
@@ -47,23 +47,18 @@ public struct RemoteImageView: View {
   }
 
   public var body: some View {
-    CachedAsyncImage(url: url) { phase in
-      switch phase {
-      case .success(let image):
-        image
+    WebImage(url: url) { image in
+      image
+        .resizable()
+        .scaledToFit()
+    } placeholder: {
+      if let icon {
+        icon
           .resizable()
           .scaledToFit()
-      case .failure:
-        if let placeholder = icon {
-          placeholder
-            .resizable()
-            .scaledToFit()
-        }
-      default:
-        ProgressView()
-          .tint(Theme.shared.color.primary)
       }
     }
+    .indicator(.progress)
     .if(url != nil || icon != nil) { view in
       view.frame(
         maxWidth: self.getWidth,
