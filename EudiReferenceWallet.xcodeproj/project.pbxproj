@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F02921632B8E07870076A58B /* WalletDemoRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */; };
-		F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */; };
 		F02AE38F2BA6E45F00C25C59 /* logic-assembly in Resources */ = {isa = PBXBuildFile; fileRef = F02AE38E2BA6E45F00C25C59 /* logic-assembly */; };
 		F02AE3912BA6E59600C25C59 /* logic-assembly in Frameworks */ = {isa = PBXBuildFile; productRef = F02AE3902BA6E59600C25C59 /* logic-assembly */; };
 		F0394F632EE9FD3100098E43 /* r45_staging.der in Resources */ = {isa = PBXBuildFile; fileRef = F0394F622EE9FD3100098E43 /* r45_staging.der */; };
@@ -34,8 +32,6 @@
 		F14907BC2ABAF54B00DDFE56 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14907BB2ABAF54B00DDFE56 /* Application.swift */; };
 		F14907C02ABAF55000DDFE56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F14907BF2ABAF55000DDFE56 /* Assets.xcassets */; };
 		F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F14907C22ABAF55000DDFE56 /* Preview Assets.xcassets */; };
-		F1CACAE02AC3097100B40DED /* WalletDev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F1CACADF2AC3097100B40DED /* WalletDev.xcconfig */; };
-		F1CACAE22AC3098C00B40DED /* WalletDemo.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F1CACAE12AC3098C00B40DED /* WalletDemo.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -262,7 +258,6 @@
 				F0394F632EE9FD3100098E43 /* r45_staging.der in Resources */,
 				F0A013992AC35ECA00065EAD /* logic-api in Resources */,
 				F0A0139A2AC35ECA00065EAD /* feature-startup in Resources */,
-				F1CACAE22AC3098C00B40DED /* WalletDemo.xcconfig in Resources */,
 				F0BFE9B72AD557290062826F /* feature-common in Resources */,
 				F0A984762DA917130051A4DB /* pidissuerca02_ut.der in Resources */,
 				F0A984772DA917130051A4DB /* pidissuerca02_nl.der in Resources */,
@@ -272,7 +267,6 @@
 				F0A9847B2DA917130051A4DB /* pidissuerca02_lu.der in Resources */,
 				F0A9847C2DA917130051A4DB /* pidissuerca02_eu.der in Resources */,
 				F0A0139C2AC35ECA00065EAD /* logic-ui in Resources */,
-				F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */,
 				F05E9F382AFABBC200891E8F /* feature-presentation in Resources */,
 				F069CC3F2AFAC0AD0033AAC5 /* feature-proximity in Resources */,
 			);
@@ -350,6 +344,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 9NR5K6K6B5;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -373,6 +368,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -384,20 +380,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "Wallet/Preview\\ Content";
-				DEVELOPMENT_TEAM = AZXQE7588Y;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = AZXQE7588Y;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_CFBundleDisplayName = "Demo lommebok";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -413,11 +407,10 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = yyyy.mm.v;
-				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.eidas2sandkasse.demo-lommebok";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "EUDI Demo Dev";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI Demo Dev";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -465,6 +458,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 9NR5K6K6B5;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -481,6 +475,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -492,19 +487,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Netcompany-Intrasoft S.A. (AZXQE7588Y)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Netcompany-Intrasoft S.A. (AZXQE7588Y)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "Wallet/Preview\\ Content";
-				DEVELOPMENT_TEAM = AZXQE7588Y;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = AZXQE7588Y;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_CFBundleDisplayName = "Demo lommebok";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -520,11 +513,10 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = yyyy.mm.v;
-				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.eidas2sandkasse.demo-lommebok";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "EUDI Demo Release";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI Demo Release";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -572,6 +564,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 9NR5K6K6B5;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -595,6 +588,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -635,6 +629,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 9NR5K6K6B5;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -651,6 +646,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -662,20 +658,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconDev;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "Wallet/Preview\\ Content";
-				DEVELOPMENT_TEAM = AZXQE7588Y;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = AZXQE7588Y;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_CFBundleDisplayName = "Demo lommebok";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -691,11 +685,10 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = yyyy.mm.v;
-				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.dev;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.eidas2sandkasse.demo-lommebok.dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "EUDI Dev";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI Dev";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -714,19 +707,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconDev;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Netcompany-Intrasoft S.A. (AZXQE7588Y)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Netcompany-Intrasoft S.A. (AZXQE7588Y)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "Wallet/Preview\\ Content";
-				DEVELOPMENT_TEAM = AZXQE7588Y;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = AZXQE7588Y;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_CFBundleDisplayName = "Demo lommebok";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -744,9 +735,10 @@
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = yyyy.mm.v;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.dev;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.eidas2sandkasse.demo-lommebok.dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "EUDI Dev Release";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI Dev Release";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
