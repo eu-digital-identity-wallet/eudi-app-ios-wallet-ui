@@ -122,25 +122,6 @@ private func content(
         buttonText: .okButton,
         onDismiss: nil
       )
-
-      HomeCardView(
-        text: LocalizableStringKey.electronicallySignDigitalDocuments,
-        locator: HomeTabViewLocators.electronicallySignDigitalDocuments,
-        buttonText: LocalizableStringKey.signDocument,
-        illustration: Theme.shared.image.homeContract,
-        learnMoreText: LocalizableStringKey.learnMore,
-        learnMoreAction: {
-          toggleSignDocumentAlert()
-        },
-        action: openSignDocument()
-      )
-      .alertView(
-        isPresented: isSignDocumentAlertShowing,
-        title: .alertSignDocumentsSafely,
-        message: .alertSignDocumentsSafelyMessage,
-        buttonText: .okButton,
-        onDismiss: nil
-      )
     }
     .padding(.horizontal, SPACING_MEDIUM)
     .padding(.bottom, SPACING_MEDIUM)
