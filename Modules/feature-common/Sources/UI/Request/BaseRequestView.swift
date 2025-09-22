@@ -75,7 +75,7 @@ public struct BaseRequestView<Router: RouterHost>: View {
 private func content(
   viewState: RequestViewState,
   onShare: @escaping () -> Void,
-  onSelectionChanged: @escaping @Sendable (String) -> Void
+  onSelectionChanged: @escaping (String) -> Void
 ) -> some View {
   if viewState.items.isEmpty {
     noDocumentsFound(viewState: viewState)
@@ -93,7 +93,7 @@ private func content(
 private func scrollableContent(
   viewState: RequestViewState,
   onShare: @escaping () -> Void,
-  onSelectionChanged: @escaping @Sendable (String) -> Void
+  onSelectionChanged: @escaping (String) -> Void
 ) -> some View {
   ScrollView {
     VStack(spacing: .zero) {

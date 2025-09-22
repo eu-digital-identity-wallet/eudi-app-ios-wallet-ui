@@ -82,10 +82,12 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
 
   func fetch() {
     Task {
+
       let failedDocuments = viewState.failedDocuments
+      let interactor = self.interactor
 
       let state = await Task.detached { () -> DocumentsPartialState in
-        return await self.interactor.fetchDocuments(failedDocuments: failedDocuments)
+        return await interactor.fetchDocuments(failedDocuments: failedDocuments)
       }.value
 
       switch state {
@@ -177,8 +179,10 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
     setState { $0.copy(isLoading: true).copy(pendingDeletionDocument: nil) }
     Task {
 
+      let interactor = self.interactor
+
       let state = await Task.detached { () -> DeleteDeferredPartialState in
-        return await self.interactor.deleteDeferredDocument(with: document.value.id)
+        return await interactor.deleteDeferredDocument(with: document.value.id)
       }.value
 
       switch state {

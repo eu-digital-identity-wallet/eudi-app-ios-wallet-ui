@@ -51,11 +51,12 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
   func getTransactionDetails() async {
 
     let transactionId = viewState.transactionId
+    let interactor = self.interactor
 
     self.setState { $0.copy(isLoading: true).copy(error: nil) }
 
     let state = await Task.detached { () -> TransactionDetailsInteractorPartialState in
-      return await self.interactor.getTransactionDetails(transactionId: transactionId)
+      return await interactor.getTransactionDetails(transactionId: transactionId)
     }.value
 
     switch state {

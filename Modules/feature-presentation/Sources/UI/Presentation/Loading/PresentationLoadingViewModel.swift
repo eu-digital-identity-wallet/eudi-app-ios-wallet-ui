@@ -128,8 +128,10 @@ final class PresentationLoadingViewModel<Router: RouterHost, RequestItem: Sendab
 
     startPublisherTask()
 
+    let interactor = self.interactor
+
     let result = await Task.detached { () -> RemoteSentResponsePartialState in
-      return await self.interactor.onSendResponse()
+      return await interactor.onSendResponse()
     }.value
 
     switch result {

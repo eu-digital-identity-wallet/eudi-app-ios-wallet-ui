@@ -167,8 +167,10 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
       )
     }
 
+    let interactor = self.interactor
+
     let state = await Task.detached { () -> IssueDynamicDocumentPartialState in
-      return await self.interactor.resumeDynamicIssuance()
+      return await interactor.resumeDynamicIssuance()
     }.value
 
     switch state {
@@ -206,8 +208,10 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
         .copy(error: nil)
       }
 
+      let interactor = self.interactor
+
       let state = await Task.detached { () -> IssueResultPartialState in
-        return await self.interactor.issueDocument(configId: configId, docTypeIdentifier: docTypeIdentifier)
+        return await interactor.issueDocument(configId: configId, docTypeIdentifier: docTypeIdentifier)
       }.value
 
       switch state {
@@ -331,8 +335,11 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
   }
 
   private func fetchStoredDocuments(docId: String) async {
+
+    let interactor = self.interactor
+
     let state = await Task.detached { () -> IssueDocumentsPartialState in
-      return await self.interactor.fetchStoredDocuments(
+      return await interactor.fetchStoredDocuments(
         documentIds: [docId]
       )
     }.value

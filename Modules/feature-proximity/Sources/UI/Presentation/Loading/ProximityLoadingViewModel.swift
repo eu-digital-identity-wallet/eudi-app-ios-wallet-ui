@@ -80,8 +80,10 @@ final class ProximityLoadingViewModel<Router: RouterHost, RequestItem: Sendable>
 
     self.startPublisherTask()
 
+    let interactor = self.interactor
+
     let state = await Task.detached { () -> ProximityResponsePartialState in
-      return await self.interactor.onSendResponse()
+      return await interactor.onSendResponse()
     }.value
 
     switch state {

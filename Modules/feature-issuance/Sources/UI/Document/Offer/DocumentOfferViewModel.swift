@@ -86,9 +86,10 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
     }
 
     let offerUri = viewState.offerUri
+    let interactor = self.interactor
 
     let state = await Task.detached { () -> OfferRequestPartialState in
-      return await self.interactor.processOfferRequest(with: offerUri)
+      return await interactor.processOfferRequest(with: offerUri)
     }.value
 
     switch state {
@@ -157,9 +158,10 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
       let issuerName = viewState.documentOfferUiModel.issuerName
       let docOffers = viewState.documentOfferUiModel.docOffers
       let successNavigation = viewState.successNavigation
+      let interactor = self.interactor
 
       let state = await Task.detached { () -> OfferResultPartialState in
-        return await self.interactor.issueDocuments(
+        return await interactor.issueDocuments(
           with: offerUri,
           issuerName: issuerName,
           docOffers: docOffers,
@@ -244,9 +246,10 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
 
     let issuerName = viewState.documentOfferUiModel.issuerName
     let successNavigation = viewState.successNavigation
+    let interactor = self.interactor
 
     let state = await Task.detached { () -> OfferDynamicIssuancePartialState in
-      return await self.interactor.resumeDynamicIssuance(
+      return await interactor.resumeDynamicIssuance(
         issuerName: issuerName,
         successNavigation: successNavigation
       )

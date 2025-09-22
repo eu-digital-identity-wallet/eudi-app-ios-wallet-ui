@@ -93,8 +93,10 @@ final class HomeTabViewModel<Router: RouterHost>: ViewModel<Router, HomeTabState
   func onShare() {
     Task {
 
+      let interactor = self.interactor
+
       let state = await Task.detached { () -> Reachability.BleAvailibity in
-        return await self.interactor.getBleAvailability()
+        return await interactor.getBleAvailability()
       }.value
 
       switch state {

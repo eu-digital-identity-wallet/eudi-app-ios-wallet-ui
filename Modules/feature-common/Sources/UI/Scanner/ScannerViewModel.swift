@@ -71,8 +71,10 @@ final class ScannerViewModel<Router: RouterHost>: ViewModel<Router, ScannerState
     setState { $0.copy(allowScanning: false) }
     Task {
 
+      let interactor = self.interactor
+
       let isValid = await Task.detached { () -> Bool in
-        return await self.interactor.validateForm(
+        return await interactor.validateForm(
           form: .init(
             inputs: [
               [
