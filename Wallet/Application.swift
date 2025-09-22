@@ -16,7 +16,6 @@
 import SwiftUI
 import PartialSheet
 import logic_assembly
-import SDWebImageSVGCoder
 
 @main
 struct Application: App {
@@ -40,8 +39,6 @@ struct Application: App {
     self.deepLinkController = DIGraph.shared.resolver.force(DeepLinkController.self)
     self.walletKitController = DIGraph.shared.resolver.force(WalletKitController.self)
     self.toolbarConfig = routerHost.getToolbarConfig()
-
-    SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
   }
 
   var body: some Scene {
