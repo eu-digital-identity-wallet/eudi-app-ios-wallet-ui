@@ -17,6 +17,7 @@ import Foundation
 import UIKit
 import logic_assembly
 import logic_core
+import SDWebImageSVGCoder
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -33,6 +34,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // Initialize Revocation Worker
     initializeRevocationWorker()
+
+    // Register the SVG coder so SDWebImage can decode & render .svg images
+    SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
 
     return true
   }

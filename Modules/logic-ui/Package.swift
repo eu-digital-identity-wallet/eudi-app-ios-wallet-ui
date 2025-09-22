@@ -50,8 +50,12 @@ let package = Package(
       from: "3.1.1"
     ),
     .package(
-      url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git",
-      from: "2.1.1"
+      url: "https://github.com/SDWebImage/SDWebImageSwiftUI",
+      from: "3.1.3"
+    ),
+    .package(
+      url: "https://github.com/SDWebImage/SDWebImageSVGCoder",
+      from: "1.7.0"
     ),
     .package(name: "logic-test", path: "./logic-test")
   ],
@@ -81,8 +85,12 @@ let package = Package(
           package: "SwiftUI-Shimmer"
         ),
         .product(
-          name: "CachedAsyncImage",
-          package: "swiftui-cached-async-image"
+          name: "SDWebImageSwiftUI",
+          package: "SDWebImageSwiftUI"
+        ),
+        .product(
+          name: "SDWebImageSVGCoder",
+          package: "SDWebImageSVGCoder"
         )
       ],
       path: "./Sources"
