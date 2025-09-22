@@ -30,10 +30,13 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   override func doWork() async {
+
     self.onStartLoading()
 
+    let interactor = self.interactor
+
     let result = await Task.detached { () -> Result<OnlineAuthenticationRequestSuccessModel, Error> in
-      return await self.interactor.onDeviceEngagement()
+      return await interactor.onDeviceEngagement()
     }.value
 
     switch result {
@@ -72,9 +75,10 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     Task {
 
       let items = self.viewState.items
+      let interactor = self.interactor
 
       let result = await Task.detached { () -> Result<RequestItemConvertible, Error> in
-        return await self.interactor.onResponsePrepare(requestItems: items)
+        return await interactor.onResponsePrepare(requestItems: items)
       }.value
 
       switch result {

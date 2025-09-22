@@ -34,8 +34,10 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
     self.onStartLoading()
     self.startPublisherTask()
 
+    let interactor = self.interactor
+
     let state = await Task.detached { () -> ProximityRequestPartialState in
-      return await self.interactor.onRequestReceived()
+      return await interactor.onRequestReceived()
     }.value
 
     switch state {
@@ -72,9 +74,10 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
     Task {
 
       let items = self.viewState.items
+      let interactor = self.interactor
 
       let response = await Task.detached { () -> ProximityResponsePreparationPartialState in
-        return await self.interactor.onResponsePrepare(requestItems: items)
+        return await interactor.onResponsePrepare(requestItems: items)
       }.value
 
       switch response {

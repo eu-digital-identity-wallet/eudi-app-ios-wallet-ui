@@ -72,9 +72,11 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
   func fetch() {
     Task {
 
+      let interactor = self.interactor
+
       do {
         let state = try await Task.detached {
-          try await self.interactor.fetchTransactions()
+          try await interactor.fetchTransactions()
         }.value
 
         switch state {
