@@ -163,14 +163,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
   var readerConfig: ReaderConfig {
     let certificates = [
-      "pidissuerca02_cz",
-      "pidissuerca02_ee",
-      "pidissuerca02_eu",
-      "pidissuerca02_lu",
-      "pidissuerca02_nl",
-      "pidissuerca02_pt",
-      "pidissuerca02_ut",
-      "r45_staging"
+      "r45_staging",
+      "eidas2sandkasse_net_access_CA"
     ]
     let certsData: [Data] = certificates.compactMap {
       Data(name: $0, ext: "der")
