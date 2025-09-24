@@ -13,19 +13,20 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import RealmSwift
+import SwiftData
 
-class RealmRevokedDocument: Object {
+@Model
+final class SDRevokedDocument: IdentifiableObject {
 
-  @Persisted(primaryKey: true) var identifier: String
+  @Attribute(.unique) var identifier: String
 
-  convenience init(identifier: String) {
-    self.init()
+  init(identifier: String) {
     self.identifier = identifier
   }
 }
 
-public struct RevokedDocument: StoredObject {
+public struct RevokedDocument: Sendable {
+
   public let identifier: String
 
   public init(identifier: String) {
@@ -33,26 +34,26 @@ public struct RevokedDocument: StoredObject {
   }
 }
 
-extension RealmRevokedDocument {
+extension SDRevokedDocument {
   func toRevokedDocument() -> RevokedDocument {
-    RevokedDocument(identifier: self.identifier)
+    RevokedDocument(identifier: identifier)
   }
 }
 
 extension RevokedDocument {
-  func toRealmRevokedDocument() -> RealmRevokedDocument {
-    RealmRevokedDocument(identifier: self.identifier)
+  func toSdModel() -> SDRevokedDocument {
+    SDRevokedDocument(identifier: identifier)
   }
 }
 
-extension Array where Element == RealmRevokedDocument {
-  func toRealmRevokedDocument() -> [RevokedDocument] {
-    self.map { $0.toRevokedDocument() }
+extension Array where Element == SDRevokedDocument {
+  func toRevokedDocuments() -> [RevokedDocument] {
+    map { $0.toRevokedDocument() }
   }
 }
 
 extension Array where Element == RevokedDocument {
-  func toRealmRevokedDocuments() -> [RealmRevokedDocument] {
-    self.map { $0.toRealmRevokedDocument() }
+  func toSdModels() -> [SDRevokedDocument] {
+    map { $0.toSdModel() }
   }
 }

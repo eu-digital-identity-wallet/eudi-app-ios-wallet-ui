@@ -13,21 +13,22 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import RealmSwift
+import SwiftData
 
-class RealmTransactionLog: Object {
+@Model
+final class SDTransactionLog: IdentifiableObject {
 
-  @Persisted(primaryKey: true) var identifier: String
-  @Persisted var value: String = ""
+  @Attribute(.unique) var identifier: String
+  var value: String
 
-  convenience init(identifier: String, value: String) {
-    self.init()
+  init(identifier: String, value: String) {
     self.identifier = identifier
     self.value = value
   }
 }
 
-public struct TransactionLog: StoredObject {
+public struct TransactionLog: Sendable {
+
   public let identifier: String
   public let value: String
 
@@ -37,26 +38,26 @@ public struct TransactionLog: StoredObject {
   }
 }
 
-extension RealmTransactionLog {
+extension SDTransactionLog {
   func toTransactionLog() -> TransactionLog {
-    TransactionLog(identifier: self.identifier, value: self.value)
+    TransactionLog(identifier: identifier, value: value)
   }
 }
 
 extension TransactionLog {
-  func toRealmTransactionLog() -> RealmTransactionLog {
-    RealmTransactionLog(identifier: self.identifier, value: self.value)
+  func toSdModel() -> SDTransactionLog {
+    SDTransactionLog(identifier: identifier, value: value)
   }
 }
 
-extension Array where Element == RealmTransactionLog {
+extension Array where Element == SDTransactionLog {
   func toTransactionLogs() -> [TransactionLog] {
-    self.map { $0.toTransactionLog() }
+    map { $0.toTransactionLog() }
   }
 }
 
 extension Array where Element == TransactionLog {
-  func toRealmTransactionLogs() -> [RealmTransactionLog] {
-    self.map { $0.toRealmTransactionLog() }
+  func toSdModels() -> [SDTransactionLog] {
+    map { $0.toSdModel() }
   }
 }

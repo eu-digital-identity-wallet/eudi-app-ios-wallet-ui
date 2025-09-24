@@ -77,7 +77,7 @@ If you're planning to use this application in production, we recommend reviewing
 
 Minimum device requirements
 
-- Any device that supports iOS 16.0
+- Any device that supports iOS 17.0
 
 ### Prerequisites
 
