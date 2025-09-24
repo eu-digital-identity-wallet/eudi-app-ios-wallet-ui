@@ -77,8 +77,8 @@ struct Application: App {
           }
         }
       }
-      .onChange(of: scenePhase) { phase in
-        switch phase {
+      .onChange(of: scenePhase) {
+        switch scenePhase {
         case .background:
           self.blurType = .background
         case .inactive:
