@@ -42,13 +42,13 @@ struct HomeTabView<Router: RouterHost>: View {
       isPresented: $viewModel.isAuthenticateModalShowing,
       titleVisibility: .visible
     ) {
-      Button(.cancelButton, role: .cancel) {}
       Button(.inPerson) {
         viewModel.onShare()
       }
       Button(.online) {
         viewModel.onShowScanner()
       }
+      Button(.cancelButton, role: .destructive) {}
     } message: {
       Text(.authenticateAuthoriseTransactions)
     }
@@ -57,10 +57,10 @@ struct HomeTabView<Router: RouterHost>: View {
       isPresented: $viewModel.isBleModalShowing,
       titleVisibility: .visible
     ) {
-      Button(.cancelButton, role: .cancel) {}
       Button(.bleDisabledModalButton) {
         viewModel.onBleSettings()
       }
+      Button(.cancelButton, role: .destructive) {}
     } message: {
       Text(.bleDisabledModalCaption)
     }

@@ -57,7 +57,7 @@ struct DocumentTabView<Router: RouterHost>: View {
       isPresented: $viewModel.isDeleteDeferredModalShowing,
       titleVisibility: .visible
     ) {
-      Button(.no, role: .cancel) {}
+      Button(.no, role: .destructive) {}
       Button(.yes) {
         viewModel.deleteDeferredDocument()
       }

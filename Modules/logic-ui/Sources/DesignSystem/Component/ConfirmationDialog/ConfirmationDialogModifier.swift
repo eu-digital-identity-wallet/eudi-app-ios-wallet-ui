@@ -61,7 +61,7 @@ private struct ConfirmationDialogModifier: ViewModifier {
             destructiveAction()
           }
         }
-        Button(baseText, role: .cancel) {
+        Button(baseText) {
           baseAction()
         }
       } message: {
