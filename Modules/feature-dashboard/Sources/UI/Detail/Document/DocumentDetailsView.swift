@@ -56,15 +56,18 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       }
     }
     .confirmationDialog(
-      title: .custom(""),
-      message: .deleteDocumentConfirmDialog,
-      destructiveText: .deleteDocument,
-      baseText: .cancelButton,
+      .custom(""),
       isPresented: $viewModel.isDeletionModalShowing,
-      destructiveAction: {
-        viewModel.onDeleteDocument()
-      },
-      baseAction: viewModel.onShowDeleteModal()
+      actions: {
+        Button(.deleteDocument, role: .destructive) {
+          viewModel.onDeleteDocument()
+        }
+        Button(.cancelButton) {
+          viewModel.onShowDeleteModal()
+        }
+      }, message: {
+        Text(.deleteDocumentConfirmDialog)
+      }
     )
     .alertView(
       isPresented: $viewModel.showAlert,

@@ -38,15 +38,19 @@ struct QuickPinView<Router: RouterHost>: View {
       )
     }
     .confirmationDialog(
-      title: .quickPinUpdateCancellationTitle,
-      message: .quickPinUpdateCancellationCaption,
-      destructiveText: .cancelButton,
-      baseText: .quickPinUpdateCancellationContinue,
+      .quickPinUpdateCancellationTitle,
       isPresented: $viewModel.isCancelModalShowing,
-      destructiveAction: {
-        viewModel.onPop()
-      },
-      baseAction: viewModel.onShowCancellationModal()
+      actions: {
+        Button(.cancelButton, role: .destructive) {
+          viewModel.onPop()
+
+        }
+        Button(.quickPinUpdateCancellationContinue) {
+          viewModel.onShowCancellationModal()
+        }
+      }, message: {
+        Text(.quickPinUpdateCancellationCaption)
+      }
     )
   }
 }

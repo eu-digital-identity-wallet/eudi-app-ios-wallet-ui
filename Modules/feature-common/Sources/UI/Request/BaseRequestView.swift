@@ -44,18 +44,26 @@ public struct BaseRequestView<Router: RouterHost>: View {
       )
     }
     .confirmationDialog(
-      title: .requestDataInfoNotice,
-      message: .requestDataSheetCaption,
-      baseText: .okButton,
+      .requestDataInfoNotice,
       isPresented: $viewModel.isRequestInfoModalShowing,
-      baseAction: viewModel.onShowRequestInfoModal()
+      actions: {
+        Button(.okButton) {
+          viewModel.onShowRequestInfoModal()
+        }
+      }, message: {
+        Text(.requestDataSheetCaption)
+      }
     )
     .confirmationDialog(
-      title: viewModel.getTrustedRelyingParty(),
-      message: viewModel.getTrustedRelyingPartyInfo(),
-      baseText: .okButton,
+      viewModel.getTrustedRelyingParty(),
       isPresented: $viewModel.isVerifiedEntityModalShowing,
-      baseAction: viewModel.onVerifiedEntityModal()
+      actions: {
+        Button(.okButton) {
+          viewModel.onVerifiedEntityModal()
+        }
+      }, message: {
+        Text(viewModel.getTrustedRelyingPartyInfo())
+      }
     )
     .task {
       if !viewModel.viewState.initialized {
