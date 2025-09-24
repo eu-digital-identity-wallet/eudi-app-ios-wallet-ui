@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
   name: "logic-storage",
-  platforms: [.iOS(.v16)],
+  platforms: [.iOS(.v17)],
   products: [
     .library(
       name: "logic-storage",
@@ -13,10 +13,6 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(
-      url: "https://github.com/realm/realm-swift.git",
-      from: "10.54.1"
-    ),
     .package(
       name: "logic-business",
       path: "./logic-business"
@@ -31,8 +27,7 @@ let package = Package(
       name: "logic-storage",
       dependencies: [
         "logic-business",
-        "logic-resources",
-        .product(name: "RealmSwift", package: "realm-swift")
+        "logic-resources"
       ],
       path: "./Sources"
     )

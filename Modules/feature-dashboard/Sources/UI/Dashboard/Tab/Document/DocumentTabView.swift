@@ -82,8 +82,8 @@ struct DocumentTabView<Router: RouterHost>: View {
         }
       }
     }
-    .onChange(of: scenePhase) { phase in
-      viewModel.setPhase(with: phase)
+    .onChange(of: scenePhase) {
+      viewModel.setPhase(with: scenePhase)
     }
     .onAppear {
       viewModel.onCreate()

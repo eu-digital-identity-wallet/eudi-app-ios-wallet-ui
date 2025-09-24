@@ -46,8 +46,8 @@ struct BiometryView<Router: RouterHost>: View {
           secondaryButton: .cancel {}
         )
       }
-      .onChange(of: scenePhase) { phase in
-        self.viewModel.setPhase(with: phase)
+      .onChange(of: scenePhase) {
+        self.viewModel.setPhase(with: scenePhase)
       }
     }
     .onAppear {

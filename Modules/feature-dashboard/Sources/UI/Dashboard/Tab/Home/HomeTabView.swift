@@ -64,8 +64,8 @@ struct HomeTabView<Router: RouterHost>: View {
     } message: {
       Text(.bleDisabledModalCaption)
     }
-    .onChange(of: scenePhase) { phase in
-      self.viewModel.setPhase(with: phase)
+    .onChange(of: scenePhase) {
+      self.viewModel.setPhase(with: scenePhase)
     }
     .onAppear {
       viewModel.onCreate()

@@ -13,19 +13,20 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import RealmSwift
+import SwiftData
 
-class RealmBookmark: Object {
+@Model
+final class SDBookmark: IdentifiableObject {
 
-  @Persisted(primaryKey: true) var identifier: String
+  @Attribute(.unique) var identifier: String
 
-  convenience init(identifier: String) {
-    self.init()
+  init(identifier: String) {
     self.identifier = identifier
   }
 }
 
-public struct Bookmark: StoredObject {
+public struct Bookmark: Sendable {
+
   public let identifier: String
 
   public init(identifier: String) {
@@ -33,26 +34,26 @@ public struct Bookmark: StoredObject {
   }
 }
 
-extension RealmBookmark {
+extension SDBookmark {
   func toBookmark() -> Bookmark {
-    Bookmark(identifier: self.identifier)
+    Bookmark(identifier: identifier)
   }
 }
 
 extension Bookmark {
-  func toRealmBookmark() -> RealmBookmark {
-    RealmBookmark(identifier: self.identifier)
+  func toSdModel() -> SDBookmark {
+    SDBookmark(identifier: identifier)
   }
 }
 
-extension Array where Element == RealmBookmark {
+extension Array where Element == SDBookmark {
   func toBookmarks() -> [Bookmark] {
-    self.map { $0.toBookmark() }
+    map { $0.toBookmark() }
   }
 }
 
 extension Array where Element == Bookmark {
-  func toRealmBookmarks() -> [RealmBookmark] {
-    self.map { $0.toRealmBookmark() }
+  func toSdModels() -> [SDBookmark] {
+    map { $0.toSdModel() }
   }
 }
