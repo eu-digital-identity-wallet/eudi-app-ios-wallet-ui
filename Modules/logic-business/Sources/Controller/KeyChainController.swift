@@ -90,12 +90,3 @@ private extension KeyChainControllerImpl {
     }
   }
 }
-
-public enum KeyChainIdentifier: String, KeyChainWrapper {
-
-  public var value: String {
-    self.rawValue
-  }
-
-  case realmKey
-}

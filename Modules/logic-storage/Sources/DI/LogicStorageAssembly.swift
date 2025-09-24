@@ -13,8 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_business
 import Swinject
+import logic_business
 
 public final class LogicStorageAssembly: Assembly {
 
@@ -22,28 +22,28 @@ public final class LogicStorageAssembly: Assembly {
 
   public func assemble(container: Container) {
 
-    container.register(StorageConfig.self) { r in
-      StorageConfigImpl(keyChainController: r.force(KeyChainController.self))
+    container.register(StorageConfig.self) { _ in
+      StorageConfigImpl()
     }
     .inObjectScope(ObjectScope.container)
 
-    container.register(RealmService.self) { r in
-      RealmServiceImpl(storageConfig: r.force(StorageConfig.self))
+    container.register(SwiftDataService.self) { r in
+      SwiftDataServiceImpl(storageConfig: r.force(StorageConfig.self))
     }
     .inObjectScope(ObjectScope.container)
 
     container.register((any BookmarkStorageController).self) { r in
-      BookmarkStorageControllerImpl(realmService: r.force(RealmService.self))
+      BookmarkStorageControllerImpl(swiftDataService: r.force(SwiftDataService.self))
     }
     .inObjectScope(ObjectScope.transient)
 
     container.register((any TransactionLogStorageController).self) { r in
-      TransactionLogStorageControllerImpl(realmService: r.force(RealmService.self))
+      TransactionLogStorageControllerImpl(swiftDataService: r.force(SwiftDataService.self))
     }
     .inObjectScope(ObjectScope.transient)
 
     container.register((any RevokedDocumentStorageController).self) { r in
-      RevokedDocumentStorageControllerImpl(realmService: r.force(RealmService.self))
+      RevokedDocumentStorageControllerImpl(swiftDataService: r.force(SwiftDataService.self))
     }
     .inObjectScope(ObjectScope.transient)
   }

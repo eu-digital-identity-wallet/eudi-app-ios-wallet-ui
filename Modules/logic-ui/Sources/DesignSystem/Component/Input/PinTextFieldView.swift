@@ -89,7 +89,7 @@ public struct PinTextFieldView: View {
               .stroke(
                 hasError ?
                 Theme.shared.color.error :
-                stateForDigit[index].color
+                  stateForDigit[index].color
               )
           )
         if shouldUseFullScreen && index < (maxDigits - 1) {
@@ -165,11 +165,11 @@ public struct PinTextFieldView: View {
         stateForDigit = Array(repeating: FieldState.inactive, count: maxDigits)
       }
     )
-    .onChange(of: numericText, perform: { numericText in
+    .onChange(of: numericText) {
       for index in (0..<maxDigits) {
         self.stateForDigit[index] = numericText.count == index  ? .active : .inactive
       }
-    })
+    }
     .accentColor(.clear)
     .foregroundColor(.clear)
     .keyboardType(.numberPad)

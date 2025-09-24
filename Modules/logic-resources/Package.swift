@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
   name: "logic-resources",
-  platforms: [.iOS(.v16)],
+  platforms: [.iOS(.v17)],
   products: [
     .library(
       name: "logic-resources",

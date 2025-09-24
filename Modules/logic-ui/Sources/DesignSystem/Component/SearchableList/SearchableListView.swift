@@ -62,8 +62,8 @@ private struct SearchableModifier: ViewModifier {
       .background(backgroundColor)
 
       content
-        .onChange(of: searchText) { newValue in
-          onSearchTextChange?(newValue)
+        .onChange(of: searchText) {
+          onSearchTextChange?(searchText)
         }
     }
   }

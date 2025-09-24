@@ -16,7 +16,7 @@
 
 public protocol StorageController: Sendable {
 
-  associatedtype Value: StoredObject
+  associatedtype Value: Sendable
 
   func store(_ value: Value) async throws
   func store(_ values: [Value]) async throws

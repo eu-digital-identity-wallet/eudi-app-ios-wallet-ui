@@ -147,13 +147,12 @@ struct FiltersListView: View {
               startDate = date
             }
           }
-          .onChange(of: startDate) { newDate in
-            startDate = newDate
+          .onChange(of: startDate) {
             let expectedStartDate = filters[index].startDate ?? Date()
             if !Calendar.current.isDate(startDate, equalTo: expectedStartDate, toGranularity: .day) {
               showIndicator?()
             }
-            updateDateFiltersCallback?(sectionID, filters[index].id, newDate, endDate)
+            updateDateFiltersCallback?(sectionID, filters[index].id, startDate, endDate)
           }
 
           DatePicker(selection: $endDate, in: startDate...maxEndDate, displayedComponents: .date) {
@@ -163,13 +162,12 @@ struct FiltersListView: View {
                   endDate = date
                 }
               }
-              .onChange(of: endDate) { newDate in
-                endDate = newDate
+              .onChange(of: endDate) {
                 let expectedStartDate = filters[index].endDate ?? Date()
                 if !Calendar.current.isDate(startDate, equalTo: expectedStartDate, toGranularity: .day) {
                   showIndicator?()
                 }
-                updateDateFiltersCallback?(sectionID, filters[index].id, startDate, newDate)
+                updateDateFiltersCallback?(sectionID, filters[index].id, startDate, endDate)
               }
           }
         }
