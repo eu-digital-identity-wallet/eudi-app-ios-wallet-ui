@@ -44,28 +44,18 @@ struct DocumentDetailsView<Router: RouterHost>: View {
 
       content(
         viewState: viewModel.viewState,
-        isVisible: viewModel.isVisible
+        isVisible: viewModel.isVisible,
+        isDeletionModalShowing: $viewModel.isDeletionModalShowing
       ) {
-        viewModel.showAlert = true
-      } onContinue: {
         viewModel.onContinue()
       } onShowDeleteModal: {
         viewModel.onShowDeleteModal()
+      } onDeleteDocument: {
+        viewModel.onDeleteDocument()
       } issueNewDocument: {
         viewModel.issueNewDocument()
       }
     }
-    .confirmationDialog(
-      title: .custom(""),
-      message: .deleteDocumentConfirmDialog,
-      destructiveText: .deleteDocument,
-      baseText: .cancelButton,
-      isPresented: $viewModel.isDeletionModalShowing,
-      destructiveAction: {
-        viewModel.onDeleteDocument()
-      },
-      baseAction: viewModel.onShowDeleteModal()
-    )
     .alertView(
       isPresented: $viewModel.showAlert,
       title: viewModel.alertTitle(),
@@ -86,9 +76,10 @@ struct DocumentDetailsView<Router: RouterHost>: View {
 private func content(
   viewState: DocumentDetailsViewState,
   isVisible: Bool,
-  showAlert: @escaping () -> Void,
+  isDeletionModalShowing: Binding<Bool>,
   onContinue: @escaping () -> Void,
   onShowDeleteModal: @escaping () -> Void,
+  onDeleteDocument: @escaping () -> Void,
   issueNewDocument: @escaping () -> Void
 ) -> some View {
   ScrollView {
@@ -144,6 +135,20 @@ private func content(
         isLoading: viewState.isLoading,
         onAction: onShowDeleteModal()
       )
+      .confirmationDialog(
+        .custom(""),
+        isPresented: isDeletionModalShowing,
+        actions: {
+          Button(.deleteDocument, role: .destructive) {
+            onDeleteDocument()
+          }
+          Button(.cancelButton) {
+            onShowDeleteModal()
+          }
+        }, message: {
+          Text(.deleteDocumentConfirmDialog)
+        }
+      )
     }
     .padding(Theme.shared.dimension.padding)
     .padding(.bottom)
@@ -181,9 +186,10 @@ private func content(
     content(
       viewState: viewState,
       isVisible: true,
-      showAlert: {},
+      isDeletionModalShowing: .constant(false),
       onContinue: {},
       onShowDeleteModal: {},
+      onDeleteDocument: {},
       issueNewDocument: {}
     )
   }

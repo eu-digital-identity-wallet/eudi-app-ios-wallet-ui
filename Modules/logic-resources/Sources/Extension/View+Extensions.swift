@@ -19,6 +19,7 @@ public extension View {
   func navigationTitle(_ key: LocalizableStringKey) -> some View {
     return self.navigationTitle(key.toString)
   }
+
   func confirmationDialog<A, M>(
     _ key: LocalizableStringKey,
     isPresented: Binding<Bool>,
