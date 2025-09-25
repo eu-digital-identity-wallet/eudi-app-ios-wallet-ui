@@ -25,7 +25,7 @@ protocol SwiftDataService: Actor {
   func deleteAll<T: PersistentModel & IdentifiableObject>(of type: T.Type) throws
 }
 
-actor SwiftDataServiceImpl: SwiftDataService {
+final actor SwiftDataServiceImpl: SwiftDataService {
 
   private let container: ModelContainer
   private let context: ModelContext
