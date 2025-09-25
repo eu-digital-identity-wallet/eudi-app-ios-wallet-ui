@@ -17,8 +17,9 @@ import SwiftUI
 import logic_resources
 
 public extension View {
+
   @ViewBuilder
-  func alertOrConfirmationDialog<A: View, M: View>(
+  func dialogCompat<A: View, M: View>(
     _ key: LocalizableStringKey,
     isPresented: Binding<Bool>,
     titleVisibility: Visibility = .automatic,
@@ -26,9 +27,9 @@ public extension View {
     @ViewBuilder message: @escaping () -> M
   ) -> some View {
     modifier(
-      AlertOrConfirmationModifier(
-        key: key,
+      DialogCompatModifier(
         isPresented: isPresented,
+        key: key,
         titleVisibility: titleVisibility,
         actions: actions,
         message: message
@@ -37,9 +38,11 @@ public extension View {
   }
 }
 
-private struct AlertOrConfirmationModifier<A: View, M: View>: ViewModifier {
-  let key: LocalizableStringKey
+private struct DialogCompatModifier<A: View, M: View>: ViewModifier {
+
   @Binding var isPresented: Bool
+
+  let key: LocalizableStringKey
   let titleVisibility: Visibility
   let actions: () -> A
   let message: () -> M

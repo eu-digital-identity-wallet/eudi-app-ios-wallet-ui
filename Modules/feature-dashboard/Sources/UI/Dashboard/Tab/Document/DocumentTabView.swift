@@ -52,7 +52,7 @@ struct DocumentTabView<Router: RouterHost>: View {
         viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
       }
     }
-    .alertOrConfirmationDialog(
+    .dialogCompat(
       .issuanceDetailsDeletionTitle([viewModel.viewState.pendingDocumentTitle]),
       isPresented: $viewModel.isDeleteDeferredModalShowing,
       actions: {
