@@ -52,18 +52,19 @@ struct HomeTabView<Router: RouterHost>: View {
     } message: {
       Text(.authenticateAuthoriseTransactions)
     }
-    .confirmationDialog(
+    .alertOrConfirmationDialog(
       .bleDisabledModalTitle,
       isPresented: $viewModel.isBleModalShowing,
-      titleVisibility: .visible
-    ) {
-      Button(.bleDisabledModalButton) {
-        viewModel.onBleSettings()
+      actions: {
+        Button(.bleDisabledModalButton) {
+          viewModel.onBleSettings()
+        }
+        Button(.cancelButton, role: .cancel) {}
+      },
+      message: {
+        Text(.bleDisabledModalCaption)
       }
-      Button(.cancelButton, role: .destructive) {}
-    } message: {
-      Text(.bleDisabledModalCaption)
-    }
+    )
     .onChange(of: scenePhase) {
       self.viewModel.setPhase(with: scenePhase)
     }

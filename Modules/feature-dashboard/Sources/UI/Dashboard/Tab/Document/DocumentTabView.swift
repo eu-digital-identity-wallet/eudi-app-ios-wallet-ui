@@ -52,18 +52,19 @@ struct DocumentTabView<Router: RouterHost>: View {
         viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
       }
     }
-    .confirmationDialog(
+    .alertOrConfirmationDialog(
       .issuanceDetailsDeletionTitle([viewModel.viewState.pendingDocumentTitle]),
       isPresented: $viewModel.isDeleteDeferredModalShowing,
-      titleVisibility: .visible
-    ) {
-      Button(.no, role: .destructive) {}
-      Button(.yes) {
-        viewModel.deleteDeferredDocument()
+      actions: {
+        Button(.no, role: .cancel) {}
+        Button(.yes, role: .destructive) {
+          viewModel.deleteDeferredDocument()
+        }
+      },
+      message: {
+        Text(.issuanceDetailsDeletionCaption([viewModel.viewState.pendingDocumentTitle]))
       }
-    } message: {
-      Text(.issuanceDetailsDeletionCaption([viewModel.viewState.pendingDocumentTitle]))
-    }
+    )
     .sheetDialog(isPresented: $viewModel.isSuccededDocumentsModalShowing) {
       SheetContentView {
         VStack(spacing: SPACING_MEDIUM) {
