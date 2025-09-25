@@ -52,7 +52,7 @@ struct HomeTabView<Router: RouterHost>: View {
     } message: {
       Text(.authenticateAuthoriseTransactions)
     }
-    .alertOrConfirmationDialog(
+    .dialogCompat(
       .bleDisabledModalTitle,
       isPresented: $viewModel.isBleModalShowing,
       actions: {
