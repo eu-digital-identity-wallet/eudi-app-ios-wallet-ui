@@ -13,6 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
 
 public protocol RevokedDocumentStorageController: StorageController where Value == RevokedDocument {}
 
@@ -37,7 +38,9 @@ final class RevokedDocumentStorageControllerImpl: RevokedDocumentStorageControll
   }
 
   func retrieve(_ identifier: String) async throws -> RevokedDocument {
-    let revokedDocument = try await swiftDataService.read(SDRevokedDocument.self, id: identifier) {
+    let revokedDocument = try await swiftDataService.read(
+      predicate: #Predicate<SDRevokedDocument> { $0.identifier == identifier }
+    ) {
       $0.toRevokedDocument()
     }
     guard let revokedDocument else {
@@ -55,7 +58,9 @@ final class RevokedDocumentStorageControllerImpl: RevokedDocumentStorageControll
   }
 
   func delete(_ identifier: String) async throws {
-    try await swiftDataService.delete(SDRevokedDocument.self, id: identifier)
+    try await swiftDataService.delete(
+      predicate: #Predicate<SDRevokedDocument> { $0.identifier == identifier }
+    )
   }
 
   func deleteAll() async throws {

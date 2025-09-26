@@ -13,6 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
 
 public protocol BookmarkStorageController: StorageController where Value == Bookmark {}
 
@@ -37,7 +38,9 @@ final class BookmarkStorageControllerImpl: BookmarkStorageController {
   }
 
   func retrieve(_ identifier: String) async throws -> Bookmark {
-    let bookmark = try await swiftDataService.read(SDBookmark.self, id: identifier) {
+    let bookmark = try await swiftDataService.read(
+      predicate: #Predicate<SDBookmark> { $0.identifier == identifier }
+    ) {
       $0.toBookmark()
     }
     guard let bookmark else {
@@ -55,7 +58,9 @@ final class BookmarkStorageControllerImpl: BookmarkStorageController {
   }
 
   func delete(_ identifier: String) async throws {
-    try await swiftDataService.delete(SDBookmark.self, id: identifier)
+    try await swiftDataService.delete(
+      predicate: #Predicate<SDBookmark> { $0.identifier == identifier }
+    )
   }
 
   func deleteAll() async throws {

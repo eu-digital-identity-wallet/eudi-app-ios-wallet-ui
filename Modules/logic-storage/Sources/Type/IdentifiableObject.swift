@@ -14,5 +14,5 @@
  * governing permissions and limitations under the Licence.
  */
 protocol IdentifiableObject: AnyObject {
-  var identifier: String { get set }
+  var identifier: String { get }
 }

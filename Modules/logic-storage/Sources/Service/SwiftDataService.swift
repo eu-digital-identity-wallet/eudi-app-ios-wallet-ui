@@ -19,9 +19,9 @@ import Foundation
 protocol SwiftDataService: Actor {
   func write<T: PersistentModel & IdentifiableObject>(_ object: T) throws
   func writeAll<T: PersistentModel & IdentifiableObject>(_ objects: [T]) throws
-  func read<T: PersistentModel & IdentifiableObject, R>(_ type: T.Type, id: String, map: (T) -> R) throws -> R?
+  func read<T: PersistentModel & IdentifiableObject, R>(predicate: Predicate<T>, map: (T) -> R) throws -> R?
   func readAll<T: PersistentModel & IdentifiableObject, R>(_ type: T.Type, map: (T) -> R) throws -> [R]
-  func delete<T: PersistentModel & IdentifiableObject>(_ type: T.Type, id: String) throws
+  func delete<T: PersistentModel & IdentifiableObject>(predicate: Predicate<T>) throws
   func deleteAll<T: PersistentModel & IdentifiableObject>(of type: T.Type) throws
 }
 
@@ -52,19 +52,18 @@ final actor SwiftDataServiceImpl: SwiftDataService {
     try context.save()
   }
 
-  func read<T: PersistentModel & IdentifiableObject, R>(_ type: T.Type, id: String, map: (T) -> R) throws -> R? {
-    var fd = FetchDescriptor<T>(predicate: #Predicate<T> { $0.identifier == id })
+  func read<T: PersistentModel & IdentifiableObject, R>(predicate: Predicate<T>, map: (T) -> R) throws -> R? {
+    var fd = FetchDescriptor<T>(predicate: predicate)
     fd.fetchLimit = 1
-    if let found = try context.fetch(fd).first { return map(found) }
-    return nil
+    return try context.fetch(fd).first.map(map)
   }
 
   func readAll<T: PersistentModel & IdentifiableObject, R>(_ type: T.Type, map: (T) -> R) throws -> [R] {
     try context.fetch(FetchDescriptor<T>()).map(map)
   }
 
-  func delete<T: PersistentModel & IdentifiableObject>(_ type: T.Type, id: String) throws {
-    var fd = FetchDescriptor<T>(predicate: #Predicate<T> { $0.identifier == id })
+  func delete<T: PersistentModel & IdentifiableObject>(predicate: Predicate<T>) throws {
+    var fd = FetchDescriptor<T>(predicate: predicate)
     fd.fetchLimit = 1
     if let object = try context.fetch(fd).first {
       context.delete(object)

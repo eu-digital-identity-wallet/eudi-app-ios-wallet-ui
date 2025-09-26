@@ -13,6 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
 
 public protocol TransactionLogStorageController: StorageController where Value == TransactionLog {}
 
@@ -37,7 +38,9 @@ final class TransactionLogStorageControllerImpl: TransactionLogStorageController
   }
 
   func retrieve(_ identifier: String) async throws -> TransactionLog {
-    let log = try await swiftDataService.read(SDTransactionLog.self, id: identifier) {
+    let log = try await swiftDataService.read(
+      predicate: #Predicate<SDTransactionLog> { $0.identifier == identifier }
+    ) {
       $0.toTransactionLog()
     }
     guard let log else {
@@ -55,7 +58,9 @@ final class TransactionLogStorageControllerImpl: TransactionLogStorageController
   }
 
   func delete(_ identifier: String) async throws {
-    try await swiftDataService.delete(SDTransactionLog.self, id: identifier)
+    try await swiftDataService.delete(
+      predicate: #Predicate<SDTransactionLog> { $0.identifier == identifier }
+    )
   }
 
   func deleteAll() async throws {
