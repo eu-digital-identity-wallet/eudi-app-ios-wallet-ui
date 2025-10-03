@@ -105,7 +105,7 @@ final class ImageManager: ImageManagerProtocol {
     case walletVerified = "wallet-verified"
     case bell
     case menuIcon = "line.3.horizontal"
-    case filterMenuIcon = "filter-menu-icon"
+    case filterMenuIcon = "slider.horizontal.3"
     case bookmarkIcon = "bookmark"
     case bookmarkIconFill = "bookmark.fill"
     case gearshape
@@ -234,7 +234,7 @@ final class ImageManager: ImageManagerProtocol {
     Image(systemName: ImageEnum.menuIcon.rawValue)
   }
   var filterMenuIcon: Image {
-    Image(ImageEnum.filterMenuIcon.rawValue, bundle: bundle)
+    Image(systemName: ImageEnum.filterMenuIcon.rawValue)
   }
   var bookmarkIcon: Image {
     Image(systemName: ImageEnum.bookmarkIcon.rawValue)
