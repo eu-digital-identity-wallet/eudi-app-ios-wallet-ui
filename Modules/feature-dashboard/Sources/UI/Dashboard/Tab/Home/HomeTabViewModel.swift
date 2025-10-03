@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import feature_common
+import Observation
 
 @Copyable
 struct HomeTabState: ViewState {
@@ -23,15 +24,18 @@ struct HomeTabState: ViewState {
   let pendingBleModalAction: Bool
 }
 
+@Observable
 final class HomeTabViewModel<Router: RouterHost>: ViewModel<Router, HomeTabState> {
 
+  @ObservationIgnored
   private let interactor: HomeTabInteractor
+  @ObservationIgnored
   private let onUpdateToolbar: (ToolBarContent, LocalizableStringKey) -> Void
 
-  @Published var isAuthenticateAlertShowing: Bool = false
-  @Published var isAuthenticateModalShowing: Bool = false
-  @Published var isSignDocumentAlertShowing: Bool = false
-  @Published var isBleModalShowing: Bool = false
+  var isAuthenticateAlertShowing: Bool = false
+  var isAuthenticateModalShowing: Bool = false
+  var isSignDocumentAlertShowing: Bool = false
+  var isBleModalShowing: Bool = false
 
   init(
     router: Router,

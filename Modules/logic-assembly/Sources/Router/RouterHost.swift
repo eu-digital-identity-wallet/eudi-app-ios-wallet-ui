@@ -14,20 +14,26 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_ui
+import Observation
 
 private typealias QueueItem = () -> Void
 
-final class RouterHostImpl: RouterHost, ObservableObject {
+@Observable
+final class RouterHostImpl: RouterHost {
 
-  @Published private var pathElements: [AppRoute] = []
+  private var pathElements: [AppRoute] = []
+
+  @ObservationIgnored
   private let rootRoute: AppRoute = .featureStartupModule(.startup)
-
+  @ObservationIgnored
   private let uiConfigLogic: ConfigUiLogic
+  @ObservationIgnored
   private let analyticsController: AnalyticsController
-
+  @ObservationIgnored
   private let lockInterval: Int = 1000
-
+  @ObservationIgnored
   private var queueNavigation: [QueueItem] = []
+  @ObservationIgnored
   private var isLocked: Bool = false
 
   init(
@@ -189,7 +195,7 @@ private extension RouterHostImpl {
 
   struct RouterContainerView: View {
 
-    @ObservedObject var host: RouterHostImpl
+    @State var host: RouterHostImpl
 
     var body: some View {
       NavigationStack(path: $host.pathElements) {

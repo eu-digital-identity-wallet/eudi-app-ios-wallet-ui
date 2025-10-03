@@ -787,6 +787,7 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Biometry/BiometryViewModel.swift'
 
 import Cuckoo
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -864,6 +865,7 @@ import logic_resources
 
 import Cuckoo
 import logic_resources
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -895,6 +897,7 @@ import logic_resources
 
 import Cuckoo
 import logic_resources
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -2842,6 +2845,7 @@ import logic_resources
 
 import Cuckoo
 import Foundation
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -2965,6 +2969,7 @@ import logic_resources
 
 import Cuckoo
 import Foundation
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -2995,6 +3000,7 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Dashboard/Tab/Home/HomeTabViewModel.swift'
 
 import Cuckoo
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -3026,6 +3032,7 @@ import logic_resources
 
 import Cuckoo
 import logic_resources
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -3105,6 +3112,7 @@ import logic_resources
 
 import Cuckoo
 import logic_resources
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -3352,6 +3360,7 @@ import SwiftUI
 
 import Cuckoo
 import logic_resources
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -10520,6 +10529,7 @@ import Cuckoo
 import SwiftUI
 import Combine
 import Copyable
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

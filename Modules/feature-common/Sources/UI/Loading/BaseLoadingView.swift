@@ -19,10 +19,10 @@ import logic_resources
 
 public struct BaseLoadingView<Router: RouterHost, RequestItem: Sendable>: View {
 
-  @ObservedObject private var viewModel: BaseLoadingViewModel<Router, RequestItem>
+  @State private var viewModel: BaseLoadingViewModel<Router, RequestItem>
 
   public init(with router: Router, viewModel: BaseLoadingViewModel<Router, RequestItem>) {
-    self.viewModel = viewModel
+    self._viewModel = State(wrappedValue: viewModel)
   }
 
   public var body: some View {

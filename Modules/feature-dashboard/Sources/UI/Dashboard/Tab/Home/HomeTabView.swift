@@ -21,10 +21,10 @@ struct HomeTabView<Router: RouterHost>: View {
 
   @Environment(\.scenePhase) private var scenePhase
 
-  @ObservedObject private var viewModel: HomeTabViewModel<Router>
+  @State private var viewModel: HomeTabViewModel<Router>
 
   init(with viewModel: HomeTabViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = State(wrappedValue: viewModel)
   }
 
   var body: some View {

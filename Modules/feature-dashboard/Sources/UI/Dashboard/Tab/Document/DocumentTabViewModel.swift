@@ -17,6 +17,7 @@ import Foundation
 import logic_ui
 import logic_core
 import feature_common
+import Observation
 
 @Copyable
 struct DocumentTabState: ViewState {
@@ -35,17 +36,35 @@ struct DocumentTabState: ViewState {
   }
 }
 
+@Observable
 final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, DocumentTabState> {
 
+  @ObservationIgnored
   private let interactor: DocumentTabInteractor
+  @ObservationIgnored
   private let SEARCH_INPUT_DEBOUNCE = 250
+  @ObservationIgnored
   private let onUpdateToolbar: (ToolBarContent, LocalizableStringKey) -> Void
 
-  @Published var isFilterModalShowing: Bool = false
-  @Published var isDeleteDeferredModalShowing: Bool = false
-  @Published var isSuccededDocumentsModalShowing: Bool = false
-  @Published var searchQuery: String = ""
+  var isFilterModalShowing: Bool = false
+  var isDeleteDeferredModalShowing: Bool = false
+  var isSuccededDocumentsModalShowing: Bool = false {
+    didSet {
+      debouncedSucceededModal.send(isSuccededDocumentsModalShowing)
+    }
+  }
+  var searchQuery: String = "" {
+    didSet {
+      debouncedSearchQuery.send(searchQuery)
+    }
+  }
 
+  @ObservationIgnored
+  private var debouncedSearchQuery = CurrentValueSubject<String, Never>("")
+  @ObservationIgnored
+  private var debouncedSucceededModal = CurrentValueSubject<Bool, Never>(false)
+
+  @ObservationIgnored
   private var deferredTask: Task<DeferredPartialState, Error>?
 
   init(
@@ -216,7 +235,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   }
 
   private func listenForSuccededIssuedModalChanges() {
-    $isSuccededDocumentsModalShowing
+    debouncedSucceededModal
       .dropFirst()
       .removeDuplicates()
       .sink { [weak self] value in
@@ -228,7 +247,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   }
 
   private func subscribeToSearch() {
-    $searchQuery
+    debouncedSearchQuery
       .dropFirst()
       .debounce(for: .milliseconds(SEARCH_INPUT_DEBOUNCE), scheduler: RunLoop.main)
       .removeDuplicates()

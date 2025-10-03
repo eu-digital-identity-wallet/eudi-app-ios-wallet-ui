@@ -15,6 +15,7 @@
  */
 import logic_ui
 import logic_resources
+import Observation
 
 enum QuickPinStep {
   case validate
@@ -39,12 +40,20 @@ struct QuickPinState: ViewState {
   let quickPinSize: Int
 }
 
+@Observable
 final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinState> {
 
-  @Published var uiPinInputField: String = ""
-  @Published var isCancelModalShowing: Bool = false
+  var uiPinInputField: String = "" {
+    didSet {
+      debouncedPinInputField.send(uiPinInputField)
+    }
+  }
+  var isCancelModalShowing: Bool = false
 
+  @ObservationIgnored
   private let interactor: QuickPinInteractor
+  @ObservationIgnored
+  private var debouncedPinInputField = CurrentValueSubject<String, Never>("")
 
   init(
     router: Router,
@@ -197,7 +206,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
   }
 
   private func subscribeToPinInput() {
-    $uiPinInputField
+    debouncedPinInputField
       .dropFirst()
       .removeDuplicates()
       .sink { [weak self] value in

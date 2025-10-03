@@ -18,10 +18,10 @@ import feature_common
 
 struct PresentationLoadingView<Router: RouterHost, RequestItem: Sendable>: View {
 
-  @StateObject private var viewModel: PresentationLoadingViewModel<Router, RequestItem>
+  @State private var viewModel: PresentationLoadingViewModel<Router, RequestItem>
 
   init(with viewModel: PresentationLoadingViewModel<Router, RequestItem>) {
-    self._viewModel = StateObject(wrappedValue: viewModel)
+    self._viewModel = State(wrappedValue: viewModel)
   }
 
   var body: some View {

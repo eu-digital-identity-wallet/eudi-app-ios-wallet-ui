@@ -20,10 +20,10 @@ import feature_common
 
 struct DocumentOfferView<Router: RouterHost>: View {
 
-  @StateObject private var viewModel: DocumentOfferViewModel<Router>
+  @State private var viewModel: DocumentOfferViewModel<Router>
 
   init(with viewModel: DocumentOfferViewModel<Router>) {
-    self._viewModel = StateObject(wrappedValue: viewModel)
+    self._viewModel = State(wrappedValue: viewModel)
   }
 
   var body: some View {

@@ -19,10 +19,10 @@ import logic_resources
 
 public struct BaseRequestView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewModel: BaseRequestViewModel<Router>
+  @State private var viewModel: BaseRequestViewModel<Router>
 
   public init(with router: Router, viewModel: BaseRequestViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = State(wrappedValue: viewModel)
   }
 
   public var body: some View {

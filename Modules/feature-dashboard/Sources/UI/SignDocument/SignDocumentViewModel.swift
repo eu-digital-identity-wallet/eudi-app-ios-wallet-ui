@@ -15,16 +15,19 @@
  */
 import logic_ui
 import logic_resources
+import Observation
 
 @Copyable
 struct SignDocumentState: ViewState {
   let listItem: ListItemData
 }
 
+@Observable
 final class SignDocumentViewModel<Router: RouterHost>: ViewModel<Router, SignDocumentState> {
 
-  @Published var showFilePicker: Bool = false
+  var showFilePicker: Bool = false
 
+  @ObservationIgnored
   private let interactor: DocumentSignInteractor
 
   init(

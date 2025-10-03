@@ -19,11 +19,11 @@ import logic_resources
 
 struct GenericSuccessView<Router: RouterHost>: View {
 
-  @StateObject private var viewModel: GenericSuccessViewModel<Router>
+  @State private var viewModel: GenericSuccessViewModel<Router>
 
   init(
     with viewModel: GenericSuccessViewModel<Router>) {
-      self._viewModel = StateObject(wrappedValue: viewModel)
+      self._viewModel = State(wrappedValue: viewModel)
     }
 
   var body: some View {

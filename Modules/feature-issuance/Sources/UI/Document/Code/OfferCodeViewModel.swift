@@ -17,6 +17,7 @@ import Foundation
 import logic_ui
 import logic_resources
 import feature_common
+import Observation
 
 @Copyable
 struct OfferCodeViewState: ViewState {
@@ -28,13 +29,23 @@ struct OfferCodeViewState: ViewState {
   let contentHeaderConfig: ContentHeaderConfig
 }
 
+@Observable
 final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeViewState> {
 
-  @Published var codeInput: String = ""
-  @Published var codeIsFocused: Bool = true
+  var codeInput: String = "" {
+    didSet {
+      debouncedCodeInput.send(codeInput)
+    }
+  }
+  var codeIsFocused: Bool = true
 
+  @ObservationIgnored
   private let CODE_INPUT_DEBOUNCE = 250
+  @ObservationIgnored
   private let interactor: DocumentOfferInteractor
+
+  @ObservationIgnored
+  private var debouncedCodeInput = CurrentValueSubject<String, Never>("")
 
   init(
     router: Router,
@@ -182,7 +193,7 @@ final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeV
   }
 
   private func subscribeToCodeInput() {
-    $codeInput
+    debouncedCodeInput
       .dropFirst()
       .debounce(for: .milliseconds(CODE_INPUT_DEBOUNCE), scheduler: RunLoop.main)
       .removeDuplicates()
