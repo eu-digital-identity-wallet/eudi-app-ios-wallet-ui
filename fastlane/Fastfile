@@ -98,7 +98,6 @@ platform :ios do
       connectApi: connect_api,
       binaryName: ENV["APP_IPA_PATH"],
       bundleId: ENV["APP_BUNDLE_ID"],
-      distributeExternal: ENV["TESTFLIGHT_EXTERNAL_RELEASE"],
       groups: ENV["TESTFLIGHT_GROUPS"]
     )
 
@@ -167,7 +166,6 @@ platform :ios do
     connectApi = values[:connectApi]
     binaryName = values[:binaryName]
     bundleId = values[:bundleId]
-    distributeExternal = values[:distributeExternal]
     groups = values[:groups]
     pilot(
       app_identifier: bundleId,
@@ -175,7 +173,6 @@ platform :ios do
       ipa: binaryName,
       skip_submission: false,
       skip_waiting_for_build_processing: true,
-      distribute_external: distributeExternal == "true",
       groups: groups&.split(',')&.map(&:strip)
     )
   end
