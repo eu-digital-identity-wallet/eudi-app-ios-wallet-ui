@@ -19,10 +19,10 @@ import logic_resources
 
 struct TransactionTabView<Router: RouterHost>: View {
 
-  @ObservedObject private var viewModel: TransactionTabViewModel<Router>
+  @State private var viewModel: TransactionTabViewModel<Router>
 
   public init(with viewModel: TransactionTabViewModel<Router>) {
-    self.viewModel = viewModel
+    self._viewModel = State(wrappedValue: viewModel)
   }
 
   var body: some View {

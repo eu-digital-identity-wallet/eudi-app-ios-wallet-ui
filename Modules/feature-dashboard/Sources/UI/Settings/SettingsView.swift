@@ -18,10 +18,10 @@ import logic_ui
 import logic_resources
 
 struct SettingsView<Router: RouterHost>: View {
-  @StateObject private var viewModel: SettingsViewModel<Router>
+  @State private var viewModel: SettingsViewModel<Router>
 
   init(with viewModel: SettingsViewModel<Router>) {
-    self._viewModel = StateObject(wrappedValue: viewModel)
+    self._viewModel = State(wrappedValue: viewModel)
   }
 
   var body: some View {

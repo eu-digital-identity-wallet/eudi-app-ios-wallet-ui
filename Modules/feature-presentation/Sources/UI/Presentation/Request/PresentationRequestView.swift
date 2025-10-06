@@ -18,10 +18,10 @@ import feature_common
 
 struct PresentationRequestView<Router: RouterHost>: View {
 
-  @StateObject private var viewModel: PresentationRequestViewModel<Router>
+  @State private var viewModel: PresentationRequestViewModel<Router>
 
   init(with viewModel: PresentationRequestViewModel<Router>) {
-    self._viewModel = StateObject(wrappedValue: viewModel)
+    self._viewModel = State(wrappedValue: viewModel)
   }
 
   var body: some View {

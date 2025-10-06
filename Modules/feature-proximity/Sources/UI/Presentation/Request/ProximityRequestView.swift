@@ -18,10 +18,10 @@ import feature_common
 
 struct ProximityRequestView<Router: RouterHost>: View {
 
-  @StateObject private var viewModel: ProximityRequestViewModel<Router>
+  @State private var viewModel: ProximityRequestViewModel<Router>
 
   init(with viewModel: ProximityRequestViewModel<Router>) {
-    self._viewModel = StateObject(wrappedValue: viewModel)
+    self._viewModel = State(wrappedValue: viewModel)
   }
 
   var body: some View {

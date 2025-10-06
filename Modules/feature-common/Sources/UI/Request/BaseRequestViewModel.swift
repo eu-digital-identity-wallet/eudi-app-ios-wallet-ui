@@ -16,6 +16,7 @@
 
 @_exported import logic_ui
 @_exported import logic_resources
+import Observation
 
 @Copyable
 public struct RequestViewState: ViewState {
@@ -32,11 +33,12 @@ public struct RequestViewState: ViewState {
   public let contentHeaderConfig: ContentHeaderConfig
 }
 
+@Observable
 open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestViewState> {
 
-  @Published var isRequestInfoModalShowing: Bool = false
-  @Published var isVerifiedEntityModalShowing: Bool = false
-  @Published var itemsChanged: Bool = false
+  var isRequestInfoModalShowing: Bool = false
+  var isVerifiedEntityModalShowing: Bool = false
+  var itemsChanged: Bool = false
 
   public init(router: Router, originator: AppRoute) {
     super.init(

@@ -16,6 +16,7 @@
 import logic_resources
 import feature_common
 import logic_core
+import Observation
 
 @Copyable
 struct DocumentDetailsViewState: ViewState {
@@ -29,13 +30,14 @@ struct DocumentDetailsViewState: ViewState {
   let documentCredentialsInfo: DocumentCredentialsInfoUi?
 }
 
+@Observable
 final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, DocumentDetailsViewState> {
 
-  @Published var isDeletionModalShowing: Bool = false
-  @Published var isVisible = true
-  @Published var showAlert = false
-  @Published var documentCredentialsInfoIsExpanded = false
+  var isDeletionModalShowing: Bool = false
+  var isVisible = true
+  var showAlert = false
 
+  @ObservationIgnored
   private let interactor: DocumentDetailsInteractor
 
   init(

@@ -18,12 +18,12 @@ import logic_ui
 
 public struct DocumentSuccessView<Router: RouterHost, RequestItem: Sendable>: View {
 
-  @ObservedObject private var viewModel: DocumentSuccessViewModel<Router, RequestItem>
+  @State private var viewModel: DocumentSuccessViewModel<Router, RequestItem>
 
   public init(
     with viewModel: DocumentSuccessViewModel<Router, RequestItem>
   ) {
-    self.viewModel = viewModel
+    self._viewModel = State(wrappedValue: viewModel)
   }
 
   public var body: some View {

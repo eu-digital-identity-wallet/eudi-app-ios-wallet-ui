@@ -19,10 +19,10 @@ import feature_common
 
 struct OfferCodeView<Router: RouterHost>: View {
 
-  @StateObject private var viewModel: OfferCodeViewModel<Router>
+  @State private var viewModel: OfferCodeViewModel<Router>
 
   init(with viewModel: OfferCodeViewModel<Router>) {
-    self._viewModel = StateObject(wrappedValue: viewModel)
+    self._viewModel = State(wrappedValue: viewModel)
   }
 
   var body: some View {

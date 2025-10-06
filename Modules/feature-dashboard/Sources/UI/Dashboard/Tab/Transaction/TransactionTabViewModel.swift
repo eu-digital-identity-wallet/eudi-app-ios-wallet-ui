@@ -15,6 +15,7 @@
  */
 import logic_ui
 import logic_resources
+import Observation
 
 @Copyable
 struct TransactionTabState: ViewState {
@@ -29,14 +30,25 @@ struct TransactionTabState: ViewState {
   let maxEndDate: Date
 }
 
+@Observable
 final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, TransactionTabState> {
 
+  @ObservationIgnored
   private let interactor: TransactionTabInteractor
+  @ObservationIgnored
   private let onUpdateToolbar: (ToolBarContent, LocalizableStringKey) -> Void
+  @ObservationIgnored
   private let SEARCH_INPUT_DEBOUNCE = 250
 
-  @Published var isFilterModalShowing: Bool = false
-  @Published var searchQuery: String = ""
+  var isFilterModalShowing: Bool = false
+  var searchQuery: String = "" {
+    didSet {
+      debouncedSearchQuery.send(searchQuery)
+    }
+  }
+
+  @ObservationIgnored
+  private var debouncedSearchQuery = CurrentValueSubject<String, Never>("")
 
   init(
     router: Router,
@@ -190,7 +202,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
   }
 
   private func subscribeToSearch() {
-    $searchQuery
+    debouncedSearchQuery
       .dropFirst()
       .debounce(for: .milliseconds(SEARCH_INPUT_DEBOUNCE), scheduler: RunLoop.main)
       .removeDuplicates()

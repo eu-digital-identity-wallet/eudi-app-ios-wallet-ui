@@ -15,6 +15,7 @@
  */
 import logic_ui
 import logic_authentication
+import Observation
 
 @Copyable
 struct BiometryState: ViewState {
@@ -31,15 +32,26 @@ struct BiometryState: ViewState {
   let contentHeaderConfig: ContentHeaderConfig
 }
 
+@Observable
 final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometryState> {
 
+  @ObservationIgnored
   private let AUTO_VERIFY_ON_APPEAR_DELAY = 250
+  @ObservationIgnored
   private let PIN_INPUT_DEBOUNCE = 250
 
-  @Published var uiPinInputField: String = ""
-  @Published var biometryError: SystemBiometryError?
+  var uiPinInputField: String = "" {
+    didSet {
+      debouncedPinInputField.send(uiPinInputField)
+    }
+  }
+  var biometryError: SystemBiometryError?
 
+  @ObservationIgnored
   private let interactor: BiometryInteractor
+
+  @ObservationIgnored
+  private var debouncedPinInputField = CurrentValueSubject<String, Never>("")
 
   init(
     router: Router,
@@ -120,7 +132,7 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
 
   private func subscribeToPinInput() {
 
-    let publisher = self.$uiPinInputField.dropFirst()
+    let publisher = self.debouncedPinInputField.dropFirst()
 
     if viewState.throttlePinInput {
       publisher

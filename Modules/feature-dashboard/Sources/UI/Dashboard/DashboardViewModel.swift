@@ -16,6 +16,7 @@
 import Foundation
 import logic_ui
 import feature_common
+import Observation
 
 @Copyable
 struct DashboardState<Router: RouterHost>: ViewState {
@@ -34,14 +35,23 @@ enum SelectedTab {
   case transactions
 }
 
+@Observable
 final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardState<Router>> {
 
+  @ObservationIgnored
   private let interactor: DashboardInteractor
-
+  @ObservationIgnored
   private let deepLinkController: DeepLinkController
 
-  @Published var selectedTab: SelectedTab = .home
-  @Published var isRevokedModalShowing: Bool = false
+  var selectedTab: SelectedTab = .home
+  var isRevokedModalShowing: Bool = false {
+    didSet {
+      debouncedIsRevokedModalShowing.send(isRevokedModalShowing)
+    }
+  }
+
+  @ObservationIgnored
+  private var debouncedIsRevokedModalShowing = CurrentValueSubject<Bool, Never>(false)
 
   init(
     router: Router,
@@ -138,7 +148,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   }
 
   private func listenForRevokedModalChanges() {
-    $isRevokedModalShowing
+    debouncedIsRevokedModalShowing
       .dropFirst()
       .removeDuplicates()
       .sink { [weak self] value in

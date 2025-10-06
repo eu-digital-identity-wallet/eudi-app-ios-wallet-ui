@@ -22,10 +22,10 @@ struct DashboardView<Router: RouterHost>: View {
 
   @Environment(\.scenePhase) private var scenePhase
 
-  @StateObject private var viewModel: DashboardViewModel<Router>
+  @State private var viewModel: DashboardViewModel<Router>
 
   public init(with viewModel: DashboardViewModel<Router>) {
-    self._viewModel = StateObject(wrappedValue: viewModel)
+    self._viewModel = State(wrappedValue: viewModel)
   }
 
   var body: some View {

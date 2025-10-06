@@ -19,10 +19,10 @@ import logic_resources
 
 struct IssuanceOptionView<Router: RouterHost>: View {
 
-  @StateObject private var viewModel: IssuanceOptionViewModel<Router>
+  @State private var viewModel: IssuanceOptionViewModel<Router>
 
   init(with viewModel: IssuanceOptionViewModel<Router>) {
-    self._viewModel = StateObject(wrappedValue: viewModel)
+    self._viewModel = State(wrappedValue: viewModel)
   }
 
   var body: some View {
