@@ -23,7 +23,12 @@ public protocol WalletKitConfig {
   /**
    * VCI Configuration
    */
-  var vciConfig: VciConfig { get }
+  var vciConfig: OpenId4VCIConfiguration { get }
+
+  /**
+   * Issuer URL
+   */
+  var issuerUrl: String { get }
 }
 ```
 Based on the Build Variant of the Wallet (e.g., Dev)
@@ -37,19 +42,30 @@ struct WalletKitConfigImpl: WalletKitConfig {
     self.configLogic = configLogic
   }
 
-  var vciConfig: VciConfig {
+  var issuerUrl: String {
+    return switch configLogic.appBuildVariant {
+    case .DEMO:
+      "your_demo_url"
+    case .DEV:
+      "your_dev_url"
+    }
+  }
+
+  var vciConfig: OpenId4VCIConfiguration {
     return switch configLogic.appBuildVariant {
     case .DEMO:
         .init(
-          issuerUrl: "your_demo_url",
-          clientId: "your_demo_clientid",
-          redirectUri: URL(string: "your_demo_redirect")!
+          client: .public(id: "your_demo_clientid"),
+          authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
+          usePAR: should_use_par_bool,
+          useDPoP: should_use_dpop_bool
         )
     case .DEV:
         .init(
-          issuerUrl: "your_dev_url",
-          clientId: "your_dev_clientid",
-          redirectUri: URL(string: "your_dev_redirect")!
+          client: .public(id: "your_dev_clientid"),
+          authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
+          usePAR: should_use_par_bool,
+          useDPoP: should_use_dpop_bool
         )
     }
   }
@@ -88,13 +104,50 @@ The application's IACA certificates are located [here](https://github.com/eu-dig
   }
 ```
 
-3. Preregistered Client Scheme
+3. VP API
 
-If you plan to use the Preregistered for OpenId4VP configuration, please add the following to the *WalletKitConfigImpl* initializer.
+Via the *WalletKitConfig* protocol inside the logic-core module.
 
 ```swift
-wallet.verifierApiUri = "your_verifier_url"
-wallet.verifierLegalName = "your_verifier_legal_name"
+public protocol WalletKitConfig {
+  /**
+   * VP Configuration
+   */
+  var vpConfig: OpenId4VpConfiguration { get }
+}
+```
+
+The preregistered scheme is optional. If you want to use it, please add the following: the `SiopOpenID4VP` import and the `.preregistered` option in the `clientIdSchemes` array.
+
+```swift
+import SiopOpenID4VP
+
+struct WalletKitConfigImpl: WalletKitConfig {
+
+  let configLogic: ConfigLogic
+
+  init(configLogic: ConfigLogic) {
+    self.configLogic = configLogic
+  }
+
+  var vpConfig: OpenId4VpConfiguration {
+    .init(
+      clientIdSchemes: [
+        .x509SanDns,
+        .x509Hash,
+        .preregistered(
+          [
+            PreregisteredClient(
+              clientId: "your_verifier_id",
+              verifierApiUri: "your_verifier_url",
+              verifierLegalName: "your_verifier_legal_name"
+            )
+          ]
+        )
+      ]
+    )
+  }
+}
 ```
 
 4. RQES
