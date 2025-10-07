@@ -96,7 +96,7 @@ For instance, here's how `WalletKitConfig` resolves its configuration for OpenID
   }
 ```
 
-In this example, the `vciConfig` and `issuerUrl` properties dynamically assign configurations, such as `issuerUrl`, `clientId`, `redirectUri`, `usePAR`, and `useDPoP`, based on the current' appBuildVariant'. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
+In this example, the `vciConfig` and `issuerUrl` properties dynamically assign configurations, such as `issuerUrl`, `clientId`, `redirectUri`, `usePAR`, and `useDPoP`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
 
 ### Running with local services
 
