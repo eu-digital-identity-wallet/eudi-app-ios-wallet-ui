@@ -37,7 +37,7 @@ To run the app on a device, follow similar steps to running it on the simulator.
 
 ### Running with remote services
 
-The app is configured to the type (debug/release) and variant (dev/demo) in the four xcconfig files. These are the contents of the xcconfig file and you don't need to change anything if you don't want to:
+The app is configured to the type (debug/release) and variant (dev/demo) in the four xcconfig files. These are the contents of the xcconfig file, and you don't need to change anything if you don't want to:
 
 ```
 BUILD_TYPE = RELEASE
@@ -65,39 +65,51 @@ Using this parsed information, instances such as `WalletKitConfig` and `RQESConf
 For instance, here's how `WalletKitConfig` resolves its configuration for OpenID4VCI remote services based on the build variant:
 
 ```swift
-var vciConfig: VciConfig {
-    switch configLogic.appBuildVariant {
+  var issuerUrl: String {
+    return switch configLogic.appBuildVariant {
     case .DEMO:
-        return .init(
-            issuerUrl: "https://issuer.eudiw.dev",
-            clientId: "wallet-dev",
-            redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!
-        )
+      "https://issuer.eudiw.dev"
     case .DEV:
-        return .init(
-            issuerUrl: "https://dev.issuer.eudiw.dev",
-            clientId: "wallet-dev",
-            redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!
-        )
+      "https://dev.issuer.eudiw.dev"
     }
-}
+  }
 ```
 
-In this example, the `vciConfig` property dynamically assigns configurations such as `issuerUrl`, `clientId`, and `redirectUri` based on the current appBuildVariant. This ensures that the appropriate settings are applied for each variant (e.g., .`DEMO` or `.DEV`).
+```swift
+  var vciConfig: OpenId4VCIConfiguration {
+    return switch configLogic.appBuildVariant {
+    case .DEMO:
+        .init(
+          client: .public(id: "wallet-dev"),
+          authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
+          usePAR: true,
+          useDPoP: true
+        )
+    case .DEV:
+        .init(
+          client: .public(id: "wallet-dev"),
+          authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
+          usePAR: true,
+          useDPoP: true
+        )
+    }
+  }
+```
+
+In this example, the `vciConfig` and `issuerUrl` properties dynamically assign configurations, such as `issuerUrl`, `clientId`, `redirectUri`, `usePAR`, and `useDPoP`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
 
 ### Running with local services
 
-The first step here is to have all three services running locally on your machine, 
-you can follow these Repositories for further instructions:
+The first step here is to have all three services running locally on your machine. You can follow these Repositories for further instructions:
 * [Issuer](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py)
 * [Web Verifier UI](https://github.com/eu-digital-identity-wallet/eudi-web-verifier)
 * [Web Verifier Endpoint](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt)
 
-### How to work with self signed certificates on iOS
+### How to work with self-signed certificates on iOS
 
-In addition to the change below, in order for the app to interact with locally running service a small code change is required to do this successfully.
+In addition to the change below, to enable the app to interact with a locally running service, a minor code change is required for successful interaction.
 
-Before running the app in the simulator add these lines of code to the top of the file WalletKitController just below the import statements. 
+Before running the app in the simulator, add these lines of code to the top of the file WalletKitController just below the import statements.
 
 ```swift
 final class SelfSignedDelegate: NSObject, URLSessionDelegate {
@@ -141,4 +153,4 @@ guard let walletKit = try? EudiWallet(serviceName: configLogic.documentStorageSe
 
 This change will allow the app to interact with web services that rely on self-signed certificates.
 
-For all configuration options please refer to [this document](configuration.md)
+For all configuration options, please refer to [this document](configuration.md)

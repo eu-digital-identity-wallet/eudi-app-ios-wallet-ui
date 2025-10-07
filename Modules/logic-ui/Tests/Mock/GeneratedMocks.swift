@@ -2967,12 +2967,32 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         cuckoo_manager.enableDefaultStubImplementation()
     }
     
-    var vciConfig: VciConfig {
+    var vciConfig: OpenId4VCIConfiguration {
         get {
             return cuckoo_manager.getter(
                 "vciConfig",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
                 defaultCall: __defaultImplStub!.vciConfig
+            )
+        }
+    }
+    
+    var vpConfig: OpenId4VpConfiguration {
+        get {
+            return cuckoo_manager.getter(
+                "vpConfig",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.vpConfig
+            )
+        }
+    }
+    
+    var issuerUrl: String {
+        get {
+            return cuckoo_manager.getter(
+                "issuerUrl",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.issuerUrl
             )
         }
     }
@@ -3065,8 +3085,16 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             self.cuckoo_manager = manager
         }
         
-        var vciConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,VciConfig> {
+        var vciConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,OpenId4VCIConfiguration> {
             return .init(manager: cuckoo_manager, name: "vciConfig")
+        }
+        
+        var vpConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,OpenId4VpConfiguration> {
+            return .init(manager: cuckoo_manager, name: "vpConfig")
+        }
+        
+        var issuerUrl: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,String> {
+            return .init(manager: cuckoo_manager, name: "issuerUrl")
         }
         
         var readerConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,ReaderConfig> {
@@ -3113,8 +3141,16 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             self.sourceLocation = sourceLocation
         }
         
-        var vciConfig: Cuckoo.VerifyReadOnlyProperty<VciConfig> {
+        var vciConfig: Cuckoo.VerifyReadOnlyProperty<OpenId4VCIConfiguration> {
             return .init(manager: cuckoo_manager, name: "vciConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var vpConfig: Cuckoo.VerifyReadOnlyProperty<OpenId4VpConfiguration> {
+            return .init(manager: cuckoo_manager, name: "vpConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var issuerUrl: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "issuerUrl", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         var readerConfig: Cuckoo.VerifyReadOnlyProperty<ReaderConfig> {
@@ -3153,9 +3189,21 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
 
 class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
     
-    var vciConfig: VciConfig {
+    var vciConfig: OpenId4VCIConfiguration {
         get {
-            return DefaultValueRegistry.defaultValue(for: (VciConfig).self)
+            return DefaultValueRegistry.defaultValue(for: (OpenId4VCIConfiguration).self)
+        }
+    }
+    
+    var vpConfig: OpenId4VpConfiguration {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (OpenId4VpConfiguration).self)
+        }
+    }
+    
+    var issuerUrl: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
         }
     }
     
@@ -5575,6 +5623,26 @@ import OpenID4VCI
 
 import Cuckoo
 import OpenID4VCI
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/OpenId4VCIConfiguration+Extensions.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/OpenId4VpConfiguration+Extensions.swift'
+
+import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
