@@ -17,14 +17,6 @@ import Foundation
 import logic_business
 import EudiWalletKit
 
-struct VciConfig: Sendable {
-  public let issuerUrl: String
-  public let clientId: String
-  public let redirectUri: URL
-  public let usePAR: Bool
-  public let useDPoP: Bool
-}
-
 struct ReaderConfig: Sendable {
   public let trustedCerts: [Data]
 }
@@ -34,7 +26,17 @@ protocol WalletKitConfig: Sendable {
   /**
    * VCI Configuration
    */
-  var vciConfig: VciConfig { get }
+  var vciConfig: OpenId4VCIConfiguration { get }
+
+  /**
+   * VP Configuration
+   */
+  var vpConfig: OpenId4VpConfiguration { get }
+
+  /**
+   * Issuer URL
+   */
+  var issuerUrl: String { get }
 
   /**
    * Reader Configuration
@@ -94,24 +96,35 @@ struct WalletKitConfigImpl: WalletKitConfig {
     false
   }
 
-  var vciConfig: VciConfig {
+  var vciConfig: OpenId4VCIConfiguration {
     return switch configLogic.appBuildVariant {
     case .DEMO:
         .init(
-          issuerUrl: "https://issuer.eudiw.dev",
-          clientId: "wallet-dev",
-          redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!,
+          client: .public(id: "wallet-dev"),
+          authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
           useDPoP: true
         )
     case .DEV:
         .init(
-          issuerUrl: "https://dev.issuer.eudiw.dev",
-          clientId: "wallet-dev",
-          redirectUri: URL(string: "eu.europa.ec.euidi://authorization")!,
+          client: .public(id: "wallet-dev"),
+          authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
           useDPoP: true
         )
+    }
+  }
+
+  var vpConfig: OpenId4VpConfiguration {
+    .init(clientIdSchemes: [.x509SanDns, .x509Hash])
+  }
+
+  var issuerUrl: String {
+    return switch configLogic.appBuildVariant {
+    case .DEMO:
+      "https://issuer.eudiw.dev"
+    case .DEV:
+      "https://dev.issuer.eudiw.dev"
     }
   }
 

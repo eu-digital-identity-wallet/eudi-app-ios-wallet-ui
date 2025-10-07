@@ -117,13 +117,9 @@ final class WalletKitControllerImpl: WalletKitController {
     wallet = walletKit
     wallet.uiCulture = Locale.current.systemLanguageCode
     wallet.userAuthenticationRequired = configLogic.userAuthenticationRequired
-    wallet.openID4VciIssuerUrl = configLogic.vciConfig.issuerUrl
-    wallet.openID4VciConfig = .init(
-      client: .public(id: configLogic.vciConfig.clientId),
-      authFlowRedirectionURI: configLogic.vciConfig.redirectUri,
-      usePAR: configLogic.vciConfig.usePAR,
-      useDPoP: configLogic.vciConfig.useDPoP
-    )
+    wallet.openID4VciIssuerUrl = configLogic.issuerUrl
+    wallet.openID4VciConfig = configLogic.vciConfig
+    wallet.openID4VpConfig = configLogic.vpConfig
     wallet.trustedReaderCertificates = configLogic.readerConfig.trustedCerts
     wallet.logFileName = configLogic.logFileName
     walletKit.transactionLogger = configLogic.transactionLogger
