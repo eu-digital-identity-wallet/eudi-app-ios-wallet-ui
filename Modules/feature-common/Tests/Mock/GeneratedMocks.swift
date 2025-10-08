@@ -7725,32 +7725,6 @@ import OpenID4VCI
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/OpenId4VCIConfiguration+Extensions.swift'
-
-import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/OpenId4VpConfiguration+Extensions.swift'
-
-import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-
-
-
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/String+Extensions.swift'
 
 import Cuckoo
