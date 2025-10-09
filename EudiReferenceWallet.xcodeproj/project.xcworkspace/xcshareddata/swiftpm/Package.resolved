@@ -1,5 +1,5 @@
 {
-  "originHash" : "9db3592397c5b31321ebcd7194ce917aca0fb47a8cb7ffa803721a140b395a16",
+  "originHash" : "1059280b5d6c2571404a7b4167508235a027e9d99c4fe39df0655232bfca0fd8",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -177,8 +177,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "16e1d10bd68578aff0ad505115c0d2c8e14f84a3",
-        "version" : "0.16.0"
+        "revision" : "3809e621738cc31e2ad5985fede98b6c19125644",
+        "version" : "0.16.1"
       }
     },
     {
@@ -186,8 +186,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "ae0bc4f35fd7518007f8143518320a91395f0ede",
-        "version" : "0.7.0"
+        "revision" : "cf94d9a9134b2cee770e89c964c50d8733e0d951",
+        "version" : "0.7.1"
       }
     },
     {
@@ -294,8 +294,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage.git",
       "state" : {
-        "revision" : "34cf2423a2c4088d06a3b08655603b5bc3eeeb3a",
-        "version" : "5.21.2"
+        "revision" : "2053b120767c42a70bcba21095f34e4cfb54a75d",
+        "version" : "5.21.3"
       }
     },
     {
