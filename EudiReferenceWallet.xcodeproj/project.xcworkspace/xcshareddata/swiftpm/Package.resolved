@@ -1,5 +1,5 @@
 {
-  "originHash" : "75cb08e054d0896408638ddea48ca3720ad24e60473f8de02d80b48ed1575f93",
+  "originHash" : "9db3592397c5b31321ebcd7194ce917aca0fb47a8cb7ffa803721a140b395a16",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -78,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
       "state" : {
-        "revision" : "132f5b209cd0251067f29cdb59c97d9f8a63252a",
-        "version" : "1.8.5"
+        "revision" : "e45a26384239e028ec87fbcc788f513b67e10d8f",
+        "version" : "1.9.0"
       }
     },
     {
@@ -123,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "508556bdd1cf517735a0e6405c9dbd2704e6a892",
-        "version" : "0.15.4"
+        "revision" : "f60a2be657368308c59e21802d60f18dfc7088f5",
+        "version" : "0.16.0"
       }
     },
     {
@@ -177,8 +177,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "09e88fa00316931f334e56156bd5cbeb3e332a72",
-        "version" : "0.15.0"
+        "revision" : "16e1d10bd68578aff0ad505115c0d2c8e14f84a3",
+        "version" : "0.16.0"
       }
     },
     {
@@ -204,8 +204,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-sdjwt-swift.git",
       "state" : {
-        "revision" : "aaf68f574b194a121490a6f1bffc2ddbbdbce4a2",
-        "version" : "0.8.0"
+        "revision" : "86070708b8042a5a1291c20381b0f57fe69921cd",
+        "version" : "0.9.1"
       }
     },
     {
@@ -222,8 +222,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/beatt83/jose-swift.git",
       "state" : {
-        "revision" : "57fe5a03c83feaf73a84b23c02e641f86482e313",
-        "version" : "4.0.2"
+        "revision" : "8d087c7d8333310449aff4c9eb2431fbb4f1eb9f",
+        "version" : "6.0.0"
       }
     },
     {
@@ -494,6 +494,15 @@
       "state" : {
         "revision" : "b1caa062d4aaab3e3d2bed5fe0ac5f8ce9bf84f4",
         "version" : "8.27.7"
+      }
+    },
+    {
+      "identity" : "zlib",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/DLTAStudio/zlib.git",
+      "state" : {
+        "revision" : "ad7db0fdde74b88b3ac9b20d412c3129e7eade34",
+        "version" : "1.0.1"
       }
     }
   ],

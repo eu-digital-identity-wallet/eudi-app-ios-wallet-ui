@@ -124,7 +124,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
     case .DEMO:
       "https://issuer.eudiw.dev"
     case .DEV:
-      "https://dev.issuer.eudiw.dev"
+      "https://dev.issuer-backend.eudiw.dev"
     }
   }
 

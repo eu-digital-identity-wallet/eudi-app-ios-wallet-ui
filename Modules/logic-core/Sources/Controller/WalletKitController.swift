@@ -291,7 +291,7 @@ final class WalletKitControllerImpl: WalletKitController {
       case .msoMdoc(let config):
         let identifier = DocumentTypeIdentifier(rawValue: config.docType)
         return ScopedDocument(
-          name: config.display.getName(fallback: credential.key.value),
+          name: config.credentialMetadata?.display.getName(fallback: credential.key.value) ?? credential.key.value,
           issuer: metadata.display.getName(fallback: ""),
           configId: credential.key.value,
           isPid: identifier == .mDocPid,
@@ -303,7 +303,7 @@ final class WalletKitControllerImpl: WalletKitController {
         }
         let identifier = DocumentTypeIdentifier(rawValue: vct)
         return ScopedDocument(
-          name: config.display.getName(fallback: credential.key.value),
+          name: config.credentialMetadata?.display.getName(fallback: credential.key.value) ?? credential.key.value,
           issuer: metadata.display.getName(fallback: ""),
           configId: credential.key.value,
           isPid: identifier == .sdJwtPid,
