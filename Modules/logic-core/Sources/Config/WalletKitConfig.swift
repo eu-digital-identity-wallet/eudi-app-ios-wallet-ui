@@ -101,18 +101,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
       case .DEMO:
         return [
           .init(
-            credentialIssuerURL: "https://issuer.eudiw.dev",
-            clientId: "wallet-dev",
-            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
-            authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-            usePAR: true,
-            useDpopIfSupported: true,
-            cacheIssuerMetadata: true
-          ),
-          .init(
-            credentialIssuerURL: "https://issuer-backend.eudiw.dev",
-            clientId: "wallet-dev",
-            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+            credentialIssuerURL: "https://utsteder.test.eidas2sandkasse.net",
+            clientId: "demo-lommebok-test",
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
             usePAR: true,
             useDpopIfSupported: true,
@@ -122,18 +112,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
       case .DEV:
         return [
           .init(
-            credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
-            clientId: "wallet-dev",
-            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
-            authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-            usePAR: true,
-            useDpopIfSupported: true,
-            cacheIssuerMetadata: true
-          ),
-          .init(
-            credentialIssuerURL: "https://dev.issuer-backend.eudiw.dev",
-            clientId: "wallet-dev",
-            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+            credentialIssuerURL: "https://utsteder.eidas2sandkasse.dev",
+            clientId: "demo-lommebok-dev",
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
             usePAR: true,
             useDpopIfSupported: true,
