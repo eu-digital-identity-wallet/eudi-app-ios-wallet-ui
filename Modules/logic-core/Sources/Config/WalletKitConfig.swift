@@ -103,14 +103,16 @@ struct WalletKitConfigImpl: WalletKitConfig {
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
-          useDPoP: true
+          useDpopIfSupported: true,
+          cacheIssuerMetadata: true
         )
     case .DEV:
         .init(
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
-          useDPoP: true
+          useDpopIfSupported: true,
+          cacheIssuerMetadata: true
         )
     }
   }
