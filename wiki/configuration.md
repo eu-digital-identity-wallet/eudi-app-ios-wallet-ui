@@ -59,13 +59,16 @@ struct WalletKitConfigImpl: WalletKitConfig {
           authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
           usePAR: should_use_par_bool,
           useDPoP: should_use_dpop_bool
+          useDpopIfSupported: should_use_dpop_bool,
+          cacheIssuerMetadata: should_cache_metadata_bool
         )
     case .DEV:
         .init(
           client: .public(id: "your_dev_clientid"),
           authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
           usePAR: should_use_par_bool,
-          useDPoP: should_use_dpop_bool
+          useDpopIfSupported: should_use_dpop_bool,
+          cacheIssuerMetadata: should_cache_metadata_bool
         )
     }
   }
