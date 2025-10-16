@@ -512,7 +512,7 @@ extension WalletKitController {
         path: docClaim.path,
         type: type,
         value: value,
-        status: .available(isRequired: false)
+        status: .available(isRequired: !docClaim.isOptional)
       )
     ]
   }
