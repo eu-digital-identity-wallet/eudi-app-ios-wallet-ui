@@ -1,5 +1,5 @@
 {
-  "originHash" : "7b9e72248f532f8e3f5bf386d8808625760fa6e78cc9e830a8046184d41884b2",
+  "originHash" : "4dcd73a6b1df8fc410c21e70ddbb441da66fd337d0793246184ccd34c0213efe",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "a2b2d3af28491ef56dd8bc189be3e7e57d789819",
-        "version" : "0.8.1"
+        "revision" : "395cca652e2c9884b60aae4e9b6f6a5015dc4ec7",
+        "version" : "0.9.0"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "8b99b604f3bf67507133af6680485c9578d9708f",
-        "version" : "0.8.1"
+        "revision" : "7b27c74921ab2d569174c71e97cc775a27441163",
+        "version" : "0.8.3"
       }
     },
     {
@@ -114,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "ec5b879a101da94a26ff5da79e37f47b0751fe62",
-        "version" : "0.7.1"
+        "revision" : "90a088a258e83c54b7c4f676600a7a740e8abebc",
+        "version" : "0.8.0"
       }
     },
     {
@@ -177,8 +177,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "a8cc54d8d1d0545eac9eb185a744b848a152df8a",
-        "version" : "0.16.3"
+        "revision" : "81a178f2a50df9ba52d3471d5faa4b27c929bd40",
+        "version" : "0.16.6"
       }
     },
     {
@@ -186,8 +186,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "cf94d9a9134b2cee770e89c964c50d8733e0d951",
-        "version" : "0.7.1"
+        "revision" : "62c4dc5c5a0bb28d92fb23f8b4d03a8fa9cc12a7",
+        "version" : "0.8.0"
       }
     },
     {

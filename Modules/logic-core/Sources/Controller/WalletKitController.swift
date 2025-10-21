@@ -135,13 +135,12 @@ final class WalletKitControllerImpl: WalletKitController {
     txCodeValue: String?
   ) async throws -> [WalletStorage.Document] {
     let docTypes = docTypes.map { docType in
-      let identifier: DocumentTypeIdentifier? = docType.docType.map {
-        DocumentTypeIdentifier(rawValue: $0)
-      } ?? docType.vct.map { DocumentTypeIdentifier(rawValue: $0) }
-
-      let rule = configLogic.documentIssuanceConfig.rule(for: identifier)
-      let keyOptions = KeyOptions(credentialPolicy: rule.policy, batchSize: rule.numberOfCredentials)
-      return docType.copy(keyOptions: keyOptions)
+      let rule = configLogic.documentIssuanceConfig.rule(for: docType.documentTypeIdentifier)
+      let credentialOptions: CredentialOptions = .init(
+        credentialPolicy: rule.policy,
+        batchSize: rule.numberOfCredentials
+      )
+      return docType.copy(credentialOptions: credentialOptions)
     }
 
     return try await wallet.issueDocumentsByOfferUrl(
@@ -228,13 +227,24 @@ final class WalletKitControllerImpl: WalletKitController {
 
   func issueDocument(identifier: String, docTypeIdentifier: DocumentTypeIdentifier) async throws -> WalletStorage.Document {
     let rule = configLogic.documentIssuanceConfig.rule(for: docTypeIdentifier)
-    let keyOptions = KeyOptions(credentialPolicy: rule.policy, batchSize: rule.numberOfCredentials)
-
-    return try await wallet.issueDocument(docTypeIdentifier: .identifier(identifier), keyOptions: keyOptions)
+    return try await wallet.issueDocument(
+      docTypeIdentifier: .identifier(identifier),
+      credentialOptions: .init(
+        credentialPolicy: rule.policy,
+        batchSize: rule.numberOfCredentials
+      )
+    )
   }
 
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable {
-    let result = try await wallet.requestDeferredIssuance(deferredDoc: doc)
+    let rule = configLogic.documentIssuanceConfig.rule(for: doc.documentTypeIdentifier)
+    let result = try await wallet.requestDeferredIssuance(
+      deferredDoc: doc,
+      credentialOptions: .init(
+        credentialPolicy: rule.policy,
+        batchSize: rule.numberOfCredentials
+      )
+    )
     if result.isDeferred {
       return result.transformToDeferredDecodable()
     } else if let doc = fetchDocument(with: result.id) {
@@ -254,7 +264,15 @@ final class WalletKitControllerImpl: WalletKitController {
   }
 
   func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document {
-    return try await wallet.resumePendingIssuance(pendingDoc: pendingDoc, webUrl: webUrl)
+    let rule = configLogic.documentIssuanceConfig.rule(for: pendingDoc.documentTypeIdentifier)
+    return try await wallet.resumePendingIssuance(
+      pendingDoc: pendingDoc,
+      webUrl: webUrl,
+      credentialOptions: .init(
+        credentialPolicy: rule.policy,
+        batchSize: rule.numberOfCredentials
+      )
+    )
   }
 
   func storeDynamicIssuancePendingUrl(with url: URL) {

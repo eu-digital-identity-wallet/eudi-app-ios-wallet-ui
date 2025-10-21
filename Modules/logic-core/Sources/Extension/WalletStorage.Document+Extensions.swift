@@ -45,3 +45,9 @@ extension WalletStorage.Document {
     )
   }
 }
+
+extension WalletStorage.Document {
+  var documentTypeIdentifier: DocumentTypeIdentifier {
+    DocumentTypeIdentifier(rawValue: docType ?? "")
+  }
+}
