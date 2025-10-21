@@ -22,4 +22,7 @@ extension OfferedDocModel: @retroactive Equatable {
     && lhs.displayName == rhs.displayName
     && lhs.algValuesSupported == rhs.algValuesSupported
   }
+  var documentTypeIdentifier: DocumentTypeIdentifier {
+    DocumentTypeIdentifier(rawValue: docTypeOrVct ?? "")
+  }
 }

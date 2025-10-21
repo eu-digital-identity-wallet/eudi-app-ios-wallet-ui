@@ -23,10 +23,10 @@ import XCTest
 import OpenID4VCI
 
 final class TestDocumentOfferInteractor: EudiTest {
-
+  
   var interactor: DocumentOfferInteractor!
   var walletKitController: MockWalletKitController!
-
+  
   override func setUp() {
     super.setUp()
     self.walletKitController = MockWalletKitController()
@@ -34,12 +34,12 @@ final class TestDocumentOfferInteractor: EudiTest {
       walletController: walletKitController
     )
   }
-
+  
   override func tearDown() {
     self.interactor = nil
     self.walletKitController = nil
   }
-
+  
   func testResumeDynamicIssuance_WhenNoPendingData_ThenReturnNoPending() async {
     // Given
     let config = IssuanceCodeUiConfig(
@@ -54,17 +54,17 @@ final class TestDocumentOfferInteractor: EudiTest {
       ),
       navigationCancelType: .pop
     )
-
+    
     stub(walletKitController) { mock in
       when(mock.getDynamicIssuancePendingData()).thenReturn(nil)
     }
-
+    
     // When
     let result = await interactor.resumeDynamicIssuance(
       issuerName: config.issuerName,
       successNavigation: config.successNavigation
     )
-
+    
     // Then
     switch result {
     case .noPending:
@@ -73,11 +73,11 @@ final class TestDocumentOfferInteractor: EudiTest {
       XCTFail("Expected noPending, but got \(result)")
     }
   }
-
+  
   func testResumeDynamicIssuance_WhenDocumentIssued_ThenReturnFailure() async {
     // Given
     let exceptedError = WalletCoreError.unableToIssueAndStore
-
+    
     let config = IssuanceCodeUiConfig(
       offerUri: "",
       issuerName: "Issuer Name",
@@ -90,9 +90,9 @@ final class TestDocumentOfferInteractor: EudiTest {
       ),
       navigationCancelType: .pop
     )
-
+    
     let url = URL(filePath: "someURL")!
-
+    
     let document = Document(
       id: "doc-id",
       docType: "type",
@@ -104,30 +104,30 @@ final class TestDocumentOfferInteractor: EudiTest {
       displayName: "My Document",
       status: .issued
     )
-
+    
     let mockPendingData = DynamicIssuancePendingData(
       pendingDoc: document,
       url: url
     )
-
+    
     stub(walletKitController) { mock in
       when(mock.getDynamicIssuancePendingData()).thenReturn(mockPendingData)
-
+      
       when(mock.resumePendingIssuance(
         pendingDoc: any(),
         webUrl: any()
       ))
       .thenThrow(exceptedError)
-
+      
       when(mock.fetchDocuments(with: any())).thenReturn([])
     }
-
+    
     // When
     let result = await interactor.resumeDynamicIssuance(
       issuerName: config.issuerName,
       successNavigation: config.successNavigation
     )
-
+    
     // Then
     switch result {
     case .failure(let error):
@@ -136,7 +136,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       XCTFail("Expected success, but got \(result)")
     }
   }
-
+  
   func testResumeDynamicIssuance_WhenDocumentIssued_ThenReturnSuccess() async {
     // Given
     let config = IssuanceCodeUiConfig(
@@ -151,9 +151,9 @@ final class TestDocumentOfferInteractor: EudiTest {
       ),
       navigationCancelType: .pop
     )
-
+    
     let url = URL(filePath: "someURL")!
-
+    
     let document = Document(
       id: "doc-id",
       docType: "type",
@@ -165,30 +165,30 @@ final class TestDocumentOfferInteractor: EudiTest {
       displayName: "My Document",
       status: .issued
     )
-
+    
     let mockPendingData = DynamicIssuancePendingData(
       pendingDoc: document,
       url: url
     )
-
+    
     stub(walletKitController) { mock in
       when(mock.getDynamicIssuancePendingData()).thenReturn(mockPendingData)
-
+      
       when(mock.resumePendingIssuance(
         pendingDoc: any(),
         webUrl: any()
       ))
       .thenReturn(document)
-
+      
       when(mock.fetchDocuments(with: any())).thenReturn([Constants.createEuPidModel()])
     }
-
+    
     // When
     let result = await interactor.resumeDynamicIssuance(
       issuerName: config.issuerName,
       successNavigation: config.successNavigation
     )
-
+    
     // Then
     switch result {
     case .success(let documents):
@@ -197,7 +197,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       XCTFail("Expected success, but got \(result)")
     }
   }
-
+  
   func testResumeDynamicIssuance_WhenDocumentDeffered_ThenReturnSuccess() async {
     // Given
     let config = IssuanceCodeUiConfig(
@@ -212,9 +212,9 @@ final class TestDocumentOfferInteractor: EudiTest {
       ),
       navigationCancelType: .pop
     )
-
+    
     let url = URL(filePath: "someURL")!
-
+    
     let document = Document(
       id: "doc-id",
       docType: "type",
@@ -226,30 +226,30 @@ final class TestDocumentOfferInteractor: EudiTest {
       displayName: "My Document",
       status: .deferred
     )
-
+    
     let mockPendingData = DynamicIssuancePendingData(
       pendingDoc: document,
       url: url
     )
-
+    
     stub(walletKitController) { mock in
       when(mock.getDynamicIssuancePendingData()).thenReturn(mockPendingData)
-
+      
       when(mock.resumePendingIssuance(
         pendingDoc: any(),
         webUrl: any()
       ))
       .thenReturn(document)
-
+      
       when(mock.fetchDocuments(with: any())).thenReturn([Constants.createEuPidModel()])
     }
-
+    
     // When
     let result = await interactor.resumeDynamicIssuance(
       issuerName: config.issuerName,
       successNavigation: config.successNavigation
     )
-
+    
     // Then
     switch result {
     case .success(let route):
@@ -258,7 +258,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       XCTFail("Expected success, but got \(result)")
     }
   }
-
+  
   func testResumeDynamicIssuance_WhenDocumentPending_ThenReturnFailure() async {
     // Given
     let config = IssuanceCodeUiConfig(
@@ -273,9 +273,9 @@ final class TestDocumentOfferInteractor: EudiTest {
       ),
       navigationCancelType: .pop
     )
-
+    
     let url = URL(filePath: "someURL")!
-
+    
     let document = Document(
       id: "doc-id",
       docType: "type",
@@ -287,30 +287,30 @@ final class TestDocumentOfferInteractor: EudiTest {
       displayName: "My Document",
       status: .pending
     )
-
+    
     let mockPendingData = DynamicIssuancePendingData(
       pendingDoc: document,
       url: url
     )
-
+    
     stub(walletKitController) { mock in
       when(mock.getDynamicIssuancePendingData()).thenReturn(mockPendingData)
-
+      
       when(mock.resumePendingIssuance(
         pendingDoc: any(),
         webUrl: any()
       ))
       .thenReturn(document)
-
+      
       when(mock.fetchDocuments(with: any())).thenReturn([Constants.createEuPidModel()])
     }
-
+    
     // When
     let result = await interactor.resumeDynamicIssuance(
       issuerName: config.issuerName,
       successNavigation: config.successNavigation
     )
-
+    
     // Then
     switch result {
     case .failure(let error):
@@ -319,7 +319,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       XCTFail("Expected success, but got \(result)")
     }
   }
-
+  
   func testIssueDocuments_WhenIssueDocumentsByOfferUrl_ThenReturnFailure() async {
     // Given
     let config = UIConfig.TwoWayNavigationType.push(
@@ -332,12 +332,12 @@ final class TestDocumentOfferInteractor: EudiTest {
         )
       )
     )
-
+    
     let expectedError = WalletCoreError.unableToIssueAndStore
-
+    
     let uri = "uri"
     let txCodeValue = "txCodeValue"
-
+    
     stub(walletKitController) { mock in
       mock.issueDocumentsByOfferUrl(
         offerUri: uri,
@@ -346,7 +346,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       )
       .thenThrow(expectedError)
     }
-
+    
     // When
     let result = await interactor.issueDocuments(
       with: uri,
@@ -355,7 +355,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       successNavigation: config,
       txCodeValue: txCodeValue
     )
-
+    
     // Then
     switch result {
     case .failure(let error):
@@ -364,7 +364,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       XCTFail("Expected success, but got \(result)")
     }
   }
-
+  
   func testIssueDocuments_WhenIssueDocumentsByOfferUrlEmptyDocuments_ThenReturnFailure() async {
     // Given
     let config = UIConfig.TwoWayNavigationType.push(
@@ -377,10 +377,10 @@ final class TestDocumentOfferInteractor: EudiTest {
         )
       )
     )
-
+    
     let uri = "uri"
     let txCodeValue = "txCodeValue"
-
+    
     stub(walletKitController) { mock in
       mock.issueDocumentsByOfferUrl(
         offerUri: uri,
@@ -389,7 +389,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       )
       .thenReturn([])
     }
-
+    
     // When
     let result = await interactor.issueDocuments(
       with: uri,
@@ -398,7 +398,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       successNavigation: config,
       txCodeValue: txCodeValue
     )
-
+    
     // Then
     switch result {
     case .failure(let error):
@@ -407,7 +407,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       XCTFail("Expected success, but got \(result)")
     }
   }
-
+  
   func testIssueDocuments_WhenIssueDocumentsByOfferUrl_ThenReturnSuccess() async {
     // Given
     let document = Document(
@@ -421,7 +421,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       displayName: "My Document",
       status: .deferred
     )
-
+    
     let config = UIConfig.TwoWayNavigationType.push(
       .featureCommonModule(
         .genericSuccess(config: UIConfig.Success(
@@ -432,10 +432,10 @@ final class TestDocumentOfferInteractor: EudiTest {
         )
       )
     )
-
+    
     let uri = "uri"
     let txCodeValue = "txCodeValue"
-
+    
     stub(walletKitController) { mock in
       mock.issueDocumentsByOfferUrl(
         offerUri: uri,
@@ -444,7 +444,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       )
       .thenReturn([document])
     }
-
+    
     // When
     let result = await interactor.issueDocuments(
       with: uri,
@@ -453,7 +453,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       successNavigation: config,
       txCodeValue: txCodeValue
     )
-
+    
     // Then
     switch result {
     case .deferredSuccess(let route):
@@ -462,7 +462,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       XCTFail("Expected success, but got \(result)")
     }
   }
-
+  
   func testIssueDocuments_WhenIssueDocumentsByOfferUrlauthorizePresentationUrl_ThenReturnSuccess() async {
     // Given
     let document = Document(
@@ -476,7 +476,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       displayName: "My Document",
       status: .issued
     )
-
+    
     let config = UIConfig.TwoWayNavigationType.push(
       .featureCommonModule(
         .genericSuccess(config: UIConfig.Success(
@@ -487,10 +487,10 @@ final class TestDocumentOfferInteractor: EudiTest {
         )
       )
     )
-
+    
     let uri = "uri"
     let txCodeValue = "txCodeValue"
-
+    
     stub(walletKitController) { mock in
       mock.issueDocumentsByOfferUrl(
         offerUri: uri,
@@ -498,10 +498,10 @@ final class TestDocumentOfferInteractor: EudiTest {
         txCodeValue: txCodeValue
       )
       .thenReturn([document])
-
+      
       when(mock.fetchDocuments(with: any())).thenReturn([Constants.createEuPidModel()])
     }
-
+    
     // When
     let result = await interactor.issueDocuments(
       with: uri,
@@ -510,7 +510,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       successNavigation: config,
       txCodeValue: txCodeValue
     )
-
+    
     // Then
     switch result {
     case .partialSuccess(let route):
@@ -519,7 +519,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       XCTFail("Expected success, but got \(result)")
     }
   }
-
+  
   func testIssueDocuments_WhenIssueDocumentsByOfferUrlWithDocOffers_ThenReturnSuccess() async {
     // Given
     let document = Document(
@@ -533,7 +533,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       displayName: "My Document",
       status: .issued
     )
-
+    
     let docOffers = [
       OfferedDocModel(
         credentialConfigurationIdentifier: "id",
@@ -541,10 +541,14 @@ final class TestDocumentOfferInteractor: EudiTest {
         identifier: "identifier",
         displayName: "My Document",
         algValuesSupported: [],
-        keyOptions: KeyOptions(credentialPolicy: .oneTimeUse, batchSize: 1)
+        credentialOptions: .init(
+          credentialPolicy: .oneTimeUse,
+          batchSize: 1
+        ),
+        keyOptions: nil
       )
     ]
-
+    
     let config = UIConfig.TwoWayNavigationType.push(
       .featureCommonModule(
         .genericSuccess(config: UIConfig.Success(
@@ -555,10 +559,10 @@ final class TestDocumentOfferInteractor: EudiTest {
         )
       )
     )
-
+    
     let uri = "uri"
     let txCodeValue = "txCodeValue"
-
+    
     stub(walletKitController) { mock in
       mock.issueDocumentsByOfferUrl(
         offerUri: uri,
@@ -566,10 +570,10 @@ final class TestDocumentOfferInteractor: EudiTest {
         txCodeValue: txCodeValue
       )
       .thenReturn([document])
-
+      
       when(mock.fetchDocuments(with: any())).thenReturn([Constants.createEuPidModel()])
     }
-
+    
     // When
     let result = await interactor.issueDocuments(
       with: uri,
@@ -578,7 +582,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       successNavigation: config,
       txCodeValue: txCodeValue
     )
-
+    
     // Then
     switch result {
     case .success(let route):
@@ -587,21 +591,21 @@ final class TestDocumentOfferInteractor: EudiTest {
       XCTFail("Expected success, but got \(result)")
     }
   }
-
+  
   func testProcessOfferRequest_WhenResolveOfferUrlDocTypes_ThenReturnFailure() async {
     // Given
     let uri = "uri"
     let exceptedError = WalletCoreError.unableToIssueAndStore
-
+    
     stub(walletKitController) { mock in
       mock.resolveOfferUrlDocTypes(uriOffer: uri).thenThrow(exceptedError)
-
+      
       mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.createEuPidModel()])
     }
-
+    
     // When
     let result = await interactor.processOfferRequest(with: uri)
-
+    
     // Then
     switch result {
     case .failure(let error):
@@ -610,7 +614,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       XCTFail("Expected success, but got \(result)")
     }
   }
-
+  
   func testOfferedIssuance_WhenModelTransforms_ThenToDocumentOfferUIModel() {
     let docModel = OfferedDocModel(
       credentialConfigurationIdentifier: "id",
@@ -619,18 +623,22 @@ final class TestDocumentOfferInteractor: EudiTest {
       identifier: "identifier",
       displayName: "Display Name",
       algValuesSupported: [],
-      keyOptions: KeyOptions(credentialPolicy: .oneTimeUse, batchSize: 1)
+      credentialOptions: .init(
+        credentialPolicy: .oneTimeUse,
+        batchSize: 1
+      ),
+      keyOptions: nil
     )
-
+    
     let issuanceModel = OfferedIssuanceModel(
       issuerName: "Issuer",
       issuerLogoUrl: "https://logo.com/logo.png",
       docModels: [docModel],
       txCodeSpec: TxCode(inputMode: .text, length: 6, description: "description")
     )
-
+    
     let offerUI = issuanceModel.transformToDocumentOfferUi()
-
+    
     XCTAssertEqual(offerUI.issuerName, "Issuer")
     XCTAssertEqual(offerUI.issuerLogo?.absoluteString, "https://logo.com/logo.png")
     XCTAssertEqual(offerUI.uiOffers.count, 1)
@@ -638,24 +646,24 @@ final class TestDocumentOfferInteractor: EudiTest {
     XCTAssertEqual(offerUI.txCode?.isRequired, true)
     XCTAssertEqual(offerUI.txCode?.codeLenght, 6)
   }
-
+  
   func testDocumentOffer_MockUIModel() {
     // Given
     let mock = DocumentOfferUIModel.mock()
-
+    
     // When / Then
     XCTAssertEqual(mock.issuerName, LocalizableStringKey.unknownIssuer.toString)
     XCTAssertNil(mock.issuerLogo)
     XCTAssertNil(mock.txCode)
     XCTAssertEqual(mock.uiOffers.count, 5)
     XCTAssertEqual(mock.uiOffers.first?.documentName, "Document Name")
-
+    
     for offer in mock.uiOffers {
       XCTAssertEqual(offer.listItem.mainContent.asString, "Document Name")
     }
     XCTAssertEqual(mock.docOffers.count, 0)
   }
-
+  
   func testProcessOfferRequest_WhenResolveOfferUrlDocTypes_ThenReturnSuccess() async {
     // Given
     let expectedDocumentOfferUIModel = DocumentOfferUIModel(
@@ -665,7 +673,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       uiOffers: [],
       docOffers: []
     )
-
+    
     let uri = "uri"
     let docModels = [
       OfferedDocModel(
@@ -674,26 +682,30 @@ final class TestDocumentOfferInteractor: EudiTest {
         identifier: "identifier",
         displayName: "My Document",
         algValuesSupported: [],
-        keyOptions: KeyOptions(credentialPolicy: .oneTimeUse, batchSize: 1)
+        credentialOptions: .init(
+          credentialPolicy: .oneTimeUse,
+          batchSize: 1
+        ),
+        keyOptions: nil
       )
     ]
-
+    
     let offeredIssuanceModel =  OfferedIssuanceModel(
       issuerName: "issuerName",
       issuerLogoUrl: "issuerLogoUrl",
       docModels: docModels,
       txCodeSpec: nil
     )
-
+    
     stub(walletKitController) { mock in
       mock.resolveOfferUrlDocTypes(uriOffer: uri).thenReturn(offeredIssuanceModel)
-
+      
       mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.createEuPidModel()])
     }
-
+    
     // When
     let result = await interactor.processOfferRequest(with: uri)
-
+    
     // Then
     switch result {
     case .success(let doc):
