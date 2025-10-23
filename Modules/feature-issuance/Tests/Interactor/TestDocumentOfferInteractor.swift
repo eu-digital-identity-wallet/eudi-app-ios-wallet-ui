@@ -541,6 +541,7 @@ final class TestDocumentOfferInteractor: EudiTest {
         identifier: "identifier",
         displayName: "My Document",
         algValuesSupported: [],
+        claims: [],
         credentialOptions: .init(
           credentialPolicy: .oneTimeUse,
           batchSize: 1
@@ -623,6 +624,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       identifier: "identifier",
       displayName: "Display Name",
       algValuesSupported: [],
+      claims: [],
       credentialOptions: .init(
         credentialPolicy: .oneTimeUse,
         batchSize: 1
@@ -682,6 +684,7 @@ final class TestDocumentOfferInteractor: EudiTest {
         identifier: "identifier",
         displayName: "My Document",
         algValuesSupported: [],
+        claims: [],
         credentialOptions: .init(
           credentialPolicy: .oneTimeUse,
           batchSize: 1
