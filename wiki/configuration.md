@@ -205,7 +205,8 @@ final class RQESConfig: EudiRQESUiConfig {
           clientId: "your_dev_clientid",
           clientSecret: "your_dev_secret",
           authFlowRedirectionURI: "your_dev_redirect",
-          hashAlgorithm: .SHA256
+          hashAlgorithm: .SHA256,
+          includeRevocationInfo: false
         )
       ]
     case .DEMO:
@@ -217,7 +218,8 @@ final class RQESConfig: EudiRQESUiConfig {
           clientId: "your_demo_clientid",
           clientSecret: "your_demo_secret",
           authFlowRedirectionURI: "your_demo_redirect",
-          hashAlgorithm: .SHA256
+          hashAlgorithm: .SHA256,
+          includeRevocationInfo: false
         )
       ]
     }

@@ -36,7 +36,8 @@ final class RQESConfig: EudiRQESUiConfig {
           clientId: "wallet-client",
           clientSecret: "somesecret2",
           authFlowRedirectionURI: "rqes://oauth/callback",
-          hashAlgorithm: .SHA256
+          hashAlgorithm: .SHA256,
+          includeRevocationInfo: false
         )
       ]
     case .DEMO:
@@ -48,7 +49,8 @@ final class RQESConfig: EudiRQESUiConfig {
           clientId: "wallet-client",
           clientSecret: "somesecret2",
           authFlowRedirectionURI: "rqes://oauth/callback",
-          hashAlgorithm: .SHA256
+          hashAlgorithm: .SHA256,
+          includeRevocationInfo: false
         )
       ]
     }
