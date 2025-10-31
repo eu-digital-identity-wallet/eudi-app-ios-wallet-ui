@@ -84,14 +84,18 @@ private func content(
         .typography(Theme.shared.font.bodyLarge)
         .foregroundStyle(Theme.shared.color.onSurface)
 
-      ForEach(Array(viewState.addDocumentCellModels), id: \.key) { issuer, models in
+      ForEach(viewState.addDocumentCellModels.elements, id: \.key) { pair in
+
+        let issuer = pair.key
+        let models = pair.value
+
         Section(
           header:
             Text(issuer)
             .frame(maxWidth: .infinity, alignment: .leading)
             .shimmer(isLoading: viewState.isLoading)
         ) {
-          VStack(spacing: SPACING_MEDIUM_SMALL) {
+          LazyVStack(spacing: SPACING_MEDIUM_SMALL) {
             ForEach(models, id: \.id) { cell in
               WrapCardView {
                 WrapListItemView(
