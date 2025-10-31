@@ -39,7 +39,7 @@ final class TestAddDocumentInteractor: EudiTest {
     self.walletKitController = nil
   }
   
-  func testFetchScopedDocuments_whenScopedDocuments_thenReturnsSuccess() async {
+  func testFetchScopedDocuments_whenScopedDocuments_thenReturnsSuccess() async throws {
     // Given
     stubGetScopedDocumentsSuccess(with: [
       Constants.scopedDocument
@@ -52,13 +52,15 @@ final class TestAddDocumentInteractor: EudiTest {
     switch result {
     case .success(let documents):
       XCTAssertEqual(documents.count, 1)
-      XCTAssertEqual(documents.first?.value.first?.configId, "test-config-id")
+      let firstEntry = try XCTUnwrap(documents.elements.first)
+      let firstModel = try XCTUnwrap(firstEntry.value.first)
+      XCTAssertEqual(firstModel.configId, "test-config-id")
     default:
       XCTFail("Expected success but got \(result)")
     }
   }
   
-  func testFetchScopedDocuments_whenScopedDocumentsCompare_thenReturnsSuccess() async {
+  func testFetchScopedDocuments_whenScopedDocumentsCompare_thenReturnsSuccess() async throws {
     // Given
     stubGetScopedDocumentsSuccess(with: [
       Constants.scopedDocument,
@@ -71,7 +73,8 @@ final class TestAddDocumentInteractor: EudiTest {
     // Then
     switch result {
     case .success(let documents):
-      XCTAssertEqual(documents.first?.value.count, 2)
+      let firstEntry = try XCTUnwrap(documents.elements.first)
+      XCTAssertEqual(firstEntry.value.count, 2)
     default:
       XCTFail("Expected success but got \(result)")
     }
@@ -430,7 +433,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testFetchScopedDocuments_WhenDocumentsReturned_ThenReturnsSuccessMocks() async {
+  func testFetchScopedDocuments_WhenDocumentsReturned_ThenReturnsSuccessMocks() async throws {
     // Given
     let issuerId = "issuer.dev"
     let secondaryIssuerId = "issuer2.dev"
@@ -479,13 +482,16 @@ final class TestAddDocumentInteractor: EudiTest {
     // Then
     switch result {
     case .success(let documents):
+      
       XCTAssertEqual(documents.count, 2)
-      
       XCTAssertNotNil(documents[issuerId])
-      XCTAssertEqual(documents[issuerId]?.first?.configId, scopedDocument1.configId)
-      
       XCTAssertNotNil(documents[secondaryIssuerId])
-      XCTAssertEqual(documents[secondaryIssuerId]?.first?.configId, scopedDocument4.configId)
+      
+      let firstModel = try XCTUnwrap(documents[issuerId]?.first)
+      XCTAssertEqual(firstModel.configId, scopedDocument1.configId)
+      
+      let secondaryModel = try XCTUnwrap(documents[secondaryIssuerId]?.first)
+      XCTAssertEqual(secondaryModel.configId, scopedDocument4.configId)
     default:
       XCTFail("Expected success but got \(result)")
     }

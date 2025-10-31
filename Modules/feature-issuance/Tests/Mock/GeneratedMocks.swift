@@ -1021,6 +1021,7 @@ import Cuckoo
 
 import Cuckoo
 import logic_resources
+import OrderedCollections
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -1461,6 +1462,7 @@ import logic_resources
 
 import Cuckoo
 import logic_resources
+import OrderedCollections
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -1475,6 +1477,7 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/feature-issuance/Sources/UI/Document/Add/Model/AddDocumentUIModel.swift'
 
 import Cuckoo
+import OrderedCollections
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

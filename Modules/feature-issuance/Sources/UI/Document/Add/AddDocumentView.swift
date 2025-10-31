@@ -42,7 +42,9 @@ struct AddDocumentView<Router: RouterHost>: View {
       if viewModel.viewState.addDocumentCellModels.isEmpty {
         noDocumentsFound()
       } else {
-        content(viewState: viewModel.viewState) { issuerId, configId, identifier in
+        content(
+          viewState: viewModel.viewState
+        ) { issuerId, configId, identifier in
           viewModel.onClick(
             issuerId: issuerId,
             configId: configId,
@@ -76,27 +78,30 @@ private func content(
 ) -> some View {
 
   ScrollView {
-    VStack(spacing: SPACING_LARGE_MEDIUM) {
+    LazyVStack(spacing: SPACING_LARGE_MEDIUM) {
 
       Text(.chooseFromListTitle)
         .typography(Theme.shared.font.bodyLarge)
         .foregroundStyle(Theme.shared.color.onSurface)
 
-      VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
-        ForEach(Array(viewState.addDocumentCellModels), id: \.key) { issuer, models in
-          Section(
-            header: Text(issuer).shimmer(isLoading: viewState.isLoading)
-          ) {
-            VStack(spacing: SPACING_MEDIUM_SMALL) {
-              ForEach(models, id: \.id) { cell in
-                WrapCardView {
-                  WrapListItemView(
-                    listItem: cell.listItem,
-                    isLoading: cell.isLoading,
-                    action: { action(cell.issuerId, cell.configId, cell.docTypeIdentifier) }
-                  )
-                }
+      ForEach(Array(viewState.addDocumentCellModels), id: \.key
+      ) { issuer, models in
+        Section(
+          header:
+            Text(issuer)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .shimmer(isLoading: viewState.isLoading)
+        ) {
+          VStack(spacing: SPACING_MEDIUM_SMALL) {
+            ForEach(models, id: \.id) { cell in
+              WrapCardView {
+                WrapListItemView(
+                  listItem: cell.listItem,
+                  isLoading: cell.isLoading,
+                  action: { action(cell.issuerId, cell.configId, cell.docTypeIdentifier) }
+                )
               }
+              .id(cell.id)
             }
           }
         }
@@ -181,7 +186,9 @@ private func scanFooter(
     showFooterScanner: true
   )
 
-  content(viewState: viewState) { _, _, _ in }
+  content(
+    viewState: viewState
+  ) { _, _, _ in }
 }
 
 #Preview {

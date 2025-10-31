@@ -15,6 +15,7 @@
  */
 import logic_ui
 import logic_core
+import OrderedCollections
 
 public struct AddDocumentUIModel: Identifiable, Sendable, Equatable {
 
@@ -45,7 +46,7 @@ public struct AddDocumentUIModel: Identifiable, Sendable, Equatable {
 }
 
 public extension AddDocumentUIModel {
-  static var mocks: [String: [AddDocumentUIModel]] {
+  static var mocks: OrderedDictionary<String, [AddDocumentUIModel]> {
     [
       "Issuer": [
         .init(

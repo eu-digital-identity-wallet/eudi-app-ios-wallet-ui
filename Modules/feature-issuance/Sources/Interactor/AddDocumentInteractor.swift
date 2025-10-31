@@ -16,6 +16,7 @@
 import logic_resources
 import feature_common
 import logic_core
+import OrderedCollections
 
 public protocol AddDocumentInteractor: Sendable {
   func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> ScopedDocumentsPartialState
@@ -71,7 +72,13 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
         section.sorted(by: compare)
       }
 
-      return .success(grouped)
+      let ordered = OrderedDictionary<String, [AddDocumentUIModel]>(
+        uniqueKeysWithValues: Array(grouped).sorted {
+          $0.key.localizedCompare($1.key) == .orderedAscending
+        }
+      )
+
+      return .success(ordered)
     } catch {
       return .failure(error)
     }
@@ -156,7 +163,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
 }
 
 public enum ScopedDocumentsPartialState: Sendable {
-  case success([String: [AddDocumentUIModel]])
+  case success(OrderedDictionary<String, [AddDocumentUIModel]>)
   case failure(Error)
 }
 
