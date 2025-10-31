@@ -84,8 +84,7 @@ private func content(
         .typography(Theme.shared.font.bodyLarge)
         .foregroundStyle(Theme.shared.color.onSurface)
 
-      ForEach(Array(viewState.addDocumentCellModels), id: \.key
-      ) { issuer, models in
+      ForEach(Array(viewState.addDocumentCellModels), id: \.key) { issuer, models in
         Section(
           header:
             Text(issuer)
@@ -101,7 +100,6 @@ private func content(
                   action: { action(cell.issuerId, cell.configId, cell.docTypeIdentifier) }
                 )
               }
-              .id(cell.id)
             }
           }
         }
