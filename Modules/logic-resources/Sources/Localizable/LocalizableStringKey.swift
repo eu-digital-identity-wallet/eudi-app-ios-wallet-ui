@@ -117,6 +117,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestCredentialOfferCaption
   case requestCredentialOfferNoDocument
   case unableToIssueAndStore
+  case missingMetadata
   case issueButton
   case cancelIssueSheetTitle
   case cancelIssueSheetCaption

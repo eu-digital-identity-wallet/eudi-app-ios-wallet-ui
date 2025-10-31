@@ -50,7 +50,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       let codeMinLength = 4
       let codeMaxLength = 6
 
-      let offer = try await walletController.resolveOfferUrlDocTypes(uriOffer: uri)
+      let offer = try await walletController.resolveOfferUrlDocTypes(offerUri: uri)
       let hasPidStored = !walletController.fetchIssuedDocuments(with: [.mDocPid, .sdJwtPid]).isEmpty
 
       if let spec = offer.txCodeSpec,

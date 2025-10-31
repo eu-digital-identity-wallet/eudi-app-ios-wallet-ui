@@ -1335,6 +1335,17 @@
         }
       }
     },
+    "missing_metadata" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to retreive document metadata"
+          }
+        }
+      }
+    },
     "missing_pid" : {
       "extractionState" : "manual",
       "localizations" : {

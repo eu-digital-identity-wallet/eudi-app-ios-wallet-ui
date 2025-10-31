@@ -202,6 +202,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "request_credential_offer_no_document")
     case .unableToIssueAndStore:
       bundle.localizedString(forKey: "unable_to_issue_and_store_documents")
+    case .missingMetadata:
+      bundle.localizedString(forKey: "missing_metadata")
     case .issueButton:
       bundle.localizedString(forKey: "issue_button")
     case .cancelIssueSheetTitle:

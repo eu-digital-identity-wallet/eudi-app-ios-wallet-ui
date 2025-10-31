@@ -26,17 +26,12 @@ protocol WalletKitConfig: Sendable {
   /**
    * VCI Configuration
    */
-  var vciConfig: OpenId4VCIConfiguration { get }
+  var vciConfig: [String: OpenId4VciConfiguration] { get }
 
   /**
    * VP Configuration
    */
   var vpConfig: OpenId4VpConfiguration { get }
-
-  /**
-   * Issuer URL
-   */
-  var issuerUrl: String { get }
 
   /**
    * Reader Configuration
@@ -96,24 +91,46 @@ struct WalletKitConfigImpl: WalletKitConfig {
     false
   }
 
-  var vciConfig: OpenId4VCIConfiguration {
+  var vciConfig: [String: OpenId4VciConfiguration] {
     return switch configLogic.appBuildVariant {
     case .DEMO:
-        .init(
+      [
+        "issuer.eudiw.dev": .init(
+          credentialIssuerURL: "https://issuer.eudiw.dev",
+          client: .public(id: "wallet-dev"),
+          authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
+          usePAR: true,
+          useDpopIfSupported: true,
+          cacheIssuerMetadata: true
+        ),
+        "issuer-backend.eudiw.dev": .init(
+          credentialIssuerURL: "https://issuer-backend.eudiw.dev",
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
           useDpopIfSupported: true,
           cacheIssuerMetadata: true
         )
+      ]
     case .DEV:
-        .init(
+      [
+        "dev.issuer.eudiw.dev": .init(
+          credentialIssuerURL: "https://dev.issuer.eudiw.dev",
+          client: .public(id: "wallet-dev"),
+          authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
+          usePAR: true,
+          useDpopIfSupported: true,
+          cacheIssuerMetadata: true
+        ),
+        "dev.issuer-backend.eudiw.dev": .init(
+          credentialIssuerURL: "https://dev.issuer-backend.eudiw.dev",
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
           useDpopIfSupported: true,
           cacheIssuerMetadata: true
         )
+      ]
     }
   }
 

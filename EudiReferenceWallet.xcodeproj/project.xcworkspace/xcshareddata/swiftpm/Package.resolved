@@ -1,5 +1,5 @@
 {
-  "originHash" : "67a3e5c4669268f30f38368a78a1243e788c2cc606916ffce5da1b5d2db19ac9",
+  "originHash" : "a2e73222039b2f8780e26d082125cb4787432a62065bc8b91718c7ce1d7ca480",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -123,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "d9de26ede2353fdaadb8463a3c207a1b78e863c0",
-        "version" : "0.16.1"
+        "revision" : "bba221262df18c0f4be8006e02a1475b152a2567",
+        "version" : "0.16.2"
       }
     },
     {
@@ -159,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
       "state" : {
-        "revision" : "93326236e40137f01f07b71533c6db95e8811bfa",
-        "version" : "0.17.6"
+        "revision" : "d9508aaddab82c4095d11305cabfcce2ca94a8fc",
+        "version" : "0.17.7"
       }
     },
     {
@@ -177,8 +177,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "231546f42f3cb4a08bc56a6557a6685b5f5a2da4",
-        "version" : "0.17.0"
+        "revision" : "4f59f3ac58bc1e5762b033cd406653a2a98a344a",
+        "version" : "0.18.1"
       }
     },
     {
@@ -250,7 +250,7 @@
       "location" : "https://github.com/iziz/libPhoneNumber-iOS.git",
       "state" : {
         "branch" : "master",
-        "revision" : "3220b4027117c41f076f1bcc7f3c492ab8957348"
+        "revision" : "768c6eccd24bbf0d2a73596cac7a03174f4f5c3d"
       }
     },
     {
@@ -366,8 +366,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-certificates.git",
       "state" : {
-        "revision" : "f4cd9e78a1ec209b27e426a5f5c693675f95e75a",
-        "version" : "1.15.0"
+        "revision" : "c399f90e7bbe8874f6cbfda1d5f9023d1f5ce122",
+        "version" : "1.15.1"
       }
     },
     {
