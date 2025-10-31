@@ -78,7 +78,7 @@ private func content(
 ) -> some View {
 
   ScrollView {
-    LazyVStack(spacing: SPACING_LARGE_MEDIUM) {
+    LazyVStack(spacing: SPACING_MEDIUM_SMALL) {
 
       Text(.chooseFromListTitle)
         .typography(Theme.shared.font.bodyLarge)
@@ -95,15 +95,13 @@ private func content(
             .frame(maxWidth: .infinity, alignment: .leading)
             .shimmer(isLoading: viewState.isLoading)
         ) {
-          LazyVStack(spacing: SPACING_MEDIUM_SMALL) {
-            ForEach(models, id: \.id) { cell in
-              WrapCardView {
-                WrapListItemView(
-                  listItem: cell.listItem,
-                  isLoading: cell.isLoading,
-                  action: { action(cell.issuerId, cell.configId, cell.docTypeIdentifier) }
-                )
-              }
+          ForEach(models, id: \.id) { cell in
+            WrapCardView {
+              WrapListItemView(
+                listItem: cell.listItem,
+                isLoading: cell.isLoading,
+                action: { action(cell.issuerId, cell.configId, cell.docTypeIdentifier) }
+              )
             }
           }
         }
