@@ -65,40 +65,35 @@ Using this parsed information, instances such as `WalletKitConfig` and `RQESConf
 For instance, here's how `WalletKitConfig` resolves its configuration for OpenID4VCI remote services based on the build variant:
 
 ```swift
-  var issuerUrl: String {
+  var vciConfig: [String: OpenId4VciConfiguration] {
     return switch configLogic.appBuildVariant {
     case .DEMO:
-      "https://issuer.eudiw.dev"
-    case .DEV:
-      "https://dev.issuer.eudiw.dev"
-    }
-  }
-```
-
-```swift
-  var vciConfig: OpenId4VCIConfiguration {
-    return switch configLogic.appBuildVariant {
-    case .DEMO:
-        .init(
+      [
+        "issuer.eudiw.dev": .init(
+          credentialIssuerURL: "https://issuer.eudiw.dev",
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
           useDpopIfSupported: true,
           cacheIssuerMetadata: true
         )
+      ]
     case .DEV:
-        .init(
+      [
+        "dev.issuer.eudiw.dev": .init(
+          credentialIssuerURL: "https://dev.issuer.eudiw.dev",
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
           useDpopIfSupported: true,
           cacheIssuerMetadata: true
         )
+      ]
     }
   }
 ```
 
-In this example, the `vciConfig` and `issuerUrl` properties dynamically assign configurations, such as `issuerUrl`, `clientId`, `redirectUri`, `usePAR`, and `useDPoP`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
+In this example, the `vciConfig` property dynamically assigns configurations, such as `issuerUrl`, `clientId`, `redirectUri`, `usePAR`, `useDPoP`, and `metadataCache`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
 
 ### Running with local services
 
