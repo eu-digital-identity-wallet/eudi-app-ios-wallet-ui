@@ -20,7 +20,7 @@ import logic_core
 
 @Copyable
 struct AddDocumentViewState: ViewState {
-  let addDocumentCellModels: [AddDocumentUIModel]
+  let addDocumentCellModels: [String: [AddDocumentUIModel]]
   let error: ContentErrorView.Config?
   let config: IssuanceFlowUiConfig
   let showFooterScanner: Bool
@@ -30,7 +30,10 @@ struct AddDocumentViewState: ViewState {
   }
 
   var isLoading: Bool {
-    !addDocumentCellModels.isEmpty && addDocumentCellModels.allSatisfy { $0.isLoading }
+    guard !addDocumentCellModels.isEmpty else { return false }
+    return addDocumentCellModels
+      .flatMap { $0.value }
+      .allSatisfy { $0.isLoading }
   }
 }
 
@@ -89,7 +92,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     case .failure(let error):
       setState {
         $0.copy(
-          addDocumentCellModels: [],
+          addDocumentCellModels: [:],
           error: link == nil
           ? .init(
             description: .custom(error.localizedDescription),
@@ -107,17 +110,25 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     }
   }
 
-  func onClick(configId: String, docTypeIdentifier: DocumentTypeIdentifier) {
-    issueDocument(configId: configId, docTypeIdentifier: docTypeIdentifier)
+  func onClick(
+    issuerId: String,
+    configId: String,
+    docTypeIdentifier: DocumentTypeIdentifier
+  ) {
+    issueDocument(
+      issuerId: issuerId,
+      configId: configId,
+      docTypeIdentifier: docTypeIdentifier
+    )
   }
 
   func onScanClick() {
     var successNavigation: UIConfig.TwoWayNavigationType {
       switch viewState.config.flow {
       case .noDocument:
-        .push(.featureDashboardModule(.dashboard))
+          .push(.featureDashboardModule(.dashboard))
       case .extraDocument:
-        .popTo(.featureDashboardModule(.dashboard))
+          .popTo(.featureDashboardModule(.dashboard))
       }
     }
 
@@ -199,7 +210,11 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     }
   }
 
-  private func issueDocument(configId: String, docTypeIdentifier: DocumentTypeIdentifier) {
+  private func issueDocument(
+    issuerId: String,
+    configId: String,
+    docTypeIdentifier: DocumentTypeIdentifier
+  ) {
     Task {
       setState {
         $0.copy(
@@ -211,7 +226,11 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
       let interactor = self.interactor
 
       let state = await Task.detached { () -> IssueResultPartialState in
-        return await interactor.issueDocument(configId: configId, docTypeIdentifier: docTypeIdentifier)
+        return await interactor.issueDocument(
+          issuerId: issuerId,
+          configId: configId,
+          docTypeIdentifier: docTypeIdentifier
+        )
       }.value
 
       switch state {
@@ -303,13 +322,14 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     )
   }
 
-  private func transformCellLoadingState(with isLoading: Bool) -> [AddDocumentUIModel] {
-    return viewState.addDocumentCellModels.map({
-      var cell = $0
-      cell.isLoading = isLoading
-      return cell
+  private func transformCellLoadingState(with isLoading: Bool) -> [String: [AddDocumentUIModel]] {
+    viewState.addDocumentCellModels.mapValues { models in
+      models.map { model in
+        var updated = model
+        updated.isLoading = isLoading
+        return updated
+      }
     }
-    )
   }
 
   private func hasDeepLink() -> String? {
@@ -385,7 +405,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     }
   }
 
-  private func showScannerFooter(documents: [AddDocumentUIModel]) -> Bool {
+  private func showScannerFooter(documents: [String: [AddDocumentUIModel]]) -> Bool {
     viewState.config.flow == .noDocument || documents.isEmpty
   }
 }

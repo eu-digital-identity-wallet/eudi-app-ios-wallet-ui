@@ -47,45 +47,45 @@ final class TestAddDocumentInteractor: EudiTest {
     
     // When
     let result = await interactor.fetchScopedDocuments(with: .extraDocument(filterType: nil))
-
+    
     // Then
     switch result {
     case .success(let documents):
       XCTAssertEqual(documents.count, 1)
-      XCTAssertEqual(documents.first?.configId, "test-config-id")
+      XCTAssertEqual(documents.first?.value.first?.configId, "test-config-id")
     default:
       XCTFail("Expected success but got \(result)")
     }
   }
-
+  
   func testFetchScopedDocuments_whenScopedDocumentsCompare_thenReturnsSuccess() async {
     // Given
     stubGetScopedDocumentsSuccess(with: [
       Constants.scopedDocument,
       Constants.scopedDocumentNotPid
     ])
-
+    
     // When
     let result = await interactor.fetchScopedDocuments(with: .extraDocument(filterType: nil))
-
+    
     // Then
     switch result {
     case .success(let documents):
-      XCTAssertEqual(documents.count, 2)
+      XCTAssertEqual(documents.first?.value.count, 2)
     default:
       XCTFail("Expected success but got \(result)")
     }
   }
-
+  
   func testFetchScopedDocuments_whenGetScopedDocuments_thenReturnsSuccess() async {
     // Given
     stubGetScopedDocumentsSuccess(with: [
       Constants.scopedDocumentNotPid
     ])
-
+    
     // When
     let result = await interactor.fetchScopedDocuments(with: .noDocument)
-
+    
     // Then
     switch result {
     case .success(let documents):
@@ -94,14 +94,14 @@ final class TestAddDocumentInteractor: EudiTest {
       XCTFail("Expected success but got \(result)")
     }
   }
-
+  
   func testFetchScopedDocuments_whenGetScopedDocuments_thenReturnsFailure() async {
     // Given
     stubGetScopedDocumentsFailure()
     
     // When
     let result = await interactor.fetchScopedDocuments(with: .extraDocument(filterType: nil))
-
+    
     // Then
     switch result {
     case .failure(let error):
@@ -114,6 +114,7 @@ final class TestAddDocumentInteractor: EudiTest {
   func testIssueDocument_whenDefferedPendingDocument_thenReturnSuccess() async {
     // Given
     let configId = "deferred-doc"
+    let issuerId = "issuer.dev"
     let identifier = DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
     let document = Constants.defferedPendingDocument
     
@@ -121,10 +122,11 @@ final class TestAddDocumentInteractor: EudiTest {
     
     // When
     let result = await interactor.issueDocument(
+      issuerId: issuerId,
       configId: configId,
       docTypeIdentifier: identifier
     )
-
+    
     // Then
     switch result {
     case .deferredSuccess:
@@ -133,18 +135,23 @@ final class TestAddDocumentInteractor: EudiTest {
       XCTFail("Expected .deferredSuccess but got \(result)")
     }
   }
-
+  
   func testIssueDocument_whenIssuedDocument_thenReturnSuccess() async {
     // Given
+    let issuerId = "issuer.dev"
     let configId = "deferred-doc"
     let identifier = DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
     let document = Constants.issuedPendingDocument
-
+    
     stubResumeDynamicIssuanceDefferedSuccess(document: document)
-
+    
     // When
-    let result = await interactor.issueDocument(configId: configId, docTypeIdentifier: identifier)
-
+    let result = await interactor.issueDocument(
+      issuerId: issuerId,
+      configId: configId,
+      docTypeIdentifier: identifier
+    )
+    
     // Then
     switch result {
     case .success:
@@ -153,17 +160,26 @@ final class TestAddDocumentInteractor: EudiTest {
       XCTFail("Expected .deferredSuccess but got \(result)")
     }
   }
-
+  
   func testIssueDocument_whenDefferedPendingDocument_thenReturnsFailure() async {
     // Given
     let configId = "fail-doc"
+    let issuerId = "issuer.dev"
     let identifier = DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
-
-    stubIssueDocumentFailure(configId: configId, docTypeIdentifier: identifier)
+    
+    stubIssueDocumentFailure(
+      issuerId: issuerId,
+      configId: configId,
+      docTypeIdentifier: identifier
+    )
     
     // When
-    let result = await interactor.issueDocument(configId: configId, docTypeIdentifier: identifier)
-
+    let result = await interactor.issueDocument(
+      issuerId: issuerId,
+      configId: configId,
+      docTypeIdentifier: identifier
+    )
+    
     // Then
     switch result {
     case .failure(let error):
@@ -242,21 +258,21 @@ final class TestAddDocumentInteractor: EudiTest {
       XCTFail("Expected .failure but got \(result)")
     }
   }
-
+  
   func testResumeDynamicIssuance_whenPending_thenReturnSuccess() async {
     // Given
     let pendingDoc = Constants.pendingDocument
-
+    
     let pendingData = DynamicIssuancePendingData(
       pendingDoc: pendingDoc,
       url: URL(string: "https://example.com")!
     )
-
+    
     stubResumeDynamicIssuanceIssued(pendingData: pendingData, pendingDoc: pendingDoc)
-
+    
     // When
     let result = await interactor.resumeDynamicIssuance()
-
+    
     // Then
     switch result {
     case .failure(let error):
@@ -265,7 +281,7 @@ final class TestAddDocumentInteractor: EudiTest {
       XCTFail("Expected .failure but got \(result)")
     }
   }
-
+  
   func testResumeDynamicIssuance_whenReturnsNoPending_thenNoPendingDataExists() async {
     // Given
     stub(walletKitController) { stub in
@@ -413,55 +429,63 @@ final class TestAddDocumentInteractor: EudiTest {
       XCTFail("Expected .failure but got \(result)")
     }
   }
-
+  
   func testFetchScopedDocuments_WhenDocumentsReturned_ThenReturnsSuccessMocks() async {
     // Given
+    let issuerId = "issuer.dev"
+    let secondaryIssuerId = "issuer2.dev"
     let scopedDocument1 = ScopedDocument(
       name: "Document name 1",
-      issuer: "Test Issuer",
-      configId: "id",
+      issuer: issuerId,
+      configId: "id1",
       isPid: true,
       docTypeIdentifier: .mDocPid
     )
-
+    
     let scopedDocument2 = ScopedDocument(
       name: "Document name 2",
-      issuer: "Test Issuer",
-      configId: "id",
+      issuer: issuerId,
+      configId: "id2",
       isPid: true,
       docTypeIdentifier: .mDocPid
     )
-
+    
     let scopedDocument3 = ScopedDocument(
       name: "Document name 3",
-      issuer: "Test Issuer",
-      configId: "id",
+      issuer: issuerId,
+      configId: "id3",
       isPid: true,
       docTypeIdentifier: .mDocPid
     )
-
+    
     let scopedDocument4 = ScopedDocument(
       name: "Document name 4",
-      issuer: "Test Issuer",
-      configId: "id",
+      issuer: secondaryIssuerId,
+      configId: "id4",
       isPid: true,
       docTypeIdentifier: .mDocPid
     )
-
+    
     stubGetScopedDocumentsSuccess(with: [
       scopedDocument1,
       scopedDocument2,
       scopedDocument3,
       scopedDocument4
     ])
-
+    
     // When
     let result = await interactor.fetchScopedDocuments(with: .extraDocument(filterType: nil))
-
+    
     // Then
     switch result {
     case .success(let documents):
-      XCTAssertEqual(documents.first?.configId, AddDocumentUIModel.mocks.first?.configId)
+      XCTAssertEqual(documents.count, 2)
+      
+      XCTAssertNotNil(documents[issuerId])
+      XCTAssertEqual(documents[issuerId]?.first?.configId, scopedDocument1.configId)
+      
+      XCTAssertNotNil(documents[secondaryIssuerId])
+      XCTAssertEqual(documents[secondaryIssuerId]?.first?.configId, scopedDocument4.configId)
     default:
       XCTFail("Expected success but got \(result)")
     }
@@ -490,10 +514,14 @@ private extension TestAddDocumentInteractor {
     }
   }
   
-  func stubIssueDocumentFailure(configId: String, docTypeIdentifier: DocumentTypeIdentifier) {
+  func stubIssueDocumentFailure(issuerId: String, configId: String, docTypeIdentifier: DocumentTypeIdentifier) {
     stub(walletKitController) { stub in
-      when(stub.issueDocument(
-        identifier: equal(to: configId), docTypeIdentifier: equal(to: docTypeIdentifier))
+      when(
+        stub.issueDocument(
+          issuerId: equal(to: issuerId),
+          identifier: equal(to: configId),
+          docTypeIdentifier: equal(to: docTypeIdentifier)
+        )
       ).thenThrow(WalletCoreError.unableToIssueAndStore)
     }
   }
@@ -502,8 +530,14 @@ private extension TestAddDocumentInteractor {
     document: WalletStorage.Document
   ) {
     stub(walletKitController) { stub in
-      when(stub.issueDocument(identifier: equal(to: "deferred-doc"), docTypeIdentifier: equal(to: DocumentTypeIdentifier.init(rawValue: "eu.europa.ec.eudi.pid.1"))))
-        .thenReturn(document)
+      when(
+        stub.issueDocument(
+          issuerId: equal(to: "issuer.dev"),
+          identifier: equal(to: "deferred-doc"),
+          docTypeIdentifier: equal(to: DocumentTypeIdentifier.init(rawValue: "eu.europa.ec.eudi.pid.1"))
+        )
+      )
+      .thenReturn(document)
     }
   }
   

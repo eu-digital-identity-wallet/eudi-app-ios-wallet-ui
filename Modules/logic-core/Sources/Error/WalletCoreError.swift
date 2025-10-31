@@ -21,6 +21,7 @@ public enum WalletCoreError: LocalizedError, Equatable {
   case unableFetchDocument
   case missingPid
   case unableToIssueAndStore
+  case missingMetadata
   case transactionCodeFormat([String])
   case unableToPresentAndShare
   case unableToFetchTransactionLog
@@ -35,6 +36,8 @@ public enum WalletCoreError: LocalizedError, Equatable {
       LocalizableStringKey.missingPid.toString
     case .unableToIssueAndStore:
       LocalizableStringKey.unableToIssueAndStore.toString
+    case .missingMetadata:
+      LocalizableStringKey.missingMetadata.toString
     case .transactionCodeFormat(let args):
       LocalizableStringKey.transactionCodeFormatError(args).toString
     case .unableToPresentAndShare:

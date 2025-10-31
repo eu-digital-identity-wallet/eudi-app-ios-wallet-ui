@@ -7441,7 +7441,7 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         cuckoo_manager.enableDefaultStubImplementation()
     }
     
-    var vciConfig: OpenId4VCIConfiguration {
+    var vciConfig: [String: OpenId4VciConfiguration] {
         get {
             return cuckoo_manager.getter(
                 "vciConfig",
@@ -7457,16 +7457,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
                 "vpConfig",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
                 defaultCall: __defaultImplStub!.vpConfig
-            )
-        }
-    }
-    
-    var issuerUrl: String {
-        get {
-            return cuckoo_manager.getter(
-                "issuerUrl",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.issuerUrl
             )
         }
     }
@@ -7559,16 +7549,12 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             self.cuckoo_manager = manager
         }
         
-        var vciConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,OpenId4VCIConfiguration> {
+        var vciConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,[String: OpenId4VciConfiguration]> {
             return .init(manager: cuckoo_manager, name: "vciConfig")
         }
         
         var vpConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,OpenId4VpConfiguration> {
             return .init(manager: cuckoo_manager, name: "vpConfig")
-        }
-        
-        var issuerUrl: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,String> {
-            return .init(manager: cuckoo_manager, name: "issuerUrl")
         }
         
         var readerConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,ReaderConfig> {
@@ -7615,16 +7601,12 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             self.sourceLocation = sourceLocation
         }
         
-        var vciConfig: Cuckoo.VerifyReadOnlyProperty<OpenId4VCIConfiguration> {
+        var vciConfig: Cuckoo.VerifyReadOnlyProperty<[String: OpenId4VciConfiguration]> {
             return .init(manager: cuckoo_manager, name: "vciConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         var vpConfig: Cuckoo.VerifyReadOnlyProperty<OpenId4VpConfiguration> {
             return .init(manager: cuckoo_manager, name: "vpConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var issuerUrl: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "issuerUrl", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         var readerConfig: Cuckoo.VerifyReadOnlyProperty<ReaderConfig> {
@@ -7663,21 +7645,15 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
 
 class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
     
-    var vciConfig: OpenId4VCIConfiguration {
+    var vciConfig: [String: OpenId4VciConfiguration] {
         get {
-            return DefaultValueRegistry.defaultValue(for: (OpenId4VCIConfiguration).self)
+            return DefaultValueRegistry.defaultValue(for: ([String: OpenId4VciConfiguration]).self)
         }
     }
     
     var vpConfig: OpenId4VpConfiguration {
         get {
             return DefaultValueRegistry.defaultValue(for: (OpenId4VpConfiguration).self)
-        }
-    }
-    
-    var issuerUrl: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
         }
     }
     
@@ -7926,13 +7902,13 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         )
     }
     
-    public func issueDocument(identifier p0: String, docTypeIdentifier p1: DocumentTypeIdentifier) async throws -> WalletStorage.Document {
+    public func issueDocument(issuerId p0: String, identifier p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> WalletStorage.Document {
         return try await cuckoo_manager.callThrows(
-            "issueDocument(identifier p0: String, docTypeIdentifier p1: DocumentTypeIdentifier) async throws -> WalletStorage.Document",
-            parameters: (p0, p1),
-            escapingParameters: (p0, p1),
+            "issueDocument(issuerId p0: String, identifier p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> WalletStorage.Document",
+            parameters: (p0, p1, p2),
+            escapingParameters: (p0, p1, p2),
 errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.issueDocument(identifier: p0, docTypeIdentifier: p1)
+            defaultCall: await __defaultImplStub!.issueDocument(issuerId: p0, identifier: p1, docTypeIdentifier: p2)
         )
     }
     
@@ -7946,13 +7922,13 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         )
     }
     
-    public func resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> OfferedIssuanceModel {
+    public func resolveOfferUrlDocTypes(offerUri p0: String) async throws -> OfferedIssuanceModel {
         return try await cuckoo_manager.callThrows(
-            "resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> OfferedIssuanceModel",
+            "resolveOfferUrlDocTypes(offerUri p0: String) async throws -> OfferedIssuanceModel",
             parameters: (p0),
             escapingParameters: (p0),
 errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.resolveOfferUrlDocTypes(uriOffer: p0)
+            defaultCall: await __defaultImplStub!.resolveOfferUrlDocTypes(offerUri: p0)
         )
     }
     
@@ -8281,10 +8257,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             ))
         }
         
-        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(identifier p0: M1, docTypeIdentifier p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(String, DocumentTypeIdentifier), WalletStorage.Document,Error> where M1.MatchedType == String, M2.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(String, DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, identifier p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.ProtocolStubThrowingFunction<(String, String, DocumentTypeIdentifier), WalletStorage.Document,Error> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == DocumentTypeIdentifier {
+            let matchers: [Cuckoo.ParameterMatcher<(String, String, DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "issueDocument(identifier p0: String, docTypeIdentifier p1: DocumentTypeIdentifier) async throws -> WalletStorage.Document",
+                method: "issueDocument(issuerId p0: String, identifier p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> WalletStorage.Document",
                 parameterMatchers: matchers
             ))
         }
@@ -8297,10 +8273,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             ))
         }
         
-        func resolveOfferUrlDocTypes<M1: Cuckoo.Matchable>(uriOffer p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), OfferedIssuanceModel,Error> where M1.MatchedType == String {
+        func resolveOfferUrlDocTypes<M1: Cuckoo.Matchable>(offerUri p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), OfferedIssuanceModel,Error> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> OfferedIssuanceModel",
+                method: "resolveOfferUrlDocTypes(offerUri p0: String) async throws -> OfferedIssuanceModel",
                 parameterMatchers: matchers
             ))
         }
@@ -8655,10 +8631,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(identifier p0: M1, docTypeIdentifier p1: M2) -> Cuckoo.__DoNotUse<(String, DocumentTypeIdentifier), WalletStorage.Document> where M1.MatchedType == String, M2.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(String, DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, identifier p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.__DoNotUse<(String, String, DocumentTypeIdentifier), WalletStorage.Document> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == DocumentTypeIdentifier {
+            let matchers: [Cuckoo.ParameterMatcher<(String, String, DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return cuckoo_manager.verify(
-                "issueDocument(identifier p0: String, docTypeIdentifier p1: DocumentTypeIdentifier) async throws -> WalletStorage.Document",
+                "issueDocument(issuerId p0: String, identifier p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> WalletStorage.Document",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -8679,10 +8655,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func resolveOfferUrlDocTypes<M1: Cuckoo.Matchable>(uriOffer p0: M1) -> Cuckoo.__DoNotUse<(String), OfferedIssuanceModel> where M1.MatchedType == String {
+        func resolveOfferUrlDocTypes<M1: Cuckoo.Matchable>(offerUri p0: M1) -> Cuckoo.__DoNotUse<(String), OfferedIssuanceModel> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> OfferedIssuanceModel",
+                "resolveOfferUrlDocTypes(offerUri p0: String) async throws -> OfferedIssuanceModel",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -8989,7 +8965,7 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func issueDocument(identifier p0: String, docTypeIdentifier p1: DocumentTypeIdentifier) async throws -> WalletStorage.Document {
+    public func issueDocument(issuerId p0: String, identifier p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> WalletStorage.Document {
         return DefaultValueRegistry.defaultValue(for: (WalletStorage.Document).self)
     }
     
@@ -8997,7 +8973,7 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (DocClaimsDecodable).self)
     }
     
-    public func resolveOfferUrlDocTypes(uriOffer p0: String) async throws -> OfferedIssuanceModel {
+    public func resolveOfferUrlDocTypes(offerUri p0: String) async throws -> OfferedIssuanceModel {
         return DefaultValueRegistry.defaultValue(for: (OfferedIssuanceModel).self)
     }
     

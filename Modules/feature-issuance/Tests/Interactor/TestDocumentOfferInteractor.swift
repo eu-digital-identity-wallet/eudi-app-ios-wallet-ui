@@ -599,7 +599,7 @@ final class TestDocumentOfferInteractor: EudiTest {
     let exceptedError = WalletCoreError.unableToIssueAndStore
     
     stub(walletKitController) { mock in
-      mock.resolveOfferUrlDocTypes(uriOffer: uri).thenThrow(exceptedError)
+      mock.resolveOfferUrlDocTypes(offerUri: uri).thenThrow(exceptedError)
       
       mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.createEuPidModel()])
     }
@@ -701,7 +701,7 @@ final class TestDocumentOfferInteractor: EudiTest {
     )
     
     stub(walletKitController) { mock in
-      mock.resolveOfferUrlDocTypes(uriOffer: uri).thenReturn(offeredIssuanceModel)
+      mock.resolveOfferUrlDocTypes(offerUri: uri).thenReturn(offeredIssuanceModel)
       
       mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.createEuPidModel()])
     }

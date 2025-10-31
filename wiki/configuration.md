@@ -23,12 +23,7 @@ public protocol WalletKitConfig {
   /**
    * VCI Configuration
    */
-  var vciConfig: OpenId4VCIConfiguration { get }
-
-  /**
-   * Issuer URL
-   */
-  var issuerUrl: String { get }
+  var vciConfig: [String: OpenId4VciConfiguration] { get }
 }
 ```
 Based on the Build Variant of the Wallet (e.g., Dev)
@@ -42,19 +37,12 @@ struct WalletKitConfigImpl: WalletKitConfig {
     self.configLogic = configLogic
   }
 
-  var issuerUrl: String {
+  var vciConfig: [String: OpenId4VciConfiguration] {
     return switch configLogic.appBuildVariant {
     case .DEMO:
-      "your_demo_url"
-    case .DEV:
-      "your_dev_url"
-    }
-  }
-
-  var vciConfig: OpenId4VCIConfiguration {
-    return switch configLogic.appBuildVariant {
-    case .DEMO:
-        .init(
+      [
+        "your_demo_issuer_url_host_only": .init(
+          credentialIssuerURL: "your_demo_issuer_url",
           client: .public(id: "your_demo_clientid"),
           authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
           usePAR: should_use_par_bool,
@@ -62,14 +50,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
           useDpopIfSupported: should_use_dpop_bool,
           cacheIssuerMetadata: should_cache_metadata_bool
         )
+      ]
     case .DEV:
-        .init(
+      [
+        "your_dev_issuer_url_host_only": .init(
+          credentialIssuerURL: "your_dev_issuer_url",
           client: .public(id: "your_dev_clientid"),
           authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
           usePAR: should_use_par_bool,
           useDpopIfSupported: should_use_dpop_bool,
           cacheIssuerMetadata: should_cache_metadata_bool
         )
+      ]
     }
   }
 }

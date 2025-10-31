@@ -182,7 +182,7 @@ final class FormValidatorImpl: FormValidator {
   }
 
   private func isPhoneNumberValid(phone: String, countryCode: String) -> Bool {
-    guard let phoneUtil = NBPhoneNumberUtil.sharedInstance() else { return false }
+    let phoneUtil = NBPhoneNumberUtil.sharedInstance()
     do {
       let phoneNumber: NBPhoneNumber = try phoneUtil.parse(phone, defaultRegion: countryCode)
       return phoneUtil.isValidNumber(phoneNumber)
