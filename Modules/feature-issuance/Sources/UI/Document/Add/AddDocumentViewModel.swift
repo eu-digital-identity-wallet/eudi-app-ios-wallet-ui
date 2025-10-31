@@ -17,10 +17,11 @@ import logic_ui
 import logic_resources
 import feature_common
 import logic_core
+import OrderedCollections
 
 @Copyable
 struct AddDocumentViewState: ViewState {
-  let addDocumentCellModels: [String: [AddDocumentUIModel]]
+  let addDocumentCellModels: OrderedDictionary<String, [AddDocumentUIModel]>
   let error: ContentErrorView.Config?
   let config: IssuanceFlowUiConfig
   let showFooterScanner: Bool
@@ -322,7 +323,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     )
   }
 
-  private func transformCellLoadingState(with isLoading: Bool) -> [String: [AddDocumentUIModel]] {
+  private func transformCellLoadingState(with isLoading: Bool) -> OrderedDictionary<String, [AddDocumentUIModel]> {
     viewState.addDocumentCellModels.mapValues { models in
       models.map { model in
         var updated = model
@@ -405,7 +406,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     }
   }
 
-  private func showScannerFooter(documents: [String: [AddDocumentUIModel]]) -> Bool {
+  private func showScannerFooter(documents: OrderedDictionary<String, [AddDocumentUIModel]>) -> Bool {
     viewState.config.flow == .noDocument || documents.isEmpty
   }
 }
