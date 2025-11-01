@@ -91,9 +91,12 @@ private func content(
 
         Section(
           header:
-            Text(issuer)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .shimmer(isLoading: viewState.isLoading)
+            VStack(alignment: .leading) {
+              VSpacer.mediumSmall()
+              Text(issuer)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .shimmer(isLoading: viewState.isLoading)
+            }
         ) {
           ForEach(models, id: \.id) { cell in
             WrapCardView {
