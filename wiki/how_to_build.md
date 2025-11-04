@@ -70,7 +70,7 @@ For instance, here's how `WalletKitConfig` resolves its configuration for OpenID
     case .DEMO:
       [
         "issuer.eudiw.dev": .init(
-          credentialIssuerURL: "https://issuer.eudiw.dev",
+          credentialIssuerURL: "https://ec.issuer.eudiw.dev",
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
@@ -81,7 +81,7 @@ For instance, here's how `WalletKitConfig` resolves its configuration for OpenID
     case .DEV:
       [
         "dev.issuer.eudiw.dev": .init(
-          credentialIssuerURL: "https://dev.issuer.eudiw.dev",
+          credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
