@@ -65,6 +65,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
 	      ]
 	    }
 	  }()
+
+	// ...
 	}
 }
 ```
