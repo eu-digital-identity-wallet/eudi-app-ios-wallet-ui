@@ -38,32 +38,36 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var vciConfig: [String: OpenId4VciConfiguration] {
-    return switch configLogic.appBuildVariant {
-    case .DEMO:
-      [
-        "your_demo_issuer_url_host_only": .init(
-          credentialIssuerURL: "your_demo_issuer_url",
-          client: .public(id: "your_demo_clientid"),
-          authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
-          usePAR: should_use_par_bool,
-          useDPoP: should_use_dpop_bool
-          useDpopIfSupported: should_use_dpop_bool,
-          cacheIssuerMetadata: should_cache_metadata_bool
-        )
-      ]
-    case .DEV:
-      [
-        "your_dev_issuer_url_host_only": .init(
-          credentialIssuerURL: "your_dev_issuer_url",
-          client: .public(id: "your_dev_clientid"),
-          authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
-          usePAR: should_use_par_bool,
-          useDpopIfSupported: should_use_dpop_bool,
-          cacheIssuerMetadata: should_cache_metadata_bool
-        )
-      ]
-    }
-  }
+	let openId4VciConfigurations: [OpenId4VciConfiguration] = {
+		switch configLogic.appBuildVariant {
+	    case .DEMO:
+	      return [
+	        .init(
+	          credentialIssuerURL: "your_demo_issuer_url",
+	          client: .public(id: "your_demo_clientid"),
+	          authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
+	          usePAR: should_use_par_bool,
+	          useDPoP: should_use_dpop_bool
+	          useDpopIfSupported: should_use_dpop_bool,
+	          cacheIssuerMetadata: should_cache_metadata_bool
+	        )
+	      ]
+	    case .DEV:
+	      return [
+	        .init(
+	          credentialIssuerURL: "your_dev_issuer_url",
+	          client: .public(id: "your_dev_clientid"),
+	          authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
+	          usePAR: should_use_par_bool,
+	          useDpopIfSupported: should_use_dpop_bool,
+	          cacheIssuerMetadata: should_cache_metadata_bool
+	        )
+	      ]
+	    }
+	  }()
+
+	// ...
+	}
 }
 ```
 

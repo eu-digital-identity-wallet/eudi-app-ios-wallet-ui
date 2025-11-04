@@ -65,11 +65,12 @@ Using this parsed information, instances such as `WalletKitConfig` and `RQESConf
 For instance, here's how `WalletKitConfig` resolves its configuration for OpenID4VCI remote services based on the build variant:
 
 ```swift
-  var vciConfig: [String: OpenId4VciConfiguration] {
-    return switch configLogic.appBuildVariant {
+var vciConfig: [String: OpenId4VciConfiguration] {
+  let openId4VciConfigurations: [OpenId4VciConfiguration] = {
+    switch configLogic.appBuildVariant {
     case .DEMO:
-      [
-        "ec.issuer.eudiw.dev": .init(
+      return [
+        .init(
           credentialIssuerURL: "https://ec.issuer.eudiw.dev",
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
@@ -77,10 +78,9 @@ For instance, here's how `WalletKitConfig` resolves its configuration for OpenID
           useDpopIfSupported: true,
           cacheIssuerMetadata: true
         )
-      ]
     case .DEV:
-      [
-        "ec.dev.issuer.eudiw.dev": .init(
+      return [
+        .init(
           credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
@@ -90,7 +90,10 @@ For instance, here's how `WalletKitConfig` resolves its configuration for OpenID
         )
       ]
     }
-  }
+  }()
+
+  // ...
+}
 ```
 
 In this example, the `vciConfig` property dynamically assigns configurations, such as `issuerUrl`, `clientId`, `redirectUri`, `usePAR`, `useDPoP`, and `metadataCache`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
