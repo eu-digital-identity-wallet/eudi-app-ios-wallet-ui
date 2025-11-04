@@ -114,7 +114,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
       ]
     case .DEV:
       [
-        "dev.issuer.eudiw.dev": .init(
+        "ec.dev.issuer.eudiw.dev": .init(
           credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,

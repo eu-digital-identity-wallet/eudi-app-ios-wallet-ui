@@ -69,7 +69,7 @@ For instance, here's how `WalletKitConfig` resolves its configuration for OpenID
     return switch configLogic.appBuildVariant {
     case .DEMO:
       [
-        "issuer.eudiw.dev": .init(
+        "ec.issuer.eudiw.dev": .init(
           credentialIssuerURL: "https://ec.issuer.eudiw.dev",
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
@@ -80,7 +80,7 @@ For instance, here's how `WalletKitConfig` resolves its configuration for OpenID
       ]
     case .DEV:
       [
-        "dev.issuer.eudiw.dev": .init(
+        "ec.dev.issuer.eudiw.dev": .init(
           credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
