@@ -115,7 +115,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
     case .DEV:
       [
         "dev.issuer.eudiw.dev": .init(
-          credentialIssuerURL: "https://dev.issuer.eudiw.dev",
+          credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
           client: .public(id: "wallet-dev"),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
@@ -136,15 +136,6 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
   var vpConfig: OpenId4VpConfiguration {
     .init(clientIdSchemes: [.x509SanDns, .x509Hash])
-  }
-
-  var issuerUrl: String {
-    return switch configLogic.appBuildVariant {
-    case .DEMO:
-      "https://issuer.eudiw.dev"
-    case .DEV:
-      "https://dev.issuer.eudiw.dev"
-    }
   }
 
   var readerConfig: ReaderConfig {
