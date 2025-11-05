@@ -114,7 +114,7 @@ open class BaseLoadingViewModel<Router: RouterHost, RequestItem: Sendable>: View
     setState {
       $0.copy(
         error: .init(
-          description: .custom(error.localizedDescription),
+          description: .custom(error.errorMessage),
           cancelAction: self.onNavigate(type: .pop),
           action: { self.onErrorAction() }
         )

@@ -99,7 +99,7 @@ final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeV
         $0.copy(
           isLoading: false,
           error: .init(
-            description: .custom(error.localizedDescription),
+            description: .custom(error.errorMessage),
             cancelAction: self.setState { $0.copy(error: nil) }
           )
         )
@@ -173,7 +173,7 @@ final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeV
           $0.copy(
             isLoading: false,
             error: .init(
-              description: .custom(error.localizedDescription),
+              description: .custom(error.errorMessage),
               cancelAction: self.resetError()
             )
           )

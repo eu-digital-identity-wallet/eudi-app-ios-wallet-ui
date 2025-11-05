@@ -90,7 +90,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         $0.copy(
           isLoading: true,
           error: .init(
-            description: .custom(error.localizedDescription),
+            description: .custom(error.errorMessage),
             cancelAction: self.pop()
           )
         )
@@ -233,7 +233,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
           $0.copy(
             isLoading: false,
             error: .init(
-              description: .custom(error.localizedDescription),
+              description: .custom(error.errorMessage),
               cancelAction: self.setState { $0.copy(error: nil) }
             )
           )

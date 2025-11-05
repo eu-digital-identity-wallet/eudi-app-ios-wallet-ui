@@ -121,7 +121,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
         $0.copy(
           isLoading: false,
           error: ContentErrorView.Config(
-            description: .custom(error.localizedDescription),
+            description: .custom(error.errorMessage),
             cancelAction: self.onPop()
           ),
           allowIssue: false,
@@ -192,7 +192,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
           $0.copy(
             isLoading: false,
             error: .init(
-              description: .custom(error.localizedDescription),
+              description: .custom(error.errorMessage),
               cancelAction: self.setState { $0.copy(error: nil) }
             )
           )
@@ -265,7 +265,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
         $0.copy(
           isLoading: false,
           error: .init(
-            description: .custom(error.localizedDescription),
+            description: .custom(error.errorMessage),
             cancelAction: self.setState { $0.copy(error: nil) }
           )
         )
