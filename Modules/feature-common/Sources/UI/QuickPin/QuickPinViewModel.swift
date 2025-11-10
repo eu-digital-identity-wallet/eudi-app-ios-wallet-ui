@@ -163,7 +163,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       uiPinInputField = ""
     case .failure(let error):
       setState {
-        $0.copy(pinError: .custom(error.localizedDescription))
+        $0.copy(pinError: .custom(error.errorMessage))
       }
     }
   }

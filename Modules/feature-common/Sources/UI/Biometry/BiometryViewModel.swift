@@ -158,7 +158,7 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
       case .success:
         self.authenticated()
       case .failure(let error):
-        setState { $0.copy(pinError: error.localizedDescription) }
+        setState { $0.copy(pinError: error.errorMessage) }
       }
     } else {
       setState { $0.copy(pinError: nil) }

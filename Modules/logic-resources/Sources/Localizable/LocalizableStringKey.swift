@@ -41,9 +41,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case addDoc
   case filters
   case sortByIssuedDateSectionTitle
-  case issuerSectionTitle
   case showResults
-  case showQRTap
   case welcomeBack([String])
   case viewDocumentDetails
   case pleaseWait
@@ -56,7 +54,6 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case unavailableField
   case requestDataVerifiedEntity
   case requestDataVerifiedEntityMessage
-  case moreOptions
   case changeQuickPinOption
   case quickPinSetTitle
   case quickPinEnterPin
@@ -80,10 +77,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case quickPinUpdateCancellationTitle
   case quickPinUpdateCancellationCaption
   case quickPinUpdateCancellationContinue
-  case issuanceDetailsContinueButton
   case successTitlePunctuated
-  case issuanceSuccessCaption([String])
-  case issuanceSuccessNextButton
   case issuerWantWalletAddition
   case unknownVerifier
   case unknownIssuer
@@ -114,17 +108,10 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case cameraError
   case missingPid
   case requestCredentialOfferTitle([String])
-  case requestCredentialOfferCaption
   case requestCredentialOfferNoDocument
   case unableToIssueAndStore
   case missingMetadata
   case issueButton
-  case cancelIssueSheetTitle
-  case cancelIssueSheetCaption
-  case cancelIssueSheetContinue
-  case credentialOfferSuccessButton
-  case credentialOfferSuccessCaption([String])
-  case credentialOfferPartialSuccessCaption([String])
   case issuanceCodeTitle([String])
   case issuanceCodeCaption([String])
   case transactionCodeFormatError([String])
@@ -161,7 +148,6 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case all
   case descending
   case ascending
-  case issuanceSuccessHeaderDescriptionWhenError
   case trustedRelyingParty
   case trustedRelyingPartyDescription
   case alertAccessOnlineServices
@@ -171,9 +157,6 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case authenticate
   case inPerson
   case online
-  case fromDevice
-  case autodashboardAuthenticateDialogMessage
-  case deleteButton
   case savedToFavorites
   case succesfullyAddedFollowingToWallet
   case removedFromFavorites
@@ -186,7 +169,6 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case noResultsDocumentsDescription
   case noResultsTransactionsDescription
   case proximityConnectionBleDescription
-  case expiryPeriodSectionTitle
   case selectExpiryPeriod
   case filterByState
   case sortBy
@@ -223,8 +205,6 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case startDate
   case endDate
   case relyingParty
-  case attestation
-  case documentSigning
   case signedDocuments
   case transactionInformation
   case transactionDetailsDataShare
@@ -255,7 +235,6 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case transactionDetailsReportTransactionMessage
   case transactionDetailsReportTransactionButton
   case settings
-  case batchIssuanceCunter
   case documentDetailsDocumentCredentialsText([String])
   case documentDetailsDocumentCredentialsMoreInfoText
   case documentDetailsDocumentCredentialsExpandedTextSubtitle

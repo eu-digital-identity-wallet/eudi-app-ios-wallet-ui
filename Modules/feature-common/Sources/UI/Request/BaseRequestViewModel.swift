@@ -127,7 +127,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       $0.copy(
         isLoading: false,
         error: .init(
-          description: .custom(error.localizedDescription),
+          description: .custom(error.errorMessage),
           cancelAction: self.router.pop(),
           action: { self.onErrorAction() }
         )

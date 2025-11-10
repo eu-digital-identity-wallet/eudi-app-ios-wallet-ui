@@ -113,7 +113,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
         return .success(doc.id)
       }
     } catch {
-      return .failure(WalletCoreError.unableToIssueAndStore)
+      return .failure(error)
     }
   }
 
@@ -139,7 +139,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
       }
 
     } catch {
-      return .failure(WalletCoreError.unableToIssueAndStore)
+      return .failure(error)
     }
   }
 

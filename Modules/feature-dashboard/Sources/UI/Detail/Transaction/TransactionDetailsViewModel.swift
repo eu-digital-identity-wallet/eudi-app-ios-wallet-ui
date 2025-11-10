@@ -72,7 +72,7 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
         $0.copy(
           isLoading: false,
           error: .init(
-            description: .custom(error),
+            description: .custom(error.errorMessage),
             cancelAction: self.router.pop()
           )
         )

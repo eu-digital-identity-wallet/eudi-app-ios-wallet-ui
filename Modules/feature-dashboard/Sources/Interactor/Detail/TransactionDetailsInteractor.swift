@@ -17,7 +17,7 @@ import logic_core
 
 public enum TransactionDetailsInteractorPartialState: Sendable {
   case success(transactionDetailsUi: TransactionDetailsUiModel)
-  case failure(error: String)
+  case failure(error: Error)
 }
 
 public protocol TransactionDetailsInteractor: Sendable {
@@ -41,7 +41,7 @@ final class TransactionDetailsInteractorImpl: TransactionDetailsInteractor {
         transactionDetailsUi: transaction.toUiModel()
       )
     } catch {
-      return .failure(error: error.localizedDescription)
+      return .failure(error: error)
     }
   }
 }

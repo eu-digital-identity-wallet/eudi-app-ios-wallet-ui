@@ -70,7 +70,7 @@ final class TestTransactionDetailsInteractor: EudiTest {
     case .success:
       XCTFail("Expected failure, but got success.")
     case .failure(let error):
-      XCTAssertEqual(error, WalletCoreError.unableToFetchTransactionLog.localizedDescription)
+      XCTAssertEqual(error as! WalletCoreError, WalletCoreError.unableToFetchTransactionLog)
     }
   }
 }

@@ -83,7 +83,8 @@ public struct WrapListItemView: View {
           Text(overlineText)
             .typography(Theme.shared.font.bodySmall)
             .foregroundStyle(listItem.overlineTextColor)
-            .lineLimit(1)
+            .lineLimit(nil)
+            .multilineTextAlignment(.leading)
             .truncationMode(.tail)
         }
 
@@ -142,7 +143,8 @@ public struct WrapListItemView: View {
             .typography(Theme.shared.font.headlineSmall)
             .font(Theme.shared.font.bodyMedium.font)
             .foregroundStyle(listItem.supportingTextColor)
-            .lineLimit(1)
+            .lineLimit(nil)
+            .multilineTextAlignment(.leading)
             .truncationMode(.tail)
         }
       }
