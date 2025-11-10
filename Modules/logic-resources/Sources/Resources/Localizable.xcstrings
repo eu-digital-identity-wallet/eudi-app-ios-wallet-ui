@@ -111,17 +111,6 @@
         }
       }
     },
-    "attestation" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Filter By Attestation"
-          }
-        }
-      }
-    },
     "authenticate" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -140,17 +129,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Authenticate, authorise transactions and share your digital documents in person or online."
-          }
-        }
-      }
-    },
-    "batch_issuance_counter" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Batch issuance counter"
           }
         }
       }
@@ -250,39 +228,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancel"
-          }
-        }
-      }
-    },
-    "cancel_issuance_sheet_caption" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel will redirect you back to the documents list with no new documents"
-          }
-        }
-      }
-    },
-    "cancel_issuance_sheet_continue" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continue issuance"
-          }
-        }
-      }
-    },
-    "cancel_issuance_sheet_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel issuance process?"
           }
         }
       }
@@ -441,39 +386,6 @@
         }
       }
     },
-    "credential_offer_partial_success_caption" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your documents from %@ have been successfully issued except %@"
-          }
-        }
-      }
-    },
-    "credential_offer_success_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continue"
-          }
-        }
-      }
-    },
-    "credential_offer_success_caption" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your documents from %@ have been successfully issued."
-          }
-        }
-      }
-    },
     "data_shared" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -547,17 +459,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Documents issued"
-          }
-        }
-      }
-    },
-    "delete_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete"
           }
         }
       }
@@ -679,17 +580,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Document number"
-          }
-        }
-      }
-    },
-    "document_signing" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Filter By Document Signing"
           }
         }
       }
@@ -939,17 +829,6 @@
         }
       }
     },
-    "from_device" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "From device"
-          }
-        }
-      }
-    },
     "generic_error_description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1093,17 +972,6 @@
         }
       }
     },
-    "issuance_details_continue_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continue"
-          }
-        }
-      }
-    },
     "issuance_details_doc_deletion_caption" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1148,17 +1016,6 @@
         }
       }
     },
-    "issuance_success_caption" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You can now add your %@"
-          }
-        }
-      }
-    },
     "issuance_success_deferred_caption" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1166,28 +1023,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your documents from %@ have been requested. You will be notified when they have been issued to your wallet."
-          }
-        }
-      }
-    },
-    "issuance_success_header_description_when_error" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You have successfully added the document(s) to your wallet"
-          }
-        }
-      }
-    },
-    "issuance_success_next_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Next"
           }
         }
       }
@@ -1357,17 +1192,6 @@
         }
       }
     },
-    "more_options" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "More options"
-          }
-        }
-      }
-    },
     "my_eu_wallet" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1487,7 +1311,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ORDER BY"
+            "value" : "Order by"
           }
         }
       }
@@ -1796,17 +1620,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The document was successfully removed from your favorite list"
-          }
-        }
-      }
-    },
-    "request_credential_offer_caption" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please confirm the issuance of the following"
           }
         }
       }
@@ -2185,17 +1998,6 @@
         }
       }
     },
-    "show_qr_tap" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "SHOW QR"
-          }
-        }
-      }
-    },
     "show_results" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2257,7 +2059,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SORT BY"
+            "value" : "Sort by"
           }
         }
       }
