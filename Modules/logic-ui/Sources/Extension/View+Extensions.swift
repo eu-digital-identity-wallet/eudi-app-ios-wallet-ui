@@ -15,7 +15,6 @@
  */
 import SwiftUI
 import AlertToast
-import PartialSheet
 import Shimmer
 
 private let shimmeringGradient = Gradient(
@@ -68,7 +67,7 @@ public extension View {
   }
 
   func gone(if shouldHide: Bool) -> some View {
-      shouldHide ? AnyView(EmptyView()) : AnyView(self)
+    shouldHide ? AnyView(EmptyView()) : AnyView(self)
   }
 }
 
@@ -124,13 +123,25 @@ public extension View {
 }
 
 public extension View {
-  func sheetDialog<Content: View>(isPresented: Binding<Bool>, @ViewBuilder _ content: @escaping () -> Content) -> some View {
-    return self.partialSheet(
-      isPresented: isPresented,
-      iPhoneStyle: SheetStyle.iphoneSheetStyle,
-      iPadMacStyle: SheetStyle.IpadMacSheetStyle,
-      content: { ContentSheetView(content: content) }
-    )
+  func sheetDialog<Content: View>(
+    isPresented: Binding<Bool>,
+    backgroundTapToDismiss: Bool = true,
+    @ViewBuilder _ content: @escaping () -> Content
+  ) -> some View {
+    ZStack {
+
+      self
+
+      if isPresented.wrappedValue {
+        SheetContainerView(
+          isPresented: isPresented,
+          backgroundTapToDismiss: backgroundTapToDismiss,
+          content: content
+        )
+        .zIndex(1)
+      }
+    }
+    .animation(.easeInOut(duration: 0.25), value: isPresented.wrappedValue)
   }
 }
 
