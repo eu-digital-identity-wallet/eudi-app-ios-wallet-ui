@@ -19,7 +19,7 @@ import Observation
 private typealias QueueItem = () -> Void
 
 @Observable
-public final class RouterHostImpl: RouterHost {
+final class RouterHostImpl: RouterHost {
 
   private var pathElements: [AppRoute] = []
 
