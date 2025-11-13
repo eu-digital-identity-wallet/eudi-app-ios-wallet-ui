@@ -66,21 +66,19 @@ struct DocumentTabView<Router: RouterHost>: View {
       }
     )
     .sheetDialog(isPresented: $viewModel.isSuccededDocumentsModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
+      VStack(spacing: .zero) {
 
-          ContentTitleView(
-            title: .deferredDocumentsIssuedModalTitle,
-            caption: .defferedDocumentsIssuedModalCaption
-          )
+        ContentTitleView(
+          title: .deferredDocumentsIssuedModalTitle,
+          caption: .defferedDocumentsIssuedModalCaption
+        )
 
-          deferredSuccessList(
-            state: viewModel.viewState,
-            onDocumentDetails: {
-              viewModel.onDocumentDetails(documentId: $0)
-            }
-          )
-        }
+        deferredSuccessList(
+          state: viewModel.viewState,
+          onDocumentDetails: {
+            viewModel.onDocumentDetails(documentId: $0)
+          }
+        )
       }
     }
     .onChange(of: scenePhase) {

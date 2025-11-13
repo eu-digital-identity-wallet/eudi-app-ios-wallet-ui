@@ -57,21 +57,19 @@ struct DashboardView<Router: RouterHost>: View {
       )
     }
     .sheetDialog(isPresented: $viewModel.isRevokedModalShowing) {
-      SheetContentView {
-        VStack(spacing: SPACING_MEDIUM) {
+      VStack(spacing: .zero) {
 
-          ContentTitleView(
-            title: .revokedModalTitle,
-            caption: .revokedModalDescription
-          )
+        ContentTitleView(
+          title: .revokedModalTitle,
+          caption: .revokedModalDescription
+        )
 
-          revokedNotificationList(
-            state: viewModel.viewState,
-            onDocumentDetails: {
-              viewModel.onDocumentDetails(documentId: $0)
-            }
-          )
-        }
+        revokedNotificationList(
+          state: viewModel.viewState,
+          onDocumentDetails: {
+            viewModel.onDocumentDetails(documentId: $0)
+          }
+        )
       }
     }
     .onChange(of: scenePhase) {
@@ -113,13 +111,13 @@ private func content(
       .tag(SelectedTab.documents)
 
     tabView(.transactions)
-    .tabItem {
-      Label(
-        .transactions,
-        systemImage: "arrow.left.arrow.right"
-      )
-    }
-    .tag(SelectedTab.transactions)
+      .tabItem {
+        Label(
+          .transactions,
+          systemImage: "arrow.left.arrow.right"
+        )
+      }
+      .tag(SelectedTab.transactions)
   }
 }
 

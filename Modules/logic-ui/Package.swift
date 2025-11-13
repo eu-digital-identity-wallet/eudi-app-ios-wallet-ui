@@ -46,10 +46,6 @@ let package = Package(
       from: "1.4.0"
     ),
     .package(
-      url: "https://github.com/AndreaMiotto/PartialSheet.git",
-      from: "3.1.1"
-    ),
-    .package(
       url: "https://github.com/SDWebImage/SDWebImageSwiftUI",
       from: "3.1.3"
     ),
@@ -67,7 +63,6 @@ let package = Package(
         "logic-resources",
         "logic-analytics",
         "logic-core",
-        "PartialSheet",
         .product(
           name: "CodeScanner",
           package: "CodeScanner"
