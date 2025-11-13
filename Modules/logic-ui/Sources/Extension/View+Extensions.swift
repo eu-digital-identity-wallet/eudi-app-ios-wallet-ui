@@ -129,9 +129,7 @@ public extension View {
     @ViewBuilder _ content: @escaping () -> Content
   ) -> some View {
     ZStack {
-
       self
-
       if isPresented.wrappedValue {
         SheetContainerView(
           isPresented: isPresented,
@@ -141,7 +139,6 @@ public extension View {
         .zIndex(1)
       }
     }
-    .animation(.easeInOut(duration: 0.25), value: isPresented.wrappedValue)
   }
 }
 
