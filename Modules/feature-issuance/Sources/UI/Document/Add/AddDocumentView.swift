@@ -90,13 +90,18 @@ private func content(
         let models = pair.value
 
         Section(
-          header:
-            VStack(alignment: .leading) {
-              VSpacer.mediumSmall()
-              Text(issuer)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .shimmer(isLoading: viewState.isLoading)
-            }
+          header: WrapTextView(
+            text: .custom(issuer),
+            textConfig: TextConfig(
+              font: Theme.shared.font.bodySmall.font,
+              color: Theme.shared.color.onSurface,
+              textAlign: .leading,
+              fontWeight: .semibold
+            )
+          )
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .shimmer(isLoading: viewState.isLoading)
+          .padding(.top, SPACING_MEDIUM_SMALL)
         ) {
           ForEach(models, id: \.id) { cell in
             WrapCardView {

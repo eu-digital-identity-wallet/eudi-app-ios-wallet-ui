@@ -19,8 +19,9 @@ import logic_business
 @MainActor
 public final class CommonRouter {
 
-  public static func resolve(module: FeatureCommonRouteModule, host: some RouterHost) -> AnyView {
-    return switch module {
+  @ViewBuilder
+  public static func resolve(module: FeatureCommonRouteModule, host: some RouterHost) -> some View {
+    switch module {
     case .quickPin(let config):
       QuickPinView(
         with: .init(
@@ -30,7 +31,7 @@ public final class CommonRouter {
           ),
           config: config
         )
-      ).eraseToAnyView()
+      )
     case .qrScanner(config: let config):
       ScannerView(
         with: .init(
@@ -40,7 +41,7 @@ public final class CommonRouter {
             ScannerInteractor.self
           )
         )
-      ).eraseToAnyView()
+      )
     case .biometry(config: let config):
       BiometryView(
         with: .init(
@@ -49,7 +50,7 @@ public final class CommonRouter {
             BiometryInteractor.self
           ), config: config
         )
-      ).eraseToAnyView()
+      )
     case .genericSuccess(let config):
       GenericSuccessView(
         with: .init(
@@ -59,7 +60,7 @@ public final class CommonRouter {
             DeepLinkController.self
           )
         )
-      ).eraseToAnyView()
+      )
     }
   }
 }

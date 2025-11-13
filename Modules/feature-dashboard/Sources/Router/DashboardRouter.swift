@@ -20,7 +20,8 @@ import logic_core
 @MainActor
 public final class DashboardRouter {
 
-  public static func resolve(module: FeatureDashboardRouteModule, host: some RouterHost) -> AnyView {
+  @ViewBuilder
+  public static func resolve(module: FeatureDashboardRouteModule, host: some RouterHost) -> some View {
     switch module {
     case .dashboard:
       DashboardView(
@@ -42,7 +43,7 @@ public final class DashboardRouter {
             DeepLinkController.self
           )
         )
-      ).eraseToAnyView()
+      )
     case .signDocument:
       SignDocumentView(
         with: .init(
@@ -51,13 +52,13 @@ public final class DashboardRouter {
             DocumentSignInteractor.self
           )
         )
-      ).eraseToAnyView()
+      )
     case .sideMenu:
       SideMenuView(
         with: .init(
           router: host
         )
-      ).eraseToAnyView()
+      )
     case .settingsMenu:
       SettingsView(
         with: .init(
@@ -69,13 +70,13 @@ public final class DashboardRouter {
             WalletKitController.self
           )
         )
-      ).eraseToAnyView()
+      )
     case .issuanceOption:
       IssuanceOptionView(
         with: .init(
           router: host
         )
-      ).eraseToAnyView()
+      )
     case .documentDetails(id: let id):
       DocumentDetailsView(
         with: .init(
@@ -85,7 +86,7 @@ public final class DashboardRouter {
           ),
           documentId: id
         )
-      ).eraseToAnyView()
+      )
     case .transactionDetails(id: let id):
       TransactionDetailsView(
         with: .init(
@@ -95,7 +96,7 @@ public final class DashboardRouter {
           ),
           transactionId: id
         )
-      ).eraseToAnyView()
+      )
     }
   }
 }

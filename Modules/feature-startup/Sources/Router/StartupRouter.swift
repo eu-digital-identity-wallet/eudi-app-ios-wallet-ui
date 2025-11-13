@@ -19,7 +19,8 @@ import logic_business
 @MainActor
 public final class StartupRouter {
 
-  public static func resolve(module: FeatureStartupRouteModule, host: some RouterHost) -> AnyView {
+  @ViewBuilder
+  public static func resolve(module: FeatureStartupRouteModule, host: some RouterHost) -> some View {
     switch module {
     case .startup:
       StartupView(
@@ -29,7 +30,7 @@ public final class StartupRouter {
             StartupInteractor.self
           )
         )
-      ).eraseToAnyView()
+      )
     }
   }
 }

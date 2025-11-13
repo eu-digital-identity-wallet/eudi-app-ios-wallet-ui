@@ -77,36 +77,52 @@ private func content(
         description: .noResultsTransactionsDescription
       )
     } else if !state.transactions.isEmpty {
-      List {
-        ForEach(state.transactions.keys.sorted(by: { state.sortIsDescending ? $0.order < $1.order : $0.order > $1.order }), id: \.self) { category in
-          Section(header: Text(category.title)) {
-            WrapCardView {
-              VStack(spacing: .zero) {
-                WrapListItemsView(
-                  listItems: state.transactions[category]?.map({ transaction in
-                    transaction.listItem
-                  }) ?? []
-                ) { item in
-                  onAction(item.id)
+
+      ScrollView {
+        LazyVStack(alignment: .leading, spacing: .zero) {
+          ForEach(
+            state.transactions.keys.sorted(by: {
+              state.sortIsDescending
+              ? $0.order < $1.order
+              : $0.order > $1.order
+            }),
+            id: \.self
+          ) { category in
+
+            VStack(alignment: .leading, spacing: SPACING_SMALL) {
+
+              WrapTextView(
+                text: category.title,
+                textConfig: TextConfig(
+                  font: Theme.shared.font.bodySmall.font,
+                  color: Theme.shared.color.onSurface,
+                  textAlign: .leading,
+                  fontWeight: .semibold
+                )
+              )
+              .padding(.horizontal, SPACING_MEDIUM)
+              .padding(.top, SPACING_SMALL)
+
+              WrapCardView {
+                VStack(spacing: .zero) {
+                  WrapListItemsView(
+                    listItems: state.transactions[category]?.map { transaction in
+                      transaction.listItem
+                    } ?? []
+                  ) { item in
+                    onAction(item.id)
+                  }
                 }
               }
+              .padding(.horizontal, SPACING_MEDIUM)
             }
-            .listRowBackground(Theme.shared.color.background)
-            .listRowSeparator(.hidden)
           }
-          .listRowInsets(.init(
-            top: SPACING_SMALL,
-            leading: SPACING_MEDIUM,
-            bottom: .zero,
-            trailing: SPACING_MEDIUM)
-          )
         }
+        .padding(.bottom, SPACING_MEDIUM)
       }
       .shimmer(isLoading: state.isLoading)
-      .listStyle(.plain)
-      .scrollContentBackground(.hidden)
       .scrollIndicators(.hidden)
-      .clipped()
+
     } else if !state.isLoading {
       ContentUnavailableView(
         title: .noResults,
