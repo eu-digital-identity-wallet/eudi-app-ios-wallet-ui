@@ -18,7 +18,7 @@ import Observation
 
 @Copyable
 struct HomeTabState: ViewState {
-  let username: String
+  let username: String?
   let contentHeaderConfig: ContentHeaderConfig
   let phase: ScenePhase
   let pendingBleModalAction: Bool
@@ -47,7 +47,7 @@ final class HomeTabViewModel<Router: RouterHost>: ViewModel<Router, HomeTabState
     super.init(
       router: router,
       initialState: .init(
-        username: interactor.fetchUsername(),
+        username: nil,
         contentHeaderConfig: .init(
           appIconAndTextData: AppIconAndTextData(
             appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
@@ -60,7 +60,9 @@ final class HomeTabViewModel<Router: RouterHost>: ViewModel<Router, HomeTabState
     )
   }
 
-  func onCreate() {
+  func onCreate() async {
+    let username = await interactor.fetchUsername()
+    setState { $0.copy(username: username) }
     onUpdateToolbar(
       .init(
         trailingActions: nil,
@@ -97,11 +99,7 @@ final class HomeTabViewModel<Router: RouterHost>: ViewModel<Router, HomeTabState
   func onShare() {
     Task {
 
-      let interactor = self.interactor
-
-      let state = await Task.detached { () -> Reachability.BleAvailibity in
-        return await interactor.getBleAvailability()
-      }.value
+      let state = await interactor.getBleAvailability()
 
       switch state {
       case .available:
@@ -131,7 +129,7 @@ final class HomeTabViewModel<Router: RouterHost>: ViewModel<Router, HomeTabState
 
   func onBleSettings() {
     toggleBleModal()
-    interactor.openBleSettings()
+    Task { await interactor.openBleSettings() }
   }
 
   func setPhase(with phase: ScenePhase) {

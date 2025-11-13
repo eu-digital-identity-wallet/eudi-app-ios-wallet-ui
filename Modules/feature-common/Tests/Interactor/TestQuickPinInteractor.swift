@@ -35,7 +35,7 @@ final class TestQuickPinInteractor: EudiTest {
     self.pinStorageController = nil
   }
   
-  func testSetPin_WhenNewPinIsSet_ThenVerifyAtLeastOnce() {
+  func testSetPin_WhenNewPinIsSet_ThenVerifyAtLeastOnce() async {
     
     // Given
     let pin = "1234"
@@ -44,14 +44,14 @@ final class TestQuickPinInteractor: EudiTest {
     }
     
     // When
-    interactor.setPin(newPin: pin)
+    await interactor.setPin(newPin: pin)
     
     // Then
     verify(pinStorageController).setPin(with: pin)
     
   }
   
-  func testIsPinValid_WhenStoredAndProvidedPinsMatch_ThenReturnPartialStateSuccess() {
+  func testIsPinValid_WhenStoredAndProvidedPinsMatch_ThenReturnPartialStateSuccess() async {
     
     // Given
     let pin = "1234"
@@ -60,7 +60,7 @@ final class TestQuickPinInteractor: EudiTest {
     }
     
     // When
-    let state = interactor.isPinValid(pin: pin)
+    let state = await interactor.isPinValid(pin: pin)
     
     // Then
     switch state {
@@ -71,7 +71,7 @@ final class TestQuickPinInteractor: EudiTest {
     }
   }
   
-  func testIsPinValid_WhenStoredAndProvidedPinsDoNotMatch_ThenReturnPartialStateFailure() {
+  func testIsPinValid_WhenStoredAndProvidedPinsDoNotMatch_ThenReturnPartialStateFailure() async {
     
     // Given
     let pin = "1234"
@@ -80,7 +80,7 @@ final class TestQuickPinInteractor: EudiTest {
     }
     
     // When
-    let state = interactor.isPinValid(pin: pin)
+    let state = await interactor.isPinValid(pin: pin)
     
     // Then
     switch state {
@@ -91,7 +91,7 @@ final class TestQuickPinInteractor: EudiTest {
     }
   }
   
-  func testHasPin_WhenThereIsAStoredPin_ThenReturnTrue() {
+  func testHasPin_WhenThereIsAStoredPin_ThenReturnTrue() async {
     
     // Given
     let pin = "1234"
@@ -100,13 +100,13 @@ final class TestQuickPinInteractor: EudiTest {
     }
     
     // When
-    let answer = interactor.hasPin()
+    let answer = await interactor.hasPin()
     
     // Then
     XCTAssertTrue(answer)
   }
   
-  func testHasPin_WhenThereIsNoStoredPin_ThenReturnFalse() {
+  func testHasPin_WhenThereIsNoStoredPin_ThenReturnFalse() async {
     
     // Given
     stub(pinStorageController) { mock in
@@ -114,13 +114,13 @@ final class TestQuickPinInteractor: EudiTest {
     }
     
     // When
-    let answer = interactor.hasPin()
+    let answer = await interactor.hasPin()
     
     // Then
     XCTAssertFalse(answer)
   }
   
-  func testChangePin_WhenCurrentPinIsValid_ThenReturnPartialStateSuccess() {
+  func testChangePin_WhenCurrentPinIsValid_ThenReturnPartialStateSuccess() async {
     
     // Given
     let newPin = "4321"
@@ -133,7 +133,7 @@ final class TestQuickPinInteractor: EudiTest {
     }
     
     // When
-    let state = interactor.changePin(currentPin: currentPin, newPin: newPin)
+    let state = await interactor.changePin(currentPin: currentPin, newPin: newPin)
     
     // Then
     verify(pinStorageController).setPin(with: newPin)
@@ -146,7 +146,7 @@ final class TestQuickPinInteractor: EudiTest {
     }
   }
   
-  func testChangePin_WhenCurrentPinIsNotValid_ThenReturnPartialStateFailure() {
+  func testChangePin_WhenCurrentPinIsNotValid_ThenReturnPartialStateFailure() async {
     
     // Given
     let newPin = "4321"
@@ -158,7 +158,7 @@ final class TestQuickPinInteractor: EudiTest {
     }
     
     // When
-    let state = interactor.changePin(currentPin: newPin, newPin: newPin)
+    let state = await interactor.changePin(currentPin: newPin, newPin: newPin)
     
     // Then
     verify(pinStorageController, times(0)).setPin(with: any())

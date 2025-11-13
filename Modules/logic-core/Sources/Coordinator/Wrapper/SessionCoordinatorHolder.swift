@@ -15,14 +15,14 @@
  */
 
 public protocol SessionCoordinatorHolder: Sendable {
-  func clear()
-  func setActiveRemoteCoordinator(_ coordinator: RemoteSessionCoordinator)
-  func setActiveProximityCoordinator(_ coordinator: ProximitySessionCoordinator)
-  func getActiveRemoteCoordinator() throws -> RemoteSessionCoordinator
-  func getActiveProximityCoordinator() throws -> ProximitySessionCoordinator
+  func clear() async
+  func setActiveRemoteCoordinator(_ coordinator: RemoteSessionCoordinator) async
+  func setActiveProximityCoordinator(_ coordinator: ProximitySessionCoordinator) async
+  func getActiveRemoteCoordinator() async throws -> RemoteSessionCoordinator
+  func getActiveProximityCoordinator() async throws -> ProximitySessionCoordinator
 }
 
-final class SessionCoordinatorHolderImpl: SessionCoordinatorHolder, @unchecked Sendable {
+final actor SessionCoordinatorHolderImpl: SessionCoordinatorHolder {
 
   private var activeRemoteCoordinator: RemoteSessionCoordinator?
   private var activeProximityCoordinator: ProximitySessionCoordinator?

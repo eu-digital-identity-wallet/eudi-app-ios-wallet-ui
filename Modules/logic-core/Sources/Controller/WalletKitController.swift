@@ -31,16 +31,16 @@ public protocol WalletKitController: Sendable {
   func startProximityPresentation() async -> ProximitySessionCoordinator
   func startSameDevicePresentation(deepLink: URLComponents) async -> RemoteSessionCoordinator
   func startCrossDevicePresentation(urlString: String) async -> RemoteSessionCoordinator
-  func stopPresentation()
+  func stopPresentation() async
 
-  func fetchAllDocuments() -> [DocClaimsDecodable]
-  func fetchDeferredDocuments() -> [WalletStorage.Document]
-  func fetchIssuedDocuments() -> [DocClaimsDecodable]
-  func fetchIssuedDocuments(with types: [DocumentTypeIdentifier]) -> [DocClaimsDecodable]
-  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [DocClaimsDecodable]
-  func fetchMainPidDocument() -> DocClaimsDecodable?
-  func fetchDocument(with id: String) -> DocClaimsDecodable?
-  func fetchDocuments(with ids: [String]) -> [DocClaimsDecodable]
+  func fetchAllDocuments() async -> [DocClaimsDecodable]
+  func fetchDeferredDocuments() async -> [WalletStorage.Document]
+  func fetchIssuedDocuments() async -> [DocClaimsDecodable]
+  func fetchIssuedDocuments(with types: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable]
+  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable]
+  func fetchMainPidDocument() async -> DocClaimsDecodable?
+  func fetchDocument(with id: String) async -> DocClaimsDecodable?
+  func fetchDocuments(with ids: [String]) async -> [DocClaimsDecodable]
   func clearAllDocuments() async
   func deleteDocument(with id: String, status: DocumentStatus) async throws
   func loadDocuments() async throws
@@ -62,13 +62,13 @@ public protocol WalletKitController: Sendable {
     docClaim: DocClaim,
     type: DocumentElementType,
     parser: (String) -> String
-  ) -> [DocumentElementClaim]
-  func retrieveLogFileUrl() -> URL?
+  ) async -> [DocumentElementClaim]
+  func retrieveLogFileUrl() async -> URL?
   func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document
-  func storeDynamicIssuancePendingUrl(with url: URL)
+  func storeDynamicIssuancePendingUrl(with url: URL) async
   func getDynamicIssuancePendingData() async -> DynamicIssuancePendingData?
   func getScopedDocuments() async throws -> [ScopedDocument]
-  func getDocumentCategories() -> DocumentCategories
+  func getDocumentCategories() async -> DocumentCategories
 
   func isDocumentBookmarked(with id: String) async -> Bool
   func storeBookmarkedDocument(with id: String) async throws
@@ -83,10 +83,10 @@ public protocol WalletKitController: Sendable {
   func removeRevokedDocument(with id: String) async throws
 
   func getDocumentStatus(for statusIdentifier: StatusIdentifier) async throws -> CredentialStatus
-  func isDocumentLowOnCredentials(document: DocClaimsDecodable?) -> Bool
+  func isDocumentLowOnCredentials(document: DocClaimsDecodable?) async -> Bool
 }
 
-final class WalletKitControllerImpl: WalletKitController {
+final actor WalletKitControllerImpl: WalletKitController {
 
   let wallet: EudiWallet
   private let sessionCoordinatorHolder: SessionCoordinatorHolder
@@ -168,13 +168,13 @@ final class WalletKitControllerImpl: WalletKitController {
   }
 
   func startProximityPresentation() async -> ProximitySessionCoordinator {
-    self.stopPresentation()
+    await self.stopPresentation()
     let session = await wallet.beginPresentation(flow: .ble)
     let proximitySessionCoordinator = DIGraph.shared.resolver.force(
       ProximitySessionCoordinator.self,
       argument: session
     )
-    self.sessionCoordinatorHolder.setActiveProximityCoordinator(proximitySessionCoordinator)
+    await self.sessionCoordinatorHolder.setActiveProximityCoordinator(proximitySessionCoordinator)
     return proximitySessionCoordinator
   }
 
@@ -190,8 +190,8 @@ final class WalletKitControllerImpl: WalletKitController {
     await self.startRemotePresentation(urlString: urlString)
   }
 
-  func stopPresentation() {
-    self.sessionCoordinatorHolder.clear()
+  func stopPresentation() async {
+    await self.sessionCoordinatorHolder.clear()
   }
 
   func fetchAllDocuments() -> [DocClaimsDecodable] {
@@ -446,16 +446,11 @@ final class WalletKitControllerImpl: WalletKitController {
 private extension WalletKitControllerImpl {
 
   func decodeDeeplink(link: URLComponents) -> String? {
-    // Handling requests of the form
-    //    mdoc-openid4vp://https://eudi.netcompany-intrasoft.com?client_id=Verifier&request_uri=https://eudi.netcompany-intrasoft.com/wallet/request.jwt/OWB1_xVU7ndoHmirBn7S2JpcC5fFPzAXGCY1fTLxDjczVATjzQvre_w4yEcMB4FO5KwuyYXXw-JottarKgEvRQ
-    // so we need to drop scheme and forward slashes and keep the rest of the url in order to
-    // pass to wallet
-
-    return link.removeSchemeFromComponents()?.string
+    link.removeSchemeFromComponents()?.string
   }
 
   func startRemotePresentation(urlString: String) async -> RemoteSessionCoordinator {
-    self.stopPresentation()
+    await self.stopPresentation()
 
     let data = urlString.data(using: .utf8) ?? Data()
 
@@ -464,7 +459,7 @@ private extension WalletKitControllerImpl {
       RemoteSessionCoordinator.self,
       argument: session
     )
-    self.sessionCoordinatorHolder.setActiveRemoteCoordinator(remoteSessionCoordinator)
+    await self.sessionCoordinatorHolder.setActiveRemoteCoordinator(remoteSessionCoordinator)
     return remoteSessionCoordinator
   }
 }

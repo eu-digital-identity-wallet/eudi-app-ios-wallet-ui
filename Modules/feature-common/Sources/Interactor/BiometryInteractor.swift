@@ -18,69 +18,43 @@ import logic_authentication
 import LocalAuthentication
 
 public enum BiometricsState: Equatable, Sendable {
-  case idle
-  case loading
   case authenticated
   case failure(SystemBiometryError)
 }
 
 public protocol BiometryInteractor: Sendable {
-
-  func authenticate() -> AnyPublisher<BiometricsState, Never>
-  @MainActor func openSettingsURL(action: @escaping () -> Void)
-  var biometricsImage: Image? { get }
-  var currentBiometricsMethod: String { get }
-  var biometryType: LABiometryType { get }
-
-  func isBiometryEnabled() -> Bool
-  func setBiometrySelection(isEnabled: Bool)
-  func isPinValid(with pin: String) -> QuickPinPartialState
+  func authenticate() async -> BiometricsState
+  func openSettings(action: @escaping @Sendable () -> Void) async
+  func getBiometricsImage() async -> Image?
+  func getBiometricsMethod() async -> String
+  func getBiometryType() async -> LABiometryType
+  func isBiometryEnabled() async -> Bool
+  func setBiometrySelection(isEnabled: Bool) async
+  func isPinValid(with pin: String) async -> QuickPinPartialState
 }
 
-final class BiometryInteractorImpl: BiometryInteractor {
+final actor BiometryInteractorImpl: BiometryInteractor {
 
   private let prefsController: PrefsController
   private let quickPinInteractor: QuickPinInteractor
   private let biometryController: SystemBiometryController
 
-  private let useTestDispatcher: Bool
-
   init(
     prefsController: PrefsController,
     quickPinInteractor: QuickPinInteractor,
-    biometryController: SystemBiometryController,
-    useTestDispatcher: Bool = false
+    biometryController: SystemBiometryController
   ) {
     self.prefsController = prefsController
     self.quickPinInteractor = quickPinInteractor
     self.biometryController = biometryController
-    self.useTestDispatcher = useTestDispatcher
   }
 
-  public var biometryType: LABiometryType {
-    biometryController.biometryType
+  public func getBiometryType() async -> LABiometryType {
+    await biometryController.getBiometryType()
   }
 
-  public func authenticate() -> AnyPublisher<BiometricsState, Never> {
-
-    let publisher = biometryController.requestBiometricUnlock()
-      .map { BiometricsState.authenticated }
-      .catch { error -> AnyPublisher<BiometricsState, Never> in
-        return Just(BiometricsState.failure(error)).eraseToAnyPublisher()
-      }
-
-    if !self.useTestDispatcher {
-      return publisher
-        .subscribe(on: DispatchQueue.global(qos: .userInitiated))
-        .receive(on: DispatchQueue.main)
-        .eraseToAnyPublisher()
-    } else {
-      return publisher.eraseToAnyPublisher()
-    }
-  }
-
-  public var biometricsImage: Image? {
-    return switch biometryController.biometryType {
+  public func getBiometricsImage() async -> Image? {
+    switch await biometryController.getBiometryType() {
     case .faceID:
       Theme.shared.image.faceId
     case .touchID:
@@ -89,8 +63,8 @@ final class BiometryInteractorImpl: BiometryInteractor {
     }
   }
 
-  public var currentBiometricsMethod: String {
-    switch biometryController.biometryType {
+  public func getBiometricsMethod() async -> String {
+    switch await biometryController.getBiometryType() {
     case .faceID:
       return "Face ID"
     case .touchID:
@@ -100,12 +74,19 @@ final class BiometryInteractorImpl: BiometryInteractor {
     }
   }
 
-  public func openSettingsURL(action: @escaping () -> Void) {
-    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-    UIApplication.shared.open(url, options: [:]) { success in
-      guard success else { return }
-      action()
+  public func authenticate() async -> BiometricsState {
+    do {
+      try await biometryController.requestBiometricUnlock()
+      return .authenticated
+    } catch let error as SystemBiometryError {
+      return .failure(error)
+    } catch {
+      return .failure(.biometricError)
     }
+  }
+
+  public func openSettings(action: @escaping @Sendable () -> Void) async {
+    await biometryController.openSettings(action: action)
   }
 
   public func isBiometryEnabled() -> Bool {
@@ -116,8 +97,7 @@ final class BiometryInteractorImpl: BiometryInteractor {
     prefsController.setValue(isEnabled, forKey: .biometryEnabled)
   }
 
-  public func isPinValid(with pin: String) -> QuickPinPartialState {
-    quickPinInteractor.isPinValid(pin: pin)
+  public func isPinValid(with pin: String) async -> QuickPinPartialState {
+    await quickPinInteractor.isPinValid(pin: pin)
   }
-
 }

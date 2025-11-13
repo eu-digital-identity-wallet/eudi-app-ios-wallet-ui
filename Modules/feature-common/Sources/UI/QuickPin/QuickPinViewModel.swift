@@ -89,29 +89,31 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
   }
 
   func onButtonClick() {
-    switch viewState.step {
-    case .validate:
-      onValidate()
-    case .firstInput:
-      setState {
-        $0
-          .copy(
-            navigationTitle: .quickPinConfirmPin,
-            caption: viewState.config.isSetFlow ? .quickPinSetCaptionTwo : .quickPinUpdateCaptionThree,
-            button: .quickPinConfirmButton,
-            step: .retryInput(uiPinInputField)
-          )
-          .copy(pinError: nil)
-      }
-      uiPinInputField = ""
-    case .retryInput(let previousPin):
-      guard previousPin == uiPinInputField else {
+    Task {
+      switch viewState.step {
+      case .validate:
+        await onValidate()
+      case .firstInput:
         setState {
-          $0.copy(pinError: .quickPinDoNotMatch)
+          $0
+            .copy(
+              navigationTitle: .quickPinConfirmPin,
+              caption: viewState.config.isSetFlow ? .quickPinSetCaptionTwo : .quickPinUpdateCaptionThree,
+              button: .quickPinConfirmButton,
+              step: .retryInput(uiPinInputField)
+            )
+            .copy(pinError: nil)
         }
-        return
+        uiPinInputField = ""
+      case .retryInput(let previousPin):
+        guard previousPin == uiPinInputField else {
+          setState {
+            $0.copy(pinError: .quickPinDoNotMatch)
+          }
+          return
+        }
+        await onSuccess()
       }
-      onSuccess()
     }
   }
 
@@ -148,8 +150,8 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
     )
   }
 
-  private func onValidate() {
-    switch interactor.isPinValid(pin: uiPinInputField) {
+  private func onValidate() async {
+    switch await interactor.isPinValid(pin: uiPinInputField) {
     case .success:
       setState {
         $0
@@ -168,8 +170,8 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
     }
   }
 
-  private func onSuccess() {
-    interactor.setPin(newPin: uiPinInputField)
+  private func onSuccess() async {
+    await interactor.setPin(newPin: uiPinInputField)
 
     let buttonTitle: LocalizableStringKey = viewState.config.isSetFlow ?
       .walletIsSecured :

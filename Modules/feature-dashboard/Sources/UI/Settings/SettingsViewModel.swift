@@ -20,7 +20,7 @@ import feature_common
 @Copyable
 struct SettingsViewState: ViewState {
   let items: [SettingMenuItemUIModel]
-  let appVersion: String
+  let appVersion: String?
   let logsUrl: URL?
   let changelogUrl: URL?
 }
@@ -41,13 +41,15 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
       router: router,
       initialState: .init(
         items: [],
-        appVersion: interactor.getAppVersion(),
-        logsUrl: interactor.retrieveLogFileUrl(),
-        changelogUrl: interactor.retrieveChangeLogUrl()
+        appVersion: nil,
+        logsUrl: nil,
+        changelogUrl: nil
       )
     )
+  }
 
-    buildMenuItems()
+  func initialize() async {
+    await buildUi()
   }
 
   func toolbarContent() -> ToolBarContent {
@@ -61,7 +63,11 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     )
   }
 
-  private func buildMenuItems() {
+  private func buildUi() async {
+
+    let appVersion = await interactor.getAppVersion()
+    let logsUrl = await interactor.retrieveLogFileUrl()
+    let changelogUrl = await interactor.retrieveChangeLogUrl()
 
     var items: [SettingMenuItemUIModel] = [
       .init(
@@ -71,7 +77,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
       )
     ]
 
-    if let changelogUrl = interactor.retrieveChangeLogUrl() {
+    if let changelogUrl = await interactor.retrieveChangeLogUrl() {
       items.append(
         .init(
           title: .changelog,
@@ -81,6 +87,13 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
       )
     }
 
-    setState { $0.copy(items: items) }
+    setState {
+      $0.copy(
+        items: items,
+        appVersion: appVersion,
+        logsUrl: logsUrl,
+        changelogUrl: changelogUrl
+      )
+    }
   }
 }

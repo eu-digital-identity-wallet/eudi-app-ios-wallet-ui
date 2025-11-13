@@ -26,12 +26,11 @@ public protocol RemoteSessionCoordinator: Sendable {
   func initialize() async
   func requestReceived() async throws -> PresentationRequest
   func sendResponse(response: RequestItemConvertible) async
-
   func getState() async -> PresentationState
+
   func getStream() -> AsyncStream<PresentationState>
   func setState(presentationState: PresentationState)
   func stopPresentation()
-
 }
 
 final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {

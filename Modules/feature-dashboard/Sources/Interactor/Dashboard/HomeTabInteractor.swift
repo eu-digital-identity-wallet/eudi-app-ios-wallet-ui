@@ -17,13 +17,13 @@ import logic_core
 import logic_business
 
 public protocol HomeTabInteractor: Sendable {
-  func fetchUsername() -> String
-  func getWalletKitController() -> WalletKitController
+  func fetchUsername() async -> String
+  func getWalletKitController() async -> WalletKitController
   func getBleAvailability() async -> Reachability.BleAvailibity
-  @MainActor func openBleSettings()
+  func openBleSettings() async
 }
 
-final class HomeTabInteractorImpl: HomeTabInteractor {
+final actor HomeTabInteractorImpl: HomeTabInteractor {
 
   private let walletKitController: WalletKitController
   private let reachabilityController: ReachabilityController
@@ -42,8 +42,8 @@ final class HomeTabInteractorImpl: HomeTabInteractor {
     sendableAnyCancellable.cancel()
   }
 
-  func fetchUsername() -> String {
-    let name = walletKitController.fetchMainPidDocument()?.getBearersName()?.first
+  func fetchUsername() async -> String {
+    let name = await walletKitController.fetchMainPidDocument()?.getBearersName()?.first
     return name.orEmpty
   }
 
@@ -59,7 +59,7 @@ final class HomeTabInteractorImpl: HomeTabInteractor {
     }
   }
 
-  func openBleSettings() {
-    reachabilityController.openBleSettings()
+  func openBleSettings() async {
+    await reachabilityController.openBleSettings()
   }
 }

@@ -34,6 +34,9 @@ struct SettingsView<Router: RouterHost>: View {
         viewState: viewModel.viewState
       )
     }
+    .task {
+      await viewModel.initialize()
+    }
   }
 }
 
@@ -66,9 +69,11 @@ private func content(
 
     Spacer()
 
-    Text(viewState.appVersion)
-      .typography(Theme.shared.font.bodyMedium)
-      .frame(maxWidth: .infinity, alignment: .center)
+    if let version = viewState.appVersion {
+      Text(version)
+        .typography(Theme.shared.font.bodyMedium)
+        .frame(maxWidth: .infinity, alignment: .center)
+    }
   }
   .padding(.bottom, SPACING_LARGE_MEDIUM)
 }

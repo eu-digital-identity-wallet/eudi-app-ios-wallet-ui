@@ -19,6 +19,7 @@ import logic_core
 final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewModel<Router> {
 
   private let interactor: PresentationInteractor
+  private var coordinator: RemoteSessionCoordinator?
 
   init(
     router: Router,
@@ -31,13 +32,10 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
   override func doWork() async {
 
-    self.onStartLoading()
+    onStartLoading()
+    await getCoordinator()
 
-    let interactor = self.interactor
-
-    let result = await Task.detached { () -> Result<OnlineAuthenticationRequestSuccessModel, Error> in
-      return await interactor.onDeviceEngagement()
-    }.value
+    let result = await interactor.onDeviceEngagement()
 
     switch result {
     case .success(let authenticationRequest):
@@ -75,11 +73,8 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     Task {
 
       let items = self.viewState.items
-      let interactor = self.interactor
 
-      let result = await Task.detached { () -> Result<RequestItemConvertible, Error> in
-        return await interactor.onResponsePrepare(requestItems: items)
-      }.value
+      let result = await interactor.onResponsePrepare(requestItems: items)
 
       switch result {
       case .success:
@@ -97,33 +92,30 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   override func getSuccessRoute() -> AppRoute? {
-    return switch interactor.getCoordinator() {
-    case .success(let remoteSessionCoordinator):
-        .featureCommonModule(
-          .biometry(
-            config: UIConfig.Biometry(
-              navigationTitle: .biometryConfirmRequest,
-              caption: .requestDataShareBiometryCaption,
-              quickPinOnlyCaption: .requestDataShareQuickPinCaption,
-              navigationSuccessType: .push(
-                .featurePresentationModule(
-                  .presentationLoader(
-                    relyingParty: getRelyingParty().toString,
-                    relyingPartyisTrusted: getRelyingPartyIsTrusted(),
-                    presentationCoordinator: remoteSessionCoordinator,
-                    originator: getOriginator(),
-                    items: viewState.items.filterSelectedRows()
-                  )
-                )
-              ),
-              navigationBackType: .pop,
-              isPreAuthorization: false,
-              shouldInitializeBiometricOnCreate: true
+    guard let coordinator = self.coordinator else { return nil }
+    return .featureCommonModule(
+      .biometry(
+        config: UIConfig.Biometry(
+          navigationTitle: .biometryConfirmRequest,
+          caption: .requestDataShareBiometryCaption,
+          quickPinOnlyCaption: .requestDataShareQuickPinCaption,
+          navigationSuccessType: .push(
+            .featurePresentationModule(
+              .presentationLoader(
+                relyingParty: getRelyingParty().toString,
+                relyingPartyisTrusted: getRelyingPartyIsTrusted(),
+                presentationCoordinator: coordinator,
+                originator: getOriginator(),
+                items: viewState.items.filterSelectedRows()
+              )
             )
-          )
+          ),
+          navigationBackType: .pop,
+          isPreAuthorization: false,
+          shouldInitializeBiometricOnCreate: true
         )
-    case .failure: nil
-    }
+      )
+    )
   }
 
   override func getPopRoute() -> AppRoute? {
@@ -163,11 +155,22 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   func handleDeepLinkNotification(with info: [AnyHashable: Any]) {
-    guard let session = info["session"] as? RemoteSessionCoordinator else {
-      return
+    Task {
+      guard let session = info["session"] as? RemoteSessionCoordinator else {
+        return
+      }
+      resetState()
+      await interactor.updatePresentationCoordinator(with: session)
+      await doWork()
     }
-    resetState()
-    interactor.updatePresentationCoordinator(with: session)
-    Task { await doWork() }
+  }
+
+  private func getCoordinator() async {
+    return switch await interactor.getCoordinator() {
+    case .success(let remoteSessionCoordinator):
+      self.coordinator = remoteSessionCoordinator
+    case .failure:
+      self.coordinator = nil
+    }
   }
 }

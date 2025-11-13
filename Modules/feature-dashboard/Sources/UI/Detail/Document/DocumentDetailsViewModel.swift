@@ -64,13 +64,8 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   func fetchDocumentDetails() async {
 
     let documentId = viewState.documentId
-    let interactor = self.interactor
 
-    let state = await Task.detached { () -> DocumentDetailsPartialState in
-      return await interactor.fetchStoredDocument(
-        documentId: documentId
-      )
-    }.value
+    let state = await interactor.fetchStoredDocument(documentId: documentId)
 
     switch state {
 
@@ -215,11 +210,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
       self.setState { $0.copy(isLoading: true).copy(error: nil) }
 
-      let interactor = self.interactor
-
-      let state = await Task.detached { () -> DocumentDetailsDeletionPartialState in
-        return await interactor.deleteDocument(with: id, and: type)
-      }.value
+      let state = await interactor.deleteDocument(with: id, and: type)
 
       switch state {
       case .success(let shouldReboot):

@@ -103,11 +103,8 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
     Task {
 
       let failedDocuments = viewState.failedDocuments
-      let interactor = self.interactor
 
-      let state = await Task.detached { () -> DocumentsPartialState in
-        return await interactor.fetchDocuments(failedDocuments: failedDocuments)
-      }.value
+      let state = await interactor.fetchDocuments(failedDocuments: failedDocuments)
 
       switch state {
       case .success(let documents):
@@ -125,7 +122,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
             isPaused: false
           )
         }
-        onDocumentsRetrievedPostActions()
+        await onDocumentsRetrievedPostActions()
       case .failure:
         setState {
           $0.copy(
@@ -158,7 +155,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   func setPhase(with phase: ScenePhase) {
     setState { $0.copy(phase: phase) }
     if phase == .active {
-      onDocumentsRetrievedPostActions()
+      Task { await onDocumentsRetrievedPostActions() }
     }
     if phase == .background {
       onPause()
@@ -191,18 +188,18 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   }
 
   func deleteDeferredDocument() {
+
     toggleDeleteDeferredModal()
+
     guard let document = viewState.pendingDeletionDocument else {
       return
     }
+
     setState { $0.copy(isLoading: true).copy(pendingDeletionDocument: nil) }
+
     Task {
 
-      let interactor = self.interactor
-
-      let state = await Task.detached { () -> DeleteDeferredPartialState in
-        return await interactor.deleteDeferredDocument(with: document.value.id)
-      }.value
+      let state = await interactor.deleteDeferredDocument(with: document.value.id)
 
       switch state {
       case .success:
@@ -261,7 +258,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
 
   private func onFiltersChangeState() {
     Task {
-      for await state in interactor.onFilterChangeState() {
+      for await state in await interactor.onFilterChangeState() {
         switch state {
         case .filterApplyResult(let documents, let filterSections, let hasDefaultFilters):
           setState {
@@ -285,8 +282,8 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
     }
   }
 
-  private func onDocumentsRetrievedPostActions() {
-    if interactor.hasDeferredDocuments() && (self.deferredTask == nil || self.deferredTask?.isCancelled == true) {
+  private func onDocumentsRetrievedPostActions() async {
+    if await interactor.hasDeferredDocuments() && (self.deferredTask == nil || self.deferredTask?.isCancelled == true) {
       self.deferredTask = Task {
         try? await Task.sleep(seconds: 5)
         return await interactor.requestDeferredIssuance()

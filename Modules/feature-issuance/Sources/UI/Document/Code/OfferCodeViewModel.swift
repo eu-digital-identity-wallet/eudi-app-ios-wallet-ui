@@ -81,14 +81,11 @@ final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeV
   func checkPendingIssuance() async {
 
     let config: IssuanceCodeUiConfig = viewState.config
-    let interactor = self.interactor
 
-    let state = await Task.detached { () -> OfferDynamicIssuancePartialState in
-      return await interactor.resumeDynamicIssuance(
-        issuerName: config.issuerName,
-        successNavigation: config.successNavigation
-      )
-    }.value
+    let state = await interactor.resumeDynamicIssuance(
+      issuerName: config.issuerName,
+      successNavigation: config.successNavigation
+    )
 
     switch state {
     case .success(let route):
@@ -136,18 +133,15 @@ final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeV
       setState { $0.copy(isLoading: true).copy(error: nil) }
 
       let config = viewState.config
-      let interactor = self.interactor
       let codeInput = self.codeInput
 
-      let state = await Task.detached { () -> OfferResultPartialState in
-        return await interactor.issueDocuments(
-          with: config.offerUri,
-          issuerName: config.issuerName,
-          docOffers: config.docOffers,
-          successNavigation: config.successNavigation,
-          txCodeValue: codeInput
-        )
-      }.value
+      let state = await interactor.issueDocuments(
+        with: config.offerUri,
+        issuerName: config.issuerName,
+        docOffers: config.docOffers,
+        successNavigation: config.successNavigation,
+        txCodeValue: codeInput
+      )
 
       switch state {
       case .success(let route):

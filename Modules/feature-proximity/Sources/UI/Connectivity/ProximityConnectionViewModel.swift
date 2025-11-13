@@ -67,21 +67,19 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
       publisherTask = Task {
         await self.subscribeToCoordinatorPublisher()
       }
-      Task {
-        try? await self.publisherTask?.value
-      }
+      Task { try? await self.publisherTask?.value }
     }
   }
 
   private func subscribeToCoordinatorPublisher() async {
-    switch self.interactor.getSessionStatePublisher() {
+    switch await self.interactor.getSessionStatePublisher() {
     case .success(let publisher):
       for try await state in publisher {
         switch state {
         case .prepareQr:
           await self.onQRGeneration()
         case .requestReceived:
-          self.onConnectionSuccess()
+          await self.onConnectionSuccess()
         case .error(let error):
           self.onError(with: error)
         default:
@@ -95,7 +93,7 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
 
   private func pop() {
     publisherTask?.cancel()
-    interactor.stopPresentation()
+    Task { await interactor.stopPresentation() }
     router.pop()
   }
 
@@ -108,9 +106,9 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
     }
   }
 
-  private func onConnectionSuccess() {
+  private func onConnectionSuccess() async {
     publisherTask?.cancel()
-    switch interactor.getCoordinator() {
+    switch await interactor.getCoordinator() {
     case .success(let proximitySessionCoordinator):
       router.push(
         with: .featureProximityModule(

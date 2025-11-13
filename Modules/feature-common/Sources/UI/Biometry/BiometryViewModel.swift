@@ -67,13 +67,13 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
       router: router,
       initialState: .init(
         config: config,
-        areBiometricsEnabled: interactor.isBiometryEnabled(),
+        areBiometricsEnabled: false,
         pinError: nil,
         throttlePinInput: throttlePinInput,
         scenePhase: .active,
         pendingNavigation: nil,
         autoBiometryInitiated: false,
-        biometryImage: interactor.biometricsImage,
+        biometryImage: nil,
         isCancellable: config.navigationBackType != nil,
         quickPinSize: 6,
         contentHeaderConfig: .init(
@@ -88,7 +88,18 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
     self.subscribeToPinInput()
   }
 
-  func onAppearBiometry() {
+  func onAppearBiometry() async {
+
+    let biometricsImage = await interactor.getBiometricsImage()
+    let isBiometryEnabled = await interactor.isBiometryEnabled()
+
+    setState {
+      $0.copy(
+        areBiometricsEnabled: isBiometryEnabled,
+        biometryImage: biometricsImage
+      )
+    }
+
     if viewState.config.shouldInitializeBiometricOnCreate, viewState.areBiometricsEnabled, !viewState.autoBiometryInitiated {
       setState { $0.copy(autoBiometryInitiated: true) }
       DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(AUTO_VERIFY_ON_APPEAR_DELAY)) {
@@ -104,23 +115,20 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
   }
 
   func onBiometry() {
-    interactor.authenticate()
-      .sink { _ in } receiveValue: { [weak self] (state) in
-        guard let self = self else { return }
-        switch state {
-        case .authenticated:
-          self.authenticated()
-        case .failure(let error):
-          if error != .biometricError {
-            self.biometryError = error
-          }
-        default: break
+    Task {
+      switch await interactor.authenticate() {
+      case .authenticated:
+        self.authenticated()
+      case .failure(let error):
+        if error != .biometricError {
+          self.biometryError = error
         }
-      }.store(in: &cancellables)
+      }
+    }
   }
 
   func onSettings() {
-    interactor.openSettingsURL {}
+    Task { await interactor.openSettings {} }
   }
 
   func setPhase(with phase: ScenePhase) {
@@ -153,15 +161,17 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
   }
 
   private func processPin(value: String) {
-    if value.count == viewState.quickPinSize {
-      switch interactor.isPinValid(with: uiPinInputField) {
-      case .success:
-        self.authenticated()
-      case .failure(let error):
-        setState { $0.copy(pinError: error.errorMessage) }
+    Task {
+      if value.count == viewState.quickPinSize {
+        switch await interactor.isPinValid(with: uiPinInputField) {
+        case .success:
+          self.authenticated()
+        case .failure(let error):
+          setState { $0.copy(pinError: error.errorMessage) }
+        }
+      } else {
+        setState { $0.copy(pinError: nil) }
       }
-    } else {
-      setState { $0.copy(pinError: nil) }
     }
   }
 

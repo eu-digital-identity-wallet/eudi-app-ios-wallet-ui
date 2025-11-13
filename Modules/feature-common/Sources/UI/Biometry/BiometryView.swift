@@ -50,8 +50,8 @@ struct BiometryView<Router: RouterHost>: View {
         self.viewModel.setPhase(with: scenePhase)
       }
     }
-    .onAppear {
-      self.viewModel.onAppearBiometry()
+    .task {
+      await self.viewModel.onAppearBiometry()
     }
   }
 }

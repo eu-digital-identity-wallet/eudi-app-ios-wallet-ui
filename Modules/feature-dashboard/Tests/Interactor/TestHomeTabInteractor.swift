@@ -41,20 +41,20 @@ final class TestHomeTabInteractor: EudiTest {
     self.walletKitController = nil
   }
   
-  func testFetchUsername_WhenPidDocumentReturnsValidName_ThenReturnsThatName() {
+  func testFetchUsername_WhenPidDocumentReturnsValidName_ThenReturnsThatName() async {
     // Given
     stubFetchMainPidDocument(with: Constants.createEuPidModel())
     
     // When
-    let username = interactor.fetchUsername()
+    let username = await interactor.fetchUsername()
     
     // Then
     XCTAssertEqual(username, "John")
   }
   
-  func testGetWalletKitController_WhenInteractorReturnsWalletKitController_ThenVerifyControllerIsInjected() {
+  func testGetWalletKitController_WhenInteractorReturnsWalletKitController_ThenVerifyControllerIsInjected() async {
     // When
-    let result = interactor.getWalletKitController()
+    let result = await interactor.getWalletKitController()
     
     // Then
     XCTAssertTrue(result is MockWalletKitController, "The result should be of type MockWalletKitController")

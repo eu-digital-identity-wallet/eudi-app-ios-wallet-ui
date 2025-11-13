@@ -13,21 +13,24 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+
 import XCTest
-import Combine
 @testable import logic_test
 @testable import logic_authentication
 @preconcurrency import LocalAuthentication
 
 final class TestSystemBiometryController: EudiTest {
-
+  
+  // MARK: - Stub LAContext
   class StubLAContext: LAContext {
-    var canEvaluateReturn = true
+    
+    var canEvaluateReturn: Bool = true
     var evaluateError: NSError? = nil
-
     var stubBiometryType: LABiometryType = .touchID
+    var evaluatePolicyResult: (success: Bool, error: Error?) = (true, nil)
+    
     override var biometryType: LABiometryType { stubBiometryType }
-
+    
     override func canEvaluatePolicy(
       _ policy: LAPolicy,
       error: NSErrorPointer
@@ -37,8 +40,7 @@ final class TestSystemBiometryController: EudiTest {
       }
       return canEvaluateReturn
     }
-
-    var evaluatePolicyResult: (success: Bool, error: Error?) = (true, nil)
+    
     override func evaluatePolicy(
       _ policy: LAPolicy,
       localizedReason: String,
@@ -46,15 +48,16 @@ final class TestSystemBiometryController: EudiTest {
     ) {
       reply(evaluatePolicyResult.success, evaluatePolicyResult.error)
     }
-
+    
     override func invalidate() {}
   }
-
+  
+  // MARK: - Properties
   var biometryController: SystemBiometryController!
   var keyChainController: MockKeyChainController!
   var context: StubLAContext!
-  var cancellables: Set<AnyCancellable> = []
-
+  
+  // MARK: - Lifecycle
   override func setUp() {
     super.setUp()
     self.keyChainController = MockKeyChainController()
@@ -64,298 +67,197 @@ final class TestSystemBiometryController: EudiTest {
       keyChainController: keyChainController
     )
   }
-
+  
   override func tearDown() {
-    self.cancellables.removeAll()
     self.biometryController = nil
     self.keyChainController = nil
     self.context = nil
+    super.tearDown()
   }
-
-  func testRequestUnlock_WhenPolicyDenied_ThenDeniedAccess() {
-    // Given
+  
+  // MARK: - Tests
+  func testRequestUnlock_WhenPolicyDenied_ThenDeniedAccess() async {
+    // Given: canEvaluatePolicy fails with no specific error
     context.canEvaluateReturn = false
-    context.evaluateError = NSError(
-      domain: LAErrorDomain,
-      code: LAError.Code.userCancel.rawValue,
-      userInfo: nil
-    )
-
-    let exp = expectation(description: "deniedAccess")
-    // When
-    biometryController.requestBiometricUnlock()
-      .sink(
-        receiveCompletion: { completion in
-          // Then
-          if case let .failure(err) = completion {
-            XCTAssertEqual(err, .deniedAccess)
-            XCTAssertEqual(
-              err.errorDescription,
-              NSLocalizedString(
-                "You have denied access. Please go to the settings, locate this application and turn the Face ID on",
-                comment: ""
-              )
-            )
-            exp.fulfill()
-          }
-        },
-        receiveValue: { _ in
-          XCTFail("Should not send value when policy is denied")
-        }
+    context.evaluateError = nil
+    
+    // When / Then
+    do {
+      try await biometryController.requestBiometricUnlock()
+      XCTFail("Expected requestBiometricUnlock to throw")
+    } catch let error as SystemBiometryError {
+      XCTAssertEqual(error, .deniedAccess)
+      XCTAssertEqual(
+        error.errorDescription,
+        NSLocalizedString(
+          "You have denied access. Please go to the settings, locate this application and turn the Face ID on",
+          comment: ""
+        )
       )
-      .store(in: &cancellables)
-
-    wait(for: [exp], timeout: 0.5)
+    } catch {
+      XCTFail("Unexpected error: \(error)")
+    }
   }
-
-  func testRequestBiometricUnlock_WhenFaceID_ThenNoFaceIdEnrolled() {
-    // Given
-    context.canEvaluateReturn = true
+  
+  func testRequestBiometricUnlock_WhenFaceID_ThenNoFaceIdEnrolled() async {
+    // Given: canEvaluatePolicy fails with biometryNotEnrolled and Face ID
+    context.canEvaluateReturn = false
     context.evaluateError = NSError(
       domain: LAErrorDomain,
       code: LAError.Code.biometryNotEnrolled.rawValue,
       userInfo: nil
     )
     context.stubBiometryType = .faceID
-
-    let exp = expectation(description: "noFaceIdEnrolled")
-    // When
-    biometryController.requestBiometricUnlock()
-      .sink(
-        receiveCompletion: { completion in
-          // Then
-          if case let .failure(err) = completion {
-            XCTAssertEqual(err, .noFaceIdEnrolled)
-            XCTAssertEqual(
-              err.errorDescription,
-              NSLocalizedString("You have not enabled Face ID yet", comment: "")
-            )
-            exp.fulfill()
-          }
-        },
-        receiveValue: { _ in XCTFail("Should not send a value") }
+    
+    // When / Then
+    do {
+      try await biometryController.requestBiometricUnlock()
+      XCTFail("Expected requestBiometricUnlock to throw")
+    } catch let error as SystemBiometryError {
+      XCTAssertEqual(error, .noFaceIdEnrolled)
+      XCTAssertEqual(
+        error.errorDescription,
+        NSLocalizedString("You have not enabled Face ID yet", comment: "")
       )
-      .store(in: &cancellables)
-
-    wait(for: [exp], timeout: 0.5)
+    } catch {
+      XCTFail("Unexpected error: \(error)")
+    }
   }
-
-  func testRequestBiometricUnlock_WhenTouchID_ThenNoFingerprintEnrolled() {
-    // Given
-    context.canEvaluateReturn = true
+  
+  func testRequestBiometricUnlock_WhenTouchID_ThenNoFingerprintEnrolled() async {
+    // Given: canEvaluatePolicy fails with biometryNotEnrolled and Touch ID
+    context.canEvaluateReturn = false
     context.evaluateError = NSError(
       domain: LAErrorDomain,
       code: LAError.Code.biometryNotEnrolled.rawValue,
       userInfo: nil
     )
     context.stubBiometryType = .touchID
-
-    let exp = expectation(description: "noFingerprintEnrolled")
-    // When
-    biometryController.requestBiometricUnlock()
-      .sink(
-        receiveCompletion: { completion in
-          // Then
-          if case let .failure(err) = completion {
-            XCTAssertEqual(err, .noFingerprintEnrolled)
-            XCTAssertEqual(
-              err.errorDescription,
-              NSLocalizedString("You have not enabled fingerprint yet", comment: "")
-            )
-            exp.fulfill()
-          }
-        },
-        receiveValue: { _ in XCTFail() }
+    
+    // When / Then
+    do {
+      try await biometryController.requestBiometricUnlock()
+      XCTFail("Expected requestBiometricUnlock to throw")
+    } catch let error as SystemBiometryError {
+      XCTAssertEqual(error, .noFingerprintEnrolled)
+      XCTAssertEqual(
+        error.errorDescription,
+        NSLocalizedString("You have not enabled fingerprint yet", comment: "")
       )
-      .store(in: &cancellables)
-
-    wait(for: [exp], timeout: 0.5)
+    } catch {
+      XCTFail("Unexpected error: \(error)")
+    }
   }
-
-  func testRequestBiometricUnlock_WhenBiometryNotSupported_yieldsBiometryNotSupported() {
-    // Given
+  
+  func testRequestBiometricUnlock_WhenBiometryNotSupported_yieldsBiometryNotSupported() async {
+    // Given: canEvaluatePolicy succeeds, but biometryType is .none
     context.canEvaluateReturn = true
     context.evaluateError = nil
     context.stubBiometryType = .none
-
-    let exp = expectation(description: "biometryNotSupported")
-    // When
-    biometryController.requestBiometricUnlock()
-      .sink(
-        receiveCompletion: { completion in
-          // Then
-          if case let .failure(err) = completion {
-            XCTAssertEqual(err, .biometryNotSupported)
-            XCTAssertEqual(
-              err.errorDescription,
-              NSLocalizedString("This device does not support biometry", comment: "")
-            )
-            exp.fulfill()
-          }
-        },
-        receiveValue: { _ in XCTFail() }
+    
+    // When / Then
+    do {
+      try await biometryController.requestBiometricUnlock()
+      XCTFail("Expected requestBiometricUnlock to throw")
+    } catch let error as SystemBiometryError {
+      XCTAssertEqual(error, .biometryNotSupported)
+      XCTAssertEqual(
+        error.errorDescription,
+        NSLocalizedString("This device does not support biometry", comment: "")
       )
-      .store(in: &cancellables)
-
-    wait(for: [exp], timeout: 0.5)
+    } catch {
+      XCTFail("Unexpected error: \(error)")
+    }
   }
-
-  func testRequestBiometricUnlock_WhenKeychainValidates_ThenReturnSuccess() {
-    // Given
+  
+  func testRequestBiometricUnlock_WhenKeychainValidates_ThenReturnSuccess() async {
+    // Given: canEvaluate is OK, biometryType is valid, keychain validation succeeds
     context.canEvaluateReturn = true
     context.evaluateError = nil
     context.stubBiometryType = .touchID
-
+    
     stub(keyChainController) { stub in
       when(stub.validateKeyChainBiometry()).thenDoNothing()
     }
-
-    let exp = expectation(description: "success")
-    // When
-    biometryController.requestBiometricUnlock()
-      .sink(
-        receiveCompletion: { completion in
-          // Then
-          if case let .failure(err) = completion {
-            XCTFail("Expected success but got \(err)")
-          }
-        },
-        receiveValue: {
-          exp.fulfill()
-        }
-      )
-      .store(in: &cancellables)
-
-    wait(for: [exp], timeout: 0.5)
+    
+    // When / Then: no error thrown
+    do {
+      try await biometryController.requestBiometricUnlock()
+    } catch {
+      XCTFail("Expected success but got error: \(error)")
+    }
   }
-
-  func testRequestBiometricUnlock_WhenKeychainThrows_ThenReturnBiometricError() {
-    // Given
+  
+  func testRequestBiometricUnlock_WhenKeychainThrows_ThenReturnBiometricError() async {
+    // Given: canEvaluate is OK, but keychain validation throws
     context.canEvaluateReturn = true
     context.evaluateError = nil
     context.stubBiometryType = .touchID
-
+    
     stub(keyChainController) { stub in
       when(stub.validateKeyChainBiometry())
         .thenThrow(SystemBiometryError.biometricError)
       when(stub.clearKeyChainBiometry())
         .thenDoNothing()
     }
-
-    let exp = expectation(description: "biometricError")
-    // When
-    biometryController.requestBiometricUnlock()
-      .sink(
-        receiveCompletion: { completion in
-          // Then
-          if case let .failure(err) = completion {
-            XCTAssertEqual(err, .biometricError)
-            XCTAssertEqual(
-              err.errorDescription,
-              NSLocalizedString("Your biometric method has not been recognized", comment: "")
-            )
-            exp.fulfill()
-          }
-        },
-        receiveValue: { _ in XCTFail() }
+    
+    // When / Then
+    do {
+      try await biometryController.requestBiometricUnlock()
+      XCTFail("Expected requestBiometricUnlock to throw")
+    } catch let error as SystemBiometryError {
+      XCTAssertEqual(error, .biometricError)
+      XCTAssertEqual(
+        error.errorDescription,
+        NSLocalizedString("Your biometric method has not been recognized", comment: "")
       )
-      .store(in: &cancellables)
-
-    wait(for: [exp], timeout: 0.5)
+    } catch {
+      XCTFail("Unexpected error: \(error)")
+    }
   }
-
-  func testRequestBiometricUnlock_WhenLAContextErrorIsMinus6_ThenDeniedAccess() {
-    // Given
-    context.canEvaluateReturn = true
+  
+  func testRequestBiometricUnlock_WhenLAContextErrorIsMinus6_ThenDeniedAccess() async {
+    // Given: canEvaluatePolicy fails with custom error code -6
+    context.canEvaluateReturn = false
     context.evaluateError = NSError(
       domain: LAErrorDomain,
       code: -6,
       userInfo: nil
     )
     context.stubBiometryType = .touchID
-
-    let exp = expectation(description: "deniedAccess")
-    // When
-    biometryController.requestBiometricUnlock()
-      .sink(
-        receiveCompletion: { completion in
-          // Then
-          if case let .failure(err) = completion {
-            XCTAssertEqual(err, .deniedAccess)
-            exp.fulfill()
-          }
-        },
-        receiveValue: { _ in
-          XCTFail("Should not send value when code is -6")
-        }
-      )
-      .store(in: &cancellables)
-
-    wait(for: [exp], timeout: 0.5)
+    
+    // When / Then
+    do {
+      try await biometryController.requestBiometricUnlock()
+      XCTFail("Expected requestBiometricUnlock to throw")
+    } catch let error as SystemBiometryError {
+      XCTAssertEqual(error, .deniedAccess)
+    } catch {
+      XCTFail("Unexpected error: \(error)")
+    }
   }
-
-  func testRequestBiometricUnlock_WhenLAContextErrorIsUserFallback_ThenDeniedAccess() {
-    // Given
-    context.canEvaluateReturn = true
+  
+  func testRequestBiometricUnlock_WhenLAContextErrorIsUserFallback_ThenBiometricError() async {
+    // Given: canEvaluatePolicy fails with userFallback; we treat as generic biometricError
+    context.canEvaluateReturn = false
     context.evaluateError = NSError(
       domain: LAErrorDomain,
       code: LAError.Code.userFallback.rawValue,
       userInfo: nil
     )
     context.stubBiometryType = .touchID
-
-    let exp = expectation(description: "deniedAccess")
-    // When
-    biometryController.requestBiometricUnlock()
-      .sink(
-        receiveCompletion: { completion in
-          // Then
-          if case let .failure(err) = completion {
-            XCTAssertEqual(err, .biometricError)
-            exp.fulfill()
-          }
-        },
-        receiveValue: { _ in
-          XCTFail("Should not send value when code is -6")
-        }
-      )
-      .store(in: &cancellables)
-
-    wait(for: [exp], timeout: 0.5)
+    
+    // When / Then
+    do {
+      try await biometryController.requestBiometricUnlock()
+      XCTFail("Expected requestBiometricUnlock to throw")
+    } catch let error as SystemBiometryError {
+      XCTAssertEqual(error, .biometricError)
+    } catch {
+      XCTFail("Unexpected error: \(error)")
+    }
   }
-
-  func testRequestBiometricUnlock_WhenSelfIsDeallocated_ThenReturnsBiometricError() {
-    // Given
-    var biometryController: SystemBiometryControllerImpl? = SystemBiometryControllerImpl(
-      context: context,
-      keyChainController: keyChainController
-    )
-    weak var weakBiometryController = biometryController
-    var cancellables = Set<AnyCancellable>()
-    let publisher = biometryController!.requestBiometricUnlock()
-    biometryController = nil
-
-    let exp = expectation(description: "biometricErrorOnDeinit")
-    // When
-    publisher
-      .sink(
-        receiveCompletion: { completion in
-          // Then
-          if case let .failure(error) = completion {
-            XCTAssertEqual(error, .biometricError)
-            exp.fulfill()
-          }
-        },
-        receiveValue: { _ in
-          XCTFail("Should not receive a value")
-        }
-      )
-      .store(in: &cancellables)
-
-    wait(for: [exp], timeout: 0.5)
-    XCTAssertNil(weakBiometryController) // Confirm deallocation
-  }
-
+  
   func testSystemBiometryError_id_ReturnsLocalizedDescription() {
     // Given
     let allErrors: [SystemBiometryError] = [
@@ -371,21 +273,27 @@ final class TestSystemBiometryController: EudiTest {
       XCTAssertEqual(error.id, error.errorDescription)
     }
   }
-
-  func testBiometryType_ReturnsContextBiometryType() {
+  
+  func testBiometryType_ReturnsContextBiometryType() async {
+    
+    var type: LABiometryType = .none
+    
     // Given
     context.stubBiometryType = .faceID
-    // When & Then
-    XCTAssertEqual(biometryController.biometryType, .faceID)
-
+    type = await biometryController.getBiometryType()
+    // Then
+    XCTAssertEqual(type, .faceID)
+    
     // Given
     context.stubBiometryType = .touchID
-    // When & Then
-    XCTAssertEqual(biometryController.biometryType, .touchID)
-
+    type = await biometryController.getBiometryType()
+    // Then
+    XCTAssertEqual(type, .touchID)
+    
     // Given
     context.stubBiometryType = .none
-    // When & Then
-    XCTAssertEqual(biometryController.biometryType, .none)
+    type = await biometryController.getBiometryType()
+    // Then
+    XCTAssertEqual(type, .none)
   }
 }

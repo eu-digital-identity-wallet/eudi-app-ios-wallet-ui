@@ -86,11 +86,8 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
     }
 
     let offerUri = viewState.offerUri
-    let interactor = self.interactor
 
-    let state = await Task.detached { () -> OfferRequestPartialState in
-      return await interactor.processOfferRequest(with: offerUri)
-    }.value
+    let state = await interactor.processOfferRequest(with: offerUri)
 
     switch state {
     case .success(let uiModel):
@@ -158,17 +155,14 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
       let issuerName = viewState.documentOfferUiModel.issuerName
       let docOffers = viewState.documentOfferUiModel.docOffers
       let successNavigation = viewState.successNavigation
-      let interactor = self.interactor
 
-      let state = await Task.detached { () -> OfferResultPartialState in
-        return await interactor.issueDocuments(
-          with: offerUri,
-          issuerName: issuerName,
-          docOffers: docOffers,
-          successNavigation: successNavigation,
-          txCodeValue: nil
-        )
-      }.value
+      let state = await interactor.issueDocuments(
+        with: offerUri,
+        issuerName: issuerName,
+        docOffers: docOffers,
+        successNavigation: successNavigation,
+        txCodeValue: nil
+      )
 
       switch state {
       case .success(let route):
@@ -246,14 +240,11 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
 
     let issuerName = viewState.documentOfferUiModel.issuerName
     let successNavigation = viewState.successNavigation
-    let interactor = self.interactor
 
-    let state = await Task.detached { () -> OfferDynamicIssuancePartialState in
-      return await interactor.resumeDynamicIssuance(
-        issuerName: issuerName,
-        successNavigation: successNavigation
-      )
-    }.value
+    let state = await interactor.resumeDynamicIssuance(
+      issuerName: issuerName,
+      successNavigation: successNavigation
+    )
 
     switch state {
     case .success(let route):

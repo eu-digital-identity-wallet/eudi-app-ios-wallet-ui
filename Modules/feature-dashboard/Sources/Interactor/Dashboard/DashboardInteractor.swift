@@ -16,10 +16,10 @@
 import logic_core
 
 public protocol DashboardInteractor: Sendable {
-  func getWalletKitController() -> WalletKitController
+  func getWalletKitController() async -> WalletKitController
 }
 
-final class DashboardInteractorImpl: DashboardInteractor {
+final actor DashboardInteractorImpl: DashboardInteractor {
 
   private let walletKitController: WalletKitController
 

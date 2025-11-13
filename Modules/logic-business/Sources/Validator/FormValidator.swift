@@ -279,7 +279,7 @@ public struct FormValidationResult: Equatable, Sendable {
   }
 }
 
-public struct FormsValidationResult: Equatable {
+public struct FormsValidationResult: Equatable, Sendable {
   public var isValid: Bool
   public var messages: [String]
 

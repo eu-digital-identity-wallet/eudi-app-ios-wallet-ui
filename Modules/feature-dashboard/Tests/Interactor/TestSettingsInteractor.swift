@@ -41,34 +41,34 @@ final class TestSettingsInteractor: EudiTest {
     self.configLogic = nil
   }
 
-  func testGetAppVersion_WhenConfigLogicReturnsAppVersion_ThenReturnsExpectedVersion() {
+  func testGetAppVersion_WhenConfigLogicReturnsAppVersion_ThenReturnsExpectedVersion() async {
     // Given
     let appVersion = getAppVersion()
 
     // When
-    let version = interactor.getAppVersion()
+    let version = await interactor.getAppVersion()
 
     // Then
     XCTAssertEqual(version, appVersion)
   }
 
-  func testRetrieveLogFileUrl_WhenWalletKitControllerReturnsLogFileUrl_ThenReturnsExpectedUrl() {
+  func testRetrieveLogFileUrl_WhenWalletKitControllerReturnsLogFileUrl_ThenReturnsExpectedUrl() async {
     // Given
     let expectedUrl = stubLogFileUrl()
 
     // When
-    let result = interactor.retrieveLogFileUrl()
+    let result = await interactor.retrieveLogFileUrl()
 
     // Then
     XCTAssertEqual(result, expectedUrl)
   }
 
-  func testRetrieveChangelogUrl_WhenConfigLogicReturnsChangelogUrl_ThenReturnsExpectedUrl() {
+  func testRetrieveChangelogUrl_WhenConfigLogicReturnsChangelogUrl_ThenReturnsExpectedUrl() async {
     // Given
     let expectedUrl = stubChangeLogUrl()
 
     // When
-    let result = interactor.retrieveChangeLogUrl()
+    let result = await interactor.retrieveChangeLogUrl()
 
     // Then
     XCTAssertEqual(result, expectedUrl)

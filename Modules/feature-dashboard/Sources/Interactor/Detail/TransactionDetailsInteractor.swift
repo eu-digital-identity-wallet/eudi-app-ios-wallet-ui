@@ -24,7 +24,7 @@ public protocol TransactionDetailsInteractor: Sendable {
   func getTransactionDetails(transactionId: String) async -> TransactionDetailsInteractorPartialState
 }
 
-final class TransactionDetailsInteractorImpl: TransactionDetailsInteractor {
+final actor TransactionDetailsInteractorImpl: TransactionDetailsInteractor {
 
   private let walletController: WalletKitController
 

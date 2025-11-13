@@ -37,9 +37,9 @@ final class TestDashboardInteractor: EudiTest {
     self.interactor = nil
   }
   
-  func testGetWalletKitController_WhenInteractorReturnsWalletKitController_ThenVerifyControllerIsInjected() {
+  func testGetWalletKitController_WhenInteractorReturnsWalletKitController_ThenVerifyControllerIsInjected() async {
     // Given / When
-    let result = interactor.getWalletKitController()
+    let result = await interactor.getWalletKitController()
     
     // Then
     XCTAssertTrue(result is MockWalletKitController, "The result should be of type MockWalletKitController")

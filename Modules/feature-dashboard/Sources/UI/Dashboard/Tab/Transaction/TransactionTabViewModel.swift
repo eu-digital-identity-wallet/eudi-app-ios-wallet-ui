@@ -84,12 +84,8 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
   func fetch() {
     Task {
 
-      let interactor = self.interactor
-
       do {
-        let state = try await Task.detached {
-          try await interactor.fetchTransactions()
-        }.value
+        let state = try await interactor.fetchTransactions()
 
         switch state {
         case .success(let transactions, let minStartDate, let maxEndDate):
@@ -246,7 +242,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
 
   private func onFiltersChangeState() {
     Task {
-      for await state in interactor.onFilterChangeState() {
+      for await state in await interactor.onFilterChangeState() {
         switch state {
 
         case .filterApplyResult(let transactions, let filterSections, let hasDefaultFilters):

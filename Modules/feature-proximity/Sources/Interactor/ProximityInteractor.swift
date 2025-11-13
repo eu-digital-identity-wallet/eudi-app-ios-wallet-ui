@@ -54,44 +54,44 @@ public enum ProximityCoordinatorPartialState: Sendable {
 
 public protocol ProximityInteractor: Sendable {
 
-  func getSessionStatePublisher() -> ProximityPublisherPartialState
-  func getCoordinator() -> ProximityCoordinatorPartialState
+  func getSessionStatePublisher() async -> ProximityPublisherPartialState
+  func getCoordinator() async -> ProximityCoordinatorPartialState
 
   func onDeviceEngagement() async -> ProximityDeviceEngagementPartialState
   func onQRGeneration() async -> ProximityQrCodePartialState
   func onRequestReceived() async -> ProximityRequestPartialState
   func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> ProximityResponsePreparationPartialState
   func onSendResponse() async -> ProximityResponsePartialState
-  func stopPresentation()
+  func stopPresentation() async
 
 }
 
-final class ProximityInteractorImpl: ProximityInteractor {
+final actor ProximityInteractorImpl: ProximityInteractor {
 
   private let walletKitController: WalletKitController
   private let sessionCoordinatorHolder: SessionCoordinatorHolder
 
   init(
-    with presentationSessionCoordinator: ProximitySessionCoordinator,
+    with proximitySessionCoordinator: ProximitySessionCoordinator,
     and walletKitController: WalletKitController,
     also sessionCoordinatorHolder: SessionCoordinatorHolder
   ) {
     self.walletKitController = walletKitController
     self.sessionCoordinatorHolder = sessionCoordinatorHolder
-    self.sessionCoordinatorHolder.setActiveProximityCoordinator(presentationSessionCoordinator)
+    Task { await self.sessionCoordinatorHolder.setActiveProximityCoordinator(proximitySessionCoordinator) }
   }
 
-  func getCoordinator() -> ProximityCoordinatorPartialState {
+  func getCoordinator() async -> ProximityCoordinatorPartialState {
     do {
-      return .success(try sessionCoordinatorHolder.getActiveProximityCoordinator())
+      return .success(try await sessionCoordinatorHolder.getActiveProximityCoordinator())
     } catch {
       return .failure(error)
     }
   }
 
-  public func getSessionStatePublisher() -> ProximityPublisherPartialState {
+  public func getSessionStatePublisher() async -> ProximityPublisherPartialState {
     do {
-      return .success(try sessionCoordinatorHolder.getActiveProximityCoordinator().getStream())
+      return .success(try await sessionCoordinatorHolder.getActiveProximityCoordinator().getStream())
     } catch {
       return .failure(error)
     }
@@ -144,7 +144,7 @@ final class ProximityInteractorImpl: ProximityInteractor {
     }
 
     do {
-      try self.sessionCoordinatorHolder.getActiveProximityCoordinator().setState(presentationState: .responseToSend(requestConvertible))
+      try await self.sessionCoordinatorHolder.getActiveProximityCoordinator().setState(presentationState: .responseToSend(requestConvertible))
     } catch {
       return .failure(error)
     }
@@ -169,8 +169,8 @@ final class ProximityInteractorImpl: ProximityInteractor {
     }
   }
 
-  public func stopPresentation() {
-    walletKitController.stopPresentation()
-    try? sessionCoordinatorHolder.getActiveProximityCoordinator().stopPresentation()
+  public func stopPresentation() async {
+    await walletKitController.stopPresentation()
+    try? await sessionCoordinatorHolder.getActiveProximityCoordinator().stopPresentation()
   }
 }
