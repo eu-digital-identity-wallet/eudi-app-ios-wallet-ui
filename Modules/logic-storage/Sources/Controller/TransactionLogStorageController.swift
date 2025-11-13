@@ -17,7 +17,7 @@ import Foundation
 
 public protocol TransactionLogStorageController: StorageController where Value == TransactionLog {}
 
-final class TransactionLogStorageControllerImpl: TransactionLogStorageController {
+final actor TransactionLogStorageControllerImpl: TransactionLogStorageController {
 
   private let swiftDataService: SwiftDataService
 

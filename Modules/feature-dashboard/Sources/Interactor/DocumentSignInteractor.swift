@@ -20,7 +20,7 @@ public protocol DocumentSignInteractor: Sendable {
   func initiateSigning(url: URL) async
 }
 
-final class DocumentSignInteractorImpl: DocumentSignInteractor {
+final actor DocumentSignInteractorImpl: DocumentSignInteractor {
 
   private let configLogic: ConfigLogic
 

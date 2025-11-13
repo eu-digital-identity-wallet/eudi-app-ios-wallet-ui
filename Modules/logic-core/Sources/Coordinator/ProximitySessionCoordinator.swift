@@ -27,12 +27,11 @@ public protocol ProximitySessionCoordinator: Sendable {
   func startQrEngagement() async throws -> UIImage
   func requestReceived() async throws -> PresentationRequest
   func sendResponse(response: RequestItemConvertible) async
-
   func getState() async -> PresentationState
+
   func setState(presentationState: PresentationState)
   func getStream() -> AsyncStream<PresentationState>
   func stopPresentation()
-
 }
 
 final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {

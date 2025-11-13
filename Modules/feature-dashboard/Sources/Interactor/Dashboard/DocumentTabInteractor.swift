@@ -55,11 +55,11 @@ public enum DeferredPartialState: Sendable {
 
 public protocol DocumentTabInteractor: Sendable {
   func fetchDocuments(failedDocuments: [String]) async -> DocumentsPartialState
-  func hasDeferredDocuments() -> Bool
+  func hasDeferredDocuments() async -> Bool
   func deleteDeferredDocument(with id: String) async -> DeleteDeferredPartialState
   func requestDeferredIssuance() async -> DeferredPartialState
-  func retrieveLogFileUrl() -> URL?
-  @MainActor func onFilterChangeState() -> AsyncStream<DocumentFiltersPartialState>
+  func retrieveLogFileUrl() async -> URL?
+  func onFilterChangeState() async -> AsyncStream<DocumentFiltersPartialState>
   func initializeFilters(filterableList: FilterableList) async
   func applyFilters() async
   func resetFilters() async
@@ -70,12 +70,11 @@ public protocol DocumentTabInteractor: Sendable {
   func addDynamicFilters(documents: FilterableList, filters: Filters) async -> Filters
 }
 
-final class DocumentTabInteractorImpl: DocumentTabInteractor {
+final actor DocumentTabInteractorImpl: DocumentTabInteractor {
 
   private let walletKitController: WalletKitController
   private let filterValidator: FilterValidator
 
-  @MainActor
   private var filtersStateAsync: AsyncStream<DocumentFiltersPartialState>.Continuation?
 
   init(
@@ -90,8 +89,8 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     filtersStateAsync?.finish()
   }
 
-  func hasDeferredDocuments() -> Bool {
-    return !walletKitController.fetchDeferredDocuments().isEmpty
+  func hasDeferredDocuments() async -> Bool {
+    return await !walletKitController.fetchDeferredDocuments().isEmpty
   }
 
   func onFilterChangeState() -> AsyncStream<DocumentFiltersPartialState> {
@@ -121,6 +120,111 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
         }
       }
     }
+  }
+
+  func addDynamicFilters(documents: FilterableList, filters: Filters) -> Filters {
+    let newFilterGroups: [FilterGroup] = filters.filterGroups.map { filterGroup in
+      if let multipleGroup = filterGroup as? MultipleSelectionFilterGroup {
+        switch multipleGroup.filterType {
+        case .issuer:
+          return multipleGroup.copy(filters: addIssuerFilter(documents: documents)) as any FilterGroup
+        case .documentCategory:
+          return multipleGroup.copy(filters: addCategoriesFilter(documents: documents)) as any FilterGroup
+        default:
+          return multipleGroup as any FilterGroup
+        }
+      }
+
+      return filterGroup
+    }
+
+    return filters.copy(filterGroups: newFilterGroups)
+  }
+
+  func initializeFilters(filterableList: FilterableList) async {
+    let filtersGroup = createFiltersGroup()
+    let filters = addDynamicFilters(documents: filterableList, filters: filtersGroup)
+    await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
+  }
+
+  func applyFilters() async {
+    await filterValidator.applyFilters(sortOrder: .ascending)
+  }
+
+  func applySearch(query: String) async {
+    await filterValidator.applySearch(query: query)
+  }
+
+  func resetFilters() async {
+    await filterValidator.resetFilters()
+  }
+
+  func revertFilters() async {
+    await filterValidator.revertFilters()
+  }
+
+  func updateFilters(sectionID: String, filterID: String)  async {
+    await filterValidator.updateFilter(filterGroupId: sectionID, filterId: filterID)
+  }
+
+  func updateLists(filterableList: FilterableList) async {
+    let sortOrder = createFiltersGroup().sortOrder
+    await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
+  }
+
+  func fetchDocuments(failedDocuments: [String]) async -> DocumentsPartialState {
+
+    let documents = await fetchFilteredDocuments(failedDocuments: failedDocuments)
+
+    guard let documents = documents else {
+      return .failure(WalletCoreError.unableFetchDocuments)
+    }
+
+    return .success(documents)
+  }
+
+  func deleteDeferredDocument(with id: String) async -> DeleteDeferredPartialState {
+    do {
+      try await walletKitController.deleteDocument(with: id, status: .deferred)
+      return await walletKitController.fetchAllDocuments().isEmpty ? .noDocuments : .success
+    } catch {
+      return .failure(error)
+    }
+  }
+
+  func requestDeferredIssuance() async -> DeferredPartialState {
+
+    var issued: [DocumentTabUIModel] = []
+    var failed: [String] = []
+
+    let categories = await self.walletKitController.getDocumentCategories()
+    let revokedDocuments = try? await self.walletKitController.fetchRevokedDocuments()
+
+    for deferred in await walletKitController.fetchDeferredDocuments() {
+
+      if Task.isCancelled { return .cancelled }
+
+      do {
+        let document = try await walletKitController.requestDeferredIssuance(with: deferred)
+        if (document is DeferrredDocument) == false {
+          let isRevoked = revokedDocuments?.first { $0 == deferred.id } != nil
+          issued.append(
+            document.transformToDocumentTabUi(
+              categories: categories,
+              isRevoked: isRevoked
+            )
+          )
+        }
+      } catch {
+        failed.append(deferred.id)
+      }
+    }
+
+    return .completion(issued: issued, failed: failed)
+  }
+
+  func retrieveLogFileUrl() async -> URL? {
+    return await walletKitController.retrieveLogFileUrl()
   }
 
   private func createFiltersGroup() -> Filters {
@@ -294,113 +398,8 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     )
   }
 
-  func addDynamicFilters(documents: FilterableList, filters: Filters) async -> Filters {
-    let newFilterGroups: [FilterGroup] = filters.filterGroups.map { filterGroup in
-      if let multipleGroup = filterGroup as? MultipleSelectionFilterGroup {
-        switch multipleGroup.filterType {
-        case .issuer:
-          return multipleGroup.copy(filters: addIssuerFilter(documents: documents)) as any FilterGroup
-        case .documentCategory:
-          return multipleGroup.copy(filters: addCategoriesFilter(documents: documents)) as any FilterGroup
-        default:
-          return multipleGroup as any FilterGroup
-        }
-      }
-
-      return filterGroup
-    }
-
-    return filters.copy(filterGroups: newFilterGroups)
-  }
-
-  func initializeFilters(filterableList: FilterableList) async {
-    let filtersGroup = createFiltersGroup()
-    let filters = await addDynamicFilters(documents: filterableList, filters: filtersGroup)
-    await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
-  }
-
-  func applyFilters() async {
-    await filterValidator.applyFilters(sortOrder: .ascending)
-  }
-
-  func applySearch(query: String) async {
-    await filterValidator.applySearch(query: query)
-  }
-
-  func resetFilters() async {
-    await filterValidator.resetFilters()
-  }
-
-  func revertFilters() async {
-    await filterValidator.revertFilters()
-  }
-
-  func updateFilters(sectionID: String, filterID: String)  async {
-    await filterValidator.updateFilter(filterGroupId: sectionID, filterId: filterID)
-  }
-
-  func updateLists(filterableList: FilterableList) async {
-    let sortOrder = createFiltersGroup().sortOrder
-    await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
-  }
-
-  func fetchDocuments(failedDocuments: [String]) async -> DocumentsPartialState {
-
-    let documents = await fetchFilteredDocuments(failedDocuments: failedDocuments)
-
-    guard let documents = documents else {
-      return .failure(WalletCoreError.unableFetchDocuments)
-    }
-
-    return .success(documents)
-  }
-
-  func deleteDeferredDocument(with id: String) async -> DeleteDeferredPartialState {
-    do {
-      try await walletKitController.deleteDocument(with: id, status: .deferred)
-      return walletKitController.fetchAllDocuments().isEmpty ? .noDocuments : .success
-    } catch {
-      return .failure(error)
-    }
-  }
-
-  func requestDeferredIssuance() async -> DeferredPartialState {
-
-    var issued: [DocumentTabUIModel] = []
-    var failed: [String] = []
-
-    let categories = self.walletKitController.getDocumentCategories()
-    let revokedDocuments = try? await self.walletKitController.fetchRevokedDocuments()
-
-    for deferred in walletKitController.fetchDeferredDocuments() {
-
-      if Task.isCancelled { return .cancelled }
-
-      do {
-        let document = try await walletKitController.requestDeferredIssuance(with: deferred)
-        if (document is DeferrredDocument) == false {
-          let isRevoked = revokedDocuments?.first { $0 == deferred.id } != nil
-          issued.append(
-            document.transformToDocumentTabUi(
-              categories: categories,
-              isRevoked: isRevoked
-            )
-          )
-        }
-      } catch {
-        failed.append(deferred.id)
-      }
-    }
-
-    return .completion(issued: issued, failed: failed)
-  }
-
-  func retrieveLogFileUrl() -> URL? {
-    return walletKitController.retrieveLogFileUrl()
-  }
-
   private func fetchFilteredDocuments(failedDocuments: [String]) async -> FilterableList? {
-    let documents = self.walletKitController.fetchAllDocuments()
+    let documents = await self.walletKitController.fetchAllDocuments()
     let revokedDocuments = try? await self.walletKitController.fetchRevokedDocuments()
 
     guard !documents.isEmpty else {
@@ -411,8 +410,8 @@ final class DocumentTabInteractorImpl: DocumentTabInteractor {
     for document in documents {
       let isRevoked = revokedDocuments?.first { $0 == document.id } != nil
 
-      let documentIsLowOnCredentials = walletKitController.isDocumentLowOnCredentials(document: document)
-      let documentPayload = document.transformToDocumentTabUi(
+      let documentIsLowOnCredentials = await walletKitController.isDocumentLowOnCredentials(document: document)
+      let documentPayload = await document.transformToDocumentTabUi(
         categories: self.walletKitController.getDocumentCategories(),
         isRevoked: isRevoked,
         documentIsLowOnCredentials: documentIsLowOnCredentials,

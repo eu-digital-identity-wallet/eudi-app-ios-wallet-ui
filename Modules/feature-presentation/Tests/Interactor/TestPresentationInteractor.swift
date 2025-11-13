@@ -61,7 +61,7 @@ final class TestPresentationInteractor: EudiTest {
     presentationCoordinator = nil
   }
 
-  func testGetSessionStatePublisher_WhenActiveCoordinatorReturnsStream_ThenResultIsSuccessWithThatStream() {
+  func testGetSessionStatePublisher_WhenActiveCoordinatorReturnsStream_ThenResultIsSuccessWithThatStream() async {
     // Given
     let expectedStream: AsyncStream<PresentationState> = AsyncStream { completion in }
 
@@ -74,7 +74,7 @@ final class TestPresentationInteractor: EudiTest {
     }
 
     // When
-    let result = interactor.getSessionStatePublisher()
+    let result = await interactor.getSessionStatePublisher()
 
     // Then
     switch result {
@@ -85,7 +85,7 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testGetSessionStatePublisher_WhenActiveCoordinatorThrowsError_ThenReturnsFailureWithThatError() {
+  func testGetSessionStatePublisher_WhenActiveCoordinatorThrowsError_ThenReturnsFailureWithThatError() async {
     // Given
     let expectedError = RuntimeError.genericError
 
@@ -94,7 +94,7 @@ final class TestPresentationInteractor: EudiTest {
     }
 
     // When
-    let result = interactor.getSessionStatePublisher()
+    let result = await interactor.getSessionStatePublisher()
 
     // Then
     switch result {
@@ -105,7 +105,7 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testGetCoordinator_WhenActiveCoordinatorExists_ThenReturnsSuccessWithCoordinator() {
+  func testGetCoordinator_WhenActiveCoordinatorExists_ThenReturnsSuccessWithCoordinator() async {
     // Given
     let expectedStream: AsyncStream<PresentationState> = AsyncStream { completion in }
 
@@ -118,7 +118,7 @@ final class TestPresentationInteractor: EudiTest {
     }
 
     // When
-    let result = interactor.getCoordinator()
+    let result = await interactor.getCoordinator()
 
     // Then
     switch result {
@@ -129,7 +129,7 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testGetCoordinator_WhenActiveCoordinatorThrowsError_ThenReturnsFailureWithThatError() {
+  func testGetCoordinator_WhenActiveCoordinatorThrowsError_ThenReturnsFailureWithThatError() async {
     // Given
     let expectedError = RuntimeError.genericError
 
@@ -138,7 +138,7 @@ final class TestPresentationInteractor: EudiTest {
     }
 
     // When
-    let result = interactor.getCoordinator()
+    let result = await interactor.getCoordinator()
 
     // Then
     switch result {
@@ -149,7 +149,7 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testUpdatePresentationCoordinator_WhenUpdatingWithCoordinator_ThenCallsSetActiveRemoteCoordinatorTwice() {
+  func testUpdatePresentationCoordinator_WhenUpdatingWithCoordinator_ThenCallsSetActiveRemoteCoordinatorTwice() async {
     // Given
     let expectedStream: AsyncStream<PresentationState> = AsyncStream { completion in }
 
@@ -158,13 +158,13 @@ final class TestPresentationInteractor: EudiTest {
     }
 
     // When
-    let _ = interactor.updatePresentationCoordinator(with: presentationCoordinator)
+    let _ = await interactor.updatePresentationCoordinator(with: presentationCoordinator)
 
     // Then
     verify(sessionCoordinatorHolder, times(2)).setActiveRemoteCoordinator(any())
   }
 
-  func testStoreDynamicIssuancePendingUrl_WhenCalledWithUrl_ThenCallsWalletKitControllerStoreDynamicIssuancePendingUrl() {
+  func testStoreDynamicIssuancePendingUrl_WhenCalledWithUrl_ThenCallsWalletKitControllerStoreDynamicIssuancePendingUrl() async {
     // Given
     let expectedURL = URL(string: "https://example.com/pending")!
 
@@ -173,19 +173,19 @@ final class TestPresentationInteractor: EudiTest {
     }
 
     // When
-    interactor.storeDynamicIssuancePendingUrl(with: expectedURL)
+    await interactor.storeDynamicIssuancePendingUrl(with: expectedURL)
 
     // Then
     verify(walletKitController).storeDynamicIssuancePendingUrl(with: any())
   }
 
-  func testStopPresentation_WhenInteractorMethodCalled_ThenCallsWalletKitControllerStopPresentation() {
+  func testStopPresentation_WhenInteractorMethodCalled_ThenCallsWalletKitControllerStopPresentation() async {
     // Given
     stub(walletKitController) { mock in
       when(mock.stopPresentation()).thenDoNothing()
     }
     // When
-    interactor.stopPresentation()
+    await interactor.stopPresentation()
     // Then
     verify(walletKitController).stopPresentation()
   }
@@ -196,7 +196,7 @@ final class TestPresentationInteractor: EudiTest {
       when(mock.stopPresentation()).thenDoNothing()
     }
     // When
-    interactor.stopPresentation()
+    await interactor.stopPresentation()
 
     // Then
     verify(walletKitController).stopPresentation()

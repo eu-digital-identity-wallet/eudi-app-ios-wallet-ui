@@ -23,7 +23,7 @@ public protocol DocumentDetailsInteractor: Sendable {
   func delete(_ identifier: String) async throws
 }
 
-final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
+final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 
   private let walletController: WalletKitController
   private let prefsController: PrefsController
@@ -37,14 +37,14 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
   }
 
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
-    let document = walletController.fetchDocument(with: documentId)
+    let document = await walletController.fetchDocument(with: documentId)
     guard let documentDetails = document?.transformToDocumentUi() else {
       return .failure(WalletCoreError.unableFetchDocument)
     }
     let isBookmarked = await walletController.isDocumentBookmarked(with: documentId)
     let isRevoked = await walletController.isDocumentRevoked(with: documentId)
 
-    let documentIsLowOnCredentials = walletController.isDocumentLowOnCredentials(document: document)
+    let documentIsLowOnCredentials = await walletController.isDocumentLowOnCredentials(document: document)
     let info = getCredentialsUsageCount(
       credentialsUsageCounts: document?.credentialsUsageCounts,
       documentIsLowOnCredentials: documentIsLowOnCredentials
@@ -54,28 +54,28 @@ final class DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 
   func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
 
+    func shouldDeleteAllDocuments(type: DocumentTypeIdentifier) async -> Bool {
+      if type == .mDocPid || type == .sdJwtPid {
+
+        let documentPids = await walletController.fetchIssuedDocuments(
+          with: [DocumentTypeIdentifier.mDocPid, DocumentTypeIdentifier.sdJwtPid]
+        )
+        let mainPid = await walletController.fetchMainPidDocument()
+
+        guard documentPids.count > 1 else { return true }
+
+        return mainPid?.id == documentId
+
+      } else {
+        return false
+      }
+    }
+
     let successState: DocumentDetailsDeletionPartialState
 
     do {
 
-      var shouldDeleteAllDocuments: Bool {
-        if type == .mDocPid || type == .sdJwtPid {
-
-          let documentPids = walletController.fetchIssuedDocuments(
-            with: [DocumentTypeIdentifier.mDocPid, DocumentTypeIdentifier.sdJwtPid]
-          )
-          let mainPid = walletController.fetchMainPidDocument()
-
-          guard documentPids.count > 1 else { return true }
-
-          return mainPid?.id == documentId
-
-        } else {
-          return false
-        }
-      }
-
-      if shouldDeleteAllDocuments {
+      if await shouldDeleteAllDocuments(type: type) {
         await walletController.clearAllDocuments()
         successState = .success(shouldReboot: true)
       } else {

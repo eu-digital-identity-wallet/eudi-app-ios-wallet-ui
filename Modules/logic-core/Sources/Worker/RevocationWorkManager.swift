@@ -62,7 +62,7 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
 
   private func checkRevocation() async throws {
 
-    let issuedDocuments = walletKitController.fetchIssuedDocuments()
+    let issuedDocuments = await walletKitController.fetchIssuedDocuments()
     let revokedStoredDocuments = (try? await walletKitController.fetchRevokedDocuments()) ?? []
 
     var revokedDocuments: [String: String] = [:]

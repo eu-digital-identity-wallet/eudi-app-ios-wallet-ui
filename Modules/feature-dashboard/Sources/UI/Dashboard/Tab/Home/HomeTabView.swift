@@ -68,8 +68,8 @@ struct HomeTabView<Router: RouterHost>: View {
     .onChange(of: scenePhase) {
       self.viewModel.setPhase(with: scenePhase)
     }
-    .onAppear {
-      viewModel.onCreate()
+    .task {
+      await viewModel.onCreate()
     }
     .background(Theme.shared.color.background)
   }
@@ -92,9 +92,11 @@ private func content(
         config: viewState.contentHeaderConfig
       )
 
-      Text(.welcomeBack([viewState.username]))
-        .font(Theme.shared.font.titleMedium.font)
-        .foregroundStyle(Theme.shared.color.onSurface)
+      if let username = viewState.username {
+        Text(.welcomeBack([username]))
+          .font(Theme.shared.font.titleMedium.font)
+          .foregroundStyle(Theme.shared.color.onSurface)
+      }
 
       HomeCardView(
         text: LocalizableStringKey.authenticateAuthoriseTransactions,

@@ -20,7 +20,7 @@ public protocol ScannerInteractor: FormValidatorInteractor, Sendable {
   func startCrossDevicePresentation(scanResult: String) async -> RemoteSessionCoordinator
 }
 
-final class ScannerInteractorImpl: ScannerInteractor {
+final actor ScannerInteractorImpl: ScannerInteractor {
 
   private let formValidator: FormValidator
   private let walletKitController: WalletKitController

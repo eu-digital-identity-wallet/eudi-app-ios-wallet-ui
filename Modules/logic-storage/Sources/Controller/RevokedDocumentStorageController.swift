@@ -17,7 +17,7 @@ import Foundation
 
 public protocol RevokedDocumentStorageController: StorageController where Value == RevokedDocument {}
 
-final class RevokedDocumentStorageControllerImpl: RevokedDocumentStorageController {
+final actor RevokedDocumentStorageControllerImpl: RevokedDocumentStorageController {
 
   private let swiftDataService: SwiftDataService
 

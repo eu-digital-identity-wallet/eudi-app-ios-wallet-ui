@@ -109,7 +109,7 @@ final class TestProximityInteractor: EudiTest {
       when(mock.getStream()).thenReturn(stream)
     }
     // When
-    let state = interactor.getSessionStatePublisher()
+    let state = await interactor.getSessionStatePublisher()
     // Then
     switch state {
     case .success:
@@ -126,7 +126,7 @@ final class TestProximityInteractor: EudiTest {
       when(mock.getActiveProximityCoordinator()).thenThrow(expectedError)
     }
     // When
-    let state = interactor.getSessionStatePublisher()
+    let state = await interactor.getSessionStatePublisher()
     // Then
     switch state {
     case .failure(let error):
@@ -138,7 +138,7 @@ final class TestProximityInteractor: EudiTest {
   
   func testGetCoordinator_WhenCoordinatorIsValid_ThenVerifyStateSuccess() async {
     // When
-    let state = interactor.getCoordinator()
+    let state = await interactor.getCoordinator()
     // Then
     switch state {
     case .success:
@@ -155,7 +155,7 @@ final class TestProximityInteractor: EudiTest {
       when(mock.getActiveProximityCoordinator()).thenThrow(expectedError)
     }
     // When
-    let state = interactor.getCoordinator()
+    let state = await interactor.getCoordinator()
     // Then
     switch state {
     case .failure(let error):
@@ -238,7 +238,7 @@ final class TestProximityInteractor: EudiTest {
       when(mock.stopPresentation()).thenDoNothing()
     }
     // When
-    interactor.stopPresentation()
+    await interactor.stopPresentation()
     // Then
     verify(walletKitController).stopPresentation()
   }

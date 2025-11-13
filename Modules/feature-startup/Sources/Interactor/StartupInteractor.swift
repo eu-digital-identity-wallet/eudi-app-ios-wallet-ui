@@ -22,16 +22,12 @@ public protocol StartupInteractor: Sendable {
   func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute
 }
 
-final class StartupInteractorImpl: StartupInteractor {
+final actor StartupInteractorImpl: StartupInteractor {
 
   private let walletKitController: WalletKitController
   private let quickPinInteractor: QuickPinInteractor
   private let keyChainController: KeyChainController
   private let prefsController: PrefsController
-
-  private var hasDocuments: Bool {
-    return !walletKitController.fetchAllDocuments().isEmpty
-  }
 
   init(
     walletKitController: WalletKitController,
@@ -48,8 +44,9 @@ final class StartupInteractorImpl: StartupInteractor {
   public func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute {
     await manageStorageForFirstRun()
     try? await walletKitController.loadDocuments()
+    let hasDocuments = await !walletKitController.fetchAllDocuments().isEmpty
     try? await Task.sleep(nanoseconds: splashAnimationDuration.nanoseconds)
-    if quickPinInteractor.hasPin() {
+    if await quickPinInteractor.hasPin() {
       return .featureCommonModule(
         .biometry(
           config: UIConfig.Biometry(

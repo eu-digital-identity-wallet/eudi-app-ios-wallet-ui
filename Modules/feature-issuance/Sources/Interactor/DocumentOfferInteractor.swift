@@ -34,7 +34,7 @@ public protocol DocumentOfferInteractor: Sendable {
   func fetchStoredDocuments(documentIds: [String]) async -> OfferDocumentsPartialState
 }
 
-final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
+final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
   private let walletController: WalletKitController
 
@@ -51,7 +51,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       let codeMaxLength = 6
 
       let offer = try await walletController.resolveOfferUrlDocTypes(offerUri: uri)
-      let hasPidStored = !walletController.fetchIssuedDocuments(with: [.mDocPid, .sdJwtPid]).isEmpty
+      let hasPidStored = await !walletController.fetchIssuedDocuments(with: [.mDocPid, .sdJwtPid]).isEmpty
 
       if let spec = offer.txCodeSpec,
          let codeLength = spec.length,
@@ -160,11 +160,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
       )
 
       if doc.status == .issued {
-        let state = await Task.detached { () -> OfferDocumentsPartialState in
-          return await self.fetchStoredDocuments(
-            documentIds: [doc.id]
-          )
-        }.value
+        let state = await self.fetchStoredDocuments(documentIds: [doc.id])
         switch state {
         case .success(let documents):
             return .success(
@@ -202,7 +198,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
   }
 
   func fetchStoredDocuments(documentIds: [String]) async -> OfferDocumentsPartialState {
-    let documents = walletController.fetchDocuments(with: documentIds)
+    let documents = await walletController.fetchDocuments(with: documentIds)
     let documentsDetails = documents.compactMap {
       $0.transformToDocumentUi(isSensitive: false)
     }
@@ -218,11 +214,7 @@ final class DocumentOfferInteractorImpl: DocumentOfferInteractor {
     documentIdentifiers: [String],
     isPartialState: Bool = false
   ) async -> OfferResultPartialState {
-    let state = await Task.detached { () -> OfferDocumentsPartialState in
-      return await self.fetchStoredDocuments(
-        documentIds: documentIdentifiers
-      )
-    }.value
+    let state = await self.fetchStoredDocuments(documentIds: documentIdentifiers)
     switch state {
     case .success(let documents):
         if isPartialState {

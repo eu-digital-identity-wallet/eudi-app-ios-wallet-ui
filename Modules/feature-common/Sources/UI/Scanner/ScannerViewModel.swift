@@ -71,23 +71,19 @@ final class ScannerViewModel<Router: RouterHost>: ViewModel<Router, ScannerState
     setState { $0.copy(allowScanning: false) }
     Task {
 
-      let interactor = self.interactor
-
-      let isValid = await Task.detached { () -> Bool in
-        return await interactor.validateForm(
-          form: .init(
-            inputs: [
-              [
-                Rule.ValidateUrl(
-                  errorMessage: "",
-                  shouldValidateHost: false,
-                  shouldValidatePath: false
-                )
-              ]: scanResult
-            ]
-          )
-        ).isValid
-      }.value
+      let isValid = await interactor.validateForm(
+        form: .init(
+          inputs: [
+            [
+              Rule.ValidateUrl(
+                errorMessage: "",
+                shouldValidateHost: false,
+                shouldValidatePath: false
+              )
+            ]: scanResult
+          ]
+        )
+      ).isValid
 
       if isValid {
         await self.onScanResultValidated(scanResult: scanResult)

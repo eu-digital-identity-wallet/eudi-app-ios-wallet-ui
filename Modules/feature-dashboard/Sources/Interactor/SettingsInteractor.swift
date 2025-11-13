@@ -18,12 +18,12 @@ import logic_core
 import logic_business
 
 public protocol SettingsInteractor: Sendable {
-  func getAppVersion() -> String
-  func retrieveLogFileUrl() -> URL?
-  func retrieveChangeLogUrl() -> URL?
+  func getAppVersion() async -> String
+  func retrieveLogFileUrl() async -> URL?
+  func retrieveChangeLogUrl() async -> URL?
 }
 
-final class SettingsInteractorImpl: SettingsInteractor {
+final actor SettingsInteractorImpl: SettingsInteractor {
 
   private let walletController: WalletKitController
   private let configLogic: ConfigLogic
@@ -40,8 +40,8 @@ final class SettingsInteractorImpl: SettingsInteractor {
     return configLogic.appVersion
   }
 
-  func retrieveLogFileUrl() -> URL? {
-    return walletController.retrieveLogFileUrl()
+  func retrieveLogFileUrl() async -> URL? {
+    return await walletController.retrieveLogFileUrl()
   }
 
   func retrieveChangeLogUrl() -> URL? {

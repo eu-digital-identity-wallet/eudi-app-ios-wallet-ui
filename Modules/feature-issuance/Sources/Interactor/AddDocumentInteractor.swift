@@ -30,7 +30,7 @@ public protocol AddDocumentInteractor: Sendable {
   func fetchStoredDocuments(documentIds: [String]) async -> IssueDocumentsPartialState
 }
 
-final class AddDocumentInteractorImpl: AddDocumentInteractor {
+final actor AddDocumentInteractorImpl: AddDocumentInteractor {
 
   private let walletController: WalletKitController
 
@@ -150,7 +150,7 @@ final class AddDocumentInteractorImpl: AddDocumentInteractor {
   }
 
   func fetchStoredDocuments(documentIds: [String]) async -> IssueDocumentsPartialState {
-    let documents = walletController.fetchDocuments(with: documentIds)
+    let documents = await walletController.fetchDocuments(with: documentIds)
     let documentsDetails = documents.compactMap {
       $0.transformToDocumentUi(isSensitive: false)
     }

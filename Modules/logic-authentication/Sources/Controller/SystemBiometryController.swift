@@ -13,18 +13,10 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+
 @preconcurrency import LocalAuthentication
-import Combine
 import logic_business
-
-internal final class BiometryError: @unchecked Sendable {
-  internal var value: NSError?
-}
-
-public protocol SystemBiometryController: Sendable {
-  var biometryType: LABiometryType { get }
-  func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometryError>
-}
+import UIKit
 
 public enum SystemBiometryError: Error, LocalizedError, Identifiable, Sendable {
   case deniedAccess
@@ -38,7 +30,10 @@ public enum SystemBiometryError: Error, LocalizedError, Identifiable, Sendable {
   public var errorDescription: String? {
     switch self {
     case .deniedAccess:
-      return NSLocalizedString("You have denied access. Please go to the settings, locate this application and turn the Face ID on", comment: "")
+      return NSLocalizedString(
+        "You have denied access. Please go to the settings, locate this application and turn the Face ID on",
+        comment: ""
+      )
     case .noFaceIdEnrolled:
       return NSLocalizedString("You have not enabled Face ID yet", comment: "")
     case .noFingerprintEnrolled:
@@ -51,14 +46,16 @@ public enum SystemBiometryError: Error, LocalizedError, Identifiable, Sendable {
   }
 }
 
-final class SystemBiometryControllerImpl: SystemBiometryController {
+public protocol SystemBiometryController: Sendable {
+  func getBiometryType() async -> LABiometryType
+  func requestBiometricUnlock() async throws
+  func openSettings(action: @escaping @Sendable () -> Void) async
+}
 
-  public var biometryType: LABiometryType { context.biometryType }
+final actor SystemBiometryControllerImpl: SystemBiometryController {
 
   private let context: LAContext
   private let keyChainController: KeyChainController
-
-  private let biometricError: BiometryError = .init()
 
   public init(
     context: LAContext = LAContext(),
@@ -66,65 +63,66 @@ final class SystemBiometryControllerImpl: SystemBiometryController {
   ) {
     self.context = context
     self.keyChainController = keyChainController
-    _ = canEvaluateForBiometrics()
   }
 
   deinit {
-    self.context.invalidate()
+    context.invalidate()
   }
 
-  public func requestBiometricUnlock() -> AnyPublisher<Void, SystemBiometryError> {
-    canEvaluateForBiometrics()
-      .flatMap { [weak self] (_) -> AnyPublisher<Void, SystemBiometryError> in
-        guard let self = self else {
-          return Fail(error: SystemBiometryError.biometricError).eraseToAnyPublisher()
-        }
-        return self.evaluateBiometrics()
-      }
-      .eraseToAnyPublisher()
+  public func getBiometryType() async -> LABiometryType {
+    context.biometryType
   }
 
-  private func canEvaluateForBiometrics() -> AnyPublisher<Bool, SystemBiometryError> {
+  public func requestBiometricUnlock() async throws {
 
-    guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &biometricError.value) else {
-      return Fail(error: SystemBiometryError.deniedAccess).eraseToAnyPublisher()
+    try canEvaluateForBiometrics()
+
+    do {
+      try keyChainController.validateKeyChainBiometry()
+    } catch {
+      keyChainController.clearKeyChainBiometry()
+      throw SystemBiometryError.biometricError
     }
+  }
 
-    if let error = biometricError.value {
-      switch error.code {
-      case -6:
-        return Fail(error: SystemBiometryError.deniedAccess).eraseToAnyPublisher()
-      case -7:
-        if context.biometryType == .faceID {
-          return Fail(error: SystemBiometryError.noFaceIdEnrolled).eraseToAnyPublisher()
-        } else {
-          return Fail(error: SystemBiometryError.noFingerprintEnrolled).eraseToAnyPublisher()
+  @MainActor
+  public func openSettings(action: @escaping @Sendable () -> Void) {
+    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+    UIApplication.shared.open(url, options: [:]) { success in
+      guard success else { return }
+      action()
+    }
+  }
+
+  private func canEvaluateForBiometrics() throws {
+
+    var nsError: NSError?
+
+    let canEvaluate = context.canEvaluatePolicy(
+      .deviceOwnerAuthenticationWithBiometrics,
+      error: &nsError
+    )
+
+    if !canEvaluate {
+      if let error = nsError {
+        switch error.code {
+        case -6:
+          throw SystemBiometryError.deniedAccess
+        case -7:
+          if context.biometryType == .faceID {
+            throw SystemBiometryError.noFaceIdEnrolled
+          } else {
+            throw SystemBiometryError.noFingerprintEnrolled
+          }
+        default:
+          throw SystemBiometryError.biometricError
         }
-      default:
-        return Fail(error: SystemBiometryError.biometricError).eraseToAnyPublisher()
       }
+      throw SystemBiometryError.deniedAccess
     }
 
     guard context.biometryType != .none else {
-      return Fail(error: SystemBiometryError.biometryNotSupported).eraseToAnyPublisher()
+      throw SystemBiometryError.biometryNotSupported
     }
-
-    return Just(true).setFailureType(to: SystemBiometryError.self).eraseToAnyPublisher()
-  }
-
-  private func evaluateBiometrics() -> AnyPublisher<Void, SystemBiometryError> {
-    return Deferred {
-      Future { [weak self] promise in
-        guard let self = self else { return }
-        do {
-          try self.keyChainController.validateKeyChainBiometry()
-          promise(.success(()))
-        } catch {
-          self.keyChainController.clearKeyChainBiometry()
-          promise(.failure(SystemBiometryError.biometricError))
-        }
-      }
-    }
-    .eraseToAnyPublisher()
   }
 }

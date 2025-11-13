@@ -39,18 +39,18 @@ public enum RemoteSentResponsePartialState: Sendable {
 }
 
 public protocol PresentationInteractor: Sendable {
-  func getSessionStatePublisher() -> RemotePublisherPartialState
-  func getCoordinator() -> PresentationCoordinatorPartialState
+  func getSessionStatePublisher() async -> RemotePublisherPartialState
+  func getCoordinator() async -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error>
   func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
   func onSendResponse() async -> RemoteSentResponsePartialState
-  func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator)
-  func storeDynamicIssuancePendingUrl(with url: URL)
-  func stopPresentation()
+  func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator) async
+  func storeDynamicIssuancePendingUrl(with url: URL) async
+  func stopPresentation() async
 }
 
-final class PresentationInteractorImpl: PresentationInteractor {
+final actor PresentationInteractorImpl: PresentationInteractor {
 
   private let sessionCoordinatorHolder: SessionCoordinatorHolder
   private let walletKitController: WalletKitController
@@ -62,27 +62,27 @@ final class PresentationInteractorImpl: PresentationInteractor {
   ) {
     self.walletKitController = walletKitController
     self.sessionCoordinatorHolder = sessionCoordinatorHolder
-    self.sessionCoordinatorHolder.setActiveRemoteCoordinator(presentationCoordinator)
+    Task { await self.sessionCoordinatorHolder.setActiveRemoteCoordinator(presentationCoordinator) }
   }
 
-  public func getSessionStatePublisher() -> RemotePublisherPartialState {
+  public func getSessionStatePublisher() async -> RemotePublisherPartialState {
     do {
-      return .success(try self.sessionCoordinatorHolder.getActiveRemoteCoordinator().getStream())
+      return .success(try await self.sessionCoordinatorHolder.getActiveRemoteCoordinator().getStream())
     } catch {
       return .failure(error)
     }
   }
 
-  public func getCoordinator() -> PresentationCoordinatorPartialState {
+  public func getCoordinator() async -> PresentationCoordinatorPartialState {
     do {
-      return .success(try self.sessionCoordinatorHolder.getActiveRemoteCoordinator())
+      return .success(try await self.sessionCoordinatorHolder.getActiveRemoteCoordinator())
     } catch {
       return .failure(error)
     }
   }
 
-  public func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator) {
-    self.sessionCoordinatorHolder.setActiveRemoteCoordinator(coordinator)
+  public func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator) async {
+    await self.sessionCoordinatorHolder.setActiveRemoteCoordinator(coordinator)
   }
 
   public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
@@ -120,7 +120,11 @@ final class PresentationInteractorImpl: PresentationInteractor {
     }
 
     do {
-      try self.sessionCoordinatorHolder.getActiveRemoteCoordinator().setState(presentationState: .responseToSend(requestConvertible))
+
+      try await self.sessionCoordinatorHolder
+        .getActiveRemoteCoordinator()
+        .setState(presentationState: .responseToSend(requestConvertible))
+
     } catch {
       return .failure(error)
     }
@@ -145,12 +149,12 @@ final class PresentationInteractorImpl: PresentationInteractor {
     }
   }
 
-  public func storeDynamicIssuancePendingUrl(with url: URL) {
-    walletKitController.storeDynamicIssuancePendingUrl(with: url)
+  public func storeDynamicIssuancePendingUrl(with url: URL) async {
+    await walletKitController.storeDynamicIssuancePendingUrl(with: url)
   }
 
-  public func stopPresentation() {
-    walletKitController.stopPresentation()
-    try? sessionCoordinatorHolder.getActiveRemoteCoordinator().stopPresentation()
+  public func stopPresentation() async {
+    await walletKitController.stopPresentation()
+    try? await sessionCoordinatorHolder.getActiveRemoteCoordinator().stopPresentation()
   }
 }

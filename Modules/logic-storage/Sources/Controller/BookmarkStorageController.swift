@@ -17,7 +17,7 @@ import Foundation
 
 public protocol BookmarkStorageController: StorageController where Value == Bookmark {}
 
-final class BookmarkStorageControllerImpl: BookmarkStorageController {
+final actor BookmarkStorageControllerImpl: BookmarkStorageController {
 
   private let swiftDataService: SwiftDataService
 

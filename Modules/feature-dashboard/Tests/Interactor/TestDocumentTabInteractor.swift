@@ -44,7 +44,7 @@ final class TestDocumentTabInteractor: EudiTest {
     self.configLogic = nil
   }
   
-  func testHasDeferredDocuments_WhenWalletKitControllerReturnsDeferredDocuments_ThenReturnsTrue() {
+  func testHasDeferredDocuments_WhenWalletKitControllerReturnsDeferredDocuments_ThenReturnsTrue() async {
     // Given
     stubFetchDeferredDocuments(
       with: [
@@ -62,18 +62,18 @@ final class TestDocumentTabInteractor: EudiTest {
     )
     
     // When
-    let result = interactor.hasDeferredDocuments()
+    let result = await interactor.hasDeferredDocuments()
     
     // Then
     XCTAssertTrue(result)
   }
   
-  func testHasDeferredDocuments_WhenWalletKitControllerReturnsNoDeferredDocuments_ThenReturnsFalse() {
+  func testHasDeferredDocuments_WhenWalletKitControllerReturnsNoDeferredDocuments_ThenReturnsFalse() async {
     // Given
     stubFetchDeferredDocuments(with: [])
     
     // When
-    let result = interactor.hasDeferredDocuments()
+    let result = await interactor.hasDeferredDocuments()
     
     // Then
     XCTAssertFalse(result)
@@ -331,7 +331,7 @@ final class TestDocumentTabInteractor: EudiTest {
     }
 
     // When
-    let _ = interactor.retrieveLogFileUrl()
+    let _ = await interactor.retrieveLogFileUrl()
 
     // Then
     verify(walletKitController).retrieveLogFileUrl()

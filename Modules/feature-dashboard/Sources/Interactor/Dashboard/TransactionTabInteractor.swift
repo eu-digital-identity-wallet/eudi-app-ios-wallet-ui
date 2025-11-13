@@ -46,7 +46,7 @@ public protocol TransactionTabInteractor: Sendable {
     minStartDate: Date,
     maxEndDate: Date
   ) async
-  @MainActor func onFilterChangeState() -> AsyncStream<TransactionFiltersPartialState>
+  func onFilterChangeState() async -> AsyncStream<TransactionFiltersPartialState>
   func resetFilters() async
   func revertFilters() async
   func updateFilters(sectionID: String, filterID: String)  async
@@ -54,12 +54,11 @@ public protocol TransactionTabInteractor: Sendable {
   func applySearch(query: String) async
 }
 
-final class TransactionTabInteractorImpl: TransactionTabInteractor {
+final actor TransactionTabInteractorImpl: TransactionTabInteractor {
 
   private let walletKitController: WalletKitController
   private let filterValidator: FilterValidator
 
-  @MainActor
   private var filtersStateAsync: AsyncStream<TransactionFiltersPartialState>.Continuation?
 
   init(
@@ -98,8 +97,96 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
       earliestDate: minStartDate,
       latestDate: maxEndDate
     )
-    let filters = await addDynamicFilters(transactions: filterableList, filters: filtersGroup)
+    let filters = addDynamicFilters(transactions: filterableList, filters: filtersGroup)
     await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
+  }
+
+  func applyFilters() async {
+    await filterValidator.applyFilters(sortOrder: .descending)
+  }
+
+  func resetFilters() async {
+    await filterValidator.resetFilters()
+  }
+
+  func revertFilters() async {
+    await filterValidator.revertFilters()
+  }
+
+  func updateFilters(sectionID: String, filterID: String)  async {
+    await filterValidator.updateFilter(filterGroupId: sectionID, filterId: filterID)
+  }
+
+  func updateDateFilters(
+    sectionID: String,
+    filterID: String,
+    startDate: Date,
+    endDate: Date
+  )  async {
+    await filterValidator.updateDateFilters(filterGroupId: sectionID, filterId: filterID, startDate: startDate, endDate: endDate)
+  }
+
+  func updateLists(
+    filterableList: FilterableList,
+    minStartDate: Date,
+    maxEndDate: Date
+  ) async {
+    let sortOrder = createFiltersGroup(
+      earliestDate: minStartDate,
+      latestDate: maxEndDate
+    ).sortOrder
+    await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
+  }
+
+  func applySearch(query: String) async {
+    await filterValidator.applySearch(query: query)
+  }
+
+  func addDynamicFilters(transactions: FilterableList, filters: Filters) -> Filters {
+    let newFilterGroups: [FilterGroup] = filters.filterGroups.map { filterGroup in
+      if let multipleGroup = filterGroup as? MultipleSelectionFilterGroup {
+        switch multipleGroup.filterType {
+        case .relyingParty:
+          return multipleGroup.copy(filters: addRelyingPartyName(transactions: transactions)) as any FilterGroup
+        default:
+          return multipleGroup as any FilterGroup
+        }
+      }
+
+      return filterGroup
+    }
+
+    return filters.copy(filterGroups: newFilterGroups)
+  }
+
+  func onFilterChangeState() -> AsyncStream<TransactionFiltersPartialState> {
+    return AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
+      self.filtersStateAsync = continuation
+      Task {
+        for try await state in filterValidator.getFilterResultStream() {
+          switch state {
+          case .success(let filterResult):
+            switch filterResult {
+            case .filterApplyResult(let filteredList, let updatedFilters, let hasDefaultFilters):
+              let transactionsUI = filteredList.items.compactMap { filterableItem in
+                return filterableItem.payload as? TransactionTabUIModel
+              }
+              let transactions = Dictionary(grouping: transactionsUI, by: { $0.transactionCategory })
+
+              let filterSections = filterUISection(filters: updatedFilters)
+
+              continuation.yield(.filterApplyResult(transactions, filterSections, hasDefaultFilters))
+            case .filterUpdateResult(let updatedFilters):
+              let filterSections = filterUISection(filters: updatedFilters)
+              continuation.yield(.filterUpdateResult(filterSections))
+            }
+          case .completion:
+            continuation.yield(.cancelled)
+            continuation.finish()
+          }
+        }
+      }
+    }
   }
 
   private func createFiltersGroup(earliestDate: Date, latestDate: Date) -> Filters {
@@ -251,94 +338,6 @@ final class TransactionTabInteractorImpl: TransactionTabInteractor {
       ],
       sortOrder: SortOrderType.descending
     )
-  }
-
-  func applyFilters() async {
-    await filterValidator.applyFilters(sortOrder: .descending)
-  }
-
-  func resetFilters() async {
-    await filterValidator.resetFilters()
-  }
-
-  func revertFilters() async {
-    await filterValidator.revertFilters()
-  }
-
-  func updateFilters(sectionID: String, filterID: String)  async {
-    await filterValidator.updateFilter(filterGroupId: sectionID, filterId: filterID)
-  }
-
-  func updateDateFilters(
-    sectionID: String,
-    filterID: String,
-    startDate: Date,
-    endDate: Date
-  )  async {
-    await filterValidator.updateDateFilters(filterGroupId: sectionID, filterId: filterID, startDate: startDate, endDate: endDate)
-  }
-
-  func updateLists(
-    filterableList: FilterableList,
-    minStartDate: Date,
-    maxEndDate: Date
-  ) async {
-    let sortOrder = createFiltersGroup(
-      earliestDate: minStartDate,
-      latestDate: maxEndDate
-    ).sortOrder
-    await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
-  }
-
-  func applySearch(query: String) async {
-    await filterValidator.applySearch(query: query)
-  }
-
-  func addDynamicFilters(transactions: FilterableList, filters: Filters) async -> Filters {
-    let newFilterGroups: [FilterGroup] = filters.filterGroups.map { filterGroup in
-      if let multipleGroup = filterGroup as? MultipleSelectionFilterGroup {
-        switch multipleGroup.filterType {
-        case .relyingParty:
-          return multipleGroup.copy(filters: addRelyingPartyName(transactions: transactions)) as any FilterGroup
-        default:
-          return multipleGroup as any FilterGroup
-        }
-      }
-
-      return filterGroup
-    }
-
-    return filters.copy(filterGroups: newFilterGroups)
-  }
-
-  func onFilterChangeState() -> AsyncStream<TransactionFiltersPartialState> {
-    return AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
-      self.filtersStateAsync = continuation
-      Task {
-        for try await state in filterValidator.getFilterResultStream() {
-          switch state {
-          case .success(let filterResult):
-            switch filterResult {
-            case .filterApplyResult(let filteredList, let updatedFilters, let hasDefaultFilters):
-              let transactionsUI = filteredList.items.compactMap { filterableItem in
-                return filterableItem.payload as? TransactionTabUIModel
-              }
-              let transactions = Dictionary(grouping: transactionsUI, by: { $0.transactionCategory })
-
-              let filterSections = filterUISection(filters: updatedFilters)
-
-              continuation.yield(.filterApplyResult(transactions, filterSections, hasDefaultFilters))
-            case .filterUpdateResult(let updatedFilters):
-              let filterSections = filterUISection(filters: updatedFilters)
-              continuation.yield(.filterUpdateResult(filterSections))
-            }
-          case .completion:
-            continuation.yield(.cancelled)
-            continuation.finish()
-          }
-        }
-      }
-    }
   }
 
   private func fetchFilteredTransactions() async throws -> FilterableList? {
