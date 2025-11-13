@@ -20,7 +20,8 @@ import logic_core
 @MainActor
 public final class PresentationRouter {
 
-  public static func resolve(module: FeaturePresentationRouteModule, host: some RouterHost) -> AnyView {
+  @ViewBuilder
+  public static func resolve(module: FeaturePresentationRouteModule, host: some RouterHost) -> some View {
     switch module {
     case .presentationLoader(
       let relyingParty,
@@ -41,7 +42,7 @@ public final class PresentationRouter {
           originator: originator,
           requestItems: uiModels.compactMap { $0 as? PresentationListItemSection }
         )
-      ).eraseToAnyView()
+      )
     case .presentationRequest(
       presentationCoordinator: let presentationCoordinator,
       originator: let originator
@@ -55,7 +56,7 @@ public final class PresentationRouter {
           ),
           originator: originator
         )
-      ).eraseToAnyView()
+      )
     case .presentationSuccess(
       let config,
       let uiModels
@@ -69,7 +70,7 @@ public final class PresentationRouter {
           ),
           requestItems: uiModels.compactMap { $0 as? PresentationListItemSection }
         )
-      ).eraseToAnyView()
+      )
     }
   }
 }

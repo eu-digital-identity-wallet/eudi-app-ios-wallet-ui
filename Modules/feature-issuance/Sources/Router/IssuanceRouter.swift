@@ -19,7 +19,8 @@ import logic_business
 @MainActor
 public final class IssuanceRouter {
 
-  public static func resolve(module: FeatureIssuanceRouteModule, host: some RouterHost) -> AnyView {
+  @ViewBuilder
+  public static func resolve(module: FeatureIssuanceRouteModule, host: some RouterHost) -> some View {
     switch module {
     case .issuanceAddDocument(config: let config):
       AddDocumentView(
@@ -33,7 +34,7 @@ public final class IssuanceRouter {
           ),
           config: config
         )
-      ).eraseToAnyView()
+      )
     case .issuanceSuccess(
       let config,
       let uiModels
@@ -47,7 +48,7 @@ public final class IssuanceRouter {
           ),
           requestItems: uiModels.compactMap { $0 as? GenericListItemSection }
         )
-      ).eraseToAnyView()
+      )
     case .credentialOfferRequest(let config):
       DocumentOfferView(
         with: .init(
@@ -57,7 +58,7 @@ public final class IssuanceRouter {
           ),
           config: config
         )
-      ).eraseToAnyView()
+      )
     case .issuanceCode(config: let config):
       OfferCodeView(
         with: .init(
@@ -67,7 +68,7 @@ public final class IssuanceRouter {
           ),
           config: config
         )
-      ).eraseToAnyView()
+      )
     }
   }
 }

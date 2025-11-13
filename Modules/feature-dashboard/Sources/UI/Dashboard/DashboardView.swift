@@ -44,16 +44,13 @@ struct DashboardView<Router: RouterHost>: View {
     ) {
       content(
         tabView: { tab in
-          return switch tab {
+          switch tab {
           case .documents:
             viewModel.viewState.documentTab
-              .eraseToAnyView()
           case .home:
             viewModel.viewState.homeTab
-              .eraseToAnyView()
           case .transactions:
             viewModel.viewState.transactionTab
-              .eraseToAnyView()
           }
         },
         selectedTab: $viewModel.selectedTab
@@ -92,7 +89,7 @@ struct DashboardView<Router: RouterHost>: View {
 @MainActor
 @ViewBuilder
 private func content(
-  tabView: @escaping (SelectedTab) -> AnyView,
+  @ViewBuilder tabView: @escaping (SelectedTab) -> some View,
   selectedTab: Binding<SelectedTab>
 ) -> some View {
   TabView(selection: selectedTab) {

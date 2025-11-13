@@ -135,8 +135,8 @@ private func content(
       )
     }
     .padding(.horizontal, SPACING_MEDIUM)
+    .padding(.bottom, SPACING_MEDIUM)
   }
-  .clipped()
   .background(Theme.shared.color.background)
 }
 

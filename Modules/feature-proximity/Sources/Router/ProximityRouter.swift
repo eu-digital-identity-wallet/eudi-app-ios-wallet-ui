@@ -20,7 +20,8 @@ import logic_core
 @MainActor
 public final class ProximityRouter {
 
-  public static func resolve(module: FeatureProximityRouteModule, host: some RouterHost) -> AnyView {
+  @ViewBuilder
+  public static func resolve(module: FeatureProximityRouteModule, host: some RouterHost) -> some View {
     switch module {
     case .proximityConnection(
       presentationCoordinator: let presentationCoordinator,
@@ -35,7 +36,7 @@ public final class ProximityRouter {
           ),
           originator: originator
         )
-      ).eraseToAnyView()
+      )
     case .proximityRequest(
       presentationCoordinator: let presentationCoordinator,
       originator: let originator
@@ -49,7 +50,7 @@ public final class ProximityRouter {
           ),
           originator: originator
         )
-      ).eraseToAnyView()
+      )
     case .proximityLoader(
       let relyingParty,
       let relyingPartyIsTrusted,
@@ -69,7 +70,7 @@ public final class ProximityRouter {
           originator: originator,
           requestItems: uiModels.compactMap { $0 as? PresentationListItemSection }
         )
-      ).eraseToAnyView()
+      )
     case .proximitySuccess(
       let config,
       let uiModels
@@ -83,7 +84,7 @@ public final class ProximityRouter {
           ),
           requestItems: uiModels.compactMap { $0 as? PresentationListItemSection }
         )
-      ).eraseToAnyView()
+      )
     }
   }
 }

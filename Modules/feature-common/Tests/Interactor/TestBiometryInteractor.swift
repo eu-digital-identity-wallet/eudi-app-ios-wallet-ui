@@ -22,7 +22,7 @@ import logic_authentication
 
 final class TestBiometryInteractor: EudiTest {
   
-  var interactor: BiometryInteractorImpl!
+  var interactor: BiometryInteractor!
   var prefsController: MockPrefsController!
   var quickPinInteractor: MockQuickPinInteractor!
   var systemBiometricController: MockSystemBiometryController!

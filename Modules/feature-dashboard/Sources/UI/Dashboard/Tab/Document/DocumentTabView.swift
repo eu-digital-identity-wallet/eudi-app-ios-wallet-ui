@@ -112,32 +112,40 @@ private func content(
         description: .noResultsDocumentsDescription
       )
     } else if !state.documents.isEmpty {
-      List {
-        ForEach(state.documents.keys.sorted(by: { $0.order < $1.order }), id: \.self) { category in
-          Section(header: Text(category.title)) {
+
+      ScrollView {
+        LazyVStack(alignment: .leading, spacing: .zero) {
+
+          ForEach(state.documents.keys.sorted(by: { $0.order < $1.order }), id: \.self) { category in
+
+            WrapTextView(
+              text: category.title,
+              textConfig: TextConfig(
+                font: Theme.shared.font.bodySmall.font,
+                color: Theme.shared.color.onSurface,
+                textAlign: .leading,
+                fontWeight: .semibold
+              )
+            )
+            .padding(.horizontal, SPACING_MEDIUM)
+            .padding(.top, SPACING_SMALL)
+
             ForEach(state.documents[category] ?? []) { item in
               WrapCardView {
                 WrapListItemView(listItem: item.listItem) {
                   onAction(item)
                 }
               }
-              .listRowBackground(Theme.shared.color.background)
-              .listRowSeparator(.hidden)
+              .padding(.horizontal, SPACING_MEDIUM)
+              .padding(.top, SPACING_SMALL)
             }
-            .listRowInsets(.init(
-              top: SPACING_SMALL,
-              leading: SPACING_MEDIUM,
-              bottom: .zero,
-              trailing: SPACING_MEDIUM)
-            )
           }
         }
+        .padding(.bottom, SPACING_MEDIUM)
       }
       .shimmer(isLoading: state.isLoading)
-      .listStyle(.plain)
-      .scrollContentBackground(.hidden)
       .scrollIndicators(.hidden)
-      .clipped()
+
     } else if !state.isLoading {
       ContentUnavailableView(
         title: .noResults,
