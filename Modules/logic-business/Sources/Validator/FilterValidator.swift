@@ -32,7 +32,7 @@ public protocol FilterValidator: Sendable {
   func updateSortOrder(sortOrder: SortOrderType) async
 }
 
-actor FilterValidatorImpl: FilterValidator {
+final actor FilterValidatorImpl: FilterValidator {
 
   private var appliedFilters: Filters
   private var defaultFilters: Filters

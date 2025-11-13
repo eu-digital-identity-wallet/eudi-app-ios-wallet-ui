@@ -22,7 +22,7 @@ public protocol FormValidator: Sendable {
   func validateForms(forms: [ValidatableForm]) async -> FormsValidationResult
 }
 
-final class FormValidatorImpl: FormValidator {
+final actor FormValidatorImpl: FormValidator {
 
   public func validateForm(form: ValidatableForm) async -> FormValidationResult {
     var foundError = false
