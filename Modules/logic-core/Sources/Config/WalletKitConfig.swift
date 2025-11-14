@@ -98,7 +98,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
       case .DEMO:
         return [
           .init(
-            credentialIssuerURL: "https://ec.issuer.eudiw.dev",
+            credentialIssuerURL: "https://issuer.eudiw.dev",
             client: .public(id: "wallet-dev"),
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
             usePAR: true,
