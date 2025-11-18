@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import logic_resources
 
 public extension DocClaimsDecodable {
 
@@ -24,7 +25,7 @@ public extension DocClaimsDecodable {
       }
     )?.name
     ?? issuerDisplay?.first?.name
-    ?? ""
+    ?? LocalizableStringKey.unknown.toString
   }
 
   var issuerLogo: URL? {

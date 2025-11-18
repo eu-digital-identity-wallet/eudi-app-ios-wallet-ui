@@ -484,6 +484,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "expandable_document_credentials_issue_button")
     case .issuanceAddDocumentNoOptions:
       bundle.localizedString(forKey: "issuance_add_document_no_options")
+    case .unknown:
+      bundle.localizedString(forKey: "unknown")
     }
   }
 }

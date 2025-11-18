@@ -2328,6 +2328,17 @@
         }
       }
     },
+    "unknown" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
+          }
+        }
+      }
+    },
     "unknown_date" : {
       "extractionState" : "manual",
       "localizations" : {
