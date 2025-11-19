@@ -19,7 +19,7 @@ default_platform(:ios)
 
 platform :ios do
   desc "Run test coverage"
-  lane :coverage do
+  lane :code_coverage do
     FileUtils.remove_dir "../xcov_output", true
     tests
     xcov(
