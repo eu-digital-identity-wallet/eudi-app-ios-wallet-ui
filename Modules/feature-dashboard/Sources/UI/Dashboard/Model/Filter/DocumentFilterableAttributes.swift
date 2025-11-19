@@ -21,7 +21,7 @@ struct DocumentFilterableAttributes: FilterableAttributes {
   let searchTags: [String]
   let issuedDate: Date?
   let expiryDate: Date?
-  let issuer: String?
+  let issuer: String
   let name: String?
   let category: String?
   let isRevoked: Bool
@@ -31,7 +31,7 @@ struct DocumentFilterableAttributes: FilterableAttributes {
     searchTags: [String],
     issuedDate: Date? = nil,
     expiryDate: Date? = nil,
-    issuer: String? = nil,
+    issuer: String,
     name: String? = nil,
     category: String? = nil,
     isRevoked: Bool = false

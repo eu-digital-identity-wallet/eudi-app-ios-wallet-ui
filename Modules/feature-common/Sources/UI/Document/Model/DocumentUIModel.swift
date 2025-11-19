@@ -72,3 +72,11 @@ public extension DocumentUIModel {
     }
   }
 }
+
+public extension DocumentUIModel.IssuerField {
+  static func == (lhs: Self, rhs: Self) -> Bool {
+    lhs.name == rhs.name &&
+    lhs.logoUrl == rhs.logoUrl &&
+    lhs.isVerified == rhs.isVerified
+  }
+}
