@@ -11,9 +11,9 @@ jobs:
    SAST_caller:
       uses: eu-digital-identity-wallet/eudi-infra-ci/.github/workflows/sast_action_swift.yml@feat/swift_coverage
       with:
-        swift_version: "6.2" 
         app_project: "EudiReferenceWallet.xcodeproj"
         app_scheme: "EUDI Wallet Dev"
+        swift_version: "6.2" 
       secrets:
        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
