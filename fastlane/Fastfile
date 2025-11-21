@@ -24,7 +24,7 @@ platform :ios do
     tests
     xcov(
       project: ENV["APP_PROJECT"],
-      scheme: "EudiWallet",
+      scheme: ENV["APP_SCHEME"],
       output_directory: "xcov_output",
       ignore_file_path: "fastlane/.xcovignore",
       exclude_targets: ENV["XCOV_EXCLUDE_TARGETS"],
