@@ -13,7 +13,6 @@ jobs:
       with:
         app_project: "EudiReferenceWallet.xcodeproj"
         app_scheme: "EUDI Wallet Dev"
-        swift_version: "6.2"
       secrets:
        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
