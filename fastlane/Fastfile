@@ -21,7 +21,13 @@ platform :ios do
   desc "Run test coverage"
   lane :code_coverage do
     FileUtils.remove_dir "../xcov_output", true
-    tests
+    scan(
+      scheme: ENV["APP_SCHEME"],
+      code_coverage: true,
+      result_bundle: true,
+      output_directory: "xcov_output",
+      xcargs: "-skipPackagePluginValidation -skipMacroValidation"
+    )
     xcov(
       project: ENV["APP_PROJECT"],
       scheme: ENV["APP_SCHEME"],
