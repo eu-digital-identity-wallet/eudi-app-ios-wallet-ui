@@ -5,6 +5,7 @@ GEM
       base64
       nkf
       rexml
+    abbrev (0.1.2)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
     artifactory (3.0.17)
@@ -195,6 +196,7 @@ GEM
     simctl (1.6.10)
       CFPropertyList
       naturally
+    slack-notifier (2.4.0)
     sysrandom (1.0.5)
     terminal-notifier (2.0.0)
     terminal-table (3.0.2)
@@ -214,10 +216,20 @@ GEM
       colored2 (~> 3.1)
       nanaimo (~> 0.4.0)
       rexml (>= 3.3.6, < 4.0)
+    xcov (1.9.0)
+      abbrev
+      fastlane (>= 2.141.0, < 3.0.0)
+      multipart-post
+      nkf
+      slack-notifier
+      terminal-table
+      xcodeproj
+      xcresult (~> 0.2.0)
     xcpretty (0.4.1)
       rouge (~> 3.28.0)
     xcpretty-travis-formatter (1.0.1)
       xcpretty (~> 0.2, >= 0.0.7)
+    xcresult (0.2.4)
 
 PLATFORMS
   arm64-darwin-22
@@ -228,6 +240,7 @@ PLATFORMS
 DEPENDENCIES
   fastlane
   fastlane-plugin-versioning
+  xcov
 
 BUNDLED WITH
    2.6.2
