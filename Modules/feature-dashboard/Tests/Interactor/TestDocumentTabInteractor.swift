@@ -521,7 +521,8 @@ private extension TestDocumentTabInteractor {
   static let mockDocumentFilterableAttributes: DocumentFilterableAttributes =
     .init(
       sortingKey: "pid",
-      searchTags: ["Digital Credentials Issuer","PID"]
+      searchTags: ["Digital Credentials Issuer","PID"],
+      issuer: "Digital Credentials Issuer"
     )
   
   static let mockFilterablelist: FilterableList = .init(items: [
