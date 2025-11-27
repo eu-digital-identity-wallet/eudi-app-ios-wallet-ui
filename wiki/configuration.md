@@ -245,7 +245,9 @@ If you want to change or add your own, you can do it by adjusting the *Wallet.pl
 			<string>eudi-openid4vp</string>
 			<string>mdoc-openid4vp</string>
 			<string>openid4vp</string>
+			<string>haip-vp</string>
 			<string>openid-credential-offer</string>
+			<string>haip-vci</string>
 			<string>rqes</string>
 		</array>
 	</dict>
@@ -266,7 +268,9 @@ Let's assume you want to add a new one for the credential offer (e.g., custom-my
 			<string>eudi-openid4vp</string>
 			<string>mdoc-openid4vp</string>
 			<string>openid4vp</string>
+			<string>haip-vp</string>
 			<string>openid-credential-offer</string>
+			<string>haip-vci</string>
 			<string>rqes</string>
 			<string>custom-my-offer</string>
 		</array>
@@ -283,7 +287,9 @@ public extension DeepLink {
   enum Action: String, Equatable {
 
     case openid4vp
+	case haip_vp
     case credential_offer
+	case haip_vci
     case rqes
     case external
 
@@ -292,9 +298,11 @@ public extension DeepLink {
       and urlSchemaController: UrlSchemaController
     ) -> Action? {
       switch scheme {
-      case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme):
+      case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme),
+		_ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
         return .openid4vp
-      case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme):
+      case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme),
+		_ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme):
         return .credential_offer
       case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
         return .rqes
@@ -313,7 +321,9 @@ public extension DeepLink {
   enum Action: String, Equatable {
 
     case openid4vp
+	case haip_vp
     case credential_offer
+	case haip_vci
     case rqes
     case custom_my_offer
     case external
@@ -323,11 +333,12 @@ public extension DeepLink {
       and urlSchemaController: UrlSchemaController
     ) -> Action? {
       switch scheme {
-      case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme):
+      case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme),
+		_ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
         return .openid4vp
-      case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme):
-        return .credential_offer
-      case _ where custom_my_offer.getSchemas(with: urlSchemaController).contains(scheme):
+      case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme),
+		_ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme),
+		_ where custom_my_offer.getSchemas(with: urlSchemaController).contains(scheme):
         return .credential_offer
       case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
         return .rqes
