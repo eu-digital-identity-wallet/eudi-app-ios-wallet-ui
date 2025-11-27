@@ -16,6 +16,7 @@
 import logic_business
 import SwiftUI
 import logic_storage
+import logic_api
 
 private enum KeyIdentifier: String, KeyChainWrapper {
   public var value: String {
@@ -103,7 +104,8 @@ final actor WalletKitControllerImpl: WalletKitController {
     sessionCoordinatorHolder: SessionCoordinatorHolder,
     bookmarkStorageController: any BookmarkStorageController,
     transactionLogStorageController: any TransactionLogStorageController,
-    revokedDocumentStorageController: any RevokedDocumentStorageController
+    revokedDocumentStorageController: any RevokedDocumentStorageController,
+    networkSessionProvider: NetworkSessionProvider
   ) {
     self.configLogic = configLogic
     self.keyChainController = keyChainController
@@ -118,6 +120,7 @@ final actor WalletKitControllerImpl: WalletKitController {
       userAuthenticationRequired: configLogic.userAuthenticationRequired,
       openID4VpConfig: configLogic.vpConfig,
       openID4VciConfigurations: configLogic.vciConfig,
+      networking: networkSessionProvider.urlSession,
       logFileName: configLogic.logFileName,
       transactionLogger: configLogic.transactionLogger
     ) else {

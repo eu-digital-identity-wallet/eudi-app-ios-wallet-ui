@@ -16,6 +16,7 @@
 import Swinject
 import logic_business
 import logic_storage
+import logic_api
 
 public final class LogicCoreAssembly: Assembly {
 
@@ -37,7 +38,8 @@ public final class LogicCoreAssembly: Assembly {
         sessionCoordinatorHolder: r.force(SessionCoordinatorHolder.self),
         bookmarkStorageController: r.force((any BookmarkStorageController).self),
         transactionLogStorageController: r.force((any TransactionLogStorageController).self),
-        revokedDocumentStorageController: r.force((any RevokedDocumentStorageController).self)
+        revokedDocumentStorageController: r.force((any RevokedDocumentStorageController).self),
+        networkSessionProvider: r.force((any NetworkSessionProvider).self)
       )
     }
     .inObjectScope(ObjectScope.container)
@@ -68,6 +70,14 @@ public final class LogicCoreAssembly: Assembly {
       RevocationWorkManagerImpl(
         configLogic: r.force(WalletKitConfig.self),
         walletKitController: r.force(WalletKitController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.graph)
+
+    container.register(WalletKitAttestationProvider.self) { r in
+      WalletKitAttestationProviderImpl(
+        with: r.force(WalletAttestationRepository.self),
+        and: r.force(WalletKitConfig.self)
       )
     }
     .inObjectScope(ObjectScope.graph)

@@ -13,28 +13,10 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import struct Foundation.Data
+import Foundation
 
-enum NetworkMethod: String {
-  case GET
-  case POST
-  case PUT
-  case DELETE
-  case PATCH
-}
-
-protocol NetworkRequest: Sendable {
-
-  associatedtype Response
-
-  var method: NetworkMethod { get }
-  var path: String { get }
-  var host: String { get }
-  var additionalHeaders: [String: String] { get }
-  var body: Data? { get }
-}
-
-extension NetworkRequest {
-  var method: NetworkMethod { .GET }
-  var body: Data? { nil }
+enum NetworkError: Error {
+  case invalidResponse
+  case httpStatus(code: Int, data: Data?)
+  case decoding(Error)
 }

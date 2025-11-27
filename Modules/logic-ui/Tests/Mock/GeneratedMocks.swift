@@ -424,16 +424,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
         cuckoo_manager.enableDefaultStubImplementation()
     }
     
-    public var walletHostUrl: String {
-        get {
-            return cuckoo_manager.getter(
-                "walletHostUrl",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.walletHostUrl
-            )
-        }
-    }
-    
     public var appBuildType: AppBuildType {
         get {
             return cuckoo_manager.getter(
@@ -492,10 +482,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
             self.cuckoo_manager = manager
         }
         
-        var walletHostUrl: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic,String> {
-            return .init(manager: cuckoo_manager, name: "walletHostUrl")
-        }
-        
         var appBuildType: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic,AppBuildType> {
             return .init(manager: cuckoo_manager, name: "appBuildType")
         }
@@ -528,10 +514,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
             self.sourceLocation = sourceLocation
         }
         
-        var walletHostUrl: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "walletHostUrl", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
         var appBuildType: Cuckoo.VerifyReadOnlyProperty<AppBuildType> {
             return .init(manager: cuckoo_manager, name: "appBuildType", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
@@ -555,12 +537,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
 }
 
 public class ConfigLogicStub:ConfigLogic, @unchecked Sendable {
-    
-    public var walletHostUrl: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
-        }
-    }
     
     public var appBuildType: AppBuildType {
         get {
@@ -3066,6 +3042,16 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             )
         }
     }
+    
+    var walletProviderHost: String {
+        get {
+            return cuckoo_manager.getter(
+                "walletProviderHost",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.walletProviderHost
+            )
+        }
+    }
 
 
     struct __StubbingProxy_WalletKitConfig: Cuckoo.StubbingProxy {
@@ -3113,6 +3099,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         
         var documentIssuanceConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,DocumentIssuanceConfig> {
             return .init(manager: cuckoo_manager, name: "documentIssuanceConfig")
+        }
+        
+        var walletProviderHost: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,String> {
+            return .init(manager: cuckoo_manager, name: "walletProviderHost")
         }
     }
 
@@ -3165,6 +3155,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         
         var documentIssuanceConfig: Cuckoo.VerifyReadOnlyProperty<DocumentIssuanceConfig> {
             return .init(manager: cuckoo_manager, name: "documentIssuanceConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var walletProviderHost: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "walletProviderHost", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
     }
 }
@@ -3230,6 +3224,12 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
             return DefaultValueRegistry.defaultValue(for: (DocumentIssuanceConfig).self)
         }
     }
+    
+    var walletProviderHost: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+    }
 
 
 }
@@ -3242,6 +3242,7 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
 import Cuckoo
 import SwiftUI
 import logic_storage
+import logic_api
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -5824,6 +5825,131 @@ import Cuckoo
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_ui
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Provider/WalletKitAttestationProvider.swift'
+
+import Cuckoo
+import logic_api
+import JOSESwift
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+
+class MockWalletKitAttestationProvider: WalletKitAttestationProvider, Cuckoo.ProtocolMock, @unchecked Sendable {
+    typealias MocksType = WalletKitAttestationProvider
+    typealias Stubbing = __StubbingProxy_WalletKitAttestationProvider
+    typealias Verification = __VerificationProxy_WalletKitAttestationProvider
+
+    // Original typealiases
+
+    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any WalletKitAttestationProvider)?
+
+    func enableDefaultImplementation(_ stub: any WalletKitAttestationProvider) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+    
+    func getWalletAttestation(key p0: any JOSESwift.JWK) async throws -> String {
+        return try await cuckoo_manager.callThrows(
+            "getWalletAttestation(key p0: any JOSESwift.JWK) async throws -> String",
+            parameters: (p0),
+            escapingParameters: (p0),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getWalletAttestation(key: p0)
+        )
+    }
+    
+    func getKeysAttestation(keys p0: [any JOSESwift.JWK], nonce p1: String?) async throws -> String {
+        return try await cuckoo_manager.callThrows(
+            "getKeysAttestation(keys p0: [any JOSESwift.JWK], nonce p1: String?) async throws -> String",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getKeysAttestation(keys: p0, nonce: p1)
+        )
+    }
+
+    struct __StubbingProxy_WalletKitAttestationProvider: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func getWalletAttestation<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(any JOSESwift.JWK), String,Error> where M1.MatchedType == any JOSESwift.JWK {
+            let matchers: [Cuckoo.ParameterMatcher<(any JOSESwift.JWK)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitAttestationProvider.self,
+                method: "getWalletAttestation(key p0: any JOSESwift.JWK) async throws -> String",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getKeysAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(keys p0: M1, nonce p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<([any JOSESwift.JWK], String?), String,Error> where M1.MatchedType == [any JOSESwift.JWK], M2.OptionalMatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<([any JOSESwift.JWK], String?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitAttestationProvider.self,
+                method: "getKeysAttestation(keys p0: [any JOSESwift.JWK], nonce p1: String?) async throws -> String",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    struct __VerificationProxy_WalletKitAttestationProvider: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func getWalletAttestation<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.__DoNotUse<(any JOSESwift.JWK), String> where M1.MatchedType == any JOSESwift.JWK {
+            let matchers: [Cuckoo.ParameterMatcher<(any JOSESwift.JWK)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "getWalletAttestation(key p0: any JOSESwift.JWK) async throws -> String",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getKeysAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.OptionalMatchable>(keys p0: M1, nonce p1: M2) -> Cuckoo.__DoNotUse<([any JOSESwift.JWK], String?), String> where M1.MatchedType == [any JOSESwift.JWK], M2.OptionalMatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<([any JOSESwift.JWK], String?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return cuckoo_manager.verify(
+                "getKeysAttestation(keys p0: [any JOSESwift.JWK], nonce p1: String?) async throws -> String",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+class WalletKitAttestationProviderStub:WalletKitAttestationProvider, @unchecked Sendable {
+
+
+    
+    func getWalletAttestation(key p0: any JOSESwift.JWK) async throws -> String {
+        return DefaultValueRegistry.defaultValue(for: (String).self)
+    }
+    
+    func getKeysAttestation(keys p0: [any JOSESwift.JWK], nonce p1: String?) async throws -> String {
+        return DefaultValueRegistry.defaultValue(for: (String).self)
+    }
+}
+
 
 
 

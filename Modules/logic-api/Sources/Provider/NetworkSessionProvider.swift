@@ -15,19 +15,15 @@
  */
 import Foundation
 
-public protocol SampleRepository {
-  func sampleCall() async throws -> SampleResponseDTO
+public protocol NetworkSessionProvider: Sendable {
+  var urlSession: URLSession { get }
 }
 
-final class SampleRepositoryImpl: SampleRepository {
+final class NetworkSessionProviderImpl: NetworkSessionProvider {
 
-  private let networkManager: NetworkManager
+  let urlSession: URLSession
 
-  init(networkManager: NetworkManager) {
-    self.networkManager = networkManager
-  }
-
-  public func sampleCall() async throws -> SampleResponseDTO {
-    return try await networkManager.execute(with: SampleRequest(request: .init()), parameters: nil)
+  init() {
+    self.urlSession = URLSession.shared
   }
 }

@@ -72,6 +72,11 @@ protocol WalletKitConfig: Sendable {
    * Configuration for document issuance, including default rules and specific overrides.
    */
   var documentIssuanceConfig: DocumentIssuanceConfig { get }
+
+  /**
+   * Host for the wallet provider
+   */
+  var walletProviderHost: String { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {
@@ -251,5 +256,14 @@ struct WalletKitConfigImpl: WalletKitConfig {
         )
       ]
     )
+  }
+
+  var walletProviderHost: String {
+    switch configLogic.appBuildVariant {
+    case .DEMO:
+      "https://dev.wallet-provider.eudiw.dev"
+    case .DEV:
+      "https://dev.wallet-provider.eudiw.dev"
+    }
   }
 }
