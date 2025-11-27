@@ -18,7 +18,9 @@
 				<string>eudi-openid4vp</string>
 				<string>mdoc-openid4vp</string>
 				<string>openid4vp</string>
+        <string>haip-vp</string>
 				<string>openid-credential-offer</string>
+        <string>haip-vci</string>
 				<string>rqes</string>
 			</array>
 		</dict>

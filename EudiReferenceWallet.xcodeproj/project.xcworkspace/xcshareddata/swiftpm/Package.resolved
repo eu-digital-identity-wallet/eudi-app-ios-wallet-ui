@@ -213,8 +213,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/beatt83/jose-swift.git",
       "state" : {
-        "revision" : "f25da1bf75b9a2b803bb7c40bdd6ace85f4df3ce",
-        "version" : "6.0.1"
+      	"revision" : "8d087c7d8333310449aff4c9eb2431fbb4f1eb9f",
+        "version" : "6.0.0"
       }
     },
     {
@@ -241,7 +241,7 @@
       "location" : "https://github.com/iziz/libPhoneNumber-iOS.git",
       "state" : {
         "branch" : "master",
-        "revision" : "1275507b189d157d583fdce30c69d60be58190aa"
+        "revision" : "768c6eccd24bbf0d2a73596cac7a03174f4f5c3d"
       }
     },
     {

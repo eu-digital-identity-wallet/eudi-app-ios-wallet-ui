@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     initializeRevocationWorker()
 
     // Register the SVG coder so SDWebImage can decode & render .svg images
-    SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
+    registerSvgCoderToSdImage()
 
     return true
   }
@@ -53,6 +53,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   private func initializeReporting() {
     analyticsController.initialize()
+  }
+
+  private func registerSvgCoderToSdImage() {
+    SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
   }
 
   private func initializeRevocationWorker() {
