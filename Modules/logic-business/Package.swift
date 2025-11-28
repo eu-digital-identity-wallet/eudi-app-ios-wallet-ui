@@ -18,8 +18,8 @@ let package = Package(
       from: "3.0.0"
     ),
     .package(
-      url: "https://github.com/iziz/libPhoneNumber-iOS.git",
-      branch: "master"
+      url: "https://github.com/marmelroy/PhoneNumberKit",
+      from: "4.2.0"
     ),
     .package(
       url: "https://github.com/nsagora/peppermint",
@@ -55,13 +55,10 @@ let package = Package(
         "KeychainAccess",
         "BluetoothKit",
         "Swinject",
+        "PhoneNumberKit",
         .product(
           name: "Peppermint",
           package: "peppermint"
-        ),
-        .product(
-          name: "libPhoneNumber",
-          package: "libPhoneNumber-iOS"
         ),
         .product(
           name: "Copyable",

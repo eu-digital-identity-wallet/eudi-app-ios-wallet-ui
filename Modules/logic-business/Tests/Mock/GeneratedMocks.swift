@@ -1748,7 +1748,7 @@ public class FilterValidatorStub:FilterValidator, @unchecked Sendable {
 import Cuckoo
 import Foundation
 import Peppermint
-import libPhoneNumber
+import PhoneNumberKit
 @testable import logic_business
 
 public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock, @unchecked Sendable {

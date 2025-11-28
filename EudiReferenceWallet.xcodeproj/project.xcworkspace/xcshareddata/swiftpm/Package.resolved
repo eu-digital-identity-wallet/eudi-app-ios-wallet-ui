@@ -1,5 +1,5 @@
 {
-  "originHash" : "1142fdefd01aac1779c678c14890ab5e0364fbaf43fe6c80547dbcad3956debf",
+  "originHash" : "b765b9b2716c1fc6bb6527015fe59f8d57282dfb9e0e13402c4a3729f1cefd8a",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -213,8 +213,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/beatt83/jose-swift.git",
       "state" : {
-        "revision" : "8d087c7d8333310449aff4c9eb2431fbb4f1eb9f",
-        "version" : "6.0.0"
+        "revision" : "f25da1bf75b9a2b803bb7c40bdd6ace85f4df3ce",
+        "version" : "6.0.1"
       }
     },
     {
@@ -236,15 +236,6 @@
       }
     },
     {
-      "identity" : "libphonenumber-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/iziz/libPhoneNumber-iOS.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "768c6eccd24bbf0d2a73596cac7a03174f4f5c3d"
-      }
-    },
-    {
       "identity" : "pathkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kylef/PathKit.git",
@@ -263,6 +254,15 @@
       }
     },
     {
+      "identity" : "phonenumberkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/marmelroy/PhoneNumberKit",
+      "state" : {
+        "revision" : "3946d6d533392755623f255a58211146cfc69817",
+        "version" : "4.2.0"
+      }
+    },
+    {
       "identity" : "rainbow",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Rainbow",
@@ -276,8 +276,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage.git",
       "state" : {
-        "revision" : "2053b120767c42a70bcba21095f34e4cfb54a75d",
-        "version" : "5.21.3"
+        "revision" : "e53f6226eaab490291096cfbd9b2b109ea968e8d",
+        "version" : "5.21.4"
       }
     },
     {

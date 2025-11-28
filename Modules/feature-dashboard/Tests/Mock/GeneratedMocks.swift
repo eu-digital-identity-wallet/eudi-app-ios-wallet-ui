@@ -6882,7 +6882,7 @@ public class FilterValidatorStub:FilterValidator, @unchecked Sendable {
 import Cuckoo
 import Foundation
 import Peppermint
-import libPhoneNumber
+import PhoneNumberKit
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
