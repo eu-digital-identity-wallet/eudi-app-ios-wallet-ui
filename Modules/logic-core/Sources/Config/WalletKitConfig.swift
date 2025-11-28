@@ -261,7 +261,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
   var walletProviderHost: String {
     switch configLogic.appBuildVariant {
     case .DEMO:
-      "https://dev.wallet-provider.eudiw.dev"
+      "https://wallet-provider.eudiw.dev"
     case .DEV:
       "https://dev.wallet-provider.eudiw.dev"
     }

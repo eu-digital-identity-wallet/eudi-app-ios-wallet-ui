@@ -1,5 +1,5 @@
 {
-  "originHash" : "c44381672b66b8474566e92b5ef64532f241aa9a792bf3a275d5260c0b23437c",
+  "originHash" : "1142fdefd01aac1779c678c14890ab5e0364fbaf43fe6c80547dbcad3956debf",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -87,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "395cca652e2c9884b60aae4e9b6f6a5015dc4ec7",
-        "version" : "0.9.0"
+        "revision" : "a359bbdc8990114606c4079940defd347293b695",
+        "version" : "0.9.1"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "7b27c74921ab2d569174c71e97cc775a27441163",
-        "version" : "0.8.3"
+        "revision" : "15c70c6d6826f2a1779849936ef2c1a2ca1450ab",
+        "version" : "0.8.4"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "90a088a258e83c54b7c4f676600a7a740e8abebc",
-        "version" : "0.8.0"
+        "revision" : "ea8e5d289474d5b156a25a7ba3dcac87497f2eb3",
+        "version" : "0.8.1"
       }
     },
     {
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "8c80c13e47b091f88863b9c433d06dbe37c2c56e",
-        "version" : "0.18.3"
+        "revision" : "eb5836e25c09d106eaf16ac18c262a260b8ac8f1",
+        "version" : "0.18.5"
       }
     },
     {
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-sdjwt-swift.git",
       "state" : {
-        "revision" : "20d5ac66896988a0ed655c694f6562b081353626",
-        "version" : "0.9.2"
+        "revision" : "99a017068518a33fc6011056f27361391875c434",
+        "version" : "0.10.1"
       }
     },
     {
@@ -213,7 +213,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/beatt83/jose-swift.git",
       "state" : {
-      	"revision" : "8d087c7d8333310449aff4c9eb2431fbb4f1eb9f",
+        "revision" : "8d087c7d8333310449aff4c9eb2431fbb4f1eb9f",
         "version" : "6.0.0"
       }
     },
