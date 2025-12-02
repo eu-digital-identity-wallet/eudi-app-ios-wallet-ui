@@ -44,7 +44,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
 	      return [
 	        .init(
 	          credentialIssuerURL: "your_demo_issuer_url",
-	          client: .public(id: "your_demo_clientid"),
+			  clientId: "your_demo_client_id_or_nil",
+              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
 	          authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
 	          usePAR: should_use_par_bool,
 	          useDPoP: should_use_dpop_bool
@@ -56,7 +57,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
 	      return [
 	        .init(
 	          credentialIssuerURL: "your_dev_issuer_url",
-	          client: .public(id: "your_dev_clientid"),
+			  clientId: "your_dev_client_id_or_nil",
+              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
 	          authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
 	          usePAR: should_use_par_bool,
 	          useDpopIfSupported: should_use_dpop_bool,
@@ -490,9 +492,9 @@ protocol AnalyticsConfig {
 }
 ```
 
-You can provide your implementation by implementing the *AnalyticsProvider* protocol and then adding it to your *AnalyticsConfigImpl* analyticsProviders variable.
+You can implement the *AnalyticsProvider* protocol and add it to your *AnalyticsConfigImpl* analyticsProviders variable.
 You will also need the provider's token/key, thus requiring a [String: AnalyticsProvider] configuration.
-The project utilizes Dependency Injection (DI), thus requiring adjustment of the *LogicAnalyticsAssembly* graph to provide the configuration.
+The project uses Dependency Injection (DI), which requires adjusting the *LogicAnalyticsAssembly* graph to provide the configuration.
 
 Implementation Example:
 
