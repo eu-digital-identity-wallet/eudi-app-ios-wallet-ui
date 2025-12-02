@@ -72,7 +72,8 @@ var vciConfig: [String: OpenId4VciConfiguration] {
       return [
         .init(
           credentialIssuerURL: "https://issuer.eudiw.dev",
-          client: .public(id: "wallet-dev"),
+          clientId: "wallet-dev",
+          keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
           useDpopIfSupported: true,
@@ -82,7 +83,8 @@ var vciConfig: [String: OpenId4VciConfiguration] {
       return [
         .init(
           credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
-          client: .public(id: "wallet-dev"),
+          clientId: "wallet-dev",
+          keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
           useDpopIfSupported: true,
@@ -96,7 +98,7 @@ var vciConfig: [String: OpenId4VciConfiguration] {
 }
 ```
 
-In this example, the `vciConfig` property dynamically assigns configurations, such as `issuerUrl`, `clientId`, `redirectUri`, `usePAR`, `useDPoP`, and `metadataCache`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
+In this example, the `vciConfig` property dynamically assigns configurations, such as `issuerUrl`, `clientId`, `redirectUri`, `usePAR`, `useDpopIfSupported`, `keyAttestationsConfig`, and `cacheIssuerMetadata`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
 
 ### Running with local services
 
