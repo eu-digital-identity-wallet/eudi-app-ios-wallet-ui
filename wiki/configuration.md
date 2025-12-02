@@ -73,7 +73,39 @@ struct WalletKitConfigImpl: WalletKitConfig {
 }
 ```
 
-2. Trusted certificates
+2. Wallet Attestation Provider
+
+Via the *WalletKitAttestationProvider* protocol inside the logic-core module.
+
+```swift
+protocol WalletKitAttestationProvider: WalletAttestationsProvider {
+  var baseUrl: String { get }
+  func getWalletAttestation(key: any JOSESwift.JWK) async throws -> String
+  func getKeysAttestation(keys: [any JOSESwift.JWK], nonce: String?) async throws -> String
+}
+```
+
+Based on the Build Variant of the Wallet (e.g., Dev)
+
+```swift
+final class WalletKitAttestationProviderImpl: WalletKitAttestationProvider {
+
+  let repository: WalletAttestationRepository
+  let configLogic: ConfigLogic
+
+  var baseUrl: String {
+    switch configLogic.appBuildVariant {
+    case .DEMO:
+      "your_demo_host"
+    case .DEV:
+      "your_dev_host"
+    }
+
+	// ...
+  }
+```
+
+3. Trusted certificates
 
 Via the *WalletKitConfig* protocol inside the logic-core module.
 
@@ -105,7 +137,7 @@ The application's IACA certificates are located [here](https://github.com/eu-dig
   }
 ```
 
-3. VP API
+4. VP API
 
 Via the *WalletKitConfig* protocol inside the logic-core module.
 
@@ -151,7 +183,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
 }
 ```
 
-4. RQES
+5. RQES
 
 Via the *RQESConfig* struct, which implements the *EudiRQESUiConfig* protocol from the RQESUi SDK, inside the logic-business module.
 
