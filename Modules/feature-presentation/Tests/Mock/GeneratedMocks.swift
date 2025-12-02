@@ -2430,9 +2430,9 @@ public class MockWalletAttestationRepository: WalletAttestationRepository, Cucko
     }
 
     
-    public func issueWalletUnitAttestation(host p0: String, payload p1: [String: [String: Data]]) async throws -> WalletUnitAttestation {
+    public func issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation {
         return try await cuckoo_manager.callThrows(
-            "issueWalletUnitAttestation(host p0: String, payload p1: [String: [String: Data]]) async throws -> WalletUnitAttestation",
+            "issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation",
             parameters: (p0, p1),
             escapingParameters: (p0, p1),
 errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -2440,9 +2440,9 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         )
     }
     
-    public func issueWalletInstanceAttestation(host p0: String, payload p1: [String: Data]) async throws -> WalletInstanceAttestation {
+    public func issueWalletInstanceAttestation(host p0: String, payload p1: Data) async throws -> WalletInstanceAttestation {
         return try await cuckoo_manager.callThrows(
-            "issueWalletInstanceAttestation(host p0: String, payload p1: [String: Data]) async throws -> WalletInstanceAttestation",
+            "issueWalletInstanceAttestation(host p0: String, payload p1: Data) async throws -> WalletInstanceAttestation",
             parameters: (p0, p1),
             escapingParameters: (p0, p1),
 errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -2457,18 +2457,18 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             self.cuckoo_manager = manager
         }
         
-        func issueWalletUnitAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(String, [String: [String: Data]]), WalletUnitAttestation,Error> where M1.MatchedType == String, M2.MatchedType == [String: [String: Data]] {
-            let matchers: [Cuckoo.ParameterMatcher<(String, [String: [String: Data]])>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func issueWalletUnitAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(String, Data), WalletUnitAttestation,Error> where M1.MatchedType == String, M2.MatchedType == Data {
+            let matchers: [Cuckoo.ParameterMatcher<(String, Data)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletAttestationRepository.self,
-                method: "issueWalletUnitAttestation(host p0: String, payload p1: [String: [String: Data]]) async throws -> WalletUnitAttestation",
+                method: "issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation",
                 parameterMatchers: matchers
             ))
         }
         
-        func issueWalletInstanceAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(String, [String: Data]), WalletInstanceAttestation,Error> where M1.MatchedType == String, M2.MatchedType == [String: Data] {
-            let matchers: [Cuckoo.ParameterMatcher<(String, [String: Data])>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func issueWalletInstanceAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(String, Data), WalletInstanceAttestation,Error> where M1.MatchedType == String, M2.MatchedType == Data {
+            let matchers: [Cuckoo.ParameterMatcher<(String, Data)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletAttestationRepository.self,
-                method: "issueWalletInstanceAttestation(host p0: String, payload p1: [String: Data]) async throws -> WalletInstanceAttestation",
+                method: "issueWalletInstanceAttestation(host p0: String, payload p1: Data) async throws -> WalletInstanceAttestation",
                 parameterMatchers: matchers
             ))
         }
@@ -2487,10 +2487,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func issueWalletUnitAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.__DoNotUse<(String, [String: [String: Data]]), WalletUnitAttestation> where M1.MatchedType == String, M2.MatchedType == [String: [String: Data]] {
-            let matchers: [Cuckoo.ParameterMatcher<(String, [String: [String: Data]])>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func issueWalletUnitAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.__DoNotUse<(String, Data), WalletUnitAttestation> where M1.MatchedType == String, M2.MatchedType == Data {
+            let matchers: [Cuckoo.ParameterMatcher<(String, Data)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return cuckoo_manager.verify(
-                "issueWalletUnitAttestation(host p0: String, payload p1: [String: [String: Data]]) async throws -> WalletUnitAttestation",
+                "issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -2499,10 +2499,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func issueWalletInstanceAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.__DoNotUse<(String, [String: Data]), WalletInstanceAttestation> where M1.MatchedType == String, M2.MatchedType == [String: Data] {
-            let matchers: [Cuckoo.ParameterMatcher<(String, [String: Data])>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+        func issueWalletInstanceAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.__DoNotUse<(String, Data), WalletInstanceAttestation> where M1.MatchedType == String, M2.MatchedType == Data {
+            let matchers: [Cuckoo.ParameterMatcher<(String, Data)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return cuckoo_manager.verify(
-                "issueWalletInstanceAttestation(host p0: String, payload p1: [String: Data]) async throws -> WalletInstanceAttestation",
+                "issueWalletInstanceAttestation(host p0: String, payload p1: Data) async throws -> WalletInstanceAttestation",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -2515,11 +2515,11 @@ public class WalletAttestationRepositoryStub:WalletAttestationRepository, @unche
 
 
     
-    public func issueWalletUnitAttestation(host p0: String, payload p1: [String: [String: Data]]) async throws -> WalletUnitAttestation {
+    public func issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation {
         return DefaultValueRegistry.defaultValue(for: (WalletUnitAttestation).self)
     }
     
-    public func issueWalletInstanceAttestation(host p0: String, payload p1: [String: Data]) async throws -> WalletInstanceAttestation {
+    public func issueWalletInstanceAttestation(host p0: String, payload p1: Data) async throws -> WalletInstanceAttestation {
         return DefaultValueRegistry.defaultValue(for: (WalletInstanceAttestation).self)
     }
 }
@@ -5803,16 +5803,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             )
         }
     }
-    
-    var walletProviderHost: String {
-        get {
-            return cuckoo_manager.getter(
-                "walletProviderHost",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.walletProviderHost
-            )
-        }
-    }
 
 
     struct __StubbingProxy_WalletKitConfig: Cuckoo.StubbingProxy {
@@ -5860,10 +5850,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         
         var documentIssuanceConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,DocumentIssuanceConfig> {
             return .init(manager: cuckoo_manager, name: "documentIssuanceConfig")
-        }
-        
-        var walletProviderHost: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,String> {
-            return .init(manager: cuckoo_manager, name: "walletProviderHost")
         }
     }
 
@@ -5916,10 +5902,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         
         var documentIssuanceConfig: Cuckoo.VerifyReadOnlyProperty<DocumentIssuanceConfig> {
             return .init(manager: cuckoo_manager, name: "documentIssuanceConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var walletProviderHost: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "walletProviderHost", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
     }
 }
@@ -5983,12 +5965,6 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
     var documentIssuanceConfig: DocumentIssuanceConfig {
         get {
             return DefaultValueRegistry.defaultValue(for: (DocumentIssuanceConfig).self)
-        }
-    }
-    
-    var walletProviderHost: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
         }
     }
 
@@ -8737,6 +8713,16 @@ class MockWalletKitAttestationProvider: WalletKitAttestationProvider, Cuckoo.Pro
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
+    
+    var baseUrl: String {
+        get {
+            return cuckoo_manager.getter(
+                "baseUrl",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.baseUrl
+            )
+        }
+    }
 
     
     func getWalletAttestation(key p0: any JOSESwift.JWK) async throws -> String {
@@ -8764,6 +8750,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
     
         init(manager: Cuckoo.MockManager) {
             self.cuckoo_manager = manager
+        }
+        
+        var baseUrl: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitAttestationProvider,String> {
+            return .init(manager: cuckoo_manager, name: "baseUrl")
         }
         
         func getWalletAttestation<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(any JOSESwift.JWK), String,Error> where M1.MatchedType == any JOSESwift.JWK {
@@ -8794,6 +8784,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             self.sourceLocation = sourceLocation
         }
         
+        var baseUrl: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "baseUrl", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
         
         @discardableResult
         func getWalletAttestation<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.__DoNotUse<(any JOSESwift.JWK), String> where M1.MatchedType == any JOSESwift.JWK {
@@ -8821,6 +8815,12 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
 }
 
 class WalletKitAttestationProviderStub:WalletKitAttestationProvider, @unchecked Sendable {
+    
+    var baseUrl: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+    }
 
 
     

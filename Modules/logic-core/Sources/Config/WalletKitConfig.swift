@@ -72,24 +72,22 @@ protocol WalletKitConfig: Sendable {
    * Configuration for document issuance, including default rules and specific overrides.
    */
   var documentIssuanceConfig: DocumentIssuanceConfig { get }
-
-  /**
-   * Host for the wallet provider
-   */
-  var walletProviderHost: String { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {
 
   let configLogic: ConfigLogic
   let transactionLoggerImpl: TransactionLogger
+  let walletKitAttestationProvider: WalletKitAttestationProvider
 
   init(
     configLogic: ConfigLogic,
-    transactionLogger: TransactionLogger
+    transactionLogger: TransactionLogger,
+    walletKitAttestationProvider: WalletKitAttestationProvider
   ) {
     self.configLogic = configLogic
     self.transactionLoggerImpl = transactionLogger
+    self.walletKitAttestationProvider = walletKitAttestationProvider
   }
 
   var userAuthenticationRequired: Bool {
@@ -104,7 +102,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
         return [
           .init(
             credentialIssuerURL: "https://issuer.eudiw.dev",
-            client: .public(id: "wallet-dev"),
+            clientId: "wallet-dev",
+            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
             usePAR: true,
             useDpopIfSupported: true,
@@ -112,7 +111,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
           ),
           .init(
             credentialIssuerURL: "https://issuer-backend.eudiw.dev",
-            client: .public(id: "wallet-dev"),
+            clientId: "wallet-dev",
+            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
             usePAR: true,
             useDpopIfSupported: true,
@@ -123,7 +123,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
         return [
           .init(
             credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
-            client: .public(id: "wallet-dev"),
+            clientId: "wallet-dev",
+            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
             usePAR: true,
             useDpopIfSupported: true,
@@ -131,7 +132,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
           ),
           .init(
             credentialIssuerURL: "https://dev.issuer-backend.eudiw.dev",
-            client: .public(id: "wallet-dev"),
+            clientId: "wallet-dev",
+            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
             usePAR: true,
             useDpopIfSupported: true,
@@ -256,14 +258,5 @@ struct WalletKitConfigImpl: WalletKitConfig {
         )
       ]
     )
-  }
-
-  var walletProviderHost: String {
-    switch configLogic.appBuildVariant {
-    case .DEMO:
-      "https://wallet-provider.eudiw.dev"
-    case .DEV:
-      "https://dev.wallet-provider.eudiw.dev"
-    }
   }
 }

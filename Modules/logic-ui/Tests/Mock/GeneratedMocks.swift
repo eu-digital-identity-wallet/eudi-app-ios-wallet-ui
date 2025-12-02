@@ -3042,16 +3042,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             )
         }
     }
-    
-    var walletProviderHost: String {
-        get {
-            return cuckoo_manager.getter(
-                "walletProviderHost",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.walletProviderHost
-            )
-        }
-    }
 
 
     struct __StubbingProxy_WalletKitConfig: Cuckoo.StubbingProxy {
@@ -3099,10 +3089,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         
         var documentIssuanceConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,DocumentIssuanceConfig> {
             return .init(manager: cuckoo_manager, name: "documentIssuanceConfig")
-        }
-        
-        var walletProviderHost: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,String> {
-            return .init(manager: cuckoo_manager, name: "walletProviderHost")
         }
     }
 
@@ -3155,10 +3141,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         
         var documentIssuanceConfig: Cuckoo.VerifyReadOnlyProperty<DocumentIssuanceConfig> {
             return .init(manager: cuckoo_manager, name: "documentIssuanceConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var walletProviderHost: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "walletProviderHost", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
     }
 }
@@ -3222,12 +3204,6 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
     var documentIssuanceConfig: DocumentIssuanceConfig {
         get {
             return DefaultValueRegistry.defaultValue(for: (DocumentIssuanceConfig).self)
-        }
-    }
-    
-    var walletProviderHost: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
         }
     }
 
@@ -5854,6 +5830,16 @@ class MockWalletKitAttestationProvider: WalletKitAttestationProvider, Cuckoo.Pro
         __defaultImplStub = stub
         cuckoo_manager.enableDefaultStubImplementation()
     }
+    
+    var baseUrl: String {
+        get {
+            return cuckoo_manager.getter(
+                "baseUrl",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.baseUrl
+            )
+        }
+    }
 
     
     func getWalletAttestation(key p0: any JOSESwift.JWK) async throws -> String {
@@ -5881,6 +5867,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
     
         init(manager: Cuckoo.MockManager) {
             self.cuckoo_manager = manager
+        }
+        
+        var baseUrl: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitAttestationProvider,String> {
+            return .init(manager: cuckoo_manager, name: "baseUrl")
         }
         
         func getWalletAttestation<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(any JOSESwift.JWK), String,Error> where M1.MatchedType == any JOSESwift.JWK {
@@ -5911,6 +5901,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             self.sourceLocation = sourceLocation
         }
         
+        var baseUrl: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "baseUrl", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
         
         @discardableResult
         func getWalletAttestation<M1: Cuckoo.Matchable>(key p0: M1) -> Cuckoo.__DoNotUse<(any JOSESwift.JWK), String> where M1.MatchedType == any JOSESwift.JWK {
@@ -5938,6 +5932,12 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
 }
 
 class WalletKitAttestationProviderStub:WalletKitAttestationProvider, @unchecked Sendable {
+    
+    var baseUrl: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+    }
 
 
     

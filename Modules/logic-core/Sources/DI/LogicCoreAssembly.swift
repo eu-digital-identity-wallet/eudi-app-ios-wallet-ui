@@ -26,7 +26,8 @@ public final class LogicCoreAssembly: Assembly {
     container.register(WalletKitConfig.self) { r in
       WalletKitConfigImpl(
         configLogic: r.force(ConfigLogic.self),
-        transactionLogger: r.force(TransactionLogger.self)
+        transactionLogger: r.force(TransactionLogger.self),
+        walletKitAttestationProvider: r.force(WalletKitAttestationProvider.self)
       )
     }
     .inObjectScope(ObjectScope.container)
@@ -43,21 +44,6 @@ public final class LogicCoreAssembly: Assembly {
       )
     }
     .inObjectScope(ObjectScope.container)
-
-    container.register(ProximitySessionCoordinator.self) { _, session in
-      ProximitySessionCoordinatorImpl(session: session)
-    }
-    .inObjectScope(ObjectScope.transient)
-
-    container.register(RemoteSessionCoordinator.self) { _, session in
-      RemoteSessionCoordinatorImpl(session: session)
-    }
-    .inObjectScope(ObjectScope.transient)
-
-    container.register(SessionCoordinatorHolder.self) { _ in
-      SessionCoordinatorHolderImpl()
-    }
-    .inObjectScope(ObjectScope.transient)
 
     container.register(TransactionLogger.self) { r in
       WalletKitTransactionLogControllerImpl(
@@ -77,9 +63,24 @@ public final class LogicCoreAssembly: Assembly {
     container.register(WalletKitAttestationProvider.self) { r in
       WalletKitAttestationProviderImpl(
         with: r.force(WalletAttestationRepository.self),
-        and: r.force(WalletKitConfig.self)
+        and: r.force(ConfigLogic.self)
       )
     }
     .inObjectScope(ObjectScope.graph)
+
+    container.register(ProximitySessionCoordinator.self) { _, session in
+      ProximitySessionCoordinatorImpl(session: session)
+    }
+    .inObjectScope(ObjectScope.transient)
+
+    container.register(RemoteSessionCoordinator.self) { _, session in
+      RemoteSessionCoordinatorImpl(session: session)
+    }
+    .inObjectScope(ObjectScope.transient)
+
+    container.register(SessionCoordinatorHolder.self) { _ in
+      SessionCoordinatorHolderImpl()
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

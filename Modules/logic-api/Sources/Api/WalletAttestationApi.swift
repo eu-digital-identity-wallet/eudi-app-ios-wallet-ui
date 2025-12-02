@@ -23,10 +23,9 @@ struct WalletInstanceAttestationApi: NetworkRequest {
   var path: String { "wallet-instance-attestation/jwk" }
 
   var body: Data? {
-    let encoded = try? JSONSerialization.data(withJSONObject: request, options: [])
-    return encoded
+    return request
   }
-  let request: [String: Data]
+  let request: Data
   let host: String
 }
 
@@ -38,9 +37,8 @@ struct WalletUnitAttestationApi: NetworkRequest {
   var path: String { "wallet-unit-attestation/jwk-set" }
 
   var body: Data? {
-    let encoded = try? JSONSerialization.data(withJSONObject: request, options: [])
-    return encoded
+    return request
   }
-  let request: [String: [String: Data]]
+  let request: Data
   let host: String
 }

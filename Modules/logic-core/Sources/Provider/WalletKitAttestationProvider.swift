@@ -14,10 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_api
+import logic_business
 import JOSESwift
 import Foundation
 
-protocol WalletKitAttestationProvider: Sendable {
+protocol WalletKitAttestationProvider: WalletAttestationsProvider {
+  var baseUrl: String { get }
   func getWalletAttestation(key: any JOSESwift.JWK) async throws -> String
   func getKeysAttestation(keys: [any JOSESwift.JWK], nonce: String?) async throws -> String
 }
@@ -25,30 +27,50 @@ protocol WalletKitAttestationProvider: Sendable {
 final class WalletKitAttestationProviderImpl: WalletKitAttestationProvider {
 
   let repository: WalletAttestationRepository
-  let baseUrl: String
+  let configLogic: ConfigLogic
 
-  init(with repository: WalletAttestationRepository, and configLogic: WalletKitConfig) {
+  var baseUrl: String {
+    switch configLogic.appBuildVariant {
+    case .DEMO:
+      "https://wallet-provider.eudiw.dev"
+    case .DEV:
+      "https://dev.wallet-provider.eudiw.dev"
+    }
+  }
+
+  init(with repository: WalletAttestationRepository, and configLogic: ConfigLogic) {
     self.repository = repository
-    self.baseUrl = configLogic.walletProviderHost
+    self.configLogic = configLogic
   }
 
   func getWalletAttestation(key: any JOSESwift.JWK) async throws -> String {
 
     let jwkDict = try key.toDictionary()
-    let keyData = try JSONSerialization.data(withJSONObject: jwkDict, options: [])
-    let payload = ["jwk": keyData]
+    let payload = ["jwk": jwkDict]
 
-    let response = try await repository.issueWalletInstanceAttestation(host: self.baseUrl, payload: payload)
+    let encodedPayload = try JSONSerialization.data(withJSONObject: payload, options: [])
+
+    let response = try await repository.issueWalletInstanceAttestation(host: self.baseUrl, payload: encodedPayload)
     return response.walletInstanceAttestation
   }
 
   func getKeysAttestation(keys: [any JOSESwift.JWK], nonce: String?) async throws -> String {
 
     let jwkDict = try keys.map { try $0.toDictionary() }
-    let keyData = try JSONSerialization.data(withJSONObject: jwkDict, options: [])
-    let payload = ["jwkSet": ["keys": keyData]]
 
-    let response = try await repository.issueWalletUnitAttestation(host: self.baseUrl, payload: payload)
+    var payload: [String: Any] = [
+      "jwkSet": [
+        "keys": jwkDict
+      ]
+    ]
+
+    if let nonce {
+      payload["nonce"] = nonce
+    }
+
+    let encodedPayload = try JSONSerialization.data(withJSONObject: payload, options: [])
+
+    let response = try await repository.issueWalletUnitAttestation(host: self.baseUrl, payload: encodedPayload)
     return response.walletUnitAttestation
   }
 }

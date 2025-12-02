@@ -16,8 +16,8 @@
 import Foundation
 
 public protocol WalletAttestationRepository: Sendable {
-  func issueWalletUnitAttestation(host: String, payload: [String: [String: Data]]) async throws -> WalletUnitAttestation
-  func issueWalletInstanceAttestation(host: String, payload: [String: Data]) async throws -> WalletInstanceAttestation
+  func issueWalletUnitAttestation(host: String, payload: Data) async throws -> WalletUnitAttestation
+  func issueWalletInstanceAttestation(host: String, payload: Data) async throws -> WalletInstanceAttestation
 }
 
 final class WalletAttestationRepositoryImpl: WalletAttestationRepository {
@@ -28,11 +28,11 @@ final class WalletAttestationRepositoryImpl: WalletAttestationRepository {
     self.networkManager = networkManager
   }
 
-  func issueWalletUnitAttestation(host: String, payload: [String: [String: Data]]) async throws -> WalletUnitAttestation {
+  func issueWalletUnitAttestation(host: String, payload: Data) async throws -> WalletUnitAttestation {
     try await networkManager.execute(with: WalletUnitAttestationApi(request: payload, host: host), parameters: nil)
   }
 
-  func issueWalletInstanceAttestation(host: String, payload: [String: Data]) async throws -> WalletInstanceAttestation {
+  func issueWalletInstanceAttestation(host: String, payload: Data) async throws -> WalletInstanceAttestation {
     try await networkManager.execute(with: WalletInstanceAttestationApi(request: payload, host: host), parameters: nil)
   }
 }
