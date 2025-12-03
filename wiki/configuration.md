@@ -78,7 +78,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
 Via the *WalletKitAttestationConfig* protocol inside the logic-core module.
 
 ```swift
-protocol WalletKitAttestationConfig: Sendable {
+protocol WalletProviderAttestationConfig: Sendable {
   var walletProviderAttestationUrl: String { get }
 }
 ```
@@ -86,7 +86,7 @@ protocol WalletKitAttestationConfig: Sendable {
 Based on the Build Variant of the Wallet (e.g., Dev)
 
 ```swift
-final class WalletKitAttestationConfigImpl: WalletKitAttestationConfig {
+final class WalletProviderAttestationConfigImpl: WalletKitAttestationConfig {
 
   let configLogic: ConfigLogic
 
