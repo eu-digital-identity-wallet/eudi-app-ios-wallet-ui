@@ -75,34 +75,34 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
 2. Wallet Attestation Provider
 
-Via the *WalletKitAttestationProvider* protocol inside the logic-core module.
+Via the *WalletKitAttestationConfig* protocol inside the logic-core module.
 
 ```swift
-protocol WalletKitAttestationProvider: WalletAttestationsProvider {
-  var baseUrl: String { get }
-  func getWalletAttestation(key: any JOSESwift.JWK) async throws -> String
-  func getKeysAttestation(keys: [any JOSESwift.JWK], nonce: String?) async throws -> String
+protocol WalletKitAttestationConfig: Sendable {
+  var walletProviderAttestationUrl: String { get }
 }
 ```
 
 Based on the Build Variant of the Wallet (e.g., Dev)
 
 ```swift
-final class WalletKitAttestationProviderImpl: WalletKitAttestationProvider {
+final class WalletKitAttestationConfigImpl: WalletKitAttestationConfig {
 
-  let repository: WalletAttestationRepository
   let configLogic: ConfigLogic
 
-  var baseUrl: String {
+  init(configLogic: ConfigLogic) {
+    self.configLogic = configLogic
+  }
+
+  var walletProviderAttestationUrl: String {
     switch configLogic.appBuildVariant {
     case .DEMO:
-      "your_demo_host"
+      "your_demo_wallet_provider_host"
     case .DEV:
-      "your_dev_host"
+      "your_dev_wallet_provider_host"
     }
-
-	// ...
   }
+}
 ```
 
 3. Trusted certificates
