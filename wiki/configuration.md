@@ -86,7 +86,7 @@ protocol WalletProviderAttestationConfig: Sendable {
 Based on the Build Variant of the Wallet (e.g., Dev)
 
 ```swift
-final class WalletProviderAttestationConfigImpl: WalletKitAttestationConfig {
+final class WalletProviderAttestationConfigImpl: WalletProviderAttestationConfig {
 
   let configLogic: ConfigLogic
 
