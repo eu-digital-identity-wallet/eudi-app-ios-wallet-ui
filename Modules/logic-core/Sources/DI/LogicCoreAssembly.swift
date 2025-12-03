@@ -45,6 +45,13 @@ public final class LogicCoreAssembly: Assembly {
     }
     .inObjectScope(ObjectScope.container)
 
+    container.register(WalletProviderAttestationConfig.self) { r in
+      WalletProviderAttestationConfigImpl(
+        configLogic: r.force(ConfigLogic.self)
+      )
+    }
+    .inObjectScope(ObjectScope.container)
+
     container.register(TransactionLogger.self) { r in
       WalletKitTransactionLogControllerImpl(
         transactionLogStorageController: r.force((any TransactionLogStorageController).self)
@@ -63,7 +70,7 @@ public final class LogicCoreAssembly: Assembly {
     container.register(WalletKitAttestationProvider.self) { r in
       WalletKitAttestationProviderImpl(
         with: r.force(WalletAttestationRepository.self),
-        and: r.force(ConfigLogic.self)
+        and: r.force(WalletProviderAttestationConfig.self)
       )
     }
     .inObjectScope(ObjectScope.graph)

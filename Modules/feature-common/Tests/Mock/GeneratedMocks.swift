@@ -5491,6 +5491,87 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Config/WalletProviderAttestationConfig.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+class MockWalletProviderAttestationConfig: WalletProviderAttestationConfig, Cuckoo.ProtocolMock, @unchecked Sendable {
+    typealias MocksType = WalletProviderAttestationConfig
+    typealias Stubbing = __StubbingProxy_WalletProviderAttestationConfig
+    typealias Verification = __VerificationProxy_WalletProviderAttestationConfig
+
+    // Original typealiases
+
+    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any WalletProviderAttestationConfig)?
+
+    func enableDefaultImplementation(_ stub: any WalletProviderAttestationConfig) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+    var walletProviderAttestationUrl: String {
+        get {
+            return cuckoo_manager.getter(
+                "walletProviderAttestationUrl",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.walletProviderAttestationUrl
+            )
+        }
+    }
+
+
+    struct __StubbingProxy_WalletProviderAttestationConfig: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        var walletProviderAttestationUrl: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletProviderAttestationConfig,String> {
+            return .init(manager: cuckoo_manager, name: "walletProviderAttestationUrl")
+        }
+    }
+
+    struct __VerificationProxy_WalletProviderAttestationConfig: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        var walletProviderAttestationUrl: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "walletProviderAttestationUrl", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+    }
+}
+
+class WalletProviderAttestationConfigStub:WalletProviderAttestationConfig, @unchecked Sendable {
+    
+    var walletProviderAttestationUrl: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+    }
+
+
+}
+
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Controller/WalletKitController.swift'
 
 import Cuckoo

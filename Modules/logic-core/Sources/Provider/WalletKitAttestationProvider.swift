@@ -14,7 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_api
-import logic_business
 import JOSESwift
 import Foundation
 
@@ -27,20 +26,11 @@ protocol WalletKitAttestationProvider: WalletAttestationsProvider {
 final class WalletKitAttestationProviderImpl: WalletKitAttestationProvider {
 
   let repository: WalletAttestationRepository
-  let configLogic: ConfigLogic
+  let baseUrl: String
 
-  var baseUrl: String {
-    switch configLogic.appBuildVariant {
-    case .DEMO:
-      "https://wallet-provider.eudiw.dev"
-    case .DEV:
-      "https://dev.wallet-provider.eudiw.dev"
-    }
-  }
-
-  init(with repository: WalletAttestationRepository, and configLogic: ConfigLogic) {
+  init(with repository: WalletAttestationRepository, and configLogic: WalletProviderAttestationConfig) {
     self.repository = repository
-    self.configLogic = configLogic
+    self.baseUrl = configLogic.walletProviderAttestationUrl
   }
 
   func getWalletAttestation(key: any JOSESwift.JWK) async throws -> String {
