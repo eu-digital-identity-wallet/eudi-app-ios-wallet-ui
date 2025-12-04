@@ -59,94 +59,115 @@ public extension DocClaimsDecodable {
 }
 
 public extension DocClaimsDecodable {
+
   func parseClaim(
     documentId: String,
     isSensitive: Bool,
     input: [DocClaim]
   ) -> [GenericExpandableItem] {
-    input.reduce(into: []) { partialResult, docClaim in
 
-      let title = docClaim.displayName.ifNilOrEmpty { docClaim.name }
+    func shouldGroup(_ title: String, _ children: [DocClaim]) -> Bool {
+      children.count > 1 && !title.isEmpty && children.allSatisfy { $0.children != nil }
+    }
 
-      if let nested = docClaim.children {
+    return input.reduce(into: []) { result, claim in
 
-        var children = parseClaim(
-          documentId: documentId,
-          isSensitive: isSensitive,
-          input: nested
-        )
+      let title = claim.displayName.ifNilOrEmpty { claim.name }
 
-        children = children.sortByName()
+      if let nested = claim.children {
 
-        if title.isEmpty {
-          partialResult.append(contentsOf: children)
-        } else {
-          partialResult.append(
+        if shouldGroup(title, nested) {
+
+          let grouped = nested.enumerated().map { index, entry in
+
+            let expanded = parseClaim(
+              documentId: documentId,
+              isSensitive: isSensitive,
+              input: entry.children ?? []
+            ).sortByName()
+
+            return GenericExpandableItem.nested(
+              .init(
+                collapsed: .init(mainContent: .text(.custom("\(title) \(index + 1)"))),
+                expanded: expanded,
+                isExpanded: false
+              )
+            )
+          }
+
+          result.append(
             .nested(
               .init(
-                collapsed: .init(
-                  mainContent: .text(.custom(title))
-                ),
-                expanded: children,
+                collapsed: .init(mainContent: .text(.custom(title))),
+                expanded: grouped.sortByName(),
                 isExpanded: false
               )
             )
           )
-        }
-      } else if let uiImage = docClaim.dataValue.image {
-        if docClaim.name == DocumentJsonKeys.SIGNATURE {
-          partialResult.append(
-            .single(
-              .init(
-                collapsed: .init(
-                  mainContent: .image(Image(uiImage: uiImage)),
-                  overlineText: .custom(title),
-                  isBlur: isSensitive
-                ),
-                domainModel: nil
+
+        } else {
+
+          let children = parseClaim(
+            documentId: documentId,
+            isSensitive: isSensitive,
+            input: nested
+          ).sortByName()
+
+          if title.isEmpty {
+            result.append(contentsOf: children)
+          } else {
+            result.append(
+              .nested(
+                .init(
+                  collapsed: .init(mainContent: .text(.custom(title))),
+                  expanded: children,
+                  isExpanded: false
+                )
               )
             )
+          }
+        }
+
+      } else if let uiImage = claim.dataValue.image {
+
+        let collapsed: ListItemData
+
+        if claim.name == DocumentJsonKeys.SIGNATURE {
+          collapsed = .init(
+            mainContent: .image(Image(uiImage: uiImage)),
+            overlineText: .custom(title),
+            isBlur: isSensitive
           )
         } else {
-          partialResult.append(
-            .single(
-              .init(
-                collapsed: .init(
-                  mainContent: .text(.custom(title)),
-                  leadingIcon: .init(image: Image(uiImage: uiImage)),
-                  isBlur: isSensitive
-                ),
-                domainModel: nil
-              )
-            )
+          collapsed = .init(
+            mainContent: .text(.custom(title)),
+            leadingIcon: .init(image: Image(uiImage: uiImage)),
+            isBlur: isSensitive
           )
         }
+
+        result.append(.single(.init(collapsed: collapsed, domainModel: nil)))
+
       } else {
 
-        let claim = docClaim
-          .parseDate(
-            parser: {
-              Locale.current.localizedDateTime(
-                date: $0,
-                uiFormatter: "dd MMM yyyy"
-              )
-            }
-          )
+        let parsed = claim
+          .parseDate {
+            Locale.current.localizedDateTime(
+              date: $0,
+              uiFormatter: "dd MMM yyyy"
+            )
+          }
           .parseUserPseudonym()
 
-        partialResult.append(
-          .single(
-            .init(
-              collapsed: .init(
-                mainContent: .text(.custom(claim.stringValue)),
-                overlineText: .custom(title),
-                isBlur: isSensitive
-              ),
-              domainModel: nil
-            )
-          )
+        let collapsed = ListItemData(
+          mainContent: .text(.custom(parsed.stringValue)),
+          overlineText: .custom(title),
+          isBlur: isSensitive
         )
+
+        result.append(.single(.init(collapsed: collapsed, domainModel: nil)))
       }
-    }.sortByName()
+    }
+    .sortByName()
   }
 }
