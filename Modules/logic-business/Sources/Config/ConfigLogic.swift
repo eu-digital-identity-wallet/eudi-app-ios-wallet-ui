@@ -27,11 +27,6 @@ public enum AppBuildVariant: String, Sendable {
 public protocol ConfigLogic: Sendable {
 
   /**
-   * Wallet base url for direct network operation.
-   */
-  var walletHostUrl: String { get }
-
-  /**
    * Build type.
    */
   var appBuildType: AppBuildType { get }
@@ -58,10 +53,6 @@ public protocol ConfigLogic: Sendable {
 }
 
 struct ConfigLogicImpl: ConfigLogic {
-
-  public var walletHostUrl: String {
-    getBundleValue(key: "Wallet Host Url")
-  }
 
   public var appBuildType: AppBuildType {
     getBuildType()

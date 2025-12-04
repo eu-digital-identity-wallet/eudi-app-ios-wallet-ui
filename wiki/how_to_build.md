@@ -8,7 +8,7 @@
 
 ## Overview
 
-This guide aims to assist developers to build the iOS application.
+This guide aims to assist developers in building the application.
 
 # Setup Apps
 
@@ -72,7 +72,8 @@ var vciConfig: [String: OpenId4VciConfiguration] {
       return [
         .init(
           credentialIssuerURL: "https://issuer.eudiw.dev",
-          client: .public(id: "wallet-dev"),
+          clientId: "wallet-dev",
+          keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
           useDpopIfSupported: true,
@@ -82,7 +83,8 @@ var vciConfig: [String: OpenId4VciConfiguration] {
       return [
         .init(
           credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
-          client: .public(id: "wallet-dev"),
+          clientId: "wallet-dev",
+          keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
           usePAR: true,
           useDpopIfSupported: true,
@@ -96,20 +98,20 @@ var vciConfig: [String: OpenId4VciConfiguration] {
 }
 ```
 
-In this example, the `vciConfig` property dynamically assigns configurations, such as `issuerUrl`, `clientId`, `redirectUri`, `usePAR`, `useDPoP`, and `metadataCache`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
+In this example, the `vciConfig` property dynamically assigns configurations, such as `issuerUrl`, `clientId`, `redirectUri`, `usePAR`, `useDpopIfSupported`, `keyAttestationsConfig`, and `cacheIssuerMetadata`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
 
 ### Running with local services
 
-The first step here is to have all three services running locally on your machine. You can follow these Repositories for further instructions:
+The first step is to run all three services locally on your machine. You can follow these Repositories for further instructions:
 * [Issuer](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py)
 * [Web Verifier UI](https://github.com/eu-digital-identity-wallet/eudi-web-verifier)
 * [Web Verifier Endpoint](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt)
 
 ### How to work with self-signed certificates on iOS
 
-In addition to the change below, to enable the app to interact with a locally running service, a minor code change is required for successful interaction.
+To enable the app to interact with a locally running service, a minor code change is required.
 
-Before running the app in the simulator, add these lines of code to the top of the file WalletKitController just below the import statements.
+Before running the app in the simulator, add the following lines of code to the top of the `NetworkSessionProvider` file inside the `logic-api` module, directly below the import statements.
 
 ```swift
 final class SelfSignedDelegate: NSObject, URLSessionDelegate {
@@ -146,8 +148,8 @@ let walletSession: URLSession = {
 Once the above is in place, adjust the initializer:
 
 ```swift
-guard let walletKit = try? EudiWallet(serviceName: configLogic.documentStorageServiceName, networking: walletSession) else {
-  fatalError("Unable to Initialize WalletKit")
+init() {
+  self.urlSession = walletSession
 }
 ```
 

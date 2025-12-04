@@ -15,16 +15,30 @@
  */
 import Foundation
 
-struct SampleRequest: NetworkRequest {
-  typealias Response = SampleResponseDTO
+struct WalletInstanceAttestationApi: NetworkRequest {
+  typealias Response = WalletInstanceAttestation
 
   var method: NetworkMethod { .POST }
   var additionalHeaders: [String: String] {[:]}
-  var path: String { "test/test" }
+  var path: String { "wallet-instance-attestation/jwk" }
 
   var body: Data? {
-    let encoded = try? JSONEncoder().encode(request)
-    return encoded
+    return request
   }
-  let request: SampleRequestDTO
+  let request: Data
+  let host: String
+}
+
+struct WalletUnitAttestationApi: NetworkRequest {
+  typealias Response = WalletUnitAttestation
+
+  var method: NetworkMethod { .POST }
+  var additionalHeaders: [String: String] {[:]}
+  var path: String { "wallet-unit-attestation/jwk-set" }
+
+  var body: Data? {
+    return request
+  }
+  let request: Data
+  let host: String
 }

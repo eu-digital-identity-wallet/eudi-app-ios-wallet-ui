@@ -13,28 +13,29 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import struct Foundation.Data
+import logic_business
 
-enum NetworkMethod: String {
-  case GET
-  case POST
-  case PUT
-  case DELETE
-  case PATCH
+protocol WalletProviderAttestationConfig: Sendable {
+  /**
+   * Wallet Provider Attestation host
+   */
+  var walletProviderAttestationUrl: String { get }
 }
 
-protocol NetworkRequest: Sendable {
+final class WalletProviderAttestationConfigImpl: WalletProviderAttestationConfig {
 
-  associatedtype Response
+  let configLogic: ConfigLogic
 
-  var method: NetworkMethod { get }
-  var path: String { get }
-  var host: String { get }
-  var additionalHeaders: [String: String] { get }
-  var body: Data? { get }
-}
+  init(configLogic: ConfigLogic) {
+    self.configLogic = configLogic
+  }
 
-extension NetworkRequest {
-  var method: NetworkMethod { .GET }
-  var body: Data? { nil }
+  var walletProviderAttestationUrl: String {
+    switch configLogic.appBuildVariant {
+    case .DEMO:
+      "https://wallet-provider.eudiw.dev"
+    case .DEV:
+      "https://dev.wallet-provider.eudiw.dev"
+    }
+  }
 }

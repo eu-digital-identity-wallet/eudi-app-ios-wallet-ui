@@ -28,16 +28,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
         cuckoo_manager.enableDefaultStubImplementation()
     }
     
-    public var walletHostUrl: String {
-        get {
-            return cuckoo_manager.getter(
-                "walletHostUrl",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.walletHostUrl
-            )
-        }
-    }
-    
     public var appBuildType: AppBuildType {
         get {
             return cuckoo_manager.getter(
@@ -96,10 +86,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
             self.cuckoo_manager = manager
         }
         
-        var walletHostUrl: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic,String> {
-            return .init(manager: cuckoo_manager, name: "walletHostUrl")
-        }
-        
         var appBuildType: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic,AppBuildType> {
             return .init(manager: cuckoo_manager, name: "appBuildType")
         }
@@ -132,10 +118,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
             self.sourceLocation = sourceLocation
         }
         
-        var walletHostUrl: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "walletHostUrl", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
         var appBuildType: Cuckoo.VerifyReadOnlyProperty<AppBuildType> {
             return .init(manager: cuckoo_manager, name: "appBuildType", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
@@ -159,12 +141,6 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
 }
 
 public class ConfigLogicStub:ConfigLogic, @unchecked Sendable {
-    
-    public var walletHostUrl: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
-        }
-    }
     
     public var appBuildType: AppBuildType {
         get {
@@ -1772,7 +1748,7 @@ public class FilterValidatorStub:FilterValidator, @unchecked Sendable {
 import Cuckoo
 import Foundation
 import Peppermint
-import libPhoneNumber
+import PhoneNumberKit
 @testable import logic_business
 
 public class MockFormValidator: FormValidator, Cuckoo.ProtocolMock, @unchecked Sendable {

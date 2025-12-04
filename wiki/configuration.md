@@ -44,7 +44,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
 	      return [
 	        .init(
 	          credentialIssuerURL: "your_demo_issuer_url",
-	          client: .public(id: "your_demo_clientid"),
+			  clientId: "your_demo_client_id_or_nil",
+              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
 	          authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
 	          usePAR: should_use_par_bool,
 	          useDPoP: should_use_dpop_bool
@@ -56,7 +57,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
 	      return [
 	        .init(
 	          credentialIssuerURL: "your_dev_issuer_url",
-	          client: .public(id: "your_dev_clientid"),
+			  clientId: "your_dev_client_id_or_nil",
+              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
 	          authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
 	          usePAR: should_use_par_bool,
 	          useDpopIfSupported: should_use_dpop_bool,
@@ -71,7 +73,39 @@ struct WalletKitConfigImpl: WalletKitConfig {
 }
 ```
 
-2. Trusted certificates
+2. Wallet Attestation Provider
+
+Via the *WalletKitAttestationConfig* protocol inside the logic-core module.
+
+```swift
+protocol WalletProviderAttestationConfig: Sendable {
+  var walletProviderAttestationUrl: String { get }
+}
+```
+
+Based on the Build Variant of the Wallet (e.g., Dev)
+
+```swift
+final class WalletProviderAttestationConfigImpl: WalletProviderAttestationConfig {
+
+  let configLogic: ConfigLogic
+
+  init(configLogic: ConfigLogic) {
+    self.configLogic = configLogic
+  }
+
+  var walletProviderAttestationUrl: String {
+    switch configLogic.appBuildVariant {
+    case .DEMO:
+      "your_demo_wallet_provider_host"
+    case .DEV:
+      "your_dev_wallet_provider_host"
+    }
+  }
+}
+```
+
+3. Trusted certificates
 
 Via the *WalletKitConfig* protocol inside the logic-core module.
 
@@ -103,7 +137,7 @@ The application's IACA certificates are located [here](https://github.com/eu-dig
   }
 ```
 
-3. VP API
+4. VP API
 
 Via the *WalletKitConfig* protocol inside the logic-core module.
 
@@ -149,7 +183,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
 }
 ```
 
-4. RQES
+5. RQES
 
 Via the *RQESConfig* struct, which implements the *EudiRQESUiConfig* protocol from the RQESUi SDK, inside the logic-business module.
 
@@ -245,7 +279,9 @@ If you want to change or add your own, you can do it by adjusting the *Wallet.pl
 			<string>eudi-openid4vp</string>
 			<string>mdoc-openid4vp</string>
 			<string>openid4vp</string>
+			<string>haip-vp</string>
 			<string>openid-credential-offer</string>
+			<string>haip-vci</string>
 			<string>rqes</string>
 		</array>
 	</dict>
@@ -266,7 +302,9 @@ Let's assume you want to add a new one for the credential offer (e.g., custom-my
 			<string>eudi-openid4vp</string>
 			<string>mdoc-openid4vp</string>
 			<string>openid4vp</string>
+			<string>haip-vp</string>
 			<string>openid-credential-offer</string>
+			<string>haip-vci</string>
 			<string>rqes</string>
 			<string>custom-my-offer</string>
 		</array>
@@ -283,7 +321,9 @@ public extension DeepLink {
   enum Action: String, Equatable {
 
     case openid4vp
+	case haip_vp
     case credential_offer
+	case haip_vci
     case rqes
     case external
 
@@ -292,9 +332,11 @@ public extension DeepLink {
       and urlSchemaController: UrlSchemaController
     ) -> Action? {
       switch scheme {
-      case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme):
+      case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme),
+		_ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
         return .openid4vp
-      case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme):
+      case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme),
+		_ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme):
         return .credential_offer
       case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
         return .rqes
@@ -313,7 +355,9 @@ public extension DeepLink {
   enum Action: String, Equatable {
 
     case openid4vp
+	case haip_vp
     case credential_offer
+	case haip_vci
     case rqes
     case custom_my_offer
     case external
@@ -323,11 +367,12 @@ public extension DeepLink {
       and urlSchemaController: UrlSchemaController
     ) -> Action? {
       switch scheme {
-      case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme):
+      case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme),
+		_ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
         return .openid4vp
-      case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme):
-        return .credential_offer
-      case _ where custom_my_offer.getSchemas(with: urlSchemaController).contains(scheme):
+      case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme),
+		_ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme),
+		_ where custom_my_offer.getSchemas(with: urlSchemaController).contains(scheme):
         return .credential_offer
       case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
         return .rqes
@@ -479,9 +524,9 @@ protocol AnalyticsConfig {
 }
 ```
 
-You can provide your implementation by implementing the *AnalyticsProvider* protocol and then adding it to your *AnalyticsConfigImpl* analyticsProviders variable.
+You can implement the *AnalyticsProvider* protocol and add it to your *AnalyticsConfigImpl* analyticsProviders variable.
 You will also need the provider's token/key, thus requiring a [String: AnalyticsProvider] configuration.
-The project utilizes Dependency Injection (DI), thus requiring adjustment of the *LogicAnalyticsAssembly* graph to provide the configuration.
+The project uses Dependency Injection (DI), which requires adjusting the *LogicAnalyticsAssembly* graph to provide the configuration.
 
 Implementation Example:
 

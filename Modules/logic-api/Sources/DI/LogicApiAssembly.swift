@@ -21,13 +21,19 @@ public final class LogicApiAssembly: Assembly {
   public init() {}
 
   public func assemble(container: Container) {
+
+    container.register(NetworkSessionProvider.self) { _ in
+      NetworkSessionProviderImpl()
+    }
+    .inObjectScope(ObjectScope.container)
+
     container.register(NetworkManager.self) { r in
-      NetworkManagerImpl(configLogic: r.force(ConfigLogic.self))
+      NetworkManagerImpl(with: r.force(NetworkSessionProvider.self))
     }
     .inObjectScope(ObjectScope.transient)
 
-    container.register(SampleRepository.self) { r in
-      SampleRepositoryImpl(networkManager: r.force(NetworkManager.self))
+    container.register(WalletAttestationRepository.self) { r in
+      WalletAttestationRepositoryImpl(networkManager: r.force(NetworkManager.self))
     }
     .inObjectScope(ObjectScope.transient)
   }

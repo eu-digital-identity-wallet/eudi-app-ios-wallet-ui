@@ -15,7 +15,7 @@
  */
 import Foundation
 import Peppermint
-import libPhoneNumber
+import PhoneNumberKit
 
 public protocol FormValidator: Sendable {
   func validateForm(form: ValidatableForm) async -> FormValidationResult
@@ -182,10 +182,14 @@ final actor FormValidatorImpl: FormValidator {
   }
 
   private func isPhoneNumberValid(phone: String, countryCode: String) -> Bool {
-    let phoneUtil = NBPhoneNumberUtil.sharedInstance()
+    let phoneNumberUtility = PhoneNumberUtility()
     do {
-      let phoneNumber: NBPhoneNumber = try phoneUtil.parse(phone, defaultRegion: countryCode)
-      return phoneUtil.isValidNumber(phoneNumber)
+      _ = try phoneNumberUtility.parse(
+        phone,
+        withRegion: countryCode,
+        ignoreType: false
+      )
+      return true
     } catch {
       return false
     }

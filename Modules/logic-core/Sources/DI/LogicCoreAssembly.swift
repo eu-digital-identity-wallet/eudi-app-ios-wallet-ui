@@ -16,6 +16,7 @@
 import Swinject
 import logic_business
 import logic_storage
+import logic_api
 
 public final class LogicCoreAssembly: Assembly {
 
@@ -25,7 +26,8 @@ public final class LogicCoreAssembly: Assembly {
     container.register(WalletKitConfig.self) { r in
       WalletKitConfigImpl(
         configLogic: r.force(ConfigLogic.self),
-        transactionLogger: r.force(TransactionLogger.self)
+        transactionLogger: r.force(TransactionLogger.self),
+        walletKitAttestationProvider: r.force(WalletKitAttestationProvider.self)
       )
     }
     .inObjectScope(ObjectScope.container)
@@ -37,25 +39,18 @@ public final class LogicCoreAssembly: Assembly {
         sessionCoordinatorHolder: r.force(SessionCoordinatorHolder.self),
         bookmarkStorageController: r.force((any BookmarkStorageController).self),
         transactionLogStorageController: r.force((any TransactionLogStorageController).self),
-        revokedDocumentStorageController: r.force((any RevokedDocumentStorageController).self)
+        revokedDocumentStorageController: r.force((any RevokedDocumentStorageController).self),
+        networkSessionProvider: r.force((any NetworkSessionProvider).self)
       )
     }
     .inObjectScope(ObjectScope.container)
 
-    container.register(ProximitySessionCoordinator.self) { _, session in
-      ProximitySessionCoordinatorImpl(session: session)
+    container.register(WalletProviderAttestationConfig.self) { r in
+      WalletProviderAttestationConfigImpl(
+        configLogic: r.force(ConfigLogic.self)
+      )
     }
-    .inObjectScope(ObjectScope.transient)
-
-    container.register(RemoteSessionCoordinator.self) { _, session in
-      RemoteSessionCoordinatorImpl(session: session)
-    }
-    .inObjectScope(ObjectScope.transient)
-
-    container.register(SessionCoordinatorHolder.self) { _ in
-      SessionCoordinatorHolderImpl()
-    }
-    .inObjectScope(ObjectScope.transient)
+    .inObjectScope(ObjectScope.container)
 
     container.register(TransactionLogger.self) { r in
       WalletKitTransactionLogControllerImpl(
@@ -71,5 +66,28 @@ public final class LogicCoreAssembly: Assembly {
       )
     }
     .inObjectScope(ObjectScope.graph)
+
+    container.register(WalletKitAttestationProvider.self) { r in
+      WalletKitAttestationProviderImpl(
+        with: r.force(WalletAttestationRepository.self),
+        and: r.force(WalletProviderAttestationConfig.self)
+      )
+    }
+    .inObjectScope(ObjectScope.graph)
+
+    container.register(ProximitySessionCoordinator.self) { _, session in
+      ProximitySessionCoordinatorImpl(session: session)
+    }
+    .inObjectScope(ObjectScope.transient)
+
+    container.register(RemoteSessionCoordinator.self) { _, session in
+      RemoteSessionCoordinatorImpl(session: session)
+    }
+    .inObjectScope(ObjectScope.transient)
+
+    container.register(SessionCoordinatorHolder.self) { _ in
+      SessionCoordinatorHolderImpl()
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

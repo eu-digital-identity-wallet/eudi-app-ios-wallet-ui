@@ -15,13 +15,11 @@ omitHeaders = false
 [modules.LogicApi]
 output = "../Modules/logic-api/Tests/Mock/GeneratedMocks.swift"
 testableImports = [
-	"logic_core", 
 	"logic_business", 
 	"logic_analytics",
 	"logic_api"
 ]
 sources = [
-	"../Modules/logic-core/Sources/**/*.swift",
 	"../Modules/logic-business/Sources/**/*.swift",
 	"../Modules/logic-analytics/Sources/**/*.swift",
     "../Modules/logic-api/Sources/**/*.swift"

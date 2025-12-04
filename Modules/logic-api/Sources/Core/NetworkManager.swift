@@ -14,14 +14,15 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
-import Alamofire
 import logic_business
 
-protocol NetworkManager {
+protocol NetworkManager: Sendable {
+
   func execute<R: NetworkRequest, T: Decodable & Sendable>(
     with request: R,
     parameters: [NetworkParameter]?
   ) async throws -> T
+
   func prepare<R: NetworkRequest>(
     request: R,
     parameters: [NetworkParameter]?,
@@ -32,10 +33,10 @@ protocol NetworkManager {
 
 actor NetworkManagerImpl: NetworkManager {
 
-  private let configLogic: ConfigLogic
+  private let session: URLSession
 
-  init(configLogic: ConfigLogic) {
-    self.configLogic = configLogic
+  init(with sessionProvider: NetworkSessionProvider) {
+    self.session = sessionProvider.urlSession
   }
 
   func execute<R: NetworkRequest, T: Decodable & Sendable>(
@@ -43,28 +44,32 @@ actor NetworkManagerImpl: NetworkManager {
     parameters: [NetworkParameter]?
   ) async throws -> T {
 
-    let request = await self.prepare(
+    let urlRequest = await self.prepare(
       request: request,
       parameters: parameters,
-      baseHost: self.configLogic.walletHostUrl
+      baseHost: request.host
     )
 
-    return try await withCheckedThrowingContinuation { continuation in
-      AF.request(request)
-        .responseDecodable(of: T.self) { response in
+    let (data, response) = try await session.data(for: urlRequest)
 
-          self.log(
-            request: request,
-            responseData: response.data
-          )
+    self.log(
+      request: urlRequest,
+      responseData: data
+    )
 
-          switch response.result {
-          case let .success(data):
-            continuation.resume(returning: data)
-          case let .failure(error):
-            continuation.resume(throwing: error)
-          }
-        }
+    guard let httpResponse = response as? HTTPURLResponse else {
+      throw NetworkError.invalidResponse
+    }
+
+    guard (200...299).contains(httpResponse.statusCode) else {
+      throw NetworkError.httpStatus(code: httpResponse.statusCode, data: data)
+    }
+
+    do {
+      let decoder = JSONDecoder()
+      return try decoder.decode(T.self, from: data)
+    } catch {
+      throw NetworkError.decoding(error)
     }
   }
 
