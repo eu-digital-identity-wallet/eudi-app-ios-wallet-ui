@@ -497,28 +497,63 @@ extension WalletKitController {
     parser: (String) -> String
   ) -> [DocumentElementClaim] {
 
+    func shouldGroup(_ title: String, _ children: [DocClaim]) -> Bool {
+      children.count > 1 && !title.isEmpty && children.allSatisfy { $0.children != nil }
+    }
+
     if let children = docClaim.children, !children.isEmpty {
 
       let title = docClaim.displayName.ifNilOrEmpty { docClaim.name }
-      var childClaims: [DocumentElementClaim] = []
 
-      parseChildren(
-        docId: docId,
-        groupId: groupId,
-        docClaims: children,
-        type: type,
-        parser: parser,
-        claims: &childClaims
-      )
+      if shouldGroup(title, children) {
 
-      return if title.isEmpty {
-        childClaims.sortByName()
-      } else {
-        [
+        let grouped = children.enumerated().flatMap { index, entry in
+          let inner = entry.children ?? []
+
+          return [
+            DocumentElementClaim.group(
+              id: UUID().uuidString,
+              title: "\(title) \(index + 1)",
+              items: inner.flatMap {
+                parseDocClaim(
+                  docId: docId,
+                  groupId: groupId,
+                  docClaim: $0,
+                  type: type,
+                  parser: parser
+                )
+              }.sortByName()
+            )
+          ]
+        }
+
+        return [
           .group(
             id: UUID().uuidString,
-            title: docClaim.displayName.ifNilOrEmpty { docClaim.name },
-            items: childClaims.sortByName()
+            title: title,
+            items: grouped
+          )
+        ]
+
+      } else {
+
+        let childClaims = children.flatMap {
+          parseDocClaim(
+            docId: docId,
+            groupId: groupId,
+            docClaim: $0,
+            type: type,
+            parser: parser
+          )
+        }.sortByName()
+
+        return title.isEmpty
+        ? childClaims
+        : [
+          .group(
+            id: UUID().uuidString,
+            title: title,
+            items: childClaims
           )
         ]
       }
@@ -528,16 +563,14 @@ extension WalletKitController {
       if let image = docClaim.dataValue.image {
         return .image(Image(uiImage: image))
       } else {
-
         let claim = docClaim
           .parseDate(parser: parser)
           .parseUserPseudonym()
-
         return .string(claim.stringValue)
       }
     }
 
-    var groupIdentifier: String {
+    let groupIdentifier: String = {
       return switch type {
       case .mdoc:
         groupId
@@ -548,7 +581,7 @@ extension WalletKitController {
           UUID().uuidString
         }
       }
-    }
+    }()
 
     return [
       .primitive(
