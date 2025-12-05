@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import logic_resources
 
 struct SheetContainerView<Content: View>: View {
 
@@ -51,7 +52,7 @@ struct SheetContainerView<Content: View>: View {
           }
           .background(
             RoundedRectangle(cornerRadius: SPACING_MEDIUM, style: .continuous)
-              .fill(Color(.systemBackground))
+              .fill(Theme.shared.color.background)
               .shadow(radius: 10)
           )
           .offset(y: isVisible ? 0 : proxy.size.height)
