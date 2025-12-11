@@ -67,7 +67,7 @@ final actor FilterValidatorImpl: FilterValidator {
     return filterResultSubject.getAsyncStream()
   }
 
-  func initializeValidator (
+  func initializeValidator(
     filters: Filters,
     filterableList: FilterableList
   ) async {
