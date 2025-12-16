@@ -152,14 +152,7 @@ public extension Array where Element == RequestDataUiModel {
             guard let path = claim.domainModel?.path else {
               return []
             }
-            let claimPath = path.compactMap {
-              return if !$0.isEmpty {
-                $0
-              } else {
-                nil
-              }
-            }
-            return claimPath
+            return path
           default:
             return []
           }

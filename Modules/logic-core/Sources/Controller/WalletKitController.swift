@@ -575,11 +575,7 @@ extension WalletKitController {
       case .mdoc:
         groupId
       case .sdjwt:
-        if docClaim.path.last?.isEmpty == true {
-          groupId
-        } else {
-          UUID().uuidString
-        }
+        UUID().uuidString
       }
     }()
 
