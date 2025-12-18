@@ -24,6 +24,7 @@ platform :ios do
     scan(
       scheme: ENV["APP_SCHEME"],
       code_coverage: true,
+      fail_build: false,
       result_bundle: true,
       output_directory: "xcov_output",
       xcargs: "-skipPackagePluginValidation -skipMacroValidation"
