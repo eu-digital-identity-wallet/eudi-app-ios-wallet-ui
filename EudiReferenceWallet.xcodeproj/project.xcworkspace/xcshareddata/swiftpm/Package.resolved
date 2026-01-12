@@ -1,5 +1,5 @@
 {
-  "originHash" : "ede6fde63b27e1063f2a06876398f0c70d17863a70345dfcf8bb32b827321042",
+  "originHash" : "d92c2252ef798840076c37d61f26cf2039887077506b4d035e11d97e4a8458fa",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "29f0c42787635dbf79c4cede12bfe719cb68a38e",
-        "version" : "0.19.2"
+        "revision" : "582970c0d17a6cadcae558273fbe2af06f316f49",
+        "version" : "0.19.3"
       }
     },
     {
@@ -213,8 +213,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/beatt83/jose-swift.git",
       "state" : {
-        "revision" : "f25da1bf75b9a2b803bb7c40bdd6ace85f4df3ce",
-        "version" : "6.0.1"
+        "revision" : "13e5ae6f23ef1487b0dad72540eff414272bd7ca",
+        "version" : "6.0.2"
       }
     },
     {
@@ -231,8 +231,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kishikawakatsumi/KeychainAccess.git",
       "state" : {
-        "revision" : "8d33ffd6f74b3bcfc99af759d4204c6395a3f918",
-        "version" : "3.2.1"
+        "revision" : "84e546727d66f1adc5439debad16270d0fdd04e7",
+        "version" : "4.2.2"
       }
     },
     {
@@ -258,8 +258,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/marmelroy/PhoneNumberKit",
       "state" : {
-        "revision" : "f158939f66f4ef94512b7e6cd1e56057070a05e4",
-        "version" : "4.2.1"
+        "revision" : "16bb5d46b82540280c5aab8976a94d8a9cda8135",
+        "version" : "4.2.2"
       }
     },
     {
@@ -267,8 +267,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Rainbow",
       "state" : {
-        "revision" : "16da5c62dd737258c6df2e8c430f8a3202f655a7",
-        "version" : "4.2.0"
+        "revision" : "cdf146ae671b2624917648b61c908d1244b98ca1",
+        "version" : "4.2.1"
       }
     },
     {
@@ -330,8 +330,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser",
       "state" : {
-        "revision" : "cdd0ef3755280949551dc26dee5de9ddeda89f54",
-        "version" : "1.6.2"
+        "revision" : "c5d11a805e765f52ba34ec7284bd4fcd6ba68615",
+        "version" : "1.7.0"
       }
     },
     {
