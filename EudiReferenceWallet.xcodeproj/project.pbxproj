@@ -392,6 +392,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LSSupportsOpeningDocumentsInPlace = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.eidas2sandkasse.demo-lommebok.dev";
@@ -404,6 +405,7 @@
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				TVOS_DEPLOYMENT_TARGET = 17.6;
+				UIFileSharingEnabled = YES;
 				WATCHOS_DEPLOYMENT_TARGET = 26.0;
 				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
@@ -498,6 +500,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LSSupportsOpeningDocumentsInPlace = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.eidas2sandkasse.demo-lommebok.dev";
@@ -510,6 +513,7 @@
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				TVOS_DEPLOYMENT_TARGET = 17.6;
+				UIFileSharingEnabled = YES;
 				WATCHOS_DEPLOYMENT_TARGET = 26.0;
 				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
@@ -671,6 +675,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LSSupportsOpeningDocumentsInPlace = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "dev.eidas2sandkasse.demo-lommebok";
@@ -683,6 +688,7 @@
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				TVOS_DEPLOYMENT_TARGET = 17.6;
+				UIFileSharingEnabled = YES;
 				WATCHOS_DEPLOYMENT_TARGET = 26.0;
 				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
@@ -720,6 +726,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LSSupportsOpeningDocumentsInPlace = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "dev.eidas2sandkasse.demo-lommebok";
@@ -732,6 +739,7 @@
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				TVOS_DEPLOYMENT_TARGET = 17.6;
+				UIFileSharingEnabled = YES;
 				WATCHOS_DEPLOYMENT_TARGET = 26.0;
 				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
