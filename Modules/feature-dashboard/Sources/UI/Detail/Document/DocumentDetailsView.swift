@@ -135,6 +135,9 @@ private func content(
         isLoading: viewState.isLoading,
         onAction: onShowDeleteModal()
       )
+      .combineChilrenAccessibility(
+        locator: DocumentDetailsLocators.deleteDocument
+      )
       .confirmationDialog(
         .custom(""),
         isPresented: isDeletionModalShowing,
@@ -142,9 +145,12 @@ private func content(
           Button(.deleteDocument, role: .destructive) {
             onDeleteDocument()
           }
+          .accessibilityLocator(DocumentDetailsLocators.confirmDialogDeleteButton)
+
           Button(.cancelButton) {
             onShowDeleteModal()
           }
+          .accessibilityLocator(DocumentDetailsLocators.confirmDialogCancelButton)
         }, message: {
           Text(.deleteDocumentConfirmDialog)
         }

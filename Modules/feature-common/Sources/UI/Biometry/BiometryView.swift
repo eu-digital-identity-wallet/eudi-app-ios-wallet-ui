@@ -72,6 +72,7 @@ private func content(
 
   ContentTitleView(
     title: viewState.config.title,
+    accessibilityTitle: BiometryLocators.biometryScreenTitle,
     titleWeight: .bold,
     caption: viewState.areBiometricsEnabled
     ? viewState.config.caption

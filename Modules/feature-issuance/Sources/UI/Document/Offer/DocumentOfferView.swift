@@ -70,7 +70,8 @@ private func scrollableContent(
     VStack(spacing: .zero) {
 
       ContentHeaderView(
-        config: viewState.contentHeaderConfig
+        config: viewState.contentHeaderConfig,
+        accessibilityDescription: DocumentOfferLocators.headerDescription
       )
 
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {

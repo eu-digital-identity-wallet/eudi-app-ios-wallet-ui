@@ -92,6 +92,7 @@ public struct PinTextFieldView: View {
                   stateForDigit[index].color
               )
           )
+          .accessibilityLocator(Locators.pinTextField, with: "_\(index)")
         if shouldUseFullScreen && index < (maxDigits - 1) {
           Spacer()
         }

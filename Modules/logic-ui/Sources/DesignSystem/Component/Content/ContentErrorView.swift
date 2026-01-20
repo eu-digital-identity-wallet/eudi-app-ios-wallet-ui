@@ -32,7 +32,11 @@ public struct ContentErrorView: View {
         config.cancelAction()
       }
 
-      ContentTitleView(title: config.title, caption: config.description)
+      ContentTitleView(
+        title: config.title,
+        accessibilityTitle: ContentErrorLocators.screenTitle,
+        caption: config.description
+      )
 
       Spacer()
 
@@ -41,6 +45,9 @@ public struct ContentErrorView: View {
           style: .primary,
           title: config.button,
           onAction: action()
+        )
+        .combineChilrenAccessibility(
+          locator: ContentErrorLocators.primaryButton
         )
       }
     }

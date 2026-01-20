@@ -56,7 +56,8 @@ private func content<RequestItem: Sendable>(
           ),
           description: .successfullySharedFollowingInformation,
           relyingPartyData: viewState.relyingParty
-        )
+        ),
+        accessibilityDescription: DocumentSuccessLocators.documentSuccessDescription
       )
 
       VSpacer.large()

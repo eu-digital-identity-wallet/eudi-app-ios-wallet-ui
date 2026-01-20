@@ -106,7 +106,8 @@ private func scrollableContent(
   ScrollView {
     VStack(spacing: .zero) {
       ContentHeaderView(
-        config: viewState.contentHeaderConfig
+        config: viewState.contentHeaderConfig,
+        accessibilityDescription: BaseRequestLocators.description
       )
       ZStack {
         VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
@@ -146,7 +147,8 @@ private func noDocumentsFound(
 ) -> some View {
   VStack(spacing: .zero) {
     ContentHeaderView(
-      config: viewState.contentHeaderConfig
+      config: viewState.contentHeaderConfig,
+      accessibilityDescription: BaseRequestLocators.description
     )
     VStack(spacing: .zero) {
       Spacer()

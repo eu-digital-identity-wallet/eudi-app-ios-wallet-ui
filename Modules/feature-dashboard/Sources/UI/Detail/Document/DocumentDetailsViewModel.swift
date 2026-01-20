@@ -166,19 +166,24 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     .init(
       trailingActions: [
         .init(
-          image: viewState.isBookmarked ? Theme.shared.image.bookmarkIconFill : Theme.shared.image.bookmarkIcon
+          image: viewState.isBookmarked ? Theme.shared.image.bookmarkIconFill : Theme.shared.image.bookmarkIcon,
+          accessibilityLocator: viewState.isBookmarked ? DocumentDetailsLocators.bookmarkIconFill : DocumentDetailsLocators.bookmarkIcon
         ) {
           self.saveBookmark(self.viewState.document.id)
         },
         .init(
-          image: isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye
+          image: isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye,
+          accessibilityLocator: isVisible ? DocumentDetailsLocators.eyeSlash : DocumentDetailsLocators.eye
         ) {
           self.isVisible.toggle()
           self.toggleVisibility()
         }
       ],
       leadingActions: [
-        .init(image: Theme.shared.image.chevronLeft) {
+        .init(
+          image: Theme.shared.image.chevronLeft,
+          accessibilityLocator: ToolbarLocators.chevronLeft
+        ) {
           self.pop()
         }
       ]

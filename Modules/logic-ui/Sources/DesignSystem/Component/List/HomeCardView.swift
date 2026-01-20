@@ -18,6 +18,7 @@ import logic_resources
 
 public struct HomeCardView: View {
   private let text: LocalizableStringKey
+  private let locator: LocatorType?
   private let buttonText: LocalizableStringKey
   private let illustration: Image?
   private let buttonViewStyle: ButtonViewStyle
@@ -27,6 +28,7 @@ public struct HomeCardView: View {
 
   public init(
     text: LocalizableStringKey,
+    locator: LocatorType? = nil,
     buttonText: LocalizableStringKey,
     illustration: Image? = nil,
     buttonViewStyle: ButtonViewStyle = .primary,
@@ -35,6 +37,7 @@ public struct HomeCardView: View {
     action: @autoclosure @escaping () -> Void
   ) {
     self.text = text
+    self.locator = locator
     self.buttonText = buttonText
     self.learnMoreAction = learnMoreAction
     self.action = action
@@ -69,6 +72,9 @@ public struct HomeCardView: View {
         onAction: action()
       )
       .padding(.top, SPACING_MEDIUM)
+      .ifLet(locator) { view, locator in
+        view.combineChilrenAccessibility(locator: locator)
+      }
 
       if let learnMoreAction, let learnMoreText {
         Button(action: learnMoreAction) {

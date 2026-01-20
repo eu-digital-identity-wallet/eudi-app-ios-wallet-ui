@@ -26,6 +26,7 @@ public struct ContentTitleView: View {
   }
 
   private let titleWeight: Font.Weight
+  private let accessibilityTitle: LocatorType?
   private let titleFont: TypographyStyle
   private let titleDecoration: TitleDecoration
   private let decorationColor: Color
@@ -39,6 +40,7 @@ public struct ContentTitleView: View {
 
   public init(
     title: LocalizableStringKey? = nil,
+    accessibilityTitle: LocatorType? = nil,
     titleFont: TypographyStyle = Theme.shared.font.titleLarge,
     titleWeight: Font.Weight = .regular,
     caption: LocalizableStringKey? = nil,
@@ -50,6 +52,7 @@ public struct ContentTitleView: View {
     isLoading: Bool = false,
     onTap: TapListener = nil
   ) {
+    self.accessibilityTitle = accessibilityTitle
     self.titleFont = titleFont
     self.titleWeight = titleWeight
     self.titleDecoration = .plain(title)
@@ -65,6 +68,7 @@ public struct ContentTitleView: View {
 
   public init(
     titleDecoration: TitleDecoration,
+    accessibilityTitle: LocatorType? = nil,
     titleFont: TypographyStyle = Theme.shared.font.titleLarge,
     titleWeight: Font.Weight = .regular,
     caption: LocalizableStringKey? = nil,
@@ -76,6 +80,7 @@ public struct ContentTitleView: View {
     isLoading: Bool = false,
     onTap: TapListener = nil
   ) {
+    self.accessibilityTitle = accessibilityTitle
     self.titleFont = titleFont
     self.titleWeight = titleWeight
     self.titleDecoration = titleDecoration
@@ -114,6 +119,9 @@ public struct ContentTitleView: View {
           .foregroundColor(self.titleColor)
 
       }
+    }
+    .ifLet(accessibilityTitle) { view, locator in
+      view.combineChilrenAccessibility(locator: locator)
     }
   }
 

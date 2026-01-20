@@ -55,7 +55,10 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
     .init(
       trailingActions: [],
       leadingActions: [
-        .init(image: Theme.shared.image.chevronLeft) {
+        .init(
+          image: Theme.shared.image.chevronLeft,
+          accessibilityLocator: ToolbarLocators.chevronLeft
+        ) {
           self.pop()
         }
       ]
