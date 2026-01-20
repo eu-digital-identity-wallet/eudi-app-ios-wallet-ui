@@ -72,11 +72,6 @@ protocol WalletKitConfig: Sendable {
    * Configuration for document issuance, including default rules and specific overrides.
    */
   var documentIssuanceConfig: DocumentIssuanceConfig { get }
-    
-    /**
-        Enable change between Demo and Dev app in other places of the app
-     */
-    var configLogic : ConfigLogic { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {
@@ -104,7 +99,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
         return [
           .init(
             credentialIssuerURL: "https://utsteder.test.eidas2sandkasse.net",
-            client: .public(id: "demo-lommebok-test"),
+            clientId: "demo-lommebok-test",
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
             usePAR: true,
             useDpopIfSupported: true,
@@ -115,7 +110,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
         return [
           .init(
             credentialIssuerURL: "https://utsteder.eidas2sandkasse.dev",
-            client: .public(id: "demo-lommebok-dev"),
+            clientId: "demo-lommebok-dev",
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
             usePAR: true,
             useDpopIfSupported: true,
