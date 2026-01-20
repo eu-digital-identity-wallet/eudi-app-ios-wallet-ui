@@ -72,11 +72,6 @@ protocol WalletKitConfig: Sendable {
    * Configuration for document issuance, including default rules and specific overrides.
    */
   var documentIssuanceConfig: DocumentIssuanceConfig { get }
-    
-    /**
-        Enable change between Demo and Dev app in other places of the app
-     */
-    var configLogic : ConfigLogic { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {

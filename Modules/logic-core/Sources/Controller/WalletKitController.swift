@@ -267,86 +267,15 @@ final actor WalletKitControllerImpl: WalletKitController {
       throw WalletCoreError.unableFetchDocument
     }
   }
-    
-    func scanAppSandboxToCheckContentInCacheAndDocumentDirectory() {
-        let fileManager = FileManager.default
-        let folders = [
-            ("Documents", fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!),
-            ("Caches", fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!)
-        ]
-        
-        print("--- SANDBOX SCAN START ---")
-        for (name, url) in folders {
-            print("\nChecking \(name): \(url.path)")
-            do {
-                let contents = try fileManager.contentsOfDirectory(atPath: url.path)
-                if contents.isEmpty {
-                    print("  [Empty]")
-                } else {
-                    for file in contents {
-                        let fullPath = url.appendingPathComponent(file).path
-                        let isDir = (try? fileManager.attributesOfItem(atPath: fullPath)[.type] as? FileAttributeType) == .typeDirectory
-                        print("  \(isDir ? "📁" : "📄") \(file)")
-                        
-                        // Find eudi-ios-wallet-logs and try to see if it's writable
-                        if file.contains("eudi-ios-wallet-logs") {
-                            let writable = fileManager.isWritableFile(atPath: fullPath)
-                            print("     ✅ FOUND TARGET! Writable: \(writable)")
-                        }
-                    }
-                }
-            } catch {
-                print("  ❌ Could not read \(name): \(error.localizedDescription)")
-            }
-        }
-        print("\n--- SCAN END ---")
-    }
-    
-    
-    func getShareableURL(from cacheURL: URL) -> URL? {
-        let fileManager = FileManager.default
-        // Get the Documents directory
-        guard let docsDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
-        
-        // Create a path in Documents for the logs
-        let destinationURL = docsDir.appendingPathComponent("eudi-ios-wallet-logs.txt")
-        
-        do {
-            // Remove old copy of logs in document directory if it exists
-            if fileManager.fileExists(atPath: destinationURL.path) {
-                try fileManager.removeItem(at: destinationURL)
-            }
-            
-            // Copy last logs file from Caches to Documents
-            try fileManager.copyItem(at: cacheURL, to: destinationURL)
-            return destinationURL
-            
-        } catch {
-            print("Copy failed: \(error)")
-            return nil
-        }
-    }
 
-    func retrieveLogFileUrl() async -> URL? {
-        switch configLogic.configLogic.appBuildVariant {
-        case .DEMO:
-            // Scan and print all files and directories that are in the Cache and Document directory of the app
-            scanAppSandboxToCheckContentInCacheAndDocumentDirectory()
-            
-            guard let logFileCacheURL = try? EudiWallet.getLogFileURL(configLogic.logFileName)
-            else { return nil }
-            
-            let logFileDocumentsURL = getShareableURL(from: logFileCacheURL)
-            scanAppSandboxToCheckContentInCacheAndDocumentDirectory()
-            
-            return logFileDocumentsURL
-            
-            /// MARK: Retriveing logs from the DEV app still fails due to the log file not being present in the DEV apps cache directory
-        case .DEV:
-            guard let url = try? EudiWallet.getLogFileURL(configLogic.logFileName) else { return nil }
-            return url
-        }
+  func retrieveLogFileUrl() -> URL? {
+    guard
+      let url = try? EudiWallet.getLogFileURL(configLogic.logFileName)
+    else {
+      return nil
     }
+    return url
+  }
 
   func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document {
     guard
