@@ -13,6 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import logic_ui
+
 public enum QuickPinLocators: String, LocatorType {
   case quickPinTitle
 

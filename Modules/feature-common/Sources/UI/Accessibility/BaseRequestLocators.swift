@@ -13,30 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public enum HomeTabViewLocators: String, LocatorType {
-  case userNameText
-  case authenticateAuthoriseTransactions
-  case electronicallySignDigitalDocuments
+import logic_ui
+
+public enum BaseRequestLocators: String, LocatorType {
+  case description
 
   public var id: String {
     switch self {
-    case .userNameText:
-      return "home_tab_screen_username_text"
-    case .authenticateAuthoriseTransactions:
-      return "home_tab_screen_authorization_button"
-    case .electronicallySignDigitalDocuments:
-      return "home_tab_screen_sign_button"
+    case .description:
+      return "request_screen_description"
     }
   }
 
   public var trait: AccessibilityTraits? {
-    switch self {
-    case .userNameText:
-      return .isStaticText
-    case .authenticateAuthoriseTransactions:
-      return .isButton
-    case .electronicallySignDigitalDocuments:
-      return .isButton
-    }
+    .isStaticText
   }
 }

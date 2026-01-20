@@ -13,17 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public enum DocumentSuccessLocators: String, LocatorType {
-  case documentSuccessDescription
+import logic_ui
+
+public enum IssuanceOptionLocators: String, LocatorType {
+  case chooseFromList
+  case scanQrCode
+  case optionScreenTitle
 
   public var id: String {
     switch self {
-    case .documentSuccessDescription:
-      return "document_success_screen_content_header_description"
+    case .chooseFromList:
+      return "options_screen_from_list_button"
+    case .scanQrCode:
+      return "options_screen_scan_qr_code_button"
+    case .optionScreenTitle:
+      return "options_screen_scan_qr_code_button"
     }
   }
 
   public var trait: AccessibilityTraits? {
-    .isStaticText
+    switch self {
+    case .chooseFromList:
+      return .isButton
+    case .scanQrCode:
+      return .isButton
+    case .optionScreenTitle:
+      return .isStaticText
+    }
   }
 }

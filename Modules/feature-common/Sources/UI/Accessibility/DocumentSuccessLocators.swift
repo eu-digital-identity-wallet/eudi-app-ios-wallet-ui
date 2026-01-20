@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public enum DocumentOfferLocators: String, LocatorType {
-  case headerDescription
+import logic_ui
+
+public enum DocumentSuccessLocators: String, LocatorType {
+  case documentSuccessDescription
 
   public var id: String {
     switch self {
-    case .headerDescription:
-      return "document_offer_screen_content_header_description"
+    case .documentSuccessDescription:
+      return "document_success_screen_content_header_description"
     }
   }
 
   public var trait: AccessibilityTraits? {
-    return .isStaticText
+    .isStaticText
   }
 }

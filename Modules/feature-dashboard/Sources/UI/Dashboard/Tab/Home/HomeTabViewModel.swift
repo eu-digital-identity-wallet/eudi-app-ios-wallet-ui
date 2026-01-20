@@ -69,7 +69,7 @@ final class HomeTabViewModel<Router: RouterHost>: ViewModel<Router, HomeTabState
         leadingActions: [
           .init(
             image: Theme.shared.image.menuIcon,
-            accessibilityLocator: ToolbarLocators.menuIcon
+            accessibilityLocator: ToolbarLocators.menuButton
           ) {
             self.onMyWallet()
           }

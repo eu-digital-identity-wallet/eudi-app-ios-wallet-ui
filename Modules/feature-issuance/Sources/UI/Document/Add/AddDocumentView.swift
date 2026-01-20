@@ -114,7 +114,7 @@ private func content(
             }
             .accessibilityLocator(
               AddDocumentLocators.attestation,
-              with: "\(cell.issuerId)-\(cell.docTypeIdentifier)"
+              with: "\(cell.issuerId)_\(cell.docTypeIdentifier)"
             )
           }
         }

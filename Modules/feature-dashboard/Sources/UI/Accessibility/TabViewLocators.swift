@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import logic_ui
+
 public enum TabViewLocators: String, LocatorType {
   case home
   case documents

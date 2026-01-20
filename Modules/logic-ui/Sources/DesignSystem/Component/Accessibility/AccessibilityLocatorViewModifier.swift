@@ -89,13 +89,10 @@ public extension View {
 }
 
 public enum Locators: String, LocatorType {
-  case empty
   case pinTextField
 
   public var id: String {
     switch self {
-    case .empty:
-      return ""
     case .pinTextField:
       return "pin_text_field"
     }

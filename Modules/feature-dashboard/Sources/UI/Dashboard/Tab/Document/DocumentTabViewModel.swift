@@ -343,7 +343,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
           },
           .init(
             image: Theme.shared.image.filterMenuIcon,
-            accessibilityLocator: ToolbarLocators.filterMenuIcon,
+            accessibilityLocator: ToolbarLocators.filterMenuButton,
             hasIndicator: !viewState.hasDefaultFilters,
             disabled: viewState.filterUIModel.isEmpty
           ) {
@@ -353,7 +353,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
         leadingActions: [
           .init(
             image: Theme.shared.image.menuIcon,
-            accessibilityLocator: ToolbarLocators.menuIcon
+            accessibilityLocator: ToolbarLocators.menuButton
           ) {
             self.onMyWallet()
           }

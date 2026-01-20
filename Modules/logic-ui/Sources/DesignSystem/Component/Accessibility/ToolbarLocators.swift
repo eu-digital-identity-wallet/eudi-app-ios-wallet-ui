@@ -16,9 +16,9 @@
 public enum ToolbarLocators: String, LocatorType {
   case chevronLeft
   case confirm
-  case filterMenuIcon
+  case filterMenuButton
   case plus
-  case menuIcon
+  case menuButton
   case issueButton
   case cancelButton
   case doneButton
@@ -31,11 +31,11 @@ public enum ToolbarLocators: String, LocatorType {
       return "chevron_left_button"
     case .confirm:
       return "confirm_button"
-    case .filterMenuIcon:
+    case .filterMenuButton:
       return "filter_menu_button"
     case .plus:
       return "documents_screen_plus_button"
-    case .menuIcon:
+    case .menuButton:
       return "menu_icon_button"
     case .issueButton:
       return "issue_button"

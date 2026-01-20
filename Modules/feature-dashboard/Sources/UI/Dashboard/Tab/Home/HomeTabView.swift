@@ -45,10 +45,15 @@ struct HomeTabView<Router: RouterHost>: View {
       Button(.inPerson) {
         viewModel.onShare()
       }
+      .accessibilityLocator(HomeTabViewLocators.inPersonButton)
+
       Button(.online) {
         viewModel.onShowScanner()
       }
+      .accessibilityLocator(HomeTabViewLocators.onlineButton)
+
       Button(.cancelButton, role: .destructive) {}
+        .accessibilityLocator(HomeTabViewLocators.cancelButton)
     } message: {
       Text(.authenticateAuthoriseTransactions)
     }

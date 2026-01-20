@@ -13,17 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public enum BaseRequestLocators: String, LocatorType {
-  case description
+import logic_ui
+
+public enum GenericSuccessLocators: String, LocatorType {
+  case successTitle
+  case successPrimaryButton
 
   public var id: String {
     switch self {
-    case .description:
-      return "request_screen_description"
+    case .successTitle:
+      return "success_screen_title"
+    case .successPrimaryButton:
+      return "success_screen_primary_button"
     }
   }
 
   public var trait: AccessibilityTraits? {
-    .isStaticText
+    switch self {
+    case .successTitle:
+      return .isStaticText
+    case .successPrimaryButton:
+      return .isButton
+    }
   }
 }

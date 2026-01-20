@@ -13,30 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public enum AddDocumentLocators: String, LocatorType {
-  case subtitle
-  case primaryButton
-  case attestation
+import logic_ui
+
+public enum DocumentOfferLocators: String, LocatorType {
+  case headerDescription
 
   public var id: String {
     switch self {
-    case .subtitle:
-      return "add_document_screen_subtitle"
-    case .primaryButton:
-      return "add_document_primary_button"
-    case .attestation:
-      return "add_document_screen_attestation_"
+    case .headerDescription:
+      return "document_offer_screen_content_header_description"
     }
   }
 
   public var trait: AccessibilityTraits? {
-    switch self {
-    case .subtitle:
-      return .isStaticText
-    case .primaryButton:
-      return .isButton
-    case .attestation:
-      return .isButton
-    }
+    return .isStaticText
   }
 }
