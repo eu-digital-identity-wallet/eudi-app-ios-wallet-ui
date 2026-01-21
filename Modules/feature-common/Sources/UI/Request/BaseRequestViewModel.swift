@@ -187,7 +187,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       trailingActions: [
         .init(
           title: .shareButton,
-          accessibilityLocator: ToolbarLocators.shareButton,
+          accessibilityLocator: BaseRequestLocators.shareButton,
           disabled: !viewState.allowShare
         ) {
           self.onShare()

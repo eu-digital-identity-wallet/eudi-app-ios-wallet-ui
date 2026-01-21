@@ -337,13 +337,13 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
         trailingActions: [
           .init(
             image: Theme.shared.image.plus,
-            accessibilityLocator: ToolbarLocators.plus
+            accessibilityLocator: DocumentTabLocators.plusButton
           ) {
             self.onAdd()
           },
           .init(
             image: Theme.shared.image.filterMenuIcon,
-            accessibilityLocator: ToolbarLocators.filterMenuButton,
+            accessibilityLocator: DocumentTabLocators.filterButton,
             hasIndicator: !viewState.hasDefaultFilters,
             disabled: viewState.filterUIModel.isEmpty
           ) {

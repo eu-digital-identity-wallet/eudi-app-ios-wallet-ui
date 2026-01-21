@@ -17,11 +17,14 @@ import logic_ui
 
 public enum QuickPinLocators: String, LocatorType {
   case quickPinTitle
+  case confirmButton
 
   public var id: String {
     switch self {
     case .quickPinTitle:
       return "pin_screen_title"
+    case .confirmButton:
+      return "confirm_button"
     }
   }
 
@@ -29,6 +32,8 @@ public enum QuickPinLocators: String, LocatorType {
     switch self {
     case .quickPinTitle:
       return .isStaticText
+    case .confirmButton:
+      return .isButton
     }
   }
 }

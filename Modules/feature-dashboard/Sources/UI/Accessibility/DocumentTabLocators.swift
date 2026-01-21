@@ -13,22 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public enum ToolbarLocators: String, LocatorType {
-  case chevronLeft
+import logic_ui
+
+public enum DocumentTabLocators: String, LocatorType {
+  case plusButton
   case filterButton
-  case menuButton
-  case xmark
 
   public var id: String {
     switch self {
-    case .chevronLeft:
-      return "back_button"
+    case .plusButton:
+      return "documents_screen_plus_button"
     case .filterButton:
-      return "filter_button"
-    case .menuButton:
-      return "menu_button"
-    case .xmark:
-      return "xmark_button"
+      return "documents_screen_filters_button"
     }
   }
 

@@ -17,15 +17,23 @@ import logic_ui
 
 public enum BaseRequestLocators: String, LocatorType {
   case description
+  case shareButton
 
   public var id: String {
     switch self {
     case .description:
       return "request_screen_description"
+    case .shareButton:
+      return "request_screen_share_button"
     }
   }
 
   public var trait: AccessibilityTraits? {
-    .isStaticText
+    switch self {
+    case .description:
+      return .isStaticText
+    case .shareButton:
+      return .isButton
+    }
   }
 }

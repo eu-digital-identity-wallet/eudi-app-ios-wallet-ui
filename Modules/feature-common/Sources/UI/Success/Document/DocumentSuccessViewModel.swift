@@ -86,7 +86,7 @@ open class DocumentSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: 
       trailingActions: [
         .init(
           title: .doneButton,
-          accessibilityLocator: ToolbarLocators.doneButton
+          accessibilityLocator: DocumentSuccessLocators.doneButton
         ) {
           self.onDone()
         }

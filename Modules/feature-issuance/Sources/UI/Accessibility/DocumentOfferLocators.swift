@@ -17,15 +17,28 @@ import logic_ui
 
 public enum DocumentOfferLocators: String, LocatorType {
   case headerDescription
+  case issueButton
+  case cancelButton
 
   public var id: String {
     switch self {
     case .headerDescription:
       return "document_offer_screen_content_header_description"
+    case .issueButton:
+      return "document_offer_screen_issue_button"
+    case .cancelButton:
+      return "document_offer_screen_cancel_button"
     }
   }
 
   public var trait: AccessibilityTraits? {
-    return .isStaticText
+    switch self {
+    case .headerDescription:
+      return .isStaticText
+    case .issueButton:
+      return .isButton
+    case .cancelButton:
+      return .isButton
+    }
   }
 }

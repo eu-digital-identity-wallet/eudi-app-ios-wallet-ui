@@ -17,15 +17,23 @@ import logic_ui
 
 public enum DocumentSuccessLocators: String, LocatorType {
   case documentSuccessDescription
+  case doneButton
 
   public var id: String {
     switch self {
     case .documentSuccessDescription:
       return "document_success_screen_content_header_description"
+    case .doneButton:
+      return "document_success_screen_done_button"
     }
   }
 
   public var trait: AccessibilityTraits? {
-    .isStaticText
+    switch self {
+    case .documentSuccessDescription:
+      return .isStaticText
+    case .doneButton:
+      return .isButton
+    }
   }
 }

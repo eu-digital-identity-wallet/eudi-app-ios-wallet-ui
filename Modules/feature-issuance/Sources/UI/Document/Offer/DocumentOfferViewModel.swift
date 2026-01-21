@@ -269,7 +269,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
       trailingActions: [
         .init(
           title: .issueButton,
-          accessibilityLocator: ToolbarLocators.issueButton
+          accessibilityLocator: DocumentOfferLocators.issueButton
         ) {
           self.onIssueDocuments()
         }
@@ -277,7 +277,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
       leadingActions: [
         .init(
           title: .cancelButton,
-          accessibilityLocator: ToolbarLocators.cancelButton
+          accessibilityLocator: DocumentOfferLocators.cancelButton
         ) {
           self.onPop()
         }

@@ -142,7 +142,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       trailingActions: [
         .init(
           title: viewState.button,
-          accessibilityLocator: ToolbarLocators.confirm,
+          accessibilityLocator: QuickPinLocators.confirmButton,
           disabled: !viewState.isButtonActive
         ) {
           self.onButtonClick()
