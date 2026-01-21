@@ -18,6 +18,7 @@ import logic_ui
 public enum DocumentSuccessLocators: String, LocatorType {
   case documentSuccessDescription
   case doneButton
+  case document
 
   public var id: String {
     switch self {
@@ -25,6 +26,8 @@ public enum DocumentSuccessLocators: String, LocatorType {
       return "document_success_screen_content_header_description"
     case .doneButton:
       return "document_success_screen_done_button"
+    case .document:
+      return "document_success_screen_document_"
     }
   }
 
@@ -32,7 +35,7 @@ public enum DocumentSuccessLocators: String, LocatorType {
     switch self {
     case .documentSuccessDescription:
       return .isStaticText
-    case .doneButton:
+    case .doneButton, .document:
       return .isButton
     }
   }

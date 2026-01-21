@@ -18,6 +18,7 @@ import logic_ui
 public enum BaseRequestLocators: String, LocatorType {
   case description
   case shareButton
+  case requestedDocument
 
   public var id: String {
     switch self {
@@ -25,6 +26,8 @@ public enum BaseRequestLocators: String, LocatorType {
       return "request_screen_description"
     case .shareButton:
       return "request_screen_share_button"
+    case .requestedDocument:
+      return "request_screen_requested_document_"
     }
   }
 
@@ -32,7 +35,7 @@ public enum BaseRequestLocators: String, LocatorType {
     switch self {
     case .description:
       return .isStaticText
-    case .shareButton:
+    case .shareButton, .requestedDocument:
       return .isButton
     }
   }

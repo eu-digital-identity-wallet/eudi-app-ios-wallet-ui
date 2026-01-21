@@ -83,7 +83,8 @@ private func documents<RequestItem: Sendable>(
 ) -> some View {
   if !viewState.items.isEmpty {
     VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-      ForEach(viewState.items, id: \.id) { section in
+      ForEach(viewState.items.indices, id: \.self) { index in
+        let section = viewState.items[index]
         WrapExpandableListView(
           header: .init(
             mainContent: .text(.custom(section.title)),
@@ -94,6 +95,10 @@ private func documents<RequestItem: Sendable>(
           hideSensitiveContent: false,
           isLoading: viewState.isLoading,
           onItemClick: { onSelectionChanged($0.groupId) }
+        )
+        .accessibilityLocator(
+          BaseRequestLocators.requestedDocument,
+          with: index.string
         )
       }
     }
