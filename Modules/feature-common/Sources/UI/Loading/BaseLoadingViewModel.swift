@@ -125,7 +125,10 @@ open class BaseLoadingViewModel<Router: RouterHost, RequestItem: Sendable>: View
   private func backableToolbar() -> ToolBarContent {
     .init(
       leadingActions: [
-        .init(image: Theme.shared.image.xmark) {
+        .init(
+          image: Theme.shared.image.xmark,
+          accessibilityLocator: ToolbarLocators.xmark
+        ) {
           self.onNavigate(type: .pop)
         }
       ]

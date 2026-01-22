@@ -68,9 +68,14 @@ public struct TextConfig {
 
 public struct ContentHeaderView: View {
   private let config: ContentHeaderConfig
+  private let accessibilityDescription: LocatorType?
 
-  public init(config: ContentHeaderConfig) {
+  public init(
+    config: ContentHeaderConfig,
+    accessibilityDescription: LocatorType? = nil
+  ) {
     self.config = config
+    self.accessibilityDescription = accessibilityDescription
   }
 
   public var body: some View {
@@ -91,6 +96,9 @@ public struct ContentHeaderView: View {
           )
         )
         .padding(.vertical, SPACING_SMALL)
+        .ifLet(accessibilityDescription) { view, locator in
+          view.accessibilityLocator(locator)
+        }
       }
 
       if let mainText = config.mainText {

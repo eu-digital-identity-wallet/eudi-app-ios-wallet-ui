@@ -187,6 +187,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       trailingActions: [
         .init(
           title: .shareButton,
+          accessibilityLocator: BaseRequestLocators.shareButton,
           disabled: !viewState.allowShare
         ) {
           self.onShare()
@@ -194,9 +195,11 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       ],
       leadingActions: [
         .init(
-          image: Theme.shared.image.chevronLeft) {
-            self.onPop()
-          }
+          image: Theme.shared.image.chevronLeft,
+          accessibilityLocator: ToolbarLocators.chevronLeft
+        ) {
+          self.onPop()
+        }
       ]
     )
   }

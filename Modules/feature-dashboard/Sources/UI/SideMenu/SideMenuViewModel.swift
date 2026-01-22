@@ -59,7 +59,10 @@ final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuVie
     .init(
       trailingActions: [],
       leadingActions: [
-        .init(image: Theme.shared.image.chevronLeft) {
+        .init(
+          image: Theme.shared.image.chevronLeft,
+          accessibilityLocator: ToolbarLocators.chevronLeft
+        ) {
           self.router.pop()
         }
       ]

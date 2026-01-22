@@ -50,6 +50,7 @@ private func content(
     Text(.addDocumentsToWallet)
       .typography(Theme.shared.font.bodyLarge)
       .foregroundStyle(Theme.shared.color.onSurface)
+      .accessibilityLocator(IssuanceOptionLocators.optionScreenTitle)
 
     VStack(spacing: SPACING_MEDIUM_SMALL) {
       ActionCard(
@@ -59,6 +60,9 @@ private func content(
           onAddDocumentClick()
         }
       )
+      .combineChilrenAccessibility(
+        locator: IssuanceOptionLocators.chooseFromList
+      )
 
       ActionCard(
         icon: Theme.shared.image.scanDocumentImage,
@@ -66,6 +70,9 @@ private func content(
         action: {
           onScanClick()
         }
+      )
+      .combineChilrenAccessibility(
+        locator: IssuanceOptionLocators.scanQrCode
       )
     }
   }

@@ -45,10 +45,15 @@ struct HomeTabView<Router: RouterHost>: View {
       Button(.inPerson) {
         viewModel.onShare()
       }
+      .accessibilityLocator(HomeTabViewLocators.inPersonButton)
+
       Button(.online) {
         viewModel.onShowScanner()
       }
+      .accessibilityLocator(HomeTabViewLocators.onlineButton)
+
       Button(.cancelButton, role: .destructive) {}
+        .accessibilityLocator(HomeTabViewLocators.cancelButton)
     } message: {
       Text(.authenticateAuthoriseTransactions)
     }
@@ -96,10 +101,12 @@ private func content(
         Text(.welcomeBack([username]))
           .font(Theme.shared.font.titleMedium.font)
           .foregroundStyle(Theme.shared.color.onSurface)
+          .accessibilityLocator(HomeTabViewLocators.userNameText)
       }
 
       HomeCardView(
         text: LocalizableStringKey.authenticateAuthoriseTransactions,
+        locator: HomeTabViewLocators.authenticateAuthoriseTransactions,
         buttonText: LocalizableStringKey.authenticate,
         illustration: Theme.shared.image.homeIdentity,
         learnMoreText: LocalizableStringKey.learnMore,
@@ -118,6 +125,7 @@ private func content(
 
       HomeCardView(
         text: LocalizableStringKey.electronicallySignDigitalDocuments,
+        locator: HomeTabViewLocators.electronicallySignDigitalDocuments,
         buttonText: LocalizableStringKey.signDocument,
         illustration: Theme.shared.image.homeContract,
         learnMoreText: LocalizableStringKey.learnMore,

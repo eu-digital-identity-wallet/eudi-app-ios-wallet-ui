@@ -224,6 +224,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         trailingActions: [
           .init(
             image: Theme.shared.image.filterMenuIcon,
+            accessibilityLocator: ToolbarLocators.filterButton,
             hasIndicator: !viewState.hasDefaultFilters,
             disabled: viewState.filterUIModel.isEmpty
           ) {
@@ -231,7 +232,10 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
           }
         ],
         leadingActions: [
-          .init(image: Theme.shared.image.menuIcon) {
+          .init(
+            image: Theme.shared.image.menuIcon,
+            accessibilityLocator: ToolbarLocators.menuButton,
+          ) {
             self.onMyWallet()
           }
         ]

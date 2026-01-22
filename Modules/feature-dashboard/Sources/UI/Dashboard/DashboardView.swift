@@ -98,6 +98,10 @@ private func content(
           LocalizableStringKey.home.toString,
           systemImage: "house.fill"
         )
+        .accessibilityLocator(
+          TabViewLocators.home,
+          label: LocalizableStringKey.home.toString
+        )
       }
       .tag(SelectedTab.home)
 
@@ -107,6 +111,10 @@ private func content(
           .documents,
           systemImage: "doc.fill"
         )
+        .accessibilityLocator(
+          TabViewLocators.documents,
+          label: LocalizableStringKey.documents.toString
+        )
       }
       .tag(SelectedTab.documents)
 
@@ -115,6 +123,10 @@ private func content(
         Label(
           .transactions,
           systemImage: "arrow.left.arrow.right"
+        )
+        .accessibilityLocator(
+          TabViewLocators.transactions,
+          label: LocalizableStringKey.transactions.toString
         )
       }
       .tag(SelectedTab.transactions)

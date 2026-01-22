@@ -201,7 +201,8 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
     if viewState.isCancellable {
       leadingActions.append(
         .init(
-          image: Theme.shared.image.chevronLeft
+          image: Theme.shared.image.chevronLeft,
+          accessibilityLocator: ToolbarLocators.chevronLeft
         ) {
           self.onPop()
       })

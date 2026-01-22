@@ -131,7 +131,8 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
     if viewState.isCancellable {
       leadingActions.append(
         .init(
-          image: Theme.shared.image.chevronLeft
+          image: Theme.shared.image.chevronLeft,
+          accessibilityLocator: ToolbarLocators.chevronLeft
         ) {
           self.onShowCancellationModal()
         })
@@ -141,6 +142,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       trailingActions: [
         .init(
           title: viewState.button,
+          accessibilityLocator: QuickPinLocators.confirmButton,
           disabled: !viewState.isButtonActive
         ) {
           self.onButtonClick()

@@ -63,6 +63,7 @@ private func content(
 
     ContentTitleView(
       title: viewState.config.title.value,
+      accessibilityTitle: GenericSuccessLocators.successTitle,
       titleFont: Theme.shared.font.displayLarge,
       caption: viewState.config.subtitle,
       titleColor: viewState.config.title.color,
@@ -78,6 +79,9 @@ private func content(
           style: button.style == .primary ? .primary : .secondary,
           title: button.title,
           onAction: onButtonClicked(button)
+        )
+        .combineChilrenAccessibility(
+          locator: GenericSuccessLocators.successPrimaryButton
         )
       }
     }
