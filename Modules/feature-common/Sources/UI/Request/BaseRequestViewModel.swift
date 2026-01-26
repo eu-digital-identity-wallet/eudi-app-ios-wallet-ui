@@ -22,6 +22,7 @@ import Observation
 public struct RequestViewState: ViewState {
   public let isLoading: Bool
   public let error: ContentErrorView.Config?
+  public let errorTitle: LocalizableStringKey?
   public let showMissingCredentials: Bool
   public let items: [RequestDataUiModel]
   public let trustedRelyingPartyInfo: LocalizableStringKey
@@ -46,6 +47,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       initialState: .init(
         isLoading: true,
         error: nil,
+        errorTitle: nil,
         showMissingCredentials: true,
         items: RequestDataUiModel.mockData(),
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
@@ -135,10 +137,11 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     }
   }
 
-  public func onEmptyDocuments() {
+  public func onEmptyDocuments(error: String) {
     setState {
       $0.copy(
         isLoading: false,
+        errorTitle: .custom(error),
         items: [],
         initialized: true
       ).copy(error: nil)
@@ -169,6 +172,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
       .init(
         isLoading: true,
         error: nil,
+        errorTitle: nil,
         showMissingCredentials: true,
         items: RequestDataUiModel.mockData(),
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
