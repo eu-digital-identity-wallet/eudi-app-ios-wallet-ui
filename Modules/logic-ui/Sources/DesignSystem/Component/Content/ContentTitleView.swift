@@ -31,6 +31,7 @@ public struct ContentTitleView: View {
   private let titleDecoration: TitleDecoration
   private let decorationColor: Color
   private let caption: LocalizableStringKey?
+  private let accessibilityCaption: LocatorType?
   private let titleColor: Color
   private let captionColor: Color
   private let textAlignment: Alignment
@@ -44,6 +45,7 @@ public struct ContentTitleView: View {
     titleFont: TypographyStyle = Theme.shared.font.titleLarge,
     titleWeight: Font.Weight = .regular,
     caption: LocalizableStringKey? = nil,
+    accessibilityCaption: LocatorType? = nil,
     decorationColor: Color = Theme.shared.color.primary,
     titleColor: Color = Theme.shared.color.onSurface,
     captionColor: Color = Theme.shared.color.onSurfaceVariant,
@@ -57,6 +59,7 @@ public struct ContentTitleView: View {
     self.titleWeight = titleWeight
     self.titleDecoration = .plain(title)
     self.caption = caption
+    self.accessibilityCaption = accessibilityCaption
     self.decorationColor = decorationColor
     self.titleColor = titleColor
     self.captionColor = captionColor
@@ -72,6 +75,7 @@ public struct ContentTitleView: View {
     titleFont: TypographyStyle = Theme.shared.font.titleLarge,
     titleWeight: Font.Weight = .regular,
     caption: LocalizableStringKey? = nil,
+    accessibilityCaption: LocatorType? = nil,
     decorationColor: Color = Theme.shared.color.primary,
     titleColor: Color = Theme.shared.color.onSurface,
     captionColor: Color = Theme.shared.color.onSurfaceVariant,
@@ -86,6 +90,7 @@ public struct ContentTitleView: View {
     self.titleDecoration = titleDecoration
     self.decorationColor = decorationColor
     self.caption = caption
+    self.accessibilityCaption = accessibilityCaption
     self.titleColor = titleColor
     self.captionColor = captionColor
     self.textAlignment = textAlignment
@@ -147,6 +152,9 @@ public struct ContentTitleView: View {
               $0.multilineTextAlignment(.center)
             }
             .frame(maxWidth: .infinity, alignment: textAlignment)
+            .ifLet(accessibilityCaption) { view, locator in
+              view.accessibilityLocator(locator)
+            }
         }
       }
     }

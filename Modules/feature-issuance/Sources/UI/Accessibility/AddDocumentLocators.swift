@@ -15,10 +15,10 @@
  */
 import logic_ui
 
-public enum AddDocumentLocators: String, LocatorType {
+public enum AddDocumentLocators: LocatorType {
   case subtitle
   case primaryButton
-  case attestation
+  case attestation(String)
 
   public var id: String {
     switch self {
@@ -26,8 +26,8 @@ public enum AddDocumentLocators: String, LocatorType {
       return "add_document_screen_subtitle"
     case .primaryButton:
       return "add_document_primary_button"
-    case .attestation:
-      return "add_document_screen_attestation_"
+    case let .attestation(index):
+      return "add_document_screen_attestation_\(index)"
     }
   }
 

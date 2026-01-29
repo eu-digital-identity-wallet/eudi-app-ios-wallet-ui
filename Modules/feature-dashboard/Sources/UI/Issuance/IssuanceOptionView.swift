@@ -60,7 +60,7 @@ private func content(
           onAddDocumentClick()
         }
       )
-      .combineChilrenAccessibility(
+      .ignoreChilrenAccessibility(
         locator: IssuanceOptionLocators.chooseFromList
       )
 
@@ -71,7 +71,7 @@ private func content(
           onScanClick()
         }
       )
-      .combineChilrenAccessibility(
+      .ignoreChilrenAccessibility(
         locator: IssuanceOptionLocators.scanQrCode
       )
     }

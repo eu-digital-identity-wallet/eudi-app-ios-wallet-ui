@@ -80,7 +80,7 @@ private func content(
           title: button.title,
           onAction: onButtonClicked(button)
         )
-        .combineChilrenAccessibility(
+        .ignoreChilrenAccessibility(
           locator: GenericSuccessLocators.successPrimaryButton
         )
       }

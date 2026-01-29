@@ -96,9 +96,8 @@ private func documents<RequestItem: Sendable>(
           isLoading: viewState.isLoading,
           onItemClick: { onSelectionChanged($0.groupId) }
         )
-        .accessibilityLocator(
-          BaseRequestLocators.requestedDocument,
-          with: index.string
+        .ignoreChilrenAccessibility(
+          locator: BaseRequestLocators.requestedDocument(index.string)
         )
       }
     }
