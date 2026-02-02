@@ -15,10 +15,10 @@
  */
 import logic_ui
 
-public enum BaseRequestLocators: String, LocatorType {
+public enum BaseRequestLocators: LocatorType {
   case description
   case shareButton
-  case requestedDocument
+  case requestedDocument(String)
 
   public var id: String {
     switch self {
@@ -26,8 +26,8 @@ public enum BaseRequestLocators: String, LocatorType {
       return "request_screen_description"
     case .shareButton:
       return "request_screen_share_button"
-    case .requestedDocument:
-      return "request_screen_requested_document_"
+    case let .requestedDocument(index):
+      return "request_screen_requested_document_\(index)"
     }
   }
 

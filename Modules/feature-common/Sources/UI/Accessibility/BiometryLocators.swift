@@ -17,17 +17,20 @@ import logic_ui
 
 public enum BiometryLocators: String, LocatorType {
   case biometryScreenTitle
+  case biometryScreenPinText
 
   public var id: String {
     switch self {
     case .biometryScreenTitle:
-      return "biometric_screen_title"
+      return "biometric_screen_pin_title"
+    case .biometryScreenPinText:
+      return "biometric_screen_pin_text"
     }
   }
 
   public var trait: AccessibilityTraits? {
     switch self {
-    case .biometryScreenTitle:
+    case .biometryScreenPinText, .biometryScreenTitle:
       return .isStaticText
     }
   }

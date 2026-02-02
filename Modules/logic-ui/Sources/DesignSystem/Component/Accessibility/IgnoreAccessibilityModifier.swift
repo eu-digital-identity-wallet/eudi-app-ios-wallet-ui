@@ -13,27 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logic_ui
+import SwiftUI
 
-public enum GenericSuccessLocators: LocatorType {
-  case successTitle
-  case successPrimaryButton
+private struct IgnoreAccessibilityModifier: ViewModifier {
+  let locator: LocatorType
 
-  public var id: String {
-    switch self {
-    case .successTitle:
-      return "success_screen_title"
-    case .successPrimaryButton:
-      return "success_screen_primary_button"
-    }
+  func body(content: Content) -> some View {
+    content
+      .accessibilityElement(children: .ignore)
+      .accessibilityLocator(locator)
   }
+}
 
-  public var trait: AccessibilityTraits? {
-    switch self {
-    case .successTitle:
-      return .isStaticText
-    case .successPrimaryButton:
-      return .isButton
-    }
+public extension View {
+  func ignoreChilrenAccessibility(locator: LocatorType) -> some View {
+    modifier(IgnoreAccessibilityModifier(locator: locator))
   }
 }

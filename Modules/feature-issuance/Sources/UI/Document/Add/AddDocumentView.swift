@@ -112,9 +112,10 @@ private func content(
                 action: { action(cell.issuerId, cell.configId, cell.docTypeIdentifier) }
               )
             }
-            .accessibilityLocator(
-              AddDocumentLocators.attestation,
-              with: "\(cell.issuerId)_\(cell.docTypeIdentifier)"
+            .ignoreChilrenAccessibility(
+              locator: AddDocumentLocators.attestation(
+                "\(cell.issuerId)_\(cell.docTypeIdentifier)"
+              )
             )
           }
         }

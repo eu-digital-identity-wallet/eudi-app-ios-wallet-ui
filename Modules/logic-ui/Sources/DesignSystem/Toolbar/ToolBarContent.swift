@@ -65,7 +65,9 @@ public struct ToolBarContent: ToolbarContent {
             action: action,
             disabled: action.disabled
           )
-          .accessibilityLocator(action.accessibilityLocator)
+          .ignoreChilrenAccessibility(
+            locator: action.accessibilityLocator
+          )
         }
       }
     }
@@ -76,7 +78,9 @@ public struct ToolBarContent: ToolbarContent {
             action: action,
             disabled: action.disabled
           )
-          .accessibilityLocator(action.accessibilityLocator)
+          .ignoreChilrenAccessibility(
+            locator: action.accessibilityLocator
+          )
         }
       }
     }
