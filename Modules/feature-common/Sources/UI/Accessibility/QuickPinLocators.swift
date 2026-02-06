@@ -24,7 +24,7 @@ public enum QuickPinLocators: String, LocatorType {
     case .quickPinTitle:
       return "pin_screen_title"
     case .confirmButton:
-      return "confirm_button"
+      return "pin_screen_button"
     }
   }
 
