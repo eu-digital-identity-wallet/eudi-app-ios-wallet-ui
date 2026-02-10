@@ -29,9 +29,9 @@ public enum DocumentDetailsLocators: String, LocatorType {
     case .deleteDocument:
       return "document_details_screen_delete_button"
     case .confirmDialogDeleteButton:
-      return "document_details_screen_dialog_delete_document_positive_button"
-    case .confirmDialogCancelButton:
       return "document_details_screen_dialog_delete_document_negative_button"
+    case .confirmDialogCancelButton:
+      return "document_details_screen_dialog_delete_document_positive_button"
     case .bookmarkIcon:
       return "document_details_screen_bookmark_icon_button"
     case .bookmarkIconFill:

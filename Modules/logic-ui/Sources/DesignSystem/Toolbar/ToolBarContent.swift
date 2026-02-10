@@ -65,9 +65,6 @@ public struct ToolBarContent: ToolbarContent {
             action: action,
             disabled: action.disabled
           )
-          .ignoreChilrenAccessibility(
-            locator: action.accessibilityLocator
-          )
         }
       }
     }
@@ -77,9 +74,6 @@ public struct ToolBarContent: ToolbarContent {
           ActionView(
             action: action,
             disabled: action.disabled
-          )
-          .ignoreChilrenAccessibility(
-            locator: action.accessibilityLocator
           )
         }
       }
@@ -103,6 +97,7 @@ private struct ActionView: View {
           content
         }
         .disabled(disabled)
+        .combineChilrenAccessibility(locator: action.accessibilityLocator)
         .overlay(alignment: .topTrailing) {
           if let hasIndicator = action.hasIndicator, hasIndicator {
             Circle()
@@ -113,6 +108,7 @@ private struct ActionView: View {
         }
       } else {
         content
+          .combineChilrenAccessibility(locator: action.accessibilityLocator)
       }
     }
   }

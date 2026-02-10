@@ -50,21 +50,24 @@ public struct RemoteImageView: View {
     WebImage(url: url) { image in
       image
         .resizable()
-        .scaledToFit()
+        .scaledToFill()
     } placeholder: {
       if let icon {
         icon
           .resizable()
-          .scaledToFit()
+          .scaledToFill()
       }
     }
     .indicator(.progress)
+    .aspectRatio(1, contentMode: .fill)
     .if(url != nil || icon != nil) { view in
       view.frame(
         maxWidth: self.getWidth,
         maxHeight: self.getHeight
       )
     }
+    .clipped()
+    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
   }
 }
 

@@ -65,8 +65,8 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
           )
         )
       }
-    case .failure:
-      self.onEmptyDocuments()
+    case .failure(let error):
+      self.onEmptyDocuments(error: error.errorMessage)
     }
   }
 

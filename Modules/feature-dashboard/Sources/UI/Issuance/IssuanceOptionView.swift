@@ -56,23 +56,19 @@ private func content(
       ActionCard(
         icon: Theme.shared.image.chooseDocumentImage,
         title: .chooseFromList,
+        locator: IssuanceOptionLocators.chooseFromList,
         action: {
           onAddDocumentClick()
         }
-      )
-      .ignoreChilrenAccessibility(
-        locator: IssuanceOptionLocators.chooseFromList
       )
 
       ActionCard(
         icon: Theme.shared.image.scanDocumentImage,
         title: .scanQrCode,
+        locator: IssuanceOptionLocators.scanQrCode,
         action: {
           onScanClick()
         }
-      )
-      .ignoreChilrenAccessibility(
-        locator: IssuanceOptionLocators.scanQrCode
       )
     }
   }

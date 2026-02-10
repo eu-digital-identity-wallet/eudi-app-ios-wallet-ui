@@ -85,8 +85,15 @@ private func content(
   onShare: @escaping () -> Void,
   onSelectionChanged: @escaping (String) -> Void
 ) -> some View {
-  if viewState.items.isEmpty {
-    noDocumentsFound(viewState: viewState)
+  let errorTitle =
+    viewState.errorTitle
+    ?? (viewState.items.isEmpty ? .requestDataNoDocument : nil)
+
+  if let errorTitle {
+    noDocumentsFound(
+        contentHeaderConfig: viewState.contentHeaderConfig,
+        errorTitle: errorTitle
+    )
   } else {
     scrollableContent(
       viewState: viewState,
@@ -147,17 +154,18 @@ private func scrollableContent(
 @MainActor
 @ViewBuilder
 private func noDocumentsFound(
-  viewState: RequestViewState
+  contentHeaderConfig: ContentHeaderConfig,
+  errorTitle: LocalizableStringKey
 ) -> some View {
   VStack(spacing: .zero) {
     ContentHeaderView(
-      config: viewState.contentHeaderConfig,
+      config: contentHeaderConfig,
       accessibilityDescription: BaseRequestLocators.description
     )
     VStack(spacing: .zero) {
       Spacer()
       ContentEmptyView(
-        title: .requestDataNoDocument
+        title: errorTitle
       )
       Spacer()
     }
@@ -169,6 +177,7 @@ private func noDocumentsFound(
   let viewState = RequestViewState(
     isLoading: false,
     error: nil,
+    errorTitle: nil,
     showMissingCredentials: false,
     items: RequestDataUiModel.mockData(),
     trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
