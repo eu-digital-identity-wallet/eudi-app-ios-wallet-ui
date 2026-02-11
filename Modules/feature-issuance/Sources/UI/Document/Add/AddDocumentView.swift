@@ -108,15 +108,13 @@ private func content(
             WrapCardView {
               WrapListItemView(
                 listItem: cell.listItem,
+                locator: AddDocumentLocators.attestation(
+                  "\(cell.issuerId)_\(cell.docTypeIdentifier)"
+                ),
                 isLoading: cell.isLoading,
                 action: { action(cell.issuerId, cell.configId, cell.docTypeIdentifier) }
               )
             }
-            .ignoreChilrenAccessibility(
-              locator: AddDocumentLocators.attestation(
-                "\(cell.issuerId)_\(cell.docTypeIdentifier)"
-              )
-            )
           }
         }
       }

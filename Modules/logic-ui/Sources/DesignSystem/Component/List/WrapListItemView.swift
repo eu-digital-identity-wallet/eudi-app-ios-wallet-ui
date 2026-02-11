@@ -23,6 +23,7 @@ public struct WrapListItemView: View {
   }
 
   private let listItem: ListItemData
+  private let locator: LocatorType?
   private let action: (() -> Void)?
   private let mainTextVerticalPadding: CGFloat?
   private let minHeight: Bool
@@ -41,6 +42,7 @@ public struct WrapListItemView: View {
 
   public init(
     listItem: ListItemData,
+    locator: LocatorType? = nil,
     mainTextVerticalPadding: CGFloat? = nil,
     minHeight: Bool = true,
     clickableArea: ClickableArea = .entireRow,
@@ -48,6 +50,7 @@ public struct WrapListItemView: View {
     action: (() -> Void)? = nil
   ) {
     self.listItem = listItem
+    self.locator = locator
     self.mainTextVerticalPadding = mainTextVerticalPadding
     self.minHeight = minHeight
     self.clickableArea = clickableArea
@@ -176,6 +179,13 @@ public struct WrapListItemView: View {
           EmptyView()
         }
       }
+    }
+    .ifLet(locator) { view, locator in
+      view
+        .accessibilityElement()
+        .combineChilrenAccessibility(
+          locator: locator
+        )
     }
     .contentShape(Rectangle())
     .onTapGesture {

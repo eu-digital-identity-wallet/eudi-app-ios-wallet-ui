@@ -131,7 +131,8 @@ private func scrollableContent(
               isLoading: viewState.isLoading,
               onItemClick: { onSelectionChanged($0.groupId) }
             )
-            .ignoreChilrenAccessibility(
+            .accessibilityElement()
+            .combineChilrenAccessibility(
               locator: BaseRequestLocators.requestedDocument(index.string)
             )
           }
