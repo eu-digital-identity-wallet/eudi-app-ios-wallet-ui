@@ -145,18 +145,14 @@ private func content(
           Button(.deleteDocument, role: .destructive) {
             onDeleteDocument()
           }
-          .accessibilityLocator(
-            DocumentDetailsLocators.confirmDialogDeleteButton,
-            label: DocumentDetailsLocators.confirmDialogDeleteButton.id
-          )
+          .accessibilityElement()
+          .accessibilityIdentifier(DocumentDetailsLocators.confirmDialogDeleteButton.id)
 
           Button(.cancelButton) {
             onShowDeleteModal()
           }
-          .accessibilityLocator(
-            DocumentDetailsLocators.confirmDialogCancelButton,
-            label: DocumentDetailsLocators.confirmDialogDeleteButton.id
-          )
+          .accessibilityElement()
+          .accessibilityIdentifier(DocumentDetailsLocators.confirmDialogDeleteButton.id)
         }, message: {
           Text(.deleteDocumentConfirmDialog)
         }
