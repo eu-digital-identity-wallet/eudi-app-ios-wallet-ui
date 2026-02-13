@@ -923,7 +923,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Invalid quick pin"
+            "value" : "Invalid pin"
           }
         }
       }
@@ -1132,7 +1132,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Type your quick pin to login"
+            "value" : "Type your pin to login"
           }
         }
       }
@@ -1454,7 +1454,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Re-enter the quick pin"
+            "value" : "Re-enter the pin"
           }
         }
       }
@@ -1498,7 +1498,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cancel will redirect you back to the home without changing the quick pin"
+            "value" : "Cancel will redirect you back to the home without changing the pin"
           }
         }
       }
@@ -1520,7 +1520,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cancel quick pin changing?"
+            "value" : "Cancel pin changing?"
           }
         }
       }
@@ -1542,7 +1542,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Re-enter the quick pin"
+            "value" : "Re-enter the pin"
           }
         }
       }
@@ -1553,7 +1553,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Set a quick pin for future logins"
+            "value" : "Set a pin for future logins"
           }
         }
       }
@@ -1564,7 +1564,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You successfully set the quick pin"
+            "value" : "You successfully set the pin"
           }
         }
       }
