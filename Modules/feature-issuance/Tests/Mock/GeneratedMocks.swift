@@ -6518,13 +6518,13 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         )
     }
     
-    public func issueDocument(issuerId p0: String, identifier p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> WalletStorage.Document {
+    public func issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> [WalletStorage.Document] {
         return try await cuckoo_manager.callThrows(
-            "issueDocument(issuerId p0: String, identifier p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> WalletStorage.Document",
+            "issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> [WalletStorage.Document]",
             parameters: (p0, p1, p2),
             escapingParameters: (p0, p1, p2),
 errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.issueDocument(issuerId: p0, identifier: p1, docTypeIdentifier: p2)
+            defaultCall: await __defaultImplStub!.issueDocuments(issuerId: p0, identifiers: p1, docTypeIdentifier: p2)
         )
     }
     
@@ -6873,10 +6873,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             ))
         }
         
-        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, identifier p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.ProtocolStubThrowingFunction<(String, String, DocumentTypeIdentifier), WalletStorage.Document,Error> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+        func issueDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, identifiers p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.ProtocolStubThrowingFunction<(String, [String], DocumentTypeIdentifier), [WalletStorage.Document],Error> where M1.MatchedType == String, M2.MatchedType == [String], M3.MatchedType == DocumentTypeIdentifier {
+            let matchers: [Cuckoo.ParameterMatcher<(String, [String], DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "issueDocument(issuerId p0: String, identifier p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> WalletStorage.Document",
+                method: "issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> [WalletStorage.Document]",
                 parameterMatchers: matchers
             ))
         }
@@ -7247,10 +7247,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, identifier p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.__DoNotUse<(String, String, DocumentTypeIdentifier), WalletStorage.Document> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+        func issueDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, identifiers p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.__DoNotUse<(String, [String], DocumentTypeIdentifier), [WalletStorage.Document]> where M1.MatchedType == String, M2.MatchedType == [String], M3.MatchedType == DocumentTypeIdentifier {
+            let matchers: [Cuckoo.ParameterMatcher<(String, [String], DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return cuckoo_manager.verify(
-                "issueDocument(issuerId p0: String, identifier p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> WalletStorage.Document",
+                "issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> [WalletStorage.Document]",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7581,8 +7581,8 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func issueDocument(issuerId p0: String, identifier p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> WalletStorage.Document {
-        return DefaultValueRegistry.defaultValue(for: (WalletStorage.Document).self)
+    public func issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> [WalletStorage.Document] {
+        return DefaultValueRegistry.defaultValue(for: ([WalletStorage.Document]).self)
     }
     
     public func requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> DocClaimsDecodable {

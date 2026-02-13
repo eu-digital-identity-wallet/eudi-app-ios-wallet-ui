@@ -523,9 +523,9 @@ private extension TestAddDocumentInteractor {
   func stubIssueDocumentFailure(issuerId: String, configId: String, docTypeIdentifier: DocumentTypeIdentifier) {
     stub(walletKitController) { stub in
       when(
-        stub.issueDocument(
+        stub.issueDocuments(
           issuerId: equal(to: issuerId),
-          identifier: equal(to: configId),
+          identifiers: equal(to: [configId]),
           docTypeIdentifier: equal(to: docTypeIdentifier)
         )
       ).thenThrow(WalletCoreError.unableToIssueAndStore)
@@ -537,13 +537,13 @@ private extension TestAddDocumentInteractor {
   ) {
     stub(walletKitController) { stub in
       when(
-        stub.issueDocument(
+        stub.issueDocuments(
           issuerId: equal(to: "issuer.dev"),
-          identifier: equal(to: "deferred-doc"),
+          identifiers: equal(to: ["deferred-doc"]),
           docTypeIdentifier: equal(to: DocumentTypeIdentifier.init(rawValue: "eu.europa.ec.eudi.pid.1"))
         )
       )
-      .thenReturn(document)
+      .thenReturn([document])
     }
   }
   
