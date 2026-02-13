@@ -75,7 +75,7 @@ private extension KeyChainControllerImpl {
     try self.keyChain
       .accessibility(
         .whenPasscodeSetThisDeviceOnly,
-        authenticationPolicy: [.touchIDAny]
+        authenticationPolicy: [.biometryAny]
       )
       .set(UUID().uuidString, key: self.biometryKey)
   }

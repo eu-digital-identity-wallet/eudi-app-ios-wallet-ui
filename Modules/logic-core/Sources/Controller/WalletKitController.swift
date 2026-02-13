@@ -45,11 +45,11 @@ public protocol WalletKitController: Sendable {
   func clearAllDocuments() async
   func deleteDocument(with id: String, status: DocumentStatus) async throws
   func loadDocuments() async throws
-  func issueDocument(
+  func issueDocuments(
     issuerId: String,
-    identifier: String,
+    identifiers: [String],
     docTypeIdentifier: DocumentTypeIdentifier
-  ) async throws -> WalletStorage.Document
+  ) async throws -> [WalletStorage.Document]
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable
   func resolveOfferUrlDocTypes(offerUri: String) async throws -> OfferedIssuanceModel
   func issueDocumentsByOfferUrl(
@@ -115,25 +115,30 @@ final actor WalletKitControllerImpl: WalletKitController {
     self.revokedDocumentStorageController = revokedDocumentStorageController
 
     guard let walletKit = try? EudiWallet(
-      serviceName: configLogic.documentStorageServiceName,
-      trustedReaderCertificates: configLogic.readerConfig.trustedCerts,
-      userAuthenticationRequired: configLogic.userAuthenticationRequired,
+      eudiWalletConfig: EudiWalletConfiguration(
+        serviceName: configLogic.documentStorageServiceName,
+        userAuthenticationRequired: configLogic.userAuthenticationRequired,
+        trustedReaderCertificates: configLogic.readerConfig.trustedCerts,
+        deviceAuthMethod: .deviceSignature,
+        uiCulture: Locale.current.systemLanguageCode,
+        logFileName: configLogic.logFileName
+      ),
       openID4VpConfig: configLogic.vpConfig,
       openID4VciConfigurations: configLogic.vciConfig,
       networking: networkSessionProvider.urlSession,
-      logFileName: configLogic.logFileName,
       transactionLogger: configLogic.transactionLogger
     ) else {
       fatalError("Unable to Initialize WalletKit")
     }
 
-    walletKit.uiCulture = Locale.current.systemLanguageCode
-
     wallet = walletKit
   }
 
   func resolveOfferUrlDocTypes(offerUri: String) async throws -> OfferedIssuanceModel {
-    return try await wallet.resolveOfferUrlDocTypes(offerUri: offerUri)
+    return try await wallet.resolveOfferUrlDocTypes(
+      offerUri: offerUri,
+      authFlowRedirectionURI: nil
+    )
   }
 
   func issueDocumentsByOfferUrl(
@@ -232,16 +237,22 @@ final actor WalletKitControllerImpl: WalletKitController {
     fetchIssuedDocuments().filter { ids.contains($0.id) }
   }
 
-  func issueDocument(issuerId: String, identifier: String, docTypeIdentifier: DocumentTypeIdentifier) async throws -> WalletStorage.Document {
+  func issueDocuments(
+    issuerId: String,
+    identifiers: [String],
+    docTypeIdentifier: DocumentTypeIdentifier
+  ) async throws -> [WalletStorage.Document] {
     let rule = configLogic.documentIssuanceConfig.rule(for: docTypeIdentifier)
-    return try await wallet.issueDocument(
+
+    let documents = try await wallet.issueDocuments(
       issuerName: issuerId,
-      docTypeIdentifier: .identifier(identifier),
+      docTypeIdentifiers: identifiers.map { .identifier($0) },
       credentialOptions: .init(
         credentialPolicy: rule.policy,
         batchSize: rule.numberOfCredentials
       )
     )
+    return documents
   }
 
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable {
@@ -273,6 +284,18 @@ final actor WalletKitControllerImpl: WalletKitController {
       let url = try? EudiWallet.getLogFileURL(configLogic.logFileName)
     else {
       return nil
+    }
+    if url.isFileURL {
+      let directoryUrl = url.deletingLastPathComponent()
+      if !FileManager.default.fileExists(atPath: directoryUrl.path) {
+        try? FileManager.default.createDirectory(
+          at: directoryUrl,
+          withIntermediateDirectories: true
+        )
+      }
+      if !FileManager.default.fileExists(atPath: url.path) {
+        FileManager.default.createFile(atPath: url.path, contents: Data())
+      }
     }
     return url
   }

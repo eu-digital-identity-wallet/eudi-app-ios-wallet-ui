@@ -94,23 +94,28 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
     docTypeIdentifier: DocumentTypeIdentifier
   ) async -> IssueResultPartialState {
     do {
-      let doc = try await walletController.issueDocument(
+      let doc = try await walletController.issueDocuments(
         issuerId: issuerId,
-        identifier: configId,
+        identifiers: [configId],
         docTypeIdentifier: docTypeIdentifier
-      )
-      if doc.isDeferred {
-        return .deferredSuccess
-      } else if let authorizePresentationUrl = doc.authorizePresentationUrl {
-        guard
-          let presentationUrl = authorizePresentationUrl.toCompatibleUrl(),
-          let presentationComponents = URLComponents(url: presentationUrl, resolvingAgainstBaseURL: true) else {
-          return .failure(WalletCoreError.unableToIssueAndStore)
+      ).first
+
+      if let doc {
+        if doc.isDeferred {
+          return .deferredSuccess
+        } else if let authorizePresentationUrl = doc.authorizePresentationUrl {
+          guard
+            let presentationUrl = authorizePresentationUrl.toCompatibleUrl(),
+            let presentationComponents = URLComponents(url: presentationUrl, resolvingAgainstBaseURL: true) else {
+            return .failure(WalletCoreError.unableToIssueAndStore)
+          }
+          let session = await walletController.startSameDevicePresentation(deepLink: presentationComponents)
+          return .dynamicIssuance(session)
+        } else {
+          return .success(doc.id)
         }
-        let session = await walletController.startSameDevicePresentation(deepLink: presentationComponents)
-        return .dynamicIssuance(session)
       } else {
-        return .success(doc.id)
+        return .failure(WalletCoreError.unableToIssueAndStore)
       }
     } catch {
       return .failure(error)

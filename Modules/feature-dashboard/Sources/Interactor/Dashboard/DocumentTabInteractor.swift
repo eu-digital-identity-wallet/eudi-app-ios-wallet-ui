@@ -58,7 +58,6 @@ public protocol DocumentTabInteractor: Sendable {
   func hasDeferredDocuments() async -> Bool
   func deleteDeferredDocument(with id: String) async -> DeleteDeferredPartialState
   func requestDeferredIssuance() async -> DeferredPartialState
-  func retrieveLogFileUrl() async -> URL?
   func onFilterChangeState() async -> AsyncStream<DocumentFiltersPartialState>
   func initializeFilters(filterableList: FilterableList) async
   func applyFilters() async
@@ -221,10 +220,6 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
     }
 
     return .completion(issued: issued, failed: failed)
-  }
-
-  func retrieveLogFileUrl() async -> URL? {
-    return await walletKitController.retrieveLogFileUrl()
   }
 
   private func createFiltersGroup() -> Filters {
