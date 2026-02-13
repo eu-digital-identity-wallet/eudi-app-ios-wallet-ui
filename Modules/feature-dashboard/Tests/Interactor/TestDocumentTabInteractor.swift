@@ -323,20 +323,6 @@ final class TestDocumentTabInteractor: EudiTest {
     }
   }
 
-  func testRetrieveLogFileUrl_WhenWallketKitRetriveLogFileUrl_ThenVerify() async {
-    // Given
-    let expectedUrl = URL(string: "https://example.com")!
-    stub(walletKitController) { stub in
-      stub.retrieveLogFileUrl().thenReturn(expectedUrl)
-    }
-
-    // When
-    let _ = await interactor.retrieveLogFileUrl()
-
-    // Then
-    verify(walletKitController).retrieveLogFileUrl()
-  }
-
   func testRequestDeferredIssuance_WhenAllIssuanceSucceeds_ThenReturnsIssuedModels() async {
     // Given
     let issuedDoc = Constants.createEuPidModel()

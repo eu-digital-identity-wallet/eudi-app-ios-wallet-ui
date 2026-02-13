@@ -1310,16 +1310,6 @@ public class MockDocumentTabInteractor: DocumentTabInteractor, Cuckoo.ProtocolMo
         )
     }
     
-    public func retrieveLogFileUrl() async -> URL? {
-        return await cuckoo_manager.call(
-            "retrieveLogFileUrl() async -> URL?",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.retrieveLogFileUrl()
-        )
-    }
-    
     public func onFilterChangeState() async -> AsyncStream<DocumentFiltersPartialState> {
         return await cuckoo_manager.call(
             "onFilterChangeState() async -> AsyncStream<DocumentFiltersPartialState>",
@@ -1445,14 +1435,6 @@ public class MockDocumentTabInteractor: DocumentTabInteractor, Cuckoo.ProtocolMo
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentTabInteractor.self,
                 method: "requestDeferredIssuance() async -> DeferredPartialState",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func retrieveLogFileUrl() -> Cuckoo.ProtocolStubFunction<(), URL?> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentTabInteractor.self,
-                method: "retrieveLogFileUrl() async -> URL?",
                 parameterMatchers: matchers
             ))
         }
@@ -1591,18 +1573,6 @@ public class MockDocumentTabInteractor: DocumentTabInteractor, Cuckoo.ProtocolMo
         
         
         @discardableResult
-        func retrieveLogFileUrl() -> Cuckoo.__DoNotUse<(), URL?> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "retrieveLogFileUrl() async -> URL?",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
         func onFilterChangeState() -> Cuckoo.__DoNotUse<(), AsyncStream<DocumentFiltersPartialState>> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
@@ -1729,10 +1699,6 @@ public class DocumentTabInteractorStub:DocumentTabInteractor, @unchecked Sendabl
     
     public func requestDeferredIssuance() async -> DeferredPartialState {
         return DefaultValueRegistry.defaultValue(for: (DeferredPartialState).self)
-    }
-    
-    public func retrieveLogFileUrl() async -> URL? {
-        return DefaultValueRegistry.defaultValue(for: (URL?).self)
     }
     
     public func onFilterChangeState() async -> AsyncStream<DocumentFiltersPartialState> {

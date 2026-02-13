@@ -285,6 +285,18 @@ final actor WalletKitControllerImpl: WalletKitController {
     else {
       return nil
     }
+    if url.isFileURL {
+      let directoryUrl = url.deletingLastPathComponent()
+      if !FileManager.default.fileExists(atPath: directoryUrl.path) {
+        try? FileManager.default.createDirectory(
+          at: directoryUrl,
+          withIntermediateDirectories: true
+        )
+      }
+      if !FileManager.default.fileExists(atPath: url.path) {
+        FileManager.default.createFile(atPath: url.path, contents: Data())
+      }
+    }
     return url
   }
 
