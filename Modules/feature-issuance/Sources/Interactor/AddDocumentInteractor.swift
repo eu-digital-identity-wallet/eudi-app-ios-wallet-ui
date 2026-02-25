@@ -48,6 +48,7 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
       var pidConfigIds: [String] = []
       var pidDocTypeIdentifier: DocumentTypeIdentifier = .other(formatType: "")
       var issuerId: String = ""
+      var order: Int = 0
     }
 
     do {
@@ -80,6 +81,7 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
               isEnabled: true,
               configIds: [doc.configId],
               issuerId: issuerId,
+              order: doc.order,
               docTypeIdentifier: doc.docTypeIdentifier
             )
           )
@@ -102,6 +104,7 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
               isEnabled: true,
               configIds: bucket.pidConfigIds,
               issuerId: bucket.issuerId,
+              order: bucket.order,
               docTypeIdentifier: bucket.pidDocTypeIdentifier
             )
           )
@@ -110,10 +113,16 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
         return items.sorted(by: compare)
       }
 
+      let orderedPairs: [(String, [AddDocumentUIModel])] = grouped.sorted { lhs, rhs in
+        let lhsOrder = lhs.value.map(\.order).max() ?? Int.min
+        let rhsOrder = rhs.value.map(\.order).max() ?? Int.min
+
+        if lhsOrder != rhsOrder { return lhsOrder > rhsOrder }
+        return lhs.key.localizedCompare(rhs.key) == .orderedAscending
+      }
+
       let ordered = OrderedDictionary<String, [AddDocumentUIModel]>(
-        uniqueKeysWithValues: grouped.sorted {
-          $0.key.localizedCompare($1.key) == .orderedAscending
-        }
+        uniqueKeysWithValues: orderedPairs
       )
 
       return .success(ordered)

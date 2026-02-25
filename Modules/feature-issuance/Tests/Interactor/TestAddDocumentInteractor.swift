@@ -389,6 +389,7 @@ final class TestAddDocumentInteractor: EudiTest {
     let scopedDocument1 = ScopedDocument(
       name: "Document name 1",
       issuer: issuerId,
+      order: 0,
       configId: "id1",
       isPid: true,
       docTypeIdentifier: .mDocPid
@@ -397,6 +398,7 @@ final class TestAddDocumentInteractor: EudiTest {
     let scopedDocument2 = ScopedDocument(
       name: "Document name 2",
       issuer: issuerId,
+      order: 0,
       configId: "id2",
       isPid: true,
       docTypeIdentifier: .mDocPid
@@ -405,6 +407,7 @@ final class TestAddDocumentInteractor: EudiTest {
     let scopedDocument3 = ScopedDocument(
       name: "Document name 3",
       issuer: issuerId,
+      order: 1,
       configId: "id3",
       isPid: true,
       docTypeIdentifier: .mDocPid
@@ -413,6 +416,7 @@ final class TestAddDocumentInteractor: EudiTest {
     let scopedDocument4 = ScopedDocument(
       name: "Document name 4",
       issuer: secondaryIssuerId,
+      order: 1,
       configId: "id4",
       isPid: true,
       docTypeIdentifier: .mDocPid
