@@ -243,21 +243,41 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var documentIssuanceConfig: DocumentIssuanceConfig {
-    DocumentIssuanceConfig(
-      defaultRule: DocumentIssuanceRule(
-        policy: .rotateUse,
-        numberOfCredentials: 1
-      ),
-      documentSpecificRules: [
-        DocumentTypeIdentifier.mDocPid: DocumentIssuanceRule(
-          policy: .oneTimeUse,
-          numberOfCredentials: 10
+    return switch configLogic.appBuildVariant {
+    case .DEMO:
+      DocumentIssuanceConfig(
+        defaultRule: DocumentIssuanceRule(
+          policy: .rotateUse,
+          numberOfCredentials: 1
         ),
-        DocumentTypeIdentifier.sdJwtPid: DocumentIssuanceRule(
-          policy: .oneTimeUse,
-          numberOfCredentials: 10
-        )
-      ]
-    )
+        documentSpecificRules: [
+          DocumentTypeIdentifier.mDocPid: DocumentIssuanceRule(
+            policy: .oneTimeUse,
+            numberOfCredentials: 10
+          ),
+          DocumentTypeIdentifier.sdJwtPid: DocumentIssuanceRule(
+            policy: .oneTimeUse,
+            numberOfCredentials: 10
+          )
+        ]
+      )
+    case .DEV:
+      DocumentIssuanceConfig(
+        defaultRule: DocumentIssuanceRule(
+          policy: .rotateUse,
+          numberOfCredentials: 1
+        ),
+        documentSpecificRules: [
+          DocumentTypeIdentifier.mDocPid: DocumentIssuanceRule(
+            policy: .oneTimeUse,
+            numberOfCredentials: 60
+          ),
+          DocumentTypeIdentifier.sdJwtPid: DocumentIssuanceRule(
+            policy: .oneTimeUse,
+            numberOfCredentials: 60
+          )
+        ]
+      )
+    }
   }
 }

@@ -73,15 +73,18 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
 
   private let walletKitController: WalletKitController
   private let filterValidator: FilterValidator
+  private let configLogic: ConfigLogic
 
   private var filtersStateAsync: AsyncStream<DocumentFiltersPartialState>.Continuation?
 
   init(
     walletKitController: WalletKitController,
-    filterValidator: FilterValidator
+    filterValidator: FilterValidator,
+    configLogic: ConfigLogic
   ) {
     self.walletKitController = walletKitController
     self.filterValidator = filterValidator
+    self.configLogic = configLogic
   }
 
   deinit {
@@ -185,7 +188,7 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
   func deleteDeferredDocument(with id: String) async -> DeleteDeferredPartialState {
     do {
       try await walletKitController.deleteDocument(with: id, status: .deferred)
-      return await walletKitController.fetchAllDocuments().isEmpty ? .noDocuments : .success
+      return await walletKitController.fetchAllDocuments().isEmpty && configLogic.forcePidActivation ? .noDocuments : .success
     } catch {
       return .failure(error)
     }

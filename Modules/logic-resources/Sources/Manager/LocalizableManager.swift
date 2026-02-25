@@ -486,6 +486,10 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "issuance_add_document_no_options")
     case .unknown:
       bundle.localizedString(forKey: "unknown")
+    case .quickPinSetNoActivationSuccess:
+      bundle.localizedString(forKey: "quick_pin_set_no_activation_success")
+    case .quickPinSetNoActivationSuccessButton:
+      bundle.localizedString(forKey: "quick_pin_set_no_activation_success_button")
     }
   }
 }

@@ -25,20 +25,26 @@ final class TestDocumentDetailsInteractor: EudiTest {
   var interactor: DocumentDetailsInteractor!
   var walletKitController: MockWalletKitController!
   var prefsController: MockPrefsController!
+  var configLogic: MockConfigLogic!
 
   override func setUp() {
     self.walletKitController = MockWalletKitController()
     self.prefsController = MockPrefsController()
+    self.configLogic = MockConfigLogic()
     self.interactor = DocumentDetailsInteractorImpl(
       walletController: walletKitController,
-      prefsController: prefsController
+      prefsController: prefsController,
+      configLogic: configLogic
     )
+    
+    stubConfigLogic()
   }
   
   override func tearDown() {
     self.interactor = nil
     self.walletKitController = nil
     self.prefsController = nil
+    self.configLogic = nil
   }
   
   func testFetchStoredDocument_WhenWalletKitControllerReturnsValidDocument_ThenReturnsExpectedValues() async throws {
@@ -433,6 +439,12 @@ extension TestDocumentDetailsInteractor {
     stub(walletKitController) { stub in
       when(stub.removeBookmarkedDocument(with: equal(to: id)))
         .thenThrow(WalletCoreError.unableFetchDocument)
+    }
+  }
+  
+  func stubConfigLogic() {
+    stub(configLogic) { mock in
+      when(mock.forcePidActivation.get).thenReturn(true)
     }
   }
 }

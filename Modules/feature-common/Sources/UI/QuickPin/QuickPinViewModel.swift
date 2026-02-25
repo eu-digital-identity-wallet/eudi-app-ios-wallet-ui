@@ -30,7 +30,8 @@ struct QuickPinState: ViewState {
   let title: LocalizableStringKey
   let caption: LocalizableStringKey
   let button: LocalizableStringKey
-  let success: LocalizableStringKey
+  let successTitle: LocalizableStringKey
+  let successCaption: LocalizableStringKey
   let successButton: LocalizableStringKey
   let successNavigationType: UIConfig.DeepLinkNavigationType
   let isCancellable: Bool
@@ -64,6 +65,40 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       fatalError("QuickPinViewModel:: Invalid configuraton")
     }
     self.interactor = interactor
+
+    var successNavigation: UIConfig.DeepLinkNavigationType {
+      switch config.flow {
+      case .setWithActivation:
+          .push(screen: .featureIssuanceModule(.issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument))))
+      case .setWithoutActivation:
+          .push(screen: .featureDashboardModule(.dashboard))
+      case .update:
+          .pop(screen: .featureDashboardModule(.dashboard))
+      }
+    }
+
+    var successButton: LocalizableStringKey {
+      switch config.flow {
+      case .setWithActivation:
+          .quickPinSetSuccessButton
+      case .setWithoutActivation:
+          .quickPinSetNoActivationSuccessButton
+      case .update:
+          .quickPinUpdateSuccessButton
+      }
+    }
+
+    var successCaption: LocalizableStringKey {
+      switch config.flow {
+      case .setWithActivation:
+          .quickPinSetSuccess
+      case .setWithoutActivation:
+          .quickPinSetNoActivationSuccess
+      case .update:
+          .quickPinUpdateSuccess
+      }
+    }
+
     super.init(
       router: router,
       initialState: .init(
@@ -72,11 +107,12 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
         title: config.isSetFlow ? .quickPinSetTitle : .quickPinUpdateTitle,
         caption: config.isSetFlow ? .quickPinSetCaptionOne : .quickPinUpdateCaptionOne,
         button: .quickPinNextButton,
-        success: config.isSetFlow ? .quickPinSetSuccess : .quickPinUpdateSuccess,
-        successButton: config.isSetFlow ? .quickPinSetSuccessButton : .quickPinUpdateSuccessButton,
-        successNavigationType: config.isSetFlow
-        ? .push(screen: .featureIssuanceModule(.issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument))))
-        : .pop(screen: .featureDashboardModule(.dashboard)),
+        successTitle: config.isSetFlow
+        ? .walletIsSecured
+        : .successTitlePunctuated,
+        successCaption: successCaption,
+        successButton: successButton,
+        successNavigationType: successNavigation,
         isCancellable: config.isUpdateFlow,
         pinError: nil,
         isButtonActive: false,
@@ -175,10 +211,6 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
   private func onSuccess() async {
     await interactor.setPin(newPin: uiPinInputField)
 
-    let buttonTitle: LocalizableStringKey = viewState.config.isSetFlow ?
-      .walletIsSecured :
-      .successTitlePunctuated
-
     let visualKind: UIConfig.Success.VisualKind = viewState.config.isSetFlow ?
       .customIcon(
         Theme.shared.image.successSecuredWallet,
@@ -193,8 +225,8 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       with: .featureCommonModule(
         .genericSuccess(
           config: UIConfig.Success(
-            title: .init(value: buttonTitle),
-            subtitle: viewState.success,
+            title: .init(value: viewState.successTitle),
+            subtitle: viewState.successCaption,
             buttons: [
               .init(
                 title: viewState.successButton,

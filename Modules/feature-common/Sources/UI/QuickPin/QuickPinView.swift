@@ -123,12 +123,13 @@ private func pinView(
 
 #Preview {
   let viewState = QuickPinState(
-    config: QuickPinUiConfig(flow: .set),
+    config: QuickPinUiConfig(flow: .setWithActivation),
     navigationTitle: .quickPinEnterPin,
     title: .quickPinSetTitle,
     caption: .quickPinSetCaptionOne,
     button: .quickPinNextButton,
-    success: .success,
+    successTitle: .quickPinSetTitle,
+    successCaption: .quickPinSetSuccess,
     successButton: .quickPinSetSuccessButton,
     successNavigationType: .push(screen: .featureDashboardModule(.dashboard)),
     isCancellable: false,

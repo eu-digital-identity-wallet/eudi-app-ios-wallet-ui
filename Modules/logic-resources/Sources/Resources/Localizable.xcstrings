@@ -1437,6 +1437,28 @@
         }
       }
     },
+    "quick_pin_set_no_activation_success" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Waller is ready for use."
+          }
+        }
+      }
+    },
+    "quick_pin_set_no_activation_success_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go to home"
+          }
+        }
+      }
+    },
     "quick_pin_set_step_one_caption" : {
       "extractionState" : "manual",
       "localizations" : {
