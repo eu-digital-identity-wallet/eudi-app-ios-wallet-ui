@@ -63,10 +63,12 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case quickPinNextButton
   case quickPinConfirmButton
   case quickPinSetSuccess
+  case quickPinSetNoActivationSuccess
   case loginTitle
   case loginCaptionQuickPinOnly
   case loginCaption
   case quickPinSetSuccessButton
+  case quickPinSetNoActivationSuccessButton
   case quickPinDoNotMatch
   case quickPinUpdateTitle
   case quickPinUpdateCaptionOne

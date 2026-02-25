@@ -3188,6 +3188,16 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
             )
         }
     }
+    
+    public var forcePidActivation: Bool {
+        get {
+            return cuckoo_manager.getter(
+                "forcePidActivation",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.forcePidActivation
+            )
+        }
+    }
 
 
     public struct __StubbingProxy_ConfigLogic: Cuckoo.StubbingProxy {
@@ -3215,6 +3225,10 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
         
         var changelogUrl: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic,URL?> {
             return .init(manager: cuckoo_manager, name: "changelogUrl")
+        }
+        
+        var forcePidActivation: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockConfigLogic,Bool> {
+            return .init(manager: cuckoo_manager, name: "forcePidActivation")
         }
     }
 
@@ -3248,6 +3262,10 @@ public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Senda
         var changelogUrl: Cuckoo.VerifyReadOnlyProperty<URL?> {
             return .init(manager: cuckoo_manager, name: "changelogUrl", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
+        
+        var forcePidActivation: Cuckoo.VerifyReadOnlyProperty<Bool> {
+            return .init(manager: cuckoo_manager, name: "forcePidActivation", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
     }
 }
 
@@ -3280,6 +3298,12 @@ public class ConfigLogicStub:ConfigLogic, @unchecked Sendable {
     public var changelogUrl: URL? {
         get {
             return DefaultValueRegistry.defaultValue(for: (URL?).self)
+        }
+    }
+    
+    public var forcePidActivation: Bool {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Bool).self)
         }
     }
 

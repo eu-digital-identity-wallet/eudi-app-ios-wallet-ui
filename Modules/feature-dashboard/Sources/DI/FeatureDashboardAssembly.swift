@@ -50,7 +50,8 @@ public final class FeatureDashboardAssembly: Assembly {
     container.register(DocumentTabInteractor.self) { r in
       DocumentTabInteractorImpl(
         walletKitController: r.force(WalletKitController.self),
-        filterValidator: r.force(FilterValidator.self)
+        filterValidator: r.force(FilterValidator.self),
+        configLogic: r.force(ConfigLogic.self)
       )
     }
 
@@ -64,7 +65,8 @@ public final class FeatureDashboardAssembly: Assembly {
     container.register(DocumentDetailsInteractor.self) { r in
       DocumentDetailsInteractorImpl(
         walletController: r.force(WalletKitController.self),
-        prefsController: r.force(PrefsController.self)
+        prefsController: r.force(PrefsController.self),
+        configLogic: r.force(ConfigLogic.self)
       )
     }
     .inObjectScope(ObjectScope.transient)

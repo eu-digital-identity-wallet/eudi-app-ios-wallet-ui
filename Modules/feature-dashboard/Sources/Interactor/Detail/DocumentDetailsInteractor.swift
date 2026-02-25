@@ -27,13 +27,16 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 
   private let walletController: WalletKitController
   private let prefsController: PrefsController
+  private let configLogic: ConfigLogic
 
   init(
     walletController: WalletKitController,
-    prefsController: PrefsController
+    prefsController: PrefsController,
+    configLogic: ConfigLogic
   ) {
     self.walletController = walletController
     self.prefsController = prefsController
+    self.configLogic = configLogic
   }
 
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
@@ -55,7 +58,7 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
   func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
 
     func shouldDeleteAllDocuments(type: DocumentTypeIdentifier) async -> Bool {
-      if type == .mDocPid || type == .sdJwtPid {
+      if configLogic.forcePidActivation && (type == .mDocPid || type == .sdJwtPid ) {
 
         let documentPids = await walletController.fetchIssuedDocuments(
           with: [DocumentTypeIdentifier.mDocPid, DocumentTypeIdentifier.sdJwtPid]

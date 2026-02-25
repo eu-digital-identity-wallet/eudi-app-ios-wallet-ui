@@ -50,6 +50,11 @@ public protocol ConfigLogic: Sendable {
    * Changelog URL
    */
   var changelogUrl: URL? { get }
+
+  /**
+   * Wallet requires PID Activation
+   */
+  var forcePidActivation: Bool { get }
 }
 
 struct ConfigLogicImpl: ConfigLogic {
@@ -78,5 +83,9 @@ struct ConfigLogicImpl: ConfigLogic {
       return nil
     }
     return url
+  }
+
+  var forcePidActivation: Bool {
+    false
   }
 }

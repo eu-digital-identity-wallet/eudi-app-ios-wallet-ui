@@ -34,8 +34,11 @@ final class TestDocumentTabInteractor: EudiTest {
     self.filterValidator = MockFilterValidator()
     self.interactor = DocumentTabInteractorImpl(
       walletKitController: walletKitController,
-      filterValidator: filterValidator
+      filterValidator: filterValidator,
+      configLogic: configLogic
     )
+    
+    stubConfigLogic()
   }
   
   override func tearDown() {
@@ -636,6 +639,12 @@ private extension TestDocumentTabInteractor {
         query: equal(to: "search"))
       )
       .thenDoNothing()
+    }
+  }
+  
+  func stubConfigLogic() {
+    stub(configLogic) { mock in
+      when(mock.forcePidActivation.get).thenReturn(true)
     }
   }
 }

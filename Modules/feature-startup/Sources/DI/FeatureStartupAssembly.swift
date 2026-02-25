@@ -28,7 +28,8 @@ public final class FeatureStartupAssembly: Assembly {
         walletKitController: r.force(WalletKitController.self),
         quickPinInteractor: r.force(QuickPinInteractor.self),
         keyChainController: r.force(KeyChainController.self),
-        prefsController: r.force(PrefsController.self)
+        prefsController: r.force(PrefsController.self),
+        configLogic: r.force(ConfigLogic.self)
       )
     }
     .inObjectScope(ObjectScope.transient)

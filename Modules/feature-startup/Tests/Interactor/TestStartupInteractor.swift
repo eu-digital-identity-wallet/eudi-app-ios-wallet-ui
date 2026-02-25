@@ -28,19 +28,23 @@ final class TestStartupInteractor: EudiTest {
   var quickPinInteractor: MockQuickPinInteractor!
   var keyChainController: MockKeyChainController!
   var prefsController: MockPrefsController!
+  var configLogic: MockConfigLogic!
   
   override func setUp() {
     self.walletKitController = MockWalletKitController()
     self.quickPinInteractor = MockQuickPinInteractor()
     self.keyChainController = MockKeyChainController()
     self.prefsController = MockPrefsController()
+    self.configLogic = MockConfigLogic()
     self.interactor = StartupInteractorImpl(
       walletKitController: walletKitController,
       quickPinInteractor: quickPinInteractor,
       keyChainController: keyChainController,
-      prefsController: prefsController
+      prefsController: prefsController,
+      configLogic: configLogic
     )
     
+    stubConfigLogic()
     stubPrefsControllerSetValue()
     stubKeyChainClear()
     stubWalletKiControllerClearAllDocuments()
@@ -52,11 +56,12 @@ final class TestStartupInteractor: EudiTest {
     self.quickPinInteractor = nil
     self.keyChainController = nil
     self.prefsController = nil
+    self.configLogic = nil
   }
   
   func testInitialize_WhenIsNotFirstBootAndPinIsNotSet_ThenReturnQuickPinAppRoute() async throws {
     // Given
-    let expectedConfig = QuickPinUiConfig(flow: .set)
+    let expectedConfig = QuickPinUiConfig(flow: .setWithActivation)
     let expectedPid = Constants.createEuPidModel()
     let expectedMdl = Constants.createIsoMdlModel()
     stubFetchDocuments(with: [expectedPid, expectedMdl])
@@ -135,7 +140,7 @@ final class TestStartupInteractor: EudiTest {
   
   func testInitialize_WhenIsFirstBootAndPinIsNotSet_ThenClearDocumentStorageAndReturnQuickPinAppRoute() async throws {
     // Given
-    let expectedConfig = QuickPinUiConfig(flow: .set)
+    let expectedConfig = QuickPinUiConfig(flow: .setWithActivation)
     let expectedPid = Constants.createEuPidModel()
     let expectedMdl = Constants.createIsoMdlModel()
     stubFetchDocuments(with: [expectedPid, expectedMdl])
@@ -196,6 +201,12 @@ private extension TestStartupInteractor {
   func stubPrefsControllerSetValue() {
     stub(prefsController) { mock in
       when(mock.setValue(any(), forKey: any())).thenDoNothing()
+    }
+  }
+  
+  func stubConfigLogic() {
+    stub(configLogic) { mock in
+      when(mock.forcePidActivation.get).thenReturn(true)
     }
   }
   

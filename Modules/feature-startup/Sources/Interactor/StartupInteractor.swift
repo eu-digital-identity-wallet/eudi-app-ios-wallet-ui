@@ -28,17 +28,20 @@ final actor StartupInteractorImpl: StartupInteractor {
   private let quickPinInteractor: QuickPinInteractor
   private let keyChainController: KeyChainController
   private let prefsController: PrefsController
+  private let configLogic: ConfigLogic
 
   init(
     walletKitController: WalletKitController,
     quickPinInteractor: QuickPinInteractor,
     keyChainController: KeyChainController,
-    prefsController: PrefsController
+    prefsController: PrefsController,
+    configLogic: ConfigLogic
   ) {
     self.walletKitController = walletKitController
     self.quickPinInteractor = quickPinInteractor
     self.keyChainController = keyChainController
     self.prefsController = prefsController
+    self.configLogic = configLogic
   }
 
   public func initialize(with splashAnimationDuration: TimeInterval) async -> AppRoute {
@@ -55,9 +58,9 @@ final actor StartupInteractorImpl: StartupInteractor {
             caption: .loginCaption,
             quickPinOnlyCaption: .loginCaptionQuickPinOnly,
             navigationSuccessType: .push(
-              hasDocuments
-              ? .featureDashboardModule(.dashboard)
-              : .featureIssuanceModule(.issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument)))
+              !hasDocuments && configLogic.forcePidActivation
+              ? .featureIssuanceModule(.issuanceAddDocument(config: IssuanceFlowUiConfig(flow: .noDocument)))
+              : .featureDashboardModule(.dashboard)
             ),
             navigationBackType: nil,
             isPreAuthorization: true,
@@ -67,7 +70,13 @@ final actor StartupInteractorImpl: StartupInteractor {
       )
     } else {
       return .featureCommonModule(
-        .quickPin(config: QuickPinUiConfig(flow: .set))
+        .quickPin(
+          config: QuickPinUiConfig(
+            flow: configLogic.forcePidActivation
+            ? .setWithActivation
+            : .setWithoutActivation
+          )
+        )
       )
     }
   }

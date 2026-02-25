@@ -23,8 +23,16 @@ public struct QuickPinUiConfig: UIConfigType, Equatable {
     return "flow: \(flow.rawValue)"
   }
 
+  public var isSetFlowWithActivation: Bool {
+    self.flow == .setWithActivation
+  }
+
+  public var isSetFlowWithoutActivation: Bool {
+    self.flow == .setWithoutActivation
+  }
+
   public var isSetFlow: Bool {
-    self.flow == .set
+    self.flow == .setWithoutActivation || self.flow == .setWithActivation
   }
 
   public var isUpdateFlow: Bool {
@@ -38,7 +46,8 @@ public struct QuickPinUiConfig: UIConfigType, Equatable {
 
 public extension QuickPinUiConfig {
   enum Flow: String, Equatable, Sendable {
-    case set
+    case setWithActivation
+    case setWithoutActivation
     case update
   }
 }
