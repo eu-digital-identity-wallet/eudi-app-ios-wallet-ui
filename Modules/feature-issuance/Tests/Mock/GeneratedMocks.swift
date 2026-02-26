@@ -1158,13 +1158,13 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
         )
     }
     
-    public func issueDocument(issuerId p0: String, configId p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async -> IssueResultPartialState {
+    public func issueDocument(issuerId p0: String, configIds p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async -> IssueResultPartialState {
         return await cuckoo_manager.call(
-            "issueDocument(issuerId p0: String, configId p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async -> IssueResultPartialState",
+            "issueDocument(issuerId p0: String, configIds p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async -> IssueResultPartialState",
             parameters: (p0, p1, p2),
             escapingParameters: (p0, p1, p2),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.issueDocument(issuerId: p0, configId: p1, docTypeIdentifier: p2)
+            defaultCall: await __defaultImplStub!.issueDocument(issuerId: p0, configIds: p1, docTypeIdentifier: p2)
         )
     }
     
@@ -1175,16 +1175,6 @@ public class MockAddDocumentInteractor: AddDocumentInteractor, Cuckoo.ProtocolMo
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.resumeDynamicIssuance()
-        )
-    }
-    
-    public func getScopedDocument(configId p0: String) async throws -> ScopedDocument {
-        return try await cuckoo_manager.callThrows(
-            "getScopedDocument(configId p0: String) async throws -> ScopedDocument",
-            parameters: (p0),
-            escapingParameters: (p0),
-errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.getScopedDocument(configId: p0)
         )
     }
     
@@ -1213,10 +1203,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             ))
         }
         
-        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, configId p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.ProtocolStubFunction<(String, String, DocumentTypeIdentifier), IssueResultPartialState> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, configIds p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.ProtocolStubFunction<(String, [String], DocumentTypeIdentifier), IssueResultPartialState> where M1.MatchedType == String, M2.MatchedType == [String], M3.MatchedType == DocumentTypeIdentifier {
+            let matchers: [Cuckoo.ParameterMatcher<(String, [String], DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractor.self,
-                method: "issueDocument(issuerId p0: String, configId p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async -> IssueResultPartialState",
+                method: "issueDocument(issuerId p0: String, configIds p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async -> IssueResultPartialState",
                 parameterMatchers: matchers
             ))
         }
@@ -1225,14 +1215,6 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractor.self,
                 method: "resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getScopedDocument<M1: Cuckoo.Matchable>(configId p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), ScopedDocument,Error> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockAddDocumentInteractor.self,
-                method: "getScopedDocument(configId p0: String) async throws -> ScopedDocument",
                 parameterMatchers: matchers
             ))
         }
@@ -1271,10 +1253,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, configId p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.__DoNotUse<(String, String, DocumentTypeIdentifier), IssueResultPartialState> where M1.MatchedType == String, M2.MatchedType == String, M3.MatchedType == DocumentTypeIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(String, String, DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+        func issueDocument<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, configIds p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.__DoNotUse<(String, [String], DocumentTypeIdentifier), IssueResultPartialState> where M1.MatchedType == String, M2.MatchedType == [String], M3.MatchedType == DocumentTypeIdentifier {
+            let matchers: [Cuckoo.ParameterMatcher<(String, [String], DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return cuckoo_manager.verify(
-                "issueDocument(issuerId p0: String, configId p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async -> IssueResultPartialState",
+                "issueDocument(issuerId p0: String, configIds p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async -> IssueResultPartialState",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1287,18 +1269,6 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
                 "resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getScopedDocument<M1: Cuckoo.Matchable>(configId p0: M1) -> Cuckoo.__DoNotUse<(String), ScopedDocument> where M1.MatchedType == String {
-            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "getScopedDocument(configId p0: String) async throws -> ScopedDocument",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1327,16 +1297,12 @@ public class AddDocumentInteractorStub:AddDocumentInteractor, @unchecked Sendabl
         return DefaultValueRegistry.defaultValue(for: (ScopedDocumentsPartialState).self)
     }
     
-    public func issueDocument(issuerId p0: String, configId p1: String, docTypeIdentifier p2: DocumentTypeIdentifier) async -> IssueResultPartialState {
+    public func issueDocument(issuerId p0: String, configIds p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async -> IssueResultPartialState {
         return DefaultValueRegistry.defaultValue(for: (IssueResultPartialState).self)
     }
     
     public func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState {
         return DefaultValueRegistry.defaultValue(for: (IssueDynamicDocumentPartialState).self)
-    }
-    
-    public func getScopedDocument(configId p0: String) async throws -> ScopedDocument {
-        return DefaultValueRegistry.defaultValue(for: (ScopedDocument).self)
     }
     
     public func fetchStoredDocuments(documentIds p0: [String]) async -> IssueDocumentsPartialState {

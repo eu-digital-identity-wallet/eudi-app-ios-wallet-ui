@@ -22,11 +22,10 @@ public protocol AddDocumentInteractor: Sendable {
   func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> ScopedDocumentsPartialState
   func issueDocument(
     issuerId: String,
-    configId: String,
+    configIds: [String],
     docTypeIdentifier: DocumentTypeIdentifier
   ) async -> IssueResultPartialState
   func resumeDynamicIssuance() async -> IssueDynamicDocumentPartialState
-  func getScopedDocument(configId: String) async throws -> ScopedDocument
   func fetchStoredDocuments(documentIds: [String]) async -> IssueDocumentsPartialState
 }
 
@@ -40,40 +39,79 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
     self.walletController = walletController
   }
 
-  public func fetchScopedDocuments(with flow: IssuanceFlowUiConfig.Flow) async -> ScopedDocumentsPartialState {
+  public func fetchScopedDocuments(
+    with flow: IssuanceFlowUiConfig.Flow
+  ) async -> ScopedDocumentsPartialState {
+
+    struct IssuerBucket {
+      var items: [AddDocumentUIModel] = []
+      var pidConfigIds: [String] = []
+      var pidDocTypeIdentifier: DocumentTypeIdentifier = .other(formatType: "")
+      var issuerId: String = ""
+    }
+
     do {
-      let documents: [AddDocumentUIModel] = try await walletController.getScopedDocuments().compactMap { doc in
+      let scoped = try await walletController.getScopedDocuments()
+      var buckets: [String: IssuerBucket] = [:]
+
+      for doc in scoped {
         switch flow {
         case .noDocument:
-          guard doc.isPid else { return nil }
+          guard doc.isPid else { continue }
 
         case .extraDocument(let identifier):
-          if let identifier, doc.docTypeIdentifier != identifier {
-            return nil
-          }
+          if let identifier, doc.docTypeIdentifier != identifier { continue }
         }
 
-        return .init(
-          listItem: .init(
-            mainContent: .text(.custom(doc.name)),
-            trailingContent: .icon(Theme.shared.image.plus)
-          ),
-          isEnabled: true,
-          configId: doc.configId,
-          issuerId: doc.issuer,
-          docTypeIdentifier: doc.docTypeIdentifier
-        )
+        let issuerId = doc.issuer
+        var bucket = buckets[issuerId, default: IssuerBucket()]
+
+        if doc.isPid {
+          bucket.pidConfigIds.append(doc.configId)
+          bucket.pidDocTypeIdentifier = doc.docTypeIdentifier
+          bucket.issuerId = issuerId
+        } else {
+          bucket.items.append(
+            AddDocumentUIModel(
+              listItem: .init(
+                mainContent: .text(.custom(doc.name)),
+                trailingContent: .icon(Theme.shared.image.plus)
+              ),
+              isEnabled: true,
+              configIds: [doc.configId],
+              issuerId: issuerId,
+              docTypeIdentifier: doc.docTypeIdentifier
+            )
+          )
+        }
+
+        buckets[issuerId] = bucket
       }
 
-      let grouped: [String: [AddDocumentUIModel]] = Dictionary(
-        grouping: documents,
-        by: { $0.issuerId }
-      ).mapValues { section in
-        section.sorted(by: compare)
+      let grouped: [String: [AddDocumentUIModel]] = buckets.mapValues { bucket in
+
+        var items = bucket.items
+
+        if !bucket.pidConfigIds.isEmpty {
+          items.append(
+            AddDocumentUIModel(
+              listItem: .init(
+                mainContent: .text(.pidCombined),
+                trailingContent: .icon(Theme.shared.image.plus)
+              ),
+              isEnabled: true,
+              configIds: bucket.pidConfigIds,
+              issuerId: bucket.issuerId,
+              docTypeIdentifier: bucket.pidDocTypeIdentifier
+            )
+          )
+        }
+
+        return items.sorted(by: compare)
       }
 
       let ordered = OrderedDictionary<String, [AddDocumentUIModel]>(
-        uniqueKeysWithValues: Array(grouped).sorted {
+        uniqueKeysWithValues: grouped.sorted {
           $0.key.localizedCompare($1.key) == .orderedAscending
         }
       )
@@ -83,40 +121,72 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
       return .failure(error)
     }
 
-    func compare(_ first: AddDocumentUIModel, _ second: AddDocumentUIModel) -> Bool {
-      return first.listItem.mainContent.asString.lowercased() < second.listItem.mainContent.asString.lowercased()
+    func compare(_ a: AddDocumentUIModel, _ b: AddDocumentUIModel) -> Bool {
+      a.listItem.mainContent.asString
+        .localizedCaseInsensitiveCompare(b.listItem.mainContent.asString) == .orderedAscending
     }
   }
 
   public func issueDocument(
     issuerId: String,
-    configId: String,
+    configIds: [String],
     docTypeIdentifier: DocumentTypeIdentifier
   ) async -> IssueResultPartialState {
     do {
-      let doc = try await walletController.issueDocuments(
-        issuerId: issuerId,
-        identifiers: [configId],
-        docTypeIdentifier: docTypeIdentifier
-      ).first
 
-      if let doc {
+      let docs = try await walletController.issueDocuments(
+        issuerId: issuerId,
+        identifiers: configIds,
+        docTypeIdentifier: docTypeIdentifier
+      )
+
+      guard !docs.isEmpty else {
+        return .failure(WalletCoreError.unableToIssueAndStore)
+      }
+
+      var deferredDocument: ScopedDocument?
+      var successIds: [String] = []
+      var dynamicIssuanceCoordinator: RemoteSessionCoordinator?
+      var error: Error?
+
+      for doc in docs {
         if doc.isDeferred {
-          return .deferredSuccess
+          guard
+            let configId = DocMetadata(from: doc.metadata)?.configurationIdentifier,
+            let document = try? await getScopedDocument(configId: configId)
+          else {
+            error = WalletCoreError.unableToIssueAndStore
+            continue
+          }
+          deferredDocument = document
         } else if let authorizePresentationUrl = doc.authorizePresentationUrl {
+          guard dynamicIssuanceCoordinator == nil else { continue }
           guard
             let presentationUrl = authorizePresentationUrl.toCompatibleUrl(),
-            let presentationComponents = URLComponents(url: presentationUrl, resolvingAgainstBaseURL: true) else {
-            return .failure(WalletCoreError.unableToIssueAndStore)
+            let presentationComponents = URLComponents(url: presentationUrl, resolvingAgainstBaseURL: true)
+          else {
+            error = WalletCoreError.unableToIssueAndStore
+            continue
           }
           let session = await walletController.startSameDevicePresentation(deepLink: presentationComponents)
-          return .dynamicIssuance(session)
+          dynamicIssuanceCoordinator = session
         } else {
-          return .success(doc.id)
+          successIds.append(doc.id)
         }
+      }
+
+      if let error {
+        return .failure(error)
+      } else if !successIds.isEmpty {
+        return .success(successIds)
+      } else if let deferredDocument {
+        return .deferredSuccess(deferredDocument)
+      } else if let session = dynamicIssuanceCoordinator {
+        return .dynamicIssuance(session)
       } else {
         return .failure(WalletCoreError.unableToIssueAndStore)
       }
+
     } catch {
       return .failure(error)
     }
@@ -148,12 +218,6 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
     }
   }
 
-  func getScopedDocument(configId: String) async throws -> ScopedDocument {
-    try await walletController.getScopedDocuments().first {
-      $0.configId == configId
-    } ?? ScopedDocument.empty()
-  }
-
   func fetchStoredDocuments(documentIds: [String]) async -> IssueDocumentsPartialState {
     let documents = await walletController.fetchDocuments(with: documentIds)
     let documentsDetails = documents.compactMap {
@@ -165,6 +229,12 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
     }
     return .success(documentsDetails)
   }
+
+  private func getScopedDocument(configId: String) async throws -> ScopedDocument {
+    try await walletController.getScopedDocuments().first {
+      $0.configId == configId
+    } ?? ScopedDocument.empty()
+  }
 }
 
 public enum ScopedDocumentsPartialState: Sendable {
@@ -173,8 +243,8 @@ public enum ScopedDocumentsPartialState: Sendable {
 }
 
 public enum IssueResultPartialState: Sendable {
-  case success(String)
-  case deferredSuccess
+  case success([String])
+  case deferredSuccess(ScopedDocument)
   case dynamicIssuance(RemoteSessionCoordinator)
   case failure(Error)
 }
