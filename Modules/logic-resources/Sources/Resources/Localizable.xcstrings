@@ -1327,6 +1327,17 @@
         }
       }
     },
+    "pid_combined" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PID Combined"
+          }
+        }
+      }
+    },
     "please_wait" : {
       "extractionState" : "manual",
       "localizations" : {

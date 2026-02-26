@@ -121,6 +121,9 @@ extension Constants {
     )
   }
   
+  private static let documentMetaData: Data? =
+    try? "{\"display\":[{\"backgroundColor\":\"\",\"logo\":{},\"textColor\":\"\",\"name\":\"PID (SD-JWT VC Compact) (deferred)\",\"localeIdentifier\":\"en\",\"description\":\"\"}],\"claims\":[{\"isMandatory\":true,\"claimPath\":[\"family_name\"],\"display\":[{\"description\":\"\",\"localeIdentifier\":\"en\",\"name\":\"Family Name(s)\",\"logo\":{},\"textColor\":\"\",\"backgroundColor\":\"\"}]},{\"isMandatory\":true,\"claimPath\":[\"given_name\"],\"display\":[{\"backgroundColor\":\"\",\"textColor\":\"\",\"name\":\"Given Name(s)\",\"localeIdentifier\":\"en\",\"logo\":{},\"description\":\"\"}]},{\"isMandatory\":true,\"claimPath\":[\"birthdate\"],\"display\":[{\"description\":\"\",\"name\":\"Birth Date\",\"textColor\":\"\",\"logo\":{},\"backgroundColor\":\"\",\"localeIdentifier\":\"en\"}]},{\"isMandatory\":true,\"claimPath\":[\"place_of_birth\"],\"display\":[{\"localeIdentifier\":\"en\",\"logo\":{},\"description\":\"\",\"name\":\"Birth Place\",\"backgroundColor\":\"\",\"textColor\":\"\"}]},{\"isMandatory\":true,\"claimPath\":[\"place_of_birth\",\"locality\"],\"display\":[{\"localeIdentifier\":\"en\",\"logo\":{},\"backgroundColor\":\"\",\"name\":\"Locality\",\"textColor\":\"\",\"description\":\"\"}]},{\"isMandatory\":false,\"claimPath\":[\"place_of_birth\",\"region\"],\"display\":[{\"textColor\":\"\",\"description\":\"\",\"localeIdentifier\":\"en\",\"logo\":{},\"backgroundColor\":\"\",\"name\":\"Region\"}]},{\"isMandatory\":false,\"claimPath\":[\"place_of_birth\",\"country\"],\"display\":[{\"backgroundColor\":\"\",\"localeIdentifier\":\"en\",\"logo\":{},\"description\":\"\",\"textColor\":\"\",\"name\":\"Country\"}]},{\"isMandatory\":true,\"claimPath\":[\"nationalities\"],\"display\":[{\"localeIdentifier\":\"en\",\"description\":\"\",\"name\":\"Nationality\",\"logo\":{},\"backgroundColor\":\"\",\"textColor\":\"\"}]},{\"isMandatory\":false,\"claimPath\":[\"address\"],\"display\":[{\"logo\":{},\"textColor\":\"\",\"name\":\"Address\",\"localeIdentifier\":\"en\",\"description\":\"\",\"backgroundColor\":\"\"}]},{\"isMandatory\":false,\"claimPath\":[\"address\",\"house_number\"],\"display\":[{\"textColor\":\"\",\"description\":\"\",\"localeIdentifier\":\"en\",\"backgroundColor\":\"\",\"name\":\"House Number\",\"logo\":{}}]},{\"isMandatory\":false,\"claimPath\":[\"address\",\"street_address\"],\"display\":[{\"logo\":{},\"description\":\"\",\"name\":\"Street\",\"localeIdentifier\":\"en\",\"backgroundColor\":\"\",\"textColor\":\"\"}]},{\"isMandatory\":false,\"claimPath\":[\"address\",\"locality\"],\"display\":[{\"logo\":{},\"localeIdentifier\":\"en\",\"textColor\":\"\",\"name\":\"Locality\",\"description\":\"\",\"backgroundColor\":\"\"}]},{\"isMandatory\":false,\"claimPath\":[\"address\",\"region\"],\"display\":[{\"localeIdentifier\":\"en\",\"description\":\"\",\"textColor\":\"\",\"logo\":{},\"backgroundColor\":\"\",\"name\":\"Region\"}]},{\"isMandatory\":false,\"claimPath\":[\"address\",\"postal_code\"],\"display\":[{\"description\":\"\",\"backgroundColor\":\"\",\"name\":\"Postal Code\",\"localeIdentifier\":\"en\",\"logo\":{},\"textColor\":\"\"}]},{\"isMandatory\":false,\"claimPath\":[\"address\",\"country\"],\"display\":[{\"textColor\":\"\",\"backgroundColor\":\"\",\"localeIdentifier\":\"en\",\"name\":\"Country\",\"logo\":{},\"description\":\"\"}]},{\"isMandatory\":false,\"claimPath\":[\"address\",\"formatted\"],\"display\":[{\"logo\":{},\"textColor\":\"\",\"backgroundColor\":\"\",\"localeIdentifier\":\"en\",\"description\":\"\",\"name\":\"Full Address\"}]},{\"isMandatory\":false,\"claimPath\":[\"personal_administrative_number\"],\"display\":[{\"description\":\"\",\"name\":\"Personal Administrative Number\",\"textColor\":\"\",\"logo\":{},\"backgroundColor\":\"\",\"localeIdentifier\":\"en\"}]},{\"isMandatory\":false,\"claimPath\":[\"picture\"],\"display\":[{\"description\":\"\",\"textColor\":\"\",\"name\":\"Portrait Image\",\"backgroundColor\":\"\",\"logo\":{},\"localeIdentifier\":\"en\"}]},{\"isMandatory\":false,\"claimPath\":[\"birth_family_name\"],\"display\":[{\"name\":\"Birth Family Name(s)\",\"logo\":{},\"description\":\"\",\"backgroundColor\":\"\",\"localeIdentifier\":\"en\",\"textColor\":\"\"}]},{\"isMandatory\":false,\"claimPath\":[\"birth_given_name\"],\"display\":[{\"textColor\":\"\",\"logo\":{},\"name\":\"Birth Given Name(s)\",\"localeIdentifier\":\"en\",\"description\":\"\",\"backgroundColor\":\"\"}]},{\"isMandatory\":false,\"claimPath\":[\"sex\"],\"display\":[{\"name\":\"Sex\",\"backgroundColor\":\"\",\"logo\":{},\"localeIdentifier\":\"en\",\"description\":\"\",\"textColor\":\"\"}]},{\"isMandatory\":false,\"claimPath\":[\"email\"],\"display\":[{\"localeIdentifier\":\"en\",\"description\":\"\",\"backgroundColor\":\"\",\"textColor\":\"\",\"logo\":{},\"name\":\"Email Address\"}]},{\"isMandatory\":false,\"claimPath\":[\"phone_number\"],\"display\":[{\"name\":\"Mobile Phone Number\",\"logo\":{},\"description\":\"\",\"localeIdentifier\":\"en\",\"backgroundColor\":\"\",\"textColor\":\"\"}]},{\"isMandatory\":true,\"claimPath\":[\"date_of_expiry\"],\"display\":[{\"textColor\":\"\",\"logo\":{},\"backgroundColor\":\"\",\"localeIdentifier\":\"en\",\"name\":\"Expiry Date\",\"description\":\"\"}]},{\"isMandatory\":true,\"claimPath\":[\"issuing_authority\"],\"display\":[{\"name\":\"Issuing Authority\",\"backgroundColor\":\"\",\"description\":\"\",\"localeIdentifier\":\"en\",\"textColor\":\"\",\"logo\":{}}]},{\"isMandatory\":true,\"claimPath\":[\"issuing_country\"],\"display\":[{\"description\":\"\",\"logo\":{},\"textColor\":\"\",\"backgroundColor\":\"\",\"localeIdentifier\":\"en\",\"name\":\"Issuing Country\"}]},{\"isMandatory\":false,\"claimPath\":[\"document_number\"],\"display\":[{\"localeIdentifier\":\"en\",\"description\":\"\",\"backgroundColor\":\"\",\"textColor\":\"\",\"logo\":{},\"name\":\"Document Number\"}]},{\"isMandatory\":false,\"claimPath\":[\"issuing_jurisdiction\"],\"display\":[{\"description\":\"\",\"logo\":{},\"name\":\"Issuing Jurisdiction\",\"localeIdentifier\":\"en\",\"backgroundColor\":\"\",\"textColor\":\"\"}]},{\"isMandatory\":false,\"claimPath\":[\"date_of_issuance\"],\"display\":[{\"localeIdentifier\":\"en\",\"textColor\":\"\",\"logo\":{},\"name\":\"Issuance Date\",\"description\":\"\",\"backgroundColor\":\"\"}]},{\"isMandatory\":false,\"claimPath\":[\"trust_anchor\"],\"display\":[{\"description\":\"\",\"name\":\"Trust Anchor\",\"textColor\":\"\",\"localeIdentifier\":\"en\",\"logo\":{},\"backgroundColor\":\"\"}]},{\"isMandatory\":false,\"claimPath\":[\"attestation_legal_category\"],\"display\":[{\"name\":\"Attestation Legal Category\",\"textColor\":\"\",\"localeIdentifier\":\"en\",\"logo\":{},\"description\":\"\",\"backgroundColor\":\"\"}]}],\"credentialIssuerIdentifier\":\"dev.issuer-backend.eudiw.dev\",\"issuerDisplay\":[{\"logo\":{\"alternativeText\":\"EU Digital Identity Wallet Logo\",\"urlString\":\"https:\\/\\/eudiw.dev\\/ic-logo.svg\"},\"name\":\"Digital Credentials Issuer\",\"localeIdentifier\":\"en\"},{\"logo\":{\"alternativeText\":\"Λογότυπο Ευρωπαϊκού Πορτοφολιού Ψηφιακής Ταυτότητας\",\"urlString\":\"https:\\/\\/eudiw.dev\\/ic-logo.svg\"},\"name\":\"Εκδότης Ψηφιακών Διαπιστευτηρίων\",\"localeIdentifier\":\"el\"}],\"configurationIdentifier\":\"eu.europa.ec.eudi.pid_vc_sd_jwt_deferred\"}".tryToData()
+  
   static let scopedDocument = ScopedDocument(
     name: "Test Document",
     issuer: "Test Issuer",
@@ -128,7 +131,7 @@ extension Constants {
     isPid: true,
     docTypeIdentifier: DocumentTypeIdentifier.mDocPid
   )
-
+  
   static let scopedDocumentNotPid = ScopedDocument(
     name: "Test Document",
     issuer: "Test Issuer",
@@ -136,7 +139,7 @@ extension Constants {
     isPid: false,
     docTypeIdentifier: DocumentTypeIdentifier.mDocPid
   )
-
+  
   static let defferedPendingDocument = Document(
     id: "doc-id",
     docType: "type",
@@ -144,7 +147,7 @@ extension Constants {
     data: Data(),
     docKeyInfo: nil,
     createdAt: Date(),
-    metadata: nil,
+    metadata: documentMetaData,
     displayName: "My Document",
     status: .deferred
   )
@@ -160,7 +163,7 @@ extension Constants {
     displayName: "My Document",
     status: .issued
   )
-
+  
   static let pendingDocument = Document(
     id: "doc-id",
     docType: "type",

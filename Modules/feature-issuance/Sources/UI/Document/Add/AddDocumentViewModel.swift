@@ -113,12 +113,12 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
 
   func onClick(
     issuerId: String,
-    configId: String,
+    configIds: [String],
     docTypeIdentifier: DocumentTypeIdentifier
   ) {
     issueDocument(
       issuerId: issuerId,
-      configId: configId,
+      configIds: configIds,
       docTypeIdentifier: docTypeIdentifier
     )
   }
@@ -186,7 +186,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
 
     switch state {
     case .success(let docId):
-      await fetchStoredDocuments(docId: docId)
+      await fetchStoredDocuments(docIds: [docId])
     case .deferredSuccess:
       router.push(
         with: onDeferredSuccess()
@@ -212,7 +212,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
 
   private func issueDocument(
     issuerId: String,
-    configId: String,
+    configIds: [String],
     docTypeIdentifier: DocumentTypeIdentifier
   ) {
     Task {
@@ -225,13 +225,13 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
 
       let state = await interactor.issueDocument(
         issuerId: issuerId,
-        configId: configId,
+        configIds: configIds,
         docTypeIdentifier: docTypeIdentifier
       )
 
       switch state {
-      case .success(let docId):
-        await fetchStoredDocuments(docId: docId)
+      case .success(let docIds):
+        await fetchStoredDocuments(docIds: docIds)
       case .dynamicIssuance(let session):
         setState {
           $0.copy(
@@ -256,15 +256,11 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
             )
           )
         }
-      case .deferredSuccess:
-        let metaData = try await interactor.getScopedDocument(
-          configId: configId
-        )
-
+      case .deferredSuccess(let scopedDocument):
         router.push(
           with: onDeferredSuccess(
-            issuerName: metaData.issuer,
-            documentName: metaData.name
+            issuerName: scopedDocument.issuer,
+            documentName: scopedDocument.name
           )
         )
       }
@@ -350,9 +346,9 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     )
   }
 
-  private func fetchStoredDocuments(docId: String) async {
+  private func fetchStoredDocuments(docIds: [String]) async {
 
-    let state = await interactor.fetchStoredDocuments(documentIds: [docId])
+    let state = await interactor.fetchStoredDocuments(documentIds: docIds)
 
     let onSuccesNavigation = switch viewState.config.flow {
     case .noDocument:

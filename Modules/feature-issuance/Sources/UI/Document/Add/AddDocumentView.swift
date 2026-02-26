@@ -44,10 +44,10 @@ struct AddDocumentView<Router: RouterHost>: View {
       } else {
         content(
           viewState: viewModel.viewState
-        ) { issuerId, configId, identifier in
+        ) { issuerId, configIds, identifier in
           viewModel.onClick(
             issuerId: issuerId,
-            configId: configId,
+            configIds: configIds,
             docTypeIdentifier: identifier
           )
         }
@@ -74,7 +74,7 @@ struct AddDocumentView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: AddDocumentViewState,
-  action: @escaping (String, String, DocumentTypeIdentifier) -> Void
+  action: @escaping (String, [String], DocumentTypeIdentifier) -> Void
 ) -> some View {
 
   ScrollView {
@@ -112,7 +112,7 @@ private func content(
                   "\(cell.issuerId)_\(cell.docTypeIdentifier)"
                 ),
                 isLoading: cell.isLoading,
-                action: { action(cell.issuerId, cell.configId, cell.docTypeIdentifier) }
+                action: { action(cell.issuerId, cell.configIds, cell.docTypeIdentifier) }
               )
             }
           }

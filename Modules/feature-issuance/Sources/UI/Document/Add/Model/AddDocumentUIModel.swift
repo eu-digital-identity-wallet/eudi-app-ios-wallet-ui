@@ -21,7 +21,7 @@ public struct AddDocumentUIModel: Identifiable, Sendable, Equatable {
 
   public let id: String
   public let listItem: ListItemData
-  public let configId: String
+  public let configIds: [String]
   public let issuerId: String
   public let docTypeIdentifier: DocumentTypeIdentifier
   public var isEnabled: Bool
@@ -31,7 +31,7 @@ public struct AddDocumentUIModel: Identifiable, Sendable, Equatable {
     listItem: ListItemData,
     isEnabled: Bool,
     isLoading: Bool = false,
-    configId: String,
+    configIds: [String],
     issuerId: String,
     docTypeIdentifier: DocumentTypeIdentifier
   ) {
@@ -39,7 +39,7 @@ public struct AddDocumentUIModel: Identifiable, Sendable, Equatable {
     self.isEnabled = isEnabled
     self.listItem = listItem
     self.isLoading = isLoading
-    self.configId = configId
+    self.configIds = configIds
     self.issuerId = issuerId
     self.docTypeIdentifier = docTypeIdentifier
   }
@@ -55,7 +55,7 @@ public extension AddDocumentUIModel {
           ),
           isEnabled: true,
           isLoading: true,
-          configId: "id",
+          configIds: ["id"],
           issuerId: "id",
           docTypeIdentifier: .mDocPid
         ),
@@ -65,7 +65,7 @@ public extension AddDocumentUIModel {
           ),
           isEnabled: true,
           isLoading: true,
-          configId: "id",
+          configIds: ["id"],
           issuerId: "id",
           docTypeIdentifier: .mDocPid
         ),
@@ -75,7 +75,7 @@ public extension AddDocumentUIModel {
           ),
           isEnabled: true,
           isLoading: true,
-          configId: "id",
+          configIds: ["id"],
           issuerId: "id",
           docTypeIdentifier: .mDocPid
         ),
@@ -85,7 +85,7 @@ public extension AddDocumentUIModel {
           ),
           isEnabled: true,
           isLoading: true,
-          configId: "id",
+          configIds: ["id"],
           issuerId: "id",
           docTypeIdentifier: .mDocPid
         )
