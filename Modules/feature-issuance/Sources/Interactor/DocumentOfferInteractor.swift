@@ -37,11 +37,14 @@ public protocol DocumentOfferInteractor: Sendable {
 final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
   private let walletController: WalletKitController
+  private let configLogic: ConfigLogic
 
   init(
-    walletController: WalletKitController
+    walletController: WalletKitController,
+    configLogic: ConfigLogic
   ) {
     self.walletController = walletController
+    self.configLogic = configLogic
   }
 
   func processOfferRequest(with uri: String) async -> OfferRequestPartialState {
@@ -72,7 +75,7 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
         }
       ) != nil
 
-      if !hasPidStored && !hasPidInOffer {
+      if configLogic.forcePidActivation && !hasPidStored && !hasPidInOffer {
         return .failure(WalletCoreError.missingPid)
       }
 

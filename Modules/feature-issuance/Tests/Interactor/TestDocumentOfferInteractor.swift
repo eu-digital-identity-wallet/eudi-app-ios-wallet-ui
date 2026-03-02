@@ -26,18 +26,23 @@ final class TestDocumentOfferInteractor: EudiTest {
   
   var interactor: DocumentOfferInteractor!
   var walletKitController: MockWalletKitController!
+  var configLogic: MockConfigLogic!
   
   override func setUp() {
     super.setUp()
     self.walletKitController = MockWalletKitController()
+    self.configLogic = MockConfigLogic()
     self.interactor = DocumentOfferInteractorImpl(
-      walletController: walletKitController
+      walletController: walletKitController,
+      configLogic: configLogic
     )
+    stubConfigLogic()
   }
   
   override func tearDown() {
     self.interactor = nil
     self.walletKitController = nil
+    self.configLogic = nil
   }
   
   func testResumeDynamicIssuance_WhenNoPendingData_ThenReturnNoPending() async {
@@ -715,6 +720,14 @@ final class TestDocumentOfferInteractor: EudiTest {
       XCTAssertEqual(doc.issuerName, expectedDocumentOfferUIModel.issuerName)
     default:
       XCTFail("Expected success, but got \(result)")
+    }
+  }
+}
+
+private extension TestDocumentOfferInteractor {
+  func stubConfigLogic() {
+    stub(configLogic) { mock in
+      when(mock.forcePidActivation.get).thenReturn(true)
     }
   }
 }
