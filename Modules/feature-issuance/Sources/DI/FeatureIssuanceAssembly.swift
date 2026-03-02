@@ -15,6 +15,7 @@
  */
 import Swinject
 import logic_core
+import logic_business
 
 public final class FeatureIssuanceAssembly: Assembly {
 
@@ -27,7 +28,10 @@ public final class FeatureIssuanceAssembly: Assembly {
     .inObjectScope(ObjectScope.transient)
 
     container.register(DocumentOfferInteractor.self) { r in
-      DocumentOfferInteractorImpl(walletController: r.force(WalletKitController.self))
+      DocumentOfferInteractorImpl(
+        walletController: r.force(WalletKitController.self),
+        configLogic: r.force(ConfigLogic.self)
+      )
     }
     .inObjectScope(ObjectScope.transient)
   }
