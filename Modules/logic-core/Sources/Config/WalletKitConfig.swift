@@ -102,7 +102,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
         return [
           .init(
             credentialIssuerURL: "https://utsteder.test.eidas2sandkasse.net",
-            clientId: "demo-lommebok-test",
+            client: .public(id: "demo-lommebok-test"),
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
             usePAR: true,
             useDpopIfSupported: true,
@@ -113,7 +113,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
         return [
           .init(
             credentialIssuerURL: "https://utsteder.eidas2sandkasse.dev",
-            clientId: "demo-lommebok-dev",
+            client: .public(id: "demo-lommebok-dev"),
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
             usePAR: true,
             useDpopIfSupported: true,
