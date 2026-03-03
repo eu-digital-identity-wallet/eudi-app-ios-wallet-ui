@@ -37,30 +37,41 @@ struct HomeTabView<Router: RouterHost>: View {
       openSignDocument: viewModel.openSignDocument(),
       toggleSignDocumentAlert: viewModel.toggleSignDocumentAlert()
     )
-    .onChange(of: viewModel.isAuthenticateModalShowing) { showOnline in
-        guard showOnline else { return }
-        viewModel.onShowScanner()
-    }
-    .dialogCompat(
-      .bleDisabledModalTitle,
-      isPresented: $viewModel.isBleModalShowing,
-      actions: {
-        Button(.bleDisabledModalButton) {
-          viewModel.onBleSettings()
-        }
-        Button(.cancelButton, role: .cancel) {}
-      },
-      message: {
-        Text(.bleDisabledModalCaption)
+    .confirmationDialog(
+      .authenticate,
+      isPresented: $viewModel.isAuthenticateModalShowing,
+      titleVisibility: .visible
+    ) {
+      Button(.inPerson) {
+        viewModel.onShare()
       }
-    )
-    .onChange(of: scenePhase) {
-      self.viewModel.setPhase(with: scenePhase)
+      Button(.online) {
+        viewModel.onShowScanner()
+      }
+      Button(.cancelButton, role: .destructive) {}
+    } message: {
+        Text(.authenticateAuthoriseTransactions)
+      .dialogCompat(
+        .bleDisabledModalTitle,
+        isPresented: $viewModel.isBleModalShowing,
+        actions: {
+          Button(.bleDisabledModalButton) {
+            viewModel.onBleSettings()
+          }
+          Button(.cancelButton, role: .cancel) {}
+        },
+        message: {
+          Text(.bleDisabledModalCaption)
+        }
+      )
+      .onChange(of: scenePhase) {
+        self.viewModel.setPhase(with: scenePhase)
+      }
+      .task {
+        await viewModel.onCreate()
+      }
+      .background(Theme.shared.color.background)
     }
-    .task {
-      await viewModel.onCreate()
-    }
-    .background(Theme.shared.color.background)
   }
 }
 
