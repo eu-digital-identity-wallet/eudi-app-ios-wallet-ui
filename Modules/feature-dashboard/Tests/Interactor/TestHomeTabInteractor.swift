@@ -83,7 +83,7 @@ final class TestHomeTabInteractor: EudiTest {
 }
 
 private extension TestHomeTabInteractor {
-  func stubFetchMainPidDocument(with document: DocClaimsDecodable?) {
+  func stubFetchMainPidDocument(with document: (any DocClaimsDecodable)?) {
     stub(walletKitController) { mock in
       when(mock.fetchMainPidDocument()).thenReturn(document)
     }

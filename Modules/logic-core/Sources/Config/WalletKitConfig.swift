@@ -16,10 +16,7 @@
 import Foundation
 import logic_business
 import EudiWalletKit
-
-struct ReaderConfig: Sendable {
-  public let trustedCerts: [Data]
-}
+import Security
 
 protocol WalletKitConfig: Sendable {
 
@@ -36,7 +33,7 @@ protocol WalletKitConfig: Sendable {
   /**
    * Reader Configuration
    */
-  var readerConfig: ReaderConfig { get }
+  var trustedReaderRootCertificates: [x5chain] { get }
 
   /**
    * User authentication required accessing core's secure storage
@@ -161,7 +158,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
     .init(clientIdSchemes: [.x509SanDns, .x509Hash])
   }
 
-  var readerConfig: ReaderConfig {
+  var trustedReaderRootCertificates: [x5chain] {
     let certificates = [
       "pidissuerca02_cz",
       "pidissuerca02_ee",
@@ -172,10 +169,9 @@ struct WalletKitConfigImpl: WalletKitConfig {
       "pidissuerca02_ut",
       "r45_staging"
     ]
-    let certsData: [Data] = certificates.compactMap {
-      Data(name: $0, ext: "der")
-    }
-    return .init(trustedCerts: certsData)
+    return certificates
+      .compactMap { loadCertificate($0) }
+      .map { [$0] }
   }
 
   var documentStorageServiceName: String {
@@ -279,5 +275,12 @@ struct WalletKitConfigImpl: WalletKitConfig {
         ]
       )
     }
+  }
+}
+
+private extension WalletKitConfigImpl {
+  func loadCertificate(_ name: String) -> SecCertificate? {
+    guard let data = Data(name: name, ext: "der") else { return nil }
+    return SecCertificateCreateWithData(nil, data as CFData)
   }
 }

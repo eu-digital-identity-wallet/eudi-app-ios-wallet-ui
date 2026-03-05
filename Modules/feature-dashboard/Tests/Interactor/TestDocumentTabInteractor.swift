@@ -520,13 +520,13 @@ private extension TestDocumentTabInteractor {
       attributes: TestDocumentTabInteractor.mockDocumentFilterableAttributes)
   ])
   
-  func stubFetchDocuments(with documents: [DocClaimsDecodable]) {
+  func stubFetchDocuments(with documents: [any DocClaimsDecodable]) {
     stub(walletKitController) { mock in
       when(mock.fetchAllDocuments()).thenReturn(documents)
     }
   }
   
-  func stubFetchIssuedDocuments(with documents: [DocClaimsDecodable]) {
+  func stubFetchIssuedDocuments(with documents: [any DocClaimsDecodable]) {
     stub(walletKitController) { mock in
       when(mock.fetchIssuedDocuments()).thenReturn(documents)
     }
@@ -538,13 +538,13 @@ private extension TestDocumentTabInteractor {
     }
   }
   
-  func stubFetchDocumentsWithExclusion(with documents: [DocClaimsDecodable]) {
+  func stubFetchDocumentsWithExclusion(with documents: [any DocClaimsDecodable]) {
     stub(walletKitController) { mock in
       when(mock.fetchIssuedDocuments(excluded: any())).thenReturn(documents)
     }
   }
   
-  func stubFetchMainPidDocument(with document: DocClaimsDecodable?) {
+  func stubFetchMainPidDocument(with document: (any DocClaimsDecodable)?) {
     stub(walletKitController) { mock in
       when(mock.fetchMainPidDocument()).thenReturn(document)
     }
