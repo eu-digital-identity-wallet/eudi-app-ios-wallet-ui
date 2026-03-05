@@ -5773,6 +5773,7 @@ import EudiWalletKit
 import Cuckoo
 import Foundation
 import EudiWalletKit
+import Security
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -5818,12 +5819,12 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         }
     }
     
-    var readerConfig: ReaderConfig {
+    var trustedReaderRootCertificates: [x5chain] {
         get {
             return cuckoo_manager.getter(
-                "readerConfig",
+                "trustedReaderRootCertificates",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.readerConfig
+                defaultCall: __defaultImplStub!.trustedReaderRootCertificates
             )
         }
     }
@@ -5914,8 +5915,8 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             return .init(manager: cuckoo_manager, name: "vpConfig")
         }
         
-        var readerConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,ReaderConfig> {
-            return .init(manager: cuckoo_manager, name: "readerConfig")
+        var trustedReaderRootCertificates: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,[x5chain]> {
+            return .init(manager: cuckoo_manager, name: "trustedReaderRootCertificates")
         }
         
         var userAuthenticationRequired: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,Bool> {
@@ -5966,8 +5967,8 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             return .init(manager: cuckoo_manager, name: "vpConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var readerConfig: Cuckoo.VerifyReadOnlyProperty<ReaderConfig> {
-            return .init(manager: cuckoo_manager, name: "readerConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var trustedReaderRootCertificates: Cuckoo.VerifyReadOnlyProperty<[x5chain]> {
+            return .init(manager: cuckoo_manager, name: "trustedReaderRootCertificates", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         var userAuthenticationRequired: Cuckoo.VerifyReadOnlyProperty<Bool> {
@@ -6014,9 +6015,9 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
         }
     }
     
-    var readerConfig: ReaderConfig {
+    var trustedReaderRootCertificates: [x5chain] {
         get {
-            return DefaultValueRegistry.defaultValue(for: (ReaderConfig).self)
+            return DefaultValueRegistry.defaultValue(for: ([x5chain]).self)
         }
     }
     
@@ -6231,9 +6232,9 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func fetchAllDocuments() async -> [DocClaimsDecodable] {
+    public func fetchAllDocuments() async -> [any DocClaimsDecodable] {
         return await cuckoo_manager.call(
-            "fetchAllDocuments() async -> [DocClaimsDecodable]",
+            "fetchAllDocuments() async -> [any DocClaimsDecodable]",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -6251,9 +6252,9 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func fetchIssuedDocuments() async -> [DocClaimsDecodable] {
+    public func fetchIssuedDocuments() async -> [any DocClaimsDecodable] {
         return await cuckoo_manager.call(
-            "fetchIssuedDocuments() async -> [DocClaimsDecodable]",
+            "fetchIssuedDocuments() async -> [any DocClaimsDecodable]",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -6261,9 +6262,9 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func fetchIssuedDocuments(with p0: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable] {
+    public func fetchIssuedDocuments(with p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable] {
         return await cuckoo_manager.call(
-            "fetchIssuedDocuments(with p0: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable]",
+            "fetchIssuedDocuments(with p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -6271,9 +6272,9 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable] {
+    public func fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable] {
         return await cuckoo_manager.call(
-            "fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable]",
+            "fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -6281,9 +6282,9 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func fetchMainPidDocument() async -> DocClaimsDecodable? {
+    public func fetchMainPidDocument() async -> (any DocClaimsDecodable)? {
         return await cuckoo_manager.call(
-            "fetchMainPidDocument() async -> DocClaimsDecodable?",
+            "fetchMainPidDocument() async -> (any DocClaimsDecodable)?",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -6291,9 +6292,9 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func fetchDocument(with p0: String) async -> DocClaimsDecodable? {
+    public func fetchDocument(with p0: String) async -> (any DocClaimsDecodable)? {
         return await cuckoo_manager.call(
-            "fetchDocument(with p0: String) async -> DocClaimsDecodable?",
+            "fetchDocument(with p0: String) async -> (any DocClaimsDecodable)?",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -6301,9 +6302,9 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
     
-    public func fetchDocuments(with p0: [String]) async -> [DocClaimsDecodable] {
+    public func fetchDocuments(with p0: [String]) async -> [any DocClaimsDecodable] {
         return await cuckoo_manager.call(
-            "fetchDocuments(with p0: [String]) async -> [DocClaimsDecodable]",
+            "fetchDocuments(with p0: [String]) async -> [any DocClaimsDecodable]",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -6351,9 +6352,9 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         )
     }
     
-    public func requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> DocClaimsDecodable {
+    public func requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> any DocClaimsDecodable {
         return try await cuckoo_manager.callThrows(
-            "requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> DocClaimsDecodable",
+            "requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> any DocClaimsDecodable",
             parameters: (p0),
             escapingParameters: (p0),
 errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -6555,9 +6556,9 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         )
     }
     
-    public func isDocumentLowOnCredentials(document p0: DocClaimsDecodable?) async -> Bool {
+    public func isDocumentLowOnCredentials(document p0: (any DocClaimsDecodable)?) async -> Bool {
         return await cuckoo_manager.call(
-            "isDocumentLowOnCredentials(document p0: DocClaimsDecodable?) async -> Bool",
+            "isDocumentLowOnCredentials(document p0: (any DocClaimsDecodable)?) async -> Bool",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -6608,10 +6609,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             ))
         }
         
-        func fetchAllDocuments() -> Cuckoo.ProtocolStubFunction<(), [DocClaimsDecodable]> {
+        func fetchAllDocuments() -> Cuckoo.ProtocolStubFunction<(), [any DocClaimsDecodable]> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "fetchAllDocuments() async -> [DocClaimsDecodable]",
+                method: "fetchAllDocuments() async -> [any DocClaimsDecodable]",
                 parameterMatchers: matchers
             ))
         }
@@ -6624,50 +6625,50 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             ))
         }
         
-        func fetchIssuedDocuments() -> Cuckoo.ProtocolStubFunction<(), [DocClaimsDecodable]> {
+        func fetchIssuedDocuments() -> Cuckoo.ProtocolStubFunction<(), [any DocClaimsDecodable]> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "fetchIssuedDocuments() async -> [DocClaimsDecodable]",
+                method: "fetchIssuedDocuments() async -> [any DocClaimsDecodable]",
                 parameterMatchers: matchers
             ))
         }
         
-        func fetchIssuedDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<([DocumentTypeIdentifier]), [DocClaimsDecodable]> where M1.MatchedType == [DocumentTypeIdentifier] {
+        func fetchIssuedDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<([DocumentTypeIdentifier]), [any DocClaimsDecodable]> where M1.MatchedType == [DocumentTypeIdentifier] {
             let matchers: [Cuckoo.ParameterMatcher<([DocumentTypeIdentifier])>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "fetchIssuedDocuments(with p0: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable]",
+                method: "fetchIssuedDocuments(with p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]",
                 parameterMatchers: matchers
             ))
         }
         
-        func fetchIssuedDocuments<M1: Cuckoo.Matchable>(excluded p0: M1) -> Cuckoo.ProtocolStubFunction<([DocumentTypeIdentifier]), [DocClaimsDecodable]> where M1.MatchedType == [DocumentTypeIdentifier] {
+        func fetchIssuedDocuments<M1: Cuckoo.Matchable>(excluded p0: M1) -> Cuckoo.ProtocolStubFunction<([DocumentTypeIdentifier]), [any DocClaimsDecodable]> where M1.MatchedType == [DocumentTypeIdentifier] {
             let matchers: [Cuckoo.ParameterMatcher<([DocumentTypeIdentifier])>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable]",
+                method: "fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]",
                 parameterMatchers: matchers
             ))
         }
         
-        func fetchMainPidDocument() -> Cuckoo.ProtocolStubFunction<(), DocClaimsDecodable?> {
+        func fetchMainPidDocument() -> Cuckoo.ProtocolStubFunction<(), (any DocClaimsDecodable)?> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "fetchMainPidDocument() async -> DocClaimsDecodable?",
+                method: "fetchMainPidDocument() async -> (any DocClaimsDecodable)?",
                 parameterMatchers: matchers
             ))
         }
         
-        func fetchDocument<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<(String), DocClaimsDecodable?> where M1.MatchedType == String {
+        func fetchDocument<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<(String), (any DocClaimsDecodable)?> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "fetchDocument(with p0: String) async -> DocClaimsDecodable?",
+                method: "fetchDocument(with p0: String) async -> (any DocClaimsDecodable)?",
                 parameterMatchers: matchers
             ))
         }
         
-        func fetchDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<([String]), [DocClaimsDecodable]> where M1.MatchedType == [String] {
+        func fetchDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<([String]), [any DocClaimsDecodable]> where M1.MatchedType == [String] {
             let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "fetchDocuments(with p0: [String]) async -> [DocClaimsDecodable]",
+                method: "fetchDocuments(with p0: [String]) async -> [any DocClaimsDecodable]",
                 parameterMatchers: matchers
             ))
         }
@@ -6704,10 +6705,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             ))
         }
         
-        func requestDeferredIssuance<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(WalletStorage.Document), DocClaimsDecodable,Error> where M1.MatchedType == WalletStorage.Document {
+        func requestDeferredIssuance<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(WalletStorage.Document), any DocClaimsDecodable,Error> where M1.MatchedType == WalletStorage.Document {
             let matchers: [Cuckoo.ParameterMatcher<(WalletStorage.Document)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> DocClaimsDecodable",
+                method: "requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> any DocClaimsDecodable",
                 parameterMatchers: matchers
             ))
         }
@@ -6864,10 +6865,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             ))
         }
         
-        func isDocumentLowOnCredentials<M1: Cuckoo.OptionalMatchable>(document p0: M1) -> Cuckoo.ProtocolStubFunction<(DocClaimsDecodable?), Bool> where M1.OptionalMatchedType == DocClaimsDecodable {
-            let matchers: [Cuckoo.ParameterMatcher<(DocClaimsDecodable?)>] = [wrap(matchable: p0) { $0 }]
+        func isDocumentLowOnCredentials<M1: Cuckoo.OptionalMatchable>(document p0: M1) -> Cuckoo.ProtocolStubFunction<((any DocClaimsDecodable)?), Bool> where M1.OptionalMatchedType == (any DocClaimsDecodable) {
+            let matchers: [Cuckoo.ParameterMatcher<((any DocClaimsDecodable)?)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "isDocumentLowOnCredentials(document p0: DocClaimsDecodable?) async -> Bool",
+                method: "isDocumentLowOnCredentials(document p0: (any DocClaimsDecodable)?) async -> Bool",
                 parameterMatchers: matchers
             ))
         }
@@ -6938,10 +6939,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func fetchAllDocuments() -> Cuckoo.__DoNotUse<(), [DocClaimsDecodable]> {
+        func fetchAllDocuments() -> Cuckoo.__DoNotUse<(), [any DocClaimsDecodable]> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "fetchAllDocuments() async -> [DocClaimsDecodable]",
+                "fetchAllDocuments() async -> [any DocClaimsDecodable]",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -6962,10 +6963,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func fetchIssuedDocuments() -> Cuckoo.__DoNotUse<(), [DocClaimsDecodable]> {
+        func fetchIssuedDocuments() -> Cuckoo.__DoNotUse<(), [any DocClaimsDecodable]> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "fetchIssuedDocuments() async -> [DocClaimsDecodable]",
+                "fetchIssuedDocuments() async -> [any DocClaimsDecodable]",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -6974,10 +6975,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func fetchIssuedDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<([DocumentTypeIdentifier]), [DocClaimsDecodable]> where M1.MatchedType == [DocumentTypeIdentifier] {
+        func fetchIssuedDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<([DocumentTypeIdentifier]), [any DocClaimsDecodable]> where M1.MatchedType == [DocumentTypeIdentifier] {
             let matchers: [Cuckoo.ParameterMatcher<([DocumentTypeIdentifier])>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "fetchIssuedDocuments(with p0: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable]",
+                "fetchIssuedDocuments(with p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -6986,10 +6987,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func fetchIssuedDocuments<M1: Cuckoo.Matchable>(excluded p0: M1) -> Cuckoo.__DoNotUse<([DocumentTypeIdentifier]), [DocClaimsDecodable]> where M1.MatchedType == [DocumentTypeIdentifier] {
+        func fetchIssuedDocuments<M1: Cuckoo.Matchable>(excluded p0: M1) -> Cuckoo.__DoNotUse<([DocumentTypeIdentifier]), [any DocClaimsDecodable]> where M1.MatchedType == [DocumentTypeIdentifier] {
             let matchers: [Cuckoo.ParameterMatcher<([DocumentTypeIdentifier])>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable]",
+                "fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -6998,10 +6999,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func fetchMainPidDocument() -> Cuckoo.__DoNotUse<(), DocClaimsDecodable?> {
+        func fetchMainPidDocument() -> Cuckoo.__DoNotUse<(), (any DocClaimsDecodable)?> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "fetchMainPidDocument() async -> DocClaimsDecodable?",
+                "fetchMainPidDocument() async -> (any DocClaimsDecodable)?",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7010,10 +7011,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func fetchDocument<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), DocClaimsDecodable?> where M1.MatchedType == String {
+        func fetchDocument<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), (any DocClaimsDecodable)?> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "fetchDocument(with p0: String) async -> DocClaimsDecodable?",
+                "fetchDocument(with p0: String) async -> (any DocClaimsDecodable)?",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7022,10 +7023,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func fetchDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<([String]), [DocClaimsDecodable]> where M1.MatchedType == [String] {
+        func fetchDocuments<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<([String]), [any DocClaimsDecodable]> where M1.MatchedType == [String] {
             let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "fetchDocuments(with p0: [String]) async -> [DocClaimsDecodable]",
+                "fetchDocuments(with p0: [String]) async -> [any DocClaimsDecodable]",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7082,10 +7083,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func requestDeferredIssuance<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(WalletStorage.Document), DocClaimsDecodable> where M1.MatchedType == WalletStorage.Document {
+        func requestDeferredIssuance<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(WalletStorage.Document), any DocClaimsDecodable> where M1.MatchedType == WalletStorage.Document {
             let matchers: [Cuckoo.ParameterMatcher<(WalletStorage.Document)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> DocClaimsDecodable",
+                "requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> any DocClaimsDecodable",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7322,10 +7323,10 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
         
         
         @discardableResult
-        func isDocumentLowOnCredentials<M1: Cuckoo.OptionalMatchable>(document p0: M1) -> Cuckoo.__DoNotUse<(DocClaimsDecodable?), Bool> where M1.OptionalMatchedType == DocClaimsDecodable {
-            let matchers: [Cuckoo.ParameterMatcher<(DocClaimsDecodable?)>] = [wrap(matchable: p0) { $0 }]
+        func isDocumentLowOnCredentials<M1: Cuckoo.OptionalMatchable>(document p0: M1) -> Cuckoo.__DoNotUse<((any DocClaimsDecodable)?), Bool> where M1.OptionalMatchedType == (any DocClaimsDecodable) {
+            let matchers: [Cuckoo.ParameterMatcher<((any DocClaimsDecodable)?)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "isDocumentLowOnCredentials(document p0: DocClaimsDecodable?) async -> Bool",
+                "isDocumentLowOnCredentials(document p0: (any DocClaimsDecodable)?) async -> Bool",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7360,36 +7361,36 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func fetchAllDocuments() async -> [DocClaimsDecodable] {
-        return DefaultValueRegistry.defaultValue(for: ([DocClaimsDecodable]).self)
+    public func fetchAllDocuments() async -> [any DocClaimsDecodable] {
+        return DefaultValueRegistry.defaultValue(for: ([any DocClaimsDecodable]).self)
     }
     
     public func fetchDeferredDocuments() async -> [WalletStorage.Document] {
         return DefaultValueRegistry.defaultValue(for: ([WalletStorage.Document]).self)
     }
     
-    public func fetchIssuedDocuments() async -> [DocClaimsDecodable] {
-        return DefaultValueRegistry.defaultValue(for: ([DocClaimsDecodable]).self)
+    public func fetchIssuedDocuments() async -> [any DocClaimsDecodable] {
+        return DefaultValueRegistry.defaultValue(for: ([any DocClaimsDecodable]).self)
     }
     
-    public func fetchIssuedDocuments(with p0: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable] {
-        return DefaultValueRegistry.defaultValue(for: ([DocClaimsDecodable]).self)
+    public func fetchIssuedDocuments(with p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable] {
+        return DefaultValueRegistry.defaultValue(for: ([any DocClaimsDecodable]).self)
     }
     
-    public func fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable] {
-        return DefaultValueRegistry.defaultValue(for: ([DocClaimsDecodable]).self)
+    public func fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable] {
+        return DefaultValueRegistry.defaultValue(for: ([any DocClaimsDecodable]).self)
     }
     
-    public func fetchMainPidDocument() async -> DocClaimsDecodable? {
-        return DefaultValueRegistry.defaultValue(for: (DocClaimsDecodable?).self)
+    public func fetchMainPidDocument() async -> (any DocClaimsDecodable)? {
+        return DefaultValueRegistry.defaultValue(for: ((any DocClaimsDecodable)?).self)
     }
     
-    public func fetchDocument(with p0: String) async -> DocClaimsDecodable? {
-        return DefaultValueRegistry.defaultValue(for: (DocClaimsDecodable?).self)
+    public func fetchDocument(with p0: String) async -> (any DocClaimsDecodable)? {
+        return DefaultValueRegistry.defaultValue(for: ((any DocClaimsDecodable)?).self)
     }
     
-    public func fetchDocuments(with p0: [String]) async -> [DocClaimsDecodable] {
-        return DefaultValueRegistry.defaultValue(for: ([DocClaimsDecodable]).self)
+    public func fetchDocuments(with p0: [String]) async -> [any DocClaimsDecodable] {
+        return DefaultValueRegistry.defaultValue(for: ([any DocClaimsDecodable]).self)
     }
     
     public func clearAllDocuments() async {
@@ -7408,8 +7409,8 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: ([WalletStorage.Document]).self)
     }
     
-    public func requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> DocClaimsDecodable {
-        return DefaultValueRegistry.defaultValue(for: (DocClaimsDecodable).self)
+    public func requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> any DocClaimsDecodable {
+        return DefaultValueRegistry.defaultValue(for: (any DocClaimsDecodable).self)
     }
     
     public func resolveOfferUrlDocTypes(offerUri p0: String) async throws -> OfferedIssuanceModel {
@@ -7488,7 +7489,7 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (CredentialStatus).self)
     }
     
-    public func isDocumentLowOnCredentials(document p0: DocClaimsDecodable?) async -> Bool {
+    public func isDocumentLowOnCredentials(document p0: (any DocClaimsDecodable)?) async -> Bool {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
 }

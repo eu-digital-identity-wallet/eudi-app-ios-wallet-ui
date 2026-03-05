@@ -330,7 +330,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
 }
 
 extension TestDocumentDetailsInteractor {
-  func stubFetchDocument(for id: String, document: DocClaimsDecodable = Constants.createEuPidModel()) {
+  func stubFetchDocument(for id: String, document: any DocClaimsDecodable = Constants.createEuPidModel()) {
     stub(walletKitController) { stub in
       when(stub.fetchDocument(with: equal(to: id)))
         .thenReturn(document)

@@ -1,5 +1,5 @@
 {
-  "originHash" : "f5d9d9b712c4edf829afcd5fb6d8c8ce07c423fe9e3bd415c257daf75742d475",
+  "originHash" : "925531be77eba9ed3ab9cce5f5b1917ac907a9180e8549906a40ad3b6d8ebb20",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -87,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "a3e8f8991aaf5e51690cf30a3728c534174329c6",
-        "version" : "0.9.2"
+        "revision" : "876fcb791e894d8ac8320dc171fcd967874e0346",
+        "version" : "0.10.0"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "1edd207667a3a6e0df59868fed059647c089332d",
-        "version" : "0.8.5"
+        "revision" : "e3be5b6e0bd3d792153690b4b98209bcf98d7c5c",
+        "version" : "0.10.1"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "865049862c8154e6f350f722e185db9ae65c6301",
-        "version" : "0.8.2"
+        "revision" : "64c6216056e8c4a146d966cbf793a1f9f46b391c",
+        "version" : "0.10.1"
       }
     },
     {
@@ -115,15 +115,6 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
         "revision" : "f08783f37364bb300ee32182fd0b7dfc9c29dfd4",
-        "version" : "0.20.0"
-      }
-    },
-    {
-      "identity" : "eudi-lib-ios-openid4vp-swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vp-swift.git",
-      "state" : {
-        "revision" : "e616e07b0d9fd11ca5da09e66b26e09d71096a02",
         "version" : "0.20.0"
       }
     },
@@ -155,6 +146,15 @@
       }
     },
     {
+      "identity" : "eudi-lib-ios-siop-openid4vp-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
+      "state" : {
+        "revision" : "55a61bf74a6f1745e0e97455dc8eae974a07db0b",
+        "version" : "0.30.0"
+      }
+    },
+    {
       "identity" : "eudi-lib-ios-statium-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-statium-swift.git",
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "3abecd15f90dbdeebbe8a8d54c07a8e2fd0d6d5c",
-        "version" : "0.20.5"
+        "revision" : "29d3055f1bbf9af1519e95ff57ff0504a2158b39",
+        "version" : "0.21.0"
       }
     },
     {
@@ -177,8 +177,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "27c0e858b4de1a0f71f2c5f266c7a9305b9e4c22",
-        "version" : "0.8.4"
+        "revision" : "2cfcbd43544fdc51d0b1ea33c2045203563815be",
+        "version" : "0.10.0"
       }
     },
     {
@@ -258,8 +258,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/marmelroy/PhoneNumberKit",
       "state" : {
-        "revision" : "e0f91a22bbc96a67430e1cff502f943a67a97ed3",
-        "version" : "4.2.5"
+        "revision" : "ad20aba8db84a6ba373abfcffe38b1c8e6f8258b",
+        "version" : "4.2.7"
       }
     },
     {
@@ -276,8 +276,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage.git",
       "state" : {
-        "revision" : "449e8f8f10377f620db8ad22ea81208eecf6325f",
-        "version" : "5.21.6"
+        "revision" : "2de3a496eaf6df9a1312862adcfd54acd73c39c0",
+        "version" : "5.21.7"
       }
     },
     {

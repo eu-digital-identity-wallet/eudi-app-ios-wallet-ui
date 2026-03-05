@@ -34,14 +34,14 @@ public protocol WalletKitController: Sendable {
   func startCrossDevicePresentation(urlString: String) async -> RemoteSessionCoordinator
   func stopPresentation() async
 
-  func fetchAllDocuments() async -> [DocClaimsDecodable]
+  func fetchAllDocuments() async -> [any DocClaimsDecodable]
   func fetchDeferredDocuments() async -> [WalletStorage.Document]
-  func fetchIssuedDocuments() async -> [DocClaimsDecodable]
-  func fetchIssuedDocuments(with types: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable]
-  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) async -> [DocClaimsDecodable]
-  func fetchMainPidDocument() async -> DocClaimsDecodable?
-  func fetchDocument(with id: String) async -> DocClaimsDecodable?
-  func fetchDocuments(with ids: [String]) async -> [DocClaimsDecodable]
+  func fetchIssuedDocuments() async -> [any DocClaimsDecodable]
+  func fetchIssuedDocuments(with types: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]
+  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]
+  func fetchMainPidDocument() async -> (any DocClaimsDecodable)?
+  func fetchDocument(with id: String) async -> (any DocClaimsDecodable)?
+  func fetchDocuments(with ids: [String]) async -> [any DocClaimsDecodable]
   func clearAllDocuments() async
   func deleteDocument(with id: String, status: DocumentStatus) async throws
   func loadDocuments() async throws
@@ -50,7 +50,7 @@ public protocol WalletKitController: Sendable {
     identifiers: [String],
     docTypeIdentifier: DocumentTypeIdentifier
   ) async throws -> [WalletStorage.Document]
-  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable
+  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> any DocClaimsDecodable
   func resolveOfferUrlDocTypes(offerUri: String) async throws -> OfferedIssuanceModel
   func issueDocumentsByOfferUrl(
     offerUri: String,
@@ -84,7 +84,7 @@ public protocol WalletKitController: Sendable {
   func removeRevokedDocument(with id: String) async throws
 
   func getDocumentStatus(for statusIdentifier: StatusIdentifier) async throws -> CredentialStatus
-  func isDocumentLowOnCredentials(document: DocClaimsDecodable?) async -> Bool
+  func isDocumentLowOnCredentials(document: (any DocClaimsDecodable)?) async -> Bool
 }
 
 final actor WalletKitControllerImpl: WalletKitController {
@@ -118,7 +118,7 @@ final actor WalletKitControllerImpl: WalletKitController {
       eudiWalletConfig: EudiWalletConfiguration(
         serviceName: configLogic.documentStorageServiceName,
         userAuthenticationRequired: configLogic.userAuthenticationRequired,
-        trustedReaderCertificates: configLogic.readerConfig.trustedCerts,
+        trustedReaderRootCertificates: configLogic.trustedReaderRootCertificates,
         deviceAuthMethod: .deviceSignature,
         uiCulture: Locale.current.systemLanguageCode,
         logFileName: configLogic.logFileName
@@ -202,7 +202,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     await self.sessionCoordinatorHolder.clear()
   }
 
-  func fetchAllDocuments() -> [DocClaimsDecodable] {
+  func fetchAllDocuments() -> [any DocClaimsDecodable] {
     return fetchIssuedDocuments() + fetchDeferredDocuments().transformToDeferredDecodables()
   }
 
@@ -210,30 +210,30 @@ final actor WalletKitControllerImpl: WalletKitController {
     return wallet.storage.deferredDocuments
   }
 
-  func fetchIssuedDocuments() -> [DocClaimsDecodable] {
+  func fetchIssuedDocuments() -> [any DocClaimsDecodable] {
     return wallet.storage.docModels
   }
 
-  func fetchIssuedDocuments(with types: [DocumentTypeIdentifier]) -> [DocClaimsDecodable] {
+  func fetchIssuedDocuments(with types: [DocumentTypeIdentifier]) -> [any DocClaimsDecodable] {
     return wallet.storage.docModels
       .filter({ types.map { $0.rawValue }.contains($0.docType) })
   }
 
-  func fetchMainPidDocument() -> DocClaimsDecodable? {
+  func fetchMainPidDocument() -> (any DocClaimsDecodable)? {
     return fetchIssuedDocuments(with: [DocumentTypeIdentifier.mDocPid, DocumentTypeIdentifier.sdJwtPid])
       .sorted { $0.createdAt > $1.createdAt }.last
   }
 
-  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [DocClaimsDecodable] {
+  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [any DocClaimsDecodable] {
     let excludedRawValues = excluded.map { $0.rawValue }
     return fetchIssuedDocuments().filter { !excludedRawValues.contains($0.docType.orEmpty) }
   }
 
-  func fetchDocument(with id: String) -> DocClaimsDecodable? {
+  func fetchDocument(with id: String) -> (any DocClaimsDecodable)? {
     wallet.storage.getDocumentModel(id: id)
   }
 
-  func fetchDocuments(with ids: [String]) -> [DocClaimsDecodable] {
+  func fetchDocuments(with ids: [String]) -> [any DocClaimsDecodable] {
     fetchIssuedDocuments().filter { ids.contains($0.id) }
   }
 
@@ -255,7 +255,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     return documents
   }
 
-  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> DocClaimsDecodable {
+  func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> any DocClaimsDecodable {
     guard
       let metadata = DocMetadata(from: doc.metadata)
     else {
@@ -389,7 +389,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     }
   }
 
-  func isDocumentLowOnCredentials(document: DocClaimsDecodable?) -> Bool {
+  func isDocumentLowOnCredentials(document: (any DocClaimsDecodable)?) -> Bool {
     if let document, let documentRemainingCredentials = document.credentialsUsageCounts?.remaining {
       return document.credentialPolicy == CredentialPolicy.oneTimeUse && documentRemainingCredentials <= 1
     } else {

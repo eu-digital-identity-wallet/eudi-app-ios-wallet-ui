@@ -16,7 +16,7 @@
 import Foundation
 
 extension Array where Element == WalletStorage.Document {
-  func transformToDeferredDecodables() -> [DocClaimsDecodable] {
+  func transformToDeferredDecodables() -> [any DocClaimsDecodable] {
     return self.compactMap { document in
       return document.transformToDeferredDecodable()
     }

@@ -43,7 +43,7 @@ extension Constants {
   static let documentCreatedAt = Date()
   static let claimExpiredAt = Date()
   
-  static func createEuPidModel(credentialsUsageCounts: CredentialsUsageCounts? = nil) -> DocClaimsDecodable {
+  static func createEuPidModel(credentialsUsageCounts: CredentialsUsageCounts? = nil) -> any DocClaimsDecodable {
     return GenericMdocModel(
       id: euPidModelId,
       createdAt: documentCreatedAt,
@@ -82,7 +82,7 @@ extension Constants {
     )
   }
   
-  static func createIsoMdlModel(credentialsUsageCounts: CredentialsUsageCounts? = nil) -> DocClaimsDecodable {
+  static func createIsoMdlModel(credentialsUsageCounts: CredentialsUsageCounts? = nil) -> any DocClaimsDecodable {
     return GenericMdocModel(
       id: isoMdlModelId,
       createdAt: documentCreatedAt,
@@ -183,6 +183,9 @@ extension Constants {
 
 extension Constants {
   struct MockPresentationService: PresentationService {
+    var zkpDocumentIds: [WalletStorage.Document.ID]?
+    
+    func waitForDisconnect() async throws {}
     
     var transactionLog: EudiWalletKit.TransactionLog
     

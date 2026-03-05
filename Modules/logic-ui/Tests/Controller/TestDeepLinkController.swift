@@ -323,6 +323,9 @@ private extension TestDeepLinkController {
 
 private extension TestDeepLinkController {
   struct MockPresentationService: PresentationService {
+    var zkpDocumentIds: [WalletStorage.Document.ID]?
+    
+    func waitForDisconnect() async throws {}
     
     var transactionLog: EudiWalletKit.TransactionLog
     

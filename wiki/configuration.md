@@ -114,13 +114,7 @@ public protocol WalletKitConfig {
   /**
    * Reader Configuration
    */
-  var readerConfig: ReaderConfig { get }
-}
-```
-
-```swift
-public struct ReaderConfig {
-  public let trustedCerts: [Data]
+  var trustedReaderRootCertificates: [x5chain] { get }
 }
 ```
 
@@ -129,11 +123,20 @@ The *WalletKitConfigImpl* implementation of the *WalletKitConfig* protocol can b
 The application's IACA certificates are located [here](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/tree/main/Wallet/Sample)
 
 ```swift
-  var readerConfigConfig: ReaderConfig {
-    guard let cert = Data(name: "eudi_pid_issuer_ut", ext: "der") else {
-      return .init(trustedCerts: [])
-    }
-    return .init(trustedCerts: [cert])
+  var trustedReaderRootCertificates: [x5chain] {
+    let certificates = [
+      "pidissuerca02_cz",
+      "pidissuerca02_ee",
+      "pidissuerca02_eu",
+      "pidissuerca02_lu",
+      "pidissuerca02_nl",
+      "pidissuerca02_pt",
+      "pidissuerca02_ut",
+      "r45_staging"
+    ]
+    return certificates
+      .compactMap { loadCertificate($0) }
+      .map { [$0] }
   }
 ```
 
