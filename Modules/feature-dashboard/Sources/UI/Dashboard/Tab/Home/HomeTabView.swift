@@ -55,28 +55,28 @@ struct HomeTabView<Router: RouterHost>: View {
       Button(.cancelButton, role: .destructive) {}
         .accessibilityLocator(HomeTabViewLocators.cancelButton)
     } message: {
-      Text(.authenticateAuthoriseTransactions)
-    }
-    .dialogCompat(
-      .bleDisabledModalTitle,
-      isPresented: $viewModel.isBleModalShowing,
-      actions: {
-        Button(.bleDisabledModalButton) {
-          viewModel.onBleSettings()
+        Text(.authenticateAuthoriseTransactions)
+      .dialogCompat(
+        .bleDisabledModalTitle,
+        isPresented: $viewModel.isBleModalShowing,
+        actions: {
+          Button(.bleDisabledModalButton) {
+            viewModel.onBleSettings()
+          }
+          Button(.cancelButton, role: .cancel) {}
+        },
+        message: {
+          Text(.bleDisabledModalCaption)
         }
-        Button(.cancelButton, role: .cancel) {}
-      },
-      message: {
-        Text(.bleDisabledModalCaption)
+      )
+      .onChange(of: scenePhase) {
+        self.viewModel.setPhase(with: scenePhase)
       }
-    )
-    .onChange(of: scenePhase) {
-      self.viewModel.setPhase(with: scenePhase)
+      .task {
+        await viewModel.onCreate()
+      }
+      .background(Theme.shared.color.background)
     }
-    .task {
-      await viewModel.onCreate()
-    }
-    .background(Theme.shared.color.background)
   }
 }
 
