@@ -366,7 +366,8 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
               successNavigation: onSuccesNavigation,
               relyingParty: documents.first?.issuer?.name,
               issuerLogoUrl: documents.first?.issuer?.logoUrl,
-              relyingPartyIsTrusted: false
+              relyingPartyIsTrusted: false,
+              isIssuingDocument: true
             ),
             requestItems: documents.map { item in
               ListItemSection(

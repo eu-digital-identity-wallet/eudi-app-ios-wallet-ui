@@ -30,7 +30,7 @@ public struct DocumentSuccessView<Router: RouterHost, RequestItem: Sendable>: Vi
     ContentScreenView(
       padding: .zero,
       canScroll: true,
-      navigationTitle: .dataShared,
+      navigationTitle: viewModel.viewState.navigationTitle,
       toolbarContent: viewModel.toolbarContent()
     ) {
       content(
@@ -49,14 +49,7 @@ private func content<RequestItem: Sendable>(
 
     VStack(spacing: .zero) {
       ContentHeaderView(
-        config: ContentHeaderConfig(
-          appIconAndTextData: AppIconAndTextData(
-            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-            appText: ThemeManager.shared.image.euditext
-          ),
-          description: .successfullySharedFollowingInformation,
-          relyingPartyData: viewState.relyingParty
-        ),
+        config: viewState.contentHeaderConfig,
         accessibilityDescription: DocumentSuccessLocators.documentSuccessDescription
       )
 

@@ -1027,6 +1027,17 @@
         }
       }
     },
+    "issuance_success_header_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have successfully added the following to your wallet"
+          }
+        }
+      }
+    },
     "issuance_success_title_punctuated" : {
       "extractionState" : "manual",
       "localizations" : {
