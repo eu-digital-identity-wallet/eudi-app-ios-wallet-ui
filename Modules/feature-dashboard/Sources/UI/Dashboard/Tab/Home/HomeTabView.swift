@@ -52,8 +52,13 @@ struct HomeTabView<Router: RouterHost>: View {
       }
       .accessibilityLocator(HomeTabViewLocators.onlineButton)
 
-      Button(.cancelButton, role: .destructive) {}
-        .accessibilityLocator(HomeTabViewLocators.cancelButton)
+      if ProcessInfo.processInfo.isiOSAppOnMac {
+          Button(.cancelButton, role: .cancel) {}
+            .accessibilityLocator(HomeTabViewLocators.cancelButton)
+      } else {
+          Button(.cancelButton) {}
+            .accessibilityLocator(HomeTabViewLocators.cancelButton)
+      }
     } message: {
         Text(.authenticateAuthoriseTransactions)
       .dialogCompat(
@@ -63,7 +68,9 @@ struct HomeTabView<Router: RouterHost>: View {
           Button(.bleDisabledModalButton) {
             viewModel.onBleSettings()
           }
-          Button(.cancelButton, role: .cancel) {}
+          if !ProcessInfo.processInfo.isiOSAppOnMac {
+              Button(.cancelButton, role: .cancel) {}
+          }
         },
         message: {
           Text(.bleDisabledModalCaption)
