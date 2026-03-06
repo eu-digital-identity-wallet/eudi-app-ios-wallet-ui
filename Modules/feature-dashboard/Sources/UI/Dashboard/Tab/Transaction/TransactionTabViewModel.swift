@@ -16,6 +16,7 @@
 import logic_ui
 import logic_resources
 import Observation
+import Combine
 
 @Copyable
 struct TransactionTabState: ViewState {
@@ -234,7 +235,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         leadingActions: [
           .init(
             image: Theme.shared.image.menuIcon,
-            accessibilityLocator: ToolbarLocators.menuButton,
+            accessibilityLocator: ToolbarLocators.menuButton
           ) {
             self.onMyWallet()
           }
