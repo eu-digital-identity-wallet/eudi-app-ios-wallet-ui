@@ -13,8 +13,8 @@ let package = Package(
   ],
   dependencies: [
     .package(
-      url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
-      exact: "0.19.4"
+      url: "https://github.com/DusanNDigDir/eudi-lib-ios-wallet-kit-digdir.git",
+      exact: "0.1.2"
     ),
     .package(
       name: "logic-resources",
@@ -43,7 +43,7 @@ let package = Package(
         "logic-api",
         .product(
           name: "EudiWalletKit",
-          package: "eudi-lib-ios-wallet-kit"
+          package: "eudi-lib-ios-wallet-kit-digdir"
         )
       ],
       path: "./Sources"
