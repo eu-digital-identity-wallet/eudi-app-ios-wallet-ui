@@ -57,7 +57,8 @@ final class ProximityLoadingViewModel<Router: RouterHost, RequestItem: Sendable>
         config: DocumentSuccessUIConfig(
           successNavigation: .pop(screen: getOriginator()),
           relyingParty: getRelyingParty(),
-          relyingPartyIsTrusted: isRelyingPartyIstrusted()
+          relyingPartyIsTrusted: isRelyingPartyIstrusted(),
+          isIssuingDocument: false
         ),
         getRequestItems()
       )

@@ -93,7 +93,8 @@ final class PresentationLoadingViewModel<Router: RouterHost, RequestItem: Sendab
         config: DocumentSuccessUIConfig(
           successNavigation: navigationType,
           relyingParty: getRelyingParty(),
-          relyingPartyIsTrusted: isRelyingPartyIstrusted()
+          relyingPartyIsTrusted: isRelyingPartyIstrusted(),
+          isIssuingDocument: false
         ),
         getRequestItems()
       )

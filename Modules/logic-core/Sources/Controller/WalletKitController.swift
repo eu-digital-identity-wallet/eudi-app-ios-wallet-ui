@@ -595,15 +595,7 @@ extension WalletKitController {
       }
     }
 
-    let groupIdentifier: String = {
-      return switch type {
-      case .mdoc:
-        groupId
-      case .sdjwt:
-        UUID().uuidString
-      }
-    }()
-
+    let groupIdentifier: String = groupId
     return [
       .primitive(
         id: groupIdentifier,

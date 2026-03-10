@@ -492,6 +492,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "quick_pin_set_no_activation_success_button")
     case .pidCombined:
       bundle.localizedString(forKey: "pid_combined")
+    case .issuanceSuccessHeaderDescription:
+      bundle.localizedString(forKey: "issuance_success_header_description")
     }
   }
 }

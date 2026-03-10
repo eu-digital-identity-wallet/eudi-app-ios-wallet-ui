@@ -246,6 +246,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case issuanceAddDocumentNoOptions
   case unknown
   case pidCombined
+  case issuanceSuccessHeaderDescription
 }
 
 public extension LocalizableStringKey {
