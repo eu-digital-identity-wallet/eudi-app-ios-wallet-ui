@@ -35,7 +35,9 @@ public extension Locale {
   }
 
   var systemLanguageCode: String? {
-    Locale.current.language.languageCode?.identifier
+    Locale.preferredLanguages.first?
+      .components(separatedBy: "-")
+      .first
   }
 
   func localizedDateTime(
