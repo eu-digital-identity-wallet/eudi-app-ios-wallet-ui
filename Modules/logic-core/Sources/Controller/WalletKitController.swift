@@ -124,7 +124,7 @@ final actor WalletKitControllerImpl: WalletKitController {
         logFileName: configLogic.logFileName
       ),
       openID4VpConfig: configLogic.vpConfig,
-      openID4VciConfigurations: configLogic.vciConfig,
+      openID4VciConfigurations: configLogic.issuersConfig.mapValues { $0.config },
       networking: networkSessionProvider.urlSession,
       transactionLogger: configLogic.transactionLogger
     ) else {
@@ -348,7 +348,7 @@ final actor WalletKitControllerImpl: WalletKitController {
   func getScopedDocuments() async throws -> [ScopedDocument] {
 
     try await withThrowingTaskGroup(of: [ScopedDocument].self) { group in
-      for issuerName in configLogic.vciConfig.keys {
+      for (issuerName, orderedVciConfig) in configLogic.issuersConfig {
         group.addTask {
           let metadata = try await self.wallet.getIssuerMetadata(issuerName: issuerName)
           return metadata.credentialsSupported.compactMap { credential in
@@ -358,6 +358,7 @@ final actor WalletKitControllerImpl: WalletKitController {
               return ScopedDocument(
                 name: config.credentialMetadata?.display.getName(fallback: credential.key.value) ?? credential.key.value,
                 issuer: metadata.credentialIssuerIdentifier.url.host.ifNilOrEmpty { issuerName },
+                order: orderedVciConfig.order,
                 configId: credential.key.value,
                 isPid: id == .mDocPid,
                 docTypeIdentifier: id
@@ -369,6 +370,7 @@ final actor WalletKitControllerImpl: WalletKitController {
               return ScopedDocument(
                 name: config.credentialMetadata?.display.getName(fallback: credential.key.value) ?? credential.key.value,
                 issuer: metadata.credentialIssuerIdentifier.url.host.ifNilOrEmpty { issuerName },
+                order: orderedVciConfig.order,
                 configId: credential.key.value,
                 isPid: id == .sdJwtPid,
                 docTypeIdentifier: id

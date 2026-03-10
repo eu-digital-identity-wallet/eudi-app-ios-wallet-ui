@@ -23,6 +23,7 @@ public struct AddDocumentUIModel: Identifiable, Sendable, Equatable {
   public let listItem: ListItemData
   public let configIds: [String]
   public let issuerId: String
+  public let order: Int
   public let docTypeIdentifier: DocumentTypeIdentifier
   public var isEnabled: Bool
   public var isLoading: Bool
@@ -33,6 +34,7 @@ public struct AddDocumentUIModel: Identifiable, Sendable, Equatable {
     isLoading: Bool = false,
     configIds: [String],
     issuerId: String,
+    order: Int,
     docTypeIdentifier: DocumentTypeIdentifier
   ) {
     self.id = UUID().uuidString
@@ -41,6 +43,7 @@ public struct AddDocumentUIModel: Identifiable, Sendable, Equatable {
     self.isLoading = isLoading
     self.configIds = configIds
     self.issuerId = issuerId
+    self.order = order
     self.docTypeIdentifier = docTypeIdentifier
   }
 }
@@ -57,6 +60,7 @@ public extension AddDocumentUIModel {
           isLoading: true,
           configIds: ["id"],
           issuerId: "id",
+          order: 0,
           docTypeIdentifier: .mDocPid
         ),
         .init(
@@ -67,6 +71,7 @@ public extension AddDocumentUIModel {
           isLoading: true,
           configIds: ["id"],
           issuerId: "id",
+          order: 0,
           docTypeIdentifier: .mDocPid
         ),
         .init(
@@ -77,6 +82,7 @@ public extension AddDocumentUIModel {
           isLoading: true,
           configIds: ["id"],
           issuerId: "id",
+          order: 1,
           docTypeIdentifier: .mDocPid
         ),
         .init(
@@ -87,6 +93,7 @@ public extension AddDocumentUIModel {
           isLoading: true,
           configIds: ["id"],
           issuerId: "id",
+          order: 1,
           docTypeIdentifier: .mDocPid
         )
       ]

@@ -13,18 +13,10 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
+import EudiWalletKit
 
-public struct ScopedDocument: Equatable, Sendable {
-  public let name: String
-  public let issuer: String
+public struct VciConfig: Sendable {
+  public let config: OpenId4VciConfiguration
   public let order: Int
-  public let configId: String
-  public let isPid: Bool
-  public let docTypeIdentifier: DocumentTypeIdentifier
-}
-
-public extension ScopedDocument {
-  static func empty() -> ScopedDocument {
-    .init(name: "", issuer: "", order: 0, configId: "", isPid: false, docTypeIdentifier: .mDocPid)
-  }
 }

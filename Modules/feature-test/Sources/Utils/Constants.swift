@@ -127,6 +127,7 @@ extension Constants {
   static let scopedDocument = ScopedDocument(
     name: "Test Document",
     issuer: "Test Issuer",
+    order: 0,
     configId: "test-config-id",
     isPid: true,
     docTypeIdentifier: DocumentTypeIdentifier.mDocPid
@@ -135,6 +136,7 @@ extension Constants {
   static let scopedDocumentNotPid = ScopedDocument(
     name: "Test Document",
     issuer: "Test Issuer",
+    order: 0,
     configId: "test-config-id",
     isPid: false,
     docTypeIdentifier: DocumentTypeIdentifier.mDocPid

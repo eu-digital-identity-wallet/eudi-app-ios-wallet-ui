@@ -125,6 +125,9 @@ final class TestProximityInteractor: EudiTest {
     stub(sessionHolder) { mock in
       when(mock.getActiveProximityCoordinator()).thenThrow(expectedError)
     }
+    stub(sessionHolder) { mock in
+      when(mock.setActiveProximityCoordinator(any())).thenDoNothing()
+    }
     // When
     let state = await interactor.getSessionStatePublisher()
     // Then
