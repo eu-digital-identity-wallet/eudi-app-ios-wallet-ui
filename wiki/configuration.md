@@ -23,7 +23,7 @@ public protocol WalletKitConfig {
   /**
    * VCI Configuration
    */
-  var vciConfig: [String: OpenId4VciConfiguration] { get }
+  var issuersConfig: [String: VciConfig] { get }
 }
 ```
 Based on the Build Variant of the Wallet (e.g., Dev)
@@ -37,36 +37,43 @@ struct WalletKitConfigImpl: WalletKitConfig {
     self.configLogic = configLogic
   }
 
-  var vciConfig: [String: OpenId4VciConfiguration] {
-	let openId4VciConfigurations: [OpenId4VciConfiguration] = {
-		switch configLogic.appBuildVariant {
-	    case .DEMO:
-	      return [
-	        .init(
-	          credentialIssuerURL: "your_demo_issuer_url",
-			  clientId: "your_demo_client_id_or_nil",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
-	          authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
-	          usePAR: should_use_par_bool,
-	          useDPoP: should_use_dpop_bool
-	          useDpopIfSupported: should_use_dpop_bool,
-	          cacheIssuerMetadata: should_cache_metadata_bool
-	        )
-	      ]
-	    case .DEV:
-	      return [
-	        .init(
-	          credentialIssuerURL: "your_dev_issuer_url",
-			  clientId: "your_dev_client_id_or_nil",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
-	          authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
-	          usePAR: should_use_par_bool,
-	          useDpopIfSupported: should_use_dpop_bool,
-	          cacheIssuerMetadata: should_cache_metadata_bool
-	        )
-	      ]
-	    }
-	  }()
+  var issuersConfig: [String: VciConfig] {
+  let openId4VciConfigurations: [OrderedVciConfig] = {
+    switch configLogic.appBuildVariant {
+      case .DEMO:
+        return [
+          .init(
+            config: .init(
+                credentialIssuerURL: "your_demo_issuer_url",
+                clientId: "your_demo_client_id_or_nil",
+                keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+                authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
+                usePAR: should_use_par_bool,
+                useDPoP: should_use_dpop_bool,
+                useDpopIfSupported: should_use_dpop_bool,
+                cacheIssuerMetadata: should_cache_metadata_bool
+            ),
+            order: issuer_order_int
+          )
+        ]
+            
+        case .DEV:
+          return [
+            .init(
+              config: .init(
+                  credentialIssuerURL: "your_dev_issuer_url",
+                  clientId: "your_dev_client_id_or_nil",
+                  keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+                  authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
+                  usePAR: should_use_par_bool,
+                  useDpopIfSupported: should_use_dpop_bool,
+                  cacheIssuerMetadata: should_cache_metadata_bool
+              ),
+              order: issuer_order_int
+            )
+          ]
+        }
+    }()
 
 	// ...
 	}
