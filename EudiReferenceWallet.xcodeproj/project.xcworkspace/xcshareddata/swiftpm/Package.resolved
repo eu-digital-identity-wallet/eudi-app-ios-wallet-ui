@@ -1,5 +1,5 @@
 {
-  "originHash" : "1aa5edd169ab96040e840f40b6ea5687d50a1d07fb91c4ea8aebc5bcf432e07f",
+  "originHash" : "8b72c1132ee95a9117e1dcd1ff3c6c3fd109fccd7fbdaa78555c47dbd0a566c5",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -87,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "876fcb791e894d8ac8320dc171fcd967874e0346",
-        "version" : "0.10.0"
+        "revision" : "67f6d3b950032c6c07045e2bd2b6160ae385cbd0",
+        "version" : "0.11.0"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "e3be5b6e0bd3d792153690b4b98209bcf98d7c5c",
-        "version" : "0.10.1"
+        "revision" : "1d51ab8e7f7c85fc3f5dda451198c95cf27dd4fe",
+        "version" : "0.11.0"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "64c6216056e8c4a146d966cbf793a1f9f46b391c",
-        "version" : "0.10.1"
+        "revision" : "0c623950f16b7c3762ad5b6deb5e4201100fe7c8",
+        "version" : "0.11.0"
       }
     },
     {
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "0b19b1505e226ee71c76a948eda05c10cd63c1fc",
-        "version" : "0.21.1"
+        "revision" : "436257cd0230eaa0bf6754d784f4c84cdd055142",
+        "version" : "0.22.0"
       }
     },
     {
@@ -177,8 +177,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "2cfcbd43544fdc51d0b1ea33c2045203563815be",
-        "version" : "0.10.0"
+        "revision" : "390b1586b0aaaea0c9d0eabd7ab4ef269adab4be",
+        "version" : "0.11.0"
       }
     },
     {
@@ -380,15 +380,6 @@
       }
     },
     {
-      "identity" : "swift-log-file",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/crspybits/swift-log-file",
-      "state" : {
-        "revision" : "aa94b38bf88c7d9cbc87ceafcdffadaffbc2bffa",
-        "version" : "0.1.0"
-      }
-    },
-    {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-syntax.git",
@@ -449,15 +440,6 @@
       "state" : {
         "revision" : "ec6198d37d495efc6acd4dffbd262cdca7ff9b3f",
         "version" : "0.6.0"
-      }
-    },
-    {
-      "identity" : "xcglogger",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/DaveWoodCom/XCGLogger.git",
-      "state" : {
-        "revision" : "4def3c1c772ca90ad5e7bfc8ac437c3b0b4276cf",
-        "version" : "7.1.5"
       }
     },
     {
