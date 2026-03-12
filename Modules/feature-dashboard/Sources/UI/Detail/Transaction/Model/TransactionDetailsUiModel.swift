@@ -120,7 +120,7 @@ extension DocClaimsDecodable {
   }
 }
 
-extension Array where Element == any DocClaimsDecodable {
+extension Array where Element == DocClaimsModel {
   func transformToTransactionListItemSections() -> [GenericListItemSection] {
     return self.map { $0.transformToTransactionListItemSection() }
   }

@@ -52,7 +52,7 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDeferredDocuments(
       with: [
         .init(
-          docType: nil,
+          docType: "",
           docDataFormat: .cbor,
           data: Data(),
           docKeyInfo: nil,
@@ -333,7 +333,7 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDeferredDocuments(
       with: [
         .init(
-          docType: nil,
+          docType: "",
           docDataFormat: .cbor,
           data: Data(),
           docKeyInfo: nil,
@@ -370,7 +370,7 @@ final class TestDocumentTabInteractor: EudiTest {
       with: [
         .init(
           id: expectedId,
-          docType: nil,
+          docType: "",
           docDataFormat: .cbor,
           data: Data(),
           docKeyInfo: nil,
