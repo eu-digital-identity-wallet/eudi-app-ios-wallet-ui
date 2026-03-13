@@ -78,8 +78,6 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "add_doc")
     case .welcomeBack(let args):
       bundle.localizedStringWithArguments(forKey: "welcome_back", arguments: args)
-    case .viewDocumentDetails:
-      bundle.localizedString(forKey: "view_document_details")
     case .pleaseWait:
       bundle.localizedString(forKey: "please_wait")
     case .requestDataShareQuickPinCaption:
@@ -170,6 +168,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedStringWithArguments(forKey: "issuance_details_doc_deletion_title", arguments: args)
     case .deleteDocument:
       bundle.localizedString(forKey: "delete_document")
+    case .removeFromWallet:
+      bundle.localizedString(forKey: "remove_from_wallet")
     case .issuanceDetailsDeletionCaption(let args):
       bundle.localizedStringWithArguments(forKey: "issuance_details_doc_deletion_caption", arguments: args)
     case .errorUnableFetchDocuments:
@@ -454,8 +454,6 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "just_now")
     case .revoked:
       bundle.localizedString(forKey: "revoked")
-    case .documentDetailsRevokedDocumentMessage:
-      bundle.localizedString(forKey: "document_details_revoked_document_message")
     case .revokedModalTitle:
       bundle.localizedString(forKey: "revoked_modal_title")
     case .revokedModalDescription:
@@ -472,12 +470,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "settings_menu")
     case .documentDetailsDocumentCredentialsText(let args):
       bundle.localizedStringWithArguments(forKey: "document_details_document_credentials_text", arguments: args)
-    case .documentDetailsDocumentCredentialsMoreInfoText:
-      bundle.localizedString(forKey: "document_details_document_credentials_more_info_text")
     case .documentDetailsDocumentCredentialsExpandedTextSubtitle:
       bundle.localizedString(forKey: "document_details_document_credentials_expanded_text_subtitle")
-    case .documentDetailsDocumentCredentialsExpandedButtonHideText:
-      bundle.localizedString(forKey: "document_details_document_credentials_expanded_button_hide_text")
     case .documentsListCredentialsUsageText(let args):
       bundle.localizedStringWithArguments(forKey: "documents_list_credentials_usage_text", arguments: args)
     case .expandableDocumentCredentialsIssueButton:
@@ -492,8 +486,26 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "quick_pin_set_no_activation_success_button")
     case .pidCombined:
       bundle.localizedString(forKey: "pid_combined")
+    case .documentData:
+      bundle.localizedString(forKey: "document_data")
     case .issuanceSuccessHeaderDescription:
       bundle.localizedString(forKey: "issuance_success_header_description")
+    case .documentDetailsReIssueButton:
+      bundle.localizedString(forKey: "document_details_re_issue_button")
+    case .documentDetailsRemoveButton:
+      bundle.localizedString(forKey: "document_details_remove_button")
+    case .documentDetailsExpiresOn(let args):
+      bundle.localizedStringWithArguments(forKey: "document_details_expires_on", arguments: args)
+    case .documentDetailsIssuedOn(let args):
+      bundle.localizedStringWithArguments(forKey: "document_details_issued_on", arguments: args)
+    case .documentDetailsRevokedDocument:
+      bundle.localizedString(forKey: "document_details_revoked_document")
+    case .documentDetailsIssuerCardIssuedMessageText:
+      bundle.localizedString(forKey: "document_details_issuer_card_issued_message_text")
+    case .documentDetailsIssuerCardRevokedMessageText:
+      bundle.localizedString(forKey: "document_details_issuer_card_revoked_message_text")
+    case .documentDetailsIssuerCardIssuedActionButtonText:
+      bundle.localizedString(forKey: "document_details_issuer_card_issued_action_btn_text")
     }
   }
 }

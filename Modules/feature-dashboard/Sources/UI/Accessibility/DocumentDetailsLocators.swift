@@ -23,6 +23,10 @@ public enum DocumentDetailsLocators: String, LocatorType {
   case bookmarkIconFill
   case eyeSlash
   case eye
+  case documetIssuerDetails
+  case reissueNavigationBarButton
+  case documentDetailsReIssueButton
+  case documentDetailsRemoveButton
 
   public var id: String {
     switch self {
@@ -40,6 +44,14 @@ public enum DocumentDetailsLocators: String, LocatorType {
       return "document_details_screen_eye_slash_button"
     case .eye:
       return "document_details_screen_eye_button"
+    case .documetIssuerDetails:
+      return "document_details_issuer_expandable_view"
+    case .reissueNavigationBarButton:
+      return "document_details_reissue_navigation_bar_button"
+    case .documentDetailsReIssueButton:
+      return "document_details_re_issue_button"
+    case .documentDetailsRemoveButton:
+      return "document_details_remove_button"
     }
   }
 

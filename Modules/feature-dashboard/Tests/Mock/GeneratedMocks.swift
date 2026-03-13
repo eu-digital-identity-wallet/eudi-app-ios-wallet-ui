@@ -3197,7 +3197,7 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Detail/Document/Component/ExpandableDocumentCredentialsView.swift'
+// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Detail/Document/Component/IssuerDetailsCardView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -3213,9 +3213,10 @@ import logic_resources
 
 
 
-// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Detail/Document/Component/RevokedDocumentView.swift'
+// MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Detail/Document/Component/IssuerDocumentDetailsCardUIModel.swift'
 
 import Cuckoo
+import Foundation
 import SwiftUI
 import logic_resources
 @testable import logic_core

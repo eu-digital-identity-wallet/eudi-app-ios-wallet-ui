@@ -54,7 +54,22 @@ struct DocumentDetailsView<Router: RouterHost>: View {
         viewModel.onDeleteDocument()
       } issueNewDocument: {
         viewModel.issueNewDocument()
+      } toggleIsVisible: {
+        viewModel.toggleIsVisible()
       }
+    }
+    .alert(
+      Text(""),
+      isPresented: $viewModel.showReissuanceDialog) {
+        Button(.documentDetailsReIssueButton) {}
+
+        Button(.documentDetailsRemoveButton) {
+          viewModel.onShowDeleteModal()
+        }
+
+        Button(.cancelButton, role: .cancel) {}
+    } message: {
+      Text("")
     }
     .alertView(
       isPresented: $viewModel.showAlert,
@@ -80,10 +95,11 @@ private func content(
   onContinue: @escaping () -> Void,
   onShowDeleteModal: @escaping () -> Void,
   onDeleteDocument: @escaping () -> Void,
-  issueNewDocument: @escaping () -> Void
+  issueNewDocument: @escaping () -> Void,
+  toggleIsVisible: @escaping () -> Void,
 ) -> some View {
   ScrollView {
-    VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+    VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
 
       Text(viewState.document.documentName)
         .font(.largeTitle)
@@ -91,20 +107,44 @@ private func content(
         .frame(maxWidth: .infinity, alignment: .leading)
         .shimmer(isLoading: viewState.isLoading)
 
-      if viewState.isRevoked {
-        RevokedDocumentView(
-          message: .documentDetailsRevokedDocumentMessage
-        )
+      if let issuerDetailsCardDataUi = viewState.issuerDetailsCardDataUi {
+        VStack(spacing: SPACING_SMALL) {
+          Text(.genericIssuer)
+            .typography(Theme.shared.font.bodySmall)
+            .fontWeight(.semibold)
+            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+          IssuerDetailsCardView(
+            issuerDetails: issuerDetailsCardDataUi,
+            onAction: viewState.isRevoked ? nil : issueNewDocument
+          )
+        }
       }
 
-      if let credentialsInfo = viewState.documentCredentialsInfo {
-        ExpandableDocumentCredentialsView(
-          documentCredentialsInfo: credentialsInfo,
-          onPrimaryButtonClicked: issueNewDocument
-        )
-      }
+      VStack(spacing: SPACING_SMALL) {
+        HStack {
+          Text(.documentData)
+            .typography(Theme.shared.font.bodySmall)
+            .fontWeight(.semibold)
+            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .padding(.vertical, SPACING_SMALL)
 
-      VStack(spacing: .zero) {
+          Spacer()
+
+          Button {
+            toggleIsVisible()
+          } label: {
+            (isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye)
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(width: 24, height: 24)
+              .padding(.horizontal, SPACING_MEDIUM)
+              .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+          }
+          .accessibilityLocator(isVisible ? DocumentDetailsLocators.eyeSlash : DocumentDetailsLocators.eye)
+        }
+
         WrapExpandableListView(
           items: viewState.document.documentFields,
           hideSensitiveContent: isVisible,
@@ -112,26 +152,9 @@ private func content(
         )
       }
 
-      if let issuer = viewState.document.issuer {
-        VStack(spacing: SPACING_SMALL) {
-          Text(.genericIssuer)
-            .typography(Theme.shared.font.bodySmall)
-            .fontWeight(.semibold)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .shimmer(isLoading: viewState.isLoading)
-
-          CardViewWithLogoView(
-            icon: .remoteImage(issuer.logoUrl, nil),
-            title: .custom(issuer.name),
-            isLoading: viewState.isLoading
-          )
-        }
-      }
-
       WrapButtonView(
         style: .error,
-        title: .deleteDocument,
+        title: .removeFromWallet,
         isLoading: viewState.isLoading,
         onAction: onShowDeleteModal()
       )
@@ -142,7 +165,7 @@ private func content(
         .custom(""),
         isPresented: isDeletionModalShowing,
         actions: {
-          Button(.deleteDocument, role: .destructive) {
+          Button(.removeFromWallet, role: .destructive) {
             onDeleteDocument()
           }
           .accessibilityElement()
@@ -157,6 +180,15 @@ private func content(
           Text(.deleteDocumentConfirmDialog)
         }
       )
+
+      if let documentCredentialsInfo = viewState.documentCredentialsInfo {
+        Text(documentCredentialsInfo.title)
+          .font(Theme.shared.font.bodySmall.font)
+          .padding(.vertical, SPACING_SMALL)
+          .padding(.horizontal, SPACING_MEDIUM)
+          .foregroundColor(Theme.shared.color.onSurfaceVariant)
+          .frame(maxWidth: .infinity, alignment: .center)
+      }
     }
     .padding(Theme.shared.dimension.padding)
     .padding(.bottom)
@@ -175,14 +207,14 @@ private func content(
     documentCredentialsInfo: DocumentCredentialsInfoUi(
       availableCredentials: 5,
       totalCredentials: 10,
-      title: .custom("instances remaining"),
-      collapsedInfo: CollapsedInfo(
-        moreInfoText: .custom("More Info")
-      ),
-      expandedInfo: ExpandedInfo(
-        subtitle: .custom("For security reasons, this document can be shared a limited number of times before it needs to be re-issued by the issuing authority."),
-        updateNowButtonText: .custom("Update now"),
-        hideButtonText: .custom("Hide")
+      title: .custom("instances remaining")
+    ),
+    issuerDetailsCardDataUi: IssuerDocumentDetailsCardUIModel(
+      issuerName: .custom("issuer name"),
+      issuerLogo: nil,
+      documentState: .issued(
+        issuanceDate: "issuanceDate",
+        expirationDate: "expirationDate"
       )
     )
   )
@@ -198,7 +230,8 @@ private func content(
       onContinue: {},
       onShowDeleteModal: {},
       onDeleteDocument: {},
-      issueNewDocument: {}
+      issueNewDocument: {},
+      toggleIsVisible: {}
     )
   }
 }

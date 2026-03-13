@@ -43,7 +43,6 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case sortByIssuedDateSectionTitle
   case showResults
   case welcomeBack([String])
-  case viewDocumentDetails
   case pleaseWait
   case requestDataShareQuickPinCaption
   case requestDataShareBiometryCaption
@@ -98,6 +97,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestDataNoDocument
   case issuanceDetailsDeletionTitle([String])
   case deleteDocument
+  case removeFromWallet
   case issuanceDetailsDeletionCaption([String])
   case errorUnableFetchDocuments
   case errorUnableFetchDocument
@@ -229,7 +229,6 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case incomplete
   case justNow
   case revoked
-  case documentDetailsRevokedDocumentMessage
   case revokedModalTitle
   case revokedModalDescription
   case transactionDetailsRequestDeletionMessage
@@ -238,15 +237,22 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case transactionDetailsReportTransactionButton
   case settings
   case documentDetailsDocumentCredentialsText([String])
-  case documentDetailsDocumentCredentialsMoreInfoText
   case documentDetailsDocumentCredentialsExpandedTextSubtitle
-  case documentDetailsDocumentCredentialsExpandedButtonHideText
   case documentsListCredentialsUsageText([String])
   case expandableDocumentCredentialsIssueButton
   case issuanceAddDocumentNoOptions
   case unknown
   case pidCombined
+  case documentData
   case issuanceSuccessHeaderDescription
+  case documentDetailsReIssueButton
+  case documentDetailsRemoveButton
+  case documentDetailsExpiresOn([String])
+  case documentDetailsIssuedOn([String])
+  case documentDetailsRevokedDocument
+  case documentDetailsIssuerCardIssuedMessageText
+  case documentDetailsIssuerCardRevokedMessageText
+  case documentDetailsIssuerCardIssuedActionButtonText
 }
 
 public extension LocalizableStringKey {
