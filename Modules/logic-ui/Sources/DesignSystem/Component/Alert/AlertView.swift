@@ -17,46 +17,40 @@ import SwiftUI
 import logic_resources
 
 public extension View {
-  func alertView(
+  @ViewBuilder
+  func alertView<A: View>(
     isPresented: Binding<Bool>,
     title: LocalizableStringKey,
     message: LocalizableStringKey,
-    buttonText: LocalizableStringKey = .close,
-    onDismiss: (() -> Void)? = nil
+    @ViewBuilder actions: @escaping () -> A,
   ) -> some View {
     self.modifier(
       AlertAlertViewModifier(
         isPresented: isPresented,
         title: title,
         message: message,
-        buttonText: buttonText,
-        onDismiss: onDismiss
+        actions: actions
       )
     )
   }
 }
 
-private struct AlertAlertViewModifier: ViewModifier {
+private struct AlertAlertViewModifier<A: View>: ViewModifier {
   @Binding var isPresented: Bool
   let title: LocalizableStringKey
   let message: LocalizableStringKey
-  let buttonText: LocalizableStringKey
-  let onDismiss: (() -> Void)?
+  let actions: () -> A
 
   func body(content: Content) -> some View {
     content
-      .alert(isPresented: $isPresented) {
-        Alert(
-          title: Text(title),
-          message: Text(message),
-          dismissButton: .default(
-            Text(buttonText),
-            action: {
-              onDismiss?()
-            }
-          )
-        )
-      }
+      .alert(
+        title.toString,
+        isPresented: $isPresented,
+        actions: actions,
+        message: {
+          Text(message)
+        }
+      )
   }
 }
 
@@ -74,9 +68,8 @@ private struct PreviewView: View {
       isPresented: $showAlert,
       title: .trustedRelyingParty,
       message: .trustedRelyingPartyDescription,
-      buttonText: .close,
-      onDismiss: {
-        print("Alert dismissed")
+      actions: {
+        Button(.okButton, role: .cancel) {}
       }
     )
   }

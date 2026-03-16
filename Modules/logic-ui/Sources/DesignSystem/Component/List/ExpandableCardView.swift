@@ -50,6 +50,8 @@ public struct ExpandableCardView<Content: View>: View {
               mainContent: header.mainContent,
               mainStyle: .bold,
               supportingText: header.supportingText,
+              supportingTextColor: header.supportingTextColor,
+              leadingIcon: header.leadingIcon,
               trailingContent: .icon(
                 isExpanded ? Theme.shared.image.chevronUp : Theme.shared.image.chevronDown
               )

@@ -67,6 +67,7 @@ public protocol ImageManagerProtocol: Sendable {
   var digitalIdIssuance: Image { get }
   var documentSuccessPending: Image { get }
   var verified: Image { get }
+  var ellipsisVertical: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -123,6 +124,7 @@ final class ImageManager: ImageManagerProtocol {
     case digitalIdIssuance = "digital-id-issuance"
     case documentSuccessPending = "document-success-pending"
     case verified = "verified"
+    case ellipsisVertical = "elipsis-vertical"
   }
 
   // MARK: - Properties
@@ -286,5 +288,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var verified: Image {
     Image(ImageEnum.verified.rawValue, bundle: bundle)
+  }
+  var ellipsisVertical: Image {
+    Image(ImageEnum.ellipsisVertical.rawValue, bundle: bundle)
   }
 }

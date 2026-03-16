@@ -480,7 +480,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This document will be permanently deleted from your wallet and may affect access to services."
+            "value" : "This document will be removed from your wallet and may affect access to services."
           }
         }
       }
@@ -518,13 +518,13 @@
         }
       }
     },
-    "document_details_document_credentials_expanded_button_hide_text" : {
+    "document_data" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hide"
+            "value" : "DOCUMENT DATA"
           }
         }
       }
@@ -540,35 +540,101 @@
         }
       }
     },
-    "document_details_document_credentials_more_info_text" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "More info"
-          }
-        }
-      }
-    },
     "document_details_document_credentials_text" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@/%@ instances remaining"
+            "value" : "Instances remaining %@/%@"
           }
         }
       }
     },
-    "document_details_revoked_document_message" : {
+    "document_details_expires_on" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This document has been revoked by the issuer. Contact the issuing service for more information."
+            "value" : "Expires on: %@"
+          }
+        }
+      }
+    },
+    "document_details_issued_on" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issued on: %@"
+          }
+        }
+      }
+    },
+    "document_details_issuer_card_issued_action_btn_text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reissue document"
+          }
+        }
+      }
+    },
+    "document_details_issuer_card_issued_message_text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You may reissue this document at any time."
+          }
+        }
+      }
+    },
+    "document_details_issuer_card_revoked_message_text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This document cannot be used for verification."
+          }
+        }
+      }
+    },
+    "document_details_re_issue_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reissue document"
+          }
+        }
+      }
+    },
+    "document_details_remove_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
+          }
+        }
+      }
+    },
+    "document_details_revoked_document" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document revoked"
           }
         }
       }
@@ -857,7 +923,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Issuer"
+            "value" : "ISSUER DETAILS"
           }
         }
       }
@@ -1642,6 +1708,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Filter By Relying Party"
+          }
+        }
+      }
+    },
+    "remove_from_wallet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove from wallet"
           }
         }
       }
@@ -2439,17 +2516,6 @@
       }
     },
     "view_details" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "View details"
-          }
-        }
-      }
-    },
-    "view_document_details" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {

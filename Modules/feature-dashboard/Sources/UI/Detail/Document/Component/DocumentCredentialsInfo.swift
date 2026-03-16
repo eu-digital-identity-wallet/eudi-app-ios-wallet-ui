@@ -20,47 +20,14 @@ public struct DocumentCredentialsInfoUi: Sendable {
   public let availableCredentials: Int
   public let totalCredentials: Int
   public let title: LocalizableStringKey
-  public let collapsedInfo: CollapsedInfo?
-  public let expandedInfo: ExpandedInfo?
-  public let isExpanded: Bool
 
   public init(
     availableCredentials: Int,
     totalCredentials: Int,
     title: LocalizableStringKey,
-    collapsedInfo: CollapsedInfo? = nil,
-    expandedInfo: ExpandedInfo? = nil,
-    isExpanded: Bool = false
   ) {
     self.availableCredentials = availableCredentials
     self.totalCredentials = totalCredentials
     self.title = title
-    self.collapsedInfo = collapsedInfo
-    self.expandedInfo = expandedInfo
-    self.isExpanded = isExpanded
-  }
-}
-
-public struct CollapsedInfo: Sendable {
-  public let moreInfoText: LocalizableStringKey
-
-  public init(moreInfoText: LocalizableStringKey) {
-    self.moreInfoText = moreInfoText
-  }
-}
-
-public struct ExpandedInfo: Sendable {
-  public let subtitle: LocalizableStringKey
-  public let updateNowButtonText: LocalizableStringKey?
-  public let hideButtonText: LocalizableStringKey
-
-  public init(
-    subtitle: LocalizableStringKey,
-    updateNowButtonText: LocalizableStringKey? = nil,
-    hideButtonText: LocalizableStringKey
-  ) {
-    self.subtitle = subtitle
-    self.updateNowButtonText = updateNowButtonText
-    self.hideButtonText = hideButtonText
   }
 }

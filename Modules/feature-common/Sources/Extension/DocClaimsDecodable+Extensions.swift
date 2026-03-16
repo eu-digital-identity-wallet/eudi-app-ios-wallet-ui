@@ -13,8 +13,9 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_ui
+import logic_business
 import logic_core
+import logic_ui
 
 public extension DocClaimsDecodable {
   func transformToDocumentUi(
@@ -25,6 +26,7 @@ public extension DocClaimsDecodable {
       guard !self.issuerName.isEmpty else {
         return nil
       }
+
       return .init(
         issuersName: self.issuerName,
         logoUrl: self.issuerLogo,
@@ -38,13 +40,6 @@ public extension DocClaimsDecodable {
       isSensitive: isSensitive,
       input: docClaims
     )
-
-    var bearerName: String {
-      guard let fullName = getBearersName() else {
-        return ""
-      }
-      return "\(fullName.first) \(fullName.last)"
-    }
 
     return .init(
       id: id,

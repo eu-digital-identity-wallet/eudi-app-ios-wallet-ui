@@ -73,7 +73,10 @@ public struct BaseRequestView<Router: RouterHost>: View {
     .alertView(
       isPresented: $viewModel.itemsChanged,
       title: .custom(""),
-      message: .incompleteRequestDataSelection
+      message: .incompleteRequestDataSelection,
+      actions: {
+        Button(.okButton) {}
+      }
     )
   }
 }

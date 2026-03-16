@@ -52,7 +52,9 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
       credentialsUsageCounts: document?.credentialsUsageCounts,
       documentIsLowOnCredentials: documentIsLowOnCredentials
     )
-    return .success(documentDetails, info, isBookmarked, isRevoked)
+    let issuerDetailsCard = document?.transformToIssuerDetailsCardDataUi(isRevoked: isRevoked)
+
+    return .success(documentDetails, issuerDetailsCard, info, isBookmarked)
   }
 
   func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
@@ -105,15 +107,14 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     documentIsLowOnCredentials: Bool
   ) -> DocumentCredentialsInfoUi? {
     if let usageCounts = credentialsUsageCounts {
-      return documentCredentialsInfoUi(usageCounts: usageCounts, documentIsLowOnCredentials: documentIsLowOnCredentials)
+      return documentCredentialsInfoUi(usageCounts: usageCounts)
     } else {
-      return documentCredentialsInfoUi(documentIsLowOnCredentials: documentIsLowOnCredentials)
+      return nil
     }
   }
 
   private func documentCredentialsInfoUi(
-    usageCounts: CredentialsUsageCounts? = nil,
-    documentIsLowOnCredentials: Bool
+    usageCounts: CredentialsUsageCounts? = nil
   ) -> DocumentCredentialsInfoUi {
     let defaultValue = 1
     let availableCredentials = usageCounts?.remaining ?? defaultValue
@@ -123,21 +124,12 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
       availableCredentials: availableCredentials,
       totalCredentials: totalCredentials,
       title: .documentDetailsDocumentCredentialsText([availableCredentials.string, totalCredentials.string]),
-      collapsedInfo: CollapsedInfo(
-        moreInfoText: .documentDetailsDocumentCredentialsMoreInfoText
-      ),
-      expandedInfo: ExpandedInfo(
-        subtitle: .documentDetailsDocumentCredentialsExpandedTextSubtitle,
-        updateNowButtonText: documentIsLowOnCredentials ? .expandableDocumentCredentialsIssueButton : nil,
-        hideButtonText: .documentDetailsDocumentCredentialsExpandedButtonHideText
-      ),
-      isExpanded: documentIsLowOnCredentials
     )
   }
 }
 
 public enum DocumentDetailsPartialState: Sendable {
-  case success(DocumentUIModel, DocumentCredentialsInfoUi?, Bool, Bool)
+  case success(DocumentUIModel, IssuerDocumentDetailsCardUIModel?, DocumentCredentialsInfoUi?, Bool)
   case failure(Error)
 }
 

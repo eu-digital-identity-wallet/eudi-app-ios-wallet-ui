@@ -26,8 +26,8 @@ struct DocumentDetailsViewState: ViewState {
   let documentId: String
   let documentFieldsCount: Int
   let isBookmarked: Bool
-  let isRevoked: Bool
   let documentCredentialsInfo: DocumentCredentialsInfoUi?
+  let issuerDetailsCardDataUi: IssuerDocumentDetailsCardUIModel?
 }
 
 @Observable
@@ -35,7 +35,8 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
   var isDeletionModalShowing: Bool = false
   var isVisible = true
-  var showAlert = false
+  var showReissuanceDialog: Bool = false
+  var showBookmarkAlert = false
 
   @ObservationIgnored
   private let interactor: DocumentDetailsInteractor
@@ -55,8 +56,8 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         documentId: documentId,
         documentFieldsCount: 0,
         isBookmarked: false,
-        isRevoked: false,
-        documentCredentialsInfo: nil
+        documentCredentialsInfo: nil,
+        issuerDetailsCardDataUi: nil
       )
     )
   }
@@ -69,15 +70,15 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
     switch state {
 
-    case .success(let document, let documentCredentialsInfo, let isBookmarked, let isRevoked):
+    case .success(let document, let issuerDetailsCardDataUi, let documentCredentialsInfo, let isBookmarked):
       self.setState {
         $0.copy(
           document: document,
           isLoading: false,
           documentFieldsCount: document.documentFields.count,
           isBookmarked: isBookmarked,
-          isRevoked: isRevoked,
-          documentCredentialsInfo: documentCredentialsInfo
+          documentCredentialsInfo: documentCredentialsInfo,
+          issuerDetailsCardDataUi: issuerDetailsCardDataUi
         ).copy(error: nil)
       }
     case .failure(let error):
@@ -141,12 +142,12 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
             )
           }
         }
-        self.showAlert = true
+        self.showBookmarkAlert = true
       } catch {}
     }
   }
 
-  func alertTitle() -> LocalizableStringKey {
+  func bookmarkAlertTitle() -> LocalizableStringKey {
     if viewState.isBookmarked {
       return .savedToFavorites
     } else {
@@ -154,7 +155,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     }
   }
 
-  func alertMessage() -> LocalizableStringKey {
+  func bookmarkAlertMessage() -> LocalizableStringKey {
     if viewState.isBookmarked {
       return .savedToFavoritesMessage
     } else {
@@ -172,11 +173,10 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
           self.saveBookmark(self.viewState.document.id)
         },
         .init(
-          image: isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye,
-          accessibilityLocator: isVisible ? DocumentDetailsLocators.eyeSlash : DocumentDetailsLocators.eye
+          image: Theme.shared.image.ellipsisVertical,
+          accessibilityLocator: DocumentDetailsLocators.reissueNavigationBarButton
         ) {
-          self.isVisible.toggle()
-          self.toggleVisibility()
+          self.showReissuanceDialog.toggle()
         }
       ],
       leadingActions: [
@@ -191,10 +191,14 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   }
 
   func handleRevocationNotification(for payload: [AnyHashable: Any]?) {
-    guard let ids = payload?["revoked_ids"] as? [String] else { return }
-    if ids.contains(where: { $0 == viewState.document.id }) {
-      setState { $0.copy(isRevoked: true) }
+    Task {
+      await fetchDocumentDetails()
     }
+  }
+
+  func toggleIsVisible() {
+    self.isVisible.toggle()
+    self.toggleVisibility()
   }
 
   private func toggleVisibility() {

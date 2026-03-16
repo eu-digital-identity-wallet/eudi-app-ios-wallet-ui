@@ -71,6 +71,7 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
           bucket.pidConfigIds.append(doc.configId)
           bucket.pidDocTypeIdentifier = doc.docTypeIdentifier
           bucket.issuerId = issuerId
+          bucket.order = doc.order
         } else {
           bucket.items.append(
             AddDocumentUIModel(
@@ -110,7 +111,7 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
           )
         }
 
-        return items.sorted(by: compare)
+        return items
       }
 
       let orderedPairs: [(String, [AddDocumentUIModel])] = grouped.sorted { lhs, rhs in
