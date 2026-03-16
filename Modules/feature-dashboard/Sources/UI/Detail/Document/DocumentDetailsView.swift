@@ -58,9 +58,11 @@ struct DocumentDetailsView<Router: RouterHost>: View {
         viewModel.toggleIsVisible()
       }
     }
-    .alert(
-      Text(""),
-      isPresented: $viewModel.showReissuanceDialog) {
+    .alertView(
+      isPresented: $viewModel.showReissuanceDialog,
+      title: .custom(""),
+      message: .custom(""),
+      actions: {
         Button(.documentDetailsReIssueButton) {}
 
         Button(.documentDetailsRemoveButton) {
@@ -68,16 +70,16 @@ struct DocumentDetailsView<Router: RouterHost>: View {
         }
 
         Button(.cancelButton, role: .cancel) {}
-    } message: {
-      Text("")
-    }
+      }
+    )
     .alertView(
-      isPresented: $viewModel.showAlert,
-      title: viewModel.alertTitle(),
-      message: viewModel.alertMessage(),
-      buttonText: .close,
-      onDismiss: {
-        viewModel.showAlert = false
+      isPresented: $viewModel.showBookmarkAlert,
+      title: viewModel.bookmarkAlertTitle(),
+      message: viewModel.bookmarkAlertMessage(),
+      actions: {
+        Button(.close) {
+          viewModel.showBookmarkAlert = false
+        }
       }
     )
     .task {

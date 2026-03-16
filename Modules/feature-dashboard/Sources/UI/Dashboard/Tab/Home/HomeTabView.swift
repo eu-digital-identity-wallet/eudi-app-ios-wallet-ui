@@ -119,8 +119,9 @@ private func content(
         isPresented: isAuthenticateAlertShowing,
         title: .alertAccessOnlineServices,
         message: .alertAccessOnlineServicesMessage,
-        buttonText: .okButton,
-        onDismiss: nil
+        actions: {
+          Button(.okButton, role: .cancel) {}
+        }
       )
 
       HomeCardView(
@@ -138,8 +139,9 @@ private func content(
         isPresented: isSignDocumentAlertShowing,
         title: .alertSignDocumentsSafely,
         message: .alertSignDocumentsSafelyMessage,
-        buttonText: .okButton,
-        onDismiss: nil
+        actions: {
+          Button(.okButton, role: .cancel) {}
+        }
       )
     }
     .padding(.horizontal, SPACING_MEDIUM)

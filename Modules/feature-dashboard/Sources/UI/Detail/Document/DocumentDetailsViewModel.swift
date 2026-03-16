@@ -37,7 +37,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   var isDeletionModalShowing: Bool = false
   var isVisible = true
   var showReissuanceDialog: Bool = false
-  var showAlert = false
+  var showBookmarkAlert = false
 
   @ObservationIgnored
   private let interactor: DocumentDetailsInteractor
@@ -145,12 +145,12 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
             )
           }
         }
-        self.showAlert = true
+        self.showBookmarkAlert = true
       } catch {}
     }
   }
 
-  func alertTitle() -> LocalizableStringKey {
+  func bookmarkAlertTitle() -> LocalizableStringKey {
     if viewState.isBookmarked {
       return .savedToFavorites
     } else {
@@ -158,7 +158,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     }
   }
 
-  func alertMessage() -> LocalizableStringKey {
+  func bookmarkAlertMessage() -> LocalizableStringKey {
     if viewState.isBookmarked {
       return .savedToFavoritesMessage
     } else {
