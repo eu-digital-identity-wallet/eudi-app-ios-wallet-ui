@@ -54,7 +54,7 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     )
     let issuerDetailsCard = document?.transformToIssuerDetailsCardDataUi(isRevoked: isRevoked)
 
-    return .success(documentDetails, issuerDetailsCard, info, isBookmarked, isRevoked)
+    return .success(documentDetails, issuerDetailsCard, info, isBookmarked)
   }
 
   func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
@@ -129,7 +129,7 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 }
 
 public enum DocumentDetailsPartialState: Sendable {
-  case success(DocumentUIModel, IssuerDocumentDetailsCardUIModel?, DocumentCredentialsInfoUi?, Bool, Bool)
+  case success(DocumentUIModel, IssuerDocumentDetailsCardUIModel?, DocumentCredentialsInfoUi?, Bool)
   case failure(Error)
 }
 

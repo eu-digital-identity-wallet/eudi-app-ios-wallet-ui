@@ -63,13 +63,12 @@ final class TestDocumentDetailsInteractor: EudiTest {
     
     // Then
     switch result {
-    case .success(let uiModel, let issuerDocumentDetailsCard, let documentCredentialsInfoUi, let isBookmarked, let isRevoked):
+    case .success(let uiModel, let issuerDocumentDetailsCard, let documentCredentialsInfoUi, let isBookmarked):
       XCTAssertEqual(uiModel.id, documentId)
       XCTAssertEqual(documentCredentialsInfoUi?.availableCredentials, 10)
       XCTAssertEqual(documentCredentialsInfoUi?.totalCredentials, 10)
       XCTAssertNotNil(issuerDocumentDetailsCard)
       XCTAssertFalse(isBookmarked)
-      XCTAssertFalse(isRevoked)
     case .failure:
       XCTFail("Expected success, but got failure.")
     }
@@ -90,10 +89,9 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
     // Then
     switch result {
-    case .success(let uiModel, _, _, let isBookmarked, let isRevoked):
+    case .success(let uiModel, _, _, let isBookmarked):
       XCTAssertEqual(uiModel.id, documentId)
       XCTAssertFalse(isBookmarked)
-      XCTAssertFalse(isRevoked)
     case .failure:
       XCTFail("Expected success, but got failure.")
     }
@@ -114,13 +112,12 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
     // Then
     switch result {
-    case .success(let uiModel, let issuerDocumentDetailsCard, let documentCredentialsInfoUi, let isBookmarked, let isRevoked):
+    case .success(let uiModel, let issuerDocumentDetailsCard, let documentCredentialsInfoUi, let isBookmarked):
       XCTAssertEqual(uiModel.id, documentId)
       XCTAssertNotNil(issuerDocumentDetailsCard)
       XCTAssertEqual(documentCredentialsInfoUi?.availableCredentials, nil)
       XCTAssertEqual(documentCredentialsInfoUi?.totalCredentials, nil)
       XCTAssertFalse(isBookmarked)
-      XCTAssertFalse(isRevoked)
     case .failure:
       XCTFail("Expected success, but got failure.")
     }
@@ -141,7 +138,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
     // Then
     switch result {
-    case .success(_, let issuerDocumentDetailsCard, _, _, let isRevoked):
+    case .success(_, let issuerDocumentDetailsCard, _, _):
       XCTAssertNotNil(issuerDocumentDetailsCard)
       XCTAssertEqual(issuerDocumentDetailsCard?.dateText, .documentDetailsExpiresOn([""]))
       XCTAssertEqual(
@@ -162,7 +159,6 @@ final class TestDocumentDetailsInteractor: EudiTest {
           [expectedDocument.createdAt.formattedForDocumentDetails()]
         )
       )
-      XCTAssertFalse(isRevoked)
     case .failure:
       XCTFail("Expected success, but got failure.")
     }
@@ -183,7 +179,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
 
     // Then
     switch result {
-    case .success(_, let issuerDocumentDetailsCard, _, _, let isRevoked):
+    case .success(_, let issuerDocumentDetailsCard, _, _):
       XCTAssertNotNil(issuerDocumentDetailsCard)
       XCTAssertEqual(issuerDocumentDetailsCard?.dateText, .documentDetailsRevokedDocument)
       XCTAssertEqual(
@@ -198,7 +194,6 @@ final class TestDocumentDetailsInteractor: EudiTest {
         Theme.shared.color.error
       )
       XCTAssertNil(issuerDocumentDetailsCard?.expandedDateText)
-      XCTAssertTrue(isRevoked)
     case .failure:
       XCTFail("Expected success, but got failure.")
     }

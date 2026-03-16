@@ -480,7 +480,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This document will be permanently deleted from your wallet and may affect access to services."
+            "value" : "This document will be removed from your wallet and may affect access to services."
           }
         }
       }
@@ -524,7 +524,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Document Data"
+            "value" : "DOCUMENT DATA"
           }
         }
       }
@@ -923,7 +923,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Issuer details"
+            "value" : "ISSUER DETAILS"
           }
         }
       }

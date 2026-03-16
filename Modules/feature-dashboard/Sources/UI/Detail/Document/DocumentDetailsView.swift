@@ -64,6 +64,9 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       message: .custom(""),
       actions: {
         Button(.documentDetailsReIssueButton) {}
+          .disabled(
+            viewModel.viewState.issuerDetailsCardDataUi?.documentState == .revoked
+          )
 
         Button(.documentDetailsRemoveButton) {
           viewModel.onShowDeleteModal()
@@ -119,7 +122,7 @@ private func content(
 
           IssuerDetailsCardView(
             issuerDetails: issuerDetailsCardDataUi,
-            onAction: viewState.isRevoked ? nil : issueNewDocument
+            onAction: issueNewDocument
           )
         }
       }
@@ -137,7 +140,7 @@ private func content(
           Button {
             toggleIsVisible()
           } label: {
-            (isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye)
+            (isVisible ? Theme.shared.image.eye : Theme.shared.image.eyeSlash)
               .resizable()
               .aspectRatio(contentMode: .fit)
               .frame(width: 24, height: 24)
@@ -167,7 +170,7 @@ private func content(
         .custom(""),
         isPresented: isDeletionModalShowing,
         actions: {
-          Button(.removeFromWallet, role: .destructive) {
+          Button(.documentDetailsRemoveButton, role: .destructive) {
             onDeleteDocument()
           }
           .accessibilityElement()
@@ -205,7 +208,6 @@ private func content(
     documentId: "",
     documentFieldsCount: DocumentUIModel.mock().documentFields.count,
     isBookmarked: true,
-    isRevoked: true,
     documentCredentialsInfo: DocumentCredentialsInfoUi(
       availableCredentials: 5,
       totalCredentials: 10,

@@ -26,7 +26,6 @@ struct DocumentDetailsViewState: ViewState {
   let documentId: String
   let documentFieldsCount: Int
   let isBookmarked: Bool
-  let isRevoked: Bool
   let documentCredentialsInfo: DocumentCredentialsInfoUi?
   let issuerDetailsCardDataUi: IssuerDocumentDetailsCardUIModel?
 }
@@ -57,7 +56,6 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         documentId: documentId,
         documentFieldsCount: 0,
         isBookmarked: false,
-        isRevoked: false,
         documentCredentialsInfo: nil,
         issuerDetailsCardDataUi: nil
       )
@@ -72,14 +70,13 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
     switch state {
 
-    case .success(let document, let issuerDetailsCardDataUi, let documentCredentialsInfo, let isBookmarked, let isRevoked):
+    case .success(let document, let issuerDetailsCardDataUi, let documentCredentialsInfo, let isBookmarked):
       self.setState {
         $0.copy(
           document: document,
           isLoading: false,
           documentFieldsCount: document.documentFields.count,
           isBookmarked: isBookmarked,
-          isRevoked: isRevoked,
           documentCredentialsInfo: documentCredentialsInfo,
           issuerDetailsCardDataUi: issuerDetailsCardDataUi
         ).copy(error: nil)
@@ -194,9 +191,8 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   }
 
   func handleRevocationNotification(for payload: [AnyHashable: Any]?) {
-    guard let ids = payload?["revoked_ids"] as? [String] else { return }
-    if ids.contains(where: { $0 == viewState.document.id }) {
-      setState { $0.copy(isRevoked: true) }
+    Task {
+      await fetchDocumentDetails()
     }
   }
 
