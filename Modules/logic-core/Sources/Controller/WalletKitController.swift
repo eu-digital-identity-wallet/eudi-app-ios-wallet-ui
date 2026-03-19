@@ -97,6 +97,7 @@ final actor WalletKitControllerImpl: WalletKitController {
   private let bookmarkStorageController: any BookmarkStorageController
   private let transactionLogStorageController: any TransactionLogStorageController
   private let revokedDocumentStorageController: any RevokedDocumentStorageController
+  private let documentRegistrationManager: DocumentRegistrationManager
 
   init(
     configLogic: WalletKitConfig,
@@ -105,7 +106,8 @@ final actor WalletKitControllerImpl: WalletKitController {
     bookmarkStorageController: any BookmarkStorageController,
     transactionLogStorageController: any TransactionLogStorageController,
     revokedDocumentStorageController: any RevokedDocumentStorageController,
-    networkSessionProvider: NetworkSessionProvider
+    networkSessionProvider: NetworkSessionProvider,
+    documentRegistrationManager: DocumentRegistrationManager
   ) {
     self.configLogic = configLogic
     self.keyChainController = keyChainController
@@ -113,6 +115,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     self.bookmarkStorageController = bookmarkStorageController
     self.transactionLogStorageController = transactionLogStorageController
     self.revokedDocumentStorageController = revokedDocumentStorageController
+    self.documentRegistrationManager = documentRegistrationManager
 
     guard let walletKit = try? EudiWallet(
       eudiWalletConfig: EudiWalletConfiguration(
@@ -164,6 +167,9 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func clearAllDocuments() async {
     try? await wallet.deleteAllDocuments()
+    try? await removeAllRegistration(
+      with: wallet.loadAllDocuments()?.compactMap { return $0.id }
+    )
   }
 
   func deleteDocument(with id: String, status: DocumentStatus) async throws {
@@ -234,7 +240,26 @@ final actor WalletKitControllerImpl: WalletKitController {
   }
 
   func fetchDocuments(with ids: [String]) -> [any DocClaimsDecodable] {
-    fetchIssuedDocuments().filter { ids.contains($0.id) }
+    let documents = fetchIssuedDocuments().filter { ids.contains($0.id) }
+    Task {
+      for document in documents {
+        if let docType = document.docType {
+          do {
+            if #available(iOS 26.0, *) {
+              try await documentRegistrationManager.addRegistration(
+                mobileDocumentType: docType,
+                supportedAuthorityKeyIdentifiers: [],
+                documentIdentifier: document.id,
+                invalidationDate: document.validUntil
+              )
+            } else {}
+          } catch {
+            throw WalletCoreError.unableFetchDocuments
+          }
+        }
+      }
+    }
+    return documents
   }
 
   func issueDocuments(
@@ -468,6 +493,15 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func getDocumentStatus(for statusIdentifier: StatusIdentifier) async throws -> CredentialStatus {
     return try await wallet.getDocumentStatus(for: statusIdentifier)
+  }
+
+  private func removeAllRegistration(with ids: [String]?) async {
+    if #available(iOS 26.0, *) {
+      guard let ids else { return }
+      do {
+        try await documentRegistrationManager.removeRegistration(documentIdentifiers: ids)
+      } catch {}
+    } else {}
   }
 }
 
