@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9F8701D02F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 9F8701C92F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9F8701DE2F6BE79B00A865A9 /* DcApi18013AnnexC in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8701DD2F6BE79B00A865A9 /* DcApi18013AnnexC */; };
 		F02921632B8E07870076A58B /* WalletDemoRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */; };
 		F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */; };
 		F02AE38F2BA6E45F00C25C59 /* logic-assembly in Resources */ = {isa = PBXBuildFile; fileRef = F02AE38E2BA6E45F00C25C59 /* logic-assembly */; };
@@ -122,6 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9F8701DE2F6BE79B00A865A9 /* DcApi18013AnnexC in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +258,7 @@
 			);
 			name = EudiReferenceWalletIDProvider;
 			packageProductDependencies = (
+				9F8701DD2F6BE79B00A865A9 /* DcApi18013AnnexC */,
 			);
 			productName = EudiReferenceWalletIDProvider;
 			productReference = 9F8701C92F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider.appex */;
@@ -311,6 +314,9 @@
 				Base,
 			);
 			mainGroup = F14907AF2ABAF54B00DDFE56;
+			packageReferences = (
+				9F8701DC2F6BE79B00A865A9 /* XCRemoteSwiftPackageReference "av-lib-ios-w3c-dc-api" */,
+			);
 			productRefGroup = F14907B92ABAF54B00DDFE56 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1242,7 +1248,23 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		9F8701DC2F6BE79B00A865A9 /* XCRemoteSwiftPackageReference "av-lib-ios-w3c-dc-api" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/eu-digital-identity-wallet/av-lib-ios-w3c-dc-api.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		9F8701DD2F6BE79B00A865A9 /* DcApi18013AnnexC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F8701DC2F6BE79B00A865A9 /* XCRemoteSwiftPackageReference "av-lib-ios-w3c-dc-api" */;
+			productName = DcApi18013AnnexC;
+		};
 		F02AE3902BA6E59600C25C59 /* logic-assembly */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "logic-assembly";
