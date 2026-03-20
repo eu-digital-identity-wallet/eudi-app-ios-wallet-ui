@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9F8701D02F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 9F8701C92F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9F8701DE2F6BE79B00A865A9 /* DcApi18013AnnexC in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8701DD2F6BE79B00A865A9 /* DcApi18013AnnexC */; };
+		9F8702012F6C41ED00A865A9 /* logic-business in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8702002F6C41ED00A865A9 /* logic-business */; };
 		F02921632B8E07870076A58B /* WalletDemoRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */; };
 		F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */; };
 		F02AE38F2BA6E45F00C25C59 /* logic-assembly in Resources */ = {isa = PBXBuildFile; fileRef = F02AE38E2BA6E45F00C25C59 /* logic-assembly */; };
@@ -125,6 +126,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F8701DE2F6BE79B00A865A9 /* DcApi18013AnnexC in Frameworks */,
+				9F8702012F6C41ED00A865A9 /* logic-business in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +263,7 @@
 			name = EudiReferenceWalletIDProvider;
 			packageProductDependencies = (
 				9F8701DD2F6BE79B00A865A9 /* DcApi18013AnnexC */,
+				9F8702002F6C41ED00A865A9 /* logic-business */,
 			);
 			productName = EudiReferenceWalletIDProvider;
 			productReference = 9F8701C92F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider.appex */;
@@ -455,6 +458,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = EudiReferenceWalletIDProvider/EudiReferenceWalletIDProvider.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
 				CODE_SIGN_STYLE = Manual;
@@ -497,6 +501,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.dev.EudiReferenceWalletIDProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SHARED_APP_GROUP_IDENTIFIER = eu.europa.ec.euidi.dev;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI DC-API Dev";
 				SDKROOT = iphoneos;
@@ -545,7 +550,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = "EudiReferenceWalletIDProvider/EudiReferenceWalletIDProviderDebug Demo.entitlements";
+				CODE_SIGN_ENTITLEMENTS = EudiReferenceWalletIDProvider/EudiReferenceWalletIDProvider.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
 				CODE_SIGN_STYLE = Manual;
@@ -588,6 +593,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.EudiReferenceWalletIDProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SHARED_APP_GROUP_IDENTIFIER = eu.europa.ec.euidi;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI DC-API";
 				SDKROOT = iphoneos;
@@ -636,6 +642,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = EudiReferenceWalletIDProvider/EudiReferenceWalletIDProvider.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
 				CODE_SIGN_STYLE = Manual;
@@ -671,6 +678,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.dev.EudiReferenceWalletIDProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SHARED_APP_GROUP_IDENTIFIER = eu.europa.ec.euidi.dev;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI DC-API Dev";
 				SDKROOT = iphoneos;
@@ -719,6 +727,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = EudiReferenceWalletIDProvider/EudiReferenceWalletIDProvider.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
 				CODE_SIGN_STYLE = Manual;
@@ -754,6 +763,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.EudiReferenceWalletIDProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SHARED_APP_GROUP_IDENTIFIER = eu.europa.ec.euidi;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI DC-API";
 				SDKROOT = iphoneos;
@@ -1271,6 +1281,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9F8701DC2F6BE79B00A865A9 /* XCRemoteSwiftPackageReference "av-lib-ios-w3c-dc-api" */;
 			productName = DcApi18013AnnexC;
+		};
+		9F8702002F6C41ED00A865A9 /* logic-business */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = "logic-business";
 		};
 		F02AE3902BA6E59600C25C59 /* logic-assembly */ = {
 			isa = XCSwiftPackageProductDependency;

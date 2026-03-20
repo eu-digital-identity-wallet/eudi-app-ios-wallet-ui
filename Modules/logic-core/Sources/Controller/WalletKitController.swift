@@ -120,6 +120,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     guard let walletKit = try? EudiWallet(
       eudiWalletConfig: EudiWalletConfiguration(
         serviceName: configLogic.documentStorageServiceName,
+        accessGroup: Bundle.getKeychainAccessGroup(),
         userAuthenticationRequired: configLogic.userAuthenticationRequired,
         trustedReaderRootCertificates: configLogic.trustedReaderRootCertificates,
         deviceAuthMethod: .deviceSignature,

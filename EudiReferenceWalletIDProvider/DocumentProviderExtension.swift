@@ -16,19 +16,21 @@
 import ExtensionKit
 import IdentityDocumentServicesUI
 import SwiftUI
+import DcApi18013AnnexC
+import logic_business
 
 @main
 struct DocumentProviderExtension: IdentityDocumentProvider {
+  let dcApiHandler = DcApiHandler(
+    serviceName: Bundle.getDocumentStorageServiceName(),
+    accessGroup: Bundle.getKeychainAccessGroup()
+  )
 
-    var body: some IdentityDocumentRequestScene {
-        ISO18013MobileDocumentRequestScene { _ in
-            // Insert your view here
-            Text("Hello, world!")
-        }
+  var body: some IdentityDocumentRequestScene {
+    ISO18013MobileDocumentRequestScene { context in
+      RequestAuthorizationView(context: context, dcApiHandler: dcApiHandler)
     }
+  }
 
-    func performRegistrationUpdates() async {
-
-    }
-
+  func performRegistrationUpdates() async {  }
 }

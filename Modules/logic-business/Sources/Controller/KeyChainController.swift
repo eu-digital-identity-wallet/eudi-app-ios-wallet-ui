@@ -34,7 +34,17 @@ public protocol KeyChainController: Sendable {
 final class KeyChainControllerImpl: KeyChainController {
 
   private let biometryKey = "eu.europa.ec.euidi.biometric.access"
-  private let keyChain: Keychain = Keychain()
+  private let keyChain: Keychain
+
+  public init() {
+    let accessGroup = Bundle.getKeychainAccessGroup()
+    let service = Bundle.getDocumentStorageServiceName()
+    keyChain = Keychain(
+      service: service,
+      accessGroup: accessGroup
+    )
+    .accessibility(.whenUnlocked)
+  }
 
   public func storeValue(key: KeyChainWrapper, value: String) {
     keyChain[key.value] = value
