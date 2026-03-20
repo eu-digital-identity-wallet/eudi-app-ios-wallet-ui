@@ -182,6 +182,20 @@ public enum FeatureIssuanceRouteModule: AppRouteModule {
   }
 }
 
+public enum FeatureIDPRouteModule: AppRouteModule {
+  case requestAuthorization
+  case biometry(config: any UIConfigType)
+
+  public var info: (key: String, arguments: [String: String]) {
+      return switch self {
+      case .requestAuthorization:
+        (key: "RequestAuthorization", arguments: [:])
+      case .biometry(let config):
+        (key: "Biometry", arguments: ["config": config.log])
+      }
+  }
+}
+
 public enum AppRoute: AppRouteModule {
 
   case featureStartupModule(FeatureStartupRouteModule)
@@ -190,6 +204,7 @@ public enum AppRoute: AppRouteModule {
   case featureIssuanceModule(FeatureIssuanceRouteModule)
   case featurePresentationModule(FeaturePresentationRouteModule)
   case featureProximityModule(FeatureProximityRouteModule)
+  case featureIDPModule(FeatureIDPRouteModule)
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -204,6 +219,8 @@ public enum AppRoute: AppRouteModule {
     case .featurePresentationModule(let module):
       module.info
     case .featureProximityModule(let module):
+      module.info
+    case .featureIDPModule(let module):
       module.info
     }
   }

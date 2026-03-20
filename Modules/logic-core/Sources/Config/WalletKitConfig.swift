@@ -46,6 +46,11 @@ protocol WalletKitConfig: Sendable {
   var documentStorageServiceName: String { get }
 
   /**
+   * Keychain shared access
+   */
+  var keychainAccessGroup: String { get }
+
+  /**
    * The name of the file to be created to store logs
    */
   var logFileName: String { get }
@@ -187,11 +192,11 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var documentStorageServiceName: String {
-//    guard let identifier = Bundle.main.bundleIdentifier else {
-//      return "eudi.document.storage"
-//    }
-//    return "\(identifier).eudi.document.storage"
     return Bundle.getDocumentStorageServiceName()
+  }
+
+  var keychainAccessGroup: String {
+    return Bundle.getKeychainAccessGroup()
   }
 
   var logFileName: String {

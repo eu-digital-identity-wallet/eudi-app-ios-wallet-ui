@@ -18,17 +18,29 @@ import IdentityDocumentServicesUI
 import SwiftUI
 import DcApi18013AnnexC
 import logic_business
+import logic_ui
 
 @main
 struct DocumentProviderExtension: IdentityDocumentProvider {
-  let dcApiHandler = DcApiHandler(
-    serviceName: Bundle.getDocumentStorageServiceName(),
-    accessGroup: Bundle.getKeychainAccessGroup()
-  )
+  private let dcApiHandler: DcApiHandler
+  private let routerHost: RouterHost
+
+  init() {
+    _ = DocumentProviderDIContainer.shared
+    self.dcApiHandler = DIGraph.shared.resolver.force(DcApiHandler.self)
+    self.routerHost = DIGraph.shared.resolver.force(RouterHost.self)
+  }
 
   var body: some IdentityDocumentRequestScene {
     ISO18013MobileDocumentRequestScene { context in
-      RequestAuthorizationView(context: context, dcApiHandler: dcApiHandler)
+      if let documentRouter = routerHost as? DigitalCredentialProviderRouter {
+        documentRouter.configureAuthorization(
+          context: context,
+          handler: dcApiHandler
+        )
+      }
+      return routerHost.composeApplication()
+        .ignoresSafeArea(edges: .bottom)
     }
   }
 

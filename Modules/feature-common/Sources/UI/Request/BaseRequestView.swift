@@ -94,8 +94,8 @@ private func content(
 
   if let errorTitle {
     noDocumentsFound(
-        contentHeaderConfig: viewState.contentHeaderConfig,
-        errorTitle: errorTitle
+      contentHeaderConfig: viewState.contentHeaderConfig,
+      errorTitle: errorTitle
     )
   } else {
     scrollableContent(

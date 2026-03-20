@@ -13,45 +13,44 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import feature_common
+import IdentityDocumentServicesUI
+import logic_authentication
+import logic_assembly
 import logic_ui
-import Observation
+import DcApi18013AnnexC
+import feature_proximity
 
+// MARK: - Extension Router Host
 private typealias QueueItem = () -> Void
 
 @Observable
-final class RouterHostImpl: RouterHost {
+final class DigitalCredentialProviderRouter: RouterHost {
 
-  private var pathElements: [AppRoute] = []
+  private var pathElements: [logic_ui.AppRoute] = []
 
   @ObservationIgnored
-  private let rootRoute: AppRoute = .featureStartupModule(.startup)
-  @ObservationIgnored
-  private let uiConfigLogic: ConfigUiLogic
-  @ObservationIgnored
-  private let analyticsController: AnalyticsController
+  private var rootRoute: logic_ui.AppRoute = .featureIDPModule(.requestAuthorization)
+
   @ObservationIgnored
   private let lockInterval: Int = 1000
   @ObservationIgnored
   private var queueNavigation: [QueueItem] = []
   @ObservationIgnored
   private var isLocked: Bool = false
+  @ObservationIgnored
+  private var authorizationContext: ISO18013MobileDocumentRequestContext?
+  @ObservationIgnored
+  private var authorizationHandler: DcApiHandler?
 
-  init(
-    uiConfigLogic: ConfigUiLogic,
-    analyticsController: AnalyticsController
-  ) {
-    self.uiConfigLogic = uiConfigLogic
-    self.analyticsController = analyticsController
-  }
-
-  public func push(with route: AppRoute) {
+  public func push(with route: logic_ui.AppRoute) {
     guard canNavigate(block: self.push(with: route)) else { return }
     lockNavigation()
     pathElements.append(route)
     onNavigationFollowUp(with: route)
   }
 
-  public func popTo(with route: AppRoute, inclusive: Bool) {
+  public func popTo(with route: logic_ui.AppRoute, inclusive: Bool) {
     guard
       canNavigate(
         block: self.popTo(
@@ -81,7 +80,7 @@ final class RouterHostImpl: RouterHost {
     onNavigationFollowUp(with: route)
   }
 
-  public func popTo(with route: AppRoute) {
+  public func popTo(with route: logic_ui.AppRoute) {
     popTo(with: route, inclusive: false)
   }
 
@@ -98,32 +97,27 @@ final class RouterHostImpl: RouterHost {
     }
   }
 
-  public func getCurrentScreen() -> AppRoute? {
+  public func getCurrentScreen() -> logic_ui.AppRoute? {
     return pathElements.last
   }
 
   public func getToolbarConfig() -> UIConfig.ToolBar {
-    guard let screenKey = self.getCurrentScreen()?.info.key else {
-      return .init(Theme.shared.color.onSurface)
-    }
-
-    return uiConfigLogic.backgroundColorForScreenDictionary[screenKey]
-    ?? .init(Theme.shared.color.background)
+    return .init(Theme.shared.color.onSurface)
   }
 
   public func userIsLoggedInWithDocuments() -> Bool {
-    return isForegroundOrBackStack(with: uiConfigLogic.dashboardRoute)
+    return true
   }
 
   public func userIsLoggedInWithNoDocuments() -> Bool {
-    return isForegroundOrBackStack(with: uiConfigLogic.issuanceRoute)
+    return false
   }
 
-  public func isScreenForeground(with route: AppRoute) -> Bool {
+  public func isScreenForeground(with route: logic_ui.AppRoute) -> Bool {
     getCurrentScreen()?.info.key == route.info.key
   }
 
-  public func isScreenOnBackStack(with route: AppRoute) -> Bool {
+  public func isScreenOnBackStack(with route: logic_ui.AppRoute) -> Bool {
     pathElements.contains(where: { $0.info.key == route.info.key })
   }
 
@@ -132,9 +126,9 @@ final class RouterHostImpl: RouterHost {
   }
 }
 
-private extension RouterHostImpl {
+private extension DigitalCredentialProviderRouter {
 
-  @MainActor func isForegroundOrBackStack(with route: AppRoute) -> Bool {
+  @MainActor func isForegroundOrBackStack(with route: logic_ui.AppRoute) -> Bool {
     return isScreenForeground(with: route) || isScreenOnBackStack(with: route)
   }
 
@@ -161,26 +155,19 @@ private extension RouterHostImpl {
     item()
   }
 
-  @MainActor func onNavigationFollowUp(with route: AppRoute) {
+  @MainActor func onNavigationFollowUp(with route: logic_ui.AppRoute) {
     notifyBackgroundColorUpdate()
-    analyticsController.logScreen(
-      screen: route.info.key,
-      arguments: route.info.arguments
-    )
   }
 
   @MainActor func notifyBackgroundColorUpdate() {
     NotificationCenter.default.post(name: .shouldChangeBackgroundColor, object: nil)
   }
 
-  @MainActor
   @ViewBuilder
-  func resolveView(_ route: AppRoute) -> some View {
+  @MainActor func resolveView(_ route: logic_ui.AppRoute) -> some View {
     switch route {
     case .featureStartupModule(let module):
       StartupRouter.resolve(module: module, host: self)
-    case .featureDashboardModule(let module):
-      DashboardRouter.resolve(module: module, host: self)
     case .featureCommonModule(let module):
       CommonRouter.resolve(module: module, host: self)
     case .featureIssuanceModule(let module):
@@ -189,22 +176,46 @@ private extension RouterHostImpl {
       PresentationRouter.resolve(module: module, host: self)
     case .featureProximityModule(let module):
       ProximityRouter.resolve(module: module, host: self)
-    default:
-      EmptyView()
+    case .featureIDPModule(let module):
+      IDPRouter.resolve(module: module, host: self)
+    case .featureDashboardModule(let module):
+      DashboardRouter.resolve(module: module, host: self)
     }
   }
 }
 
-private extension RouterHostImpl {
+extension DigitalCredentialProviderRouter {
+
+  func configureAuthorization(
+    context: ISO18013MobileDocumentRequestContext,
+    handler: DcApiHandler
+  ) {
+    authorizationContext = context
+    authorizationHandler = handler
+  }
+
+  fileprivate func authorizationDependencies()
+  -> (context: ISO18013MobileDocumentRequestContext, handler: DcApiHandler)? {
+    guard
+      let authorizationContext,
+      let authorizationHandler
+    else {
+      return nil
+    }
+    return (authorizationContext, authorizationHandler)
+  }
+}
+
+private extension DigitalCredentialProviderRouter {
 
   struct RouterContainerView: View {
 
-    @State var host: RouterHostImpl
+    @State var host: DigitalCredentialProviderRouter
 
     var body: some View {
       NavigationStack(path: $host.pathElements) {
         host.resolveView(host.rootRoute)
-          .navigationDestination(for: AppRoute.self) { route in
+          .navigationDestination(for: logic_ui.AppRoute.self) { route in
             host.resolveView(route)
           }
       }
@@ -222,5 +233,37 @@ fileprivate extension Array where Element == QueueItem {
     }
     self.removeAll()
     return item
+  }
+}
+
+public extension Notification.Name {
+  static let shouldChangeBackgroundColor = Notification.Name("shouldChangeBackgroundColor")
+}
+
+@MainActor
+public final class IDPRouter {
+  @ViewBuilder
+  public static func resolve(module: FeatureIDPRouteModule, host: some RouterHost) -> some View {
+    switch module {
+    case .requestAuthorization:
+      if
+        let documentRouter = host as? DigitalCredentialProviderRouter,
+        let dependencies = documentRouter.authorizationDependencies() {
+        RequestAuthorizationView(
+          with: .init(
+            router: host,
+            context: dependencies.context,
+            dcApiHandler: dependencies.handler
+          )
+        )
+      } else {
+        ContentUnavailableView(
+          title: LocalizableStringKey.custom(""),
+          description: LocalizableStringKey.custom("")
+        )
+      }
+    case .biometry(config: let config):
+      CommonRouter.resolve(module: .biometry(config: config), host: host)
+    }
   }
 }
