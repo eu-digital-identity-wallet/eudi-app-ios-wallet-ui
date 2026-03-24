@@ -57,6 +57,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsDocumentLowOnCredentials()
+    stubIsBatchCounterEnabled()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -84,6 +85,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsDocumentLowOnCredentials()
+    stubIsBatchCounterEnabled()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -108,6 +110,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsDocumentLowOnCredentials()
+    stubIsBatchCounterEnabled()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -135,6 +138,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsDocumentLowOnCredentials()
+    stubIsBatchCounterEnabled()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -176,6 +180,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: true)
     stubIsDocumentLowOnCredentials()
+    stubIsBatchCounterEnabled()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -595,6 +600,13 @@ extension TestDocumentDetailsInteractor {
   func stubConfigLogic() {
     stub(configLogic) { mock in
       when(mock.forcePidActivation.get).thenReturn(true)
+    }
+  }
+  
+  
+  func stubIsBatchCounterEnabled(_ enabled: Bool = true) {
+    stub(prefsController) { stub in
+      when(stub.getBool(forKey: Prefs.Key.batchCounter)).thenReturn(enabled)
     }
   }
 }

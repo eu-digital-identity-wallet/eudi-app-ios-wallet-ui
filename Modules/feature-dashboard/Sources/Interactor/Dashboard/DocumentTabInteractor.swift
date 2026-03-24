@@ -72,6 +72,7 @@ public protocol DocumentTabInteractor: Sendable {
 final actor DocumentTabInteractorImpl: DocumentTabInteractor {
 
   private let walletKitController: WalletKitController
+  private let prefsController: PrefsController
   private let filterValidator: FilterValidator
   private let configLogic: ConfigLogic
 
@@ -79,10 +80,12 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
 
   init(
     walletKitController: WalletKitController,
+    prefsController: PrefsController,
     filterValidator: FilterValidator,
     configLogic: ConfigLogic
   ) {
     self.walletKitController = walletKitController
+    self.prefsController = prefsController
     self.filterValidator = filterValidator
     self.configLogic = configLogic
   }
@@ -217,7 +220,13 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
           issued.append(
             document.transformToDocumentTabUi(
               categories: categories,
-              isRevoked: isRevoked
+              isRevoked: isRevoked,
+              usageCount: isBatchCounterEnabled()
+              ? getCredentialsUsageCount(
+                credentialsUsageCounts: document.credentialsUsageCounts,
+                isDeferred: (document is DeferrredDocument) == true
+              )
+              : nil
             )
           )
         }
@@ -422,10 +431,12 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
         categories: self.walletKitController.getDocumentCategories(),
         isRevoked: isRevoked,
         documentIsLowOnCredentials: documentIsLowOnCredentials,
-        usageCount: getCredentialsUsageCount(
+        usageCount: isBatchCounterEnabled()
+        ? getCredentialsUsageCount(
           credentialsUsageCounts: document.credentialsUsageCounts,
           isDeferred: (document is DeferrredDocument) == true
         )
+        : nil
       )
 
       let documentSearchTags: [String] = {
@@ -530,5 +541,9 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
     }
 
     return filterItems
+  }
+
+  private func isBatchCounterEnabled() -> Bool {
+    prefsController.getBool(forKey: .batchCounter)
   }
 }

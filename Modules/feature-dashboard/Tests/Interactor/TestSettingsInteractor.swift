@@ -26,15 +26,18 @@ final class TestSettingsInteractor: EudiTest {
   var walletKitController: MockWalletKitController!
   var configLogic: MockConfigLogic!
   var biometryInteractor: MockBiometryInteractor!
+  var prefsController: MockPrefsController!
 
   override func setUp() {
     self.walletKitController = MockWalletKitController()
+    self.prefsController = MockPrefsController()
     self.configLogic = MockConfigLogic()
     self.biometryInteractor = MockBiometryInteractor()
     self.interactor = SettingsInteractorImpl(
       walletController: walletKitController,
       configLogic: configLogic,
-      biometryInteractor: biometryInteractor
+      biometryInteractor: biometryInteractor,
+      prefsController: prefsController
     )
   }
 
@@ -170,6 +173,47 @@ final class TestSettingsInteractor: EudiTest {
     // Then
     verify(biometryInteractor).openSettings(action: any())
   }
+  
+  
+  func testIsBatchCounterEnabled_WhenPrefsControllerReturnsTrue_ThenReturnsTrue() async {
+    // Given
+    stub(prefsController) { mock in
+      when(mock.getBool(forKey: Prefs.Key.batchCounter)).thenReturn(true)
+    }
+
+    // When
+    let result = await interactor.isBatchCounterEnabled()
+
+    // Then
+    XCTAssertTrue(result)
+  }
+
+  func testIsBatchCounterEnabled_WhenPrefsControllerReturnsFalse_ThenReturnsFalse() async {
+    // Given
+    stub(prefsController) { mock in
+      when(mock.getBool(forKey: Prefs.Key.batchCounter)).thenReturn(false)
+    }
+
+    // When
+    let result = await interactor.isBatchCounterEnabled()
+
+    // Then
+    XCTAssertFalse(result)
+  }
+
+  func testBatchCounter_WhenSetToTrue_CallsPrefsControllerWithTrue() async {
+    // Given
+    stub(prefsController) { mock in
+      when(mock.setValue(any(), forKey: Prefs.Key.batchCounter)).thenDoNothing()
+    }
+
+    // When
+    await interactor.setBatchCounter(isEnabled: true)
+    
+    // Then
+    verify(prefsController).setValue(any(), forKey: Prefs.Key.batchCounter)
+  }
+
 }
 
 extension TestSettingsInteractor {

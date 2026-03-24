@@ -27,20 +27,25 @@ public protocol SettingsInteractor: Sendable {
   func authenticateBiometry() async -> BiometricsState
   func setBiometrySelection(isEnabled: Bool) async
   func openBiometrySettings(action: @escaping @Sendable () -> Void) async
+  func setBatchCounter(isEnabled: Bool) async
+  func isBatchCounterEnabled() async -> Bool
 }
 
 final actor SettingsInteractorImpl: SettingsInteractor {
 
   private let walletController: WalletKitController
+  private let prefsController: PrefsController
   private let configLogic: ConfigLogic
   private let biometryInteractor: BiometryInteractor
 
   init(
     walletController: WalletKitController,
     configLogic: ConfigLogic,
-    biometryInteractor: BiometryInteractor
+    biometryInteractor: BiometryInteractor,
+    prefsController: PrefsController
   ) {
     self.walletController = walletController
+    self.prefsController = prefsController
     self.configLogic = configLogic
     self.biometryInteractor = biometryInteractor
   }
@@ -75,5 +80,13 @@ final actor SettingsInteractorImpl: SettingsInteractor {
 
   func openBiometrySettings(action: @escaping @Sendable () -> Void) async {
     await biometryInteractor.openSettings(action: action)
+  }
+
+  func isBatchCounterEnabled() async -> Bool {
+    prefsController.getBool(forKey: .batchCounter)
+  }
+
+  func setBatchCounter(isEnabled: Bool) async {
+    prefsController.setValue(isEnabled, forKey: .batchCounter)
   }
 }

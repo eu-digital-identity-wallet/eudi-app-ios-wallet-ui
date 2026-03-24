@@ -3063,6 +3063,26 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
             defaultCall: await __defaultImplStub!.retrieveChangeLogUrl()
         )
     }
+    
+    public func setBatchCounter(isEnabled p0: Bool) async {
+        return await cuckoo_manager.call(
+            "setBatchCounter(isEnabled p0: Bool) async",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.setBatchCounter(isEnabled: p0)
+        )
+    }
+    
+    public func isBatchCounterEnabled() async -> Bool {
+        return await cuckoo_manager.call(
+            "isBatchCounterEnabled() async -> Bool",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.isBatchCounterEnabled()
+        )
+    }
 
     public func isBiometryAvailable() async -> Bool {
         return await cuckoo_manager.call(
@@ -3184,6 +3204,22 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
                 parameterMatchers: matchers
             ))
         }
+        
+        func setBatchCounter<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(Bool)> where M1.MatchedType == Bool {
+            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
+                method: "setBatchCounter(isEnabled p0: Bool) async",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func isBatchCounterEnabled() -> Cuckoo.ProtocolStubFunction<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
+                method: "isBatchCounterEnabled() async -> Bool",
+                parameterMatchers: matchers
+            ))
+        }
     }
 
     public struct __VerificationProxy_SettingsInteractor: Cuckoo.VerificationProxy {
@@ -3292,6 +3328,30 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func setBatchCounter<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.__DoNotUse<(Bool), Void> where M1.MatchedType == Bool {
+            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "setBatchCounter(isEnabled p0: Bool) async",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func isBatchCounterEnabled() -> Cuckoo.__DoNotUse<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "isBatchCounterEnabled() async -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -3329,6 +3389,14 @@ public class SettingsInteractorStub:SettingsInteractor, @unchecked Sendable {
     
     public func openBiometrySettings(action p0: @escaping @Sendable () -> Void) async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func setBatchCounter(isEnabled p0: Bool) async {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func isBatchCounterEnabled() async -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
 }
 

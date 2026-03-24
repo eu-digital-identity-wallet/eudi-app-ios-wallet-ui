@@ -256,6 +256,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case documentDetailsIssuerCardIssuedMessageText
   case documentDetailsIssuerCardRevokedMessageText
   case documentDetailsIssuerCardIssuedActionButtonText
+  case batchIssuanceCounter
   case documentProviderExtensionAcceptButton
   case documentProviderExtensionRejectButton
 }

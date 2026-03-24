@@ -27,7 +27,14 @@ struct SettingsViewState: ViewState {
   let changelogUrl: URL?
 }
 
+@Observable
 final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsViewState> {
+  var isBatchCounterEnabled: Bool = false {
+    didSet {
+      guard oldValue != isBatchCounterEnabled else { return }
+      updateBatchCounter(isBatchCounterEnabled)
+    }
+  }
 
   var biometryError: SystemBiometryError?
 
@@ -98,6 +105,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     let changelogUrl = await interactor.retrieveChangeLogUrl()
     let isBiometryAvailable = await interactor.isBiometryAvailable()
     let isBiometryEnabled = await interactor.isBiometryEnabled()
+    isBatchCounterEnabled = await interactor.isBatchCounterEnabled()
 
     var items: [SettingMenuItemUIModel] = []
 
@@ -113,6 +121,15 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
         )
       )
     }
+
+    items.append(
+      .init(
+        title: .batchIssuanceCounter,
+        showDivider: true,
+        isToggle: true,
+        action: {}
+      )
+    )
 
     items.append(
       .init(
@@ -140,6 +157,12 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
         logsUrl: logsUrl,
         changelogUrl: changelogUrl
       )
+    }
+  }
+
+  private func updateBatchCounter(_ isEnabled: Bool) {
+    Task {
+      await interactor.setBatchCounter(isEnabled: isEnabled)
     }
   }
 }
