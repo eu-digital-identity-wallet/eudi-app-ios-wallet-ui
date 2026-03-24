@@ -62,7 +62,7 @@ final class HomeTabViewModel<Router: RouterHost>: ViewModel<Router, HomeTabState
 
   func onCreate() async {
     let username = await interactor.fetchUsername()
-    setState { $0.copy(username: username) }
+    setState { $0.copy(username: getuserName(username)) }
     onUpdateToolbar(
       .init(
         trailingActions: nil,
@@ -151,5 +151,10 @@ final class HomeTabViewModel<Router: RouterHost>: ViewModel<Router, HomeTabState
         .sideMenu
       )
     )
+  }
+
+  private func getuserName(_ username: String) -> String {
+    let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
+    return trimmedUsername.isEmpty ? "" : ", \(trimmedUsername)"
   }
 }
