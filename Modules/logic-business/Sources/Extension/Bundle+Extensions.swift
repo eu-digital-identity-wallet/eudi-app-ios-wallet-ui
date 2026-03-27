@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import Security
 
 public extension Bundle {
   /// Gets the main app bundle identifier, working correctly in both main app and extension contexts.

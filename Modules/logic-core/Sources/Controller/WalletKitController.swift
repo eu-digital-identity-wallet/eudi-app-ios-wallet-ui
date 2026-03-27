@@ -93,6 +93,7 @@ final actor WalletKitControllerImpl: WalletKitController {
   private let sessionCoordinatorHolder: SessionCoordinatorHolder
 
   private let configLogic: WalletKitConfig
+  private let keychainConfig: KeyChainConfig
   private let keyChainController: KeyChainController
   private let bookmarkStorageController: any BookmarkStorageController
   private let transactionLogStorageController: any TransactionLogStorageController
@@ -101,6 +102,7 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   init(
     configLogic: WalletKitConfig,
+    keychainConfig: KeyChainConfig,
     keyChainController: KeyChainController,
     sessionCoordinatorHolder: SessionCoordinatorHolder,
     bookmarkStorageController: any BookmarkStorageController,
@@ -110,6 +112,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     documentRegistrationManager: DocumentRegistrationManager
   ) {
     self.configLogic = configLogic
+    self.keychainConfig = keychainConfig
     self.keyChainController = keyChainController
     self.sessionCoordinatorHolder = sessionCoordinatorHolder
     self.bookmarkStorageController = bookmarkStorageController
@@ -119,8 +122,8 @@ final actor WalletKitControllerImpl: WalletKitController {
 
     guard let walletKit = try? EudiWallet(
       eudiWalletConfig: EudiWalletConfiguration(
-        serviceName: configLogic.documentStorageServiceName,
-        accessGroup: configLogic.keychainAccessGroup,
+        serviceName: keychainConfig.documentStorageServiceName,
+        accessGroup: keychainConfig.keychainAccessGroup,
         userAuthenticationRequired: configLogic.userAuthenticationRequired,
         trustedReaderRootCertificates: configLogic.trustedReaderRootCertificates,
         deviceAuthMethod: .deviceSignature,
@@ -233,7 +236,7 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [any DocClaimsDecodable] {
     let excludedRawValues = excluded.map { $0.rawValue }
-    return fetchIssuedDocuments().filter { !excludedRawValues.contains($0.docType.orEmpty) }
+    return fetchIssuedDocuments().filter { !excludedRawValues.contains($0.docType) }
   }
 
   func fetchDocument(with id: String) -> (any DocClaimsDecodable)? {
@@ -242,24 +245,7 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func fetchDocuments(with ids: [String]) -> [any DocClaimsDecodable] {
     let documents = fetchIssuedDocuments().filter { ids.contains($0.id) }
-    Task {
-      for document in documents {
-        if let docType = document.docType {
-          do {
-            if #available(iOS 26.0, *) {
-              try await documentRegistrationManager.addRegistration(
-                mobileDocumentType: docType,
-                supportedAuthorityKeyIdentifiers: [],
-                documentIdentifier: document.id,
-                invalidationDate: document.validUntil
-              )
-            } else {}
-          } catch {
-            throw WalletCoreError.unableFetchDocuments
-          }
-        }
-      }
-    }
+    registerForDocumentIdentityExtension(documents: documents)
     return documents
   }
 
@@ -494,6 +480,25 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func getDocumentStatus(for statusIdentifier: StatusIdentifier) async throws -> CredentialStatus {
     return try await wallet.getDocumentStatus(for: statusIdentifier)
+  }
+
+  private func registerForDocumentIdentityExtension(documents: [any DocClaimsDecodable]) {
+    Task {
+      for document in documents {
+        do {
+          if #available(iOS 26.0, *), document.docDataFormat == .cbor {
+            try await documentRegistrationManager.addRegistration(
+              mobileDocumentType: document.docType,
+              supportedAuthorityKeyIdentifiers: [],
+              documentIdentifier: document.id,
+              invalidationDate: document.validUntil
+            )
+          }
+        } catch {
+          throw WalletCoreError.unableFetchDocuments
+        }
+      }
+    }
   }
 
   private func removeAllRegistration(with ids: [String]?) async {

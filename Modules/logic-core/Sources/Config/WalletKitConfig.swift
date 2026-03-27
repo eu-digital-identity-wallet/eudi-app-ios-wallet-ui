@@ -41,16 +41,6 @@ protocol WalletKitConfig: Sendable {
   var userAuthenticationRequired: Bool { get }
 
   /**
-   * Service name for documents key chain storage
-   */
-  var documentStorageServiceName: String { get }
-
-  /**
-   * Keychain shared access
-   */
-  var keychainAccessGroup: String { get }
-
-  /**
    * The name of the file to be created to store logs
    */
   var logFileName: String { get }
@@ -189,14 +179,6 @@ struct WalletKitConfigImpl: WalletKitConfig {
     return certificates
       .compactMap { loadCertificate($0) }
       .map { [$0] }
-  }
-
-  var documentStorageServiceName: String {
-    return Bundle.getDocumentStorageServiceName()
-  }
-
-  var keychainAccessGroup: String {
-    return Bundle.getKeychainAccessGroup()
   }
 
   var logFileName: String {

@@ -21,8 +21,15 @@ public final class LogicBusinessAssembly: Assembly {
 
   public func assemble(container: Container) {
 
-    container.register(KeyChainController.self) { _ in
-      KeyChainControllerImpl()
+    container.register(KeyChainConfig.self) { _ in
+      KeychainConfigImpl()
+    }
+    .inObjectScope(ObjectScope.container)
+
+    container.register(KeyChainController.self) { r in
+      KeyChainControllerImpl(
+        keyChainConfig: r.force(KeyChainConfig.self),
+      )
     }
     .inObjectScope(ObjectScope.container)
 

@@ -14,60 +14,62 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
-import IdentityDocumentServices
-import IdentityDocumentServicesUI
-import MdocDataModel18013
-import WalletStorage
-import DcApi18013AnnexC
-import feature_common
+import logic_resources
 import logic_ui
 
-struct RequestAuthorizationView<Router: RouterHost>: View {
+struct RequestAuthorizationView: View {
 
-  @State private var viewModel: RequestAuthorizationViewModel<Router>
+  @State private var viewModel: RequestAuthorizationViewModel
 
-  init(with viewModel: RequestAuthorizationViewModel<Router>) {
+  init(with viewModel: RequestAuthorizationViewModel) {
     self._viewModel = State(wrappedValue: viewModel)
   }
 
   var body: some View {
-    VStack(alignment: .center) {
-      if viewModel.viewState.errorMessage != nil {
-        noDocumentsFound()
-      } else if let requestSet = viewModel.viewState.documents,
-                let websiteName = viewModel.viewState.websiteName {
-        contentView(requestSet: requestSet, websiteName: websiteName)
-      } else {
-        noDocumentsFound()
+    NavigationStack {
+      VStack(alignment: .center) {
+        if let documents = viewModel.viewState.documents {
+          contentView(documents: documents)
+        } else {
+          noDocumentsFound()
+        }
       }
-    }
-    .frame(maxWidth: .infinity)
-    .padding()
-    .task {
-      await viewModel.loadRequest()
+      .navigationDestination(isPresented: $viewModel.showBiometryView) {
+        ProviderBiometryView(
+          with: .init(
+            config: viewModel.createBiometryConfig(),
+            onDismiss: { viewModel.showBiometryView = false }
+          )
+        )
+      }
+      .shimmer(isLoading: viewModel.viewState.isLoading)
+      .frame(maxWidth: .infinity)
+      .padding()
+      .task {
+        await viewModel.loadRequest()
+      }
     }
   }
 
   @ViewBuilder
   private func contentView(
-    requestSet: [AuthorizationUIDocument],
-    websiteName: String
+    documents: [AuthorizationUIDocument]
   ) -> some View {
     ScrollView {
       VStack(spacing: .zero) {
         ContentHeaderView(
-          config: viewModel.viewState.contentHeaderConfig,
-          accessibilityDescription: BaseRequestLocators.description
+          config: viewModel.viewState.contentHeaderConfig
         )
 
         VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
-          ForEach(requestSet, id: \.self) { request in
+          ForEach(documents, id: \.self) { document in
             WrapCardView {
               WrapListItemView(
                 listItem: .init(
-                  mainContent: .text(.custom(request.documentName))
-                )
+                  mainContent: .text(.custom(document.name))
+                ),
+                mainTextVerticalPadding: SPACING_SMALL
               )
             }
           }
@@ -89,8 +91,7 @@ struct RequestAuthorizationView<Router: RouterHost>: View {
   private func noDocumentsFound() -> some View {
     VStack(spacing: .zero) {
       ContentHeaderView(
-        config: viewModel.viewState.contentHeaderConfig,
-        accessibilityDescription: BaseRequestLocators.description
+        config: viewModel.viewState.contentHeaderConfig
       )
       VStack(spacing: .zero) {
         Spacer()
@@ -126,8 +127,9 @@ struct RequestAuthorizationView<Router: RouterHost>: View {
     WrapButtonView(
       style: .primary,
       title: .documentProviderExtensionAcceptButton,
+      isLoading: viewModel.viewState.isLoading,
       onAction: {
-        viewModel.acceptVerification()
+        viewModel.showBiometryView = true
       }()
     )
   }

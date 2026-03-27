@@ -1,3 +1,18 @@
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Config/AuthorizationUIConfig.swift'
+
+import Cuckoo
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_proximity
+
+
+
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Config/BiometricUiConfig.swift'
 
 import Cuckoo
@@ -3310,6 +3325,113 @@ public class ConfigLogicStub:ConfigLogic, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Config/KeyChainConfig.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_proximity
+
+public class MockKeyChainConfig: KeyChainConfig, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = KeyChainConfig
+    public typealias Stubbing = __StubbingProxy_KeyChainConfig
+    public typealias Verification = __VerificationProxy_KeyChainConfig
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any KeyChainConfig)?
+
+    public func enableDefaultImplementation(_ stub: any KeyChainConfig) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+    public var documentStorageServiceName: String {
+        get {
+            return cuckoo_manager.getter(
+                "documentStorageServiceName",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.documentStorageServiceName
+            )
+        }
+    }
+    
+    public var keychainAccessGroup: String {
+        get {
+            return cuckoo_manager.getter(
+                "keychainAccessGroup",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.keychainAccessGroup
+            )
+        }
+    }
+
+
+    public struct __StubbingProxy_KeyChainConfig: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        var documentStorageServiceName: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockKeyChainConfig,String> {
+            return .init(manager: cuckoo_manager, name: "documentStorageServiceName")
+        }
+        
+        var keychainAccessGroup: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockKeyChainConfig,String> {
+            return .init(manager: cuckoo_manager, name: "keychainAccessGroup")
+        }
+    }
+
+    public struct __VerificationProxy_KeyChainConfig: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        var documentStorageServiceName: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "documentStorageServiceName", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var keychainAccessGroup: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "keychainAccessGroup", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+    }
+}
+
+public class KeyChainConfigStub:KeyChainConfig, @unchecked Sendable {
+    
+    public var documentStorageServiceName: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+    }
+    
+    public var keychainAccessGroup: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+    }
+
+
+}
+
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Controller/KeyChainController.swift'
 
 import Cuckoo
@@ -4400,6 +4522,22 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Extension/Array+Extensions.swift'
 
 import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_proximity
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Extension/Bundle+Extensions.swift'
+
+import Cuckoo
+import Foundation
+import Security
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -5852,16 +5990,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         }
     }
     
-    var documentStorageServiceName: String {
-        get {
-            return cuckoo_manager.getter(
-                "documentStorageServiceName",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.documentStorageServiceName
-            )
-        }
-    }
-    
     var logFileName: String {
         get {
             return cuckoo_manager.getter(
@@ -5936,10 +6064,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             return .init(manager: cuckoo_manager, name: "userAuthenticationRequired")
         }
         
-        var documentStorageServiceName: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,String> {
-            return .init(manager: cuckoo_manager, name: "documentStorageServiceName")
-        }
-        
         var logFileName: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,String> {
             return .init(manager: cuckoo_manager, name: "logFileName")
         }
@@ -5988,10 +6112,6 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             return .init(manager: cuckoo_manager, name: "userAuthenticationRequired", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var documentStorageServiceName: Cuckoo.VerifyReadOnlyProperty<String> {
-            return .init(manager: cuckoo_manager, name: "documentStorageServiceName", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
         var logFileName: Cuckoo.VerifyReadOnlyProperty<String> {
             return .init(manager: cuckoo_manager, name: "logFileName", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
@@ -6037,12 +6157,6 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
     var userAuthenticationRequired: Bool {
         get {
             return DefaultValueRegistry.defaultValue(for: (Bool).self)
-        }
-    }
-    
-    var documentStorageServiceName: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
         }
     }
     
@@ -8459,6 +8573,134 @@ public class SessionCoordinatorHolderStub:SessionCoordinatorHolder, @unchecked S
     
     public func getActiveProximityCoordinator() async throws -> ProximitySessionCoordinator {
         return DefaultValueRegistry.defaultValue(for: (ProximitySessionCoordinator).self)
+    }
+}
+
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/DocumentRegistrationManager/DocumentRegistrationManager.swift'
+
+import Cuckoo
+import Foundation
+import IdentityDocumentServices
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_proximity
+
+public class MockDocumentRegistrationManager: DocumentRegistrationManager, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = DocumentRegistrationManager
+    public typealias Stubbing = __StubbingProxy_DocumentRegistrationManager
+    public typealias Verification = __VerificationProxy_DocumentRegistrationManager
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any DocumentRegistrationManager)?
+
+    public func enableDefaultImplementation(_ stub: any DocumentRegistrationManager) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+    
+    public func addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws {
+        return try await cuckoo_manager.callThrows(
+            "addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws",
+            parameters: (p0, p1, p2, p3),
+            escapingParameters: (p0, p1, p2, p3),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.addRegistration(mobileDocumentType: p0, supportedAuthorityKeyIdentifiers: p1, documentIdentifier: p2, invalidationDate: p3)
+        )
+    }
+    
+    public func removeRegistration(documentIdentifiers p0: [String]) async throws {
+        return try await cuckoo_manager.callThrows(
+            "removeRegistration(documentIdentifiers p0: [String]) async throws",
+            parameters: (p0),
+            escapingParameters: (p0),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.removeRegistration(documentIdentifiers: p0)
+        )
+    }
+
+    public struct __StubbingProxy_DocumentRegistrationManager: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func addRegistration<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.OptionalMatchable>(mobileDocumentType p0: M1, supportedAuthorityKeyIdentifiers p1: M2, documentIdentifier p2: M3, invalidationDate p3: M4) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String, [Data], String, Date?),Error> where M1.MatchedType == String, M2.MatchedType == [Data], M3.MatchedType == String, M4.OptionalMatchedType == Date {
+            let matchers: [Cuckoo.ParameterMatcher<(String, [Data], String, Date?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockDocumentRegistrationManager.self,
+                method: "addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func removeRegistration<M1: Cuckoo.Matchable>(documentIdentifiers p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<([String]),Error> where M1.MatchedType == [String] {
+            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockDocumentRegistrationManager.self,
+                method: "removeRegistration(documentIdentifiers p0: [String]) async throws",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    public struct __VerificationProxy_DocumentRegistrationManager: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func addRegistration<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.OptionalMatchable>(mobileDocumentType p0: M1, supportedAuthorityKeyIdentifiers p1: M2, documentIdentifier p2: M3, invalidationDate p3: M4) -> Cuckoo.__DoNotUse<(String, [Data], String, Date?), Void> where M1.MatchedType == String, M2.MatchedType == [Data], M3.MatchedType == String, M4.OptionalMatchedType == Date {
+            let matchers: [Cuckoo.ParameterMatcher<(String, [Data], String, Date?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+            return cuckoo_manager.verify(
+                "addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func removeRegistration<M1: Cuckoo.Matchable>(documentIdentifiers p0: M1) -> Cuckoo.__DoNotUse<([String]), Void> where M1.MatchedType == [String] {
+            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "removeRegistration(documentIdentifiers p0: [String]) async throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+public class DocumentRegistrationManagerStub:DocumentRegistrationManager, @unchecked Sendable {
+
+
+    
+    public func addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func removeRegistration(documentIdentifiers p0: [String]) async throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }
 

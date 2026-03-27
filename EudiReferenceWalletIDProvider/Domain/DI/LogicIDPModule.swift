@@ -14,15 +14,14 @@
  * governing permissions and limitations under the Licence.
  */
 import Swinject
-import logic_business
-import logic_ui
 import DcApi18013AnnexC
+import logic_assembly
 
-public final class LogicIDPModule: Assembly {
+final class LogicIDPModule: Assembly {
 
-  public init() {}
+  init() {}
 
-  public func assemble(container: Container) {
+  func assemble(container: Container) {
     container.register(DcApiHandler.self) { _ in
       let serviceName = LogicIDPModule.getDocumentStorageServiceName()
       let accessGroup = LogicIDPModule.getKeychainAccessGroup()
@@ -33,10 +32,9 @@ public final class LogicIDPModule: Assembly {
     }
     .inObjectScope(ObjectScope.container)
 
-    container.register(RouterHost.self) { _ in
-      return DigitalCredentialProviderRouter()
+    container.register(RequestAuthorizationInteractor.self) { r in
+      RequestAuthorizationInteractorImpl(dcApiHandler: r.force(DcApiHandler.self))
     }
-    .inObjectScope(ObjectScope.container)
   }
 }
 
@@ -60,7 +58,7 @@ final class DocumentProviderDIContainer {
   }
 
   private func setupDependencies() {
-    DIGraph.assembleDependenciesGraph()
+    DIGraph.assembleDependenciesGraph(withExtras: [LogicIDPModule()])
   }
 
   func resolve<T>(_ type: T.Type) -> T {

@@ -13,30 +13,22 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Swinject
+import logic_ui
 
-public extension DIGraph {
+struct AuthorizationUIModel: Sendable {
+  let issuerName: String
+  let document: [AuthorizationUIDocument]
+}
 
-  static func assembleDependenciesGraph(withExtras: [Assembly] = []) {
-    let defaultAssembly: [Assembly] = [
-      // Logic Modules
-      LogicBusinessAssembly(),
-      LogicAnalyticsAssembly(),
-      LogicCoreAssembly(),
-      LogicUiAssembly(),
-      LogicApiAssembly(),
-      LogicAuthAssembly(),
-      LogicAssemblyModule(),
-      LogicStorageAssembly(),
-      // Feature Modules
-      FeatureCommonAssembly(),
-      FeatureStartupAssembly(),
-      FeatureDashboardAssembly(),
-      FeaturePresentationAssembly(),
-      FeatureProximityAssembly(),
-      FeatureIssuanceAssembly()
-    ]
+struct AuthorizationUIDocument: Sendable, Identifiable, Hashable {
+  let id: String
+  let name: String
 
-    DIGraph.shared.lazyLoad(with: defaultAssembly + withExtras)
+  init(
+    id: String = UUID().uuidString,
+    name: String
+  ) {
+    self.id = id
+    self.name = name
   }
 }

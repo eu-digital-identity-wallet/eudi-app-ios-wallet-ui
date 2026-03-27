@@ -34,11 +34,13 @@ public protocol KeyChainController: Sendable {
 final class KeyChainControllerImpl: KeyChainController {
 
   private let biometryKey = "eu.europa.ec.euidi.biometric.access"
+  private let keyChainConfig: KeyChainConfig
   private let keyChain: Keychain
 
-  public init() {
-    let accessGroup = Bundle.getKeychainAccessGroup()
-    let service = Bundle.getDocumentStorageServiceName()
+  public init(keyChainConfig: KeyChainConfig) {
+    self.keyChainConfig = keyChainConfig
+    let accessGroup = keyChainConfig.keychainAccessGroup
+    let service = keyChainConfig.keychainAccessGroup
     keyChain = Keychain(
       service: service,
       accessGroup: accessGroup

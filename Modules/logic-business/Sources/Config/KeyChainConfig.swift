@@ -13,30 +13,27 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_business
-import feature_issuance
-import logic_storage
-import logic_ui
-import logic_assembly
-import logic_authentication
+import Foundation
 
-public extension DIGraph {
+public protocol KeyChainConfig: Sendable {
+  /**
+   * Service name for documents key chain storage
+   */
+  var documentStorageServiceName: String { get }
 
-  static func assembleDependenciesGraph() {
-    DIGraph.shared.lazyLoad(
-      with: [
-        // Logic Modules
-        LogicBusinessAssembly(),
-        LogicCoreAssembly(),
-        LogicUiAssembly(),
-        LogicAuthAssembly(),
-        LogicAssemblyModule(),
-        LogicStorageAssembly(),
-        // Feature Modules
-        FeatureCommonAssembly(),
-        LogicIDPModule(),
-        FeatureIssuanceAssembly()
-      ]
-    )
+  /**
+   * Keychain shared access
+   */
+  var keychainAccessGroup: String { get }
+}
+
+public struct KeychainConfigImpl: KeyChainConfig {
+
+  public var documentStorageServiceName: String {
+    return Bundle.getDocumentStorageServiceName()
+  }
+
+  public var keychainAccessGroup: String {
+    return Bundle.getKeychainAccessGroup()
   }
 }

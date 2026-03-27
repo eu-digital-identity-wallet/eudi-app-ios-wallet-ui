@@ -31,6 +31,7 @@ extension WalletStorage.Document {
       statusIdentifier: nil,
       createdAt: self.createdAt,
       displayName: metadata?.getDisplayName(Locale.current.systemLanguageCode),
+      docType: "",
       docClaims: [],
       docDataFormat: self.docDataFormat,
       ageOverXX: [:],

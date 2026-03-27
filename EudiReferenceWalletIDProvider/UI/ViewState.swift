@@ -13,26 +13,25 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import ExtensionKit
-import IdentityDocumentServicesUI
-import SwiftUI
+import Observation
+import Combine
 
-@main
-struct DocumentProviderExtension: IdentityDocumentProvider {
+public protocol ViewState {}
 
-  init() {
-    _ = DocumentProviderDIContainer.shared
+@MainActor
+@Observable
+open class ViewModel<UiState: ViewState> {
+
+  public private(set) var viewState: UiState
+
+  @ObservationIgnored
+  public lazy var cancellables = Set<AnyCancellable>()
+
+  public init(initialState: UiState) {
+    self.viewState = initialState
   }
 
-  var body: some IdentityDocumentRequestScene {
-    ISO18013MobileDocumentRequestScene { context in
-      RequestAuthorizationView(
-        with: .init(
-          context: context
-        )
-      )
-    }
+  public func setState(_ reducer: (UiState) -> UiState) {
+    self.viewState = reducer(viewState)
   }
-
-  func performRegistrationUpdates() async {  }
 }

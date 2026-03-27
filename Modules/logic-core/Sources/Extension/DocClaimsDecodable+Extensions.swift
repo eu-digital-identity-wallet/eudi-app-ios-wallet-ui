@@ -33,7 +33,7 @@ public extension DocClaimsDecodable {
   }
 
   var documentTypeIdentifier: DocumentTypeIdentifier {
-    DocumentTypeIdentifier(rawValue: docType ?? credentialIssuerIdentifier ?? "")
+    DocumentTypeIdentifier(rawValue: docType)
   }
 
   func getExpiryDate(parser: (Date) -> String) -> String? {

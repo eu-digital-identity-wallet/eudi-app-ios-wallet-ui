@@ -52,7 +52,7 @@ extension Constants {
     var issuerDisplay: [MdocDataModel18013.DisplayMetadata]?
     var credentialIssuerIdentifier: String?
     var configurationIdentifier: String?
-    var docType: String?
+    var docType: String
     var docClaims: [MdocDataModel18013.DocClaim]
     var docDataFormat: MdocDataModel18013.DocDataFormat
     var validFrom: Date?
