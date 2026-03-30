@@ -93,30 +93,37 @@ final actor WalletKitControllerImpl: WalletKitController {
   private let sessionCoordinatorHolder: SessionCoordinatorHolder
 
   private let configLogic: WalletKitConfig
+  private let keychainConfig: KeyChainConfig
   private let keyChainController: KeyChainController
   private let bookmarkStorageController: any BookmarkStorageController
   private let transactionLogStorageController: any TransactionLogStorageController
   private let revokedDocumentStorageController: any RevokedDocumentStorageController
+  private let documentRegistrationManager: DocumentRegistrationManager
 
   init(
     configLogic: WalletKitConfig,
+    keychainConfig: KeyChainConfig,
     keyChainController: KeyChainController,
     sessionCoordinatorHolder: SessionCoordinatorHolder,
     bookmarkStorageController: any BookmarkStorageController,
     transactionLogStorageController: any TransactionLogStorageController,
     revokedDocumentStorageController: any RevokedDocumentStorageController,
-    networkSessionProvider: NetworkSessionProvider
+    networkSessionProvider: NetworkSessionProvider,
+    documentRegistrationManager: DocumentRegistrationManager
   ) {
     self.configLogic = configLogic
+    self.keychainConfig = keychainConfig
     self.keyChainController = keyChainController
     self.sessionCoordinatorHolder = sessionCoordinatorHolder
     self.bookmarkStorageController = bookmarkStorageController
     self.transactionLogStorageController = transactionLogStorageController
     self.revokedDocumentStorageController = revokedDocumentStorageController
+    self.documentRegistrationManager = documentRegistrationManager
 
     guard let walletKit = try? EudiWallet(
       eudiWalletConfig: EudiWalletConfiguration(
-        serviceName: configLogic.documentStorageServiceName,
+        serviceName: keychainConfig.documentStorageServiceName,
+        accessGroup: keychainConfig.keychainAccessGroup,
         userAuthenticationRequired: configLogic.userAuthenticationRequired,
         trustedReaderRootCertificates: configLogic.trustedReaderRootCertificates,
         deviceAuthMethod: .deviceSignature,
@@ -164,6 +171,9 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func clearAllDocuments() async {
     try? await wallet.deleteAllDocuments()
+    try? await removeAllRegistration(
+      with: wallet.loadAllDocuments()?.compactMap { return $0.id }
+    )
   }
 
   func deleteDocument(with id: String, status: DocumentStatus) async throws {
@@ -226,7 +236,7 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [any DocClaimsDecodable] {
     let excludedRawValues = excluded.map { $0.rawValue }
-    return fetchIssuedDocuments().filter { !excludedRawValues.contains($0.docType.orEmpty) }
+    return fetchIssuedDocuments().filter { !excludedRawValues.contains($0.docType) }
   }
 
   func fetchDocument(with id: String) -> (any DocClaimsDecodable)? {
@@ -234,7 +244,9 @@ final actor WalletKitControllerImpl: WalletKitController {
   }
 
   func fetchDocuments(with ids: [String]) -> [any DocClaimsDecodable] {
-    fetchIssuedDocuments().filter { ids.contains($0.id) }
+    let documents = fetchIssuedDocuments().filter { ids.contains($0.id) }
+    registerForDocumentIdentityExtension(documents: documents)
+    return documents
   }
 
   func issueDocuments(
@@ -468,6 +480,34 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func getDocumentStatus(for statusIdentifier: StatusIdentifier) async throws -> CredentialStatus {
     return try await wallet.getDocumentStatus(for: statusIdentifier)
+  }
+
+  private func registerForDocumentIdentityExtension(documents: [any DocClaimsDecodable]) {
+    Task {
+      for document in documents {
+        do {
+          if #available(iOS 26.0, *), document.docDataFormat == .cbor {
+            try await documentRegistrationManager.addRegistration(
+              mobileDocumentType: document.docType,
+              supportedAuthorityKeyIdentifiers: [],
+              documentIdentifier: document.id,
+              invalidationDate: document.validUntil
+            )
+          }
+        } catch {
+          throw WalletCoreError.unableFetchDocuments
+        }
+      }
+    }
+  }
+
+  private func removeAllRegistration(with ids: [String]?) async {
+    if #available(iOS 26.0, *) {
+      guard let ids else { return }
+      do {
+        try await documentRegistrationManager.removeRegistration(documentIdentifiers: ids)
+      } catch {}
+    } else {}
   }
 }
 

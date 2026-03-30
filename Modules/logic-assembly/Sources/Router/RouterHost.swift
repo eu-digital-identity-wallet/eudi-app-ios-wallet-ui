@@ -189,6 +189,8 @@ private extension RouterHostImpl {
       PresentationRouter.resolve(module: module, host: self)
     case .featureProximityModule(let module):
       ProximityRouter.resolve(module: module, host: self)
+    default:
+      EmptyView()
     }
   }
 }

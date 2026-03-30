@@ -9,6 +9,7 @@
 * [Theme configuration](#theme-configuration)
 * [Pin Storage configuration](#pin-storage-configuration)
 * [Analytics configuration](#analytics-configuration)
+* [Document Provider extension configuration](#document-provider-extension-configuration)
 
 ## General configuration
 
@@ -599,3 +600,82 @@ container.register(AnalyticsConfig.self) { _ in
 }
 .inObjectScope(ObjectScope.graph)
 ```
+
+## Document Provider extension configuration
+
+This section explains how the Identity Document Provider extension is wired and how to configure `SHARED_APP_GROUP_IDENTIFIER`.
+
+### Why `SHARED_APP_GROUP_IDENTIFIER` matters
+
+The extension reads Wallet data through `DcApiHandler`, which is initialized with:
+
+- a shared keychain access group
+- a shared document storage service name
+
+The keychain access group for the extension is defined in `EudiReferenceWalletIDProvider/EudiReferenceWalletIDProvider.entitlements` as:
+
+```xml
+<key>keychain-access-groups</key>
+<array>
+  <string>$(AppIdentifierPrefix)$(SHARED_APP_GROUP_IDENTIFIER)</string>
+</array>
+```
+
+`SHARED_APP_GROUP_IDENTIFIER` must match the main app's effective keychain group for the same build configuration (Dev or Demo), otherwise the extension cannot access the same keychain-backed wallet context.
+
+### Step-by-step setup
+
+1. **Set `SHARED_APP_GROUP_IDENTIFIER` for all extension build configurations**
+
+In the extension target build settings (`EudiReferenceWallet.xcodeproj/project.pbxproj`), ensure `SHARED_APP_GROUP_IDENTIFIER` is set for:
+
+- Debug Dev
+- Release Dev
+- Debug Demo
+- Release Demo
+
+Current values in this repository:
+
+- Dev: `eu.europa.ec.euidi.dev`
+- Demo: `eu.europa.ec.euidi`
+
+2. **Ensure extension entitlements use that value**
+
+In `EudiReferenceWalletIDProvider/EudiReferenceWalletIDProvider.entitlements`, keep:
+
+```xml
+<string>$(AppIdentifierPrefix)$(SHARED_APP_GROUP_IDENTIFIER)</string>
+```
+
+3. **Ensure the main app has matching keychain sharing**
+
+In `EudiWallet.entitlements`, the main app uses:
+
+```xml
+<string>$(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+```
+
+For Dev/Demo setups in this project, `PRODUCT_BUNDLE_IDENTIFIER` of the main app maps to the same logical identifiers (`eu.europa.ec.euidi.dev` / `eu.europa.ec.euidi`), so the group stays aligned with the extension.
+
+4. **Verify extension DI initialization**
+
+The extension entry point is `EudiReferenceWalletIDProvider/DocumentProviderExtension.swift`.
+
+At startup it initializes `DocumentProviderDIContainer`, which assembles `LogicIDPModule`. `LogicIDPModule` creates `DcApiHandler` with:
+
+- `serviceName`: derived by `Bundle.getDocumentStorageServiceName()`
+- `accessGroup`: derived by `Bundle.getKeychainAccessGroup()`
+
+5. **Verify registration from wallet to extension**
+
+In `Modules/logic-core/Sources/Controller/WalletKitController.swift`, documents are registered to `IdentityDocumentProviderRegistrationStore` (iOS 26+) through `DocumentRegistrationManager`.
+
+Only CBOR documents are registered (`document.docDataFormat == .cbor`), which controls what the extension can serve for Identity Document requests.
+
+### Validation checklist
+
+- Wallet app and extension both sign correctly with your Team ID.
+- Extension target has `EudiReferenceWalletIDProvider.entitlements` assigned.
+- `SHARED_APP_GROUP_IDENTIFIER` is present for all extension configurations.
+- Main app and extension resolve to the same runtime keychain access group.
+- On iOS 26+, registered CBOR documents appear in the extension request flow.

@@ -110,7 +110,7 @@ extension DocClaimsDecodable {
   func transformToTransactionListItemSection() -> GenericListItemSection {
     return .init(
       id: self.id,
-      title: self.displayName.ifNilOrEmpty { self.docType.orEmpty },
+      title: self.displayName.ifNilOrEmpty { self.docType },
       listItems: self.parseClaim(
         documentId: self.id,
         isSensitive: false,

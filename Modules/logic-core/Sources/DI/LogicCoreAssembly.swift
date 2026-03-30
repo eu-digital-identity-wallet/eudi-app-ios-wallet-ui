@@ -32,15 +32,26 @@ public final class LogicCoreAssembly: Assembly {
     }
     .inObjectScope(ObjectScope.container)
 
+    container.register(DocumentRegistrationManager.self) { _ in
+      if #available(iOS 26.0, *) {
+        return DocumentRegistrationManagerImpl()
+      } else {
+        return DocumentRegistrationManagerNoOp()
+      }
+    }
+    .inObjectScope(ObjectScope.container)
+
     container.register(WalletKitController.self) { r in
       WalletKitControllerImpl(
         configLogic: r.force(WalletKitConfig.self),
+        keychainConfig: r.force(KeyChainConfig.self),
         keyChainController: r.force(KeyChainController.self),
         sessionCoordinatorHolder: r.force(SessionCoordinatorHolder.self),
         bookmarkStorageController: r.force((any BookmarkStorageController).self),
         transactionLogStorageController: r.force((any TransactionLogStorageController).self),
         revokedDocumentStorageController: r.force((any RevokedDocumentStorageController).self),
-        networkSessionProvider: r.force((any NetworkSessionProvider).self)
+        networkSessionProvider: r.force((any NetworkSessionProvider).self),
+        documentRegistrationManager: r.force((any DocumentRegistrationManager).self)
       )
     }
     .inObjectScope(ObjectScope.container)

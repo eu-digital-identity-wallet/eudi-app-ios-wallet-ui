@@ -506,6 +506,10 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "document_details_issuer_card_revoked_message_text")
     case .documentDetailsIssuerCardIssuedActionButtonText:
       bundle.localizedString(forKey: "document_details_issuer_card_issued_action_btn_text")
+    case .documentProviderExtensionAcceptButton:
+      bundle.localizedString(forKey: "document_provider_extension_accept_button")
+    case .documentProviderExtensionRejectButton:
+      bundle.localizedString(forKey: "document_provider_extension_reject_button")
     }
   }
 }

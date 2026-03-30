@@ -1217,6 +1217,108 @@ public class ConfigLogicStub:ConfigLogic, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Config/KeyChainConfig.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_api
+
+public class MockKeyChainConfig: KeyChainConfig, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = KeyChainConfig
+    public typealias Stubbing = __StubbingProxy_KeyChainConfig
+    public typealias Verification = __VerificationProxy_KeyChainConfig
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any KeyChainConfig)?
+
+    public func enableDefaultImplementation(_ stub: any KeyChainConfig) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+    public var documentStorageServiceName: String {
+        get {
+            return cuckoo_manager.getter(
+                "documentStorageServiceName",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.documentStorageServiceName
+            )
+        }
+    }
+    
+    public var keychainAccessGroup: String {
+        get {
+            return cuckoo_manager.getter(
+                "keychainAccessGroup",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.keychainAccessGroup
+            )
+        }
+    }
+
+
+    public struct __StubbingProxy_KeyChainConfig: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        var documentStorageServiceName: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockKeyChainConfig,String> {
+            return .init(manager: cuckoo_manager, name: "documentStorageServiceName")
+        }
+        
+        var keychainAccessGroup: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockKeyChainConfig,String> {
+            return .init(manager: cuckoo_manager, name: "keychainAccessGroup")
+        }
+    }
+
+    public struct __VerificationProxy_KeyChainConfig: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        var documentStorageServiceName: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "documentStorageServiceName", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var keychainAccessGroup: Cuckoo.VerifyReadOnlyProperty<String> {
+            return .init(manager: cuckoo_manager, name: "keychainAccessGroup", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+    }
+}
+
+public class KeyChainConfigStub:KeyChainConfig, @unchecked Sendable {
+    
+    public var documentStorageServiceName: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+    }
+    
+    public var keychainAccessGroup: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+    }
+
+
+}
+
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Controller/KeyChainController.swift'
 
 import Cuckoo
@@ -2282,6 +2384,17 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Extension/Array+Extensions.swift'
 
 import Cuckoo
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_api
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-business/Sources/Extension/Bundle+Extensions.swift'
+
+import Cuckoo
+import Foundation
+import Security
 @testable import logic_business
 @testable import logic_analytics
 @testable import logic_api

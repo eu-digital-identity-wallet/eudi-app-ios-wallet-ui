@@ -21,7 +21,7 @@ public struct DeferrredDocument: DocClaimsDecodable {
   public var createdAt: Date
   public var modifiedAt: Date?
   public var displayName: String?
-  public var docType: String?
+  public var docType: String
   public var docClaims: [MdocDataModel18013.DocClaim]
   public var docDataFormat: MdocDataModel18013.DocDataFormat
   public var ageOverXX: [Int: Bool]
