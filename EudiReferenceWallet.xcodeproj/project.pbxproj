@@ -312,7 +312,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 2630;
-				LastUpgradeCheck = 2620;
+				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					9F8701C82F6BE5BC00A865A9 = {
 						CreatedOnToolsVersion = 26.3;
@@ -477,7 +477,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = AZXQE7588Y;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = AZXQE7588Y;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -513,7 +513,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.dev.EudiReferenceWalletIDProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "EUDI DC-API Dev";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI DC-API Dev";
 				SDKROOT = iphoneos;
 				SHARED_APP_GROUP_IDENTIFIER = eu.europa.ec.euidi.dev;
@@ -573,7 +573,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = AZXQE7588Y;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = AZXQE7588Y;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -609,7 +609,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.EudiReferenceWalletIDProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "EUDI DC-API";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI DC-API";
 				SDKROOT = iphoneos;
 				SHARED_APP_GROUP_IDENTIFIER = eu.europa.ec.euidi;
@@ -663,13 +663,13 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = EudiReferenceWalletIDProvider/EudiReferenceWalletIDProvider.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Netcompany-Intrasoft S.A. (AZXQE7588Y)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Netcompany-Intrasoft S.A. (AZXQE7588Y)";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = AZXQE7588Y;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = AZXQE7588Y;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -698,8 +698,8 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.dev.EudiReferenceWalletIDProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI DC-API Dev";
+				PROVISIONING_PROFILE_SPECIFIER = "EUDI DC-API Dev Release";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI DC-API Dev Release";
 				SDKROOT = iphoneos;
 				SHARED_APP_GROUP_IDENTIFIER = eu.europa.ec.euidi.dev;
 				SKIP_INSTALL = YES;
@@ -752,13 +752,13 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = EudiReferenceWalletIDProvider/EudiReferenceWalletIDProvider.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Netcompany-Intrasoft S.A. (AZXQE7588Y)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Netcompany-Intrasoft S.A. (AZXQE7588Y)";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = AZXQE7588Y;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = AZXQE7588Y;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -787,8 +787,8 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.EudiReferenceWalletIDProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI DC-API";
+				PROVISIONING_PROFILE_SPECIFIER = "EUDI DC-API Release";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI DC-API Release";
 				SDKROOT = iphoneos;
 				SHARED_APP_GROUP_IDENTIFIER = eu.europa.ec.euidi;
 				SKIP_INSTALL = YES;
