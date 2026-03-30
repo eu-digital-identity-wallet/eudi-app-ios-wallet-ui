@@ -5,6 +5,7 @@
 * [Overview](#overview)
 * [Setup Apps](#setup-apps)
 * [How to work with self signed certificates on iOS](#how-to-work-with-self-signed-certificates-on-ios)
+* [Document Provider extension configuration](configuration.md#document-provider-extension-configuration)
 
 ## Overview
 
@@ -155,10 +156,10 @@ init() {
 
 This change will allow the app to interact with web services that rely on self-signed certificates.
 
-For all configuration options, please refer to [this document](configuration.md)
-
 ## Document Provider extension configuration
 
 If you are enabling or troubleshooting the Identity Document Provider extension, including `SHARED_APP_GROUP_IDENTIFIER`, keychain-access-groups, and extension registration behavior, follow the dedicated configuration guide here:
 
 [Document Provider extension configuration](configuration.md#document-provider-extension-configuration)
+
+For all configuration options, please refer to [this document](configuration.md)
