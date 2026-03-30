@@ -123,7 +123,7 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     return DocumentCredentialsInfoUi(
       availableCredentials: availableCredentials,
       totalCredentials: totalCredentials,
-      title: .documentDetailsDocumentCredentialsText([availableCredentials.string, totalCredentials.string]),
+      title: .documentDetailsDocumentCredentialsText([availableCredentials.string, totalCredentials.string])
     )
   }
 }

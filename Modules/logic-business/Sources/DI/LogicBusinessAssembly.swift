@@ -28,7 +28,7 @@ public final class LogicBusinessAssembly: Assembly {
 
     container.register(KeyChainController.self) { r in
       KeyChainControllerImpl(
-        keyChainConfig: r.force(KeyChainConfig.self),
+        keyChainConfig: r.force(KeyChainConfig.self)
       )
     }
     .inObjectScope(ObjectScope.container)
