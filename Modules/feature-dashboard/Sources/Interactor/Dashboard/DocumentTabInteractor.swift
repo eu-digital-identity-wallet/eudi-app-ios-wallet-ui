@@ -481,21 +481,23 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
   }
 
   private func filterUISection(filters: Filters) -> [FilterUISection] {
-    filters.filterGroups.map { filteredGroup in
-      FilterUISection(
-        id: filteredGroup.id,
-        filters: filteredGroup.filters.map { filter in
-          FilterUIItem(
-            id: filter.id,
-            title: filter.name,
-            selected: filter.selected,
-            filterAction: filter.filterableAction,
-            filterSectionType: filter.filterElementType
-          )
-        },
-        sectionTitle: filteredGroup.name
-      )
-    }
+    filters.filterGroups
+      .filter { $0.id != FilterIds.ASCENDING_DESCENDING_GROUP }
+      .map { filteredGroup in
+        FilterUISection(
+          id: filteredGroup.id,
+          filters: filteredGroup.filters.map { filter in
+            FilterUIItem(
+              id: filter.id,
+              title: filter.name,
+              selected: filter.selected,
+              filterAction: filter.filterableAction,
+              filterSectionType: filter.filterElementType
+            )
+          },
+          sectionTitle: filteredGroup.name
+        )
+      }
   }
 
   private func addCategoriesFilter(documents: FilterableList) -> [FilterItem] {
