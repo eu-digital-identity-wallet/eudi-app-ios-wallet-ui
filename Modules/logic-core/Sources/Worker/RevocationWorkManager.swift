@@ -123,7 +123,7 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
     NotificationCenter.default.post(
       name: NSNotification.DocumentDetailsRefresh,
       object: nil,
-      userInfo: ["revoked_ids": Array(revoked.values)]
+      userInfo: ["ids": Array(revoked.values)]
     )
   }
 

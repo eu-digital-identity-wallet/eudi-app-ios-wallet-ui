@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   private lazy var analyticsController: AnalyticsController = DIGraph.shared.resolver.force(AnalyticsController.self)
   private lazy var revocationWorkManager: RevocationWorkManager = DIGraph.shared.resolver.force(RevocationWorkManager.self)
+  private lazy var reIssuanceWorkManager: ReIssuanceWorkManager = DIGraph.shared.resolver.force(ReIssuanceWorkManager.self)
 
   func application(
     _ application: UIApplication,
@@ -32,8 +33,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Initialize Reporting
     initializeReporting()
 
-    // Initialize Revocation Worker
-    initializeRevocationWorker()
+    // Initialize Workers
+    initializeWorkers()
 
     // Register the SVG coder so SDWebImage can decode & render .svg images
     registerSvgCoderToSdImage()
@@ -59,7 +60,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
   }
 
-  private func initializeRevocationWorker() {
+  private func initializeWorkers() {
     Task { await revocationWorkManager.start() }
+    Task { await reIssuanceWorkManager.start() }
   }
 }

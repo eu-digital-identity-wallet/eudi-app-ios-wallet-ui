@@ -218,6 +218,19 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     }
   }
 
+  func handleReIssuanceNotification(for payload: [AnyHashable: Any]?) {
+    guard
+      let payload,
+      let dict = payload as? [String: [String]],
+      let ids = dict["ids"]
+    else {
+      return
+    }
+    if ids.contains(viewState.documentId) {
+      router.pop()
+    }
+  }
+
   func toggleIsVisible() {
     self.isVisible.toggle()
     self.toggleVisibility()

@@ -90,8 +90,8 @@ public protocol WalletKitController: Sendable {
   func getDocumentStatus(for statusIdentifier: StatusIdentifier) async throws -> CredentialStatus
   func isDocumentLowOnCredentials(document: (any DocClaimsDecodable)?) async -> Bool
 
-  func storeFailedReIssuedDocument(documentId: String) async throws
-  func removeFailedReIssuedDocument(documentId: String) async throws
+  func storeFailedReIssuedDocuments(ids: [String]) async throws
+  func removeAllFailedReIssuedDocuments() async throws
 }
 
 final actor WalletKitControllerImpl: WalletKitController {
@@ -496,12 +496,12 @@ final actor WalletKitControllerImpl: WalletKitController {
     return try await wallet.getDocumentStatus(for: statusIdentifier)
   }
 
-  func storeFailedReIssuedDocument(documentId: String) async throws {
-    try await self.failedReIssuedDocStorageController.store(.init(identifier: documentId))
+  func storeFailedReIssuedDocuments(ids: [String]) async throws {
+    try await self.failedReIssuedDocStorageController.store(ids.map { .init(identifier: $0) })
   }
 
-  func removeFailedReIssuedDocument(documentId: String) async throws {
-    try await failedReIssuedDocStorageController.delete(documentId)
+  func removeAllFailedReIssuedDocuments() async throws {
+    try await failedReIssuedDocStorageController.deleteAll()
   }
 }
 

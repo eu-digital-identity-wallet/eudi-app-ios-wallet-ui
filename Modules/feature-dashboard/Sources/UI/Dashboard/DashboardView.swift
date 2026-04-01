@@ -34,13 +34,15 @@ struct DashboardView<Router: RouterHost>: View {
       canScroll: false,
       navigationTitle: viewModel.viewState.navigationTitle,
       toolbarContent: viewModel.viewState.toolBarContent,
-      notificationAction: .init(
-        name: NSNotification.RevocationDashboard,
-        callback: {
-          guard let payload = $0 else { return }
-          viewModel.handleRevocationNotification(for: payload)
-        }
-      )
+      notificationActions: [
+        .init(
+          name: NSNotification.RevocationDashboard,
+          callback: {
+            guard let payload = $0 else { return }
+            viewModel.handleRevocationNotification(for: payload)
+          }
+        )
+      ]
     ) {
       content(
         tabView: { tab in

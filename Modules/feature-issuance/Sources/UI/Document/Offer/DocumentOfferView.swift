@@ -31,13 +31,15 @@ struct DocumentOfferView<Router: RouterHost>: View {
       errorConfig: viewModel.viewState.error,
       navigationTitle: .addDocumentRequest,
       toolbarContent: viewModel.toolbarContent(),
-      notificationAction: .init(
-        name: NSNotification.CredentialOffer,
-        callback: {
-          guard let payload = $0 else { return }
-          viewModel.handleNotification(with: payload)
-        }
-      )
+      notificationActions: [
+        .init(
+          name: NSNotification.CredentialOffer,
+          callback: {
+            guard let payload = $0 else { return }
+            viewModel.handleNotification(with: payload)
+          }
+        )
+      ]
     ) {
       content(
         viewState: viewModel.viewState

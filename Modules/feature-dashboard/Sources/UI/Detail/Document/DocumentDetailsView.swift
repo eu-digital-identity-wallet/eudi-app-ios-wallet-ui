@@ -33,13 +33,22 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       errorConfig: viewModel.viewState.error,
       navigationTitle: .details,
       toolbarContent: viewModel.toolbarContent(),
-      notificationAction: .init(
-        name: NSNotification.DocumentDetailsRefresh,
-        callback: {
-          guard let payload = $0 else { return }
-          viewModel.handleRefreshNotification(for: payload)
-        }
-      )
+      notificationActions: [
+        .init(
+          name: NSNotification.DocumentDetailsRefresh,
+          callback: {
+            guard let payload = $0 else { return }
+            viewModel.handleRefreshNotification(for: payload)
+          }
+        ),
+        .init(
+          name: NSNotification.ReIssuanceDetailsRefresh,
+          callback: {
+            guard let payload = $0 else { return }
+            viewModel.handleReIssuanceNotification(for: payload)
+          }
+        )
+      ]
     ) {
 
       content(

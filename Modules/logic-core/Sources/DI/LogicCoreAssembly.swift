@@ -79,6 +79,14 @@ public final class LogicCoreAssembly: Assembly {
     }
     .inObjectScope(ObjectScope.graph)
 
+    container.register(ReIssuanceWorkManager.self) { r in
+      ReIssuanceWorkManagerImpl(
+        configLogic: r.force(WalletKitConfig.self),
+        walletKitController: r.force(WalletKitController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.graph)
+
     container.register(WalletKitAttestationProvider.self) { r in
       WalletKitAttestationProviderImpl(
         with: r.force(WalletAttestationRepository.self),
