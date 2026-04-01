@@ -111,7 +111,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		9F8701D62F6BE5BC00A865A9 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		9F8701D62F6BE5BC00A865A9 /* Exceptions for "EudiReferenceWalletIDProvider" folder in "EudiReferenceWalletIDProvider" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -121,7 +121,18 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		9F8701CA2F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (9F8701D62F6BE5BC00A865A9 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = EudiReferenceWalletIDProvider; sourceTree = "<group>"; };
+		9F8701CA2F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9F8701D62F6BE5BC00A865A9 /* Exceptions for "EudiReferenceWalletIDProvider" folder in "EudiReferenceWalletIDProvider" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = EudiReferenceWalletIDProvider;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
