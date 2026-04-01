@@ -26,6 +26,7 @@ struct DocumentDetailsViewState: ViewState {
   let documentId: String
   let documentFieldsCount: Int
   let isBookmarked: Bool
+  let isRevoked: Bool
   let documentCredentialsInfo: DocumentCredentialsInfoUi?
   let issuerDetailsCardDataUi: IssuerDocumentDetailsCardUIModel?
 }
@@ -56,6 +57,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         documentId: documentId,
         documentFieldsCount: 0,
         isBookmarked: false,
+        isRevoked: false,
         documentCredentialsInfo: nil,
         issuerDetailsCardDataUi: nil
       )
@@ -70,13 +72,20 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
     switch state {
 
-    case .success(let document, let issuerDetailsCardDataUi, let documentCredentialsInfo, let isBookmarked):
+    case .success(
+      let document,
+      let issuerDetailsCardDataUi,
+      let documentCredentialsInfo,
+      let isBookmarked,
+      let isRevoked
+    ):
       self.setState {
         $0.copy(
           document: document,
           isLoading: false,
           documentFieldsCount: document.documentFields.count,
           isBookmarked: isBookmarked,
+          isRevoked: isRevoked,
           documentCredentialsInfo: documentCredentialsInfo,
           issuerDetailsCardDataUi: issuerDetailsCardDataUi
         ).copy(error: nil)
@@ -112,9 +121,14 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     isDeletionModalShowing = !isDeletionModalShowing
   }
 
-  func issueNewDocument(with identifier: String) {
+  func issueNewDocument() {
+    setState {
+      $0.copy(
+        isLoading: true
+      )
+    }
     Task {
-      switch await interactor.reIssueDocument(identifier: identifier) {
+      switch await interactor.reIssueDocument(identifier: viewState.documentId) {
       case .success:
         router.pop()
       case .failure(let error):
@@ -124,7 +138,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
             error: .init(
               description: .custom(error.errorMessage),
               cancelAction: self.setState { $0.copy(error: nil) },
-              action: { self.issueNewDocument(with: identifier) }
+              action: { self.issueNewDocument() }
             )
           )
         }

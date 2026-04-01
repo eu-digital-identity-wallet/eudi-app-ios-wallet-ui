@@ -55,7 +55,7 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     )
     let issuerDetailsCard = document?.transformToIssuerDetailsCardDataUi(isRevoked: isRevoked)
 
-    return .success(documentDetails, issuerDetailsCard, info, isBookmarked)
+    return .success(documentDetails, issuerDetailsCard, info, isBookmarked, isRevoked)
   }
 
   func reIssueDocument(identifier: String) async -> DocumentDetailsReIssuancePartialState {
@@ -142,7 +142,13 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 }
 
 public enum DocumentDetailsPartialState: Sendable {
-  case success(DocumentUIModel, IssuerDocumentDetailsCardUIModel?, DocumentCredentialsInfoUi?, Bool)
+  case success(
+    DocumentUIModel,
+    IssuerDocumentDetailsCardUIModel?,
+    DocumentCredentialsInfoUi?,
+    Bool,
+    Bool
+  )
   case failure(Error)
 }
 

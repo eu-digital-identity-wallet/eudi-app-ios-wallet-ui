@@ -52,8 +52,8 @@ struct DocumentDetailsView<Router: RouterHost>: View {
         viewModel.onShowDeleteModal()
       } onDeleteDocument: {
         viewModel.onDeleteDocument()
-      } issueNewDocument: { id in
-        viewModel.issueNewDocument(with: id)
+      } issueNewDocument: {
+        viewModel.issueNewDocument()
       } toggleIsVisible: {
         viewModel.toggleIsVisible()
       }
@@ -63,10 +63,11 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       title: .custom(""),
       message: .custom(""),
       actions: {
-        Button(.documentDetailsReIssueButton) {}
-          .disabled(
-            viewModel.viewState.issuerDetailsCardDataUi?.documentState == .revoked
-          )
+        Button(.documentDetailsReIssueButton) {
+          viewModel.issueNewDocument()
+        }.disabled(
+          viewModel.viewState.isRevoked
+        )
 
         Button(.documentDetailsRemoveButton) {
           viewModel.onShowDeleteModal()
@@ -100,7 +101,7 @@ private func content(
   onContinue: @escaping () -> Void,
   onShowDeleteModal: @escaping () -> Void,
   onDeleteDocument: @escaping () -> Void,
-  issueNewDocument: @escaping (String) -> Void,
+  issueNewDocument: @escaping () -> Void,
   toggleIsVisible: @escaping () -> Void,
 ) -> some View {
   ScrollView {
@@ -122,6 +123,7 @@ private func content(
 
           IssuerDetailsCardView(
             issuerDetails: issuerDetailsCardDataUi,
+            isLoading: viewState.isLoading,
             onAction: issueNewDocument
           )
         }
@@ -193,6 +195,7 @@ private func content(
           .padding(.horizontal, SPACING_MEDIUM)
           .foregroundColor(Theme.shared.color.onSurfaceVariant)
           .frame(maxWidth: .infinity, alignment: .center)
+          .shimmer(isLoading: viewState.isLoading)
       }
     }
     .padding(Theme.shared.dimension.padding)
@@ -208,6 +211,7 @@ private func content(
     documentId: "",
     documentFieldsCount: DocumentUIModel.mock().documentFields.count,
     isBookmarked: true,
+    isRevoked: false,
     documentCredentialsInfo: DocumentCredentialsInfoUi(
       availableCredentials: 5,
       totalCredentials: 10,
@@ -216,7 +220,6 @@ private func content(
     issuerDetailsCardDataUi: IssuerDocumentDetailsCardUIModel(
       issuerName: .custom("issuer name"),
       issuerLogo: nil,
-      credentialIssuerIdentifier: "",
       documentState: .issued(
         issuanceDate: "issuanceDate",
         expirationDate: "expirationDate"
@@ -235,7 +238,7 @@ private func content(
       onContinue: {},
       onShowDeleteModal: {},
       onDeleteDocument: {},
-      issueNewDocument: { _ in },
+      issueNewDocument: {},
       toggleIsVisible: {}
     )
   }

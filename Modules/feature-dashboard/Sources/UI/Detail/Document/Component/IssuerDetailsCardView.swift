@@ -20,13 +20,16 @@ import logic_ui
 struct IssuerDetailsCardView: View {
 
   private let issuerDetails: IssuerDocumentDetailsCardUIModel
-  private let onAction: ((String) -> Void)?
+  private let onAction: (() -> Void)?
+  private let isLoading: Bool
 
   init(
     issuerDetails: IssuerDocumentDetailsCardUIModel,
-    onAction: ((String) -> Void)? = nil
+    isLoading: Bool = false,
+    onAction: (() -> Void)? = nil
   ) {
     self.issuerDetails = issuerDetails
+    self.isLoading = isLoading
     self.onAction = onAction
   }
 
@@ -39,8 +42,9 @@ struct IssuerDetailsCardView: View {
         leadingIcon: .init(
           imageUrl: issuerDetails.issuerLogo,
           image: Theme.shared.image.id
-        )
-      )
+        ),
+      ),
+      isLoading: self.isLoading
     ) {
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
         if let dateTextKey = issuerDetails.expandedDateText {
@@ -58,7 +62,7 @@ struct IssuerDetailsCardView: View {
 
           if let onAction, let textButton = issuerDetails.expandedActionButtonText {
             Button(
-              action: { onAction(issuerDetails.credentialIssuerIdentifier) },
+              action: onAction,
               label: {
                 Text(textButton)
                   .typography(Theme.shared.font.bodyLarge)
