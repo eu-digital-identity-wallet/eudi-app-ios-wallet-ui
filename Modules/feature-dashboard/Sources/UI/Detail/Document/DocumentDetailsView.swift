@@ -138,6 +138,7 @@ private func content(
             onAction: issueNewDocument
           )
         }
+        .zIndex(1)
       }
 
       VStack(spacing: SPACING_SMALL) {
@@ -171,6 +172,7 @@ private func content(
           hideSensitiveContent: isVisible,
           isLoading: viewState.isLoading
         )
+        .zIndex(0)
       }
 
       WrapButtonView(
