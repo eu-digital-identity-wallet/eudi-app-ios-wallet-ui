@@ -55,6 +55,11 @@ public protocol ConfigLogic: Sendable {
    * Wallet requires PID Activation
    */
   var forcePidActivation: Bool { get }
+
+  /**
+   * Keychain Configuration
+   */
+  var keyChainConfig: KeyChainConfig { get }
 }
 
 struct ConfigLogicImpl: ConfigLogic {
@@ -87,5 +92,12 @@ struct ConfigLogicImpl: ConfigLogic {
 
   var forcePidActivation: Bool {
     false
+  }
+
+  var keyChainConfig: KeyChainConfig {
+    KeyChainConfig(
+      documentStorageServiceName: Bundle.getDocumentStorageServiceName(),
+      keychainAccessGroup: Bundle.getKeychainAccessGroup()
+    )
   }
 }
