@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Team ID</key>
-	<string>$(APP_TEAM_ID)</string>
 	<key>Build Type</key>
 	<string>$(BUILD_TYPE)</string>
 	<key>Build Variant</key>
@@ -35,5 +33,7 @@
 	<string>$(CORE_USER_AUTH)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>Team ID</key>
+	<string>$(APP_TEAM_ID)</string>
 </dict>
 </plist>
