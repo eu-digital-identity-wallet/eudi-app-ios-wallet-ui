@@ -18,4 +18,7 @@ import Foundation
 public extension NSNotification {
   static let DeepLinkAction = Notification.Name.init("DeepLinkAction")
   static let urlKey: String = "URL"
+
+  static let DocumentTabRefresh = Notification.Name("DocumentTabRefresh")
+  static let DocumentDetailsRefresh = Notification.Name("AlteredIdsDetailsExtra")
 }

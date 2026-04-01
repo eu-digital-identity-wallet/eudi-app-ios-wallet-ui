@@ -42,7 +42,7 @@ struct IssuerDetailsCardView: View {
         leadingIcon: .init(
           imageUrl: issuerDetails.issuerLogo,
           image: Theme.shared.image.id
-        ),
+        )
       ),
       isLoading: self.isLoading
     ) {

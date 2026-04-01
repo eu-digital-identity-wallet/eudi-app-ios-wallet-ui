@@ -212,7 +212,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     )
   }
 
-  func handleRevocationNotification(for payload: [AnyHashable: Any]?) {
+  func handleRefreshNotification(for payload: [AnyHashable: Any]?) {
     Task {
       await fetchDocumentDetails()
     }

@@ -121,7 +121,7 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
       userInfo: revoked
     )
     NotificationCenter.default.post(
-      name: NSNotification.RevocationDocumentDetailsRefresh,
+      name: NSNotification.DocumentDetailsRefresh,
       object: nil,
       userInfo: ["revoked_ids": Array(revoked.values)]
     )
@@ -130,7 +130,7 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
   @MainActor
   private func notifyDocumentTabListener() async {
     NotificationCenter.default.post(
-      name: NSNotification.RevocationDocumentTabRefresh,
+      name: NSNotification.DocumentTabRefresh,
       object: nil,
       userInfo: [:]
     )
@@ -139,6 +139,4 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
 
 public extension NSNotification {
   static let RevocationDashboard = Notification.Name("RevocationDashboard")
-  static let RevocationDocumentTabRefresh = Notification.Name("RevocationDocumentTabRefresh")
-  static let RevocationDocumentDetailsRefresh = Notification.Name("RevocationIdsDetailsExtra")
 }

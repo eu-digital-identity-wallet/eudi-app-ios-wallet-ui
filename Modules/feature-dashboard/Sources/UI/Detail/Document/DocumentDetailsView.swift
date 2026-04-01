@@ -34,10 +34,10 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       navigationTitle: .details,
       toolbarContent: viewModel.toolbarContent(),
       notificationAction: .init(
-        name: NSNotification.RevocationDocumentDetailsRefresh,
+        name: NSNotification.DocumentDetailsRefresh,
         callback: {
           guard let payload = $0 else { return }
-          viewModel.handleRevocationNotification(for: payload)
+          viewModel.handleRefreshNotification(for: payload)
         }
       )
     ) {

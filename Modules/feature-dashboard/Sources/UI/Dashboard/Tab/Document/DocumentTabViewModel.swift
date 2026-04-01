@@ -225,7 +225,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
     onPause()
   }
 
-  func handleRevocationNotification() {
+  func handleRefreshotification() {
     if !viewState.isPaused {
       fetch()
     }

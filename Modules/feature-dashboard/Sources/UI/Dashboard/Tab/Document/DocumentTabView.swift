@@ -90,8 +90,8 @@ struct DocumentTabView<Router: RouterHost>: View {
     .onDisappear {
       viewModel.onPause()
     }
-    .onReceive(NotificationCenter.default.publisher(for: NSNotification.RevocationDocumentTabRefresh)) { _ in
-      viewModel.handleRevocationNotification()
+    .onReceive(NotificationCenter.default.publisher(for: NSNotification.DocumentTabRefresh)) { _ in
+      viewModel.handleRefreshotification()
     }
   }
 }
