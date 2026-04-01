@@ -115,11 +115,13 @@ private func content(
 
       if let issuerDetailsCardDataUi = viewState.issuerDetailsCardDataUi {
         VStack(spacing: SPACING_SMALL) {
+
           Text(.genericIssuer)
             .typography(Theme.shared.font.bodySmall)
             .fontWeight(.semibold)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .shimmer(isLoading: viewState.isLoading)
 
           IssuerDetailsCardView(
             issuerDetails: issuerDetailsCardDataUi,
@@ -131,11 +133,13 @@ private func content(
 
       VStack(spacing: SPACING_SMALL) {
         HStack {
+
           Text(.documentData)
             .typography(Theme.shared.font.bodySmall)
             .fontWeight(.semibold)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .padding(.vertical, SPACING_SMALL)
+            .shimmer(isLoading: viewState.isLoading)
 
           Spacer()
 
@@ -148,6 +152,7 @@ private func content(
               .frame(width: 24, height: 24)
               .padding(.horizontal, SPACING_MEDIUM)
               .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+              .shimmer(isLoading: viewState.isLoading)
           }
           .accessibilityLocator(isVisible ? DocumentDetailsLocators.eyeSlash : DocumentDetailsLocators.eye)
         }
