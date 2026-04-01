@@ -50,6 +50,10 @@ public protocol WalletKitController: Sendable {
     identifiers: [String],
     docTypeIdentifier: DocumentTypeIdentifier
   ) async throws -> [WalletStorage.Document]
+  func reIssueDocument(
+    identifier: String,
+    isBackgroundOperation: Bool
+  ) async throws -> WalletStorage.Document
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> any DocClaimsDecodable
   func resolveOfferUrlDocTypes(offerUri: String) async throws -> OfferedIssuanceModel
   func issueDocumentsByOfferUrl(
@@ -85,6 +89,9 @@ public protocol WalletKitController: Sendable {
 
   func getDocumentStatus(for statusIdentifier: StatusIdentifier) async throws -> CredentialStatus
   func isDocumentLowOnCredentials(document: (any DocClaimsDecodable)?) async -> Bool
+
+  func storeFailedReIssuedDocument(documentId: String) async throws
+  func removeFailedReIssuedDocument(documentId: String) async throws
 }
 
 final actor WalletKitControllerImpl: WalletKitController {
@@ -98,6 +105,7 @@ final actor WalletKitControllerImpl: WalletKitController {
   private let bookmarkStorageController: any BookmarkStorageController
   private let transactionLogStorageController: any TransactionLogStorageController
   private let revokedDocumentStorageController: any RevokedDocumentStorageController
+  private let failedReIssuedDocStorageController: any FailedReIssuedDocStorageController
   private let documentRegistrationManager: DocumentRegistrationManager
 
   init(
@@ -108,6 +116,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     bookmarkStorageController: any BookmarkStorageController,
     transactionLogStorageController: any TransactionLogStorageController,
     revokedDocumentStorageController: any RevokedDocumentStorageController,
+    failedReIssuedDocStorageController: any FailedReIssuedDocStorageController,
     networkSessionProvider: NetworkSessionProvider,
     documentRegistrationManager: DocumentRegistrationManager
   ) {
@@ -118,6 +127,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     self.bookmarkStorageController = bookmarkStorageController
     self.transactionLogStorageController = transactionLogStorageController
     self.revokedDocumentStorageController = revokedDocumentStorageController
+    self.failedReIssuedDocStorageController = failedReIssuedDocStorageController
     self.documentRegistrationManager = documentRegistrationManager
 
     guard let walletKit = try? EudiWallet(
@@ -265,6 +275,10 @@ final actor WalletKitControllerImpl: WalletKitController {
       )
     )
     return documents
+  }
+
+  func reIssueDocument(identifier: String, isBackgroundOperation: Bool) async throws -> WalletStorage.Document {
+    return try await wallet.reissueDocument(documentId: identifier, backgroundOnly: isBackgroundOperation)
   }
 
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> any DocClaimsDecodable {
@@ -482,7 +496,18 @@ final actor WalletKitControllerImpl: WalletKitController {
     return try await wallet.getDocumentStatus(for: statusIdentifier)
   }
 
-  private func registerForDocumentIdentityExtension(documents: [any DocClaimsDecodable]) {
+  func storeFailedReIssuedDocument(documentId: String) async throws {
+    try await self.failedReIssuedDocStorageController.store(.init(identifier: documentId))
+  }
+
+  func removeFailedReIssuedDocument(documentId: String) async throws {
+    try await failedReIssuedDocStorageController.delete(documentId)
+  }
+}
+
+private extension WalletKitControllerImpl {
+
+  func registerForDocumentIdentityExtension(documents: [any DocClaimsDecodable]) {
     Task {
       for document in documents {
         do {
@@ -501,7 +526,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     }
   }
 
-  private func removeAllRegistration(with ids: [String]?) async {
+  func removeAllRegistration(with ids: [String]?) async {
     if #available(iOS 26.0, *) {
       guard let ids else { return }
       do {
@@ -509,9 +534,6 @@ final actor WalletKitControllerImpl: WalletKitController {
       } catch {}
     } else {}
   }
-}
-
-private extension WalletKitControllerImpl {
 
   func decodeDeeplink(link: URLComponents) -> String? {
     link.removeSchemeFromComponents()?.string

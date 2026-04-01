@@ -20,11 +20,11 @@ import logic_ui
 struct IssuerDetailsCardView: View {
 
   private let issuerDetails: IssuerDocumentDetailsCardUIModel
-  private let onAction: (() -> Void)?
+  private let onAction: ((String) -> Void)?
 
   init(
     issuerDetails: IssuerDocumentDetailsCardUIModel,
-    onAction: (() -> Void)? = nil
+    onAction: ((String) -> Void)? = nil
   ) {
     self.issuerDetails = issuerDetails
     self.onAction = onAction
@@ -57,12 +57,15 @@ struct IssuerDetailsCardView: View {
           Spacer()
 
           if let onAction, let textButton = issuerDetails.expandedActionButtonText {
-            Button(action: onAction) {
-              Text(textButton)
-                .typography(Theme.shared.font.bodyLarge)
-                .fontWeight(.medium)
-                .foregroundStyle(Theme.shared.color.primary)
-            }
+            Button(
+              action: { onAction(issuerDetails.credentialIssuerIdentifier) },
+              label: {
+                Text(textButton)
+                  .typography(Theme.shared.font.bodyLarge)
+                  .fontWeight(.medium)
+                  .foregroundStyle(Theme.shared.color.primary)
+              }
+            )
           }
         }
       }

@@ -49,7 +49,7 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
 
       while await self.isRunning {
         try? await self.checkRevocation()
-        try? await Task.sleep(seconds: self.configLogic.revocationInterval)
+        try? await Task.sleep(seconds: self.configLogic.revocationIntervalSeconds)
       }
     }
   }

@@ -50,6 +50,7 @@ public final class LogicCoreAssembly: Assembly {
         bookmarkStorageController: r.force((any BookmarkStorageController).self),
         transactionLogStorageController: r.force((any TransactionLogStorageController).self),
         revokedDocumentStorageController: r.force((any RevokedDocumentStorageController).self),
+        failedReIssuedDocStorageController: r.force((any FailedReIssuedDocStorageController).self),
         networkSessionProvider: r.force((any NetworkSessionProvider).self),
         documentRegistrationManager: r.force((any DocumentRegistrationManager).self)
       )

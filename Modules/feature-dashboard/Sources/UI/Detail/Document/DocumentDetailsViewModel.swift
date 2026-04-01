@@ -112,16 +112,24 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     isDeletionModalShowing = !isDeletionModalShowing
   }
 
-  func issueNewDocument() {
-    router.push(
-      with: .featureIssuanceModule(
-        .issuanceAddDocument(
-          config: IssuanceFlowUiConfig(
-            flow: .extraDocument(filterType: viewState.document.type)
+  func issueNewDocument(with identifier: String) {
+    Task {
+      switch await interactor.reIssueDocument(identifier: identifier) {
+      case .success:
+        router.pop()
+      case .failure(let error):
+        self.setState {
+          $0.copy(
+            isLoading: false,
+            error: .init(
+              description: .custom(error.errorMessage),
+              cancelAction: self.setState { $0.copy(error: nil) },
+              action: { self.issueNewDocument(with: identifier) }
+            )
           )
-        )
-      )
-    )
+        }
+      }
+    }
   }
 
   func saveBookmark(_ identifier: String) {

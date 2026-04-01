@@ -22,15 +22,18 @@ public struct IssuerDocumentDetailsCardUIModel: Equatable, Sendable {
 
   public let issuerName: LocalizableStringKey
   public let issuerLogo: URL?
+  public let credentialIssuerIdentifier: String
   public let documentState: DocumentState
 
   public init(
     issuerName: LocalizableStringKey,
     issuerLogo: URL?,
+    credentialIssuerIdentifier: String,
     documentState: DocumentState,
   ) {
     self.issuerName = issuerName
     self.issuerLogo = issuerLogo
+    self.credentialIssuerIdentifier = credentialIssuerIdentifier
     self.documentState = documentState
   }
 
@@ -106,6 +109,7 @@ public extension DocClaimsDecodable {
     return .init(
       issuerName: .custom(self.issuerName),
       issuerLogo: self.issuerLogo,
+      credentialIssuerIdentifier: self.credentialIssuerIdentifier.orEmpty,
       documentState: documentState
     )
   }

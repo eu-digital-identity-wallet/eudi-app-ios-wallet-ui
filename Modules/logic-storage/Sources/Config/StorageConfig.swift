@@ -41,7 +41,8 @@ final class StorageConfigImpl: StorageConfig {
       [
         SDBookmark.self,
         SDTransactionLog.self,
-        SDRevokedDocument.self
+        SDRevokedDocument.self,
+        SDFailedReIssuedDocument.self
       ]
     )
   }

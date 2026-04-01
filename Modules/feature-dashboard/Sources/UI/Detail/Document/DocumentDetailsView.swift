@@ -52,8 +52,8 @@ struct DocumentDetailsView<Router: RouterHost>: View {
         viewModel.onShowDeleteModal()
       } onDeleteDocument: {
         viewModel.onDeleteDocument()
-      } issueNewDocument: {
-        viewModel.issueNewDocument()
+      } issueNewDocument: { id in
+        viewModel.issueNewDocument(with: id)
       } toggleIsVisible: {
         viewModel.toggleIsVisible()
       }
@@ -100,7 +100,7 @@ private func content(
   onContinue: @escaping () -> Void,
   onShowDeleteModal: @escaping () -> Void,
   onDeleteDocument: @escaping () -> Void,
-  issueNewDocument: @escaping () -> Void,
+  issueNewDocument: @escaping (String) -> Void,
   toggleIsVisible: @escaping () -> Void,
 ) -> some View {
   ScrollView {
@@ -216,6 +216,7 @@ private func content(
     issuerDetailsCardDataUi: IssuerDocumentDetailsCardUIModel(
       issuerName: .custom("issuer name"),
       issuerLogo: nil,
+      credentialIssuerIdentifier: "",
       documentState: .issued(
         issuanceDate: "issuanceDate",
         expirationDate: "expirationDate"
@@ -234,7 +235,7 @@ private func content(
       onContinue: {},
       onShowDeleteModal: {},
       onDeleteDocument: {},
-      issueNewDocument: {},
+      issueNewDocument: { _ in },
       toggleIsVisible: {}
     )
   }

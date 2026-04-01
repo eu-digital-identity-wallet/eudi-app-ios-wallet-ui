@@ -46,5 +46,10 @@ public final class LogicStorageAssembly: Assembly {
       RevokedDocumentStorageControllerImpl(swiftDataService: r.force(SwiftDataService.self))
     }
     .inObjectScope(ObjectScope.transient)
+
+    container.register((any FailedReIssuedDocStorageController).self) { r in
+      FailedReIssuedDocStorageControllerImpl(swiftDataService: r.force(SwiftDataService.self))
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

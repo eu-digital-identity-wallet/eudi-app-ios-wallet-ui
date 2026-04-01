@@ -18,6 +18,7 @@ import feature_common
 
 public protocol DocumentDetailsInteractor: Sendable {
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState
+  func reIssueDocument(identifier: String) async -> DocumentDetailsReIssuancePartialState
   func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState
   func save(_ identifier: String) async throws
   func delete(_ identifier: String) async throws
@@ -55,6 +56,18 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     let issuerDetailsCard = document?.transformToIssuerDetailsCardDataUi(isRevoked: isRevoked)
 
     return .success(documentDetails, issuerDetailsCard, info, isBookmarked)
+  }
+
+  func reIssueDocument(identifier: String) async -> DocumentDetailsReIssuancePartialState {
+    do {
+      _ = try await walletController.reIssueDocument(
+        identifier: identifier,
+        isBackgroundOperation: false
+      )
+      return .success
+    } catch {
+      return .failure(error)
+    }
   }
 
   func deleteDocument(with documentId: String, and type: DocumentTypeIdentifier) async -> DocumentDetailsDeletionPartialState {
@@ -135,5 +148,10 @@ public enum DocumentDetailsPartialState: Sendable {
 
 public enum DocumentDetailsDeletionPartialState: Sendable {
   case success(shouldReboot: Bool)
+  case failure(Error)
+}
+
+public enum DocumentDetailsReIssuancePartialState: Sendable {
+  case success
   case failure(Error)
 }
