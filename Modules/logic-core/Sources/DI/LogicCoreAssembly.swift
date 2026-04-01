@@ -43,13 +43,14 @@ public final class LogicCoreAssembly: Assembly {
 
     container.register(WalletKitController.self) { r in
       WalletKitControllerImpl(
-        configLogic: r.force(WalletKitConfig.self),
-        keychainConfig: r.force(KeyChainConfig.self),
+        walletKitConfig: r.force(WalletKitConfig.self),
+        configLogic: r.force(ConfigLogic.self),
         keyChainController: r.force(KeyChainController.self),
         sessionCoordinatorHolder: r.force(SessionCoordinatorHolder.self),
         bookmarkStorageController: r.force((any BookmarkStorageController).self),
         transactionLogStorageController: r.force((any TransactionLogStorageController).self),
         revokedDocumentStorageController: r.force((any RevokedDocumentStorageController).self),
+        failedReIssuedDocStorageController: r.force((any FailedReIssuedDocStorageController).self),
         networkSessionProvider: r.force((any NetworkSessionProvider).self),
         documentRegistrationManager: r.force((any DocumentRegistrationManager).self)
       )
@@ -72,6 +73,14 @@ public final class LogicCoreAssembly: Assembly {
 
     container.register(RevocationWorkManager.self) { r in
       RevocationWorkManagerImpl(
+        configLogic: r.force(WalletKitConfig.self),
+        walletKitController: r.force(WalletKitController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.graph)
+
+    container.register(ReIssuanceWorkManager.self) { r in
+      ReIssuanceWorkManagerImpl(
         configLogic: r.force(WalletKitConfig.self),
         walletKitController: r.force(WalletKitController.self)
       )

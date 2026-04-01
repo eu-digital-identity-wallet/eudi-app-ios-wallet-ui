@@ -33,13 +33,22 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       errorConfig: viewModel.viewState.error,
       navigationTitle: .details,
       toolbarContent: viewModel.toolbarContent(),
-      notificationAction: .init(
-        name: NSNotification.RevocationDocumentDetailsRefresh,
-        callback: {
-          guard let payload = $0 else { return }
-          viewModel.handleRevocationNotification(for: payload)
-        }
-      )
+      notificationActions: [
+        .init(
+          name: NSNotification.DocumentDetailsRefresh,
+          callback: {
+            guard let payload = $0 else { return }
+            viewModel.handleRefreshNotification(for: payload)
+          }
+        ),
+        .init(
+          name: NSNotification.ReIssuanceDetailsRefresh,
+          callback: {
+            guard let payload = $0 else { return }
+            viewModel.handleReIssuanceNotification(for: payload)
+          }
+        )
+      ]
     ) {
 
       content(
@@ -63,10 +72,11 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       title: .custom(""),
       message: .custom(""),
       actions: {
-        Button(.documentDetailsReIssueButton) {}
-          .disabled(
-            viewModel.viewState.issuerDetailsCardDataUi?.documentState == .revoked
-          )
+        Button(.documentDetailsReIssueButton) {
+          viewModel.issueNewDocument()
+        }.disabled(
+          viewModel.viewState.isRevoked
+        )
 
         Button(.documentDetailsRemoveButton) {
           viewModel.onShowDeleteModal()
@@ -114,14 +124,17 @@ private func content(
 
       if let issuerDetailsCardDataUi = viewState.issuerDetailsCardDataUi {
         VStack(spacing: SPACING_SMALL) {
+
           Text(.genericIssuer)
             .typography(Theme.shared.font.bodySmall)
             .fontWeight(.semibold)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .shimmer(isLoading: viewState.isLoading)
 
           IssuerDetailsCardView(
             issuerDetails: issuerDetailsCardDataUi,
+            isLoading: viewState.isLoading,
             onAction: issueNewDocument
           )
         }
@@ -129,11 +142,13 @@ private func content(
 
       VStack(spacing: SPACING_SMALL) {
         HStack {
+
           Text(.documentData)
             .typography(Theme.shared.font.bodySmall)
             .fontWeight(.semibold)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
             .padding(.vertical, SPACING_SMALL)
+            .shimmer(isLoading: viewState.isLoading)
 
           Spacer()
 
@@ -146,6 +161,7 @@ private func content(
               .frame(width: 24, height: 24)
               .padding(.horizontal, SPACING_MEDIUM)
               .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+              .shimmer(isLoading: viewState.isLoading)
           }
           .accessibilityLocator(isVisible ? DocumentDetailsLocators.eyeSlash : DocumentDetailsLocators.eye)
         }
@@ -193,6 +209,7 @@ private func content(
           .padding(.horizontal, SPACING_MEDIUM)
           .foregroundColor(Theme.shared.color.onSurfaceVariant)
           .frame(maxWidth: .infinity, alignment: .center)
+          .shimmer(isLoading: viewState.isLoading)
       }
     }
     .padding(Theme.shared.dimension.padding)
@@ -208,6 +225,7 @@ private func content(
     documentId: "",
     documentFieldsCount: DocumentUIModel.mock().documentFields.count,
     isBookmarked: true,
+    isRevoked: false,
     documentCredentialsInfo: DocumentCredentialsInfoUi(
       availableCredentials: 5,
       totalCredentials: 10,

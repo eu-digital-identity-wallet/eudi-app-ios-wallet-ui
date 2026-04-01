@@ -21,12 +21,15 @@ struct IssuerDetailsCardView: View {
 
   private let issuerDetails: IssuerDocumentDetailsCardUIModel
   private let onAction: (() -> Void)?
+  private let isLoading: Bool
 
   init(
     issuerDetails: IssuerDocumentDetailsCardUIModel,
+    isLoading: Bool = false,
     onAction: (() -> Void)? = nil
   ) {
     self.issuerDetails = issuerDetails
+    self.isLoading = isLoading
     self.onAction = onAction
   }
 
@@ -40,7 +43,8 @@ struct IssuerDetailsCardView: View {
           imageUrl: issuerDetails.issuerLogo,
           image: Theme.shared.image.id
         )
-      )
+      ),
+      isLoading: self.isLoading
     ) {
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
         if let dateTextKey = issuerDetails.expandedDateText {
@@ -57,12 +61,15 @@ struct IssuerDetailsCardView: View {
           Spacer()
 
           if let onAction, let textButton = issuerDetails.expandedActionButtonText {
-            Button(action: onAction) {
-              Text(textButton)
-                .typography(Theme.shared.font.bodyLarge)
-                .fontWeight(.medium)
-                .foregroundStyle(Theme.shared.color.primary)
-            }
+            Button(
+              action: onAction,
+              label: {
+                Text(textButton)
+                  .typography(Theme.shared.font.bodyLarge)
+                  .fontWeight(.medium)
+                  .foregroundStyle(Theme.shared.color.primary)
+              }
+            )
           }
         }
       }

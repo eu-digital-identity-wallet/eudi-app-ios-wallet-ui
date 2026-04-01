@@ -26,6 +26,7 @@ struct DocumentDetailsViewState: ViewState {
   let documentId: String
   let documentFieldsCount: Int
   let isBookmarked: Bool
+  let isRevoked: Bool
   let documentCredentialsInfo: DocumentCredentialsInfoUi?
   let issuerDetailsCardDataUi: IssuerDocumentDetailsCardUIModel?
 }
@@ -56,6 +57,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
         documentId: documentId,
         documentFieldsCount: 0,
         isBookmarked: false,
+        isRevoked: false,
         documentCredentialsInfo: nil,
         issuerDetailsCardDataUi: nil
       )
@@ -70,13 +72,20 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
 
     switch state {
 
-    case .success(let document, let issuerDetailsCardDataUi, let documentCredentialsInfo, let isBookmarked):
+    case .success(
+      let document,
+      let issuerDetailsCardDataUi,
+      let documentCredentialsInfo,
+      let isBookmarked,
+      let isRevoked
+    ):
       self.setState {
         $0.copy(
           document: document,
           isLoading: false,
           documentFieldsCount: document.documentFields.count,
           isBookmarked: isBookmarked,
+          isRevoked: isRevoked,
           documentCredentialsInfo: documentCredentialsInfo,
           issuerDetailsCardDataUi: issuerDetailsCardDataUi
         ).copy(error: nil)
@@ -113,15 +122,28 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
   }
 
   func issueNewDocument() {
-    router.push(
-      with: .featureIssuanceModule(
-        .issuanceAddDocument(
-          config: IssuanceFlowUiConfig(
-            flow: .extraDocument(filterType: viewState.document.type)
-          )
-        )
+    setState {
+      $0.copy(
+        isLoading: true
       )
-    )
+    }
+    Task {
+      switch await interactor.reIssueDocument(identifier: viewState.documentId) {
+      case .success:
+        router.pop()
+      case .failure(let error):
+        self.setState {
+          $0.copy(
+            isLoading: false,
+            error: .init(
+              description: .custom(error.errorMessage),
+              cancelAction: self.setState { $0.copy(error: nil) },
+              action: { self.issueNewDocument() }
+            )
+          )
+        }
+      }
+    }
   }
 
   func saveBookmark(_ identifier: String) {
@@ -190,9 +212,22 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     )
   }
 
-  func handleRevocationNotification(for payload: [AnyHashable: Any]?) {
+  func handleRefreshNotification(for payload: [AnyHashable: Any]?) {
     Task {
       await fetchDocumentDetails()
+    }
+  }
+
+  func handleReIssuanceNotification(for payload: [AnyHashable: Any]?) {
+    guard
+      let payload,
+      let dict = payload as? [String: [String]],
+      let ids = dict["ids"]
+    else {
+      return
+    }
+    if ids.contains(viewState.documentId) {
+      router.pop()
     }
   }
 

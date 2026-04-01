@@ -14,10 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 import EudiWalletKit
+import Foundation
 
 struct DocumentIssuanceConfig {
   let defaultRule: DocumentIssuanceRule
   let documentSpecificRules: [DocumentTypeIdentifier: DocumentIssuanceRule]
+  let reIssuanceRule: ReIssuanceRule
 
   func rule(for documentIdentifier: DocumentTypeIdentifier?) -> DocumentIssuanceRule {
     guard let documentIdentifier, let rule = documentSpecificRules[documentIdentifier] else {
@@ -30,4 +32,10 @@ struct DocumentIssuanceConfig {
 struct DocumentIssuanceRule {
   let policy: CredentialPolicy
   let numberOfCredentials: Int
+}
+
+struct ReIssuanceRule {
+  let minNumberOfCredentials: Int
+  let minExpirationHours: Int
+  let backgroundIntervalSeconds: TimeInterval
 }

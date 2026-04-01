@@ -58,7 +58,7 @@ protocol WalletKitConfig: Sendable {
   /**
    * The interval (in seconds) at which revocations are checked.
    */
-  var revocationInterval: TimeInterval { get }
+  var revocationIntervalSeconds: TimeInterval { get }
 
   /**
    * Configuration for document issuance, including default rules and specific overrides.
@@ -234,7 +234,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
     return self.transactionLoggerImpl
   }
 
-  var revocationInterval: TimeInterval {
+  var revocationIntervalSeconds: TimeInterval {
     300
   }
 
@@ -255,7 +255,12 @@ struct WalletKitConfigImpl: WalletKitConfig {
             policy: .oneTimeUse,
             numberOfCredentials: 10
           )
-        ]
+        ],
+        reIssuanceRule: ReIssuanceRule(
+          minNumberOfCredentials: 2,
+          minExpirationHours: 14,
+          backgroundIntervalSeconds: 300
+        )
       )
     case .DEV:
       DocumentIssuanceConfig(
@@ -272,7 +277,12 @@ struct WalletKitConfigImpl: WalletKitConfig {
             policy: .oneTimeUse,
             numberOfCredentials: 60
           )
-        ]
+        ],
+        reIssuanceRule: ReIssuanceRule(
+          minNumberOfCredentials: 2,
+          minExpirationHours: 14,
+          backgroundIntervalSeconds: 300
+        )
       )
     }
   }

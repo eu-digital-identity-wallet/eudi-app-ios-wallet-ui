@@ -13,27 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
-
-public protocol KeyChainConfig: Sendable {
-  /**
-   * Service name for documents key chain storage
-   */
-  var documentStorageServiceName: String { get }
-
-  /**
-   * Keychain shared access
-   */
-  var keychainAccessGroup: String { get }
-}
-
-public struct KeychainConfigImpl: KeyChainConfig {
-
-  public var documentStorageServiceName: String {
-    return Bundle.getDocumentStorageServiceName()
-  }
-
-  public var keychainAccessGroup: String {
-    return Bundle.getKeychainAccessGroup()
-  }
+public struct KeyChainConfig {
+  public let documentStorageServiceName: String
+  public let keychainAccessGroup: String
 }
