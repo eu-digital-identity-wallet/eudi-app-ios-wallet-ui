@@ -49,9 +49,9 @@ struct WalletKitConfigImpl: WalletKitConfig {
                 clientId: "your_demo_client_id_or_nil",
                 keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
                 authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
-                usePAR: should_use_par_bool,
+                requirePAR: should_use_par_bool,
                 useDPoP: should_use_dpop_bool,
-                useDpopIfSupported: should_use_dpop_bool,
+                requireDpop: should_use_dpop_bool,
                 cacheIssuerMetadata: should_cache_metadata_bool
             ),
             order: issuer_order_int
@@ -66,8 +66,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
                   clientId: "your_dev_client_id_or_nil",
                   keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
                   authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
-                  usePAR: should_use_par_bool,
-                  useDpopIfSupported: should_use_dpop_bool,
+                  requirePAR: should_use_par_bool,
+                  requireDpop: should_use_dpop_bool,
                   cacheIssuerMetadata: should_cache_metadata_bool
               ),
               order: issuer_order_int

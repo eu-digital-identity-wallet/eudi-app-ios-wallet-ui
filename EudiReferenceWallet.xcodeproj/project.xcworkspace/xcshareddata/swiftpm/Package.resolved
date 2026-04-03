@@ -1,5 +1,5 @@
 {
-  "originHash" : "8421577457462e04d1fbe0d8f96829e9c424a11b2f76a420c1e2e8deaef87359",
+  "originHash" : "459812fa42dcceb13b3fd98cf2dc13f94d89bc8a62b5f49a1c294f63df1c80d3",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/av-lib-ios-w3c-dc-api.git",
       "state" : {
-        "revision" : "6f204a17fa661c8a44f069fb3618216b0ecf8482",
-        "version" : "0.11.0"
+        "revision" : "6103acc6a3a2f3a22359e4ac371d443588d4a69f",
+        "version" : "0.11.3"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "49dd0074e6471509e73ca05b616170d90e233342",
-        "version" : "0.32.0"
+        "revision" : "be60de2e1587ec5691d9fdc69b9cad749db71860",
+        "version" : "0.33.0"
       }
     },
     {
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "bd93658a0eeed1ac8a8831769c7f5c8ac8803a14",
-        "version" : "0.23.3"
+        "revision" : "786ae2541ff7317dea48d0113b9a8867d0e0970a",
+        "version" : "0.23.4"
       }
     },
     {
@@ -285,8 +285,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/marmelroy/PhoneNumberKit",
       "state" : {
-        "revision" : "54f678c2fb115e68bb173face494954c1de9df10",
-        "version" : "4.2.8"
+        "revision" : "f6b612507fd23de7f21866000fc79ec8000358be",
+        "version" : "4.2.9"
       }
     },
     {

@@ -391,7 +391,7 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
             transactionType: .presentation
           )
         )
-      case .issuance, .signing:
+      case .issuance, .signing, .deletion:
         return FilterableItem(
           payload: transactionPayload,
           attributes: TransactionFilterableAttributes(

@@ -82,6 +82,7 @@ public enum TransactionType: Sendable, Equatable {
   case presentation
   case issuance
   case signing
+  case deletion
 
   var typeTitle: LocalizableStringKey {
     switch self {
@@ -91,6 +92,8 @@ public enum TransactionType: Sendable, Equatable {
       return .issuance
     case .signing:
       return .signing
+    case .deletion:
+      return .deletion
     }
   }
 }
@@ -107,7 +110,7 @@ extension TransactionLogItem {
         transactionCategory: .category(for: logData.timestamp.formattedAsDayMonthYearTime()),
         transactionType: .presentation
       )
-    case .issuance, .signing:
+    case .issuance, .signing, .deletion:
       return .init(
         id: self.id,
         name: "",
