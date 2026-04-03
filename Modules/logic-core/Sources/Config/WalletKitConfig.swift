@@ -98,8 +98,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
               clientId: "wallet-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              usePAR: true,
-              useDpopIfSupported: true,
+              requirePAR: true,
+              requireDpop: true,
               cacheIssuerMetadata: true
             ),
             order: 1
@@ -110,8 +110,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
               clientId: "wallet-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              usePAR: true,
-              useDpopIfSupported: true,
+              requirePAR: true,
+              requireDpop: true,
               cacheIssuerMetadata: true
             ),
             order: 0
@@ -125,8 +125,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
               clientId: "wallet-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              usePAR: true,
-              useDpopIfSupported: true,
+              requirePAR: true,
+              requireDpop: true,
               cacheIssuerMetadata: true
             ),
             order: 1
@@ -137,8 +137,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
               clientId: "wallet-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              usePAR: true,
-              useDpopIfSupported: true,
+              requirePAR: true,
+              requireDpop: true,
               cacheIssuerMetadata: true
             ),
             order: 0

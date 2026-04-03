@@ -52,6 +52,8 @@ extension TransactionLogItem {
           .issuance
       case .signing:
           .signing
+      case .deletion:
+          .deletion
       }
     }
 
@@ -59,7 +61,7 @@ extension TransactionLogItem {
       return switch transactionLogData {
       case .presentation(let log):
         log.status.mapToTransactionStatus()
-      case .issuance, .signing:
+      case .issuance, .signing, .deletion:
         nil
       }
     }
@@ -68,7 +70,7 @@ extension TransactionLogItem {
       return switch transactionLogData {
       case .presentation(let log):
         .custom(log.timestamp.formattedTimestamp().toString)
-      case .issuance, .signing:
+      case .issuance, .signing, .deletion:
         .custom("")
       }
     }
@@ -77,7 +79,7 @@ extension TransactionLogItem {
       return switch self.transactionLogData {
       case .presentation(let log):
         log.relyingParty
-      case .issuance, .signing:
+      case .issuance, .signing, .deletion:
         nil
       }
     }
@@ -86,7 +88,7 @@ extension TransactionLogItem {
       return switch self.transactionLogData {
       case .presentation(let log):
         log.documents.transformToTransactionListItemSections()
-      case .issuance, .signing:
+      case .issuance, .signing, .deletion:
         []
       }
     }

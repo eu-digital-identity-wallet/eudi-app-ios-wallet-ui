@@ -485,6 +485,17 @@
         }
       }
     },
+    "deletion" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deletion"
+          }
+        }
+      }
+    },
     "descending" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -224,6 +224,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case presentation
   case signing
   case issuance
+  case deletion
   case withoutRelyingName
   case errorFetchTransactionLog
   case incomplete
