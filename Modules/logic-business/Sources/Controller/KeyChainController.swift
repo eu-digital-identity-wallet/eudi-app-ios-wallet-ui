@@ -40,7 +40,7 @@ final class KeyChainControllerImpl: KeyChainController {
   public init(configLogic: ConfigLogic) {
     self.configLogic = configLogic
     let accessGroup = configLogic.keyChainConfig.keychainAccessGroup
-    let service = configLogic.keyChainConfig.keychainAccessGroup
+    let service = configLogic.keyChainConfig.documentStorageServiceName
     keyChain = Keychain(
       service: service,
       accessGroup: accessGroup
