@@ -76,8 +76,8 @@ var vciConfig: [String: OpenId4VciConfiguration] {
           clientId: "wallet-dev",
           keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-          usePAR: true,
-          useDpopIfSupported: true,
+          requirePAR: true,
+          requireDpop: true,
           cacheIssuerMetadata: true
         )
     case .DEV:
@@ -87,8 +87,8 @@ var vciConfig: [String: OpenId4VciConfiguration] {
           clientId: "wallet-dev",
           keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
           authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-          usePAR: true,
-          useDpopIfSupported: true,
+          requirePAR: true,
+          requireDpop: true,
           cacheIssuerMetadata: true
         )
       ]
