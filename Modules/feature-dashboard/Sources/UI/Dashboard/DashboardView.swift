@@ -51,8 +51,8 @@ struct DashboardView<Router: RouterHost>: View {
             viewModel.viewState.documentTab
           case .home:
             viewModel.viewState.homeTab
-          case .transactions:
-            viewModel.viewState.transactionTab
+          case .history:
+            viewModel.viewState.historyTab
           }
         },
         selectedTab: $viewModel.selectedTab
@@ -120,18 +120,18 @@ private func content(
       }
       .tag(SelectedTab.documents)
 
-    tabView(.transactions)
+    tabView(.history)
       .tabItem {
         Label(
-          .transactions,
+          .historyTitle,
           systemImage: "arrow.left.arrow.right"
         )
         .accessibilityLocator(
-          TabViewLocators.transactions,
-          label: LocalizableStringKey.transactions.toString
+          TabViewLocators.history,
+          label: LocalizableStringKey.historyTitle.toString
         )
       }
-      .tag(SelectedTab.transactions)
+      .tag(SelectedTab.history)
   }
 }
 

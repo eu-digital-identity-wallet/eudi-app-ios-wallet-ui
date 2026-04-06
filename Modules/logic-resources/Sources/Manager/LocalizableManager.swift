@@ -240,8 +240,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "items_not_found_in_storage")
     case .home:
       bundle.localizedString(forKey: "home")
-    case .transactions:
-      bundle.localizedString(forKey: "transactions")
+    case .historyTitle:
+      bundle.localizedString(forKey: "history")
     case .documents:
       bundle.localizedString(forKey: "documents")
     case .authenticateAuthoriseTransactions:

@@ -263,7 +263,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
           }
         ]
       ),
-      .transactions
+      .historyTitle
     )
   }
 
