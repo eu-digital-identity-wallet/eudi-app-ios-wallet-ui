@@ -42,13 +42,24 @@ final actor RequestAuthorizationInteractorImpl: RequestAuthorizationInteractor {
     context: ISO18013MobileDocumentRequestContext
   ) async throws -> AuthorizationUIModel {
     let (set, _, rn) = try await dcApiHandler.validateRequest(context.request)
-    let documentTypes = set.requests.map(\.documentType)
     let websiteName = context.requestingWebsiteOrigin?.absoluteString ?? rn ?? "Website name not available"
 
     return AuthorizationUIModel(
       issuerName: websiteName,
-      document: documentTypes.map {
-        AuthorizationUIDocument(name: $0)
+      document: set.requests.map { request in
+        let requestedElements = request.namespaces.flatMap { namespace, elements in
+          elements.keys.map { key in
+            AuthorizationUIRequestedElement(
+              namespace: namespace,
+              elementKey: key
+            )
+          }
+        }
+
+        return AuthorizationUIDocument(
+          name: request.documentType,
+          requestedElements: requestedElements
+        )
       }
     )
   }

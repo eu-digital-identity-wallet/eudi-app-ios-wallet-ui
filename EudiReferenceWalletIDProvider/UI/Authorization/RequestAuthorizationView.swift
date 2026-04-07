@@ -16,6 +16,7 @@
 import SwiftUI
 import logic_resources
 import logic_ui
+import feature_common
 
 struct RequestAuthorizationView: View {
 
@@ -28,8 +29,8 @@ struct RequestAuthorizationView: View {
   var body: some View {
     NavigationStack {
       VStack(alignment: .center) {
-        if let documents = viewModel.viewState.documents {
-          contentView(documents: documents)
+        if !viewModel.viewState.items.isEmpty {
+          contentView(viewState: viewModel.viewState)
         } else {
           noDocumentsFound()
         }
@@ -53,25 +54,32 @@ struct RequestAuthorizationView: View {
 
   @ViewBuilder
   private func contentView(
-    documents: [AuthorizationUIDocument]
+    viewState: RequestAuthorizationViewState
   ) -> some View {
     ScrollView {
       VStack(spacing: .zero) {
         ContentHeaderView(
-          config: viewModel.viewState.contentHeaderConfig
+          config: viewState.contentHeaderConfig
         )
 
         VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
-          ForEach(documents, id: \.self) { document in
-            WrapCardView {
-              WrapListItemView(
-                listItem: .init(
-                  mainContent: .text(.custom(document.name))
-                ),
-                mainTextVerticalPadding: SPACING_SMALL
-              )
-            }
+          ForEach(viewState.items.indices, id: \.self) { index in
+            let section = viewState.items[index]
+            WrapExpandableListView(
+              header: .init(
+                mainContent: .text(.custom(section.section.title)),
+                supportingText: .viewDetails
+              ),
+              items: section.section.listItems,
+              hideSensitiveContent: false,
+              isLoading: viewState.isLoading,
+              onItemClick: { viewModel.onSelectionChanged(id: $0.groupId) }
+            )
+            .accessibilityElement()
+            .combineChilrenAccessibility(
+              locator: BaseRequestLocators.requestedDocument(index.string)
+            )
           }
 
           Text(.shareDataReview)
@@ -79,7 +87,7 @@ struct RequestAuthorizationView: View {
             .foregroundColor(Theme.shared.color.onSurface)
             .multilineTextAlignment(.leading)
         }
-        .shimmer(isLoading: viewModel.viewState.isLoading)
+        .shimmer(isLoading: viewState.isLoading)
       }
     }
     .safeAreaInset(edge: .bottom) {

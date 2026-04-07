@@ -20,7 +20,7 @@ import Observation
 
 @Copyable
 struct RequestAuthorizationViewState: ViewState {
-  let documents: [AuthorizationUIDocument]?
+  let items: [AuthorizationUIRequestItem]
   let errorMessage: String?
   let isLoading: Bool
   let contentHeaderConfig: ContentHeaderConfig
@@ -42,7 +42,7 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
     self.context = context
     super.init(
       initialState: .init(
-        documents: nil,
+        items: [],
         errorMessage: nil,
         isLoading: true,
         contentHeaderConfig: .init(
@@ -66,7 +66,7 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
 
       setState {
         $0.copy(
-          documents: uiModel.document,
+          items: uiModel.document.toRequestItems(),
           isLoading: false,
           contentHeaderConfig: .init(
             appIconAndTextData: AppIconAndTextData(
@@ -118,6 +118,8 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
   func cancelRequest() {
     context?.cancel()
   }
+
+  func onSelectionChanged(id: String) {}
 
   func createBiometryConfig() -> UIConfig.AuthorizeAction {
     UIConfig.AuthorizeAction(

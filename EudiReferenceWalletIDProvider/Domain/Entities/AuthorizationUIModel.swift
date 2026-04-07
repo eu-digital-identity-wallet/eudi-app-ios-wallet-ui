@@ -14,21 +14,71 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_ui
+import logic_resources
 
 struct AuthorizationUIModel: Sendable {
   let issuerName: String
   let document: [AuthorizationUIDocument]
 }
 
-struct AuthorizationUIDocument: Sendable, Identifiable, Hashable {
+typealias AuthorizationListItemSection = ListItemSection<AuthorizationUIRequestedElement>
+
+struct AuthorizationUIRequestItem: Sendable, Identifiable {
   let id: String
-  let name: String
+  let section: AuthorizationListItemSection
 
   init(
     id: String = UUID().uuidString,
-    name: String
+    section: AuthorizationListItemSection
+  ) {
+    self.id = id
+    self.section = section
+  }
+}
+
+struct AuthorizationUIDocument: Sendable, Identifiable, Hashable {
+  let id: String
+  let name: String
+  let requestedElements: [AuthorizationUIRequestedElement]
+
+  init(
+    id: String = UUID().uuidString,
+    name: String,
+    requestedElements: [AuthorizationUIRequestedElement] = []
   ) {
     self.id = id
     self.name = name
+    self.requestedElements = requestedElements
+  }
+}
+
+struct AuthorizationUIRequestedElement: Sendable, Hashable {
+  let namespace: String
+  let elementKey: String
+}
+
+extension Array where Element == AuthorizationUIDocument {
+  func toRequestItems() -> [AuthorizationUIRequestItem] {
+    self.map { document in
+      let listItems: [ExpandableListItem<AuthorizationUIRequestedElement>] = document.requestedElements.map { element in
+        .single(
+          .init(
+            collapsed: .init(
+              mainContent: .text(.custom(element.elementKey))
+            ),
+            domainModel: element
+          )
+        )
+      }
+
+      return AuthorizationUIRequestItem(
+        id: document.id,
+        section: .init(
+          id: document.id,
+          title: document.name,
+          listItems: listItems
+        )
+      )
+    }
   }
 }
