@@ -52,31 +52,38 @@ struct HomeTabView<Router: RouterHost>: View {
       }
       .accessibilityLocator(HomeTabViewLocators.onlineButton)
 
-      Button(.cancelButton, role: .destructive) {}
-        .accessibilityLocator(HomeTabViewLocators.cancelButton)
-    } message: {
-      Text(.authenticateAuthoriseTransactions)
-    }
-    .dialogCompat(
-      .bleDisabledModalTitle,
-      isPresented: $viewModel.isBleModalShowing,
-      actions: {
-        Button(.bleDisabledModalButton) {
-          viewModel.onBleSettings()
-        }
-        Button(.cancelButton, role: .cancel) {}
-      },
-      message: {
-        Text(.bleDisabledModalCaption)
+      if ProcessInfo.processInfo.isiOSAppOnMac {
+          Button(.cancelButton, role: .cancel) {}
+            .accessibilityLocator(HomeTabViewLocators.cancelButton)
+      } else {
+          Button(.cancelButton) {}
+            .accessibilityLocator(HomeTabViewLocators.cancelButton)
       }
-    )
-    .onChange(of: scenePhase) {
-      self.viewModel.setPhase(with: scenePhase)
+    } message: {
+        Text(.authenticateAuthoriseTransactions)
+      .dialogCompat(
+        .bleDisabledModalTitle,
+        isPresented: $viewModel.isBleModalShowing,
+        actions: {
+          Button(.bleDisabledModalButton) {
+            viewModel.onBleSettings()
+          }
+          if !ProcessInfo.processInfo.isiOSAppOnMac {
+              Button(.cancelButton, role: .cancel) {}
+          }
+        },
+        message: {
+          Text(.bleDisabledModalCaption)
+        }
+      )
+      .onChange(of: scenePhase) {
+        self.viewModel.setPhase(with: scenePhase)
+      }
+      .task {
+        await viewModel.onCreate()
+      }
+      .background(Theme.shared.color.background)
     }
-    .task {
-      await viewModel.onCreate()
-    }
-    .background(Theme.shared.color.background)
   }
 }
 
@@ -119,26 +126,6 @@ private func content(
         isPresented: isAuthenticateAlertShowing,
         title: .alertAccessOnlineServices,
         message: .alertAccessOnlineServicesMessage,
-        actions: {
-          Button(.okButton, role: .cancel) {}
-        }
-      )
-
-      HomeCardView(
-        text: LocalizableStringKey.electronicallySignDigitalDocuments,
-        locator: HomeTabViewLocators.electronicallySignDigitalDocuments,
-        buttonText: LocalizableStringKey.signDocument,
-        illustration: Theme.shared.image.homeContract,
-        learnMoreText: LocalizableStringKey.learnMore,
-        learnMoreAction: {
-          toggleSignDocumentAlert()
-        },
-        action: openSignDocument()
-      )
-      .alertView(
-        isPresented: isSignDocumentAlertShowing,
-        title: .alertSignDocumentsSafely,
-        message: .alertSignDocumentsSafelyMessage,
         actions: {
           Button(.okButton, role: .cancel) {}
         }

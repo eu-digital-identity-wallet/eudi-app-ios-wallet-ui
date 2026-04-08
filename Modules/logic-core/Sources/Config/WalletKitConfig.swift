@@ -94,8 +94,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
         return [
           .init(
             config: .init(
-              credentialIssuerURL: "https://issuer.eudiw.dev",
-              clientId: "wallet-dev",
+              credentialIssuerURL: "https://utsteder.test.eidas2sandkasse.net",
+              clientId: "demo-lommebok-test",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
               requirePAR: true,
@@ -103,26 +103,14 @@ struct WalletKitConfigImpl: WalletKitConfig {
               cacheIssuerMetadata: true
             ),
             order: 1
-          ),
-          .init(
-            config: .init(
-              credentialIssuerURL: "https://issuer-backend.eudiw.dev",
-              clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
-              authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
-              requireDpop: true,
-              cacheIssuerMetadata: true
-            ),
-            order: 0
           )
         ]
       case .DEV:
         return [
           .init(
             config: .init(
-              credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
-              clientId: "wallet-dev",
+              credentialIssuerURL: "https://utsteder.eidas2sandkasse.dev",
+              clientId: "demo-lommebok-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
               requirePAR: true,
@@ -130,18 +118,6 @@ struct WalletKitConfigImpl: WalletKitConfig {
               cacheIssuerMetadata: true
             ),
             order: 1
-          ),
-          .init(
-            config: .init(
-              credentialIssuerURL: "https://dev.issuer-backend.eudiw.dev",
-              clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
-              authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
-              requireDpop: true,
-              cacheIssuerMetadata: true
-            ),
-            order: 0
           )
         ]
       }
@@ -166,16 +142,21 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var trustedReaderRootCertificates: [x5chain] {
-    let certificates = [
-      "pidissuerca02_cz",
-      "pidissuerca02_ee",
-      "pidissuerca02_eu",
-      "pidissuerca02_lu",
-      "pidissuerca02_nl",
-      "pidissuerca02_pt",
-      "pidissuerca02_ut",
-      "r45_staging"
-    ]
+    let certificates: [String]
+    switch configLogic.appBuildVariant {
+    case .DEMO:
+        certificates = [
+            "eidas2sandkasse_net_access_CA",
+            "eidas2sandkasse_net_access2_CA"
+        ]
+    case .DEV:
+        certificates = [
+            "eidas2sandkasse_net_access_CA",
+            "eidas2sandkasse_dev_access_CA",
+            "eidas2sandkasse_dev_access2_CA"
+        ]
+    }
+      
     return certificates
       .compactMap { loadCertificate($0) }
       .map { [$0] }

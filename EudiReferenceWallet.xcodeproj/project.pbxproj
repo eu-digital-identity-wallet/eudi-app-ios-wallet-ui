@@ -16,9 +16,12 @@
 		9F87022A2F6D55C700A865A9 /* logic-core in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8702292F6D55C700A865A9 /* logic-core */; };
 		F02921632B8E07870076A58B /* WalletDemoRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */; };
 		F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */; };
+		1FAB086E2F76B2EB004BDB87 /* eidas2sandkasse_net_access2_CA.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FAB086D2F76B2EB004BDB87 /* eidas2sandkasse_net_access2_CA.der */; };
+		1FAB08702F76B2FD004BDB87 /* eidas2sandkasse_dev_access_CA.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FAB086F2F76B2FD004BDB87 /* eidas2sandkasse_dev_access_CA.der */; };
+		1FAB08722F76B308004BDB87 /* eidas2sandkasse_dev_access2_CA.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FAB08712F76B308004BDB87 /* eidas2sandkasse_dev_access2_CA.der */; };
+		1FBAB1582E7DE7A70092FE59 /* eidas2sandkasse_net_access_CA.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FBAB1572E7DE7A70092FE59 /* eidas2sandkasse_net_access_CA.der */; };
 		F02AE38F2BA6E45F00C25C59 /* logic-assembly in Resources */ = {isa = PBXBuildFile; fileRef = F02AE38E2BA6E45F00C25C59 /* logic-assembly */; };
 		F02AE3912BA6E59600C25C59 /* logic-assembly in Frameworks */ = {isa = PBXBuildFile; productRef = F02AE3902BA6E59600C25C59 /* logic-assembly */; };
-		F0394F632EE9FD3100098E43 /* r45_staging.der in Resources */ = {isa = PBXBuildFile; fileRef = F0394F622EE9FD3100098E43 /* r45_staging.der */; };
 		F05E9F382AFABBC200891E8F /* feature-presentation in Resources */ = {isa = PBXBuildFile; fileRef = F05E9F372AFABBC200891E8F /* feature-presentation */; };
 		F06325102AC598370004601F /* logic-test in Resources */ = {isa = PBXBuildFile; fileRef = F063250F2AC598370004601F /* logic-test */; };
 		F06325122AC59AF50004601F /* feature-test in Resources */ = {isa = PBXBuildFile; fileRef = F06325112AC59AF50004601F /* feature-test */; };
@@ -28,21 +31,12 @@
 		F0A013992AC35ECA00065EAD /* logic-api in Resources */ = {isa = PBXBuildFile; fileRef = F0A013932AC35ECA00065EAD /* logic-api */; };
 		F0A0139A2AC35ECA00065EAD /* feature-startup in Resources */ = {isa = PBXBuildFile; fileRef = F0A013942AC35ECA00065EAD /* feature-startup */; };
 		F0A0139C2AC35ECA00065EAD /* logic-ui in Resources */ = {isa = PBXBuildFile; fileRef = F0A013962AC35ECA00065EAD /* logic-ui */; };
-		F0A984762DA917130051A4DB /* pidissuerca02_ut.der in Resources */ = {isa = PBXBuildFile; fileRef = F0A984752DA917130051A4DB /* pidissuerca02_ut.der */; };
-		F0A984772DA917130051A4DB /* pidissuerca02_nl.der in Resources */ = {isa = PBXBuildFile; fileRef = F0A984732DA917130051A4DB /* pidissuerca02_nl.der */; };
-		F0A984782DA917130051A4DB /* pidissuerca02_cz.der in Resources */ = {isa = PBXBuildFile; fileRef = F0A9846F2DA917130051A4DB /* pidissuerca02_cz.der */; };
-		F0A984792DA917130051A4DB /* pidissuerca02_pt.der in Resources */ = {isa = PBXBuildFile; fileRef = F0A984742DA917130051A4DB /* pidissuerca02_pt.der */; };
-		F0A9847A2DA917130051A4DB /* pidissuerca02_ee.der in Resources */ = {isa = PBXBuildFile; fileRef = F0A984702DA917130051A4DB /* pidissuerca02_ee.der */; };
-		F0A9847B2DA917130051A4DB /* pidissuerca02_lu.der in Resources */ = {isa = PBXBuildFile; fileRef = F0A984722DA917130051A4DB /* pidissuerca02_lu.der */; };
-		F0A9847C2DA917130051A4DB /* pidissuerca02_eu.der in Resources */ = {isa = PBXBuildFile; fileRef = F0A984712DA917130051A4DB /* pidissuerca02_eu.der */; };
 		F0BFE9B72AD557290062826F /* feature-common in Resources */ = {isa = PBXBuildFile; fileRef = F0BFE9B62AD557290062826F /* feature-common */; };
 		F0C6207E2B6A6246007F903F /* logic-analytics in Resources */ = {isa = PBXBuildFile; fileRef = F0C6207D2B6A6246007F903F /* logic-analytics */; };
 		F12E940F2ABC6C000086EC93 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12E940E2ABC6C000086EC93 /* AppDelegate.swift */; };
 		F14907BC2ABAF54B00DDFE56 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14907BB2ABAF54B00DDFE56 /* Application.swift */; };
 		F14907C02ABAF55000DDFE56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F14907BF2ABAF55000DDFE56 /* Assets.xcassets */; };
 		F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F14907C22ABAF55000DDFE56 /* Preview Assets.xcassets */; };
-		F1CACAE02AC3097100B40DED /* WalletDev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F1CACADF2AC3097100B40DED /* WalletDev.xcconfig */; };
-		F1CACAE22AC3098C00B40DED /* WalletDemo.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F1CACAE12AC3098C00B40DED /* WalletDemo.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,11 +67,15 @@
 		1198ECD72AC453F200F4E71A /* logic-resources */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-resources"; path = "Modules/logic-resources"; sourceTree = "<group>"; };
 		9F8701C92F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = EudiReferenceWalletIDProvider.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F8701DF2F6BE96C00A865A9 /* EudiWallet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EudiWallet.entitlements; sourceTree = "<group>"; };
+		1FAB086D2F76B2EB004BDB87 /* eidas2sandkasse_net_access2_CA.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = eidas2sandkasse_net_access2_CA.der; sourceTree = "<group>"; };
+		1FAB086F2F76B2FD004BDB87 /* eidas2sandkasse_dev_access_CA.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = eidas2sandkasse_dev_access_CA.der; sourceTree = "<group>"; };
+		1FAB08712F76B308004BDB87 /* eidas2sandkasse_dev_access2_CA.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = eidas2sandkasse_dev_access2_CA.der; sourceTree = "<group>"; };
+		1FBAB1572E7DE7A70092FE59 /* eidas2sandkasse_net_access_CA.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = eidas2sandkasse_net_access_CA.der; sourceTree = "<group>"; };
+		1FDC0F762E8296840054F0DF /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		F018D9F32D087C410015876D /* logic-storage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-storage"; path = "Modules/logic-storage"; sourceTree = "<group>"; };
 		F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WalletDemoRelease.xcconfig; sourceTree = "<group>"; };
 		F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WalletDevRelease.xcconfig; sourceTree = "<group>"; };
 		F02AE38E2BA6E45F00C25C59 /* logic-assembly */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-assembly"; path = "Modules/logic-assembly"; sourceTree = "<group>"; };
-		F0394F622EE9FD3100098E43 /* r45_staging.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = r45_staging.der; sourceTree = "<group>"; };
 		F05E9F372AFABBC200891E8F /* feature-presentation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-presentation"; path = "Modules/feature-presentation"; sourceTree = "<group>"; };
 		F063250F2AC598370004601F /* logic-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-test"; path = "Modules/logic-test"; sourceTree = "<group>"; };
 		F06325112AC59AF50004601F /* feature-test */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-test"; path = "Modules/feature-test"; sourceTree = "<group>"; };
@@ -89,13 +87,6 @@
 		F0A013942AC35ECA00065EAD /* feature-startup */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-startup"; path = "Modules/feature-startup"; sourceTree = "<group>"; };
 		F0A013962AC35ECA00065EAD /* logic-ui */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-ui"; path = "Modules/logic-ui"; sourceTree = "<group>"; };
 		F0A0BE922AC35925002BE0F5 /* EudiWallet.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EudiWallet.xctestplan; sourceTree = "<group>"; };
-		F0A9846F2DA917130051A4DB /* pidissuerca02_cz.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pidissuerca02_cz.der; sourceTree = "<group>"; };
-		F0A984702DA917130051A4DB /* pidissuerca02_ee.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pidissuerca02_ee.der; sourceTree = "<group>"; };
-		F0A984712DA917130051A4DB /* pidissuerca02_eu.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pidissuerca02_eu.der; sourceTree = "<group>"; };
-		F0A984722DA917130051A4DB /* pidissuerca02_lu.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pidissuerca02_lu.der; sourceTree = "<group>"; };
-		F0A984732DA917130051A4DB /* pidissuerca02_nl.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pidissuerca02_nl.der; sourceTree = "<group>"; };
-		F0A984742DA917130051A4DB /* pidissuerca02_pt.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pidissuerca02_pt.der; sourceTree = "<group>"; };
-		F0A984752DA917130051A4DB /* pidissuerca02_ut.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = pidissuerca02_ut.der; sourceTree = "<group>"; };
 		F0B440782B9B42B600031137 /* logic-core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-core"; path = "Modules/logic-core"; sourceTree = "<group>"; };
 		F0BFE9B62AD557290062826F /* feature-common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "feature-common"; path = "Modules/feature-common"; sourceTree = "<group>"; };
 		F0C6207D2B6A6246007F903F /* logic-analytics */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-analytics"; path = "Modules/logic-analytics"; sourceTree = "<group>"; };
@@ -160,6 +151,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1FDC0F752E8296730054F0DF /* ci_scripts */ = {
+			isa = PBXGroup;
+			children = (
+				1FDC0F762E8296840054F0DF /* ci_post_clone.sh */,
+			);
+			path = ci_scripts;
+			sourceTree = "<group>";
+		};
 		F09E1EA02AC33A6800779C25 /* Config */ = {
 			isa = PBXGroup;
 			children = (
@@ -174,14 +173,10 @@
 		F0FFD1DF2D82DB8C0044B5C1 /* Certificate */ = {
 			isa = PBXGroup;
 			children = (
-				F0394F622EE9FD3100098E43 /* r45_staging.der */,
-				F0A9846F2DA917130051A4DB /* pidissuerca02_cz.der */,
-				F0A984702DA917130051A4DB /* pidissuerca02_ee.der */,
-				F0A984712DA917130051A4DB /* pidissuerca02_eu.der */,
-				F0A984722DA917130051A4DB /* pidissuerca02_lu.der */,
-				F0A984732DA917130051A4DB /* pidissuerca02_nl.der */,
-				F0A984742DA917130051A4DB /* pidissuerca02_pt.der */,
-				F0A984752DA917130051A4DB /* pidissuerca02_ut.der */,
+				1FBAB1572E7DE7A70092FE59 /* eidas2sandkasse_net_access_CA.der */,
+				1FAB086D2F76B2EB004BDB87 /* eidas2sandkasse_net_access2_CA.der */,
+				1FAB086F2F76B2FD004BDB87 /* eidas2sandkasse_dev_access_CA.der */,
+				1FAB08712F76B308004BDB87 /* eidas2sandkasse_dev_access2_CA.der */,
 			);
 			path = Certificate;
 			sourceTree = "<group>";
@@ -190,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				9F8701DF2F6BE96C00A865A9 /* EudiWallet.entitlements */,
+				1FDC0F752E8296730054F0DF /* ci_scripts */,
 				F0A0BE922AC35925002BE0F5 /* EudiWallet.xctestplan */,
 				F14907BA2ABAF54B00DDFE56 /* Wallet */,
 				F14908692ABC467600DDFE56 /* Packages */,
@@ -370,27 +366,19 @@
 				F02AE38F2BA6E45F00C25C59 /* logic-assembly in Resources */,
 				F06325122AC59AF50004601F /* feature-test in Resources */,
 				F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */,
+				1FAB08702F76B2FD004BDB87 /* eidas2sandkasse_dev_access_CA.der in Resources */,
 				F0A013982AC35ECA00065EAD /* logic-business in Resources */,
 				F069CC402AFAC0AD0033AAC5 /* feature-issuance in Resources */,
+				1FBAB1582E7DE7A70092FE59 /* eidas2sandkasse_net_access_CA.der in Resources */,
 				F14907C02ABAF55000DDFE56 /* Assets.xcassets in Resources */,
+				1FAB08722F76B308004BDB87 /* eidas2sandkasse_dev_access2_CA.der in Resources */,
 				F06325102AC598370004601F /* logic-test in Resources */,
 				F0C6207E2B6A6246007F903F /* logic-analytics in Resources */,
-				F02921632B8E07870076A58B /* WalletDemoRelease.xcconfig in Resources */,
-				F1CACAE02AC3097100B40DED /* WalletDev.xcconfig in Resources */,
-				F0394F632EE9FD3100098E43 /* r45_staging.der in Resources */,
 				F0A013992AC35ECA00065EAD /* logic-api in Resources */,
 				F0A0139A2AC35ECA00065EAD /* feature-startup in Resources */,
-				F1CACAE22AC3098C00B40DED /* WalletDemo.xcconfig in Resources */,
 				F0BFE9B72AD557290062826F /* feature-common in Resources */,
-				F0A984762DA917130051A4DB /* pidissuerca02_ut.der in Resources */,
-				F0A984772DA917130051A4DB /* pidissuerca02_nl.der in Resources */,
-				F0A984782DA917130051A4DB /* pidissuerca02_cz.der in Resources */,
-				F0A984792DA917130051A4DB /* pidissuerca02_pt.der in Resources */,
-				F0A9847A2DA917130051A4DB /* pidissuerca02_ee.der in Resources */,
-				F0A9847B2DA917130051A4DB /* pidissuerca02_lu.der in Resources */,
-				F0A9847C2DA917130051A4DB /* pidissuerca02_eu.der in Resources */,
+				1FAB086E2F76B2EB004BDB87 /* eidas2sandkasse_net_access2_CA.der in Resources */,
 				F0A0139C2AC35ECA00065EAD /* logic-ui in Resources */,
-				F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */,
 				F05E9F382AFABBC200891E8F /* feature-presentation in Resources */,
 				F069CC3F2AFAC0AD0033AAC5 /* feature-proximity in Resources */,
 			);
@@ -853,6 +841,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 9NR5K6K6B5;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -876,6 +865,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -887,21 +877,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = EudiWallet.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "Wallet/Preview\\ Content";
-				DEVELOPMENT_TEAM = AZXQE7588Y;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = AZXQE7588Y;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_CFBundleDisplayName = "Demo lommebok";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -917,14 +904,13 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = yyyy.mm.v;
-				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.eidas2sandkasse.demo-lommebok.dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "EUDI Demo Dev";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI Demo Dev";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -969,6 +955,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 9NR5K6K6B5;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -985,6 +972,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -996,20 +984,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = EudiWallet.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Netcompany-Intrasoft S.A. (AZXQE7588Y)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Netcompany-Intrasoft S.A. (AZXQE7588Y)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "Wallet/Preview\\ Content";
-				DEVELOPMENT_TEAM = AZXQE7588Y;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = AZXQE7588Y;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_CFBundleDisplayName = "Demo lommebok";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -1025,14 +1010,13 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = yyyy.mm.v;
-				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.eidas2sandkasse.demo-lommebok.dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "EUDI Demo Release";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI Demo Release";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1077,6 +1061,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 9NR5K6K6B5;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1100,6 +1085,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -1140,6 +1126,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 9NR5K6K6B5;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1156,6 +1143,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1167,21 +1155,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconDev;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = EudiWallet.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "Wallet/Preview\\ Content";
-				DEVELOPMENT_TEAM = AZXQE7588Y;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = AZXQE7588Y;
+				DEVELOPMENT_TEAM = 9NR5K6K6B5;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_CFBundleDisplayName = "Demo lommebok";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -1197,14 +1183,13 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = yyyy.mm.v;
-				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.dev;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.eidas2sandkasse.demo-lommebok";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "EUDI Dev";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI Dev";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1220,20 +1205,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconDev;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = EudiWallet.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Netcompany-Intrasoft S.A. (AZXQE7588Y)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Netcompany-Intrasoft S.A. (AZXQE7588Y)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "Wallet/Preview\\ Content";
-				DEVELOPMENT_TEAM = AZXQE7588Y;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = AZXQE7588Y;
+				DEVELOPMENT_TEAM = 9NR5K6K6B5;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_CFBundleDisplayName = "Demo lommebok";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -1249,14 +1232,13 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = yyyy.mm.v;
-				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.dev;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.eidas2sandkasse.demo-lommebok";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "EUDI Dev Release";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI Dev Release";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
