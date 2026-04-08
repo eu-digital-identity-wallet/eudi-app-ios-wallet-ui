@@ -142,12 +142,25 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var readerConfig: ReaderConfig {
-    let certificates = [
-      "eidas2sandkasse_net_access_CA"
-    ]
+    let certificates: [String]
+    switch configLogic.appBuildVariant {
+    case .DEMO:
+        certificates = [
+            "eidas2sandkasse_net_access_CA",
+            "eidas2sandkasse_net_access2_CA"
+        ]
+    case .DEV:
+        certificates = [
+            "eidas2sandkasse_net_access_CA",
+            "eidas2sandkasse_dev_access_CA",
+            "eidas2sandkasse_dev_access2_CA"
+        ]
+    }
+      
     let certsData: [Data] = certificates.compactMap {
       Data(name: $0, ext: "der")
     }
+      
     return .init(trustedCerts: certsData)
   }
 
