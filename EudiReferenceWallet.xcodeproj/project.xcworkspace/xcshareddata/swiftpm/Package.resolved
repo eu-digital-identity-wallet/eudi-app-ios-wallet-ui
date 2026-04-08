@@ -191,9 +191,9 @@
       }
     },
     {
-      "identity" : "eudi-lib-ios-wallet-kit-digdir",
+      "identity" : "eudi-lib-ios-wallet-kit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/DusanNDigDir/eudi-lib-ios-wallet-kit-digdir.git",
+      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
         "revision" : "a7fa88425b0028b56decf9f6759482304ec27598",
         "version" : "0.23.6"
@@ -321,8 +321,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImageSwiftUI",
       "state" : {
-        "revision" : "451c6dfd5ecec2cf626d1d9ca81c2d4a60355172",
-        "version" : "3.1.3"
+        "revision" : "0e331457ca9af2f0b08bcaa138a91ffb907b004f",
+        "version" : "3.1.4"
       }
     },
     {
@@ -393,8 +393,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
       "state" : {
-        "revision" : "d1c6b70f7c5f19fb0b8750cb8dcdf2ea6e2d8c34",
-        "version" : "3.15.0"
+        "revision" : "95ba0316a9b733e92bb6b071255ff46263bbe7dc",
+        "version" : "3.15.1"
       }
     },
     {

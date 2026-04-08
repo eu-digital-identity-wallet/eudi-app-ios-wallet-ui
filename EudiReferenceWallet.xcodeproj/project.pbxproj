@@ -7,21 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9F8701D02F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 9F8701C92F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		9F8701DE2F6BE79B00A865A9 /* DcApi18013AnnexC in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8701DD2F6BE79B00A865A9 /* DcApi18013AnnexC */; };
-		9F8702012F6C41ED00A865A9 /* logic-business in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8702002F6C41ED00A865A9 /* logic-business */; };
-		9F8702242F6D41F400A865A9 /* logic-ui in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8702232F6D41F400A865A9 /* logic-ui */; };
-		9F8702262F6D55B800A865A9 /* feature-common in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8702252F6D55B800A865A9 /* feature-common */; };
-		9F8702282F6D55BF00A865A9 /* logic-assembly in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8702272F6D55BF00A865A9 /* logic-assembly */; };
-		9F87022A2F6D55C700A865A9 /* logic-core in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8702292F6D55C700A865A9 /* logic-core */; };
-		F02921632B8E07870076A58B /* WalletDemoRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */; };
-		F02921642B8E07870076A58B /* WalletDevRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */; };
+		1FAAA71A2F86A5CE0091AE28 /* logic-assembly in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8702272F6D55BF00A865A9 /* logic-assembly */; };
 		1FAB086E2F76B2EB004BDB87 /* eidas2sandkasse_net_access2_CA.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FAB086D2F76B2EB004BDB87 /* eidas2sandkasse_net_access2_CA.der */; };
 		1FAB08702F76B2FD004BDB87 /* eidas2sandkasse_dev_access_CA.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FAB086F2F76B2FD004BDB87 /* eidas2sandkasse_dev_access_CA.der */; };
 		1FAB08722F76B308004BDB87 /* eidas2sandkasse_dev_access2_CA.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FAB08712F76B308004BDB87 /* eidas2sandkasse_dev_access2_CA.der */; };
 		1FBAB1582E7DE7A70092FE59 /* eidas2sandkasse_net_access_CA.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FBAB1572E7DE7A70092FE59 /* eidas2sandkasse_net_access_CA.der */; };
+		9F8701DE2F6BE79B00A865A9 /* DcApi18013AnnexC in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8701DD2F6BE79B00A865A9 /* DcApi18013AnnexC */; };
+		9F8702012F6C41ED00A865A9 /* logic-business in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8702002F6C41ED00A865A9 /* logic-business */; };
+		9F8702242F6D41F400A865A9 /* logic-ui in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8702232F6D41F400A865A9 /* logic-ui */; };
+		9F8702262F6D55B800A865A9 /* feature-common in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8702252F6D55B800A865A9 /* feature-common */; };
+		9F87022A2F6D55C700A865A9 /* logic-core in Frameworks */ = {isa = PBXBuildFile; productRef = 9F8702292F6D55C700A865A9 /* logic-core */; };
 		F02AE38F2BA6E45F00C25C59 /* logic-assembly in Resources */ = {isa = PBXBuildFile; fileRef = F02AE38E2BA6E45F00C25C59 /* logic-assembly */; };
-		F02AE3912BA6E59600C25C59 /* logic-assembly in Frameworks */ = {isa = PBXBuildFile; productRef = F02AE3902BA6E59600C25C59 /* logic-assembly */; };
+		F02AE3912BA6E59600C25C59 /* logic-assembly in Frameworks */ = {isa = PBXBuildFile; productRef = F02AE3902BA6E59600C25C59 /* logic-assembly */; settings = {ATTRIBUTES = (Required, ); }; };
 		F05E9F382AFABBC200891E8F /* feature-presentation in Resources */ = {isa = PBXBuildFile; fileRef = F05E9F372AFABBC200891E8F /* feature-presentation */; };
 		F06325102AC598370004601F /* logic-test in Resources */ = {isa = PBXBuildFile; fileRef = F063250F2AC598370004601F /* logic-test */; };
 		F06325122AC59AF50004601F /* feature-test in Resources */ = {isa = PBXBuildFile; fileRef = F06325112AC59AF50004601F /* feature-test */; };
@@ -39,39 +36,15 @@
 		F14907C32ABAF55000DDFE56 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F14907C22ABAF55000DDFE56 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		9F8701CE2F6BE5BC00A865A9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F14907B02ABAF54B00DDFE56 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9F8701C82F6BE5BC00A865A9;
-			remoteInfo = EudiReferenceWalletIDProvider;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		9F8701D12F6BE5BC00A865A9 /* Embed ExtensionKit Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
-			dstSubfolderSpec = 16;
-			files = (
-				9F8701D02F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider.appex in Embed ExtensionKit Extensions */,
-			);
-			name = "Embed ExtensionKit Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		1198ECD72AC453F200F4E71A /* logic-resources */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-resources"; path = "Modules/logic-resources"; sourceTree = "<group>"; };
-		9F8701C92F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = EudiReferenceWalletIDProvider.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		9F8701DF2F6BE96C00A865A9 /* EudiWallet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EudiWallet.entitlements; sourceTree = "<group>"; };
 		1FAB086D2F76B2EB004BDB87 /* eidas2sandkasse_net_access2_CA.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = eidas2sandkasse_net_access2_CA.der; sourceTree = "<group>"; };
 		1FAB086F2F76B2FD004BDB87 /* eidas2sandkasse_dev_access_CA.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = eidas2sandkasse_dev_access_CA.der; sourceTree = "<group>"; };
 		1FAB08712F76B308004BDB87 /* eidas2sandkasse_dev_access2_CA.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = eidas2sandkasse_dev_access2_CA.der; sourceTree = "<group>"; };
 		1FBAB1572E7DE7A70092FE59 /* eidas2sandkasse_net_access_CA.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = eidas2sandkasse_net_access_CA.der; sourceTree = "<group>"; };
 		1FDC0F762E8296840054F0DF /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
+		9F8701C92F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = EudiReferenceWalletIDProvider.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9F8701DF2F6BE96C00A865A9 /* EudiWallet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EudiWallet.entitlements; sourceTree = "<group>"; };
 		F018D9F32D087C410015876D /* logic-storage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "logic-storage"; path = "Modules/logic-storage"; sourceTree = "<group>"; };
 		F02921612B8E07870076A58B /* WalletDemoRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WalletDemoRelease.xcconfig; sourceTree = "<group>"; };
 		F02921622B8E07870076A58B /* WalletDevRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = WalletDevRelease.xcconfig; sourceTree = "<group>"; };
@@ -102,7 +75,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		9F8701D62F6BE5BC00A865A9 /* Exceptions for "EudiReferenceWalletIDProvider" folder in "EudiReferenceWalletIDProvider" target */ = {
+		9F8701D62F6BE5BC00A865A9 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				WalletIdProvider.plist,
@@ -112,18 +85,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		9F8701CA2F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				9F8701D62F6BE5BC00A865A9 /* Exceptions for "EudiReferenceWalletIDProvider" folder in "EudiReferenceWalletIDProvider" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = EudiReferenceWalletIDProvider;
-			sourceTree = "<group>";
-		};
+		9F8701CA2F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (9F8701D62F6BE5BC00A865A9 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = EudiReferenceWalletIDProvider; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,8 +93,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FAAA71A2F86A5CE0091AE28 /* logic-assembly in Frameworks */,
 				9F8702262F6D55B800A865A9 /* feature-common in Frameworks */,
-				9F8702282F6D55BF00A865A9 /* logic-assembly in Frameworks */,
 				9F8701DE2F6BE79B00A865A9 /* DcApi18013AnnexC in Frameworks */,
 				9F8702242F6D41F400A865A9 /* logic-ui in Frameworks */,
 				9F87022A2F6D55C700A865A9 /* logic-core in Frameworks */,
@@ -296,12 +258,10 @@
 				F14907B52ABAF54B00DDFE56 /* Frameworks */,
 				F14907B62ABAF54B00DDFE56 /* Resources */,
 				F09E1EA52AC3468300779C25 /* Swift Lint */,
-				9F8701D12F6BE5BC00A865A9 /* Embed ExtensionKit Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				9F8701CF2F6BE5BC00A865A9 /* PBXTargetDependency */,
 			);
 			name = EudiWallet;
 			packageProductDependencies = (
@@ -427,14 +387,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		9F8701CF2F6BE5BC00A865A9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 9F8701C82F6BE5BC00A865A9 /* EudiReferenceWalletIDProvider */;
-			targetProxy = 9F8701CE2F6BE5BC00A865A9 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
 		9F8701D22F6BE5BC00A865A9 /* Debug Dev */ = {
 			isa = XCBuildConfiguration;
@@ -470,14 +422,12 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = EudiReferenceWalletIDProvider/EudiReferenceWalletIDProvider.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stylianos Tzouvaras (XA5F8Z3QP7)";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = AZXQE7588Y;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = AZXQE7588Y;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -512,8 +462,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.europa.ec.euidi.dev.EudiReferenceWalletIDProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "EUDI DC-API Dev";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "EUDI DC-API Dev";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SHARED_APP_GROUP_IDENTIFIER = eu.europa.ec.euidi.dev;
 				SKIP_INSTALL = YES;
