@@ -87,7 +87,7 @@ extension DocClaimsDecodable {
       }
     )
     return .init(
-      id: UUID().uuidString,
+      id: self.id,
       value: .init(
         id: self.id,
         heading: self.issuerName,
@@ -103,6 +103,7 @@ extension DocClaimsDecodable {
         documentCategory: categories.first(where: { $1.contains(self.documentTypeIdentifier) })?.key ?? .Other
       ),
       listItem: .init(
+        id: self.id,
         mainContent: .text(.custom(displayName.orEmpty)),
         overlineText: .custom(issuerName),
         supportingText: supportingText(state, expiresAt),
