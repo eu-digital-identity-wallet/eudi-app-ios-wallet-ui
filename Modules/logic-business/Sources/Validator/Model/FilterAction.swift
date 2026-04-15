@@ -48,15 +48,25 @@ public struct Sort<T: FilterableAttributes, R: Comparable>: FilterAction {
   ) -> FilterableList {
     let sortedItems = filterableItems.items.sorted {
       guard let lhs = $0.attributes as? T, let rhs = $1.attributes as? T else { return false }
-      guard let lhsValue = predicate(lhs), let rhsValue = predicate(rhs) else { return false }
+      let lhsValue = predicate(lhs)
+      let rhsValue = predicate(rhs)
 
-      if let lhsString = lhsValue as? String, let rhsString = rhsValue as? String {
-        return sortOrder == .ascending
-        ? lhsString.localizedCaseInsensitiveCompare(rhsString) == .orderedAscending
-        : lhsString.localizedCaseInsensitiveCompare(rhsString) == .orderedDescending
+      switch (lhsValue, rhsValue) {
+      case (nil, nil):
+        return false
+      case (nil, _?):
+        return false
+      case (_?, nil):
+        return true
+      case let (lhsValue?, rhsValue?):
+        if let lhsString = lhsValue as? String, let rhsString = rhsValue as? String {
+          return sortOrder == .ascending
+          ? lhsString.localizedCaseInsensitiveCompare(rhsString) == .orderedAscending
+          : lhsString.localizedCaseInsensitiveCompare(rhsString) == .orderedDescending
+        }
+
+        return sortOrder == .ascending ? lhsValue < rhsValue : lhsValue > rhsValue
       }
-
-      return sortOrder == .ascending ? lhsValue < rhsValue : lhsValue > rhsValue
     }
 
     return FilterableList(items: sortedItems)
