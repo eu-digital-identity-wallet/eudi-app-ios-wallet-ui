@@ -53,52 +53,49 @@ public extension Bundle {
     return "\(mainAppBundleID).eudi.document.storage"
   }
 
-  /// Gets the keychain access group based on the main app bundle identifier.
-  /// This tries to read the access group from an existing keychain item first.
-  /// If no items exist, it constructs the access group from the bundle identifier.
-  /// Always returns a non-nil value to ensure compatibility with APIs that require it.
+  /// Gets the keychain access group by writing a temporary probe item and reading back the
+  /// access group the OS assigned. When no `kSecAttrAccessGroup` is specified, the OS places
+  /// the item in the app's default keychain group, which is the first entry in the
+  /// `keychain-access-groups` entitlement — already fully resolved by Xcode (e.g.
+  /// `AZXQE7588Y.eu.europa.ec.euidi.dev`). This works correctly on both simulator and device.
   static func getKeychainAccessGroup() -> String {
-    // Try to read ANY existing keychain item to get the access group
-    // This is safer than trying to create an item, which requires proper entitlements
-    let query: [String: Any] = [
+    let probeAccount = "eu.europa.ec.euidi.access.group.probe"
+
+    let deleteQuery: [String: Any] = [
       kSecClass as String: kSecClassGenericPassword,
+      kSecAttrAccount as String: probeAccount
+    ]
+    SecItemDelete(deleteQuery as CFDictionary)
+
+    let addQuery: [String: Any] = [
+      kSecClass as String: kSecClassGenericPassword,
+      kSecAttrAccount as String: probeAccount,
+      kSecValueData as String: Data("probe".utf8)
+    ]
+
+    guard SecItemAdd(addQuery as CFDictionary, nil) == errSecSuccess else {
+      return getMainAppBundleID()
+    }
+
+    let readQuery: [String: Any] = [
+      kSecClass as String: kSecClassGenericPassword,
+      kSecAttrAccount as String: probeAccount,
       kSecMatchLimit as String: kSecMatchLimitOne,
       kSecReturnAttributes as String: true
     ]
 
     var result: CFTypeRef?
-    let status = SecItemCopyMatching(query as CFDictionary, &result)
-
-    // If we found an existing item, read its access group
-    if status == errSecSuccess,
+    let accessGroup: String
+    if SecItemCopyMatching(readQuery as CFDictionary, &result) == errSecSuccess,
        let attributes = result as? [String: Any],
-       let accessGroup = attributes[kSecAttrAccessGroup as String] as? String,
-       !accessGroup.isEmpty {
-      return accessGroup
+       let group = attributes[kSecAttrAccessGroup as String] as? String,
+       !group.isEmpty {
+      accessGroup = group
+    } else {
+      accessGroup = getMainAppBundleID()
     }
 
-    // If no existing items found, construct the access group from bundle identifier
-    // The access group format in entitlements is: $(AppIdentifierPrefix){BundleID}
-    // At runtime, we need to construct: {TeamID}.{BundleID}
-    // We'll use the main app bundle ID as the base
-    let mainAppBundleID = getMainAppBundleID()
-
-    // Try to extract team ID from the current bundle identifier
-    // Some bundle IDs include the team ID as a prefix: {TeamID}.{BundleID}
-    if let bundleID = Bundle.main.bundleIdentifier {
-      let components = bundleID.split(separator: ".")
-
-      // Check if first component looks like a team ID (typically 10 characters, alphanumeric)
-      if components.count > 2,
-         let firstComponent = components.first,
-         firstComponent.count == 10,
-         firstComponent.allSatisfy({ $0.isLetter || $0.isNumber }) {
-        // Construct access group with team ID prefix
-        return "\(firstComponent).\(mainAppBundleID)"
-      }
-    }
-
-    // Fallback: return the team ID and main app bundle ID as the access group
-    return "\("Team ID".valueFromBundle).\(mainAppBundleID)"
+    SecItemDelete(deleteQuery as CFDictionary)
+    return accessGroup
   }
 }
