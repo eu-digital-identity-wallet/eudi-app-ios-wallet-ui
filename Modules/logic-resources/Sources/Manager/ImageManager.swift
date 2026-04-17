@@ -78,6 +78,7 @@ final class ImageManager: ImageManagerProtocol {
     case ble = "ble"
     case touchId = "touch-id"
     case logo = "logo"
+    case logoDev = "logo-Dev"
     case arrowLeft = "arrow.left"
     case chevronUp = "chevron.up"
     case chevronDown = "chevron.down"
@@ -103,6 +104,7 @@ final class ImageManager: ImageManagerProtocol {
     case errorIndicator = "exclamationmark.circle.fill"
     case signDocument = "doc"
     case euditext = "EUDI-text"
+    case euditextDev = "EUDI-text-Dev"
     case walletVerified = "wallet-verified"
     case bell
     case menuIcon = "line.3.horizontal"
@@ -118,6 +120,7 @@ final class ImageManager: ImageManagerProtocol {
     case relyingPartyVerified = "relying-party-verified"
     case docFill = "doc.fill"
     case logoEuDigitalIndentityWallet = "logo-eu-digital-indentity-wallet"
+    case logoEuDigitalIndentityWalletDev = "logo-eu-digital-indentity-wallet-Dev"
     case homeContract = "home-contract"
     case homeIdentity = "home-identity"
     case successSecuredWallet = "success-secured-wallet"
@@ -149,7 +152,11 @@ final class ImageManager: ImageManagerProtocol {
     Image(ImageEnum.touchId.rawValue, bundle: bundle)
   }
   var logo: Image {
-    Image(ImageEnum.logo.rawValue, bundle: bundle)
+      let variant = Bundle.main.object(forInfoDictionaryKey: "Build Variant") as? String
+      if variant == "DEV" {
+          return Image(ImageEnum.logoDev.rawValue, bundle: bundle)
+      }
+      return Image(ImageEnum.logo.rawValue, bundle: bundle)
   }
   var arrowLeft: Image {
     Image(systemName: ImageEnum.arrowLeft.rawValue)
@@ -224,7 +231,11 @@ final class ImageManager: ImageManagerProtocol {
     Image(systemName: ImageEnum.signDocument.rawValue)
   }
   var euditext: Image {
-    Image(ImageEnum.euditext.rawValue, bundle: bundle)
+      let variant = Bundle.main.object(forInfoDictionaryKey: "Build Variant") as? String
+      if variant == "DEV" {
+          return Image(ImageEnum.euditextDev.rawValue, bundle: bundle)
+      }
+      return Image(ImageEnum.euditext.rawValue, bundle: bundle)
   }
   var walletVerified: Image {
     Image(ImageEnum.walletVerified.rawValue, bundle: bundle)
@@ -269,7 +280,11 @@ final class ImageManager: ImageManagerProtocol {
     Image(systemName: ImageEnum.docFill.rawValue)
   }
   var logoEuDigitalIndentityWallet: Image {
-    Image(ImageEnum.logoEuDigitalIndentityWallet.rawValue, bundle: bundle)
+      let variant = Bundle.main.object(forInfoDictionaryKey: "Build Variant") as? String
+      if variant == "DEV" {
+          return Image(ImageEnum.logoEuDigitalIndentityWalletDev.rawValue, bundle: bundle)
+      }
+      return Image(ImageEnum.logoEuDigitalIndentityWallet.rawValue, bundle: bundle)
   }
   var homeContract: Image {
     Image(ImageEnum.homeContract.rawValue, bundle: bundle)
