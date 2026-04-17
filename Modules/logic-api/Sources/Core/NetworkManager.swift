@@ -108,6 +108,7 @@ actor NetworkManagerImpl: NetworkManager {
   }
 
   nonisolated func log(request: URLRequest, responseData: Data? = nil) {
+    #if DEBUG
     print("1️⃣ Request: " + (request.url?.absoluteString ?? "") )
     print("2️⃣ Request Http Method: " + (request.httpMethod ?? "") )
     print("3️⃣ Request HttpBody: " + ((try? request.httpBody?.toJSONString(prettyPrinted: true)).orEmpty) )
@@ -119,5 +120,6 @@ actor NetworkManagerImpl: NetworkManager {
     if let responseData {
       print("✅ Response Body: " + ((try? responseData.toJSONString(prettyPrinted: true)).orEmpty) )
     }
+    #endif
   }
 }
