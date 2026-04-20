@@ -162,7 +162,10 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var vpConfig: OpenId4VpConfiguration {
-    .init(clientIdSchemes: [.x509SanDns, .x509Hash])
+    .init(
+      clientIdSchemes: [.x509SanDns, .x509Hash],
+      allowPresentingPartialClaims: true
+    )
   }
 
   var trustedReaderRootCertificates: [x5chain] {
