@@ -18,33 +18,18 @@ import logic_resources
 
 struct AuthorizationUIModel: Sendable {
   let issuerName: String
-  let document: [AuthorizationUIDocument]
+  let documents: [AuthorizationUIDocument]
 }
 
-typealias AuthorizationListItemSection = ListItemSection<AuthorizationUIRequestedElement>
-
-struct AuthorizationUIRequestItem: Sendable, Identifiable {
-  let id: String
-  let section: AuthorizationListItemSection
-
-  init(
-    id: String = UUID().uuidString,
-    section: AuthorizationListItemSection
-  ) {
-    self.id = id
-    self.section = section
-  }
-}
-
-struct AuthorizationUIDocument: Sendable, Identifiable, Hashable {
+struct AuthorizationUIDocument: Sendable, Identifiable {
   let id: String
   let name: String
-  let requestedElements: [AuthorizationUIRequestedElement]
+  let requestedElements: [GenericExpandableItem]
 
   init(
     id: String = UUID().uuidString,
     name: String,
-    requestedElements: [AuthorizationUIRequestedElement] = []
+    requestedElements: [GenericExpandableItem] = []
   ) {
     self.id = id
     self.name = name
@@ -52,31 +37,28 @@ struct AuthorizationUIDocument: Sendable, Identifiable, Hashable {
   }
 }
 
-struct AuthorizationUIRequestedElement: Sendable, Hashable {
-  let namespace: String
-  let elementKey: String
+struct AuthorizationUIRequestItem: Sendable, Identifiable {
+  let id: String
+  let section: GenericListItemSection
+
+  init(
+    id: String = UUID().uuidString,
+    section: GenericListItemSection
+  ) {
+    self.id = id
+    self.section = section
+  }
 }
 
 extension Array where Element == AuthorizationUIDocument {
   func toRequestItems() -> [AuthorizationUIRequestItem] {
     self.map { document in
-      let listItems: [ExpandableListItem<AuthorizationUIRequestedElement>] = document.requestedElements.map { element in
-        .single(
-          .init(
-            collapsed: .init(
-              mainContent: .text(.custom(element.elementKey))
-            ),
-            domainModel: element
-          )
-        )
-      }
-
       return AuthorizationUIRequestItem(
         id: document.id,
         section: .init(
           id: document.id,
           title: document.name,
-          listItems: listItems
+          listItems: document.requestedElements
         )
       )
     }

@@ -73,8 +73,7 @@ struct RequestAuthorizationView: View {
               ),
               items: section.section.listItems,
               hideSensitiveContent: false,
-              isLoading: viewState.isLoading,
-              onItemClick: { viewModel.onSelectionChanged(id: $0.groupId) }
+              isLoading: viewState.isLoading
             )
             .accessibilityElement()
             .combineChilrenAccessibility(

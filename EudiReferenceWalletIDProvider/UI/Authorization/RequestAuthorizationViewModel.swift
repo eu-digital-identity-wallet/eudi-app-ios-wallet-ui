@@ -66,7 +66,7 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
 
       setState {
         $0.copy(
-          items: uiModel.document.toRequestItems(),
+          items: uiModel.documents.toRequestItems(),
           isLoading: false,
           contentHeaderConfig: .init(
             appIconAndTextData: AppIconAndTextData(
@@ -118,8 +118,6 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
   func cancelRequest() {
     context?.cancel()
   }
-
-  func onSelectionChanged(id: String) {}
 
   func createBiometryConfig() -> UIConfig.AuthorizeAction {
     UIConfig.AuthorizeAction(
