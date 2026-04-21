@@ -64,12 +64,12 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
 
     let issuedDocuments = await walletKitController.fetchIssuedDocuments()
       .filter {
-        guard let validUntil = $0.validUntil else {
-          return false
-        }
         let remainingUsage = $0.credentialsUsageCounts?.remaining ?? -1
-        return validUntil.isWithinNextHours(reIssuanceRule.minExpirationHours)
-        || (remainingUsage != -1 && remainingUsage <= reIssuanceRule.minNumberOfCredentials)
+        let belowMinCount = remainingUsage <= reIssuanceRule.minNumberOfCredentials
+        let hasOneTimeUsePolicy = $0.credentialPolicy == .oneTimeUse
+        let expiresWithinThreshold = $0.validUntil?.isWithinNextHours(reIssuanceRule.minExpirationHours) ?? false
+
+        return (belowMinCount && hasOneTimeUsePolicy) || expiresWithinThreshold
       }
 
     guard !issuedDocuments.isEmpty else { return }
