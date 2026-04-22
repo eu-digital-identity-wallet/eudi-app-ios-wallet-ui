@@ -17,6 +17,8 @@ import IdentityDocumentServicesUI
 import DcApi18013AnnexC
 import IdentityDocumentServices
 import Foundation
+import feature_common
+import logic_core
 
 protocol RequestAuthorizationInteractor: Sendable {
   func loadRequestData(
@@ -32,6 +34,10 @@ final actor RequestAuthorizationInteractorImpl: RequestAuthorizationInteractor {
 
   private let dcApiHandler: DcApiHandler
 
+  private let interactor: WalletKitController = DIGraph.shared.resolver.force(
+    WalletKitController.self
+  )
+
   init(
     dcApiHandler: DcApiHandler
   ) {
@@ -41,14 +47,20 @@ final actor RequestAuthorizationInteractorImpl: RequestAuthorizationInteractor {
   func loadRequestData(
     context: ISO18013MobileDocumentRequestContext
   ) async throws -> AuthorizationUIModel {
-    let (set, _, rn) = try await dcApiHandler.validateRequest(context.request)
-    let documentTypes = set.requests.map(\.documentType)
+    let (docClaimsModels, _, _, rn) = try await dcApiHandler.validateRequest(context.request)
     let websiteName = context.requestingWebsiteOrigin?.absoluteString ?? rn ?? "Website name not available"
+    let documents = docClaimsModels.compactMap {
+      $0.transformToDocumentUi(isSensitive: false)
+    }
 
     return AuthorizationUIModel(
       issuerName: websiteName,
-      document: documentTypes.map {
-        AuthorizationUIDocument(name: $0)
+      documents: documents.map { document in
+        return AuthorizationUIDocument(
+          id: document.id,
+          name: document.documentName,
+          requestedElements: document.documentFields
+        )
       }
     )
   }
@@ -63,7 +75,7 @@ final actor RequestAuthorizationInteractorImpl: RequestAuthorizationInteractor {
         rawRequest: rawRequest
       )
 
-      try await self.dcApiHandler.validateRawRequest(rawRequest: rawRequest)
+//      try await self.dcApiHandler.validateRawRequest(rawRequest: rawRequest)
 
       let responseData = try await self.dcApiHandler.buildAndEncryptResponse(
         rawRequest: rawRequest,

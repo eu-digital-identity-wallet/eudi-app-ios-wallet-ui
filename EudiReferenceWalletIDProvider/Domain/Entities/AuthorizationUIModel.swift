@@ -14,21 +14,53 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_ui
+import logic_resources
 
 struct AuthorizationUIModel: Sendable {
   let issuerName: String
-  let document: [AuthorizationUIDocument]
+  let documents: [AuthorizationUIDocument]
 }
 
-struct AuthorizationUIDocument: Sendable, Identifiable, Hashable {
+struct AuthorizationUIDocument: Sendable, Identifiable {
   let id: String
   let name: String
+  let requestedElements: [GenericExpandableItem]
 
   init(
     id: String = UUID().uuidString,
-    name: String
+    name: String,
+    requestedElements: [GenericExpandableItem] = []
   ) {
     self.id = id
     self.name = name
+    self.requestedElements = requestedElements
+  }
+}
+
+struct AuthorizationUIRequestItem: Sendable, Identifiable {
+  let id: String
+  let section: GenericListItemSection
+
+  init(
+    id: String = UUID().uuidString,
+    section: GenericListItemSection
+  ) {
+    self.id = id
+    self.section = section
+  }
+}
+
+extension Array where Element == AuthorizationUIDocument {
+  func toRequestItems() -> [AuthorizationUIRequestItem] {
+    self.map { document in
+      return AuthorizationUIRequestItem(
+        id: document.id,
+        section: .init(
+          id: document.id,
+          title: document.name,
+          listItems: document.requestedElements
+        )
+      )
+    }
   }
 }
