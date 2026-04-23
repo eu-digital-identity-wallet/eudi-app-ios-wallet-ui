@@ -94,9 +94,8 @@ final class TestQuickPinInteractor: EudiTest {
   func testHasPin_WhenThereIsAStoredPin_ThenReturnTrue() async {
     
     // Given
-    let pin = "1234"
     stub(pinStorageController) { mock in
-      when(mock.retrievePin()).thenReturn(pin)
+      when(mock.hasPin()).thenReturn(true)
     }
     
     // When
@@ -110,7 +109,7 @@ final class TestQuickPinInteractor: EudiTest {
     
     // Given
     stub(pinStorageController) { mock in
-      when(mock.retrievePin()).thenReturn(nil)
+      when(mock.hasPin()).thenReturn(false)
     }
     
     // When

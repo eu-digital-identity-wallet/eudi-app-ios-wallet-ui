@@ -15,7 +15,7 @@
  */
 
 protocol PinStorageProvider: Sendable {
-  func retrievePin() -> String?
+  func hasPin() -> Bool
   func setPin(with pin: String)
   func isPinValid(with pin: String) -> Bool
 }

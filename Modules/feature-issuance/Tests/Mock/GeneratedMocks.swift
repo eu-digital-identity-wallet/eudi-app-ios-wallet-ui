@@ -2793,13 +2793,13 @@ public class MockPinStorageController: PinStorageController, Cuckoo.ProtocolMock
     }
 
     
-    public func retrievePin() -> String? {
+    public func hasPin() -> Bool {
         return cuckoo_manager.call(
-            "retrievePin() -> String?",
+            "hasPin() -> Bool",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.retrievePin()
+            defaultCall: __defaultImplStub!.hasPin()
         )
     }
     
@@ -2830,10 +2830,10 @@ public class MockPinStorageController: PinStorageController, Cuckoo.ProtocolMock
             self.cuckoo_manager = manager
         }
         
-        func retrievePin() -> Cuckoo.ProtocolStubFunction<(), String?> {
+        func hasPin() -> Cuckoo.ProtocolStubFunction<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockPinStorageController.self,
-                method: "retrievePin() -> String?",
+                method: "hasPin() -> Bool",
                 parameterMatchers: matchers
             ))
         }
@@ -2868,10 +2868,10 @@ public class MockPinStorageController: PinStorageController, Cuckoo.ProtocolMock
         
         
         @discardableResult
-        func retrievePin() -> Cuckoo.__DoNotUse<(), String?> {
+        func hasPin() -> Cuckoo.__DoNotUse<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "retrievePin() -> String?",
+                "hasPin() -> Bool",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -2908,8 +2908,8 @@ public class PinStorageControllerStub:PinStorageController, @unchecked Sendable 
 
 
     
-    public func retrievePin() -> String? {
-        return DefaultValueRegistry.defaultValue(for: (String?).self)
+    public func hasPin() -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
     public func setPin(with p0: String) {
@@ -3131,13 +3131,13 @@ class MockPinStorageProvider: PinStorageProvider, Cuckoo.ProtocolMock, @unchecke
     }
 
     
-    func retrievePin() -> String? {
+    func hasPin() -> Bool {
         return cuckoo_manager.call(
-            "retrievePin() -> String?",
+            "hasPin() -> Bool",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.retrievePin()
+            defaultCall: __defaultImplStub!.hasPin()
         )
     }
     
@@ -3168,10 +3168,10 @@ class MockPinStorageProvider: PinStorageProvider, Cuckoo.ProtocolMock, @unchecke
             self.cuckoo_manager = manager
         }
         
-        func retrievePin() -> Cuckoo.ProtocolStubFunction<(), String?> {
+        func hasPin() -> Cuckoo.ProtocolStubFunction<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockPinStorageProvider.self,
-                method: "retrievePin() -> String?",
+                method: "hasPin() -> Bool",
                 parameterMatchers: matchers
             ))
         }
@@ -3206,10 +3206,10 @@ class MockPinStorageProvider: PinStorageProvider, Cuckoo.ProtocolMock, @unchecke
         
         
         @discardableResult
-        func retrievePin() -> Cuckoo.__DoNotUse<(), String?> {
+        func hasPin() -> Cuckoo.__DoNotUse<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "retrievePin() -> String?",
+                "hasPin() -> Bool",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -3246,8 +3246,8 @@ class PinStorageProviderStub:PinStorageProvider, @unchecked Sendable {
 
 
     
-    func retrievePin() -> String? {
-        return DefaultValueRegistry.defaultValue(for: (String?).self)
+    func hasPin() -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
     func setPin(with p0: String) {

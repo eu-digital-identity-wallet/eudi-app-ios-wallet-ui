@@ -57,7 +57,7 @@ final actor QuickPinInteractorImpl: QuickPinInteractor {
   }
 
   public func hasPin() -> Bool {
-    pinStorageController.retrievePin()?.isEmpty == false
+    pinStorageController.hasPin()
   }
 
   private func isCurrentPinValid(pin: String) -> Bool {
