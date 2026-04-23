@@ -29,7 +29,7 @@ struct RequestAuthorizationView: View {
   var body: some View {
     NavigationStack {
       VStack(alignment: .center) {
-        if !viewModel.viewState.items.isEmpty {
+        if !viewModel.viewState.items.isEmpty, viewModel.viewState.errorMessage == nil {
           contentView(viewState: viewModel.viewState)
         } else {
           noDocumentsFound()
