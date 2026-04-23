@@ -19,6 +19,7 @@ import logic_resources
 public struct PinTextFieldView: View {
 
   // MARK: - Properties
+  private let pinTitle: LocalizableStringKey?
   private let maxDigits: Int
   private let isSecureEntry: Bool
   private let shouldUseFullScreen: Bool
@@ -54,6 +55,7 @@ public struct PinTextFieldView: View {
   }
 
   public init(
+    pinTitle: LocalizableStringKey? = nil,
     numericText: Binding<String>,
     maxDigits: Int,
     isSecureEntry: Bool,
@@ -62,6 +64,7 @@ public struct PinTextFieldView: View {
     hasError: Bool = false,
     isDisabled: Bool = false
   ) {
+    self.pinTitle = pinTitle
     self._numericText = numericText
     self._canFocus = canFocus
     self.maxDigits = maxDigits
@@ -74,7 +77,13 @@ public struct PinTextFieldView: View {
   }
 
   public var body: some View {
-    VStack(spacing: 15) {
+    VStack(alignment: .leading, spacing: SPACING_SMALL) {
+      if let pinTitle {
+        Text(pinTitle)
+          .typography(Theme.shared.font.bodyLarge)
+          .foregroundColor(Theme.shared.color.onSurface)
+      }
+
       ZStack {
         pinDots
         backgroundField

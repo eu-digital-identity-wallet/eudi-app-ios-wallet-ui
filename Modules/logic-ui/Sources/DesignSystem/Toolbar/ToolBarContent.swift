@@ -24,6 +24,7 @@ public extension ToolBarContent {
     public let image: Image?
     public let hasIndicator: Bool?
     public let disabled: Bool
+    public let isBorderedProminent: Bool
     public let callback: (() -> Void)?
 
     public init(
@@ -32,6 +33,7 @@ public extension ToolBarContent {
       accessibilityLocator: LocatorType,
       hasIndicator: Bool? = nil,
       disabled: Bool = false,
+      isBorderedProminent: Bool = false,
       callback: (() -> Void)? = nil
     ) {
       self.title = title
@@ -39,6 +41,7 @@ public extension ToolBarContent {
       self.image = image
       self.hasIndicator = hasIndicator
       self.disabled = disabled
+      self.isBorderedProminent = isBorderedProminent
       self.callback = callback
     }
   }
@@ -95,6 +98,9 @@ private struct ActionView: View {
       if let callback = action.callback {
         Button(action: callback) {
           content
+        }
+        .if(action.isBorderedProminent) { view in
+          view.buttonStyle(.borderedProminent)
         }
         .disabled(disabled)
         .accessibilityElement()

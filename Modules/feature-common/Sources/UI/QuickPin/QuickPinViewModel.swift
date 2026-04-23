@@ -29,6 +29,8 @@ struct QuickPinState: ViewState {
   let navigationTitle: LocalizableStringKey
   let title: LocalizableStringKey
   let caption: LocalizableStringKey
+  let pinTextFieldTitle: LocalizableStringKey
+  let buttonImage: Image
   let successTitle: LocalizableStringKey
   let successCaption: LocalizableStringKey
   let successButton: LocalizableStringKey
@@ -116,7 +118,9 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
         config: config,
         navigationTitle: config.isSetFlow ? .quickPinEnterPin : .quickPinConfirmPin,
         title: config.isSetFlow ? .quickPinSetTitle : .quickPinUpdateTitle,
-        caption: config.isSetFlow ? .quickPinSetCaptionOne : .quickPinUpdateCaptionOne,
+        caption: .quickPinSetCaptionOne,
+        pinTextFieldTitle: config.isSetFlow ? .quickPinEnterPin : .quickPinUpdateCaptionOne,
+        buttonImage: Theme.shared.image.chevronRight,
         successTitle: config.isSetFlow
         ? .walletIsSecured
         : .successTitlePunctuated,
@@ -204,6 +208,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
         $0
           .copy(
             caption: .quickPinUpdateCaptionTwo,
+            buttonImage: Theme.shared.image.chevronRight,
             step: .firstInput
           )
           .copy(pinError: nil)
