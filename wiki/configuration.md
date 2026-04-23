@@ -510,16 +510,16 @@ final class KeychainPinStorageProvider: PinStorageProvider {
     self.keyChainController = keyChainController
   }
 
-  func retrievePin() -> String? {
-    keyChainController.getValue(key: KeychainIdentifier.devicePin)
+  func hasPin() -> Bool {
+    // Implementation
   }
 
   func setPin(with pin: String) {
-    keyChainController.storeValue(key: KeychainIdentifier.devicePin, value: pin)
+    // Implementation
   }
 
   func isPinValid(with pin: String) -> Bool {
-    keyChainController.getValue(key: KeychainIdentifier.devicePin) == pin
+    // Implementation
   }
 }
 ```
