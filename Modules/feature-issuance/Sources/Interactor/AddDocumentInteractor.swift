@@ -111,6 +111,7 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
           )
         }
 
+        items.sort(by: compare)
         return items
       }
 
