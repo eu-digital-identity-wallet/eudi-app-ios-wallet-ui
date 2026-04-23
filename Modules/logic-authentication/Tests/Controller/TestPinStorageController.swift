@@ -37,16 +37,16 @@ final class TestPinStorageController: EudiTest {
     self.provider = nil
   }
   
-  func testRetrievePin() {
+  func testhasPin() {
     //Given
-    let expectedPin = "1111"
-    stubRetrievePin(expectedPin: expectedPin)
+    let expected = true
+    stubHasPin(expected: expected)
     
     // When
-    let retrievedPin = controller.retrievePin()
+    let result = controller.hasPin()
     
     //Then
-    XCTAssertEqual(retrievedPin, expectedPin, "The retrieved PIN should match the expected value.")
+    XCTAssertEqual(result, expected, "The hasPin result should match the expected value.")
   }
   
   func testSetPin() {
@@ -76,9 +76,9 @@ final class TestPinStorageController: EudiTest {
 }
 
 extension TestPinStorageController {
-  func stubRetrievePin(expectedPin: String) {
+  func stubHasPin(expected: Bool) {
     stub(provider) { mock in
-      when(mock.retrievePin()).thenReturn(expectedPin)
+      when(mock.hasPin()).thenReturn(expected)
     }
   }
   
