@@ -24,7 +24,7 @@ final actor WalletKitTransactionLogControllerImpl: TransactionLogger {
     self.transactionLogStorageController = transactionLogStorageController
   }
 
-  func log(transaction: EudiWalletKit.TransactionLog) async throws {
+  func log(transaction: MdocDataModel18013.TransactionLog) async throws {
     do {
 
       let jsonResultData = try JSONEncoder().encode(transaction)
