@@ -73,13 +73,13 @@ platform :ios do
     )
 
     minified_version(
-      target: ENV["APP_TARGET"],
+      targets: ENV["APP_TARGETS"],
       configName: ENV["APP_VERSION_CONFIG"],
       fullVersion: fullVersion,
     )
 
     update_build_number(
-      target: ENV["APP_TARGET"],
+      targets: ENV["APP_TARGETS"],
       number: buildNumber,
     )
 
@@ -111,7 +111,7 @@ platform :ios do
     clean_build_artifacts
 
     reset_project(
-      target: ENV["APP_TARGET"],
+      targets: ENV["APP_TARGETS"],
       configName: ENV["APP_VERSION_CONFIG"],
       buildType: ENV["APP_BUILD_TYPE"],
     )
@@ -186,15 +186,15 @@ platform :ios do
 
   desc "Reset default project settings"
   lane :reset_project do |values|
-    target = values[:target]
+    targets = values[:targets]
     configName = values[:configName]
     buildType = values[:buildType]
     update_build_number(
-      target: target,
+      targets: targets,
       number: 1,
     )
     update_version(
-      target: target,
+      targets: targets,
       configName: configName,
       version: "yyyy.mm.v",
     )
@@ -202,28 +202,35 @@ platform :ios do
 
   desc "Set build number"
   lane :update_build_number do |values|
-    target = values[:target]
+    targets = values[:targets]
     number = values[:number]
-    increment_build_number_in_plist(
-      target: target,
-      build_number: number.to_s,
-    )
-    increment_build_number_in_xcodeproj(
-      target: target,
-      build_number: number.to_s,
-    )
+
+    targets.split(",").map(&:strip).reject(&:empty?).each do |target|
+      increment_build_number_in_plist(
+        target: target,
+        build_number: number.to_s,
+      )
+
+      increment_build_number_in_xcodeproj(
+        target: target,
+        build_number: number.to_s,
+      )
+    end
   end
 
   desc "Set version"
   lane :update_version do |values|
-    target = values[:target]
+    targets = values[:targets]
     configName = values[:configName]
     version = values[:version]
-    increment_version_number_in_xcodeproj(
-      target: target,
-      version_number: version,
-      build_configuration_name: configName,
-    )
+
+    targets.split(",").map(&:strip).each do |target|
+      increment_version_number_in_xcodeproj(
+        target: target,
+        version_number: version,
+        build_configuration_name: configName,
+      )
+    end
   end
 
   desc "Build Number"
@@ -256,13 +263,13 @@ platform :ios do
 
   desc "Appstore Build Version"
   lane :minified_version do |values|
-    target = values[:target]
+    targets = values[:targets]
     configName = values[:configName]
     fullVersion = values[:fullVersion]
     version = fullVersion.split("-").first
     puts "Minified Version For Appstore: #{version}"
     update_version(
-      target: target,
+      targets: targets,
       configName: configName,
       version: version,
     )
