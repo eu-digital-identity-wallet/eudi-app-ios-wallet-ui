@@ -210,7 +210,7 @@ extension Constants {
     
     func waitForDisconnect() async throws {}
     
-    var transactionLog: EudiWalletKit.TransactionLog
+    var transactionLog: TransactionLog
     
     func startQrEngagement(secureAreaName: String?, crv: MdocDataModel18013.CoseEcCurve) async throws -> String {
       ""
@@ -298,6 +298,7 @@ extension Constants {
   
   static let mockPresentationSession = PresentationSession(
     presentationService: MockPresentationService(
+      zkpDocumentIds: nil,
       transactionLog: mockTransactionLog,
       flow: .other
     ),
