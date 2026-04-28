@@ -1,5 +1,5 @@
 {
-  "originHash" : "d4de5a386a3df02880e5e3f8bcd2cb659e6bc6cf25f551dfd8d0b3b46def31b1",
+  "originHash" : "7eeb24e48b3e51e1ab7acae18c9536df36dd8304c1b89a380d467b155ce8a30a",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -114,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "ef6109faf36fbc310a3d9d32baf2e82470a57284",
-        "version" : "0.12.0"
+        "revision" : "7252e2070e608d693909ab0e9a873db7f801e61f",
+        "version" : "0.13.0"
       }
     },
     {
@@ -123,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "952f7a9d2a46aa2846c136d7ad4d97df51e9cd6c",
-        "version" : "0.12.0"
+        "revision" : "7b0357c62827dac6f061d9662c88e710fbf6a5c5",
+        "version" : "0.13.0"
       }
     },
     {
@@ -132,8 +132,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "e8fa624673650483c9ad8b536359846f776f44f1",
-        "version" : "0.12.0"
+        "revision" : "2f5a75e3fbef09b643ba5f4c638b8455f268f979",
+        "version" : "0.13.0"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "9f42809488b56f588d8bf8a04c068b01ed6b9a3f",
-        "version" : "0.35.0"
+        "revision" : "225a3ae3fec28830c49382304551af829e98e070",
+        "version" : "0.35.1"
       }
     },
     {
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "3052ed9d9a084cccf7ee3c18e5c686ae5438787c",
-        "version" : "0.25.2"
+        "revision" : "86769e2efae72794820d5ae4dc3ce9f33aee6b9b",
+        "version" : "0.26.0"
       }
     },
     {
@@ -285,8 +285,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/marmelroy/PhoneNumberKit",
       "state" : {
-        "revision" : "c15542f373a8593fc0cbeac443b0efb2cea4aff0",
-        "version" : "4.2.10"
+        "revision" : "840ca3a89ced1a190e20ac93666ff3cdb376c973",
+        "version" : "4.2.11"
       }
     },
     {
