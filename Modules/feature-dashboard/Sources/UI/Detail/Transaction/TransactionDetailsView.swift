@@ -84,6 +84,7 @@ private func content(
             )
           }
         }
+        .zIndex(1)
 
         VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
           VStack(alignment: .leading, spacing: SPACING_SMALL) {
@@ -116,6 +117,7 @@ private func content(
             )
           }
         }
+        .zIndex(0)
       }
     }
     .padding(Theme.shared.dimension.padding)
