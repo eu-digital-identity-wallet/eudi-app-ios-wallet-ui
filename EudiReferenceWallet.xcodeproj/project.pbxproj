@@ -1310,7 +1310,7 @@
 			repositoryURL = "https://github.com/eu-digital-identity-wallet/av-lib-ios-w3c-dc-api.git";
 			requirement = {
 				kind = exactVersion;
-				version = 0.12.1;
+				version = 0.14.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
