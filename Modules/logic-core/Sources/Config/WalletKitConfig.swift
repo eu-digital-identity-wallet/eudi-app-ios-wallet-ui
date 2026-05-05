@@ -71,15 +71,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
   let configLogic: ConfigLogic
   let transactionLoggerImpl: TransactionLogger
   let walletKitAttestationProvider: WalletKitAttestationProvider
+  let avAttestationProvider: WalletKitAttestationProvider
 
   init(
     configLogic: ConfigLogic,
     transactionLogger: TransactionLogger,
-    walletKitAttestationProvider: WalletKitAttestationProvider
+    walletKitAttestationProvider: WalletKitAttestationProvider,
+    avAttestationProvider: WalletKitAttestationProvider
   ) {
     self.configLogic = configLogic
     self.transactionLoggerImpl = transactionLogger
     self.walletKitAttestationProvider = walletKitAttestationProvider
+    self.avAttestationProvider = avAttestationProvider
   }
 
   var userAuthenticationRequired: Bool {
@@ -118,9 +121,9 @@ struct WalletKitConfigImpl: WalletKitConfig {
           ),
           .init(
             config: .init(
-              credentialIssuerURL: "https://issuer.dev.ageverification.dev",
+              credentialIssuerURL: "https://test.issuer.dev.ageverification.dev",
               clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+              keyAttestationsConfig: .init(walletAttestationsProvider: avAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
               requirePAR: true,
               requireDpop: true,
@@ -159,7 +162,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
             config: .init(
               credentialIssuerURL: "https://test.issuer.dev.ageverification.dev",
               clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+              keyAttestationsConfig: .init(walletAttestationsProvider: avAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
               requirePAR: true,
               requireDpop: true,
