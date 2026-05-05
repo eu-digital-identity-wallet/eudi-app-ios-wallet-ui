@@ -115,6 +115,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
               cacheIssuerMetadata: true
             ),
             order: 0
+          ),
+          .init(
+            config: .init(
+              credentialIssuerURL: "https://issuer.dev.ageverification.dev",
+              clientId: "wallet-dev",
+              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+              authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
+              requirePAR: true,
+              requireDpop: true,
+              cacheIssuerMetadata: true
+            ),
+            order: -1
           )
         ]
       case .DEV:
@@ -142,6 +154,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
               cacheIssuerMetadata: true
             ),
             order: 0
+          ),
+          .init(
+            config: .init(
+              credentialIssuerURL: "https://test.issuer.dev.ageverification.dev",
+              clientId: "wallet-dev",
+              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+              authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
+              requirePAR: true,
+              requireDpop: true,
+              cacheIssuerMetadata: true
+            ),
+            order: -1
           )
         ]
       }
