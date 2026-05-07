@@ -116,9 +116,6 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
       }
 
       let orderedPairs: [(String, [AddDocumentUIModel])] = grouped
-        .filter { _, documents in
-          (documents.map(\.order).max() ?? Int.min) != -1
-        }
         .sorted { lhs, rhs in
           let lhsOrder = lhs.value.map(\.order).max() ?? Int.min
           let rhsOrder = rhs.value.map(\.order).max() ?? Int.min

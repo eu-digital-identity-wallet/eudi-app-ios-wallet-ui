@@ -71,18 +71,15 @@ struct WalletKitConfigImpl: WalletKitConfig {
   let configLogic: ConfigLogic
   let transactionLoggerImpl: TransactionLogger
   let walletKitAttestationProvider: WalletKitAttestationProvider
-  let avAttestationProvider: WalletKitAttestationProvider
 
   init(
     configLogic: ConfigLogic,
     transactionLogger: TransactionLogger,
-    walletKitAttestationProvider: WalletKitAttestationProvider,
-    avAttestationProvider: WalletKitAttestationProvider
+    walletKitAttestationProvider: WalletKitAttestationProvider
   ) {
     self.configLogic = configLogic
     self.transactionLoggerImpl = transactionLogger
     self.walletKitAttestationProvider = walletKitAttestationProvider
-    self.avAttestationProvider = avAttestationProvider
   }
 
   var userAuthenticationRequired: Bool {
@@ -118,18 +115,6 @@ struct WalletKitConfigImpl: WalletKitConfig {
               cacheIssuerMetadata: true
             ),
             order: 0
-          ),
-          .init(
-            config: .init(
-              credentialIssuerURL: "https://test.issuer.dev.ageverification.dev",
-              clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: avAttestationProvider),
-              authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
-              requireDpop: true,
-              cacheIssuerMetadata: true
-            ),
-            order: -1
           )
         ]
       case .DEV:
@@ -157,18 +142,6 @@ struct WalletKitConfigImpl: WalletKitConfig {
               cacheIssuerMetadata: true
             ),
             order: 0
-          ),
-          .init(
-            config: .init(
-              credentialIssuerURL: "https://test.issuer.dev.ageverification.dev",
-              clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: avAttestationProvider),
-              authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
-              requireDpop: true,
-              cacheIssuerMetadata: true
-            ),
-            order: -1
           )
         ]
       }

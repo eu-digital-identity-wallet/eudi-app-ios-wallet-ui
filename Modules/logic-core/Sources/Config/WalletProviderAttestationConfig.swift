@@ -39,21 +39,3 @@ final class WalletProviderAttestationConfigImpl: WalletProviderAttestationConfig
     }
   }
 }
-
-final class AvWalletProviderAttestationConfigImpl: WalletProviderAttestationConfig {
-
-  let configLogic: ConfigLogic
-
-  init(configLogic: ConfigLogic) {
-    self.configLogic = configLogic
-  }
-
-  var walletProviderAttestationUrl: String {
-    switch configLogic.appBuildVariant {
-    case .DEMO:
-      "https://wallet-provider.ageverification.dev"
-    case .DEV:
-      "https://wallet-provider.ageverification.dev"
-    }
-  }
-}

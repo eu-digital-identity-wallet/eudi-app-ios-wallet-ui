@@ -18,31 +18,16 @@ import logic_business
 import logic_storage
 import logic_api
 
-private enum DIName {
-  static let avAttestationProvider = "avAttestationProvider"
-  static let avWalletProviderAttestationConfig = "avWalletProviderAttestationConfig"
-}
-
 public final class LogicCoreAssembly: Assembly {
 
   public init() {}
 
   public func assemble(container: Container) {
     container.register(WalletKitConfig.self) { r in
-      guard
-        let avAttestationProvider = r.resolve(
-          WalletKitAttestationProvider.self,
-          name: DIName.avAttestationProvider
-        )
-      else {
-        fatalError("Missing DI registration '\(DIName.avAttestationProvider)' for WalletKitAttestationProvider.")
-      }
-
-      return WalletKitConfigImpl(
+      WalletKitConfigImpl(
         configLogic: r.force(ConfigLogic.self),
         transactionLogger: r.force(TransactionLogger.self),
-        walletKitAttestationProvider: r.force(WalletKitAttestationProvider.self),
-        avAttestationProvider: avAttestationProvider
+        walletKitAttestationProvider: r.force(WalletKitAttestationProvider.self)
       )
     }
     .inObjectScope(ObjectScope.container)
@@ -79,16 +64,6 @@ public final class LogicCoreAssembly: Assembly {
     }
     .inObjectScope(ObjectScope.container)
 
-    container.register(
-      WalletProviderAttestationConfig.self,
-      name: DIName.avWalletProviderAttestationConfig
-    ) { r in
-      AvWalletProviderAttestationConfigImpl(
-        configLogic: r.force(ConfigLogic.self)
-      )
-    }
-    .inObjectScope(ObjectScope.container)
-
     container.register(TransactionLogger.self) { r in
       WalletKitTransactionLogControllerImpl(
         transactionLogStorageController: r.force((any TransactionLogStorageController).self)
@@ -116,23 +91,6 @@ public final class LogicCoreAssembly: Assembly {
       WalletKitAttestationProviderImpl(
         with: r.force(WalletAttestationRepository.self),
         and: r.force(WalletProviderAttestationConfig.self)
-      )
-    }
-    .inObjectScope(ObjectScope.graph)
-
-    container.register(WalletKitAttestationProvider.self, name: DIName.avAttestationProvider) { r in
-      guard
-        let avWalletProviderAttestationConfig = r.resolve(
-          WalletProviderAttestationConfig.self,
-          name: DIName.avWalletProviderAttestationConfig
-        )
-      else {
-        fatalError("Missing DI registration '\(DIName.avWalletProviderAttestationConfig)' for WalletProviderAttestationConfig.")
-      }
-
-      return WalletKitAttestationProviderImpl(
-        with: r.force(WalletAttestationRepository.self),
-        and: avWalletProviderAttestationConfig
       )
     }
     .inObjectScope(ObjectScope.graph)
