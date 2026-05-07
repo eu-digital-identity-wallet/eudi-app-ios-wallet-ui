@@ -115,13 +115,14 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
         return items
       }
 
-      let orderedPairs: [(String, [AddDocumentUIModel])] = grouped.sorted { lhs, rhs in
-        let lhsOrder = lhs.value.map(\.order).max() ?? Int.min
-        let rhsOrder = rhs.value.map(\.order).max() ?? Int.min
+      let orderedPairs: [(String, [AddDocumentUIModel])] = grouped
+        .sorted { lhs, rhs in
+          let lhsOrder = lhs.value.map(\.order).max() ?? Int.min
+          let rhsOrder = rhs.value.map(\.order).max() ?? Int.min
 
-        if lhsOrder != rhsOrder { return lhsOrder > rhsOrder }
-        return lhs.key.localizedCompare(rhs.key) == .orderedAscending
-      }
+          if lhsOrder != rhsOrder { return lhsOrder > rhsOrder }
+          return lhs.key.localizedCompare(rhs.key) == .orderedAscending
+        }
 
       let ordered = OrderedDictionary<String, [AddDocumentUIModel]>(
         uniqueKeysWithValues: orderedPairs

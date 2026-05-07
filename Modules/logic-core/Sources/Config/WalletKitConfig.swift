@@ -293,7 +293,10 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
 private extension WalletKitConfigImpl {
   func loadCertificate(_ name: String) -> SecCertificate? {
-    guard let data = Data(name: name, ext: "der") else { return nil }
+    guard
+      let url = Bundle.main.url(forResource: name, withExtension: "der"),
+      let data = try? Data(contentsOf: url)
+    else { return nil }
     return SecCertificateCreateWithData(nil, data as CFData)
   }
 }

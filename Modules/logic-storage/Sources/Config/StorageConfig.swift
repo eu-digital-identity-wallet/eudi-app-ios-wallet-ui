@@ -48,8 +48,7 @@ final class StorageConfigImpl: StorageConfig {
   }
 
   var storeURL: URL {
-
-    let base = FileManager.default.urls(
+    let base = sharedContainerURL ?? FileManager.default.urls(
       for: .applicationSupportDirectory,
       in: .userDomainMask
     ).first ?? FileManager.default.temporaryDirectory
@@ -71,5 +70,30 @@ final class StorageConfigImpl: StorageConfig {
 
   var modelConfiguration: ModelConfiguration {
     ModelConfiguration(url: storeURL)
+  }
+}
+
+private extension StorageConfigImpl {
+  var sharedContainerURL: URL? {
+    let identifier = appGroupIdentifier
+    guard !identifier.isEmpty else { return nil }
+    return FileManager.default.containerURL(
+      forSecurityApplicationGroupIdentifier: identifier
+    )
+  }
+
+  var appGroupIdentifier: String {
+    let bundleID = Bundle.main.bundleIdentifier ?? ""
+    guard !bundleID.isEmpty else { return "" }
+
+    let mainBundleID: String
+    if Bundle.main.bundlePath.contains(".appex") {
+      let components = bundleID.split(separator: ".")
+      mainBundleID = components.count > 1 ? components.dropLast().joined(separator: ".") : bundleID
+    } else {
+      mainBundleID = bundleID
+    }
+
+    return "group.\(mainBundleID)"
   }
 }

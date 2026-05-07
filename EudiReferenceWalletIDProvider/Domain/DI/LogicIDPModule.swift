@@ -22,12 +22,14 @@ final class LogicIDPModule: Assembly {
   init() {}
 
   func assemble(container: Container) {
-    container.register(DcApiHandler.self) { _ in
+    container.register(DcApiHandler.self) { r in
       let serviceName = LogicIDPModule.getDocumentStorageServiceName()
       let accessGroup = LogicIDPModule.getKeychainAccessGroup()
+      let transactionLogger = r.resolve(TransactionLogger.self)
       return DcApiHandler(
         serviceName: serviceName,
-        accessGroup: accessGroup
+        accessGroup: accessGroup,
+        transactionLogger: transactionLogger
       )
     }
     .inObjectScope(ObjectScope.container)
