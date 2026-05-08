@@ -3,17 +3,41 @@
 ## Table of contents
 
 * [Overview](#overview)
+* [Dependency versions](#dependency-versions)
 * [Setup Apps](#setup-apps)
-* [How to work with self signed certificates on iOS](#how-to-work-with-self-signed-certificates-on-ios)
+* [Build configurations](#build-configurations)
+* [Build commands](#build-commands)
+* [How to work with self-signed certificates on iOS](#how-to-work-with-self-signed-certificates-on-ios)
 * [Document Provider extension configuration](configuration.md#document-provider-extension-configuration)
+* [Production note](#production-note)
 
 ## Overview
 
 This guide aims to assist developers in building the application.
 
-# Setup Apps
+## Dependency versions
 
-## EUDI iOS Wallet reference application
+Current production-relevant dependency versions are pinned through Swift Package Manager and
+`EudiReferenceWallet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`.
+
+| Dependency | Current version or source |
+| --- | --- |
+| Swift tools | `6.2` |
+| Minimum package platform | iOS 17 |
+| EUDI WalletKit | `0.28.2` |
+| EUDI RQES UI | `0.4.0` |
+| EUDI OpenID4VCI Swift | `0.35.1` |
+| EUDI SIOP OpenID4VP Swift | `0.33.0` |
+| EUDI ISO 18013 libraries | `0.14.0` |
+| EUDI Wallet Storage | `0.11.3` |
+
+For production, keep dependencies pinned, review transitive updates, run SCA, and archive the
+dependency report or SBOM for each release. See the [production go-live guide](go_live.md) for the
+full dependency governance checklist.
+
+## Setup Apps
+
+### EUDI iOS Wallet reference application
 
 You need [xcode](https://xcodereleases.com/) and its associated tools installed on your machine. We recommend the latest non-beta version. 
 
@@ -35,6 +59,55 @@ This setup results in a total of four configurations. All four configurations ar
 To run the app on the simulator, select your app schema and press Run.
 
 To run the app on a device, follow similar steps to running it on the simulator. Additionally, you need to supply your own provisioning profile and signing certificate in the Signing & Capabilities tab of your app target.
+
+## Build configurations
+
+Current schemes and configurations:
+
+| Scheme | Run/Test configuration | Archive configuration | Intended use |
+| --- | --- | --- | --- |
+| `EUDI Wallet Dev` | `Debug Dev` | `Release Dev` | Development environment. |
+| `EUDI Wallet Demo` | `Debug Demo` | `Release Demo` | Public demo/stable environment. |
+
+For production, create a dedicated production scheme and production build configurations, for
+example `EUDI Wallet Prod`, `Debug Prod`, and `Release Prod`. Do not ship `Release Dev` or
+`Release Demo` as a production artifact.
+
+## Build commands
+
+Build the Dev scheme:
+
+```bash
+xcodebuild \
+  -project EudiReferenceWallet.xcodeproj \
+  -scheme "EUDI Wallet Dev" \
+  -configuration "Debug Dev" \
+  -destination "generic/platform=iOS" \
+  clean build
+```
+
+Build the Demo release configuration:
+
+```bash
+xcodebuild \
+  -project EudiReferenceWallet.xcodeproj \
+  -scheme "EUDI Wallet Demo" \
+  -configuration "Release Demo" \
+  -destination "generic/platform=iOS" \
+  clean build
+```
+
+Recommended production archive shape after adding a production scheme:
+
+```bash
+xcodebuild \
+  -project EudiReferenceWallet.xcodeproj \
+  -scheme "EUDI Wallet Prod" \
+  -configuration "Release Prod" \
+  -destination "generic/platform=iOS" \
+  -archivePath build/EudiWalletProd.xcarchive \
+  clean archive
+```
 
 ### Running with remote services
 
@@ -163,3 +236,10 @@ If you are enabling or troubleshooting the Identity Document Provider extension,
 [Document Provider extension configuration](configuration.md#document-provider-extension-configuration)
 
 For all configuration options, please refer to [this document](configuration.md)
+
+## Production note
+
+Before creating a production release candidate, follow the [production go-live guide](go_live.md).
+It explains how to add a production scheme/build configuration, configure WalletKit and RQES with
+production services, replace demo trust anchors, configure signing and entitlements, harden the app,
+align with OWASP MASVS, and collect release evidence.

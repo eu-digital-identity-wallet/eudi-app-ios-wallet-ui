@@ -12,6 +12,8 @@ the [EUDI Wallet Reference Implementation project description](https://github.co
 * [How to use the application](#how-to-use-the-application)
 * [How to build - Quick start guide](#how-to-build---quick-start-guide)
 * [Application configuration](#application-configuration)
+* [Production go-live guide](#production-go-live-guide)
+* [Release automation](#release-automation)
 * [Demo videos](#demo-videos)
 * [Disclaimer](#disclaimer)
 * [How to contribute](#how-to-contribute)
@@ -31,7 +33,7 @@ The EUDI Wallet Reference Implementation is the application that allows users to
 
 The EUDIW project provides an iOS app through this repository. Please refer to the repositories listed in the following sections for more detailed information on how to get started, contribute, and engage with the EUDI Wallet Reference Implementation.
  
-# 💡 Specifications Employed
+## Specifications Employed
 
 The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit) and a list of available libraries to facilitate remote presentation, proximity, and issuing test/demo functionality following the specification of the [ARF](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework), including:
  
@@ -69,13 +71,18 @@ The main purpose of the reference implementation is to showcase the ecosystem an
 
 If you're planning to use this application in production, we recommend reviewing the following steps:
 - Configure the application properly by following the guide [here](wiki/configuration.md)
+- Follow the production go-live guide [here](wiki/go_live.md) before creating a release candidate.
 - The Pin storage configuration matches your security requirements, or provide your own by following this guide [Pin Storage Configuration](wiki/configuration.md#pin-storage-configuration)
 - The application meets the OWASP MASVS industry standard. Please refer to the following links for further information on the controls you must implement to ensure maximum compliance:
     - [OWASP MASVS](https://mas.owasp.org/MASVS/)
 
+Do not treat `Release Dev` or `Release Demo` as production-ready artifacts. They use demo services,
+demo/development trust anchors, and reference-implementation defaults that an implementer must
+replace before launch.
+
 ## How to use the application
 
-Minimum device requirements
+### Minimum device requirements
 
 - Any device that supports iOS 17.0
 
@@ -115,13 +122,13 @@ To delete a document, navigate to the 'Documents' tab within the 'Dashboard' scr
 
 1. Go to the browser application on your device and enter "https://verifier.eudiw.dev"
 2. Expand the Person Identification Data (PID) card and select:
-    1. "Attributes by" → "Specific attributes".
-    2. "Format" → Choose the format of your choice.
+    1. "Attributes by" -> "Specific attributes".
+    2. "Format" -> Choose the format of your choice.
 3. Tap "Next", then select "Select Attributes".
 4. Choose the fields you want to request from the Wallet (e.g., "Family Name" and "Given Name").
 5. Review your presentation request, tap "Next", and then select "Open with your Wallet".
 6. When prompted to open the wallet app, tap "Open".
-7. You will be redirected to the app’s "Request" screen, where you can select or deselect which attributes to share with the Verifier. You must select at least one attribute to proceed.
+7. You will be redirected to the app's "Request" screen, where you can select or deselect which attributes to share with the Verifier. You must select at least one attribute to proceed.
 8. Tap "Share".
 9. Enter the PIN you set up during the initial steps.
 10. Upon successful submission, tap "Close".
@@ -150,6 +157,19 @@ To delete a document, navigate to the 'Documents' tab within the 'Dashboard' scr
 ## Application configuration
 
 You can find instructions on how to configure the application [here](wiki/configuration.md)
+
+## Production go-live guide
+
+Member State teams, wallet providers, and integrators preparing a live deployment should follow the
+production go-live guide [here](wiki/go_live.md). It explains how to create a production scheme and
+configuration, replace demo endpoints and trust anchors, configure WalletKit and RQES, harden the
+iOS app, align with OWASP MASVS, and collect release/security evidence.
+
+## Release automation
+
+Fastlane lane reference is generated in [fastlane/README.md](fastlane/README.md). Human-maintained
+usage notes, required environment variables, and release-lane cautions are documented in
+[fastlane/USAGE.md](fastlane/USAGE.md).
 
 ## Package structure
 

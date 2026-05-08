@@ -3,6 +3,7 @@
 ## Table of contents
 
 * [General configuration](#general-configuration)
+* [Production configuration reference](#production-configuration-reference)
 * [DeepLink Schemas configuration](#deeplink-schemas-configuration)
 * [Scoped Issuance Document Configuration](#scoped-issuance-document-configuration)
 * [How to work with self-signed certificates](#how-to-work-with-self-signed-certificates)
@@ -288,6 +289,30 @@ public protocol ConfigLogic: Sendable {
   var forcePidActivation: Bool { get }
 }
 ```
+
+## Production configuration reference
+
+For production deployments, do not only edit the existing Dev or Demo values. Create a dedicated
+production scheme, production build configuration, and `PROD` app build variant, then provide
+production values for every config surface listed below.
+
+| Configuration area | Source file | Production value to provide |
+| --- | --- | --- |
+| Build variant/type | `Wallet/Config/*.xcconfig`, `ConfigLogic.swift` | `BUILD_VARIANT = PROD`, `BUILD_TYPE = RELEASE` for production archives. |
+| Issuers | `WalletKitConfig.swift` | Production OpenID4VCI issuer URLs, client IDs, redirect URIs, PAR/DPoP policy, metadata caching policy, and display order. |
+| Wallet provider attestation | `WalletProviderAttestationConfig.swift` | Production Wallet Provider host used for wallet/key attestation. |
+| Reader trust anchors | `WalletKitConfig.swift`, certificate resources | Production IACA/reader/verifier trust anchors only. |
+| OpenID4VP | `WalletKitConfig.swift` | Approved client ID schemes, preregistered verifier entries where needed, and partial claim disclosure policy. |
+| WalletKit storage/auth | `WalletKitConfig.swift`, `ConfigLogic.swift` | Production Keychain service/access group and `userAuthenticationRequired` decision. |
+| Document issuance | `WalletKitConfig.swift` | Production credential policy, batch size, and reissuance thresholds. |
+| Revocation/status | `WalletKitConfig.swift` | Production status-check interval and failure behavior. |
+| RQES | `RQESConfig.swift` | Production QTSP/RSSP endpoint, TSA, client ID, redirect URI, hash policy, and logging policy. Do not hardcode production secrets. |
+| Deep links | `Wallet/Wallet.plist`, deep-link parsing code | Production URI schemes and strict validation. |
+| Entitlements | `EudiWallet.entitlements`, extension entitlements | Production App Groups, Keychain access groups, document-provider capabilities, and mobile document types. |
+| Analytics | `AnalyticsConfig.swift` | Privacy-reviewed provider setup with no PID, credential, token, or verifier payload collection. |
+
+The full production checklist, hardening guidance, OWASP MASVS mapping, and release evidence
+requirements are documented in the [production go-live guide](go_live.md).
 
 ## DeepLink Schemas configuration
 
