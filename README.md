@@ -8,12 +8,14 @@ the [EUDI Wallet Reference Implementation project description](https://github.co
 ## Table of contents
 
 * [Overview](#overview)
+* [Specifications Employed](#specifications-employed)
 * [Important things to know](#important-things-to-know)
 * [How to use the application](#how-to-use-the-application)
 * [How to build - Quick start guide](#how-to-build---quick-start-guide)
 * [Application configuration](#application-configuration)
 * [Production go-live guide](#production-go-live-guide)
 * [Release automation](#release-automation)
+* [Package structure](#package-structure)
 * [Demo videos](#demo-videos)
 * [Disclaimer](#disclaimer)
 * [How to contribute](#how-to-contribute)

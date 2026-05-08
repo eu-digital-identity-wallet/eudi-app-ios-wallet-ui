@@ -59,6 +59,8 @@ The `deploy` lane expects:
 | `APP_TAG` | Tags | Tag namespace or brand segment used in the generated Git tag. |
 | `APP_BUNDLE_ID` | Upload and export options | Main app bundle identifier. |
 | `APP_PROVISION_PROFILE` | Export options | Main app provisioning profile name. |
+| `APP_EXTENSION_BUNDLE_ID` | Export options | Identity Document Provider extension bundle identifier. |
+| `APP_EXTENSION_PROVISION_PROFILE` | Export options | Extension provisioning profile name. |
 | `APP_IPA_PATH` | Upload | Path to the generated IPA. |
 | `TESTFLIGHT_GROUPS` | Upload | Optional comma-separated TestFlight groups. |
 | `CONNECT_KEY_ID` | App Store Connect | App Store Connect API key ID. |
@@ -72,6 +74,12 @@ The `deploy` lane expects:
 | `DEV_REMOTE_REPO` | Optional tag upload | Remote URL to push tags to a development mirror. |
 | `GITHUB_RELEASE_REPO` | Optional GitHub release | Repository name for GitHub releases, for example `owner/repo`. |
 | `GITHUB_RELEASE_TOKEN` | Optional GitHub release | Token used by Fastlane to create the release. |
+
+Current lane caveat:
+
+The checked-in `deploy` lane currently passes only the main app provisioning profile to
+`build_app`. If an archive embeds `EudiReferenceWalletIDProvider`, production CI must extend the
+lane so the exported IPA includes explicit profile mappings for both the main app and the extension.
 
 ## Example Commands
 
@@ -121,6 +129,15 @@ TESTFLIGHT_GROUPS="<tester-groups>" \
 bundle exec fastlane ios deploy
 ```
 
+Production export mapping for the embedded extension:
+
+```ruby
+provisioningProfiles = {
+  ENV["APP_BUNDLE_ID"] => ENV["APP_PROVISION_PROFILE"],
+  ENV["APP_EXTENSION_BUNDLE_ID"] => ENV["APP_EXTENSION_PROVISION_PROFILE"]
+}
+```
+
 ## Production Notes
 
 Before using Fastlane for production:
@@ -129,7 +146,7 @@ Before using Fastlane for production:
 * Add production build configurations, for example `Debug Prod` and `Release Prod`.
 * Add production `.xcconfig` files and a `PROD` app build variant.
 * Update the lane or export options to include provisioning profile mappings for both the main app
-  and the Identity Document Provider extension.
+  and the Identity Document Provider extension; the current lane only maps the main app profile.
 * Add secret scanning and demo-endpoint checks before upload.
 * Archive the IPA, dSYM files, entitlements, provisioning profile metadata, dependency report, SBOM,
   signing certificate fingerprint, Git commit, and test reports.

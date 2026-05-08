@@ -350,7 +350,8 @@ Current key lanes:
 Required production improvements:
 
 * Use the production scheme and configuration explicitly.
-* Include provisioning profile export mappings for both the main app and extension.
+* Update `build_app` export options so provisioning profile mappings include both the main app and
+  the Identity Document Provider extension.
 * Fail the pipeline if production artifacts contain demo endpoints or sample secrets.
 * Run tests, SAST, SCA, secret scan, and plist/entitlement checks before upload.
 * Archive the signed IPA, dSYM files, dependency report, SBOM, test reports, and evidence package.
@@ -371,6 +372,8 @@ Example production environment variables:
 | `APP_TAG` | Tag namespace or brand segment. |
 | `APP_BUNDLE_ID` | Production main app bundle identifier. |
 | `APP_PROVISION_PROFILE` | Main app distribution provisioning profile name. |
+| `APP_EXTENSION_BUNDLE_ID` | Identity Document Provider extension bundle identifier. |
+| `APP_EXTENSION_PROVISION_PROFILE` | Extension distribution provisioning profile name. |
 | `CONNECT_KEY_ID` | App Store Connect API key ID. |
 | `CONNECT_ISSUER_ID` | App Store Connect API issuer ID. |
 | `CONNECT_KEY_PATH` | Path to the private key file injected by CI. |
@@ -382,6 +385,25 @@ Example production environment variables:
 | `PROD_REMOTE_REPO` | Optional remote used to push production tags. |
 | `GITHUB_RELEASE_REPO` | Optional GitHub release repository. |
 | `GITHUB_RELEASE_TOKEN` | Optional token used to create GitHub releases. |
+
+Current lane caveat:
+
+The checked-in `deploy` lane maps only `APP_BUNDLE_ID` to `APP_PROVISION_PROFILE` in
+`export_options`. Before production use, extend the lane to export the embedded extension with its
+own profile mapping:
+
+```ruby
+build_app(
+  scheme: ENV["APP_SCHEME"],
+  export_method: "app-store",
+  export_options: {
+    provisioningProfiles: {
+      ENV["APP_BUNDLE_ID"] => ENV["APP_PROVISION_PROFILE"],
+      ENV["APP_EXTENSION_BUNDLE_ID"] => ENV["APP_EXTENSION_PROVISION_PROFILE"]
+    }
+  }
+)
+```
 
 For the complete lane usage notes, see [../fastlane/USAGE.md](../fastlane/USAGE.md).
 
@@ -885,12 +907,14 @@ Production review areas:
 | Keychain groups | Main and extension entitlements | Confirm the runtime access group matches app and extension needs. |
 | Mobile document types | Main app entitlements | Include only production-supported document types. |
 | Encryption export flag | `ITSAppUsesNonExemptEncryption` in `Wallet.plist` | Confirm with legal/export compliance. Do not assume the sample value applies. |
-| Privacy manifest | `PrivacyInfo.xcprivacy` if added | Required for covered API usage and data collection declarations. |
+| Privacy manifest | `PrivacyInfo.xcprivacy` | Add and audit privacy manifests for required-reason APIs, tracking domains, data collection, and SDK declarations. |
 
 Privacy manifest note:
 
 Apple requires apps and SDKs that use covered required-reason APIs to declare approved reasons in a
-privacy manifest. Review direct code and third-party SDKs before App Store submission.
+privacy manifest. Treat the manifest as a production release input: review direct app code, the
+Identity Document Provider extension, WalletKit/RQES/analytics SDKs, and third-party dependencies
+before App Store submission, and keep declarations aligned with App Store privacy labels.
 
 ## Network Security
 
@@ -1240,30 +1264,34 @@ available.
 Manual controls are easier to bypass than mature commercial hardening. Implement them as layered
 signals, obfuscate them, and enforce high-risk outcomes on the backend where possible.
 
-### Manual Control 1: Bundle And Team Identity Verification
+### Manual Control 1: Bundle Metadata And Signing Identity Signals
 
-At runtime, verify that the app is running with the expected production bundle and team identifiers.
+At runtime, you can compare bundle metadata with expected production values, but do not treat
+`Info.plist` values as proof of signing identity. A re-signed or modified app can alter bundle
+metadata.
 
-Example shape:
+Example metadata-only shape:
 
 ```swift
-struct AppIdentity {
-  static func hasExpectedIdentity() -> Bool {
+struct AppMetadataSignal {
+  static func hasExpectedBundleIdentifier() -> Bool {
     let expectedBundleID = "eu.example.wallet"
-    let expectedTeamID = "ABCDE12345"
 
-    let bundleID = Bundle.main.bundleIdentifier
-    let teamID = Bundle.main.object(forInfoDictionaryKey: "Team ID") as? String
-
-    return bundleID == expectedBundleID && teamID == expectedTeamID
+    return Bundle.main.bundleIdentifier == expectedBundleID
   }
 }
 ```
 
+If you add local code-signing or entitlement inspection, implement it with platform security APIs and
+treat the result as advisory. The authoritative identity control should be server-side App Attest
+validation that checks the production bundle identifier, team identifier, environment, nonce,
+timestamp, and replay state.
+
 Production rules:
 
-* Treat this as a weak local signal.
+* Treat bundle metadata checks as weak local signals.
 * Also validate app identity server-side through App Attest.
+* Do not read a custom `Team ID` `Info.plist` key as signing proof.
 * Obfuscate expected values if used locally.
 * Treat failure as high risk for issuance, presentation, and signing.
 
