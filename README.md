@@ -175,6 +175,20 @@ usage notes, required environment variables, and release-lane cautions are docum
 
 ```mermaid
 graph TD;
+
+  logic-test --> logic-business
+  logic-test --> logic-core
+  logic-test --> logic-analytics
+  logic-test --> logic-resources
+  logic-test --> logic-storage
+  logic-test --> logic-ui
+  logic-test --> logic-api
+  logic-test --> logic-authentication
+
+  logic-test --> feature-test
+  
+  feature-test --> feature-common
+
   logic-business --> logic-authentication
   logic-core --> logic-authentication
   logic-analytics --> logic-authentication
@@ -194,11 +208,8 @@ graph TD;
   logic-business --> logic-analytics
 
   feature-common --> feature-issuance
-
   feature-common --> feature-proximity
-
   feature-common --> feature-presentation
-
   feature-common --> feature-dashboard
 
   logic-storage --> feature-common
@@ -224,6 +235,8 @@ graph TD;
   logic-resources --> logic-ui
 
   logic-core --> logic-ui
+
+  logic-assembly --> app
 
 ```
 
