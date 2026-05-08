@@ -94,7 +94,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
         return [
           .init(
             config: .init(
-              credentialIssuerURL: "https://utsteder.test.eidas2sandkasse.net",
+              credentialIssuerURL: "https://utsteder.test.eidas2sandkasse.net/pid",
               clientId: "demo-lommebok-test",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
@@ -109,7 +109,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
         return [
           .init(
             config: .init(
-              credentialIssuerURL: "https://utsteder.eidas2sandkasse.dev",
+              credentialIssuerURL: "https://utsteder.eidas2sandkasse.dev/pid",
               clientId: "demo-lommebok-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
