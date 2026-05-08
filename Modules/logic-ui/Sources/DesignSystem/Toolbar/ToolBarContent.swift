@@ -24,6 +24,7 @@ public extension ToolBarContent {
     public let image: Image?
     public let hasIndicator: Bool?
     public let disabled: Bool
+    public let tintColor: Color?
     public let isBorderedProminent: Bool
     public let callback: (() -> Void)?
 
@@ -33,6 +34,7 @@ public extension ToolBarContent {
       accessibilityLocator: LocatorType,
       hasIndicator: Bool? = nil,
       disabled: Bool = false,
+      tintColor: Color? = nil,
       isBorderedProminent: Bool = false,
       callback: (() -> Void)? = nil
     ) {
@@ -41,6 +43,7 @@ public extension ToolBarContent {
       self.image = image
       self.hasIndicator = hasIndicator
       self.disabled = disabled
+      self.tintColor = tintColor
       self.isBorderedProminent = isBorderedProminent
       self.callback = callback
     }
@@ -98,6 +101,9 @@ private struct ActionView: View {
       if let callback = action.callback {
         Button(action: callback) {
           content
+        }
+        .ifLet(action.tintColor) { view, color in
+          view.tint(color)
         }
         .if(action.isBorderedProminent) { view in
           view.buttonStyle(.borderedProminent)
