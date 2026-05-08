@@ -98,37 +98,32 @@ public struct WrapButtonView: View {
             icon
               .resizable()
               .scaledToFit()
-              .frame(width: 25, height: 25)
+              .frame(width: 22, height: 22)
               .foregroundColor(iconColor)
 
-            HSpacer.medium()
+            HSpacer.small()
           }
 
           Text(title)
             .typography(Theme.shared.font.bodyLarge)
             .fontWeight(.semibold)
             .foregroundColor(textColor)
-            .buttonStyle(OutlinePressedButtonStyle())
 
           if gravity == .center || gravity == .start {
             Spacer()
           }
         }
-        .padding()
+        .padding(Theme.shared.shape.extraSmall)
         .if(gravity != .none) {
           $0.frame(maxWidth: .infinity)
         }
-        .background(backgroundColor)
-        .cornerRadius(cornerRadius)
-        .overlay(
-          RoundedRectangle(cornerRadius: cornerRadius)
-            .stroke(borderColor, lineWidth: borderWidth)
-        )
       }
     )
     .if(!isEnabled && !isLoading) {
       $0.opacity(0.38)
     }
+    .tint(backgroundColor)
+    .buttonStyle(.borderedProminent)
     .disabled(isLoading || !isEnabled)
     .shimmer(isLoading: isLoading)
   }

@@ -47,9 +47,9 @@ public enum ButtonViewStyle {
     case .primary:
       Theme.shared.color.primary
     case .secondary:
-        .clear
+      Theme.shared.color.fillsTertiary.opacity(0.14)
     case .error:
-      Theme.shared.color.background
+      Theme.shared.color.error.opacity(0.14)
     case .success:
       Theme.shared.color.success
     case .custom(_, let background, _, _):

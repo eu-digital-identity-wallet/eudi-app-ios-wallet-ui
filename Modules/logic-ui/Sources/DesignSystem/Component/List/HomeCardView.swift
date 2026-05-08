@@ -77,18 +77,13 @@ public struct HomeCardView: View {
       }
 
       if let learnMoreAction, let learnMoreText {
-        Button(action: learnMoreAction) {
-          Label {
-            Text(learnMoreText)
-              .typography(Theme.shared.font.bodyLarge)
-              .fontWeight(.semibold)
-          } icon: {
-            Theme.shared.image.infoCircle
-          }
-          .foregroundStyle(Theme.shared.color.primary)
-          .padding(SPACING_SMALL)
-        }
-        .buttonStyle(PlainButtonStyle())
+        WrapButtonView(
+          style: .secondary,
+          title: learnMoreText,
+          icon: Theme.shared.image.infoCircle,
+          gravity: .center,
+          onAction: learnMoreAction()
+        )
         .padding(.top, SPACING_MEDIUM)
       }
     }

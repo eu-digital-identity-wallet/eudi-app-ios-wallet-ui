@@ -40,6 +40,7 @@ public protocol ColorManagerProtocol: Sendable {
   var secondaryFixed: Color { get }
   var secondaryFixedDim: Color { get }
   var tertiary: Color { get }
+  var fillsTertiary: Color { get }
   var onTertiary: Color { get }
   var tertiaryContainer: Color { get }
   var onTertiaryContainer: Color { get }
@@ -94,6 +95,7 @@ final class ColorManager: ColorManagerProtocol {
     case secondaryFixed
     case secondaryFixedDim
     case tertiary
+    case fillsTertiary
     case onTertiary
     case tertiaryContainer
     case onTertiaryContainer
@@ -217,6 +219,9 @@ final class ColorManager: ColorManagerProtocol {
 
   public var tertiary: Color {
     Color(MaterialColors.tertiary.rawValue, bundle: bundle)
+  }
+  public var fillsTertiary: Color {
+    Color(MaterialColors.fillsTertiary.rawValue, bundle: bundle)
   }
   public var onTertiary: Color {
     Color(MaterialColors.onTertiary.rawValue, bundle: bundle)
