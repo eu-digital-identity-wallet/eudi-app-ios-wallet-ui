@@ -173,34 +173,6 @@ usage notes, required environment variables, and release-lane cautions are docum
 
 ## Package structure
 
-*logic-resources*: All app resources reside here (images, etc.)
-
-*logic-core*: Wallet core logic.
-
-*logic-analytics*: Access to analytics providers. Capabilities for test monitoring analytics (i.e., crashes) can be added here (no functionality right now)
-
-*logic-business*: App business logic.
-
-*logic-storage*: Persistent storage cache.
-
-*logic-authentication*: PinStorage and System Biometrics Logic.
-
-*logic-ui*: Common UI components.
-
-*feature-common*: Code that is common to all features.
-
-*feature-dashboard*: The application's main screen.
-
-*feature-startup*: The initial screen of the app.
-
-*feature-presentation*: Online authentication feature.
-
-*feature-issuance*: Document issuance feature.
-
-*feature-proximity*: Proximity scenarios feature.
-
-*logic-assembly*: This module has access to all the above modules and assembles navigation and DI graphs.
-
 ```mermaid
 graph TD;
   logic-business --> logic-authentication
