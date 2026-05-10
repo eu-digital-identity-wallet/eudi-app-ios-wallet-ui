@@ -409,27 +409,35 @@ For the complete lane usage notes, see [../fastlane/USAGE.md](../fastlane/USAGE.
 
 ## Dependency Versions
 
-Current production-relevant dependency sources include:
+The Swift Package Manager dependency resolution file is:
 
-| Dependency | Current version or source | Production guidance |
-| --- | --- | --- |
-| Swift tools | `6.2` in package manifests | Confirm CI and Xcode version support this toolchain. |
-| iOS platform | `.iOS(.v17)` in package manifests | Confirm policy and market support for iOS 17 and later. |
-| EUDI WalletKit | `0.28.2` exact | Keep exact or otherwise pinned; review release notes before upgrades. |
-| EUDI RQES UI | `0.4.0` exact | Keep exact or otherwise pinned; review QTSP behavior after upgrades. |
-| EUDI OpenID4VCI | `0.35.1` resolved transitively | Review metadata, PAR, DPoP, and credential offer compatibility. |
-| EUDI SIOP OpenID4VP | `0.33.0` resolved transitively | Review OpenID4VP profile and verifier trust behavior. |
-| EUDI ISO 18013 libraries | `0.14.0` resolved transitively | Review proximity and mdoc compatibility. |
-| EUDI Wallet Storage | `0.11.3` resolved transitively | Review secure storage, migrations, and backup behavior. |
-| KeychainAccess | `4.2.2` resolved | Review accessibility classes and access group behavior. |
-| BluetoothKit | `master` branch | Prefer pinned tags or commits for production dependency governance. |
-| Swinject | `2.10.0` resolved | Review dependency injection graph changes during upgrades. |
+`EudiReferenceWallet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`
 
-Production dependency rules:
+At the time this guide was written, key versions included:
 
+| Dependency | Current repo version |
+| --- | --- |
+| Swift tools | `6.2` |
+| Minimum package platform | iOS 17 |
+| EUDI WalletKit | `0.28.2` |
+| EUDI RQES UI | `0.4.0` |
+| EUDI OpenID4VCI | `0.35.1` |
+| EUDI SIOP OpenID4VP | `0.33.0` |
+| EUDI ISO 18013 libraries | `0.14.0` |
+| EUDI Wallet Storage | `0.11.3` |
+| KeychainAccess | `4.2.2` |
+| BluetoothKit | `master` branch, resolved to commit `d6ab93c` |
+| Swinject | `2.10.0` |
+
+Production rules:
+
+* Use released versions, not snapshots or branch dependencies, unless formally approved.
+* Subscribe to security advisories for WalletKit, RQES UI, OpenID4VCI, SIOP OpenID4VP, ISO18013
+  libraries, Wallet Storage, KeychainAccess, BluetoothKit, Swinject, and the Swift/Xcode toolchain.
+* Keep a dependency update SLA.
 * Keep `Package.resolved` committed and reviewed.
 * Avoid branch dependencies for production unless the commit is pinned and approved.
-* Generate an SBOM for each release.
+* Generate and archive an SBOM for every release.
 * Run SCA before each release.
 * Review all transitive dependencies used by WalletKit, RQES, DC API, cryptography, parsing, and UI.
 

@@ -17,8 +17,11 @@ This guide aims to assist developers in building the application.
 
 ## Dependency versions
 
-Current production-relevant dependency versions are pinned through Swift Package Manager and
-`EudiReferenceWallet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`.
+The Swift Package Manager dependency resolution file is:
+
+`EudiReferenceWallet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`
+
+At the time this guide was written, key versions included:
 
 | Dependency | Current version or source |
 | --- | --- |
@@ -31,9 +34,9 @@ Current production-relevant dependency versions are pinned through Swift Package
 | EUDI ISO 18013 libraries | `0.14.0` |
 | EUDI Wallet Storage | `0.11.3` |
 
-For production, keep dependencies pinned, review transitive updates, run SCA, and archive the
-dependency report or SBOM for each release. See the [production go-live guide](go_live.md) for the
-full dependency governance checklist.
+Before building a release candidate, confirm these values against `Package.resolved` and archive the
+dependency report or SBOM with the release evidence. See the [production go-live guide](go_live.md)
+for the full dependency governance checklist.
 
 ## Setup Apps
 

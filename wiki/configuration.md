@@ -3,6 +3,7 @@
 ## Table of contents
 
 * [General configuration](#general-configuration)
+* [Dependency versions](#dependency-versions)
 * [Production configuration reference](#production-configuration-reference)
 * [DeepLink Schemas configuration](#deeplink-schemas-configuration)
 * [Scoped Issuance Document Configuration](#scoped-issuance-document-configuration)
@@ -289,6 +290,29 @@ public protocol ConfigLogic: Sendable {
   var forcePidActivation: Bool { get }
 }
 ```
+
+## Dependency versions
+
+The Swift Package Manager dependency resolution file is:
+
+`EudiReferenceWallet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`
+
+At the time this guide was written, key versions included:
+
+| Dependency | Current version or source |
+| --- | --- |
+| Swift tools | `6.2` |
+| Minimum package platform | iOS 17 |
+| EUDI WalletKit | `0.28.2` |
+| EUDI RQES UI | `0.4.0` |
+| EUDI OpenID4VCI Swift | `0.35.1` |
+| EUDI SIOP OpenID4VP Swift | `0.33.0` |
+| EUDI ISO 18013 libraries | `0.14.0` |
+| EUDI Wallet Storage | `0.11.3` |
+
+Review these versions whenever you change configuration that depends on SDK behavior, such as
+WalletKit issuance/presentation, RQES, OpenID4VP, ISO18013 proximity, Wallet Storage, or dependency
+security policy. For production release rules, see [go_live.md](go_live.md#dependency-versions).
 
 ## Production configuration reference
 
