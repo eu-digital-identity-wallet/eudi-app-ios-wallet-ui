@@ -1,5 +1,5 @@
 {
-  "originHash" : "d61805c4b13f7f328210b01ada56a9ea75cdabd146ea73fd5c89929ead4a5dc5",
+  "originHash" : "4c96eb515e6f6b0b1437489600565cdca0e12160cebf9503efd52b0f320b0463",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/av-lib-ios-w3c-dc-api.git",
       "state" : {
-        "revision" : "f424cd8a65548f7e8e53827bfc9fabcbf0db4a1d",
-        "version" : "0.14.0"
+        "revision" : "5e79fe140fe5cd809f0f98a8468439aa7f3639fc",
+        "version" : "0.14.2"
       }
     },
     {
@@ -123,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "89d420a992d5a3f95e83c3cb9095d15fdc8a47a1",
-        "version" : "0.14.0"
+        "revision" : "8cebd23ca9e1769adf423059e80372d5f11e4bef",
+        "version" : "0.14.1"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "225a3ae3fec28830c49382304551af829e98e070",
-        "version" : "0.35.1"
+        "revision" : "eaced81de7af032de50cce9425259a23221f241a",
+        "version" : "0.36.2"
       }
     },
     {
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "69f27165401365c15205ea6ca387f52cd03f6c9d",
-        "version" : "0.28.2"
+        "revision" : "fe147e16a4620dc3e0bc36ebfb311e80eeb1814a",
+        "version" : "0.28.3"
       }
     },
     {
@@ -285,8 +285,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/marmelroy/PhoneNumberKit",
       "state" : {
-        "revision" : "840ca3a89ced1a190e20ac93666ff3cdb376c973",
-        "version" : "4.2.11"
+        "revision" : "2d547ffe38f61009219e34e5378d2aa4c13b6e51",
+        "version" : "4.2.12"
       }
     },
     {
