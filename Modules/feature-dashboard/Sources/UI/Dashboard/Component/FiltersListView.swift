@@ -78,18 +78,21 @@ struct FiltersListView: View {
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
-          Button(.cancelButton) {
+          Button {
             isApplied = true
             revertFilters()
             dismiss()
+          } label: {
+            Theme.shared.image.xmark
           }
+          .accessibilityLabel(Text(.cancelButton))
         }
         ToolbarItem(placement: .navigationBarTrailing) {
-          Button(.reset) {
-            isApplied = true
-            resetFiltersAction()
-            dismiss()
+          Button(action: applyFilters) {
+            Theme.shared.image.checkmark
           }
+          .buttonStyle(.borderedProminent)
+          .accessibilityLabel(Text(.showResults))
         }
       }
       .safeAreaInset(edge: .bottom) {
