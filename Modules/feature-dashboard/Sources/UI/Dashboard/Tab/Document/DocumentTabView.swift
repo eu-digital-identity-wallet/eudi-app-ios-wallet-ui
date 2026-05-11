@@ -116,26 +116,33 @@ private func content(
 
           ForEach(state.documents.keys.sorted(by: { $0.order < $1.order }), id: \.self) { category in
 
-            WrapTextView(
-              text: category.title,
-              textConfig: TextConfig(
-                font: Theme.shared.font.bodySmall.font,
-                color: Theme.shared.color.onSurface,
-                textAlign: .leading,
-                fontWeight: .semibold
-              )
-            )
-            .padding(.horizontal, SPACING_MEDIUM)
-            .padding(.top, SPACING_SMALL)
+            VStack(alignment: .leading, spacing: SPACING_SMALL) {
 
-            ForEach(state.documents[category] ?? []) { item in
+              WrapTextView(
+                text: category.title,
+                textConfig: TextConfig(
+                  font: Theme.shared.font.bodySmall.font,
+                  color: Theme.shared.color.onSurface,
+                  textAlign: .leading,
+                  fontWeight: .semibold
+                )
+              )
+              .padding(.horizontal, SPACING_MEDIUM)
+              .padding(.top, SPACING_SMALL)
+
               WrapCardView {
-                WrapListItemView(listItem: item.listItem) {
-                  onAction(item)
+                VStack(spacing: .zero) {
+                  let categoryDocuments = state.documents[category] ?? []
+                  WrapListItemsView(
+                    listItems: categoryDocuments.map(\.listItem)
+                  ) { listItem in
+                    if let item = categoryDocuments.first(where: { $0.listItem.id == listItem.id }) {
+                      onAction(item)
+                    }
+                  }
                 }
               }
               .padding(.horizontal, SPACING_MEDIUM)
-              .padding(.top, SPACING_SMALL)
             }
           }
         }
