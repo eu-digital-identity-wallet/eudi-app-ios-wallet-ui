@@ -78,6 +78,7 @@ The application is a modular iOS project. Important modules and targets for prod
 | `logic-ui` | Shared SwiftUI components, deep-link parsing, scanner, request UI. |
 | `logic-assembly` | Dependency injection graph and app routing assembly. |
 | `feature-*` | User-facing flows for startup, dashboard, issuance, presentation, proximity, and common features. |
+| `logic-test` / `feature-test` | Shared test utilities, mock generation helpers, and test fixtures; not included in production targets. |
 | `fastlane` | Test, versioning, archive, TestFlight/App Store upload, tagging, and GitHub release automation. |
 
 Current schemes:
