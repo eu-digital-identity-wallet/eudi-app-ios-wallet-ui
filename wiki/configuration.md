@@ -52,7 +52,6 @@ struct WalletKitConfigImpl: WalletKitConfig {
                 keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
                 authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
                 requirePAR: should_use_par_bool,
-                useDPoP: should_use_dpop_bool,
                 requireDpop: should_use_dpop_bool,
                 cacheIssuerMetadata: should_cache_metadata_bool
             ),
@@ -85,7 +84,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
 2. Wallet Attestation Provider
 
-Via the *WalletKitAttestationConfig* protocol inside the logic-core module.
+Via the *WalletProviderAttestationConfig* protocol inside the logic-core module.
 
 ```swift
 protocol WalletProviderAttestationConfig: Sendable {
@@ -303,7 +302,7 @@ At the time this guide was written, key versions included:
 | --- | --- |
 | Swift tools | `6.2` |
 | Minimum package platform | iOS 17 |
-| EUDI WalletKit | `0.28.2` |
+| EUDI WalletKit | `0.28.3` |
 | EUDI RQES UI | `0.4.0` |
 | EUDI OpenID4VCI Swift | `0.35.1` |
 | EUDI SIOP OpenID4VP Swift | `0.33.0` |

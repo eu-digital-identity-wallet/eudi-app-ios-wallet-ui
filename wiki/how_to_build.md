@@ -27,7 +27,7 @@ At the time this guide was written, key versions included:
 | --- | --- |
 | Swift tools | `6.2` |
 | Minimum package platform | iOS 17 |
-| EUDI WalletKit | `0.28.2` |
+| EUDI WalletKit | `0.28.3` |
 | EUDI RQES UI | `0.4.0` |
 | EUDI OpenID4VCI Swift | `0.35.1` |
 | EUDI SIOP OpenID4VP Swift | `0.33.0` |
@@ -142,30 +142,37 @@ Using this parsed information, instances such as `WalletKitConfig` and `RQESConf
 For instance, here's how `WalletKitConfig` resolves its configuration for OpenID4VCI remote services based on the build variant:
 
 ```swift
-var vciConfig: [String: OpenId4VciConfiguration] {
-  let openId4VciConfigurations: [OpenId4VciConfiguration] = {
+var issuersConfig: [String: VciConfig] {
+  let openId4VciConfigurations: [VciConfig] = {
     switch configLogic.appBuildVariant {
     case .DEMO:
       return [
         .init(
-          credentialIssuerURL: "https://issuer.eudiw.dev",
-          clientId: "wallet-dev",
-          keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
-          authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-          requirePAR: true,
-          requireDpop: true,
-          cacheIssuerMetadata: true
+          config: .init(
+            credentialIssuerURL: "https://issuer.eudiw.dev",
+            clientId: "wallet-dev",
+            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+            authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
+            requirePAR: true,
+            requireDpop: true,
+            cacheIssuerMetadata: true
+          ),
+          order: 1
         )
+      ]
     case .DEV:
       return [
         .init(
-          credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
-          clientId: "wallet-dev",
-          keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
-          authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-          requirePAR: true,
-          requireDpop: true,
-          cacheIssuerMetadata: true
+          config: .init(
+            credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
+            clientId: "wallet-dev",
+            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+            authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
+            requirePAR: true,
+            requireDpop: true,
+            cacheIssuerMetadata: true
+          ),
+          order: 1
         )
       ]
     }
@@ -175,7 +182,7 @@ var vciConfig: [String: OpenId4VciConfiguration] {
 }
 ```
 
-In this example, the `vciConfig` property dynamically assigns configurations, such as `issuerUrl`, `clientId`, `redirectUri`, `usePAR`, `useDpopIfSupported`, `keyAttestationsConfig`, and `cacheIssuerMetadata`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
+In this example, the `issuersConfig` property dynamically assigns configurations, such as `credentialIssuerURL`, `clientId`, `authFlowRedirectionURI`, `requirePAR`, `requireDpop`, `keyAttestationsConfig`, and `cacheIssuerMetadata`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
 
 ### Running with local services
 

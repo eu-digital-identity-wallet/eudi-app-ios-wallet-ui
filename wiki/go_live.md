@@ -419,7 +419,7 @@ At the time this guide was written, key versions included:
 | --- | --- |
 | Swift tools | `6.2` |
 | Minimum package platform | iOS 17 |
-| EUDI WalletKit | `0.28.2` |
+| EUDI WalletKit | `0.28.3` |
 | EUDI RQES UI | `0.4.0` |
 | EUDI OpenID4VCI | `0.35.1` |
 | EUDI SIOP OpenID4VP | `0.33.0` |
@@ -604,7 +604,7 @@ Production tasks:
 Current registration behavior:
 
 * `WalletKitController` registers documents through `DocumentRegistrationManager`.
-* Registration is only attempted on iOS versions where the API is available.
+* Registration is only attempted on iOS 26 and later where the Digital Credentials API is available.
 * Only CBOR documents are registered (`document.docDataFormat == .cbor`).
 
 Production validation:
