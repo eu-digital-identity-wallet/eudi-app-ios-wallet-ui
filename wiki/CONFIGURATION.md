@@ -3,9 +3,11 @@
 ## Table of contents
 
 * [General configuration](#general-configuration)
+* [Dependency versions](#dependency-versions)
+* [Production configuration reference](#production-configuration-reference)
 * [DeepLink Schemas configuration](#deeplink-schemas-configuration)
 * [Scoped Issuance Document Configuration](#scoped-issuance-document-configuration)
-* [How to work with self-signed certificates](#how-to-work-with-self-signed-certificates)
+* [How to work with self-signed certificates](HOW_TO_BUILD.md#how-to-work-with-self-signed-certificates-on-ios)
 * [Theme configuration](#theme-configuration)
 * [Pin Storage configuration](#pin-storage-configuration)
 * [Analytics configuration](#analytics-configuration)
@@ -50,7 +52,6 @@ struct WalletKitConfigImpl: WalletKitConfig {
                 keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
                 authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
                 requirePAR: should_use_par_bool,
-                useDPoP: should_use_dpop_bool,
                 requireDpop: should_use_dpop_bool,
                 cacheIssuerMetadata: should_cache_metadata_bool
             ),
@@ -83,7 +84,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
 2. Wallet Attestation Provider
 
-Via the *WalletKitAttestationConfig* protocol inside the logic-core module.
+Via the *WalletProviderAttestationConfig* protocol inside the logic-core module.
 
 ```swift
 protocol WalletProviderAttestationConfig: Sendable {
@@ -289,6 +290,53 @@ public protocol ConfigLogic: Sendable {
 }
 ```
 
+## Dependency versions
+
+The Swift Package Manager dependency resolution file is:
+
+`EudiReferenceWallet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`
+
+At the time this guide was written, key versions included:
+
+| Dependency | Current version or source |
+| --- | --- |
+| Swift tools | `6.2` |
+| Minimum package platform | iOS 17 |
+| EUDI WalletKit | `0.28.3` |
+| EUDI RQES UI | `0.4.0` |
+| EUDI OpenID4VCI Swift | `0.35.1` |
+| EUDI SIOP OpenID4VP Swift | `0.33.0` |
+| EUDI ISO 18013 libraries | `0.14.0` |
+| EUDI Wallet Storage | `0.11.3` |
+
+Review these versions whenever you change configuration that depends on SDK behavior, such as
+WalletKit issuance/presentation, RQES, OpenID4VP, ISO18013 proximity, Wallet Storage, or dependency
+security policy. For production release rules, see [GO_LIVE.md](GO_LIVE.md#dependency-versions).
+
+## Production configuration reference
+
+For production deployments, do not only edit the existing Dev or Demo values. Create a dedicated
+production scheme, production build configuration, and `PROD` app build variant, then provide
+production values for every config surface listed below.
+
+| Configuration area | Source file | Production value to provide |
+| --- | --- | --- |
+| Build variant/type | `Wallet/Config/*.xcconfig`, `ConfigLogic.swift` | `BUILD_VARIANT = PROD`, `BUILD_TYPE = RELEASE` for production archives. |
+| Issuers | `WalletKitConfig.swift` | Production OpenID4VCI issuer URLs, client IDs, redirect URIs, PAR/DPoP policy, metadata caching policy, and display order. |
+| Wallet provider attestation | `WalletProviderAttestationConfig.swift` | Production Wallet Provider host used for wallet/key attestation. |
+| Reader trust anchors | `WalletKitConfig.swift`, certificate resources | Production IACA/reader/verifier trust anchors only. |
+| OpenID4VP | `WalletKitConfig.swift` | Approved client ID schemes, preregistered verifier entries where needed, and partial claim disclosure policy. |
+| WalletKit storage/auth | `WalletKitConfig.swift`, `ConfigLogic.swift` | Production Keychain service/access group and `userAuthenticationRequired` decision. |
+| Document issuance | `WalletKitConfig.swift` | Production credential policy, batch size, and reissuance thresholds. |
+| Revocation/status | `WalletKitConfig.swift` | Production status-check interval and failure behavior. |
+| RQES | `RQESConfig.swift` | Production QTSP/RSSP endpoint, TSA, client ID, redirect URI, hash policy, and logging policy. Do not hardcode production secrets. |
+| Deep links | `Wallet/Wallet.plist`, deep-link parsing code | Production URI schemes and strict validation. |
+| Entitlements | `EudiWallet.entitlements`, extension entitlements | Production App Groups, Keychain access groups, document-provider capabilities, and mobile document types. |
+| Analytics | `AnalyticsConfig.swift` | Privacy-reviewed provider setup with no PID, credential, token, or verifier payload collection. |
+
+The full production checklist, hardening guidance, OWASP MASVS mapping, and release evidence
+requirements are documented in the [production go-live guide](GO_LIVE.md).
+
 ## DeepLink Schemas configuration
 
 According to the specifications, issuance, presentation, and RQES require deep-linking for the same device flows.
@@ -419,51 +467,7 @@ If you want to add or adjust the displayed scoped documents, you must modify the
 
 ## How to work with self-signed certificates
 
-This section describes configuring the application to interact with services utilizing self-signed certificates.
-
-Add these lines of code to the top of the file *WalletKitController*, inside the logic-core module, just below the import statements. 
-
-```swift
-final class SelfSignedDelegate: NSObject, URLSessionDelegate {
-  func urlSession(
-    _ session: URLSession,
-    didReceive challenge: URLAuthenticationChallenge,
-    completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
-  ) {
-    // Check if the challenge is for a self-signed certificate
-    if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
-       let trust = challenge.protectionSpace.serverTrust {
-      // Create a URLCredential with the self-signed certificate
-      let credential = URLCredential(trust: trust)
-      // Call the completion handler with the credential to accept the self-signed certificate
-      completionHandler(.useCredential, credential)
-    } else {
-      // For other authentication methods, call the completion handler with a nil credential to reject the request
-      completionHandler(.cancelAuthenticationChallenge, nil)
-    }
-  }
-}
-
-let walletSession: URLSession = {
-  let delegate = SelfSignedDelegate()
-  let configuration = URLSessionConfiguration.default
-  return URLSession(
-    configuration: configuration,
-    delegate: delegate,
-    delegateQueue: nil
-  )
-}()
-```
-
-Once the above is in place, adjust the initializer:
-
-```swift
-guard let walletKit = try? EudiWallet(serviceName: configLogic.documentStorageServiceName, networking: walletSession) else {
-  fatalError("Unable to Initialize WalletKit")
-}
-```
-
-This change will allow the app to interact with web services that rely on self-signed certificates.
+For instructions on working with self-signed certificates during local development, see [HOW_TO_BUILD.md](HOW_TO_BUILD.md#how-to-work-with-self-signed-certificates-on-ios).
 
 ## Theme configuration
 

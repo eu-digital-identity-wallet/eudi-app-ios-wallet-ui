@@ -3,17 +3,44 @@
 ## Table of contents
 
 * [Overview](#overview)
+* [Dependency versions](#dependency-versions)
 * [Setup Apps](#setup-apps)
-* [How to work with self signed certificates on iOS](#how-to-work-with-self-signed-certificates-on-ios)
-* [Document Provider extension configuration](configuration.md#document-provider-extension-configuration)
+* [Build configurations](#build-configurations)
+* [Build commands](#build-commands)
+* [How to work with self-signed certificates on iOS](#how-to-work-with-self-signed-certificates-on-ios)
+* [Document Provider extension configuration](CONFIGURATION.md#document-provider-extension-configuration)
+* [Production note](#production-note)
 
 ## Overview
 
 This guide aims to assist developers in building the application.
 
-# Setup Apps
+## Dependency versions
 
-## EUDI iOS Wallet reference application
+The Swift Package Manager dependency resolution file is:
+
+`EudiReferenceWallet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`
+
+At the time this guide was written, key versions included:
+
+| Dependency | Current version or source |
+| --- | --- |
+| Swift tools | `6.2` |
+| Minimum package platform | iOS 17 |
+| EUDI WalletKit | `0.28.3` |
+| EUDI RQES UI | `0.4.0` |
+| EUDI OpenID4VCI Swift | `0.35.1` |
+| EUDI SIOP OpenID4VP Swift | `0.33.0` |
+| EUDI ISO 18013 libraries | `0.14.0` |
+| EUDI Wallet Storage | `0.11.3` |
+
+Before building a release candidate, confirm these values against `Package.resolved` and archive the
+dependency report or SBOM with the release evidence. See the [production go-live guide](GO_LIVE.md)
+for the full dependency governance checklist.
+
+## Setup Apps
+
+### EUDI iOS Wallet reference application
 
 You need [xcode](https://xcodereleases.com/) and its associated tools installed on your machine. We recommend the latest non-beta version. 
 
@@ -35,6 +62,55 @@ This setup results in a total of four configurations. All four configurations ar
 To run the app on the simulator, select your app schema and press Run.
 
 To run the app on a device, follow similar steps to running it on the simulator. Additionally, you need to supply your own provisioning profile and signing certificate in the Signing & Capabilities tab of your app target.
+
+## Build configurations
+
+Current schemes and configurations:
+
+| Scheme | Run/Test configuration | Archive configuration | Intended use |
+| --- | --- | --- | --- |
+| `EUDI Wallet Dev` | `Debug Dev` | `Release Dev` | Development environment. |
+| `EUDI Wallet Demo` | `Debug Demo` | `Release Demo` | Public demo/stable environment. |
+
+For production, create a dedicated production scheme and production build configurations, for
+example `EUDI Wallet Prod`, `Debug Prod`, and `Release Prod`. Do not ship `Release Dev` or
+`Release Demo` as a production artifact.
+
+## Build commands
+
+Build the Dev scheme:
+
+```bash
+xcodebuild \
+  -project EudiReferenceWallet.xcodeproj \
+  -scheme "EUDI Wallet Dev" \
+  -configuration "Debug Dev" \
+  -destination "generic/platform=iOS" \
+  clean build
+```
+
+Build the Demo release configuration:
+
+```bash
+xcodebuild \
+  -project EudiReferenceWallet.xcodeproj \
+  -scheme "EUDI Wallet Demo" \
+  -configuration "Release Demo" \
+  -destination "generic/platform=iOS" \
+  clean build
+```
+
+Recommended production archive shape after adding a production scheme:
+
+```bash
+xcodebuild \
+  -project EudiReferenceWallet.xcodeproj \
+  -scheme "EUDI Wallet Prod" \
+  -configuration "Release Prod" \
+  -destination "generic/platform=iOS" \
+  -archivePath build/EudiWalletProd.xcarchive \
+  clean archive
+```
 
 ### Running with remote services
 
@@ -66,30 +142,37 @@ Using this parsed information, instances such as `WalletKitConfig` and `RQESConf
 For instance, here's how `WalletKitConfig` resolves its configuration for OpenID4VCI remote services based on the build variant:
 
 ```swift
-var vciConfig: [String: OpenId4VciConfiguration] {
-  let openId4VciConfigurations: [OpenId4VciConfiguration] = {
+var issuersConfig: [String: VciConfig] {
+  let openId4VciConfigurations: [VciConfig] = {
     switch configLogic.appBuildVariant {
     case .DEMO:
       return [
         .init(
-          credentialIssuerURL: "https://issuer.eudiw.dev",
-          clientId: "wallet-dev",
-          keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
-          authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-          requirePAR: true,
-          requireDpop: true,
-          cacheIssuerMetadata: true
+          config: .init(
+            credentialIssuerURL: "https://issuer.eudiw.dev",
+            clientId: "wallet-dev",
+            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+            authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
+            requirePAR: true,
+            requireDpop: true,
+            cacheIssuerMetadata: true
+          ),
+          order: 1
         )
+      ]
     case .DEV:
       return [
         .init(
-          credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
-          clientId: "wallet-dev",
-          keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
-          authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-          requirePAR: true,
-          requireDpop: true,
-          cacheIssuerMetadata: true
+          config: .init(
+            credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
+            clientId: "wallet-dev",
+            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+            authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
+            requirePAR: true,
+            requireDpop: true,
+            cacheIssuerMetadata: true
+          ),
+          order: 1
         )
       ]
     }
@@ -99,7 +182,7 @@ var vciConfig: [String: OpenId4VciConfiguration] {
 }
 ```
 
-In this example, the `vciConfig` property dynamically assigns configurations, such as `issuerUrl`, `clientId`, `redirectUri`, `usePAR`, `useDpopIfSupported`, `keyAttestationsConfig`, and `cacheIssuerMetadata`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
+In this example, the `issuersConfig` property dynamically assigns configurations, such as `credentialIssuerURL`, `clientId`, `authFlowRedirectionURI`, `requirePAR`, `requireDpop`, `keyAttestationsConfig`, and `cacheIssuerMetadata`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
 
 ### Running with local services
 
@@ -160,6 +243,13 @@ This change will allow the app to interact with web services that rely on self-s
 
 If you are enabling or troubleshooting the Identity Document Provider extension, including `SHARED_APP_GROUP_IDENTIFIER`, keychain-access-groups, and extension registration behavior, follow the dedicated configuration guide here:
 
-[Document Provider extension configuration](configuration.md#document-provider-extension-configuration)
+[Document Provider extension configuration](CONFIGURATION.md#document-provider-extension-configuration)
 
-For all configuration options, please refer to [this document](configuration.md)
+For all configuration options, please refer to [this document](CONFIGURATION.md)
+
+## Production note
+
+Before creating a production release candidate, follow the [production go-live guide](GO_LIVE.md).
+It explains how to add a production scheme/build configuration, configure WalletKit and RQES with
+production services, replace demo trust anchors, configure signing and entitlements, harden the app,
+align with OWASP MASVS, and collect release evidence.
