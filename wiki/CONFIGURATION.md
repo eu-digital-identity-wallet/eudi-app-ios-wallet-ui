@@ -7,7 +7,7 @@
 * [Production configuration reference](#production-configuration-reference)
 * [DeepLink Schemas configuration](#deeplink-schemas-configuration)
 * [Scoped Issuance Document Configuration](#scoped-issuance-document-configuration)
-* [How to work with self-signed certificates](how_to_build.md#how-to-work-with-self-signed-certificates-on-ios)
+* [How to work with self-signed certificates](HOW_TO_BUILD.md#how-to-work-with-self-signed-certificates-on-ios)
 * [Theme configuration](#theme-configuration)
 * [Pin Storage configuration](#pin-storage-configuration)
 * [Analytics configuration](#analytics-configuration)
@@ -311,7 +311,7 @@ At the time this guide was written, key versions included:
 
 Review these versions whenever you change configuration that depends on SDK behavior, such as
 WalletKit issuance/presentation, RQES, OpenID4VP, ISO18013 proximity, Wallet Storage, or dependency
-security policy. For production release rules, see [go_live.md](go_live.md#dependency-versions).
+security policy. For production release rules, see [GO_LIVE.md](GO_LIVE.md#dependency-versions).
 
 ## Production configuration reference
 
@@ -335,7 +335,7 @@ production values for every config surface listed below.
 | Analytics | `AnalyticsConfig.swift` | Privacy-reviewed provider setup with no PID, credential, token, or verifier payload collection. |
 
 The full production checklist, hardening guidance, OWASP MASVS mapping, and release evidence
-requirements are documented in the [production go-live guide](go_live.md).
+requirements are documented in the [production go-live guide](GO_LIVE.md).
 
 ## DeepLink Schemas configuration
 
@@ -467,7 +467,7 @@ If you want to add or adjust the displayed scoped documents, you must modify the
 
 ## How to work with self-signed certificates
 
-For instructions on working with self-signed certificates during local development, see [how_to_build.md](how_to_build.md#how-to-work-with-self-signed-certificates-on-ios).
+For instructions on working with self-signed certificates during local development, see [HOW_TO_BUILD.md](HOW_TO_BUILD.md#how-to-work-with-self-signed-certificates-on-ios).
 
 ## Theme configuration
 

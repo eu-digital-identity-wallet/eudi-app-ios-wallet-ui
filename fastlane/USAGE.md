@@ -18,7 +18,7 @@ bundle exec fastlane ios tests
 ```
 
 The iOS build still uses the Xcode project, schemes, and configuration described in
-[../wiki/how_to_build.md](../wiki/how_to_build.md).
+[../wiki/HOW_TO_BUILD.md](../wiki/HOW_TO_BUILD.md).
 
 ## Common Lanes
 
@@ -176,4 +176,4 @@ rqes://oauth/callback
 eu.europa.ec.euidi.dev
 ```
 
-For the complete production release process, see [../wiki/go_live.md](../wiki/go_live.md).
+For the complete production release process, see [../wiki/GO_LIVE.md](../wiki/GO_LIVE.md).

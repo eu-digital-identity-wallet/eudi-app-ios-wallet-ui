@@ -8,7 +8,7 @@
 * [Build configurations](#build-configurations)
 * [Build commands](#build-commands)
 * [How to work with self-signed certificates on iOS](#how-to-work-with-self-signed-certificates-on-ios)
-* [Document Provider extension configuration](configuration.md#document-provider-extension-configuration)
+* [Document Provider extension configuration](CONFIGURATION.md#document-provider-extension-configuration)
 * [Production note](#production-note)
 
 ## Overview
@@ -35,7 +35,7 @@ At the time this guide was written, key versions included:
 | EUDI Wallet Storage | `0.11.3` |
 
 Before building a release candidate, confirm these values against `Package.resolved` and archive the
-dependency report or SBOM with the release evidence. See the [production go-live guide](go_live.md)
+dependency report or SBOM with the release evidence. See the [production go-live guide](GO_LIVE.md)
 for the full dependency governance checklist.
 
 ## Setup Apps
@@ -243,13 +243,13 @@ This change will allow the app to interact with web services that rely on self-s
 
 If you are enabling or troubleshooting the Identity Document Provider extension, including `SHARED_APP_GROUP_IDENTIFIER`, keychain-access-groups, and extension registration behavior, follow the dedicated configuration guide here:
 
-[Document Provider extension configuration](configuration.md#document-provider-extension-configuration)
+[Document Provider extension configuration](CONFIGURATION.md#document-provider-extension-configuration)
 
-For all configuration options, please refer to [this document](configuration.md)
+For all configuration options, please refer to [this document](CONFIGURATION.md)
 
 ## Production note
 
-Before creating a production release candidate, follow the [production go-live guide](go_live.md).
+Before creating a production release candidate, follow the [production go-live guide](GO_LIVE.md).
 It explains how to add a production scheme/build configuration, configure WalletKit and RQES with
 production services, replace demo trust anchors, configure signing and entitlements, harden the app,
 align with OWASP MASVS, and collect release evidence.
