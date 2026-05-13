@@ -835,7 +835,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filter by Expiry Period"
+            "value" : "Expiry Period"
           }
         }
       }
@@ -868,7 +868,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filter by Category"
+            "value" : "Category"
           }
         }
       }
@@ -879,7 +879,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filter By Transaction Date Period"
+            "value" : "Transaction Date Period"
           }
         }
       }
@@ -890,7 +890,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filter by Issuer"
+            "value" : "Issuer"
           }
         }
       }
@@ -901,7 +901,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filter By State"
+            "value" : "State"
           }
         }
       }
@@ -912,7 +912,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filter By Status"
+            "value" : "Status"
           }
         }
       }
@@ -923,7 +923,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filter By Type"
+            "value" : "Type"
           }
         }
       }
@@ -934,7 +934,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filters"
+            "value" : "Filter by"
           }
         }
       }
@@ -1784,7 +1784,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filter By Relying Party"
+            "value" : "Relying Party"
           }
         }
       }

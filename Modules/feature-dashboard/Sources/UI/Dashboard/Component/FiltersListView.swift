@@ -62,18 +62,22 @@ struct FiltersListView: View {
   }
 
   var body: some View {
-    NavigationView {
-      List {
-        ForEach(sections) { section in
-          FilterSection(
-            sectionTitle: section.sectionTitle,
-            sectionID: section.id,
-            filters: section.filters
-          )
+    NavigationStack {
+      ScrollView {
+        LazyVStack(spacing: SPACING_MEDIUM) {
+          ForEach(sections) { section in
+            filterSectionCard(
+              sectionTitle: section.sectionTitle,
+              sectionID: section.id,
+              filters: section.filters
+            )
+          }
         }
+        .padding(.horizontal, SPACING_MEDIUM)
+        .padding(.vertical, SPACING_SMALL)
       }
-      .listStyle(.grouped)
       .scrollIndicators(.hidden)
+      .background(Theme.shared.color.background)
       .navigationTitle(.filters)
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
@@ -95,14 +99,6 @@ struct FiltersListView: View {
           .accessibilityLabel(Text(.showResults))
         }
       }
-      .safeAreaInset(edge: .bottom) {
-        WrapButtonView(
-          style: .primary,
-          title: .showResults,
-          onAction: applyFilters()
-        )
-        .padding(.horizontal, SPACING_MEDIUM)
-      }
       .onDisappear {
         if !isApplied {
           revertFilters()
@@ -116,64 +112,103 @@ struct FiltersListView: View {
         endDate = availableDates.compactMap { $0.1 }.max() ?? maxEndDate
       }
     }
+    .presentationDragIndicator(.visible)
   }
 
   @ViewBuilder
-  func FilterSection(
+  private func filterSectionCard(
     sectionTitle: String,
     sectionID: String,
     filters: [FilterUIItem]
   ) -> some View {
-    Section(header: Text(sectionTitle)) {
-      ForEach(filters.indices, id: \.self) { index in
-        if filters[index].filterSectionType == .radio {
-          HStack {
-            Text(filters[index].title)
-              .frame(maxWidth: .infinity, alignment: .topLeading)
-            if filters[index].selected {
-              Theme.shared.image.checkmark
-                .foregroundColor(ThemeManager.shared.color.primary)
-            }
-          }
-          .contentShape(Rectangle())
-          .frame(maxWidth: .infinity)
-          .onTapGesture {
-            updateFiltersCallback?(sectionID, filters[index].id)
-          }
-        } else if filters[index].filterSectionType == .datePicker {
+    WrapCardView {
+      VStack(alignment: .leading, spacing: .zero) {
+        Text(sectionTitle)
+          .typography(Theme.shared.font.labelLarge)
+          .fontWeight(.semibold)
+          .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .padding(.horizontal, SPACING_MEDIUM)
+          .padding(.top, SPACING_MEDIUM)
 
-          DatePicker(selection: $startDate, in: minStartDate...endDate, displayedComponents: .date) {
-            Text(.startDate)
+        ForEach(Array(filters.enumerated()), id: \.element.id) { index, filter in
+          if index > 0 {
+            ListDividerView(spacing: SPACING_LARGE)
           }
-          .onAppear {
-            if let date = filters[index].startDate {
-              startDate = date
-            }
-          }
-          .onChange(of: startDate) {
-            let expectedStartDate = filters[index].startDate ?? Date()
-            if !Calendar.current.isDate(startDate, equalTo: expectedStartDate, toGranularity: .day) {
-              showIndicator?()
-            }
-            updateDateFiltersCallback?(sectionID, filters[index].id, startDate, endDate)
-          }
+          filterRow(
+            sectionID: sectionID,
+            filter: filter
+          )
+          .padding(.horizontal, SPACING_LARGE)
+          .padding(.vertical, SPACING_MEDIUM)
+        }
+      }
+    }
+  }
 
-          DatePicker(selection: $endDate, in: startDate...maxEndDate, displayedComponents: .date) {
-            Text(.endDate)
-              .onAppear {
-                if let date = filters[index].endDate {
-                  endDate = date
-                }
-              }
-              .onChange(of: endDate) {
-                let expectedStartDate = filters[index].endDate ?? Date()
-                if !Calendar.current.isDate(startDate, equalTo: expectedStartDate, toGranularity: .day) {
-                  showIndicator?()
-                }
-                updateDateFiltersCallback?(sectionID, filters[index].id, startDate, endDate)
-              }
+  @ViewBuilder
+  private func filterRow(
+    sectionID: String,
+    filter: FilterUIItem
+  ) -> some View {
+    switch filter.filterSectionType {
+    case .radio:
+      HStack(alignment: .center, spacing: .zero) {
+        Text(filter.title)
+          .typography(Theme.shared.font.bodyLarge)
+          .foregroundStyle(Theme.shared.color.onSurface)
+          .multilineTextAlignment(.leading)
+        Spacer(minLength: SPACING_MEDIUM)
+        Toggle(
+          "",
+          isOn: Binding(
+            get: { filter.selected },
+            set: { newValue in
+              guard newValue != filter.selected else { return }
+              updateFiltersCallback?(sectionID, filter.id)
+            }
+          )
+        )
+        .labelsHidden()
+        .tint(Color.green)
+      }
+
+    case .datePicker:
+      VStack(alignment: .leading, spacing: SPACING_SMALL) {
+        DatePicker(selection: $startDate, in: minStartDate...endDate, displayedComponents: .date) {
+          Text(.startDate)
+        }
+        .tint(Theme.shared.color.primary)
+        .onAppear {
+          if let date = filter.startDate {
+            startDate = date
           }
         }
+        .onChange(of: startDate) {
+          let expectedStartDate = filter.startDate ?? Date()
+          if !Calendar.current.isDate(startDate, equalTo: expectedStartDate, toGranularity: .day) {
+            showIndicator?()
+          }
+          updateDateFiltersCallback?(sectionID, filter.id, startDate, endDate)
+        }
+        .tint(Theme.shared.color.primary)
+
+        DatePicker(selection: $endDate, in: startDate...maxEndDate, displayedComponents: .date) {
+          Text(.endDate)
+            .onAppear {
+              if let date = filter.endDate {
+                endDate = date
+              }
+            }
+            .onChange(of: endDate) {
+              let expectedStartDate = filter.endDate ?? Date()
+              if !Calendar.current.isDate(startDate, equalTo: expectedStartDate, toGranularity: .day) {
+                showIndicator?()
+              }
+              updateDateFiltersCallback?(sectionID, filter.id, startDate, endDate)
+            }
+        }
+        .tint(Theme.shared.color.primary)
       }
     }
   }
