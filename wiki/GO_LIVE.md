@@ -36,6 +36,34 @@ Create a separate production scheme and build configuration, replace every demo 
 certificate, perform a MASVS-aligned assessment, add runtime hardening, and run a formal release
 process.
 
+## Out Of Scope
+
+This guide focuses on taking the iOS reference wallet application to a production-ready mobile
+deployment posture. It does not define every backend, governance, or product decision around a
+national wallet ecosystem.
+
+The following items are out of scope and must be designed, implemented, assessed, and approved by
+the Member State or wallet provider:
+
+* Enrollment and identity proofing flows before PID issuance.
+* Selfie capture, video capture, liveness detection, document scanning, face matching, registry
+  lookup, or any equivalent national onboarding process.
+* The integration contract between the wallet app, the issuer, and any identity-proofing or
+  population-register backend.
+* Legal certification, accreditation, conformity assessment, supervisory approval, and governance
+  decisions.
+* Full production implementation of issuer, verifier, wallet-provider, QTSP, or status-list backend
+  services.
+* Non-iOS form factors such as web wallets, browser extensions, Android apps, desktop apps, kiosk
+  apps, or other native platforms.
+* Migration from an existing national wallet product unless the implementer designs and tests that
+  migration explicitly.
+
+If the Member State requires selfie, video, remote identity proofing, in-person proofing, national
+eID login, or another enrollment method, integrate that flow through the Member State onboarding and
+issuer architecture. The app must only receive the production credential offer, authorization
+redirect, or issuer-specific entry point after the enrollment policy has been satisfied.
+
 ## Go-Live Checklist
 
 Use this checklist before the first production release.
@@ -497,7 +525,7 @@ Production meaning:
 | --- | --- | --- |
 | `serviceName` | Keychain service name used by WalletKit storage. | Must be stable across app updates and match extension access needs. |
 | `accessGroup` | Keychain access group. | Must match signed entitlements and extension sharing requirements. |
-| `userAuthenticationRequired` | Whether WalletKit secure storage requires local user authentication. | For high-assurance credentials, strongly consider `true`; test all issuance, presentation, extension, and background behavior. |
+| `userAuthenticationRequired` | Whether WalletKit secure storage requires local user authentication. | For LoA High PID and other high-assurance EAA/QEAA credentials, set this to `true` unless an approved remote high-assurance hardware-backed key protection design replaces local key use. Test all issuance, presentation, extension, and background behavior. |
 | `trustedReaderRootCertificates` | Trust anchors for proximity reader authentication and supported verification flows. | Replace demo anchors with production trust anchors only. |
 | `deviceAuthMethod` | Device authentication method used by WalletKit. | Current value is `.deviceSignature`; confirm with WalletKit and assurance policy. |
 | `uiCulture` | Locale passed to WalletKit. | Confirm supported locales and fallback behavior. |
@@ -513,11 +541,22 @@ var userAuthenticationRequired: Bool {
 }
 ```
 
-Production decision:
+This is the reference configuration as shipped. It is not a production recommendation for LoA High
+PID or other high-assurance credentials.
+
+Production requirements and decision points:
 
 * `false` relies on app-level PIN/biometric flows and Keychain/App Sandbox protections.
+* For LoA High PID and other high-assurance EAA/QEAA credentials, WalletKit-managed credential and
+  key material must be protected by strong local authentication and Keychain/Secure Enclave-backed
+  protection, or through an approved remote high-assurance hardware-backed storage design.
 * `true` can bind WalletKit storage access to platform local authentication, but it must be tested
   with all flows, including extension access, reissuance, revocation checks, and background behavior.
+* The current iOS app exposes `userAuthenticationRequired`; it does not expose the Android
+  `userAuthenticationTimeout` setting. If batch issuing, deferred issuing, or reissuance causes
+  repeated authentication prompts, use only a WalletKit/iOS-supported authentication reuse or session
+  design approved by the assurance policy, document the risk decision, and verify the window cannot
+  be reused outside the intended flow.
 
 Recommended production process:
 
@@ -529,8 +568,53 @@ Recommended production process:
    * Export or support log creation.
    * Document deletion or wallet reset.
 2. Test WalletKit behavior with `userAuthenticationRequired = true`.
-3. Decide fallback behavior for devices without biometrics or passcode.
-4. Document the UX and support impact.
+3. Test PID issuance, batch/deferred issuance, presentation, and extension access with the selected
+   authentication behavior.
+4. Decide fallback behavior for devices without biometrics or passcode.
+5. Document the UX and support impact.
+
+### Key Storage And Extension Points
+
+The default storage and key-handling behavior is selected by WalletKit when `EudiWallet` is created
+with `EudiWalletConfiguration`. In this application, the integration point is:
+
+```text
+Modules/logic-core/Sources/Controller/WalletKitController.swift
+```
+
+Production teams must decide whether the default WalletKit and Keychain/App Group storage model is
+sufficient or whether a WalletKit-supported custom integration, remote signing service, or external
+protection SDK is required.
+
+Current app-level configuration points:
+
+| Configuration point | Purpose | When to change |
+| --- | --- | --- |
+| `ConfigLogic.keyChainConfig.documentStorageServiceName` | Keychain service name passed to WalletKit and the Identity Document Provider extension. | Change only through a planned migration, because it must remain stable across upgrades and extension access. |
+| `ConfigLogic.keyChainConfig.keychainAccessGroup` | Runtime Keychain access group used by the main app and extension. | Change when production entitlements, App Groups, or Keychain Sharing groups are finalized. |
+| `WalletKitConfig.userAuthenticationRequired` | Local authentication gate for WalletKit secure storage access. | Enable for LoA High PID and other high-assurance credentials unless an approved remote high-assurance hardware-backed design replaces local key use. |
+| `WalletKitAttestationProviderImpl` and `WalletProviderAttestationConfig` | Wallet Provider host and wallet/key attestation calls. | Change when wallet attestation keys must be generated, stored, attested, or unlocked through a custom provider or remote high-assurance key service. |
+| `WalletKitConfig.issuersConfig` and `keyAttestationsConfig` | Issuance configuration and Wallet Provider attestation provider wiring. | Change when issuer policy requires different key attestation, DPoP, or proof-of-possession behavior. |
+| WalletKit storage and key-management APIs | WalletKit-owned document, credential, and protocol key handling. | If the selected WalletKit version exposes dedicated storage, key manager, Secure Enclave, remote signing, or ephemeral-key configuration, configure it in the production integration and record the exact SDK API. |
+
+Production implementation rules:
+
+* Treat document keys, wallet attestation keys, issuance proof/DPoP keys, and remote presentation
+  protocol keys as separate key classes with separate policies.
+* Document keys for LoA High PID and high-assurance EAA/QEAA credentials must be hardware-backed or
+  protected by an approved remote high-assurance hardware-backed design.
+* Wallet attestation keys must be generated, stored, unlocked, and attested according to the Wallet
+  Provider policy.
+* DPoP or issuance proof keys protect issuance access tokens against replay. Do not disable DPoP in
+  production unless the issuer explicitly does not support it and the risk is accepted.
+* Remote presentation uses protocol-level ephemeral key material for encrypted OpenID4VP responses.
+  Ephemeral key material must be generated per transaction, must not be reused across verifiers, and
+  must not be persisted longer than the protocol flow requires. If the selected WalletKit version
+  exposes a dedicated configuration option for this ephemeral key storage, configure it in the
+  production WalletKit integration and record the exact SDK API in the release evidence.
+* Test custom storage or key-management behavior with device lock changes, biometric enrollment
+  changes, app upgrade, app reinstall, backup/restore attempts, low-storage conditions, extension
+  access, issuer reissuance, and revocation/status refresh.
 
 ## OpenID4VP Configuration
 
