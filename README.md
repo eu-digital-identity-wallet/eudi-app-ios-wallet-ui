@@ -74,6 +74,7 @@ The main purpose of the reference implementation is to showcase the ecosystem an
 If you're planning to use this application in production, we recommend reviewing the following steps:
 - Configure the application properly by following the guide [here](wiki/CONFIGURATION.md)
 - Follow the production go-live guide [here](wiki/GO_LIVE.md) before creating a release candidate.
+- Review the go-live guide's out-of-scope section [here](wiki/GO_LIVE.md#out-of-scope) and design the required Member State onboarding, enrollment, and operational processes around the app.
 - The Pin storage configuration matches your security requirements, or provide your own by following this guide [Pin Storage Configuration](wiki/CONFIGURATION.md#pin-storage-configuration)
 - The application meets the OWASP MASVS industry standard. Please refer to the following links for further information on the controls you must implement to ensure maximum compliance:
     - [OWASP MASVS](https://mas.owasp.org/MASVS/)
@@ -90,7 +91,7 @@ replace before launch.
 
 ### Prerequisites
 
-To complete the flows described below, you must build and run the application with Xcode. Alternatively, you can download the Android app [here](https://github.com/eu-digital-identity-wallet/eudi-app-android-wallet-ui/releases).
+To complete the flows described below, you must build and run the iOS application with Xcode. If your organization provides a TestFlight, App Store, or MDM-distributed iOS build, install that approved build instead.
 
 You will also need to download the EUDI Verifier app. More information can be found [here](https://github.com/eu-digital-identity-wallet/eudi-app-multiplatform-verifier-ui)
 
