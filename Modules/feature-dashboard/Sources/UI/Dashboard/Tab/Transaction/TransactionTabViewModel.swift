@@ -23,12 +23,20 @@ struct TransactionTabState: ViewState {
   let isLoading: Bool
   let transactions: [TransactionCategory: [TransactionTabUIModel]]
   let filterUIModel: [FilterUISection]
-  let isPaused: Bool
+  let lifecycle: Lifecycle
   let hasDefaultFilters: Bool
   let dateHasChanged: Bool
   let sortIsDescending: Bool
   let minStartDate: Date
   let maxEndDate: Date
+}
+
+extension TransactionTabState {
+  enum Lifecycle {
+    case tabActivePaused
+    case tabNotActivePaused
+    case active
+  }
 }
 
 @Observable
@@ -64,7 +72,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         isLoading: true,
         transactions: [:],
         filterUIModel: [],
-        isPaused: true,
+        lifecycle: .tabNotActivePaused,
         hasDefaultFilters: true,
         dateHasChanged: false,
         sortIsDescending: false,
@@ -77,9 +85,13 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
     subscribeToSearch()
   }
 
-  func onCreate() {
+  func onAppear() {
     updateToolBar()
     fetch()
+  }
+
+  func onDisappear() {
+    self.setState { $0.copy(lifecycle: .tabNotActivePaused) }
   }
 
   func fetch() {
@@ -91,7 +103,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         switch state {
         case .success(let transactions, let minStartDate, let maxEndDate):
 
-          if viewState.isPaused {
+          if viewState.lifecycle != .active {
             await interactor.initializeFilters(
               filterableList: transactions,
               minStartDate: minStartDate,
@@ -110,7 +122,7 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
           setState {
             $0.copy(
               isLoading: false,
-              isPaused: false,
+              lifecycle: .active,
               minStartDate: minStartDate,
               maxEndDate: maxEndDate
             )
@@ -119,7 +131,8 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
           setState {
             $0.copy(
               isLoading: false,
-              transactions: [:]
+              transactions: [:],
+              lifecycle: .active
             )
           }
         }
@@ -170,10 +183,6 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
     }
   }
 
-  func onPause() {
-    self.setState { $0.copy(isPaused: true) }
-  }
-
   func updateDateFilters(
     sectionID: String,
     filterID: String,
@@ -188,6 +197,19 @@ final class TransactionTabViewModel<Router: RouterHost>: ViewModel<Router, Trans
         endDate: endDate
       )
     }
+  }
+
+  func setPhase(with phase: ScenePhase) {
+    if phase == .active, viewState.lifecycle == .tabActivePaused {
+      onAppear()
+    }
+    if phase == .background, viewState.lifecycle == .active {
+      onbackground()
+    }
+  }
+
+  private func onbackground() {
+    self.setState { $0.copy(lifecycle: .tabActivePaused) }
   }
 
   private func onMyWallet() {

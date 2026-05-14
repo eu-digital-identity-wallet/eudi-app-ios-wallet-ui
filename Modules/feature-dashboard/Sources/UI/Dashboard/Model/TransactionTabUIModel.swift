@@ -99,7 +99,7 @@ public enum TransactionType: Sendable, Equatable {
 }
 
 extension TransactionLogItem {
-  func transformToTransactionUI() -> TransactionTabUIModel {
+  func transformToTransactionUI() -> TransactionTabUIModel? {
     switch self.transactionLogData {
     case .presentation(let logData):
       return .init(
@@ -111,14 +111,7 @@ extension TransactionLogItem {
         transactionType: .presentation
       )
     case .issuance, .signing, .deletion:
-      return .init(
-        id: self.id,
-        name: "",
-        status: .completed,
-        transactionDate: "",
-        transactionCategory: .category(for: ""),
-        transactionType: .presentation
-      )
+      return nil
     }
   }
 }

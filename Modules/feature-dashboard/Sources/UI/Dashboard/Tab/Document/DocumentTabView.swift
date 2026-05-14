@@ -85,10 +85,10 @@ struct DocumentTabView<Router: RouterHost>: View {
       viewModel.setPhase(with: scenePhase)
     }
     .onAppear {
-      viewModel.onCreate()
+      viewModel.onAppear()
     }
     .onDisappear {
-      viewModel.onPause()
+      viewModel.onDisappear()
     }
     .onReceive(NotificationCenter.default.publisher(for: NSNotification.DocumentTabRefresh)) { _ in
       viewModel.handleRefreshotification()
@@ -198,11 +198,10 @@ private func deferredSuccessList(
     isLoading: false,
     documents: [:],
     filterUIModel: [],
-    phase: .active,
+    lifecycle: .active,
     pendingDeletionDocument: nil,
     succededIssuedDocuments: [],
     failedDocuments: [],
-    isPaused: false,
     hasDefaultFilters: false
   )
   content(

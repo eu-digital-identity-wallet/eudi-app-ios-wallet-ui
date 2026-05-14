@@ -19,6 +19,8 @@ import logic_resources
 
 struct TransactionTabView<Router: RouterHost>: View {
 
+  @Environment(\.scenePhase) private var scenePhase
+
   @State private var viewModel: TransactionTabViewModel<Router>
 
   public init(with viewModel: TransactionTabViewModel<Router>) {
@@ -54,11 +56,14 @@ struct TransactionTabView<Router: RouterHost>: View {
         viewModel.updateDateFilters(sectionID: sectionID, filterID: filterID, startDate: startDate, endDate: endDate)
       }
     }
+    .onChange(of: scenePhase) {
+      viewModel.setPhase(with: scenePhase)
+    }
     .onAppear {
-      viewModel.onCreate()
+      viewModel.onAppear()
     }
     .onDisappear {
-      viewModel.onPause()
+      viewModel.onDisappear()
     }
   }
 }
@@ -146,7 +151,7 @@ private func content(
     isLoading: false,
     transactions: [:],
     filterUIModel: [],
-    isPaused: false,
+    lifecycle: .active,
     hasDefaultFilters: false,
     dateHasChanged: false,
     sortIsDescending: true,

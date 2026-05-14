@@ -353,9 +353,11 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
       return nil
     }
 
-    let filterableItems = transactions.map { transaction in
+    let filterableItems: [FilterableItem] = transactions.compactMap { transaction in
 
-      let transactionPayload = transaction.transformToTransactionUI()
+      guard let transactionUi = transaction.transformToTransactionUI() else {
+        return nil
+      }
 
       switch transaction.transactionLogData {
       case .presentation(let logData):
@@ -380,8 +382,9 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
         if !credentialsTrimmed.isEmpty {
           tags.append(contentsOf: credentialsTrimmed)
         }
+
         return FilterableItem(
-          payload: transactionPayload,
+          payload: transactionUi,
           attributes: TransactionFilterableAttributes(
             sortingKey: logData.relyingParty.name.lowercased(),
             searchTags: tags,
@@ -392,17 +395,11 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
           )
         )
       case .issuance, .signing, .deletion:
-        return FilterableItem(
-          payload: transactionPayload,
-          attributes: TransactionFilterableAttributes(
-            sortingKey: "",
-            searchTags: []
-          )
-        )
+        return nil
       }
     }
 
-    return FilterableList(items: filterableItems)
+    return !filterableItems.isEmpty ? FilterableList(items: filterableItems) : nil
   }
 
   private func filterUISection(filters: Filters) -> [FilterUISection] {
