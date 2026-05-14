@@ -24,15 +24,22 @@ struct DocumentTabState: ViewState {
   let isLoading: Bool
   let documents: [DocumentCategory: [DocumentTabUIModel]]
   let filterUIModel: [FilterUISection]
-  let phase: ScenePhase
+  let lifecycle: Lifecycle
   let pendingDeletionDocument: DocumentTabUIModel?
   let succededIssuedDocuments: [DocumentTabUIModel]
   let failedDocuments: [String]
-  let isPaused: Bool
   let hasDefaultFilters: Bool
 
   var pendingDocumentTitle: String {
     pendingDeletionDocument?.value.title ?? ""
+  }
+}
+
+extension DocumentTabState {
+  enum Lifecycle {
+    case tabActivePaused
+    case tabNotActivePaused
+    case active
   }
 }
 
@@ -80,11 +87,10 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
         isLoading: true,
         documents: [:],
         filterUIModel: [],
-        phase: .active,
+        lifecycle: .tabNotActivePaused,
         pendingDeletionDocument: nil,
         succededIssuedDocuments: [],
         failedDocuments: [],
-        isPaused: true,
         hasDefaultFilters: true
       )
     )
@@ -94,9 +100,14 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
     onFiltersChangeState()
   }
 
-  func onCreate() {
+  func onAppear() {
     updateToolBar()
     fetch()
+  }
+
+  func onDisappear() {
+    self.deferredTask?.cancel()
+    self.setState { $0.copy(lifecycle: .tabNotActivePaused) }
   }
 
   func fetch() {
@@ -109,7 +120,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
       switch state {
       case .success(let documents):
 
-        if viewState.isPaused {
+        if viewState.lifecycle != .active {
           await interactor.initializeFilters(filterableList: documents)
         } else {
           await interactor.updateLists(filterableList: documents)
@@ -119,7 +130,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
 
         setState {
           $0.copy(
-            isPaused: false
+            lifecycle: .active
           )
         }
         await onDocumentsRetrievedPostActions()
@@ -127,7 +138,8 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
         setState {
           $0.copy(
             isLoading: false,
-            documents: [:]
+            documents: [:],
+            lifecycle: .active
           )
         }
       }
@@ -153,18 +165,17 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   }
 
   func setPhase(with phase: ScenePhase) {
-    setState { $0.copy(phase: phase) }
-    if phase == .active {
-      Task { await onDocumentsRetrievedPostActions() }
+    if phase == .active, viewState.lifecycle == .tabActivePaused {
+      onAppear()
     }
-    if phase == .background {
-      onPause()
+    if phase == .background, viewState.lifecycle == .active {
+      onbackground()
     }
   }
 
-  func onPause() {
+  private func onbackground() {
     self.deferredTask?.cancel()
-    self.setState { $0.copy(isPaused: true) }
+    self.setState { $0.copy(lifecycle: .tabActivePaused) }
   }
 
   func onDocumentDetails(documentId: String) {
@@ -222,11 +233,11 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
 
   func showFilters() {
     isFilterModalShowing = true
-    onPause()
+    onbackground()
   }
 
   func handleRefreshotification() {
-    if !viewState.isPaused {
+    if viewState.lifecycle == .active {
       fetch()
     }
   }
