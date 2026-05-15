@@ -115,7 +115,10 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
 
       let failedDocuments = viewState.failedDocuments
 
-      let state = await interactor.fetchDocuments(failedDocuments: failedDocuments)
+      let state = await interactor.fetchDocuments(
+        failedDocuments: failedDocuments,
+        shouldRefreshCounters: viewState.lifecycle != .active
+      )
 
       switch state {
       case .success(let documents):

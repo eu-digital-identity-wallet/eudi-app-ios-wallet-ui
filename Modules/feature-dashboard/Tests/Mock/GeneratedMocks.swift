@@ -1270,13 +1270,13 @@ public class MockDocumentTabInteractor: DocumentTabInteractor, Cuckoo.ProtocolMo
     }
 
 
-    public func fetchDocuments(failedDocuments p0: [String]) async -> DocumentsPartialState {
+    public func fetchDocuments(failedDocuments p0: [String], shouldRefreshCounters p1: Bool) async -> DocumentsPartialState {
         return await cuckoo_manager.call(
-            "fetchDocuments(failedDocuments p0: [String]) async -> DocumentsPartialState",
-            parameters: (p0),
-            escapingParameters: (p0),
+            "fetchDocuments(failedDocuments p0: [String], shouldRefreshCounters p1: Bool) async -> DocumentsPartialState",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.fetchDocuments(failedDocuments: p0)
+            defaultCall: await __defaultImplStub!.fetchDocuments(failedDocuments: p0, shouldRefreshCounters: p1)
         )
     }
 
@@ -1407,10 +1407,10 @@ public class MockDocumentTabInteractor: DocumentTabInteractor, Cuckoo.ProtocolMo
             self.cuckoo_manager = manager
         }
         
-        func fetchDocuments<M1: Cuckoo.Matchable>(failedDocuments p0: M1) -> Cuckoo.ProtocolStubFunction<([String]), DocumentsPartialState> where M1.MatchedType == [String] {
-            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
+        func fetchDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(failedDocuments p0: M1, shouldRefreshCounters p1: M2) -> Cuckoo.ProtocolStubFunction<([String], Bool), DocumentsPartialState> where M1.MatchedType == [String], M2.MatchedType == Bool {
+            let matchers: [Cuckoo.ParameterMatcher<([String], Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentTabInteractor.self,
-                method: "fetchDocuments(failedDocuments p0: [String]) async -> DocumentsPartialState",
+                method: "fetchDocuments(failedDocuments p0: [String], shouldRefreshCounters p1: Bool) async -> DocumentsPartialState",
                 parameterMatchers: matchers
             ))
         }
@@ -1525,10 +1525,10 @@ public class MockDocumentTabInteractor: DocumentTabInteractor, Cuckoo.ProtocolMo
         
         
         @discardableResult
-        func fetchDocuments<M1: Cuckoo.Matchable>(failedDocuments p0: M1) -> Cuckoo.__DoNotUse<([String]), DocumentsPartialState> where M1.MatchedType == [String] {
-            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
+        func fetchDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(failedDocuments p0: M1, shouldRefreshCounters p1: M2) -> Cuckoo.__DoNotUse<([String], Bool), DocumentsPartialState> where M1.MatchedType == [String], M2.MatchedType == Bool {
+            let matchers: [Cuckoo.ParameterMatcher<([String], Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return cuckoo_manager.verify(
-                "fetchDocuments(failedDocuments p0: [String]) async -> DocumentsPartialState",
+                "fetchDocuments(failedDocuments p0: [String], shouldRefreshCounters p1: Bool) async -> DocumentsPartialState",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1685,7 +1685,7 @@ public class DocumentTabInteractorStub:DocumentTabInteractor, @unchecked Sendabl
 
 
     
-    public func fetchDocuments(failedDocuments p0: [String]) async -> DocumentsPartialState {
+    public func fetchDocuments(failedDocuments p0: [String], shouldRefreshCounters p1: Bool) async -> DocumentsPartialState {
         return DefaultValueRegistry.defaultValue(for: (DocumentsPartialState).self)
     }
     
@@ -8688,6 +8688,17 @@ return await cuckoo_manager.call(
         )
     }
 
+    public func refreshUsageCounters() async throws {
+        return try await cuckoo_manager.callThrows(
+            "refreshUsageCounters() async throws",
+            parameters: (),
+            escapingParameters: (),
+            errorType: Swift.Error.self,
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.refreshUsageCounters()
+        )
+    }
+
     public struct __StubbingProxy_WalletKitController: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
@@ -9015,6 +9026,14 @@ return await cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "removeAllFailedReIssuedDocuments() async throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func refreshUsageCounters() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(),Swift.Error> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "refreshUsageCounters() async throws",
                 parameterMatchers: matchers
             ))
         }
@@ -9514,6 +9533,18 @@ return await cuckoo_manager.call(
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func refreshUsageCounters() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "refreshUsageCounters() async throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -9684,6 +9715,10 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
     }
     
     public func removeAllFailedReIssuedDocuments() async throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func refreshUsageCounters() async throws {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }

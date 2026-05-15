@@ -4296,6 +4296,17 @@ return await cuckoo_manager.call(
         )
     }
 
+    public func refreshUsageCounters() async throws {
+        return try await cuckoo_manager.callThrows(
+            "refreshUsageCounters() async throws",
+            parameters: (),
+            escapingParameters: (),
+            errorType: Swift.Error.self,
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.refreshUsageCounters()
+        )
+    }
+
     public struct __StubbingProxy_WalletKitController: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
@@ -4623,6 +4634,14 @@ return await cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "removeAllFailedReIssuedDocuments() async throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func refreshUsageCounters() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(),Swift.Error> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "refreshUsageCounters() async throws",
                 parameterMatchers: matchers
             ))
         }
@@ -5122,6 +5141,18 @@ return await cuckoo_manager.call(
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func refreshUsageCounters() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "refreshUsageCounters() async throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -5292,6 +5323,10 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
     }
     
     public func removeAllFailedReIssuedDocuments() async throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func refreshUsageCounters() async throws {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }
