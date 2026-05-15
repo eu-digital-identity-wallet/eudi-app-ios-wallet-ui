@@ -92,6 +92,8 @@ public protocol WalletKitController: Sendable {
 
   func storeFailedReIssuedDocuments(ids: [String]) async throws
   func removeAllFailedReIssuedDocuments() async throws
+
+  func refreshUsageCounters() async throws
 }
 
 final actor WalletKitControllerImpl: WalletKitController {
@@ -222,7 +224,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     await self.sessionCoordinatorHolder.clear()
   }
 
-  func fetchAllDocuments() -> [any DocClaimsDecodable] {
+  func fetchAllDocuments() async -> [any DocClaimsDecodable] {
     return fetchIssuedDocuments() + fetchDeferredDocuments().transformToDeferredDecodables()
   }
 
@@ -502,6 +504,10 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func removeAllFailedReIssuedDocuments() async throws {
     try await failedReIssuedDocStorageController.deleteAll()
+  }
+
+  func refreshUsageCounters() async throws {
+    try await wallet.refreshUsageCounters()
   }
 }
 

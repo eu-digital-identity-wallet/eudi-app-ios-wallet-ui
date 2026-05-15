@@ -54,7 +54,7 @@ public enum DeferredPartialState: Sendable {
 }
 
 public protocol DocumentTabInteractor: Sendable {
-  func fetchDocuments(failedDocuments: [String]) async -> DocumentsPartialState
+  func fetchDocuments(failedDocuments: [String], shouldRefreshCounters: Bool) async -> DocumentsPartialState
   func hasDeferredDocuments() async -> Bool
   func deleteDeferredDocument(with id: String) async -> DeleteDeferredPartialState
   func requestDeferredIssuance() async -> DeferredPartialState
@@ -174,9 +174,12 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
     await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
   }
 
-  func fetchDocuments(failedDocuments: [String]) async -> DocumentsPartialState {
+  func fetchDocuments(failedDocuments: [String], shouldRefreshCounters: Bool) async -> DocumentsPartialState {
 
-    let documents = await fetchFilteredDocuments(failedDocuments: failedDocuments)
+    let documents = await fetchFilteredDocuments(
+      failedDocuments: failedDocuments,
+      shouldRefreshCounters: shouldRefreshCounters
+    )
 
     guard let documents = documents else {
       return .failure(WalletCoreError.unableFetchDocuments)
@@ -188,7 +191,8 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
   func deleteDeferredDocument(with id: String) async -> DeleteDeferredPartialState {
     do {
       try await walletKitController.deleteDocument(with: id, status: .deferred)
-      return await walletKitController.fetchAllDocuments().isEmpty && configLogic.forcePidActivation ? .noDocuments : .success
+      return await walletKitController.fetchAllDocuments().isEmpty
+      && configLogic.forcePidActivation ? .noDocuments : .success
     } catch {
       return .failure(error)
     }
@@ -396,7 +400,12 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
     )
   }
 
-  private func fetchFilteredDocuments(failedDocuments: [String]) async -> FilterableList? {
+  private func fetchFilteredDocuments(failedDocuments: [String], shouldRefreshCounters: Bool) async -> FilterableList? {
+
+    if shouldRefreshCounters {
+      try? await walletKitController.refreshUsageCounters()
+    }
+
     let documents = await self.walletKitController.fetchAllDocuments()
     let revokedDocuments = try? await self.walletKitController.fetchRevokedDocuments()
 
