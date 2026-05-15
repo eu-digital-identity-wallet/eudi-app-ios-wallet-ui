@@ -436,36 +436,7 @@ build_app(
 
 For the complete lane usage notes, see [../fastlane/USAGE.md](../fastlane/USAGE.md).
 
-## Dependency Versions
-
-The Swift Package Manager dependency resolution file is:
-
-`EudiReferenceWallet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`
-
-Direct package constraints live in `Modules/*/Package.swift`, while resolved Swift package versions
-live in `Package.resolved`. At the time this guide was last updated, key versions included:
-
-| Dependency | Version/source at last guide update |
-| --- | --- |
-| Swift tools | `6.2` in module package manifests |
-| Minimum package platform | iOS 17 in module package manifests |
-| EUDI WalletKit | `0.29.3` |
-| EUDI RQES UI | `0.4.0` |
-| EUDI RQES Kit / CSC Swift | `0.10.0` |
-| EUDI OpenID4VCI | `0.38.0` |
-| EUDI SIOP OpenID4VP | `0.33.0` |
-| EUDI ISO 18013 data model / data transfer / security | `0.15.0` |
-| EUDI W3C DC API | `0.15.0` |
-| EUDI Wallet Storage | `0.11.3` |
-| EUDI SD-JWT Swift | `0.14.1` |
-| KeychainAccess | `4.2.2` |
-| BluetoothKit | `master` branch, resolved to commit `d6ab93c` |
-| Swinject | `2.10.0` |
-
-At the time this guide was last updated, Ruby release tooling was locked in `Gemfile.lock`: Bundler
-`2.6.7`, fastlane `2.232.2`, fastlane-plugin-versioning `0.7.1`, and xcov `1.9.0`.
-
-Production rules:
+## Dependency Governance
 
 * Use released versions, not snapshots or branch dependencies, unless formally approved.
 * Subscribe to security advisories for WalletKit, RQES UI, OpenID4VCI, SIOP OpenID4VP, ISO18013
