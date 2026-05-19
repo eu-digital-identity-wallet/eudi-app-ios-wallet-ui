@@ -31,7 +31,7 @@ public struct TappableCellView: View {
     isToggle: Bool = false,
     isOn: Binding<Bool> = .constant(false),
     useOverlay: Bool = true,
-    action: @autoclosure @escaping () -> Void
+    action: @escaping () -> Void = {}
   ) {
     self.title = title
     self.useOverlay = useOverlay
@@ -51,7 +51,16 @@ public struct TappableCellView: View {
           .minimumScaleFactor(0.8)
 
         if isToggle {
-          Toggle("", isOn: $isOn)
+          Toggle(
+            "",
+            isOn: Binding(
+              get: { isOn },
+              set: { newValue in
+                isOn = newValue
+                action()
+              }
+            )
+          )
             .labelsHidden()
             .frame(maxWidth: .infinity, alignment: .topTrailing)
         } else {
@@ -80,7 +89,7 @@ public struct TappableCellView: View {
     title: .addDocumentTitle,
     showDivider: true,
     useOverlay: true,
-    action: {}()
+    action: {}
   )
   .padding()
 }

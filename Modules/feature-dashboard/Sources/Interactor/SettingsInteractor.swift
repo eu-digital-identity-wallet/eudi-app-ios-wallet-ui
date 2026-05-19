@@ -16,24 +16,33 @@
 import Foundation
 import logic_core
 import logic_business
+import feature_common
 
 public protocol SettingsInteractor: Sendable {
   func getAppVersion() async -> String
   func retrieveLogFileUrl() async -> URL?
   func retrieveChangeLogUrl() async -> URL?
+  func isBiometryAvailable() async -> Bool
+  func isBiometryEnabled() async -> Bool
+  func authenticateBiometry() async -> BiometricsState
+  func setBiometrySelection(isEnabled: Bool) async
+  func openBiometrySettings(action: @escaping @Sendable () -> Void) async
 }
 
 final actor SettingsInteractorImpl: SettingsInteractor {
 
   private let walletController: WalletKitController
   private let configLogic: ConfigLogic
+  private let biometryInteractor: BiometryInteractor
 
   init(
     walletController: WalletKitController,
-    configLogic: ConfigLogic
+    configLogic: ConfigLogic,
+    biometryInteractor: BiometryInteractor
   ) {
     self.walletController = walletController
     self.configLogic = configLogic
+    self.biometryInteractor = biometryInteractor
   }
 
   func getAppVersion() -> String {
@@ -46,5 +55,25 @@ final actor SettingsInteractorImpl: SettingsInteractor {
 
   func retrieveChangeLogUrl() -> URL? {
     return configLogic.changelogUrl
+  }
+
+  func isBiometryAvailable() async -> Bool {
+    await biometryInteractor.getBiometryType() != .none
+  }
+
+  func isBiometryEnabled() async -> Bool {
+    await biometryInteractor.isBiometryEnabled()
+  }
+
+  func authenticateBiometry() async -> BiometricsState {
+    await biometryInteractor.authenticate()
+  }
+
+  func setBiometrySelection(isEnabled: Bool) async {
+    await biometryInteractor.setBiometrySelection(isEnabled: isEnabled)
+  }
+
+  func openBiometrySettings(action: @escaping @Sendable () -> Void) async {
+    await biometryInteractor.openSettings(action: action)
   }
 }

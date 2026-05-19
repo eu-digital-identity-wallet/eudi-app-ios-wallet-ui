@@ -16,6 +16,7 @@
 import SwiftUI
 import logic_ui
 import logic_resources
+import logic_business
 
 struct SettingsView<Router: RouterHost>: View {
   @State private var viewModel: SettingsViewModel<Router>
@@ -37,6 +38,16 @@ struct SettingsView<Router: RouterHost>: View {
     .task {
       await viewModel.initialize()
     }
+    .alert(item: $viewModel.biometryError) { error in
+      Alert(
+        title: Text(.genericErrorTitle),
+        message: Text(error.errorDescription.orEmpty),
+        primaryButton: .default(Text(.biometryOpenSettings)) {
+          viewModel.onBiometrySettings()
+        },
+        secondaryButton: .cancel {}
+      )
+    }
   }
 }
 
@@ -54,15 +65,27 @@ private func content(
               title: .retrieveLogs,
               showDivider: item.showDivider,
               useOverlay: false,
-              action: {}()
+              action: {}
             )
           }
         }
+      } else if item.isToggle {
+        TappableCellView(
+          title: item.title,
+          showDivider: item.showDivider,
+          isToggle: true,
+          isOn: Binding(
+            get: { viewState.isBiometryEnabled },
+            set: { _ in }
+          ),
+          useOverlay: false,
+          action: item.action
+        )
       } else {
         TappableCellView(
           title: item.title,
           showDivider: item.showDivider,
-          action: item.action()
+          action: item.action
         )
       }
     }
@@ -82,10 +105,16 @@ private func content(
   let viewSate = SettingsViewState(
     items: [
       .init(
+        title: .loginWithBiometrics,
+        isToggle: true,
+        action: {}
+      ),
+      .init(
         title: .changeQuickPinOption,
-        action: {}()
+        action: {}
       )
     ],
+    isBiometryEnabled: true,
     appVersion: "",
     logsUrl: URL(string: "https://www.example.com"),
     changelogUrl: URL(string: "https://www.example.com")
@@ -95,8 +124,22 @@ private func content(
     canScroll: false,
     background: Theme.shared.color.surface
   ) {
-    content(
-      viewState: viewSate
-    )
+    VStack(spacing: SPACING_MEDIUM_SMALL) {
+      TappableCellView(
+        title: .loginWithBiometrics,
+        showDivider: true,
+        isToggle: true,
+        isOn: .constant(true),
+        useOverlay: false,
+        action: {}
+      )
+    }
+    .padding(.bottom, SPACING_LARGE_MEDIUM)
+
+    if let version = viewSate.appVersion {
+      Text(version)
+        .typography(Theme.shared.font.bodyMedium)
+        .frame(maxWidth: .infinity, alignment: .center)
+    }
   }
 }

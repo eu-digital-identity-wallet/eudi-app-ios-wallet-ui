@@ -16,6 +16,7 @@
 import Swinject
 import logic_business
 import logic_core
+import feature_common
 
 public final class FeatureDashboardAssembly: Assembly {
 
@@ -36,7 +37,8 @@ public final class FeatureDashboardAssembly: Assembly {
     container.register(SettingsInteractor.self) { r in
       SettingsInteractorImpl(
         walletController: r.force(WalletKitController.self),
-        configLogic: r.force(ConfigLogic.self)
+        configLogic: r.force(ConfigLogic.self),
+        biometryInteractor: r.force(BiometryInteractor.self)
       )
     }
 

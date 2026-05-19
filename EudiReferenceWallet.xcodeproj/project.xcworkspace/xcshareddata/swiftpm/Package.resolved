@@ -1,5 +1,5 @@
 {
-  "originHash" : "893c15641647206232390978e9284ab3f4854db2e12ee297e5d4a80d744d5356",
+  "originHash" : "b1e6fa42cfbc6877d148d5d65b920c6af79865af9411f9aa295669964ed18562",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/av-lib-ios-w3c-dc-api.git",
       "state" : {
-        "revision" : "b896c661fa3294dd9537cd2b3ade95f5956564ff",
-        "version" : "0.15.0"
+        "revision" : "f35ac09c93e67adc22f726e6ac1bf319b6e49be0",
+        "version" : "0.20.0"
       }
     },
     {
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "65e1320b47e459b43a8162721002435ec41ca783",
-        "version" : "0.30.0"
+        "revision" : "38aba61149a713c747faf3c8b7f8083bcffe1c67",
+        "version" : "0.30.2"
       }
     },
     {
@@ -204,8 +204,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "dbb58fed79b5560b99be78d52d3a176de48858a2",
-        "version" : "0.11.3"
+        "revision" : "7469ac73b57cb6576a2f7476c2a228492ab74353",
+        "version" : "0.20.0"
       }
     },
     {

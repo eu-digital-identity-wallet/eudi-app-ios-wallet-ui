@@ -46,7 +46,7 @@ private func content(viewState: SideMenuViewState) -> some View {
       TappableCellView(
         title: item.title,
         showDivider: item.showDivider,
-        action: item.action()
+        action: item.action
       )
     }
 

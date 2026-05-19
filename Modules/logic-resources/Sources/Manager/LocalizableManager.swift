@@ -114,6 +114,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "quick_pin_set_success")
     case .loginTitle:
       bundle.localizedString(forKey: "login_title")
+    case .loginWithBiometrics:
+      bundle.localizedString(forKey: "login_with_biometrics")
     case .loginCaptionQuickPinOnly:
       bundle.localizedString(forKey: "login_caption_quick_pin_only")
     case .loginCaption:

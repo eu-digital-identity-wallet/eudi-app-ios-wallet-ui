@@ -18,20 +18,23 @@ import logic_business
 @testable import logic_core
 @testable import logic_test
 @testable import feature_dashboard
+@testable import feature_common
 
 final class TestSettingsInteractor: EudiTest {
 
   var interactor: SettingsInteractor!
   var walletKitController: MockWalletKitController!
-  var prefsController: MockPrefsController!
   var configLogic: MockConfigLogic!
+  var biometryInteractor: MockBiometryInteractor!
 
   override func setUp() {
     self.walletKitController = MockWalletKitController()
     self.configLogic = MockConfigLogic()
+    self.biometryInteractor = MockBiometryInteractor()
     self.interactor = SettingsInteractorImpl(
       walletController: walletKitController,
-      configLogic: configLogic
+      configLogic: configLogic,
+      biometryInteractor: biometryInteractor
     )
   }
 
@@ -39,6 +42,7 @@ final class TestSettingsInteractor: EudiTest {
     self.interactor = nil
     self.walletKitController = nil
     self.configLogic = nil
+    self.biometryInteractor = nil
   }
 
   func testGetAppVersion_WhenConfigLogicReturnsAppVersion_ThenReturnsExpectedVersion() async {
@@ -72,6 +76,86 @@ final class TestSettingsInteractor: EudiTest {
 
     // Then
     XCTAssertEqual(result, expectedUrl)
+  }
+
+  func testIsBiometryAvailable_WhenDeviceSupportsFaceId_ThenReturnsTrue() async {
+    // Given
+    stub(biometryInteractor) { mock in
+      when(mock.getBiometryType()).thenReturn(.faceID)
+    }
+
+    // When
+    let result = await interactor.isBiometryAvailable()
+
+    // Then
+    XCTAssertTrue(result)
+  }
+
+  func testIsBiometryAvailable_WhenDeviceDoesNotSupportBiometry_ThenReturnsFalse() async {
+    // Given
+    stub(biometryInteractor) { mock in
+      when(mock.getBiometryType()).thenReturn(.none)
+    }
+
+    // When
+    let result = await interactor.isBiometryAvailable()
+
+    // Then
+    XCTAssertFalse(result)
+  }
+
+  func testIsBiometryEnabled_WhenBiometryInteractorReturnsEnabled_ThenReturnsTrue() async {
+    // Given
+    stub(biometryInteractor) { mock in
+      when(mock.isBiometryEnabled()).thenReturn(true)
+    }
+
+    // When
+    let result = await interactor.isBiometryEnabled()
+
+    // Then
+    XCTAssertTrue(result)
+  }
+
+  func testAuthenticateBiometry_WhenAuthenticationSucceeds_ThenReturnsAuthenticated() async {
+    // Given
+    stub(biometryInteractor) { mock in
+      when(mock.authenticate()).thenReturn(.authenticated)
+    }
+
+    // When
+    let state = await interactor.authenticateBiometry()
+
+    // Then
+    XCTAssertEqual(state, .authenticated)
+    verify(biometryInteractor).authenticate()
+  }
+
+  func testAuthenticateBiometry_WhenAuthenticationFails_ThenReturnsFailure() async {
+    // Given
+    stub(biometryInteractor) { mock in
+      when(mock.authenticate()).thenReturn(.failure(.deniedAccess))
+    }
+
+    // When
+    let state = await interactor.authenticateBiometry()
+
+    // Then
+    XCTAssertEqual(state, .failure(.deniedAccess))
+    verify(biometryInteractor).authenticate()
+  }
+
+  func testSetBiometrySelection_WhenCalled_ThenDelegatesToBiometryInteractor() async {
+    // Given
+    stub(biometryInteractor) { mock in
+      when(mock.setBiometrySelection(isEnabled: true)).thenDoNothing()
+    }
+
+    // When
+    await interactor.setBiometrySelection(isEnabled: true)
+
+    // Then
+    verify(biometryInteractor).setBiometrySelection(isEnabled: true)
   }
 }
 
