@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/av-lib-ios-w3c-dc-api.git",
       "state" : {
-        "revision" : "b896c661fa3294dd9537cd2b3ade95f5956564ff",
-        "version" : "0.15.0"
+        "revision" : "f35ac09c93e67adc22f726e6ac1bf319b6e49be0",
+        "version" : "0.20.0"
       }
     },
     {
