@@ -117,54 +117,45 @@ final class TestSettingsInteractor: EudiTest {
     XCTAssertTrue(result)
   }
 
-  func testSetBiometryEnabled_WhenDisabling_ThenUpdatesPreference() async {
-    // Given
-    stub(biometryInteractor) { mock in
-      when(mock.setBiometrySelection(isEnabled: false)).thenDoNothing()
-    }
-
-    // When
-    let result = await interactor.setBiometryEnabled(isEnabled: false)
-
-    // Then
-    XCTAssertFalse(result.isEnabled)
-    XCTAssertNil(result.error)
-    verify(biometryInteractor).setBiometrySelection(isEnabled: false)
-  }
-
-  func testSetBiometryEnabled_WhenEnablingAndAuthenticationSucceeds_ThenEnablesBiometry() async {
+  func testAuthenticateBiometry_WhenAuthenticationSucceeds_ThenReturnsAuthenticated() async {
     // Given
     stub(biometryInteractor) { mock in
       when(mock.authenticate()).thenReturn(.authenticated)
-      when(mock.setBiometrySelection(isEnabled: true)).thenDoNothing()
     }
 
     // When
-    let result = await interactor.setBiometryEnabled(isEnabled: true)
+    let state = await interactor.authenticateBiometry()
 
     // Then
-    XCTAssertTrue(result.isEnabled)
-    XCTAssertNil(result.error)
+    XCTAssertEqual(state, .authenticated)
     verify(biometryInteractor).authenticate()
-    verify(biometryInteractor).setBiometrySelection(isEnabled: true)
   }
 
-  func testSetBiometryEnabled_WhenEnablingAndAuthenticationFails_ThenKeepsBiometryDisabled() async {
+  func testAuthenticateBiometry_WhenAuthenticationFails_ThenReturnsFailure() async {
     // Given
     stub(biometryInteractor) { mock in
       when(mock.authenticate()).thenReturn(.failure(.deniedAccess))
     }
 
     // When
-    let result = await interactor.setBiometryEnabled(isEnabled: true)
+    let state = await interactor.authenticateBiometry()
 
     // Then
-    XCTAssertFalse(result.isEnabled)
-    if case .deniedAccess? = result.error {} else {
-      XCTFail("Expected deniedAccess error")
-    }
+    XCTAssertEqual(state, .failure(.deniedAccess))
     verify(biometryInteractor).authenticate()
-    verify(biometryInteractor, never()).setBiometrySelection(isEnabled: true)
+  }
+
+  func testSetBiometrySelection_WhenCalled_ThenDelegatesToBiometryInteractor() async {
+    // Given
+    stub(biometryInteractor) { mock in
+      when(mock.setBiometrySelection(isEnabled: true)).thenDoNothing()
+    }
+
+    // When
+    await interactor.setBiometrySelection(isEnabled: true)
+
+    // Then
+    verify(biometryInteractor).setBiometrySelection(isEnabled: true)
   }
 }
 

@@ -78,10 +78,15 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
   private func setBiometryEnabled(_ isEnabled: Bool) {
     setState { $0.copy(isBiometryEnabled: isEnabled) }
     Task {
-      let result = await interactor.setBiometryEnabled(isEnabled: isEnabled)
-      setState { $0.copy(isBiometryEnabled: result.isEnabled) }
-      if let error = result.error, error != .biometricError {
-        self.biometryError = error
+      switch await interactor.authenticateBiometry() {
+      case .authenticated:
+        await interactor.setBiometrySelection(isEnabled: isEnabled)
+        setState { $0.copy(isBiometryEnabled: isEnabled) }
+      case .failure(let error):
+        setState { $0.copy(isBiometryEnabled: !isEnabled) }
+        if error != .biometricError {
+          self.biometryError = error
+        }
       }
     }
   }

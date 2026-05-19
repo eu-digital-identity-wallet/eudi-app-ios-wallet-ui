@@ -2755,7 +2755,6 @@ public class DocumentSignInteractorStub:DocumentSignInteractor, @unchecked Senda
 
 import Cuckoo
 import Foundation
-import LocalAuthentication
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -2832,13 +2831,23 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
         )
     }
 
-    public func setBiometryEnabled(isEnabled p0: Bool) async -> SetBiometryResult {
+    public func authenticateBiometry() async -> BiometricsState {
         return await cuckoo_manager.call(
-            "setBiometryEnabled(isEnabled p0: Bool) async -> SetBiometryResult",
+            "authenticateBiometry() async -> BiometricsState",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.authenticateBiometry()
+        )
+    }
+
+    public func setBiometrySelection(isEnabled p0: Bool) async {
+        return await cuckoo_manager.call(
+            "setBiometrySelection(isEnabled p0: Bool) async",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.setBiometryEnabled(isEnabled: p0)
+            defaultCall: await __defaultImplStub!.setBiometrySelection(isEnabled: p0)
         )
     }
 
@@ -2899,10 +2908,18 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
             ))
         }
         
-        func setBiometryEnabled<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.ProtocolStubFunction<(Bool), SetBiometryResult> where M1.MatchedType == Bool {
+        func authenticateBiometry() -> Cuckoo.ProtocolStubFunction<(), BiometricsState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
+                method: "authenticateBiometry() async -> BiometricsState",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func setBiometrySelection<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(Bool)> where M1.MatchedType == Bool {
             let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
-                method: "setBiometryEnabled(isEnabled p0: Bool) async -> SetBiometryResult",
+                method: "setBiometrySelection(isEnabled p0: Bool) async",
                 parameterMatchers: matchers
             ))
         }
@@ -2989,10 +3006,22 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
         
         
         @discardableResult
-        func setBiometryEnabled<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.__DoNotUse<(Bool), SetBiometryResult> where M1.MatchedType == Bool {
+        func authenticateBiometry() -> Cuckoo.__DoNotUse<(), BiometricsState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "authenticateBiometry() async -> BiometricsState",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func setBiometrySelection<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.__DoNotUse<(Bool), Void> where M1.MatchedType == Bool {
             let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "setBiometryEnabled(isEnabled p0: Bool) async -> SetBiometryResult",
+                "setBiometrySelection(isEnabled p0: Bool) async",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -3037,8 +3066,12 @@ public class SettingsInteractorStub:SettingsInteractor, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
-    public func setBiometryEnabled(isEnabled p0: Bool) async -> SetBiometryResult {
-        return DefaultValueRegistry.defaultValue(for: (SetBiometryResult).self)
+    public func authenticateBiometry() async -> BiometricsState {
+        return DefaultValueRegistry.defaultValue(for: (BiometricsState).self)
+    }
+    
+    public func setBiometrySelection(isEnabled p0: Bool) async {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
     public func openBiometrySettings(action p0: @escaping @Sendable () -> Void) async {
