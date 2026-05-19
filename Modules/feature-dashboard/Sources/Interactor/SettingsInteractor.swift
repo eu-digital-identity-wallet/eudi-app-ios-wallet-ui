@@ -14,26 +14,46 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import LocalAuthentication
 import logic_core
 import logic_business
+import logic_authentication
+import feature_common
+
+public struct SetBiometryResult: Sendable {
+  public let isEnabled: Bool
+  public let error: SystemBiometryError?
+
+  public init(isEnabled: Bool, error: SystemBiometryError? = nil) {
+    self.isEnabled = isEnabled
+    self.error = error
+  }
+}
 
 public protocol SettingsInteractor: Sendable {
   func getAppVersion() async -> String
   func retrieveLogFileUrl() async -> URL?
   func retrieveChangeLogUrl() async -> URL?
+  func isBiometryAvailable() async -> Bool
+  func isBiometryEnabled() async -> Bool
+  func setBiometryEnabled(isEnabled: Bool) async -> SetBiometryResult
+  func openBiometrySettings(action: @escaping @Sendable () -> Void) async
 }
 
 final actor SettingsInteractorImpl: SettingsInteractor {
 
   private let walletController: WalletKitController
   private let configLogic: ConfigLogic
+  private let biometryInteractor: BiometryInteractor
 
   init(
     walletController: WalletKitController,
-    configLogic: ConfigLogic
+    configLogic: ConfigLogic,
+    biometryInteractor: BiometryInteractor
   ) {
     self.walletController = walletController
     self.configLogic = configLogic
+    self.biometryInteractor = biometryInteractor
   }
 
   func getAppVersion() -> String {
@@ -46,5 +66,32 @@ final actor SettingsInteractorImpl: SettingsInteractor {
 
   func retrieveChangeLogUrl() -> URL? {
     return configLogic.changelogUrl
+  }
+
+  func isBiometryAvailable() async -> Bool {
+    await biometryInteractor.getBiometryType() != .none
+  }
+
+  func isBiometryEnabled() async -> Bool {
+    await biometryInteractor.isBiometryEnabled()
+  }
+
+  func setBiometryEnabled(isEnabled: Bool) async -> SetBiometryResult {
+    guard isEnabled else {
+      await biometryInteractor.setBiometrySelection(isEnabled: false)
+      return SetBiometryResult(isEnabled: false)
+    }
+
+    switch await biometryInteractor.authenticate() {
+    case .authenticated:
+      await biometryInteractor.setBiometrySelection(isEnabled: true)
+      return SetBiometryResult(isEnabled: true)
+    case .failure(let error):
+      return SetBiometryResult(isEnabled: false, error: error)
+    }
+  }
+
+  func openBiometrySettings(action: @escaping @Sendable () -> Void) async {
+    await biometryInteractor.openSettings(action: action)
   }
 }

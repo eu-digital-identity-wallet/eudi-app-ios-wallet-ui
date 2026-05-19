@@ -2755,6 +2755,7 @@ public class DocumentSignInteractorStub:DocumentSignInteractor, @unchecked Senda
 
 import Cuckoo
 import Foundation
+import LocalAuthentication
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -2811,6 +2812,46 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
         )
     }
 
+    public func isBiometryAvailable() async -> Bool {
+        return await cuckoo_manager.call(
+            "isBiometryAvailable() async -> Bool",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.isBiometryAvailable()
+        )
+    }
+
+    public func isBiometryEnabled() async -> Bool {
+        return await cuckoo_manager.call(
+            "isBiometryEnabled() async -> Bool",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.isBiometryEnabled()
+        )
+    }
+
+    public func setBiometryEnabled(isEnabled p0: Bool) async -> SetBiometryResult {
+        return await cuckoo_manager.call(
+            "setBiometryEnabled(isEnabled p0: Bool) async -> SetBiometryResult",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.setBiometryEnabled(isEnabled: p0)
+        )
+    }
+
+    public func openBiometrySettings(action p0: @escaping @Sendable () -> Void) async {
+        return await cuckoo_manager.call(
+            "openBiometrySettings(action p0: @escaping @Sendable () -> Void) async",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.openBiometrySettings(action: p0)
+        )
+    }
+
     public struct __StubbingProxy_SettingsInteractor: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
@@ -2838,6 +2879,38 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
                 method: "retrieveChangeLogUrl() async -> URL?",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func isBiometryAvailable() -> Cuckoo.ProtocolStubFunction<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
+                method: "isBiometryAvailable() async -> Bool",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func isBiometryEnabled() -> Cuckoo.ProtocolStubFunction<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
+                method: "isBiometryEnabled() async -> Bool",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func setBiometryEnabled<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.ProtocolStubFunction<(Bool), SetBiometryResult> where M1.MatchedType == Bool {
+            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
+                method: "setBiometryEnabled(isEnabled p0: Bool) async -> SetBiometryResult",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func openBiometrySettings<M1: Cuckoo.Matchable>(action p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(@Sendable () -> Void)> where M1.MatchedType == @Sendable () -> Void {
+            let matchers: [Cuckoo.ParameterMatcher<(@Sendable () -> Void)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockSettingsInteractor.self,
+                method: "openBiometrySettings(action p0: @escaping @Sendable () -> Void) async",
                 parameterMatchers: matchers
             ))
         }
@@ -2889,6 +2962,54 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func isBiometryAvailable() -> Cuckoo.__DoNotUse<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "isBiometryAvailable() async -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func isBiometryEnabled() -> Cuckoo.__DoNotUse<(), Bool> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "isBiometryEnabled() async -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func setBiometryEnabled<M1: Cuckoo.Matchable>(isEnabled p0: M1) -> Cuckoo.__DoNotUse<(Bool), SetBiometryResult> where M1.MatchedType == Bool {
+            let matchers: [Cuckoo.ParameterMatcher<(Bool)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "setBiometryEnabled(isEnabled p0: Bool) async -> SetBiometryResult",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func openBiometrySettings<M1: Cuckoo.Matchable>(action p0: M1) -> Cuckoo.__DoNotUse<(@Sendable () -> Void), Void> where M1.MatchedType == @Sendable () -> Void {
+            let matchers: [Cuckoo.ParameterMatcher<(@Sendable () -> Void)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "openBiometrySettings(action p0: @escaping @Sendable () -> Void) async",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -2906,6 +3027,22 @@ public class SettingsInteractorStub:SettingsInteractor, @unchecked Sendable {
     
     public func retrieveChangeLogUrl() async -> URL? {
         return DefaultValueRegistry.defaultValue(for: (URL?).self)
+    }
+    
+    public func isBiometryAvailable() async -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+    
+    public func isBiometryEnabled() async -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+    
+    public func setBiometryEnabled(isEnabled p0: Bool) async -> SetBiometryResult {
+        return DefaultValueRegistry.defaultValue(for: (SetBiometryResult).self)
+    }
+    
+    public func openBiometrySettings(action p0: @escaping @Sendable () -> Void) async {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }
 

@@ -128,7 +128,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Authenticate, authorise transactions and share your digital documents in person or online."
+            "value" : "Authenticate, authorise transactions and share your digital documentsin person or online."
           }
         }
       }
@@ -1254,6 +1254,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Login"
+          }
+        }
+      }
+    },
+    "login_with_biometrics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authenticate with biometrics"
           }
         }
       }

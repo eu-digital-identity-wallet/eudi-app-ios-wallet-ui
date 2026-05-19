@@ -15,17 +15,21 @@
  */
 import logic_ui
 import logic_core
+import logic_authentication
 import feature_common
 
 @Copyable
 struct SettingsViewState: ViewState {
   let items: [SettingMenuItemUIModel]
+  let isBiometryEnabled: Bool
   let appVersion: String?
   let logsUrl: URL?
   let changelogUrl: URL?
 }
 
 final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsViewState> {
+
+  var biometryError: SystemBiometryError?
 
   private let interactor: SettingsInteractor
   private let walletKitController: WalletKitController
@@ -41,6 +45,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
       router: router,
       initialState: .init(
         items: [],
+        isBiometryEnabled: false,
         appVersion: nil,
         logsUrl: nil,
         changelogUrl: nil
@@ -66,26 +71,58 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     )
   }
 
+  func onBiometrySettings() {
+    Task { await interactor.openBiometrySettings {} }
+  }
+
+  private func setBiometryEnabled(_ isEnabled: Bool) {
+    setState { $0.copy(isBiometryEnabled: isEnabled) }
+    Task {
+      let result = await interactor.setBiometryEnabled(isEnabled: isEnabled)
+      setState { $0.copy(isBiometryEnabled: result.isEnabled) }
+      if let error = result.error, error != .biometricError {
+        self.biometryError = error
+      }
+    }
+  }
+
   private func buildUi() async {
 
     let appVersion = await interactor.getAppVersion()
     let logsUrl = await interactor.retrieveLogFileUrl()
     let changelogUrl = await interactor.retrieveChangeLogUrl()
+    let isBiometryAvailable = await interactor.isBiometryAvailable()
+    let isBiometryEnabled = await interactor.isBiometryEnabled()
 
-    var items: [SettingMenuItemUIModel] = [
+    var items: [SettingMenuItemUIModel] = []
+
+    if isBiometryAvailable {
+      items.append(
+        .init(
+          title: .loginWithBiometrics,
+          isToggle: true,
+          action: { [weak self] in
+            guard let self else { return }
+            self.setBiometryEnabled(!self.viewState.isBiometryEnabled)
+          }
+        )
+      )
+    }
+
+    items.append(
       .init(
         title: .retrieveLogs,
         isShareLink: true,
-        action: {}()
+        action: {}
       )
-    ]
+    )
 
     if let changelogUrl = await interactor.retrieveChangeLogUrl() {
       items.append(
         .init(
           title: .changelog,
           showDivider: false,
-          action: changelogUrl.open()
+          action: { changelogUrl.open() }
         )
       )
     }
@@ -93,6 +130,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     setState {
       $0.copy(
         items: items,
+        isBiometryEnabled: isBiometryEnabled,
         appVersion: appVersion,
         logsUrl: logsUrl,
         changelogUrl: changelogUrl
