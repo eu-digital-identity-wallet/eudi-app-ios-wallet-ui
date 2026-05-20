@@ -16,6 +16,7 @@
 import SwiftUI
 import logic_resources
 import logic_ui
+import logic_assembly
 import feature_common
 
 struct RequestAuthorizationView: View {
@@ -36,11 +37,14 @@ struct RequestAuthorizationView: View {
         }
       }
       .navigationDestination(isPresented: $viewModel.showBiometryView) {
-        ProviderBiometryView(
-          with: .init(
-            config: viewModel.createBiometryConfig(),
-            onDismiss: { viewModel.showBiometryView = false }
-          )
+        BiometryViewFactory.makeView(
+          router: ProviderBiometryRouter(
+            onPop: viewModel.handleBiometryAuthenticated
+          ),
+          interactor: DIGraph.shared.resolver.force(
+            BiometryInteractor.self
+          ),
+          config: viewModel.createBiometryConfig()
         )
       }
       .shimmer(isLoading: viewModel.viewState.isLoading)

@@ -28,6 +28,7 @@ public extension UIConfig {
     public let navigationBackType: ThreeWayNavigationType?
     public let isPreAuthorization: Bool
     public let shouldInitializeBiometricOnCreate: Bool
+    public let displayNavigationBar: Bool
 
     public var log: String {
       return "navigationTitle: \(navigationTitle.toString)" +
@@ -36,7 +37,8 @@ public extension UIConfig {
       " onSuccessNav: \(navigationSuccessType.key)" +
       " onBackNav: \(navigationBackType?.key ?? "none")" +
       " isPreAuthorization: \(isPreAuthorization)" +
-      " shouldInitializeBiometricOnCreate: \(shouldInitializeBiometricOnCreate)"
+      " shouldInitializeBiometricOnCreate: \(shouldInitializeBiometricOnCreate)" +
+      " displayNavigationBar: \(displayNavigationBar)"
     }
 
     public init(
@@ -48,7 +50,8 @@ public extension UIConfig {
       navigationSuccessType: ThreeWayNavigationType,
       navigationBackType: ThreeWayNavigationType?,
       isPreAuthorization: Bool,
-      shouldInitializeBiometricOnCreate: Bool
+      shouldInitializeBiometricOnCreate: Bool,
+      displayNavigationBar: Bool = true
     ) {
       self.navigationTitle = navigationTitle
       self.displayLogo = displayLogo
@@ -59,6 +62,7 @@ public extension UIConfig {
       self.navigationBackType = navigationBackType
       self.isPreAuthorization = isPreAuthorization
       self.shouldInitializeBiometricOnCreate = shouldInitializeBiometricOnCreate
+      self.displayNavigationBar = displayNavigationBar
     }
   }
 }

@@ -27,9 +27,17 @@ struct BiometryView<Router: RouterHost>: View {
   }
 
   var body: some View {
+    let config = viewModel.viewState.config
+    let isEmbeddedPresentation = !config.displayNavigationBar
+
     ContentScreenView(
-      navigationTitle: viewModel.viewState.config.navigationTitle,
-      toolbarContent: viewModel.toolbarContent()
+      padding: isEmbeddedPresentation ? .zero : Theme.shared.dimension.padding,
+      navigationTitle: config.displayNavigationBar
+        ? config.navigationTitle
+        : nil,
+      toolbarContent: config.displayNavigationBar
+        ? viewModel.toolbarContent()
+        : nil
     ) {
       content(
         viewState: viewModel.viewState,
@@ -49,6 +57,12 @@ struct BiometryView<Router: RouterHost>: View {
       .onChange(of: scenePhase) {
         self.viewModel.setPhase(with: scenePhase)
       }
+    }
+    .if(isEmbeddedPresentation) {
+      $0
+        .frame(maxWidth: .infinity)
+        .padding()
+        .toolbar(.hidden, for: .navigationBar)
     }
     .task {
       await self.viewModel.onAppearBiometry()
@@ -79,7 +93,9 @@ private func content(
     : viewState.config.quickPinOnlyCaption,
     accessibilityCaption: BiometryLocators.biometryScreenPinText,
     titleColor: Theme.shared.color.onSurface,
-    topSpacing: viewState.isCancellable ? .withToolbar : .withoutToolbar
+    topSpacing: viewState.config.displayNavigationBar && viewState.isCancellable
+      ? .withToolbar
+      : .withoutToolbar
   )
 
   VSpacer.large()
