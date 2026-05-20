@@ -884,6 +884,21 @@ import logic_resources
 
 
 
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Biometry/BiometryViewFactory.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Biometry/BiometryViewModel.swift'
 
 import Cuckoo

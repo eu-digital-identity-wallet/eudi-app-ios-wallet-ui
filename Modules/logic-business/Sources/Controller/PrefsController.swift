@@ -30,35 +30,35 @@ public protocol PrefsController: Sendable {
 final class PrefsControllerImpl: PrefsController {
 
   public func setValue(_ value: Any?, forKey: Prefs.Key) {
-    UserDefaults.standard.setValue(value, forKey: forKey.rawValue)
+    SharedPrefs.userDefaults.setValue(value, forKey: forKey.rawValue)
   }
 
   public func getString(forKey: Prefs.Key) -> String? {
-    return UserDefaults.standard.string(forKey: forKey.rawValue)
+    return SharedPrefs.userDefaults.string(forKey: forKey.rawValue)
   }
 
   public func getOptionalString(forKey: Prefs.Key) -> String {
-    return UserDefaults.standard.string(forKey: forKey.rawValue) ?? ""
+    return SharedPrefs.userDefaults.string(forKey: forKey.rawValue) ?? ""
   }
 
   public func getFloat(forKey: Prefs.Key) -> Float {
-    return UserDefaults.standard.float(forKey: forKey.rawValue)
+    return SharedPrefs.userDefaults.float(forKey: forKey.rawValue)
   }
 
   public func getBool(forKey: Prefs.Key) -> Bool {
-    return UserDefaults.standard.bool(forKey: forKey.rawValue)
+    return SharedPrefs.userDefaults.bool(forKey: forKey.rawValue)
   }
 
   public func remove(forKey: Prefs.Key) {
-    UserDefaults.standard.removeObject(forKey: forKey.rawValue)
+    SharedPrefs.userDefaults.removeObject(forKey: forKey.rawValue)
   }
 
   public func getValue(forKey: Prefs.Key) -> Any? {
-    return UserDefaults.standard.value(forKey: forKey.rawValue)
+    return SharedPrefs.userDefaults.value(forKey: forKey.rawValue)
   }
 
   public func getInt(forKey: Prefs.Key) -> Int {
-    return UserDefaults.standard.integer(forKey: forKey.rawValue)
+    return SharedPrefs.userDefaults.integer(forKey: forKey.rawValue)
   }
 
   public func getUserLocale() -> String {
@@ -66,10 +66,31 @@ final class PrefsControllerImpl: PrefsController {
   }
 }
 
+private enum SharedPrefs {
+  static var userDefaults: UserDefaults {
+    guard let suiteName = Bundle.getAppGroupIdentifier(),
+          let sharedDefaults = UserDefaults(suiteName: suiteName) else {
+      return .standard
+    }
+
+    migrateFromStandardIfNeeded(to: sharedDefaults)
+    return sharedDefaults
+  }
+
+  static func migrateFromStandardIfNeeded(to sharedDefaults: UserDefaults) {
+    let standardDefaults = UserDefaults.standard
+
+    for key in Prefs.Key.allCases where sharedDefaults.object(forKey: key.rawValue) == nil {
+      guard let value = standardDefaults.object(forKey: key.rawValue) else { continue }
+      sharedDefaults.set(value, forKey: key.rawValue)
+    }
+  }
+}
+
 public struct Prefs {}
 
 public extension Prefs {
-  enum Key: String {
+  enum Key: String, CaseIterable {
     case biometryEnabled
     case cachedDeepLink
     case runAtLeastOnce

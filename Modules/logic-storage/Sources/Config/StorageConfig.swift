@@ -83,17 +83,6 @@ private extension StorageConfigImpl {
   }
 
   var appGroupIdentifier: String {
-    let bundleID = Bundle.main.bundleIdentifier ?? ""
-    guard !bundleID.isEmpty else { return "" }
-
-    let mainBundleID: String
-    if Bundle.main.bundlePath.contains(".appex") {
-      let components = bundleID.split(separator: ".")
-      mainBundleID = components.count > 1 ? components.dropLast().joined(separator: ".") : bundleID
-    } else {
-      mainBundleID = bundleID
-    }
-
-    return "group.\(mainBundleID)"
+    Bundle.getAppGroupIdentifier() ?? ""
   }
 }
