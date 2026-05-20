@@ -72,25 +72,14 @@ private enum SharedPrefs {
           let sharedDefaults = UserDefaults(suiteName: suiteName) else {
       return .standard
     }
-
-    migrateFromStandardIfNeeded(to: sharedDefaults)
     return sharedDefaults
-  }
-
-  static func migrateFromStandardIfNeeded(to sharedDefaults: UserDefaults) {
-    let standardDefaults = UserDefaults.standard
-
-    for key in Prefs.Key.allCases where sharedDefaults.object(forKey: key.rawValue) == nil {
-      guard let value = standardDefaults.object(forKey: key.rawValue) else { continue }
-      sharedDefaults.set(value, forKey: key.rawValue)
-    }
   }
 }
 
 public struct Prefs {}
 
 public extension Prefs {
-  enum Key: String, CaseIterable {
+  enum Key: String {
     case biometryEnabled
     case cachedDeepLink
     case runAtLeastOnce
