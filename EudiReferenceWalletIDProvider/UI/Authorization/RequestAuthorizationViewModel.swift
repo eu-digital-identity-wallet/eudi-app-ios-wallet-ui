@@ -56,6 +56,13 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
     )
   }
 
+  func handleBiometryAuthenticated() {
+    showBiometryView = false
+    Task {
+      await acceptVerification()
+    }
+  }
+
   func loadRequest() async {
     do {
       guard let context else {
@@ -119,24 +126,16 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
     context?.cancel()
   }
 
-  func createBiometryConfig() -> UIConfig.AuthorizeAction {
-    UIConfig.AuthorizeAction(
-      displayLogo: true,
+  func createBiometryConfig() -> UIConfig.Biometry {
+    UIConfig.Biometry(
+      navigationTitle: .biometryConfirmRequest,
       caption: .requestDataShareBiometryCaption,
       quickPinOnlyCaption: .requestDataShareQuickPinCaption,
-      navigationBackType: .pop,
-      onAuthResult: { [weak self] result in
-        guard let self = self else { return }
-
-        switch result {
-        case .success:
-          Task {
-            await self.acceptVerification()
-          }
-        case .cancelled, .error:
-          break
-        }
-      }
+      navigationSuccessType: .pop,
+      navigationBackType: nil,
+      isPreAuthorization: false,
+      shouldInitializeBiometricOnCreate: true,
+      displayNavigationBar: false
     )
   }
 }

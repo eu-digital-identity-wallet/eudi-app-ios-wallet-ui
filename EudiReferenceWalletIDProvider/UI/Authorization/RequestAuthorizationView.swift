@@ -36,10 +36,10 @@ struct RequestAuthorizationView: View {
         }
       }
       .navigationDestination(isPresented: $viewModel.showBiometryView) {
-        ProviderBiometryView(
-          with: .init(
-            config: viewModel.createBiometryConfig(),
-            onDismiss: { viewModel.showBiometryView = false }
+        CommonRouter.resolve(
+          module: .biometry(config: viewModel.createBiometryConfig()),
+          host: ProviderBiometryRouter(
+            onPop: viewModel.handleBiometryAuthenticated
           )
         )
       }

@@ -44,6 +44,13 @@ public extension Bundle {
     return bundleID
   }
 
+  /// App Group identifier shared between the main app and its extensions.
+  static func getAppGroupIdentifier() -> String? {
+    let mainAppBundleID = getMainAppBundleID()
+    guard !mainAppBundleID.isEmpty else { return nil }
+    return "group.\(mainAppBundleID)"
+  }
+
   /// Gets the document storage service name using the main app bundle ID.
   static func getDocumentStorageServiceName() -> String {
     let mainAppBundleID = getMainAppBundleID()
