@@ -388,6 +388,109 @@ class AnalyticsProviderStub:AnalyticsProvider, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-authentication/Sources/Config/AuthenticationConfig.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_authentication
+
+public class MockAuthenticationConfig: AuthenticationConfig, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = any AuthenticationConfig
+    public typealias Stubbing = __StubbingProxy_AuthenticationConfig
+    public typealias Verification = __VerificationProxy_AuthenticationConfig
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any AuthenticationConfig)?
+
+    public func enableDefaultImplementation(_ stub: any AuthenticationConfig) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+    public var maxFailedPinAttempts: Int {
+        get {
+            return cuckoo_manager.getter(
+                "maxFailedPinAttempts",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.maxFailedPinAttempts
+            )
+        }
+    }
+
+    public var pinLockoutDurations: [TimeInterval] {
+        get {
+            return cuckoo_manager.getter(
+                "pinLockoutDurations",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.pinLockoutDurations
+            )
+        }
+    }
+
+
+    public struct __StubbingProxy_AuthenticationConfig: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        var maxFailedPinAttempts: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockAuthenticationConfig,Int> {
+            return .init(manager: cuckoo_manager, name: "maxFailedPinAttempts")
+        }
+        
+        var pinLockoutDurations: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockAuthenticationConfig,[TimeInterval]> {
+            return .init(manager: cuckoo_manager, name: "pinLockoutDurations")
+        }
+    }
+
+    public struct __VerificationProxy_AuthenticationConfig: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        var maxFailedPinAttempts: Cuckoo.VerifyReadOnlyProperty<Int> {
+            return .init(manager: cuckoo_manager, name: "maxFailedPinAttempts", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var pinLockoutDurations: Cuckoo.VerifyReadOnlyProperty<[TimeInterval]> {
+            return .init(manager: cuckoo_manager, name: "pinLockoutDurations", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+    }
+}
+
+public class AuthenticationConfigStub:AuthenticationConfig, @unchecked Sendable {
+    
+    public var maxFailedPinAttempts: Int {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Int).self)
+        }
+    }
+    
+    public var pinLockoutDurations: [TimeInterval] {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ([TimeInterval]).self)
+        }
+    }
+
+
+}
+
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-authentication/Sources/Controller/PinStorageController.swift'
 
 import Cuckoo
@@ -538,6 +641,162 @@ public class PinStorageControllerStub:PinStorageController, @unchecked Sendable 
     
     public func isPinValid(with p0: String) -> Bool {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+}
+
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-authentication/Sources/Controller/PinThrottleController.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_authentication
+
+public class MockPinThrottleController: PinThrottleController, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = any PinThrottleController
+    public typealias Stubbing = __StubbingProxy_PinThrottleController
+    public typealias Verification = __VerificationProxy_PinThrottleController
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any PinThrottleController)?
+
+    public func enableDefaultImplementation(_ stub: any PinThrottleController) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public func getState() -> PinLockoutState {
+        return cuckoo_manager.call(
+            "getState() -> PinLockoutState",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.getState()
+        )
+    }
+
+    public func recordFailure() -> PinLockoutState {
+        return cuckoo_manager.call(
+            "recordFailure() -> PinLockoutState",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.recordFailure()
+        )
+    }
+
+    public func recordSuccess() {
+        return cuckoo_manager.call(
+            "recordSuccess()",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.recordSuccess()
+        )
+    }
+
+    public struct __StubbingProxy_PinThrottleController: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func getState() -> Cuckoo.ProtocolStubFunction<(), PinLockoutState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPinThrottleController.self,
+                method: "getState() -> PinLockoutState",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func recordFailure() -> Cuckoo.ProtocolStubFunction<(), PinLockoutState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPinThrottleController.self,
+                method: "recordFailure() -> PinLockoutState",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func recordSuccess() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPinThrottleController.self,
+                method: "recordSuccess()",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    public struct __VerificationProxy_PinThrottleController: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func getState() -> Cuckoo.__DoNotUse<(), PinLockoutState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getState() -> PinLockoutState",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func recordFailure() -> Cuckoo.__DoNotUse<(), PinLockoutState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "recordFailure() -> PinLockoutState",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func recordSuccess() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "recordSuccess()",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+public class PinThrottleControllerStub:PinThrottleController, @unchecked Sendable {
+
+
+    
+    public func getState() -> PinLockoutState {
+        return DefaultValueRegistry.defaultValue(for: (PinLockoutState).self)
+    }
+    
+    public func recordFailure() -> PinLockoutState {
+        return DefaultValueRegistry.defaultValue(for: (PinLockoutState).self)
+    }
+    
+    public func recordSuccess() {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }
 
@@ -868,6 +1127,186 @@ class PinStorageProviderStub:PinStorageProvider, @unchecked Sendable {
     }
 }
 
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-authentication/Sources/Provider/PinThrottleProvider.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_authentication
+
+class MockPinThrottleProvider: PinThrottleProvider, Cuckoo.ProtocolMock, @unchecked Sendable {
+    typealias MocksType = any PinThrottleProvider
+    typealias Stubbing = __StubbingProxy_PinThrottleProvider
+    typealias Verification = __VerificationProxy_PinThrottleProvider
+
+    // Original typealiases
+
+    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any PinThrottleProvider)?
+
+    func enableDefaultImplementation(_ stub: any PinThrottleProvider) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    func getState() -> PinLockoutState {
+        return cuckoo_manager.call(
+            "getState() -> PinLockoutState",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.getState()
+        )
+    }
+
+    func recordFailure() -> PinLockoutState {
+        return cuckoo_manager.call(
+            "recordFailure() -> PinLockoutState",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.recordFailure()
+        )
+    }
+
+    func recordSuccess() {
+        return cuckoo_manager.call(
+            "recordSuccess()",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.recordSuccess()
+        )
+    }
+
+    struct __StubbingProxy_PinThrottleProvider: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func getState() -> Cuckoo.ProtocolStubFunction<(), PinLockoutState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPinThrottleProvider.self,
+                method: "getState() -> PinLockoutState",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func recordFailure() -> Cuckoo.ProtocolStubFunction<(), PinLockoutState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPinThrottleProvider.self,
+                method: "recordFailure() -> PinLockoutState",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func recordSuccess() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockPinThrottleProvider.self,
+                method: "recordSuccess()",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    struct __VerificationProxy_PinThrottleProvider: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func getState() -> Cuckoo.__DoNotUse<(), PinLockoutState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getState() -> PinLockoutState",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func recordFailure() -> Cuckoo.__DoNotUse<(), PinLockoutState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "recordFailure() -> PinLockoutState",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func recordSuccess() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "recordSuccess()",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+class PinThrottleProviderStub:PinThrottleProvider, @unchecked Sendable {
+
+
+    
+    func getState() -> PinLockoutState {
+        return DefaultValueRegistry.defaultValue(for: (PinLockoutState).self)
+    }
+    
+    func recordFailure() -> PinLockoutState {
+        return DefaultValueRegistry.defaultValue(for: (PinLockoutState).self)
+    }
+    
+    func recordSuccess() {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+}
+
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-authentication/Sources/Storage/KeychainPinStorageProvider.swift'
+
+import Cuckoo
+import Foundation
+import CommonCrypto
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_authentication
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-authentication/Sources/Storage/KeychainPinThrottleProvider.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_authentication
 
 
 

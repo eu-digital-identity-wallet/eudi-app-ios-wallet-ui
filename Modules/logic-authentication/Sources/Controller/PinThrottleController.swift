@@ -13,22 +13,30 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_ui
 
-public enum QuickPinLocators: String, LocatorType {
-  case quickPinTitle
+public protocol PinThrottleController: Sendable {
+  func getState() -> PinLockoutState
+  func recordFailure() -> PinLockoutState
+  func recordSuccess()
+}
 
-  public var id: String {
-    switch self {
-    case .quickPinTitle:
-      return "pin_screen_title"
-    }
+final class PinThrottleControllerImpl: PinThrottleController {
+
+  private let provider: PinThrottleProvider
+
+  init(provider: PinThrottleProvider) {
+    self.provider = provider
   }
 
-  public var trait: AccessibilityTraits? {
-    switch self {
-    case .quickPinTitle:
-      return .isStaticText
-    }
+  public func getState() -> PinLockoutState {
+    provider.getState()
+  }
+
+  public func recordFailure() -> PinLockoutState {
+    provider.recordFailure()
+  }
+
+  public func recordSuccess() {
+    provider.recordSuccess()
   }
 }

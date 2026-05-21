@@ -21,29 +21,43 @@ import logic_authentication
 @testable import feature_test
 
 final class TestBiometryInteractor: EudiTest {
-  
+
   var interactor: BiometryInteractor!
   var prefsController: MockPrefsController!
   var quickPinInteractor: MockQuickPinInteractor!
   var systemBiometricController: MockSystemBiometryController!
-  
+  var pinThrottleController: MockPinThrottleController!
+  var authenticationConfig: MockAuthenticationConfig!
+
   override func setUp() {
     super.setUp()
     self.prefsController = MockPrefsController()
     self.quickPinInteractor = MockQuickPinInteractor()
     self.systemBiometricController = MockSystemBiometryController()
+    self.pinThrottleController = MockPinThrottleController()
+    self.authenticationConfig = MockAuthenticationConfig()
+    
+    stub(authenticationConfig) { mock in
+      when(mock.maxFailedPinAttempts.get).thenReturn(3)
+      when(mock.pinLockoutDurations.get).thenReturn([30, 90, 300])
+    }
+    
     self.interactor = BiometryInteractorImpl(
       prefsController: self.prefsController,
       quickPinInteractor: self.quickPinInteractor,
-      biometryController: self.systemBiometricController
+      biometryController: self.systemBiometricController,
+      pinThrottleController: self.pinThrottleController,
+      authenticationConfig: self.authenticationConfig
     )
   }
-  
+
   override func tearDown() {
     self.interactor = nil
     self.prefsController = nil
     self.quickPinInteractor = nil
     self.systemBiometricController = nil
+    self.pinThrottleController = nil
+    self.authenticationConfig = nil
     super.tearDown()
   }
   

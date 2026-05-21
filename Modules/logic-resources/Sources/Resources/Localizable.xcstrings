@@ -1558,6 +1558,17 @@
         }
       }
     },
+    "quick_pin_locked_out" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have entered the wrong PIN %@ times in a row.\nPlease wait %@ before trying again."
+          }
+        }
+      }
+    },
     "quick_pin_next_button" : {
       "extractionState" : "manual",
       "localizations" : {

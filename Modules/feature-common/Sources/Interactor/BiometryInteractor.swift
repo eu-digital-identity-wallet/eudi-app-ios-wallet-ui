@@ -23,6 +23,8 @@ public enum BiometricsState: Equatable, Sendable {
 }
 
 public protocol BiometryInteractor: Sendable {
+  var maxFailedPinAttempts: Int { get }
+
   func authenticate() async -> BiometricsState
   func openSettings(action: @escaping @Sendable () -> Void) async
   func getBiometricsImage() async -> Image?
@@ -31,6 +33,10 @@ public protocol BiometryInteractor: Sendable {
   func isBiometryEnabled() async -> Bool
   func setBiometrySelection(isEnabled: Bool) async
   func isPinValid(with pin: String) async -> QuickPinPartialState
+
+  func getPinLockoutState() async -> PinLockoutState
+  func recordPinFailure() async -> PinLockoutState
+  func resetPinThrottle() async
 }
 
 final actor BiometryInteractorImpl: BiometryInteractor {
@@ -38,15 +44,24 @@ final actor BiometryInteractorImpl: BiometryInteractor {
   private let prefsController: PrefsController
   private let quickPinInteractor: QuickPinInteractor
   private let biometryController: SystemBiometryController
+  private let pinThrottleController: PinThrottleController
+  private let authenticationConfig: AuthenticationConfig
+
+  public let maxFailedPinAttempts: Int
 
   init(
     prefsController: PrefsController,
     quickPinInteractor: QuickPinInteractor,
-    biometryController: SystemBiometryController
+    biometryController: SystemBiometryController,
+    pinThrottleController: PinThrottleController,
+    authenticationConfig: AuthenticationConfig
   ) {
     self.prefsController = prefsController
     self.quickPinInteractor = quickPinInteractor
     self.biometryController = biometryController
+    self.pinThrottleController = pinThrottleController
+    self.authenticationConfig = authenticationConfig
+    self.maxFailedPinAttempts = authenticationConfig.maxFailedPinAttempts
   }
 
   public func getBiometryType() async -> LABiometryType {
@@ -99,5 +114,17 @@ final actor BiometryInteractorImpl: BiometryInteractor {
 
   public func isPinValid(with pin: String) async -> QuickPinPartialState {
     await quickPinInteractor.isPinValid(pin: pin)
+  }
+
+  public func getPinLockoutState() -> PinLockoutState {
+    pinThrottleController.getState()
+  }
+
+  public func recordPinFailure() -> PinLockoutState {
+    pinThrottleController.recordFailure()
+  }
+
+  public func resetPinThrottle() {
+    pinThrottleController.recordSuccess()
   }
 }

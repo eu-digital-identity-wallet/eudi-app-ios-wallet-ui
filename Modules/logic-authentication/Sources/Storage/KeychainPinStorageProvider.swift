@@ -87,7 +87,7 @@ final class KeychainPinStorageProvider: PinStorageProvider {
   }
 }
 
-private extension KeychainPinStorageProvider {
+extension KeychainPinStorageProvider {
 
   enum KeyIdentifier: String, KeyChainWrapper {
 

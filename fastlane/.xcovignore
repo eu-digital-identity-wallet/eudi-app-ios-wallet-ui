@@ -38,9 +38,6 @@
 # Extensions
 - .*Extensions.swift
 
-# Provider
-- .*Provider.swift
-
 # Attribute
 - .*Attributes.swift
 

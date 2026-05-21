@@ -23,6 +23,7 @@ public struct PinTextFieldView: View {
   private let isSecureEntry: Bool
   private let shouldUseFullScreen: Bool
   private let hasError: Bool
+  private let isDisabled: Bool
 
   @State private var stateForDigit: [FieldState]
   @State private var currentIndex: Int = 0
@@ -58,7 +59,8 @@ public struct PinTextFieldView: View {
     isSecureEntry: Bool,
     canFocus: Binding<Bool> = .constant(true),
     shouldUseFullScreen: Bool = false,
-    hasError: Bool = false
+    hasError: Bool = false,
+    isDisabled: Bool = false
   ) {
     self._numericText = numericText
     self._canFocus = canFocus
@@ -66,6 +68,7 @@ public struct PinTextFieldView: View {
     self.isSecureEntry = isSecureEntry
     self.shouldUseFullScreen = shouldUseFullScreen
     self.hasError = hasError
+    self.isDisabled = isDisabled
 
     self.stateForDigit = Array(repeating: FieldState.inactive, count: maxDigits)
   }
@@ -175,7 +178,13 @@ public struct PinTextFieldView: View {
     .textContentType(.oneTimeCode)
     .frame(width: self.isInEditMode ? 0 : nil, height: nil)
     .focused($focused)
-    .if(canFocus) { view in
+    .disabled(isDisabled)
+    .onChange(of: isDisabled) { _, newValue in
+      if newValue {
+        self.focused = false
+      }
+    }
+    .if(canFocus && !isDisabled) { view in
       view
         .onAppearDelayed {
           self.focused = true

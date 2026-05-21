@@ -67,9 +67,9 @@ private func pinView(
     maxDigits: txCodeLength,
     isSecureEntry: true,
     canFocus: codeIsFocused,
-    shouldUseFullScreen: false
+    shouldUseFullScreen: false,
+    isDisabled: isLoading
   )
-  .disabled(isLoading)
 
   Spacer()
 }

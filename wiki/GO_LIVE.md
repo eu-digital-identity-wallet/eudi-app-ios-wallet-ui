@@ -99,7 +99,7 @@ The application is a modular iOS project. Important modules and targets for prod
 | `EudiReferenceWalletIDProvider` | Identity Document Provider extension for Digital Credentials API presentment on supported iOS versions. |
 | `logic-core` | WalletKit integration, issuer configuration, presentation, document issuance, document registration, revocation, transaction logging. |
 | `logic-business` | Global app config, build variant parsing, RQES config, Keychain controller, preferences, Bluetooth and shared helpers. |
-| `logic-authentication` | PIN storage provider, PIN controller, biometric controller. |
+| `logic-authentication` | PIN storage provider, PIN controller, biometric controller, PIN throttle/lockout, authentication configuration. |
 | `logic-storage` | SwiftData storage for bookmarks, transactions, revoked documents, and failed reissuance data. |
 | `logic-api` | `URLSession` provider and network request helpers. |
 | `logic-analytics` | Optional analytics provider integration. |
@@ -156,6 +156,8 @@ Keep these files under strict review:
 | `Modules/logic-core/Sources/Config/WalletProviderAttestationConfig.swift` | Defines the wallet provider attestation host. |
 | `Modules/logic-core/Sources/Controller/WalletKitController.swift` | Constructs `EudiWallet`, wires WalletKit config, starts presentation, issuance, revocation, logging, and document registration. |
 | `Modules/logic-authentication/Sources/Storage/KeychainPinStorageProvider.swift` | Defines PIN hashing, salt, PBKDF2 iteration count, and constant-time comparison. |
+| `Modules/logic-authentication/Sources/Config/AuthenticationConfig.swift` | PIN lockout policy (max failed attempts, escalating lockout durations). |
+| `Modules/logic-authentication/Sources/Storage/KeychainPinThrottleProvider.swift` | Keychain-persisted PIN failure counter, lockout level, lockout window timestamps; clock-rollback detection. |
 | `Modules/logic-business/Sources/Controller/KeyChainController.swift` | Defines Keychain service, access group, accessibility class, and biometric Keychain validation. |
 | `Modules/logic-storage/Sources/Config/StorageConfig.swift` | Defines SwiftData store location, App Group container selection, and local storage schema. |
 | `Modules/logic-api/Sources/Provider/NetworkSessionProvider.swift` | Defines the shared network session used by app network calls. |
@@ -1204,10 +1206,51 @@ Current PIN storage uses:
 Production tasks:
 
 * Confirm PIN length, complexity, and retry UX.
-* Add failed attempt rate limiting or lockout according to policy.
-* Consider server-side risk signals for repeated failures.
+* Consider binding PIN verification to a hardware-backed key operation (Secure Enclave) for additional defense in depth.
+* Benchmark PBKDF2 iterations on the slowest supported device.
+* Consider memory-hard KDF options if supported by your platform/security policy.
 * Avoid logging PIN validation results beyond coarse categories.
 * Include PIN setup, change, lockout, and recovery in test plans.
+* Add telemetry for repeated failed attempts without logging PIN values (the reference implementation does not emit lockout metrics).
+
+Failure counting and lockout are handled separately by `PinThrottleController` — see the next section.
+
+### PIN Throttle And Lockout
+
+The reference implementation includes an escalating client-side lockout enforced by `PinThrottleController` and persisted in the iOS Keychain via `KeyChainController` (using the shared App-Group access group, so the main app and the document-provider extension share state). Policy is configured through `AuthenticationConfig` (see [CONFIGURATION.md#pin-throttle-configuration](CONFIGURATION.md#pin-throttle-configuration)).
+
+Persisted state keys (`KeychainPinThrottleProvider.KeyIdentifier`):
+
+* `pinFailedAttempts` — current consecutive failure counter (`Int`, stored as `String`).
+* `pinLockoutLevel` — monotonic counter indexing `AuthenticationConfig.pinLockoutDurations` (`Int`, stored as `String`).
+* `pinLockoutStartedAt` — wall-clock timestamp (`Date().timeIntervalSince1970`) when the current lockout began. Used for clock-rollback detection.
+* `pinLockoutEndsAt` — wall-clock timestamp when the current lockout ends.
+
+The values are stored as Strings in the Keychain (e.g. `"3"`, `"1762345678.123"`). The Keychain item accessibility class follows `KeyChainController`'s default (`.whenUnlocked`), which means the values are readable only while the device is unlocked and are excluded from iCloud backup under the standard Keychain backup rules.
+
+Default policy (`AuthenticationConfigImpl`):
+
+| Event | Behavior |
+| --- | --- |
+| 3 consecutive failed attempts | First lockout: 30 seconds. |
+| 3 more failures after lockout ends | Second lockout: 90 seconds. |
+| 3 more failures after that | Third lockout: 5 minutes. |
+| Each subsequent batch of 3 failures | 5 minutes (last list entry reused). |
+| Successful PIN or biometric authentication | Counters and lockout level reset. |
+| App kill or device reboot | Lockout window persists (wall-clock based). |
+| Device clock rolled back | Detected via stored start timestamp; user remains locked for the full duration. |
+| App reinstall | State is wiped together with app data. Require re-enrollment unless secure backup/recovery is explicitly implemented. |
+
+Lockout counters are persisted, not just held in UI state. The PIN input is disabled in both the login screen (`BiometryViewModel`) and the change-PIN validation step (`QuickPinViewModel`) while locked. The biometric icon on the login screen stays enabled during PIN lockout and acts as an escape hatch — a successful biometric authentication clears the throttle.
+
+Production gaps to address:
+
+* Decide what happens once the final lockout tier is reached. The reference implementation cycles at the last list entry indefinitely; production policy may instead require device-credential step-up, wallet wipe, or a support recovery flow.
+* Decide whether to step up to device credential at high cumulative failures (e.g. after 10 cumulative failures across batches).
+* Add server-side risk signals; the current lockout is purely client-side and is wiped by reinstall.
+* Add telemetry for lockout events without logging PIN values.
+* Combine with App Attest / DeviceCheck / RASP and server-side risk checks where applicable (see [App Attest, DeviceCheck, And App Hardening](#app-attest-devicecheck-and-app-hardening)).
+* Clock-rollback mitigation is best-effort; a fully tampered device with reset clock could still bypass parts of the wall-clock window.
 
 ### SwiftData Store
 
@@ -1311,7 +1354,7 @@ Production decisions:
 | Area | Guidance |
 | --- | --- |
 | PIN length | Define minimum length and whether numeric-only is acceptable. |
-| PIN retry policy | Add lockout/rate limiting for repeated failures. |
+| PIN lockout policy | Defaults to 3 attempts then escalating lockouts of 30s, 90s, 5m (then 5m repeats). Tune via `AuthenticationConfig.maxFailedPinAttempts` and `pinLockoutDurations`. Decide whether the final tier should escalate further (wipe, support flow, device-credential step-up). See [PIN Throttle And Lockout](#pin-throttle-and-lockout). |
 | Biometric opt-in | Decide whether biometrics are optional or required for specific operations. |
 | Device credential fallback | Decide whether passcode fallback is allowed. |
 | Biometric enrollment change | Test and define whether access is invalidated when biometrics change. |
