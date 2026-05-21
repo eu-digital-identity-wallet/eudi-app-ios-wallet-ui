@@ -247,6 +247,8 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case unknown
   case pidCombined
   case documentData
+  case documentDetailsShow
+  case documentDetailsHide
   case issuanceSuccessHeaderDescription
   case documentDetailsReIssueButton
   case documentDetailsRemoveButton

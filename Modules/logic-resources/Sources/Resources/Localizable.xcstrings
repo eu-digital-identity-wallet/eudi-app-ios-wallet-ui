@@ -551,6 +551,28 @@
         }
       }
     },
+    "document_details_show" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show"
+          }
+        }
+      }
+    },
+    "document_details_hide" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide"
+          }
+        }
+      }
+    },
     "document_details_document_credentials_expanded_text_subtitle" : {
       "extractionState" : "manual",
       "localizations" : {

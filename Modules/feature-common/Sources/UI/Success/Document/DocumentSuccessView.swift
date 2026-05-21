@@ -15,6 +15,7 @@
  */
 import SwiftUI
 import logic_ui
+import logic_resources
 
 public struct DocumentSuccessView<Router: RouterHost, RequestItem: Sendable>: View {
 
@@ -30,11 +31,11 @@ public struct DocumentSuccessView<Router: RouterHost, RequestItem: Sendable>: Vi
     ContentScreenView(
       padding: .zero,
       canScroll: true,
-      navigationTitle: viewModel.viewState.navigationTitle,
-      toolbarContent: viewModel.toolbarContent()
+      navigationTitle: viewModel.viewState.navigationTitle
     ) {
       content(
-        viewState: viewModel.viewState
+        viewState: viewModel.viewState,
+        onDone: viewModel.onDone
       )
     }
   }
@@ -43,7 +44,8 @@ public struct DocumentSuccessView<Router: RouterHost, RequestItem: Sendable>: Vi
 @MainActor
 @ViewBuilder
 private func content<RequestItem: Sendable>(
-  viewState: DocumentSuccessState<RequestItem>
+  viewState: DocumentSuccessState<RequestItem>,
+  onDone: @escaping () -> Void
 ) -> some View {
   ScrollView {
 
@@ -64,6 +66,31 @@ private func content<RequestItem: Sendable>(
     }
     .padding(.horizontal, Theme.shared.dimension.padding)
   }
+  .safeAreaInset(edge: .bottom) {
+    doneButton(
+      isLoading: viewState.isLoading,
+      onDone: onDone
+    )
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func doneButton(
+  isLoading: Bool,
+  onDone: @escaping () -> Void
+) -> some View {
+  WrapButtonView(
+    style: .primary,
+    title: .doneButton,
+    isLoading: isLoading,
+    onAction: onDone()
+  )
+  .combineChilrenAccessibility(
+    locator: DocumentSuccessLocators.doneButton
+  )
+  .padding(.horizontal, Theme.shared.dimension.padding)
+  .padding(.bottom, Theme.shared.dimension.padding)
 }
 
 @MainActor

@@ -68,6 +68,7 @@ public protocol ImageManagerProtocol: Sendable {
   var documentSuccessPending: Image { get }
   var verified: Image { get }
   var ellipsisVertical: Image { get }
+  var copy: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -125,6 +126,7 @@ final class ImageManager: ImageManagerProtocol {
     case documentSuccessPending = "document-success-pending"
     case verified = "verified"
     case ellipsisVertical = "elipsis-vertical"
+    case copy = "doc.on.doc"
   }
 
   // MARK: - Properties
@@ -291,5 +293,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var ellipsisVertical: Image {
     Image(ImageEnum.ellipsisVertical.rawValue, bundle: bundle)
+  }
+  var copy: Image {
+    Image(systemName: ImageEnum.copy.rawValue)
   }
 }

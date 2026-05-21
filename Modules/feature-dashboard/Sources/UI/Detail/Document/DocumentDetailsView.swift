@@ -156,14 +156,22 @@ private func content(
           Button {
             toggleIsVisible()
           } label: {
-            (isVisible ? Theme.shared.image.eye : Theme.shared.image.eyeSlash)
-              .resizable()
-              .aspectRatio(contentMode: .fit)
-              .frame(width: 24, height: 24)
-              .padding(.horizontal, SPACING_MEDIUM)
-              .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-              .shimmer(isLoading: viewState.isLoading)
+            HStack(spacing: SPACING_SMALL) {
+              (isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 24, height: 24)
+
+              Text(isVisible ? .documentDetailsShow : .documentDetailsHide)
+                .typography(Theme.shared.font.bodyMedium)
+                .fontWeight(.semibold)
+                .frame(width: 44, alignment: .leading)
+            }
+            .frame(width: 76, alignment: .trailing)
+            .foregroundStyle(Theme.shared.color.primary)
+            .shimmer(isLoading: viewState.isLoading)
           }
+          .buttonStyle(.plain)
           .accessibilityLocator(isVisible ? DocumentDetailsLocators.eyeSlash : DocumentDetailsLocators.eye)
         }
 

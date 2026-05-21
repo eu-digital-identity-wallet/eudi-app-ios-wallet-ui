@@ -155,6 +155,34 @@ private func scrollableContent(
       .padding(Theme.shared.dimension.padding)
     }
   }
+  .safeAreaInset(edge: .bottom) {
+    shareButton(
+      allowShare: viewState.allowShare,
+      isLoading: viewState.isLoading,
+      onShare: onShare
+    )
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func shareButton(
+  allowShare: Bool,
+  isLoading: Bool,
+  onShare: @escaping () -> Void
+) -> some View {
+  WrapButtonView(
+    style: .primary,
+    title: .shareButton,
+    isLoading: isLoading,
+    isEnabled: allowShare,
+    onAction: onShare()
+  )
+  .combineChilrenAccessibility(
+    locator: BaseRequestLocators.shareButton
+  )
+  .padding(.horizontal, Theme.shared.dimension.padding)
+  .padding(.bottom, Theme.shared.dimension.padding)
 }
 
 @MainActor

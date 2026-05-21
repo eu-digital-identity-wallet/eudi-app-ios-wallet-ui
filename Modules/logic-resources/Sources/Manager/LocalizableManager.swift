@@ -494,6 +494,10 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "pid_combined")
     case .documentData:
       bundle.localizedString(forKey: "document_data")
+    case .documentDetailsShow:
+      bundle.localizedString(forKey: "document_details_show")
+    case .documentDetailsHide:
+      bundle.localizedString(forKey: "document_details_hide")
     case .issuanceSuccessHeaderDescription:
       bundle.localizedString(forKey: "issuance_success_header_description")
     case .documentDetailsReIssueButton:
