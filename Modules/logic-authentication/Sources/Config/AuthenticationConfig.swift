@@ -13,22 +13,21 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_ui
+import Foundation
 
-public enum QuickPinLocators: String, LocatorType {
-  case quickPinTitle
+public protocol AuthenticationConfig: Sendable {
 
-  public var id: String {
-    switch self {
-    case .quickPinTitle:
-      return "pin_screen_title"
-    }
-  }
+  /// Number of consecutive wrong PIN attempts allowed before the user is locked out.
+  var maxFailedPinAttempts: Int { get }
 
-  public var trait: AccessibilityTraits? {
-    switch self {
-    case .quickPinTitle:
-      return .isStaticText
-    }
-  }
+  /// Lockout durations (in seconds) applied each time the user reaches `maxFailedPinAttempts`.
+  /// The list indexes by lockout level (0 = first lockout). Once the user exceeds the
+  /// size of the list, the last entry is reused for every subsequent lockout.
+  var pinLockoutDurations: [TimeInterval] { get }
+}
+
+struct AuthenticationConfigImpl: AuthenticationConfig {
+
+  public let maxFailedPinAttempts: Int = 3
+  public let pinLockoutDurations: [TimeInterval] = [30, 90, 300]
 }

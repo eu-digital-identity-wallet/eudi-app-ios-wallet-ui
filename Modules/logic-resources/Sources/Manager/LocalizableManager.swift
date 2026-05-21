@@ -124,6 +124,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "quick_pin_set_success_button")
     case .quickPinDoNotMatch:
       bundle.localizedString(forKey: "quick_pin_dont_match")
+    case .quickPinLockedOut(let args):
+      bundle.localizedStringWithArguments(forKey: "quick_pin_locked_out", arguments: args)
     case .quickPinUpdateTitle:
       bundle.localizedString(forKey: "quick_pin_update_title")
     case .quickPinUpdateCaptionOne:

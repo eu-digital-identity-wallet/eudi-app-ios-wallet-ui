@@ -23,7 +23,11 @@ public final class FeatureCommonAssembly: Assembly {
 
   public func assemble(container: Container) {
     container.register(QuickPinInteractor.self) { r in
-      QuickPinInteractorImpl(pinStorageController: r.force(PinStorageController.self))
+      QuickPinInteractorImpl(
+        pinStorageController: r.force(PinStorageController.self),
+        pinThrottleController: r.force(PinThrottleController.self),
+        authenticationConfig: r.force(AuthenticationConfig.self)
+      )
     }
     .inObjectScope(ObjectScope.transient)
 
@@ -31,7 +35,9 @@ public final class FeatureCommonAssembly: Assembly {
       BiometryInteractorImpl(
         prefsController: r.force(PrefsController.self),
         quickPinInteractor: r.force(QuickPinInteractor.self),
-        biometryController: r.force(SystemBiometryController.self)
+        biometryController: r.force(SystemBiometryController.self),
+        pinThrottleController: r.force(PinThrottleController.self),
+        authenticationConfig: r.force(AuthenticationConfig.self)
       )
     }
     .inObjectScope(ObjectScope.transient)

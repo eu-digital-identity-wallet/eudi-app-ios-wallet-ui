@@ -70,6 +70,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case quickPinSetSuccessButton
   case quickPinSetNoActivationSuccessButton
   case quickPinDoNotMatch
+  case quickPinLockedOut([String])
   case quickPinUpdateTitle
   case quickPinUpdateCaptionOne
   case quickPinUpdateCaptionTwo

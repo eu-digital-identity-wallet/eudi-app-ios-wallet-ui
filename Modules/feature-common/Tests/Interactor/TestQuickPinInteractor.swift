@@ -21,18 +21,34 @@ import logic_business
 @testable import feature_test
 
 final class TestQuickPinInteractor: EudiTest {
-  
+
   var interactor: QuickPinInteractor!
   var pinStorageController: MockPinStorageController!
-  
+  var pinThrottleController: MockPinThrottleController!
+  var authenticationConfig: MockAuthenticationConfig!
+
   override func setUp() {
     self.pinStorageController = MockPinStorageController()
-    self.interactor = QuickPinInteractorImpl(pinStorageController: pinStorageController)
+    self.pinThrottleController = MockPinThrottleController()
+    self.authenticationConfig = MockAuthenticationConfig()
+    
+    stub(authenticationConfig) { mock in
+      when(mock.maxFailedPinAttempts.get).thenReturn(3)
+      when(mock.pinLockoutDurations.get).thenReturn([30, 90, 300])
+    }
+    
+    self.interactor = QuickPinInteractorImpl(
+      pinStorageController: pinStorageController,
+      pinThrottleController: pinThrottleController,
+      authenticationConfig: authenticationConfig
+    )
   }
-  
+
   override func tearDown() {
     self.interactor = nil
     self.pinStorageController = nil
+    self.pinThrottleController = nil
+    self.authenticationConfig = nil
   }
   
   func testSetPin_WhenNewPinIsSet_ThenVerifyAtLeastOnce() async {

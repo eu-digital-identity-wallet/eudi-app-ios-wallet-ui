@@ -9,6 +9,7 @@
 * [How to work with self-signed certificates](HOW_TO_BUILD.md#how-to-work-with-self-signed-certificates-on-ios)
 * [Theme configuration](#theme-configuration)
 * [Pin Storage configuration](#pin-storage-configuration)
+* [PIN throttle configuration](#pin-throttle-configuration)
 * [Analytics configuration](#analytics-configuration)
 * [Document Provider extension configuration](#document-provider-extension-configuration)
 
@@ -303,6 +304,7 @@ production values for every config surface listed below.
 | Reader trust anchors | `WalletKitConfig.swift`, certificate resources | Production IACA/reader/verifier trust anchors only. |
 | OpenID4VP | `WalletKitConfig.swift` | Approved client ID schemes, preregistered verifier entries where needed, and partial claim disclosure policy. |
 | WalletKit storage/auth | `WalletKitConfig.swift`, `ConfigLogic.swift` | Production Keychain service/access group and `userAuthenticationRequired` decision. For LoA High PID and other high-assurance EAA/QEAA credentials, require strong local authentication and Keychain/Secure Enclave-backed protection unless an approved remote high-assurance key protection design replaces local key use. |
+| PIN throttle policy | `AuthenticationConfig.swift` in `logic-authentication` | Confirm `maxFailedPinAttempts` and `pinLockoutDurations` meet policy. Decide what happens once the final lockout tier is reached (e.g. wipe, support flow, device-credential step-up). |
 | Document / WalletKit key storage | `EudiWalletConfiguration`, `ConfigLogic.keyChainConfig`, WalletKit-supported storage APIs | Default app configuration uses WalletKit storage with the configured Keychain service and access group. If production requires alternative local secure storage, a remote-backed key service, or an external protection SDK, use WalletKit-supported extension points and document the exact SDK/API. |
 | Wallet attestation key storage | `WalletKitAttestationProviderImpl`, `WalletProviderAttestationConfig.swift`, Wallet Provider policy | Use when wallet attestation keys must be generated, stored, attested, or unlocked by a custom provider, platform-backed key policy, or remote high-assurance key service. |
 | Issuance proof / DPoP key handling | `WalletKitConfig.swift` issuer configuration and WalletKit OpenID4VCI integration | Prefer DPoP where supported. Use WalletKit-supported custom key handling when proof-of-possession keys require specific authentication, Secure Enclave/Keychain policy, remote high-assurance protection, or issuer-specific key policy. |
@@ -516,6 +518,67 @@ container.register(PinStorageProvider.self) { r in
 }
 .inObjectScope(ObjectScope.graph)
 ```
+
+The PIN storage layer handles hashing, persistence, and validation. Brute-force protection (failure counting, escalating lockouts) is a separate concern handled by `PinThrottleController` — see [PIN throttle configuration](#pin-throttle-configuration).
+
+## PIN throttle configuration
+
+The application protects against brute-force PIN attempts via an escalating lockout mechanism. After a configurable number of consecutive failed attempts the PIN input is disabled for an increasing duration. Lockout state is persisted in the iOS Keychain via `KeyChainController` (using the shared App-Group access group, so the main app and the document-provider extension share state), so it survives process death, device reboot, and app updates. State is reset on any successful PIN or biometric authentication.
+
+The policy is configurable via the `AuthenticationConfig` protocol inside the `logic-authentication` module:
+
+```swift
+public protocol AuthenticationConfig: Sendable {
+
+  /// Number of consecutive wrong PIN attempts allowed before the user is locked out.
+  var maxFailedPinAttempts: Int { get }
+
+  /// Lockout durations (in seconds) applied each time the user reaches `maxFailedPinAttempts`.
+  /// The list indexes by lockout level (0 = first lockout). Once the user exceeds the
+  /// size of the list, the last entry is reused for every subsequent lockout.
+  var pinLockoutDurations: [TimeInterval] { get }
+}
+```
+
+Default policy (`AuthenticationConfigImpl`):
+
+```swift
+public struct AuthenticationConfigImpl: AuthenticationConfig {
+
+  public let maxFailedPinAttempts: Int = 3
+  public let pinLockoutDurations: [TimeInterval] = [30, 90, 300]
+
+  public init() {}
+}
+```
+
+Resulting behavior with the defaults:
+
+| Event | Behavior |
+| --- | --- |
+| 3 consecutive wrong PIN attempts | First lockout: 30 seconds. |
+| 3 more wrong attempts after lockout ends | Second lockout: 90 seconds. |
+| 3 more wrong attempts | Third lockout: 5 minutes. |
+| Each subsequent batch of 3 wrong attempts | 5 minutes (last list entry reused). |
+| Successful PIN or biometric authentication | Failure counter and lockout level reset. |
+| App kill or device reboot | Active lockout window persists (wall-clock). |
+| Device clock rolled back | Detected; user remains locked for the full duration. |
+
+You can change the policy by providing your own `AuthenticationConfig` conformance and wiring it through `LogicAuthAssembly`:
+
+```swift
+container.register(AuthenticationConfig.self) { _ in
+  AuthenticationConfigImpl()
+}
+.inObjectScope(ObjectScope.container)
+```
+
+The lockout is enforced by `PinThrottleController` and applied in both the login screen (`BiometryViewModel`) and the change-PIN validation step (`QuickPinViewModel`). While locked:
+
+* The PIN input field is disabled (no keyboard, no edits).
+* The proceed button is disabled.
+* The existing inline error slot of the PIN view shows a countdown message formatted from the `quick_pin_locked_out` string resource. The message takes two format arguments — the configured `maxFailedPinAttempts` and the remaining time as `mm:ss` — so changing the config values updates the user-facing message automatically.
+* On screens that offer biometrics, the biometric icon stays interactive. A successful biometric authentication clears the throttle.
 
 ## Analytics configuration
 

@@ -33,8 +33,7 @@ struct QuickPinView<Router: RouterHost>: View {
       content(
         viewState: viewModel.viewState,
         uiPinInputField: $viewModel.uiPinInputField,
-        onShowCancellationModal: { viewModel.onShowCancellationModal() },
-        onButtonClick: { viewModel.onButtonClick() }
+        onShowCancellationModal: { viewModel.onShowCancellationModal() }
       )
     }
     .dialogCompat(
@@ -52,6 +51,9 @@ struct QuickPinView<Router: RouterHost>: View {
         Text(.quickPinUpdateCancellationCaption)
       }
     )
+    .task {
+      await viewModel.initialize()
+    }
   }
 }
 
@@ -60,8 +62,7 @@ struct QuickPinView<Router: RouterHost>: View {
 private func content(
   viewState: QuickPinState,
   uiPinInputField: Binding<String>,
-  onShowCancellationModal: @escaping () -> Void,
-  onButtonClick: @escaping () -> Void
+  onShowCancellationModal: @escaping () -> Void
 ) -> some View {
 
   ContentHeaderView(
@@ -84,7 +85,9 @@ private func content(
   pinView(
     uiPinInputField: uiPinInputField,
     quickPinSize: viewState.quickPinSize,
-    pinError: viewState.pinError
+    pinError: viewState.pinError,
+    isLockedOut: viewState.isLockedOut,
+    lockoutMessage: viewState.lockoutMessage
   )
 
   Spacer()
@@ -95,25 +98,38 @@ private func content(
 private func pinView(
   uiPinInputField: Binding<String>,
   quickPinSize: Int,
-  pinError: LocalizableStringKey?
+  pinError: LocalizableStringKey?,
+  isLockedOut: Bool,
+  lockoutMessage: LocalizableStringKey?
 ) -> some View {
+  let hasError = pinError != nil || isLockedOut
+
   VStack(spacing: .zero) {
 
     PinTextFieldView(
       numericText: uiPinInputField,
       maxDigits: quickPinSize,
       isSecureEntry: true,
-      canFocus: .constant(true),
+      canFocus: .constant(!isLockedOut),
       shouldUseFullScreen: false,
-      hasError: pinError != nil
+      hasError: hasError,
+      isDisabled: isLockedOut
     )
 
     VSpacer.mediumSmall()
 
-    if let error = pinError {
+    if let lockoutMessage {
+      HStack {
+        Text(lockoutMessage)
+          .typography(Theme.shared.font.bodySmall)
+          .foregroundColor(Theme.shared.color.error)
+          .multilineTextAlignment(.leading)
+        Spacer()
+      }
+    } else if let error = pinError {
       HStack {
         Text(error)
-          .typography(Theme.shared.font.bodyMedium)
+          .typography(Theme.shared.font.bodySmall)
           .foregroundColor(Theme.shared.color.error)
         Spacer()
       }
@@ -127,24 +143,23 @@ private func pinView(
     navigationTitle: .quickPinEnterPin,
     title: .quickPinSetTitle,
     caption: .quickPinSetCaptionOne,
-    button: .quickPinNextButton,
     successTitle: .quickPinSetTitle,
     successCaption: .quickPinSetSuccess,
     successButton: .quickPinSetSuccessButton,
     successNavigationType: .push(screen: .featureDashboardModule(.dashboard)),
     isCancellable: false,
     pinError: nil,
-    isButtonActive: true,
     step: .firstInput,
-    quickPinSize: 6
+    quickPinSize: 6,
+    isLockedOut: false,
+    lockoutMessage: nil
   )
 
   ContentScreenView {
     content(
       viewState: viewState,
       uiPinInputField: .constant("PinInput Field"),
-      onShowCancellationModal: {},
-      onButtonClick: {}
+      onShowCancellationModal: {}
     )
   }
 }

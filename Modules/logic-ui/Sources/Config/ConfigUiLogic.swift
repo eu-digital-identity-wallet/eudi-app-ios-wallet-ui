@@ -39,7 +39,7 @@ struct ConfigUiLogicImpl: ConfigUiLogic {
     return .featureDashboardModule(.dashboard)
   }
 
-  var issuanceRoute: AppRoute {
+  public var issuanceRoute: AppRoute {
     return .featureIssuanceModule(.issuanceAddDocument(config: NoConfig()))
   }
 
