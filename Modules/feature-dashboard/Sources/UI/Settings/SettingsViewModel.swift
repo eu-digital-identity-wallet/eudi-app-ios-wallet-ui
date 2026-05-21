@@ -113,6 +113,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
       items.append(
         .init(
           title: .loginWithBiometrics,
+          icon: Theme.shared.image.faceIdMenu,
           isToggle: true,
           action: { [weak self] in
             guard let self else { return }
@@ -125,6 +126,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     items.append(
       .init(
         title: .batchIssuanceCounter,
+        icon: Theme.shared.image.batchCounter,
         showDivider: true,
         isToggle: true,
         action: {}
@@ -134,6 +136,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     items.append(
       .init(
         title: .retrieveLogs,
+        icon: Theme.shared.image.retrieveLogs,
         isShareLink: true,
         action: {}
       )
@@ -143,6 +146,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
       items.append(
         .init(
           title: .changelog,
+          icon: Theme.shared.image.changelog,
           showDivider: false,
           action: { changelogUrl.open() }
         )

@@ -18,6 +18,7 @@ import logic_resources
 
 public struct TappableCellView: View {
   public let title: LocalizableStringKey
+  public let icon: Image?
   public let showDivider: Bool
   public let useOverlay: Bool
   public let action: () -> Void
@@ -27,6 +28,7 @@ public struct TappableCellView: View {
 
   public init(
     title: LocalizableStringKey,
+    icon: Image? = nil,
     showDivider: Bool,
     isToggle: Bool = false,
     isOn: Binding<Bool> = .constant(false),
@@ -34,6 +36,7 @@ public struct TappableCellView: View {
     action: @escaping () -> Void = {}
   ) {
     self.title = title
+    self.icon = icon
     self.useOverlay = useOverlay
     self.action = action
     self.showDivider = showDivider
@@ -43,12 +46,21 @@ public struct TappableCellView: View {
 
   public var body: some View {
     VStack(spacing: SPACING_MEDIUM_SMALL) {
-      HStack {
+      HStack(alignment: .center, spacing: SPACING_MEDIUM) {
+        if let icon {
+          icon
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 24, height: 24)
+            .foregroundStyle(Theme.shared.color.primary)
+        }
+
         Text(title)
           .typography(Theme.shared.font.bodyLarge)
           .foregroundColor(Theme.shared.color.onSurface)
           .lineLimit(1)
           .minimumScaleFactor(0.8)
+          .frame(maxWidth: .infinity, alignment: .leading)
 
         if isToggle {
           Toggle(
@@ -61,11 +73,9 @@ public struct TappableCellView: View {
               }
             )
           )
-            .labelsHidden()
-            .frame(maxWidth: .infinity, alignment: .topTrailing)
+          .labelsHidden()
         } else {
           Theme.shared.image.chevronRight
-            .frame(maxWidth: .infinity, alignment: .topTrailing)
             .foregroundColor(Theme.shared.color.onSurface)
         }
       }

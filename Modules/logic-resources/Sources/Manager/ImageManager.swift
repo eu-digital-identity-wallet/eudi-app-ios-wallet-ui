@@ -18,6 +18,7 @@ import SwiftUI
 public protocol ImageManagerProtocol: Sendable {
   var logo: Image { get }
   var faceId: Image { get }
+  var faceIdMenu: Image { get }
   var id: Image { get }
   var ble: Image { get }
   var touchId: Image { get }
@@ -69,12 +70,17 @@ public protocol ImageManagerProtocol: Sendable {
   var verified: Image { get }
   var ellipsisVertical: Image { get }
   var copy: Image { get }
+  var changePin: Image { get }
+  var batchCounter: Image { get }
+  var retrieveLogs: Image { get }
+  var changelog: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
 
   enum ImageEnum: String {
     case faceId = "face-id"
+    case faceIdMenu = "faceid"
     case id = "id"
     case ble = "ble"
     case touchId = "touch-id"
@@ -127,6 +133,10 @@ final class ImageManager: ImageManagerProtocol {
     case verified = "verified"
     case ellipsisVertical = "elipsis-vertical"
     case copy = "doc.on.doc"
+    case changePin = "123.rectangle"
+    case batchCounter = "number"
+    case retrieveLogs = "arrow.up.forward.square"
+    case changelog = "clock.arrow.trianglehead.2.counterclockwise.rotate.90"
   }
 
   // MARK: - Properties
@@ -140,6 +150,9 @@ final class ImageManager: ImageManagerProtocol {
   // MARK: - Images
   var faceId: Image {
     Image(ImageEnum.faceId.rawValue, bundle: bundle)
+  }
+  var faceIdMenu: Image {
+    Image(systemName: ImageEnum.faceIdMenu.rawValue)
   }
   var id: Image {
     Image(ImageEnum.id.rawValue, bundle: bundle)
@@ -296,5 +309,17 @@ final class ImageManager: ImageManagerProtocol {
   }
   var copy: Image {
     Image(systemName: ImageEnum.copy.rawValue)
+  }
+  var changePin: Image {
+    Image(systemName: ImageEnum.changePin.rawValue)
+  }
+  var batchCounter: Image {
+    Image(systemName: ImageEnum.batchCounter.rawValue)
+  }
+  var retrieveLogs: Image {
+    Image(systemName: ImageEnum.retrieveLogs.rawValue)
+  }
+  var changelog: Image {
+    Image(systemName: ImageEnum.changelog.rawValue)
   }
 }

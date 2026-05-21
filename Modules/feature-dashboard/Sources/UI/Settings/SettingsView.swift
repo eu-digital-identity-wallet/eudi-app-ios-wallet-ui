@@ -65,6 +65,7 @@ private func content(
           ShareLink(item: fileUrl) {
             TappableCellView(
               title: .retrieveLogs,
+              icon: item.icon,
               showDivider: item.showDivider,
               useOverlay: false,
               action: {}
@@ -75,6 +76,7 @@ private func content(
         if item.title == .batchIssuanceCounter {
           TappableCellView(
             title: item.title,
+            icon: item.icon,
             showDivider: item.showDivider,
             isToggle: true,
             isOn: isBatchCounterEnabled,
@@ -84,6 +86,7 @@ private func content(
         } else {
           TappableCellView(
             title: item.title,
+            icon: item.icon,
             showDivider: item.showDivider,
             isToggle: true,
             isOn: Binding(
@@ -97,6 +100,7 @@ private func content(
       } else {
         TappableCellView(
           title: item.title,
+          icon: item.icon,
           showDivider: item.showDivider,
           action: item.action
         )
@@ -140,6 +144,7 @@ private func content(
     VStack(spacing: SPACING_MEDIUM_SMALL) {
       TappableCellView(
         title: .loginWithBiometrics,
+        icon: Theme.shared.image.faceIdMenu,
         showDivider: true,
         isToggle: true,
         isOn: .constant(true),

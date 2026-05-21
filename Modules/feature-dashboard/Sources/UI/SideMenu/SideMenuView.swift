@@ -45,6 +45,7 @@ private func content(viewState: SideMenuViewState) -> some View {
     ForEach(viewState.items) { item in
       TappableCellView(
         title: item.title,
+        icon: item.icon,
         showDivider: item.showDivider,
         action: item.action
       )
@@ -60,6 +61,7 @@ private func content(viewState: SideMenuViewState) -> some View {
     items: [
       .init(
         title: .changeQuickPinOption,
+        icon: Theme.shared.image.changePin,
         action: {}()
       )
     ]
