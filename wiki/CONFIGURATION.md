@@ -543,12 +543,10 @@ public protocol AuthenticationConfig: Sendable {
 Default policy (`AuthenticationConfigImpl`):
 
 ```swift
-public struct AuthenticationConfigImpl: AuthenticationConfig {
+struct AuthenticationConfigImpl: AuthenticationConfig {
 
   public let maxFailedPinAttempts: Int = 3
   public let pinLockoutDurations: [TimeInterval] = [30, 90, 300]
-
-  public init() {}
 }
 ```
 
