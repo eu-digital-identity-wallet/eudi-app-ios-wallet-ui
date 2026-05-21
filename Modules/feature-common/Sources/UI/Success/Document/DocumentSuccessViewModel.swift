@@ -94,7 +94,7 @@ open class DocumentSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: 
     .init(
       trailingActions: [
         .init(
-          title: .doneButton,
+          image: Theme.shared.image.xmark,
           accessibilityLocator: DocumentSuccessLocators.doneButton
         ) {
           self.onDone()

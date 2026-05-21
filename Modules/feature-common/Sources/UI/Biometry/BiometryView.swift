@@ -88,19 +88,22 @@ private func content(
     title: viewState.config.title,
     accessibilityTitle: BiometryLocators.biometryScreenTitle,
     titleWeight: .bold,
-    caption: viewState.areBiometricsEnabled
-    ? viewState.config.caption
-    : viewState.config.quickPinOnlyCaption,
-    accessibilityCaption: BiometryLocators.biometryScreenPinText,
+//    caption: viewState.areBiometricsEnabled
+//    ? viewState.config.caption
+//    : viewState.config.quickPinOnlyCaption,
+//    accessibilityCaption: BiometryLocators.biometryScreenPinText,
     titleColor: Theme.shared.color.onSurface,
     topSpacing: viewState.config.displayNavigationBar && viewState.isCancellable
       ? .withToolbar
       : .withoutToolbar
   )
 
-  VSpacer.large()
+  VSpacer.small()
 
   pinView(
+    pinTitle: viewState.areBiometricsEnabled
+    ? viewState.config.caption
+    : viewState.config.quickPinOnlyCaption,
     uiPinInputField: uiPinInputField,
     quickPinSize: viewState.quickPinSize,
     areBiometricsEnabled: viewState.areBiometricsEnabled,
@@ -126,6 +129,7 @@ private func content(
 @MainActor
 @ViewBuilder
 private func pinView(
+  pinTitle: LocalizableStringKey?,
   uiPinInputField: Binding<String>,
   quickPinSize: Int,
   areBiometricsEnabled: Bool,
@@ -138,11 +142,12 @@ private func pinView(
   VStack(spacing: .zero) {
 
     PinTextFieldView(
+      pinTitle: pinTitle,
       numericText: uiPinInputField,
       maxDigits: quickPinSize,
       isSecureEntry: true,
       canFocus: .constant(!areBiometricsEnabled && !isLockedOut),
-      shouldUseFullScreen: false,
+      shouldUseFullScreen: true,
       hasError: hasError,
       isDisabled: isLockedOut
     )

@@ -518,6 +518,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "document_provider_extension_accept_button")
     case .documentProviderExtensionRejectButton:
       bundle.localizedString(forKey: "document_provider_extension_reject_button")
+    case .enterYourPin:
+      bundle.localizedString(forKey: "enter_your_pin")
     }
   }
 }

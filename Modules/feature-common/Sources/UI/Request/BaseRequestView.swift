@@ -119,6 +119,8 @@ private func scrollableContent(
         config: viewState.contentHeaderConfig,
         accessibilityDescription: BaseRequestLocators.description
       )
+      .padding(.horizontal, Theme.shared.dimension.padding)
+
       ZStack {
         VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 

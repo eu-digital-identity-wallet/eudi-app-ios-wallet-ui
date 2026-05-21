@@ -752,6 +752,17 @@
         }
       }
     },
+    "enter_your_pin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter your PIN"
+          }
+        }
+      }
+    },
     "error_unable_fetch_document" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1253,7 +1264,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Use your biometrics to login"
+            "value" : "To access the EUDI Wallet you need to provide your biometrics."
           }
         }
       }
@@ -1264,7 +1275,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Type your pin to login"
+            "value" : "To access the EUDI Wallet you need to provide your PIN."
           }
         }
       }
@@ -1275,7 +1286,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Login"
+            "value" : "Welcome back!"
           }
         }
       }
@@ -1575,7 +1586,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enter a 6-digit PIN"
+            "value" : "Enter a PIN"
           }
         }
       }
@@ -1740,7 +1751,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Set a pin for future logins"
+            "value" : "Set a pin for future login"
           }
         }
       }
@@ -1894,7 +1905,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enter your PIN to share data"
+            "value" : "Enter your PIN"
           }
         }
       }

@@ -32,6 +32,7 @@ struct QuickPinView<Router: RouterHost>: View {
     ) {
       content(
         viewState: viewModel.viewState,
+        contentCaption: viewModel.contentCaption,
         uiPinInputField: $viewModel.uiPinInputField,
         onShowCancellationModal: { viewModel.onShowCancellationModal() }
       )
@@ -61,6 +62,7 @@ struct QuickPinView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: QuickPinState,
+  contentCaption: LocalizableStringKey?,
   uiPinInputField: Binding<String>,
   onShowCancellationModal: @escaping () -> Void
 ) -> some View {
@@ -78,7 +80,7 @@ private func content(
     title: viewState.title,
     accessibilityTitle: QuickPinLocators.quickPinTitle,
     titleWeight: .bold,
-    caption: viewState.caption,
+    caption: contentCaption,
     captionWeight: .semibold
   )
 
@@ -165,6 +167,7 @@ private func pinView(
   ContentScreenView {
     content(
       viewState: viewState,
+      contentCaption: viewState.caption,
       uiPinInputField: .constant("PinInput Field"),
       onShowCancellationModal: {}
     )

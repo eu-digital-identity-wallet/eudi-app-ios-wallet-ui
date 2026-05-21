@@ -28,7 +28,7 @@ struct QuickPinState: ViewState {
   let config: QuickPinUiConfig
   let navigationTitle: LocalizableStringKey
   let title: LocalizableStringKey
-  let caption: LocalizableStringKey
+  let caption: LocalizableStringKey?
   let pinTextFieldTitle: LocalizableStringKey
   let buttonImage: Image
   let successTitle: LocalizableStringKey
@@ -116,7 +116,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       router: router,
       initialState: .init(
         config: config,
-        navigationTitle: config.isSetFlow ? .quickPinEnterPin : .quickPinConfirmPin,
+        navigationTitle: config.isSetFlow ? .quickPinEnterPin : .quickPinUpdateTitle,
         title: config.isSetFlow ? .quickPinSetTitle : .quickPinUpdateTitle,
         caption: .quickPinSetCaptionOne,
         pinTextFieldTitle: config.isSetFlow ? .quickPinEnterPin : .quickPinUpdateCaptionOne,
@@ -149,6 +149,10 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
     if case .active(let remaining, _) = state {
       startLockoutTick(initialRemaining: remaining)
     }
+  }
+
+  var contentCaption: LocalizableStringKey? {
+    viewState.caption
   }
 
   func onShowCancellationModal() {
@@ -207,7 +211,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       setState {
         $0
           .copy(
-            caption: .quickPinUpdateCaptionTwo,
+            pinTextFieldTitle: .quickPinUpdateCaptionTwo,
             buttonImage: Theme.shared.image.chevronRight,
             step: .firstInput
           )

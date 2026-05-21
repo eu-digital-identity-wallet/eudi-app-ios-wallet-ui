@@ -53,7 +53,7 @@ final actor StartupInteractorImpl: StartupInteractor {
       return .featureCommonModule(
         .biometry(
           config: UIConfig.Biometry(
-            navigationTitle: .custom(""),
+            navigationTitle: .enterYourPin,
             title: .loginTitle,
             caption: .loginCaption,
             quickPinOnlyCaption: .loginCaptionQuickPinOnly,
@@ -64,7 +64,8 @@ final actor StartupInteractorImpl: StartupInteractor {
             ),
             navigationBackType: nil,
             isPreAuthorization: true,
-            shouldInitializeBiometricOnCreate: true
+            shouldInitializeBiometricOnCreate: true,
+            displayNavigationBar: true
           )
         )
       )

@@ -22,7 +22,7 @@ public struct WrapCardView<Content: View>: View {
   private let content: () -> Content
 
   public init(
-    cornerRadius: CGFloat = 13,
+    cornerRadius: CGFloat = 18,
     backgroundColor: Color = Theme.shared.color.surfaceContainer,
     content: @escaping () -> Content
   ) {
