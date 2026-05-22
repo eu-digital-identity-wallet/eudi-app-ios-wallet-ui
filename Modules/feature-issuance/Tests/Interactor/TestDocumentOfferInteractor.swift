@@ -671,6 +671,106 @@ final class TestDocumentOfferInteractor: EudiTest {
     XCTAssertEqual(mock.docOffers.count, 0)
   }
   
+  func testProcessOfferRequest_WhenTxCodeLengthOutOfRange_ThenReturnsTransactionCodeFormatFailure() async {
+    // Given: an offer with txCodeSpec.length outside the 4...6 range hits the
+    // failure branch in processOfferRequest (lines 59-63).
+    let uri = "uri"
+    let offer = OfferedIssuanceModel(
+      issuerName: "issuerName",
+      issuerLogoUrl: "https://logo",
+      docModels: [],
+      txCodeSpec: TxCode(inputMode: .numeric, length: 3, description: "")
+    )
+    stub(walletKitController) { mock in
+      mock.resolveOfferUrlDocTypes(offerUri: uri).thenReturn(offer)
+      mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.createEuPidModel()])
+    }
+
+    // When
+    let result = await interactor.processOfferRequest(with: uri)
+
+    // Then
+    switch result {
+    case .failure(let error):
+      if case .transactionCodeFormat = error as? WalletCoreError {
+        XCTAssertTrue(true)
+      } else {
+        XCTFail("Expected .transactionCodeFormat, got \(error)")
+      }
+    default:
+      XCTFail("Expected failure, got \(result)")
+    }
+  }
+
+  func testProcessOfferRequest_WhenTxCodeInputModeIsText_ThenReturnsTransactionCodeFormatFailure() async {
+    // Given: inputMode == .text also trips the txCode guard regardless of length.
+    let uri = "uri"
+    let offer = OfferedIssuanceModel(
+      issuerName: "issuerName",
+      issuerLogoUrl: "https://logo",
+      docModels: [],
+      txCodeSpec: TxCode(inputMode: .text, length: 5, description: "")
+    )
+    stub(walletKitController) { mock in
+      mock.resolveOfferUrlDocTypes(offerUri: uri).thenReturn(offer)
+      mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.createEuPidModel()])
+    }
+
+    // When
+    let result = await interactor.processOfferRequest(with: uri)
+
+    // Then
+    switch result {
+    case .failure(let error):
+      if case .transactionCodeFormat = error as? WalletCoreError {
+        XCTAssertTrue(true)
+      } else {
+        XCTFail("Expected .transactionCodeFormat, got \(error)")
+      }
+    default:
+      XCTFail("Expected failure, got \(result)")
+    }
+  }
+
+  func testProcessOfferRequest_WhenForcePidActivationButNoPidStoredOrOffered_ThenMissingPidFailure() async {
+    // Given: forcePidActivation is true (default stub), no PID is stored,
+    // and the offer contains no PID document types. Hits the missingPid
+    // failure branch (lines 78-80).
+    let uri = "uri"
+    let nonPidOffer = OfferedDocModel(
+      credentialConfigurationIdentifier: "non-pid-id",
+      docType: "non-pid-doctype",
+      scope: "scope",
+      identifier: "identifier",
+      displayName: "Other Doc",
+      algValuesSupported: [],
+      claims: [],
+      credentialOptions: .init(credentialPolicy: .oneTimeUse, batchSize: 1),
+      keyOptions: nil
+    )
+    let offer = OfferedIssuanceModel(
+      issuerName: "issuerName",
+      issuerLogoUrl: "https://logo",
+      docModels: [nonPidOffer],
+      txCodeSpec: nil
+    )
+    stub(walletKitController) { mock in
+      mock.resolveOfferUrlDocTypes(offerUri: uri).thenReturn(offer)
+      mock.fetchIssuedDocuments(with: any()).thenReturn([])
+    }
+
+    // When
+    let result = await interactor.processOfferRequest(with: uri)
+
+    // Then
+    switch result {
+    case .failure(let error):
+      XCTAssertEqual(error as? WalletCoreError, WalletCoreError.missingPid)
+    default:
+      XCTFail("Expected missingPid failure, got \(result)")
+    }
+  }
+
   func testProcessOfferRequest_WhenResolveOfferUrlDocTypes_ThenReturnSuccess() async {
     // Given
     let expectedDocumentOfferUIModel = DocumentOfferUIModel(

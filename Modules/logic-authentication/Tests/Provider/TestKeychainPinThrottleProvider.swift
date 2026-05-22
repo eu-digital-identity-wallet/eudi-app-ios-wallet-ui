@@ -188,6 +188,23 @@ final class TestKeychainPinThrottleProvider: EudiTest {
     XCTAssertEqual(readInt(forKey: .pinLockoutLevel), 1)
   }
 
+  func testGetState_WhenStoredValuesAreNonNumeric_ThenIdle() {
+    // Exercises the `Int(raw) ?? 0` / `Double(raw) ?? 0` fallback branch in
+    // the private getInt / getDouble helpers when keychain returns garbage.
+    storedValues[KeychainPinThrottleProvider.KeyIdentifier.pinLockoutStartedAt.rawValue] = "not-a-number"
+    storedValues[KeychainPinThrottleProvider.KeyIdentifier.pinLockoutEndsAt.rawValue] = "also-bad"
+
+    XCTAssertEqual(provider.getState(), .idle)
+  }
+
+  func testRecordFailure_WhenStoredCounterIsNonNumeric_ThenTreatsAsZero() {
+    // Pre-poison the keychain so getInt's `Int(raw) ?? 0` fallback fires.
+    storedValues[KeychainPinThrottleProvider.KeyIdentifier.pinFailedAttempts.rawValue] = "garbage"
+
+    XCTAssertEqual(provider.recordFailure(), .idle)
+    XCTAssertEqual(readInt(forKey: .pinFailedAttempts), 1)
+  }
+
   private func stubAuthenticationConfig(maxAttempts: Int, durations: [TimeInterval]) {
     stub(authenticationConfig) { mock in
       when(mock.maxFailedPinAttempts.get).thenReturn(maxAttempts)

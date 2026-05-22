@@ -245,6 +245,108 @@ final class TestTransactionTabInteractor: EudiTest {
   }
 
   
+  func testOnFilterChangeState_WhenStreamYieldsCompletion_ThenForwardsCancelledAndFinishes() async {
+    // Given: the underlying FilterValidator stream completes; the interactor's
+    // .completion handler (lines 183-185) yields .cancelled and finishes.
+    stub(filterValidator) { stub in
+      when(stub.getFilterResultStream()).thenReturn(AsyncStream { continuation in
+        continuation.yield(.completion)
+        continuation.finish()
+      })
+    }
+
+    // When
+    let resultStream = await interactor.onFilterChangeState()
+    var iterator = resultStream.makeAsyncIterator()
+    let first = await iterator.next()
+
+    // Then: the first (and only) emitted value is .cancelled.
+    if case .cancelled = first {
+      XCTAssertTrue(true)
+    } else {
+      XCTFail("Expected .cancelled, got \(String(describing: first))")
+    }
+  }
+
+  func testInitializeFilters_WhenTransactionsHaveRelyingParty_ThenRelyingPartyGroupIsPopulated() async {
+    // Given: transactions with two distinct relying parties and one with no
+    // relying-party name. addDynamicFilters → addRelyingPartyName should
+    // produce a FILTER_BY_RELYING_PARY_NAME group containing the "none" item
+    // plus two named items, sorted alphabetically.
+    let txUiA = TransactionTabUIModel(
+      id: "1",
+      name: "Verifier A",
+      status: .completed,
+      transactionDate: "1 Jan 2026 10:00",
+      transactionCategory: .category(for: "1 Jan 2026 10:00"),
+      transactionType: .presentation
+    )
+    let txUiB = TransactionTabUIModel(
+      id: "2",
+      name: "Verifier B",
+      status: .completed,
+      transactionDate: "1 Jan 2026 11:00",
+      transactionCategory: .category(for: "1 Jan 2026 11:00"),
+      transactionType: .presentation
+    )
+    let txUiNone = TransactionTabUIModel(
+      id: "3",
+      name: "",
+      status: .completed,
+      transactionDate: "1 Jan 2026 12:00",
+      transactionCategory: .category(for: "1 Jan 2026 12:00"),
+      transactionType: .presentation
+    )
+    let filterable = FilterableList(items: [
+      FilterableItem(
+        payload: txUiA,
+        attributes: TransactionFilterableAttributes(
+          sortingKey: "verifier a", searchTags: ["a"],
+          relyingPartyName: "Verifier A"
+        )
+      ),
+      FilterableItem(
+        payload: txUiB,
+        attributes: TransactionFilterableAttributes(
+          sortingKey: "verifier b", searchTags: ["b"],
+          relyingPartyName: "Verifier B"
+        )
+      ),
+      FilterableItem(
+        payload: txUiNone,
+        attributes: TransactionFilterableAttributes(
+          sortingKey: "none", searchTags: ["none"],
+          relyingPartyName: nil
+        )
+      )
+    ])
+
+    var capturedFilters: Filters?
+    stub(filterValidator) { mock in
+      when(mock.initializeValidator(filters: any(), filterableList: any()))
+        .then { (filters, _) in
+          capturedFilters = filters
+        }
+    }
+
+    // When
+    await interactor.initializeFilters(
+      filterableList: filterable,
+      minStartDate: Date(),
+      maxEndDate: Date()
+    )
+
+    // Then
+    let relyingPartyGroup = capturedFilters?.filterGroups.first {
+      $0.id == FilterIds.FILTER_BY_RELYING_PARY_NAME
+    }
+    XCTAssertNotNil(relyingPartyGroup)
+    let filterIds = relyingPartyGroup?.filters.map(\.id) ?? []
+    XCTAssertTrue(filterIds.contains(FilterIds.FILTER_BY_RELYING_PARTY_NONE))
+    XCTAssertTrue(filterIds.contains("Verifier A"))
+    XCTAssertTrue(filterIds.contains("Verifier B"))
+  }
+
   func testOnFilterChangeState_WhenStreamEmitsResults_ThenProcessesResultsAsExpected() async {
     // Given
     let filterApplyResult: FilterResult = .filterApplyResult(
@@ -261,39 +363,39 @@ final class TestTransactionTabInteractor: EudiTest {
         sortOrder: .ascending
       )
     )
-    
+
+    // The interactor exposes an AsyncStream(bufferingPolicy: .bufferingNewest(1)),
+    // so emitting both events back-to-back would drop the first. Drive input via
+    // a controllable stream and read each forwarded event before emitting the next.
+    let (inputStream, inputContinuation) = AsyncStream<FilterResultPartialState>.makeStream()
     stub(filterValidator) { stub in
-      when(stub.getFilterResultStream()).thenReturn(AsyncStream { continuation in
-        continuation.yield(FilterResultPartialState.success(filterApplyResult))
-        continuation.yield(FilterResultPartialState.success(filterUpdateResult))
-        continuation.finish()
-      })
+      when(stub.getFilterResultStream()).thenReturn(inputStream)
     }
-    
-    // When
+
     let resultStream = await interactor.onFilterChangeState()
-    var results = [TransactionFiltersPartialState]()
-    
-    // Then
-    Task {
-      for try await result in resultStream {
-        results.append(result)
-      }
-      
-      XCTAssertEqual(results.count, 2)
-      if case let .filterApplyResult(transactions, sections, _) = results[0] {
-        XCTAssertTrue(transactions.isEmpty)
-        XCTAssertEqual(sections.count, 0)
-      } else {
-        XCTFail("Expected .filterApplyResult, but got \(results[0])")
-      }
-      
-      if case let .filterUpdateResult(sections) = results[1] {
-        XCTAssertEqual(sections.count, 0)
-      } else {
-        XCTFail("Expected .filterUpdateResult, but got \(results[1])")
-      }
+    var iterator = resultStream.makeAsyncIterator()
+
+    // When / Then: emit one event, observe one forwarded event, repeat.
+    inputContinuation.yield(.success(filterApplyResult))
+    let first = await iterator.next()
+
+    if case let .filterApplyResult(transactions, sections, _) = first {
+      XCTAssertTrue(transactions.isEmpty)
+      XCTAssertEqual(sections.count, 0)
+    } else {
+      XCTFail("Expected .filterApplyResult, but got \(String(describing: first))")
     }
+
+    inputContinuation.yield(.success(filterUpdateResult))
+    let second = await iterator.next()
+
+    if case let .filterUpdateResult(sections) = second {
+      XCTAssertEqual(sections.count, 0)
+    } else {
+      XCTFail("Expected .filterUpdateResult, but got \(String(describing: second))")
+    }
+
+    inputContinuation.finish()
   }
 }
 

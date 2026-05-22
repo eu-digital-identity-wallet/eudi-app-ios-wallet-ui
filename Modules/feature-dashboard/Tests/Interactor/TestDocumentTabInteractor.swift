@@ -484,15 +484,120 @@ final class TestDocumentTabInteractor: EudiTest {
   func testInitializeFilters_WhenCalled_ThenInitializesFilterValidatorWithCorrectArguments() async {
     // Given
     stubInitializeValidator()
-    
+
     // When
     await interactor.initializeFilters(filterableList: Self.mockFilterablelist)
-    
+
     // Then
     verify(filterValidator).initializeValidator(
       filters: any(),
       filterableList: equal(to: Self.mockFilterablelist)
     )
+  }
+
+  func testOnFilterChangeState_WhenStreamYieldsCompletion_ThenForwardsCancelledAndFinishes() async {
+    // Given: the underlying FilterValidator stream completes, exercising the
+    // .completion branch (lines 118-120) which yields .cancelled and finishes.
+    stub(filterValidator) { stub in
+      when(stub.getFilterResultStream()).thenReturn(AsyncStream { continuation in
+        continuation.yield(.completion)
+        continuation.finish()
+      })
+    }
+
+    // When
+    let resultStream = await interactor.onFilterChangeState()
+    var iterator = resultStream.makeAsyncIterator()
+    let first = await iterator.next()
+
+    // Then
+    if case .cancelled = first {
+      XCTAssertTrue(true)
+    } else {
+      XCTFail("Expected .cancelled, got \(String(describing: first))")
+    }
+  }
+
+  func testDeleteDeferredDocument_WhenEmptyDocumentsButForcePidActivationDisabled_ThenReturnsSuccess() async {
+    // Given: forcePidActivation=false AND fetchAllDocuments returns [] →
+    // the short-circuit evaluates to false so the function returns .success
+    // rather than .noDocuments.
+    stub(configLogic) { mock in
+      when(mock.forcePidActivation.get).thenReturn(false)
+    }
+    stub(walletKitController) { mock in
+      when(mock.deleteDocument(with: any(), status: any())).thenDoNothing()
+      when(mock.fetchAllDocuments()).thenReturn([])
+    }
+
+    // When
+    let result = await interactor.deleteDeferredDocument(with: "any-id")
+
+    // Then
+    XCTAssertEqual(result, .success)
+  }
+
+  func testAddDynamicFilters_WhenDocumentsHaveIssuerAndCategoryAttributes_ThenPopulatesIssuerAndCategoryGroups() async {
+    // Given: a FilterableList where the items have DocumentFilterableAttributes
+    // with distinct issuers and categories. addDynamicFilters → addIssuerFilter
+    // / addCategoriesFilter should produce non-empty filter items for each.
+    let docA = DocumentTabUIModel(
+      id: "a-ui",
+      value: .init(
+        id: "a", heading: "Issuer A", title: "Doc A", createdAt: Date(),
+        expiresAt: "", hasExpired: false, state: .issued,
+        image: .none, documentCategory: .Government
+      ),
+      listItem: .init(mainContent: .text(.custom("Doc A")))
+    )
+    let docB = DocumentTabUIModel(
+      id: "b-ui",
+      value: .init(
+        id: "b", heading: "Issuer B", title: "Doc B", createdAt: Date(),
+        expiresAt: "", hasExpired: false, state: .issued,
+        image: .none, documentCategory: .Education
+      ),
+      listItem: .init(mainContent: .text(.custom("Doc B")))
+    )
+    let filterable = FilterableList(items: [
+      FilterableItem(
+        payload: docA,
+        attributes: DocumentFilterableAttributes(
+          sortingKey: "a", searchTags: ["Issuer A"],
+          issuer: "Issuer A", category: "Government"
+        )
+      ),
+      FilterableItem(
+        payload: docB,
+        attributes: DocumentFilterableAttributes(
+          sortingKey: "b", searchTags: ["Issuer B"],
+          issuer: "Issuer B", category: "Education"
+        )
+      )
+    ])
+
+    var capturedFilters: Filters?
+    stub(filterValidator) { mock in
+      when(mock.initializeValidator(filters: any(), filterableList: any()))
+        .then { (filters, _) in
+          capturedFilters = filters
+        }
+    }
+
+    // When
+    await interactor.initializeFilters(filterableList: filterable)
+
+    // Then
+    let issuerGroup = capturedFilters?.filterGroups.first {
+      $0.id == FilterIds.FILTER_BY_ISSUER_GROUP_ID
+    }
+    let categoryGroup = capturedFilters?.filterGroups.first {
+      $0.id == FilterIds.FILTER_BY_DOCUMENT_CATEGORY_GROUP_ID
+    }
+    XCTAssertFalse(issuerGroup?.filters.isEmpty ?? true,
+                   "Expected issuer filters to be populated dynamically")
+    XCTAssertFalse(categoryGroup?.filters.isEmpty ?? true,
+                   "Expected category filters to be populated dynamically")
   }
 }
 

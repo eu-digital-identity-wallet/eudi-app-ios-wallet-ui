@@ -14,6 +14,7 @@
 - .*Modifier.swift
 - .*ToolBarContent.swift
 - EasySpacer.swift
+- DialogCompat.swift
 
 # ViewModel
 - ViewModel.swift
@@ -21,6 +22,10 @@
 
 # UIModel
 - .*UIModel.swift
+- .*UiModel.swift
+
+# Accessibility identifier constants
+- .*Locators.swift
 
 # Data Model
 - .*Data.swift

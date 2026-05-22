@@ -250,10 +250,10 @@ final class TestBiometryInteractor: EudiTest {
       when(mock.requestBiometricUnlock())
         .thenThrow(SystemBiometryError.deniedAccess)
     }
-    
+
     // When
     let state = await interactor.authenticate()
-    
+
     // Then
     switch state {
     case .failure(let error):
@@ -261,5 +261,104 @@ final class TestBiometryInteractor: EudiTest {
     default:
       XCTFail("Expected .failure(.deniedAccess) but got \(state)")
     }
+  }
+
+  func testAuthenticate_WhenRequestThrowsGenericError_ThenEmitsBiometricErrorFailure() async {
+    // Given: a non-SystemBiometryError reaches the generic catch branch
+    struct UnknownError: Error {}
+    stub(systemBiometricController) { mock in
+      when(mock.requestBiometricUnlock()).thenThrow(UnknownError())
+    }
+
+    // When
+    let state = await interactor.authenticate()
+
+    // Then
+    switch state {
+    case .failure(let error):
+      XCTAssertEqual(error, .biometricError)
+    default:
+      XCTFail("Expected .failure(.biometricError) but got \(state)")
+    }
+  }
+
+  // MARK: - openSettings
+
+  func testOpenSettings_WhenCalled_ThenDelegatesToBiometryController() async {
+    // Given
+    stub(systemBiometricController) { mock in
+      when(mock.openSettings(action: any())).thenDoNothing()
+    }
+
+    // When
+    await interactor.openSettings(action: {})
+
+    // Then
+    verify(systemBiometricController).openSettings(action: any())
+  }
+
+  // MARK: - maxFailedPinAttempts
+
+  func testMaxFailedPinAttempts_WhenConfigured_ThenReflectsAuthenticationConfig() async {
+    XCTAssertEqual(interactor.maxFailedPinAttempts, 3)
+  }
+
+  // MARK: - PIN throttle delegation
+
+  func testGetPinLockoutState_WhenThrottleControllerReturnsIdle_ThenReturnsIdle() async {
+    // Given
+    stub(pinThrottleController) { mock in
+      when(mock.getState()).thenReturn(.idle)
+    }
+
+    // When
+    let state = await interactor.getPinLockoutState()
+
+    // Then
+    XCTAssertEqual(state, .idle)
+    verify(pinThrottleController).getState()
+  }
+
+  func testGetPinLockoutState_WhenThrottleControllerReturnsActiveLockout_ThenForwardsLockout() async {
+    // Given
+    let expected: PinLockoutState = .active(remaining: 60, total: 300)
+    stub(pinThrottleController) { mock in
+      when(mock.getState()).thenReturn(expected)
+    }
+
+    // When
+    let state = await interactor.getPinLockoutState()
+
+    // Then
+    XCTAssertEqual(state, expected)
+    verify(pinThrottleController).getState()
+  }
+
+  func testRecordPinFailure_WhenCalled_ThenForwardsThrottleControllerResult() async {
+    // Given
+    let expected: PinLockoutState = .active(remaining: 30, total: 90)
+    stub(pinThrottleController) { mock in
+      when(mock.recordFailure()).thenReturn(expected)
+    }
+
+    // When
+    let state = await interactor.recordPinFailure()
+
+    // Then
+    XCTAssertEqual(state, expected)
+    verify(pinThrottleController).recordFailure()
+  }
+
+  func testResetPinThrottle_WhenCalled_ThenDelegatesToThrottleController() async {
+    // Given
+    stub(pinThrottleController) { mock in
+      when(mock.recordSuccess()).thenDoNothing()
+    }
+
+    // When
+    await interactor.resetPinThrottle()
+
+    // Then
+    verify(pinThrottleController).recordSuccess()
   }
 }

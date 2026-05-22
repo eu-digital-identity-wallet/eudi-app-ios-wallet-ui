@@ -1,5 +1,13 @@
 # EUDI iOS Wallet reference application
 
+[![License: EUPL 1.2](https://img.shields.io/badge/License-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
+[![Swift](https://img.shields.io/badge/Swift-6.0-F05138.svg?logo=swift)](https://swift.org)
+[![SwiftUI](https://img.shields.io/badge/SwiftUI-enabled-007AFF.svg?logo=swift)](https://developer.apple.com/xcode/swiftui/)
+[![iOS](https://img.shields.io/badge/iOS-17%2B-000000.svg?logo=apple)](https://developer.apple.com/ios/)
+[![SonarCloud](https://img.shields.io/badge/SonarCloud-enabled-F3702A.svg?logo=sonarcloud)](https://sonarcloud.io)
+[![Dependency Check](https://img.shields.io/badge/Dependency--Check-enabled-005A9C.svg)](https://owasp.org/www-project-dependency-check/)
+[![Gitleaks](https://img.shields.io/badge/Gitleaks-enabled-orange.svg)](https://github.com/gitleaks/gitleaks)
+
 :heavy_exclamation_mark: **Important!** Before you proceed, please read
 the [EUDI Wallet Reference Implementation project description](https://github.com/eu-digital-identity-wallet/.github/blob/main/profile/reference-implementation.md)
 
@@ -280,7 +288,7 @@ involved, follow the guidelines found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### License details
 
-Copyright (c) 2025 European Commission
+Copyright (c) 2026 European Commission
 
 Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
 Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
