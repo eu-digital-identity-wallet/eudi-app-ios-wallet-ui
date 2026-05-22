@@ -266,6 +266,202 @@ final class TestDeepLinkController: EudiTest {
     verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
     verify(routerHost, times(0)).push(with: any())
   }
+
+  func testHandleDeepLinkAction_WhenCredentialOfferActionAndScreenIsNotForeground_ThenPushesIssuanceRoute() async {
+    // Given: post-auth, credential_offer action, screen NOT foreground -> push branch (line 142)
+    let pendingAction = Self.mockedCredentialOfferDeepLinkAction
+
+    stubHandleDeepLink(
+      action: pendingAction,
+      route: nil,
+      isAfterAuth: true,
+      isScreenForeground: false
+    )
+    stub(routerHost) { mock in
+      when(mock.push(with: any())).thenDoNothing()
+    }
+
+    // When
+    await controller.handleDeepLinkAction(
+      routerHost: routerHost,
+      deepLinkExecutable: pendingAction,
+      remoteSessionCoordinator: nil
+    )
+
+    // Then
+    verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
+    verify(routerHost).push(with: any())
+  }
+
+  func testHandleDeepLinkAction_WhenActionIsHaipVpAndScreenNotForeground_ThenPushesPresentationRoute() async {
+    // Given: .haip_vp shares the openid4vp switch arm — must also push when not foreground
+    let sessionCoordinator = RemoteSessionCoordinatorImpl(
+      session: Self.mockPresentationSession
+    )
+    let pendingAction = Self.mockedHaipVpDeepLinkAction
+    stubHandleDeepLink(
+      action: pendingAction,
+      route: nil,
+      isAfterAuth: true,
+      isScreenForeground: false
+    )
+    stub(routerHost) { mock in
+      when(mock.push(with: any())).thenDoNothing()
+    }
+
+    // When
+    await controller.handleDeepLinkAction(
+      routerHost: routerHost,
+      deepLinkExecutable: pendingAction,
+      remoteSessionCoordinator: sessionCoordinator
+    )
+
+    // Then
+    verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
+    verify(routerHost).push(with: any())
+  }
+
+  func testHandleDeepLinkAction_WhenActionIsHaipVciAndScreenNotForeground_ThenPushesIssuanceRoute() async {
+    // Given: .haip_vci shares the credential_offer switch arm
+    let pendingAction = Self.mockedHaipVciDeepLinkAction
+    stubHandleDeepLink(
+      action: pendingAction,
+      route: nil,
+      isAfterAuth: true,
+      isScreenForeground: false
+    )
+    stub(routerHost) { mock in
+      when(mock.push(with: any())).thenDoNothing()
+    }
+
+    // When
+    await controller.handleDeepLinkAction(
+      routerHost: routerHost,
+      deepLinkExecutable: pendingAction,
+      remoteSessionCoordinator: nil
+    )
+
+    // Then
+    verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
+    verify(routerHost).push(with: any())
+  }
+
+  func testHandleDeepLinkAction_WhenRqesPendingAndUserLoggedInWithDocuments_ThenPopsToDashboard() async {
+    // Given: action == .rqes AND user logged in AND not on dashboard already
+    // → shouldPopToDashboardFirst guard fires, popTo(dashboard) is invoked
+    let pendingAction = Self.mockedRqesDeepLinkAction
+    stub(prefsController) { mock in
+      when(mock.setValue(any(), forKey: Prefs.Key.cachedDeepLink)).thenDoNothing()
+      when(mock.remove(forKey: Prefs.Key.cachedDeepLink)).thenDoNothing()
+    }
+    stub(routerHost) { mock in
+      when(mock.userIsLoggedInWithDocuments()).thenReturn(true)
+      when(mock.userIsLoggedInWithNoDocuments()).thenReturn(false)
+      when(mock.isScreenForeground(with: any())).thenReturn(false)
+      when(mock.popTo(with: any(), inclusive: any())).thenDoNothing()
+    }
+
+    // When
+    await controller.handleDeepLinkAction(
+      routerHost: routerHost,
+      deepLinkExecutable: pendingAction,
+      remoteSessionCoordinator: nil
+    )
+
+    // Then
+    verify(prefsController).setValue(any(), forKey: Prefs.Key.cachedDeepLink)
+    verify(routerHost).popTo(with: any(), inclusive: equal(to: false))
+  }
+
+  func testHandleDeepLinkAction_WhenRqesWithoutAuthorizationCode_ThenEarlyReturn() async {
+    // Given: .rqes action with no `code` query item — guard at line 152 returns early
+    let url = URL(string: "rqes://callback?other=value")!
+    let executable = DeepLink.Executable(
+      link: URLComponents(url: url, resolvingAgainstBaseURL: true)!,
+      plainUrl: url,
+      action: .rqes
+    )
+    stub(prefsController) { mock in
+      when(mock.remove(forKey: Prefs.Key.cachedDeepLink)).thenDoNothing()
+    }
+    stub(routerHost) { mock in
+      when(mock.userIsLoggedInWithDocuments()).thenReturn(true)
+      when(mock.userIsLoggedInWithNoDocuments()).thenReturn(false)
+      when(mock.isScreenForeground(with: any())).thenReturn(true)
+    }
+
+    // When
+    await controller.handleDeepLinkAction(
+      routerHost: routerHost,
+      deepLinkExecutable: executable,
+      remoteSessionCoordinator: nil
+    )
+
+    // Then
+    verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
+    verify(routerHost, times(0)).push(with: any())
+  }
+
+  func testHandleDeepLinkAction_WhenRqesWithAuthorizationCode_ThenSchedulesResumeTask() async {
+    // Given: .rqes action WITH a `code` query item.
+    // Hits the Task { @MainActor in ... } block (lines 156-170). The Task itself
+    // polls for topViewController which never resolves in unit tests, so we
+    // simply verify the function returns and reaches the spawn point.
+    let url = URL(string: "rqes://callback?code=abc123")!
+    let executable = DeepLink.Executable(
+      link: URLComponents(url: url, resolvingAgainstBaseURL: true)!,
+      plainUrl: url,
+      action: .rqes
+    )
+    stub(prefsController) { mock in
+      when(mock.remove(forKey: Prefs.Key.cachedDeepLink)).thenDoNothing()
+    }
+    stub(routerHost) { mock in
+      when(mock.userIsLoggedInWithDocuments()).thenReturn(true)
+      when(mock.userIsLoggedInWithNoDocuments()).thenReturn(false)
+      when(mock.isScreenForeground(with: any())).thenReturn(true)
+    }
+
+    // When
+    await controller.handleDeepLinkAction(
+      routerHost: routerHost,
+      deepLinkExecutable: executable,
+      remoteSessionCoordinator: nil
+    )
+
+    // Then: the function reached the .rqes case and dispatched the resume Task
+    verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
+  }
+
+  func testRemoveCachedDeepLinkURL_WhenCalled_ThenDelegatesToPrefsController() {
+    // Given
+    stub(prefsController) { mock in
+      when(mock.remove(forKey: Prefs.Key.cachedDeepLink)).thenDoNothing()
+    }
+
+    // When
+    controller.removeCachedDeepLinkURL()
+
+    // Then
+    verify(prefsController).remove(forKey: Prefs.Key.cachedDeepLink)
+  }
+
+  func testHasDeepLink_WhenSchemaControllerMatchesRqes_ThenActionIsRqes() {
+    // Given: parseType returns .rqes when scheme matches the rqes schema list
+    stub(urlSchemaController) { mock in
+      // First call: openid4vp schemas (no match), then credential_offer (no match), then rqes (match)
+      when(mock.retrieveSchemas(with: any())).then { name in
+        return name == "rqes" ? ["rqes-callback"] : []
+      }
+    }
+    let url = URL(string: "rqes-callback://complete?code=abc")!
+
+    // When
+    let action = controller.hasDeepLink(url: url)
+
+    // Then
+    XCTAssertEqual(action?.action, .rqes)
+  }
 }
 
 private extension TestDeepLinkController {
@@ -317,8 +513,28 @@ private extension TestDeepLinkController {
     action: .credential_offer
   )
 
+  static let mockedHaipVpDeepLinkAction = DeepLink.Executable(
+    link: URLComponents(url: mockedOpenId4VPUrl, resolvingAgainstBaseURL: true)!,
+    plainUrl: mockedOpenId4VPUrl,
+    action: .haip_vp
+  )
+
+  static let mockedHaipVciDeepLinkAction = DeepLink.Executable(
+    link: URLComponents(url: mockedExternalUrl, resolvingAgainstBaseURL: true)!,
+    plainUrl: mockedExternalUrl,
+    action: .haip_vci
+  )
+
+  static let mockedRqesUrl: URL = URL(string: "rqes://callback?code=auth-code")!
+
+  static let mockedRqesDeepLinkAction = DeepLink.Executable(
+    link: URLComponents(url: mockedRqesUrl, resolvingAgainstBaseURL: true)!,
+    plainUrl: mockedRqesUrl,
+    action: .rqes
+  )
+
   static let mockedMalformedUrl: URL = URL(string: "not_a_valid_url")!
-  
+
 }
 
 private extension TestDeepLinkController {

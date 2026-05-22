@@ -718,6 +718,49 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
+  func testValidateStringLengthsRule() async {
+    let rules = [Rule.ValidateStringLengths(lengths: [4, 6, 8], errorMessage: plainErrorMessage)]
+    await validateForm(rules, "ab", validationError)
+    await validateForm(rules, "abc", validationError)
+    await validateForm(rules, "abcd", validationSuccess)
+    await validateForm(rules, "abcde", validationError)
+    await validateForm(rules, "abcdef", validationSuccess)
+    await validateForm(rules, "abcdefgh", validationSuccess)
+    await validateForm(rules, "abcdefghi", validationError)
+    await validateForm(rules, "", validationError)
+  }
+
+  func testValidateNumericNotInConsecutiveSequenceOrder_WhenLengthIsLessThanTwo_ThenAlwaysSuccess() async {
+    // length < 2 short-circuits to success regardless of input
+    let rules = [Rule.ValidateNumericNotInConsecutiveSequenceOrder(length: 1, errorMessage: plainErrorMessage)]
+    await validateForm(rules, "1", validationSuccess)
+    await validateForm(rules, "9", validationSuccess)
+    await validateForm(rules, "", validationSuccess)
+  }
+
+  func testValidateDuplicateCharacter_WhenMaxConsecutiveOrderIsLessThanTwo_ThenAlwaysSuccess() async {
+    // maxTimesOfConsecutiveOrder < 2 returns true unconditionally (line 238),
+    // so even strings like "1111" pass the rule.
+    let rules1 = [Rule.ValidateDuplicateCharacterNotInConsecutiveOrder(maxTimesOfConsecutiveOrder: 1, errorMessage: plainErrorMessage)]
+    let rules0 = [Rule.ValidateDuplicateCharacterNotInConsecutiveOrder(maxTimesOfConsecutiveOrder: 0, errorMessage: plainErrorMessage)]
+    await validateForm(rules1, "1111", validationSuccess)
+    await validateForm(rules1, "aaaa", validationSuccess)
+    await validateForm(rules0, "0000", validationSuccess)
+  }
+
+  func testValidateUrl_WhenPathIsEmptyAndShouldValidatePath_ThenFailsValidation() async {
+    // shouldValidatePath: true + URL with empty path component
+    // (e.g. `https://example.com`) hits the empty-path failure branch (line 159).
+    let rules = [Rule.ValidateUrl(
+      errorMessage: plainErrorMessage,
+      shouldValidateHost: false,
+      shouldValidateSchema: false,
+      shouldValidateQuery: false,
+      shouldValidatePath: true
+    )]
+    await validateForm(rules, "https://example.com", validationError)
+  }
+
   private func validateForm(
     _ rules: [Rule],
     _ value: String,

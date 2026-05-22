@@ -157,6 +157,19 @@ final class TestSettingsInteractor: EudiTest {
     // Then
     verify(biometryInteractor).setBiometrySelection(isEnabled: true)
   }
+
+  func testOpenBiometrySettings_WhenCalled_ThenDelegatesToBiometryInteractor() async {
+    // Given
+    stub(biometryInteractor) { mock in
+      when(mock.openSettings(action: any())).thenDoNothing()
+    }
+
+    // When
+    await interactor.openBiometrySettings(action: {})
+
+    // Then
+    verify(biometryInteractor).openSettings(action: any())
+  }
 }
 
 extension TestSettingsInteractor {

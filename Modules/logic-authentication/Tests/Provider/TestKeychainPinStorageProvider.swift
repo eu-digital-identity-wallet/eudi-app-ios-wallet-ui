@@ -171,6 +171,20 @@ final class TestKeychainPinStorageProvider: EudiTest {
     XCTAssertFalse(provider.isPinValid(with: "123456"))
   }
 
+  func testHasPin_WhenSaltIsEmptyData_ThenFalse() {
+    provider.setPin(with: "123456")
+    storedData[KeychainPinStorageProvider.KeyIdentifier.devicePinSalt.rawValue] = Data()
+
+    XCTAssertFalse(provider.hasPin())
+  }
+
+  func testHasPin_WhenHashIsEmptyData_ThenFalse() {
+    provider.setPin(with: "123456")
+    storedData[KeychainPinStorageProvider.KeyIdentifier.devicePinHash.rawValue] = Data()
+
+    XCTAssertFalse(provider.hasPin())
+  }
+
   private func stubKeyChainController() {
     stub(keyChainController) { mock in
       when(mock.storeValue(key: any(), value: any(String.self))).then { [weak self] (key, value) in

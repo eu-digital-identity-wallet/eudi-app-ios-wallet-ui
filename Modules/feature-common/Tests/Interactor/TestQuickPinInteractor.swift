@@ -162,7 +162,7 @@ final class TestQuickPinInteractor: EudiTest {
   }
   
   func testChangePin_WhenCurrentPinIsNotValid_ThenReturnPartialStateFailure() async {
-    
+
     // Given
     let newPin = "4321"
     stub(pinStorageController) { mock in
@@ -171,18 +171,75 @@ final class TestQuickPinInteractor: EudiTest {
     stub(pinStorageController) { mock in
       when(mock.setPin(with: any())).thenDoNothing()
     }
-    
+
     // When
     let state = await interactor.changePin(currentPin: newPin, newPin: newPin)
-    
+
     // Then
     verify(pinStorageController, times(0)).setPin(with: any())
-    
+
     switch state {
     case .failure(let error):
       XCTAssertEqual(error.localizedDescription, AuthenticationError.quickPinInvalid.localizedDescription)
     default:
       XCTFail("Wrong state \(state)")
     }
+  }
+
+  func testGetPinLockoutState_WhenThrottleControllerReturnsIdle_ThenReturnsIdle() async {
+    // Given
+    stub(pinThrottleController) { mock in
+      when(mock.getState()).thenReturn(.idle)
+    }
+
+    // When
+    let state = await interactor.getPinLockoutState()
+
+    // Then
+    XCTAssertEqual(state, .idle)
+    verify(pinThrottleController).getState()
+  }
+
+  func testGetPinLockoutState_WhenThrottleControllerReturnsActiveLockout_ThenForwardsLockout() async {
+    // Given
+    let expected: PinLockoutState = .active(remaining: 30, total: 90)
+    stub(pinThrottleController) { mock in
+      when(mock.getState()).thenReturn(expected)
+    }
+
+    // When
+    let state = await interactor.getPinLockoutState()
+
+    // Then
+    XCTAssertEqual(state, expected)
+    verify(pinThrottleController).getState()
+  }
+
+  func testRecordPinFailure_WhenThrottleControllerReturnsLockout_ThenForwardsLockout() async {
+    // Given
+    let expected: PinLockoutState = .active(remaining: 60, total: 300)
+    stub(pinThrottleController) { mock in
+      when(mock.recordFailure()).thenReturn(expected)
+    }
+
+    // When
+    let state = await interactor.recordPinFailure()
+
+    // Then
+    XCTAssertEqual(state, expected)
+    verify(pinThrottleController).recordFailure()
+  }
+
+  func testResetPinThrottle_WhenCalled_ThenDelegatesToThrottleController() async {
+    // Given
+    stub(pinThrottleController) { mock in
+      when(mock.recordSuccess()).thenDoNothing()
+    }
+
+    // When
+    await interactor.resetPinThrottle()
+
+    // Then
+    verify(pinThrottleController).recordSuccess()
   }
 }

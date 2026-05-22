@@ -395,6 +395,9 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
           )
         )
       case .issuance, .signing, .deletion:
+        // Unreachable in practice: transformToTransactionUI() above already
+        // returns nil for non-presentation log data, so this arm only exists to
+        // keep the switch exhaustive against TransactionLogData.
         return nil
       }
     }
