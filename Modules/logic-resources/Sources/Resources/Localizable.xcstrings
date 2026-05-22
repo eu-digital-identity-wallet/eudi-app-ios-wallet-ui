@@ -1608,6 +1608,17 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Enter a 6-digit PIN"
+          }
+        }
+      }
+    },
+    "quick_pin_navigation_enter_a_pin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Enter a PIN"
           }
         }

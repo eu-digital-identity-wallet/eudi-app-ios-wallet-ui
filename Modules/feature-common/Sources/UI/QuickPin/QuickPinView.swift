@@ -147,7 +147,7 @@ private func pinView(
 #Preview {
   let viewState = QuickPinState(
     config: QuickPinUiConfig(flow: .setWithActivation),
-    navigationTitle: .quickPinEnterPin,
+    navigationTitle: .quickPinNavigationEnterPin,
     title: .quickPinSetTitle,
     caption: .quickPinSetCaptionOne,
     pinTextFieldTitle: .quickPinEnterPin,

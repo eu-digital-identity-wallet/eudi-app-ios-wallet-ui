@@ -116,7 +116,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       router: router,
       initialState: .init(
         config: config,
-        navigationTitle: config.isSetFlow ? .quickPinEnterPin : .quickPinUpdateTitle,
+        navigationTitle: config.isSetFlow ? .quickPinNavigationEnterPin : .quickPinUpdateTitle,
         title: config.isSetFlow ? .quickPinSetTitle : .quickPinUpdateTitle,
         caption: .quickPinSetCaptionOne,
         pinTextFieldTitle: config.isSetFlow ? .quickPinEnterPin : .quickPinUpdateCaptionOne,
@@ -165,17 +165,45 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
   }
 
   func toolbarContent() -> ToolBarContent? {
-    guard viewState.isCancellable else { return nil }
+    guard showsLeadingBackButton else { return nil }
     return .init(
       leadingActions: [
         .init(
           image: Theme.shared.image.chevronLeft,
           accessibilityLocator: ToolbarLocators.chevronLeft
         ) {
-          self.onShowCancellationModal()
+          self.onLeadingBack()
         }
       ]
     )
+  }
+
+  private var showsLeadingBackButton: Bool {
+    if viewState.isCancellable {
+      return true
+    }
+    if viewState.config.isSetFlow, case .retryInput = viewState.step {
+      return true
+    }
+    return false
+  }
+
+  private func onLeadingBack() {
+    if viewState.isCancellable {
+      onShowCancellationModal()
+      return
+    }
+    guard viewState.config.isSetFlow, case .retryInput = viewState.step else { return }
+    setState {
+      $0
+        .copy(
+          navigationTitle: .quickPinNavigationEnterPin,
+          pinTextFieldTitle: .quickPinEnterPin,
+          step: .firstInput
+        )
+        .copy(pinError: nil)
+    }
+    uiPinInputField = ""
   }
 
   private func subscribeToPinInput() {
@@ -231,14 +259,27 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
   }
 
   private func advanceToRetryInput() {
-    setState {
-      $0
-        .copy(
-          navigationTitle: .quickPinConfirmPin,
-          caption: viewState.config.isSetFlow ? .quickPinSetCaptionTwo : .quickPinUpdateCaptionThree,
-          step: .retryInput(uiPinInputField)
-        )
-        .copy(pinError: nil)
+    if viewState.config.isUpdateFlow {
+      setState {
+        $0
+          .copy(
+            navigationTitle: .quickPinConfirmPin,
+            title: .quickPinUpdateTitle,
+            pinTextFieldTitle: .quickPinUpdateCaptionThree,
+            step: .retryInput(uiPinInputField)
+          )
+          .copy(pinError: nil)
+      }
+    } else {
+      setState {
+        $0
+          .copy(
+            navigationTitle: .quickPinConfirmPin,
+            pinTextFieldTitle: .quickPinSetCaptionTwo,
+            step: .retryInput(uiPinInputField)
+          )
+          .copy(pinError: nil)
+      }
     }
     uiPinInputField = ""
   }

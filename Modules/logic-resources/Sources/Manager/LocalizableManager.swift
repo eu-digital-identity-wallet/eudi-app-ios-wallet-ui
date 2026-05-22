@@ -310,6 +310,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "scanner_qr_caption_presentation")
     case .quickPinEnterPin:
       bundle.localizedString(forKey: "quick_pin_enter_a_pin")
+    case .quickPinNavigationEnterPin:
+      bundle.localizedString(forKey: "quick_pin_navigation_enter_a_pin")
     case .quickPinConfirmPin:
       bundle.localizedString(forKey: "quick_pin_confirm_pin")
     case .biometryConfirmRequest:

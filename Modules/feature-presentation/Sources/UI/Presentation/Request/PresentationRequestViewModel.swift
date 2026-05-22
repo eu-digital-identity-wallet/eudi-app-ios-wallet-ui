@@ -99,6 +99,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
           navigationTitle: .biometryConfirmRequest,
           caption: .requestDataShareBiometryCaption,
           quickPinOnlyCaption: .requestDataShareQuickPinCaption,
+          pinTextFieldTitle: .enterYourPin,
           navigationSuccessType: .push(
             .featurePresentationModule(
               .presentationLoader(

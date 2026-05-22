@@ -88,10 +88,8 @@ private func content(
     title: viewState.config.title,
     accessibilityTitle: BiometryLocators.biometryScreenTitle,
     titleWeight: .bold,
-//    caption: viewState.areBiometricsEnabled
-//    ? viewState.config.caption
-//    : viewState.config.quickPinOnlyCaption,
-//    accessibilityCaption: BiometryLocators.biometryScreenPinText,
+    caption: biometryTitleCaption(viewState: viewState),
+    accessibilityCaption: BiometryLocators.biometryScreenPinText,
     titleColor: Theme.shared.color.onSurface,
     topSpacing: viewState.config.displayNavigationBar && viewState.isCancellable
       ? .withToolbar
@@ -101,9 +99,7 @@ private func content(
   VSpacer.small()
 
   pinView(
-    pinTitle: viewState.areBiometricsEnabled
-    ? viewState.config.caption
-    : viewState.config.quickPinOnlyCaption,
+    pinTitle: biometryPinTitle(viewState: viewState),
     uiPinInputField: uiPinInputField,
     quickPinSize: viewState.quickPinSize,
     areBiometricsEnabled: viewState.areBiometricsEnabled,
@@ -124,6 +120,29 @@ private func content(
     }
     .padding(.horizontal)
   }
+}
+
+@MainActor
+private func biometryTitleCaption(viewState: BiometryState) -> LocalizableStringKey? {
+  guard
+    viewState.config.pinTextFieldTitle == nil,
+    !viewState.config.isPreAuthorization
+  else {
+    return nil
+  }
+  return viewState.areBiometricsEnabled
+    ? viewState.config.caption
+    : viewState.config.quickPinOnlyCaption
+}
+
+@MainActor
+private func biometryPinTitle(viewState: BiometryState) -> LocalizableStringKey? {
+  if let pinTextFieldTitle = viewState.config.pinTextFieldTitle {
+    return pinTextFieldTitle
+  }
+  return viewState.areBiometricsEnabled
+    ? viewState.config.caption
+    : viewState.config.quickPinOnlyCaption
 }
 
 @MainActor

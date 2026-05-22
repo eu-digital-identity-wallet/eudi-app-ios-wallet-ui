@@ -44,8 +44,7 @@ struct RequestAuthorizationView: View {
         )
       }
       .shimmer(isLoading: viewModel.viewState.isLoading)
-      .frame(maxWidth: .infinity)
-      .padding()
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
       .task {
         await viewModel.loadRequest()
       }
@@ -56,41 +55,44 @@ struct RequestAuthorizationView: View {
   private func contentView(
     viewState: RequestAuthorizationViewState
   ) -> some View {
-    ScrollView {
-      VStack(spacing: .zero) {
-        ContentHeaderView(
-          config: viewState.contentHeaderConfig
-        )
+    VStack(spacing: SPACING_SMALL) {
+      ScrollView {
+        VStack(spacing: .zero) {
+          ContentHeaderView(
+            config: viewState.contentHeaderConfig
+          )
 
-        VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+          VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+            ForEach(viewState.items.indices, id: \.self) { index in
+              let section = viewState.items[index]
+              WrapExpandableListView(
+                header: .init(
+                  mainContent: .text(.custom(section.section.title)),
+                  supportingText: .viewDetails
+                ),
+                items: section.section.listItems,
+                hideSensitiveContent: false,
+                isLoading: viewState.isLoading
+              )
+              .accessibilityElement()
+              .combineChilrenAccessibility(
+                locator: BaseRequestLocators.requestedDocument(index.string)
+              )
+            }
 
-          ForEach(viewState.items.indices, id: \.self) { index in
-            let section = viewState.items[index]
-            WrapExpandableListView(
-              header: .init(
-                mainContent: .text(.custom(section.section.title)),
-                supportingText: .viewDetails
-              ),
-              items: section.section.listItems,
-              hideSensitiveContent: false,
-              isLoading: viewState.isLoading
-            )
-            .accessibilityElement()
-            .combineChilrenAccessibility(
-              locator: BaseRequestLocators.requestedDocument(index.string)
-            )
+            Text(.shareDataReview)
+              .typography(Theme.shared.font.bodyMedium)
+              .foregroundColor(Theme.shared.color.onSurface)
+              .multilineTextAlignment(.leading)
           }
-
-          Text(.shareDataReview)
-            .typography(Theme.shared.font.bodyMedium)
-            .foregroundColor(Theme.shared.color.onSurface)
-            .multilineTextAlignment(.leading)
+          .padding(.horizontal, Theme.shared.dimension.padding)
+          .padding(.top, SPACING_MEDIUM)
+          .padding(.bottom, SPACING_SMALL)
         }
         .shimmer(isLoading: viewState.isLoading)
       }
-    }
-    .safeAreaInset(edge: .bottom) {
-      actionButtons()
+
+      actionButtonsFooter()
     }
   }
 
@@ -114,7 +116,18 @@ struct RequestAuthorizationView: View {
         Spacer()
       }
       .padding(.horizontal, Theme.shared.dimension.padding)
+      .padding(.top, Theme.shared.dimension.padding)
     }
+  }
+
+  @ViewBuilder
+  private func actionButtonsFooter() -> some View {
+    VStack(spacing: .zero) {
+      actionButtons()
+        .padding(.horizontal, Theme.shared.dimension.padding)
+        .padding(.bottom, SPACING_MEDIUM)
+    }
+    .background(Theme.shared.color.background)
   }
 
   @ViewBuilder
