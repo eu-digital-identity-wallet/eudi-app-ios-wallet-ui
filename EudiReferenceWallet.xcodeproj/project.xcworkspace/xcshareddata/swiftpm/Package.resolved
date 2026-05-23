@@ -1,5 +1,5 @@
 {
-  "originHash" : "a3c312f28e3216ca11d65776897ffce1251601ceb2ad02a90bac9d0bd1054e9c",
+  "originHash" : "f2724d12484d8022b7b3c113ccee12d83bcd61e6e93c958a8072d8cd4b0e364d",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -123,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "e4be1aefda442e0e8e171f6e4e8fbef62ef2fdc7",
-        "version" : "0.20.0"
+        "revision" : "3a5c2849ae151862ba9e9c80c93356783bcbc16e",
+        "version" : "0.20.1"
       }
     },
     {
@@ -132,8 +132,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "5b707308e45d89e7c553d56b6fc963d7b888daee",
-        "version" : "0.20.0"
+        "revision" : "4337ad921a0f27f7e737fb318d374c078dcd8702",
+        "version" : "0.20.1"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "add19d453c3c98c1c76c0b859d38cfdc4f07bde9",
-        "version" : "0.38.1"
+        "revision" : "505f531f90d5a55aa2a1e574ee0bcf39bacb5fa8",
+        "version" : "0.38.2"
       }
     },
     {
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "00175cb4c0c9c862fc2ba1ab7547cfaebad2e74b",
-        "version" : "0.30.3"
+        "revision" : "173ff623d4c55e6b050e9f3e455af854bee576b3",
+        "version" : "0.30.4"
       }
     },
     {
@@ -204,8 +204,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-storage.git",
       "state" : {
-        "revision" : "7469ac73b57cb6576a2f7476c2a228492ab74353",
-        "version" : "0.20.0"
+        "revision" : "04252bce1791e3b0aa368f3fc398bd85848797a2",
+        "version" : "0.20.1"
       }
     },
     {
@@ -402,8 +402,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "5073617dac96330a486245e4c0179cb0a6fd2256",
-        "version" : "1.12.0"
+        "revision" : "a012e0ad8a8a72de92b0e008c81a9b793f70e73a",
+        "version" : "1.12.1"
       }
     },
     {
