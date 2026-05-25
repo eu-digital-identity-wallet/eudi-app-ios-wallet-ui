@@ -8818,6 +8818,16 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         }
     }
 
+    var keyOptions: KeyOptions? {
+        get {
+            return cuckoo_manager.getter(
+                "keyOptions",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.keyOptions
+            )
+        }
+    }
+
     var logFileName: String {
         get {
             return cuckoo_manager.getter(
@@ -8892,6 +8902,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             return .init(manager: cuckoo_manager, name: "userAuthenticationRequired")
         }
         
+        var keyOptions: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,KeyOptions?> {
+            return .init(manager: cuckoo_manager, name: "keyOptions")
+        }
+        
         var logFileName: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,String> {
             return .init(manager: cuckoo_manager, name: "logFileName")
         }
@@ -8940,6 +8954,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             return .init(manager: cuckoo_manager, name: "userAuthenticationRequired", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
+        var keyOptions: Cuckoo.VerifyReadOnlyProperty<KeyOptions?> {
+            return .init(manager: cuckoo_manager, name: "keyOptions", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
         var logFileName: Cuckoo.VerifyReadOnlyProperty<String> {
             return .init(manager: cuckoo_manager, name: "logFileName", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
@@ -8985,6 +9003,12 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
     var userAuthenticationRequired: Bool {
         get {
             return DefaultValueRegistry.defaultValue(for: (Bool).self)
+        }
+    }
+    
+    var keyOptions: KeyOptions? {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (KeyOptions?).self)
         }
     }
     

@@ -41,6 +41,11 @@ protocol WalletKitConfig: Sendable {
   var userAuthenticationRequired: Bool { get }
 
   /**
+   * KeyOptions for creating & accessing attestation keys
+   */
+  var keyOptions: KeyOptions? { get }
+
+  /**
    * The name of the file to be created to store logs
    */
   var logFileName: String { get }
@@ -84,6 +89,14 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
   var userAuthenticationRequired: Bool {
     false
+  }
+
+  var keyOptions: KeyOptions? {
+    KeyOptions(
+      curve: .P256,
+      secureAreaName: SecureEnclaveSecureArea.name,
+      accessControl: []
+    )
   }
 
   var issuersConfig: [String: VciConfig] {

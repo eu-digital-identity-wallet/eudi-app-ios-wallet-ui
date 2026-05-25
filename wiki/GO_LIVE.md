@@ -467,6 +467,7 @@ protocol WalletKitConfig: Sendable {
   var vpConfig: OpenId4VpConfiguration { get }
   var trustedReaderRootCertificates: [x5chain] { get }
   var userAuthenticationRequired: Bool { get }
+  var keyOptions: KeyOptions? { get }
   var logFileName: String { get }
   var documentsCategories: DocumentCategories { get }
   var transactionLogger: TransactionLogger { get }
@@ -531,6 +532,10 @@ Production requirements and decision points:
   repeated authentication prompts, use only a WalletKit/iOS-supported authentication reuse or session
   design approved by the assurance policy, document the risk decision, and verify the window cannot
   be reused outside the intended flow.
+* `userAuthenticationRequired` gates *access* to WalletKit secure storage; the per-credential
+  complement that gates *use* of attestation/proof keys at signing time is
+  `WalletKitConfig.keyOptions.accessControl` (for example, `.requireUserPresence`). See
+  [Attestation Key Options](#attestation-key-options-keyoptions).
 
 Recommended production process:
 
@@ -567,6 +572,7 @@ Current app-level configuration points:
 | `ConfigLogic.keyChainConfig.documentStorageServiceName` | Keychain service name passed to WalletKit and the Identity Document Provider extension. | Change only through a planned migration, because it must remain stable across upgrades and extension access. |
 | `ConfigLogic.keyChainConfig.keychainAccessGroup` | Runtime Keychain access group used by the main app and extension. | Change when production entitlements, App Groups, or Keychain Sharing groups are finalized. |
 | `WalletKitConfig.userAuthenticationRequired` | Local authentication gate for WalletKit secure storage access. | Enable for LoA High PID and other high-assurance credentials unless an approved remote high-assurance hardware-backed design replaces local key use. |
+| `WalletKitConfig.keyOptions` | Per-issuance `KeyOptions` (curve, secure area, access protection, access control, key purposes) applied to attestation/proof keys created by `issueDocuments`, `issueDocumentsByOfferUrl`, `reIssueDocument`, `requestDeferredIssuance`, and `resumePendingIssuance`. | Set explicitly for production. For LoA High PID and high-assurance EAA/QEAA, require Secure Enclave (P-256) with appropriate `accessProtection` (e.g. `.whenUnlockedThisDeviceOnly`) and `accessControl` (e.g. `.requireUserPresence`), unless an approved remote high-assurance hardware-backed design replaces local key use. See [Attestation Key Options](#attestation-key-options-keyoptions). |
 | `WalletKitAttestationProviderImpl` and `WalletProviderAttestationConfig` | Wallet Provider host and wallet/key attestation calls. | Change when wallet attestation keys must be generated, stored, attested, or unlocked through a custom provider or remote high-assurance key service. |
 | `WalletKitConfig.issuersConfig` and `keyAttestationsConfig` | Issuance configuration and Wallet Provider attestation provider wiring. | Change when issuer policy requires different key attestation, DPoP, or proof-of-possession behavior. |
 | WalletKit storage and key-management APIs | WalletKit-owned document, credential, and protocol key handling. | If the selected WalletKit version exposes dedicated storage, key manager, Secure Enclave, remote signing, or ephemeral-key configuration, configure it in the production integration and record the exact SDK API. |
@@ -589,6 +595,42 @@ Production implementation rules:
 * Test custom storage or key-management behavior with device lock changes, biometric enrollment
   changes, app upgrade, app reinstall, backup/restore attempts, low-storage conditions, extension
   access, issuer reissuance, and revocation/status refresh.
+
+### Attestation Key Options (`keyOptions`)
+
+`WalletKitConfig.keyOptions` is the iOS-side per-issuance knob for the keys created and used by
+WalletKit during credential issuance. The same value is passed to `issueDocuments`,
+`issueDocumentsByOfferUrl`, `reIssueDocument`, `requestDeferredIssuance`, and `resumePendingIssuance`
+in `WalletKitController`.
+
+Fields:
+
+* `curve` — `CoseEcCurve`. Secure Enclave only supports `.P256`. Other curves (P-384, P-521,
+  brainpool, Ed25519) require `secureAreaName` resolving to a software or custom secure area.
+* `secureAreaName` — selects a registered `SecureArea`. WalletKit auto-registers
+  `SecureEnclaveSecureArea` (when available on the device) and `SoftwareSecureArea`. Prefer the
+  type-safe constant (`SecureEnclaveSecureArea.name`, `SoftwareSecureArea.name`, or
+  `SecureAreaRegistry.DeviceSecureArea.secureEnclave.rawValue`) over a string literal: an unknown
+  name silently falls back to the registry's default secure area instead of erroring.
+* `accessProtection` — maps to `kSecAttrAccessible*`. For production, prefer
+  `.whenUnlockedThisDeviceOnly` or `.afterFirstUnlockThisDeviceOnly` unless backup/restore of these
+  keys is explicitly required and approved.
+* `accessControl` — `KeyAccessControl` option set. Enable `.requireUserPresence` to gate signing on
+  biometry/passcode for LoA High PID and high-assurance EAA/QEAA credentials.
+  `.requireApplicationPassword` adds a second factor for additional data encryption.
+* `keyPurposes` — defaults to all purposes (`.signing`, `.keyAgreement`). Narrow when policy
+  requires.
+
+The reference value
+(`KeyOptions(curve: .P256, secureAreaName: SecureEnclaveSecureArea.name, accessControl: [])`) is
+suitable for the reference/demo setup. It does not enable user-presence-bound signing and does not
+set an explicit accessibility class. Review all fields against the assurance level of each
+credential class before production.
+
+If per-document-type key policy is required (for example, stronger access control for PID than for
+low-assurance EAAs), follow the existing per-type pattern used by `documentIssuanceConfig` — extend
+`WalletKitConfig` with default and document-specific `KeyOptions`, then resolve in
+`WalletKitController` alongside the existing `rule(for:)` call sites.
 
 ## OpenID4VP Configuration
 
@@ -1703,6 +1745,8 @@ Controls to evidence:
 Project-specific actions:
 
 * Review WalletKit cryptographic defaults.
+* Review `WalletKitConfig.keyOptions` (curve, secure area, access protection, access control, key
+  purposes) against the assurance level of each credential class.
 * Review `userAuthenticationRequired`.
 * Review PIN PBKDF2 parameters.
 * Review RQES hash algorithm and signing policy.
