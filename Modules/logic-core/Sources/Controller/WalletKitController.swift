@@ -171,7 +171,10 @@ final actor WalletKitControllerImpl: WalletKitController {
         credentialPolicy: rule.policy,
         batchSize: rule.numberOfCredentials
       )
-      return docType.copy(credentialOptions: credentialOptions)
+      return docType.copy(
+        credentialOptions: credentialOptions,
+        keyOptions: walletKitConfig.keyOptions
+      )
     }
 
     return try await wallet.issueDocumentsByOfferUrl(
@@ -274,13 +277,18 @@ final actor WalletKitControllerImpl: WalletKitController {
       credentialOptions: .init(
         credentialPolicy: rule.policy,
         batchSize: rule.numberOfCredentials
-      )
+      ),
+      keyOptions: walletKitConfig.keyOptions
     )
     return documents
   }
 
   func reIssueDocument(identifier: String, isBackgroundOperation: Bool) async throws -> WalletStorage.Document {
-    return try await wallet.reissueDocument(documentId: identifier, backgroundOnly: isBackgroundOperation)
+    return try await wallet.reissueDocument(
+      documentId: identifier,
+      keyOptions: walletKitConfig.keyOptions,
+      backgroundOnly: isBackgroundOperation
+    )
   }
 
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> any DocClaimsDecodable {
@@ -296,7 +304,8 @@ final actor WalletKitControllerImpl: WalletKitController {
       credentialOptions: .init(
         credentialPolicy: rule.policy,
         batchSize: rule.numberOfCredentials
-      )
+      ),
+      keyOptions: walletKitConfig.keyOptions
     )
     if result.isDeferred {
       return result.transformToDeferredDecodable()
@@ -342,7 +351,8 @@ final actor WalletKitControllerImpl: WalletKitController {
       credentialOptions: .init(
         credentialPolicy: rule.policy,
         batchSize: rule.numberOfCredentials
-      )
+      ),
+      keyOptions: walletKitConfig.keyOptions
     )
   }
 
