@@ -24,7 +24,6 @@ struct AddDocumentViewState: ViewState {
   let addDocumentCellModels: OrderedDictionary<String, [AddDocumentUIModel]>
   let error: ContentErrorView.Config?
   let config: IssuanceFlowUiConfig
-  let showFooterScanner: Bool
 
   var isFlowCancellable: Bool {
     return config.isExtraDocumentFlow
@@ -59,8 +58,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
       initialState: .init(
         addDocumentCellModels: AddDocumentUIModel.mocks,
         error: nil,
-        config: config,
-        showFooterScanner: config.isNoDocumentFlow
+        config: config
       )
     )
   }
@@ -85,8 +83,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     case .success(let documents):
       setState {
         $0.copy(
-          addDocumentCellModels: documents,
-          showFooterScanner: showScannerFooter(documents: documents)
+          addDocumentCellModels: documents
         )
         .copy(error: nil)
       }
@@ -156,12 +153,13 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
   }
 
   func toolbarContent() -> ToolBarContent? {
+    let scanAction = scanToolbarAction()
     return switch viewState.config.flow {
     case .noDocument:
-      nil
+        .init(trailingActions: [scanAction])
     case .extraDocument:
         .init(
-          trailingActions: [],
+          trailingActions: [scanAction],
           leadingActions: [
             .init(
               image: Theme.shared.image.chevronLeft,
@@ -171,6 +169,15 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
             }
           ]
         )
+    }
+  }
+
+  private func scanToolbarAction() -> ToolBarContent.Action {
+    .init(
+      image: Theme.shared.image.qrCodeViewfinder,
+      accessibilityLocator: AddDocumentLocators.scanQrCode
+    ) {
+      self.onScanClick()
     }
   }
 
@@ -390,9 +397,5 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
         )
       }
     }
-  }
-
-  private func showScannerFooter(documents: OrderedDictionary<String, [AddDocumentUIModel]>) -> Bool {
-    viewState.config.flow == .noDocument || documents.isEmpty
   }
 }

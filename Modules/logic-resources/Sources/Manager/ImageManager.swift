@@ -58,6 +58,7 @@ public protocol ImageManagerProtocol: Sendable {
   var hourglassImage: Image { get }
   var chooseDocumentImage: Image { get }
   var scanDocumentImage: Image { get }
+  var qrCodeViewfinder: Image { get }
   var infoCircle: Image { get }
   var relyingPartyVerified: Image { get }
   var docFill: Image { get }
@@ -121,6 +122,7 @@ final class ImageManager: ImageManagerProtocol {
     case hourglassImage
     case chooseDocumentImage = "choose-document-image"
     case scanDocumentImage = "scan-document-image"
+    case qrCodeViewfinder = "qrcode.viewfinder"
     case infoCircle = "info.circle"
     case relyingPartyVerified = "relying-party-verified"
     case docFill = "doc.fill"
@@ -273,6 +275,9 @@ final class ImageManager: ImageManagerProtocol {
   }
   var scanDocumentImage: Image {
     Image(ImageEnum.scanDocumentImage.rawValue, bundle: bundle)
+  }
+  var qrCodeViewfinder: Image {
+    Image(systemName: ImageEnum.qrCodeViewfinder.rawValue)
   }
   var infoCircle: Image {
     Image(systemName: ImageEnum.infoCircle.rawValue)

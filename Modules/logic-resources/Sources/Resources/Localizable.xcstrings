@@ -370,7 +370,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose a digital document from the list below to add to your wallet."
+            "value" : "Choose a digital document from the list below to add to your wallet. You may add more documents by scanning the QR code provided to you by an authorised issuing service."
           }
         }
       }

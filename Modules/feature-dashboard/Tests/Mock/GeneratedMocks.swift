@@ -1314,6 +1314,7 @@ import logic_resources
 
 import Cuckoo
 import SwiftUI
+import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -3063,26 +3064,6 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
             defaultCall: await __defaultImplStub!.retrieveChangeLogUrl()
         )
     }
-    
-    public func setBatchCounter(isEnabled p0: Bool) async {
-        return await cuckoo_manager.call(
-            "setBatchCounter(isEnabled p0: Bool) async",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.setBatchCounter(isEnabled: p0)
-        )
-    }
-    
-    public func isBatchCounterEnabled() async -> Bool {
-        return await cuckoo_manager.call(
-            "isBatchCounterEnabled() async -> Bool",
-            parameters: (),
-            escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.isBatchCounterEnabled()
-        )
-    }
 
     public func isBiometryAvailable() async -> Bool {
         return await cuckoo_manager.call(
@@ -3131,6 +3112,26 @@ public class MockSettingsInteractor: SettingsInteractor, Cuckoo.ProtocolMock, @u
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.openBiometrySettings(action: p0)
+        )
+    }
+
+    public func setBatchCounter(isEnabled p0: Bool) async {
+        return await cuckoo_manager.call(
+            "setBatchCounter(isEnabled p0: Bool) async",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.setBatchCounter(isEnabled: p0)
+        )
+    }
+
+    public func isBatchCounterEnabled() async -> Bool {
+        return await cuckoo_manager.call(
+            "isBatchCounterEnabled() async -> Bool",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.isBatchCounterEnabled()
         )
     }
 
@@ -3872,6 +3873,7 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Detail/Transaction/TransactionDetailsViewModel.swift'
 
 import Cuckoo
+import UIKit
 import logic_resources
 @testable import logic_core
 @testable import logic_business
@@ -3919,6 +3921,7 @@ import logic_resources
 
 import Cuckoo
 import Foundation
+import SwiftUI
 import logic_resources
 @testable import logic_core
 @testable import logic_business
@@ -3965,6 +3968,7 @@ import Cuckoo
 
 import Cuckoo
 import Foundation
+import SwiftUI
 import logic_resources
 @testable import logic_core
 @testable import logic_business
