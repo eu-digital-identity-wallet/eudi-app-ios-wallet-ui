@@ -158,7 +158,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
       )
       XCTAssertEqual(
         issuerDocumentDetailsCard?.dateTextColor,
-        Theme.shared.color.onSurfaceVariant
+        Theme.shared.color.secondaryLabel
       )
       XCTAssertEqual(
         issuerDocumentDetailsCard?.expandedDateText,
@@ -199,7 +199,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
       )
       XCTAssertEqual(
         issuerDocumentDetailsCard?.dateTextColor,
-        Theme.shared.color.error
+        Theme.shared.color.red
       )
       XCTAssertNil(issuerDocumentDetailsCard?.expandedDateText)
       XCTAssertTrue(isRevoked)
