@@ -81,7 +81,7 @@ public struct PinTextFieldView: View {
       if let pinTitle {
         Text(pinTitle)
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.onSurface)
+          .foregroundColor(Theme.shared.color.primaryLabel)
       }
 
       ZStack {
@@ -100,7 +100,7 @@ public struct PinTextFieldView: View {
             RoundedRectangle(cornerRadius: 5.0)
               .stroke(
                 hasError ?
-                Theme.shared.color.error :
+                Theme.shared.color.red :
                   stateForDigit[index].color
               )
           )
@@ -132,8 +132,8 @@ public struct PinTextFieldView: View {
         .frame(width: size, height: size, alignment: .center)
         .foregroundColor(
           hasError
-          ? Theme.shared.color.error
-          : Theme.shared.color.onSurface
+          ? Theme.shared.color.red
+          : Theme.shared.color.primaryLabel
         )
     } else {
       Text(input)
@@ -149,7 +149,7 @@ public struct PinTextFieldView: View {
     HStack {
       Divider()
         .frame(width: 1, height: height)
-        .background(Theme.shared.color.onSurface)
+        .background(Theme.shared.color.primaryLabel)
     }
     .opacity(toggleLine ? 1 : 0)
     .onReceive(timer) { _ in
@@ -248,9 +248,9 @@ extension PinTextFieldView {
     var color: Color {
       return switch self {
       case .inactive:
-        Theme.shared.color.outlineVariant
+        Theme.shared.color.separator
       case .active:
-        Theme.shared.color.primary
+        Theme.shared.color.accent
       }
     }
   }

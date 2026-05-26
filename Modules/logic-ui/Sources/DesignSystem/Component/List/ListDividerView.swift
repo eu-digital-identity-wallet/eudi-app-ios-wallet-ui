@@ -23,7 +23,7 @@ public struct ListDividerView: View {
   private let spacing: CGFloat
 
   public init(
-    backgroundColor: Color = Theme.shared.color.onSurfaceVariant.opacity(0.2),
+    backgroundColor: Color = Theme.shared.color.separator.opacity(0.8),
     height: CGFloat = 1,
     spacing: CGFloat = SPACING_MEDIUM
   ) {

@@ -42,7 +42,9 @@ public struct WrapCheckboxView: View {
       checkmarkSquare
         .resizable()
         .frame(width: size, height: size)
-        .foregroundColor(checkboxData.enabled ? Theme.shared.color.primary : Theme.shared.color.secondary)
+        .foregroundColor(
+          checkboxData.enabled ? Theme.shared.color.accent : Theme.shared.color.tertiaryLabel
+        )
     }
     .disabled(!checkboxData.enabled)
   }

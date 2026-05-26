@@ -37,7 +37,7 @@ public struct ContentUnavailableView: View {
 
       Text(description)
         .typography(Theme.shared.font.bodyLarge)
-        .foregroundStyle(Theme.shared.color.onSurface)
+        .foregroundStyle(Theme.shared.color.primaryLabel)
         .multilineTextAlignment(.center)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)

@@ -29,7 +29,7 @@ public struct WrapExpandableListView<T: Sendable>: View {
   public init(
     header: ListItemData? = nil,
     items: [ExpandableListItem<T>],
-    backgroundColor: Color = Theme.shared.color.surfaceContainer,
+    backgroundColor: Color = Theme.shared.color.groupedBackground,
     hideSensitiveContent: Bool,
     hasHeader: Bool = true,
     isLoading: Bool = false,
@@ -45,7 +45,7 @@ public struct WrapExpandableListView<T: Sendable>: View {
   }
 
   public var body: some View {
-    WrapCardView {
+    WrapCardView(backgroundColor: backgroundColor) {
       VStack(alignment: .leading) {
         if let header {
           ExpandableCardView(

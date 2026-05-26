@@ -33,9 +33,9 @@ public struct WrapButtonView: View {
 
   public init(
     title: LocalizableStringKey,
-    textColor: Color = Theme.shared.color.onSurface,
-    backgroundColor: Color = Theme.shared.color.primary,
-    iconColor: Color = Theme.shared.color.primary,
+    textColor: Color = Theme.shared.color.primaryLabel,
+    backgroundColor: Color = Theme.shared.color.accent,
+    iconColor: Color = Theme.shared.color.white,
     icon: Image? = nil,
     gravity: Gravity = .center,
     isLoading: Bool = false,
@@ -62,7 +62,7 @@ public struct WrapButtonView: View {
   public init(
     style: ButtonViewStyle,
     title: LocalizableStringKey,
-    iconColor: Color = Theme.shared.color.primary,
+    iconColor: Color = Theme.shared.color.accent,
     icon: Image? = nil,
     gravity: Gravity = .center,
     isLoading: Bool = false,

@@ -52,7 +52,7 @@ public struct HomeCardView: View {
         VStack(alignment: .leading, spacing: SPACING_MEDIUM_LARGE) {
           Text(text)
             .typography(Theme.shared.font.headlineSmall)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .foregroundStyle(Theme.shared.color.primaryLabel)
             .lineLimit(nil)
         }
 
@@ -88,7 +88,7 @@ public struct HomeCardView: View {
       }
     }
     .padding(SPACING_MEDIUM)
-    .background(Theme.shared.color.surfaceContainer)
+    .background(Theme.shared.color.groupedBackground)
     .cornerRadius(13)
   }
 }

@@ -90,7 +90,7 @@ private func content(
     titleWeight: .bold,
     caption: biometryTitleCaption(viewState: viewState),
     accessibilityCaption: BiometryLocators.biometryScreenPinText,
-    titleColor: Theme.shared.color.onSurface,
+    titleColor: Theme.shared.color.primaryLabel,
     topSpacing: viewState.config.displayNavigationBar && viewState.isCancellable
       ? .withToolbar
       : .withoutToolbar
@@ -177,7 +177,7 @@ private func pinView(
       HStack {
         Text(lockoutMessage)
           .typography(Theme.shared.font.bodySmall)
-          .foregroundColor(Theme.shared.color.error)
+          .foregroundColor(Theme.shared.color.red)
           .multilineTextAlignment(.leading)
         Spacer()
       }
@@ -185,7 +185,7 @@ private func pinView(
       HStack {
         Text(error)
           .typography(Theme.shared.font.bodySmall)
-          .foregroundColor(Theme.shared.color.error)
+          .foregroundColor(Theme.shared.color.red)
         Spacer()
       }
     }

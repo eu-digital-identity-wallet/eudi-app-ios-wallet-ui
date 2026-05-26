@@ -68,7 +68,7 @@ private func content(
 
       Text(.chooseFromListTitle)
         .typography(Theme.shared.font.bodyLarge)
-        .foregroundStyle(Theme.shared.color.onSurface)
+        .foregroundStyle(Theme.shared.color.primaryLabel)
         .accessibilityLocator(AddDocumentLocators.subtitle)
 
       ForEach(viewState.addDocumentCellModels.elements, id: \.key) { pair in
@@ -81,7 +81,7 @@ private func content(
             text: .custom(issuer),
             textConfig: TextConfig(
               font: Theme.shared.font.bodySmall.font,
-              color: Theme.shared.color.onSurface,
+              color: Theme.shared.color.primaryLabel,
               textAlign: .leading,
               fontWeight: .semibold
             )
@@ -117,7 +117,7 @@ private func noDocumentsFound() -> some View {
   VStack(spacing: .zero) {
     Text(.chooseFromListTitle)
       .typography(Theme.shared.font.bodyLarge)
-      .foregroundStyle(Theme.shared.color.onSurface)
+      .foregroundStyle(Theme.shared.color.primaryLabel)
 
     Spacer()
     ContentEmptyView(

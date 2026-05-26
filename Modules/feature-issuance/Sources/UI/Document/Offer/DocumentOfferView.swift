@@ -85,7 +85,9 @@ private func scrollableContent(
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
         ForEach(viewState.documentOfferUiModel.uiOffers) { cell in
-          WrapCardView {
+          WrapCardView(
+            backgroundColor: Theme.shared.color.groupedElevatedBackground
+          ) {
             DocumentOfferCellView(
               cellModel: cell,
               isLoading: viewState.isLoading
@@ -95,7 +97,7 @@ private func scrollableContent(
 
         Text(.shareDataReview)
           .typography(Theme.shared.font.bodyMedium)
-          .foregroundColor(Theme.shared.color.onSurface)
+          .foregroundColor(Theme.shared.color.primaryLabel)
           .multilineTextAlignment(.leading)
           .shimmer(isLoading: viewState.isLoading)
 

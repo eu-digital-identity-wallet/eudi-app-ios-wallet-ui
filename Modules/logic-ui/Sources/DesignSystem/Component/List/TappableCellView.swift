@@ -52,12 +52,12 @@ public struct TappableCellView: View {
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: 24, height: 24)
-            .foregroundStyle(Theme.shared.color.primary)
+            .foregroundStyle(Theme.shared.color.accent)
         }
 
         Text(title)
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.onSurface)
+          .foregroundColor(Theme.shared.color.primaryLabel)
           .lineLimit(1)
           .minimumScaleFactor(0.8)
           .frame(maxWidth: .infinity, alignment: .leading)
@@ -76,7 +76,7 @@ public struct TappableCellView: View {
           .labelsHidden()
         } else {
           Theme.shared.image.chevronRight
-            .foregroundColor(Theme.shared.color.onSurface)
+            .foregroundColor(Theme.shared.color.tertiaryLabel)
         }
       }
       if showDivider {

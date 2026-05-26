@@ -24,7 +24,7 @@ public struct ExpandableCardView<Content: View>: View {
   private let content: () -> Content
 
   public init(
-    backgroundColor: Color = Theme.shared.color.surfaceContainer,
+    backgroundColor: Color = Theme.shared.color.groupedBackground,
     header: ListItemData,
     mainTextVerticalPadding: CGFloat? = nil,
     isLoading: Bool = false,

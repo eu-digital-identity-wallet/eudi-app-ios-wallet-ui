@@ -122,7 +122,7 @@ private struct CustomSearchBar: UIViewRepresentable {
     searchBar.inputAccessoryView = toolbar
 
     searchBar.backgroundImage = UIImage()
-    searchBar.searchTextField.backgroundColor = UIColor(Theme.shared.color.surfaceContainer)
+    searchBar.searchTextField.backgroundColor = UIColor(Theme.shared.color.secondaryBackground)
 
     return searchBar
   }

@@ -132,6 +132,7 @@ private func scrollableContent(
                 supportingText: .viewDetails
               ),
               items: section.section.listItems,
+              backgroundColor: Theme.shared.color.groupedElevatedBackground,
               hideSensitiveContent: false,
               isLoading: viewState.isLoading,
               onItemClick: { onSelectionChanged($0.groupId) }
@@ -144,7 +145,7 @@ private func scrollableContent(
 
           Text(.shareDataReview)
             .typography(Theme.shared.font.bodyMedium)
-            .foregroundColor(Theme.shared.color.onSurface)
+            .foregroundColor(Theme.shared.color.primaryLabel)
             .multilineTextAlignment(.leading)
             .shimmer(isLoading: viewState.isLoading)
 

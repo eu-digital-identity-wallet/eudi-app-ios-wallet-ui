@@ -63,7 +63,7 @@ private func content(
     HStack {
       Text(.signDocumentSubtitle)
         .typography(Theme.shared.font.bodyLarge)
-        .foregroundColor(Theme.shared.color.onSurfaceVariant)
+        .foregroundColor(Theme.shared.color.secondaryLabel)
     }
     .frame(maxWidth: .infinity, alignment: .leading)
 

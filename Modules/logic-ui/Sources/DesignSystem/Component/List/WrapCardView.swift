@@ -23,7 +23,7 @@ public struct WrapCardView<Content: View>: View {
 
   public init(
     cornerRadius: CGFloat = 18,
-    backgroundColor: Color = Theme.shared.color.surfaceContainer,
+    backgroundColor: Color = Theme.shared.color.groupedBackground,
     content: @escaping () -> Content
   ) {
     self.cornerRadius = cornerRadius

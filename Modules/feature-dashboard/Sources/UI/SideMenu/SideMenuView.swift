@@ -69,7 +69,7 @@ private func content(viewState: SideMenuViewState) -> some View {
   ContentScreenView(
     padding: .zero,
     canScroll: false,
-    background: Theme.shared.color.surface
+    background: Theme.shared.color.background
   ) {
     content(viewState: viewSate)
   }

@@ -126,7 +126,7 @@ struct FiltersListView: View {
         Text(sectionTitle)
           .typography(Theme.shared.font.labelLarge)
           .fontWeight(.semibold)
-          .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+          .foregroundStyle(Theme.shared.color.secondaryLabel)
           .frame(maxWidth: .infinity, alignment: .leading)
           .padding(.horizontal, SPACING_MEDIUM)
           .padding(.top, SPACING_MEDIUM)
@@ -156,7 +156,7 @@ struct FiltersListView: View {
       HStack(alignment: .center, spacing: .zero) {
         Text(filter.title)
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundStyle(Theme.shared.color.onSurface)
+          .foregroundStyle(Theme.shared.color.primaryLabel)
           .multilineTextAlignment(.leading)
         Spacer(minLength: SPACING_MEDIUM)
         Toggle(
@@ -178,7 +178,7 @@ struct FiltersListView: View {
         DatePicker(selection: $startDate, in: minStartDate...endDate, displayedComponents: .date) {
           Text(.startDate)
         }
-        .tint(Theme.shared.color.primary)
+        .tint(Theme.shared.color.accent)
         .onAppear {
           if let date = filter.startDate {
             startDate = date
@@ -191,7 +191,7 @@ struct FiltersListView: View {
           }
           updateDateFiltersCallback?(sectionID, filter.id, startDate, endDate)
         }
-        .tint(Theme.shared.color.primary)
+        .tint(Theme.shared.color.accent)
 
         DatePicker(selection: $endDate, in: startDate...maxEndDate, displayedComponents: .date) {
           Text(.endDate)
@@ -208,7 +208,7 @@ struct FiltersListView: View {
               updateDateFiltersCallback?(sectionID, filter.id, startDate, endDate)
             }
         }
-        .tint(Theme.shared.color.primary)
+        .tint(Theme.shared.color.accent)
       }
     }
   }

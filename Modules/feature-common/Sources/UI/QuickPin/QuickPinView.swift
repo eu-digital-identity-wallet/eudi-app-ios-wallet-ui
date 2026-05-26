@@ -129,7 +129,7 @@ private func pinView(
       HStack {
         Text(lockoutMessage)
           .typography(Theme.shared.font.bodySmall)
-          .foregroundColor(Theme.shared.color.error)
+          .foregroundColor(Theme.shared.color.red)
           .multilineTextAlignment(.leading)
         Spacer()
       }
@@ -137,7 +137,7 @@ private func pinView(
       HStack {
         Text(error)
           .typography(Theme.shared.font.bodySmall)
-          .foregroundColor(Theme.shared.color.error)
+          .foregroundColor(Theme.shared.color.red)
         Spacer()
       }
     }

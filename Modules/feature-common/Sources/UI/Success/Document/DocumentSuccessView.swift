@@ -98,7 +98,7 @@ private func doneButton(
 private func documents<RequestItem: Sendable>(
   viewState: DocumentSuccessState<RequestItem>,
   ignoreTrainingContent: Bool = true,
-  backgroundColor: Color = Theme.shared.color.tertiary,
+  backgroundColor: Color = Theme.shared.color.successBackground,
   onSelectionChanged: @escaping @Sendable (String) -> Void
 ) -> some View {
   if !viewState.items.isEmpty {

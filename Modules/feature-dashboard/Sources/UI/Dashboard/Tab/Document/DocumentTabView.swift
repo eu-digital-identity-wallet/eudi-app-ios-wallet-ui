@@ -122,7 +122,7 @@ private func content(
                 text: category.title,
                 textConfig: TextConfig(
                   font: Theme.shared.font.bodySmall.font,
-                  color: Theme.shared.color.onSurface,
+                  color: Theme.shared.color.secondaryLabel,
                   textAlign: .leading,
                   fontWeight: .semibold
                 )
@@ -181,16 +181,16 @@ private func deferredSuccessList(
       HStack {
         Text(.custom(item.value.title))
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.onSurface)
+          .foregroundColor(Theme.shared.color.primaryLabel)
 
         Spacer()
 
         Theme.shared.image.chevronRight
           .renderingMode(.template)
-          .foregroundStyle(Theme.shared.color.primary)
+          .foregroundStyle(Theme.shared.color.accent)
       }
       .padding()
-      .background(Theme.shared.color.surfaceContainer)
+      .background(Theme.shared.color.groupedBackground)
       .clipShape(.rect(cornerRadius: 8))
       .onTapGesture {
         onDocumentDetails(item.value.id)

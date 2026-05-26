@@ -116,7 +116,7 @@ private struct ActionView: View {
         .overlay(alignment: .topTrailing) {
           if let hasIndicator = action.hasIndicator, hasIndicator {
             Circle()
-              .foregroundStyle(Theme.shared.color.primary)
+              .foregroundStyle(Theme.shared.color.accent)
               .frame(width: 10)
               .offset(x: 2, y: 2)
           }

@@ -128,7 +128,7 @@ private func content(
           Text(.genericIssuer)
             .typography(Theme.shared.font.bodySmall)
             .fontWeight(.semibold)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .foregroundStyle(Theme.shared.color.secondaryLabel)
             .frame(maxWidth: .infinity, alignment: .leading)
             .shimmer(isLoading: viewState.isLoading)
 
@@ -147,7 +147,7 @@ private func content(
           Text(.documentData)
             .typography(Theme.shared.font.bodySmall)
             .fontWeight(.semibold)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .foregroundStyle(Theme.shared.color.secondaryLabel)
             .padding(.vertical, SPACING_SMALL)
             .shimmer(isLoading: viewState.isLoading)
 
@@ -168,7 +168,7 @@ private func content(
                 .frame(width: 44, alignment: .leading)
             }
             .frame(width: 76, alignment: .trailing)
-            .foregroundStyle(Theme.shared.color.primary)
+            .foregroundStyle(Theme.shared.color.accent)
             .shimmer(isLoading: viewState.isLoading)
           }
           .buttonStyle(.plain)
@@ -217,7 +217,7 @@ private func content(
           .font(Theme.shared.font.bodySmall.font)
           .padding(.vertical, SPACING_SMALL)
           .padding(.horizontal, SPACING_MEDIUM)
-          .foregroundColor(Theme.shared.color.onSurfaceVariant)
+          .foregroundColor(Theme.shared.color.secondaryLabel)
           .frame(maxWidth: .infinity, alignment: .center)
           .shimmer(isLoading: viewState.isLoading)
       }

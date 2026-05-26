@@ -100,7 +100,7 @@ private func content(
       if let username = viewState.username {
         Text(.welcomeBack([username]))
           .font(Theme.shared.font.titleMedium.font)
-          .foregroundStyle(Theme.shared.color.onSurface)
+          .foregroundStyle(Theme.shared.color.primaryLabel)
           .accessibilityLocator(HomeTabViewLocators.userNameText)
       }
 

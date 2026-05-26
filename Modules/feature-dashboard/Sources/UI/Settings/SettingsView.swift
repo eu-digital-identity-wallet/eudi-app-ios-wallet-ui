@@ -139,7 +139,7 @@ private func content(
   ContentScreenView(
     padding: .zero,
     canScroll: false,
-    background: Theme.shared.color.surface
+    background: Theme.shared.color.background
   ) {
     VStack(spacing: SPACING_MEDIUM_SMALL) {
       TappableCellView(

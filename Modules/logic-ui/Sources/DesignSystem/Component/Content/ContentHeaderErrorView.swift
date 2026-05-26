@@ -27,7 +27,7 @@ public struct ContentHeaderErrorView: View {
   public init(
     title: LocalizableStringKey? = nil,
     dismissIcon: Image = Theme.shared.image.arrowLeft,
-    foregroundColor: Color = Theme.shared.color.primary,
+    foregroundColor: Color = Theme.shared.color.accent,
     actions: [Action]? = nil,
     onBack: (() -> Void)? = nil
   ) {

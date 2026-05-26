@@ -71,6 +71,7 @@ struct RequestAuthorizationView: View {
                   supportingText: .viewDetails
                 ),
                 items: section.section.listItems,
+                backgroundColor: Theme.shared.color.groupedElevatedBackground,
                 hideSensitiveContent: false,
                 isLoading: viewState.isLoading
               )
@@ -82,7 +83,7 @@ struct RequestAuthorizationView: View {
 
             Text(.shareDataReview)
               .typography(Theme.shared.font.bodyMedium)
-              .foregroundColor(Theme.shared.color.onSurface)
+              .foregroundColor(Theme.shared.color.primaryLabel)
               .multilineTextAlignment(.leading)
           }
           .padding(.horizontal, Theme.shared.dimension.padding)

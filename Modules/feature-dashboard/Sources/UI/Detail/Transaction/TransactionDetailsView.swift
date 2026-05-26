@@ -72,7 +72,7 @@ private func content(
           Text(.transactionDetailsDataShare)
             .typography(Theme.shared.font.bodySmall)
             .fontWeight(.semibold)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .foregroundStyle(Theme.shared.color.secondaryLabel)
             .shimmer(isLoading: state.isLoading)
 
           ForEach(transactionDetailsDataSharedList) { item in
@@ -82,6 +82,7 @@ private func content(
                 supportingText: .viewDetails
               ),
               items: item.listItems,
+              backgroundColor: Theme.shared.color.groupedElevatedBackground,
               hideSensitiveContent: false,
               isLoading: state.isLoading
             )
@@ -93,7 +94,7 @@ private func content(
           VStack(alignment: .leading, spacing: SPACING_SMALL) {
             Text(.transactionDetailsRequestDeletionMessage)
               .font(Theme.shared.font.bodyLarge.font)
-              .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+              .foregroundStyle(Theme.shared.color.secondaryLabel)
               .shimmer(isLoading: state.isLoading)
 
             WrapButtonView(
@@ -108,7 +109,7 @@ private func content(
           VStack(alignment: .leading, spacing: SPACING_SMALL) {
             Text(.transactionDetailsReportTransactionMessage)
               .font(Theme.shared.font.bodyLarge.font)
-              .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+              .foregroundStyle(Theme.shared.color.secondaryLabel)
               .shimmer(isLoading: state.isLoading)
 
             WrapButtonView(

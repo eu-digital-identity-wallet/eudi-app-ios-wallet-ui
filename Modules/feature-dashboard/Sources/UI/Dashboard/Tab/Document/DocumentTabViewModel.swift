@@ -352,7 +352,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
           .init(
             image: Theme.shared.image.plus,
             accessibilityLocator: DocumentTabLocators.plusButton,
-            tintColor: Theme.shared.color.primary
+            tintColor: Theme.shared.color.accent
           ) {
             self.onAdd()
           },
