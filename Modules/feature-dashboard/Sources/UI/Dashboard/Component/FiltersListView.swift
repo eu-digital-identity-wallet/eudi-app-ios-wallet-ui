@@ -24,6 +24,8 @@ struct FiltersListView: View {
   @State private var isApplied: Bool = false
   @State private var startDate: Date
   @State private var endDate: Date
+  @State private var initialStartDate: Date?
+  @State private var initialEndDate: Date?
 
   private let minStartDate: Date
   private let maxEndDate: Date
@@ -108,8 +110,14 @@ struct FiltersListView: View {
         let availableDates = sections.flatMap { $0.filters }
           .compactMap { ($0.startDate, $0.endDate) }
 
-        startDate = availableDates.compactMap { $0.0 }.min() ?? minStartDate
-        endDate = availableDates.compactMap { $0.1 }.max() ?? maxEndDate
+        let computedStartDate = availableDates.compactMap { $0.0 }.min() ?? minStartDate
+        let computedEndDate = availableDates.compactMap { $0.1 }.max() ?? maxEndDate
+
+        startDate = computedStartDate
+        endDate = computedEndDate
+
+        initialStartDate = initialStartDate ?? computedStartDate
+        initialEndDate = initialEndDate ?? computedEndDate
       }
     }
     .presentationDragIndicator(.visible)
@@ -208,9 +216,11 @@ struct FiltersListView: View {
       .onAppear {
         if let date = filter.startDate {
           startDate = date
+          initialStartDate = initialStartDate ?? date
         }
         if let date = filter.endDate {
           endDate = date
+          initialEndDate = initialEndDate ?? date
         }
       }
     }
@@ -243,9 +253,9 @@ struct FiltersListView: View {
       .foregroundStyle(Theme.shared.color.accent)
     }
     .onChange(of: selection.wrappedValue) {
-      let expectedDate = title == .startDate ? filter.startDate : filter.endDate
-      if let expectedDate,
-         !Calendar.current.isDate(selection.wrappedValue, equalTo: expectedDate, toGranularity: .day) {
+      let baselineDate = title == .startDate ? initialStartDate : initialEndDate
+      if let baselineDate,
+         !Calendar.current.isDate(selection.wrappedValue, equalTo: baselineDate, toGranularity: .day) {
         showIndicator?()
       }
       updateDateFiltersCallback?(sectionID, filter.id, startDate, endDate)
@@ -255,7 +265,13 @@ struct FiltersListView: View {
   private func resetDates(sectionID: String, filter: FilterUIItem) {
     startDate = minStartDate
     endDate = maxEndDate
-    showIndicator?()
+    if let initialStartDate,
+       !Calendar.current.isDate(startDate, equalTo: initialStartDate, toGranularity: .day) {
+      showIndicator?()
+    } else if let initialEndDate,
+              !Calendar.current.isDate(endDate, equalTo: initialEndDate, toGranularity: .day) {
+      showIndicator?()
+    }
     updateDateFiltersCallback?(sectionID, filter.id, startDate, endDate)
   }
 
