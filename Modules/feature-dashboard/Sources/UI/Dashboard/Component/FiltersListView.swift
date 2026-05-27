@@ -161,25 +161,21 @@ struct FiltersListView: View {
   ) -> some View {
     switch filter.filterSectionType {
     case .radio:
-      HStack(alignment: .center, spacing: .zero) {
+      Toggle(
+        isOn: Binding(
+          get: { filter.selected },
+          set: { newValue in
+            guard newValue != filter.selected else { return }
+            updateFiltersCallback?(sectionID, filter.id)
+          }
+        )
+      ) {
         Text(filter.title)
           .typography(Theme.shared.font.bodyLarge)
           .foregroundStyle(Theme.shared.color.primaryLabel)
           .multilineTextAlignment(.leading)
-        Spacer(minLength: SPACING_MEDIUM)
-        Toggle(
-          "",
-          isOn: Binding(
-            get: { filter.selected },
-            set: { newValue in
-              guard newValue != filter.selected else { return }
-              updateFiltersCallback?(sectionID, filter.id)
-            }
-          )
-        )
-        .labelsHidden()
-        .tint(Color.green)
       }
+      .tint(Color.green)
 
     case .datePicker:
       VStack(alignment: .leading, spacing: .zero) {
