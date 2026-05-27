@@ -174,43 +174,89 @@ struct FiltersListView: View {
       }
 
     case .datePicker:
-      VStack(alignment: .leading, spacing: SPACING_SMALL) {
-        DatePicker(selection: $startDate, in: minStartDate...endDate, displayedComponents: .date) {
-          Text(.startDate)
-        }
-        .tint(Theme.shared.color.accent)
-        .onAppear {
-          if let date = filter.startDate {
-            startDate = date
-          }
-        }
-        .onChange(of: startDate) {
-          let expectedStartDate = filter.startDate ?? Date()
-          if !Calendar.current.isDate(startDate, equalTo: expectedStartDate, toGranularity: .day) {
-            showIndicator?()
-          }
-          updateDateFiltersCallback?(sectionID, filter.id, startDate, endDate)
-        }
-        .tint(Theme.shared.color.accent)
+      VStack(alignment: .leading, spacing: .zero) {
+        datePickerRow(
+          title: .startDate,
+          selection: $startDate,
+          range: minStartDate...endDate,
+          sectionID: sectionID,
+          filter: filter
+        )
 
-        DatePicker(selection: $endDate, in: startDate...maxEndDate, displayedComponents: .date) {
-          Text(.endDate)
-            .onAppear {
-              if let date = filter.endDate {
-                endDate = date
-              }
-            }
-            .onChange(of: endDate) {
-              let expectedStartDate = filter.endDate ?? Date()
-              if !Calendar.current.isDate(startDate, equalTo: expectedStartDate, toGranularity: .day) {
-                showIndicator?()
-              }
-              updateDateFiltersCallback?(sectionID, filter.id, startDate, endDate)
-            }
+        ListDividerView(spacing: 0)
+          .padding(.vertical, SPACING_MEDIUM)
+
+        datePickerRow(
+          title: .endDate,
+          selection: $endDate,
+          range: startDate...maxEndDate,
+          sectionID: sectionID,
+          filter: filter
+        )
+
+        Button {
+          resetDates(sectionID: sectionID, filter: filter)
+        } label: {
+          Text(.resetDates)
+            .typography(Theme.shared.font.labelLarge)
+            .foregroundStyle(Theme.shared.color.accent)
+            .frame(maxWidth: .infinity, alignment: .center)
         }
-        .tint(Theme.shared.color.accent)
+        .buttonStyle(.plain)
+        .padding(.top, SPACING_MEDIUM)
+      }
+      .onAppear {
+        if let date = filter.startDate {
+          startDate = date
+        }
+        if let date = filter.endDate {
+          endDate = date
+        }
       }
     }
+  }
+
+  @ViewBuilder
+  private func datePickerRow(
+    title: LocalizableStringKey,
+    selection: Binding<Date>,
+    range: ClosedRange<Date>,
+    sectionID: String,
+    filter: FilterUIItem
+  ) -> some View {
+    HStack(alignment: .center, spacing: SPACING_MEDIUM) {
+      Text(title)
+        .typography(Theme.shared.font.bodyLarge)
+        .foregroundStyle(Theme.shared.color.primaryLabel)
+
+      Spacer(minLength: SPACING_MEDIUM)
+
+      DatePicker(
+        "",
+        selection: selection,
+        in: range,
+        displayedComponents: .date
+      )
+      .labelsHidden()
+      .datePickerStyle(.compact)
+      .tint(Theme.shared.color.accent)
+      .foregroundStyle(Theme.shared.color.accent)
+    }
+    .onChange(of: selection.wrappedValue) {
+      let expectedDate = title == .startDate ? filter.startDate : filter.endDate
+      if let expectedDate,
+         !Calendar.current.isDate(selection.wrappedValue, equalTo: expectedDate, toGranularity: .day) {
+        showIndicator?()
+      }
+      updateDateFiltersCallback?(sectionID, filter.id, startDate, endDate)
+    }
+  }
+
+  private func resetDates(sectionID: String, filter: FilterUIItem) {
+    startDate = minStartDate
+    endDate = maxEndDate
+    showIndicator?()
+    updateDateFiltersCallback?(sectionID, filter.id, startDate, endDate)
   }
 
   private func applyFilters() {

@@ -209,6 +209,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case filterByDate
   case startDate
   case endDate
+  case resetDates
   case relyingParty
   case signedDocuments
   case transactionInformation

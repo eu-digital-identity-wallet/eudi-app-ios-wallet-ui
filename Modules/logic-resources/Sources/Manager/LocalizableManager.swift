@@ -414,6 +414,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "start_date")
     case .endDate:
       bundle.localizedString(forKey: "end_date")
+    case .resetDates:
+      bundle.localizedString(forKey: "reset_dates")
     case .relyingParty:
       bundle.localizedString(forKey: "relying_party")
     case .signedDocuments:
