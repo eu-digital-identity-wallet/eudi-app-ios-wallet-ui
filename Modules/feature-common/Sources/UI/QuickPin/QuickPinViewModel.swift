@@ -152,7 +152,10 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
   }
 
   var contentCaption: LocalizableStringKey? {
-    viewState.caption
+    if viewState.config.isUpdateFlow {
+      return nil
+    }
+    return viewState.caption
   }
 
   func onShowCancellationModal() {

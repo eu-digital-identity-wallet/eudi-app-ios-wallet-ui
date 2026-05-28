@@ -86,7 +86,7 @@ public struct TransactionCardView: View {
 
           HStack(spacing: SPACING_SMALL) {
             Text(transactionDetailsCardData.transactionStatusLabel)
-              .typography(Theme.shared.font.labelLarge)
+              .typography(Theme.shared.font.labelMedium)
               .foregroundStyle(Theme.shared.color.primaryLabel)
           }
           .padding(.horizontal, SPACING_SMALL)

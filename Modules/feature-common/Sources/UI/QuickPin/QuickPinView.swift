@@ -84,7 +84,11 @@ private func content(
     captionWeight: .semibold
   )
 
-  VSpacer.large()
+  if viewState.config.isUpdateFlow {
+    VSpacer.small()
+  } else {
+    VSpacer.extraLarge()
+  }
 
   pinView(
     uiPinInputField: uiPinInputField,
