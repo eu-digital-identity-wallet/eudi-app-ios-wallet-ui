@@ -5525,6 +5525,16 @@ public class MockFilterValidator: FilterValidator, Cuckoo.ProtocolMock, @uncheck
         )
     }
 
+    public func updateSort(filterId p0: String) async {
+        return await cuckoo_manager.call(
+            "updateSort(filterId p0: String) async",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.updateSort(filterId: p0)
+        )
+    }
+
     public struct __StubbingProxy_FilterValidator: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
@@ -5608,6 +5618,14 @@ public class MockFilterValidator: FilterValidator, Cuckoo.ProtocolMock, @uncheck
             let matchers: [Cuckoo.ParameterMatcher<(SortOrderType)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockFilterValidator.self,
                 method: "updateSortOrder(sortOrder p0: SortOrderType) async",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func updateSort<M1: Cuckoo.Matchable>(filterId p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(String)> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockFilterValidator.self,
+                method: "updateSort(filterId p0: String) async",
                 parameterMatchers: matchers
             ))
         }
@@ -5743,6 +5761,18 @@ public class MockFilterValidator: FilterValidator, Cuckoo.ProtocolMock, @uncheck
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func updateSort<M1: Cuckoo.Matchable>(filterId p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "updateSort(filterId p0: String) async",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -5787,6 +5817,10 @@ public class FilterValidatorStub:FilterValidator, @unchecked Sendable {
     }
     
     public func updateSortOrder(sortOrder p0: SortOrderType) async {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func updateSort(filterId p0: String) async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }
@@ -6147,6 +6181,118 @@ public class MockFilterAction: FilterAction, Cuckoo.ProtocolMock, @unchecked Sen
 }
 
 public class FilterActionStub:FilterAction, @unchecked Sendable {
+
+
+    
+    public func applyFilter(sortOrder p0: SortOrderType, filterableItems p1: FilterableList, filter p2: FilterItem) -> FilterableList {
+        return DefaultValueRegistry.defaultValue(for: (FilterableList).self)
+    }
+    
+    public func applyFilterGroup(filterableItems p0: FilterableList, filterGroup p1: FilterGroup) -> FilterableList {
+        return DefaultValueRegistry.defaultValue(for: (FilterableList).self)
+    }
+}
+
+
+public class MockSortFilterAction: SortFilterAction, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = any SortFilterAction
+    public typealias Stubbing = __StubbingProxy_SortFilterAction
+    public typealias Verification = __VerificationProxy_SortFilterAction
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any SortFilterAction)?
+
+    public func enableDefaultImplementation(_ stub: any SortFilterAction) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public func applyFilter(sortOrder p0: SortOrderType, filterableItems p1: FilterableList, filter p2: FilterItem) -> FilterableList {
+        return cuckoo_manager.call(
+            "applyFilter(sortOrder p0: SortOrderType, filterableItems p1: FilterableList, filter p2: FilterItem) -> FilterableList",
+            parameters: (p0, p1, p2),
+            escapingParameters: (p0, p1, p2),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.applyFilter(sortOrder: p0, filterableItems: p1, filter: p2)
+        )
+    }
+
+    public func applyFilterGroup(filterableItems p0: FilterableList, filterGroup p1: FilterGroup) -> FilterableList {
+        return cuckoo_manager.call(
+            "applyFilterGroup(filterableItems p0: FilterableList, filterGroup p1: FilterGroup) -> FilterableList",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.applyFilterGroup(filterableItems: p0, filterGroup: p1)
+        )
+    }
+
+    public struct __StubbingProxy_SortFilterAction: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func applyFilter<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(sortOrder p0: M1, filterableItems p1: M2, filter p2: M3) -> Cuckoo.ProtocolStubFunction<(SortOrderType, FilterableList, FilterItem), FilterableList> where M1.MatchedType == SortOrderType, M2.MatchedType == FilterableList, M3.MatchedType == FilterItem {
+            let matchers: [Cuckoo.ParameterMatcher<(SortOrderType, FilterableList, FilterItem)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockSortFilterAction.self,
+                method: "applyFilter(sortOrder p0: SortOrderType, filterableItems p1: FilterableList, filter p2: FilterItem) -> FilterableList",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func applyFilterGroup<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(filterableItems p0: M1, filterGroup p1: M2) -> Cuckoo.ProtocolStubFunction<(FilterableList, FilterGroup), FilterableList> where M1.MatchedType == FilterableList, M2.MatchedType == FilterGroup {
+            let matchers: [Cuckoo.ParameterMatcher<(FilterableList, FilterGroup)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockSortFilterAction.self,
+                method: "applyFilterGroup(filterableItems p0: FilterableList, filterGroup p1: FilterGroup) -> FilterableList",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    public struct __VerificationProxy_SortFilterAction: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func applyFilter<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(sortOrder p0: M1, filterableItems p1: M2, filter p2: M3) -> Cuckoo.__DoNotUse<(SortOrderType, FilterableList, FilterItem), FilterableList> where M1.MatchedType == SortOrderType, M2.MatchedType == FilterableList, M3.MatchedType == FilterItem {
+            let matchers: [Cuckoo.ParameterMatcher<(SortOrderType, FilterableList, FilterItem)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
+            return cuckoo_manager.verify(
+                "applyFilter(sortOrder p0: SortOrderType, filterableItems p1: FilterableList, filter p2: FilterItem) -> FilterableList",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func applyFilterGroup<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(filterableItems p0: M1, filterGroup p1: M2) -> Cuckoo.__DoNotUse<(FilterableList, FilterGroup), FilterableList> where M1.MatchedType == FilterableList, M2.MatchedType == FilterGroup {
+            let matchers: [Cuckoo.ParameterMatcher<(FilterableList, FilterGroup)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return cuckoo_manager.verify(
+                "applyFilterGroup(filterableItems p0: FilterableList, filterGroup p1: FilterGroup) -> FilterableList",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+public class SortFilterActionStub:SortFilterAction, @unchecked Sendable {
 
 
     

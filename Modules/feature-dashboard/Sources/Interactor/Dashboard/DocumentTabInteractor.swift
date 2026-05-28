@@ -266,38 +266,6 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
           filterType: .orderBy
         ),
         SingleSelectionFilterGroup(
-          id: FilterIds.FILTER_SORT_GROUP_ID,
-          name: LocalizableStringKey.sortBy.toString,
-          filters: [
-            FilterItem(
-              id: FilterIds.FILTER_SORT_DEFAULT,
-              name: LocalizableStringKey.defaultLabel.toString,
-              selected: true,
-              isDefault: true,
-              filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
-                attribute.sortingKey
-              })
-            ),
-            FilterItem(
-              id: FilterIds.FILTER_SORT_DATE_ISSUED,
-              name: LocalizableStringKey.dateIssued.toString,
-              selected: false,
-              filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
-                attribute.issuedDate
-              })
-            ),
-            FilterItem(
-              id: FilterIds.FILTER_SORT_EXPIRY_DATE,
-              name: LocalizableStringKey.expiryDate.toString,
-              selected: false,
-              filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
-                attribute.expiryDate
-              })
-            )
-          ],
-          filterType: .other
-        ),
-        SingleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_PERIOD_GROUP_ID,
           name: LocalizableStringKey.selectExpiryPeriod.toString,
           filters: [
@@ -405,7 +373,38 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
           filterType: .other
         )
       ],
-      sortOrder: SortOrderType.ascending
+      sortOrder: SortOrderType.ascending,
+      sort: FilterSort(
+        id: FilterIds.FILTER_SORT_GROUP_ID,
+        name: LocalizableStringKey.sortBy.toString,
+        filters: [
+          FilterItem(
+            id: FilterIds.FILTER_SORT_DEFAULT,
+            name: LocalizableStringKey.defaultLabel.toString,
+            selected: true,
+            isDefault: true,
+            filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
+              attribute.sortingKey
+            })
+          ),
+          FilterItem(
+            id: FilterIds.FILTER_SORT_DATE_ISSUED,
+            name: LocalizableStringKey.dateIssued.toString,
+            selected: false,
+            filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
+              attribute.issuedDate
+            })
+          ),
+          FilterItem(
+            id: FilterIds.FILTER_SORT_EXPIRY_DATE,
+            name: LocalizableStringKey.expiryDate.toString,
+            selected: false,
+            filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
+              attribute.expiryDate
+            })
+          )
+        ]
+      )
     )
   }
 
@@ -481,23 +480,29 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
   }
 
   private func filterUISection(filters: Filters) -> [FilterUISection] {
-    filters.filterGroups
-      .filter { $0.id != FilterIds.ASCENDING_DESCENDING_GROUP }
-      .map { filteredGroup in
-        FilterUISection(
-          id: filteredGroup.id,
-          filters: filteredGroup.filters.map { filter in
-            FilterUIItem(
-              id: filter.id,
-              title: filter.name,
-              selected: filter.selected,
-              filterAction: filter.filterableAction,
-              filterSectionType: filter.filterElementType
-            )
-          },
-          sectionTitle: filteredGroup.name
-        )
-      }
+    var sections: [FilterUISection] = []
+
+    sections.append(contentsOf:
+      filters.filterGroups
+        .filter { $0.id != FilterIds.ASCENDING_DESCENDING_GROUP }
+        .map { filteredGroup in
+          FilterUISection(
+            id: filteredGroup.id,
+            filters: filteredGroup.filters.map { filter in
+              FilterUIItem(
+                id: filter.id,
+                title: filter.name,
+                selected: filter.selected,
+                filterAction: filter.filterableAction,
+                filterSectionType: filter.filterElementType
+              )
+            },
+            sectionTitle: filteredGroup.name
+          )
+        }
+    )
+
+    return sections
   }
 
   private func addCategoriesFilter(documents: FilterableList) -> [FilterItem] {

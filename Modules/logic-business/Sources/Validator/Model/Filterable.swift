@@ -50,6 +50,19 @@ extension FilterableList {
     }
     return FilterableList(items: sortedItems)
   }
+
+  func applySort(filters: Filters) -> FilterableList {
+    guard let selectedSort = filters.sort?.filters
+      .first(where: { $0.selected && $0.filterableAction is SortFilterAction }) else {
+      return self
+    }
+
+    return selectedSort.filterableAction.applyFilter(
+      sortOrder: filters.sortOrder,
+      filterableItems: self,
+      filter: selectedSort
+    )
+  }
 }
 
 public struct FilterableItem: Sendable, Equatable {
