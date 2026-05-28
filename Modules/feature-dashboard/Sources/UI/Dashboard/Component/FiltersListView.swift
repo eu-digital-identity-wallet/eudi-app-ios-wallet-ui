@@ -202,7 +202,7 @@ struct FiltersListView: View {
           resetDates(sectionID: sectionID, filter: filter)
         } label: {
           Text(.resetDates)
-            .typography(Theme.shared.font.labelLarge)
+            .typography(Theme.shared.font.bodyLarge)
             .foregroundStyle(Theme.shared.color.accent)
             .frame(maxWidth: .infinity, alignment: .center)
         }
