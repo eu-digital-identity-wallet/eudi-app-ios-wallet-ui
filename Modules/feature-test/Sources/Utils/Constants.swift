@@ -212,7 +212,7 @@ extension Constants {
     
     var transactionLog: TransactionLog
     
-    func startQrEngagement(secureAreaName: String?, crv: MdocDataModel18013.CoseEcCurve) async throws -> String {
+    func startQrEngagement(secureAreaName: String?, keyOptions: MdocDataModel18013.KeyOptions) async throws -> String {
       ""
     }
     
