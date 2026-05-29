@@ -3953,6 +3953,7 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Settings/SettingsViewModel.swift'
 
 import Cuckoo
+import SwiftUI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

@@ -25,6 +25,7 @@ struct SettingMenuItemUIModel: Identifiable {
   let showDivider: Bool
   let isShareLink: Bool
   let isToggle: Bool
+  let toggleBinding: Binding<Bool>?
   let action: () -> Void
 
   init(
@@ -34,6 +35,7 @@ struct SettingMenuItemUIModel: Identifiable {
     showDivider: Bool = true,
     isShareLink: Bool = false,
     isToggle: Bool = false,
+    toggleBinding: Binding<Bool>? = nil,
     action: @escaping () -> Void
   ) {
     self.id = id
@@ -42,6 +44,7 @@ struct SettingMenuItemUIModel: Identifiable {
     self.showDivider = showDivider
     self.isShareLink = isShareLink
     self.isToggle = isToggle
+    self.toggleBinding = toggleBinding
     self.action = action
   }
 }

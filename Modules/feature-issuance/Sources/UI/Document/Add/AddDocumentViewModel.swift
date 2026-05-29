@@ -124,9 +124,9 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     var successNavigation: UIConfig.TwoWayNavigationType {
       switch viewState.config.flow {
       case .noDocument:
-          .push(.featureDashboardModule(.dashboard))
+        .push(.featureDashboardModule(.dashboard))
       case .extraDocument:
-          .popTo(.featureDashboardModule(.dashboard))
+        .popTo(.featureDashboardModule(.dashboard))
       }
     }
 
@@ -156,19 +156,19 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     let scanAction = scanToolbarAction()
     return switch viewState.config.flow {
     case .noDocument:
-        .init(trailingActions: [scanAction])
+      .init(trailingActions: [scanAction])
     case .extraDocument:
-        .init(
-          trailingActions: [scanAction],
-          leadingActions: [
-            .init(
-              image: Theme.shared.image.chevronLeft,
-              accessibilityLocator: ToolbarLocators.chevronLeft
-            ) {
-              self.pop()
-            }
-          ]
-        )
+      .init(
+        trailingActions: [scanAction],
+        leadingActions: [
+          .init(
+            image: Theme.shared.image.chevronLeft,
+            accessibilityLocator: ToolbarLocators.chevronLeft
+          ) {
+            self.pop()
+          }
+        ]
+      )
     }
   }
 

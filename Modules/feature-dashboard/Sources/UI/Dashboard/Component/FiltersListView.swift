@@ -175,7 +175,7 @@ struct FiltersListView: View {
           .foregroundStyle(Theme.shared.color.primaryLabel)
           .multilineTextAlignment(.leading)
       }
-      .tint(Color.green)
+      .tint(Theme.shared.color.green)
 
     case .datePicker:
       VStack(alignment: .leading, spacing: .zero) {

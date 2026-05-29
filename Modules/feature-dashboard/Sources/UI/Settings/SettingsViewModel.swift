@@ -13,6 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import SwiftUI
 import logic_ui
 import logic_core
 import logic_authentication
@@ -31,12 +32,15 @@ struct SettingsViewState: ViewState {
 final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsViewState> {
   var isBatchCounterEnabled: Bool = false {
     didSet {
-      guard oldValue != isBatchCounterEnabled else { return }
+      guard !isHydratingBatchCounter, oldValue != isBatchCounterEnabled else { return }
       updateBatchCounter(isBatchCounterEnabled)
     }
   }
 
   var biometryError: SystemBiometryError?
+
+  @ObservationIgnored
+  private var isHydratingBatchCounter = false
 
   private let interactor: SettingsInteractor
   private let walletKitController: WalletKitController
@@ -105,7 +109,10 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     let changelogUrl = await interactor.retrieveChangeLogUrl()
     let isBiometryAvailable = await interactor.isBiometryAvailable()
     let isBiometryEnabled = await interactor.isBiometryEnabled()
+
+    isHydratingBatchCounter = true
     isBatchCounterEnabled = await interactor.isBatchCounterEnabled()
+    isHydratingBatchCounter = false
 
     var items: [SettingMenuItemUIModel] = []
 
@@ -115,6 +122,12 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
           title: .loginWithBiometrics,
           icon: Theme.shared.image.faceIdMenu,
           isToggle: true,
+          toggleBinding: Binding(
+            get: { [weak self] in
+              self?.viewState.isBiometryEnabled ?? false
+            },
+            set: { _ in }
+          ),
           action: { [weak self] in
             guard let self else { return }
             self.setBiometryEnabled(!self.viewState.isBiometryEnabled)
@@ -129,6 +142,14 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
         icon: Theme.shared.image.batchCounter,
         showDivider: true,
         isToggle: true,
+        toggleBinding: Binding(
+          get: { [weak self] in
+            self?.isBatchCounterEnabled ?? false
+          },
+          set: { [weak self] newValue in
+            self?.isBatchCounterEnabled = newValue
+          }
+        ),
         action: {}
       )
     )
