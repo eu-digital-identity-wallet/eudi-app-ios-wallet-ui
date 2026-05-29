@@ -37,7 +37,6 @@ struct TransactionDetailsView<Router: RouterHost>: View {
     ) {
       content(
         state: viewModel.viewState,
-        onCopyRelyingPartyName: viewModel.copyRelyingPartyName,
         onReportModal: viewModel.onReportModal,
         onShowDeleteModal: viewModel.onShowDeleteModal
       )
@@ -52,7 +51,6 @@ struct TransactionDetailsView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   state: TransactionDetailsViewState,
-  onCopyRelyingPartyName: @escaping (LocalizableStringKey) -> Void,
   onReportModal: @escaping () -> Void,
   onShowDeleteModal: @escaping () -> Void
 ) -> some View {
@@ -62,8 +60,7 @@ private func content(
       if let transactionDetailsCardData = state.transactionDetailsUi?.transactionDetailsCardData {
         TransactionCardView(
           transactionDetailsCardData: transactionDetailsCardData,
-          isLoading: state.isLoading,
-          onCopyRelyingPartyName: onCopyRelyingPartyName
+          isLoading: state.isLoading
         )
       }
 

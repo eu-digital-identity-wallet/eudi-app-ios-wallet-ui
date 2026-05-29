@@ -13,7 +13,6 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import UIKit
 import logic_ui
 import logic_resources
 import feature_common
@@ -81,10 +80,6 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
   func onReportModal() {}
 
   func onShowDeleteModal() {}
-
-  func copyRelyingPartyName(_ name: LocalizableStringKey) {
-    UIPasteboard.general.string = name.toString
-  }
 
   func toolbarContent() -> ToolBarContent? {
     .init(

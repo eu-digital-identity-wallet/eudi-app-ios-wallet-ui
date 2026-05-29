@@ -21,18 +21,15 @@ public struct TransactionCardView: View {
   private let backgroundColor: Color
   private let transactionDetailsCardData: TransactionDetailsCardData
   private let isLoading: Bool
-  private let onCopyRelyingPartyName: (LocalizableStringKey) -> Void
 
   public init(
     backgroundColor: Color = Theme.shared.color.groupedBackground,
     transactionDetailsCardData: TransactionDetailsCardData,
-    isLoading: Bool = false,
-    onCopyRelyingPartyName: @escaping (LocalizableStringKey) -> Void = { _ in }
+    isLoading: Bool = false
   ) {
     self.backgroundColor = backgroundColor
     self.transactionDetailsCardData = transactionDetailsCardData
     self.isLoading = isLoading
-    self.onCopyRelyingPartyName = onCopyRelyingPartyName
   }
 
   public var body: some View {
@@ -44,30 +41,15 @@ public struct TransactionCardView: View {
             .typography(Theme.shared.font.labelSmall)
             .foregroundStyle(Theme.shared.color.secondaryLabel)
           if let relyingPartyName = transactionDetailsCardData.relyingPartyName {
-            HStack(alignment: .center, spacing: SPACING_SMALL) {
-              Text(relyingPartyName)
-                .typography(Theme.shared.font.bodyLarge)
-                .foregroundStyle(Theme.shared.color.primaryLabel)
-                .if(transactionDetailsCardData.relyingPartyIsVerified ?? false) {
-                  $0.rightImage(
-                    image: Theme.shared.image.verified,
-                    spacing: SPACING_SMALL
-                  ).foregroundStyle(Theme.shared.color.success)
-                }
-
-              Spacer()
-
-              Button {
-                onCopyRelyingPartyName(relyingPartyName)
-              } label: {
-                Theme.shared.image.copy
-                  .resizable()
-                  .aspectRatio(contentMode: .fit)
-                  .frame(width: 24, height: 24)
-                  .foregroundStyle(Theme.shared.color.accent)
+            Text(relyingPartyName)
+              .typography(Theme.shared.font.bodyLarge)
+              .foregroundStyle(Theme.shared.color.primaryLabel)
+              .if(transactionDetailsCardData.relyingPartyIsVerified ?? false) {
+                $0.rightImage(
+                  image: Theme.shared.image.verified,
+                  spacing: SPACING_SMALL
+                ).foregroundStyle(Theme.shared.color.success)
               }
-              .buttonStyle(.plain)
-            }
           }
         }
 

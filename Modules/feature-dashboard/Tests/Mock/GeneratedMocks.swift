@@ -3873,7 +3873,6 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/feature-dashboard/Sources/UI/Detail/Transaction/TransactionDetailsViewModel.swift'
 
 import Cuckoo
-import UIKit
 import logic_resources
 @testable import logic_core
 @testable import logic_business
