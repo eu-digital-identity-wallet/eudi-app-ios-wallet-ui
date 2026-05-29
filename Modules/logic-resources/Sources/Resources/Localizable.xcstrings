@@ -551,28 +551,6 @@
         }
       }
     },
-    "document_details_show" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show"
-          }
-        }
-      }
-    },
-    "document_details_hide" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hide"
-          }
-        }
-      }
-    },
     "document_details_document_credentials_expanded_text_subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -602,6 +580,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Expires on: %@"
+          }
+        }
+      }
+    },
+    "document_details_hide" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide"
           }
         }
       }
@@ -679,6 +668,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Document revoked"
+          }
+        }
+      }
+    },
+    "document_details_show" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show"
           }
         }
       }
@@ -956,7 +956,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Type"
+            "value" : "Transaction Type"
           }
         }
       }
@@ -1553,7 +1553,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show this QR code to access the necessary information for sharing"
+            "value" : "Show this QR code to an interacting party within close proximity to authenticate your identity."
           }
         }
       }
@@ -1613,17 +1613,6 @@
         }
       }
     },
-    "quick_pin_navigation_enter_a_pin" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter a PIN"
-          }
-        }
-      }
-    },
     "quick_pin_locked_out" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1631,6 +1620,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You have entered the wrong PIN %@ times in a row.\nPlease wait %@ before trying again."
+          }
+        }
+      }
+    },
+    "quick_pin_navigation_enter_a_pin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a PIN"
           }
         }
       }
@@ -2114,7 +2114,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Scan a QR code provided from a Relying Party to present a digital document online."
+            "value" : "Scan a QR code provided from an interacting party to authenticate your identity."
           }
         }
       }
@@ -2125,7 +2125,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Scan QR to add"
+            "value" : "Scan QR"
           }
         }
       }
@@ -2136,7 +2136,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Present a document"
+            "value" : "Authenticate my identity "
           }
         }
       }

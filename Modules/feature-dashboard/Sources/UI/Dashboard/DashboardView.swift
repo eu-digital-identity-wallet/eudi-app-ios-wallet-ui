@@ -124,7 +124,7 @@ private func content(
       .tabItem {
         Label(
           .historyTitle,
-          systemImage: "arrow.left.arrow.right"
+          systemImage: "clock.fill"
         )
         .accessibilityLocator(
           TabViewLocators.history,
