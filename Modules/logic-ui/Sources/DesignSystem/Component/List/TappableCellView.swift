@@ -58,7 +58,6 @@ public struct TappableCellView: View {
         Text(title)
           .typography(Theme.shared.font.bodyLarge)
           .foregroundColor(Theme.shared.color.primaryLabel)
-          .lineLimit(1)
           .minimumScaleFactor(0.8)
           .frame(maxWidth: .infinity, alignment: .leading)
 

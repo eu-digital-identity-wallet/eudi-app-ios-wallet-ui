@@ -165,9 +165,9 @@ private func content(
               Text(isVisible ? .documentDetailsShow : .documentDetailsHide)
                 .typography(Theme.shared.font.bodyMedium)
                 .fontWeight(.semibold)
-                .frame(width: 44, alignment: .leading)
+                .frame(alignment: .leading)
             }
-            .frame(width: 76, alignment: .trailing)
+            .frame(alignment: .trailing)
             .foregroundStyle(Theme.shared.color.accent)
             .shimmer(isLoading: viewState.isLoading)
           }
