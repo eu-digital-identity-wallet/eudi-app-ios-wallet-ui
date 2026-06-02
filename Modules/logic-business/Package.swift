@@ -18,8 +18,8 @@ let package = Package(
       from: "4.0.0"
     ),
     .package(
-      url: "https://github.com/marmelroy/PhoneNumberKit",
-      from: "4.2.0"
+      url: "https://github.com/PhoneNumberKit/PhoneNumberKit",
+      from: "5.0.0"
     ),
     .package(
       url: "https://github.com/nsagora/peppermint",
