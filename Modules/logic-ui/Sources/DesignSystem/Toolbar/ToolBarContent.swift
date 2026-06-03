@@ -102,12 +102,14 @@ private struct ActionView: View {
         Button(action: callback) {
           content
         }
-        .ifLet(action.tintColor) { view, color in
-          view.tint(color)
-        }
         .if(action.isBorderedProminent) { view in
           view.buttonStyle(.borderedProminent)
         }
+        .tint(
+          action.isBorderedProminent
+            ? (action.tintColor ?? Theme.shared.color.accent)
+            : action.tintColor
+        )
         .disabled(disabled)
         .accessibilityElement()
         .accessibilityLocator(

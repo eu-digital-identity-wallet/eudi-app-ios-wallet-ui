@@ -122,8 +122,8 @@ public struct WrapButtonView: View {
     .if(!isEnabled && !isLoading) {
       $0.opacity(0.38)
     }
-    .tint(backgroundColor)
     .buttonStyle(.borderedProminent)
+    .tint(backgroundColor)
     .disabled(isLoading || !isEnabled)
     .shimmer(isLoading: isLoading)
   }

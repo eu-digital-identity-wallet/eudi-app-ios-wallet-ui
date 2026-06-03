@@ -98,6 +98,7 @@ struct FiltersListView: View {
             Theme.shared.image.checkmark
           }
           .buttonStyle(.borderedProminent)
+          .tint(Theme.shared.color.accent)
           .accessibilityLabel(Text(.showResults))
         }
       }
