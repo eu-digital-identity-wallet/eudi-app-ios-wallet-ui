@@ -454,7 +454,19 @@ For instructions on working with self-signed certificates during local developme
 
 ## Theme configuration
 
-The application allows the configuration of:
+Branding and theming are split across three layers:
+
+1. **The SwiftUI theme** (`logic-resources` module) — colors, typography/fonts, shapes, dimensions,
+   and in-app images, all reachable through `Theme.shared` (a `ThemeProtocol`) and its five managers
+   (`color`, `image`, `shape`, `font`, `dimension`).
+2. **Branding assets** — app icon, app display name, bundle id, splash/launch screen, deep-link
+   schemes, and brand strings, defined in the `Wallet/` app target (`project.pbxproj`,
+   `Assets.xcassets`, `Wallet.plist`, `Config/*.xcconfig`) plus the `logic-resources` images and
+   strings.
+3. **Sub-SDK theming** — the RQES signing UI carries its own theme and translations (see the RQES
+   subsection under [General configuration](#general-configuration)).
+
+The five themeable aspects of the SwiftUI theme are described by the *ThemeConfiguration* struct:
 
 1. Colors
 2. Images
@@ -462,7 +474,16 @@ The application allows the configuration of:
 4. Fonts
 5. Dimension
 
-Via the *ThemeConfiguration* struct.
+> The theme is applied at runtime through `Theme.shared`, which is built from the reference managers
+> in `Modules/logic-resources/Sources/Manager/`. Those managers read their values from the asset
+> catalogs in `logic-resources` (and, for fonts, an optional `WalletFontConfig.plist`). For most
+> rebrands you edit the asset catalogs directly; swapping the whole theme programmatically (via
+> `Theme.config(...)` with a custom `ThemeConfiguration`) is supported for advanced/runtime setups
+> but **not** used by default — see **[THEMING.md](THEMING.md)**.
+
+For a complete, step-by-step rebranding and retheming guide — covering every file you need to change,
+a quick-start checklist, colors (light/dark), fonts, logos, the app icon, app name, splash screen,
+RQES theming, and a production/accessibility checklist — see **[THEMING.md](THEMING.md)**.
 
 ## Pin Storage configuration
 

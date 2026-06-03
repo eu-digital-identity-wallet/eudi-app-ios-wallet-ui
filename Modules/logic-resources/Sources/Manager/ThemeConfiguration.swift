@@ -25,7 +25,7 @@ public struct ThemeConfiguration: Sendable {
   let font: TypographyManagerProtocol
   let dimension: DimensionManagerProtocol
 
-  init(
+  public init(
     color: ColorManagerProtocol? = nil,
     image: ImageManagerProtocol? = nil,
     shape: ShapeManagerProtocol? = nil,
