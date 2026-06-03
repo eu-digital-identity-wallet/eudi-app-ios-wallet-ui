@@ -225,11 +225,16 @@ Text("Hello").typography(Theme.shared.font.titleLarge)
 
 ### Using a custom font
 
-1. **Drop your font files** (`.ttf`/`.otf`) anywhere under
+Two independent things must happen: the font files must be **registered** (so the system can find
+them) and the type scale must be **told to use them**. Registration is automatic; the plist is only
+the mapping.
+
+1. **Drop your font files** (`.ttf`/`.otf`) into
    [`logic-resources/Sources/Resources/`](../Modules/logic-resources/Sources/Resources). They are
    registered with Core Text automatically at startup by `Bundle.registerModuleFonts()` (see
-   [`Bundle.swift`](../Modules/logic-resources/Sources/Bundle.swift)) — **no `Info.plist`/`UIAppFonts`
-   entry is needed.**
+   [`Bundle.swift`](../Modules/logic-resources/Sources/Bundle.swift), called from
+   `ThemeConfiguration.init`) — **no `Info.plist`/`UIAppFonts` entry, and no manual registration, is
+   needed.**
 2. **Add a `WalletFontConfig.plist`** to the same `Resources/` directory, mapping the three weight
    keys to the **exact PostScript names** of your fonts:
 
@@ -249,9 +254,11 @@ Text("Hello").typography(Theme.shared.font.titleLarge)
    the system font** (`Font.custom` does not crash). Find PostScript names in Font Book (not the file
    name — the internal PostScript name).
 
-The plist is a flat `[String: String]` with exactly those three keys, and it needs **no
-`Package.swift` change** — SwiftPM's `.process("Resources")` rule bundles it automatically. To change
-which weight a *role* uses (e.g. a lighter body), edit the `style(...)` mappings in
+The plist does **not** register fonts — step 1 already did; it only selects which registered font the
+type scale uses. If you drop fonts but omit the plist, they are registered yet unused and the UI stays
+on the system font. The plist is a flat `[String: String]` with exactly those three keys and needs
+**no `Package.swift` change** — SwiftPM's `.process("Resources")` rule bundles it automatically. To
+change which weight a *role* uses (e.g. a lighter body), edit the `style(...)` mappings in
 `TypographyManager.swift`.
 
 ## Shapes
