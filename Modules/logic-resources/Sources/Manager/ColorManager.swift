@@ -173,23 +173,39 @@ final class ColorManager: ColorManagerProtocol {
     Color(uiColor: color)
   }
 
+  /// Tries to load the named color from the asset catalog first.
+  /// Returns `nil` when no entry with that name exists, allowing callers to fall back.
+  private func catalogColor(named name: String) -> Color? {
+    guard let uiColor = UIColor(named: name, in: bundle, compatibleWith: nil) else {
+      return nil
+    }
+    return Color(uiColor: uiColor)
+  }
+
+  /// Resolves a system color.
+  /// When a color named after the enum case exists in the asset catalog it takes
+  /// precedence over the SwiftUI system color, so member-state themes only need
+  /// to add an entry with the matching name (e.g. "blue") to the Color catalog.
   func color(for system: SystemColors) -> Color {
+    if let catalogColor = catalogColor(named: system.rawValue) {
+      return catalogColor
+    }
     switch system {
-    case .blue: .blue
-    case .green: .green
-    case .indigo: .indigo
-    case .orange: .orange
-    case .pink: .pink
-    case .purple: .purple
-    case .red: .red
-    case .teal: .teal
-    case .yellow: .yellow
-    case .mint: .mint
-    case .cyan: .cyan
-    case .brown: .brown
-    case .black: .black
-    case .white: .white
-    case .gray: .gray
+    case .blue: return .blue
+    case .green: return .green
+    case .indigo: return .indigo
+    case .orange: return .orange
+    case .pink: return .pink
+    case .purple: return .purple
+    case .red: return .red
+    case .teal: return .teal
+    case .yellow: return .yellow
+    case .mint: return .mint
+    case .cyan: return .cyan
+    case .brown: return .brown
+    case .black: return .black
+    case .white: return .white
+    case .gray: return .gray
     }
   }
 
@@ -197,23 +213,30 @@ final class ColorManager: ColorManagerProtocol {
     Color(brand.rawValue, bundle: bundle)
   }
 
+  /// Resolves a semantic color.
+  /// When a color named after the enum case exists in the asset catalog it takes
+  /// precedence over the UIKit adaptive color, so member-state themes only need
+  /// to add an entry with the matching name (e.g. "primaryLabel") to the Color catalog.
   func color(for semantic: SemanticColors) -> Color {
+    if let catalogColor = catalogColor(named: semantic.rawValue) {
+      return catalogColor
+    }
     switch semantic {
-    case .primaryLabel: uiColor(.label)
-    case .secondaryLabel: uiColor(.secondaryLabel)
-    case .tertiaryLabel: uiColor(.tertiaryLabel)
-    case .quaternaryLabel: uiColor(.quaternaryLabel)
-    case .background: uiColor(.systemBackground)
-    case .secondaryBackground: uiColor(.secondarySystemBackground)
-    case .tertiaryBackground: uiColor(.tertiarySystemBackground)
-    case .secondaryGroupedBackground: uiColor(.secondarySystemGroupedBackground)
-    case .tertiaryGroupedBackground: uiColor(.tertiarySystemGroupedBackground)
-    case .opaqueSeparator: uiColor(.opaqueSeparator)
-    case .fill: uiColor(.systemFill)
-    case .secondaryFill: uiColor(.secondarySystemFill)
-    case .tertiaryFill: uiColor(.tertiarySystemFill)
-    case .quaternaryFill: uiColor(.quaternarySystemFill)
-    case .accent: uiColor(.systemBlue)
+    case .primaryLabel: return uiColor(.label)
+    case .secondaryLabel: return uiColor(.secondaryLabel)
+    case .tertiaryLabel: return uiColor(.tertiaryLabel)
+    case .quaternaryLabel: return uiColor(.quaternaryLabel)
+    case .background: return uiColor(.systemBackground)
+    case .secondaryBackground: return uiColor(.secondarySystemBackground)
+    case .tertiaryBackground: return uiColor(.tertiarySystemBackground)
+    case .secondaryGroupedBackground: return uiColor(.secondarySystemGroupedBackground)
+    case .tertiaryGroupedBackground: return uiColor(.tertiarySystemGroupedBackground)
+    case .opaqueSeparator: return uiColor(.opaqueSeparator)
+    case .fill: return uiColor(.systemFill)
+    case .secondaryFill: return uiColor(.secondarySystemFill)
+    case .tertiaryFill: return uiColor(.tertiarySystemFill)
+    case .quaternaryFill: return uiColor(.quaternarySystemFill)
+    case .accent: return uiColor(.systemBlue)
     }
   }
 }
