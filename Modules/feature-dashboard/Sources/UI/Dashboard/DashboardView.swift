@@ -133,6 +133,7 @@ private func content(
       }
       .tag(SelectedTab.history)
   }
+  .tint(Theme.shared.color.accent)
 }
 
 @MainActor
