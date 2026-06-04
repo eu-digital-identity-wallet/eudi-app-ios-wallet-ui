@@ -89,8 +89,8 @@ private func doneButton(
   .combineChilrenAccessibility(
     locator: DocumentSuccessLocators.doneButton
   )
-  .padding(.horizontal, Theme.shared.dimension.padding)
-  .padding(.bottom, Theme.shared.dimension.padding)
+  .padding(.horizontal, SPACING_MEDIUM)
+  .padding(.bottom, SPACING_LARGE_MEDIUM)
 }
 
 @MainActor

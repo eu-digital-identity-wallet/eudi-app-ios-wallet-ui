@@ -131,6 +131,8 @@ private func issueButton(
   .combineChilrenAccessibility(
     locator: DocumentOfferLocators.issueButton
   )
+  .padding(.horizontal, SPACING_MEDIUM)
+  .padding(.bottom, SPACING_LARGE_MEDIUM)
 }
 
 @MainActor
