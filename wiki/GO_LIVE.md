@@ -7,6 +7,7 @@ It complements:
 
 * [How to build](HOW_TO_BUILD.md)
 * [How to configure the application](CONFIGURATION.md)
+* [Theming and branding guide](THEMING.md)
 * [Main README](../README.md)
 
 The reference application is not production ready as delivered. It uses demo services, demo trust
@@ -71,6 +72,7 @@ Use this checklist before the first production release.
 | Area | Required production outcome |
 | --- | --- |
 | App identity | Final bundle identifier, app name, icon, Apple Developer team, App Store Connect app record, and distribution channel are defined. |
+| Branding and theme | App name, app icon (every variant), in-app logos, light and dark color appearances, splash/launch screen, and any sub-SDK (RQES) theme are replaced with the production brand; no EUDI reference assets remain; text/background contrast meets accessibility targets. See [THEMING.md](THEMING.md). |
 | Build configurations | A dedicated production scheme and production build configuration exist, for example `EUDI Wallet Prod` and `Release Prod`; Dev and Demo remain non-production only. |
 | Signing | Distribution certificates, provisioning profiles, App Groups, Keychain Sharing, and required entitlements are controlled and documented. |
 | Issuers | All OpenID4VCI issuer URLs point to production issuer services controlled or approved by the implementer. |
@@ -165,6 +167,9 @@ Keep these files under strict review:
 | `.github/workflows/*.yml` | Defines SAST, SCA, and secret scanning workflows. |
 | `security/gitleaks/gitleaks.toml` | Defines local secret scanning rules. |
 | `fastlane/Fastfile` | Defines iOS test, versioning, archive, upload, tag, and release lanes. |
+| `Modules/logic-resources/Sources/Resources/Color.xcassets` | Brand color palette (light and dark appearances) and system/semantic color overrides. See [THEMING.md](THEMING.md). |
+| `Modules/logic-resources/Sources/Resources/Images.xcassets` | In-app brand logos and illustrations used on the splash and headers. |
+| `Wallet/Assets.xcassets` | Per-variant app icons (`AppIcon`, `AppIconDev`) and the global `AccentColor`. |
 
 ## Create A Production Scheme And Configuration
 
@@ -324,6 +329,33 @@ Recommended:
 * Production icons should differ from Dev/Demo where those variants can be installed side by side.
 * App Store Connect metadata, privacy labels, support URL, marketing URL, and age rating must be
   reviewed by the legal and privacy teams.
+
+## Branding And Theme
+
+The reference app ships with EUDI visual identity; a production wallet must replace it. App name and
+app icon are covered under [Application Identity](#application-identity). The remaining theme and
+branding surfaces are documented in **[THEMING.md](THEMING.md)**.
+
+Surfaces to review before release:
+
+| Surface | Where | Notes |
+| --- | --- | --- |
+| Color palette (light and dark) | `Modules/logic-resources/Sources/Resources/Color.xcassets` | Brand colorsets plus system/semantic overrides; add an `accent` colorset. Set both appearances and verify contrast. |
+| Typography and fonts | `Modules/logic-resources/Sources/Resources/` + `WalletFontConfig.plist` | Default is the system font (San Francisco). Add font files and the plist only if your brand requires a custom face. |
+| Shapes | `Modules/logic-resources/Sources/Manager/ShapeManager.swift` | Corner radii. |
+| In-app logos | `Modules/logic-resources/Sources/Resources/Images.xcassets` (`logo`, `EUDI-text`, illustrations) | Used on the splash and content headers; keep the imageset names. |
+| App icon | `Wallet/Assets.xcassets` — `AppIcon` and `AppIconDev` | One per build variant. |
+| Splash / launch screen | in-app `StartupView` (`logo` on `background`) and the OS launch screen (`INFOPLIST_KEY_UILaunchScreen_Generation`) | The generated launch screen is blank by default. |
+| Status bar and toolbars | `Modules/logic-ui/Sources/Config/ConfigUiLogic.swift` | Per-screen toolbar background map. |
+| RQES signing UI | `Modules/logic-business/Sources/Config/RQESConfig.swift` | The RQES SDK carries its own theme; a wallet rebrand does not restyle it unless you set `RQESConfig.theme`. |
+
+Requirements:
+
+* No EUDI reference branding (name, icon, logos, colors, splash) remains in the production artifact.
+* Light and dark colorset appearances are both set and meet WCAG AA contrast for text.
+* The signing (RQES) flow either matches your brand or the SDK default is explicitly accepted.
+* Run the verification steps and the production checklist in
+  [THEMING.md](THEMING.md#production-and-accessibility-checklist).
 
 ## Release Signing
 
