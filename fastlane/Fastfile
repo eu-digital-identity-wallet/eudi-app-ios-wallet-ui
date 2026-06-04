@@ -39,9 +39,9 @@ platform :ios do
   end
 
   desc "Run tests"
-  lane :tests do
+  lane :tests do |values|
     scan(
-      scheme: ENV["APP_SCHEME"],
+      scheme: values[:scheme],
       xcargs: "-skipPackagePluginValidation -skipMacroValidation"
     )
   end
