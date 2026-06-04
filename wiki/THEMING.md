@@ -64,7 +64,7 @@ Theme.shared.dimension.padding
 ```
 
 > **Important — how the theme is initialized.**
-> The application uses the lazily-created `Theme.shared`, which defaults to `AppTheme()` built from
+> The application uses the global `Theme.shared`, which defaults to `AppTheme()` built from
 > the reference managers (`ColorManager`, `ImageManager`, `ShapeManager`, `TypographyManager`,
 > `DimensionManager`). Those managers read their values from the **asset catalogs** in
 > `logic-resources` and from system defaults.
@@ -400,7 +400,8 @@ There are two distinct pieces:
 2. **In-app splash** —
    [`StartupView`](../Modules/feature-startup/Sources/UI/StartupView.swift) renders
    `Theme.shared.image.logo` centered (width = `screenWidth / 2.5`) on the
-   `Theme.shared.color.background` color:
+   `Theme.shared.color.background` color (simplified — the real view nests this in a `ZStack` that
+   ignores safe-area insets):
 
    ```swift
    ContentScreenView(padding: .zero, canScroll: false, background: Theme.shared.color.background) {
@@ -426,29 +427,36 @@ details use `Theme.shared.color.background`. Add or change entries there to bran
 ## Sub-SDK theming (RQES)
 
 The remote qualified electronic signature (RQES) flow is provided by a separate UI SDK. It carries
-its **own** theme and translations, configured on `EudiRQESUiConfig` via
-[`RQESConfig`](../Modules/logic-business/Sources/Config/RQESConfig.swift):
+its **own** theme and translations, exposed by the SDK's `EudiRQESUiConfig` protocol and supplied by
+the wallet's [`RQESConfig`](../Modules/logic-business/Sources/Config/RQESConfig.swift). Both `theme`
+and `translations` are **optional** protocol members with SDK-provided defaults:
 
 ```swift
-final class RQESConfig: EudiRQESUiConfig {
-  // Optional. Default English translations are used if not set.
-  var translations: [String: [LocalizableKey: String]]
-  // Optional. The SDK's default theme is used if not set.
-  var theme: ThemeProtocol
-  // …
-}
+// EudiRQESUiConfig (RQES UI SDK) — theme/translations are optional overrides:
+var translations: [String: [LocalizableKey: String]] { get }  // defaults to [:] (English)
+var theme: ThemeProtocol { get }                               // defaults to the SDK theme
 ```
+
+The wallet's `RQESConfig` declares neither, so it inherits both SDK defaults.
 
 The reference app leaves both `theme` and `translations` at their SDK defaults — the RQES flow is
 **not** rethemed by the wallet. Consequences:
 
-* The SDK ships its own copy of the EUDI reference palette, so out of the box the signing screens
-  already match the unmodified wallet.
+* As of RQES UI SDK **0.4.2**, the SDK's default theme follows the **same model as the wallet's
+  SwiftUI theme** (Layer 1): iOS **system colors** (`primaryLabel`, `secondaryLabel`, `background`,
+  `accent`) with only a few brand colors baked into its asset catalog (`success`, `successBackground`,
+  `groupedBackground`, `black`), the **system font**, and native prominent buttons tinted with
+  `accent` (system blue by default). Out of the box the signing screens match the unmodified wallet's
+  system-based look and adapt to light/dark automatically.
 * Because the two themes are independent, **rebranding the wallet does not restyle the RQES screens** —
-  they keep the SDK default look.
+  they keep the SDK default look (notably the system-blue `accent`) until you set `RQESConfig.theme`.
 
-If you want the signing flow to match your brand, set `theme` (and, if needed, `translations`) in
-`RQESConfig` with values that mirror your wallet theme. See the RQES subsection under
+If you want the signing flow to match your brand, set `theme` in `RQESConfig` with a custom
+`ThemeProtocol`. Since 0.4.2 its `ColorManagerProtocol` mirrors a subset of the wallet's color
+roles — `black`, `white`, `success`, `successBackground`, `groupedBackground`, `primaryLabel`,
+`secondaryLabel`, `background`, `accent` — and its `TypographyManagerProtocol` exposes the same type
+scale (`displayLarge` … `labelSmall`); point these at the same values your wallet theme uses. If you
+also need localized RQES strings, set `translations` as well. See the RQES subsection under
 [General configuration](CONFIGURATION.md#general-configuration) for how `RQESConfig` is wired per
 variant.
 
@@ -480,10 +488,13 @@ first frame. `ThemeConfiguration.init` is `public` for exactly this purpose. Thi
 Android's `ThemeManager.Builder`, and is intentionally left at `.default` in the reference app.
 
 > For a fully dynamic swap you can also assign `Theme.shared` directly — it is a `public` settable var
-> of the public `ThemeProtocol`. Do it as the **first** statement in `Application.init()`
-> ([`Wallet/Application.swift`](../Wallet/Application.swift)), before any view reads `Theme.shared`
-> (the `toolbarConfig` property initializer reads it early). Prefer the `ThemeConfiguration` path
-> above when you only need to override some managers — it keeps the defaults for the rest.
+> of the public `ThemeProtocol`. Note that `Application`'s `toolbarConfig` **stored-property
+> initializer** ([`Wallet/Application.swift`](../Wallet/Application.swift)) reads `Theme.shared`
+> *before* any statement in `Application.init()` runs, so a direct assignment in `init()` cannot beat
+> that first read — it's harmless (the initial value is overwritten after the swap), but it means the
+> `ThemeConfiguration`/DI path above is preferable: it runs during `Application.init()` (resolving
+> `RouterHost` forces `ConfigUiLogic`), so the final `toolbarConfig` and every view body read the
+> swapped theme.
 
 ## Verifying your rebrand
 

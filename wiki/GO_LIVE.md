@@ -15,6 +15,57 @@ anchors, broad custom-scheme deep links, source-level configuration, and securit
 be reviewed for a high-assurance wallet. Treat this guide as a go-live work plan, not as a legal
 certification or a replacement for a full security assessment.
 
+## Table of contents
+
+* [Audience](#audience)
+* [Production Principle](#production-principle)
+* [Out Of Scope](#out-of-scope)
+* [Go-Live Checklist](#go-live-checklist)
+* [Current Project Shape](#current-project-shape)
+* [Source Of Truth Files](#source-of-truth-files)
+* [Create A Production Scheme And Configuration](#create-a-production-scheme-and-configuration)
+* [Application Identity](#application-identity)
+* [Branding And Theme](#branding-and-theme)
+* [Release Signing](#release-signing)
+* [CI/CD Release Pipeline](#cicd-release-pipeline)
+* [Dependency Governance](#dependency-governance)
+* [WalletKitConfig Overview](#walletkitconfig-overview)
+* [`EudiWalletConfiguration`](#eudiwalletconfiguration)
+* [OpenID4VP Configuration](#openid4vp-configuration)
+* [Digital Credentials API And Identity Document Provider](#digital-credentials-api-and-identity-document-provider)
+* [Reader Trust Store](#reader-trust-store)
+* [Issuer Configuration: `issuersConfig`](#issuer-configuration-issuersconfig)
+* [Wallet Provider Attestation](#wallet-provider-attestation)
+* [Document Issuance Rules](#document-issuance-rules)
+* [Document Categories](#document-categories)
+* [Revocation And Status Checking](#revocation-and-status-checking)
+* [RQES Configuration](#rqes-configuration)
+* [ConfigLogic](#configlogic)
+* [Deep Links And Redirect URIs](#deep-links-and-redirect-uris)
+* [Entitlements, Plist Values, And Permissions](#entitlements-plist-values-and-permissions)
+* [Network Security](#network-security)
+* [Local Development With Self-Signed Certificates](#local-development-with-self-signed-certificates)
+* [Storage And Local Data Protection](#storage-and-local-data-protection)
+* [Logging And Audit](#logging-and-audit)
+* [Screenshots, Screen Recording, And Sensitive UI](#screenshots-screen-recording-and-sensitive-ui)
+* [Authentication And Biometrics](#authentication-and-biometrics)
+* [Analytics And Telemetry](#analytics-and-telemetry)
+* [App Attest, DeviceCheck, And App Hardening](#app-attest-devicecheck-and-app-hardening)
+* [Hardening Path A: Apple App Attest And DeviceCheck](#hardening-path-a-apple-app-attest-and-devicecheck)
+* [Hardening Path B: Commercial iOS Protection](#hardening-path-b-commercial-ios-protection)
+* [Hardening Path C: Manual RASP Controls](#hardening-path-c-manual-rasp-controls)
+* [OWASP MASVS Production Alignment](#owasp-masvs-production-alignment)
+* [Production Backend Requirements](#production-backend-requirements)
+* [Build, Install, And Use In Production Testing](#build-install-and-use-in-production-testing)
+* [Production Test Matrix](#production-test-matrix)
+* [Release Evidence Package](#release-evidence-package)
+* [Pre-Release Automated Checks](#pre-release-automated-checks)
+* [Operational Readiness](#operational-readiness)
+* [Incident Scenarios To Rehearse](#incident-scenarios-to-rehearse)
+* [User-Facing Production Behavior](#user-facing-production-behavior)
+* [Final Go-Live Gate](#final-go-live-gate)
+* [Reference Links](#reference-links)
+
 ## Audience
 
 This guide is for technical teams that will operate or integrate a production wallet, including:
@@ -341,7 +392,7 @@ Surfaces to review before release:
 | Surface | Where | Notes |
 | --- | --- | --- |
 | Color palette (light and dark) | `Modules/logic-resources/Sources/Resources/Color.xcassets` | Brand colorsets plus system/semantic overrides; add an `accent` colorset. Set both appearances and verify contrast. |
-| Typography and fonts | `Modules/logic-resources/Sources/Resources/` + `WalletFontConfig.plist` | Default is the system font (San Francisco). Add font files and the plist only if your brand requires a custom face. |
+| Typography and fonts | `Modules/logic-resources/Sources/Resources/` (+ a `WalletFontConfig.plist` you add) | Default is the system font (San Francisco). No font files or `WalletFontConfig.plist` ship by default; add them only if your brand requires a custom face. |
 | Shapes | `Modules/logic-resources/Sources/Manager/ShapeManager.swift` | Corner radii. |
 | In-app logos | `Modules/logic-resources/Sources/Resources/Images.xcassets` (`logo`, `EUDI-text`, illustrations) | Used on the splash and content headers; keep the imageset names. |
 | App icon | `Wallet/Assets.xcassets` — `AppIcon` and `AppIconDev` | One per build variant. |
@@ -884,11 +935,14 @@ Certificate governance:
 
 ## Issuer Configuration: `issuersConfig`
 
-Current demo code contains issuer URLs such as:
+Current demo/dev code contains issuer URLs such as (two per build variant — a primary at `order: 1`
+and a backend at `order: 0`):
 
 ```swift
+// .DEMO
 credentialIssuerURL: "https://issuer.eudiw.dev"
 credentialIssuerURL: "https://issuer-backend.eudiw.dev"
+// .DEV
 credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev"
 credentialIssuerURL: "https://dev.issuer-backend.eudiw.dev"
 ```
@@ -1165,8 +1219,7 @@ Production guidance:
 Files to review:
 
 * `Wallet/Wallet.plist`
-* `Modules/logic-ui/Sources/Controller/DeepLinkController.swift`
-* `Modules/logic-ui/Sources/Extension/DeepLink+Extensions.swift`
+* `Modules/logic-ui/Sources/Controller/DeepLinkController.swift` (the `DeepLink.Action` enum and `parseType(with:and:)` scheme parsing)
 * Issuance and presentation interactors that consume parsed deep links.
 
 ## Entitlements, Plist Values, And Permissions
@@ -1182,7 +1235,7 @@ Production review areas:
 | Keychain groups | Main and extension entitlements | Confirm the runtime access group matches app and extension needs. |
 | Mobile document types | Main app entitlements | Include only production-supported document types. |
 | Encryption export flag | `ITSAppUsesNonExemptEncryption` in `Wallet.plist` | Confirm with legal/export compliance. Do not assume the sample value applies. |
-| Privacy manifest | `PrivacyInfo.xcprivacy` | Add and audit privacy manifests for required-reason APIs, tracking domains, data collection, and SDK declarations. |
+| Privacy manifest | Not present — add `PrivacyInfo.xcprivacy` | No privacy manifest ships in the repo today. Add and audit one for required-reason APIs, tracking domains, data collection, and SDK declarations. |
 
 Privacy manifest note:
 
@@ -1328,10 +1381,12 @@ Production gaps to address:
 
 ### SwiftData Store
 
-Current local storage uses SwiftData and chooses the App Group container when available:
+Current local storage uses SwiftData and chooses the App Group container when available. The
+container identifier is built by `Bundle.getAppGroupIdentifier()` in
+`Modules/logic-business/Sources/Extension/Bundle+Extensions.swift`:
 
 ```swift
-return "group.\(mainBundleID)"
+return "group.\(mainAppBundleID)"
 ```
 
 Production tasks:
@@ -1759,7 +1814,7 @@ Project-specific actions:
 * Review WalletKit storage and Keychain configuration.
 * Review SwiftData store location and file protection.
 * Review App Group container contents.
-* Add PIN lockout or rate limiting.
+* Confirm the shipped PIN lockout / rate limiting (`PinThrottleController`) meets policy; tune `maxFailedPinAttempts` / `pinLockoutDurations` as needed.
 * Redact or remove file logging.
 * Add tests that inspect app data after flows.
 
@@ -1796,7 +1851,7 @@ Controls to evidence:
 
 Project-specific actions:
 
-* Add PIN attempt lockout.
+* Review and tune the shipped PIN attempt lockout (`PinThrottleController`); see [PIN Throttle And Lockout](#pin-throttle-and-lockout).
 * Decide device credential fallback policy.
 * Consider WalletKit user authentication requirements.
 * Test biometric enrollment changes.
@@ -2104,6 +2159,7 @@ serverTrust
 completionHandler(.useCredential
 rqes://oauth/callback
 eu.europa.ec.euidi.dev
+eu.europa.ec.euidi
 ```
 
 Also check:
