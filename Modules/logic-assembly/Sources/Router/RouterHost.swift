@@ -104,7 +104,7 @@ final class RouterHostImpl: RouterHost {
 
   public func getToolbarConfig() -> UIConfig.ToolBar {
     guard let screenKey = self.getCurrentScreen()?.info.key else {
-      return .init(Theme.shared.color.onSurface)
+      return .init(Theme.shared.color.primaryLabel)
     }
 
     return uiConfigLogic.backgroundColorForScreenDictionary[screenKey]

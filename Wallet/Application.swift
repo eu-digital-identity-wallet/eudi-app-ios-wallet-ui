@@ -23,7 +23,7 @@ struct Application: App {
   @Environment(\.scenePhase) var scenePhase
 
   @State var blurType: BlurType = .none
-  @State var toolbarConfig: UIConfig.ToolBar = .init(Theme.shared.color.surface)
+  @State var toolbarConfig: UIConfig.ToolBar = .init(Theme.shared.color.secondaryLabel)
 
   private let routerHost: RouterHost
   private let deepLinkController: DeepLinkController

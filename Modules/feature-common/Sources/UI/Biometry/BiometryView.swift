@@ -88,19 +88,18 @@ private func content(
     title: viewState.config.title,
     accessibilityTitle: BiometryLocators.biometryScreenTitle,
     titleWeight: .bold,
-    caption: viewState.areBiometricsEnabled
-    ? viewState.config.caption
-    : viewState.config.quickPinOnlyCaption,
+    caption: biometryTitleCaption(viewState: viewState),
     accessibilityCaption: BiometryLocators.biometryScreenPinText,
-    titleColor: Theme.shared.color.onSurface,
+    titleColor: Theme.shared.color.primaryLabel,
     topSpacing: viewState.config.displayNavigationBar && viewState.isCancellable
       ? .withToolbar
       : .withoutToolbar
   )
 
-  VSpacer.large()
+  VSpacer.small()
 
   pinView(
+    pinTitle: biometryPinTitle(viewState: viewState),
     uiPinInputField: uiPinInputField,
     quickPinSize: viewState.quickPinSize,
     areBiometricsEnabled: viewState.areBiometricsEnabled,
@@ -124,8 +123,32 @@ private func content(
 }
 
 @MainActor
+private func biometryTitleCaption(viewState: BiometryState) -> LocalizableStringKey? {
+  guard
+    viewState.config.pinTextFieldTitle == nil,
+    !viewState.config.isPreAuthorization
+  else {
+    return nil
+  }
+  return viewState.areBiometricsEnabled
+    ? viewState.config.caption
+    : viewState.config.quickPinOnlyCaption
+}
+
+@MainActor
+private func biometryPinTitle(viewState: BiometryState) -> LocalizableStringKey? {
+  if let pinTextFieldTitle = viewState.config.pinTextFieldTitle {
+    return pinTextFieldTitle
+  }
+  return viewState.areBiometricsEnabled
+    ? viewState.config.caption
+    : viewState.config.quickPinOnlyCaption
+}
+
+@MainActor
 @ViewBuilder
 private func pinView(
+  pinTitle: LocalizableStringKey?,
   uiPinInputField: Binding<String>,
   quickPinSize: Int,
   areBiometricsEnabled: Bool,
@@ -138,11 +161,12 @@ private func pinView(
   VStack(spacing: .zero) {
 
     PinTextFieldView(
+      pinTitle: pinTitle,
       numericText: uiPinInputField,
       maxDigits: quickPinSize,
       isSecureEntry: true,
       canFocus: .constant(!areBiometricsEnabled && !isLockedOut),
-      shouldUseFullScreen: false,
+      shouldUseFullScreen: true,
       hasError: hasError,
       isDisabled: isLockedOut
     )
@@ -153,7 +177,7 @@ private func pinView(
       HStack {
         Text(lockoutMessage)
           .typography(Theme.shared.font.bodySmall)
-          .foregroundColor(Theme.shared.color.error)
+          .foregroundColor(Theme.shared.color.red)
           .multilineTextAlignment(.leading)
         Spacer()
       }
@@ -161,7 +185,7 @@ private func pinView(
       HStack {
         Text(error)
           .typography(Theme.shared.font.bodySmall)
-          .foregroundColor(Theme.shared.color.error)
+          .foregroundColor(Theme.shared.color.red)
         Spacer()
       }
     }

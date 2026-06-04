@@ -13,6 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import SwiftUI
 import logic_ui
 import logic_core
 import logic_authentication
@@ -27,9 +28,19 @@ struct SettingsViewState: ViewState {
   let changelogUrl: URL?
 }
 
+@Observable
 final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsViewState> {
+  var isBatchCounterEnabled: Bool = false {
+    didSet {
+      guard !isHydratingBatchCounter, oldValue != isBatchCounterEnabled else { return }
+      updateBatchCounter(isBatchCounterEnabled)
+    }
+  }
 
   var biometryError: SystemBiometryError?
+
+  @ObservationIgnored
+  private var isHydratingBatchCounter = false
 
   private let interactor: SettingsInteractor
   private let walletKitController: WalletKitController
@@ -99,13 +110,24 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     let isBiometryAvailable = await interactor.isBiometryAvailable()
     let isBiometryEnabled = await interactor.isBiometryEnabled()
 
+    isHydratingBatchCounter = true
+    isBatchCounterEnabled = await interactor.isBatchCounterEnabled()
+    isHydratingBatchCounter = false
+
     var items: [SettingMenuItemUIModel] = []
 
     if isBiometryAvailable {
       items.append(
         .init(
           title: .loginWithBiometrics,
+          icon: Theme.shared.image.faceIdMenu,
           isToggle: true,
+          toggleBinding: Binding(
+            get: { [weak self] in
+              self?.viewState.isBiometryEnabled ?? false
+            },
+            set: { _ in }
+          ),
           action: { [weak self] in
             guard let self else { return }
             self.setBiometryEnabled(!self.viewState.isBiometryEnabled)
@@ -116,7 +138,26 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
 
     items.append(
       .init(
+        title: .batchIssuanceCounter,
+        icon: Theme.shared.image.batchCounter,
+        showDivider: true,
+        isToggle: true,
+        toggleBinding: Binding(
+          get: { [weak self] in
+            self?.isBatchCounterEnabled ?? false
+          },
+          set: { [weak self] newValue in
+            self?.isBatchCounterEnabled = newValue
+          }
+        ),
+        action: {}
+      )
+    )
+
+    items.append(
+      .init(
         title: .retrieveLogs,
+        icon: Theme.shared.image.retrieveLogs,
         isShareLink: true,
         action: {}
       )
@@ -126,6 +167,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
       items.append(
         .init(
           title: .changelog,
+          icon: Theme.shared.image.changelog,
           showDivider: false,
           action: { changelogUrl.open() }
         )
@@ -140,6 +182,12 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
         logsUrl: logsUrl,
         changelogUrl: changelogUrl
       )
+    }
+  }
+
+  private func updateBatchCounter(_ isEnabled: Bool) {
+    Task {
+      await interactor.setBatchCounter(isEnabled: isEnabled)
     }
   }
 }

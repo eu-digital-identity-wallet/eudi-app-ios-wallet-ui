@@ -266,17 +266,9 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
 
   func toolbarContent() -> ToolBarContent {
     .init(
-      trailingActions: [
-        .init(
-          title: .issueButton,
-          accessibilityLocator: DocumentOfferLocators.issueButton
-        ) {
-          self.onIssueDocuments()
-        }
-      ],
       leadingActions: [
         .init(
-          title: .cancelButton,
+          image: Theme.shared.image.xmark,
           accessibilityLocator: DocumentOfferLocators.cancelButton
         ) {
           self.onPop()

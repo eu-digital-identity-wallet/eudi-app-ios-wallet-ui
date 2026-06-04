@@ -27,7 +27,7 @@ public struct CardViewWithLogoView: View {
 
   public init(
     cornerRadius: CGFloat = 13,
-    backgroundColor: Color = Theme.shared.color.surfaceContainer,
+    backgroundColor: Color = Theme.shared.color.groupedBackground,
     icon: RemoteImageView.ImageContentOption = .none,
     title: LocalizableStringKey,
     isVerified: Bool = false,
@@ -72,7 +72,7 @@ public struct CardViewWithLogoView: View {
 
         Text(title)
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundStyle(Theme.shared.color.onSurface)
+          .foregroundStyle(Theme.shared.color.primaryLabel)
           .if(isVerified) {
             $0.leftImage(
               image: Theme.shared.image.relyingPartyVerified,
@@ -116,7 +116,7 @@ public struct CardViewWithLogoView: View {
     )
 
     CardViewWithLogoView(
-      backgroundColor: Theme.shared.color.tertiary,
+      backgroundColor: Theme.shared.color.secondaryGroupedBackground,
       icon: .image(
         Image(
           systemName: "building.2.crop.circle.fill"

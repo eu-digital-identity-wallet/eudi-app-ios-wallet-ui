@@ -25,17 +25,18 @@ public struct ThemeConfiguration: Sendable {
   let font: TypographyManagerProtocol
   let dimension: DimensionManagerProtocol
 
-  init(
+  public init(
     color: ColorManagerProtocol? = nil,
     image: ImageManagerProtocol? = nil,
     shape: ShapeManagerProtocol? = nil,
     font: TypographyManagerProtocol? = nil,
     dimension: DimensionManagerProtocol? = nil
   ) {
+    Bundle.registerModuleFonts()
     self.color = color ?? ColorManager(bundle: .assetsBundle)
     self.image = image ?? ImageManager(bundle: .assetsBundle)
     self.shape = shape ?? ShapeManager()
-    self.font = font ?? TypographyManager()
+    self.font = font ?? TypographyManager(bundle: .assetsBundle)
     self.dimension = dimension ?? DimensionManager()
   }
 }

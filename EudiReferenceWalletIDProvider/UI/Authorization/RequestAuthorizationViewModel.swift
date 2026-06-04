@@ -131,6 +131,7 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
       navigationTitle: .biometryConfirmRequest,
       caption: .requestDataShareBiometryCaption,
       quickPinOnlyCaption: .requestDataShareQuickPinCaption,
+      pinTextFieldTitle: .enterYourPin,
       navigationSuccessType: .pop,
       navigationBackType: nil,
       isPreAuthorization: false,

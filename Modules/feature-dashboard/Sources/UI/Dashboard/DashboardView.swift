@@ -51,8 +51,8 @@ struct DashboardView<Router: RouterHost>: View {
             viewModel.viewState.documentTab
           case .home:
             viewModel.viewState.homeTab
-          case .transactions:
-            viewModel.viewState.transactionTab
+          case .history:
+            viewModel.viewState.historyTab
           }
         },
         selectedTab: $viewModel.selectedTab
@@ -120,19 +120,20 @@ private func content(
       }
       .tag(SelectedTab.documents)
 
-    tabView(.transactions)
+    tabView(.history)
       .tabItem {
         Label(
-          .transactions,
-          systemImage: "arrow.left.arrow.right"
+          .historyTitle,
+          systemImage: "clock.fill"
         )
         .accessibilityLocator(
-          TabViewLocators.transactions,
-          label: LocalizableStringKey.transactions.toString
+          TabViewLocators.history,
+          label: LocalizableStringKey.historyTitle.toString
         )
       }
-      .tag(SelectedTab.transactions)
+      .tag(SelectedTab.history)
   }
+  .tint(Theme.shared.color.accent)
 }
 
 @MainActor
@@ -147,16 +148,16 @@ private func revokedNotificationList<Router: RouterHost>(
       HStack {
         Text(.custom(key))
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.onSurface)
+          .foregroundColor(Theme.shared.color.primaryLabel)
 
         Spacer()
 
         Theme.shared.image.chevronRight
           .renderingMode(.template)
-          .foregroundStyle(Theme.shared.color.primary)
+          .foregroundStyle(Theme.shared.color.accent)
       }
       .padding()
-      .background(Theme.shared.color.surfaceContainer)
+      .background(Theme.shared.color.groupedBackground)
       .clipShape(.rect(cornerRadius: 8))
       .onTapGesture {
         onDocumentDetails(value)
@@ -170,7 +171,7 @@ private func revokedNotificationList<Router: RouterHost>(
   ContentScreenView(
     padding: .zero,
     canScroll: false,
-    background: Theme.shared.color.surface
+    background: Theme.shared.color.background
   ) {
     content(
       tabView: {_ in EmptyView().eraseToAnyView()},

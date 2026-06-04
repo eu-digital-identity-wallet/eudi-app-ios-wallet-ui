@@ -56,7 +56,7 @@ private func content(
     HStack {
       Text(.proximityConnectivityCaption)
         .typography(Theme.shared.font.bodyLarge)
-        .foregroundStyle(Theme.shared.color.onSurface)
+        .foregroundStyle(Theme.shared.color.primaryLabel)
       Spacer()
     }
     .frame(maxWidth: .infinity, alignment: .leading)
@@ -96,7 +96,7 @@ private func nfcFooter(contentSize: CGFloat) -> some View {
 
     Text(.proximityConnectionBleDescription)
       .typography(Theme.shared.font.bodyMedium)
-      .foregroundStyle(Theme.shared.color.onSurface)
+      .foregroundStyle(Theme.shared.color.primaryLabel)
   }
 }
 

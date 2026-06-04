@@ -18,7 +18,7 @@ import logic_ui
 public enum TabViewLocators: String, LocatorType {
   case home
   case documents
-  case transactions
+  case history
 
   public var id: String {
     switch self {
@@ -26,8 +26,8 @@ public enum TabViewLocators: String, LocatorType {
       return "home_tab"
     case .documents:
       return "documents_tab"
-    case .transactions:
-      return "transactions_tab"
+    case .history:
+      return "history_tab"
     }
   }
 

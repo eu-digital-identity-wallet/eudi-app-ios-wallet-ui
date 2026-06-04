@@ -65,9 +65,9 @@ public struct IssuerDocumentDetailsCardUIModel: Equatable, Sendable {
   var dateTextColor: Color {
     switch documentState {
     case .issued:
-      return Theme.shared.color.onSurfaceVariant
+      return Theme.shared.color.secondaryLabel
     case .revoked:
-      return Theme.shared.color.error
+      return Theme.shared.color.red
     }
   }
 

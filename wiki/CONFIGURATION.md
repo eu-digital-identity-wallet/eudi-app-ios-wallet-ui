@@ -22,7 +22,7 @@ The application allows the configuration of:
 Via the *WalletKitConfig* protocol inside the logic-core module.
 
 ```swift
-public protocol WalletKitConfig {
+protocol WalletKitConfig: Sendable {
   /**
    * VCI Configuration
    */
@@ -41,7 +41,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var issuersConfig: [String: VciConfig] {
-  let openId4VciConfigurations: [OrderedVciConfig] = {
+  let openId4VciConfigurations: [VciConfig] = {
     switch configLogic.appBuildVariant {
       case .DEMO:
         return [
@@ -119,7 +119,7 @@ final class WalletProviderAttestationConfigImpl: WalletProviderAttestationConfig
 Via the *WalletKitConfig* protocol inside the logic-core module.
 
 ```swift
-public protocol WalletKitConfig {
+protocol WalletKitConfig: Sendable {
   /**
    * Reader Configuration
    */
@@ -129,7 +129,7 @@ public protocol WalletKitConfig {
 
 The *WalletKitConfigImpl* implementation of the *WalletKitConfig* protocol can be located inside the logic-core module.
 
-The application's IACA certificates are located [here](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui/tree/main/Wallet/Sample)
+The reader/IACA trust-anchor certificates ship with this repo as DER files in [`Wallet/Certificate`](../Wallet/Certificate) (e.g. `pidissuerca02_eu.der`, `r45_staging.der`). The file names — without the `.der` extension — must match the `certificates` array in `WalletKitConfigImpl.trustedReaderRootCertificates`, which loads each via `loadCertificate(_:)`. Replace these with your production trust anchors before go-live.
 
 ```swift
   var trustedReaderRootCertificates: [x5chain] {
@@ -154,7 +154,7 @@ The application's IACA certificates are located [here](https://github.com/eu-dig
 Via the *WalletKitConfig* protocol inside the logic-core module.
 
 ```swift
-public protocol WalletKitConfig {
+protocol WalletKitConfig: Sendable {
   /**
    * VP Configuration
    */
@@ -197,29 +197,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
 5. RQES
 
-Via the *RQESConfig* struct, which implements the *EudiRQESUiConfig* protocol from the RQESUi SDK, inside the logic-business module.
+Via the *RQESConfig* class, which implements the *EudiRQESUiConfig* protocol from the RQESUi SDK, inside the logic-business module.
+
+The SDK protocol defines four members. `rssps` and `printLogs` are required; `translations` and
+`theme` have SDK-provided default implementations, so the wallet may omit them (and the reference app
+does — it overrides neither):
 
 ```swift
-final class RQESConfig: EudiRQESUiConfig {
-
-  let buildVariant: AppBuildVariant
-  let buildType: AppBuildType
-
-  init(buildVariant: AppBuildVariant, buildType: AppBuildType) {
-    self.buildVariant = buildVariant
-    self.buildType = buildType
-  }
-
-  var rssps: [QTSPData]
-
-  // Optional. Default is false.
-  var printLogs: Bool
-
-  // Optional. Default English translations will be used if not set.
-  var translations: [String : [LocalizableKey : String]]
-
-  // Optional. Default theme will be used if not set.
-  var theme: ThemeProtocol
+public protocol EudiRQESUiConfig: Sendable {
+  var rssps: [QTSPData] { get }                                  // Required.
+  var printLogs: Bool { get }                                    // Required.
+  var translations: [String: [LocalizableKey: String]] { get }  // Optional — defaults to [:] (English).
+  var theme: ThemeProtocol { get }                               // Optional — defaults to the SDK theme.
 }
 ```
 
@@ -324,9 +313,10 @@ requirements are documented in the [production go-live guide](GO_LIVE.md).
 
 According to the specifications, issuance, presentation, and RQES require deep-linking for the same device flows.
 
-If you want to change or add your own, you can do it by adjusting the *Wallet.plist* file.
+If you want to change or add your own, you can do it by adjusting the *Wallet.plist* file. The URL schemes live under the `CFBundleURLTypes` key:
 
 ```xml
+<key>CFBundleURLTypes</key>
 <array>
 	<dict>
 		<key>CFBundleTypeRole</key>
@@ -350,6 +340,7 @@ If you want to change or add your own, you can do it by adjusting the *Wallet.pl
 Let's assume you want to add a new one for the credential offer (e.g., custom-my-offer://), the *Wallet.plist* should look like this:
 
 ```xml
+<key>CFBundleURLTypes</key>
 <array>
 	<dict>
 		<key>CFBundleTypeRole</key>
@@ -373,11 +364,11 @@ Let's assume you want to add a new one for the credential offer (e.g., custom-my
 
 After the *Wallet.plist* adjustment, you must also adjust the *DeepLinkController* inside the logic-ui module.
 
-Current Implementation:
+Current Implementation (simplified — the real enum also defines the private `name` and `getSchemas(with:)` helpers that `parseType` relies on):
 
 ```swift
 public extension DeepLink {
-  enum Action: String, Equatable {
+  enum Action: String, Equatable, Sendable {
 
     case openid4vp
 	case haip_vp
@@ -411,7 +402,7 @@ Adjusted with the new schema:
 
 ```swift
 public extension DeepLink {
-  enum Action: String, Equatable {
+  enum Action: String, Equatable, Sendable {
 
     case openid4vp
 	case haip_vp
@@ -454,7 +445,19 @@ For instructions on working with self-signed certificates during local developme
 
 ## Theme configuration
 
-The application allows the configuration of:
+Branding and theming are split across three layers:
+
+1. **The SwiftUI theme** (`logic-resources` module) — colors, typography/fonts, shapes, dimensions,
+   and in-app images, all reachable through `Theme.shared` (a `ThemeProtocol`) and its five managers
+   (`color`, `image`, `shape`, `font`, `dimension`).
+2. **Branding assets** — app icon, app display name, bundle id, splash/launch screen, deep-link
+   schemes, and brand strings, defined in the `Wallet/` app target (`project.pbxproj`,
+   `Assets.xcassets`, `Wallet.plist`, `Config/*.xcconfig`) plus the `logic-resources` images and
+   strings.
+3. **Sub-SDK theming** — the RQES signing UI carries its own theme and translations (see the RQES
+   subsection under [General configuration](#general-configuration)).
+
+The five themeable aspects of the SwiftUI theme are described by the *ThemeConfiguration* struct:
 
 1. Colors
 2. Images
@@ -462,7 +465,16 @@ The application allows the configuration of:
 4. Fonts
 5. Dimension
 
-Via the *ThemeConfiguration* struct.
+> The theme is applied at runtime through `Theme.shared`, which is built from the reference managers
+> in `Modules/logic-resources/Sources/Manager/`. Those managers read their values from the asset
+> catalogs in `logic-resources` (and, for fonts, an optional `WalletFontConfig.plist`). For most
+> rebrands you edit the asset catalogs directly; swapping the whole theme programmatically (via
+> `Theme.config(...)` with a custom `ThemeConfiguration`) is supported for advanced/runtime setups
+> but **not** used by default — see **[THEMING.md](THEMING.md)**.
+
+For a complete, step-by-step rebranding and retheming guide — covering every file you need to change,
+a quick-start checklist, colors (light/dark), fonts, logos, the app icon, app name, splash screen,
+RQES theming, and a production/accessibility checklist — see **[THEMING.md](THEMING.md)**.
 
 ## Pin Storage configuration
 
@@ -472,7 +484,7 @@ The application allows the configuration of the PIN storage. You can configure t
 2. From where the pin will be retrieved
 3. Pin matching and validity
 
-Via the *LogicAuthAssembly* inside the logic-authentication module.
+Via the *LogicAuthAssembly* inside the logic-authentication module. The assembly already registers the full authentication stack — the default `PinStorageProvider` is `KeychainPinStorageProvider`:
 
 ```swift
 public final class LogicAuthAssembly: Assembly {
@@ -480,11 +492,21 @@ public final class LogicAuthAssembly: Assembly {
   public init() {}
 
   public func assemble(container: Container) {
+    container.register(AuthenticationConfig.self) { _ in AuthenticationConfigImpl() }
+      .inObjectScope(ObjectScope.container)
+
+    container.register(PinStorageProvider.self) { r in
+      KeychainPinStorageProvider(keyChainController: r.force(KeyChainController.self))
+    }
+    .inObjectScope(ObjectScope.graph)
+
+    // PinStorageController, PinThrottleProvider, PinThrottleController, and
+    // SystemBiometryController are also registered here.
   }
 }
 ```
 
-You can provide your storage implementation by implementing the *PinStorageProvider* protocol and then providing the implementation inside the Assembly DI Graph *LogicAuthAssembly*
+To use your own storage, implement the *PinStorageProvider* protocol and **replace** the `KeychainPinStorageProvider` registration above inside *LogicAuthAssembly*
 
 Implementation Example:
 
@@ -590,7 +612,7 @@ The application allows the configuration of multiple analytics providers. You ca
 Via the *AnalyticsConfig* and *LogicAnalyticsAssembly* inside the logic-analytics module.
 
 ```swift
-protocol AnalyticsConfig {
+protocol AnalyticsConfig: Sendable {
   /**
    * Supported Analytics Provider, e.g. Firebase
    */
@@ -598,9 +620,7 @@ protocol AnalyticsConfig {
 }
 ```
 
-You can implement the *AnalyticsProvider* protocol and add it to your *AnalyticsConfigImpl* analyticsProviders variable.
-You will also need the provider's token/key, thus requiring a [String: AnalyticsProvider] configuration.
-The project uses Dependency Injection (DI), which requires adjusting the *LogicAnalyticsAssembly* graph to provide the configuration.
+You can implement the *AnalyticsProvider* protocol and add it to your *AnalyticsConfigImpl* `analyticsProviders` variable (the value typically carries the provider's token/key). You do **not** register `AnalyticsConfigImpl` in the DI graph yourself: `LogicAnalyticsAssembly` discovers it at runtime by name via the Objective-C runtime (`NSClassFromString("AnalyticsConfigImpl")`) and registers it automatically. For this to work, `AnalyticsConfigImpl` **must be an `NSObject` subclass named exactly `AnalyticsConfigImpl`** — a `struct` fails the runtime cast and analytics is silently skipped.
 
 Implementation Example:
 
@@ -631,20 +651,26 @@ struct AppCenterProvider: AnalyticsProvider {
 Config Example:
 
 ```swift
-struct AnalyticsConfigImpl: AnalyticsConfig {
+final class AnalyticsConfigImpl: NSObject, AnalyticsConfig {
   var analyticsProviders: [String: AnalyticsProvider] {
     return ["YOUR_OWN_KEY": AppCenterProvider()]
   }
 }
 ```
 
-Config Construction via DI Graph Example:
+`LogicAnalyticsAssembly` then registers it for you (no manual `container.register` call needed):
 
 ```swift
-container.register(AnalyticsConfig.self) { _ in
- AnalyticsConfigImpl()
+private func registerConfig(with container: Container) {
+  guard
+    let object = NSClassFromString("AnalyticsConfigImpl") as? NSObject.Type,
+    let config = object.init() as? AnalyticsConfig
+  else {
+    return
+  }
+  container.register(AnalyticsConfig.self) { _ in config }
+    .inObjectScope(ObjectScope.graph)
 }
-.inObjectScope(ObjectScope.graph)
 ```
 
 ## Document Provider extension configuration

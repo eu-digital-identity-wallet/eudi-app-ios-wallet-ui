@@ -84,14 +84,14 @@ public extension WrapIconView {
   Group {
     WrapIconView(
       title: LocalizableStringKey.addDoc,
-      textColor: Theme.shared.color.onSurface,
+      textColor: Theme.shared.color.primaryLabel,
       systemIcon: "calendar"
     )
     .lightModePreview()
 
     WrapIconView(
       title: LocalizableStringKey.addDoc,
-      textColor: Theme.shared.color.onSurface,
+      textColor: Theme.shared.color.primaryLabel,
       systemIcon: "calendar"
     )
     .darkModePreview()

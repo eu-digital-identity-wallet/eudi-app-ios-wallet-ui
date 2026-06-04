@@ -49,7 +49,7 @@ private func content(
   VStack(spacing: SPACING_LARGE_MEDIUM) {
     Text(.addDocumentsToWallet)
       .typography(Theme.shared.font.bodyLarge)
-      .foregroundStyle(Theme.shared.color.onSurface)
+      .foregroundStyle(Theme.shared.color.primaryLabel)
       .accessibilityLocator(IssuanceOptionLocators.optionScreenTitle)
 
     VStack(spacing: SPACING_MEDIUM_SMALL) {

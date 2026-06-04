@@ -75,10 +75,12 @@ final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuVie
         items: [
           .init(
             title: .changeQuickPinOption,
+            icon: Theme.shared.image.changePin,
             action: self.updatePin()
           ),
           .init(
             title: .settings,
+            icon: Theme.shared.image.gearshape,
             showDivider: false,
             action: self.settings()
           )

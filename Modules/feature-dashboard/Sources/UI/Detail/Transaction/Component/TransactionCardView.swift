@@ -23,7 +23,7 @@ public struct TransactionCardView: View {
   private let isLoading: Bool
 
   public init(
-    backgroundColor: Color = Theme.shared.color.surfaceContainer,
+    backgroundColor: Color = Theme.shared.color.groupedBackground,
     transactionDetailsCardData: TransactionDetailsCardData,
     isLoading: Bool = false
   ) {
@@ -39,11 +39,11 @@ public struct TransactionCardView: View {
         VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
           Text(transactionDetailsCardData.transactionTypeLabel)
             .typography(Theme.shared.font.labelSmall)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .foregroundStyle(Theme.shared.color.secondaryLabel)
           if let relyingPartyName = transactionDetailsCardData.relyingPartyName {
             Text(relyingPartyName)
               .typography(Theme.shared.font.bodyLarge)
-              .foregroundStyle(Theme.shared.color.onSurface)
+              .foregroundStyle(Theme.shared.color.primaryLabel)
               .if(transactionDetailsCardData.relyingPartyIsVerified ?? false) {
                 $0.rightImage(
                   image: Theme.shared.image.verified,
@@ -57,25 +57,25 @@ public struct TransactionCardView: View {
           VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
             Text(.transactionDetailsScreenCardDateLabel)
               .typography(Theme.shared.font.bodyMedium)
-              .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+              .foregroundStyle(Theme.shared.color.secondaryLabel)
               .fontWeight(.semibold)
             Text(transactionDetailsCardData.transactionDate)
               .typography(Theme.shared.font.bodyMedium)
-              .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+              .foregroundStyle(Theme.shared.color.secondaryLabel)
           }
 
           Spacer()
 
           HStack(spacing: SPACING_SMALL) {
             Text(transactionDetailsCardData.transactionStatusLabel)
-              .typography(Theme.shared.font.labelLarge)
-              .foregroundStyle(Theme.shared.color.surfaceContainerLowest)
+              .typography(Theme.shared.font.labelMedium)
+              .foregroundStyle(Theme.shared.color.primaryLabel)
           }
           .padding(.horizontal, SPACING_SMALL)
           .padding(.vertical, SPACING_SMALL)
-          .background(transactionDetailsCardData.transactionIsCompleted ? Theme.shared.color.success : Theme.shared.color.error)
+          .background(transactionDetailsCardData.transactionIsCompleted ? Theme.shared.color.green : Theme.shared.color.red)
           .cornerRadius(8)
-          .foregroundStyle(Theme.shared.color.onPrimary)
+          .foregroundStyle(Theme.shared.color.primaryLabel)
         }
       }
       .padding(.all, SPACING_MEDIUM)
@@ -92,7 +92,7 @@ public struct TransactionCardView: View {
         transactionStatusLabel: .custom("Completed"),
         transactionIsCompleted: true,
         transactionDate: .custom("16 February 2024"),
-        relyingPartyName: .custom("Hellenic Government"),
+        relyingPartyName: .custom("TravelBook Inc."),
         relyingPartyIsVerified: true
       )
     )

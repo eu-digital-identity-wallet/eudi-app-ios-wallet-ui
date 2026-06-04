@@ -1,5 +1,5 @@
 {
-  "originHash" : "efbb800dea2433e7fe58b8e32edd405fcecae4ab2e704148dcd580c2cf33a365",
+  "originHash" : "c80180e2f112d0f70341139a2c21e9600b82f4578f6613ddbb2ec1594aa0d3bd",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
       "state" : {
-        "revision" : "fad35de62713feac24eb19b895705ea2fa6eb5c3",
-        "version" : "2.2.1"
+        "revision" : "8db209b9a5ba58ac6be7d542b07bb72b49baa587",
+        "version" : "2.3.0"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "711161de6542cae30213051065c415ad1764036a",
-        "version" : "0.38.3"
+        "revision" : "2491fb8ce5f85193e583b006400af94434e0fcda",
+        "version" : "0.39.0"
       }
     },
     {
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui.git",
       "state" : {
-        "revision" : "8a2503a194cc1ccb5d9e6ed35c728bd7694b80d0",
-        "version" : "0.4.1"
+        "revision" : "8c869a56bd87b62a5311786b15aa8b58bff38dd8",
+        "version" : "0.4.2"
       }
     },
     {
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "c6490d3ec5e0e777d0736d38a644ed2f88b6894e",
-        "version" : "0.30.7"
+        "revision" : "9524e79bdcb522ec587af8faefd82cf35ee18ab1",
+        "version" : "0.31.0"
       }
     },
     {

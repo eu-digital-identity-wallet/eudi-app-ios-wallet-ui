@@ -63,6 +63,7 @@ private func content(
           ShareLink(item: fileUrl) {
             TappableCellView(
               title: .retrieveLogs,
+              icon: item.icon,
               showDivider: item.showDivider,
               useOverlay: false,
               action: {}
@@ -70,20 +71,21 @@ private func content(
           }
         }
       } else if item.isToggle {
-        TappableCellView(
-          title: item.title,
-          showDivider: item.showDivider,
-          isToggle: true,
-          isOn: Binding(
-            get: { viewState.isBiometryEnabled },
-            set: { _ in }
-          ),
-          useOverlay: false,
-          action: item.action
-        )
+        if let toggleBinding = item.toggleBinding {
+          TappableCellView(
+            title: item.title,
+            icon: item.icon,
+            showDivider: item.showDivider,
+            isToggle: true,
+            isOn: toggleBinding,
+            useOverlay: false,
+            action: item.action
+          )
+        }
       } else {
         TappableCellView(
           title: item.title,
+          icon: item.icon,
           showDivider: item.showDivider,
           action: item.action
         )
@@ -122,11 +124,12 @@ private func content(
   ContentScreenView(
     padding: .zero,
     canScroll: false,
-    background: Theme.shared.color.surface
+    background: Theme.shared.color.background
   ) {
     VStack(spacing: SPACING_MEDIUM_SMALL) {
       TappableCellView(
         title: .loginWithBiometrics,
+        icon: Theme.shared.image.faceIdMenu,
         showDivider: true,
         isToggle: true,
         isOn: .constant(true),
