@@ -56,6 +56,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case changeQuickPinOption
   case quickPinSetTitle
   case quickPinEnterPin
+  case quickPinNavigationEnterPin
   case quickPinConfirmPin
   case quickPinSetCaptionOne
   case quickPinSetCaptionTwo
@@ -135,7 +136,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case itemsNotFoundInStorage
   case home
   case documents
-  case transactions
+  case historyTitle
   case authenticateAuthoriseTransactions
   case electronicallySignDigitalDocuments
   case learnMore
@@ -208,6 +209,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case filterByDate
   case startDate
   case endDate
+  case resetDates
   case relyingParty
   case signedDocuments
   case transactionInformation
@@ -247,6 +249,8 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case unknown
   case pidCombined
   case documentData
+  case documentDetailsShow
+  case documentDetailsHide
   case issuanceSuccessHeaderDescription
   case documentDetailsReIssueButton
   case documentDetailsRemoveButton
@@ -256,8 +260,10 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case documentDetailsIssuerCardIssuedMessageText
   case documentDetailsIssuerCardRevokedMessageText
   case documentDetailsIssuerCardIssuedActionButtonText
+  case batchIssuanceCounter
   case documentProviderExtensionAcceptButton
   case documentProviderExtensionRejectButton
+  case enterYourPin
 }
 
 public extension LocalizableStringKey {

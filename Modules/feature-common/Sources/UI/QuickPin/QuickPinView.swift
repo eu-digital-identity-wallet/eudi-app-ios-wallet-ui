@@ -32,6 +32,7 @@ struct QuickPinView<Router: RouterHost>: View {
     ) {
       content(
         viewState: viewModel.viewState,
+        contentCaption: viewModel.contentCaption,
         uiPinInputField: $viewModel.uiPinInputField,
         onShowCancellationModal: { viewModel.onShowCancellationModal() }
       )
@@ -61,6 +62,7 @@ struct QuickPinView<Router: RouterHost>: View {
 @ViewBuilder
 private func content(
   viewState: QuickPinState,
+  contentCaption: LocalizableStringKey?,
   uiPinInputField: Binding<String>,
   onShowCancellationModal: @escaping () -> Void
 ) -> some View {
@@ -77,14 +79,21 @@ private func content(
   ContentTitleView(
     title: viewState.title,
     accessibilityTitle: QuickPinLocators.quickPinTitle,
-    caption: viewState.caption
+    titleWeight: .bold,
+    caption: contentCaption,
+    captionWeight: .semibold
   )
 
-  VSpacer.large()
+  if viewState.config.isUpdateFlow {
+    VSpacer.small()
+  } else {
+    VSpacer.extraLarge()
+  }
 
   pinView(
     uiPinInputField: uiPinInputField,
     quickPinSize: viewState.quickPinSize,
+    pinTextfieldTitle: viewState.pinTextFieldTitle,
     pinError: viewState.pinError,
     isLockedOut: viewState.isLockedOut,
     lockoutMessage: viewState.lockoutMessage
@@ -98,6 +107,7 @@ private func content(
 private func pinView(
   uiPinInputField: Binding<String>,
   quickPinSize: Int,
+  pinTextfieldTitle: LocalizableStringKey,
   pinError: LocalizableStringKey?,
   isLockedOut: Bool,
   lockoutMessage: LocalizableStringKey?
@@ -107,11 +117,12 @@ private func pinView(
   VStack(spacing: .zero) {
 
     PinTextFieldView(
+      pinTitle: pinTextfieldTitle,
       numericText: uiPinInputField,
       maxDigits: quickPinSize,
       isSecureEntry: true,
       canFocus: .constant(!isLockedOut),
-      shouldUseFullScreen: false,
+      shouldUseFullScreen: true,
       hasError: hasError,
       isDisabled: isLockedOut
     )
@@ -122,7 +133,7 @@ private func pinView(
       HStack {
         Text(lockoutMessage)
           .typography(Theme.shared.font.bodySmall)
-          .foregroundColor(Theme.shared.color.error)
+          .foregroundColor(Theme.shared.color.red)
           .multilineTextAlignment(.leading)
         Spacer()
       }
@@ -130,7 +141,7 @@ private func pinView(
       HStack {
         Text(error)
           .typography(Theme.shared.font.bodySmall)
-          .foregroundColor(Theme.shared.color.error)
+          .foregroundColor(Theme.shared.color.red)
         Spacer()
       }
     }
@@ -140,9 +151,11 @@ private func pinView(
 #Preview {
   let viewState = QuickPinState(
     config: QuickPinUiConfig(flow: .setWithActivation),
-    navigationTitle: .quickPinEnterPin,
+    navigationTitle: .quickPinNavigationEnterPin,
     title: .quickPinSetTitle,
     caption: .quickPinSetCaptionOne,
+    pinTextFieldTitle: .quickPinEnterPin,
+    buttonImage: Theme.shared.image.chevronRight,
     successTitle: .quickPinSetTitle,
     successCaption: .quickPinSetSuccess,
     successButton: .quickPinSetSuccessButton,
@@ -158,6 +171,7 @@ private func pinView(
   ContentScreenView {
     content(
       viewState: viewState,
+      contentCaption: viewState.caption,
       uiPinInputField: .constant("PinInput Field"),
       onShowCancellationModal: {}
     )

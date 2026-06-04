@@ -33,9 +33,9 @@ public struct WrapButtonView: View {
 
   public init(
     title: LocalizableStringKey,
-    textColor: Color = Theme.shared.color.onSurface,
-    backgroundColor: Color = Theme.shared.color.primary,
-    iconColor: Color = Theme.shared.color.primary,
+    textColor: Color = Theme.shared.color.primaryLabel,
+    backgroundColor: Color = Theme.shared.color.accent,
+    iconColor: Color = Theme.shared.color.white,
     icon: Image? = nil,
     gravity: Gravity = .center,
     isLoading: Bool = false,
@@ -62,7 +62,7 @@ public struct WrapButtonView: View {
   public init(
     style: ButtonViewStyle,
     title: LocalizableStringKey,
-    iconColor: Color = Theme.shared.color.primary,
+    iconColor: Color = Theme.shared.color.accent,
     icon: Image? = nil,
     gravity: Gravity = .center,
     isLoading: Bool = false,
@@ -98,37 +98,32 @@ public struct WrapButtonView: View {
             icon
               .resizable()
               .scaledToFit()
-              .frame(width: 25, height: 25)
+              .frame(width: 22, height: 22)
               .foregroundColor(iconColor)
 
-            HSpacer.medium()
+            HSpacer.small()
           }
 
           Text(title)
             .typography(Theme.shared.font.bodyLarge)
             .fontWeight(.semibold)
             .foregroundColor(textColor)
-            .buttonStyle(OutlinePressedButtonStyle())
 
           if gravity == .center || gravity == .start {
             Spacer()
           }
         }
-        .padding()
+        .padding(Theme.shared.shape.extraSmall)
         .if(gravity != .none) {
           $0.frame(maxWidth: .infinity)
         }
-        .background(backgroundColor)
-        .cornerRadius(cornerRadius)
-        .overlay(
-          RoundedRectangle(cornerRadius: cornerRadius)
-            .stroke(borderColor, lineWidth: borderWidth)
-        )
       }
     )
     .if(!isEnabled && !isLoading) {
       $0.opacity(0.38)
     }
+    .buttonStyle(.borderedProminent)
+    .tint(backgroundColor)
     .disabled(isLoading || !isEnabled)
     .shimmer(isLoading: isLoading)
   }

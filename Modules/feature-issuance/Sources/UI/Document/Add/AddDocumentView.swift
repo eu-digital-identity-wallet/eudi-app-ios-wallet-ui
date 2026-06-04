@@ -23,11 +23,8 @@ struct AddDocumentView<Router: RouterHost>: View {
 
   @State private var viewModel: AddDocumentViewModel<Router>
 
-  private var contentSize: CGFloat = 0.0
-
   init(with viewModel: AddDocumentViewModel<Router>) {
     self._viewModel = State(wrappedValue: viewModel)
-    self.contentSize = getScreenRect().width / 2.0
   }
 
   var body: some View {
@@ -52,17 +49,6 @@ struct AddDocumentView<Router: RouterHost>: View {
           )
         }
       }
-
-      if viewModel.viewState.showFooterScanner {
-
-        VSpacer.extraSmall()
-
-        scanFooter(
-          viewState: viewModel.viewState,
-          contentSize: contentSize,
-          action: viewModel.onScanClick()
-        )
-      }
     }
     .task {
       await self.viewModel.initialize()
@@ -82,7 +68,7 @@ private func content(
 
       Text(.chooseFromListTitle)
         .typography(Theme.shared.font.bodyLarge)
-        .foregroundStyle(Theme.shared.color.onSurface)
+        .foregroundStyle(Theme.shared.color.primaryLabel)
         .accessibilityLocator(AddDocumentLocators.subtitle)
 
       ForEach(viewState.addDocumentCellModels.elements, id: \.key) { pair in
@@ -95,7 +81,7 @@ private func content(
             text: .custom(issuer),
             textConfig: TextConfig(
               font: Theme.shared.font.bodySmall.font,
-              color: Theme.shared.color.onSurface,
+              color: Theme.shared.color.primaryLabel,
               textAlign: .leading,
               fontWeight: .semibold
             )
@@ -131,7 +117,7 @@ private func noDocumentsFound() -> some View {
   VStack(spacing: .zero) {
     Text(.chooseFromListTitle)
       .typography(Theme.shared.font.bodyLarge)
-      .foregroundStyle(Theme.shared.color.onSurface)
+      .foregroundStyle(Theme.shared.color.primaryLabel)
 
     Spacer()
     ContentEmptyView(
@@ -142,80 +128,14 @@ private func noDocumentsFound() -> some View {
   .padding(.horizontal, Theme.shared.dimension.padding)
 }
 
-@MainActor
-@ViewBuilder
-private func scanFooter(
-  viewState: AddDocumentViewState,
-  contentSize: CGFloat,
-  action: @escaping @autoclosure () -> Void
-) -> some View {
-  VStack(spacing: SPACING_MEDIUM) {
-
-    Spacer()
-
-    HStack {
-
-      Spacer()
-
-      VStack(alignment: .center, spacing: SPACING_MEDIUM) {
-
-        Text(.or)
-          .typography(Theme.shared.font.bodyMedium)
-          .foregroundColor(Theme.shared.color.onSurfaceVariant)
-
-        Theme.shared.image.scanDocumentImage
-      }
-
-      Spacer()
-    }
-
-    WrapButtonView(
-      style: .custom(
-        textColor: Theme.shared.color.primary,
-        backgroundColor: Theme.shared.color.surfaceContainerLowest,
-        borderColor: Theme.shared.color.primary,
-        useBorder: true
-      ),
-      title: .scanQrCode,
-      isLoading: viewState.isLoading,
-      onAction: action()
-    )
-    .combineChilrenAccessibility(
-      locator: AddDocumentLocators.primaryButton
-    )
-
-    Spacer()
-
-  }
-  .frame(maxWidth: .infinity, maxHeight: contentSize)
-  .padding([.horizontal, .bottom])
-  .background(Theme.shared.color.surfaceContainer)
-  .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
-}
-
 #Preview {
   let viewState = AddDocumentViewState(
     addDocumentCellModels: AddDocumentUIModel.mocks,
     error: nil,
-    config: IssuanceFlowUiConfig(flow: .noDocument),
-    showFooterScanner: true
+    config: IssuanceFlowUiConfig(flow: .noDocument)
   )
 
   content(
     viewState: viewState
   ) { _, _, _ in }
-}
-
-#Preview {
-  let viewState = AddDocumentViewState(
-    addDocumentCellModels: AddDocumentUIModel.mocks,
-    error: nil,
-    config: IssuanceFlowUiConfig(flow: .noDocument),
-    showFooterScanner: true
-  )
-  scanFooter(
-    viewState: viewState,
-    contentSize: 500,
-    action: {}()
-  )
 }

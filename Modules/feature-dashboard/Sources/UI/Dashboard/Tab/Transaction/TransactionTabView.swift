@@ -100,7 +100,7 @@ private func content(
                 text: category.title,
                 textConfig: TextConfig(
                   font: Theme.shared.font.bodySmall.font,
-                  color: Theme.shared.color.onSurface,
+                  color: Theme.shared.color.secondaryLabel,
                   textAlign: .leading,
                   fontWeight: .semibold
                 )

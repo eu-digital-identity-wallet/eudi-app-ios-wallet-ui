@@ -103,17 +103,17 @@ private func informativeText(viewState: ScannerState) -> some View {
 
         Theme.shared.image.errorIndicator
           .renderingMode(.template)
-          .foregroundStyle(Theme.shared.color.onSurface)
+          .foregroundStyle(Theme.shared.color.primaryLabel)
 
         Text(viewState.informativeTest)
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundStyle(Theme.shared.color.onSurface)
+          .foregroundStyle(Theme.shared.color.primaryLabel)
           .multilineTextAlignment(.center)
 
       }
     }
     .padding()
-    .background(Theme.shared.color.surfaceContainer)
+    .background(Theme.shared.color.secondaryBackground)
     .clipShape(Theme.shared.shape.highCornerRadiusShape)
     .opacity(viewState.showInformativeText ? 1.0 : 0.0)
   }

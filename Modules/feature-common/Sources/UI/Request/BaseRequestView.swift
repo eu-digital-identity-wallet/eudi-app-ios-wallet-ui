@@ -119,6 +119,8 @@ private func scrollableContent(
         config: viewState.contentHeaderConfig,
         accessibilityDescription: BaseRequestLocators.description
       )
+      .padding(.horizontal, Theme.shared.dimension.padding)
+
       ZStack {
         VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
@@ -130,6 +132,7 @@ private func scrollableContent(
                 supportingText: .viewDetails
               ),
               items: section.section.listItems,
+              backgroundColor: Theme.shared.color.groupedElevatedBackground,
               hideSensitiveContent: false,
               isLoading: viewState.isLoading,
               onItemClick: { onSelectionChanged($0.groupId) }
@@ -142,7 +145,7 @@ private func scrollableContent(
 
           Text(.shareDataReview)
             .typography(Theme.shared.font.bodyMedium)
-            .foregroundColor(Theme.shared.color.onSurface)
+            .foregroundColor(Theme.shared.color.primaryLabel)
             .multilineTextAlignment(.leading)
             .shimmer(isLoading: viewState.isLoading)
 
@@ -153,6 +156,34 @@ private func scrollableContent(
       .padding(Theme.shared.dimension.padding)
     }
   }
+  .safeAreaInset(edge: .bottom) {
+    shareButton(
+      allowShare: viewState.allowShare,
+      isLoading: viewState.isLoading,
+      onShare: onShare
+    )
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func shareButton(
+  allowShare: Bool,
+  isLoading: Bool,
+  onShare: @escaping () -> Void
+) -> some View {
+  WrapButtonView(
+    style: .primary,
+    title: .shareButton,
+    isLoading: isLoading,
+    isEnabled: allowShare,
+    onAction: onShare()
+  )
+  .combineChilrenAccessibility(
+    locator: BaseRequestLocators.shareButton
+  )
+  .padding(.horizontal, SPACING_MEDIUM)
+  .padding(.bottom, SPACING_LARGE_MEDIUM)
 }
 
 @MainActor

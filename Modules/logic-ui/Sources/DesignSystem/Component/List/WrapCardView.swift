@@ -22,8 +22,8 @@ public struct WrapCardView<Content: View>: View {
   private let content: () -> Content
 
   public init(
-    cornerRadius: CGFloat = 13,
-    backgroundColor: Color = Theme.shared.color.surfaceContainer,
+    cornerRadius: CGFloat = 18,
+    backgroundColor: Color = Theme.shared.color.groupedBackground,
     content: @escaping () -> Content
   ) {
     self.cornerRadius = cornerRadius

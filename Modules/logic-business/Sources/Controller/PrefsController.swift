@@ -67,7 +67,18 @@ final class PrefsControllerImpl: PrefsController {
 }
 
 private enum SharedPrefs {
+  private static let didRegisterDefaults: Void = {
+    let defaults = [Prefs.Key.batchCounter.rawValue: true]
+    if let suiteName = Bundle.getAppGroupIdentifier(),
+       let sharedDefaults = UserDefaults(suiteName: suiteName) {
+      sharedDefaults.register(defaults: defaults)
+    } else {
+      UserDefaults.standard.register(defaults: defaults)
+    }
+  }()
+
   static var userDefaults: UserDefaults {
+    _ = didRegisterDefaults
     guard let suiteName = Bundle.getAppGroupIdentifier(),
           let sharedDefaults = UserDefaults(suiteName: suiteName) else {
       return .standard
@@ -84,5 +95,6 @@ public extension Prefs {
     case cachedDeepLink
     case runAtLeastOnce
     case language
+    case batchCounter
   }
 }

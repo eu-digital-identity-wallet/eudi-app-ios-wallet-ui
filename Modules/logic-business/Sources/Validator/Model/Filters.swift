@@ -40,25 +40,45 @@ public enum FilterElementType: Sendable {
 public struct Filters: Sendable {
   public let filterGroups: [FilterGroup]
   public let sortOrder: SortOrderType
+  public let sort: FilterSort?
 
   public init(
     filterGroups: [FilterGroup],
-    sortOrder: SortOrderType
+    sortOrder: SortOrderType,
+    sort: FilterSort? = nil
   ) {
     self.filterGroups = filterGroups
     self.sortOrder = sortOrder
+    self.sort = sort
   }
 
   public var isEmpty: Bool {
-    return filterGroups.isEmpty
+    return filterGroups.isEmpty && sort == nil
   }
 
   public var isNotEmpty: Bool {
-    !filterGroups.isEmpty
+    !isEmpty
   }
 
   public static func emptyFilters(sortOrder: SortOrderType = .ascending) -> Filters {
-    return Filters(filterGroups: [], sortOrder: sortOrder)
+    return Filters(filterGroups: [], sortOrder: sortOrder, sort: nil)
+  }
+}
+
+@Copyable
+public struct FilterSort: Sendable {
+  public let id: String
+  public let name: String
+  public let filters: [FilterItem]
+
+  public init(
+    id: String,
+    name: String,
+    filters: [FilterItem]
+  ) {
+    self.id = id
+    self.name = name
+    self.filters = filters
   }
 }
 

@@ -351,7 +351,8 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
         trailingActions: [
           .init(
             image: Theme.shared.image.plus,
-            accessibilityLocator: DocumentTabLocators.plusButton
+            accessibilityLocator: DocumentTabLocators.plusButton,
+            tintColor: Theme.shared.color.accent
           ) {
             self.onAdd()
           },

@@ -42,7 +42,8 @@ struct DocumentOfferView<Router: RouterHost>: View {
       ]
     ) {
       content(
-        viewState: viewModel.viewState
+        viewState: viewModel.viewState,
+        onIssueDocuments: viewModel.onIssueDocuments
       )
     }
     .task {
@@ -54,19 +55,24 @@ struct DocumentOfferView<Router: RouterHost>: View {
 @MainActor
 @ViewBuilder
 private func content(
-  viewState: DocumentOfferViewState
+  viewState: DocumentOfferViewState,
+  onIssueDocuments: @escaping () -> Void
 ) -> some View {
   if viewState.documentOfferUiModel.uiOffers.isEmpty {
     noDocumentsFound(viewState: viewState)
   } else {
-    scrollableContent(viewState: viewState)
+    scrollableContent(
+      viewState: viewState,
+      onIssueDocuments: onIssueDocuments
+    )
   }
 }
 
 @MainActor
 @ViewBuilder
 private func scrollableContent(
-  viewState: DocumentOfferViewState
+  viewState: DocumentOfferViewState,
+  onIssueDocuments: @escaping () -> Void
 ) -> some View {
   ScrollView {
     VStack(spacing: .zero) {
@@ -79,7 +85,9 @@ private func scrollableContent(
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
         ForEach(viewState.documentOfferUiModel.uiOffers) { cell in
-          WrapCardView {
+          WrapCardView(
+            backgroundColor: Theme.shared.color.groupedElevatedBackground
+          ) {
             DocumentOfferCellView(
               cellModel: cell,
               isLoading: viewState.isLoading
@@ -89,7 +97,7 @@ private func scrollableContent(
 
         Text(.shareDataReview)
           .typography(Theme.shared.font.bodyMedium)
-          .foregroundColor(Theme.shared.color.onSurface)
+          .foregroundColor(Theme.shared.color.primaryLabel)
           .multilineTextAlignment(.leading)
           .shimmer(isLoading: viewState.isLoading)
 
@@ -97,6 +105,34 @@ private func scrollableContent(
       }
     }
   }
+  .safeAreaInset(edge: .bottom) {
+    issueButton(
+      allowIssue: viewState.allowIssue,
+      isLoading: viewState.isLoading,
+      onIssueDocuments: onIssueDocuments
+    )
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func issueButton(
+  allowIssue: Bool,
+  isLoading: Bool,
+  onIssueDocuments: @escaping () -> Void
+) -> some View {
+  WrapButtonView(
+    style: .primary,
+    title: .issueButton,
+    isLoading: isLoading,
+    isEnabled: allowIssue,
+    onAction: onIssueDocuments()
+  )
+  .combineChilrenAccessibility(
+    locator: DocumentOfferLocators.issueButton
+  )
+  .padding(.horizontal, SPACING_MEDIUM)
+  .padding(.bottom, SPACING_LARGE_MEDIUM)
 }
 
 @MainActor
@@ -139,7 +175,8 @@ private func noDocumentsFound(
 
   ContentScreenView {
     content(
-      viewState: viewState
+      viewState: viewState,
+      onIssueDocuments: {}
     )
   }
 }
@@ -173,7 +210,8 @@ private func noDocumentsFound(
 
   ContentScreenView {
     content(
-      viewState: viewState
+      viewState: viewState,
+      onIssueDocuments: {}
     )
   }
 }

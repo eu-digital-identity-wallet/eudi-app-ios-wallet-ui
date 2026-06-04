@@ -153,16 +153,16 @@ extension DocClaimsDecodable {
     _ state: DocumentTabUIModel.Value.State
   ) -> Color {
     if hasExpired {
-      return Theme.shared.color.error
+      return Theme.shared.color.red
     }
 
     switch state {
     case .issued:
-      return Theme.shared.color.onSurfaceVariant
+      return Theme.shared.color.secondaryLabel
     case .pending:
       return Theme.shared.color.warning
     case .failed, .revoked:
-      return Theme.shared.color.error
+      return Theme.shared.color.red
     }
   }
 
@@ -171,7 +171,7 @@ extension DocClaimsDecodable {
     documentIsLowOnCredentials: Bool
   ) -> Color {
     if hasExpired {
-      return Theme.shared.color.error
+      return Theme.shared.color.red
     }
 
     if documentIsLowOnCredentials {
@@ -180,11 +180,11 @@ extension DocClaimsDecodable {
 
     switch state {
     case .issued:
-      return Theme.shared.color.onSurfaceVariant
+      return Theme.shared.color.secondaryLabel
     case .pending:
       return Theme.shared.color.warning
     case .failed, .revoked:
-      return Theme.shared.color.error
+      return Theme.shared.color.red
     }
   }
 

@@ -217,22 +217,6 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
           filterType: .orderBy
         ),
         SingleSelectionFilterGroup(
-          id: FilterIds.FILTER_SORT_GROUP_ID,
-          name: LocalizableStringKey.sortBy.toString,
-          filters: [
-            FilterItem(
-              id: FilterIds.FILTER_SORT_DEFAULT,
-              name: LocalizableStringKey.transactionDate.toString,
-              selected: true,
-              isDefault: true,
-              filterableAction: Sort<TransactionFilterableAttributes, Date>(predicate: { attribute in
-                attribute.creationDate
-              })
-            )
-          ],
-          filterType: .other
-        ),
-        SingleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_TRANSACTION_DATE_GROUP_ID,
           name: LocalizableStringKey.filterByDate.toString,
           filters: [
@@ -336,7 +320,22 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
           filterType: .other
         )
       ],
-      sortOrder: SortOrderType.descending
+      sortOrder: SortOrderType.descending,
+      sort: FilterSort(
+        id: FilterIds.FILTER_SORT_GROUP_ID,
+        name: LocalizableStringKey.sortBy.toString,
+        filters: [
+          FilterItem(
+            id: FilterIds.FILTER_SORT_DEFAULT,
+            name: LocalizableStringKey.transactionDate.toString,
+            selected: true,
+            isDefault: true,
+            filterableAction: Sort<TransactionFilterableAttributes, Date>(predicate: { attribute in
+              attribute.creationDate
+            })
+          )
+        ]
+      )
     )
   }
 
@@ -406,23 +405,31 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
   }
 
   private func filterUISection(filters: Filters) -> [FilterUISection] {
-    filters.filterGroups.map { filteredGroup in
-      FilterUISection(
-        id: filteredGroup.id,
-        filters: filteredGroup.filters.map { filter in
-          FilterUIItem(
-            id: filter.id,
-            title: filter.name,
-            selected: filter.selected,
-            startDate: filter.startDate,
-            endDate: filter.endDate,
-            filterAction: filter.filterableAction,
-            filterSectionType: filter.filterElementType
+    var sections: [FilterUISection] = []
+
+    sections.append(contentsOf:
+      filters.filterGroups
+        .filter { $0.id != FilterIds.ASCENDING_DESCENDING_GROUP }
+        .map { filteredGroup in
+          FilterUISection(
+            id: filteredGroup.id,
+            filters: filteredGroup.filters.map { filter in
+              FilterUIItem(
+                id: filter.id,
+                title: filter.name,
+                selected: filter.selected,
+                startDate: filter.startDate,
+                endDate: filter.endDate,
+                filterAction: filter.filterableAction,
+                filterSectionType: filter.filterElementType
+              )
+            },
+            sectionTitle: filteredGroup.name
           )
-        },
-        sectionTitle: filteredGroup.name
-      )
-    }
+        }
+    )
+
+    return sections
   }
 
   private func addRelyingPartyName(transactions: FilterableList) -> [FilterItem] {

@@ -99,6 +99,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
           navigationTitle: .biometryConfirmRequest,
           caption: .requestDataShareBiometryCaption,
           quickPinOnlyCaption: .requestDataShareQuickPinCaption,
+          pinTextFieldTitle: .enterYourPin,
           navigationSuccessType: .push(
             .featureProximityModule(
               .proximityLoader(

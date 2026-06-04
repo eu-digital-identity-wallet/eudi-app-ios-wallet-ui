@@ -14,23 +14,27 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import SwiftUI
 import logic_resources
 
 struct SideMenuItemUIModel: Identifiable {
 
   let id: String
   let title: LocalizableStringKey
+  let icon: Image?
   let showDivider: Bool
   let action: () -> Void
 
   init(
     id: String = UUID().uuidString,
     title: LocalizableStringKey,
+    icon: Image? = nil,
     showDivider: Bool = true,
     action: @autoclosure @escaping () -> Void
   ) {
     self.id = id
     self.title = title
+    self.icon = icon
     self.showDivider = showDivider
     self.action = action
   }

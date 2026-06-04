@@ -74,7 +74,7 @@ public struct RelyingPartyView: View {
           text: name,
           textConfig: relyingPartyData.nameTextConfig ?? TextConfig(
             font: Theme.shared.font.bodyLarge.font,
-            color: Theme.shared.color.onSurface,
+            color: Theme.shared.color.primaryLabel,
             textAlign: .center,
             maxLines: 1,
             fontWeight: .semibold
@@ -94,7 +94,7 @@ public struct RelyingPartyView: View {
           text: description,
           textConfig: relyingPartyData.descriptionTextConfig ?? TextConfig(
             font: Theme.shared.font.bodyMedium.font,
-            color: Theme.shared.color.onSurface,
+            color: Theme.shared.color.primaryLabel,
             textAlign: .center,
             maxLines: 2,
             fontWeight: nil

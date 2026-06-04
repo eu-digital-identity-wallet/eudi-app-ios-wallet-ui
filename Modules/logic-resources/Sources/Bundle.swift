@@ -14,9 +14,29 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import CoreText
 
 public extension Bundle {
   static var assetsBundle: Bundle {
     Bundle.module
+  }
+
+  /// Registers every .ttf and .otf font file found in the module bundle with
+  /// Core Text so they can be used via `Font.custom` or `UIFont(name:size:)`.
+  ///
+  /// Call once at app startup. Core Text deduplicates registrations, so
+  /// calling this multiple times is safe.
+  ///
+  /// Member states only need to drop new font files into
+  /// `Sources/Resources/` — they will be picked up automatically here,
+  /// with no changes to Info.plist or Swift code required.
+  static func registerModuleFonts() {
+    ["ttf", "otf"].forEach { ext in
+      assetsBundle
+        .urls(forResourcesWithExtension: ext, subdirectory: nil)?
+        .forEach { url in
+          CTFontManagerRegisterFontsForURL(url as CFURL, .process, nil)
+        }
+    }
   }
 }

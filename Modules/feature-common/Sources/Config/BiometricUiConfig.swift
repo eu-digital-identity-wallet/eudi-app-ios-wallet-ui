@@ -24,6 +24,7 @@ public extension UIConfig {
     public let title: LocalizableStringKey?
     public let caption: LocalizableStringKey
     public let quickPinOnlyCaption: LocalizableStringKey
+    public let pinTextFieldTitle: LocalizableStringKey?
     public let navigationSuccessType: ThreeWayNavigationType
     public let navigationBackType: ThreeWayNavigationType?
     public let isPreAuthorization: Bool
@@ -47,6 +48,7 @@ public extension UIConfig {
       title: LocalizableStringKey? = nil,
       caption: LocalizableStringKey,
       quickPinOnlyCaption: LocalizableStringKey,
+      pinTextFieldTitle: LocalizableStringKey? = nil,
       navigationSuccessType: ThreeWayNavigationType,
       navigationBackType: ThreeWayNavigationType?,
       isPreAuthorization: Bool,
@@ -58,6 +60,7 @@ public extension UIConfig {
       self.title = title
       self.caption = caption
       self.quickPinOnlyCaption = quickPinOnlyCaption
+      self.pinTextFieldTitle = pinTextFieldTitle
       self.navigationSuccessType = navigationSuccessType
       self.navigationBackType = navigationBackType
       self.isPreAuthorization = isPreAuthorization

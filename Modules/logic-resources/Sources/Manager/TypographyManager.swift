@@ -46,95 +46,60 @@ public protocol TypographyManagerProtocol: Sendable {
 
 final class TypographyManager: TypographyManagerProtocol {
 
-  var displayLarge: TypographyStyle {
-    TypographyStyle(font: displayLargeFont, spacing: displayLargeSpacing)
-  }
-  var displayMedium: TypographyStyle {
-    TypographyStyle(font: displayMediumFont, spacing: displayMediumSpacing)
-  }
-  var displaySmall: TypographyStyle {
-    TypographyStyle(font: displaySmallFont, spacing: displaySmallSpacing)
+  // MARK: - Lifecycle
+
+  private let fontConfig: [String: String]
+
+  /// Reads PostScript names from `WalletFontConfig.plist` in `bundle`.
+  /// Falls back to system fonts when the plist is absent or a name is not
+  /// registered — `Font.custom` handles this silently with no crash.
+  init(bundle: Bundle = .assetsBundle) {
+    if let url = bundle.url(forResource: "WalletFontConfig", withExtension: "plist"),
+       let dict = NSDictionary(contentsOf: url) as? [String: String] {
+      fontConfig = dict
+    } else {
+      fontConfig = [:]
+    }
   }
 
-  var headlineLarge: TypographyStyle {
-    TypographyStyle(font: headlineLargeFont, spacing: headlineLargeSpacing)
-  }
-  var headlineMedium: TypographyStyle {
-    TypographyStyle(font: headlineMediumFont, spacing: headlineMediumSpacing)
-  }
-  var headlineSmall: TypographyStyle {
-    TypographyStyle(font: headlineSmallFont, spacing: headlineSmallSpacing)
-  }
+  // MARK: - Font resolution
 
-  var titleLarge: TypographyStyle {
-    TypographyStyle(font: titleLargeFont, spacing: titleLargeSpacing)
-  }
-  var titleMedium: TypographyStyle {
-    TypographyStyle(font: titleMediumFont, spacing: titleMediumSpacing)
-  }
-  var titleSmall: TypographyStyle {
-    TypographyStyle(font: titleSmallFont, spacing: titleSmallSpacing)
+  /// Resolves a font by weight key and text style.
+  /// Uses `Font.custom` when a PostScript name is configured; falls back to
+  /// the system font for `textStyle` otherwise. `defaultSize` provides the
+  /// base point size that `Font.custom(relativeTo:)` scales with Dynamic Type.
+  private func font(_ key: String, _ textStyle: Font.TextStyle) -> Font {
+    guard let name = fontConfig[key], !name.isEmpty else {
+      return .system(textStyle)
+    }
+    return .custom(name, size: textStyle.defaultSize, relativeTo: textStyle)
   }
 
-  var bodyLarge: TypographyStyle {
-    TypographyStyle(font: bodyLargeFont, spacing: bodyLargeSpacing)
-  }
-  var bodyMedium: TypographyStyle {
-    TypographyStyle(font: bodyMediumFont, spacing: bodyMediumSpacing)
-  }
-  var bodySmall: TypographyStyle {
-    TypographyStyle(font: bodySmallFont, spacing: bodySmallSpacing)
+  private func style(_ key: String, _ textStyle: Font.TextStyle) -> TypographyStyle {
+    TypographyStyle(font: font(key, textStyle), spacing: 0)
   }
 
-  var labelLarge: TypographyStyle {
-    TypographyStyle(font: labelLargeFont, spacing: labelLargeSpacing)
-  }
-  var labelMedium: TypographyStyle {
-    TypographyStyle(font: labelMediumFont, spacing: labelMediumSpacing)
-  }
-  var labelSmall: TypographyStyle {
-    TypographyStyle(font: labelSmallFont, spacing: labelSmallSpacing)
-  }
+  // MARK: - Type scale
 
-  private let displayLargeFont = Font.largeTitle
-  private let displayMediumFont = Font.title
-  private let displaySmallFont = Font.title2
+  var displayLarge: TypographyStyle { style("bold", .largeTitle) }
+  var displayMedium: TypographyStyle { style("bold", .title) }
+  var displaySmall: TypographyStyle { style("bold", .title2) }
 
-  private let headlineLargeFont = Font.title3
-  private let headlineMediumFont = Font.headline
-  private let headlineSmallFont = Font.subheadline
+  var headlineLarge: TypographyStyle { style("medium", .title3) }
+  var headlineMedium: TypographyStyle { style("medium", .headline) }
+  var headlineSmall: TypographyStyle { style("medium", .subheadline) }
 
-  private let titleLargeFont = Font.title
-  private let titleMediumFont = Font.title2
-  private let titleSmallFont = Font.title3
+  var titleLarge: TypographyStyle { style("medium", .title) }
+  var titleMedium: TypographyStyle { style("medium", .title2) }
+  var titleSmall: TypographyStyle { style("medium", .title3) }
 
-  private let bodyLargeFont = Font.body
-  private let bodyMediumFont = Font.callout
-  private let bodySmallFont = Font.footnote
+  var bodyLarge: TypographyStyle { style("regular", .body) }
+  var bodyMedium: TypographyStyle { style("regular", .callout) }
+  var bodySmall: TypographyStyle { style("regular", .footnote) }
 
-  private let labelLargeFont = Font.headline
-  private let labelMediumFont = Font.caption
-  private let labelSmallFont = Font.caption2
-
-  private let displayLargeSpacing: CGFloat = 0
-  private let displayMediumSpacing: CGFloat = 0
-  private let displaySmallSpacing: CGFloat = 0
-
-  private let headlineLargeSpacing: CGFloat = 0
-  private let headlineMediumSpacing: CGFloat = 0
-  private let headlineSmallSpacing: CGFloat = 0
-
-  private let titleLargeSpacing: CGFloat = 0
-  private let titleMediumSpacing: CGFloat = 0
-  private let titleSmallSpacing: CGFloat = 0
-
-  private let bodyLargeSpacing: CGFloat = 0
-  private let bodyMediumSpacing: CGFloat =  0
-  private let bodySmallSpacing: CGFloat =  0
-
-  private let labelLargeSpacing: CGFloat = 0
-  private let labelMediumSpacing: CGFloat = 0
-  private let labelSmallSpacing: CGFloat = 0
+  var labelLarge: TypographyStyle { style("medium", .headline) }
+  var labelMedium: TypographyStyle { style("regular", .caption) }
+  var labelSmall: TypographyStyle { style("regular", .caption2) }
 }
 
 extension Font.TextStyle {

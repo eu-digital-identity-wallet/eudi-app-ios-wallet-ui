@@ -90,16 +90,4 @@ open class DocumentSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: 
     }
   }
 
-  func toolbarContent() -> ToolBarContent {
-    .init(
-      trailingActions: [
-        .init(
-          title: .doneButton,
-          accessibilityLocator: DocumentSuccessLocators.doneButton
-        ) {
-          self.onDone()
-        }
-      ]
-    )
-  }
 }

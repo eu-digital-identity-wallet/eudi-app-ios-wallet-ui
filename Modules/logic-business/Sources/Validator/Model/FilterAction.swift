@@ -28,7 +28,11 @@ public protocol FilterAction: Sendable {
   ) -> FilterableList
 }
 
-public struct Sort<T: FilterableAttributes, R: Comparable>: FilterAction {
+/// Marker protocol used to identify any `Sort` filter action without having
+/// to refer to its generic specializations.
+public protocol SortFilterAction: FilterAction {}
+
+public struct Sort<T: FilterableAttributes, R: Comparable>: FilterAction, SortFilterAction {
   public func applyFilterGroup(filterableItems: FilterableList, filterGroup: any FilterGroup) -> FilterableList {
     filterableItems
   }

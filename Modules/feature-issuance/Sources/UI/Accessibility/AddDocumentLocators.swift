@@ -17,15 +17,15 @@ import logic_ui
 
 public enum AddDocumentLocators: LocatorType {
   case subtitle
-  case primaryButton
+  case scanQrCode
   case attestation(String)
 
   public var id: String {
     switch self {
     case .subtitle:
       return "add_document_screen_subtitle"
-    case .primaryButton:
-      return "add_document_primary_button"
+    case .scanQrCode:
+      return "add_document_scan_qr_code_button"
     case let .attestation(index):
       return "add_document_screen_attestation_\(index)"
     }
@@ -35,7 +35,7 @@ public enum AddDocumentLocators: LocatorType {
     switch self {
     case .subtitle:
       return .isStaticText
-    case .primaryButton:
+    case .scanQrCode:
       return .isButton
     case .attestation:
       return .isButton

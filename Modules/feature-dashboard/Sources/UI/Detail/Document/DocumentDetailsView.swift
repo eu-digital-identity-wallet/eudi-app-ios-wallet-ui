@@ -128,7 +128,7 @@ private func content(
           Text(.genericIssuer)
             .typography(Theme.shared.font.bodySmall)
             .fontWeight(.semibold)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .foregroundStyle(Theme.shared.color.secondaryLabel)
             .frame(maxWidth: .infinity, alignment: .leading)
             .shimmer(isLoading: viewState.isLoading)
 
@@ -147,7 +147,7 @@ private func content(
           Text(.documentData)
             .typography(Theme.shared.font.bodySmall)
             .fontWeight(.semibold)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .foregroundStyle(Theme.shared.color.secondaryLabel)
             .padding(.vertical, SPACING_SMALL)
             .shimmer(isLoading: viewState.isLoading)
 
@@ -156,14 +156,22 @@ private func content(
           Button {
             toggleIsVisible()
           } label: {
-            (isVisible ? Theme.shared.image.eye : Theme.shared.image.eyeSlash)
-              .resizable()
-              .aspectRatio(contentMode: .fit)
-              .frame(width: 24, height: 24)
-              .padding(.horizontal, SPACING_MEDIUM)
-              .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-              .shimmer(isLoading: viewState.isLoading)
+            HStack(spacing: SPACING_SMALL) {
+              (isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 24, height: 24)
+
+              Text(isVisible ? .documentDetailsShow : .documentDetailsHide)
+                .typography(Theme.shared.font.bodyMedium)
+                .fontWeight(.semibold)
+                .frame(alignment: .leading)
+            }
+            .frame(alignment: .trailing)
+            .foregroundStyle(Theme.shared.color.accent)
+            .shimmer(isLoading: viewState.isLoading)
           }
+          .buttonStyle(.plain)
           .accessibilityLocator(isVisible ? DocumentDetailsLocators.eyeSlash : DocumentDetailsLocators.eye)
         }
 
@@ -209,7 +217,7 @@ private func content(
           .font(Theme.shared.font.bodySmall.font)
           .padding(.vertical, SPACING_SMALL)
           .padding(.horizontal, SPACING_MEDIUM)
-          .foregroundColor(Theme.shared.color.onSurfaceVariant)
+          .foregroundColor(Theme.shared.color.secondaryLabel)
           .frame(maxWidth: .infinity, alignment: .center)
           .shimmer(isLoading: viewState.isLoading)
       }

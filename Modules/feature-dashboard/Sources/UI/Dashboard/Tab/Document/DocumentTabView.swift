@@ -116,26 +116,33 @@ private func content(
 
           ForEach(state.documents.keys.sorted(by: { $0.order < $1.order }), id: \.self) { category in
 
-            WrapTextView(
-              text: category.title,
-              textConfig: TextConfig(
-                font: Theme.shared.font.bodySmall.font,
-                color: Theme.shared.color.onSurface,
-                textAlign: .leading,
-                fontWeight: .semibold
-              )
-            )
-            .padding(.horizontal, SPACING_MEDIUM)
-            .padding(.top, SPACING_SMALL)
+            VStack(alignment: .leading, spacing: SPACING_SMALL) {
 
-            ForEach(state.documents[category] ?? []) { item in
+              WrapTextView(
+                text: category.title,
+                textConfig: TextConfig(
+                  font: Theme.shared.font.bodySmall.font,
+                  color: Theme.shared.color.secondaryLabel,
+                  textAlign: .leading,
+                  fontWeight: .semibold
+                )
+              )
+              .padding(.horizontal, SPACING_MEDIUM)
+              .padding(.top, SPACING_SMALL)
+
               WrapCardView {
-                WrapListItemView(listItem: item.listItem) {
-                  onAction(item)
+                VStack(spacing: .zero) {
+                  let categoryDocuments = state.documents[category] ?? []
+                  WrapListItemsView(
+                    listItems: categoryDocuments.map(\.listItem)
+                  ) { listItem in
+                    if let item = categoryDocuments.first(where: { $0.listItem.id == listItem.id }) {
+                      onAction(item)
+                    }
+                  }
                 }
               }
               .padding(.horizontal, SPACING_MEDIUM)
-              .padding(.top, SPACING_SMALL)
             }
           }
         }
@@ -174,16 +181,16 @@ private func deferredSuccessList(
       HStack {
         Text(.custom(item.value.title))
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.onSurface)
+          .foregroundColor(Theme.shared.color.primaryLabel)
 
         Spacer()
 
         Theme.shared.image.chevronRight
           .renderingMode(.template)
-          .foregroundStyle(Theme.shared.color.primary)
+          .foregroundStyle(Theme.shared.color.accent)
       }
       .padding()
-      .background(Theme.shared.color.surfaceContainer)
+      .background(Theme.shared.color.groupedBackground)
       .clipShape(.rect(cornerRadius: 8))
       .onTapGesture {
         onDocumentDetails(item.value.id)

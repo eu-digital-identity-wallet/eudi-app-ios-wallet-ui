@@ -29,7 +29,7 @@ struct StartupView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: false,
-      background: Theme.shared.color.surface
+      background: Theme.shared.color.background
     ) {
       content(
         viewState: viewModel.viewState,
@@ -67,7 +67,7 @@ private func content(
   ContentScreenView(
     padding: .zero,
     canScroll: false,
-    background: Theme.shared.color.primary
+    background: Theme.shared.color.accent
   ) {
     content(viewState: viewState, screenWidth: 1080)
   }

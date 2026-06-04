@@ -72,6 +72,7 @@ public protocol DocumentTabInteractor: Sendable {
 final actor DocumentTabInteractorImpl: DocumentTabInteractor {
 
   private let walletKitController: WalletKitController
+  private let prefsController: PrefsController
   private let filterValidator: FilterValidator
   private let configLogic: ConfigLogic
 
@@ -79,10 +80,12 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
 
   init(
     walletKitController: WalletKitController,
+    prefsController: PrefsController,
     filterValidator: FilterValidator,
     configLogic: ConfigLogic
   ) {
     self.walletKitController = walletKitController
+    self.prefsController = prefsController
     self.filterValidator = filterValidator
     self.configLogic = configLogic
   }
@@ -217,7 +220,13 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
           issued.append(
             document.transformToDocumentTabUi(
               categories: categories,
-              isRevoked: isRevoked
+              isRevoked: isRevoked,
+              usageCount: isBatchCounterEnabled()
+              ? getCredentialsUsageCount(
+                credentialsUsageCounts: document.credentialsUsageCounts,
+                isDeferred: (document is DeferrredDocument) == true
+              )
+              : nil
             )
           )
         }
@@ -255,38 +264,6 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
             )
           ],
           filterType: .orderBy
-        ),
-        SingleSelectionFilterGroup(
-          id: FilterIds.FILTER_SORT_GROUP_ID,
-          name: LocalizableStringKey.sortBy.toString,
-          filters: [
-            FilterItem(
-              id: FilterIds.FILTER_SORT_DEFAULT,
-              name: LocalizableStringKey.defaultLabel.toString,
-              selected: true,
-              isDefault: true,
-              filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
-                attribute.sortingKey
-              })
-            ),
-            FilterItem(
-              id: FilterIds.FILTER_SORT_DATE_ISSUED,
-              name: LocalizableStringKey.dateIssued.toString,
-              selected: false,
-              filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
-                attribute.issuedDate
-              })
-            ),
-            FilterItem(
-              id: FilterIds.FILTER_SORT_EXPIRY_DATE,
-              name: LocalizableStringKey.expiryDate.toString,
-              selected: false,
-              filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
-                attribute.expiryDate
-              })
-            )
-          ],
-          filterType: .other
         ),
         SingleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_PERIOD_GROUP_ID,
@@ -396,7 +373,38 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
           filterType: .other
         )
       ],
-      sortOrder: SortOrderType.ascending
+      sortOrder: SortOrderType.ascending,
+      sort: FilterSort(
+        id: FilterIds.FILTER_SORT_GROUP_ID,
+        name: LocalizableStringKey.sortBy.toString,
+        filters: [
+          FilterItem(
+            id: FilterIds.FILTER_SORT_DEFAULT,
+            name: LocalizableStringKey.defaultLabel.toString,
+            selected: true,
+            isDefault: true,
+            filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
+              attribute.sortingKey
+            })
+          ),
+          FilterItem(
+            id: FilterIds.FILTER_SORT_DATE_ISSUED,
+            name: LocalizableStringKey.dateIssued.toString,
+            selected: false,
+            filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
+              attribute.issuedDate
+            })
+          ),
+          FilterItem(
+            id: FilterIds.FILTER_SORT_EXPIRY_DATE,
+            name: LocalizableStringKey.expiryDate.toString,
+            selected: false,
+            filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
+              attribute.expiryDate
+            })
+          )
+        ]
+      )
     )
   }
 
@@ -422,10 +430,12 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
         categories: self.walletKitController.getDocumentCategories(),
         isRevoked: isRevoked,
         documentIsLowOnCredentials: documentIsLowOnCredentials,
-        usageCount: getCredentialsUsageCount(
+        usageCount: isBatchCounterEnabled()
+        ? getCredentialsUsageCount(
           credentialsUsageCounts: document.credentialsUsageCounts,
           isDeferred: (document is DeferrredDocument) == true
         )
+        : nil
       )
 
       let documentSearchTags: [String] = {
@@ -470,21 +480,29 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
   }
 
   private func filterUISection(filters: Filters) -> [FilterUISection] {
-    filters.filterGroups.map { filteredGroup in
-      FilterUISection(
-        id: filteredGroup.id,
-        filters: filteredGroup.filters.map { filter in
-          FilterUIItem(
-            id: filter.id,
-            title: filter.name,
-            selected: filter.selected,
-            filterAction: filter.filterableAction,
-            filterSectionType: filter.filterElementType
+    var sections: [FilterUISection] = []
+
+    sections.append(contentsOf:
+      filters.filterGroups
+        .filter { $0.id != FilterIds.ASCENDING_DESCENDING_GROUP }
+        .map { filteredGroup in
+          FilterUISection(
+            id: filteredGroup.id,
+            filters: filteredGroup.filters.map { filter in
+              FilterUIItem(
+                id: filter.id,
+                title: filter.name,
+                selected: filter.selected,
+                filterAction: filter.filterableAction,
+                filterSectionType: filter.filterElementType
+              )
+            },
+            sectionTitle: filteredGroup.name
           )
-        },
-        sectionTitle: filteredGroup.name
-      )
-    }
+        }
+    )
+
+    return sections
   }
 
   private func addCategoriesFilter(documents: FilterableList) -> [FilterItem] {
@@ -530,5 +548,9 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
     }
 
     return filterItems
+  }
+
+  private func isBatchCounterEnabled() -> Bool {
+    prefsController.getBool(forKey: .batchCounter)
   }
 }

@@ -183,7 +183,7 @@ private extension TestStartupInteractor {
   
   func biometryConfig(with hasDocuments: Bool) -> UIConfig.Biometry {
     return UIConfig.Biometry(
-      navigationTitle: .custom(""),
+      navigationTitle: .enterYourPin,
       title: .loginTitle,
       caption: .loginCaption,
       quickPinOnlyCaption: .loginCaptionQuickPinOnly,
@@ -194,7 +194,8 @@ private extension TestStartupInteractor {
       ),
       navigationBackType: nil,
       isPreAuthorization: true,
-      shouldInitializeBiometricOnCreate: true
+      shouldInitializeBiometricOnCreate: true,
+      displayNavigationBar: true
     )
   }
   

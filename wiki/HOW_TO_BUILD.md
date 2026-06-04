@@ -7,7 +7,7 @@
 * [Build configurations](#build-configurations)
 * [Build commands](#build-commands)
 * [How to work with self-signed certificates on iOS](#how-to-work-with-self-signed-certificates-on-ios)
-* [Document Provider extension configuration](CONFIGURATION.md#document-provider-extension-configuration)
+* [Document Provider extension configuration](#document-provider-extension-configuration)
 * [Production note](#production-note)
 
 ## Overview
@@ -18,14 +18,24 @@ This guide aims to assist developers in building the application.
 
 ### EUDI iOS Wallet reference application
 
-You need [xcode](https://xcodereleases.com/) and its associated tools installed on your machine. We recommend the latest non-beta version. 
+You need [Xcode](https://xcodereleases.com/) and its command-line tools installed. Use a current
+non-beta Xcode that ships the **iOS 26 SDK** or newer — the Identity Document Provider extension
+targets iOS 26.2, and an older Xcode will not compile it.
+
+The project builds against:
+
+| Component | Requirement |
+| --- | --- |
+| Swift | 6.0 |
+| Main app (`EudiWallet`) deployment target | iOS 17.0 |
+| Identity Document Provider extension | iOS 26.2 |
 
 Clone the [iOS repository](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui)
 
 Open the project file in Xcode. The application has two schemes: "EUDI Wallet Dev" and "EUDI Wallet Demo".
 
-- EUDI Wallet Dev: This target communicates with the services deployed in an environment based on the latest main branch.
-- EUDI Wallet Demo: This target communicates with the services deployed in the latest stable environment.
+- EUDI Wallet Dev: This scheme communicates with the services deployed in an environment based on the latest main branch.
+- EUDI Wallet Demo: This scheme communicates with the services deployed in the latest stable environment.
 
 
 Each scheme has two configurations: Debug and Release.
@@ -33,9 +43,21 @@ Each scheme has two configurations: Debug and Release.
 - Debug: Used when running the app from within Xcode.
 - Release: Used when running the app after it has been distributed via a distribution platform, currently TestFlight.
 
-This setup results in a total of four configurations. All four configurations are defined in the xcconfig files located under the Config folder in the project.
+This setup results in a total of four configurations. All four configurations are defined in the
+`.xcconfig` files in the `Wallet/Config` folder (`WalletDev.xcconfig`, `WalletDevRelease.xcconfig`,
+`WalletDemo.xcconfig`, `WalletDemoRelease.xcconfig`).
 
-To run the app on the simulator, select your app schema and press Run.
+On first open, **let Swift Package Manager finish resolving dependencies** before building. The
+project pulls in ~55 packages, including the C++ `eudi-lib-podofo` library, so the first resolve can
+take several minutes. From the command line you can pre-resolve with
+`xcodebuild -resolvePackageDependencies -project EudiReferenceWallet.xcodeproj`. If resolution fails,
+reset via *File ▸ Packages ▸ Reset Package Caches* and retry.
+
+To run the app on the simulator, select your app scheme and press Run.
+
+> **Use an Apple-silicon (arm64) simulator.** PoDoFo ships no x86_64 simulator slice, so a
+> `generic/platform=iOS Simulator` destination or an Intel/Rosetta build fails at link time. Pin
+> `ARCHS=arm64 ONLY_ACTIVE_ARCH=YES` for simulator builds (see the simulator command below).
 
 To run the app on a device, follow similar steps to running it on the simulator. Additionally, you need to supply your own provisioning profile and signing certificate in the Signing & Capabilities tab of your app target.
 
@@ -65,6 +87,18 @@ xcodebuild \
   clean build
 ```
 
+Build for the simulator (Apple-silicon hosts — note the pinned architecture):
+
+```bash
+xcodebuild \
+  -project EudiReferenceWallet.xcodeproj \
+  -scheme "EUDI Wallet Dev" \
+  -configuration "Debug Dev" \
+  -destination "platform=iOS Simulator,name=iPhone 16 Pro" \
+  ARCHS=arm64 ONLY_ACTIVE_ARCH=YES \
+  clean build
+```
+
 Build the Demo release configuration:
 
 ```bash
@@ -88,14 +122,23 @@ xcodebuild \
   clean archive
 ```
 
+> **Command-line / CI builds.** The repo also ships a Ruby/Fastlane toolchain (`Gemfile`,
+> `fastlane/Fastfile`) used for CI builds and tests. For those workflows run `bundle install`, then
+> the relevant lane (lanes are selected via environment variables such as `APP_SCHEME`). For local
+> development the Xcode GUI build above is sufficient.
+
 ### Running with remote services
 
-The app is configured to the type (debug/release) and variant (dev/demo) in the four xcconfig files. These are the contents of the xcconfig file, and you don't need to change anything if you don't want to:
+The app is configured to the build type (debug/release) and variant (dev/demo) by the four
+`.xcconfig` files in `Wallet/Config`; you don't need to change anything unless you want to. Each file
+sets `BUILD_TYPE` and `BUILD_VARIANT`:
 
-```
-BUILD_TYPE = RELEASE
-BUILD_VARIANT = DEMO
-```
+| File | `BUILD_TYPE` | `BUILD_VARIANT` |
+| --- | --- | --- |
+| `WalletDev.xcconfig` | `DEBUG` | `DEV` |
+| `WalletDevRelease.xcconfig` | `RELEASE` | `DEV` |
+| `WalletDemo.xcconfig` | `DEBUG` | `DEMO` |
+| `WalletDemoRelease.xcconfig` | `RELEASE` | `DEMO` |
 
 The values defined in the `.xcconfig` files are utilized within instances of `WalletKitConfig` and `RQESConfig` to assign the appropriate configurations. These configurations are selected based on the specified build type and build variant defined in the `.xcconfig` files.
 
@@ -158,11 +201,11 @@ var issuersConfig: [String: VciConfig] {
 }
 ```
 
-In this example, the `issuersConfig` property dynamically assigns configurations, such as `credentialIssuerURL`, `clientId`, `authFlowRedirectionURI`, `requirePAR`, `requireDpop`, `keyAttestationsConfig`, and `cacheIssuerMetadata`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`).
+In this example, the `issuersConfig` property dynamically assigns configurations, such as `credentialIssuerURL`, `clientId`, `authFlowRedirectionURI`, `requirePAR`, `requireDpop`, `keyAttestationsConfig`, and `cacheIssuerMetadata`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`). The snippet is trimmed to one issuer per variant for brevity; the live `WalletKitConfigImpl` returns **two** issuers per variant — the primary (`order: 1`) plus a backend issuer (`order: 0`): `https://issuer-backend.eudiw.dev` for `.DEMO` and `https://dev.issuer-backend.eudiw.dev` for `.DEV`.
 
 ### Running with local services
 
-The first step is to run all three services locally on your machine. You can follow these Repositories for further instructions:
+The first step is to run the backend services locally — the issuer and the web verifier (its UI and endpoint). Follow these repositories for instructions:
 * [Issuer](https://github.com/eu-digital-identity-wallet/eudi-srv-web-issuing-eudiw-py)
 * [Web Verifier UI](https://github.com/eu-digital-identity-wallet/eudi-web-verifier)
 * [Web Verifier Endpoint](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt)
@@ -171,7 +214,7 @@ The first step is to run all three services locally on your machine. You can fol
 
 To enable the app to interact with a locally running service, a minor code change is required.
 
-Before running the app in the simulator, add the following lines of code to the top of the `NetworkSessionProvider` file inside the `logic-api` module, directly below the import statements.
+Before running the app in the simulator, add the following lines of code to the top of the `NetworkSessionProvider.swift` file inside the `logic-api` module (the type you edit is `NetworkSessionProviderImpl`), directly below the import statements.
 
 ```swift
 final class SelfSignedDelegate: NSObject, URLSessionDelegate {

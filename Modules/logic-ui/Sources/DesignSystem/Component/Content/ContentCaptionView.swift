@@ -24,7 +24,7 @@ public struct ContentCaptionView: View {
 
   public init(
     caption: LocalizableStringKey,
-    captionColor: Color = Theme.shared.color.onSurfaceVariant,
+    captionColor: Color = Theme.shared.color.primaryLabel,
     isLoading: Bool = false
   ) {
     self.caption = caption
