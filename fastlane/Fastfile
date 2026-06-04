@@ -39,9 +39,11 @@ platform :ios do
   end
 
   desc "Run tests"
-  lane :tests do
+  lane :tests do |values|
+    scheme = values[:scheme]
+    UI.user_error!("Missing required parameter: scheme") if scheme.to_s.strip.empty?
     scan(
-      scheme: ENV["APP_SCHEME"],
+      scheme: scheme,
       xcargs: "-skipPackagePluginValidation -skipMacroValidation"
     )
   end
