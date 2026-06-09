@@ -1,5 +1,5 @@
 {
-  "originHash" : "630f264ea7577898a606ae65602241cdd784282d1bc351dff4b0227054b43e1d",
+  "originHash" : "660fc54fa0f66336b905892f3d567ad983785a81978e400835568b3b2aa7a452",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "9524e79bdcb522ec587af8faefd82cf35ee18ab1",
-        "version" : "0.31.0"
+        "revision" : "9622b918d080e7ab4ea9363d72c3f938d26218f7",
+        "version" : "0.31.2"
       }
     },
     {
@@ -285,8 +285,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/PhoneNumberKit/PhoneNumberKit",
       "state" : {
-        "revision" : "52bd68dffa07ec7fc42b9851911c59e9d57fc906",
-        "version" : "5.0.0"
+        "revision" : "ebde4c008bad416588627d83ac07b991c204f72b",
+        "version" : "5.0.2"
       }
     },
     {
@@ -366,8 +366,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-asn1.git",
       "state" : {
-        "revision" : "eb50cbd14606a9161cbc5d452f18797c90ef0bab",
-        "version" : "1.7.0"
+        "revision" : "a9a5efd40eaf558a2bcd48d64b1d1646be686008",
+        "version" : "1.7.1"
       }
     },
     {
