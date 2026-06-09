@@ -51,21 +51,16 @@ struct DocumentDetailsView<Router: RouterHost>: View {
       ]
     ) {
 
-      content(
+      DocumentDetailsViewContainer(
         viewState: viewModel.viewState,
         isVisible: viewModel.isVisible,
-        isDeletionModalShowing: $viewModel.isDeletionModalShowing
-      ) {
-        viewModel.onContinue()
-      } onShowDeleteModal: {
-        viewModel.onShowDeleteModal()
-      } onDeleteDocument: {
-        viewModel.onDeleteDocument()
-      } issueNewDocument: {
-        viewModel.issueNewDocument()
-      } toggleIsVisible: {
-        viewModel.toggleIsVisible()
-      }
+        isDeletionModalShowing: $viewModel.isDeletionModalShowing,
+        onContinue: { viewModel.onContinue() },
+        onShowDeleteModal: { viewModel.onShowDeleteModal() },
+        onDeleteDocument: { viewModel.onDeleteDocument() },
+        issueNewDocument: { viewModel.issueNewDocument() },
+        toggleIsVisible: { viewModel.toggleIsVisible() }
+      )
     }
     .alertView(
       isPresented: $viewModel.showReissuanceDialog,
@@ -101,129 +96,136 @@ struct DocumentDetailsView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: DocumentDetailsViewState,
-  isVisible: Bool,
-  isDeletionModalShowing: Binding<Bool>,
-  onContinue: @escaping () -> Void,
-  onShowDeleteModal: @escaping () -> Void,
-  onDeleteDocument: @escaping () -> Void,
-  issueNewDocument: @escaping () -> Void,
-  toggleIsVisible: @escaping () -> Void,
-) -> some View {
-  ScrollView {
-    VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
+private struct DocumentDetailsViewContainer: View {
 
-      Text(viewState.document.documentName)
-        .font(.largeTitle)
-        .bold()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .shimmer(isLoading: viewState.isLoading)
+  let viewState: DocumentDetailsViewState
+  let isVisible: Bool
+  @Binding var isDeletionModalShowing: Bool
+  let onContinue: () -> Void
+  let onShowDeleteModal: () -> Void
+  let onDeleteDocument: () -> Void
+  let issueNewDocument: () -> Void
+  let toggleIsVisible: () -> Void
 
-      if let issuerDetailsCardDataUi = viewState.issuerDetailsCardDataUi {
-        VStack(spacing: SPACING_SMALL) {
+  var body: some View {
+    content()
+  }
 
-          Text(.genericIssuer)
-            .typography(Theme.shared.font.bodySmall)
-            .fontWeight(.semibold)
-            .foregroundStyle(Theme.shared.color.secondaryLabel)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .shimmer(isLoading: viewState.isLoading)
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    ScrollView {
+      VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
 
-          IssuerDetailsCardView(
-            issuerDetails: issuerDetailsCardDataUi,
-            isLoading: viewState.isLoading,
-            onAction: issueNewDocument
-          )
-        }
-        .zIndex(1)
-      }
-
-      VStack(spacing: SPACING_SMALL) {
-        HStack {
-
-          Text(.documentData)
-            .typography(Theme.shared.font.bodySmall)
-            .fontWeight(.semibold)
-            .foregroundStyle(Theme.shared.color.secondaryLabel)
-            .padding(.vertical, SPACING_SMALL)
-            .shimmer(isLoading: viewState.isLoading)
-
-          Spacer()
-
-          Button {
-            toggleIsVisible()
-          } label: {
-            HStack(spacing: SPACING_SMALL) {
-              (isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 24, height: 24)
-
-              Text(isVisible ? .documentDetailsShow : .documentDetailsHide)
-                .typography(Theme.shared.font.bodyMedium)
-                .fontWeight(.semibold)
-                .frame(alignment: .leading)
-            }
-            .frame(alignment: .trailing)
-            .foregroundStyle(Theme.shared.color.accent)
-            .shimmer(isLoading: viewState.isLoading)
-          }
-          .buttonStyle(.plain)
-          .accessibilityLocator(isVisible ? DocumentDetailsLocators.eyeSlash : DocumentDetailsLocators.eye)
-        }
-
-        WrapExpandableListView(
-          items: viewState.document.documentFields,
-          hideSensitiveContent: isVisible,
-          isLoading: viewState.isLoading
-        )
-        .zIndex(0)
-      }
-
-      WrapButtonView(
-        style: .error,
-        title: .removeFromWallet,
-        isLoading: viewState.isLoading,
-        onAction: onShowDeleteModal()
-      )
-      .combineChilrenAccessibility(
-        locator: DocumentDetailsLocators.deleteDocument
-      )
-      .confirmationDialog(
-        .custom(""),
-        isPresented: isDeletionModalShowing,
-        actions: {
-          Button(.documentDetailsRemoveButton, role: .destructive) {
-            onDeleteDocument()
-          }
-          .accessibilityElement()
-          .accessibilityIdentifier(DocumentDetailsLocators.confirmDialogDeleteButton.id)
-
-          Button(.cancelButton) {
-            onShowDeleteModal()
-          }
-          .accessibilityElement()
-          .accessibilityIdentifier(DocumentDetailsLocators.confirmDialogDeleteButton.id)
-        }, message: {
-          Text(.deleteDocumentConfirmDialog)
-        }
-      )
-
-      if let documentCredentialsInfo = viewState.documentCredentialsInfo {
-        Text(documentCredentialsInfo.title)
-          .font(Theme.shared.font.bodySmall.font)
-          .padding(.vertical, SPACING_SMALL)
-          .padding(.horizontal, SPACING_MEDIUM)
-          .foregroundColor(Theme.shared.color.secondaryLabel)
-          .frame(maxWidth: .infinity, alignment: .center)
+        Text(viewState.document.documentName)
+          .font(.largeTitle)
+          .bold()
+          .frame(maxWidth: .infinity, alignment: .leading)
           .shimmer(isLoading: viewState.isLoading)
+
+        if let issuerDetailsCardDataUi = viewState.issuerDetailsCardDataUi {
+          VStack(spacing: SPACING_SMALL) {
+
+            Text(.genericIssuer)
+              .typography(Theme.shared.font.bodySmall)
+              .fontWeight(.semibold)
+              .foregroundStyle(Theme.shared.color.secondaryLabel)
+              .frame(maxWidth: .infinity, alignment: .leading)
+              .shimmer(isLoading: viewState.isLoading)
+
+            IssuerDetailsCardView(
+              issuerDetails: issuerDetailsCardDataUi,
+              isLoading: viewState.isLoading,
+              onAction: issueNewDocument
+            )
+          }
+          .zIndex(1)
+        }
+
+        VStack(spacing: SPACING_SMALL) {
+          HStack {
+
+            Text(.documentData)
+              .typography(Theme.shared.font.bodySmall)
+              .fontWeight(.semibold)
+              .foregroundStyle(Theme.shared.color.secondaryLabel)
+              .padding(.vertical, SPACING_SMALL)
+              .shimmer(isLoading: viewState.isLoading)
+
+            Spacer()
+
+            Button {
+              toggleIsVisible()
+            } label: {
+              HStack(spacing: SPACING_SMALL) {
+                (isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye)
+                  .resizable()
+                  .aspectRatio(contentMode: .fit)
+                  .frame(width: 24, height: 24)
+
+                Text(isVisible ? .documentDetailsShow : .documentDetailsHide)
+                  .typography(Theme.shared.font.bodyMedium)
+                  .fontWeight(.semibold)
+                  .frame(alignment: .leading)
+              }
+              .frame(alignment: .trailing)
+              .foregroundStyle(Theme.shared.color.accent)
+              .shimmer(isLoading: viewState.isLoading)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLocator(isVisible ? DocumentDetailsLocators.eyeSlash : DocumentDetailsLocators.eye)
+          }
+
+          WrapExpandableListView(
+            items: viewState.document.documentFields,
+            hideSensitiveContent: isVisible,
+            isLoading: viewState.isLoading
+          )
+          .zIndex(0)
+        }
+
+        WrapButtonView(
+          style: .error,
+          title: .removeFromWallet,
+          isLoading: viewState.isLoading,
+          onAction: onShowDeleteModal()
+        )
+        .combineChilrenAccessibility(
+          locator: DocumentDetailsLocators.deleteDocument
+        )
+        .confirmationDialog(
+          .custom(""),
+          isPresented: $isDeletionModalShowing,
+          actions: {
+            Button(.documentDetailsRemoveButton, role: .destructive) {
+              onDeleteDocument()
+            }
+            .accessibilityElement()
+            .accessibilityIdentifier(DocumentDetailsLocators.confirmDialogDeleteButton.id)
+
+            Button(.cancelButton) {
+              onShowDeleteModal()
+            }
+            .accessibilityElement()
+            .accessibilityIdentifier(DocumentDetailsLocators.confirmDialogDeleteButton.id)
+          }, message: {
+            Text(.deleteDocumentConfirmDialog)
+          }
+        )
+
+        if let documentCredentialsInfo = viewState.documentCredentialsInfo {
+          Text(documentCredentialsInfo.title)
+            .font(Theme.shared.font.bodySmall.font)
+            .padding(.vertical, SPACING_SMALL)
+            .padding(.horizontal, SPACING_MEDIUM)
+            .foregroundColor(Theme.shared.color.secondaryLabel)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .shimmer(isLoading: viewState.isLoading)
+        }
       }
+      .padding(Theme.shared.dimension.padding)
+      .padding(.bottom)
     }
-    .padding(Theme.shared.dimension.padding)
-    .padding(.bottom)
   }
 }
 
@@ -255,7 +257,7 @@ private func content(
     padding: .zero,
     canScroll: true
   ) {
-    content(
+    DocumentDetailsViewContainer(
       viewState: viewState,
       isVisible: true,
       isDeletionModalShowing: .constant(false),

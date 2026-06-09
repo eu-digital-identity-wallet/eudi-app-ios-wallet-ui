@@ -32,7 +32,7 @@ struct IssuanceOptionView<Router: RouterHost>: View {
       navigationTitle: .addDocumentTitle,
       toolbarContent: viewModel.toolbarContent()
     ) {
-      content(
+      IssuanceOptionViewContainer(
         onAddDocumentClick: { viewModel.onAddDocumentClick() },
         onScanClick: { viewModel.onScanClick() }
       )
@@ -40,40 +40,47 @@ struct IssuanceOptionView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  onAddDocumentClick: @escaping () -> Void,
-  onScanClick: @escaping () -> Void
-) -> some View {
-  VStack(spacing: SPACING_LARGE_MEDIUM) {
-    Text(.addDocumentsToWallet)
-      .typography(Theme.shared.font.bodyLarge)
-      .foregroundStyle(Theme.shared.color.primaryLabel)
-      .accessibilityLocator(IssuanceOptionLocators.optionScreenTitle)
+private struct IssuanceOptionViewContainer: View {
 
-    VStack(spacing: SPACING_MEDIUM_SMALL) {
-      ActionCard(
-        icon: Theme.shared.image.chooseDocumentImage,
-        title: .chooseFromList,
-        locator: IssuanceOptionLocators.chooseFromList,
-        action: {
-          onAddDocumentClick()
-        }
-      )
+  let onAddDocumentClick: () -> Void
+  let onScanClick: () -> Void
 
-      ActionCard(
-        icon: Theme.shared.image.scanDocumentImage,
-        title: .scanQrCode,
-        locator: IssuanceOptionLocators.scanQrCode,
-        action: {
-          onScanClick()
-        }
-      )
-    }
+  var body: some View {
+    content()
   }
-  .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-  .padding(.horizontal, Theme.shared.dimension.padding)
+
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    VStack(spacing: SPACING_LARGE_MEDIUM) {
+      Text(.addDocumentsToWallet)
+        .typography(Theme.shared.font.bodyLarge)
+        .foregroundStyle(Theme.shared.color.primaryLabel)
+        .accessibilityLocator(IssuanceOptionLocators.optionScreenTitle)
+
+      VStack(spacing: SPACING_MEDIUM_SMALL) {
+        ActionCard(
+          icon: Theme.shared.image.chooseDocumentImage,
+          title: .chooseFromList,
+          locator: IssuanceOptionLocators.chooseFromList,
+          action: {
+            onAddDocumentClick()
+          }
+        )
+
+        ActionCard(
+          icon: Theme.shared.image.scanDocumentImage,
+          title: .scanQrCode,
+          locator: IssuanceOptionLocators.scanQrCode,
+          action: {
+            onScanClick()
+          }
+        )
+      }
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    .padding(.horizontal, Theme.shared.dimension.padding)
+  }
 }
 
 #Preview {
@@ -82,6 +89,6 @@ private func content(
     canScroll: true,
     navigationTitle: .addDocumentTitle
   ) {
-    content(onAddDocumentClick: {}, onScanClick: {})
+    IssuanceOptionViewContainer(onAddDocumentClick: {}, onScanClick: {})
   }
 }

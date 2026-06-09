@@ -35,7 +35,7 @@ struct ProximityConnectionView<Router: RouterHost>: View {
       navigationTitle: .authenticate,
       toolbarContent: viewModel.toolbarContent()
     ) {
-      content(
+      ProximityConnectionViewContainer(
         viewState: viewModel.viewState,
         contentSize: contentSize
       )
@@ -46,57 +46,64 @@ struct ProximityConnectionView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: ProxmityConnectivityState,
-  contentSize: CGFloat
-) -> some View {
-  VStack(spacing: SPACING_LARGE_MEDIUM) {
-    HStack {
-      Text(.proximityConnectivityCaption)
-        .typography(Theme.shared.font.bodyLarge)
-        .foregroundStyle(Theme.shared.color.primaryLabel)
-      Spacer()
-    }
-    .frame(maxWidth: .infinity, alignment: .leading)
+private struct ProximityConnectionViewContainer: View {
 
-    Spacer()
+  let viewState: ProxmityConnectivityState
+  let contentSize: CGFloat
 
-    VStack(alignment: .center) {
-      if let image = viewState.qrImage {
-        Image(uiImage: image)
-          .resizable()
-          .transition(.opacity)
-      } else {
-        ContentLoaderView(showLoader: .constant(true))
-      }
-    }
-    .frame(width: contentSize, height: contentSize)
-
-    Spacer()
-
-    Divider()
-
-    nfcFooter(contentSize: contentSize)
+  var body: some View {
+    content()
   }
-  .padding(.top, SPACING_LARGE_MEDIUM)
-  .padding(.horizontal, Theme.shared.dimension.padding)
-}
 
-@MainActor
-@ViewBuilder
-private func nfcFooter(contentSize: CGFloat) -> some View {
-  VStack(alignment: .center, spacing: SPACING_SMALL) {
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    VStack(spacing: SPACING_LARGE_MEDIUM) {
+      HStack {
+        Text(.proximityConnectivityCaption)
+          .typography(Theme.shared.font.bodyLarge)
+          .foregroundStyle(Theme.shared.color.primaryLabel)
+        Spacer()
+      }
+      .frame(maxWidth: .infinity, alignment: .leading)
 
-    Theme.shared.image.ble
-      .resizable()
-      .scaledToFit()
-      .frame(width: 36, height: 36)
+      Spacer()
 
-    Text(.proximityConnectionBleDescription)
-      .typography(Theme.shared.font.bodyMedium)
-      .foregroundStyle(Theme.shared.color.primaryLabel)
+      VStack(alignment: .center) {
+        if let image = viewState.qrImage {
+          Image(uiImage: image)
+            .resizable()
+            .transition(.opacity)
+        } else {
+          ContentLoaderView(showLoader: .constant(true))
+        }
+      }
+      .frame(width: contentSize, height: contentSize)
+
+      Spacer()
+
+      Divider()
+
+      nfcFooter()
+    }
+    .padding(.top, SPACING_LARGE_MEDIUM)
+    .padding(.horizontal, Theme.shared.dimension.padding)
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func nfcFooter() -> some View {
+    VStack(alignment: .center, spacing: SPACING_SMALL) {
+
+      Theme.shared.image.ble
+        .resizable()
+        .scaledToFit()
+        .frame(width: 36, height: 36)
+
+      Text(.proximityConnectionBleDescription)
+        .typography(Theme.shared.font.bodyMedium)
+        .foregroundStyle(Theme.shared.color.primaryLabel)
+    }
   }
 }
 
@@ -111,7 +118,7 @@ private func nfcFooter(contentSize: CGFloat) -> some View {
     padding: .zero,
     canScroll: true
   ) {
-    content(
+    ProximityConnectionViewContainer(
       viewState: viewState,
       contentSize: 0.0
     )
@@ -129,7 +136,7 @@ private func nfcFooter(contentSize: CGFloat) -> some View {
     padding: .zero,
     canScroll: true
   ) {
-    content(
+    ProximityConnectionViewContainer(
       viewState: viewState,
       contentSize: 0.0
     )

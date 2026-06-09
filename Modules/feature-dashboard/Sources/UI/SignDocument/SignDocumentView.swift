@@ -29,11 +29,10 @@ struct SignDocumentView<Router: RouterHost>: View {
       navigationTitle: .signDocument,
       toolbarContent: viewModel.toolbarContent()
     ) {
-      content(
-        viewState: viewModel.viewState
-      ) {
-        viewModel.onShowFilePicker()
-      }
+      SignDocumentViewContainer(
+        viewState: viewModel.viewState,
+        action: { viewModel.onShowFilePicker() }
+      )
       .fileImporter(
         isPresented: $viewModel.showFilePicker,
         allowedContentTypes: [.pdf],
@@ -52,26 +51,32 @@ struct SignDocumentView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: SignDocumentState,
-  action: @escaping () -> Void
-) -> some View {
+private struct SignDocumentViewContainer: View {
 
-  VStack(spacing: SPACING_LARGE) {
-    HStack {
-      Text(.signDocumentSubtitle)
-        .typography(Theme.shared.font.bodyLarge)
-        .foregroundColor(Theme.shared.color.primaryLabel)
-    }
-    .frame(maxWidth: .infinity, alignment: .leading)
+  let viewState: SignDocumentState
+  let action: () -> Void
 
-    WrapCardView {
-      WrapListItemView(
-        listItem: viewState.listItem
-      ) {
-        action()
+  var body: some View {
+    content()
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    VStack(spacing: SPACING_LARGE) {
+      HStack {
+        Text(.signDocumentSubtitle)
+          .typography(Theme.shared.font.bodyLarge)
+          .foregroundColor(Theme.shared.color.primaryLabel)
+      }
+      .frame(maxWidth: .infinity, alignment: .leading)
+
+      WrapCardView {
+        WrapListItemView(
+          listItem: viewState.listItem
+        ) {
+          action()
+        }
       }
     }
   }
@@ -79,12 +84,14 @@ private func content(
 
 #Preview {
   ContentScreenView {
-    content(viewState: .init(
-      listItem: .init(
-        mainContent: .text(.selectDocument),
-        trailingContent: .icon(Theme.shared.image.plus)
-      )
-    ), action: {}
+    SignDocumentViewContainer(
+      viewState: .init(
+        listItem: .init(
+          mainContent: .text(.selectDocument),
+          trailingContent: .icon(Theme.shared.image.plus)
+        )
+      ),
+      action: {}
     )
   }
 }
