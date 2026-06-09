@@ -60,6 +60,13 @@ public extension Bundle {
   static func getKeychainAccessGroup() -> String {
     // Try to read ANY existing keychain item to get the access group
     // This is safer than trying to create an item, which requires proper entitlements
+      
+    let variant = Bundle.main.object(forInfoDictionaryKey: "Build Variant") as? String
+      if variant == "DEV" {
+        return "9NR5K6K6B5.dev.eidas2sandkasse.demo-lommebok"
+    }
+    return "9NR5K6K6B5.net.eidas2sandkasse.demo-lommebok.dev"
+      
     let query: [String: Any] = [
       kSecClass as String: kSecClassGenericPassword,
       kSecMatchLimit as String: kSecMatchLimitOne,
