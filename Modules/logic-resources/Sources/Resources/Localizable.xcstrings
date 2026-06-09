@@ -1608,7 +1608,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enter a 6-digit PIN"
+            "value" : "Type a PIN"
           }
         }
       }
@@ -1685,7 +1685,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Re-type your PIN"
+            "value" : "Confirm PIN"
           }
         }
       }
