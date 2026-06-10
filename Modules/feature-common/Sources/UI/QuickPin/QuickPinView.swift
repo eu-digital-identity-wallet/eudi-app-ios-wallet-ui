@@ -114,7 +114,7 @@ private struct QuickPinViewContainer: View {
         maxDigits: viewState.quickPinSize,
         isSecureEntry: true,
         canFocus: .constant(!viewState.isLockedOut),
-        shouldUseFullScreen: true,
+        shouldUseFullScreen: false,
         hasError: hasError,
         isDisabled: viewState.isLockedOut
       )
