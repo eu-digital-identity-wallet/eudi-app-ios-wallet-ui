@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "ic-logo-2.svg",
+      "filename" : "eudi-wallet-logo.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "eudi-wallet-logo-dark.svg",
       "idiom" : "universal"
     }
   ],

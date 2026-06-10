@@ -70,8 +70,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
         initialized: false,
         contentHeaderConfig: .init(
           appIconAndTextData: AppIconAndTextData(
-            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-            appText: ThemeManager.shared.image.euditext
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
           )
         )
       )
@@ -99,8 +98,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
           initialized: true,
           contentHeaderConfig: .init(
             appIconAndTextData: AppIconAndTextData(
-              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-              appText: ThemeManager.shared.image.euditext
+              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
             ),
             description: .dataSharingTitle,
             mainText: .issuanceRequest,

@@ -53,8 +53,7 @@ private struct GenericSuccessViewContainer: View {
     ContentHeaderView(
       config: ContentHeaderConfig(
         appIconAndTextData: AppIconAndTextData(
-          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-          appText: ThemeManager.shared.image.euditext
+          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
         )
       )
     )

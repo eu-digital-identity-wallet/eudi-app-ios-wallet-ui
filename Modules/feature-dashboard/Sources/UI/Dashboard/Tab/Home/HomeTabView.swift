@@ -162,8 +162,7 @@ private struct HomeTabViewContainer: View {
     username: "Eudi User",
     contentHeaderConfig: .init(
       appIconAndTextData: AppIconAndTextData(
-        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-        appText: ThemeManager.shared.image.euditext
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
       )
     ),
     phase: .active,

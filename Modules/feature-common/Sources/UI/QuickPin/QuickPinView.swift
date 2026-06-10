@@ -75,11 +75,12 @@ private struct QuickPinViewContainer: View {
     ContentHeaderView(
       config: ContentHeaderConfig(
         appIconAndTextData: AppIconAndTextData(
-          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-          appText: ThemeManager.shared.image.euditext
+          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
         )
       )
     )
+
+    VSpacer.small()
 
     ContentTitleView(
       title: viewState.title,
