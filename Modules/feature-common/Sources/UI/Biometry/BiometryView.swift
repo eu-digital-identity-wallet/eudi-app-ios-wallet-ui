@@ -155,7 +155,7 @@ private struct BiometryViewContainer: View {
         maxDigits: viewState.quickPinSize,
         isSecureEntry: true,
         canFocus: .constant(!viewState.areBiometricsEnabled && !viewState.isLockedOut),
-        shouldUseFullScreen: true,
+        shouldUseFullScreen: false,
         hasError: hasError,
         isDisabled: viewState.isLockedOut
       )
