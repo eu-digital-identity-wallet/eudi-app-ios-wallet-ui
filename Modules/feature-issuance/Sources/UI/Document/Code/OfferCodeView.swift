@@ -31,7 +31,7 @@ struct OfferCodeView<Router: RouterHost>: View {
       navigationTitle: .custom(""),
       toolbarContent: viewModel.toolbarContent()
     ) {
-      content(
+      OfferCodeViewContainer(
         viewState: viewModel.viewState,
         codeInput: $viewModel.codeInput,
         codeIsFocused: $viewModel.codeIsFocused
@@ -43,65 +43,60 @@ struct OfferCodeView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func loader() -> some View {
-  Spacer()
-  ContentLoaderView(showLoader: .constant(true))
-  Spacer()
-}
+private struct OfferCodeViewContainer: View {
 
-@MainActor
-@ViewBuilder
-private func pinView(
-  isLoading: Bool,
-  txCodeLength: Int,
-  codeInput: Binding<String>,
-  codeIsFocused: Binding<Bool>
-) -> some View {
+  let viewState: OfferCodeViewState
+  @Binding var codeInput: String
+  @Binding var codeIsFocused: Bool
 
-  VSpacer.large()
+  var body: some View {
+    content()
+  }
 
-  PinTextFieldView(
-    numericText: codeInput,
-    maxDigits: txCodeLength,
-    isSecureEntry: true,
-    canFocus: codeIsFocused,
-    shouldUseFullScreen: false,
-    isDisabled: isLoading
-  )
-
-  Spacer()
-}
-
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: OfferCodeViewState,
-  codeInput: Binding<String>,
-  codeIsFocused: Binding<Bool>
-) -> some View {
-
-  ContentHeaderView(
-    config: viewState.contentHeaderConfig
-  )
-
-  ContentTitleView(
-    title: viewState.title,
-    caption: viewState.caption
-  )
-
-  VSpacer.large()
-
-  if viewState.isLoading {
-    loader()
-  } else {
-    pinView(
-      isLoading: viewState.isLoading,
-      txCodeLength: viewState.config.txCodeLength,
-      codeInput: codeInput,
-      codeIsFocused: codeIsFocused
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    ContentHeaderView(
+      config: viewState.contentHeaderConfig
     )
+
+    ContentTitleView(
+      title: viewState.title,
+      caption: viewState.caption
+    )
+
+    VSpacer.large()
+
+    if viewState.isLoading {
+      loader()
+    } else {
+      pinView()
+    }
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func loader() -> some View {
+    Spacer()
+    ContentLoaderView(showLoader: .constant(true))
+    Spacer()
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func pinView() -> some View {
+    VSpacer.large()
+
+    PinTextFieldView(
+      numericText: $codeInput,
+      maxDigits: viewState.config.txCodeLength,
+      isSecureEntry: true,
+      canFocus: $codeIsFocused,
+      shouldUseFullScreen: false,
+      isDisabled: viewState.isLoading
+    )
+
+    Spacer()
   }
 }
 
@@ -125,14 +120,13 @@ private func content(
     caption: LocalizableStringKey.addDocumentSubtitle,
     contentHeaderConfig: .init(
       appIconAndTextData: AppIconAndTextData(
-        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-        appText: ThemeManager.shared.image.euditext
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
       )
     )
   )
 
   ContentScreenView {
-    content(
+    OfferCodeViewContainer(
       viewState: state,
       codeInput: .constant("inout"),
       codeIsFocused: .constant(false)

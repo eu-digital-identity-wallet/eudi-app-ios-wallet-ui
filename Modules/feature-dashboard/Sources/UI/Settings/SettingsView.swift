@@ -31,7 +31,7 @@ struct SettingsView<Router: RouterHost>: View {
       navigationTitle: .settings,
       toolbarContent: viewModel.toolbarContent()
     ) {
-      content(
+      SettingsViewContainer(
         viewState: viewModel.viewState
       )
     }
@@ -51,60 +51,67 @@ struct SettingsView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: SettingsViewState
-) -> some View {
-  VStack(spacing: SPACING_MEDIUM_SMALL) {
-    ForEach(viewState.items) { item in
-      if item.isShareLink {
-        if let fileUrl = viewState.logsUrl {
-          ShareLink(item: fileUrl) {
+private struct SettingsViewContainer: View {
+
+  let viewState: SettingsViewState
+
+  var body: some View {
+    content()
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    VStack(spacing: SPACING_MEDIUM_SMALL) {
+      ForEach(viewState.items) { item in
+        if item.isShareLink {
+          if let fileUrl = viewState.logsUrl {
+            ShareLink(item: fileUrl) {
+              TappableCellView(
+                title: .retrieveLogs,
+                icon: item.icon,
+                showDivider: item.showDivider,
+                useOverlay: false,
+                action: {}
+              )
+            }
+          }
+        } else if item.isToggle {
+          if let toggleBinding = item.toggleBinding {
             TappableCellView(
-              title: .retrieveLogs,
+              title: item.title,
               icon: item.icon,
               showDivider: item.showDivider,
+              isToggle: true,
+              isOn: toggleBinding,
               useOverlay: false,
-              action: {}
+              action: item.action
             )
           }
-        }
-      } else if item.isToggle {
-        if let toggleBinding = item.toggleBinding {
+        } else {
           TappableCellView(
             title: item.title,
             icon: item.icon,
             showDivider: item.showDivider,
-            isToggle: true,
-            isOn: toggleBinding,
-            useOverlay: false,
             action: item.action
           )
         }
-      } else {
-        TappableCellView(
-          title: item.title,
-          icon: item.icon,
-          showDivider: item.showDivider,
-          action: item.action
-        )
+      }
+
+      Spacer()
+
+      if let version = viewState.appVersion {
+        Text(version)
+          .typography(Theme.shared.font.bodyMedium)
+          .frame(maxWidth: .infinity, alignment: .center)
       }
     }
-
-    Spacer()
-
-    if let version = viewState.appVersion {
-      Text(version)
-        .typography(Theme.shared.font.bodyMedium)
-        .frame(maxWidth: .infinity, alignment: .center)
-    }
+    .padding(.bottom, SPACING_LARGE_MEDIUM)
   }
-  .padding(.bottom, SPACING_LARGE_MEDIUM)
 }
 
 #Preview {
-  let viewSate = SettingsViewState(
+  let viewState = SettingsViewState(
     items: [
       .init(
         title: .loginWithBiometrics,
@@ -122,27 +129,9 @@ private func content(
     changelogUrl: URL(string: "https://www.example.com")
   )
   ContentScreenView(
-    padding: .zero,
-    canScroll: false,
-    background: Theme.shared.color.background
+    canScroll: true,
+    navigationTitle: .settings
   ) {
-    VStack(spacing: SPACING_MEDIUM_SMALL) {
-      TappableCellView(
-        title: .loginWithBiometrics,
-        icon: Theme.shared.image.faceIdMenu,
-        showDivider: true,
-        isToggle: true,
-        isOn: .constant(true),
-        useOverlay: false,
-        action: {}
-      )
-    }
-    .padding(.bottom, SPACING_LARGE_MEDIUM)
-
-    if let version = viewSate.appVersion {
-      Text(version)
-        .typography(Theme.shared.font.bodyMedium)
-        .frame(maxWidth: .infinity, alignment: .center)
-    }
+    SettingsViewContainer(viewState: viewState)
   }
 }

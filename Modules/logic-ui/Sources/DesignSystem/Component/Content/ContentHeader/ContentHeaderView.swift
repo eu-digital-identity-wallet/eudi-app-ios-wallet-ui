@@ -144,8 +144,7 @@ public struct ContentHeaderView: View {
   ContentHeaderView(
     config: ContentHeaderConfig(
       appIconAndTextData: AppIconAndTextData(
-        appIcon: Image(systemName: "app"),
-        appText: Image(systemName: "app")
+        appIcon: Image(systemName: "app")
       ),
       description: .custom("This is a description"),
       descriptionTextConfig: nil,

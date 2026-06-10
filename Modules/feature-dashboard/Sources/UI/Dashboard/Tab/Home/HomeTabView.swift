@@ -28,14 +28,14 @@ struct HomeTabView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    content(
+    HomeTabViewContainer(
       viewState: viewModel.viewState,
       isAuthenticateAlertShowing: $viewModel.isAuthenticateAlertShowing,
       isSignDocumentAlertShowing: $viewModel.isSignDocumentAlertShowing,
-      toggleAuthenticateAlert: viewModel.toggleAuthenticateAlert(),
-      toggleAuthenticateModal: viewModel.toggleAuthenticateModal(),
-      openSignDocument: viewModel.openSignDocument(),
-      toggleSignDocumentAlert: viewModel.toggleSignDocumentAlert()
+      toggleAuthenticateAlert: { viewModel.toggleAuthenticateAlert() },
+      toggleAuthenticateModal: { viewModel.toggleAuthenticateModal() },
+      openSignDocument: { viewModel.openSignDocument() },
+      toggleSignDocumentAlert: { viewModel.toggleSignDocumentAlert() }
     )
     .confirmationDialog(
       .authenticate,
@@ -80,74 +80,81 @@ struct HomeTabView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: HomeTabState,
-  isAuthenticateAlertShowing: Binding<Bool>,
-  isSignDocumentAlertShowing: Binding<Bool>,
-  toggleAuthenticateAlert: @autoclosure @escaping () -> Void,
-  toggleAuthenticateModal: @autoclosure @escaping () -> Void,
-  openSignDocument: @autoclosure @escaping () -> Void,
-  toggleSignDocumentAlert: @autoclosure @escaping () -> Void
-) -> some View {
-  ScrollView {
-    VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-      ContentHeaderView(
-        config: viewState.contentHeaderConfig
-      )
+private struct HomeTabViewContainer: View {
 
-      if let username = viewState.username {
-        Text(.welcomeBack([username]))
-          .font(Theme.shared.font.titleMedium.font)
-          .foregroundStyle(Theme.shared.color.primaryLabel)
-          .accessibilityLocator(HomeTabViewLocators.userNameText)
-      }
+  let viewState: HomeTabState
+  @Binding var isAuthenticateAlertShowing: Bool
+  @Binding var isSignDocumentAlertShowing: Bool
+  let toggleAuthenticateAlert: () -> Void
+  let toggleAuthenticateModal: () -> Void
+  let openSignDocument: () -> Void
+  let toggleSignDocumentAlert: () -> Void
 
-      HomeCardView(
-        text: LocalizableStringKey.authenticateAuthoriseTransactions,
-        locator: HomeTabViewLocators.authenticateAuthoriseTransactions,
-        buttonText: LocalizableStringKey.authenticate,
-        illustration: Theme.shared.image.homeIdentity,
-        learnMoreText: LocalizableStringKey.learnMore,
-        learnMoreAction: {
-          toggleAuthenticateAlert()
-        },
-        action: toggleAuthenticateModal()
-      )
-      .alertView(
-        isPresented: isAuthenticateAlertShowing,
-        title: .alertAccessOnlineServices,
-        message: .alertAccessOnlineServicesMessage,
-        actions: {
-          Button(.okButton, role: .cancel) {}
-        }
-      )
-
-      HomeCardView(
-        text: LocalizableStringKey.electronicallySignDigitalDocuments,
-        locator: HomeTabViewLocators.electronicallySignDigitalDocuments,
-        buttonText: LocalizableStringKey.signDocument,
-        illustration: Theme.shared.image.homeContract,
-        learnMoreText: LocalizableStringKey.learnMore,
-        learnMoreAction: {
-          toggleSignDocumentAlert()
-        },
-        action: openSignDocument()
-      )
-      .alertView(
-        isPresented: isSignDocumentAlertShowing,
-        title: .alertSignDocumentsSafely,
-        message: .alertSignDocumentsSafelyMessage,
-        actions: {
-          Button(.okButton, role: .cancel) {}
-        }
-      )
-    }
-    .padding(.horizontal, SPACING_MEDIUM)
-    .padding(.bottom, SPACING_MEDIUM)
+  var body: some View {
+    content()
   }
-  .background(Theme.shared.color.background)
+
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    ScrollView {
+      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+        ContentHeaderView(
+          config: viewState.contentHeaderConfig
+        )
+
+        if let username = viewState.username {
+          Text(.welcomeBack([username]))
+            .font(Theme.shared.font.titleMedium.font)
+            .foregroundStyle(Theme.shared.color.primaryLabel)
+            .accessibilityLocator(HomeTabViewLocators.userNameText)
+        }
+
+        HomeCardView(
+          text: LocalizableStringKey.authenticateAuthoriseTransactions,
+          locator: HomeTabViewLocators.authenticateAuthoriseTransactions,
+          buttonText: LocalizableStringKey.authenticate,
+          illustration: Theme.shared.image.homeIdentity,
+          learnMoreText: LocalizableStringKey.learnMore,
+          learnMoreAction: {
+            toggleAuthenticateAlert()
+          },
+          action: toggleAuthenticateModal()
+        )
+        .alertView(
+          isPresented: $isAuthenticateAlertShowing,
+          title: .alertAccessOnlineServices,
+          message: .alertAccessOnlineServicesMessage,
+          actions: {
+            Button(.okButton, role: .cancel) {}
+          }
+        )
+
+        HomeCardView(
+          text: LocalizableStringKey.electronicallySignDigitalDocuments,
+          locator: HomeTabViewLocators.electronicallySignDigitalDocuments,
+          buttonText: LocalizableStringKey.signDocument,
+          illustration: Theme.shared.image.homeContract,
+          learnMoreText: LocalizableStringKey.learnMore,
+          learnMoreAction: {
+            toggleSignDocumentAlert()
+          },
+          action: openSignDocument()
+        )
+        .alertView(
+          isPresented: $isSignDocumentAlertShowing,
+          title: .alertSignDocumentsSafely,
+          message: .alertSignDocumentsSafelyMessage,
+          actions: {
+            Button(.okButton, role: .cancel) {}
+          }
+        )
+      }
+      .padding(.horizontal, SPACING_MEDIUM)
+      .padding(.bottom, SPACING_MEDIUM)
+    }
+    .background(Theme.shared.color.background)
+  }
 }
 
 #Preview {
@@ -155,20 +162,19 @@ private func content(
     username: "Eudi User",
     contentHeaderConfig: .init(
       appIconAndTextData: AppIconAndTextData(
-        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-        appText: ThemeManager.shared.image.euditext
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
       )
     ),
     phase: .active,
     pendingBleModalAction: false
   )
-  content(
+  HomeTabViewContainer(
     viewState: state,
     isAuthenticateAlertShowing: .constant(false),
     isSignDocumentAlertShowing: .constant(false),
-    toggleAuthenticateAlert: {}(),
-    toggleAuthenticateModal: {}(),
-    openSignDocument: {}(),
-    toggleSignDocumentAlert: {}()
+    toggleAuthenticateAlert: {},
+    toggleAuthenticateModal: {},
+    openSignDocument: {},
+    toggleSignDocumentAlert: {}
   )
 }

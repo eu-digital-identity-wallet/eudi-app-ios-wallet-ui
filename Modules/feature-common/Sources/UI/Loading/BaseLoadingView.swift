@@ -62,8 +62,7 @@ private func content(
     content(
       contentHeaderConfig: .init(
         appIconAndTextData: AppIconAndTextData(
-          appIcon: Theme.shared.image.logoEuDigitalIndentityWallet,
-          appText: Theme.shared.image.euditext
+          appIcon: Theme.shared.image.logoEuDigitalIndentityWallet
         )
       )
     )

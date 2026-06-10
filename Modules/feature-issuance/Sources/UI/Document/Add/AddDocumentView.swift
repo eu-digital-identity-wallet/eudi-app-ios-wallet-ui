@@ -36,18 +36,14 @@ struct AddDocumentView<Router: RouterHost>: View {
       isLoading: viewModel.viewState.isLoading,
       toolbarContent: viewModel.toolbarContent()
     ) {
-      if viewModel.viewState.addDocumentCellModels.isEmpty {
-        noDocumentsFound()
-      } else {
-        content(
-          viewState: viewModel.viewState
-        ) { issuerId, configIds, identifier in
-          viewModel.onClick(
-            issuerId: issuerId,
-            configIds: configIds,
-            docTypeIdentifier: identifier
-          )
-        }
+      AddDocumentViewContainer(
+        viewState: viewModel.viewState
+      ) { issuerId, configIds, identifier in
+        viewModel.onClick(
+          issuerId: issuerId,
+          configIds: configIds,
+          docTypeIdentifier: identifier
+        )
       }
     }
     .task {
@@ -56,76 +52,86 @@ struct AddDocumentView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: AddDocumentViewState,
-  action: @escaping (String, [String], DocumentTypeIdentifier) -> Void
-) -> some View {
+private struct AddDocumentViewContainer: View {
 
-  ScrollView {
-    LazyVStack(spacing: SPACING_MEDIUM_SMALL) {
+  let viewState: AddDocumentViewState
+  let action: (String, [String], DocumentTypeIdentifier) -> Void
 
-      Text(.chooseFromListTitle)
-        .typography(Theme.shared.font.bodyLarge)
-        .foregroundStyle(Theme.shared.color.primaryLabel)
-        .accessibilityLocator(AddDocumentLocators.subtitle)
+  var body: some View {
+    if viewState.addDocumentCellModels.isEmpty {
+      noDocumentsFound()
+    } else {
+      content()
+    }
+  }
 
-      ForEach(viewState.addDocumentCellModels.elements, id: \.key) { pair in
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    ScrollView {
+      LazyVStack(spacing: SPACING_MEDIUM_SMALL) {
 
-        let issuer = pair.key
-        let models = pair.value
+        Text(.chooseFromListTitle)
+          .typography(Theme.shared.font.bodyLarge)
+          .foregroundStyle(Theme.shared.color.primaryLabel)
+          .accessibilityLocator(AddDocumentLocators.subtitle)
 
-        Section(
-          header: WrapTextView(
-            text: .custom(issuer),
-            textConfig: TextConfig(
-              font: Theme.shared.font.bodySmall.font,
-              color: Theme.shared.color.primaryLabel,
-              textAlign: .leading,
-              fontWeight: .semibold
-            )
-          )
-          .frame(maxWidth: .infinity, alignment: .leading)
-          .shimmer(isLoading: viewState.isLoading)
-          .padding(.top, SPACING_MEDIUM_SMALL)
-        ) {
-          ForEach(models, id: \.id) { cell in
-            WrapCardView {
-              WrapListItemView(
-                listItem: cell.listItem,
-                locator: AddDocumentLocators.attestation(
-                  "\(cell.issuerId)_\(cell.docTypeIdentifier)"
-                ),
-                isLoading: cell.isLoading,
-                action: { action(cell.issuerId, cell.configIds, cell.docTypeIdentifier) }
+        ForEach(viewState.addDocumentCellModels.elements, id: \.key) { pair in
+
+          let issuer = pair.key
+          let models = pair.value
+
+          Section(
+            header: WrapTextView(
+              text: .custom(issuer),
+              textConfig: TextConfig(
+                font: Theme.shared.font.bodySmall.font,
+                color: Theme.shared.color.primaryLabel,
+                textAlign: .leading,
+                fontWeight: .semibold
               )
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .shimmer(isLoading: viewState.isLoading)
+            .padding(.top, SPACING_MEDIUM_SMALL)
+          ) {
+            ForEach(models, id: \.id) { cell in
+              WrapCardView {
+                WrapListItemView(
+                  listItem: cell.listItem,
+                  locator: AddDocumentLocators.attestation(
+                    "\(cell.issuerId)_\(cell.docTypeIdentifier)"
+                  ),
+                  isLoading: cell.isLoading,
+                  action: { action(cell.issuerId, cell.configIds, cell.docTypeIdentifier) }
+                )
+              }
             }
           }
         }
       }
+      .padding(.horizontal, Theme.shared.dimension.padding)
+      .padding(.bottom)
+    }
+    .disabled(viewState.addDocumentCellModels.allSatisfy { $0.value.isEmpty })
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func noDocumentsFound() -> some View {
+    VStack(spacing: .zero) {
+      Text(.chooseFromListTitle)
+        .typography(Theme.shared.font.bodyLarge)
+        .foregroundStyle(Theme.shared.color.primaryLabel)
+
+      Spacer()
+      ContentEmptyView(
+        title: .issuanceAddDocumentNoOptions
+      )
+      Spacer()
     }
     .padding(.horizontal, Theme.shared.dimension.padding)
-    .padding(.bottom)
   }
-  .disabled(viewState.addDocumentCellModels.allSatisfy { $0.value.isEmpty })
-}
-
-@MainActor
-@ViewBuilder
-private func noDocumentsFound() -> some View {
-  VStack(spacing: .zero) {
-    Text(.chooseFromListTitle)
-      .typography(Theme.shared.font.bodyLarge)
-      .foregroundStyle(Theme.shared.color.primaryLabel)
-
-    Spacer()
-    ContentEmptyView(
-      title: .issuanceAddDocumentNoOptions
-    )
-    Spacer()
-  }
-  .padding(.horizontal, Theme.shared.dimension.padding)
 }
 
 #Preview {
@@ -135,7 +141,7 @@ private func noDocumentsFound() -> some View {
     config: IssuanceFlowUiConfig(flow: .noDocument)
   )
 
-  content(
+  AddDocumentViewContainer(
     viewState: viewState
   ) { _, _, _ in }
 }

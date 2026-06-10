@@ -31,7 +31,7 @@ struct StartupView<Router: RouterHost>: View {
       canScroll: false,
       background: Theme.shared.color.background
     ) {
-      content(
+      StartupViewContainer(
         viewState: viewModel.viewState,
         screenWidth: getScreenRect().width
       )
@@ -42,20 +42,27 @@ struct StartupView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: StartupState,
-  screenWidth: CGFloat
-) -> some View {
-  ZStack {
-    Theme.shared.image.logo
-      .resizable()
-      .aspectRatio(contentMode: .fit)
-      .frame(width: screenWidth / 2.5)
+private struct StartupViewContainer: View {
+
+  let viewState: StartupState
+  let screenWidth: CGFloat
+
+  var body: some View {
+    content()
   }
-  .frame(maxWidth: .infinity, maxHeight: .infinity)
-  .ignoresSafeArea(.all)
+
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    ZStack {
+      Theme.shared.image.logo
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .frame(width: screenWidth / 2.5)
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .ignoresSafeArea(.all)
+  }
 }
 
 #Preview {
@@ -69,6 +76,6 @@ private func content(
     canScroll: false,
     background: Theme.shared.color.accent
   ) {
-    content(viewState: viewState, screenWidth: 1080)
+    StartupViewContainer(viewState: viewState, screenWidth: 1080)
   }
 }

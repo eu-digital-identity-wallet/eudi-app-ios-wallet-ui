@@ -46,8 +46,7 @@ open class BaseLoadingViewModel<Router: RouterHost, RequestItem: Sendable>: View
         isCancellable: cancellationTimeout <= 0,
         contentHeaderConfig: .init(
           appIconAndTextData: AppIconAndTextData(
-            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-            appText: ThemeManager.shared.image.euditext
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
           ),
           description: .pleaseWait
         ),

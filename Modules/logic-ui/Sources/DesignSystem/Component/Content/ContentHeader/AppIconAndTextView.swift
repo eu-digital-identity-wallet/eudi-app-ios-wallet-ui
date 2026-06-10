@@ -17,20 +17,14 @@ import SwiftUI
 
 public struct AppIconAndTextData {
   public let appIcon: Image
-  public let appText: Image
   public let appIconSize: CGFloat
-  public let appTextSize: CGFloat
 
   public init(
     appIcon: Image,
-    appText: Image,
-    appIconSize: CGFloat = 60,
-    appTextSize: CGFloat = 60
+    appIconSize: CGFloat = 46
   ) {
     self.appIcon = appIcon
-    self.appText = appText
     self.appIconSize = appIconSize
-    self.appTextSize = appTextSize
   }
 }
 
@@ -44,16 +38,10 @@ public struct AppIconAndTextView: View {
   }
 
   public var body: some View {
-    HStack(spacing: SPACING_SMALL) {
-      appIconAndTextData.appIcon
-        .resizable()
-        .scaledToFit()
-        .frame(width: appIconAndTextData.appIconSize, height: appIconAndTextData.appIconSize)
-      appIconAndTextData.appText
-        .resizable()
-        .scaledToFit()
-        .frame(width: appIconAndTextData.appTextSize, height: appIconAndTextData.appTextSize)
-    }
-    .frame(maxWidth: .infinity, alignment: .center)
+    appIconAndTextData.appIcon
+      .resizable()
+      .scaledToFit()
+      .frame(height: appIconAndTextData.appIconSize)
+      .frame(maxWidth: .infinity, minHeight: 60, alignment: .center)
   }
 }

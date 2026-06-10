@@ -89,8 +89,7 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
         quickPinSize: 6,
         contentHeaderConfig: .init(
           appIconAndTextData: AppIconAndTextData(
-            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-            appText: ThemeManager.shared.image.euditext
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
           )
         ),
         isLockedOut: false,

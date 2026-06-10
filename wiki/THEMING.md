@@ -104,7 +104,7 @@ The minimum set of changes for a full rebrand. Each row links to its detailed se
 | Override system/semantic colors | Add a colorset named exactly after the role (e.g. `background`, `primaryLabel`) | Catalog entry wins over the system color. See [Colors](#colors). |
 | Fonts | Drop font files into [`logic-resources/Sources/Resources/`](../Modules/logic-resources/Sources/Resources) + add `WalletFontConfig.plist` | Default is the **system font**. See [Typography and fonts](#typography-and-fonts). |
 | Corner shapes | [`ShapeManager.swift`](../Modules/logic-resources/Sources/Manager/ShapeManager.swift) | See [Shapes](#shapes). |
-| In-app logos | Replace imagesets in [`Images.xcassets`](../Modules/logic-resources/Sources/Resources/Images.xcassets) (`logo`, `EUDI-text`, …) | Keep the imageset names. See [Logos](#logos-and-in-app-imagery). |
+| In-app logos | Replace imagesets in [`Images.xcassets`](../Modules/logic-resources/Sources/Resources/Images.xcassets) (`logo-eu-digital-indentity-wallet`, …) | Keep the imageset names. See [Logos](#logos-and-in-app-imagery). |
 | App icon | [`Wallet/Assets.xcassets`](../Wallet/Assets.xcassets) — `AppIcon` **and** `AppIconDev` | One per variant. See [App icon](#app-icon). |
 | App display name | `INFOPLIST_KEY_CFBundleDisplayName` in `project.pbxproj` | "EUDI Wallet" by default. See [App name](#app-name-and-bundle-identity). |
 | Bundle id | `PRODUCT_BUNDLE_IDENTIFIER` in `project.pbxproj` | Don't change after public release. Keep the extension id aligned. |
@@ -305,9 +305,8 @@ The brand logos and key illustrations (bundled imagesets):
 
 | `ImageManager` role | Imageset | Where it appears |
 | --- | --- | --- |
-| `logo` | `logo` (`ic-logo-2.svg`) | [Splash screen](#splash-screen) and content headers |
-| `euditext` | `EUDI-text` | Wordmark next to the logo |
-| `logoEuDigitalIndentityWallet` | `logo-eu-digital-indentity-wallet` | Branded headers |
+| `logo` | `logo` (`ic-logo-2.svg`) | [Splash screen](#splash-screen) |
+| `logoEuDigitalIndentityWallet` | `logo-eu-digital-indentity-wallet` | Branded headers (combined icon + wordmark) |
 | `homeIdentity`, `homeContract`, `successSecuredWallet`, `digitalIdIssuance`, `chooseDocumentImage`, `scanDocumentImage`, … | matching imagesets | Onboarding / dashboard / success illustrations |
 
 ### How to swap them
@@ -511,7 +510,7 @@ Android's `ThemeManager.Builder`, and is intentionally left at `.default` in the
 * [ ] Light **and** dark appearances set for every brand colorset and every system/semantic override.
 * [ ] `accent` colorset added (and the app-target `AccentColor` filled in).
 * [ ] Text/background color pairs meet contrast guidance (WCAG AA: 4.5:1 for body text).
-* [ ] All brand imagesets replaced (`logo`, `EUDI-text`, illustrations); no leftover EUDI artwork.
+* [ ] All brand imagesets replaced (`logo`, `logo-eu-digital-indentity-wallet`, illustrations); no leftover EUDI artwork.
 * [ ] App icon replaced for **every** variant (`AppIcon` and `AppIconDev`); legible at small sizes.
 * [ ] App display name set; localized if you ship multiple locales.
 * [ ] Brand strings in `Localizable.xcstrings` reviewed (onboarding, side menu, auth prompts).

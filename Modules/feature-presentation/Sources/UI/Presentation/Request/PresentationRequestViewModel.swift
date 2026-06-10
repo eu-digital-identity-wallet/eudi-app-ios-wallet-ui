@@ -51,8 +51,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
         $0.copy(
           contentHeaderConfig: .init(
             appIconAndTextData: AppIconAndTextData(
-              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-              appText: ThemeManager.shared.image.euditext
+              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
             ),
             description: .dataSharingTitle,
             mainText: getTitle(),

@@ -46,7 +46,6 @@ public protocol ImageManagerProtocol: Sendable {
   var clockIndicator: Image { get }
   var errorIndicator: Image { get }
   var signDocument: Image { get }
-  var euditext: Image { get }
   var walletVerified: Image { get }
   var bell: Image { get }
   var menuIcon: Image { get }
@@ -110,7 +109,6 @@ final class ImageManager: ImageManagerProtocol {
     case clockIndicator = "clock.fill"
     case errorIndicator = "exclamationmark.circle.fill"
     case signDocument = "doc"
-    case euditext = "EUDI-text"
     case walletVerified = "wallet-verified"
     case bell
     case menuIcon = "line.3.horizontal"
@@ -239,9 +237,6 @@ final class ImageManager: ImageManagerProtocol {
   }
   var signDocument: Image {
     Image(systemName: ImageEnum.signDocument.rawValue)
-  }
-  var euditext: Image {
-    Image(ImageEnum.euditext.rawValue, bundle: bundle)
   }
   var walletVerified: Image {
     Image(ImageEnum.walletVerified.rawValue, bundle: bundle)
