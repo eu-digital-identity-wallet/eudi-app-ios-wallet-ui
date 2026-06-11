@@ -136,26 +136,6 @@ private struct HomeTabViewContainer: View {
             Button(.okButton, role: .cancel) {}
           }
         )
-
-        HomeCardView(
-          text: LocalizableStringKey.electronicallySignDigitalDocuments,
-          locator: HomeTabViewLocators.electronicallySignDigitalDocuments,
-          buttonText: LocalizableStringKey.signDocument,
-          illustration: Theme.shared.image.homeContract,
-          learnMoreText: LocalizableStringKey.learnMore,
-          learnMoreAction: {
-            toggleSignDocumentAlert()
-          },
-          action: openSignDocument()
-        )
-        .alertView(
-          isPresented: $isSignDocumentAlertShowing,
-          title: .alertSignDocumentsSafely,
-          message: .alertSignDocumentsSafelyMessage,
-          actions: {
-            Button(.okButton, role: .cancel) {}
-          }
-        )
       }
       .padding(.horizontal, SPACING_MEDIUM)
       .padding(.bottom, SPACING_MEDIUM)
