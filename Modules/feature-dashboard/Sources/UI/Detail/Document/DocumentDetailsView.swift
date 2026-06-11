@@ -120,6 +120,7 @@ private struct DocumentDetailsViewContainer: View {
         Text(viewState.document.documentName)
           .font(.largeTitle)
           .bold()
+          .foregroundStyle(Theme.shared.color.primaryLabel)
           .frame(maxWidth: .infinity, alignment: .leading)
           .shimmer(isLoading: viewState.isLoading)
 

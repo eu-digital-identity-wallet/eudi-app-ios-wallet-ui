@@ -33,7 +33,7 @@ public struct ThemeConfiguration: Sendable {
     dimension: DimensionManagerProtocol? = nil
   ) {
     Bundle.registerModuleFonts()
-    self.color = color ?? ColorManager(bundle: .assetsBundle)
+    self.color = color ?? ColorManager(bundle: .assetsBundle, navigationBarColorScheme: nil)
     self.image = image ?? ImageManager(bundle: .assetsBundle)
     self.shape = shape ?? ShapeManager()
     self.font = font ?? TypographyManager(bundle: .assetsBundle)
